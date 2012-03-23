@@ -1,0 +1,31 @@
+#SelectVariationMask {
+  position:absolute;
+  z-index:9000;
+  background-color:#000;
+  display:none;
+}
+
+#SelectVarationWindow {
+  position:fixed;
+  width:700px;
+  height:450px;
+  display:none;
+  z-index:9999;
+  padding:10px;
+  background-color: #fff;
+  font-size: 67%!important;
+	border-radius: 7px;
+}
+
+
+/* Customize your modal window here, you can add background image too */
+#SelectVarationWindow #dialog {
+  width:375px;
+  height:203px;
+}
+
+#SelectVarationWindow.loading {
+	background-image: url(/ecommerce/images/loading.gif);
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+}

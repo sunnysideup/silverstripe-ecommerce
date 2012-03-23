@@ -1,0 +1,84 @@
+SiteConfig:
+	config:
+		Title: eCommerce Testing Website
+		ShopClosed: 0
+
+Page:
+    home:
+        Title: Home
+        URLSegment: home
+
+ProductGroup:
+    g1:
+        Title: Products
+        URLSegment: products
+    g2:
+        Title: Clothing
+        URLSegment: clothing
+        Parent:=>ProductGroup.g1	#Sub page of products
+
+Product:
+    mp3player:
+        Title: Mp3 Player
+        Price: 200
+        URLSegment: mp3-player
+        Parent:=>ProductGroup.g1
+        AllowPurchase: 1
+        Weight: 0.3
+        Stock: 1000					#You need stock levels if you have included the stock module, else the test will fail.
+    socks:
+        Title: Socks
+        Price: 8
+        URLSegment: socks
+        Parent:=>ProductGroup.g2
+        AllowPurchase: 1
+        Weight:0.1
+        Stock: 50
+    tshirt:
+        Title: T-Shirt
+        Price: 25
+        Parent:=>ProductGroup.g2
+        URLSegment: t-shirt
+        AllowPurchase: 1
+        Weight: 0.3
+        Stock: 1000
+    beachball:
+        Title: Beach Ball
+        Price: 10
+        URLSegment: beach-ball
+        Parent:=>ProductGroup.g1
+        AllowPurchase: 0			#This product has AllowPurchase set to 0
+        Weight: 0.4
+        Stock: 1000
+        
+CheckoutPage:
+    page:
+        Title: Checkout
+        URLSegment: checkout
+        
+AccountPage:
+    page:
+        Title: Account
+        URLSegment: account
+        
+Member:
+    member:
+        FirstName: Joe
+        Surname: Bloggs
+        Country: NZ
+        Email: test@example.com
+        Password: 23u90oijlJKsa
+    member1:
+        FirstName: Bob
+        Surname: Jones
+        Country: US
+        Email: bob@somewhere.com
+        Password: 3456sdfsd34
+OrderStep:
+	step1:
+		Name: Test Step 1
+		Code: teststep1
+		Description: created merely for testing purposes
+		CustomerCanPay: 1
+		Sort: 0
+		ShowAsCompletedOrder: 1
