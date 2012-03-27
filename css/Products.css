@@ -20,10 +20,4 @@
 		.resultsBar .resultsShowing { float: right; width: 50%; text-align: right; }
 		.productItem a.noimage { padding: 20px; height: 60px; text-align: center; background: #eeeeee; color: #d3d3d3; display: block; text-decoration: none; font-size: 20px; }
 
-.notInCart .addLink {display: block;}
-.notInCart .removeLink {display: none;}
-.notInCart .goToCheckoutLink {display: none;}
 
-.inCart .addLink {display: none;}
-.inCart .removeLink {display: block;}
-.inCart .goToCheckoutLink {display: block;}

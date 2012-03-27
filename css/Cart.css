@@ -13,6 +13,14 @@
 .show{display: block;}
 .hide{display: none;}
 
+.notInCart .addLink {display: block!important;}
+.notInCart .removeLink {display: none!important;}
+.notInCart .goToCheckoutLink {display: none!important;}
+
+.inCart .addLink {display: none!important;}
+.inCart .removeLink {display: block!important;}
+.inCart .goToCheckoutLink {display: block!important;}
+
 /*
 even when theme-ing ecommerce, these should not be themed
 */
