@@ -304,7 +304,7 @@ EcomCart = {
 	/**
 	 * get JSON data from server
 	 */
-	getChanges: function(url, params) {
+	getChanges: function(url, params, loadingElement) {
 		jQuery(EcomCart.attachLoadingClassTo).addClass(EcomCart.classToShowLoading);
 		if(params === null) {
 			params = {};
@@ -312,15 +312,20 @@ EcomCart = {
 		if(EcomCart.ajaxButtonsOn) {
 			params.ajaxButtonsOn = true;
 		}
+		params.loadingElement = loadingElement;
 		jQuery(EcomCart.submitSelector).attr("disabled", "disabled").addClass("disabled");
-		jQuery.getJSON(url, params, EcomCart.setChanges);
+		jQuery.getJSON(url, params, EcomCart.setChanges());
 	},
 
 
 	/**
 	 * apply changes to the page using the JSON data from the server.
 	 */
-	setChanges: function (changes) {
+	setChanges: function (changes, status) {
+		//change to switch
+		//add loadingElement to data return
+		//clean up documentation at the top of the document
+		alert("read comments above");
 		for(var i in changes) {
 			var change = changes[i];
 			if(typeof(change.parameter) != 'undefined' && typeof(change.value) != 'undefined') {
@@ -328,11 +333,7 @@ EcomCart = {
 				var value = EcomCart.escapeHTML(change.value);
 				//selector Types
 				var id = change.id;
-				var name = change.name;
 				var className = change.className;
-				var dropdownArray = change.dropdownArray;
-				var newItemRow = change.newItemRow;
-				var newModifierRow = change.newModifierRow;
 				if(EcomCart.variableSetWithValue(id) || EcomCart.variableSetWithValue(className)) {
 					if(EcomCart.variableSetWithValue(id)) {
 						var mySelector = '#' + id;
@@ -365,41 +366,98 @@ EcomCart = {
 					}
 				}
 
-				//used for form fields...
-				else if(EcomCart.variableSetWithValue(name)) {
-					jQuery('[name=' + name + ']').each(
-						function() {
-							jQuery(this).attr(parameter, value);
+				//name: used for form fields...
+				else {
+					var name = change.name;
+					if(EcomCart.variableSetWithValue(name)) {
+						jQuery('[name=' + name + ']').each(
+							function() {
+								jQuery(this).attr(parameter, value);
+							}
+						);
+					}
+					else {
+						var dropdownArray = change.dropdownArray;
+						//dropdownArray: used for dropdowns
+						if(EcomCart.variableSetWithValue(dropdownArray)) {
+							var selector = '#' + dropdownArray+" select";
+							if(jQuery(selector).length > 0){
+								if(value.length > 0) {
+									jQuery(selector).html("");
+									for(var i = 0; i < value.length; i++) {
+										if(parameter == value[i].id) {
+											var selected = " selected=\"selected\" ";
+										}
+										else {
+											var selected = "";
+										}
+										jQuery(selector).append("<option value=\""+value[i].id+"\""+selected+">"+value[i].name+"</option>");
+									}
+								}
+							}
 						}
-					);
-				}
+						else {
+							var newModifierRow = change.newModifierRow;
+							//used to add new item row
+							if(EcomCart.variableSetWithValue(newItemRow)) {
+							}
+							else {
+								var newItemRow = change.newItemRow;
+								if(EcomCart.variableSetWithValue(newModifierRow)) {
+								}
 
-				//used for dropdowns
-				else if(EcomCart.variableSetWithValue(dropdownArray)) {
-					var selector = '#' + dropdownArray+" select";
-					if(jQuery(selector).length > 0){
-						if(value.length > 0) {
-							jQuery(selector).html("");
-							for(var i = 0; i < value.length; i++) {
-								if(parameter == value[i].id) {
-									var selected = " selected=\"selected\" ";
-								}
 								else {
-									var selected = "";
+									var replaceClass = change.replaceClass;
+									if(EcomCart.variableSetWithValue(replaceClass)) {
+
+										//parameter: the items that should be examined
+										//replaceClass: items that need to get a new class
+										//value: the new class that the replaceClass items are assigned
+										//class for items that are not inlist
+										var without = change.without;
+										//we go through all the ones that are marked as 'inCart' already
+										//as part of this we check if they are still incart
+										//and as part of this process, we add the "inCart" where needed
+										console.debug("starting process");
+										for(var i= 0; i < replaceClass.length;i++){
+											var id = "#"+replaceClass[i];
+											jQuery(id).removeClass(without).addClass(value);
+											console.debug("adding "+id);
+										}
+										jQuery(parameter).each(
+											function(i, el) {
+												var id = jQuery(el).attr("id");
+												console.debug("checking "+id);
+												var inCart = false;
+												for(var i = 0; i < replaceClass.length;i++) {
+													console.debug("testing: '"+replaceClass[i]+"' AGAINST '"+id+"'");
+													if(id == replaceClass[i]) {
+														inCart = true;
+													}
+													//to do - what is the javascript method for 'unset'
+													//unset(replaceClass[i]);
+												}
+												if(!inCart) {
+													jQuery("#"+id).removeClass(value).addClass(without);
+													console.debug("removing "+id);
+												}
+												else {
+													console.debug("leaving "+id);
+												}
+											}
+										)
+									}
+									else {
+										if(parameter == "loadingElement") {
+											jQuery(value).removeClass(classToShowLoading)
+										}
+									}
 								}
-								jQuery(selector).append("<option value=\""+value[i].id+"\""+selected+">"+value[i].name+"</option>");
 							}
 						}
 					}
 				}
-
-				//used to add new item row
-				else if(EcomCart.variableSetWithValue(newItemRow)) {
-				}
-				else if(EcomCart.variableSetWithValue(newModifierRow)) {
-				}
 			}
-			//ADD and REMOVE ROWS.....TO BE ADDED HERE....
 		}
 		EcomCart.updateForZeroVSOneOrMoreRows();
 		jQuery(EcomCart.attachLoadingClassTo).removeClass(EcomCart.classToShowLoading);
@@ -485,7 +543,7 @@ jQuery.fn.extend({
 				"click",
 				function(){
 					var url = jQuery(this).attr("href");
-					//to do: hide row / li
+					jQuery(this).addClass(EcomCart.classToShowLoading);
 					EcomCart.getChanges(url, null);
 					return false;
 				}
@@ -498,6 +556,7 @@ jQuery.fn.extend({
 				function(){
 					if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
 						var url = jQuery(this).attr("href");
+						jQuery(this).addClass(EcomCart.classToShowLoading);
 						jQuery(this).parents(EcomCart.orderItemHolderSelector).slideUp();
 						EcomCart.getChanges(url, null);
 					}
@@ -516,8 +575,8 @@ jQuery.fn.extend({
 				function(){
 					if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
 						var url = jQuery(this).attr("href");
-						jQuery(this).parents(EcomCart.orderItemHolderSelector).slideUp();
-						EcomCart.getChanges(url, null);
+						jQuery(this).addClass(EcomCart.classToShowLoading);
+						EcomCart.getChanges(url, null, this);
 						return false;
 					}
 					return false;
