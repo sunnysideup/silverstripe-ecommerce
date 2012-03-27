@@ -15,6 +15,8 @@
 		</p>
 		<% end_if %>
 		<% include ProductActionsInner %>
+	<% else %>
+	<p class="notForSale message">Not for sale.</p>
 	<% end_if %>
 <% end_if %>
 </div>
