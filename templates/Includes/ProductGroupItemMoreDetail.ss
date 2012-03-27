@@ -1,4 +1,4 @@
-<li class="productItem $FirstLast item$Pos<% if FeaturedProduct %> featured<% end_if %>" id="$UniqueIdentifier" >
+<li class="productItem $FirstLast item$Pos<% if FeaturedProduct %> featured<% end_if %>">
 	<% include ProductGroupItemImage %>
 	<h3 class="productTitle"><a href="$Link">$Title</a></h3>
 	<div class="limtedContentHolder">$Content.Summary</div>

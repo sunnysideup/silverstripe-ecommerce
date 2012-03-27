@@ -107,17 +107,6 @@ class OrderConfirmationPage extends CartPage{
 
 class OrderConfirmationPage_Controller extends CartPage_Controller{
 
-	static $allowed_actions = array(
-		'retrieveorder',
-		'loadorder',
-		'copyorder',
-		'startneworder',
-		'showorder',
-		'sendreceipt',
-		'CancelForm',
-		'PaymentForm',
-	);
-
 
 	/**
 	 * standard controller function
@@ -214,8 +203,19 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		else {
 			$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
 		}
-		Director::redirectBack();
-		return array();
+		$baseFolder = Director::baseFolder() ;
+		require_once($baseFolder . '/ecommerce/thirdparty/Emogrifier.php');
+		$html =  $this->renderWith("Order_ReceiptEmail");
+		// if it's an html email, filter it through emogrifier
+		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;
+		$html .= "\r\n\r\n<!-- CSS can be found here: $cssFileLocation -->";
+		$cssFileHandler = fopen($cssFileLocation, 'r');
+		$css = fread($cssFileHandler,  filesize($cssFileLocation));
+		fclose($cssFileHandler);
+		$emog = new Emogrifier($html, $css);
+		$html = $emog->emogrify();
+		Requirements::clear();
+		return $html;
 	}
 
 
