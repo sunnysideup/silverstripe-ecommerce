@@ -153,6 +153,23 @@ class CartPage_Controller extends Page_Controller{
 
 
 	/**
+	 * @static array
+	 * standard SS variable
+	 * it is important that we list all the options here
+	 */
+	static $allowed_actions = array(
+		'retrieveorder',
+		'loadorder',
+		'copyorder',
+		'startneworder',
+		'showorder',
+		'sendreceipt',
+		'CancelForm',
+		'PaymentForm',
+	);
+
+
+	/**
 	 * This DataObjectSet holds DataObjects with a Link and Title each....
 	 *@var $actionLinks DataObjectSet
 	 **/
@@ -208,7 +225,7 @@ class CartPage_Controller extends Page_Controller{
 			$id = $this->request->param('ID');
 			$action = $this->request->param('Action');
 			$otherID = intval($this->request->param("OtherID"));
-			if(intval($id) && in_array($action, array("showorder", "loadorder", "copyorder", "saveorder", "deleteorder"))){
+			if(intval($id) && in_array($action, $this->stat("allowed_actions"))){
 				$this->currentOrder = DataObject::get_by_id("Order", intval($id));
 			}
 		//the code below is for submitted orders, but we still put it here so
@@ -285,7 +302,8 @@ class CartPage_Controller extends Page_Controller{
 				Session::clear($sessionCode);
 			}
 		}
-		return $this->message;
+		$field = DBField::create("HTMLText", $this->message);
+		return $field;
 	}
 
 	/**
@@ -479,7 +497,7 @@ class CartPage_Controller extends Page_Controller{
 						if($this->currentOrder && $this->currentOrder->Items() && !$this->currentOrder->IsSubmitted()) {
 							$this->actionLinks->push(new ArrayData(array (
 								"Title" => $this->SaveOrderLinkLabel,
-								"Link" => $this->Link("saveorder").$this->currentOrder->ID."/"
+								"Link" => $this->Link("saveorder")."/".$this->currentOrder->ID."/"
 							)));
 						}
 					}
@@ -492,7 +510,7 @@ class CartPage_Controller extends Page_Controller{
 					if(!$viewingRealCurrentOrder) {
 						$this->actionLinks->push(new ArrayData(array (
 							"Title" => $this->LoadOrderLinkLabel,
-							"Link" => $this->Link("loadorder").$this->currentOrder->ID."/"
+							"Link" => $this->Link("loadorder")."/".$this->currentOrder->ID."/"
 						)));
 					}
 				}
@@ -504,7 +522,7 @@ class CartPage_Controller extends Page_Controller{
 					if(!$viewingRealCurrentOrder) {
 						$this->actionLinks->push(new ArrayData(array (
 							"Title" => $this->DeleteOrderLinkLabel,
-							"Link" => $this->Link("deleteorder").$this->currentOrder->ID."/"
+							"Link" => $this->Link("deleteorder")."/".$this->currentOrder->ID."/"
 						)));
 					}
 				}

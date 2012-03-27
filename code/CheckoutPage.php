@@ -62,13 +62,7 @@ class CheckoutPage extends CartPage {
 	 * @return String (URLSegment)
 	 */
 	public static function find_link() {
-		if(function_exists("get_called_class")) {
-			$className = get_called_class();
-		}
-		else {
-			$className = "CheckoutPage";
-		}
-		if ($page = DataObject::get_one("CheckoutPage", "\"ClassName\" = '$className'")) {
+		if ($page = DataObject::get_one("CheckoutPage")) {
 			return $page->Link();
 		}
 		user_error("No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.", E_USER_NOTICE);
@@ -85,7 +79,7 @@ class CheckoutPage extends CartPage {
 			$steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 			if(in_array($currentStep, $steps)) {
 				$key = array_search($currentStep, $steps);
-				if($key) {
+				if($key!==FALSE) {
 					if($doPreviousInstead) {
 						$key--;
 					}

@@ -1,16 +1,6 @@
 <div class="productActionsHolder">
 <% if HasVariations %>
-	<ul class="productActions">
-		<li>
-			<a href="{$AddVariationsLink}" class="selectVariation" rel="VariationsTable{$ID}">
-				<% if VariationIsInCart %>
-					<% _t("Product.REMOVELINK","Remove from cart") %>
-				<% else %>
-					<% _t("Product.ADDLINK","Add to cart") %>
-				<% end_if %>
-			</a>
-		</li>
-	</ul>
+	<% include ProductActionsInner %>
 <% else %>
 	<% if canPurchase %>
 	<% if Price != 0 %>

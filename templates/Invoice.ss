@@ -13,6 +13,7 @@
 			<% include Order %>
 		<% end_control %>
 	</div>
+<script type="text/javascript">window.print();</script>
 </body>
 </html>
 

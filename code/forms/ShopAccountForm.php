@@ -37,10 +37,11 @@ class ShopAccountForm extends Form {
 				$actions->push(new FormAction('proceed', _t('Account.SAVEANDPROCEED','Save changes and proceed to checkout')));
 			}
 		}
-		if($record = $controller->data()){
-			$record->extend('updateShopAccountForm',$fields,$actions,$requiredFields);
-		}
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
+		//extensions need to be set after __construct
+		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
+		if($this->extend('updateActions',$actions) !== null) {$this->setActions($actions);}
+		if($this->extend('updateValidator',$requiredFields) !== null) {$this->setValidator($requiredFields);}
 		if($member && $member->Password ){
 			$this->loadDataFrom($member);
 			if(!isset($_REQUEST["Password"])) {
@@ -48,6 +49,7 @@ class ShopAccountForm extends Form {
 			}
 			$this->fields()->fieldByName("Password")->setCanBeEmpty(true);
 		}
+		$this->extend('updateShopAccountForm',$this);
 	}
 
 

@@ -107,7 +107,7 @@ class Order_Email extends Email {
 		require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
 		parent::parseVariables($isPlain);
 		// if it's an html email, filter it through emogrifier
-		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");;
+		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");
 		$cssFileHandler = fopen($cssFileLocation, 'r');
 		$css = fread($cssFileHandler,  filesize($cssFileLocation));
 		fclose($cssFileHandler);

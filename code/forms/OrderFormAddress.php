@@ -135,12 +135,14 @@ class OrderFormAddress extends Form {
 
 
 		$actions = new FieldSet(new FormAction('saveAddress', _t('OrderForm.NEXTSTEP','Save Address')));
-		$requiredFields = new OrderFormAddress_Validator($requiredFields);
-		$this->extend('updateFields',$fields);
-		$this->extend('updateActions',$actions);
-		$this->extend('updateValidator',$requiredFields);
-		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
-
+		$validator = new OrderFormAddress_Validator($requiredFields);
+		//TODO: do we need this here?
+		$validator->setJavascriptValidationHandler("prototype");
+		parent::__construct($controller, $name, $fields, $actions, $validator);
+		//extensions need to be set after __construct
+		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
+		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
+		if($this->extend('updateValidator', $validator) !== null) {$this->setValidator($validator);}
 
 		//  ________________  7)  Load saved data
 
@@ -163,7 +165,7 @@ class OrderFormAddress extends Form {
 
 
 		//allow updating via decoration
-		$this->extend('updateOrderForm',$this);
+		$this->extend('updateOrderFormAddress',$this);
 
 
 	}
