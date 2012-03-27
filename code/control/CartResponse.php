@@ -32,18 +32,29 @@ class CartResponse extends EcommerceResponse {
 		$js = array ();
 
 		//order items
+		$inCartArray = array();
 		if ($items = $currentOrder->Items()) {
 			foreach ($items as $item) {
 				$item->updateForAjax($js);
 				//products in cart
-				$js[] = array(
-					"id" => $item->Buyable()->UniqueIdentifier(),
-					"parameter" => "class",
-					"value" => "inCart"
-				);
+				$inCartArray[] = $item->Buyable()->UniqueIdentifier();
 			}
 		}
 
+		//in cart items
+		$js[] = array(
+			"replaceClass" => $inCartArray,
+			"parameter" => ".productActions.inCart",
+			"value" => "inCart",
+			"without" => "notInCart"
+		);
+		//in cart items
+		if(isset($_REQUEST["loadingElement"])) {
+			$js[] = array(
+				"parameter" => "loadingElement",
+				"value" => isset($_REQUEST["loadingElement"])
+			);
+		}
 		//order modifiers
 		if ($modifiers = $currentOrder->Modifiers()) {
 			foreach ($modifiers as $modifier) {

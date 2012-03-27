@@ -9,9 +9,10 @@
 
 	<% if PrintLink %>
 	<li id="PrintCopyOfReceipt" >
-		<a href="$PrintLink" onclick="javascript: window.open(this.href, \'print_order\', \'toolbar=0,scrollbars=1,location=1,statusbar=0,menubar=0,resizable=1,width=800,height=600,left = 50,top = 50\'); return false;">
+		<a href="$PrintLink">
 			<% _t("Order.PRINTINVOICE","print invoice") %>
 		</a>
 	</li>
 	<% end_if %>
 </ul>
+<% require javascript(ecommerce/javascript/EcomPrintAndMail.js) %>

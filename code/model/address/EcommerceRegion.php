@@ -86,7 +86,7 @@ class EcommerceRegion extends DataObject {
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->replaceField("Country", new DropdownField("Country", EcommerceCountry::$singular_name, EcommerceCountry::get_default_array()));
+		$fields->replaceField("CountryID", new DropdownField("CountryID", EcommerceCountry::$singular_name, "EcommerceCountry"));
 		return $fields;
 	}
 
