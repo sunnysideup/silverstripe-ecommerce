@@ -239,6 +239,9 @@ class ShoppingCart extends Object{
 		$className = $buyable->classNameForOrderItem();
 		$item = new $className();
 		$item->BuyableID = $buyable->ID;
+		if(isset($buyable->Version)) {
+			$item->Version = $buyable->Version;
+		}
 		return $item;
 	}
 
