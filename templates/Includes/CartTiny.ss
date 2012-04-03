@@ -1,5 +1,6 @@
+<!-- used to represent a the cart in tiny format -->
 <% if Cart %><% control Cart %>
-<div class="Menu_Cart_Class"><!-- this is an ID used by Javascript -->
+<div class="$AJAXDefinitions.TinyCartClass">
 	<% include CartTinyInner %>
 </div>
 <% end_control %><% end_if %>
