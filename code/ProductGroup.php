@@ -703,6 +703,13 @@ class ProductGroup extends Page {
 		}
 	}
 
+	/**
+	 * tells us if the current page is part of e-commerce.
+	 * @return Boolean
+	 */
+	function IsEcommercePage() {
+		return true;
+	}
 
 }
 class ProductGroup_Controller extends Page_Controller {
@@ -716,14 +723,6 @@ class ProductGroup_Controller extends Page_Controller {
 		Requirements::themedCSS('ProductGroup');
 		Requirements::themedCSS('ProductGroupPopUp');
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
-	}
-
-	/**
-	 * tells us if the current page is part of e-commerce.
-	 * @return Boolean
-	 */
-	function IsEcommercePage() {
-		return true;
 	}
 
 	/**
