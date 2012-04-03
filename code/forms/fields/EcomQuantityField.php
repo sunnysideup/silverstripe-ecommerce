@@ -51,8 +51,6 @@ class EcomQuantityField extends NumericField {
 	 **/
 	function __construct($object, $parameters = null){
 		Requirements::javascript("ecommerce/javascript/EcomQuantityField.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		$hidePlusAndMinus = EcommerceConfig::get("EcomQuantityField", "hide_plus_and_minus") ? 1 : 0;
-		Requirements::customScript("EcomQuantityField.set_hidePlusAndMins(".($hidePlusAndMinus).")", "set_hidePlusAndMins");
 		if(Object::has_extension($object->class,'Buyable')){
 			$this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object,$parameters);
 			 //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
@@ -100,7 +98,7 @@ class EcomQuantityField extends NumericField {
 	 *@return String (HTML)
 	 **/
 	function Field() {
-		$name = $this->orderItem->MainID() . '_Quantity_SetQuantityLink';
+		$name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
 		$attributes = array(
 			'type' => 'text',
 			'class' => implode(' ',$this->classes),
@@ -121,7 +119,7 @@ class EcomQuantityField extends NumericField {
 	 * @return String (HTML)
 	 */
 	function AJAXLinkHiddenField(){
-		$name = $this->orderItem->MainID() . '_Quantity_SetQuantityLink';
+		$name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
 		if($quantitylink = $this->getQuantityLink()){
 			$attributes = array(
 				'type' => 'hidden',
