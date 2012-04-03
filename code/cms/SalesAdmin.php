@@ -39,8 +39,8 @@ class SalesAdmin extends ModelAdmin{
 
 
 	function __construct() {
-		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("SalesAdmin", "managed_models"));
 		parent::__construct();
+		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("SalesAdmin", "managed_models"));
 	}
 
 	function init() {
@@ -59,7 +59,9 @@ class SalesAdmin extends ModelAdmin{
 
 class SalesAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
 
+	//public function CreateForm() {return false;}
 
+	public function ImportForm() {return false;}
 }
 
 //remove delete action
