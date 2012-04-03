@@ -1,5 +1,11 @@
 <?php
 
+if(function_exists('lcfirst') === false) {
+	function lcfirst($str) {
+		$str[0] = strtolower($str[0]);
+		return $str;
+	}
+}
 
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
