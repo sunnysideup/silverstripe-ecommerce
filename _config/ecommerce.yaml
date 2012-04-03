@@ -43,8 +43,8 @@ ProductGroup:
 	allow_more_detail_display_style: false
 
 Product_Image:
-	thumbnail_width: 140
-	thumbnail_height: 100
+	thumbnail_width: 75
+	thumbnail_height: 75
 	content_image_width: 200
 	large_image_width: 600
 
@@ -173,7 +173,8 @@ EcommercePaymentController:
 #TO BE CHANGED
 	url_segment: "ecommercepayment"
 
-
+EcommerceConfigAjax:
+	definitions_class_name: "EcommerceConfigAjaxDefinitions"
 
 
 ################### MODIFIERS #####################
@@ -197,19 +198,13 @@ SimpleShippingModifier:
 ################### CMS #####################
 
 StoreAdmin:
-	managed_models: ['OrderStep', 'EcommerceCountry', 'EcommerceRegion', 'OrderModifier_Descriptor']
-	collection_controller_class: 'StoreAdmin_CollectionController'
-	record_controller_class: 'StoreAdmin_RecordController'
+	managed_models: ['OrderStep', 'EcommerceCountry', 'OrderModifier_Descriptor']
 
 ProductsAndGroupsModelAdmin:
 	managed_models: ['Product', 'ProductGroup']
-	collection_controller_class: 'StoreAdmin_CollectionController'
-	record_controller_class: 'StoreAdmin_RecordController'
 
 SalesAdmin:
 	managed_models: ['Order','OrderStatusLog', 'OrderItem', 'OrderModifier', 'OrderEmailRecord', 'BillingAddress', 'ShippingAddress','Payment']
-	collection_controller_class: 'SalesAdmin_CollectionController'
-	record_controller_class: 'SalesAdmin_RecordController'
 
 
 PaymentFilter_AroundDateFilter:
