@@ -45,9 +45,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin {
 	 * This standard method allows us to set some configurations.
 	 */
 	function __construct() {
-		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("SalesAdmin", "managed_models"));
-		self::$collection_controller_class = EcommerceConfig::get("SalesAdmin", "collection_controller_class");
-		self::$record_controller_class = EcommerceConfig::get("SalesAdmin", "record_controller_class");
+		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("ProductsAndGroupsModelAdmin", "managed_models"));
 		parent::__construct();
 	}
 
@@ -64,6 +62,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin {
 	}
 
 }
+
 //remove side forms
 class ProductsAndGroupsModelAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
 

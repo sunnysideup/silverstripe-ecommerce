@@ -40,8 +40,6 @@ class SalesAdmin extends ModelAdmin{
 
 	function __construct() {
 		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("SalesAdmin", "managed_models"));
-		self::$collection_controller_class = EcommerceConfig::get("SalesAdmin", "collection_controller_class");
-		self::$record_controller_class = EcommerceConfig::get("SalesAdmin", "record_controller_class");
 		parent::__construct();
 	}
 
