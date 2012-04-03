@@ -1,5 +1,5 @@
 <div class="sidebarBox cart">
-	<div id="$SideBarCartID">
+	<div id="$AJAXDefinitions.SideBarCartID">
 	<% include Cart %>
 	</div>
 </div>
