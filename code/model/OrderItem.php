@@ -21,12 +21,21 @@ class OrderItem extends OrderAttribute {
 	 */
 	public static $api_access = array(
 		'view' => array(
+				'CalculatedTotal',
+				'Sort',
+				'GroupSort',
+				'TableTitle',
+				'TableSubTitle',
+				'CartTitle',
+				'CartSubTitle',
+				'Name',
+				'TableValue',
 				'Quantity',
 				'BuyableID',
 				'Version',
 				'UnitPrice',
 				'Total',
-				"Order"
+				'Order'
 			)
 	 );
 
@@ -184,15 +193,62 @@ class OrderItem extends OrderAttribute {
 	}
 
 	/**
-	 *
+	 * used to return data for ajax
 	 * @return Array used to create JSON for AJAX
 	  **/
 	function updateForAjax(array &$js) {
 		$total = $this->TotalAsCurrencyObject()->Nice();
-		$js[] = array('id' => $this->TableTotalID(), 'parameter' => 'innerHTML', 'value' => $total);
-		$js[] = array('id' => $this->CartTotalID(), 'parameter' => 'innerHTML', 'value' => $total);
-		$js[] = array('id' => $this->CartQuantityID(), 'parameter' => 'innerHTML', 'value' => $this->Quantity);
-		$js[] = array('name' => $this->QuantityFieldName(), 'parameter' => 'value', 'value' => $this->Quantity);
+		$ajaxObject = $this->AJAXDefinitions();
+		/* we dont need to show / hide
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->TableID(),
+			'parameter' => 'hide',
+			'value' => 0
+		);
+		*/
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->QuantityFieldName(),
+			'parameter' => 'innerHTML',
+			'value' => $this->Quantity
+		);
+		$js[] = array(
+			'type' => 'name',
+			'selector' => $ajaxObject->QuantityFieldName(),
+			'parameter' => 'value',
+			'value' => $this->Quantity
+		);
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->TableTitleID(),
+			'parameter' => 'innerHTML',
+			'value' => $this->TableTitle()
+		);
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->CartTitleID(),
+			'parameter' => 'innerHTML',
+			'value' => $this->CartTitle()
+		);
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->TableSubTitleID(),
+			'parameter' => 'innerHTML',
+			'value' => $this->TableSubTitle()
+		);
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->CartSubTitleID(),
+			'parameter' => 'innerHTML',
+			'value' => $this->CartSubTitle()
+		);
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->TableTotalID(),
+			'parameter' => 'innerHTML',
+			'value' => $total
+		);
 	}
 
 	/**
@@ -255,15 +311,6 @@ class OrderItem extends OrderAttribute {
 		return $total;
 	}
 
-
-	/**
-	 * Link to the Quantity Field
-	 *
-	 *@return String
-	  **/
-	public function QuantityFieldName() {
-		return $this->MainID() . '_Quantity';
-	}
 
 
 	/**
@@ -366,31 +413,6 @@ class OrderItem extends OrderAttribute {
 		return $this->BuyableTitle();
 	}
 
-	/**
-	 *
-	 * @return String
-	  **/
-	function TableTitle() {return $this->getTableTitle();}
-	function getTableTitle() {
-		return $this->i18n_singular_name();
-	}
-
-	/**
-	 *
-	 * @return String
-	  **/
-	function TableSubTitle() {return $this->getTableSubTitle();}
-	function getTableSubTitle() {
-		return "";
-	}
-
-	/**
-	 *
-	 * @return String
-	  **/
-	function CartQuantityID() {
-		return $this->CartID() . '_Quantity';
-	}
 
 	/**
 	 *
