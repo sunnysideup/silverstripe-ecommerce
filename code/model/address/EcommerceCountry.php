@@ -187,8 +187,6 @@ class EcommerceCountry extends DataObject {
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->removeByName("Country");
-		$fields->removeByName("Regions");
 		return $fields;
 	}
 
