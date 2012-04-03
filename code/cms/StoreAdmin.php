@@ -20,7 +20,7 @@ class StoreAdmin extends ModelAdmin{
 
 	//static $url_priority = 50;
 
-	public static $managed_models = array('OrderStep', 'EcommerceCountry', 'EcommerceRegion', 'OrderModifier_Descriptor');
+	public static $managed_models = array('OrderStep', 'EcommerceCountry', 'OrderModifier_Descriptor');
 		public static function set_managed_models($array) {self::$managed_models = $array;}
 		public static function add_managed_model($s) {self::$managed_models[] = $s;}
 		public static function remove_managed_model($s) {
@@ -39,8 +39,6 @@ class StoreAdmin extends ModelAdmin{
 
 	function __construct() {
 		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("StoreAdmin", "managed_models"));
-		self::$collection_controller_class = EcommerceConfig::get("StoreAdmin", "collection_controller_class");
-		self::$record_controller_class = EcommerceConfig::get("StoreAdmin", "record_controller_class");
 		parent::__construct();
 	}
 
