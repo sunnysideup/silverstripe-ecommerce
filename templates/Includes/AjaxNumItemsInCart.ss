@@ -1,1 +1,1 @@
-<% if NumItemsInCart %> <span class="$TotalItemsClass">($NumItemsInCart)</span><% end_if %>
+<% if NumItemsInCart %> <strong class="itemsInClass">(<span class="$AJAXDefinitions.TotalItemsClassName">$NumItemsInCart</span>)</strong><% end_if %>
