@@ -147,6 +147,14 @@ class CartPage extends Page{
 		return self::get_order_link($orderID);
 	}
 
+	/**
+	 * tells us if the current page is part of e-commerce.
+	 * @return Boolean
+	 */
+	function IsEcommercePage () {
+		return true;
+	}
+
 }
 
 class CartPage_Controller extends Page_Controller{
@@ -265,15 +273,6 @@ class CartPage_Controller extends Page_Controller{
 		else {
 			$this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
 		}
-	}
-
-
-	/**
-	 * tells us if the current page is part of e-commerce.
-	 * @return Boolean
-	 */
-	function IsEcommercePage () {
-		return true;
 	}
 
 	/**
