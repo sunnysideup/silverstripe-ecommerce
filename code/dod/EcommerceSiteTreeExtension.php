@@ -49,25 +49,24 @@ class EcommerceSiteTreeExtension extends DataObjectDecorator {
 	}
 
 	/**
-	 * used to provide templates with a class for a dom element
-	 * containing the total number of items.
-	 * @return String
-	 **/
-	public function TotalItemsClass() {
-		$order = ShoppingCart::current_order();
-		if($order) {
-			return $order->TotalItemsClass();
-		}
-		return "";
-	}
-
-	/**
 	 * @return String (HTML Snippet)
 	 **/
 	function getEcommerceMenuTitle() {
 		return $this->owner->getMenuTitle();
 	}
 	function EcommerceMenuTitle(){return $this->getEcommerceMenuTitle();}
+
+
+	/**
+	 * returns the instance of EcommerceConfigAjax for use in templates.
+	 * In templates, it is used like this:
+	 * $EcommerceConfigAjax.TableID
+	 *
+	 * @return EcommerceConfigAjax
+	 **/
+	public function AJAXDefinitions() {
+		return EcommerceConfigAjax::get_one($this->owner);
+	}
 
 }
 
@@ -160,15 +159,6 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	 **/
 	public function OrderConfirmationPage() {
 		return OrderConfirmationPage::find_link();
-	}
-
-
-	/**
-	 *@return String (URLSegment)
-	 **/
-	public function SideBarCartID() {
-		$order = ShoppingCart::current_order();
-		return $order->SideBarCartID();
 	}
 
 
