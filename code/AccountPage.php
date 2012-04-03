@@ -156,7 +156,13 @@ class AccountPage extends Page {
 		return null;
 	}
 
-
+	/**
+	 * tells us if the current page is part of e-commerce.
+	 * @return Boolean
+	 */
+	function IsEcommercePage () {
+		return true;
+	}
 
 }
 
@@ -180,15 +186,6 @@ class AccountPage_Controller extends Page_Controller {
 			return false;
 		}
 		Requirements::themedCSS("AccountPage");
-	}
-
-
-	/**
-	 * tells us if the current page is part of e-commerce.
-	 * @return Boolean
-	 */
-	function IsEcommercePage () {
-		return true;
 	}
 
 	/**
