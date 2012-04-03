@@ -164,11 +164,14 @@ class Buyable extends DataObjectDecorator {
 
 
 	/**
-	 * returns a string that can be used as a unique Identifier for use in templates, etc...
-	 * @return String
-	 */
-	function UniqueIdentifier() {
-		return EcommerceConfig::get("Order", "template_id_prefix").$this->owner->ClassName."_".$this->owner->ID;
+	 * returns the instance of EcommerceConfigAjax for use in templates.
+	 * In templates, it is used like this:
+	 * $EcommerceConfigAjax.TableID
+	 *
+	 * @return EcommerceConfigAjax
+	 **/
+	public function AJAXDefinitions() {
+		return EcommerceConfigAjax::get_one($this->owner);
 	}
 
 	/**
