@@ -143,17 +143,19 @@ class OrderForm extends Form {
 		//----------------- PAYMENT ------------------------------
 
 		//-------------- ACTION PAYMENT -------------
-		$nextStep = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data, $order->Member());
-
+		$paymentIsProcessing = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
 
 		//------------- NOW THE ORDER GETS SUBMITTED FOR REAL -----------------
-		if($nextStep) {
-			$order->tryToFinaliseOrder();
+		if($paymentIsProcessing) {
 			ShoppingCart::singleton()->submit();
+			return $paymentIsProcessing;
+		}
+		else {
+			$form->sessionMessage(_t('OrderForm.PAYMENTCOULDNOTBEPROCESSED','Payment could not be processed.'), 'bad');
+			Director::redirectBack();
+			return false;
 		}
 		//------------------------------
-
-		return $nextStep;
 	}
 
 	/**
