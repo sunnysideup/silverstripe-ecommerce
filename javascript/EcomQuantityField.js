@@ -13,59 +13,51 @@
 
 EcomQuantityField = {
 
-	quantityFieldSelector: "input.ajaxQuantityField",
+	quantityFieldSelector: ".ecomquantityfield input.ajaxQuantityField",
 
-	removeSelector: "a.removeOneLink",
+	removeSelector: ".ecomquantityfield a.removeOneLink",
 
-	addSelector: "a.addOneLink",
+	addSelector: ".ecomquantityfield a.addOneLink",
 
 	URLSegmentHiddenFieldSelectorAppendix: "_SetQuantityLink",
 
-	hidePlusAndMinus: false,
-		set_hidePlusAndMins: function(v) {this.hidePlusAndMinus = v;},
-
+	//todo: auto-re-attach
 	init: function () {
-		jQuery(EcomQuantityField.quantityFieldSelector).each(
-			function() {
-				var inputField = this;
-				if(EcomQuantityField.hidePlusAndMinus) {
-					jQuery(inputField).siblings(EcomQuantityField.removeSelector + ", " + EcomQuantityField.addSelector).hide();
-				}
-				else {
-					jQuery(inputField).siblings(EcomQuantityField.removeSelector).click(
-						function() {
-							jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
-							return false;
-						}
-					);
-					jQuery(inputField).siblings(EcomQuantityField.addSelector).click(
-						function() {
-							jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
-							return false;
-						}
-					);
-
-				}
-				jQuery(inputField).change(
-					function() {
-						var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this);
-						if(URLSegment.length > 0) {
-							if(! this.value) {
-								this.value = 0;
-							}
-							else {
-								this.value = this.value.replace(/[^0-9.]+/g, '');
-							}
-							var url = jQuery('base').attr('href') + URLSegment + '?quantity=' + this.value;
-							EcomCart.getChanges(url, null);
-						}
-						else {
-						}
-					}
-				);
-				jQuery(inputField).removeAttr('disabled');
+		jQuery(EcomQuantityField.removeSelector).live(
+			"click",
+			function(e) {
+				e.preventDefault();
+				var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
+				jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
+				return false;
 			}
 		);
+		jQuery(EcomQuantityField.addSelector).live(
+			"click",
+			function(e) {
+				e.preventDefault();
+				var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
+				jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
+				return false;
+			}
+		);
+		jQuery(EcomQuantityField.quantityFieldSelector).live(
+			"change",
+			function() {
+				var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this);
+				if(URLSegment.length > 0) {
+					if(! this.value) {
+						this.value = 0;
+					}
+					else {
+						this.value = this.value.replace(/[^0-9.]+/g, '');
+					}
+					var url = jQuery('base').attr('href') + URLSegment + '?quantity=' + this.value;
+					EcomCart.getChanges(url, null);
+				}
+			}
+		);
+		jQuery(EcomQuantityField.quantityFieldSelector).removeAttr('disabled');
 	},
 
 	getSetQuantityURLSegment: function (inputField) {
