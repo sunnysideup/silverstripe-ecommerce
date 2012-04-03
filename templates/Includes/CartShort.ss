@@ -1,5 +1,6 @@
+<!--- short representation of the cart -->
 <% if Cart %><% control Cart %>
-<div id="Side_Bar_Cart"><!-- this is an ID used by Javascript -->
+<div id="$AJAXDefinitions.SmallCartID">
 	<% include CartShortInner %>
 </div>
 <% end_control %><% end_if %>
