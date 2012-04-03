@@ -90,7 +90,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 * @see CartTiny.ss
 	 * @return String
 	 **/
-	function TinyCartClass() {return self::$prefix.'tiny_cart_class';}
+	function TinyCartClassName() {return self::$prefix.'tiny_cart_class';}
 	/**
 	 * id that is used in templates and in the JSON return @see CartResponse
 	 * @return String
