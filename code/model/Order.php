@@ -1707,25 +1707,21 @@ class Order extends DataObject {
 		return EcommerceCountry::find_title($this->Country());
 	}
 
-
 	/**
 	 * returns name of coutry that we expect the customer to have
-	 * this takes into consideration more than just what has been entered
+	 * This takes into consideration more than just what has been entered
 	 * for example, it looks at GEO IP
+	 * @todo: why do we dont return a string IF there is only one item.
 	 * @return String - country name
 	 **/
 	public function ExpectedCountryName() {return $this->getExpectedCountryName();}
 	public function getExpectedCountryName() {
-		$array = EcommerceCountry::list_of_allowed_entries_for_dropdown();
-		//only show if there is more than one option.
-		if(is_array($array) && count($array) > 1) {
-			return EcommerceCountry::find_title(EcommerceCountry::get_country());
-		}
+		return EcommerceCountry::find_title(EcommerceCountry::get_country());
 	}
 
 	/**
 	 * return the title of the fixed country (if any)
-	 * @return String
+	 * @return String | empty string
 	 **/
 	public function FixedCountry() {return $this->getFixedCountry();}
 	public function getFixedCountry() {
@@ -1959,83 +1955,17 @@ class Order extends DataObject {
    * 9. TEMPLATE RELATED STUFF
 *******************************************************/
 
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * The Side bar cart ID is used for populating a small cart on the side bar.
-	 * @return String
-	 **/
-	function SideBarCartID() {return EcommerceConfig::get("Order", "template_id_prefix").'Side_Bar_Cart';}
-	/**
-	 * class that is used in templates and in the JSON return @see CartResponse
-	 * The Menu Cart class is used for populating a tiny cart on your site
-	 * (e.g. you have 3 items in your cart ($1343))
-	 * @return String
-	 **/
-	function MenuCartClass() {return EcommerceConfig::get("Order", "template_id_prefix").'Menu_Cart_Class';}
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function TableMessageID() {return EcommerceConfig::get("Order", "template_id_prefix").'Table_Order_Message';}
 
 	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * @return String
+	 * returns the instance of EcommerceConfigAjax for use in templates.
+	 * In templates, it is used like this:
+	 * $EcommerceConfigAjax.TableID
+	 *
+	 * @return EcommerceConfigAjax
 	 **/
-	function TableSubTotalID() {return EcommerceConfig::get("Order", "template_id_prefix").'Table_Order_SubTotal';}
-
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function TableTotalID() {return EcommerceConfig::get("Order", "template_id_prefix").'Table_Order_Total';}
-
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function CartSubTotalID() {return EcommerceConfig::get("Order", "template_id_prefix").'Cart_Order_SubTotal';}
-
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function CartTotalID() {return EcommerceConfig::get("Order", "template_id_prefix").'Cart_Order_Total';}
-
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function TotalItemsClass() {return EcommerceConfig::get("Order", "template_id_prefix").'number_of_items_in_cart';}
-
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function OrderForm_OrderForm_AmountID() {return EcommerceConfig::get("Order", "template_id_prefix").'OrderForm_OrderForm_Amount';}
-
-	/**
-	 * class that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function TotalItemsClassName() {return EcommerceConfig::get("Order", "template_id_prefix").'number_of_items';}
-	/**
-	 * class that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function ExpectedCountryClassName() {return EcommerceConfig::get("Order", "template_id_prefix").'expected_country_selector';}
-
-	/**
-	 * class that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function CountryFieldID() {return OrderAddress::get_country_field_ID();}
-
-	/**
-	 * class that is used in templates and in the JSON return @see CartResponse
-	 * @return String
-	 **/
-	function RegionFieldID() {return OrderAddress::get_region_field_ID();}
+	public function AJAXDefinitions() {
+		return EcommerceConfigAjax::get_one($this);
+	}
 
 	/**
 	 *
@@ -2044,13 +1974,31 @@ class Order extends DataObject {
 	function updateForAjax(array &$js) {
 		$subTotal = $this->SubTotalAsCurrencyObject()->Nice();
 		$total = $this->TotalAsCurrencyObject()->Nice();
-		$js[] = array('id' => $this->TableSubTotalID(), 'parameter' => 'innerHTML', 'value' => $subTotal);
-		$js[] = array('id' => $this->TableTotalID(), 'parameter' => 'innerHTML', 'value' => $total);
-		$js[] = array('id' => $this->OrderForm_OrderForm_AmountID(), 'parameter' => 'innerHTML', 'value' => $total);
-		$js[] = array('id' => $this->CartSubTotalID(), 'parameter' => 'innerHTML', 'value' => $subTotal);
-		$js[] = array('id' => $this->CartTotalID(), 'parameter' => 'innerHTML', 'value' => $total);
-		$js[] = array('className' => $this->TotalItemsClassName(), 'parameter' => 'innerHTML', 'value' => $this->TotalItems());
-		$js[] = array('className' => $this->ExpectedCountryClassName(), 'parameter' => 'innerHTML', 'value' => $this->ExpectedCountryName());
+		$ajaxObject = $this->AJAXDefinitions();
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->TableSubTotalID(),
+			'parameter' => 'innerHTML',
+			'value' => $subTotal
+		);
+		$js[] = array(
+			'type' => 'id',
+			'selector' => $ajaxObject->TableTotalID(),
+			'parameter' => 'innerHTML',
+			'value' => $total
+		);
+		$js[] = array(
+			'type' => 'class',
+			'selector' => $ajaxObject->TotalItemsClassName(),
+			'parameter' => 'innerHTML',
+			'value' => $this->TotalItems()
+		);
+		$js[] = array(
+			'type' => 'class',
+			'selector' => $ajaxObject->ExpectedCountryClassName(),
+			'parameter' => 'innerHTML',
+			'value' => $this->ExpectedCountryName()
+		);
 	}
 
 
