@@ -24,7 +24,8 @@ class OrderAttribute extends DataObject {
 				'TableTitle',
 				'TableSubTitle',
 				'CartTitle',
-				"Order"
+				'CartSubTitle',
+				'Order'
 			)
 	 );
 
@@ -41,7 +42,8 @@ class OrderAttribute extends DataObject {
 	public static $casting = array(
 		'TableTitle' => 'HTMLText',
 		'TableSubTitle' => 'HTMLText',
-		'CartTitle' => 'HTMLText' //shorter version of table table
+		'CartTitle' => 'HTMLText',
+		'CartSubTitle' => 'HTMLText'
 	);
 
 	public static $create_table_options = array(
@@ -56,6 +58,12 @@ class OrderAttribute extends DataObject {
 	public static $indexes = array(
 		"Sort" => true,
 	);
+
+	public static $singular_name = "Order Entry";
+		function i18n_singular_name() { return _t("OrderAttribute.ORDERENTRY", "Order Entry");}
+
+	public static $plural_name = "Order Extra Descriptions";
+		function i18n_plural_name() { return _t("OrderAttribute.ORDERENTRIES", "Order Entries");}
 
 	/**
 	 * save edit status for speed's sake
@@ -165,53 +173,16 @@ class OrderAttribute extends DataObject {
 	}
 
 	/**
-	 *@return String for use in the Templates
+	 * returns the instance of EcommerceConfigAjax for use in templates.
+	 * In templates, it is used like this:
+	 * $EcommerceConfigAjax.TableID
+	 *
+	 * @return EcommerceConfigAjax
 	 **/
-	function MainID() {
-		return get_class($this) . '_' .'DB_' . $this->ID;
+	public function AJAXDefinitions() {
+		return EcommerceConfigAjax::get_one($this);
 	}
 
-	/**
-	 *@return String for use in the Templates
-	 **/
-	function TableID() {
-		return EcommerceConfig::get("Order", "template_id_prefix") . $this->MainID();
-	}
-
-	/**
-	 *@return String for use in the Templates
-	 **/
-	function CartID() {
-		return $this->TableID()."_Cart";
-	}
-
-	/**
-	 *@return String for use in the Templates
-	 **/
-	function TableTitleID() {
-		return $this->TableID() . '_Title';
-	}
-
-	/**
-	 *@return String for use in the Templates
-	 **/
-	function CartTitleID() {
-		return $this->TableTitleID()."_Cart";
-	}
-
-	/**
-	 *@return String for use in the Templates
-	 **/
-	function TableTotalID() {
-		return $this->TableID() . '_Total';
-	}
-
-	/**
-	 *@return String for use in the Templates
-	 **/
-	function CartTotalID() {
-		return $this->TableTotalID()."_Cart";
-	}
 	/**
 	 *Should this item be shown on check out page table?
 	 *@return Boolean
@@ -236,18 +207,37 @@ class OrderAttribute extends DataObject {
 	 */
 	function TableTitle(){return $this->getTableTitle();}
 	function getTableTitle() {
-		return 'Attribute';
+		return $this->i18n_singular_name();
 	}
 
 	/**
 	 * Return a name of what this attribute is
 	 * called e.g. "Product 21" or "Discount"
-	 *
+	 * Cart is a short version of table
 	 * @return string
 	 */
 	public function CartTitle() {return $this->getCartTitle();}
 	function getCartTitle() {
 		return $this->TableTitle();
+	}
+
+	/**
+	 * the sub title for the order item or order modifier
+	 * @return String
+	  **/
+	function TableSubTitle() {return $this->getTableSubTitle();}
+	function getTableSubTitle() {
+		return "";
+	}
+
+	/**
+	 * the sub title for the order item or order modifier.
+	 * Cart is a short version of table
+	 * @return String
+	  **/
+	function CartSubTitle() {return $this->getCartSubTitle();}
+	function getCartSubTitle() {
+		return $this->TableSubTitle();
 	}
 
 	function onBeforeWrite() {
@@ -257,13 +247,6 @@ class OrderAttribute extends DataObject {
 				$this->GroupSort = $group->Sort;
 			}
 		}
-	}
-	function onAfterWrite() {
-		parent::onAfterWrite();
-	}
-
-	function onAfterDelete() {
-		parent::onAfterDelete();
 	}
 
 }
