@@ -7,13 +7,9 @@ The payment code is now [hosted on github](https://github.com/silverstripe-labs/
 
 ## Available payment types
 
- * Cheque - included with Payment module.
- * [Paypal (Express Checkout)](http://code.google.com/p/silverstripe-ecommerce/downloads/detail?name=payment_paypal_1.1.zip)
- * [PaymentExpress(DPS) - pxpay](https://silverstripe-ecommerce.googlecode.com/svn/modules/payment_dps/trunk)
- * [ePay.dk](https://silverstripe-ecommerce.googlecode.com/svn/modules/payment_epaydk/trunk)
- * [SecurePayTek](https://silverstripe-ecommerce.googlecode.com/svn/modules/payment_NZ_gateways/trunk)
- * [Paystation](https://silverstripe-ecommerce.googlecode.com/svn/modules/payment_NZ_gateways/trunk)
- 
+See code source for more information - new payment gateways are added all the time.
+[Types of payment](https://github.com/downloads/burnbright/silverstripe-payment/PaymentsSequenceDiagram.pdf)
+
 ## Creating your own payment type
 
 Create a new class that extends Payment.
@@ -24,4 +20,3 @@ If necessary, add a controller to handle incoming gateway redirects/callbacks.
 
 Here's a template:
 http://code.google.com/p/silverstripe-ecommerce/downloads/detail?name=MyPayment.php
- 
