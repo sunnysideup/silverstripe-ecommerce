@@ -67,6 +67,32 @@ class EcommerceRegion extends DataObject {
 
 	/**
 	 * standard SS variable
+	 * @var Array
+	 */
+	public static $searchable_fields = array(
+		"Name" => "PartialMatchFilter",
+		"Code" => "PartialMatchFilter"
+	);
+
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
+	public static $field_labels = array(
+		"Name" => "Region"
+	);
+
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
+	public static $summary_fields = array(
+		"Name" => "Name",
+		"Country.Title"
+	);
+
+	/**
+	 * standard SS variable
 	 * @var String
 	 */
 	public static $plural_name = "Regions";
@@ -86,7 +112,7 @@ class EcommerceRegion extends DataObject {
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->replaceField("CountryID", new DropdownField("CountryID", EcommerceCountry::$singular_name, "EcommerceCountry"));
+		//$fields->replaceField("CountryID", new DropdownField("CountryID", EcommerceCountry::$singular_name, "EcommerceCountry"));
 		return $fields;
 	}
 
