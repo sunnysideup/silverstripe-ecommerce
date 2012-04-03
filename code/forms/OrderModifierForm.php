@@ -42,6 +42,7 @@ class OrderModifierForm extends Form {
 		}
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
 		Requirements::themedCSS($this->ClassName);
+		$this->addExtraClass(lcfirst(ucwords($name)));
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
 		//add JS for the modifier - added in modifier
 	}
@@ -60,7 +61,8 @@ class OrderModifierForm extends Form {
 
 
 /**
- * This controller allows you to submit modifier forms from anywhere on the site, especially the cart / checkout page.
+ * This controller allows you to submit modifier forms from anywhere on the site,
+ * Most likely this will be from the the cart / checkout page.
  */
 class OrderModifierForm_Controller extends Controller{
 
