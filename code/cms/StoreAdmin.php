@@ -38,8 +38,8 @@ class StoreAdmin extends ModelAdmin{
 	public static $record_controller_class = 'StoreAdmin_RecordController';
 
 	function __construct() {
-		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("StoreAdmin", "managed_models"));
 		parent::__construct();
+		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("StoreAdmin", "managed_models"));
 	}
 
 	function init() {
