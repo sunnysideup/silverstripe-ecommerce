@@ -1,20 +1,18 @@
-<tr id="$TableID" class="$Classes hideOnZeroItems orderItemHolder">
-	<td<% if Link %><% else %> id="$TableTitleID"<% end_if %> class="product title" scope="row">
-		<% if Buyable %><% control Buyable %>
-			<% include ProductGroupItemImage %>
-		<% end_control %><% end_if %>
+<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
+	<td class="product title" scope="row">
+		<% if Buyable %><% control Buyable %><% include ProductGroupItemImage %><% end_control %><% end_if %>
 		<% if Link %>
-			<a id="$TableTitleID" href="$Link" title="<% sprintf(_t("Order.READMORE","Click here to read more on &quot;%s&quot;"),$TableTitle) %>">$TableTitle</a>
+			<a id="$AJAXDefinitions.TableTitleID" href="$Link" title="<% sprintf(_t("Order.READMORE","Click here to read more on &quot;%s&quot;"),$TableTitle) %>">$TableTitle</a>
 		<% else %>
-			$TableTitle
+			<span id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 		<% end_if %>
-		<% if TableSubTitle %><div class="tableSubTitle">$TableSubTitle</div ><% end_if %>
+		<div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div >
 	</td>
 	<td class="center quantity">
 		$QuantityField
 	</td>
 	<td class="right unitprice">$UnitPrice.Nice</td>
-	<td class="right total" id="$TableTotalID">$Total.Nice</td>
+	<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
 	<td class="right remove">
 		<strong>
 			<a class="ajaxQuantityLink" href="$removeallLink" title="<% sprintf(_t("Order.REMOVEALL","Remove all of &quot;%s&quot; from your cart"),$TableTitle) %>">
