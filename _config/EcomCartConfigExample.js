@@ -1,0 +1,17 @@
+EcomCart.set_shoppingCartURLSegment("");
+EcomCart.set_ajaxCountryFieldSelector("");
+EcomCart.set_ajaxRegionFieldSelector("");
+EcomCart.set_selectorMainCountryField("");
+EcomCart.set_classToShowLoading("");
+EcomCart.set_showClass("");
+EcomCart.set_hideClass("");
+EcomCart.set_selectorShowOnZeroItems("");
+EcomCart.set_selectorItemRows("");
+EcomCart.set_removeCartSelector("");
+EcomCart.set_ajaxButtonsOn("");
+EcomCart.set_confirmDeleteText("");
+EcomCart.set_ajaxLinksAreaSelector("");
+EcomCart.set_addLinkSelector("");
+EcomCart.set_removeLinkSelector("");
+EcomCart.set_orderItemHolderSelector("");
+EcomCart.set_ajaxLinksAreaSelector("");
