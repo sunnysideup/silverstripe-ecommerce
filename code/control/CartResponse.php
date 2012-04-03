@@ -27,6 +27,7 @@ class CartResponse extends EcommerceResponse {
 		//init Order - IMPORTANT
 		$currentOrder = ShoppingCart::current_order();
 		$currentOrder->calculateOrderAttributes(true);
+		$ajaxObject = $currentOrder->AJAXDefinitions();
 
 		// populate Javascript
 		$js = array ();
@@ -37,22 +38,23 @@ class CartResponse extends EcommerceResponse {
 			foreach ($items as $item) {
 				$item->updateForAjax($js);
 				//products in cart
-				$inCartArray[] = $item->Buyable()->UniqueIdentifier();
+				$inCartArray[] = $item->Buyable()->AJAXDefinitions()->UniqueIdentifier();
 			}
 		}
 
 		//in cart items
 		$js[] = array(
-			"replaceClass" => $inCartArray,
+			"type" => "replaceclass",
+			"selector" => $inCartArray,
 			"parameter" => ".productActions.inCart",
 			"value" => "inCart",
 			"without" => "notInCart"
 		);
 		//in cart items
-		if(isset($_REQUEST["loadingElement"])) {
+		if(isset($_REQUEST["loadingindex"])) {
 			$js[] = array(
-				"parameter" => "loadingElement",
-				"value" => isset($_REQUEST["loadingElement"])
+				"type" => "loadingindex",
+				"value" => $_REQUEST["loadingindex"]
 			);
 		}
 		//order modifiers
@@ -68,24 +70,28 @@ class CartResponse extends EcommerceResponse {
 		//messages
 		if(is_array($messages)) {
 			$messagesImploded = '';
+			$messageclasses = "";
 			foreach($messages as $messageArray) {
 				$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
 			}
 			$js[] = array(
-				"id" => $currentOrder->TableMessageID(),
+				"type" => "id",
+				"selector" => $ajaxObject->TableMessageID(),
 				"parameter" => "innerHTML",
 				"value" => $messagesImploded,
 				"isOrderMessage" => true
 			);
 			$js[] = array(
-				"id" =>  $currentOrder->TableMessageID(),
+				"type" =>  "id",
+				"selector" =>  $ajaxObject->TableMessageID(),
 				"parameter" => "hide",
 				"value" => 0
 			);
 		}
 		else {
 			$js[] = array(
-				"id" => $currentOrder->TableMessageID(),
+				"type" => "id",
+				"selector" => $ajaxObject->TableMessageID(),
 				"parameter" => "hide",
 				"value" => 1
 			);
@@ -93,14 +99,16 @@ class CartResponse extends EcommerceResponse {
 
 		//tiny cart
 		$js[] = array(
-			"class" => $currentOrder->MenuCartClass(),
+			"type" => "class",
+			"selector" => $ajaxObject->TinyCartClassName(),
 			"parameter" => "innerHTML",
 			"value" => $currentOrder->renderWith("CartTinyInner")
 		);
 
 		//add basic cart
 		$js[] = array(
-			"id" => $currentOrder->SideBarCartID(),
+			"type" => "id",
+			"selector" => $ajaxObject->SmallCartID(),
 			"parameter" => "innerHTML",
 			"value" => $currentOrder->renderWith("CartShortInner")
 		);
@@ -109,7 +117,9 @@ class CartResponse extends EcommerceResponse {
 		if(is_array($data)) {
 			$js = array_merge($js, $data);
 		}
+		//TODO: remove doubles!
 		return str_replace("{", "\r\n{", Convert::array2json($js));
 	}
+
 
 }
