@@ -65,6 +65,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 			if($this->configs) {
 				if($this->defaults) {
 					$this->checkFiles();
+					$this->classesThatDoNotExist();
 					$this->definitionsNotSet();
 					$this->configsNotSet();
 					$this->addSiteConfigToConfigs();
@@ -114,6 +115,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 				 ", "created");
 			}
 		}
+		echo "Current Files used: ".$files;
 	}
 
 	/**
@@ -135,6 +137,24 @@ class EcommerceCheckConfiguration extends BuildTask{
 						DB::alteration_message("$className.$key", "Edited");
 					}
 				}
+			}
+		}
+		if($allOK) {
+			DB::alteration_message("Perfect match, nothing to report", "created");
+		}
+	}
+
+
+	/**
+	 * Work out items set in the configuration but not set in the config file.
+	 */
+	protected function classesThatDoNotExist(){
+		DB::alteration_message("<h2>Classes that do not exist</h2>");
+		$allOK = true;
+		foreach($this->configs as $className => $setting) {
+			if(!class_exists($className)) {
+				$allOK = false;
+				DB::alteration_message("$className", "Edited");
 			}
 		}
 		if($allOK) {
