@@ -8,9 +8,12 @@
 		</tr>
 	</thead>
 	<tfoot>
-		<tr class="gap summary total" id="Total">
-			<th colspan="3" scope="row" class="threeColHeader total"><strong><% _t("Order.TOTAL","Total") %></strong></th>
-			<td class="right"><strong>$Total.Nice</strong></td>
+		<tr class="gap total summary hideOnZeroItems">
+			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
+			<td class="right total" id="$AJAXDefinitions.TableTotalID"><span class="value">$Total.Nice</span> <span class="currency">$Currency</span></td>
+		</tr>
+		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
+			<td colspan="4" scope="row" class="center"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></td>
 		</tr>
 	</tfoot>
 	<tbody>
