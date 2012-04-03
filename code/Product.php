@@ -193,6 +193,12 @@ class Product extends Page {
 		return $allowpurchase;
 	}
 
+	/**
+	 * Returns a link to a default image.
+	 * If a default image is set in the site config then this is returned
+	 * Otherwise, a standard link is returned
+	 * @return String
+	 */
 	function DefaultImageLink() {
 		$sc = SiteConfig::current_site_config();
 		if($sc) {
@@ -245,6 +251,19 @@ class Product extends Page {
 	 */
 	function AddVariationsLink() {
 		return $this->Link("selectvariation");
+	}
+
+	/**
+	 * tells us if the current page is part of e-commerce.
+	 * @return Boolean
+	 */
+	function IsEcommercePage () {
+		return true;
+	}
+
+
+	function DummyImage(){
+		return new Product_Image();
 	}
 
 }
@@ -332,23 +351,44 @@ class Product_Controller extends Page_Controller {
 		}
 	}
 
-
-	/**
-	 * tells us if the current page is part of e-commerce.
-	 * @return Boolean
-	 */
-	function IsEcommercePage () {
-		return true;
-	}
-
-
-
 }
 
 
 
 class Product_Image extends Image {
 
+	/**
+	 *
+	 * @return Int
+	 */
+	public function ThumbWidth() {
+		return EcommerceConfig::get("Product_Image", "thumbnail_width");
+	}
+
+	/**
+	 *
+	 * @return Int
+	 */
+	public function ThumbHeight() {
+		return EcommerceConfig::get("Product_Image", "thumbnail_height");
+	}
+
+
+	/**
+	 *
+	 * @return Int
+	 */
+	public function ContentWidth() {
+		return EcommerceConfig::get("Product_Image", "content_image_width");
+	}
+
+	/**
+	 *
+	 * @return Int
+	 */
+	public function LargeWidth() {
+		return EcommerceConfig::get("Product_Image", "large_image_width");
+	}
 
 
 	/**
@@ -357,7 +397,7 @@ class Product_Image extends Image {
 	 **/
 	function generateThumbnail($gd) {
 		$gd->setQuality(80);
-		return $gd->paddedResize(EcommerceConfig::get("Product_Image", "thumbnail_width"), EcommerceConfig::get("Product_Image", "thumbnail_height"));
+		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
 	}
 
 	/**
@@ -366,7 +406,7 @@ class Product_Image extends Image {
 	 **/
 	function generateContentImage($gd) {
 		$gd->setQuality(90);
-		return $gd->resizeByWidth(EcommerceConfig::get("Product_Image", "content_image_width"));
+		return $gd->resizeByWidth($this->ContentWidth());
 	}
 
 	/**
@@ -375,10 +415,8 @@ class Product_Image extends Image {
 	 **/
 	function generateLargeImage($gd) {
 		$gd->setQuality(90);
-		return $gd->resizeByWidth(EcommerceConfig::get("Product_Image", "large_image_width"));
+		return $gd->resizeByWidth($this->LargeWidth());
 	}
-
-
 
 }
 
