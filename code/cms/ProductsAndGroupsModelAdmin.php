@@ -45,8 +45,8 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin {
 	 * This standard method allows us to set some configurations.
 	 */
 	function __construct() {
-		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("ProductsAndGroupsModelAdmin", "managed_models"));
 		parent::__construct();
+		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("ProductsAndGroupsModelAdmin", "managed_models"));
 	}
 
 	function init() {
