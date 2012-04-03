@@ -7,7 +7,7 @@
 		<tfoot>
 			<tr class="gap summary hideOnZeroItems">
 				<td colspan="2" scope="row"><% _t("Cart.SUBTOTAL","Sub-total") %></td>
-				<td class="right" id="$TableSubTotalID">$SubTotal.Nice</td>
+				<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotal.Nice</td>
 			</tr>
 			<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
 				<td colspan="3" scope="row" class="center"><% _t("Cart.NOITEMS","There are no items in your cart") %></td>
@@ -16,19 +16,19 @@
 		<tbody>
 	<% control Items %>
 		<% if ShowInTable %>
-			<tr id="$TableID" class="$Classes hideOnZeroItems orderItemHolder">
+			<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
 				<td class="product title" scope="row">
 					<% if Link %>
-						<a id="$TableTitleID" href="$Link">$TableTitle</a>
+						<a id="AJAXDefinitions.$CartTitleID" href="$Link">$CartTitle</a>
 					<% else %>
-						<span id="$TableTitleID">$TableTitle</span>
+						<span id="$AJAXDefinitions.CartTitleID">$CartTitle</span>
 					<% end_if %>
-					<% if TableSubTitle %><div class="tableSubTitle">$TableSubTitle</div ><% end_if %>
+					<div class="tableSubTitle" id="$AJAXDefinitions.CartSubTitleID">$CartSubTitle</div>
 				</td>
 				<td class="center quantity">
 					$QuantityField
 				</td>
-				<td class="right total" id="$TableTotalID">$Total.Nice</td>
+				<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
 			</tr>
 		<% end_if %>
 	<% end_control %>
