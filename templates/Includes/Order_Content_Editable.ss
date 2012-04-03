@@ -11,6 +11,13 @@
 		</tr>
 	</thead>
 	<tfoot>
+<% if Items %>
+		<tr class="gap total summary hideOnZeroItems">
+			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
+			<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
+			<td>&nbsp;</td>
+		</tr>
+<% end_if %>
 <% if CustomerViewableOrderStatusLogs %>
 	<% control CustomerViewableOrderStatusLogs %>
 		<tr>
@@ -20,39 +27,39 @@
 	<% end_control %>
 <% end_if %>
 		<tr class="cartMessage">
-			<td colspan="5" scope="row" class="center $CartStatusClass" id="$TableMessageID">$CartStatusMessage</td>
+			<td colspan="5" scope="row" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
 		</tr>
 		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
 			<td colspan="5" scope="row" class="center"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></td>
 		</tr>
 	</tfoot>
 	<tbody>
-		<% if Items %>
-			<% control Items %>
-				<% if ShowInTable %>
-					<% include Order_Content_Editable_OrderItemRow %>
-				<% end_if %>
-			<% end_control %>
+<% if Items %>
+	<% control Items %>
+		<% if ShowInTable %>
+			<% include Order_Content_Editable_OrderItemRow %>
+		<% end_if %>
+	<% end_control %>
 
 		<tr class="gap summary hideOnZeroItems">
 			<th colspan="3" scope="row"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right" id="$TableSubTotalID">$SubTotal.Nice</td>
+			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotal.Nice</td>
 			<td>&nbsp;</td>
 		</tr>
 
-			<% if Modifiers %>
-			<% control Modifiers %>
-				<% if ShowInTable %>
-		<tr id="$TableID" class="$Classes hideOnZeroItems<% if HideInAjaxUpdate %> hideForNow<% end_if %>">
-			<td colspan="3" scope="row" id="$TableTitleID" >
+	<% if Modifiers %>
+		<% control Modifiers %>
+			<% if ShowInTable %>
+		<tr  class="$Classes hideOnZeroItems<% if HideInAjaxUpdate %> hideForNow<% end_if %>"  id="$AJAXDefinitions.TableID">
+			<td colspan="3" scope="row">
 				<% if Link %>
-					<a href="$Link" class="tableTitle">$TableTitle</a>
+					<a class="tableTitle" id="$AJAXDefinitions.TableTitleID" href="$Link" >$TableTitle</a>
 				<% else %>
-					<span class="tableTitle">$TableTitle</span>
+					<span class="tableTitle" id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 				<% end_if %>
-				<% if TableSubTitle %><div class="tableSubTitle">$TableSubTitle</div ><% end_if %>
+				<div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div >
 			</td>
-			<td class="right total" id="$TableTotalID">$TableValue.Nice</td>
+			<td class="right total" id="$AJAXDefinitions.TableTotalID">$TableValue.Nice</td>
 			<td class="right remove">
 				<% if CanBeRemoved %>
 					<strong>
@@ -63,15 +70,10 @@
 				<% end_if %>
 			</td>
 		</tr>
-				<% end_if %>
-			<% end_control %>
 			<% end_if %>
-		<tr class="gap total summary hideOnZeroItems">
-			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
-			<td class="right total" id="$TableTotalID"><span class="value">$Total.Nice</span> <span class="currency">$Currency</span></td>
-			<td>&nbsp;</td>
-		</tr>
-		<% end_if %>
+		<% end_control %>
+	<% end_if %>
+<% end_if %>
 	</tbody>
 </table>
 
