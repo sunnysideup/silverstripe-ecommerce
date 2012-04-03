@@ -4,14 +4,14 @@
 		<tbody>
 	<% control Items %>
 		<% if ShowInTable %>
-			<tr id="$TableID" class="$Classes hideOnZeroItems orderItemHolder">
+			<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
 				<td class="product title" scope="row">
 					<% if Link %>
-						<a id="$TableTitleID" href="$Link">$TableTitle</a>
+					<a id="$$AJAXDefinitions.TableTitleID" href="$Link">$TableTitle</a>
 					<% else %>
-						<span id="$TableTitleID">$TableTitle</span>
+					<span id="$$AJAXDefinitions.TableTitleID">$TableTitle</span>
 					<% end_if %>
-					<% if TableSubTitle %><div class="tableSubTitle">$TableSubTitle</div ><% end_if %>
+					<div id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div >
 				</td>
 			</tr>
 		<% end_if %>
