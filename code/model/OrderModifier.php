@@ -43,17 +43,18 @@ class OrderModifier extends OrderAttribute {
 				'TableTitle',
 				'TableSubTitle',
 				'CartTitle',
+				'CartSubTitle',
 				'Name',
 				'TableValue',
 				'HasBeenRemoved',
-				"Order"
+				'Order'
 			)
 	 );
 
 // ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
 
 	public static $db = array(
-		'Name' => 'Varchar(255)', // we use this to create the TableTitle, CartTitle and TableSubTitle
+		'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
 		'TableValue' => 'Currency', //the $$ shown in the checkout table
 		'HasBeenRemoved' => 'Boolean' // we add this so that we can see what modifiers have been removed
 	);
@@ -79,10 +80,6 @@ class OrderModifier extends OrderAttribute {
 		"Order.ID" => "Order ID",
 		"TableTitle" => "Table Title",
 		"TableValue" => "Value Shown"
-	);
-
-	public static $casting = array(
-		'CartValue' => 'Currency', // the $$ shown in the cart (smaller version of the checkout table)
 	);
 
 	public static $singular_name = "Order Extra";
@@ -188,7 +185,6 @@ class OrderModifier extends OrderAttribute {
 			$this->checkField("Name");
 			$this->checkField("CalculatedTotal");
 			$this->checkField("TableValue");
-			$this->checkField("CartValue");
 			if($this->mustUpdate && $this->canBeUpdated()) {
 				$this->write();
 			}
@@ -289,6 +285,15 @@ class OrderModifier extends OrderAttribute {
 // ######################################## *** 7. template functions (e.g. ShowInTable, TableTitle, etc...)
 
 	/**
+	 * Casted variable, returns the table title.
+	 * @return String
+	 */
+	public function TableTitle() { return $this->getTableTitle(); }
+	public function getTableTitle(){
+		return $this->Name;
+	}
+
+	/**
 	 * returns a heading if there is one.
 	 * @return String
 	 **/
@@ -375,17 +380,6 @@ class OrderModifier extends OrderAttribute {
 		return $this->doNotAddAutomatically;
 	}
 
-
-
-	/**
-	 * Sometimes we need a difference between Cart and Checkout Value - the cart value can be differentiated here.
-	 *
-	 * @return Currency Object
-	 **/
-	public function CartValue() {return $this->getCartValue();}
-	public function getCartValue(){
-		return $this->TableValue;
-	}
 	/**
 	 * Actual calculation used
 	 *
@@ -396,40 +390,17 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
-	 * This describes what the name of the  modifier should be, in relation to
-	 * the order table on the check out page - which the templates uses directly.
-	 * For example, this could be something  like "Shipping to NZ", where NZ is a
-	 * dynamic variable on where the user currently is, using {@link Geoip}.
-	 *
-	 * @return string
-	 */
-	public function TableTitle() {return $this->getTableTitle();}
-	public function getTableTitle() {
-		return $this->Name;
-	}
-
-	/**
-	 * Sometimes we need a difference between Cart and Checkout Title - the cart Title can be differentiated here.
-	 *
-	 * @return String
-	 **/
-
-	public function CartTitle() {return $this->getCartTitle();}
-	public function getCartTitle() {
-		return $this->TableTitle();
-	}
-
-	/**
 	 * This link is for modifiers that have been removed and are being put "back".
 	 * @return String
-	  **/
+	 **/
 	public function AddLink() {
 		return ShoppingCart_Controller::add_modifier_link($this->ID,$this->ClassName);
 	}
+
 	/**
-	 *
+	 * Link that can be used to remove the modifier
 	 * @return String
-	  **/
+	 **/
 	public function RemoveLink() {
 		return ShoppingCart_Controller::remove_modifier_link($this->ID,$this->ClassName);
 	}
@@ -449,9 +420,6 @@ class OrderModifier extends OrderAttribute {
 		return $this->LiveCalculatedTotal();
 	}
 
-	protected function LiveCartValue() {
-		return $this->LiveCalculatedTotal();
-	}
 	/**
 	 * This function is always called to determine the
 	 * amount this modifier needs to charge or deduct - if any.
@@ -527,20 +495,54 @@ class OrderModifier extends OrderAttribute {
 	 * @return Array for AJAX JSON
 	 **/
 	function updateForAjax(array &$js) {
-		$tableTitle = $this->TableTitle();
-		$cartTitle = $this->CartTitle();
-		//TableValue is a database value, but CartValue is not... Important difference.
+		$ajaxObject = $this->AJAXDefinitions();
+		//TableValue is a database value
 		$tableValue = DBField::create('Currency',$this->TableValue)->Nice();
-		$cartValue = DBField::create('Currency',$this->CartValue())->Nice();
 		if($this->HideInAjaxUpdate()) {
-			$js[] = array('id' => $this->TableID(), 'parameter' => 'hide', 'value' => 1);
+			$js[] = array(
+				'type' => 'id',
+				'selector' => $ajaxObject->TableID(),
+				'parameter' => 'hide',
+				'value' => 1
+			);
 		}
 		else {
-			$js[] = array('id' => $this->TableTitleID(), 'parameter' => 'innerHTML', 'value' => $tableTitle);
-			$js[] = array('id' => $this->CartTitleID(), 'parameter' => 'innerHTML', 'value' => $cartTitle);
-			$js[] = array('id' => $this->TableTotalID(), 'parameter' => 'innerHTML', 'value' => $tableValue);
-			$js[] = array('id' => $this->CartTotalID(), 'parameter' => 'innerHTML', 'value' => $cartValue);
-			$js[] = array('id' => $this->TableID(), 'parameter' => 'hide', 'value' => 0);
+			$js[] = array(
+				'type' => 'id',
+				'selector' => $ajaxObject->TableID(),
+				'parameter' => 'hide',
+				'value' => 0
+			);
+			$js[] = array(
+				'type' => 'id',
+				'selector' => $ajaxObject->TableTitleID(),
+				'parameter' => 'innerHTML',
+				'value' => $this->TableTitle()
+			);
+			$js[] = array(
+				'type' => 'id',
+				'selector' => $ajaxObject->CartTitleID(),
+				'parameter' => 'innerHTML',
+				'value' => $this->CartTitle()
+			);
+			$js[] = array(
+				'type' => 'id',
+				'selector' => $ajaxObject->TableSubTitleID(),
+				'parameter' => 'innerHTML',
+				'value' => $this->TableSubTitle()
+			);
+			$js[] = array(
+				'type' => 'id',
+				'selector' => $ajaxObject->CartSubTitleID(),
+				'parameter' => 'innerHTML',
+				'value' => $this->CartSubTitle()
+			);
+			$js[] = array(
+				'type' => 'id',
+				'selector' => $ajaxObject->TableTotalID(),
+				'parameter' => 'innerHTML',
+				'value' => $tableValue
+			);
 		}
 	}
 
@@ -559,9 +561,10 @@ class OrderModifier extends OrderAttribute {
 				<b>Order ID : </b>".$this->OrderID."<br/>
 				<b>Calculation Value : </b>".$this->CalculatedTotal."<br/>
 				<b>Table Title: </b>".$this->TableTitle()."<br/>
+				<b>Table Sub Title: </b>".$this->TableSubTitle()."<br/>
+				<b>Cart Title: </b>".$this->CartTitle()."<br/>
+				<b>Cart Sub Title: </b>".$this->CartSubTitle()."<br/>
 				<b>Table Value: </b>".$this->TableValue."<br/>
-				<b>Cart Value: </b>".$this->CartTitle()."<br/>
-				<b>Cart Title: </b>".$this->CartValue()."<br/>
 			</p>";
 	}
 
