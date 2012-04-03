@@ -46,11 +46,26 @@ class EcommercePayment extends DataObjectDecorator {
 		);
 	}
 
-	public static function process_payment_form_and_return_next_step($order, $form, $data, $paidBy = null) {
+	/**
+	 * Process payment form and return next step in the payment process.
+	 * Steps taken are:
+	 * 1. create new payment
+	 * 2. save form into payment
+	 * 3. return payment result
+	 *
+	 * @param Order $order - the order that is being paid
+	 * @param Form $form - the form that is being submitted
+	 * @param Array $data - Array of data that is submittted
+	 * @return Boolean - if successful, this method will return TRUE
+	 */
+	public static function process_payment_form_and_return_next_step($order, $form, $data) {
 		if(!$order){
 			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
 			Director::redirectBack();
 			return false;
+		}
+		if(!$paidBy) {
+			$paidBy = $order->Member();
 		}
 		if(!$paidBy) {
 			$paidBy = Member::currentUser();
@@ -78,7 +93,7 @@ class EcommercePayment extends DataObjectDecorator {
 		else {
 			// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)
 			if($result->isProcessing()) {
-				return $result->getValue();
+				//do nothing
 			}
 			else {
 				if(isset($data["returntolink"])) {
@@ -87,8 +102,8 @@ class EcommercePayment extends DataObjectDecorator {
 				else {
 					Director::redirect($order->Link());
 				}
-				return true;
 			}
+			return true;
 		}
 	}
 
@@ -106,25 +121,19 @@ class EcommercePayment extends DataObjectDecorator {
 	}
 
 
+	/**
+	 * standard SS method
+	 * @param FieldSet $fields (passed by reference)
+	 */
 	function updateCMSFields(&$fields){
-		//DOES NOT WORK RIGHT NOW AS supported_methods is PROTECTED
-		//$options = $this->owner::$supported_methods;
-		/*
-		NEEDS A BIT MORE THOUGHT...
-		$classes = ClassInfo::subclassesFor("Payment");
-		unset($classes["Payment"]);
-		if($classes && !$this->owner->ID) {
-			$fields->addFieldToTab("Root.Main", new DropdownField("ClassName", "Type", $classes), "Status");
-		}
-		else {
-			$fields->addFieldToTab("Root.Main", new ReadonlyField("ClassNameConfirmation", "Type", $this->ClassName), "Status");
-		}
-		*/
 		$fields->replaceField("OrderID", new ReadonlyField("OrderID", "Order ID"));
 		return $fields;
-
 	}
 
+
+	/**
+	 * redirect to order action
+	 */
 	function redirectToOrder() {
 		$order = $this->owner->Order();
 		if($order) {
@@ -140,14 +149,22 @@ class EcommercePayment extends DataObjectDecorator {
 		$this->owner->PaidForID = $do->ID;
 		$this->owner->PaidForClass = $do->ClassName;
 	}
+
 	/**
 	 *@return float
 	 **/
 	function getAmountValue() {
 		return $this->owner->Amount->getAmount();
 	}
+
+	/**
+	 * @alias for AmountValue
+	 **/
 	function AmountValue(){return $this->getAmountValue();}
 
+	/**
+	 * improve search fields
+	 **/
 	function scaffoldSearchFields(){
 		$fields = parent::scaffoldSearchFields();
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order ID"));
