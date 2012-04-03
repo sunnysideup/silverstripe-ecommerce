@@ -207,6 +207,7 @@ class OrderItem extends OrderAttribute {
 			'value' => 0
 		);
 		*/
+		//@TODO: is this correct, seems strange to replce the field with a number!
 		$js[] = array(
 			'type' => 'id',
 			'selector' => $ajaxObject->QuantityFieldName(),
