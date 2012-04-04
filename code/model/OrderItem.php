@@ -201,54 +201,54 @@ class OrderItem extends OrderAttribute {
 		$ajaxObject = $this->AJAXDefinitions();
 		/* we dont need to show / hide
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->TableID(),
-			'parameter' => 'hide',
-			'value' => 0
+			't' => 'id',
+			's' => $ajaxObject->TableID(),
+			'p' => 'hide',
+			'v' => 0
 		);
 		*/
 		//@TODO: is this correct, seems strange to replce the field with a number!
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->QuantityFieldName(),
-			'parameter' => 'innerHTML',
-			'value' => $this->Quantity
+			't' => 'id',
+			's' => $ajaxObject->QuantityFieldName(),
+			'p' => 'innerHTML',
+			'v' => $this->Quantity
 		);
 		$js[] = array(
-			'type' => 'name',
-			'selector' => $ajaxObject->QuantityFieldName(),
-			'parameter' => 'value',
-			'value' => $this->Quantity
+			't' => 'name',
+			's' => $ajaxObject->QuantityFieldName(),
+			'p' => 'value',
+			'v' => $this->Quantity
 		);
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->TableTitleID(),
-			'parameter' => 'innerHTML',
-			'value' => $this->TableTitle()
+			't' => 'id',
+			's' => $ajaxObject->TableTitleID(),
+			'p' => 'innerHTML',
+			'v' => $this->TableTitle()
 		);
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->CartTitleID(),
-			'parameter' => 'innerHTML',
-			'value' => $this->CartTitle()
+			't' => 'id',
+			's' => $ajaxObject->CartTitleID(),
+			'p' => 'innerHTML',
+			'v' => $this->CartTitle()
 		);
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->TableSubTitleID(),
-			'parameter' => 'innerHTML',
-			'value' => $this->TableSubTitle()
+			't' => 'id',
+			's' => $ajaxObject->TableSubTitleID(),
+			'p' => 'innerHTML',
+			'v' => $this->TableSubTitle()
 		);
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->CartSubTitleID(),
-			'parameter' => 'innerHTML',
-			'value' => $this->CartSubTitle()
+			't' => 'id',
+			's' => $ajaxObject->CartSubTitleID(),
+			'p' => 'innerHTML',
+			'v' => $this->CartSubTitle()
 		);
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->TableTotalID(),
-			'parameter' => 'innerHTML',
-			'value' => $total
+			't' => 'id',
+			's' => $ajaxObject->TableTotalID(),
+			'p' => 'innerHTML',
+			'v' => $total
 		);
 	}
 
