@@ -147,6 +147,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	public function CheckoutLink() {
 		return CheckoutPage::find_link();
 	}
+
 	/**
 	 *@return String (URLSegment)
 	 **/
