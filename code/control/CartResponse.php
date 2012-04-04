@@ -20,6 +20,7 @@ class CartResponse extends EcommerceResponse {
 	public function ReturnCartData($messages = array(), $data = null, $status = "success") {
 		//add header
 		$this->addHeader('Content-Type', 'application/json');
+		SSViewer::set_source_file_comments(false);
 		if($status != "success") {
 			$this->setStatusCode(400, "not successful: ".$status." --- ".$messages[0]);
 		}
@@ -44,17 +45,17 @@ class CartResponse extends EcommerceResponse {
 
 		//in cart items
 		$js[] = array(
-			"type" => "replaceclass",
-			"selector" => $inCartArray,
-			"parameter" => ".productActions.inCart",
-			"value" => "inCart",
+			"t" => "replaceclass",
+			"s" => $inCartArray,
+			"p" => ".productActions.inCart",
+			"v" => "inCart",
 			"without" => "notInCart"
 		);
 		//in cart items
 		if(isset($_REQUEST["loadingindex"])) {
 			$js[] = array(
-				"type" => "loadingindex",
-				"value" => $_REQUEST["loadingindex"]
+				"t" => "loadingindex",
+				"v" => $_REQUEST["loadingindex"]
 			);
 		}
 		//order modifiers
@@ -75,42 +76,51 @@ class CartResponse extends EcommerceResponse {
 				$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
 			}
 			$js[] = array(
-				"type" => "id",
-				"selector" => $ajaxObject->TableMessageID(),
-				"parameter" => "innerHTML",
-				"value" => $messagesImploded,
+				"t" => "id",
+				"s" => $ajaxObject->TableMessageID(),
+				"p" => "innerHTML",
+				"v" => $messagesImploded,
 				"isOrderMessage" => true
 			);
 			$js[] = array(
-				"type" =>  "id",
-				"selector" =>  $ajaxObject->TableMessageID(),
-				"parameter" => "hide",
-				"value" => 0
+				"t" =>  "id",
+				"s" =>  $ajaxObject->TableMessageID(),
+				"p" => "hide",
+				"v" => 0
 			);
 		}
 		else {
 			$js[] = array(
-				"type" => "id",
-				"selector" => $ajaxObject->TableMessageID(),
-				"parameter" => "hide",
-				"value" => 1
+				"t" => "id",
+				"s" => $ajaxObject->TableMessageID(),
+				"p" => "hide",
+				"v" => 1
 			);
 		}
 
+		//TO DO: set it up in such a way that ir specifically requests one of these
 		//tiny cart
 		$js[] = array(
-			"type" => "class",
-			"selector" => $ajaxObject->TinyCartClassName(),
-			"parameter" => "innerHTML",
-			"value" => $currentOrder->renderWith("CartTinyInner")
+			"t" => "class",
+			"s" => $ajaxObject->TinyCartClassName(),
+			"p" => "innerHTML",
+			"v" => $currentOrder->renderWith("CartTinyInner")
 		);
 
 		//add basic cart
 		$js[] = array(
-			"type" => "id",
-			"selector" => $ajaxObject->SmallCartID(),
-			"parameter" => "innerHTML",
-			"value" => $currentOrder->renderWith("CartShortInner")
+			"t" => "id",
+			"s" => $ajaxObject->SmallCartID(),
+			"p" => "innerHTML",
+			"v" => $currentOrder->renderWith("CartShortInner")
+		);
+
+		//side bar cart
+		$js[] = array(
+			"t" => "id",
+			"s" => $ajaxObject->SideBarCartID(),
+			"p" => "innerHTML",
+			"v" => $currentOrder->renderWith("Sidebar_Cart_Inner")
 		);
 
 		//merge and return
@@ -118,7 +128,16 @@ class CartResponse extends EcommerceResponse {
 			$js = array_merge($js, $data);
 		}
 		//TODO: remove doubles!
-		return str_replace("{", "\r\n{", Convert::array2json($js));
+		$json = Convert::array2json($js);
+		$json = str_replace('\t', " ", $json);
+		$json = str_replace('\r', " ", $json);
+		$json = str_replace('\n', " ", $json);
+		$json = preg_replace('/\s\s+/', ' ', $json);
+		if(Director::isDev()) {
+			$json = str_replace("{", "\r\n{", $json);
+		}
+
+		return $json;
 	}
 
 
