@@ -1976,28 +1976,28 @@ class Order extends DataObject {
 		$total = $this->TotalAsCurrencyObject()->Nice();
 		$ajaxObject = $this->AJAXDefinitions();
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->TableSubTotalID(),
-			'parameter' => 'innerHTML',
-			'value' => $subTotal
+			't' => 'id',
+			's' => $ajaxObject->TableSubTotalID(),
+			'p' => 'innerHTML',
+			'v' => $subTotal
 		);
 		$js[] = array(
-			'type' => 'id',
-			'selector' => $ajaxObject->TableTotalID(),
-			'parameter' => 'innerHTML',
-			'value' => $total
+			't' => 'id',
+			's' => $ajaxObject->TableTotalID(),
+			'p' => 'innerHTML',
+			'v' => $total
 		);
 		$js[] = array(
-			'type' => 'class',
-			'selector' => $ajaxObject->TotalItemsClassName(),
-			'parameter' => 'innerHTML',
-			'value' => $this->TotalItems()
+			't' => 'class',
+			's' => $ajaxObject->TotalItemsClassName(),
+			'p' => 'innerHTML',
+			'v' => $this->TotalItems()
 		);
 		$js[] = array(
-			'type' => 'class',
-			'selector' => $ajaxObject->ExpectedCountryClassName(),
-			'parameter' => 'innerHTML',
-			'value' => $this->ExpectedCountryName()
+			't' => 'class',
+			's' => $ajaxObject->ExpectedCountryClassName(),
+			'p' => 'innerHTML',
+			'v' => $this->ExpectedCountryName()
 		);
 	}
 
