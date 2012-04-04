@@ -55,7 +55,7 @@ EcomProducts = {
 							function (e) {
 								e.preventDefault();
 								url = jQuery(this).attr("href");
-								EcomCart.getChanges(url, null);
+								EcomCart.getChanges(url, null, this);
 								EcomProducts.removeAll();
 								return false;
 							}

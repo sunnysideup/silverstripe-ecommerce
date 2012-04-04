@@ -244,14 +244,14 @@ EcomCart = {
 			"change",
 			function() {
 				var url = jQuery('base').attr('href') + EcomCart.shoppingCartURLSegment + "/setcountry/" + this.value + "/";
-				EcomCart.getChanges(url, null);
+				EcomCart.getChanges(url, null, this);
 			}
 		);
 		jQuery(EcomCart.ajaxRegionFieldSelector).live(
 			"change",
 			function() {
 				var url = jQuery('base').attr('href')  + EcomCart.shoppingCartURLSegment + "/setregion/" + this.value + "/";
-				EcomCart.getChanges(url, null);
+				EcomCart.getChanges(url, null, this);
 			}
 		);
 	},
@@ -288,7 +288,7 @@ EcomCart = {
 				var val = jQuery(EcomCart.selectorChangeCountryFieldHolder + " select").val();
 				jQuery(EcomCart.ajaxCountryFieldSelector).val(val);
 				var url = jQuery('base').attr('href') + EcomCart.shoppingCartURLSegment + "/setcountry/" + val + "/";
-				EcomCart.getChanges(url, null);
+				EcomCart.getChanges(url, null, this);
 				jQuery(EcomCart.selectorChangeCountryLink).click();
 			}
 		);
@@ -326,8 +326,8 @@ EcomCart = {
 	 */
 	addLoadingSelector: function(loadingElement) {
 		jQuery(loadingElement).addClass(EcomCart.classToShowLoading);
-		this.loadingSelectors[this.loadingSelectors.length] = loadingElement;
-		return this.loadingSelectors.length
+		EcomCart.loadingSelectors[EcomCart.loadingSelectors.length] = loadingElement;
+		return EcomCart.loadingSelectors.length-1;
 	},
 
 
@@ -540,7 +540,7 @@ jQuery.fn.extend({
 				function(){
 					var url = jQuery(this).attr("href");
 					jQuery(this).addClass(EcomCart.classToShowLoading);
-					EcomCart.getChanges(url, null);
+					EcomCart.getChanges(url, null, this);
 					return false;
 				}
 			);
@@ -554,7 +554,7 @@ jQuery.fn.extend({
 						var url = jQuery(this).attr("href");
 						jQuery(this).addClass(EcomCart.classToShowLoading);
 						jQuery(this).parents(EcomCart.orderItemHolderSelector).slideUp();
-						EcomCart.getChanges(url, null);
+						EcomCart.getChanges(url, null, this);
 					}
 					return false;
 				}
