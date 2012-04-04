@@ -341,11 +341,11 @@ EcomCart = {
 		if(EcomCart.debug) {console.debug("------------- SET CHANGES -----------");}
 		for(var i in changes) {
 			var change = changes[i];
-			if(typeof(change.type) != 'undefined' && typeof(change.type) != 'undefined') {
-				var type = change.type;
-				var selector = change.selector;
-				var parameter = change.parameter;
-				var value = EcomCart.escapeHTML(change.value);
+			if(typeof(change.t) != 'undefined' && typeof(change.t) != 'undefined') {
+				var type = change.t;
+				var selector = change.s;
+				var parameter = change.p;
+				var value = EcomCart.escapeHTML(change.v);
 				//class OR id
 				if(EcomCart.debug) {console.debug("type" + type +", selector: " + selector +", parameter:"+ parameter +", value");}
 				if(type == "class" || type == "id") {
