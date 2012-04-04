@@ -500,48 +500,48 @@ class OrderModifier extends OrderAttribute {
 		$tableValue = DBField::create('Currency',$this->TableValue)->Nice();
 		if($this->HideInAjaxUpdate()) {
 			$js[] = array(
-				'type' => 'id',
-				'selector' => $ajaxObject->TableID(),
-				'parameter' => 'hide',
-				'value' => 1
+				't' => 'id',
+				's' => $ajaxObject->TableID(),
+				'p' => 'hide',
+				'v' => 1
 			);
 		}
 		else {
 			$js[] = array(
-				'type' => 'id',
-				'selector' => $ajaxObject->TableID(),
-				'parameter' => 'hide',
-				'value' => 0
+				't' => 'id',
+				's' => $ajaxObject->TableID(),
+				'p' => 'hide',
+				'v' => 0
 			);
 			$js[] = array(
-				'type' => 'id',
-				'selector' => $ajaxObject->TableTitleID(),
-				'parameter' => 'innerHTML',
-				'value' => $this->TableTitle()
+				't' => 'id',
+				's' => $ajaxObject->TableTitleID(),
+				'p' => 'innerHTML',
+				'v' => $this->TableTitle()
 			);
 			$js[] = array(
-				'type' => 'id',
-				'selector' => $ajaxObject->CartTitleID(),
-				'parameter' => 'innerHTML',
-				'value' => $this->CartTitle()
+				't' => 'id',
+				's' => $ajaxObject->CartTitleID(),
+				'p' => 'innerHTML',
+				'v' => $this->CartTitle()
 			);
 			$js[] = array(
-				'type' => 'id',
-				'selector' => $ajaxObject->TableSubTitleID(),
-				'parameter' => 'innerHTML',
-				'value' => $this->TableSubTitle()
+				't' => 'id',
+				's' => $ajaxObject->TableSubTitleID(),
+				'p' => 'innerHTML',
+				'v' => $this->TableSubTitle()
 			);
 			$js[] = array(
-				'type' => 'id',
-				'selector' => $ajaxObject->CartSubTitleID(),
-				'parameter' => 'innerHTML',
-				'value' => $this->CartSubTitle()
+				't' => 'id',
+				's' => $ajaxObject->CartSubTitleID(),
+				'p' => 'innerHTML',
+				'v' => $this->CartSubTitle()
 			);
 			$js[] = array(
-				'type' => 'id',
-				'selector' => $ajaxObject->TableTotalID(),
-				'parameter' => 'innerHTML',
-				'value' => $tableValue
+				't' => 'id',
+				's' => $ajaxObject->TableTotalID(),
+				'p' => 'innerHTML',
+				'v' => $tableValue
 			);
 		}
 	}
