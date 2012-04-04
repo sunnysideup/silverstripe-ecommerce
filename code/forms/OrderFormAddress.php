@@ -134,7 +134,7 @@ class OrderFormAddress extends Form {
 		//  ________________  6) Actions and required fields creation + Final Form construction
 
 
-		$actions = new FieldSet(new FormAction('saveAddress', _t('OrderForm.NEXTSTEP','Save Address')));
+		$actions = new FieldSet(new FormAction('saveAddress', _t('OrderForm.NEXT','Next')));
 		$validator = new OrderFormAddress_Validator($requiredFields);
 		//TODO: do we need this here?
 		$validator->setJavascriptValidationHandler("prototype");
