@@ -45,7 +45,7 @@ even when theme-ing ecommerce, these should not be themed
 #action_useDifferentShippingAddress { display: none; }
 
 .doNotShow { display: none; }
-.loading { background-image: url(../images/loading.gif); background-repeat: no-repeat; background-position: 95% 0; }
+.loading { background-image: url(/ecommerce/images/loading.gif); background-repeat: no-repeat; background-position: 95% 0; }
 
 
 /*
