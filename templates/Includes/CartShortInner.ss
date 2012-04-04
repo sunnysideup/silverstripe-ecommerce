@@ -7,9 +7,9 @@
 			<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
 				<td class="product title" scope="row">
 					<% if Link %>
-					<a id="$$AJAXDefinitions.TableTitleID" href="$Link">$TableTitle</a>
+					<a id="$AJAXDefinitions.TableTitleID" href="$Link">$TableTitle</a>
 					<% else %>
-					<span id="$$AJAXDefinitions.TableTitleID">$TableTitle</span>
+					<span id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 					<% end_if %>
 					<div id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div >
 				</td>
@@ -18,7 +18,7 @@
 	<% end_control %>
 		</tbody>
 	</table>
-	<p class="goToCart"><a href="$CheckoutLink"><% _t("Cart.GOTOCHECKOUTLINK","&raquo; Go to the checkout") %></a></p>
+	<p class="goToCheckout"><a href="$CheckoutLink" class="action goToCheckoutLink"><% _t("Cart.GOTOCHECKOUTLINK","&raquo; Go to the checkout") %></a></p>
 <% else %>
 		<p class="noItems"><% _t("Cart.NOITEMS","There are no items in your cart.") %>.</p>
 <% end_if %>
