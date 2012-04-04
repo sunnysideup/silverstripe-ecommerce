@@ -115,13 +115,18 @@ class OrderModifierForm_Controller extends Controller{
 		}
 	}
 
+	/**
+	 * @ToDO: check this method
+	 * It looks like this: /$ClassName/$action/
+	 * @return String
+	 */
 	function Link($action = null){
 		$action = ($action)? "/$action/" : "";
 		return $this->class.$action;
 	}
 
 	function removemodifier(){
-		//See issue 149
+		//@TODO: See issue 149
 	}
 
 }
