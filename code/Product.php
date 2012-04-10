@@ -164,7 +164,10 @@ class Product extends Page {
 			$keyField = "ID",
 			$labelField = "MenuTitle"
 		);
-		//See issue: 139
+		if($this->ParentID) {
+			$filter = create_function('$obj', 'return ( ( $obj InstanceOf ProductGroup) && ($obj->ID != '.$this->ParentID.'));');
+			$field->setFilterFunction($filter);
+		}
 		return $field;
 	}
 
@@ -251,6 +254,18 @@ class Product extends Page {
 	 */
 	function AddVariationsLink() {
 		return $this->Link("selectvariation");
+	}
+
+	/**
+	 * @TODO: complete
+	 * @param String $compontent - the has many relationship you are looking at, e.g. OrderAttribute
+	 * @return DataObjectSet
+	 */
+	public function getVersionedComponents($component = "ProductVariations") {
+		$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
+		$query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
+		$result = singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
+		return $result;
 	}
 
 	/**
@@ -349,6 +364,18 @@ class Product_Controller extends Page_Controller {
 		else {
 			return new EcomQuantityField($this);
 		}
+	}
+
+
+	/**
+	 * Action to return specific version of a product.
+	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
+	 * @param HTTPRequest
+	 */
+	function viewversion($request){
+		$version = intval($request->param("ID"));
+		$this->record = Versioned::get_version($this->ClassName, $this->ID, $version);
+		return array();
 	}
 
 }
