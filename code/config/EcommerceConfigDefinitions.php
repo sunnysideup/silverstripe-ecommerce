@@ -11,6 +11,40 @@
 
 class EcommerceConfigDefinitions extends Object {
 
+
+	/**
+	 * Tells us what version of e-commerce we are using
+	 *
+	 * @var Float
+	 */
+	private $version = 0.9;
+
+	/**
+	 * Tells us the version of e-commerce in use.
+	 * @return Int
+	 */
+	public function Version(){
+		return $this->version;
+	}
+
+
+	/**
+	 * Tells us the svn revision of e-commerce in use.
+	 * @return Int
+	 */
+	public function SvnVersion(){
+		$svnrev = "0";
+		$file = Director::baseFolder()."/ecommerce/.svn/entries";
+		if(file_exists($file)){
+			$svn = @File($file);
+			if($svn && isset($svn[3])){
+				$svnrev = $svn[3];
+			}
+		}
+		return $svnrev;
+	}
+
+
 	/**
 	 * Get a list of all definitions required for e-commerce.
 	 * We have this here so that we can check that all static variables have been defined.
