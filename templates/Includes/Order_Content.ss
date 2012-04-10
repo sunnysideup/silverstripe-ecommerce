@@ -8,15 +8,15 @@
 		</tr>
 	</thead>
 	<tfoot>
-		<tr class="gap total summary hideOnZeroItems">
+	<% if Items %>
+		<tr class="gap total summary">
 			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
 			<td class="right total" id="$AJAXDefinitions.TableTotalID"><span class="value">$Total.Nice</span> <span class="currency">$Currency</span></td>
 		</tr>
-		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
-			<td colspan="4" scope="row" class="center"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></td>
-		</tr>
+	<% end_if %>
 	</tfoot>
 	<tbody>
+	<% if Items %>
 		<% control Items %>
 		<tr  class="itemRow $EvenOdd $FirstLast">
 			<td class="product title" scope="row">
@@ -45,6 +45,10 @@
 		</tr>
 			<% end_if %>
 		<% end_control %>
-
+	<% else %>
+		<tr class="showOnZeroItems">
+			<td colspan="4" scope="row" class="center"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></td>
+		</tr>
+	<% end_if %>
 	</tbody>
 </table>
