@@ -40,6 +40,24 @@ class Buyable extends DataObjectDecorator {
 	 **/
 	private static $shop_closed = null;
 
+
+	/**
+	 * Action to return specific version of a product.
+	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
+	 * @request - HTTPRequest
+	 */
+	function viewversion($request){
+		$version = intval($request->param("ID"));
+		if($version) {
+			$record = Versioned::get_version($this->owner->ClassName, $this->owner->ID, $version);
+			if($record) {
+				$this->owner->record = $record;
+			}
+		}
+		return array();
+	}
+
+
 	/**
 	 * Return the currency being used on the site.
 	 * @return string Currency code, e.g. "NZD" or "USD"
@@ -58,13 +76,17 @@ class Buyable extends DataObjectDecorator {
 		return $this->owner->canPurchase();
 	}
 
-
+	/**
+	 *
+	 * DataObjectDecorator extension method
+	 * @return Boolean
+	 */
 	function canPurchase($member = null) {
 		if($this->ShopClosed()) {
 			return false;
 		}
 		//IMPORTANT - if it returns null then the product / other buyable will not take notice of this extension.
-		return true;
+		return null;
 	}
 
 	/**
@@ -119,10 +141,20 @@ class Buyable extends DataObjectDecorator {
 	function AddLink() {
 		return ShoppingCart_Controller::add_item_link($this->owner->ID, $this->owner->ClassName, $this->linkParameters());
 	}
+
+	/**
+	 * link use to add (one) to cart
+	 *@return String
+	 */
 	function IncrementLink() {
 		//we can do this, because by default add link adds one
 		return $this->AddLink();
 	}
+
+	/**
+	 * Link used to remove one from cart
+	 * @return String
+	 */
 	function DecrementLink() {
 		//we can do this, because by default remove link removes on
 		return $this->RemoveLink();
@@ -184,6 +216,7 @@ class Buyable extends DataObjectDecorator {
 	}
 
 	/**
+	 * @todo: do we still need this?
 	 *@return Array
 	 **/
 	protected function linkParameters(){
@@ -191,7 +224,6 @@ class Buyable extends DataObjectDecorator {
 		$this->owner->extend('updateLinkParameters',$array);
 		return $array;
 	}
-
 
 	/**
 	 * you can overwrite this function in your buyable items (such as Product)
@@ -225,6 +257,7 @@ class Buyable extends DataObjectDecorator {
 	}
 
 	function canDelete($memberID) {
+		//can we delete sold items? or can we only make them invisible
 		return $this->canEdit($memberID);
 	}
 
@@ -233,6 +266,7 @@ class Buyable extends DataObjectDecorator {
 	}
 
 	public function canDeleteFromLive($memberID) {
+		//check if it is in a current cart?
 		return $this->canEdit($memberID);
 	}
 
