@@ -18,6 +18,10 @@ class EcommercePayment extends DataObjectDecorator {
 		"Status" => "Status"
 	);
 
+	/**
+	 * Standard SS definitions
+	 *
+	 */
 	function extraStatics() {
 		return array(
 			'has_one' => array(
@@ -64,9 +68,7 @@ class EcommercePayment extends DataObjectDecorator {
 			Director::redirectBack();
 			return false;
 		}
-		if(!$paidBy) {
-			$paidBy = $order->Member();
-		}
+		$paidBy = $order->Member();
 		if(!$paidBy) {
 			$paidBy = Member::currentUser();
 		}
