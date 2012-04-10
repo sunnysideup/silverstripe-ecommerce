@@ -252,7 +252,7 @@ class ShoppingCart extends Object{
 	 *
 	 */
 	public function submit() {
-		$this->tryToFinaliseOrder();
+		$this->currentOrder()->tryToFinaliseOrder();
 		$this->clear();
 	}
 
