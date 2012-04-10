@@ -1238,13 +1238,6 @@ class Order extends DataObject {
 	}
 
 
-
-
-
-
-
-
-
 /*******************************************************
    * 7. CRUD METHODS (e.g. canView, canEdit, canDelete, etc...)
 *******************************************************/
@@ -1461,8 +1454,10 @@ class Order extends DataObject {
 	 */
 	function EmailLink(){return $this->getEmailLink();}
 	function getEmailLink() {
-		if($this->IsSubmitted()) {
-			return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID));
+		if(!isset($_REQUEST["print"])) {
+			if($this->IsSubmitted()) {
+				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID));
+			}
 		}
 	}
 
