@@ -399,11 +399,17 @@ class OrderItem extends OrderAttribute {
 	 * @return String (URLSegment)
 	  **/
 	function Link() {
-		if($item = $this->Buyable()) {
-			return $item->Link();
+		$item = $this->Buyable();
+		if($item) {
+			if($this->Order()->IsSubmitted()) {
+				return $item->Link("viewversion/".$this->Version."/");
+			}
+			else {
+				return $item->Link();
+			}
 		}
-		user_error("No Buyable could be found for OrderItem with ID: ".$this->ID, E_USER_WARNING);
 	}
+
 
 	/**
 	 *
@@ -489,9 +495,9 @@ class OrderItem extends OrderAttribute {
 	}
 
 	/**
-	 *
+	 * @Todo: do we still need this?
 	 * @return array for use as get variables in link
-	  **/
+	 **/
 	protected function linkParameters(){
 		$array = array();
 		$this->extend('updateLinkParameters',$array);
