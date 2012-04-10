@@ -325,6 +325,7 @@ EcomCart = {
 	 * @return integer
 	 */
 	addLoadingSelector: function(loadingElement) {
+		loadingElement = jQuery(loadingElement).parent();
 		jQuery(loadingElement).addClass(EcomCart.classToShowLoading);
 		EcomCart.loadingSelectors[EcomCart.loadingSelectors.length] = loadingElement;
 		return EcomCart.loadingSelectors.length-1;
