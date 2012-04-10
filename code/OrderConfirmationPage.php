@@ -118,6 +118,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		Requirements::themedCSS('Order');
 		Requirements::themedCSS('Order_Print', "print");
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
+		//clear steps from checkout page otherwise in the next order
+		//you go straight to the last step.
+		Session::set("CheckoutPage_Controller_Step", 0);
+		Session::clear("CheckoutPage_Controller_Step");
 	}
 
 	/**
@@ -128,6 +132,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 **/
 	function showorder($request) {
 		if(isset($_REQUEST["print"])) {
+			Requirements::clear();
+			Requirements::themedCSS("Typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport_Print", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			return $this->renderWith("Invoice");
