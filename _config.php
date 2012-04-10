@@ -23,12 +23,11 @@ Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller"
 Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
-//This is the only valid way to add the buyable extension to a DataObject
+//Object::useCustomClass('Currency','CurrencyImprovements', true);
 
 // copy the lines below to your mysite/_config.php file and set as required.
-
 // __________________________________START ECOMMERCE MODULE CONFIG __________________________________
-//The configuration below is not required, but allows you to customise your ecommerce application -
+//The configuration below allows you to customise your ecommerce application -
 //Check for the defalt value first rather than setting eveery single config as this requires a lot
 //of valuable processing where in many cases the default value is fine.
 
@@ -59,9 +58,6 @@ DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 //Object::useCustomClass('SS_Datetime','ZendDate',true);
 //Currency::setCurrencySymbol("€");
 
-//JAVASCRIPT OPTIONS:
-#EcomCart.set_ajaxButtonsOn(false);
-#see lots of other options! in ecommerce/javascript/EcomCart.js
 
 // __________________________________ END ECOMMERCE MODULE CONFIG __________________________________
 
