@@ -22,10 +22,11 @@
 		<div class="clear"><!-- --></div>
 	</div>
 <% include ProductGroupPagination %>
+<% else %>
+	<p class="noProductsFound"><% _t("Product.NOPRODUCTSFOUND", "Sorry, no products could be found.") %></p>
 <% end_if %>
 	<% if Form %><div id="FormHolder">$Form</div><% end_if %>
 	<% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>
-
 </div>
 
 
