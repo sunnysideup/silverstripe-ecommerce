@@ -146,11 +146,21 @@ class OrderModifier extends OrderAttribute {
 	protected $baseInitCalled = false;
 
 	/**
-	* This is a flag for running an update.
-	* Running an update means that all fields are (re)set, using the Live{FieldName} methods.
-	* @var Boolean
-	**/
+	 * This is a flag for running an update.
+	 * Running an update means that all fields are (re)set, using the Live{FieldName} methods.
+	 * @var Boolean
+	 **/
 	protected $mustUpdate = false;
+
+	/**
+	 * When recalculating all the modifiers, this private variable is added to as a running total
+	 * other modifiers can then tap into this to work out their own values.
+	 * For example, a tax modifier needs to know the value of the other modifiers before calculating
+	 * its own value (i.e. tax is also paid over handling and shipping).
+	 * Always consider the "order" (which one first) of the order modifiers when using this variable.
+	 * @var Float
+	 **/
+	private $runningTotal = 0;
 
 
 // ######################################## *** 4. CRUD functions (e.g. canEdit)
@@ -177,7 +187,7 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
-	* all modifier child-classes must have this method if it has more fields
+	* all classes extending OrderModifier must have this method if it has more fields
 	 * @param Bool $force - run it, even if it has run already
 	**/
 	public function runUpdate($force = false) {
@@ -188,6 +198,7 @@ class OrderModifier extends OrderAttribute {
 			if($this->mustUpdate && $this->canBeUpdated()) {
 				$this->write();
 			}
+			$this->runningTotal += $this->CalculatedTotal;
 		}
 		$this->baseInitCalled = true;
 	}
@@ -408,6 +419,14 @@ class OrderModifier extends OrderAttribute {
 
 // ######################################## ***  8. inner calculations....
 
+	/**
+	 * returns the running total variable
+	 * @see variable definition for more information
+	 * @return Float
+	 */
+	public function getRunningTotal(){
+		return $this->runningTotal;
+	}
 
 // ######################################## ***  9. calculate database fields ( = protected function Live[field name]() { ....}
 
