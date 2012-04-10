@@ -16,9 +16,6 @@
 	<li class="addLink">
 		<a class="ajaxBuyableAdd action" href="$AddLink"><% _t("Product.ADDLINK","Add to cart") %></a>
 	</li>
-	<li class="goToCheckoutLink">
-		<a class="goToCheckoutLink action" href="$CheckoutLink"><% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %></a>
-	</li>
 <% end_if %>
 </ul>
 
