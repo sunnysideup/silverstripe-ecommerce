@@ -1,6 +1,6 @@
 /**
  *@author Nicolaas [at] sunnysideup.co.nz
- *
+ * adds JS functionality to the OrderForm
  *
  **/
 
@@ -16,7 +16,9 @@
 var EcomOrderForm = {
 
 	submitButtonSelector: ".Actions input",
+
 	termsAndConditionsCheckBoxSelector: "#ReadTermsAndConditions input",
+
 	tAndcMessage: 'You must agree with the terms and conditions to proceed.',
 
 	init: function() {
@@ -27,6 +29,7 @@ var EcomOrderForm = {
 				}
 			}
 		);
+		EcomOrderForm.ajaxifyForm();
 	},
 
 	TandCcheck: function() {
@@ -38,5 +41,19 @@ var EcomOrderForm = {
 			}
 		}
 		return true;
+	},
+
+	ajaxifyForm: function() {
+		jQuery("form").submit(
+			function(e) {
+				setTimeout(
+					function() {
+						jQuery(EcomOrderForm.submitButtonSelector).hide();
+					},
+					100
+				);
+			}
+		);
 	}
+
 }
