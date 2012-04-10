@@ -66,6 +66,7 @@ class SiteConfigEcommerceExtras extends DataObjectDecorator {
 	function updateCMSFields(FieldSet &$fields) {
 		//new section
 		$fieldLabels = $this->owner->fieldLabels();
+		$versionInfo = new EcommerceConfigDefinitions();
 		$shoptabs = new TabSet('Shop',
 			new Tab('General',
 				new CheckboxField("ShopClosed", $fieldLabels["ShopClosed"])
@@ -95,6 +96,11 @@ class SiteConfigEcommerceExtras extends DataObjectDecorator {
 			),
 			new Tab('Process',
 				new ComplexTableField($this->owner, "OrderSteps", "OrderStep")
+			),
+			new Tab('Version',
+				new LiteralField("EcommerceVersion", "<p><strong>E-commerce</strong>: ".$versionInfo->Version()."</p>"),
+				new LiteralField("SVNVersion", "<p><strong>SVN</strong>: ".$versionInfo->SvnVersion()."</p>"),
+				new LiteralField("GITVersion", "<p><strong>GIT</strong>: not available yet.</p>")
 			)
 			/*$processtab = new Tab('OrderProcess',
 				new LiteralField('op','Include a drag-and-drop interface for customising order steps (Like WidgetArea)')
@@ -103,5 +109,6 @@ class SiteConfigEcommerceExtras extends DataObjectDecorator {
 		$fields->addFieldToTab('Root',$shoptabs);
 		return $fields;
 	}
+
 
 }
