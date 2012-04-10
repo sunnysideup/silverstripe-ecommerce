@@ -13,7 +13,7 @@
 			<% include Order %>
 		<% end_control %>
 	</div>
-<script type="text/javascript">window.print();</script>
+<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>
 </body>
 </html>
 
