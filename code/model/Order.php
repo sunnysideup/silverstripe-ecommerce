@@ -256,7 +256,7 @@ class Order extends DataObject {
 		'Created' => array(
 			'field' => 'TextField',
 			'filter' => 'OrderFilters_AroundDateFilter',
-			'title' => 'Around Date (e.g. Today, 1 jan 2007, or last week)'
+			'title' => 'Date (e.g. Today, 1 jan 2007, or last week)'
 		),
 		'StatusID' => array(
 			'filter' => 'OrderFilters_MultiOptionsetStatusIDFilter'
