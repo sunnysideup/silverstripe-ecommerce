@@ -4,7 +4,7 @@
 
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 
-	
+
 <% if Order %>
 	<% control Order %>
 		<% include Order %>
@@ -29,6 +29,7 @@
 	<% end_if %>
 <% end_if %>
 
+	<h3><% _t("OrderConfirmation.NEXT", "Next") %></h3>
 	<% include CartActionsAndMessages %>
 
 </div>

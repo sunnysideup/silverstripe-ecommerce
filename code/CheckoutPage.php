@@ -175,8 +175,18 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		if($this->HasCheckoutSteps) {
-			if(!$this->checkoutstep) {
+			if($this->currentStep && in_array($this->currentStep, $this->steps)) {
+				//do nothing
+			}
+			else {
 				$this->currentStep = Session::get("CheckoutPage_Controller_Step");
+			}
+			if($this->currentStep && in_array($this->currentStep, $this->steps)) {
+				//do nothing
+			}
+			else {
+				$this->currentStep = array_shift(($this->steps));
+				Session::set("CheckoutPage_Controller_Step", $this->currentStep);
 			}
 		}
 	}
