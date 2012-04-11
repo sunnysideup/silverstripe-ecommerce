@@ -332,11 +332,6 @@ class OrderForm_Cancel extends Form {
 						),
 						'good'
 					);
-					if($link = AccountPage::find_link()){
-						//see issue 150
-						AccountPage_Controller::set_message(_t("OrderForm.ORDERHASBEENCANCELLED","Order has been cancelled"));
-						Director::redirect($link);
-					}
 					Director::redirectBack();
 					return false;
 				}
