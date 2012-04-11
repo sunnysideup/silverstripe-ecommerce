@@ -53,7 +53,6 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 			$query->where("(DATEDIFF(\"Order\".\"Created\", '$formattedDate') > -".$maxDays." AND DATEDIFF(\"Order\".\"Created\", '$formattedDate') < ".$maxDays.")");
 		}
 		return $query;
-
 	}
 
 	/**
@@ -72,7 +71,6 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
  *
  *
  */
-
 class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 
 	/**
