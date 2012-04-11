@@ -20,6 +20,10 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *
 	 * For example, if you search for a date that is one year ago,
 	 * then the margin of error is 360/12 = 30 days.
+	 * if we search for yesterdaty then the margin of error is one.
+	 *
+	 * The calculation works as follow: [today] - [searched day] / [divider].
+	 * All variables are in days.
 	 *
 	 * @var Int
 	 */
