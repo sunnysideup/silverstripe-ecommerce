@@ -15,6 +15,8 @@
 
 var EcomOrderForm = {
 
+	loadingClass: "loading",
+
 	submitButtonSelector: ".Actions input",
 
 	termsAndConditionsCheckBoxSelector: "#ReadTermsAndConditions input",
@@ -48,6 +50,7 @@ var EcomOrderForm = {
 			function(e) {
 				setTimeout(
 					function() {
+						jQuery(EcomOrderForm.submitButtonSelector).parent().addClass(EcomOrderForm.loadingClass).text("loading ...");
 						jQuery(EcomOrderForm.submitButtonSelector).hide();
 					},
 					100
