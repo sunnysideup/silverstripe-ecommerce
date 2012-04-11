@@ -14,6 +14,22 @@
 class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 
 	/**
+	 * The divider is used to work out the
+	 * maximum number of days we should be from the date.
+	 * The Further back in time we go, the greater the margin of error.
+	 *
+	 * For example, if you search for a date that is one year ago,
+	 * then the margin of error is 360/12 = 30 days.
+	 * if we search for yesterdaty then the margin of error is one.
+	 *
+	 * The calculation works as follow: [today] - [searched day] / [divider].
+	 * All variables are in days.
+	 *
+	 * @var Int
+	 */
+	private $divider = 12;
+
+	/**
 	 *
 	 *@return SQLQuery
 	 **/
@@ -22,8 +38,8 @@ class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 		$value = $this->getValue();
 		$date = new Date();
 		$date->setValue($value);
-		$distanceFromToday = new Date() - $date;
-		$maxDays = round($distanceFromToday/12)+1;
+		$distanceFromToday = time() - strtotime($value);
+		$maxDays = round($distanceFromToday/($this->divider * 86400))+1;
 		$formattedDate = $date->format("Y-m-d");
 
 		// changed for PostgreSQL compatability
