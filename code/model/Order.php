@@ -1426,7 +1426,13 @@ class Order extends DataObject {
 		return $email;
 	}
 
-
+	/**
+	 * Returns true if there is a prink or email link.
+	 * @return Boolean
+	 */
+	function HasPrintOrEmailLink(){
+		return $this->EmailLink() || $this->PrintLink();
+	}
 	/**
 	 * returns the absolute link to the order that can be used in the customer communication (email)
 	 * @return String
