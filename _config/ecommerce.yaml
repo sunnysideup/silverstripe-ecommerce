@@ -207,12 +207,6 @@ SalesAdmin:
 	managed_models: ['Order','OrderStatusLog', 'OrderItem', 'OrderModifier', 'OrderEmailRecord', 'BillingAddress', 'ShippingAddress','Payment']
 
 
-PaymentFilter_AroundDateFilter:
-	how_many_days_around: 31
-
-OrderFilters_AroundDateFilter:
-	how_many_days_around: 31
-
 
 ################### TASKS #####################
 
