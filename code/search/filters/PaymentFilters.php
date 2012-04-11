@@ -54,7 +54,6 @@ class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 			$query->where("(DATEDIFF(\"Payment\".\"Created\", '$formattedDate') > -".$maxDays." AND DATEDIFF(\"Payment\".\"Created\", '$formattedDate') < ".$maxDays.")");
 		}
 		return $query;
-
 	}
 
 	/**
