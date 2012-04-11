@@ -211,6 +211,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		}
 		$baseFolder = Director::baseFolder() ;
 		require_once($baseFolder . '/ecommerce/thirdparty/Emogrifier.php');
+		Requirements::clear();
+		Requirements::themedCSS("Typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("OrderReport_Print", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		$html =  $this->renderWith("Order_ReceiptEmail");
 		// if it's an html email, filter it through emogrifier
 		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;
@@ -220,7 +224,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		fclose($cssFileHandler);
 		$emog = new Emogrifier($html, $css);
 		$html = $emog->emogrify();
-		Requirements::clear();
 		return $html;
 	}
 
