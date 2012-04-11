@@ -241,38 +241,22 @@ class Order extends DataObject {
 
 	/**
 	 * STANDARD SILVERSTRIPE STUFF
+	 * @todo: how to translate this?
 	 **/
 	public static $searchable_fields = array(
 		'ID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
 		),
-		'Member.FirstName' => array(
-			'title' => 'Customer First Name',
-			'filter' => 'PartialMatchFilter'
+		'MemberID' => array(
+			'field' => 'TextField',
+			'filter' => 'OrderFilters_MemberAndAddress',
+			'title' => 'Customer Details'
 		),
-		'Member.Surname' => array(
-			'title' => 'Customer Last Name',
-			'filter' => 'PartialMatchFilter'
-		),
-		/*
-		'BillingAddress.Email' => array(
-			'title' => 'Customer Email',
-			'filter' => 'PartialMatchFilter'
-		),
-		*/
-		//TODO: this breaks the sales part of the CMS
-		/*'Member.Phone' => array(
-			'title' => 'Customer Phone',
-			'filter' => 'PartialMatchFilter'
-		),*/
 		'Created' => array(
 			'field' => 'TextField',
 			'filter' => 'OrderFilters_AroundDateFilter',
-			'title' => "Date (e.g. Today)"
-		),
-		'TotalPaid' => array(
-			'filter' => 'OrderFilters_MustHaveAtLeastOnePayment'
+			'title' => 'Around Date (e.g. Today, 1 jan 2007, or last week)'
 		),
 		'StatusID' => array(
 			'filter' => 'OrderFilters_MultiOptionsetStatusIDFilter'
@@ -281,12 +265,6 @@ class Order extends DataObject {
 			'filter' => 'OrderFilters_HasBeenCancelled',
 			'title' => "Cancelled"
 		)
-		/*,
-		'To' => array(
-			'field' => 'DateField',
-			'filter' => 'OrderFilters_EqualOrSmallerDateFilter'
-		)
-		*/
 	);
 
 	/**
@@ -363,7 +341,8 @@ class Order extends DataObject {
 				);
 				$paymentsTable->setPageSize(20);
 				$paymentsTable->addSummary(
-					addSummary(_t("Order.TOTAL", "Total"),array("Total" => array("sum","Currency->Nice")))
+					_t("Order.TOTAL", "Total"),
+					array("Total" => array("sum","Currency->Nice"))
 				);
 				if($this->IsPaid()){
 					$paymentsTable->setPermissions(array('export', 'show'));
