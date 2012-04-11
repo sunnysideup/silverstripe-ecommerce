@@ -540,7 +540,6 @@ jQuery.fn.extend({
 				"click",
 				function(){
 					var url = jQuery(this).attr("href");
-					jQuery(this).addClass(EcomCart.classToShowLoading);
 					EcomCart.getChanges(url, null, this);
 					return false;
 				}
@@ -553,7 +552,6 @@ jQuery.fn.extend({
 				function(){
 					if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
 						var url = jQuery(this).attr("href");
-						jQuery(this).addClass(EcomCart.classToShowLoading);
 						jQuery(this).parents(EcomCart.orderItemHolderSelector).slideUp();
 						EcomCart.getChanges(url, null, this);
 					}
@@ -572,7 +570,6 @@ jQuery.fn.extend({
 				function(){
 					if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
 						var url = jQuery(this).attr("href");
-						jQuery(this).addClass(EcomCart.classToShowLoading);
 						EcomCart.getChanges(url, null, this);
 						return false;
 					}
