@@ -21,7 +21,9 @@
 
 class Product extends Page {
 
-
+	/**
+	 * Standard SS variable.
+	 */
 	public static $api_access = array(
 		'view' => array(
 				"MenuTitle",
@@ -30,6 +32,9 @@ class Product extends Page {
 			)
 	 );
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $db = array(
 		'Price' => 'Currency',
 		'Weight' => 'Decimal(9,4)',
@@ -41,18 +46,30 @@ class Product extends Page {
 		'NumberSold' => 'Int' //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $has_one = array(
 		'Image' => 'Product_Image'
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $many_many = array(
 		'ProductGroups' => 'ProductGroup'
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $defaults = array(
 		'AllowPurchase' => true
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $summary_fields = array(
 		'ID',
 		'InternalItemID',
@@ -61,6 +78,9 @@ class Product extends Page {
 		'NumberSold'
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $searchable_fields = array(
 		'Title' => "PartialMatchFilter",
 		'InternalItemID' => "PartialMatchFilter",
@@ -70,22 +90,56 @@ class Product extends Page {
 		'Price'
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $casting = array(
 		"CalculatedPrice" => "Currency"
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $singular_name = "Product";
 		function i18n_singular_name() { return _t("Order.PRODUCT", "Product");}
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $plural_name = "Products";
 		function i18n_plural_name() { return _t("Order.PRODUCTS", "Products");}
 
+
+	/**
+	 * Standard SS variable.
+	 */
 	public static $default_parent = 'ProductGroup';
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $default_sort = '"Title" ASC';
 
+	/**
+	 * Standard SS variable.
+	 */
 	public static $icon = 'ecommerce/images/icons/product';
 
+	/**
+	 * We add all $db fields to MetaKeywords to allow searching products
+	 * on more fields than just the standard ones.
+	 * This variables tells us what fields to exclude
+	 * (either they are being searched already OR they are not relevant)
+	 * @var Array
+	 */
+	protected $fieldsToExcludeFromSearch = array("Title","MenuTitle","Content","MetaTitle","MetaDescription","MetaKeywords", "Status", "ReportClass", "CanViewType", "CanEditType", "ToDo");
+
+
+	/**
+	 * Products have a standard price, but for specific situations they have a calculated price.
+	 * The Price can be changed for specific member discounts, a different currency, etc...
+	 * @return String
+	 */
 	function CalculatedPrice() {return $this->getCalculatedPrice();}
 	function getCalculatedPrice() {
 		$price = $this->Price;
@@ -93,6 +147,9 @@ class Product extends Page {
 		return $price;
 	}
 
+	/**
+	 * Standard SS variable.
+	 */
 	function getCMSFields() {
 		//prevent calling updateCMSFields extend function too early
 		$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
@@ -133,7 +190,6 @@ class Product extends Page {
 		}
 		return $fields;
 	}
-
 
 	/**
 	 * Returns all the parent groups for the product.
@@ -276,9 +332,29 @@ class Product extends Page {
 		return true;
 	}
 
-
+	/**
+	 * returns a product image for use in templates
+	 * e.g. $DummyImage.Width();
+	 * @return Product_Image
+	 */
 	function DummyImage(){
 		return new Product_Image();
+	}
+
+	function onBeforeWrite(){
+		parent::onBeforeWrite();
+	//we are adding all the fields to the keyword fields here for searching purposes.
+	//because the MetaKeywords Field is being searched.
+		$this->MetaKeywords = "";
+		foreach($this->db() as $fieldName => $fieldType) {
+			if(is_string($this->$fieldName) && strlen($this->$fieldName) > 2) {
+				//HACK!!
+				if(!in_array($fieldName, $this->fieldsToExcludeFromSearch)) {
+				//END HACK
+					$this->MetaKeywords .= strip_tags($this->$fieldName);
+				}
+			}
+		}
 	}
 
 }
