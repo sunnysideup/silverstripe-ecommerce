@@ -173,12 +173,6 @@ class EcommerceConfigDefinitions extends Object {
 				"collection_controller_class" => "The controller for the collection.  ",
 				"record_controller_class" => "The controller for the record. ",
 			),
-			"PaymentFilter_AroundDateFilter" => array(
-				"how_many_days_around" => "For date filters, the idea is that you enter a date and that the search will find any record within a certain number of days of that record.  This variable records the number of records. ",
-			),
-			"OrderFilters_AroundDateFilter" => array(
-				"how_many_days_around" => "For date filters, the idea is that you enter a date and that the search will find any record within a certain number of days of that record.  This variable records the number of records. ",
-			),
 			"RecalculateTheNumberOfProductsSold" => array(
 				"number_sold_calculation_type" => "Method for calculating the total number of items sold.  We either COUNT the number of orders or we make a SUM of the number of items sold. ",
 			),

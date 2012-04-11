@@ -13,10 +13,6 @@
 
 class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 
-	protected static $how_many_days_around = 31;
-		static function set_how_many_days_around($i){self::$how_many_days_around = $i;}
-		static function get_how_many_days_around(){return self::$how_many_days_around;}
-
 	/**
 	 *
 	 *@return SQLQuery
@@ -26,6 +22,8 @@ class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 		$value = $this->getValue();
 		$date = new Date();
 		$date->setValue($value);
+		$distanceFromToday = new Date() - $date;
+		$maxDays = round($distanceFromToday/12)+1;
 		$formattedDate = $date->format("Y-m-d");
 
 		// changed for PostgreSQL compatability
@@ -33,11 +31,11 @@ class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 		$db = DB::getConn();
 		if( $db instanceof PostgreSQLDatabase ) {
 			// don't know whether functions should be used, hence the following code using an interval cast to an integer
-			$query->where("(\"Payment\".\"Created\"::date - '$formattedDate'::date)::integer > -".self::get_how_many_days_around()." AND (\"Payment\".\"Created\"::date - '$formattedDate'::date)::integer < ".self::get_how_many_days_around());
+			$query->where("(\"Payment\".\"Created\"::date - '$formattedDate'::date)::integer > -".$maxDays." AND (\"Payment\".\"Created\"::date - '$formattedDate'::date)::integer < ".$maxDays);
 		}
 		else {
 			// default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
-			$query->where("(DATEDIFF(\"Payment\".\"Created\", '$formattedDate') > -".self::get_how_many_days_around()." AND DATEDIFF(\"Payment\".\"Created\", '$formattedDate') < ".self::get_how_many_days_around().")");
+			$query->where("(DATEDIFF(\"Payment\".\"Created\", '$formattedDate') > -".$maxDays." AND DATEDIFF(\"Payment\".\"Created\", '$formattedDate') < ".$maxDays.")");
 		}
 		return $query;
 
