@@ -56,7 +56,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 * Standard (required) SS method, runs buildtask
 	 */
 	function run($request){
-		$definitionsObject = new EcommerceConfig_Definitions();
+		$definitionsObject = new EcommerceConfigDefinitions();
 		$this->definitions = $definitionsObject->Definitions();
 		$configsObject = new EcommerceConfig();
 		$this->configs = $configsObject->getCompleteDataSet();
