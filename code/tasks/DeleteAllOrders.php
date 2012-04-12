@@ -26,11 +26,12 @@ class DeleteAllOrders extends BuildTask {
 
 	public static function run_on_demand() {
 		$obj = new CartCleanupTask();
-		$obj->run($verbose = true);
-		$obj->cleanupUnlinkedOrderObjects($verbose = true);
+		$obj->verbose = true;
+		$obj->run();
+		$obj->cleanupUnlinkedOrderObjects();
 	}
 
-
+	public $verbose = false;
 
 	/**
 	 *
@@ -54,10 +55,10 @@ class DeleteAllOrders extends BuildTask {
 	/**
 	 *@return Integer - number of carts destroyed
 	 **/
-	public function run($verbose = false){
+	public function run($request){
 		$oldCarts = DataObject::get('Order');
 		if($oldCarts){
-			if($verbose) {
+			if($this->verbose) {
 				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\"");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("<h2>Total number of orders: ".$totalToDelete." .... now deleting: </h2>", "deleted");
@@ -65,7 +66,7 @@ class DeleteAllOrders extends BuildTask {
 			$count = 0;
 			foreach($oldCarts as $oldCart){
 				$count++;
-				if($verbose) {
+				if($this->verbose) {
 					DB::alteration_message("$count ... deleting abandonned order #".$oldCart->ID, "deleted");
 				}
 				$oldCart->delete();
@@ -73,7 +74,7 @@ class DeleteAllOrders extends BuildTask {
 			}
 		}
 		else {
-			if($verbose) {
+			if($this->verbose) {
 				$count = DB::query("SELECT COUNT(\"ID\") FROM \"Order\"")->value();
 				DB::alteration_message("There are no abandonned orders. There are $count 'live' Orders.", "created");
 			}
@@ -89,11 +90,11 @@ class DeleteAllOrders extends BuildTask {
 		return $count;
 	}
 
-	function cleanupUnlinkedOrderObjects($verbose = false) {
+	function cleanupUnlinkedOrderObjects() {
 		$classNames = self::get_linked_objects_array();
 		if(is_array($classNames) && count($classNames)) {
 			foreach($classNames as $classWithOrderID => $classWithLastEdited) {
-				if($verbose) {
+				if($this->verbose) {
 					DB::alteration_message("looking for $classWithOrderID objects without link to order.", "deleted");
 				}
 				$where = "\"Order\".\"ID\" IS NULL ";
@@ -104,7 +105,7 @@ class DeleteAllOrders extends BuildTask {
 				$unlinkedObjects = DataObject::get($classWithLastEdited, $where, $sort, $join);
 				if($unlinkedObjects){
 					foreach($unlinkedObjects as $unlinkedObject){
-						if($verbose) {
+						if($this->verbose) {
 							DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
 						}
 						//HACK FOR DELETING

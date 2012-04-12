@@ -27,8 +27,15 @@ class CartCleanupTask extends HourlyTask {
 
 	public static function run_on_demand() {
 		$obj = new CartCleanupTask();
-		$obj->run($verbose = true);
+		$obj->verbose = true;
+		$obj->run();
 	}
+
+	/**
+	 * Output feedback about task?
+	 * @var Boolean
+	 */
+	public $verbose = false;
 
 
 /*******************************************************
@@ -36,7 +43,6 @@ class CartCleanupTask extends HourlyTask {
 *******************************************************/
 
 
-<<<<<<< .mine
 /*******************************************************
 	 * DELETE OLD SHOPPING CARTS
 *******************************************************/
@@ -54,17 +60,14 @@ class CartCleanupTask extends HourlyTask {
 		static function get_one_to_one_objects_array() {return self::$one_to_one_objects_array;}
 		static function add_one_to_one_object($s) {self::$one_to_one_objects_array[] = $s;}
 
-
-
-	/**
-	 *@return Integer - number of carts destroyed
-	 **/
-	public function run($verbose = false){
-
 		/*******************************************************
 			 * DELETE OLD SHOPPING CARTS
 		*******************************************************/
 
+	/**
+	 *@return Integer - number of carts destroyed
+	 **/
+	public function run($request){
 		$count = 0;
 		$clearDays = EcommerceConfig::get("CartCleanupTask", "clear_days");
 		$maximumNumberOfObjectsDeleted = EcommerceConfig::get("CartCleanupTask", "maximum_number_of_objects_deleted");
@@ -80,7 +83,7 @@ class CartCleanupTask extends HourlyTask {
 		}
 		$oldCarts = DataObject::get('Order',$where, $sort, $join, $limit);
 		if($oldCarts){
-			if($verbose) {
+			if($this->verbose) {
 				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("<h2>Total number of abandonned carts: ".$totalToDelete." .... now deleting: ".$maximumNumberOfObjectsDeleted." from ".$clearDays." days ago or more.</h2>", "created");
@@ -93,13 +96,13 @@ class CartCleanupTask extends HourlyTask {
 			}
 			foreach($oldCarts as $oldCart){
 				$count++;
-				if($verbose) {
+				if($this->verbose) {
 					DB::alteration_message("$count ... deleting abandonned order #".$oldCart->ID, "deleted");
 				}
 				$this->deleteObject($oldCart);
 			}
 		}
-		if($verbose) {
+		if($this->verbose) {
 			$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"Order\"")->value();
 			$countCart = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." ")->value();
 			DB::alteration_message("There are no abandonned orders. There are $countAll orders, $countCart of them are still in the intial cart state (not submitted).", "created");
@@ -115,7 +118,7 @@ class CartCleanupTask extends HourlyTask {
 		$classNames = EcommerceConfig::get("CartCleanupTask", "linked_objects_array");
 		if(is_array($classNames) && count($classNames)) {
 			foreach($classNames as $classWithOrderID => $classWithLastEdited) {
-				if($verbose) {
+				if($this->verbose) {
 					DB::alteration_message("looking for $classWithOrderID objects without link to order.");
 				}
 				$clearDays = EcommerceConfig::get("CartCleanupTask", "clear_days");
@@ -130,13 +133,13 @@ class CartCleanupTask extends HourlyTask {
 				$unlinkedObjects = DataObject::get($classWithLastEdited, $where, $sort, $join);
 				if($unlinkedObjects){
 					foreach($unlinkedObjects as $unlinkedObject){
-						if($verbose) {
+						if($this->verbose) {
 							DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
 						}
 						$this->deleteObject($unlinkedObject);
 					}
 				}
-				if($verbose) {
+				if($this->verbose) {
 					$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"$classWithLastEdited\"")->value();
 					$countUnlinkedOnes = DB::query("SELECT COUNT(\"$classWithOrderID\".\"ID\") FROM \"$classWithOrderID\" LEFT JOIN \"Order\" ON \"$classWithOrderID\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
 					DB::alteration_message("In total there are $countAll $classWithOrderID ($classWithLastEdited), of which there are $countUnlinkedOnes not linked to an order. ", "created");
@@ -155,7 +158,7 @@ class CartCleanupTask extends HourlyTask {
 		$classNames = self::get_one_to_one_objects_array();
 		if(is_array($classNames) && count($classNames)) {
 			foreach($classNames as $orderFieldName => $className) {
-				if($verbose) {
+				if($this->verbose) {
 					DB::alteration_message("looking for $className objects without link to order.");
 				}
 				$where = "\"Order\".\"ID\" IS NULL";
@@ -164,18 +167,18 @@ class CartCleanupTask extends HourlyTask {
 				$unlinkedObjects = DataObject::get($className, $where, $sort, $join);
 				if($unlinkedObjects){
 					foreach($unlinkedObjects as $unlinkedObject){
-						if($verbose) {
+						if($this->verbose) {
 							DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
 						}
 						$this->deleteObject($unlinkedObject);
 					}
 				}
 				else {
-					if($verbose) {
+					if($this->verbose) {
 						DB::alteration_message("There are no $className objects without a link to order.", "created");
 					}
 				}
-				if($verbose) {
+				if($this->verbose) {
 					$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"$className\"")->value();
 					$countUnlinkedOnes = DB::query("SELECT COUNT(\"$className\".\"ID\") FROM \"$className\" LEFT JOIN \"Order\" ON \"$className\".\"ID\" = \"Order\".\"$orderFieldName\" WHERE \"Order\".\"ID\" IS NULL")->value();
 					DB::alteration_message("In total there are $countAll $className ($orderFieldName), of which there are $countUnlinkedOnes not linked to an order. ", "created");
