@@ -90,29 +90,28 @@ class EcommerceConfig extends Object {
 
 
 	/**
-	 * Get the value for a static value.
-	 * @return Null | Mixed
+	 * Get the value for a static variable.
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 * @param $subIdentifier A secondary identifier string, as provided in your fixture file
+	 * @return Mixed
 	 * @TODO: implement subIdentfier
 	 */
 	public function getStaticValue($className, $identifier, $subIdentifier = null) {
+		//this only runs once
 		if(!count($this->fixtureDictionary)) {
 			$this->loadData();
-			//adding the buyables
-			$buyables = EcommerceConfig::get("Buyable", "array_of_buyables");
-			foreach($buyables as $buyable) {
-				Object::add_extension($buyable, "Buyable");
+		}
+		if($subIdentfier) {
+			if(isset($this->fixtureDictionary[$className][$identifier][$subIdentfier])) {
+				return $this->fixtureDictionary[$className][$identifier][$subIdentfier];
 			}
 		}
-		if(isset($this->fixtureDictionary[$className][$identifier])) {
+		elseif(isset($this->fixtureDictionary[$className][$identifier])) {
 			return $this->fixtureDictionary[$className][$identifier];
 		}
-		else {
-			user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
-			return null;
-		}
+		user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
+		return null;
 	}
 
 	/**

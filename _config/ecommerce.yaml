@@ -103,7 +103,7 @@ OrderAddress:
 ################### EXTENSIONS #####################
 
 Buyable:
-	array_of_buyables: ["Product", "ProductVariation"]
+	array_of_buyables: ["Product"]
 	order_item_class_name_post_fix: "_OrderItem"
 
 
@@ -136,9 +136,6 @@ OrderModifierForm:
 OrderStatusLogForm:
 	controller_class: "OrderStatusLogForm_Controller"
 	validator_class: "OrderStatusLogForm_Validator"
-
-EcomQuantityField:
-	hide_plus_and_minus: true
 
 ExpiryDateField:
 	short_months: true
