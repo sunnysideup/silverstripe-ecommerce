@@ -160,18 +160,18 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"StoreAdmin" => array(
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  You can add to these by using StoreAdmin::add_managed_model, or by adding to this array.  This configuration is used a lot to add extra menu items. ",
-				"collection_controller_class" => "The controller for the collection.  ",
-				"record_controller_class" => "The controller for the record. ",
+				//"collection_controller_class" => "The controller for the collection.  ",
+				//"record_controller_class" => "The controller for the record. ",
 			),
 			"ProductsAndGroupsModelAdmin" => array(
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  You can add to these by using StoreAdmin::add_managed_model, or by adding to this array.  This configuration is used a lot to add extra menu items. ",
-				"collection_controller_class" => "The controller for the collection.  ",
-				"record_controller_class" => "The controller for the record. ",
+				//"collection_controller_class" => "The controller for the collection.  ",
+				//"record_controller_class" => "The controller for the record. ",
 			),
 			"SalesAdmin" => array(
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  You can add to these by using StoreAdmin::add_managed_model, or by adding to this array.  This configuration is used a lot to add extra menu items. ",
-				"collection_controller_class" => "The controller for the collection.  ",
-				"record_controller_class" => "The controller for the record. ",
+				//"collection_controller_class" => "The controller for the collection.  ",
+				//"record_controller_class" => "The controller for the record. ",
 			),
 			"RecalculateTheNumberOfProductsSold" => array(
 				"number_sold_calculation_type" => "Method for calculating the total number of items sold.  We either COUNT the number of orders or we make a SUM of the number of items sold. ",
