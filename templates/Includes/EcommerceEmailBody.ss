@@ -8,13 +8,12 @@
 <div id="EmailContent">
 	<table id="Content" cellspacing="0" cellpadding="0" summary="Email Information">
 		<thead>
-			<% if EmailLogo %>
 			<tr>
 				<th>
-					<img src="$EmailLogo.getAbsoluteURL" alt="Logo - $EmailLogo.Title" />
+					<% include Order_ShopInfo %>
 				</th>
 			</tr>
-			<% end_if %>
+
 			<tr>
 				<th>
 					<h1 class="title">$Subject</h1>
@@ -44,6 +43,8 @@
 					<% end_control %>
 				</td>
 			</tr>
+<% else %>
+<p>There was an error in retrieving this order. Please contact the store.</p>
 <% end_if %>
 		</tbody>
 	</table>
