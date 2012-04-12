@@ -7,8 +7,7 @@
 <body>
 	<!-- todo: allow printing multiple invoices at once -->
 	<div style="page-break-after: always;">
-		<h1 class="title">$SiteConfig.Title Invoice</h1>
-		<p id="ShopPhysicalAddress">$SiteConfig.ShopPhysicalAddress</p>
+		<% include Order_ShopInfo %>
 		<% control Order %>
 			<% include Order %>
 		<% end_control %>
