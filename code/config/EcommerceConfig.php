@@ -102,9 +102,9 @@ class EcommerceConfig extends Object {
 		if(!count($this->fixtureDictionary)) {
 			$this->loadData();
 		}
-		if($subIdentfier) {
-			if(isset($this->fixtureDictionary[$className][$identifier][$subIdentfier])) {
-				return $this->fixtureDictionary[$className][$identifier][$subIdentfier];
+		if($subIdentifier) {
+			if(isset($this->fixtureDictionary[$className][$identifier][$subIdentifier])) {
+				return $this->fixtureDictionary[$className][$identifier][$subIdentifier];
 			}
 		}
 		elseif(isset($this->fixtureDictionary[$className][$identifier])) {
