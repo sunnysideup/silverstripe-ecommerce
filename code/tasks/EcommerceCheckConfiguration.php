@@ -101,6 +101,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$projectFolderAndFile = $projectFolder."/".$file;
 		$fullFilePath = $baseFolder."/".$projectFolderAndFile;
 		$defaultFileFullPath = Director::baseFolder()."/".$this->defaultLocation;
+		DB::alteration_message("Current files used: ".$files, "created");
 		if(!file_exists($baseAndProjectFolder)) {
 			mkdir($baseAndProjectFolder);
 		}
@@ -111,11 +112,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 		if($files == $this->defaultLocation) {
 			if(file_exists($fullFilePath)) {
 				DB::alteration_message("A customisable configuration file exists here: $projectFolderAndFile, you should add the following to your _config.php file:
-				<pre>EcommerceConfig::set_folder_and_file_location(\"$projectFolderAndFile\");</pre>
+				<pre>EcommerceConfig::set_folder_and_file_locations(array(\"$projectFolderAndFile\"));</pre>
 				 ", "created");
 			}
 		}
-		echo "Current Files used: ".$files;
 	}
 
 	/**
