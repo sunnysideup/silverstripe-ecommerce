@@ -21,6 +21,7 @@ Object::add_extension("SiteConfig", "SiteConfigEcommerceExtras");
 Object::add_extension("SiteTree", "EcommerceSiteTreeExtension");
 Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller");
 Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
+Object::add_extension("Product", "Buyable");
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
 //Object::useCustomClass('Currency','CurrencyImprovements', true);
