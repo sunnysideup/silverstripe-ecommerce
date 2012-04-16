@@ -295,6 +295,7 @@ class OrderForm_Cancel extends Form {
 		$fields = new FieldSet(
 			array(
 				new HeaderField('CancelOrderHeading', _t("OrderForm.CANCELORDER", "Changed your mind?"), 3),
+				new TextField('CancellationReason', _t("OrderForm.CANCELLATIONREASON", "Reason for cancellation")),
 				new HiddenField('OrderID', '', $order->ID)
 			)
 		);
@@ -324,14 +325,11 @@ class OrderForm_Cancel extends Form {
 		if($member) {
 			if(isset($SQLData['OrderID']) && $order = DataObject::get_one('Order', "\"ID\" = ".intval($SQLData['OrderID'])." AND \"MemberID\" = ".$member->ID)){
 				if($order->canCancel()) {
-					$order->Cancel($member);
-					$form->sessionMessage(
-						_t(
-							'OrderForm.CANCELLEDORDER',
-							'Order has been cancelled.'
-						),
-						'good'
-					);
+					$reason = "";
+					if(isset($SQLData["CancellationReason"])) {
+						$reason = $SQLData["CancellationReason"];
+					}
+					$order->Cancel($member, $reason);
 					Director::redirectBack();
 					return false;
 				}
