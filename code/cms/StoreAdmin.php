@@ -2,8 +2,7 @@
 
 /**
  * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)
- * @ TO DO TO DO TO DO TO DO TO DO TO DO  todo: move to siteconfig
- * @authors: Jeremy, Romain, Nicolaas
+ * @authors: Nicolaas
  *
  * @package: ecommerce
  * @sub-package: cms
@@ -20,26 +19,16 @@ class StoreAdmin extends ModelAdmin{
 
 	//static $url_priority = 50;
 
-	public static $managed_models = array('OrderStep', 'EcommerceCountry', 'OrderModifier_Descriptor');
-		public static function set_managed_models($array) {self::$managed_models = $array;}
-		public static function add_managed_model($s) {self::$managed_models[] = $s;}
-		public static function remove_managed_model($s) {
-			if(self::$managed_models && count(self::$managed_models)){
-				foreach(self::$managed_models as $key => $model) {
-					if($model == $s) {
-						unset(self::$managed_models[$key]);
-					}
-				}
-			}
-		}
-
 	public static $collection_controller_class = 'StoreAdmin_CollectionController';
 
 	public static $record_controller_class = 'StoreAdmin_RecordController';
 
-	function __construct() {
-		parent::__construct();
-		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("StoreAdmin", "managed_models"));
+	/**
+	 * Standard SS Method
+	 * @return Array
+	 */
+	function getManagedModels() {
+		return EcommerceConfig::get("StoreAdmin", "managed_models");
 	}
 
 	function init() {
