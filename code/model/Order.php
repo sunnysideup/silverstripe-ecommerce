@@ -41,6 +41,8 @@ class Order extends DataObject {
 			'SubTotal',
 			'TotalPaid',
 			'TotalOutstanding',
+			'ExchangeRate',
+			'CurrencyUsed',
 			'TotalItems',
 			'TotalItemsTimesQuantity',
 			'IsCancelled',
@@ -62,7 +64,6 @@ class Order extends DataObject {
 		'SessionID' => "Varchar(32)", //so that in the future we can link sessions with Orders.... One session can have several orders, but an order can onnly have one session
 		'UseShippingAddress' => 'Boolean',
 		'CustomerOrderNote' => 'Text',
-		'CurrencyUsed' => 'Varchar(5)',
 		'ExchangeRate' => 'Double'
 	);
 
@@ -71,7 +72,8 @@ class Order extends DataObject {
 		'BillingAddress' => 'BillingAddress',
 		'ShippingAddress' => 'ShippingAddress',
 		'Status' => 'OrderStep',
-		'CancelledBy' => 'Member'
+		'CancelledBy' => 'Member',
+		'CurrencyUsed' => 'EcommerceCurrency'
 	);
 
 	public static $has_many = array(
@@ -226,7 +228,8 @@ class Order extends DataObject {
 		'OrderStatusLogs',
 		'Payments',
 		'OrderDate',
-		'UIDHash',
+		'ExchangeRate',
+		'CurrencyUsedID',
 		'StatusID'
 	);
 
@@ -508,6 +511,8 @@ class Order extends DataObject {
 			$msg = _t("Order.VERYFIRSTSTEP", "The first step in creating an order is to save (<i>add</i>) it.");
 			$fields->addFieldToTab("Root.Next", new LiteralField("VeryFirstStep", "<p>".$msg."</p>"));
 		}
+		$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
+		$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), DataObject::get("EcommerceCurrency")));
 		$this->extend('updateCMSFields',$fields);
 		return $fields;
 	}
@@ -636,12 +641,16 @@ class Order extends DataObject {
 	}
 
 
-	public function Cancel($member) {
+	public function Cancel($member, $reason = "") {
 		$this->CancelledByID = $member->ID;
 		$this->write();
 		$obj = new OrderStatusLog_Cancel();
 		$obj->AuthorID = $member->ID;
 		$obj->OrderID = $this->ID;
+		$obj->Note = $reason;
+		if($member->IsShopAdmin()) {
+			$obj->InternalUseOnly = true;
+		}
 		$obj->write();
 	}
 
@@ -978,7 +987,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->sendEmail('Order_ErrorEmail', $subject, $replacementArray, $resend = true, $adminOnly = true);
+		return $this->sendEmail('Order_ErrorEmail', $subject, $message, $resend = true, $adminOnly = true);
 	}
 
 	/**
