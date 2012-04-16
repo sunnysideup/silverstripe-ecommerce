@@ -12,12 +12,15 @@ class FixBrokenOrderSubmissionData extends BuildTask{
 
 	protected $title = "Fixes broken order submission links";
 
-	protected $description = "Fixes broken order submission links";
+	protected $description = "Fixes broken order submission links (submission records without an order)";
 
 	function run($request){
 		$problem = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = 0");
 		if($problem->value()) {
 			DB::alteration_message("the size of the problem is: ".$problem->value(), "deleted");
+		}
+		else {
+			DB::alteration_message("No broken links found.", "created");
 		}
 		$rows = DB::query("Select \"ID\" from \"Order\" WHERE \"StatusID\" > 1");
 		if($rows) {
@@ -25,7 +28,6 @@ class FixBrokenOrderSubmissionData extends BuildTask{
 				$orderID = $row["ID"];
 				$inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = $orderID");
 				if($inners->value() < 1) {
-					DB::alteration_message( "no record for order: ".$orderID, "edited");
 					$sql = "
 					SELECT *
 					FROM OrderStatusLog_Submitted
