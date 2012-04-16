@@ -93,9 +93,10 @@ class EcommercePayment extends DataObjectDecorator {
 			return false;
 		}
 		else {
-			// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)
 			if($result->isProcessing()) {
-				//do nothing
+				//IMPORTANT!!!
+				// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)
+				return $result->getValue();
 			}
 			else {
 				if(isset($data["returntolink"])) {
