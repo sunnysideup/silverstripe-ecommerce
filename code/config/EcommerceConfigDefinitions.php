@@ -177,7 +177,7 @@ class EcommerceConfigDefinitions extends Object {
 				"number_sold_calculation_type" => "Method for calculating the total number of items sold.  We either COUNT the number of orders or we make a SUM of the number of items sold. ",
 			),
 			"CartCleanupTask" => array(
-				"clear_days" => "If set to zero, all objects will be cleared. If set to ten, objects older than ten days will be cleared.",
+				"clear_minutes" => "If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
 				"maximum_number_of_objects_deleted" => "This sets the total number of objects to be cleaned per clean.  We can keep this low to reduce time per clean and to reduce risks.",
 				"never_delete_if_linked_to_member" => "If set to TRUE, then orders with a member linked to it will never be deleted.",
 				"linked_objects_array" => "An array of objects that are linked to orders. When we delete an order we also delete these linked objects."
