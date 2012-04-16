@@ -28,7 +28,7 @@ class CartCleanupTask extends HourlyTask {
 	public static function run_on_demand() {
 		$obj = new CartCleanupTask();
 		$obj->verbose = true;
-		$obj->run();
+		$obj->run(null);
 	}
 
 	/**
@@ -192,7 +192,7 @@ class CartCleanupTask extends HourlyTask {
 
 
 	private function deleteObject($objectToDelete){
-		$objectToDelete = DataObject::get_by_id($unlinkedObject->ClassName,$unlinkedObject->ID);
+		$objectToDelete = DataObject::get_by_id($objectToDelete->ClassName,$objectToDelete->ID);
 		$objectToDelete->delete();
 		$objectToDelete->destroy();
 	}
