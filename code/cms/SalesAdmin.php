@@ -18,29 +18,16 @@ class SalesAdmin extends ModelAdmin{
 
 	public static $menu_priority = 1;
 
-	//static $url_priority = 50;
-
-	public static $managed_models = array('Order','OrderStatusLog', 'OrderItem', 'OrderModifier', 'OrderEmailRecord', 'BillingAddress', 'ShippingAddress','Payment');
-		public static function set_managed_models($a) {self::$managed_models = $a;}
-		public static function add_managed_model($s) {self::$managed_models[] = $s;}
-		public static function remove_managed_model($s) {
-			if(self::$managed_models && count(self::$managed_models)){
-				foreach(self::$managed_models as $key => $model) {
-					if($model == $s) {
-						unset(self::$managed_models[$key]);
-					}
-				}
-			}
-		}
-
 	public static $collection_controller_class = 'SalesAdmin_CollectionController';
 
 	public static $record_controller_class = 'SalesAdmin_RecordController';
 
-
-	function __construct() {
-		parent::__construct();
-		self::$managed_models = array_merge(self::$managed_models, EcommerceConfig::get("SalesAdmin", "managed_models"));
+	/**
+	 * Standard SS Method
+	 * @return Array
+	 */
+	function getManagedModels() {
+		return EcommerceConfig::get("SalesAdmin", "managed_models");
 	}
 
 	function init() {
