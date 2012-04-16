@@ -14,7 +14,7 @@ class AddCustomersToCustomerGroups extends BuildTask {
 			$allCombos = DB::query("
 				SELECT \"Group_Members\".\"ID\", \"Group_Members\".\"MemberID\", \"Group_Members\".\"GroupID\"
 				FROM \"Group_Members\"
-				WHERE \"Group_Members\".\"GroupID\" = ".$gp->ID.";"
+				WHERE \"Group_Members\".\"GroupID\" = ".$customerGroup->ID.";"
 			);
 			//make an array of all combos
 			$alreadyAdded = array();
@@ -33,11 +33,15 @@ class AddCustomersToCustomerGroups extends BuildTask {
 
 			//add combos
 			if($unlistedMembers) {
-				$existingMembers = $gp->Members();
+				$existingMembers = $customerGroup->Members();
 				foreach($unlistedMembers as $member) {
 					$existingMembers->add($member);
+					DB::alteration_message("Added member to customers: ".$member->Email, "created");
 				}
 			}
+		}
+		else {
+			DB::alteration_message("NO customer group found", "deleted");
 		}
 	}
 
