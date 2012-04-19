@@ -337,17 +337,13 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Action to return specific version of a product.
 	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
-	 * @param HTTPRequest $request
+	 * @param Int $versionNumber
+	 * @return DataObject | Null
 	 */
-	function viewversion($request){
-		$version = intval($request->param("ID"));
-		if($version) {
-			$record = Versioned::get_version($this->ClassName, $this->ID, $version);
-			if($record) {
-				$this->record = $record;
-			}
+	function getVersionOfProduct($versionNumber){
+		if($versionNumber) {
+			return Versioned::get_version($this->ClassName, $this->ID, $versionNumber);
 		}
-		return array();
 	}
 
 
@@ -684,6 +680,15 @@ class Product_Controller extends Page_Controller {
 		parent::init();
 		Requirements::themedCSS('Products');
 	}
+
+	function viewversion($request) {
+		$version = intval($request->param("ID"));
+		if($record = $this->getVersionOfProduct($version)) {
+			$this->record = $record;
+		}
+		return array();
+	}
+
 
 	/**
 	 * Standard SS method
