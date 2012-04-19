@@ -60,7 +60,7 @@ class EcommerceDBConfig extends DataObject {
 
 	public static $summary_fields = array(
 		"Title" => "Title",
-		"UseThisOneNice" => "Use This One?"
+		"UseThisOneNice" => "Use this configuration set"
 	); //note no => for relational fields
 
 	//CRUD settings
@@ -131,8 +131,8 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	public static function current_ecommerce_db_config(){
 		if(!self::$my_current_one) {
-			$class =  EcommerceConfig::get("EcommerceDBConfig", "EcommerceDBConfigClass");
-			self::$my_current_one = new $class();
+			$className =  EcommerceConfig::get("EcommerceDBConfig", "EcommerceDBConfigClass");
+			self::$my_current_one = DataObject::get_one($className);
 		}
 		return self::$my_current_one;
 	}
@@ -151,7 +151,7 @@ class EcommerceDBConfig extends DataObject {
 
 	function customFieldLabels(){
 		$newLabels = array(
-			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use this configuration."),
+			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch configurations)."),
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is not ticked, it is assumed that prices are inclusive of tax)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),

@@ -11,6 +11,7 @@
 <% if Products %>
 	<div id="Products" class="category">
 		<div class="resultsBar">
+			<% if TotalCount %><span class="totalCout">$TotalCount <% _t('ProductGroup.PRODUCTSFOUND','products found.') %></span><% end_if %>
 			<% if SortLinks %><span class="sortOptions"><% _t('ProductGroup.SORTBY','Sort by') %> <% control SortLinks %><a href="$Link" class="sortlink $Current">$Name</a> <% end_control %></span><% end_if %>
 		</div>
 		<ul class="productList displayStyle$MyDefaultDisplayStyle">
