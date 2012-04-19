@@ -284,8 +284,17 @@ class Product extends Page implements BuyableModel {
 	 * @return String
 	 */
 	function DefaultImageLink() {
-		$this->EcomConfig()->DefaultImageLink();
+		return $this->EcomConfig()->DefaultImageLink();
 	}
+
+	/**
+	 * returns the default image of the product
+	 * @return Image | Null
+	 */
+	public function DefaultImage() {
+		return $this->EcomConfig()->DefaultImage();
+	}
+
 
 	/**
 	 * returns a product image for use in templates

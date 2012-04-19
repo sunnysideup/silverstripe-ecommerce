@@ -326,6 +326,24 @@ class EcommerceDBConfig extends DataObject {
 		return "ecommerce/images/productPlaceHolderThumbnail.gif";
 	}
 
+	/**
+	 * Returns the default image or a dummy one if it does not exists.
+	 * @return String
+	 */
+	function DefaultImage() {
+		if($defaultImage = $this->DefaultImage()) {
+			if($defaultImage->exists()) {
+				return $defaultImage;
+			}
+			else {
+				$obj = new Product_Image();
+				$obj->Link = DefaultImageLink();
+				$obj->URL = DefaultImageLink();
+				return $obj;
+			}
+		}
+	}
+
 	function onAfterWrite(){
 		if($this->UseThisOne) {
 			$configs = DataObject::get("EcommerceDBConfig", "\"UseThisOne\" = 1 AND \"ID\" <>".$this->ID);
