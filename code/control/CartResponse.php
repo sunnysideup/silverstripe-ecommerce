@@ -11,6 +11,20 @@
 
 class CartResponse extends EcommerceResponse {
 
+	/**
+	 * Should the page be reloaded rather than using AJAX?
+	 * @var Boolean $force_reload
+	 */
+	protected static $force_reload = false;
+
+	/**
+	 * Sets the $force_reload to true;
+	 */
+	public static function set_force_reload() {
+		self::$force_reload = true;
+	}
+
+
 
 	/**
 	 * Builds json object to be returned via ajax.
@@ -28,6 +42,8 @@ class CartResponse extends EcommerceResponse {
 		//init Order - IMPORTANT
 		$currentOrder = ShoppingCart::current_order();
 		$currentOrder->calculateOrderAttributes(true);
+		//now we have done the calculations you may find that we need to reload...
+
 		$ajaxObject = $currentOrder->AJAXDefinitions();
 
 		// populate Javascript
@@ -51,6 +67,7 @@ class CartResponse extends EcommerceResponse {
 			"v" => "inCart",
 			"without" => "notInCart"
 		);
+
 		//in cart items
 		if(isset($_REQUEST["loadingindex"])) {
 			$js[] = array(
@@ -122,7 +139,12 @@ class CartResponse extends EcommerceResponse {
 			"p" => "innerHTML",
 			"v" => $currentOrder->renderWith("Sidebar_Cart_Inner")
 		);
-
+		//now can check if it needs to be reloaded
+		if(self::$force_reload) {
+			$js = array(
+				"reload" => true
+			);
+		}
 		//merge and return
 		if(is_array($data)) {
 			$js = array_merge($js, $data);
@@ -133,9 +155,7 @@ class CartResponse extends EcommerceResponse {
 		$json = str_replace('\r', " ", $json);
 		$json = str_replace('\n', " ", $json);
 		$json = preg_replace('/\s\s+/', ' ', $json);
-		if(Director::isDev()) {
-			$json = str_replace("{", "\r\n{", $json);
-		}
+		$json = str_replace("{", "\r\n{", $json);
 
 		return $json;
 	}

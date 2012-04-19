@@ -90,25 +90,6 @@ class CartPage extends Page{
 	}
 
 	/**
-	 *@return String (HTML Snippet)
-	 **/
-	function getEcommerceMenuTitle() {
-		$count = 0;
-		$order = ShoppingCart::current_order();
-		if($order) {
-			$count = $order->TotalItems();
-			if($count && $this->LinkingMode() != "current") {
-				$oldSSViewer = SSViewer::get_source_file_comments();
-				SSViewer::set_source_file_comments(false);
-				$s = $this->renderWith("AjaxNumItemsInCart");
-				SSViewer::set_source_file_comments($oldSSViewer);
-				return $s;
-			}
-		}
-		return "";
-	}
-
-	/**
 	 * Returns the Link to the CartPage on this site
 	 * @return String (URLSegment)
 	 */
@@ -153,6 +134,26 @@ class CartPage extends Page{
 	 */
 	function IsEcommercePage () {
 		return true;
+	}
+
+
+	/**
+	 *@return String (HTML Snippet)
+	 **/
+	function MenuTitleExtension() {
+		$count = 0;
+		$order = ShoppingCart::current_order();
+		if($order) {
+			$count = $order->TotalItems();
+			if($count && $this->LinkingMode() != "current") {
+				$oldSSViewer = SSViewer::get_source_file_comments();
+				SSViewer::set_source_file_comments(false);
+				$s = $this->renderWith("AjaxNumItemsInCart");
+				SSViewer::set_source_file_comments($oldSSViewer);
+				return $s;
+			}
+		}
+		return "";
 	}
 
 }

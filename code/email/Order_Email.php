@@ -40,6 +40,8 @@ class Order_Email extends Email {
 		return _t("Order_Email.SALEUPDATE", "Sale Update {OrderNumber} ").$title;
 	}
 
+
+
 	/**
 	 *
 	 * @param Null|String $messageID - ID for the message, you can leave this blank
@@ -113,6 +115,15 @@ class Order_Email extends Email {
 		fclose($cssFileHandler);
 		$emog = new Emogrifier($this->body, $css);
 		$this->body = $emog->emogrify();
+	}
+
+	/**
+	 * returns the instance of EcommerceDBConfig
+	 *
+	 * @return EcommerceDBConfig
+	 **/
+	public function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
 

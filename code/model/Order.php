@@ -808,8 +808,7 @@ class Order extends DataObject {
 	 * @return boolean
 	 */
 	function ShopClosed() {
-		$siteConfig = DataObject::get_one("SiteConfig");
-		return $siteConfig->ShopClosed;
+		return EcomConfig()->ShopClosed;
 	}
 
 
@@ -1014,7 +1013,7 @@ class Order extends DataObject {
 		}
 		$replacementArray = array("Message" => $message);
 		$replacementArray["Order"] = $this;
-		$replacementArray["EmailLogo"] = SiteConfig::current_site_config()->EmailLogo();
+		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
@@ -1584,11 +1583,17 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *
+	 *todo: should this be the preferred currency or the originating currency of the site
 	 *@return Money
 	 **/
 	function TotalOutstandingAsMoneyObject(){
-		$money = DBField::create('Money', array("Amount" => $this->TotalOutstanding(), "Currency" => $this->Currency()));
+		$money = DBField::create(
+			'Money',
+			array(
+				"Amount" => $this->TotalOutstanding(),
+				"Currency" => $this->EcomConfig()->Currency()
+			)
+		);
 		return $money;
 	}
 
@@ -1876,18 +1881,6 @@ class Order extends DataObject {
 
 
 	/**
-	 * Return the currency of this order.
-	 * Note: this is a fixed value across the entire site.
-	 *
-	 * @return string
-	 */
-	function Currency() {
-		if(class_exists('Payment')) {
-			return Payment::site_currency();
-		}
-	}
-
-	/**
 	 * Converts the Order into HTML, based on the Order Template.
 	 * @return String - HTML1
 	 **/
@@ -1966,6 +1959,15 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * returns the instance of EcommerceDBConfig
+	 *
+	 * @return EcommerceDBConfig
+	 **/
+	public function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
+	}
+
+	/**
 	 *
 	 *@return Array (for use in AJAX for JSON)
 	 **/
@@ -1997,6 +1999,29 @@ class Order extends DataObject {
 			'p' => 'innerHTML',
 			'v' => $this->ExpectedCountryName()
 		);
+	}
+
+	/**
+	 *@return Boolean
+	 **/
+	public function MoreThanOneItemInCart() {
+		return $this->NumItemsInCart() > 1 ? true : false;
+	}
+
+	/**
+	 * @ToDO: move to more appropriate class
+	 * @return Float
+	 **/
+	public function SubTotalCartValue() {
+		return $this->SubTotal;
+	}
+
+	/**
+	 * @ToDO: move to more appropriate class
+	 * @return Integer
+	 **/
+	public function NumItemsInCart() {
+		return $this->TotalItems();
 	}
 
 

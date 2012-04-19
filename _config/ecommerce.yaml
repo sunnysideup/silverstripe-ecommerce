@@ -9,13 +9,16 @@
 #
 #
 
+################### CONFIG #####################
+EcommerceDBConfig:
+	EcommerceDBConfigClass: EcommerceDBConfig
 ################### PAGES #####################
 
 CheckoutPage_Controller:
 	checkout_steps: [
-		"orderitems",
-		"orderformaddress",
-		"orderconfirmationandpayment"
+		orderitems,
+		orderformaddress,
+		orderconfirmationandpayment
 	]
 
 ProductGroup:
@@ -62,14 +65,14 @@ Order:
 
 OrderStep:
 	order_steps_to_include: [
-		"OrderStep_Created",
-		"OrderStep_Submitted",
-		"OrderStep_SentInvoice",
-		"OrderStep_Paid",
-		"OrderStep_Confirmed",
-		"OrderStep_SentReceipt",
-		"OrderStep_Sent",
-		"OrderStep_Archived"
+		OrderStep_Created,
+		OrderStep_Submitted,
+		OrderStep_SentInvoice,
+		OrderStep_Paid,
+		OrderStep_Confirmed,
+		OrderStep_SentReceipt,
+		OrderStep_Sent,
+		OrderStep_Archived
 	]
 
 OrderStep_Confirmed:
@@ -86,7 +89,9 @@ OrderStep_Confirmed:
 		</div>"
 
 OrderStatusLog:
-	available_log_classes_array: ["OrderStatusLog_PaymentCheck"]
+	available_log_classes_array: [
+		OrderStatusLog_PaymentCheck
+	]
 	order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
 
 EcommerceCountry:
@@ -104,8 +109,6 @@ OrderAddress:
 
 Buyable:
 	array_of_buyables: ["Product"]
-	order_item_class_name_post_fix: "_OrderItem"
-
 
 EcommerceRole:
 	allow_customers_to_setup_accounts: true
@@ -119,9 +122,9 @@ EcommerceRole:
 	admin_permission_code: "SHOPADMIN"
 	admin_role_title: "managing store"
 	admin_role_permission_codes: [
-		"CMS_ACCESS_ProductsAndGroupsModelAdmin",
-		"CMS_ACCESS_SalesAdmin",
-		"CMS_ACCESS_StoreAdmin"
+		CMS_ACCESS_ProductsAndGroupsModelAdmin,
+		CMS_ACCESS_SalesAdmin,
+		CMS_ACCESS_StoreAdmin
 	]
 
 
@@ -196,31 +199,31 @@ SimpleShippingModifier:
 
 StoreAdmin:
 	managed_models: [
-		'EcommerceDBConfig',
-		'OrderStep',
-		'EcommerceCountry',
-		'OrderModifier_Descriptor',
-		'EcommerceCurrency',
-		'OrderModifier_Descriptor',
-		'CheckoutPage_StepDescription'
+		EcommerceDBConfig,
+		OrderStep,
+		EcommerceCountry,
+		OrderModifier_Descriptor,
+		EcommerceCurrency,
+		OrderModifier_Descriptor,
+		CheckoutPage_StepDescription
 	]
 
 ProductsAndGroupsModelAdmin:
 	managed_models: [
-		'Product',
-		'ProductGroup'
+		Product,
+		ProductGroup
 	]
 
 SalesAdmin:
 	managed_models: [
-		'Order',
-		'OrderStatusLog',
-		'OrderItem',
-		'OrderModifier',
-		'OrderEmailRecord',
-		'BillingAddress',
-		'ShippingAddress',
-		'Payment'
+		Order,
+		OrderStatusLog,
+		OrderItem,
+		OrderModifier,
+		OrderEmailRecord,
+		BillingAddress,
+		ShippingAddress,
+		Payment
 	]
 
 

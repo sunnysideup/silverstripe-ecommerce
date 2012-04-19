@@ -1,0 +1,259 @@
+<?php
+
+/**
+ * @description: This class extends any DataObject (e.g. Product), including SiteTree items
+ * once extended, any "buyable" item can be added to cart.
+ *
+ * @authors: Silverstripe, Jeremy, Nicolaas
+ *
+ * @package: ecommerce
+ * @sub-package: products
+ *
+ **/
+
+class BuyableOLD extends DataObjectDecorator {
+
+	/**
+	 * tells is if a classanme is a buyable
+	 * @param String $className - name of the class to be tested
+	 * @return Boolean
+	 */
+	static function is_buyable($className) {
+		$buyablesArray = EcommerceConfig::get("Buyable", "array_of_buyables");
+		if(in_array($className, $buyablesArray)) {
+			return true;
+		}
+		else {
+			$array = array_reverse(ClassInfo::ancestry($className));
+			foreach($array as $className) {
+				if(in_array($className, $buyablesArray)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * static variable that "remembers" if the shop is closed.
+	 * @var Boolean
+	 **/
+	private static $shop_closed = null;
+
+
+	/**
+	 * Action to return specific version of a product.
+	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
+	 * @request - HTTPRequest
+	 */
+	function viewversion($request){
+		$version = intval($request->param("ID"));
+		if($version) {
+			$record = Versioned::get_version($this->owner->ClassName, $this->owner->ID, $version);
+			if($record) {
+				$this->owner->record = $record;
+			}
+		}
+		return array();
+	}
+
+
+	/**
+	 * Return the currency being used on the site.
+	 * @return string Currency code, e.g. "NZD" or "USD"
+	 */
+	function Currency() {
+		if(class_exists('Payment')) {
+			return Payment::site_currency();
+		}
+	}
+
+	/*
+	 * @Depreciated - use canPurchase instead
+	 */
+	function AllowPurchase() {
+		user_error("this method has been Depreciated - use canPurchase", E_USER_NOTICE);
+		return $this->owner->canPurchase();
+	}
+
+	/**
+	 *
+	 * DataObjectDecorator extension method
+	 * @return Boolean
+	 */
+	function canPurchase($member = null) {
+		if($this->EcomConfig()->ShopClosed) {
+			return false;
+		}
+		//IMPORTANT - if it returns null then the product / other buyable will not take notice of this extension.
+		return null;
+	}
+
+
+
+	/**
+	 * Returns true if the buyable is already in the shopping cart with a quantity over zero.
+	 * Note : This function is usable in the Product context because a
+	 * Product_OrderItem only has a Product object in attribute
+	 *
+	 * @return boolean
+	 */
+	function IsInCart(){
+		return ($this->owner->OrderItem() && $this->owner->OrderItem()->Quantity > 0) ? true : false;
+	}
+
+	/**
+	 * returns the order item associated with the buyable.
+	 * ALWAYS returns one, even if there is none in the cart.
+	 * Does not write to database.
+	 *@return OrderItem (no kidding)
+	 **/
+	function OrderItem() {
+		$filter = "";
+		$className = $this->owner->ClassName;
+		$this->owner->extend('updateItemFilter',$filter);
+		$item = ShoppingCart::singleton()->findOrMakeItem($this->owner, $filter);
+		$this->owner->extend('updateDummyItem',$item);
+		return $item; //return dummy item so that we can still make use of Item
+	}
+
+	//passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
+	function AddLink() {
+		return ShoppingCart_Controller::add_item_link($this->owner->ID, $this->owner->ClassName, $this->linkParameters());
+	}
+
+	/**
+	 * link use to add (one) to cart
+	 *@return String
+	 */
+	function IncrementLink() {
+		//we can do this, because by default add link adds one
+		return $this->AddLink();
+	}
+
+	/**
+	 * Link used to remove one from cart
+	 * @return String
+	 */
+	function DecrementLink() {
+		//we can do this, because by default remove link removes on
+		return $this->RemoveLink();
+	}
+
+	/**
+	 * remove one buyable's orderitem from cart
+	 * @return String (Link)
+	 */
+	function RemoveLink() {
+		return ShoppingCart_Controller::remove_item_link($this->owner->ID, $this->owner->ClassName, $this->linkParameters());
+	}
+
+	/**
+	 * remove all of this buyable's orderitem from cart
+	 * @return String (Link)
+	 */
+	function RemoveAllLink() {
+		return ShoppingCart_Controller::remove_all_item_link($this->owner->ID, $this->owner->ClassName, $this->linkParameters());
+	}
+
+
+	/**
+	 * remove all of this buyable's orderitem from cart and go through to this buyble to add alternative selection.
+	 * @return String (Link)
+	 */
+	function RemoveAllAndEditLink() {
+		return ShoppingCart_Controller::remove_all_item_and_edit_link($this->owner->ID, $this->owner->ClassName, $this->linkParameters());
+	}
+
+
+	/**
+	 * set new quantity for buyable's orderitem
+	 * @return String (Link)
+	 */
+	function SetQuantityItemLink() {
+		return ShoppingCart_Controller::set_quantity_item_link($this->owner->ID, $this->owner->ClassName, $this->linkParameters());
+	}
+
+
+	/**
+	 * returns the instance of EcommerceConfigAjax for use in templates.
+	 * In templates, it is used like this:
+	 * $EcommerceConfigAjax.TableID
+	 *
+	 * @return EcommerceConfigAjax
+	 **/
+	public function AJAXDefinitions() {
+		return EcommerceConfigAjax::get_one($this->owner);
+	}
+
+	/**
+	 * returns the instance of EcommerceDBConfig
+	 *
+	 * @return EcommerceDBConfig
+	 **/
+	public function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
+	}
+
+	/**
+	 * set new specific new quantity for buyable's orderitem
+	 * @param double
+	 * @return String (Link)
+	 */
+	function SetSpecificQuantityItemLink($quantity) {
+		return ShoppingCart_Controller::set_quantity_item_link($this->owner->ID, $this->owner->ClassName, array_merge($this->linkParameters(), array("quantity" => $quantity)));
+	}
+
+	/**
+	 * @todo: do we still need this?
+	 *@return Array
+	 **/
+	protected function linkParameters(){
+		$array = array();
+		$this->owner->extend('updateLinkParameters',$array);
+		return $array;
+	}
+
+
+	/**
+	 * you can overwrite this function in your buyable items (such as Product)
+	 *@return String
+	 **/
+	public function classNameForOrderItem($buyableClassName = '') {
+		$className = $this->owner->defaultClassNameForOrderItem;
+		$update = $this->owner->extend("updateClassNameForOrderItem", $className);
+		if($update !== null) {
+			$className = $update;
+		}
+		return $className;
+	}
+
+
+	//CRUD SETTINGS
+	function canEdit($memberID) {
+		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
+		if(Permission::checkMember($memberID, $shopAdminCode)) {
+			return true;
+		}
+		return null;
+	}
+
+	function canDelete($memberID) {
+		//can we delete sold items? or can we only make them invisible
+		return $this->canEdit($memberID);
+	}
+
+	public function canPublish($memberID) {
+		return $this->canEdit($memberID);
+	}
+
+	public function canDeleteFromLive($memberID) {
+		//check if it is in a current cart?
+		return $this->canEdit($memberID);
+	}
+
+	public function canCreate($memberID) {
+		return $this->canEdit($memberID);
+	}
+
+}

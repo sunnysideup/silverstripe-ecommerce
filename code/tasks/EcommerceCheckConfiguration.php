@@ -6,6 +6,8 @@
  * (b) which configs are required, but not set
  * (c) review of set configs
  *
+ * @TODO: compare to default
+ *
  */
 
 class EcommerceCheckConfiguration extends BuildTask{
@@ -68,7 +70,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->classesThatDoNotExist();
 					$this->definitionsNotSet();
 					$this->configsNotSet();
-					$this->addSiteConfigToConfigs();
+					$this->addEcommerceDBConfigToConfigs();
 					$this->addOtherValuesToConfigs();
 					$this->definedConfigs();
 				}
@@ -127,14 +129,14 @@ class EcommerceCheckConfiguration extends BuildTask{
 		foreach($this->configs as $className => $setting) {
 			if(!isset($this->definitions[$className])) {
 				$allOK = false;
-				DB::alteration_message("$className", "Edited");
+				DB::alteration_message("$className", "deleted");
 			}
 			else {
 				$classConfigs = $this->configs[$className];
 				foreach($classConfigs as $key => $classConfig) {
 					if(!isset($this->definitions[$className][$key])) {
 						$allOK = false;
-						DB::alteration_message("$className.$key", "Edited");
+						DB::alteration_message("$className.$key", "deleted");
 					}
 				}
 			}
@@ -269,17 +271,20 @@ class EcommerceCheckConfiguration extends BuildTask{
 		return $parser->loadFile($fixtureFolderAndFile);
 	}
 
-	protected function addSiteConfigToConfigs(){
-		$siteConfig = SiteConfig::current_site_config();
-		$fields = $siteConfig->fieldLabels();
+	/**
+	 * Adding EcommerceDBConfig values
+	 */
+	protected function addEcommerceDBConfigToConfigs(){
+		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
+		$fields = $ecommerceConfig->fieldLabels();
 		foreach($fields as $field => $description) {
-			$this->definitions["SiteConfig"][$field] = "$description. <br />THIS IS SET IN THE <a href=\"/admin/root\">SiteConfig</a>";
-			$this->configs["SiteConfig"][$field] = $siteConfig->$field;
+			$this->definitions["EcommerceDBConfig"][$field] = "$description. <br />THIS IS SET IN THE <a href=\"/admin/shop\">Ecommerce Configuration</a>";
+			$this->configs["EcommerceDBConfig"][$field] = $ecommerceConfig->$field;
 			$imageField = $field."ID";
-			if(isset($siteConfig->$imageField)) {
-				if($image = $siteConfig->$field()) {
-					if($image->exists() && $image instanceOF Image) {
-						$this->configs["SiteConfig"][$field] = "[Image]  --- <img src=\"".$image->Link()."\" />";
+			if(isset($ecommerceConfig->$imageField)) {
+				if($image = $ecommerceConfig->$field()) {
+					if($image->exists() && $image instanceOf Image) {
+						$this->configs["EcommerceDBConfig"][$field] = "[Image]  --- <img src=\"".$image->Link()."\" />";
 					}
 				}
 			}

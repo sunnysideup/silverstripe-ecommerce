@@ -340,6 +340,10 @@ EcomCart = {
 		//add loadingElement to data return
 		//clean up documentation at the top of the document
 		if(EcomCart.debug) {console.debug("------------- SET CHANGES -----------");}
+		if(changes.reload) {
+			window.location = window.location;
+			return;
+		}
 		for(var i in changes) {
 			var change = changes[i];
 			if(typeof(change.t) != 'undefined' && typeof(change.t) != 'undefined') {

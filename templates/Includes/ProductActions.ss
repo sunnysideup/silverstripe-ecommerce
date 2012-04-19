@@ -10,7 +10,7 @@
 			<% else %>
 			$CalculatedPrice.Nice
 			<% end_if %>
-			<% if Currency %><span class="currencyQuantifier">$Currency</span><% end_if %>
+			<% if EcomConfig.Currency %><span class="currencyQuantifier">$EcomConfig.Currency</span><% end_if %>
 			<% if Quantifier %><span class="mainQuantifier">$Quantifier</span><% end_if %>
 		</p>
 		<% end_if %>

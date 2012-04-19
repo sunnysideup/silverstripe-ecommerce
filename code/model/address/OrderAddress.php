@@ -44,13 +44,13 @@ class OrderAddress extends DataObject {
 	 * e.g. http://www.nzpost.co.nz/Cultures/en-NZ/OnlineTools/PostCodeFinder
 	 * @return String
 	 */
-	public static function get_postal_code_url() {$sc = SiteConfig::current_site_config(); if($sc) {return $sc->PostalCodeURL;}  }
+	public static function get_postal_code_url() {EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeURL;}
 
 	/**
 	 * e.g. "click here to check post code"
 	 * @return String
 	 */
-	public static function get_postal_code_label() {$sc = SiteConfig::current_site_config(); if($sc) {return $sc->PostalCodeLabel;}  }
+	public static function get_postal_code_label() {EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;}
 
 	/**
 	 * returns the id of the MAIN country field for template manipulation.
@@ -535,6 +535,17 @@ class OrderAddress extends DataObject {
 		}
 		return Convert::array2json($jsArray);
 	}
+
+
+	/**
+	 * returns the instance of EcommerceDBConfig
+	 *
+	 * @return EcommerceDBConfig
+	 **/
+	public function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
+	}
+
 
 }
 

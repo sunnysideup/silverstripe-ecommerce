@@ -85,30 +85,22 @@ class EcommerceDefaultRecords extends BuildTask {
 
 
 		$update = array();
-		$siteConfig = DataObject::get_one("SiteConfig");
-		if($siteConfig) {
-			if(!$siteConfig->ReceiptEmail) {
-				$siteConfig->ReceiptEmail = Email::getAdminEmail();
-				if(!$siteConfig->ReceiptEmail) {
+		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
+		if($ecommerceConfig) {
+			if(!$ecommerceConfig->ReceiptEmail) {
+				$ecommerceConfig->ReceiptEmail = Email::getAdminEmail();
+				if(!$ecommerceConfig->ReceiptEmail) {
 					user_error("you must set an AdminEmail (Email::setAdminEmail)", E_USER_NOTICE);
 				}
 				$update[]= "created default entry for ReceiptEmail";
 			}
-			if(!$siteConfig->ReceiptSubject) {
-				$siteConfig->ReceiptSubject = "Shop Sale Information {OrderNumber}";
-				$update[]= "created default entry for ReceiptSubject";
-			}
-			if(!$siteConfig->DispatchEmailSubject) {
-				$siteConfig->DispatchEmailSubject = "Your order has been dispatched";
-				$update[]= "created default entry for DispatchEmailSubject";
-			}
-			if(!$siteConfig->NumberOfProductsPerPage) {
-				$siteConfig->NumberOfProductsPerPage = 12;
+			if(!$ecommerceConfig->NumberOfProductsPerPage) {
+				$ecommerceConfig->NumberOfProductsPerPage = 12;
 				$update[]= "created default entry for NumberOfProductsPerPage";
 			}
 			if(count($update)) {
-				$siteConfig->write();
-				DB::alteration_message($siteConfig->ClassName." created/updated: ".implode(" --- ",$update), 'created');
+				$ecommerceConfig->write();
+				DB::alteration_message($ecommerceConfig->ClassName." created/updated: ".implode(" --- ",$update), 'created');
 			}
 		}
 
