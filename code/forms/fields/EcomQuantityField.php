@@ -55,7 +55,8 @@ class EcomQuantityField extends NumericField {
 			$this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object,$parameters);
 			 //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
 			if(!$this->orderItem) {
-				$this->orderItem = new Product_OrderItem($object->dataRecord,0);
+				$className = $obj->classNameForOrderItem();
+				$this->orderItem = new $className($object->dataRecord,0);
 			}
 		}
 		elseif($object instanceof OrderItem && $object->BuyableID){
@@ -136,14 +137,14 @@ class EcomQuantityField extends NumericField {
 	 *@return String (URLSegment)
 	 **/
 	function IncrementLink(){
-		return Convert::raw2att(ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->Buyable()->ClassName,$this->parameters));
+		return Convert::raw2att(ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters));
 	}
 
 	/**
 	 *@return String (URLSegment)
 	 **/
 	function DecrementLink(){
-		return Convert::raw2att(ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->Buyable()->ClassName,$this->parameters));
+		return Convert::raw2att(ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters));
 	}
 
 	/**
@@ -159,6 +160,6 @@ class EcomQuantityField extends NumericField {
 	 */
 
 	protected function getQuantityLink(){
-		return ShoppingCart_Controller::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->Buyable()->ClassName,$this->parameters);
+		return ShoppingCart_Controller::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
 	}
 }

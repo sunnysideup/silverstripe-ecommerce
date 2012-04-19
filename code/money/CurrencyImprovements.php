@@ -9,6 +9,8 @@
 
 class CurrencyImprovements extends Currency {
 
+	protected $format = null;
+
 
 
 }

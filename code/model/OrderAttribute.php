@@ -138,13 +138,6 @@ class OrderAttribute extends DataObject {
 		return false;
 	}
 
-	/**
-	 * @return Boolean (true on success / false on failure)
-	 **/
-	public function addBuyableToOrderItem($object) {
-		//more may be added here in the future
-		return true;
-	}
 
 	######################
 	## TEMPLATE METHODS ##
@@ -181,6 +174,15 @@ class OrderAttribute extends DataObject {
 	 **/
 	public function AJAXDefinitions() {
 		return EcommerceConfigAjax::get_one($this);
+	}
+
+	/**
+	 * returns the instance of EcommerceDBConfig
+	 *
+	 * @return EcommerceDBConfig
+	 **/
+	public function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
 	/**

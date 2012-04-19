@@ -418,7 +418,7 @@ class OrderStep extends DataObject {
 
 
 	//USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart
-	function requireDefaultRecords() {
+	public function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		$orderStepsToInclude = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 		$codesToInclude = self::get_codes_for_order_steps_to_include();
@@ -434,6 +434,14 @@ class OrderStep extends DataObject {
 				}
 			}
 		}
+	}
+
+	/**
+	 * returns the standard EcommerceDBConfig for use within OrderSteps.
+	 * @return EcommerceDBConfig
+	 */
+	protected function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 }
 

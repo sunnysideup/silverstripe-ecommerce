@@ -73,6 +73,7 @@ class ShoppingCart extends Object{
 			return $order->Link();
 		}
 	}
+
 	/**
 	 * Adds any number of items to the cart.
 	 *@param DataObject $buyable - the buyable (generally a product) being added to the cart
@@ -107,6 +108,7 @@ class ShoppingCart extends Object{
 			return $item;
 		}
 		$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEADDED", "Item could not be added."),'bad');
+		return false;
 	}
 
 	/**
@@ -186,6 +188,13 @@ class ShoppingCart extends Object{
 		if(!$buyable) {
 			user_error("No buyable was provided", E_USER_WARNING);
 		}
+		if(!$buyable->canPurchase()) {
+			if($item->exists()) {
+				$item->delete();
+				$item->destroy();
+			}
+			return false;
+		}
 		$item = null;
 		if($mustBeExistingItem) {
 			$item = $this->getExistingItem($buyable,$parameters);
@@ -195,13 +204,6 @@ class ShoppingCart extends Object{
 		}
 		if(!$item){//check for existence of item
 			$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEFOUNDINCART", "Item could not found in cart."),'warning');
-			return false;
-		}
-		if(!$buyable->canPurchase()) {
-			if($item->exists()) {
-				$item->delete();
-				$item->destroy();
-			}
 			return false;
 		}
 		return $item;
@@ -226,19 +228,22 @@ class ShoppingCart extends Object{
 	 * Helper function for making / retrieving order items.
 	 * we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
 	 * NOTE: does not write!
-	 *@todo: WHY IS THIS PUBLIC?
-	 *@param DataObject $buyable
-	 *@param Array $parameters
-	 *@return OrderItem
+	 * @param DataObject $buyable
+	 * @param Array $parameters
+	 * @return OrderItem
 	 */
 	public function findOrMakeItem($buyable,$parameters = array()){
 		if($item = $this->getExistingItem($buyable,$parameters)){
 			return $item;
 		}
 		//otherwise create a new item
+		if(!in_array("BuyableModel", class_implements($buyable))) {
+			user_error("No buyable provided");
+		}
 		$className = $buyable->classNameForOrderItem();
 		$item = new $className();
 		$item->BuyableID = $buyable->ID;
+		$item->BuyableClassName = $buyable->ClassName;
 		if(isset($buyable->Version)) {
 			$item->Version = $buyable->Version;
 		}
@@ -460,10 +465,15 @@ class ShoppingCart extends Object{
 	 */
 	protected function getExistingItem($buyable,$parameters = array()){
 		$filterString = $this->parametersToSQL($parameters);
-		$orderItemClassName = $buyable->classNameForOrderItem();
 		$orderID = $this->currentOrder()->ID;
-		// NOTE: MUST HAVE THE EXACT CLASSNAME !!!!! THEREFORE INCLUDED IN WHERE PHRASE
-		return DataObject::get_one($orderItemClassName, "\"ClassName\" = '".$orderItemClassName."' AND \"OrderID\" = ".$orderID." AND \"BuyableID\" = ".$buyable->ID." ". $filterString);
+		$obj = DataObject::get_one(
+			"OrderItem",
+			" \"BuyableClassName\" = '".$buyable->ClassName."' AND
+				\"BuyableID\" = ".$buyable->ID." AND
+				\"OrderID\" = ".$orderID." ".
+				$filterString
+		);
+		return $obj;
 	}
 
 	/**
@@ -573,6 +583,15 @@ class ShoppingCart extends Object{
 			return;
 		}
 	}
+
+	/**
+	 *
+	 * @return EcommerceDBConfig
+	 */
+	function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
+	}
+
 
 }
 
@@ -869,19 +888,19 @@ class ShoppingCart_Controller extends Controller{
 	 */
 	protected function buyable(){
 		$request = $this->getRequest();
-		$className = Convert::raw2sql($request->param('OtherID'));
+		$buyableClassName = Convert::raw2sql($request->param('OtherID'));
 		$buyableID = intval($request->param('ID'));
-		if($className && $buyableID){
-			if(Buyable::is_buyable($className)) {
-				$obj = DataObject::get_by_id($className,intval($buyableID));
+		if($buyableClassName && $buyableID){
+			if(EcommerceDBConfig::is_buyable($buyableClassName)) {
+				$obj = DataObject::get_by_id($buyableClassName,intval($buyableID));
 				if($obj) {
-					if($obj->ClassName == $className) {
+					if($obj->ClassName == $buyableClassName) {
 						return $obj;
 					}
 				}
 			}
 			else {
-				if(strpos($className, "OrderItem")) {
+				if(strpos($buyableClassName, "OrderItem")) {
 					user_error("ClassName in URL should be buyable and not an orderitem", E_USER_NOTICE);
 				}
 			}

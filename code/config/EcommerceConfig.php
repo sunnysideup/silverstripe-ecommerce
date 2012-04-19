@@ -131,6 +131,10 @@ class EcommerceConfig extends Object {
 		$this->fixtureDictionary = array_merge($newArray, $this->fixtureDictionary);
 	}
 
+	/**
+	 * returns the complete Array of data
+	 * @return Array
+	 */
 	public function getCompleteDataSet(){
 		if(!count($this->fixtureDictionary)) {
 			$this->loadData();
@@ -138,6 +142,10 @@ class EcommerceConfig extends Object {
 		return $this->fixtureDictionary;
 	}
 
+	/**
+	 * returns a list of file locations
+	 * @return Array
+	 */
 	public function fileLocations() {
 		return self::$folder_and_file_locations;
 	}

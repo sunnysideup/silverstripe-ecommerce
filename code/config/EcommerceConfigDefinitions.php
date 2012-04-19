@@ -59,6 +59,9 @@ class EcommerceConfigDefinitions extends Object {
 	public function Definitions($className = "", $variable = "") {
 		$array = array(
 		################### PAGES #####################
+			"EcommerceDBConfig" => array(
+				"EcommerceDBConfigClass" => "Class Name for the DataObject that contains the settings for the e-commerce application"
+			),
 			"CheckoutPage_Controller" => array(
 				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."
 			),
@@ -96,8 +99,7 @@ class EcommerceConfigDefinitions extends Object {
 				"field_class_and_id_prefix" => "In case you have some conflicts in the class / IDs for formfields then you can use this variable to add a few characters in front of the classes / IDs",
 			),
 			"Buyable" => array(
-				"array_of_buyables" => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable.",
-				"order_item_class_name_post_fix" => "For every buyable class, we expected a related OrderItem class.  The name is determined by this post fix. The default post-fix is _OrderItem.  With this post fix Product would have an OrderItem class called Product_OrderItem. ProductVariation links to a class called ProductVariation_OrderItem and MyDataObject will add MyDataObject_OrderItem to the cart (note the order item gets added to the cart rather than the Object itself). The Order Item should extend OrderItem and also have information about the object being sold (e.g. price). The reason we dont sell Products but rather Product_OrderItems is because there is only one product, but we have many Product_OrderItems.",
+				"array_of_buyables" => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable."
 			),
 			"EcommerceRole" => array(
 				"allow_customers_to_setup_accounts" => "Allow customers to become 'members' when they purchase items. If this is false then customers can never setup an account.",

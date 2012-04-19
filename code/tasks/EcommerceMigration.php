@@ -29,21 +29,24 @@ class EcommerceMigration extends BuildTask {
 	";
 
 	function run($request) {
-		$this->ShopMemberToMemberTableMigration_10();
-		$this->MoveItemToBuyable_20();
-		$this->ProductVersionToOrderItem_25();
-		$this->ProductIDToBuyableID_26();
-		$this->AmountToCalculatedTotal_27();
-		$this->CurrencyToMoneyFields_30();
-		$this->OrderShippingCost_40();
-		$this->OrderTax_45();
-		$this->OrderShippingAddress_50();
-		$this->OrderBillingAddress_51();
-		$this->MemberBillingAddress_52();
-		$this->MoveOrderStatus_60();
-		$this->FixBadOrderStatus_68();
-		$this->UpdateProductGroups_110();
-		$this->SetFixedPriceForSubmittedOrderItems_120();
+		$this->shopMemberToMemberTableMigration_10();
+		$this->moveItemToBuyable_20();
+		$this->productVersionToOrderItem_25();
+		$this->productIDToBuyableID_26();
+		$this->amountToCalculatedTotal_27();
+		$this->currencyToMoneyFields_30();
+		$this->orderShippingCost_40();
+		$this->orderTax_45();
+		$this->orderShippingAddress_50();
+		$this->orderBillingAddress_51();
+		$this->memberBillingAddress_52();
+		$this->moveOrderStatus_60();
+		$this->fixBadOrderStatus_68();
+		$this->updateProductGroups_110();
+		$this->setFixedPriceForSubmittedOrderItems_120();
+		$this->moveSiteConfigToEcommerceDBConfig_140();
+		$this->addClassNameToOrderItems_150();
+		$this->theEnd_9999();
 	}
 
 
@@ -82,8 +85,11 @@ class EcommerceMigration extends BuildTask {
 	}
 
 
-	function ShopMemberToMemberTableMigration_10() {
-		DB::alteration_message("<h1>10. ShopMember to Member</h1>");
+	protected function shopMemberToMemberTableMigration_10() {
+		DB::alteration_message("
+			<h1>10. ShopMember to Member</h1>
+			<p>In the first version of e-commerce we had the ShopMember class, then we moved this data to Member.</p>
+		");
 		if($this->hasTableAndField("ShopMember", "ID")) {
 			$exist = DB::query("SHOW TABLES LIKE 'ShopMember'")->numRecords();
 			if($exist > 0) {
@@ -111,10 +117,17 @@ class EcommerceMigration extends BuildTask {
 		}
 	}
 
-	function MoveItemToBuyable_20(){
-		DB::alteration_message("<h1>20. Move ItemID to Buyable</h1>");
+	protected function moveItemToBuyable_20(){
+		DB::alteration_message("
+			<h1>20. Move ItemID to Buyable</h1>
+			<p>Move the Product ID in OrderItem as ItemID to a new field called BuyableID.</p>
+		");
 		if($this->hasTableAndField("OrderItem", "ItemID")) {
-			DB::query("UPDATE \"OrderItem\" SET \"OrderItem\".\"BuyableID\" = \"OrderItem\".\"ItemID\"");
+			DB::query("
+				UPDATE \"OrderItem\"
+				SET \"OrderItem\".\"BuyableID\" = \"OrderItem\".\"ItemID\"
+				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
+			");
  			$this->makeFieldObsolete("OrderItem", "ItemID");
  			DB::alteration_message('Moved ItemID to BuyableID in OrderItem', 'created');
 		}
@@ -123,8 +136,11 @@ class EcommerceMigration extends BuildTask {
 		}
 	}
 
-	function ProductVersionToOrderItem_25() {
-		DB::alteration_message("<h1>25. ProductVersion to Version</h1>");
+	protected function productVersionToOrderItem_25() {
+		DB::alteration_message("
+			<h1>25. ProductVersion to Version</h1>
+			<p>Move the product version in the Product_OrderItem table to the OrderItem table.</p>
+		");
 		if($this->hasTableAndField("Product_OrderItem", "ProductVersion")) {
 			DB::query("
 				UPDATE \"OrderItem\", \"Product_OrderItem\"
@@ -138,13 +154,19 @@ class EcommerceMigration extends BuildTask {
 			DB::alteration_message("There is no need to migrate Product_OrderItem.ProductVersion to OrderItem.Version.");
 		}
 	}
-	function ProductIDToBuyableID_26() {
-		DB::alteration_message("<h1>26. ProductID to to BuyableID</h1>");
+
+	protected function productIDToBuyableID_26() {
+		DB::alteration_message("
+			<h1>26. ProductID to to BuyableID</h1>
+			<p>Move the product ID saved as Product_OrderItem.ProductID to OrderItem.BuyableID.</p>
+		");
 		if($this->hasTableAndField("Product_OrderItem", "ProductID")) {
 			DB::query("
-				UPDATE \"OrderItem\", \"Product_OrderItem\"
-					SET \"OrderItem\".\"BuyableID\" = \"Product_OrderItem\".\"ProductID\"
-				WHERE \"OrderItem\".\"ID\" = \"Product_OrderItem\".\"ID\"
+				UPDATE \"OrderItem\"
+					INNER JOIN \"Product_OrderItem\"
+						ON \"OrderItem\".\"ID\" = \"Product_OrderItem\".\"ID\"
+				SET \"OrderItem\".\"BuyableID\" = \"Product_OrderItem\".\"ProductID\"
+				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
 			");
 			$this->makeFieldObsolete("Product_OrderItem", "ProductID");
 			DB::alteration_message("Migrating Product_OrderItem.ProductID to OrderItem.BuyableID", "created");
@@ -152,16 +174,47 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There is no need to migrate Product_OrderItem.ProductID to OrderItem.BuyableID");
 		}
+		// we must check for individual database types here because each deals with schema in a none standard way
+		//can we use Table::has_field ???
+		if($this->hasTableAndField("ProductVariation_OrderItem", "ProductVariationVersion")) {
+			DB::query("
+				UPDATE \"OrderItem\", \"ProductVariation_OrderItem\"
+					SET \"OrderItem\".\"Version\" = \"ProductVariation_OrderItem\".\"ProductVariationVersion\"
+				WHERE \"OrderItem\".\"ID\" = \"ProductVariation_OrderItem\".\"ID\"
+			");
+			$this->makeFieldObsolete("ProductVariation_OrderItem", "ProductVariationVersion");
+			DB::alteration_message("Migrating ProductVariation_OrderItem.ProductVariationVersion to OrderItem.Version", "created");
+		}
+		else {
+			DB::alteration_message("No need to migrate ProductVariation_OrderItem.ProductVariationVersion");
+		}
+		if($this->hasTableAndField("ProductVariation_OrderItem", "ProductVariationID")) {
+			DB::query("
+				UPDATE \"OrderItem\", \"ProductVariation_OrderItem\"
+					SET \"OrderItem\".\"BuyableID\" = \"ProductVariation_OrderItem\".\"ProductVariationID\",
+							\"OrderItem\".\"BuyableClassName\" = 'ProductVariation',
+				WHERE \"OrderItem\".\"ID\" = \"ProductVariation_OrderItem\".\"ID\"
+			");
+			$this->makeFieldObsolete("ProductVariation_OrderItem", "ProductVariationID");
+			DB::alteration_message("Migrating ProductVariation_OrderItem.ProductVariationID to OrderItem.BuyableID and adding BuyableClassName = ProductVariation", "created");
+		}
+		else {
+			DB::alteration_message("No need to migrate ProductVariation_OrderItem.ProductVariationID");
+		}
 	}
 
-	function AmountToCalculatedTotal_27(){
-		DB::alteration_message("<h1>27. Move OrderModifier.Amount to OrderAttribute.CalculatedTotal</h1>");
+	protected function amountToCalculatedTotal_27(){
+		DB::alteration_message("
+			<h1>27. Move OrderModifier.Amount to OrderAttribute.CalculatedTotal</h1>
+			<p>Move the amount of the modifier in the OrderModifier.Amount field to the OrderAttribute.CalculatedTotal field.</p>
+		");
 		if($this->hasTableAndField("OrderModifier", "Amount")) {
 			DB::query("
 				UPDATE \"OrderItem\"
 					INNER JOIN \"OrderAttribute\"
 						ON \"OrderAttribute\".\"ID\" = \"OrderModifier\".\"ID\" =
 				SET \"OrderAttribute\".\"CalculatedTotal\" = \"OrderModifier\".\"Amount\"
+				WHERE \"OrderAttribute\".\"CalculatedTotal\" IS NULL OR \"OrderAttribute\".\"CalculatedTotal\" = 0 OR \"OrderAttribute\".\"CalculatedTotal\" = 0
 			");
  			$this->makeFieldObsolete("OrderModifier", "Amount");
  			DB::alteration_message('Moved OrderModifier.Amount to OrderAttribute.CalculatedTotal', 'created');
@@ -170,8 +223,12 @@ class EcommerceMigration extends BuildTask {
 			DB::alteration_message('There is no need to move OrderModifier.Amount to OrderAttribute.CalculatedTotal');
 		}
 	}
-	function CurrencyToMoneyFields_30(){
-		DB::alteration_message("<h1>30. Currency to Money Fields</h1>");
+
+	protected function currencyToMoneyFields_30(){
+		DB::alteration_message("
+			<h1>30. Currency to Money Fields</h1>
+			<p>Move the Payment Amount in the Amount field to a composite DB field (AmountAmount + AmountCurrency) </p>
+		");
 		if($this->hasTableAndField("Payment", "Amount")) {
 		//ECOMMERCE PAYMENT *************************
 			DB::query("
@@ -180,14 +237,16 @@ class EcommerceMigration extends BuildTask {
 				WHERE
 					\"Amount\" > 0
 					AND (
-						\"AmountAmount\" IS NULL
-						OR \"AmountAmount\" = 0
+						\"AmountAmount\" IS NULL OR \"AmountAmount\" = 0
 					)
 			");
 			$countAmountChanges = DB::affectedRows();
 			if($countAmountChanges) {
 				DB::alteration_message("Updated Payment.Amount field to 2.4 - $countAmountChanges rows updated", "edited");
 			}
+		}
+		else {
+			DB::alteration_message('There is no need to move Payment.Amount to Payment.AmountAmount');
 		}
 		if($this->hasTableAndField("Payment", "Currency")) {
 			DB::query("
@@ -209,11 +268,16 @@ class EcommerceMigration extends BuildTask {
 				DB::alteration_message("Potential error in Payment fields update to 2.4, please review data", "deleted");
 			}
 		}
+		else {
+			DB::alteration_message('There is no need to move Payment.Currency to Payment.AmountCurrency');
+		}
 	}
 
-
-	function OrderShippingCost_40(){
-		DB::alteration_message("<h1>40. Order Shipping Cost</h1>");
+	protected function orderShippingCost_40(){
+		DB::alteration_message("
+			<h1>40. Order Shipping Cost</h1>
+			<p>Move the shipping cost in the order to its own modifier.</p>
+		");
 		if($this->hasTableAndField("Order", "Shipping") && $this->hasTableAndField("Order", "HasShippingCost")) {
 			if($orders = DataObject::get('Order', "\"HasShippingCost\" = 1 AND \"Shipping\" IS NOT NULL")) {
 				foreach($orders as $order) {
@@ -237,8 +301,11 @@ class EcommerceMigration extends BuildTask {
 		}
 	}
 
-	function OrderTax_45(){
-		DB::alteration_message("<h1>45. Order Added Tax</h1>");
+	protected function orderTax_45(){
+		DB::alteration_message("
+			<h1>45. Order Added Tax</h1>
+			<p>Move the tax in the order to its own modifier.</p>
+		");
 		if($this->hasTableAndField("Order", "AddedTax")) {
 			DB::alteration_message("Moving Order.AddedTax to Modifier.", "created");
 			if($orders = DataObject::get('Order', "\"AddedTax\" > 0")) {
@@ -271,11 +338,14 @@ class EcommerceMigration extends BuildTask {
 	}
 
 
-	function OrderShippingAddress_50(){
-		DB::alteration_message("<h1>50. Order Shipping Address</h1>");
+	protected function orderShippingAddress_50(){
+		DB::alteration_message("
+			<h1>50. Order Shipping Address</h1>
+			<p>Move a shipping address from within Order to its own class.</p>
+		");
 		if($this->hasTableAndField("Order", "ShippingAddress")) {
 			if($this->hasTableAndField("Order", "UseShippingAddress")) {
-				if($orders = DataObject::get('Order', "\"UseShippingAddress\" = 1 AND \"ShippingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"ShippingAddress\" ON \"ShippingAddress\".\"OrderID\" = \"Order\".\"ID\"")) {
+				if($orders = DataObject::get('Order', "\"UseShippingAddress\" = 1 AND \"ShippingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"ShippingAddress\" ON \"Order\".\"ShippingAddressID\" = \"ShippingAddress\".\"ID\"")) {
 					foreach($orders as $order) {
 						if(!$order->ShippingAddressID) {
 							$obj = new ShippingAddress();
@@ -294,7 +364,13 @@ class EcommerceMigration extends BuildTask {
 							$order->ShippingAddressID = $obj->ID;
 							$order->write();
 						}
+						else {
+							DB::alteration_message("Strange contradiction occurred in Order with ID".$order->ID, "deleted");
+						}
 					}
+				}
+				else {
+					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
 				}
 				$this->makeFieldObsolete("Order", "ShippingName");
 				$this->makeFieldObsolete("Order", "ShippingAddress");
@@ -317,11 +393,14 @@ class EcommerceMigration extends BuildTask {
 	}
 
 
-	function OrderBillingAddress_51(){
-		DB::alteration_message("<h1>51. Order Billing Address</h1>");
+	protected function orderBillingAddress_51(){
+		DB::alteration_message("
+			<h1>51. Order Billing Address</h1>
+			<p>Move the billing address from the order to its own class.</p>
+		");
 		if($this->hasTableAndField("Order", "Address")) {
 			if($this->hasTableAndField("Order", "City")) {
-				if($orders = DataObject::get('Order', " AND \"BillingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"BillingAddress\" ON \"BillingAddress\".\"OrderID\" = \"Order\".\"ID\"")) {
+				if($orders = DataObject::get('Order', " AND \"BillingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"")) {
 					foreach($orders as $order) {
 						if(!$order->BillingAddressID) {
 							$obj = new BillingAddress();
@@ -330,7 +409,7 @@ class EcommerceMigration extends BuildTask {
 							if(isset($order->FirstName)) {$obj->BillingFirstName = $order->FirstName;}
 							if(isset($order->Address)) {$obj->BillingAddress = $order->Address;}
 							if(isset($order->AddressLine2)) {$obj->BillingAddress2 = $order->AddressLine2;}
-							if(isset($order->Address2)) {$obj->BillingAddress2 = $order->Address2;}
+							if(isset($order->Address2)) {$obj->BillingAddress2 .= $order->Address2;}
 							if(isset($order->City)) {$obj->BillingCity = $order->City;}
 							if(isset($order->PostalCode)) {$obj->BillingPostalCode = $order->PostalCode;}
 							if(isset($order->State)) {$obj->BillingState = $order->State;}
@@ -343,7 +422,13 @@ class EcommerceMigration extends BuildTask {
 							$order->BillingAddressID = $obj->ID;
 							$order->write();
 						}
+						else {
+							DB::alteration_message("Strange contradiction occurred in Order with ID".$order->ID, "deleted");
+						}
 					}
+				}
+				else {
+					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
 				}
 				$this->makeFieldObsolete("Order", "Email");
 				$this->makeFieldObsolete("Order", "FirstName");
@@ -369,11 +454,14 @@ class EcommerceMigration extends BuildTask {
 
 
 
-	function MemberBillingAddress_52(){
-		DB::alteration_message("<h1>52. Member Billing Address</h1>");
+	protected function memberBillingAddress_52(){
+		DB::alteration_message("
+			<h1>52. Member Billing Address</h1>
+			<p>Move address details in the member table to its own class (billingaddress)</p>
+		");
 		if($this->hasTableAndField("Member", "Address")) {
 			if($this->hasTableAndField("Member", "City")) {
-				if($orders = DataObject::get('Order', "\"MemberID\" > 0 AND \"BillingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"BillingAddress\" ON \"BillingAddress\".\"OrderID\" = \"Order\".\"ID\"")) {
+				if($orders = DataObject::get('Order', "\"MemberID\" > 0 AND \"BillingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"")) {
 					foreach($orders as $order) {
 						if(!$order->BillingAddressID) {
 							$member = DataObject::get_by_id("Member", $order->MemberID);
@@ -400,9 +488,14 @@ class EcommerceMigration extends BuildTask {
 								DB::alteration_message("There is no memmber associated with this order ".$order->ID, "deleted");
 							}
 						}
+						else {
+							DB::alteration_message("Strange contraduction occurred!", "deleted");
+						}
 					}
 				}
-				//do not delete member fields, because they might be used in other places.
+				else {
+					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
+				}
 			}
 			else {
 				DB::alteration_message("There is no Address2 field, but there is an Address field in Member - this might be an issue.", "deleted");
@@ -414,8 +507,11 @@ class EcommerceMigration extends BuildTask {
 	}
 
 
-	function MoveOrderStatus_60() {
-		DB::alteration_message("<h1>60. Move Order Status</h1>");
+	protected function moveOrderStatus_60() {
+		DB::alteration_message("
+			<h1>60. Move Order Status</h1>
+			<p>Moving order status from the enum field to Order Step.</p>
+		");
 		if($this->hasTableAndField("Order", "Status")) {
 		// 2) Cancel status update
 			$orders = DataObject::get('Order', "\"Status\" = 'Cancelled'");
@@ -516,6 +612,9 @@ class EcommerceMigration extends BuildTask {
 					}
 				}
 			}
+			else {
+				DB::alteration_message("No orders could be found.");
+			}
 			$this->makeFieldObsolete("Order", "Status");
 		}
 		else {
@@ -523,8 +622,11 @@ class EcommerceMigration extends BuildTask {
 		}
 	}
 
-	function FixBadOrderStatus_68(){
-		DB::alteration_message("<h1>68. Fix Bad Order Status</h1>");
+	protected function fixBadOrderStatus_68(){
+		DB::alteration_message("
+			<h1>68. Fix Bad Order Status</h1>
+			<p>Fixing any orders with an StatusID that is not in use...</p>
+		");
 		$firstOption = DataObject::get_one("OrderStep");
 		if($firstOption) {
 			$badOrders = DataObject::get("Order", "\"StatusID\" = 0 OR \"StatusID\" IS NULL OR \"OrderStep\".\"ID\" IS NULL", "", " LEFT JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
@@ -545,8 +647,11 @@ class EcommerceMigration extends BuildTask {
 	}
 
 
-	function UpdateProductGroups_110(){
-		DB::alteration_message("<h1>110. Update Product Groups: Sets the product groups 'show products' to the default.</h1>");
+	protected function updateProductGroups_110(){
+		DB::alteration_message("
+			<h1>110. Update Product Groups: </h1>
+			<p>Set the product groups 'show products' to the default.</p>
+		");
 		$checkIfAnyLevelsAreSetAtAll = DB::query("SELECT COUNT(ID) FROM \"ProductGroup\" WHERE \"LevelOfProductsToShow\" <> 0 AND \"LevelOfProductsToShow\" IS NOT NULL")->value();
 		if($checkIfAnyLevelsAreSetAtAll == 0 && ProductGroup::$defaults["LevelOfProductsToShow"] != 0) {
 			//level of products to show
@@ -591,8 +696,11 @@ class EcommerceMigration extends BuildTask {
 		}
 	}
 
-	function SetFixedPriceForSubmittedOrderItems_120() {
-		DB::alteration_message("<h1>Set Fixed Price for Submitted Order Items: Migration taks to fix the price for submitted order items</h1>");
+	protected function setFixedPriceForSubmittedOrderItems_120() {
+		DB::alteration_message("
+			<h1>Set Fixed Price for Submitted Order Items: </h1>
+			<p>Migration task to fix the price for submitted order items.</p>
+		");
 		if($this->hasTableAndField("OrderModifier", "CalculationValue")) {
 			DB::query("
 				UPDATE \"OrderAttribute\"
@@ -643,6 +751,85 @@ class EcommerceMigration extends BuildTask {
 		}
 	}
 
+	protected function moveSiteConfigToEcommerceDBConfig_140(){
+		DB::alteration_message("
+			<h1>140. Move Site Config fields to Ecommerce DB Config</h1>
+			<p>Moving the general config fields from the SiteConfig to the EcommerceDBConfig.</p>
+		");
+		$fields = array(
+			"ShopClosed",
+			"ShopPricesAreTaxExclusive",
+			"ShopPhysicalAddress",
+			"ReceiptEmail",
+			"PostalCodeURL",
+			"PostalCodeLabel",
+			"NumberOfProductsPerPage",
+			"OnlyShowProductsThatCanBePurchased",
+			"ProductsHaveWeight",
+			"ProductsHaveModelNames",
+			"ProductsHaveQuantifiers",
+			"ProductsAlsoInOtherGroups",
+			"ProductsHaveVariations",
+			"EmailLogoID",
+			"DefaultProductImageID"
+		);
+		$ecomConfig = DataObject::get_one("EcommerceDBConfig");
+		$sc = SiteConfig::current_site_config();
+		if($ecomConfig && $sc) {
+			foreach($fields as $field) {
+				if($this->hasTableAndField("SiteConfig", $field)) {
+					$ecomConfig->$field = $sc->$field;
+					$ecomConfig->write();
+					$this->makeFieldObsolete("SiteConfig", $field);
+					DB::alteration_message("Migrated SiteConfig.$field", "created");
+				}
+				else {
+					DB::alteration_message("SiteConfig.$field is not available", "edited");
+				}
+			}
+		}
+		else {
+			DB::alteration_message("SiteConfig and EcommerceDBConfig are not available", "edited");
+		}
+	}
+
+	function addClassNameToOrderItems_150() {
+		DB::alteration_message("
+			<h1>150. Add a class name to all buyables.</h1>
+			<p>ClassNames used to be implied, this is now saved as OrderItem.BuyableClassName.</p>
+		");
+		$rows = DB::query("
+			SELECT \"ID\", \"ClassName\"
+			FROM \"OrderAttribute\"
+				INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\"
+			WHERE \"BuyableClassName\" = '' OR \"BuyableClassName\" IS NULL;
+		");
+		if($rows) {
+			foreach($rows as $row) {
+				$orderItemPostFix = "_OrderItem";
+				$id = $row["ID"];
+				$className = str_replace($orderItemPostFix, "", $row["ClassName"]);
+				if(class_exists($className) && ClassInfo::is_subclass_of($className, "DataObject")) {
+					DB::query("
+						UPDATE \"OrderItem\"
+						SET \"BuyableClassName\" = '$className'
+						WHERE \"ID\" = $id;
+					");
+					DB::alteration_message("Updating Order BuyableClassName ( ID = $id ) to $className.");
+				}
+				else {
+					DB::alteration_message("Order Item with ID = $id does not have a valid class name. This needs investigation.", "deleted");
+				}
+			}
+		}
+		else {
+			DB::alteration_message("No order items could be found.");
+		}
+	}
+
+	function theEnd_9999(){
+		DB::alteration_message("<hr /><hr /><hr /><hr />THE END <hr /><hr /><hr /><hr /><hr /><hr />");
+	}
 
 }
 
