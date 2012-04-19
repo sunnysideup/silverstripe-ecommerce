@@ -24,6 +24,9 @@ class EcommerceRole extends DataObjectDecorator {
 			'db' => array(
 				'Notes' => 'HTMLText'
 			),
+			'has_one' => array(
+				'PreferredCurrency' => 'EcommerceCurrency'
+			),
 			'has_many' => array(
 				'Orders' => 'Order'
 			),
@@ -160,7 +163,7 @@ class EcommerceRole extends DataObjectDecorator {
 
 	/**
 	 * Is the member a member of the ShopAdmin Group
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function IsShopAdmin() {
 		if($this->owner->IsAdmin()) {
@@ -169,6 +172,16 @@ class EcommerceRole extends DataObjectDecorator {
 		else{
 			return Permission::checkMember($this->owner, EcommerceConfig::get("EcommerceRole", "admin_permission_code"));
 		}
+	}
+
+	/**
+	 * Save a preferred currency for a member.
+	 * @param String $code - code for the currency
+	 */
+	function SetPreferredCurrency($code){
+		$preferredCurrency = DataObject::get_one("EcommerceCurrency", "\"Code\" = '$code'");
+		$this->owner->PreferredCurrencyID = $preferredCurrency->ID;
+		$this->owner->write();
 	}
 
 }

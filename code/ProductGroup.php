@@ -33,7 +33,7 @@ class ProductGroup extends Page {
 	 *
 	 */
 	public static $belongs_many_many = array(
-		'Products' => 'Product'
+		'AlsoShowProducts' => 'Product'
 	);
 
 	/**
@@ -402,8 +402,7 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	protected function getProductsAlsoInOtherGroups(){
-		$siteConfig = SiteConfig::current_site_config();
-		return $siteConfig->ProductsAlsoInOtherGroups;
+		return $this->EcomConfig()->ProductsAlsoInOtherGroups;
 	}
 
 
@@ -434,30 +433,37 @@ class ProductGroup extends Page {
 	 */
 	protected function getGroupFilter(){
 		$groupFilter = "";
-		if($this->LevelOfProductsToShow == -2) {
+		if($this->LevelOfProductsToShow < 0) {
 			//no produts
-			$groupFilter = " (1 = 2) " ;
-		}
-		elseif($this->LevelOfProductsToShow == -1) {
-			//all products
-			$groupFilter = " (1 = 1) ";
+			$groupFilter = " (".$this->LevelOfProductsToShow." = -1) " ;
 		}
 		elseif($this->LevelOfProductsToShow > 0) {
-			$groupIDs = array();
-			$groupIDs[$this->ID] = $this->ID;
+			$groupIDs = array($this->ID => $this->ID);
+			//$groupIDs = array_merge($groupIDs, $this->getProductsAlsoInOtherGroupsArray());
 			$childGroups = $this->ChildGroups($this->LevelOfProductsToShow);
 			if($childGroups) {
-				$groupIDs = array_merge($groupIDs,$childGroups->map('ID','ID'));
+				foreach($childGroups as $childGroup) {
+					$groupIDs[$childGroup->ID] = $childGroup->ID;
+					//$groupIDs = array_merge($groupIDs, $childGroup->getProductsAlsoInOtherGroupsArray());
+				}
 			}
-			//OTHER GROUPS MANY-MANY
-			$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ";
-			if($this->getProductsAlsoInOtherGroups()) {
-				$multiCategoryFilter = $this->getManyManyFilter('Products','Product');
-				$groupFilter .= "  OR ( $multiCategoryFilter  ) ";
-			}
-			$groupFilter .= " ) ";
+			$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ";
 		}
 		return $groupFilter;
+	}
+
+	/**
+	 * If products are show in more than one group
+	 * Then this returns any products that are linked to this
+	 * product group through the standard ParentID
+	 *
+	 * @return Array
+	 */
+	protected function getProductsAlsoInOtherGroupsArray() {
+		if($this->getProductsAlsoInOtherGroups()) {
+			return $this->AlsoShowProducts()->map("ParentID", "ParentID");
+		}
+		return Array();
 	}
 
 	/**
@@ -484,8 +490,7 @@ class ProductGroup extends Page {
 	protected function currentFinalProducts($buyables){
 		if($buyables && $buyables instanceOf DataObjectSet) {
 			$buyables->removeDuplicates();
-			$siteConfig = SiteConfig::current_site_config();
-			if($siteConfig->OnlyShowProductsThatCanBePurchased) {
+			if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
 				foreach($buyables as $buyable) {
 					if(!$buyables->canPurchase()) {
 						$buyables->remove($buyable);
@@ -591,10 +596,7 @@ class ProductGroup extends Page {
 				$productsPagePage = $parent->MyNumberOfProductsPerPage();
 			}
 			else {
-				$siteConfig = SiteConfig::current_site_config();
-				if($siteConfig) {
-					$productsPagePage = $siteConfig->NumberOfProductsPerPage;
-				}
+				$productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
 			}
 		}
 		return $productsPagePage;
@@ -660,25 +662,67 @@ class ProductGroup extends Page {
 
 	/**
 	 * Returns children ProductGroup pages of this group.
+	 * @param Int $maxRecursiveLevel - maximum depth , e.g. 1 = one level down
+	 * @param String $filter - additional filter to be added
+	 * @param Int $numberOfRecursions - current level of depth
+	 * @param DataObjectSet | Null $output - child groups already found
 	 * @return DataObjectSet | null
 	 */
-	function ChildGroups($maxRecursiveLevel = 99, $filter = "", $numberOfRecursions = 0, $output = null) {
+	function ChildGroups($maxRecursiveLevel, $filter = "", $numberOfRecursions = 0) {
+		$output = null;
 		$numberOfRecursions++;
-		$filterWithAND = '';
-		if($filter) {
-			$filterWithAND = " AND $filter";
-		}
 		if($numberOfRecursions < $maxRecursiveLevel){
-			if($children = DataObject::get('ProductGroup', "\"ParentID\" = '$this->ID' $filterWithAND")){
+			$filterWithAND = '';
+			if($filter) {
+				$filterWithAND = " AND $filter";
+			}
+			$where = "\"ParentID\" = '$this->ID' $filterWithAND";
+			if($children = DataObject::get('ProductGroup', $where)){
 				if($output == null) {
 					$output = $children;
 				}
-				foreach($children as $group){
-					$output->merge($group->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions, $output));
+				foreach($children as $child){
+					$output->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions, $output));
 				}
 			}
 		}
 		return $output;
+	}
+
+	function ChildGroupsBackup($maxRecursiveLevel, $filter = "") {
+		if($maxRecursiveLevel > 24) {
+			$maxRecursiveLevel = 24;
+		}
+
+		$stage = '';
+		//@to do - make sure products are versioned!
+		if(Versioned::current_stage() == "Live") {
+			$stage = "_Live";
+		}
+		$select = "P1.ID as ID1 ";
+		$from = "ProductGroup$stage as P1 ";
+		$join = " INNER JOIN SiteTree$stage AS S1 ON P1.ID = S1.ID";
+		$where = "1 = 1";
+		$ids = array(-1);
+		for($i = 1; $i < $maxRecursiveLevel; $i++) {
+			$j = $i + 1;
+			$select .= ", P$j.ID AS ID$j, S$j.ParentID";
+			$join .= "
+				LEFT JOIN ProductGroup$stage AS P$j ON P$j.ID = S$i.ParentID
+				LEFT JOIN SiteTree$stage AS S$j ON P$j.ID = S$j.ID
+			";
+		}
+		$rows = DB::Query(" SELECT ".$select." FROM ".$from.$join." WHERE ".$where);
+		if($rows) {
+			foreach($rows as $row) {
+				for($i = 1; $i < $maxRecursiveLevel; $i++) {
+					if($row["ID".$i]) {
+						$ids[$row["ID".$i]] = $row["ID".$i];
+					}
+				}
+			}
+		}
+		return DataObject::get("ProductGroup", "ProductGroup$stage.ID IN (".implode(",", $ids).")".$filterWithAND);
 	}
 
 	/**
@@ -686,7 +730,9 @@ class ProductGroup extends Page {
 	 * @return DataObject | Null (ProductGroup)
 	 **/
 	function ParentGroup() {
-		return DataObject::get_by_id("ProductGroup", $this->ParentID);
+		if($this->ParentID) {
+			return DataObject::get_by_id("ProductGroup", $this->ParentID);
+		}
 	}
 
 
@@ -695,7 +741,7 @@ class ProductGroup extends Page {
 	 * @return DataObjectSet
 	 */
 	function GroupsMenu($filter = "ShowInMenus = 1") {
-		if($parent = $this->Parent()) {
+		if($parent = $this->ParentGroup()) {
 			return $parent instanceof ProductGroup ? $parent->GroupsMenu() : $this->ChildGroups($filter);
 		}
 		else {
@@ -732,7 +778,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 **/
 	public function Products($recursive = true){
 	//	return $this->ProductsShowable("\"FeaturedProduct\" = 1",$recursive);
-		return $this->ProductsShowable('',$recursive);
+		return $this->ProductsShowable('');
 	}
 
 	/**

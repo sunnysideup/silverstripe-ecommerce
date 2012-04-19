@@ -29,6 +29,7 @@ class RecalculateTheNumberOfProductsSold extends BuildTask{
 		$q->orderby("\"NewNumberSold\" DESC");
 
 		$q->leftJoin('OrderItem','"Product"."ID" = "OrderItem"."BuyableID"');
+		$q->where("\"OrderItem\".\"BuyableClassName\" = 'Product'");
 		$records = $q->execute();
 		$productssold = $ps->buildDataObjectSet($records, "DataObjectSet", $q, 'Product');
 

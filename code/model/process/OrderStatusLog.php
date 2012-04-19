@@ -202,6 +202,15 @@ class OrderStatusLog extends DataObject {
 		return $this->Note;
 	}
 
+
+	/**
+	 * returns the standard EcommerceDBConfig for use within OrderSteps.
+	 * @return EcommerceDBConfig
+	 */
+	protected function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
+	}
+
 }
 
 /**
