@@ -44,9 +44,12 @@ interface BuyableModel {
 	// VERSIONING
 
 	/**
-	 * View a speficic version
+	 * Action to return specific version of a product.
+	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
+	 * @param Int $versionNumber
+	 * @return DataObject | Null
 	 */
-	function viewversion($request);
+	function getVersionOfProduct($versionNumber);
 
 
 
