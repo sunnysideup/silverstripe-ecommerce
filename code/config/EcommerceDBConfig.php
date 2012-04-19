@@ -298,18 +298,6 @@ class EcommerceDBConfig extends DataObject {
 		return OrderConfirmationPage::find_link();
 	}
 
-	/**
-	 * Returns a default image.
-	 * @return Product_Image
-	 */
-	function DefaultImage() {
-		if($this->DefaultProductImageID && $defaultImage = $this->DefaultProductImage() ) {
-			if($defaultImage->exists()) {
-				return $defaultImage;
-			}
-		}
-		return new Product_Image();
-	}
 
 	/**
 	 * Returns a link to a default image.
@@ -318,8 +306,9 @@ class EcommerceDBConfig extends DataObject {
 	 * @return String
 	 */
 	function DefaultImageLink() {
-		if($defaultImage = $this->DefaultImage()) {
-			if($defaultImage->exists()) {
+		if($this->DefaultProductImageID) {
+			$defaultImage = $this->DefaultProductImage();
+			if($defaultImage && $defaultImage->exists()) {
 				return $defaultImage->Link();
 			}
 		}
@@ -331,17 +320,17 @@ class EcommerceDBConfig extends DataObject {
 	 * @return String
 	 */
 	function DefaultImage() {
-		if($defaultImage = $this->DefaultImage()) {
-			if($defaultImage->exists()) {
-				return $defaultImage;
-			}
-			else {
-				$obj = new Product_Image();
-				$obj->Link = DefaultImageLink();
-				$obj->URL = DefaultImageLink();
-				return $obj;
+		if($this->DefaultProductImageID) {
+			if($defaultImage = $this->DefaultProductImage()) {
+				if($defaultImage->exists()) {
+					return $defaultImage;
+				}
 			}
 		}
+		$obj = new Product_Image();
+		$obj->Link = DefaultImageLink();
+		$obj->URL = DefaultImageLink();
+		return $obj;
 	}
 
 	function onAfterWrite(){
