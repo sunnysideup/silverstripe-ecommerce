@@ -321,9 +321,34 @@ class ProductGroup extends Page {
 				new DropdownField("DisplayStyle", _t("ProductGroup.DEFAULTDISPLAYSTYLE", "Default Display Style"), $displayStyleDropdownList)
 			);
 		}
+		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
+			$fields->addFieldsToTab(
+				'Root.Content.OtherProductsShown',
+				array(
+					new HeaderField('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
+					$this->getProductGroupsTable()
+				)
+			);
+		}
 		return $fields;
 	}
 
+	/**
+	 * Used in getCSMFields
+	 * @return TreeMultiselectField
+	 **/
+	protected function getProductGroupsTable() {
+		$field = new TreeMultiselectField(
+			$name = "AlsoShowProducts",
+			$title = _t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),
+			$sourceObject = "SiteTree",
+			$keyField = "ID",
+			$labelField = "MenuTitle"
+		);
+		$filter = create_function('$obj', 'return ( ( $obj InstanceOf ProductGroup || $obj InstanceOf Product) && ($obj->ParentID != '.$this->ID.'));');
+		$field->setFilterFunction($filter);
+		return $field;
+	}
 
 	/**
 	 * Retrieve a set of products, based on the given parameters.
@@ -434,36 +459,47 @@ class ProductGroup extends Page {
 	protected function getGroupFilter(){
 		$groupFilter = "";
 		if($this->LevelOfProductsToShow < 0) {
-			//no produts
+			//no produts but if LevelOfProductsToShow = -1 then show all
 			$groupFilter = " (".$this->LevelOfProductsToShow." = -1) " ;
 		}
 		elseif($this->LevelOfProductsToShow > 0) {
 			$groupIDs = array($this->ID => $this->ID);
-			//$groupIDs = array_merge($groupIDs, $this->getProductsAlsoInOtherGroupsArray());
+			$groupFilter .= $this->getProductsToBeIncludedFromOtherGroups();
 			$childGroups = $this->ChildGroups($this->LevelOfProductsToShow);
 			if($childGroups) {
 				foreach($childGroups as $childGroup) {
 					$groupIDs[$childGroup->ID] = $childGroup->ID;
-					//$groupIDs = array_merge($groupIDs, $childGroup->getProductsAlsoInOtherGroupsArray());
+					$groupFilter .= $childGroup->getProductsToBeIncludedFromOtherGroups();
 				}
 			}
-			$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ";
+			$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ".$groupFilter;
 		}
 		return $groupFilter;
 	}
 
 	/**
 	 * If products are show in more than one group
-	 * Then this returns any products that are linked to this
-	 * product group through the standard ParentID
+	 * Then this returns a where phrase for any products that are linked to this
+	 * product group
 	 *
-	 * @return Array
+	 * @return String
 	 */
-	protected function getProductsAlsoInOtherGroupsArray() {
+	protected function getProductsToBeIncludedFromOtherGroups() {
+		//TO DO: this should actually return
+		//Product.ID = IN ARRAY(bla bla)
+		$array = array();
 		if($this->getProductsAlsoInOtherGroups()) {
-			return $this->AlsoShowProducts()->map("ParentID", "ParentID");
+			$array = $this->AlsoShowProducts()->map("ID", "ID");
 		}
-		return Array();
+		if(count($array)) {
+			$stage = '';
+			//@to do - make sure products are versioned!
+			if(Versioned::current_stage() == "Live") {
+				$stage = "_Live";
+			}
+			return " OR (\"Product$stage\".\"ID\" IN (".implode(",", $array).")) ";
+		}
+		return "";
 	}
 
 	/**
@@ -472,7 +508,7 @@ class ProductGroup extends Page {
 	 */
 	protected function getGroupJoin() {
 		if($this->getProductsAlsoInOtherGroups()) {
-			return $this->getManyManyJoin('Products','Product');
+			return $this->getManyManyJoin('AlsoShowProducts','Product');
 		}
 		return null;
 	}
