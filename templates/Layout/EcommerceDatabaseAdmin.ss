@@ -53,6 +53,15 @@
 </ul>
 <% end_if %>
 
+<% if CrazyShit %>
+<h3>You are MAD!</h3>
+<ul>
+<% control CrazyShit %>
+	<li><a href="$Link">$Title</a>: $Description</li>
+<% end_control %>
+</ul>
+<% end_if %>
+
 <% if Tests %>
 <h3>Ecommerce Unit Tests</h3>
 <ul>
