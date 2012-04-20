@@ -144,6 +144,9 @@ class EcommerceCheckConfiguration extends BuildTask{
 		if($allOK) {
 			DB::alteration_message("Perfect match, nothing to report", "created");
 		}
+		else {
+			DB::alteration_message("Recommended course of action: remove from your config as these are superfluous!", "edited");
+		}
 	}
 
 
@@ -156,12 +159,16 @@ class EcommerceCheckConfiguration extends BuildTask{
 		foreach($this->configs as $className => $setting) {
 			if(!class_exists($className)) {
 				$allOK = false;
-				DB::alteration_message("$className", "Edited");
+				DB::alteration_message("$className", "deleted");
 			}
 		}
 		if($allOK) {
 			DB::alteration_message("Perfect match, nothing to report", "created");
 		}
+		else {
+			DB::alteration_message("Recommended course of action: remove from your config file and review if any other action needs to be taken.", "edited");
+		}
+
 	}
 
 
@@ -188,6 +195,9 @@ class EcommerceCheckConfiguration extends BuildTask{
 		}
 		if($allOK) {
 			DB::alteration_message("Perfect match, nothing to report", "created");
+		}
+		else {
+			DB::alteration_message("Recommended course of action: add to your config file.", "edited");
 		}
 	}
 
@@ -246,7 +256,12 @@ class EcommerceCheckConfiguration extends BuildTask{
 				if($actualValue === "1") {
 					$actualValue = "[TRUE]";
 				}
-				$description = $this->definitions[$className][$key];
+				if(!isset($this->definitions[$className][$key])) {
+					$description = "<span style=\"color: red; font-weight: bold\">ERROR: no longer required in configs!</span>";
+				}
+				else {
+					$description = $this->definitions[$className][$key];
+				}
 				$htmlTable .= "<tr>
 			<td>
 				$key
