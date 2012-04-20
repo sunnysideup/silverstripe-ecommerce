@@ -210,7 +210,7 @@ class EcommerceMigration extends BuildTask {
 		");
 		if($this->hasTableAndField("OrderModifier", "Amount")) {
 			DB::query("
-				UPDATE \"OrderItem\"
+				UPDATE \"OrderModifier\"
 					INNER JOIN \"OrderAttribute\"
 						ON \"OrderAttribute\".\"ID\" = \"OrderModifier\".\"ID\"
 				SET \"OrderAttribute\".\"CalculatedTotal\" = \"OrderModifier\".\"Amount\"
