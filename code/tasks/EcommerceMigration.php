@@ -593,11 +593,9 @@ class EcommerceMigration extends BuildTask {
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
+							$adminID = Member::currentUserID();
 							if(!$adminID) {
-								$adminID = Member::currentUserID();
-								if(!$adminID) {
-									$adminID = 1;
-								}
+								$adminID = 1;
 							}
 							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$AdminCancelledObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"].", \"CancelledByID\" = ".$adminID);
 							break;
