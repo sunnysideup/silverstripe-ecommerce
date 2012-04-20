@@ -74,8 +74,6 @@ class EcommerceDatabaseAdmin extends Controller{
 	//##############################
 
 	protected $ecommerceSetup = array(
-		"ecommercecheckconfiguration",
-		"deleteallorders",
 		"setorderidstartingnumber",
 		"createecommercemembergroups",
 		"ecommercedefaultrecords",
@@ -90,20 +88,8 @@ class EcommerceDatabaseAdmin extends Controller{
 		return $this->createMenuDOSFromArray($this->ecommerceSetup, $type = "EcommerceSetup");
 	}
 
-	function deleteallorders($request){
-		$buildTask = new DeleteAllOrders();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
-	}
-
 	function setorderidstartingnumber($request){
 		$buildTask = new SetOrderIDStartingNumber();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
-	}
-
-	function EcommerceCheckConfiguration($request){
-		$buildTask = new EcommerceCheckConfiguration();
 		$buildTask->run($request);
 		$this->displayCompletionMessage($buildTask);
 	}
@@ -137,6 +123,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	//##############################
 
 	protected $regularMaintenance = array(
+		"ecommercecheckconfiguration",
 		"clearoldcarts",
 		"recalculatethenumberofproductssold",
 		"addcustomerstocustomergroups",
@@ -151,6 +138,14 @@ class EcommerceDatabaseAdmin extends Controller{
 	function RegularMaintenance() {
 		return $this->createMenuDOSFromArray($this->regularMaintenance, $type = "RegularMaintenance");
 	}
+
+
+	function EcommerceCheckConfiguration($request){
+		$buildTask = new EcommerceCheckConfiguration();
+		$buildTask->run($request);
+		$this->displayCompletionMessage($buildTask);
+	}
+
 
 	/**
 	 * executes build task
@@ -262,6 +257,33 @@ class EcommerceDatabaseAdmin extends Controller{
 	}
 
 
+
+
+
+
+
+	//##############################
+	// 4. CRAZY SHIT
+	//##############################
+
+	protected $crazyshit = array(
+		"deleteallorders"
+	);
+
+	/**
+	 * @return DataObjectSet list of migration tasks
+	 *
+	 */
+	function CrazyShit() {
+		return $this->createMenuDOSFromArray($this->crazyshit, $type = "CrazyShit");
+	}
+
+
+	function deleteallorders($request){
+		$buildTask = new DeleteAllOrders();
+		$buildTask->run($request);
+		$this->displayCompletionMessage($buildTask);
+	}
 
 
 
