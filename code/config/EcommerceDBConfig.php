@@ -131,7 +131,7 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	public static function current_ecommerce_db_config(){
 		if(!self::$my_current_one) {
-			$className =  EcommerceConfig::get("ecommerce_db_config_class_name", "EcommerceDBConfigClass");
+			$className =  EcommerceConfig::get("EcommerceDBConfig", "ecommerce_db_config_class_name");
 			self::$my_current_one = DataObject::get_one($className);
 		}
 		return self::$my_current_one;
