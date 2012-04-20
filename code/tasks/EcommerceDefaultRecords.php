@@ -31,7 +31,7 @@ class EcommerceDefaultRecords extends BuildTask {
 			$accountPage->Content = '<p>This is the account page. It is used for shop users to login and change their member details if they have an account.</p>';
 			$accountPage->URLSegment = 'account';
 			$accountPage->ShowInMenus = 0;
-			$page->writeToStage('Stage');
+			$accountPage->writeToStage('Stage');
 			$accountPage->publish('Stage', 'Live');
 			DB::alteration_message('Account page \'Account\' created', 'created');
 		}
