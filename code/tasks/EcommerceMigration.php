@@ -550,7 +550,7 @@ class EcommerceMigration extends BuildTask {
 								}
 							}
 							if($CartObject = DataObject::get_one("OrderStep", "\"Code\" = 'CREATED'")) {
-								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$CartObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]);
+								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$CartObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]. " AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 							break;
 						case "Query":
@@ -561,7 +561,7 @@ class EcommerceMigration extends BuildTask {
 								}
 							}
 							if($UnpaidObject = DataObject::get_one("OrderStep", "\"Code\" = 'SUBMITTED'")) {
-								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$UnpaidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]);
+								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$UnpaidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 
 							break;
@@ -573,7 +573,7 @@ class EcommerceMigration extends BuildTask {
 								}
 							}
 							if($PaidObject = DataObject::get_one("OrderStep", "\"Code\" = 'PAID'")) {
-								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$PaidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]);
+								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$PaidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]. " AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 							break;
 						case "Sent":
@@ -584,7 +584,7 @@ class EcommerceMigration extends BuildTask {
 								}
 							}
 							if($SentObject = DataObject::get_one("OrderStep", "\"Code\" = 'SENT'")) {
-								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$SentObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]);
+								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$SentObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 							break;
 						case "AdminCancelled":
@@ -605,7 +605,7 @@ class EcommerceMigration extends BuildTask {
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
-							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$MemberCancelledObject->ID.", \"CancelledByID\" = \"MemberID\" WHERE \"Order\".\"ID\" = '".$row["ID"]."'");
+							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$MemberCancelledObject->ID.", \"CancelledByID\" = \"MemberID\" WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							break;
 					}
 				}
