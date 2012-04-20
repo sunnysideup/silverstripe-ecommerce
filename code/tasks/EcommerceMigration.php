@@ -661,7 +661,7 @@ class EcommerceMigration extends BuildTask {
 			DB::query("
 				UPDATE \"ProductGroup_Live\"
 				SET \"LevelOfProductsToShow\" = ".ProductGroup::$defaults["LevelOfProductsToShow"]."
-				WHERE \"LevelOfProductsToShow\" = 0 OR \"LevelOfProductsToShow\" = IS NULL "
+				WHERE \"LevelOfProductsToShow\" = 0 OR \"LevelOfProductsToShow\"  IS NULL "
 			);
 			DB::alteration_message("resetting product 'show' levels", "created");
 			//default sort order
