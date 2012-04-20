@@ -597,7 +597,7 @@ class EcommerceMigration extends BuildTask {
 							if(!$adminID) {
 								$adminID = 1;
 							}
-							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$AdminCancelledObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"].", \"CancelledByID\" = ".$adminID);
+							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$AdminCancelledObject->ID.", \"CancelledByID\" = ".$adminID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							break;
 						case "MemberCancelled":
 							if(!$MemberCancelledObject) {
