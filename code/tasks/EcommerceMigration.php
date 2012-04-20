@@ -461,7 +461,7 @@ class EcommerceMigration extends BuildTask {
 		");
 		if($this->hasTableAndField("Member", "Address")) {
 			if($this->hasTableAndField("Member", "City")) {
-				if($orders = DataObject::get('Order', "\"MemberID\" > 0 AND \"BillingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"")) {
+				if($orders = DataObject::get('Order', "\"MemberID\" > 0 AND \"BillingAddress\".\"ID\" IS NULL AND \"BillingAddressID\" = 0", "", " LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"")) {
 					foreach($orders as $order) {
 						if(!$order->BillingAddressID) {
 							$member = DataObject::get_by_id("Member", $order->MemberID);
