@@ -416,6 +416,13 @@ class OrderModifier extends OrderAttribute {
 		return ShoppingCart_Controller::remove_modifier_link($this->ID,$this->ClassName);
 	}
 
+	/**
+	 * retursn and array like this: array(Title => "bla", Link => "/doit/now/");
+	 * @return Array
+	 */
+	public function PostSubmitAction() {
+		return array();
+	}
 
 // ######################################## ***  8. inner calculations....
 
