@@ -797,7 +797,7 @@ class EcommerceMigration extends BuildTask {
 			<p>ClassNames used to be implied, this is now saved as OrderItem.BuyableClassName.</p>
 		");
 		$rows = DB::query("
-			SELECT \"ID\", \"ClassName\"
+			SELECT \"OrderAttribute\".\"ID\", \"ClassName\"
 			FROM \"OrderAttribute\"
 				INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\"
 			WHERE \"BuyableClassName\" = '' OR \"BuyableClassName\" IS NULL;
