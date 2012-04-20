@@ -192,7 +192,7 @@ class EcommerceMigration extends BuildTask {
 			DB::query("
 				UPDATE \"OrderItem\", \"ProductVariation_OrderItem\"
 					SET \"OrderItem\".\"BuyableID\" = \"ProductVariation_OrderItem\".\"ProductVariationID\",
-							\"OrderItem\".\"BuyableClassName\" = 'ProductVariation',
+							\"OrderItem\".\"BuyableClassName\" = 'ProductVariation'
 				WHERE \"OrderItem\".\"ID\" = \"ProductVariation_OrderItem\".\"ID\"
 			");
 			$this->makeFieldObsolete("ProductVariation_OrderItem", "ProductVariationID");
