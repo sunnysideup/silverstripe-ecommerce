@@ -212,7 +212,7 @@ class EcommerceMigration extends BuildTask {
 			DB::query("
 				UPDATE \"OrderItem\"
 					INNER JOIN \"OrderAttribute\"
-						ON \"OrderAttribute\".\"ID\" = \"OrderModifier\".\"ID\" =
+						ON \"OrderAttribute\".\"ID\" = \"OrderModifier\".\"ID\"
 				SET \"OrderAttribute\".\"CalculatedTotal\" = \"OrderModifier\".\"Amount\"
 				WHERE \"OrderAttribute\".\"CalculatedTotal\" IS NULL OR \"OrderAttribute\".\"CalculatedTotal\" = 0 OR \"OrderAttribute\".\"CalculatedTotal\" = 0
 			");
