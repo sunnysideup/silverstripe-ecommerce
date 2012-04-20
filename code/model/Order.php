@@ -884,6 +884,8 @@ class Order extends DataObject {
 			if($address) {
 				//save order
 				$this->$variableName = $address->write();
+				//just in case!
+				$this->$variableName = $address->ID;
 				$this->write();
 				return $address;
 			}

@@ -772,14 +772,18 @@ class EcommerceMigration extends BuildTask {
 			"DefaultProductImageID"
 		);
 		$ecomConfig = DataObject::get_one("EcommerceDBConfig");
+		if(!$ecomConfig) {
+			$ecomConfig = new EcommerceDBConfig();
+			$ecomConfig->write();
+		}
 		$sc = SiteConfig::current_site_config();
 		if($ecomConfig && $sc) {
 			foreach($fields as $field) {
 				if($this->hasTableAndField("SiteConfig", $field)) {
+					DB::alteration_message("Migrated SiteConfig.$field", "created");
 					$ecomConfig->$field = $sc->$field;
 					$ecomConfig->write();
 					$this->makeFieldObsolete("SiteConfig", $field);
-					DB::alteration_message("Migrated SiteConfig.$field", "created");
 				}
 				else {
 					DB::alteration_message("SiteConfig.$field is not available", "edited");
