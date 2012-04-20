@@ -448,7 +448,7 @@ class CartPage_Controller extends Page_Controller{
 			$viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
 
 			//Continue Shopping
-			if($this->ContinueShoppingLabel) {
+			if(isset($this->ContinueShoppingLabel) && $this->ContinueShoppingLabel) {
 				if($viewingRealCurrentOrder) {
 					if($this->isCartPage()) {
 						$continuePage = DataObject::get_by_id("SiteTree", $this->ContinuePageID );
@@ -463,7 +463,7 @@ class CartPage_Controller extends Page_Controller{
 			}
 
 			//Proceed To CheckoutLabel
-			if($this->ProceedToCheckoutLabel) {
+			if(isset($this->ProceedToCheckoutLabel) && $this->ProceedToCheckoutLabel) {
 				if($viewingRealCurrentOrder) {
 					if($this->isCartPage()) {
 						$checkoutPageLink = CheckoutPage::find_link();
@@ -478,7 +478,7 @@ class CartPage_Controller extends Page_Controller{
 			}
 
 			//go to current order
-			if($this->CurrentOrderLinkLabel) {
+			if(isset($this->CurrentOrderLinkLabel) && $this->CurrentOrderLinkLabel) {
 				if($this->isCartPage()) {
 					if(!$viewingRealCurrentOrder) {
 						$this->actionLinks->push(new ArrayData(array (
@@ -491,7 +491,7 @@ class CartPage_Controller extends Page_Controller{
 
 
 			//Save order - we assume only current ones can be saved.
-			if($this->SaveOrderLinkLabel) {
+			if(isset($this->SaveOrderLinkLabel) && $this->SaveOrderLinkLabel) {
 				if($viewingRealCurrentOrder) {
 					if($this->isCartPage()) {
 						if($this->currentOrder && $this->currentOrder->Items() && !$this->currentOrder->IsSubmitted()) {
@@ -505,7 +505,7 @@ class CartPage_Controller extends Page_Controller{
 			}
 
 			//load order
-			if($this->LoadOrderLinkLabel) {
+			if(isset($this->LoadOrderLinkLabel) && $this->LoadOrderLinkLabel) {
 				if($this->isCartPage() && $this->currentOrder) {
 					if(!$viewingRealCurrentOrder) {
 						$this->actionLinks->push(new ArrayData(array (
@@ -517,7 +517,7 @@ class CartPage_Controller extends Page_Controller{
 			}
 
 			//delete order
-			if($this->DeleteOrderLinkLabel) {
+			if(isset($this->DeleteOrderLinkLabel) && $this->DeleteOrderLinkLabel) {
 				if($this->isCartPage() && $this->currentOrder) {
 					if(!$viewingRealCurrentOrder) {
 						$this->actionLinks->push(new ArrayData(array (
@@ -531,7 +531,7 @@ class CartPage_Controller extends Page_Controller{
 			//Start new order
 			//Strictly speaking this is only part of the
 			//OrderConfirmationPage but we put it here for simplicity's sake
-			if($this->StartNewOrderLinkLabel) {
+			if(isset($this->StartNewOrderLinkLabel) && $this->StartNewOrderLinkLabel) {
 				if($this->isOrderConfirmationPage()) {
 					$this->actionLinks->push(new ArrayData(array (
 						"Title" => $this->StartNewOrderLinkLabel,
@@ -543,12 +543,25 @@ class CartPage_Controller extends Page_Controller{
 			//copy order
 			//Strictly speaking this is only part of the
 			//OrderConfirmationPage but we put it here for simplicity's sake
-			if($this->CopyOrderLinkLabel) {
+			if(isset($this->CopyOrderLinkLabel) && $this->CopyOrderLinkLabel) {
 				if($this->isOrderConfirmationPage() && $this->currentOrder->ID) {
 					$this->actionLinks->push(new ArrayData(array (
 						"Title" => $this->CopyOrderLinkLabel,
 						"Link" => OrderConfirmationPage::new_order_link($this->currentOrder->ID)
 					)));
+				}
+			}
+
+			//actions from modifiers
+			if($this->isOrderConfirmationPage() && $this->currentOrder->ID) {
+				$modifiers = $this->currentOrder->OrderModifiers();
+				if($modifiers) {
+					foreach($modifiers as $modifier) {
+						$array = $modifier->PostSubmitAction();
+						if(is_array($array) && count($array)) {
+							$this->actionLinks->push(new ArrayData($array));
+						}
+					}
 				}
 			}
 

@@ -51,7 +51,7 @@ class CheckoutPage extends CartPage {
 	 * @return DataObject (Page)
 	 */
 	public static function find_terms_and_conditions_page() {
-		$checkoutPage = DataObject::get_one('CheckoutPage', "\"ClassName\" = 'CheckoutPage'");
+		$checkoutPage = DataObject::get_one('CheckoutPage');
 		if($checkoutPage) {
 			return DataObject::get_by_id('Page', $checkoutPage->TermsPageID);
 		}
