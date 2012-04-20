@@ -214,7 +214,7 @@ class EcommerceMigration extends BuildTask {
 					INNER JOIN \"OrderAttribute\"
 						ON \"OrderAttribute\".\"ID\" = \"OrderModifier\".\"ID\"
 				SET \"OrderAttribute\".\"CalculatedTotal\" = \"OrderModifier\".\"Amount\"
-				WHERE \"OrderAttribute\".\"CalculatedTotal\" IS NULL OR \"OrderAttribute\".\"CalculatedTotal\" = 0 OR \"OrderAttribute\".\"CalculatedTotal\" = 0
+				WHERE \"OrderAttribute\".\"CalculatedTotal\" IS NULL OR \"OrderAttribute\".\"CalculatedTotal\" = 0
 			");
  			$this->makeFieldObsolete("OrderModifier", "Amount");
  			DB::alteration_message('Moved OrderModifier.Amount to OrderAttribute.CalculatedTotal', 'created');
