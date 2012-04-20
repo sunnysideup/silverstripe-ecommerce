@@ -243,17 +243,9 @@ class EcommerceDBConfig extends DataObject {
 	 * @return Boolean
 	 */
 	static function is_buyable($className) {
-		$buyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
-		if(in_array($className, $buyablesArray)) {
+		$implementorsArray = class_implements($className);
+		if(is_array($implementorsArray) && in_array("BuyableModel", $implementorsArray)) {
 			return true;
-		}
-		else {
-			$array = array_reverse(ClassInfo::ancestry($className));
-			foreach($array as $className) {
-				if(in_array($className, $buyablesArray)) {
-					return true;
-				}
-			}
 		}
 		return false;
 	}
