@@ -3,7 +3,7 @@
 
 <% if EcommerceSetup %>
 <h3>E-commerce Setup</h3>
-<p>Note: these actions are generally only run once to setup e-commerce.</p>
+<p>These actions are generally only run once to setup e-commerce.</p>
 <ul>
 <% control EcommerceSetup %>
 	<li><a href="$Link">$Title</a>: $Description</li>
@@ -13,7 +13,7 @@
 
 <% if RegularMaintenance %>
 <h3>Regular Maintenance</h3>
-<p>Note: these actions should be run as cron job or you should configure e-commerce in such a way that they run regularly.</p>
+<p>These actions should be run as cron job or you should configure e-commerce in such a way that they run regularly.</p>
 <ul>
 <% control RegularMaintenance %>
 	<li><a href="$Link">$Title</a>: $Description</li>
@@ -46,6 +46,7 @@
 
 <% if Migrations %>
 <h3>Migration</h3>
+<p>Use the options listed below whenever your upgrade your source code.</p>
 <ul>
 <% control Migrations %>
 	<li><a href="$Link">$Title</a>: $Description</li>
@@ -55,6 +56,7 @@
 
 <% if CrazyShit %>
 <h3>You are MAD!</h3>
+<p>Start again?</p>
 <ul>
 <% control CrazyShit %>
 	<li><a href="$Link">$Title</a>: $Description</li>
