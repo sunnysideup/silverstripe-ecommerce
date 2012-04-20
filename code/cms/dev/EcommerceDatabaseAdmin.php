@@ -123,11 +123,9 @@ class EcommerceDatabaseAdmin extends Controller{
 	//##############################
 
 	protected $regularMaintenance = array(
-		"ecommercecheckconfiguration",
 		"clearoldcarts",
 		"recalculatethenumberofproductssold",
 		"addcustomerstocustomergroups",
-		"setdefaultproductgroupvalues",
 		"fixbrokenordersubmissiondata"
 	);
 
@@ -138,14 +136,6 @@ class EcommerceDatabaseAdmin extends Controller{
 	function RegularMaintenance() {
 		return $this->createMenuDOSFromArray($this->regularMaintenance, $type = "RegularMaintenance");
 	}
-
-
-	function EcommerceCheckConfiguration($request){
-		$buildTask = new EcommerceCheckConfiguration();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
-	}
-
 
 	/**
 	 * executes build task
@@ -172,15 +162,6 @@ class EcommerceDatabaseAdmin extends Controller{
 	 */
 	function addcustomerstocustomergroups($request) {
 		$buildTask = new AddCustomersToCustomerGroups();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
-	}
-	/**
-	 * executes build task: SetDefaultProductGroupValues
-	 *
-	 */
-	function setdefaultproductgroupvalues($request) {
-		$buildTask = new SetDefaultProductGroupValues();
 		$buildTask->run($request);
 		$this->displayCompletionMessage($buildTask);
 	}
@@ -221,7 +202,9 @@ class EcommerceDatabaseAdmin extends Controller{
 	//##############################
 
 	protected $migrations = array(
-		"ecommercemigration"
+		"ecommercemigration",
+		"ecommercecheckconfiguration",
+		"setdefaultproductgroupvalues",
 	);
 
 	/**
@@ -246,6 +229,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	}
 
 
+
+
 	/**
 	 * executes build task: FixBrokenOrderSubmissionData
 	 *
@@ -257,6 +242,23 @@ class EcommerceDatabaseAdmin extends Controller{
 	}
 
 
+
+	function ecommercecheckconfiguration($request){
+		$buildTask = new EcommerceCheckConfiguration();
+		$buildTask->run($request);
+		$this->displayCompletionMessage($buildTask);
+	}
+
+
+	/**
+	 * executes build task: SetDefaultProductGroupValues
+	 *
+	 */
+	function setdefaultproductgroupvalues($request) {
+		$buildTask = new SetDefaultProductGroupValues();
+		$buildTask->run($request);
+		$this->displayCompletionMessage($buildTask);
+	}
 
 
 
