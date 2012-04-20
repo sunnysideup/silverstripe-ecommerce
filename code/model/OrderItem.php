@@ -134,7 +134,7 @@ class OrderItem extends OrderAttribute {
 		$fields->removeByName("Sort");
 		$fields->removeByName("GroupSort");
 		$fields->removeByName("OrderAttribute_GroupID");
-		$buyables = EcommerceConfig::get("Buyable", "array_of_buyables");
+		$buyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
 		$classNameArray = array();
 		$buyablesArray = array();
 		if($buyables && count($buyables)) {
