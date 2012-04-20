@@ -368,7 +368,7 @@ class OrderItem extends OrderAttribute {
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
 	  **/
 	function Buyable($current = false) {
-		if($this->BuyableID && $this->Version && !$current) {
+		if(!$current) {
 			if($obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version)) {
 				return $obj;
 			}
