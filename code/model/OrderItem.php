@@ -373,7 +373,7 @@ class OrderItem extends OrderAttribute {
 			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
 		}
 		//end hack!
-		if(!$current  &&* $this->Version) {
+		if(!$current && $this->Version) {
 			if($obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version)) {
 				return $obj;
 			}
