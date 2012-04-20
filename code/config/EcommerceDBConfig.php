@@ -131,7 +131,7 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	public static function current_ecommerce_db_config(){
 		if(!self::$my_current_one) {
-			$className =  EcommerceConfig::get("EcommerceDBConfig", "EcommerceDBConfigClass");
+			$className =  EcommerceConfig::get("ecommerce_db_config_class_name", "EcommerceDBConfigClass");
 			self::$my_current_one = DataObject::get_one($className);
 		}
 		return self::$my_current_one;
@@ -243,7 +243,7 @@ class EcommerceDBConfig extends DataObject {
 	 * @return Boolean
 	 */
 	static function is_buyable($className) {
-		$buyablesArray = EcommerceConfig::get("Buyable", "array_of_buyables");
+		$buyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
 		if(in_array($className, $buyablesArray)) {
 			return true;
 		}

@@ -60,7 +60,8 @@ class EcommerceConfigDefinitions extends Object {
 		$array = array(
 		################### PAGES #####################
 			"EcommerceDBConfig" => array(
-				"EcommerceDBConfigClass" => "Class Name for the DataObject that contains the settings for the e-commerce application"
+				"ecommerce_db_config_class_name" => "Class Name for the DataObject that contains the settings for the e-commerce application",
+				"array_of_buyables" => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable."
 			),
 			"CheckoutPage_Controller" => array(
 				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."
@@ -97,9 +98,6 @@ class EcommerceConfigDefinitions extends Object {
 				"use_separate_shipping_address" => "Do the goods need to get shipped and if so, do we allow these goods to be shipped to a different address than the billing address?",
 				"use_shipping_address_for_main_region_and_country" => "In determing the country/region from which the order originated. For, for example, tax purposes - we use the Billing Address (@see Order::Country). However, we can also choose the Shipping Address by setting this variable to TRUE.",
 				"field_class_and_id_prefix" => "In case you have some conflicts in the class / IDs for formfields then you can use this variable to add a few characters in front of the classes / IDs",
-			),
-			"Buyable" => array(
-				"array_of_buyables" => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable."
 			),
 			"EcommerceRole" => array(
 				"allow_customers_to_setup_accounts" => "Allow customers to become 'members' when they purchase items. If this is false then customers can never setup an account.",
