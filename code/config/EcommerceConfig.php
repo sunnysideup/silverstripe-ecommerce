@@ -110,7 +110,17 @@ class EcommerceConfig extends Object {
 		elseif(isset($this->fixtureDictionary[$className][$identifier])) {
 			return $this->fixtureDictionary[$className][$identifier];
 		}
+		if(Director::isDev()) {
+
+			echo "Please add the following line to one of these files : <br />
+			".implode(", ", self::$folder_and_file_locations)."<br />
+			<pre>
+$className:
+	 $identifier: [put desired value here]
+			</pre><br />
+			Please also make sure to visit <a href=\"/dev/ecommerce/\">/dev/ecommerce/</a> to check all your configurations and run any migration scripts!";
 		user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
+		}
 		return null;
 	}
 
