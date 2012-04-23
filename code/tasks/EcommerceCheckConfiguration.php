@@ -212,7 +212,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 			td span {color: grey; font-size: 0.8em;}
 			td span {color: grey; font-size: 0.8em; display: block}
 			.sameConfig {color: #333;}
-			.newConfig{color: green;}
+			.newConfig{color: green; font-weight: bold; font-size: 1.2em;}
 			#TOC {
 				-moz-column-count: 3;
 				-moz-column-gap: 20px;
@@ -239,10 +239,16 @@ class EcommerceCheckConfiguration extends BuildTask{
 			}
 
 			foreach($settings as $key => $classConfig) {
-				$defaultValue = print_r($this->configs[$className][$key], 1);
+				if(!isset($this->defaults[$className][$key])) {
+					echo "Could not retrieve default value for: $className $key <hr />";
+				}
+				else {
+					$defaultValue = print_r($this->defaults[$className][$key], 1);
+				}
 				$actualValue = print_r($this->configs[$className][$key], 1);
 				if($actualValue == $defaultValue) {
 					$class = "sameConfig";
+					$defaultValue = "";
 				}
 				else {
 					$class = "newConfig";
@@ -267,7 +273,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 				$key
 				<span>$description</span>
 			</td>
-			<td class=\"$class\"><pre>$actualValue</pre></td>
+			<td class=\"$class\">
+				<pre>$actualValue</pre>
+				<span><pre>$defaultValue</span></span>
+			</td>
 		</tr>";
 			}
 		}
@@ -293,8 +302,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
 		$fields = $ecommerceConfig->fieldLabels();
 		foreach($fields as $field => $description) {
+			$defaultsDefaults = $ecommerceConfig->stat("defaults");
 			$this->definitions["EcommerceDBConfig"][$field] = "$description. <br />THIS IS SET IN THE <a href=\"/admin/shop\">Ecommerce Configuration</a>";
 			$this->configs["EcommerceDBConfig"][$field] = $ecommerceConfig->$field;
+			$this->defaults["EcommerceDBConfig"][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : "no default set";
 			$imageField = $field."ID";
 			if(isset($ecommerceConfig->$imageField)) {
 				if($image = $ecommerceConfig->$field()) {
@@ -310,12 +321,15 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected function addOtherValuesToConfigs(){
 		$this->definitions["Payment"]["site_currency"] = "Default currency for the site. <br />SET USING Payment::set_site_currency(\"NZD\")";
 		$this->configs["Payment"]["site_currency"] = Payment::site_currency()." ";
+		$this->defaults["Payment"]["site_currency"] = "[no default set]";
 
 		$this->definitions["Geoip"]["default_country_code"] = "Default currency for the site. <br />SET USING Geoip::\$default_country_code";
 		$this->configs["Geoip"]["default_country_code"] = Geoip::$default_country_code;
+		$this->defaults["Geoip"]["default_country_code"] = "[no default set]";
 
 		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. SET USING Email::\$admin_email_address = \"bla@ta.com\"";
 		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
+		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
 	}
 
 }
