@@ -998,7 +998,7 @@ class Order extends DataObject {
 	 */
 	protected function sendEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
 		if(!$message) {
-			$emailableLogs = DataObject::get('OrderStatusLog', "\"OrderID\" = {$this->ID} AND \"EmailCustomer\" = 1 AND \"EmailSent\" = 0 ", "\"Created\" DESC", null, 1);
+			$emailableLogs = DataObject::get('OrderStatusLog', "\"OrderID\" = {$this->ID} AND \"InternalUseOnly\" = 0", "\"Created\" DESC", null, 1);
 			if($emailableLogs) {
 				$latestEmailableLog = $emailableLogs->First();
 				$message = $latestEmailableLog->Note;
