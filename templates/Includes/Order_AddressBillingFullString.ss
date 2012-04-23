@@ -7,7 +7,7 @@
 	<% if PostalCode %>$PostalCode, <% end_if %>
 	<% if FullCountryName %>$FullCountryName, <% end_if %>
 	<% if Phone %>$Phone, <% end_if %>
-	<% if MobilePhone %>MobilePhone, <% end_if %>
+	<% if MobilePhone %>$MobilePhone, <% end_if %>
 	<% if Email %>$Email, <% end_if %>
 	<br /><a href="$RemoveLink" class="noLongerInUse" rel="$ID"><% _t("NOLONGERINUSE", "no longer in use") %>.</a>
 </span>

@@ -16,11 +16,16 @@ class OrderFormAddress extends Form {
 
 
 	/**
+	 *
 	 * @var Object (Member)
-	 *
-	 *
 	 */
 	protected $orderMember = null;
+
+	/**
+	 * ID of the member that has just been created.
+	 * @var Int
+	 */
+	protected $newlyCreatedMember = 0;
 
 	function __construct($controller, $name) {
 
@@ -318,6 +323,7 @@ class OrderFormAddress extends Form {
 
 	/**
 	 * works out the most likely member for the order after submission of the form.
+	 * It returns a member if appropriate.
 	 * At this stage, if we dont have a member, we will create one!
 	 * @param Array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
 	 * @return DataObject| Null
@@ -338,6 +344,7 @@ class OrderFormAddress extends Form {
 							if($this->memberShouldBeCreated($data)) {
 								$order = ShoppingCart::current_order();
 								$member = $order->CreateOrReturnExistingMember();
+								$this->newlyCreatedMember = $member->ID;
 							}
 						}
 					}
@@ -359,7 +366,7 @@ class OrderFormAddress extends Form {
 	 * @return Boolean
 	 **/
 	protected function memberShouldBeCreated($data) {
-		if(!Member::currentUserID()) {
+		if(!Member::currentUserID() && !$this->newlyCreatedMember) {
 			$automaticMembership = EcommerceConfig::get("EcommerceRole", "automatic_membership");
 			if( ($automaticMembership) || (isset($data["Password"]) && strlen($data["Password"]) > 3) ) {
 				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){
@@ -381,9 +388,10 @@ class OrderFormAddress extends Form {
 	 * @return Boolean
 	 **/
 	protected function memberShouldBeLoggedIn($data) {
-		if($this->memberShouldBeCreated($data)) {
-			return true;
+		if(!Member::currentUserID()) {
+			return $this->newlyCreatedMember ? true : false;
 		}
+		return false;
 	}
 
 
