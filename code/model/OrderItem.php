@@ -139,7 +139,7 @@ class OrderItem extends OrderAttribute {
 		$buyablesArray = array();
 		if($buyables && count($buyables)) {
 			foreach($buyables as $buyable) {
-				$classNameArray[$buyable->classNameForOrderItem()] = $buyable;
+				$classNameArray[$buyable] = $buyable;
 				$newObjects = DataObject::get($buyable);
 				if($newObjects) {
 					foreach($newObjects as $object) {

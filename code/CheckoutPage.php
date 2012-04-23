@@ -336,8 +336,8 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 
 	/**
-	 *@param String $part (OrderItems, OrderModifiers, OrderForm, OrderPayment)
-	 *@return Boolean
+	 * @param String $part (OrderItems, OrderModifiers, OrderForm, OrderPayment)
+	 * @return Boolean
 	 **/
 	public function CanShowStep($step) {
 		if ($this->ShowOnlyCurrentStep()) {
@@ -397,6 +397,17 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		return count($this->steps);
 	}
 
+	/**
+	 * Here are some additional rules that can be applied to steps.
+	 * If you extend the checkout page, you canm overrule these rules
+	 *
+	 */
+	protected function applyStepRules(){
+		//no items, back to beginning.
+		//has step xxx been completed? if not go back one?
+		//extend
+		//reset current step if different
+	}
 
 
 }

@@ -160,7 +160,7 @@ Order_Email:
 ################### CONTROL #####################
 
 CartPage_Controller:
-	session_code: "CartPageMessage"
+	session_code: "EcommerceCartPageMessage"
 
 ShoppingCart:
 	session_code: "EcommerceShoppingCart"
