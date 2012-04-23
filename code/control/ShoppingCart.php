@@ -53,12 +53,6 @@ class ShoppingCart extends Object{
 	 */
 	public static function singleton(){
 		if(!self::$singletoncart){
-			$cleanUpEveryTime = EcommerceConfig::get("ShoppingCart", "cleanup_every_time");
-			if($cleanUpEveryTime) {
-				$obj = new CartCleanupTask();
-				$obj->run($verbose = false);
-				$obj->cleanupUnlinkedOrderObjects($verbose = false);
-			}
 			self::$singletoncart = new ShoppingCart();
 		}
 		return self::$singletoncart;
@@ -268,6 +262,12 @@ class ShoppingCart extends Object{
 	public function submit() {
 		$this->currentOrder()->tryToFinaliseOrder();
 		$this->clear();
+		//we cleanup the old orders here so that we immediately know if there is a problem.
+		$cleanUpEveryTime = EcommerceConfig::get("ShoppingCart", "cleanup_every_time");
+		if($cleanUpEveryTime) {
+			$obj = new CartCleanupTask();
+			$obj->runSilently();
+		}
 	}
 
 	/**
@@ -279,8 +279,8 @@ class ShoppingCart extends Object{
 			$sessionVariableName = $this->sessionVariableName($name);
 			Session::clear($sessionVariableName); //clear the orderid from session
 			Session::set($sessionVariableName, null); //clear the orderid from session
+			Session::save(); //clear the orderid from session
 		}
-		Session::save(); //clear the orderid from session
 		$this->order = null; //clear local variable
 	}
 
@@ -333,7 +333,7 @@ class ShoppingCart extends Object{
 		}
 		if($order){
 			$sessionVariableName = $this->sessionVariableName("OrderID");
-			Session::set($sessionVariableName);
+			Session::set($sessionVariableName, $order->ID);
 			$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
 		}
 		else {
@@ -864,6 +864,8 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	function clearandlogout() {
+		$this->cart->clear();
+		$this->cart->clear();
 		$this->cart->clear();
 		if($m = Member::currentUser()) {
 			$m->logout();

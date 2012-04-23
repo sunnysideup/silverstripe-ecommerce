@@ -164,7 +164,7 @@ CartPage_Controller:
 
 ShoppingCart:
 	session_code: "EcommerceShoppingCart"
-	cleanup_every_time: false
+	cleanup_every_time: true
 	default_param_filters: []
 	response_class: "CartResponse"
 ShoppingCart_Controller:
@@ -239,12 +239,14 @@ CartCleanupTask:
 	clear_minutes: 1440
 	maximum_number_of_objects_deleted: 10
 	never_delete_if_linked_to_member: true
-	linked_objects_array:
+	one_to_one_classes:
+		BillingAddressID: BillingAddress
+		ShippingAddressID: ShippingAddress
+	one_to_many_classes:
 		OrderAttribute: OrderAttribute
-		BillingAddress: OrderAddress
-		ShippingAddress: OrderAddress
 		OrderStatusLog: OrderStatusLog
 		OrderEmailRecord: OrderEmailRecord
+	many_to_many_classes: []
 
 
 

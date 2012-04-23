@@ -378,7 +378,7 @@ class OrderItem extends OrderAttribute {
 				return $obj;
 			}
 		}
-		return DataObject::get_one($this->BuyableClassName, $this->BuyableID);
+		return DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
 	}
 
 	/**

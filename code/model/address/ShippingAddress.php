@@ -44,7 +44,7 @@ class ShippingAddress extends OrderAddress {
 		'ShippingPhone' => 'Varchar(100)',
 		'ShippingMobilePhone' => 'Varchar(100)',
 		'Obsolete' => 'Boolean',
-		'OrderID' => 'Int'
+		'OrderID' => 'Int' ////NOTE: we have this here for faster look-ups and to make addresses behave similar to has_many dataobjects
 	);
 
 
