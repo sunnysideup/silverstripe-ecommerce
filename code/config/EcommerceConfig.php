@@ -145,7 +145,10 @@ $className:
 	 * returns the complete Array of data
 	 * @return Array
 	 */
-	public function getCompleteDataSet(){
+	public function getCompleteDataSet($refresh = false){
+		if($refresh) {
+			$this->loadData();
+		}
 		if(!count($this->fixtureDictionary)) {
 			$this->loadData();
 		}
