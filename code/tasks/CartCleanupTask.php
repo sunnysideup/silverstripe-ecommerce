@@ -14,7 +14,10 @@
 
 class CartCleanupTask extends HourlyTask {
 
-
+	/**
+	 * Standard SS Variable
+	 * TODO: either remove or add to all tasks
+	 */
 	static $allowed_actions = array(
 		'*' => 'ADMIN',
 		'*' => 'SHOPADMIN'
@@ -37,41 +40,21 @@ class CartCleanupTask extends HourlyTask {
 	 */
 	public $verbose = false;
 
-
-/*******************************************************
-	 * CLEARING OLD ORDERS
-*******************************************************/
-
-
-/*******************************************************
-	 * DELETE OLD SHOPPING CARTS
-*******************************************************/
-
-	/**
-	 *
-	 * key = field in Order that links to the one-2-one relationship
-	 * value = the other side of the relationship
-	 **/
-	protected static $one_to_one_objects_array = array(
-		"BillingAddressID" => "BillingAddress",
-		"ShippingAddressID" => "ShippingAddress"
-	);
-		static function set_one_to_one_objects_array($a) {self::$one_to_one_objects_array = $a;}
-		static function get_one_to_one_objects_array() {return self::$one_to_one_objects_array;}
-		static function add_one_to_one_object($s) {self::$one_to_one_objects_array[] = $s;}
-
-		/*******************************************************
-			 * DELETE OLD SHOPPING CARTS
-		*******************************************************/
-
+	public function runSilently(){
+		$this->verbose = false;
+		return $this->run(null);
+	}
 	/**
 	 *@return Integer - number of carts destroyed
 	 **/
 	public function run($request){
+		if($this->verbose) {
+			DB::alteration_message("<h2>deleting carts</h2>.");
+		}
 		$count = 0;
-		$clearDays = EcommerceConfig::get("CartCleanupTask", "clear_days");
+		$clearMinutes = EcommerceConfig::get("CartCleanupTask", "clear_minutes");
 		$maximumNumberOfObjectsDeleted = EcommerceConfig::get("CartCleanupTask", "maximum_number_of_objects_deleted");
-		$time = date('Y-m-d H:i:s', strtotime("-".$clearDays." days"));
+		$time = date('Y-m-d H:i:s', strtotime("-".$clearMinutes." minutes"));
 		$where = "\"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND \"Order\".\"LastEdited\" < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
 		$join = "";
@@ -86,7 +69,7 @@ class CartCleanupTask extends HourlyTask {
 			if($this->verbose) {
 				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
-				DB::alteration_message("<h2>Total number of abandonned carts: ".$totalToDelete." .... now deleting: ".$maximumNumberOfObjectsDeleted." from ".$clearDays." days ago or more.</h2>", "created");
+				DB::alteration_message("<h2>Total number of abandonned carts: ".$totalToDelete." .... now deleting: ".$maximumNumberOfObjectsDeleted." from ".$clearMinutes." minutes ago or more.</h2>", "created");
 				if($neverDeleteIfLinkedToMember) {
 					DB::alteration_message("<h3>Carts linked to a member will NEVER be deleted.</h3>", "edited");
 				}
@@ -109,81 +92,114 @@ class CartCleanupTask extends HourlyTask {
 		}
 
 
-
+		$oneToMany = EcommerceConfig::get("CartCleanupTask", "one_to_many_classes");
+		$oneToOne = EcommerceConfig::get("CartCleanupTask", "one_to_one_classes");
+		$manyToMany = EcommerceConfig::get("CartCleanupTask", "many_to_many_classes");
 
 		/***********************************************
-		//CLEANING ONE-TO-MANYS
-		*************************************************/
-
-		$classNames = EcommerceConfig::get("CartCleanupTask", "linked_objects_array");
-		if(is_array($classNames) && count($classNames)) {
-			foreach($classNames as $classWithOrderID => $classWithLastEdited) {
-				if($this->verbose) {
-					DB::alteration_message("looking for $classWithOrderID objects without link to order.");
-				}
-				$clearDays = EcommerceConfig::get("CartCleanupTask", "clear_days");
-				$maximumNumberOfObjectsDeleted = EcommerceConfig::get("CartCleanupTask", "maximum_number_of_objects_deleted");
-				$time = date('Y-m-d H:i:s', strtotime("-".$clearDays." days"));
-				$where = "\"Order\".\"ID\" IS NULL AND \"$classWithLastEdited\".\"LastEdited\" < '$time'";
-				$sort = '';
-				$join = " LEFT JOIN \"Order\" ON \"Order\".\"ID\" = \"$classWithOrderID\".\"OrderID\"";
-				$limit = "0, ".$maximumNumberOfObjectsDeleted;
-				//the code below is a bit of a hack, but because of the one-to-one relationship we
-				//want to check both sides....
-				$unlinkedObjects = DataObject::get($classWithLastEdited, $where, $sort, $join);
-				if($unlinkedObjects){
-					foreach($unlinkedObjects as $unlinkedObject){
-						if($this->verbose) {
-							DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
-						}
-						$this->deleteObject($unlinkedObject);
+		//CLEANING ONE-TO-ONES
+		************************************************/
+		if($this->verbose) {
+			DB::alteration_message("<h2>Checking one-to-one relationships</h2>.");
+		}
+		if(is_array($oneToOne) && count($oneToOne)) {
+			foreach($oneToOne as $orderFieldName => $className) {
+				if(!in_array($className, $oneToMany) && !in_array($className, $manyToMany)) {
+					if($this->verbose) {
+						DB::alteration_message("looking for $className objects without link to order.");
 					}
-				}
-				if($this->verbose) {
-					$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"$classWithLastEdited\"")->value();
-					$countUnlinkedOnes = DB::query("SELECT COUNT(\"$classWithOrderID\".\"ID\") FROM \"$classWithOrderID\" LEFT JOIN \"Order\" ON \"$classWithOrderID\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
-					DB::alteration_message("In total there are $countAll $classWithOrderID ($classWithLastEdited), of which there are $countUnlinkedOnes not linked to an order. ", "created");
-					if($countUnlinkedOnes) {
-						DB::alteration_message("There should be NO $classWithOrderID ($classWithLastEdited) without link to Order - un error is suspected","deleted");
+					$rows = DB::query("
+						SELECT \"$className\".\"ID\"
+						FROM \"$className\"
+							LEFT JOIN \"Order\"
+								ON \"Order\".\"$orderFieldName\" = \"$className\".\"ID\"
+						WHERE \"Order\".\"ID\" IS NULL
+						LIMIT 0, ".$maximumNumberOfObjectsDeleted);
+					//the code below is a bit of a hack, but because of the one-to-one relationship we
+					//want to check both sides....
+					$oneToOneIDArray = array();
+					if($rows) {
+						foreach($rows as $row) {
+							$oneToOneIDArray[$row["ID"]] = $row["ID"];
+						}
+					}
+					if(count($oneToOneIDArray)) {
+						$unlinkedObjects = DataObject::get($className, "\"$className\".\"ID\" IN (".implode(",", $oneToOneIDArray).")");
+						if($unlinkedObjects){
+							foreach($unlinkedObjects as $unlinkedObject){
+								if($this->verbose) {
+									DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
+								}
+								$this->deleteObject($unlinkedObject);
+							}
+						}
+						else {
+							if($this->verbose) {
+								DB::alteration_message("No objects where found for $className even though there appear to be missing links.", "created");
+							}
+						}
+					}
+					elseif($this->verbose) {
+						DB::alteration_message("All references in Order to $className are valid.", "created");
+					}
+					if($this->verbose) {
+						$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"$className\"")->value();
+						$countUnlinkedOnes = DB::query("SELECT COUNT(\"$className\".\"ID\") FROM \"$className\" LEFT JOIN \"Order\" ON \"$className\".\"ID\" = \"Order\".\"$orderFieldName\" WHERE \"Order\".\"ID\" IS NULL")->value();
+						DB::alteration_message("In total there are $countAll $className ($orderFieldName), of which there are $countUnlinkedOnes not linked to an order. ", "created");
+						if($countUnlinkedOnes) {
+							DB::alteration_message("There should be NO $orderFieldName ($className) without link to Order - un error is suspected","deleted");
+						}
 					}
 				}
 			}
 		}
 
-
-
 		/***********************************************
-		//CLEANING ONE-TO-ONES
-		************************************************/
-		$classNames = self::get_one_to_one_objects_array();
-		if(is_array($classNames) && count($classNames)) {
-			foreach($classNames as $orderFieldName => $className) {
-				if($this->verbose) {
-					DB::alteration_message("looking for $className objects without link to order.");
-				}
-				$where = "\"Order\".\"ID\" IS NULL";
-				$sort = null;
-				$join = "LEFT JOIN \"Order\" ON \"Order\".\"$orderFieldName\" = \"$className\".\"ID\" ";
-				$unlinkedObjects = DataObject::get($className, $where, $sort, $join);
-				if($unlinkedObjects){
-					foreach($unlinkedObjects as $unlinkedObject){
-						if($this->verbose) {
-							DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
-						}
-						$this->deleteObject($unlinkedObject);
-					}
-				}
-				else {
+		//CLEANING ONE-TO-MANY
+		*************************************************/
+		if($this->verbose) {
+			DB::alteration_message("<h2>Checking one-to-many relationships</h2>.");
+		}
+		if(is_array($oneToMany) && count($oneToMany)) {
+			foreach($oneToMany as $classWithOrderID => $classWithLastEdited) {
+				if(!in_array($classWithLastEdited, $oneToOne) && !in_array($classWithLastEdited, $manyToMany)) {
 					if($this->verbose) {
-						DB::alteration_message("There are no $className objects without a link to order.", "created");
+						DB::alteration_message("looking for $classWithOrderID objects without link to order.");
 					}
-				}
-				if($this->verbose) {
-					$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"$className\"")->value();
-					$countUnlinkedOnes = DB::query("SELECT COUNT(\"$className\".\"ID\") FROM \"$className\" LEFT JOIN \"Order\" ON \"$className\".\"ID\" = \"Order\".\"$orderFieldName\" WHERE \"Order\".\"ID\" IS NULL")->value();
-					DB::alteration_message("In total there are $countAll $className ($orderFieldName), of which there are $countUnlinkedOnes not linked to an order. ", "created");
-					if($countUnlinkedOnes) {
-						DB::alteration_message("There should be NO $classWithOrderID ($classWithLastEdited) without link to Order - un error is suspected","deleted");
+					$rows = DB::query("
+						SELECT \"$classWithOrderID\".\"ID\"
+						FROM \"$classWithOrderID\"
+							LEFT JOIN \"Order\"
+								ON \"Order\".\"ID\" = \"$classWithOrderID\".\"OrderID\"
+						WHERE \"Order\".\"ID\" IS NULL
+						LIMIT 0, ".$maximumNumberOfObjectsDeleted);
+					$oneToManyIDArray = array();
+					if($rows) {
+						foreach($rows as $row) {
+							$oneToManyIDArray[$row["ID"]] = $row["ID"];
+						}
+					}
+					if(count($oneToManyIDArray)) {
+						$unlinkedObjects = DataObject::get($classWithLastEdited, "\"$classWithLastEdited\".\"ID\" IN (".implode(",", $oneToManyIDArray).")");
+						if($unlinkedObjects){
+							foreach($unlinkedObjects as $unlinkedObject){
+								if($this->verbose) {
+									DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
+								}
+								$this->deleteObject($unlinkedObject);
+							}
+						}
+						elseif($this->verbose) {
+							DB::alteration_message("$classWithLastEdited objects could not be found even though they were referenced.", "deleted");
+						}
+					}
+					elseif($this->verbose) {
+						DB::alteration_message("All $classWithLastEdited objects have a reference to a valid order.", "created");
+					}
+					if($this->verbose) {
+						$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"$classWithLastEdited\"")->value();
+						$countUnlinkedOnes = DB::query("SELECT COUNT(\"$classWithOrderID\".\"ID\") FROM \"$classWithOrderID\" LEFT JOIN \"Order\" ON \"$classWithOrderID\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
+						DB::alteration_message("In total there are $countAll $classWithOrderID ($classWithLastEdited), of which there are $countUnlinkedOnes not linked to an order. ", "created");
 					}
 				}
 			}

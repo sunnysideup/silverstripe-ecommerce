@@ -83,12 +83,6 @@ class Order extends DataObject {
 		'Emails' => 'OrderEmailRecord'
 	);
 
-	public static $many_many = array();
-
-	public static $belongs_many_many = array();
-
-	public static $defaults = array();
-
 	public static $indexes = array(
 		"SessionID" => true
 	);
@@ -1496,16 +1490,17 @@ class Order extends DataObject {
 	function getTitle() {
 		if($this->exists()) {
 			$title = $this->i18n_singular_name(). " #$this->ID - ".$this->dbObject('Created')->Nice();
+			$name = "";
 			if($this->CancelledByID) {
-				$title .= " - "._t("Order.CANCELLED","CANCELLED");
+				$name = " - "._t("Order.CANCELLED","CANCELLED");
 			}
-			elseif($this->MemberID && $member = $this->Member()) {
-				if($member->exists()) {
-					$name = " - ".$member->getName();
+			if(!$name && $this->MemberID && $member = $this->Member()) {
+				if($member->exists() && $name = $member->getName()) {
+					$name = " - ".$name;
 				}
 			}
-			elseif($this->BillingAddressID && $billingAddress = $this->BillingAddress()) {
-				$name = " - ".$billingAddress->FirstName." ".$billingAddress->Surname;
+			elseif(!$name && $this->BillingAddressID && $billingAddress = $this->BillingAddress()) {
+				$name = " - ".$billingAddress->Prefix." ".$billingAddress->FirstName." ".$billingAddress->Surname;
 			}
 			$title .= $name;
 		}
@@ -2113,6 +2108,7 @@ class Order extends DataObject {
 		}
 
 		//THE REST WAS GIVING ERRORS - POSSIBLY DUE TO THE FUNNY RELATIONSHIP (one-one, two times...)
+		/*
 		if($billingAddress = $this->BillingAddress()) {
 			if($billingAddress->exists()) {
 				$billingAddress->delete();
@@ -2144,6 +2140,7 @@ class Order extends DataObject {
 				$email->destroy();
 			}
 		}
+		*/
 
 	}
 

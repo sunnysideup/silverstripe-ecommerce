@@ -120,7 +120,7 @@ class OrderFormAddress extends Form {
 				);
 				$rightFields->push(new FieldGroup($passwordField));
 			}
-			else {
+			elseif(Member::currentUserID()) {
 				$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
 				$rightFields->push(
 					new LiteralField('LogoutNote', "<p class=\"message warning\">" . _t("Account.LOGGEDIN","You are currently logged in as ") . $this->orderMember->FirstName . ' ' . $this->orderMember->Surname . '. <a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out and clear your cart.')."</a></p>")

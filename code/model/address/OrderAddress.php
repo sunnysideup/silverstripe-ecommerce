@@ -507,9 +507,9 @@ class OrderAddress extends DataObject {
 
 	function onAfterWrite(){
 		parent::onAfterWrite();
-		if(!$this->OrderID && $this->exists()) {
+		if($this->exists()) {
 			$order = DataObject::get_one("Order", "\"". $this->ClassName."ID\" = ".$this->ID);
-			if($order) {
+			if($order && $order->ID != $this->OrderID) {
 				$this->OrderID = $order->ID;
 				$this->write();
 			}
