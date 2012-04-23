@@ -192,7 +192,7 @@ $lang['ar_SA']['Product.ss']['NOIMAGE'] = 'عذراً , لا توجد صورة �
 $lang['ar_SA']['Product.ss']['QUANTITYCART'] = 'الكمية في عربة الشراء';
 $lang['ar_SA']['Product.ss']['REMOVE'] = 'حذف &quot;%s&quot;من عربة الشراء';
 $lang['ar_SA']['Product.ss']['REMOVEALL'] = 'حذف أحد &quot;%s&quot; من عربة الشراء';
-$lang['ar_SA']['Product.ss']['REMOVELINK'] = '&raquo; حذف من عربة الشراء';
+$lang['ar_SA']['Product.ss']['REMOVELINK'] = '&#187; حذف من عربة الشراء';
 $lang['ar_SA']['Product.ss']['SIZE'] = 'الحجم';
 $lang['ar_SA']['ProductGroup.ss']['FEATURED'] = 'المنتجات المميزة';
 $lang['ar_SA']['ProductGroup.ss']['OTHER'] = 'المنتجات الأخرى';
@@ -208,10 +208,10 @@ $lang['ar_SA']['ProductGroupItem.ss']['NOIMAGE'] = 'عذراً. لايوجد ص�
 $lang['ar_SA']['ProductGroupItem.ss']['QUANTITY'] = 'الكمية';
 $lang['ar_SA']['ProductGroupItem.ss']['QUANTITYCART'] = 'الكمية في عربة الشراء';
 $lang['ar_SA']['ProductGroupItem.ss']['READMORE'] = 'اضغط هنا لقراءة المزيد &quot;%s&quot;';
-$lang['ar_SA']['ProductGroupItem.ss']['READMORECONTENT'] = 'اضغط لقراءة المزيد &raquo;';
+$lang['ar_SA']['ProductGroupItem.ss']['READMORECONTENT'] = 'اضغط لقراءة المزيد &#187;';
 $lang['ar_SA']['ProductGroupItem.ss']['REMOVE'] = 'حذف &quot;%s&quot; من عربة الشراء';
 $lang['ar_SA']['ProductGroupItem.ss']['REMOVEALL'] = 'حذف أحد &quot;%s&quot; من عربة الشراء';
-$lang['ar_SA']['ProductGroupItem.ss']['REMOVELINK'] = '&raquo; إزالة من عربة الشراء';
+$lang['ar_SA']['ProductGroupItem.ss']['REMOVELINK'] = '&#187; إزالة من عربة الشراء';
 $lang['ar_SA']['ProductGroupItem.ss']['REMOVEONE'] = 'إزالة أحد &quot;%s&quot; من عربة الشراء';
 $lang['ar_SA']['ProductMenu.ss']['GOTOPAGE'] = 'اذهب إلى صفحة %s ';
 $lang['ar_SA']['SSReport']['ALLCLICKHERE'] = 'اضغط هنا لعرض جميع المنتجات';

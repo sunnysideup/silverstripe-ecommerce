@@ -22,6 +22,12 @@
  */
 class ShoppingCart extends Object{
 
+	/**
+	 *
+	 * This is where we hold the (singleton) Shoppingcart
+	 * @var Object (ShoppingCart)
+	 */
+	protected static $singletoncart = null;
 
 	/**
 	 * Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).
@@ -31,16 +37,19 @@ class ShoppingCart extends Object{
 
 	/**
 	 * stores a reference to the current order object
-	 *@var Object
+	 * @var Object
 	 **/
 	protected $order = null;
 
-
-	protected static $singletoncart = null;
+	/**
+	 * This variable is set to YES when we actually need an order (i.e. write it)
+	 * @var Boolean
+	 */
+	protected  $requireSavedOrder = false;
 
 	/**
 	 * Allows access to the cart from anywhere in code.
-	 *@return ShoppingCart Object
+	 * @return ShoppingCart Object
 	 */
 	public static function singleton(){
 		if(!self::$singletoncart){
@@ -57,7 +66,7 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Allows access to the current order from anywhere in the code..
-	 *@return ShoppingCart Object
+	 * @return ShoppingCart Object
 	 */
 	public static function current_order() {
 		return self::singleton()->currentOrder();
@@ -65,7 +74,7 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Allows access to the current order from anywhere in the code..
-	 *@return ShoppingCart Object
+	 * @return ShoppingCart Object
 	 */
 	public function Link() {
 		$order = self::singleton()->currentOrder();
@@ -76,10 +85,10 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Adds any number of items to the cart.
-	 *@param DataObject $buyable - the buyable (generally a product) being added to the cart
-	 *@param Integer $quantity - number of items add.
-	 *@param $parameters - array of parameters to target a specific order item. eg: group=1, length=5
-	 *@return false | DataObject (OrderItem)
+	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
+	 * @param Integer $quantity - number of items add.
+	 * @param $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+	 * @return false | DataObject (OrderItem)
 	 */
 	public function addBuyable($buyable, $quantity = 1, $parameters = array()){
 		if(!$buyable) {
@@ -113,10 +122,10 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Sets quantity for an item in the cart.
-	 *@param DataObject $buyable - the buyable (generally a product) being added to the cart
-	 *@param Integer $quantity - number of items add.
-	 *@param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
-	 *@return false | DataObject (OrderItem)
+	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
+	 * @param Integer $quantity - number of items add.
+	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+	 * @return false | DataObject (OrderItem)
 	 */
 	function setQuantity($buyable, $quantity, $parameters = array()) {
 		$item = $this->prepareOrderItem($mustBeExistingItem = true, $buyable, $parameters);
@@ -160,9 +169,9 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Delete item from the cart.
-	 *@param OrderItem $buyable - the buyable (generally a product) being added to the cart
-	 *@param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
-	 *@return boolean - successfully removed
+	 * @param OrderItem $buyable - the buyable (generally a product) being added to the cart
+	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+	 * @return boolean - successfully removed
 	 */
 	function deleteBuyable($buyable, $parameters = array()) {
 		$item = $this->prepareOrderItem($mustBeExistingItem = true, $buyable, $parameters);
@@ -178,11 +187,11 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
-	 *@param Boolean $mustBeExistingItems - if false, the Order Item get created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
-	 *@param DataObject $buyable - the buyable (generally a product) being added to the cart
-	 *@param Integer $quantity - number of items add.
-	 *@param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5*
-	 *@return boolean | DataObject ($orderItem)
+	 * @param Boolean $mustBeExistingItems - if false, the Order Item get created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
+	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
+	 * @param Integer $quantity - number of items add.
+	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5*
+	 * @return boolean | DataObject ($orderItem)
 	 */
 	protected function prepareOrderItem($mustBeExistingItem = true, $buyable, $parameters = array()) {
 		if(!$buyable) {
@@ -265,9 +274,12 @@ class ShoppingCart extends Object{
 	 * Clears the cart contents completely by removing the orderID from session, and thus creating a new cart on next request.
 	 */
 	public function clear(){
-		$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
-		Session::clear($sessionCode); //clear the orderid from session
-		Session::set($sessionCode, null); //clear the orderid from session
+		$sessionVariableNamesArray = array("ID", "Messages");
+		foreach($sessionVariableNamesArray as $name){
+			$sessionVariableName = $this->sessionVariableName($name);
+			Session::clear($sessionVariableName); //clear the orderid from session
+			Session::set($sessionVariableName, null); //clear the orderid from session
+		}
 		Session::save(); //clear the orderid from session
 		$this->order = null; //clear local variable
 	}
@@ -320,8 +332,8 @@ class ShoppingCart extends Object{
 			$this->order = $order;
 		}
 		if($order){
-			$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
-			Session::set($sessionCode.".ID",$this->order->ID);
+			$sessionVariableName = $this->sessionVariableName("OrderID");
+			Session::set($sessionVariableName);
 			$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
 		}
 		else {
@@ -420,30 +432,33 @@ class ShoppingCart extends Object{
 	public function currentOrder(){
 		if (!$this->order) {
 			$member = Member::currentMember();
-			$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
-			$orderIDFromSession = intval(Session::get($sessionCode.".ID"));
-			$this->order = DataObject::get_by_id('Order',$orderIDFromSession); //find order by id saved to session (allows logging out and retaining cart contents)
+			$sessionVariableName = $this->sessionVariableName("OrderID");
+			$orderIDFromSession = intval(Session::get($sessionVariableName));
+			$this->order = DataObject::get_by_id("Order", $orderIDFromSession); //find order by id saved to session (allows logging out and retaining cart contents)
 			//order has already been submitted
 			if($this->order && $this->order->IsSubmitted()) {
 				$this->order = null;
 			}
-			//no order has been created yet
-			if(!$this->order){
+			if($this->order){
+				if($member) {
+					if($this->order->MemberID != $member->ID) {
+						$this->order->MemberID = $member->ID;
+						$this->order->write();
+					}
+				}
+			}
+			else {
 				$this->order = new Order();
 				if($member) {
 					$this->order->MemberID = $member->ID;
 				}
+				//TO DO:only write when
+				//if($this->requireSavedOrder) {
 				$this->order->write();
-				$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
-				Session::set($sessionCode.".ID",$this->order->ID);
+				Session::set($sessionVariableName,intval($this->order->ID));
+				//}
 			}
 			//member just logged in and is not associated with order yet
-			elseif($this->order && $member) {
-				if($this->order->MemberID != $member->ID) {
-					$this->order->MemberID = $member->ID;
-					$this->order->write();
-				}
-			}
 			//if you are not logged in but the order belongs to a member then clear the cart.
 			/***** THIS IS NOT CORRECT, BECAUSE YOU CAN CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!! ***
 			elseif($this->order->MemberID && !$member) {
@@ -451,7 +466,9 @@ class ShoppingCart extends Object{
 				return false;
 			}
 			*/
-			$this->order->calculateOrderAttributes();
+			if($this->order->exists()) {
+				$this->order->calculateOrderAttributes();
+			}
 		}
 		return $this->order;
 	}
@@ -459,9 +476,9 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Gets an existing order item based on buyable and passed parameters
-	 *@param DataObject $buyable
-	 *@param Array $parameters
-	 *@return OrderItem or null
+	 * @param DataObject $buyable
+	 * @param Array $parameters
+	 * @return OrderItem or null
 	 */
 	protected function getExistingItem($buyable,$parameters = array()){
 		$filterString = $this->parametersToSQL($parameters);
@@ -524,8 +541,7 @@ class ShoppingCart extends Object{
 	 *@return array of messages
 	 */
 	function getMessages(){
-		$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
-		$sessionVariableName = ($sessionCode.".Messages");
+		$sessionVariableName = $this->sessionVariableName("Messages");
 		//get old messages
 		$messages = unserialize(Session::get($sessionVariableName));
 		//clear old messages
@@ -542,8 +558,8 @@ class ShoppingCart extends Object{
 	 *@return array of messages
 	 */
 	protected function StoreMessagesInSession(){
-		$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
-		Session::set($sessionCode.".Messages", serialize($this->messages));
+		$sessionVariableName = $this->sessionVariableName("Messages");
+		Session::set($sessionVariableName, serialize($this->messages));
 	}
 
 	/**
@@ -588,12 +604,24 @@ class ShoppingCart extends Object{
 	 *
 	 * @return EcommerceDBConfig
 	 */
-	function EcomConfig(){
+	protected function EcomConfig(){
 		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
 
+	/**
+	 * Return the name of the session variable that should be used.
+	 * @return String
+	 */
+	protected function sessionVariableName($name = "") {
+		$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
+		return $sessionCode."_".$name;
+	}
+
 }
+
+
+
 
 /**
  * ShoppingCart_Controller
@@ -919,9 +947,11 @@ class ShoppingCart_Controller extends Controller{
 		return 1;
 	}
 
+
 	/**
 	 * Gets the request parameters
-	 *@param $getpost - choose between obtaining the chosen parameters from GET or POST
+	 * @param $getpost - choose between obtaining the chosen parameters from GET or POST
+	 * @return Array
 	 */
 	protected function parameters($getpost = 'GET'){
 		return ($getpost == 'GET') ? $this->request->getVars() : $_POST;

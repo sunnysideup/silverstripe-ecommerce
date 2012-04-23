@@ -1499,11 +1499,15 @@ class Order extends DataObject {
 			if($this->CancelledByID) {
 				$title .= " - "._t("Order.CANCELLED","CANCELLED");
 			}
-			elseif($this->MemberID && $this->Member()->exists() ) {
-				if($this->MemberID != Member::currentUserID()) {
-					$title .= " - ".$this->Member()->getName();
+			elseif($this->MemberID && $member = $this->Member()) {
+				if($member->exists()) {
+					$name = " - ".$member->getName();
 				}
 			}
+			elseif($this->BillingAddressID && $billingAddress = $this->BillingAddress()) {
+				$name = " - ".$billingAddress->FirstName." ".$billingAddress->Surname;
+			}
+			$title .= $name;
 		}
 		else {
 			$title = _t("Order.NEW", "New")." ".$this->i18n_singular_name();
