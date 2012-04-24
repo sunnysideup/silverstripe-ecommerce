@@ -73,6 +73,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->addEcommerceDBConfigToConfigs();
 					$this->addOtherValuesToConfigs();
 					$this->addPages();
+					$this->orderSteps();
 					$this->definedConfigs();
 				}
 				else {
@@ -104,7 +105,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$projectFolderAndFile = $projectFolder."/".$file;
 		$fullFilePath = $baseFolder."/".$projectFolderAndFile;
 		$defaultFileFullPath = Director::baseFolder()."/".$this->defaultLocation;
-		DB::alteration_message("Current files used: ".$files, "created");
+		DB::alteration_message("Current files used: <strong style=\"color: darkRed\">".$files."</strong>, unless stated otherwise, all settings can be edited in these files (or file).", "created");
 		if(!file_exists($baseAndProjectFolder)) {
 			mkdir($baseAndProjectFolder);
 		}
@@ -222,7 +223,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 				column-count: 3;
 				column-gap: 20px;
 			}
-			a.backToTop {display: block; float: right; font-size: 0.8em; }
+			a.backToTop {display: block; font-size: 0.8em; }
 		</style>
 		<h2>Configuration Report</h2>";
 		$htmlTable = "
@@ -322,20 +323,20 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	protected function addOtherValuesToConfigs(){
-		$this->definitions["Payment"]["site_currency"] = "Default currency for the site. <br />SET USING Payment::set_site_currency(\"NZD\")";
+		$this->definitions["Payment"]["site_currency"] = "Default currency for the site. <br />SET USING Payment::set_site_currency(\"NZD\") in the _config.php FILES";
 		$this->configs["Payment"]["site_currency"] = Payment::site_currency()." ";
 		$this->defaults["Payment"]["site_currency"] = "[no default set]";
 
-		$this->definitions["Geoip"]["default_country_code"] = "Default currency for the site. <br />SET USING Geoip::\$default_country_code";
+		$this->definitions["Geoip"]["default_country_code"] = "Default currency for the site. <br />SET USING Geoip::\$default_country_code in the _config.php FILES";
 		$this->configs["Geoip"]["default_country_code"] = Geoip::$default_country_code;
 		$this->defaults["Geoip"]["default_country_code"] = "[no default set]";
 
-		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. SET USING Email::\$admin_email_address = \"bla@ta.com\"";
+		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
 		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
 		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
 
 		$siteConfig = SiteConfig::current_site_config();
-		$this->definitions["SiteConfig"]["website_title"] = "The name of the website.";
+		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. This is <a href=\"/admin/show/root\">set in the site configuration</a>";
 		$this->configs["SiteConfig"]["website_title"] = $siteConfig->Title;
 		$this->defaults["SiteConfig"]["website_title"] = "[no default set]";
 	}
@@ -343,26 +344,64 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected function addPages(){
 
 		$checkoutPage = DataObject::get_one("CheckoutPage");
-		$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.";
-		$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "view: <a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a>, <a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a> " : " NOT CREATED!";
-		$this->defaults["Pages"]["CheckoutPage"] = "[not created by default]";
+		$this->getPageDefinitions($checkoutPage);
+		$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.<br />".($checkoutPage ? "<a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+		$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "view: <a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a><br />".$checkoutPage->configArray : " NOT CREATED!";
+		$this->defaults["Pages"]["CheckoutPage"] = $checkoutPage ? $checkoutPage->defaultsArray : "[add page first to see defaults]";
 
 		$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
-		$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.";
-		$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "view: <a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a>, <a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a> " : " NOT CREATED!";
-		$this->defaults["Pages"]["OrderConfirmationPage"] = "[not created by default]";
+		$this->getPageDefinitions($orderConfirmationPage);
+		$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.<br />".($orderConfirmationPage ? "<a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+		$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "view: <a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a><br />".$orderConfirmationPage->configArray: " NOT CREATED!";
+		$this->defaults["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : "[add page first to see defaults]";
 
 		$accountPage = DataObject::get_one("AccountPage");
-		$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.";
-		$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a>, <a href=\"/admin/show/".$accountPage->ID."/\">edit</a> " : " NOT CREATED!";
-		$this->defaults["Pages"]["AccountPage"] = "[not created by default]";
+		$this->getPageDefinitions($accountPage);
+		$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.<br />".($accountPage ? "<a href=\"/admin/show/".$accountPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+		$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a><br />".$accountPage->configArray : " NOT CREATED!";
+		$this->defaults["Pages"]["AccountPage"] = $accountPage ? $accountPage->defaultsArray : "[add page first to see defaults]";
 
 		$cartPage = DataObject::get_one("CartPage", "ClassName = 'CartPage'");
-		$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.";
-		$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a> " : " NOT CREATED!";
-		$this->defaults["Pages"]["CartPage"] = "[not created by default]";
+		$this->getPageDefinitions($cartPage);
+		$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+		$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
+		$this->defaults["Pages"]["CartPage"] = $cartPage ? $cartPage->defaultsArray : "[add page first to see defaults]";
+
+	}
+
+	private function getPageDefinitions($page){
+		if($page) {
+			$fields = $page->combined_static($page->ClassName, "db", "Page");
+			$defaultsArray = $page->stat("defaults", true);
+			$configArray = array();
+			foreach($fields as $fieldKey => $fieldType) {
+				$configArray[$fieldKey] = $page->$fieldKey;
+				if(!isset($defaultsArray[$fieldKey])) {
+					$defaultsArray[$fieldKey] = "[default not set]";
+				}
+			}
+			$page->defaultsArray = $defaultsArray;
+			$page->configArray = print_r($configArray, 1);
+		}
+	}
 
 
+	function orderSteps(){
+		$steps = DataObject::get("OrderStep");
+		foreach($steps as $step) {
+			$fields = $step->combined_static($step->ClassName, "db");
+			$defaultsArray = $step->stat("defaults", true);
+			$configArray = array();
+			foreach($fields as $fieldKey => $fieldType) {
+				$configArray[$fieldKey] = $step->$fieldKey;
+				if(!isset($defaultsArray[$fieldKey])) {
+					$defaultsArray[$fieldKey] = "[default not set]";
+				}
+			}
+			$this->definitions["OrderStep"][$step->Code] = $step->Description;
+			$this->configs["OrderStep"][$step->Code] = $configArray;
+			$this->defaults["OrderStep"][$step->Code] = $defaultsArray;
+		}
 	}
 
 }

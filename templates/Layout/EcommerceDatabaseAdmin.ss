@@ -1,6 +1,16 @@
 
 
 
+<% if OverallConfig %>
+<h3>Check your settings!</h3>
+<p>Check your settings whenever you are working on this site to make sure they are all up-to-date and valid.</p>
+<ul>
+<% control OverallConfig %>
+	<li><a href="$Link">$Title</a>: $Description</li>
+<% end_control %>
+</ul>
+<% end_if %>
+
 <% if EcommerceSetup %>
 <h3>E-commerce Setup</h3>
 <p>These actions are generally only run once to setup e-commerce.</p>
