@@ -72,6 +72,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->configsNotSet();
 					$this->addEcommerceDBConfigToConfigs();
 					$this->addOtherValuesToConfigs();
+					$this->addPages();
 					$this->definedConfigs();
 				}
 				else {
@@ -330,6 +331,31 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. SET USING Email::\$admin_email_address = \"bla@ta.com\"";
 		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
 		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
+	}
+
+	protected function addPages(){
+
+		$checkoutPage = DataObject::get_one("CheckoutPage");
+		$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.";
+		$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "<a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a>: <a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a> " : " NOT CREATED!";
+		$this->defaults["Pages"]["CheckoutPage"] = "[not created by default]";
+
+		$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
+		$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.";
+		$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "<a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a>: <a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a> " : " NOT CREATED!";
+		$this->defaults["Pages"]["OrderConfirmationPage"] = "[not created by default]";
+
+		$accountPage = DataObject::get_one("AccountPage");
+		$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.";
+		$this->configs["Pages"]["AccountPage"] = $accountPage ? "<a href=\"".$accountPage->Link()."\">".$acountPage->Title."</a>: <a href=\"/admin/show/".$accountPage->ID."/\">edit</a> " : " NOT CREATED!";
+		$this->defaults["Pages"]["AccountPage"] = "[not created by default]";
+
+		$cartPage = DataObject::get_one("CartPage", "ClassName = 'CartPage'");
+		$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.";
+		$this->configs["Pages"]["CartPage"] = $cartPage ? "<a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>: <a href=\"/admin/show/".$cartPage->ID."/\">edit</a> " : " NOT CREATED!";
+		$this->defaults["Pages"]["CartPage"] = "[not created by default]";
+
+
 	}
 
 }
