@@ -31,16 +31,14 @@ class Order_Email extends Email {
 	 * @return String
 	 */
 	static function get_subject() {
-		$ecommerceConfig = $this->EcomConfig();
-		if($ecommerceConfig && $ecommerceConfig->Title) {
-			return $ecommerceConfig->Title;
+		$siteConfig = SiteConfig::current_site_config();
+		if($siteConfig && $siteConfig->Title) {
+			return _t("Order_Email.SALEUPDATE", "Sale Update {OrderNumber} from ").$siteConfig->Title;
 		}
 		else {
 			return _t("Order_Email.SALEUPDATE", "Sale Update {OrderNumber} ");
 		}
 	}
-
-
 
 	/**
 	 *
