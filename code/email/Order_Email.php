@@ -18,7 +18,7 @@ class Order_Email extends Email {
 	 * @return String
 	 */
 	static function get_from_email() {
-		$ecommerceConfig = $this->EcomConfig();
+		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
 		if($ecommerceConfig && $ecommerceConfig->ReceiptEmail) {
 			return $ecommerceConfig->ReceiptEmail;
 		}
