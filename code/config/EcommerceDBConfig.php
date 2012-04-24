@@ -353,7 +353,7 @@ class EcommerceDBConfig extends DataObject {
 		}
 		DB::alteration_message("
 			<hr /><hr /><hr /><hr /><hr />
-			Please make sure to review your <a href=\"/dev/ecommerce/\">e-commerce settings</a>.
+			<h1 style=\"color: darkRed\">Please make sure to review your <a href=\"/dev/ecommerce/\">e-commerce settings</a>.</h1>
 			<hr /><hr /><hr /><hr /><hr />",
 			"edited"
 		);
