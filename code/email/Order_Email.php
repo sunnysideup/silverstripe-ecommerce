@@ -18,26 +18,26 @@ class Order_Email extends Email {
 	 * @return String
 	 */
 	static function get_from_email() {
-		$siteConfig = SiteConfig::current_site_config();
-		if($siteConfig && $siteConfig->Title) {
-			$email = $siteConfig->ReceiptEmail;
+		$ecommerceConfig = $this->EcomConfig();
+		if($ecommerceConfig && $ecommerceConfig->ReceiptEmail) {
+			return $ecommerceConfig->ReceiptEmail;
 		}
 		else {
-			$email =  Email::getAdminEmail();
+			return Email::getAdminEmail();
 		}
-		return $email;
 	}
 	/**
 	 * returns the subject for the email (doh!).
 	 * @return String
 	 */
 	static function get_subject() {
-		$siteConfig = SiteConfig::current_site_config();
-		$title = "";
-		if($siteConfig && $siteConfig->Title) {
-			$title = " - ".$siteConfig->Title;
+		$ecommerceConfig = $this->EcomConfig();
+		if($ecommerceConfig && $ecommerceConfig->Title) {
+			return $ecommerceConfig->Title;
 		}
-		return _t("Order_Email.SALEUPDATE", "Sale Update {OrderNumber} ").$title;
+		else {
+			return _t("Order_Email.SALEUPDATE", "Sale Update {OrderNumber} ");
+		}
 	}
 
 

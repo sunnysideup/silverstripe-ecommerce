@@ -1938,16 +1938,6 @@ class Order extends DataObject {
    * 9. TEMPLATE RELATED STUFF
 *******************************************************/
 
-
-	/**
-	 * returns the instance of SiteConfi for use in templates.
-	 *
-	 * @return SiteConfig (DataObject)
-	 **/
-	public function SiteConfig(){
-		return SiteConfig::current_site_config();
-	}
-
 	/**
 	 * returns the instance of EcommerceConfigAjax for use in templates.
 	 * In templates, it is used like this:

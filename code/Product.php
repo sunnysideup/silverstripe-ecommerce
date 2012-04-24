@@ -148,7 +148,6 @@ class Product extends Page implements BuyableModel {
 		if($siteTreeFieldExtensions) {
 			$this->enableCMSFieldsExtensions();
 		}
-		$sc = SiteConfig::current_site_config();
 		$fields->replaceField('Root.Content.Main', new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description'), 3));
 		//NOTE: IMAGE FIELD WAS GIVING ERRORS IN ModelAdmin
 		//$fields->addFieldToTab('Root.Content.Images', new TreeDropdownField('ImageID', _t('Product.IMAGE', 'Product Image'), "Image"));
