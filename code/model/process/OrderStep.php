@@ -178,6 +178,7 @@ class OrderStep extends DataObject {
 				$this->$field = $value;
 			}
 		}
+		$this->Description = $this->myDescription();
 	}
 
 	/**
@@ -428,10 +429,18 @@ class OrderStep extends DataObject {
 					if(!DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'")) {
 						$obj = new $className();
 						$obj->Code = strtoupper($obj->Code);
+						$obj->Description = $this->myDescription();
 						$obj->write();
 						DB::alteration_message("Created \"$code\" as $className.", "created");
 					}
 				}
+			}
+		}
+		$steps = DataObject::get("OrderStep");
+		foreach($steps as $step) {
+			if(!$step->Description) {
+				$step->Description = $step->myDescription();
+				$step->write();
 			}
 		}
 	}
@@ -443,6 +452,15 @@ class OrderStep extends DataObject {
 	protected function EcomConfig(){
 		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
+
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.DESCRIPTION", "No description has been provided for this step.");
+	}
+
 }
 
 /**
@@ -512,6 +530,7 @@ class OrderStep_Created extends OrderStep {
 	 *@return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		if(!$order->IsSubmitted()) {
 			//LINE BELOW IS NOT REQUIRED
 			$header = _t("OrderStep.SUBMITORDER", "Submit Order");
@@ -549,7 +568,13 @@ class OrderStep_Created extends OrderStep {
 		return $fields;
 	}
 
-
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.CREATED_DESCRIPTION", "During this step the customer creates her or his order. The shop admininistrator does not do anything during this step.");
+	}
 
 }
 
@@ -657,10 +682,21 @@ class OrderStep_Submitted extends OrderStep {
 	 *@return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
 		return $fields;
 	}
+
+
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.SUBMITTED_DESCRIPTION", "The official moment the order gets submitted by the customer. The hand-shake for a commercial transaction.");
+	}
+
 
 }
 
@@ -741,6 +777,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 *@return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
 		return $fields;
@@ -754,7 +791,13 @@ class OrderStep_SentInvoice extends OrderStep {
 		return $this->SendInvoiceToCustomer;
 	}
 
-
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.SENTINVOICE_DESCRIPTION", "Invoice gets sent to the customer via e-mail.");
+	}
 }
 
 class OrderStep_Paid extends OrderStep {
@@ -798,6 +841,7 @@ class OrderStep_Paid extends OrderStep {
 	 *@return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		if(!$order->IsPaid()) {
 			$header = _t("OrderStep.SUBMITORDER", "Order NOT Paid");
 			$msg = _t("OrderStep.ORDERNOTPAID", "This order can not be completed, because it has not been paid. You can either create a payment or change the status of any existing payment to <i>success</i>.");
@@ -807,7 +851,13 @@ class OrderStep_Paid extends OrderStep {
 		return $fields;
 	}
 
-
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.PAID_DESCRIPTION", "The order is paid in full.");
+	}
 
 }
 
@@ -852,12 +902,20 @@ class OrderStep_Confirmed extends OrderStep {
 	 * @return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.MUSTDOPAYMENTCHECK", " ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_PaymentCheck", $msg),"ActionNextStepManually");
 		$fields->addFieldToTab("Root.Next", new LiteralField("ExampleOfThingsToCheck", EcommerceConfig::get("OrderStep_Confirmed", "list_of_things_to_check")));
 		return $fields;
 	}
 
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.CONFIRMED_DESCRIPTION", "The shop administrator confirms all the details for the current order.");
+	}
 
 }
 
@@ -927,6 +985,7 @@ class OrderStep_SentReceipt extends OrderStep {
 	 *@return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...)");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
 		return $fields;
@@ -939,6 +998,14 @@ class OrderStep_SentReceipt extends OrderStep {
 	 **/
 	protected function hasCustomerMessage() {
 		return $this->SendReceiptToCustomer;
+	}
+
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.SENTRECEIPT_DESCRIPTION", "The customer is sent a receipt.");
 	}
 
 }
@@ -967,18 +1034,9 @@ class OrderStep_Sent extends OrderStep {
 		return $fields;
 	}
 
-	/**
-	 * Explains the current order step.
-	 * @return String
-	 */
-	function description(){
-		_t("OrderStep.SENTDESCRIPTON", "During this step we record the delivery details for the order such as the courrier ticket number and whatever else is relevant.");
-	}
-
 	public function initStep($order) {
 		return true;
 	}
-
 
 	public function doStep($order) {
 		return true;
@@ -1018,6 +1076,7 @@ class OrderStep_Sent extends OrderStep {
 	 *@return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.MUSTENTERDISPATCHRECORD", " ... To move this order to the next step you enter the dispatch details in the logs.");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_DispatchPhysicalOrder", $msg),"ActionNextStepManually");
 		return $fields;
@@ -1030,6 +1089,14 @@ class OrderStep_Sent extends OrderStep {
 	 **/
 	protected function hasCustomerMessage() {
 		return $this->SendDetailsToCustomer;
+	}
+
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.SENT_DESCRIPTION", "During this step we record the delivery details for the order such as the courrier ticket number and whatever else is relevant.");
 	}
 
 }
@@ -1046,14 +1113,6 @@ class OrderStep_Archived extends OrderStep {
 		"Sort" => 55,
 		"ShowAsCompletedOrder" => 1
 	);
-
-	/**
-	 * Explains the current order step.
-	 * @return String
-	 */
-	function description(){
-		_t("OrderStep.ARCHIVEDDESCRIPTON", "This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.");
-	}
 
 	public function initStep($order) {
 		return true;
@@ -1080,11 +1139,19 @@ class OrderStep_Archived extends OrderStep {
 	 *@return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
+		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this order then do this here ...");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_Archived", $msg),"ActionNextStepManually");
 		return $fields;
 	}
 
+	/**
+	 * Explains the current order step.
+	 * @return String
+	 */
+	protected function myDescription(){
+		return _t("OrderStep.ARCHIVED_DESCRIPTION", "This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.");
+	}
 
 }
 
