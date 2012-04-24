@@ -74,6 +74,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->addOtherValuesToConfigs();
 					$this->addPages();
 					$this->orderSteps();
+					$this->checkoutAndModifierDetails();
 					$this->definedConfigs();
 				}
 				else {
@@ -277,7 +278,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 			</td>
 			<td class=\"$class\">
 				<pre>$actualValue</pre>
-				<span><pre>$defaultValue</span></span>
+				<span><sub>e-commerce defaults:</sub><pre>$defaultValue</span></span>
 			</td>
 		</tr>";
 			}
@@ -303,17 +304,19 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected function addEcommerceDBConfigToConfigs(){
 		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
 		$fields = $ecommerceConfig->fieldLabels();
-		foreach($fields as $field => $description) {
-			if($field != "Title") {
-				$defaultsDefaults = $ecommerceConfig->stat("defaults");
-				$this->definitions["EcommerceDBConfig"][$field] = "$description. <br />THIS IS SET IN THE <a href=\"/admin/shop\">Ecommerce Configuration</a>";
-				$this->configs["EcommerceDBConfig"][$field] = $ecommerceConfig->$field;
-				$this->defaults["EcommerceDBConfig"][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : "no default set";
-				$imageField = $field."ID";
-				if(isset($ecommerceConfig->$imageField)) {
-					if($image = $ecommerceConfig->$field()) {
-						if($image->exists() && $image instanceOf Image) {
-							$this->configs["EcommerceDBConfig"][$field] = "[Image]  --- <img src=\"".$image->Link()."\" />";
+		if($fields) {
+			foreach($fields as $field => $description) {
+				if($field != "Title") {
+					$defaultsDefaults = $ecommerceConfig->stat("defaults");
+					$this->definitions["EcommerceDBConfig"][$field] = "$description. <br />THIS IS SET IN THE <a href=\"/admin/shop\">Ecommerce Configuration</a>";
+					$this->configs["EcommerceDBConfig"][$field] = $ecommerceConfig->$field;
+					$this->defaults["EcommerceDBConfig"][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : "no default set";
+					$imageField = $field."ID";
+					if(isset($ecommerceConfig->$imageField)) {
+						if($image = $ecommerceConfig->$field()) {
+							if($image->exists() && $image instanceOf Image) {
+								$this->configs["EcommerceDBConfig"][$field] = "[Image]  --- <img src=\"".$image->Link()."\" />";
+							}
 						}
 					}
 				}
@@ -331,12 +334,12 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$this->configs["Geoip"]["default_country_code"] = Geoip::$default_country_code;
 		$this->defaults["Geoip"]["default_country_code"] = "[no default set]";
 
-		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
+		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. <br />SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
 		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
 		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
 
 		$siteConfig = SiteConfig::current_site_config();
-		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. This is <a href=\"/admin/show/root\">set in the site configuration</a>";
+		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. <br />This is <a href=\"/admin/show/root\">set in the site configuration</a>";
 		$this->configs["SiteConfig"]["website_title"] = $siteConfig->Title;
 		$this->defaults["SiteConfig"]["website_title"] = "[no default set]";
 	}
@@ -374,14 +377,16 @@ class EcommerceCheckConfiguration extends BuildTask{
 			$fields = $page->combined_static($page->ClassName, "db", "Page");
 			$defaultsArray = $page->stat("defaults", true);
 			$configArray = array();
-			foreach($fields as $fieldKey => $fieldType) {
-				$configArray[$fieldKey] = $page->$fieldKey;
-				if(!isset($defaultsArray[$fieldKey])) {
-					$defaultsArray[$fieldKey] = "[default not set]";
+			if($fields) {
+				foreach($fields as $fieldKey => $fieldType) {
+					$configArray[$fieldKey] = $page->$fieldKey;
+					if(!isset($defaultsArray[$fieldKey])) {
+						$defaultsArray[$fieldKey] = "[default not set]";
+					}
 				}
+				$page->defaultsArray = $defaultsArray;
+				$page->configArray = print_r($configArray, 1);
 			}
-			$page->defaultsArray = $defaultsArray;
-			$page->configArray = print_r($configArray, 1);
 		}
 	}
 
@@ -393,14 +398,59 @@ class EcommerceCheckConfiguration extends BuildTask{
 			$defaultsArray = $step->stat("defaults", true);
 			$configArray = array();
 			foreach($fields as $fieldKey => $fieldType) {
-				$configArray[$fieldKey] = $step->$fieldKey;
-				if(!isset($defaultsArray[$fieldKey])) {
-					$defaultsArray[$fieldKey] = "[default not set]";
+				if($fields) {
+					$configArray[$fieldKey] = $step->$fieldKey;
+					if(!isset($defaultsArray[$fieldKey])) {
+						$defaultsArray[$fieldKey] = "[default not set]";
+					}
 				}
 			}
-			$this->definitions["OrderStep"][$step->Code] = $step->Description;
+			$this->definitions["OrderStep"][$step->Code] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/shop/\">Ecommerce Configuration</a>.";
 			$this->configs["OrderStep"][$step->Code] = $configArray;
 			$this->defaults["OrderStep"][$step->Code] = $defaultsArray;
+		}
+	}
+
+	function checkoutAndModifierDetails(){
+		$checkoutPage = DataObject::get_one("CheckoutPage");
+		$steps = DataObject::get("CheckoutPage_StepDescription");
+		if($steps) {
+			foreach($steps as $key => $step) {
+				$stepNumber = $key + 1;
+				$fields = $step->combined_static($step->ClassName, "db");
+				$defaultsArray = $step->stat("defaults", true);
+				$configArray = array();
+				foreach($fields as $fieldKey => $fieldType) {
+					if($fields) {
+						$configArray[$fieldKey] = $step->$fieldKey;
+						if(!isset($defaultsArray[$fieldKey])) {
+							$defaultsArray[$fieldKey] = "[default not set]";
+						}
+					}
+				}
+				$this->definitions["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/show/".$checkoutPage->ID."/\">checkout page</a>.";
+				$this->configs["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $configArray;
+				$this->defaults["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $defaultsArray;
+			}
+		}
+		$steps = DataObject::get("OrderModifier_Descriptor");
+		if($steps) {
+			foreach($steps as $step) {
+				$fields = $step->combined_static($step->ClassName, "db");
+				$defaultsArray = $step->stat("defaults", true);
+				$configArray = array();
+				foreach($fields as $fieldKey => $fieldType) {
+					if($fields) {
+						$configArray[$fieldKey] = $step->$fieldKey;
+						if(!isset($defaultsArray[$fieldKey])) {
+							$defaultsArray[$fieldKey] = "[default not set]";
+						}
+					}
+				}
+				$this->definitions["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/show/".$checkoutPage->ID."/\">checkout page</a>.";
+				$this->configs["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = $configArray;
+				$this->defaults["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = $defaultsArray;
+			}
 		}
 	}
 
