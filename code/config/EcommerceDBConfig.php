@@ -360,13 +360,20 @@ class EcommerceDBConfig extends DataObject {
 	}
 
 
+	/**
+	 * returns site config
+	 * @return SiteConfig
+	 */
+	public function SiteConfig(){
+		return SiteConfig::current_site_config();
+	}
 
 	/**
 	 *
 	 * Casted Variable
 	 * @return String
 	 */
-	function UseThisOneNice(){
+	public function UseThisOneNice(){
 		return $this->UseThisOne ? "YES" : "NO";
 	}
 
