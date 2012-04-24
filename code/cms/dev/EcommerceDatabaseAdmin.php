@@ -67,6 +67,33 @@ class EcommerceDatabaseAdmin extends Controller{
 
 
 
+	//##############################
+	// 0. OVERALL CONFIG
+	//##############################
+
+	protected $overallconfig = array(
+		"ecommercecheckconfiguration"
+	);
+
+	/**
+	 * @return DataObjectSet list of migration tasks
+	 *
+	 */
+	function OverallConfig() {
+		return $this->createMenuDOSFromArray($this->overallconfig, $type = "Overall Config");
+	}
+
+	function ecommercecheckconfiguration($request){
+		$buildTask = new EcommerceCheckConfiguration();
+		$buildTask->run($request);
+		$this->displayCompletionMessage($buildTask);
+	}
+
+
+
+
+
+
 
 
 	//##############################
@@ -243,13 +270,6 @@ class EcommerceDatabaseAdmin extends Controller{
 
 
 
-	function ecommercecheckconfiguration($request){
-		$buildTask = new EcommerceCheckConfiguration();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
-	}
-
-
 	/**
 	 * executes build task: SetDefaultProductGroupValues
 	 *
@@ -265,7 +285,7 @@ class EcommerceDatabaseAdmin extends Controller{
 
 
 	//##############################
-	// 4. CRAZY SHIT
+	// 5. CRAZY SHIT
 	//##############################
 
 	protected $crazyshit = array(
@@ -293,7 +313,7 @@ class EcommerceDatabaseAdmin extends Controller{
 
 
 	//##############################
-	// 5. TESTS
+	// 6. TESTS
 	//##############################
 
 	protected $tests = array(
