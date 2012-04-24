@@ -351,6 +351,12 @@ class EcommerceDBConfig extends DataObject {
 			$obj = new EcommerceDBConfig();
 			$obj->write();
 		}
+		DB::alteration_message("
+			<hr /><hr /><hr /><hr /><hr />
+			Please make sure to review your <a href=\"/dev/ecommerce/\">e-commerce settings</a>.
+			<hr /><hr /><hr /><hr /><hr />",
+			"edited"
+		);
 	}
 
 
