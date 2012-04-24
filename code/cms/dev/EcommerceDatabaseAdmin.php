@@ -46,6 +46,7 @@ class EcommerceDatabaseAdmin extends Controller{
 			// "dev/tests" from CLI.
 			|| (Director::is_cli() && !$isRunningTests)
 			|| Permission::check("ADMIN")
+			|| Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))
 		);
 		if(!$canAccess) {
 			return Security::permissionFailure($this,
