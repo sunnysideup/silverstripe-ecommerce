@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Setting for Ecommerce
+ * Database Settings for Ecommerce
  *
  *
  *
@@ -10,6 +10,18 @@
 
 class EcommerceDBConfig extends DataObject {
 
+	/**
+	 * tells is if a classanme is a buyable
+	 * @param String $className - name of the class to be tested
+	 * @return Boolean
+	 */
+	static function is_buyable($className) {
+		$implementorsArray = class_implements($className);
+		if(is_array($implementorsArray) && in_array("BuyableModel", $implementorsArray)) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Standard SS Method
@@ -236,20 +248,6 @@ class EcommerceDBConfig extends DataObject {
 		);
 		return $fields;
 	}
-
-	/**
-	 * tells is if a classanme is a buyable
-	 * @param String $className - name of the class to be tested
-	 * @return Boolean
-	 */
-	static function is_buyable($className) {
-		$implementorsArray = class_implements($className);
-		if(is_array($implementorsArray) && in_array("BuyableModel", $implementorsArray)) {
-			return true;
-		}
-		return false;
-	}
-
 
 	/**
 	 * Return the currency being used on the site.
