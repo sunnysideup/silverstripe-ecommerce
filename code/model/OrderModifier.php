@@ -672,21 +672,29 @@ class OrderModifier_Descriptor extends DataObject {
 	function requireDefaultRecords(){
 		parent::requireDefaultRecords();
 		$arrayOfModifiers = EcommerceConfig::get("Order", "modifiers");
-		if(is_array($arrayOfModifiers) && count($arrayOfModifiers)) {
-			if(in_array($this->ClassName, $arrayOfModifiers)) {
-				$obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'");
+		if(!is_array($arrayOfModifiers)) {
+			$arrayOfModifiers = array();
+		}
+		if(count($arrayOfModifiers)) {
+			foreach($arrayOfModifiers as $className) {
+				$obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$className."'");
 				if(!$obj) {
+					$modifier = singleton($className);
 					$obj = new OrderModifier_Descriptor();
-					$obj->ModifierClassName = $this->ClassName;
-					$obj->Heading = $this->i18n_singular_name();
+					$obj->ModifierClassName = $className;
+					$obj->Heading = $modifier->i18n_singular_name();
 					$obj->write();
-					DB::alteration_message("Creating description for ".$this->ClassName, "created");
+					DB::alteration_message("Creating description for ".$className, "created");
 				}
 			}
-			elseif($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
-				$obj->delete();
-				$obj->destroy();
-				DB::alteration_message("Deleting description for ".$this->ClassName, "deleted");
+		}
+		$orderModifierDescriptors = DataObject::get("OrderModifier_Descriptor");
+		if($orderModifierDescriptors) {
+			foreach($orderModifierDescriptors as $orderModifierDescriptor) {
+				if(!in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers)) {
+					$orderModifierDescriptor->delete();
+					DB::alteration_message("Deleting description for ".$orderModifierDescriptor->ModifierClassName, "created");
+				}
 			}
 		}
 	}
