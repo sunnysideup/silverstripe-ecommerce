@@ -330,7 +330,7 @@ class OrderModifier extends OrderAttribute {
 	 * returns a page for a more info link... (if there is one)
 	 * @return Object (SiteTree)
 	 **/
-	public function Link(){
+	public function MoreInfoPage(){
 		if($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
 			return $obj->Link();
 		}
@@ -653,6 +653,9 @@ class OrderModifier_Descriptor extends DataObject {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("ModifierClassName", new ReadonlyField("RealName", "Name"));
 		$fields->replaceField("LinkID", new TreeDropdownField("LinkID", "More info link (optional)", "SiteTree"));
+		if($this->LinkID) {
+			$fields->addFieldToTab("Root", new CheckboxField("NoLinkForOrderModifier_Descriptor", "Remove Link"), "LinkID");
+		}
 		$fields->replaceField("Description", new TextareaField("Description", "Description", 3));
 		return $fields;
 	}
@@ -667,6 +670,13 @@ class OrderModifier_Descriptor extends DataObject {
 			return $obj->i18n_singular_name(). " (".$this->ModifierClassName.")";
 		}
 		return $this->ModifierClassName;
+	}
+
+	function onBeforeWrite(){
+		parent::onBeforeWrite();
+		if(isset($_REQUEST["NoLinkForOrderModifier_Descriptor"]) && $_REQUEST["NoLinkForOrderModifier_Descriptor"]) {
+			$this->LinkID = 0;
+		}
 	}
 
 	function requireDefaultRecords(){
