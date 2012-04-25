@@ -344,6 +344,7 @@ class OrderFormAddress extends Form {
 							if($this->memberShouldBeCreated($data)) {
 								$order = ShoppingCart::current_order();
 								$member = $order->CreateOrReturnExistingMember();
+								$member->write($forceCreation = true);
 								$this->newlyCreatedMember = $member->ID;
 							}
 						}

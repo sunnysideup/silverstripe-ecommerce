@@ -828,9 +828,10 @@ class Order extends DataObject {
 	 * OR the member is logged in / logs in.
 	 *
 	 * Also note that if a new member is created, it is not automatically written
+	 * @param Boolean $forceCreation - if set to true then the member will always be saved in the database.
 	 * @return: DataObject (Member)
 	 **/
-	public function CreateOrReturnExistingMember() {
+	public function CreateOrReturnExistingMember($forceCreation = false) {
 		if($this->MemberID) {
 			$member = $this->Member();
 		}
@@ -840,6 +841,9 @@ class Order extends DataObject {
 		}
 		if(!$member) {
 			$member = new Member();
+			if($forceCreation) {
+				$member->write();
+			}
 		}
 		return $member;
 	}
