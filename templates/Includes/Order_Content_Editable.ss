@@ -52,8 +52,8 @@
 			<% if ShowInTable %>
 		<tr  class="$Classes hideOnZeroItems<% if HideInAjaxUpdate %> hideForNow<% end_if %>"  id="$AJAXDefinitions.TableID">
 			<td colspan="3" scope="row">
-				<% if Link %>
-					<a class="tableTitle" id="$AJAXDefinitions.TableTitleID" href="$Link" >$TableTitle</a>
+				<% if MoreInfoPage %>
+					<a class="tableTitle" id="$AJAXDefinitions.TableTitleID" href="$MoreInfoPage.Link" >$TableTitle</a>
 				<% else %>
 					<span class="tableTitle" id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 				<% end_if %>
