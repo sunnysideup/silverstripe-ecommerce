@@ -438,8 +438,8 @@ class ShoppingCart extends Object{
 			if($this->order && $this->order->IsSubmitted()) {
 				$this->order = null;
 			}
+			$member = Member::currentMember();
 			if($this->order){
-				$member = Member::currentMember();
 				//logged in, add Member.ID to order->MemberID
 				if($member) {
 					if($this->order->MemberID != $member->ID) {
