@@ -27,13 +27,6 @@ class EcommerceSiteTreeExtension extends DataObjectDecorator {
 	}
 
 	/**
-	 *@return Order
-	 **/
-	function Cart() {
-		return ShoppingCart::current_order();
-	}
-
-	/**
 	 * @return EcommerceDBConfig
 	 **/
 	function EcomConfig() {
@@ -53,12 +46,20 @@ class EcommerceSiteTreeExtension extends DataObjectDecorator {
 
 class EcommerceSiteTreeExtension_Controller extends Extension {
 
-	/*
-	 *TO DO: this even seemed to be called then the CMS is opened
+	/**
+	 * WATCH: does this get included too early to too much?
+	 * This is called by Controller::init();
 	 **/
-	function onAfterInit() {
+	function onBeforeInit() {
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		Requirements::javascript("ecommerce/javascript/EcomCart.js");
+	}
+
+	/**
+	 * runs after Page::init();
+	 *
+	 */
+	function onAfterInit() {
 		$checkoutPages = DataObject::get("CartPage");
 		$jsArray = Array();
 		if($checkoutPages) {
@@ -97,6 +98,15 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	 **/
 	function SimpleCartLinkAjax() {
 		return ShoppingCart_Controller::get_url_segment()."/showcart/";
+	}
+
+
+	/**
+	 * returns the current order.
+	 * @return Order
+	 **/
+	function Cart() {
+		return ShoppingCart::current_order();
 	}
 
 
