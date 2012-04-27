@@ -55,40 +55,6 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		Requirements::javascript("ecommerce/javascript/EcomCart.js");
 	}
 
-	/**
-	 * runs after Page::init();
-	 *
-	 */
-	function onAfterInit() {
-		$checkoutPages = DataObject::get("CartPage");
-		$jsArray = Array();
-		if($checkoutPages) {
-			foreach($checkoutPages as $page) {
-				$jsArray[] = '
-				jQuery("a[href=\''.str_replace('/', '\/', Convert::raw2js($page->Link())).'\']").each(
-					function(i, el) {
-						var oldText = jQuery(el).text();
-						var newText = "'.Convert::raw2js($page->MenuTitleExtension()).'"
-						if(newText) {
-							jQuery(el).html(oldText + newText)
-						}
-					}
-				);';
-			}
-		}
-		if(count($jsArray)) {
-			Requirements::customScript(
-				'
-				jQuery(document).ready(
-					function() {
-						'.implode("", $jsArray).'
-					}
-				);'
-				,"getEcommerceMenuTitle"
-			);
-		}
-	}
-
 
 	/**
 	 * This returns a link that displays just the cart, for use in ajax calls.

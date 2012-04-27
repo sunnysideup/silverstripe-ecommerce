@@ -46,6 +46,28 @@ class CartPage extends Page{
 		'NonExistingOrderMessage' => '<p>Sorry, the order you are trying to open does not exist</p>'
 	);
 
+
+	public static $casting = array(
+		'MenuTitle' => 'HTMLVarchar'
+	);
+
+	/***
+	 * override core function to turn "checkout" into "Checkout (1)"
+	 * @return DBField
+	 */
+	public function obj($fieldName) {
+		if($fieldName == "MenuTitle") {
+			return DBField::create('HTMLVarchar', $this->EcommerceMenuTitle(), "MenuTitle", $this);
+		}
+		else {
+			return parent::obj($fieldName);
+		}
+	}
+
+	/**
+	 * standard SS method
+	 *
+	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
 		$continuePage = DataObject::get_one("ProductGroup", "ParentID = 0");
@@ -136,24 +158,26 @@ class CartPage extends Page{
 		return true;
 	}
 
-
 	/**
 	 *@return String (HTML Snippet)
 	 **/
-	function MenuTitleExtension() {
+	function EcommerceMenuTitle() {
 		$count = 0;
 		$order = ShoppingCart::current_order();
 		if($order) {
 			$count = $order->TotalItems();
-			if($count && $this->LinkingMode() != "current") {
-				$oldSSViewer = SSViewer::get_source_file_comments();
-				SSViewer::set_source_file_comments(false);
-				$s = $this->renderWith("AjaxNumItemsInCart");
-				SSViewer::set_source_file_comments($oldSSViewer);
-				return $s;
-			}
+			$oldSSViewer = SSViewer::get_source_file_comments();
+			SSViewer::set_source_file_comments(false);
+			$this->customise(array("Count"=> $count, "OriginalMenuTitle" => $this->MenuTitle) );
+			$s = $this->renderWith("AjaxNumItemsInCart");
+			SSViewer::set_source_file_comments($oldSSViewer);
+			return $s;
 		}
-		return "";
+		return $this->OriginalMenuTitle();
+	}
+
+	function OriginalMenuTitle(){
+		return $this->MenuTite;
 	}
 
 }
