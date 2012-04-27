@@ -821,6 +821,30 @@ class Product_Image extends Image {
 		return EcommerceConfig::get("Product_Image", "thumbnail_height");
 	}
 
+	/**
+	 *
+	 * @return Int
+	 */
+	public function SmallWidth() {
+		return EcommerceConfig::get("Product_Image", "small_image_width");
+	}
+
+	/**
+	 *
+	 * @return Int
+	 */
+	public function SmallHeight() {
+		return EcommerceConfig::get("Product_Image", "small_image_height");
+	}
+
+	/**
+	 *
+	 * @return Int
+	 */
+	public function ThumbHeight() {
+		return EcommerceConfig::get("Product_Image", "thumbnail_height");
+	}
+
 
 	/**
 	 *
@@ -838,6 +862,15 @@ class Product_Image extends Image {
 		return EcommerceConfig::get("Product_Image", "large_image_width");
 	}
 
+
+	/**
+	 * @usage can be used in a template like this $Image.SmallImage.Link
+	 * @return GD
+	 **/
+	function generateSmallImage($gd) {
+		$gd->setQuality(80);
+		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
+	}
 
 	/**
 	 * @usage can be used in a template like this $Image.Thumbnail.Link
