@@ -75,8 +75,10 @@ class EcommerceConfigDefinitions extends Object {
 			"Product_Image" =>  array(
 				"thumbnail_width" => "Thumbnail width in pixels. For thumbnails, we use paddedResize.",
 				"thumbnail_height" => "Thumbnail height in pixels. For thumbnails, we use paddedResize.",
-				"content_image_width" => "Width for the content image. We use these settings to improve image quality and to set strict standard sizes. For the content and large image we use the SetWidth method.",
-				"large_image_width" => "Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes. For the content and large image we use the SetWidth method."
+				"small_image_width" => "Width for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.",
+				"small_image_height" => "Height for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.",
+				"content_image_width" => "Width for the content image. We use these settings to improve image quality and to set strict standard sizes. For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.",
+				"large_image_width" => "Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method."
 			),
 			"Order" =>  array(
 				"modifiers" => "This is the single most important setting.  here you determine what modifiers are being added to every order.  You can just add them as a non-associative array.  However, their order is important!",
