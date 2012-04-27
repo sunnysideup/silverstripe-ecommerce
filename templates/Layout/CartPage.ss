@@ -3,7 +3,6 @@
 	<h1 class="pagetitle">$Title</h1>
 
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
-	<% if Content %><div id="FormHolder">$Form</div><% end_if %>
 
 	<div id="OrderHolder">
 	<% if Order %>
@@ -16,6 +15,8 @@
 	<p>Sorry, there is no order to view.</p>
 	<% end_if %>
 	</div>
+
+	<% if ShowCreateAccountForm %><div id="CreateAccountForm">$CreateAccountForm</div><% end_if %>
 
 	<% include CartActionsAndMessages %>
 </div>
