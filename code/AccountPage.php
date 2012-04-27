@@ -179,7 +179,7 @@ class AccountPage_Controller extends Page_Controller {
 		parent::init();
 		if(!Member::CurrentMember()) {
 			$messages = array(
-				'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. If you are not registered, you will not be able to access it until you place your first order, otherwise please enter your details below.') . '</p>',
+				'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
 				'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.')
 			);
 			Security::permissionFailure($this, $messages);

@@ -25,18 +25,27 @@ class ShopAccountForm extends Form {
 			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
 			$fields->push($passwordField);
 			$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
-		}
-		else {
-			$fields = new FieldSet();
-		}
-		$actions = new FieldSet(
-			new FormAction('submit', _t('Account.SAVE','Save Changes'))
-		);
-		if($order = ShoppingCart::current_order()) {
-			if($order->Items()) {
-				$actions->push(new FormAction('proceed', _t('Account.SAVEANDPROCEED','Save changes and proceed to checkout')));
+			$actions = new FieldSet(
+				new FormAction('submit', _t('Account.SAVE','Save Changes'))
+			);
+			if($order = ShoppingCart::current_order()) {
+				if($order->Items()) {
+					$actions->push(new FormAction('proceed', _t('Account.SAVEANDPROCEED','Save changes and proceed to checkout')));
+				}
 			}
 		}
+		else {
+			$member = new Member();
+			$fields = $member->getEcommerceFields(true);
+			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
+			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
+			$fields->push($passwordField);
+			$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
+			$actions = new FieldSet(
+				new FormAction('creatememberandaddtoorder', _t('Account.SAVE','Create Account'))
+			);
+		}
+
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
@@ -68,6 +77,31 @@ class ShopAccountForm extends Form {
 	function proceed($data, $form, $request) {
 		return $this->processForm($data, $form, $request, CheckoutPage::find_link());
 	}
+
+
+	function creatememberandaddtoorder($data, $form){
+		$member = new Member();
+		$order =  ShoppingCart::current_order();
+		if($order && $order->exists()) {
+			$form->saveInto($member);
+			$member->write();
+			if($member->exists()) {
+				$this->order->MemberID = $member->ID;
+				$this->order->write();
+				$member->login();
+				CartPage_Controller::set_message(_t("ShopAccountForm.ERRORINFORM", "Your details have been saved and you are now logged in."));
+			}
+			else {
+				$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
+			}
+		}
+		else {
+			$this->sessionMessage(_t("ShopAccountForm.COULDNOTFINDORDER", "Could not find order."), "bad");
+		}
+		Director::redirectBack();
+	}
+
+
 
 	/**
 	 *@return Boolean + redirection
