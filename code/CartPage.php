@@ -191,6 +191,8 @@ class CartPage_Controller extends Page_Controller{
 	 * it is important that we list all the options here
 	 */
 	static $allowed_actions = array(
+		'saveorder',
+		'creatememberandaddtoorder',
 		'retrieveorder',
 		'loadorder',
 		'copyorder',
@@ -413,10 +415,7 @@ class CartPage_Controller extends Page_Controller{
 	function saveorder() {
 		$member = Member::currentMember();
 		if(!$member) {
-			$messages = array(
-				'default' => '<p class="message good">please log in first.</p>',
-			);
-			Security::permissionFailure($this, $messages);
+			$this->Form = new ShopAccountForm($this, "creatememberandaddtoorder");
 			return array();
 		}
 		if($this->currentOrder && $this->currentOrder->Items()) {
@@ -429,7 +428,6 @@ class CartPage_Controller extends Page_Controller{
 		Director::redirectBack();
 		return array();
 	}
-
 
 	/**
 	 * Delete the currently viewed order.
