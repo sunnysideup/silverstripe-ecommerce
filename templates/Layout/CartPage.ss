@@ -3,6 +3,7 @@
 	<h1 class="pagetitle">$Title</h1>
 
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
+	<% if Content %><div id="FormHolder">$Form</div><% end_if %>
 
 	<div id="OrderHolder">
 	<% if Order %>
