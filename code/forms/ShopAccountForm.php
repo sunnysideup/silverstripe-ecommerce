@@ -36,7 +36,16 @@ class ShopAccountForm extends Form {
 		}
 		else {
 			$member = new Member();
-			$fields = $member->getEcommerceFields(true);
+			$fields = new FieldSet();
+			$fields->push(new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account')));
+			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you are already have an account then please')." <a href=\"Security/login?BackURL=" . $controller->Link() . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
+			$memberFields = $member->getEcommerceFields(true);
+			if($memberFields) {
+				foreach($memberFields as $memberField) {
+					$fields->push($memberField);
+				}
+			}
+
 			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
 			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
 			$fields->push($passwordField);
@@ -86,10 +95,10 @@ class ShopAccountForm extends Form {
 			$form->saveInto($member);
 			$member->write();
 			if($member->exists()) {
-				$this->order->MemberID = $member->ID;
-				$this->order->write();
+				$order->MemberID = $member->ID;
+				$order->write();
 				$member->login();
-				CartPage_Controller::set_message(_t("ShopAccountForm.ERRORINFORM", "Your details have been saved and you are now logged in."));
+				$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "bad");
 			}
 			else {
 				$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");

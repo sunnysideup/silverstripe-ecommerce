@@ -21,6 +21,7 @@ class CartPage extends Page{
 	public static $db = array(
 		'ContinueShoppingLabel' => 'Varchar(100)',
 		'ProceedToCheckoutLabel' => 'Varchar(100)',
+		'ShowAccountLabel' => 'Varchar(100)',
 		'CurrentOrderLinkLabel' => 'Varchar(100)',
 		'LoginToOrderLinkLabel' => 'Varchar(100)',
 		'SaveOrderLinkLabel' => 'Varchar(100)',
@@ -37,6 +38,7 @@ class CartPage extends Page{
 	public static $defaults = array(
 		'ContinueShoppingLabel' => 'continue shopping',
 		'ProceedToCheckoutLabel' => 'proceed to checkout',
+		'ShowAccountLabel' => 'view account details',
 		'CurrentOrderLinkLabel' => 'view current order',
 		'LoginToOrderLinkLabel' => 'you must log in to view this order',
 		'SaveOrderLinkLabel' => 'save current order',
@@ -94,6 +96,7 @@ class CartPage extends Page{
 						new TextField('ContinueShoppingLabel', 'Label on link to continue shopping - e.g. click here to continue shopping'),
 						new TreeDropdownField('ContinuePageID','Continue Shopping Landing Page',"SiteTree"),
 						new TextField('ProceedToCheckoutLabel', 'Label on link to proceed to checkout - e.g. click here to finalise your order'),
+						new TextField('ShowAccountLabel', 'Label on the link \'view account details\' - e.g. click here to vuiew your account details'),
 						new TextField('CurrentOrderLinkLabel', 'Label for the link pointing to the current order - e.g. click here to view current order'),
 						new TextField('LoginToOrderLinkLabel', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order'),
 						new TextField('SaveOrderLinkLabel', 'Label for the saving an order - e.g. click here to save current order'),
@@ -192,7 +195,7 @@ class CartPage_Controller extends Page_Controller{
 	 */
 	static $allowed_actions = array(
 		'saveorder',
-		'creatememberandaddtoorder',
+		'CreateAccountForm',
 		'retrieveorder',
 		'loadorder',
 		'copyorder',
@@ -407,15 +410,35 @@ class CartPage_Controller extends Page_Controller{
 		return array();
 	}
 
+
+	protected $showCreateAccountForm = false;
+
+	function ShowCreateAccountForm(){
+		if(Session::get("CartPageCreateAccountForm")) {
+			Session::set("CartPageCreateAccountForm", false);
+			return true;
+		}
+		if(Member::currentMember() || $this->currentOrder->MemberID) {
+			return false;
+		}
+		else {
+			Session::set("CartPageCreateAccountForm", true);
+			return true;
+		}
+	}
+
+	function CreateAccountForm() {
+		return new ShopAccountForm($this, "CreateAccountForm");
+	}
 	/**
-	 * Start a new order
+	 * save the order to a member. If no member exists then create the member first using the ShopAccountForm.
 	 *
 	 * TO DO: untested
 	 */
 	function saveorder() {
 		$member = Member::currentMember();
 		if(!$member) {
-			$this->Form = new ShopAccountForm($this, "creatememberandaddtoorder");
+			$this->showCreateAccountForm = true;
 			return array();
 		}
 		if($this->currentOrder && $this->currentOrder->Items()) {
@@ -499,6 +522,19 @@ class CartPage_Controller extends Page_Controller{
 				}
 			}
 
+			//view account details
+			if(isset($this->ShowAccountLabel) && $this->ShowAccountLabel) {
+				if($this->isOrderConfirmationPage() || $this->isCartPage()) {
+					if(AccountPage::find_link()) {
+						if(Member::currentUserID()) {
+							$this->actionLinks->push(new ArrayData(array (
+								"Title" => $this->ShowAccountLabel,
+								"Link" => AccountPage::find_link()
+							)));
+						}
+					}
+				}
+			}
 			//go to current order
 			if(isset($this->CurrentOrderLinkLabel) && $this->CurrentOrderLinkLabel) {
 				if($this->isCartPage()) {
@@ -510,6 +546,7 @@ class CartPage_Controller extends Page_Controller{
 					}
 				}
 			}
+
 
 
 			//Save order - we assume only current ones can be saved.
