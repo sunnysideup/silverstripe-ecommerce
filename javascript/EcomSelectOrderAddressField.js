@@ -35,7 +35,7 @@ var EcomSelectOrderAddressField = {
 					jQuery.each(
 						data,
 						function(i, n){
-							jQuery("input[name='"+i+"']").val(n);
+							jQuery("input[name='"+i+"'], select[name='"+i+"']").val(n);
 						}
 					);
 				}
