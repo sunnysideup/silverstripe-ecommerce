@@ -7,7 +7,7 @@
   *
   **/
 
-.hideOnZeroItems {display: none;}
+.hideOnZeroItems {}
 .hideForNow{display: none;}
 
 .show{display: block;}
