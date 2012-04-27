@@ -841,15 +841,6 @@ class Product_Image extends Image {
 	 *
 	 * @return Int
 	 */
-	public function ThumbHeight() {
-		return EcommerceConfig::get("Product_Image", "thumbnail_height");
-	}
-
-
-	/**
-	 *
-	 * @return Int
-	 */
 	public function ContentWidth() {
 		return EcommerceConfig::get("Product_Image", "content_image_width");
 	}
