@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
 <head>
 	<% base_tag %>
-	<title><% _t("Order.PRINTORDERS","Print Orders") %></title>
+		$MetaTags
+		<link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
 	<!-- todo: allow printing multiple invoices at once -->
@@ -12,7 +13,7 @@
 			<% include Order %>
 		<% end_control %>
 	</div>
-<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>
+	<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>
 </body>
 </html>
 
