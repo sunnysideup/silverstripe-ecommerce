@@ -54,8 +54,10 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-		//todo: check if we even need this (via ShoppingCartsRequirements.ss)		
+		//todo: check if we even need this (via ShoppingCartsRequirements.ss)
 		Requirements::javascript("ecommerce/javascript/EcomCart.js");
+		Requirements::javascript("ecommerce/thirdparty/simpledialogue_fixed/jquery.simpledialog.0.1.js");
+		Requirements::themedCSS("jquery.simpledialog");
 	}
 
 
