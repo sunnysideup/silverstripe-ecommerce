@@ -53,6 +53,7 @@ class EcommerceDefaultRecords extends BuildTask {
 			$checkoutPage->URLSegment = 'checkout';
 			$update[] = 'Checkout page \'Checkout\' created';
 			$checkoutPage->ShowInMenus = 0;
+			DB::alteration_message('new checkout page created.', 'created');
 		}
 		else {
 			DB::alteration_message('No need to create an checkout page, it already exists.');
@@ -60,14 +61,14 @@ class EcommerceDefaultRecords extends BuildTask {
 		if($checkoutPage) {
 			if($checkoutPage->TermsPageID == 0 && $termsPage = DataObject::get_one('Page', "\"URLSegment\" = 'terms-and-conditions'")) {
 				$checkoutPage->TermsPageID = $termsPage->ID;
-				$update[] = 'added terms page';
+				DB::alteration_message('terms and conditions page linked.', "created");
 			}
 			else {
 				DB::alteration_message('No terms and conditions page linked.');
 			}
 			$checkoutPage->writeToStage('Stage');
 			$checkoutPage->publish('Stage', 'Live');
-			DB::alteration_message('Checkout page saved', 'created');
+			DB::alteration_message('Checkout page saved');
 			if(!DataObject::get_one('OrderConfirmationPage')) {
 				$orderConfirmationPage = new OrderConfirmationPage();
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
