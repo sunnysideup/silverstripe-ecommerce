@@ -43,7 +43,7 @@ class EcommerceDefaultRecords extends BuildTask {
 
 		//CHECKOUT PAGE
 
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$checkoutPage = DataObject::get_one('CheckoutPage', "ClassName = 'CheckoutPage'");
 		if(!$checkoutPage) {
 			$checkoutPage = new CheckoutPage();
 			$checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
@@ -65,6 +65,9 @@ class EcommerceDefaultRecords extends BuildTask {
 			else {
 				DB::alteration_message('No terms and conditions page linked.');
 			}
+			$checkoutPage->writeToStage('Stage');
+			$checkoutPage->publish('Stage', 'Live');
+			DB::alteration_message('Checkout page saved', 'created');
 			if(!DataObject::get_one('OrderConfirmationPage')) {
 				$orderConfirmationPage = new OrderConfirmationPage();
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
