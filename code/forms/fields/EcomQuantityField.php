@@ -27,7 +27,7 @@ class EcomQuantityField extends NumericField {
 	/**
 	 *@var $classes Array()
 	 **/
-	protected $classes = array('ajaxQuantityField', 'removeDisabledWithJS');
+	protected $classes = array('ajaxQuantityField');
 
 	/**
 	 * max length in digits
@@ -107,7 +107,6 @@ class EcomQuantityField extends NumericField {
 			'value' => ($this->orderItem->Quantity) ? $this->orderItem->Quantity : "",
 			'maxlength' => $this->maxLength,
 			'size' => $this->fieldSize,
-			'disabled' => 'disabled',
 			'rel' => $this->getQuantityLink(),
 		);
 		//IMPROVE ME: hack to use the form field createTag method ...perhaps this should become a form field instead
