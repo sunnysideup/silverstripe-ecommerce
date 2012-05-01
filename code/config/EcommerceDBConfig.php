@@ -318,8 +318,8 @@ class EcommerceDBConfig extends DataObject {
 			}
 		}
 		$obj = new Product_Image();
-		$obj->Link = DefaultImageLink();
-		$obj->URL = DefaultImageLink();
+		$obj->Link = $this->DefaultImageLink();
+		$obj->URL = $this->DefaultImageLink();
 		return $obj;
 	}
 
