@@ -193,6 +193,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 /*
 
 EcomCart.set_shoppingCartURLSegment("");
+EcomCart.countryAndRegionRootSelector
 EcomCart.set_ajaxCountryFieldSelector("");
 EcomCart.set_ajaxRegionFieldSelector("");
 EcomCart.set_selectorMainCountryField("");
@@ -209,6 +210,9 @@ EcomCart.set_addLinkSelector("");
 EcomCart.set_removeLinkSelector("");
 EcomCart.set_orderItemHolderSelector("");
 EcomCart.set_ajaxLinksAreaSelector("");
+EcomCart.set_simpleDialogSelector("");
+EcomCart.set_simpleDialogOptions("");
+
 
 */
 
