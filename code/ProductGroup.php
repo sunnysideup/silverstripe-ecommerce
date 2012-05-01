@@ -404,7 +404,7 @@ class ProductGroup extends Page {
 		}
 		$where = " ( ".implode(" ) AND ( ", $finalFilterArray)." ) ";
 		//REST OF THE VARIABLES
-		$sort = null;
+		$sort = $this->currentSortSQL; //NOTE: we sort here already to get some idea of the order of the products.
 		$join = $this->getGroupJoin();
 		$limit = null;
 		$allProducts = DataObject::get($className,$where, $sort, $join, $limit);
@@ -565,7 +565,10 @@ class ProductGroup extends Page {
 	 */
 	protected function currentWhereSQL($buyables) {
 		if($buyables instanceOf DataObjectSet) {
-			$buyables = $buyables->map("ID", "ID");
+			$buyablesIDArray = $buyables->map("ID", "ID");
+		}
+		else {
+			$buyablesIDArray = $buyables;
 		}
 		$className = $this->currentClassNameSQL();
 		$stage = '';
@@ -573,7 +576,9 @@ class ProductGroup extends Page {
 		if(Versioned::current_stage() == "Live") {
 			$stage = "_Live";
 		}
-		$where = "\"{$className}{$stage}\".\"ID\" IN (".implode(",", $buyables).")";
+		$listOfIDs = implode(",", $buyablesIDArray);
+		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $listOfIDs);
+		$where = "\"{$className}{$stage}\".\"ID\" IN (". $listOfIDs .")";
 		return $where;
 	}
 
