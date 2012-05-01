@@ -771,19 +771,37 @@ class Product_Controller extends Page_Controller {
 	 *
 	 * This method can be extended to show products in the side bar.
 	 *
-	 * @return Buyable
+	 * @return Product | Null
 	 */
 	function NextProduct(){
-		return null;
+		$array = $this->getListOfIDs();
+		$next = 0;
+		foreach($array as $key => $id) {
+			$id = intval($id);
+			if($id == $this->ID) {
+				if(isset($array[$key + 1])) {
+					return DataObject::get_by_id("Product", intval($array[$key + 1]));
+				}
+			}
+		}
 	}
 
 	/**
 	 *
 	 * This method can be extended to show products in the side bar.
 	 *
-	 * @return Buyable
+	 * @return Product | Null
 	 */
 	function PreviousProduct(){
+		$array = $this->getListOfIDs();
+		$prev = 0;
+		foreach($array as $key => $id) {
+			$id = intval($id);
+			if($id == $this->ID) {
+				return DataObject::get_by_id("Product", $prev);
+			}
+			$prev = $id;
+		}
 		return null;
 	}
 
@@ -794,9 +812,24 @@ class Product_Controller extends Page_Controller {
 	 * @return Boolean
 	 */
 	function HasPreviousOrNextProduct(){
-		return null;
+		return $this->PreviousProduct() || $this->NextProduct();
 	}
 
+	/**
+	 * returns an array of product IDs, as saved in the last
+	 * ProductGroup view (saved using session)
+	 * @return Array
+	 */
+	protected function getListOfIDs(){
+		$listOfIDs = Session::get(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"));
+		if($listOfIDs) {
+			$arrayOfIDs = explode(",", $listOfIDs);
+			if(is_array($arrayOfIDs)) {
+				return $arrayOfIDs;
+			}
+		}
+		return array();
+	}
 
 
 }
