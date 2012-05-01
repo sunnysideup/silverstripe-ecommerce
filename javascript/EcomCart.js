@@ -66,6 +66,15 @@ EcomCart = {
 	// COUNTRY + REGION SELECTION
 	//#################################
 
+
+	/**
+	 * selector to identify the area in which the country + region selection takes place
+	 * @todo: can we make this more specific?
+	 */
+	countryAndRegionRootSelector: "body",
+		set_countryAndRegionRootSelector: function(s) {this.countryAndRegionRootSelector = s;},
+
+
 	/**
 	 * selector to identify input field for selecting country.
 	 */
@@ -168,6 +177,7 @@ EcomCart = {
 	// AJAX CART LINKS OUTSIDE THE CART
 	//#################################
 
+
 	/**
 	 * turn on / off the ajax buttons outside of the cart (e.g. add this product to cart, delete from cart)
 	 */
@@ -206,6 +216,38 @@ EcomCart = {
 		set_orderItemHolderSelector: function(s) {this.removeLinkSelector = s;},
 
 
+
+	//#################################
+	// DIALOGUE POP-UP BOX
+	//#################################
+
+	/**
+	 * the selector used to identify any links that open a pop-up dialogue
+	 * the syntax is as follows:
+	 * <a href="/shoppingcart/showcart/" class="simpledialog" rel="SimpleDialogueCart">show cart</a>
+	 * <div id="SimpleDialogueCart">content for pop-up</div> (this line is optional)
+	 */
+
+	simpleDialogSelector: ".simpledialog",
+		set_simpleDialogueSelector: function(s) {this.simpleDialogSelector = s;},
+
+	/**
+	 * The options set for the simple dialogue, see: http://code.google.com/p/jquery-simpledialog/
+	 * @var Int
+	 */
+	simpleDialogOptions: {
+		width: 650,
+		height: 300,
+		loadingClass: "loading",
+		open: function (event) {
+			jQuery("#sd_container").css("overflow", "auto");
+			EcomCart.reinit();
+		}
+	},
+		set_simpleDialogOptions: function(o){this.simpleDialogOptions = o;},
+
+
+
 	//#################################
 	// INIT AND RESET FUNCTIONS
 	//#################################
@@ -214,8 +256,6 @@ EcomCart = {
 	 * initialises all the ajax functionality
 	 */
 	init: function () {
-		//hide or show "zero items" information
-		EcomCart.updateForZeroVSOneOrMoreRows();
 		//make sure that country and region changes are applied to Shopping Cart
 		EcomCart.countryAndRegionUpdates();
 		//setup an area where the user can change their country / region
@@ -228,9 +268,21 @@ EcomCart = {
 			//make sure that "delete from cart" links are updated with AJAX - looking at the actual cart itself.
 			jQuery(EcomCart.ajaxLinksAreaSelector).addCartRemove();
 		}
-		this.processing = false;
+		EcomCart.reinit();
 	},
 
+	/**
+	 * runs everytime the cart is updated
+	 */
+	reinit: function(){
+		//hide or show "zero items" information
+		EcomCart.updateForZeroVSOneOrMoreRows();
+		//link to extended cart (click on it to see full cart)
+		EcomCart.initSimpleDialogue();
+		//we include the Ecom Quantity Field here... LITTLE HACK!
+		jQuery(EcomQuantityField.quantityFieldSelector).removeAttr('disabled');
+		this.processing = false;
+	},
 
 	//#################################
 	// COUNTRY AND REGION CHANGES
@@ -240,14 +292,16 @@ EcomCart = {
 	 * sets the functions for updating country and region
 	 */
 	countryAndRegionUpdates: function() {
-		jQuery(EcomCart.ajaxCountryFieldSelector).live(
+		jQuery(EcomCart.countryAndRegionRootSelector).delegate(
+			EcomCart.ajaxCountryFieldSelector,
 			"change",
 			function() {
 				var url = jQuery('base').attr('href') + EcomCart.shoppingCartURLSegment + "/setcountry/" + this.value + "/";
 				EcomCart.getChanges(url, null, this);
 			}
 		);
-		jQuery(EcomCart.ajaxRegionFieldSelector).live(
+		jQuery(EcomCart.countryAndRegionRootSelector).delegate(
+			EcomCart.ajaxRegionFieldSelector,
 			"change",
 			function() {
 				var url = jQuery('base').attr('href')  + EcomCart.shoppingCartURLSegment + "/setregion/" + this.value + "/";
@@ -282,7 +336,8 @@ EcomCart = {
 				event.preventDefault();
 			}
 		);
-		jQuery(EcomCart.selectorChangeCountryFieldHolder + " select").live(
+		jQuery(EcomCart.countryAndRegionRootSelector).delegate(
+			EcomCart.selectorChangeCountryFieldHolder + " select",
 			"change",
 			function() {
 				var val = jQuery(EcomCart.selectorChangeCountryFieldHolder + " select").val();
@@ -462,7 +517,7 @@ EcomCart = {
 				}
 			}
 		}
-		EcomCart.updateForZeroVSOneOrMoreRows();
+		EcomCart.reinit();
 	},
 
 
@@ -533,54 +588,75 @@ EcomCart = {
 			}
 		}
 		return false;
+	},
+
+
+
+	//#################################
+	// Simple Dialogue
+	//#################################
+
+	/**
+	 * Setup dialogue links
+	 */
+	initSimpleDialogue: function(){
+		jQuery(EcomCart.simpleDialogSelector).simpleDialog(
+			EcomCart.simpleDialogOptions
+		);
 	}
+
+
+
 
 }
 
 
 jQuery.fn.extend({
-		addAddLinks: function() {
-			jQuery(this).find(EcomCart.addLinkSelector).live(
-				"click",
-				function(){
+	addAddLinks: function() {
+		jQuery(this).delegate(
+			EcomCart.addLinkSelector,
+			"click",
+			function(){
+				var url = jQuery(this).attr("href");
+				EcomCart.getChanges(url, null, this);
+				return false;
+			}
+		);
+	},
+
+	addCartRemove: function () {
+		jQuery(this).delegate(
+			EcomCart.removeCartSelector,
+			"click",
+			function(){
+				if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
+					var url = jQuery(this).attr("href");
+					jQuery(this).parents(EcomCart.orderItemHolderSelector).slideUp();
+					EcomCart.getChanges(url, null, this);
+				}
+				return false;
+			}
+		);
+	},
+
+	/**
+	 * add ajax functionality to "remove from cart" links
+	 *
+	 */
+	addRemoveLinks: function () {
+		jQuery(this).delegate(
+			EcomCart.removeLinkSelector,
+			"click",
+			function(){
+				if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
 					var url = jQuery(this).attr("href");
 					EcomCart.getChanges(url, null, this);
 					return false;
 				}
-			);
-		},
-
-		addCartRemove: function () {
-			jQuery(this).find(EcomCart.removeCartSelector).live(
-				"click",
-				function(){
-					if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
-						var url = jQuery(this).attr("href");
-						jQuery(this).parents(EcomCart.orderItemHolderSelector).slideUp();
-						EcomCart.getChanges(url, null, this);
-					}
-					return false;
-				}
-			);
-		},
-
-		/**
-		 * add ajax functionality to "remove from cart" links
-		 *
-		 */
-		addRemoveLinks: function () {
-			jQuery(this).find(EcomCart.removeLinkSelector).live(
-				"click",
-				function(){
-					if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
-						var url = jQuery(this).attr("href");
-						EcomCart.getChanges(url, null, this);
-						return false;
-					}
-					return false;
-				}
-			);
-		}
+				return false;
+			}
+		);
+	}
 
 });
 
