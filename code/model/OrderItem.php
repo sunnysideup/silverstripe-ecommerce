@@ -368,17 +368,25 @@ class OrderItem extends OrderAttribute {
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
 	  **/
 	function Buyable($current = false) {
-		//hack!
+		if (!$current && Object::has_extension($this->BuyableClassName,'Translatable')) {
+			Translatable::disable_locale_filter();
+		}
+		//start hack
 		if(!$this->BuyableClassName) {
 			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
 		}
 		//end hack!
+		$obj = null;
 		if(!$current && $this->Version) {
-			if($obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version)) {
-				return $obj;
-			}
+			$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
 		}
-		return DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
+		else {
+			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
+		}
+		if (Object::has_extension($this->BuyableClassName,'Translatable')) {
+			Translatable::enable_locale_filter();
+		}
+		return $obj;
 	}
 
 	/**
