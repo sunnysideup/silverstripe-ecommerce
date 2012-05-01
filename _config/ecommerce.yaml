@@ -192,8 +192,7 @@ FlatTaxModifier:
 SimpleShippingModifier:
 	default_charge: 20
 	charges_by_country:
-		NZ: 5
-		US: 10
+		AU: 30
 
 
 
