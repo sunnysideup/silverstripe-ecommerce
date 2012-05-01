@@ -1,5 +1,6 @@
 <div id="Sidebar">
 	<div class="sidebarTop"></div>
+	<% include Sidebar_PreviousAndNextProduct %>
 	<% include Sidebar_Cart %>
 	<% include Sidebar %>
 	<div class="sidebarBottom"></div>
