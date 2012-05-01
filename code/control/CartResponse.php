@@ -36,7 +36,11 @@ class CartResponse extends EcommerceResponse {
 		$this->addHeader('Content-Type', 'application/json');
 		SSViewer::set_source_file_comments(false);
 		if($status != "success") {
-			$this->setStatusCode(400, "not successful: ".$status." --- ".$messages[0]);
+			$messagesImploded = '';
+			foreach($messages as $messageArray) {
+				$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
+			}
+			$this->setStatusCode(400, $messagesImploded);
 		}
 
 		//init Order - IMPORTANT
@@ -67,14 +71,13 @@ class CartResponse extends EcommerceResponse {
 			"v" => "inCart",
 			"without" => "notInCart"
 		);
-
-		//in cart items
 		if(isset($_REQUEST["loadingindex"])) {
 			$js[] = array(
 				"t" => "loadingindex",
 				"v" => $_REQUEST["loadingindex"]
 			);
 		}
+
 		//order modifiers
 		if ($modifiers = $currentOrder->Modifiers()) {
 			foreach ($modifiers as $modifier) {
@@ -88,7 +91,6 @@ class CartResponse extends EcommerceResponse {
 		//messages
 		if(is_array($messages)) {
 			$messagesImploded = '';
-			$messageclasses = "";
 			foreach($messages as $messageArray) {
 				$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
 			}
@@ -142,7 +144,12 @@ class CartResponse extends EcommerceResponse {
 		//now can check if it needs to be reloaded
 		if(self::$force_reload) {
 			$js = array(
-				"reload" => true
+				"reload" => 1
+			);
+		}
+		else {
+			$js[] = array(
+				"reload" => 0
 			);
 		}
 		//merge and return
