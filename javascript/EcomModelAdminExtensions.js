@@ -9,10 +9,12 @@
 
 var EcomModelAdminExtensions = {
 
+	delegateRootSelector: '#right',
+
 	saveButtonSelector: '#action_doSave',
-	
+
 	currButtonSelector: '#action_goCurr',
-	
+
 	nextButtonSelector: '#action_goNext',
 
 	prevButtonSelector: '#action_goPrev',
@@ -31,7 +33,8 @@ var EcomModelAdminExtensions = {
 
 	//setup next and previous buttons
 	init: function () {
-		jQuery(EcomModelAdminExtensions.nextButtonSelector).live(
+		jQuery(EcomModelAdminExtensions.delegateRootSelector).delegate(
+			EcomModelAdminExtensions.nextButtonSelector,
 			'click',
 			function() {
 				nextPage = jQuery(EcomModelAdminExtensions.nextRecordURLSelector).val();
@@ -39,7 +42,8 @@ var EcomModelAdminExtensions = {
 				return false;
 			}
 		);
-		jQuery(EcomModelAdminExtensions.prevButtonSelector).live(
+		jQuery(EcomModelAdminExtensions.delegateRootSelector).delegate(
+			EcomModelAdminExtensions.prevButtonSelector,
 			'click',
 			function() {
 				prevPage = jQuery(EcomModelAdminExtensions.prevRecordURLSelector).val();
@@ -47,7 +51,8 @@ var EcomModelAdminExtensions = {
 				return false;
 			}
 		);
-		jQuery(EcomModelAdminExtensions.currButtonSelector).live(
+		jQuery(EcomModelAdminExtensions.delegateRootSelector).delegate(
+			EcomModelAdminExtensions.currButtonSelector,
 			'click',
 			function() {
 				currPage = jQuery(EcomModelAdminExtensions.currRecordURLSelector).val();
