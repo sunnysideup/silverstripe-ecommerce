@@ -902,7 +902,7 @@ class ShoppingCart_Controller extends Controller{
 	 *@return HTML
 	 */
 	public function showcart($request) {
-		return $this->renderWith("AjaxSimpleCart");
+		return $this->customise($this->cart->CurrentOrder())->renderWith("AjaxCart");
 	}
 
 	function removeaddress($request) {
