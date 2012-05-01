@@ -47,6 +47,7 @@ ProductGroup:
 			SQL: "\"ShowInSearch\"  = 1 AND \"FeaturedProduct\" = 0"
 	allow_short_display_style: false
 	allow_more_detail_display_style: false
+	session_name_for_product_array: ProductGroupProductIDs
 
 Product_Image:
 	thumbnail_width: 75
