@@ -1,6 +1,5 @@
 <% if HasPreviousOrNextProduct %>
 <div class="sidebarBox previousNext">
-	<!-- to be redone -->
 	<ul>
 	<% if PreviousProduct %>
 		<li class="previous"><span>Previous:</span> <a href="$PreviousProduct.Link">$PreviousProduct.MenuTitle</a></li>

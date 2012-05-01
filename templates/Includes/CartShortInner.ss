@@ -1,4 +1,3 @@
-	<h3 id="CartHeader"><% _t("Cart.CART","Cart") %></h3>
 <% if Items %>
 	<table id="InformationTable" class="editable" cellspacing="0" cellpadding="0" summary="<% _t("TABLESUMMARY","The contents of your cart are displayed in this table - go to the Checkout Page to make final adjustments and review additional charges and deductions.") %>">
 		<tbody>
