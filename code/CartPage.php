@@ -244,8 +244,6 @@ class CartPage_Controller extends Page_Controller{
 	 */
 	public function init() {
 		parent::init();
-		//Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js"); VIA EcommerceSiteTreeExtension::initcontentcontroller()
-		Requirements::javascript('ecommerce/javascript/EcomCart.js');
 		//NOTE: we do not need the line below because that goes via ShoppingCartRequirements.css!
 		//Requirements::themedCSS('Cart');
 
