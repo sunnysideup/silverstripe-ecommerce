@@ -368,12 +368,12 @@ class OrderItem extends OrderAttribute {
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
 	  **/
 	function Buyable($current = false) {
-		if (!$current && Object::has_extension($this->BuyableClassName,'Translatable')) {
-			Translatable::disable_locale_filter();
-		}
 		//start hack
 		if(!$this->BuyableClassName) {
 			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
+		}
+		if (!$current && Object::has_extension($this->BuyableClassName,'Translatable')) {
+			Translatable::disable_locale_filter();
 		}
 		//end hack!
 		$obj = null;
