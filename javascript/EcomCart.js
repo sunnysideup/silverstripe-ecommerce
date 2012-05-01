@@ -277,10 +277,7 @@ EcomCart = {
 	reinit: function(){
 		//hide or show "zero items" information
 		EcomCart.updateForZeroVSOneOrMoreRows();
-		//link to extended cart (click on it to see full cart)
 		EcomCart.initSimpleDialogue();
-		//we include the Ecom Quantity Field here... LITTLE HACK!
-		jQuery(EcomQuantityField.quantityFieldSelector).removeAttr('disabled');
 		this.processing = false;
 	},
 
