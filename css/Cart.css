@@ -57,3 +57,5 @@ even when theme-ing ecommerce, these should not be themed
 	#ShopAccountForm_MemberForm label.left, #LoginForm_LoginForm label.left { font-weight: bold; float: left; width: 150px; }
 	#ShopAccountForm_MemberForm #Country select { width: 305px; }
 #PrintPageIcon img { cursor: pointer; }
+
+
