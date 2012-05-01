@@ -8,10 +8,12 @@
 			EcomQuantityField.init();
 		}
 	);
-
 })(jQuery);
 
 EcomQuantityField = {
+
+	//todo: make more specific! some selector that holds true for all cart holders.
+	delegateRootSelector: 'body',
 
 	quantityFieldSelector: ".ecomquantityfield input.ajaxQuantityField",
 
@@ -23,7 +25,8 @@ EcomQuantityField = {
 
 	//todo: auto-re-attach
 	init: function () {
-		jQuery(EcomQuantityField.removeSelector).live(
+		jQuery(EcomQuantityField.delegateRootSelector).delegate(
+			EcomQuantityField.removeSelector,
 			"click",
 			function(e) {
 				e.preventDefault();
@@ -32,7 +35,8 @@ EcomQuantityField = {
 				return false;
 			}
 		);
-		jQuery(EcomQuantityField.addSelector).live(
+		jQuery(EcomQuantityField.delegateRootSelector).delegate(
+			EcomQuantityField.addSelector,
 			"click",
 			function(e) {
 				e.preventDefault();
@@ -41,7 +45,8 @@ EcomQuantityField = {
 				return false;
 			}
 		);
-		jQuery(EcomQuantityField.quantityFieldSelector).live(
+		jQuery(EcomQuantityField.delegateRootSelector).delegate(
+			EcomQuantityField.quantityFieldSelector,
 			"change",
 			function() {
 				var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this);
@@ -57,7 +62,6 @@ EcomQuantityField = {
 				}
 			}
 		);
-		jQuery(EcomQuantityField.quantityFieldSelector).removeAttr('disabled');
 	},
 
 	getSetQuantityURLSegment: function (inputField) {
