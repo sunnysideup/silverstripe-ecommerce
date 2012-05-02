@@ -43,8 +43,6 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 		$this->requestor = $do;
 	}
 
-
-
 	/*___________________
 
 	  1. Generic (Order / Modifier / OrderItem)
@@ -158,14 +156,14 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 
 	/*___________________
 
-	  4. Items
+	  4. OrderItems
 	 ___________________*/
 
 	/**
 	 * id that is used in templates and in the JSON return @see CartResponse
 	 * @return String
 	 **/
-	function QuantityFieldName() {return  $this->TableID() . '_Quantity';}
+	function QuantityFieldName() {return $this->TableID() . '_Quantity';}
 
 
 	/*___________________
@@ -186,35 +184,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 */
 	function UniqueIdentifier() {return $this->TableID()."_Button";}
 
-	/*___________________
 
-	  6. TO CHECK
-	 ___________________*/
-	 /*
-
-EcomCart.set_shoppingCartURLSegment("");
-EcomCart.countryAndRegionRootSelector
-EcomCart.set_ajaxCountryFieldSelector("");
-EcomCart.set_ajaxRegionFieldSelector("");
-EcomCart.set_selectorMainCountryField("");
-EcomCart.set_classToShowLoading("");
-EcomCart.set_showClass("");
-EcomCart.set_hideClass("");
-EcomCart.set_selectorShowOnZeroItems("");
-EcomCart.set_selectorItemRows("");
-EcomCart.set_removeCartSelector("");
-EcomCart.set_ajaxButtonsOn("");
-EcomCart.set_confirmDeleteText("");
-EcomCart.set_ajaxLinksAreaSelector("");
-EcomCart.set_addLinkSelector("");
-EcomCart.set_removeLinkSelector("");
-EcomCart.set_orderItemHolderSelector("");
-EcomCart.set_ajaxLinksAreaSelector("");
-EcomCart.set_simpleDialogSelector("");
-EcomCart.set_simpleDialogOptions("");
-
-
-*/
 
 
 
