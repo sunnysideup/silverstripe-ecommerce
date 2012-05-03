@@ -1277,16 +1277,52 @@ class Order extends DataObject {
 		if(EcommerceRole::current_member_is_shop_admin($member)) {
 			return true;
 		}
-		//if the order is the current order then they can always view it
+		//if the current member OWNS the order, (s)he can always view it.
+		if($member->exists() && $this->MemberID == $member->ID) {
+			return true;
+		}
+		//it is the current order
 		$currentOrder = ShoppingCart::current_order();
 		if($currentOrder && $currentOrder->ID == $this->ID){
-			return true;
+			//we do some additional CHECKS for session hackings!
+			if($member->exists()) {
+				//must be the same member!
+				if($this->MemberID == $member->ID) {
+					return true;
+				}
+				//order belongs to another member!
+				elseif($this->MemberID) {
+					return false;
+				}
+				//order does not belong to anyone yet! ADD IT NOW.
+				else{
+					//we do NOT add the member here, because this is done in shopping cart
+					//$this->MemberID = $member->ID;
+					//$this->write();
+					return true;
+				}
+			}
+			else{
+				//order belongs to someone, but current user is NOT logged in...
+				if($this->MemberID) {
+					return false;
+				}
+				//no-one is logged in and order does not belong to anyone
+				else {
+					return true;
+				}
+			}
 		}
-		//if the member is not logged in, but the session ID matches then the order can be viewed
-		if( $this->SessionID == session_id()) {
-			return true;
-		}
-		elseif($member && $this->MemberID == $member->ID) {
+		//if the session ID matches, we can always view it.
+		//SECURITYL RISK: if you know someone else his/her session
+		//OR you can view the sessions on the server
+		//OR you can guess the session
+		//THEN you can view the order.
+		//by viewing the order you can also access some of the member details.
+		//NB: this MUST be the last resort! If all other methods fail.
+		//That is, if we are working with the current order then it is a good idea
+		//to deny non-matching members.
+		if( $this->SessionID && $this->SessionID == session_id()) {
 			return true;
 		}
 		return false;
