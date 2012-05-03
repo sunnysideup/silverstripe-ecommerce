@@ -433,25 +433,23 @@ class ShoppingCart extends Object{
 		if (!$this->order) {
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
-			$this->order = DataObject::get_by_id("Order", $orderIDFromSession); //find order by id saved to session (allows logging out and retaining cart contents)
+			$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
 			//order has already been submitted - immediately remove it because we dont want to change it.
 			if($this->order && $this->order->IsSubmitted()) {
+				$this->order = null;
+			}
+			//make sure we have permissions
+			if($this->order && !$this->order->canView()) {
 				$this->order = null;
 			}
 			$member = Member::currentMember();
 			if($this->order){
 				//logged in, add Member.ID to order->MemberID
-				if($member) {
+				if($member && $member->exists()) {
 					if($this->order->MemberID != $member->ID) {
 						$this->order->MemberID = $member->ID;
 						$this->order->write();
 					}
-				}
-				//not logged in - remove Order.MemberID if there is one.
-				elseif($this->order->MemberID) {
-					//remove the member if the member is no longer logged in.
-					$this->order->MemberID = 0;
-					$this->order->write();
 				}
 			}
 			else {
