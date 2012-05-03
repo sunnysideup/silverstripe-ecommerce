@@ -5,7 +5,11 @@
 <% if ShowOnlyCurrentStep %><% if CanCheckout %>
 	<ol class="steps youHave{$PercentageDone}PercentageDone">
 	<% control Steps %>
-		<li class="$LinkingMode">$Title</li>
+		<% if Completed %>
+			<li class="$LinkingMode"><a href="$Link">$Title</a></li>
+		<% else %>
+			<li class="$LinkingMode">$Title</li>
+		<% end_if %>
 	<% end_control %>
 	</ol>
 <% end_if %><% end_if %>

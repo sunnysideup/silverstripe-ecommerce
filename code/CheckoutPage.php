@@ -283,13 +283,16 @@ class CheckoutPage_Controller extends CartPage_Controller {
 			$where = "\"CheckoutPage_StepDescription\".\"ID\" = $number";
 		}
 		$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
+		$completed = 1;
 		foreach($dos as $do) {
 			if($this->currentStep && $do->Code() == $this->currentStep) {
 				$do->LinkingMode = "current";
+				$completed = 0;
 			}
 			else {
 				$do->LinkingMode = "link";
 			}
+			$do->Completed = $completed;
 			$do->Link = $this->Link("checkoutstep")."/".$do->Code."/";
 		}
 		if($number) {
