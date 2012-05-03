@@ -59,23 +59,23 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 *
 	 */
 	protected $ajaxMethods = array(
-		"TableID" => "The main definition on which a lot of others are based. Use as Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID",
-		"TableTotalID" => "The total cost. Use as Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID",
-		"SideBarCartID" => "The sidebar cart. Use as Order.AjaxDefinitions.SideBarCartID",
-		"SmallCartID" => "The small cart. Use as Order.AjaxDefinitions.SmallCartID",
-		"TinyCartClassName" => "The tiny cart. Use as Order.AjaxDefinitions.SmallCartID ",
-		"TableMessageID" => "The cart message (e.g. product added). Use as Order.AjaxDefinitions.TableMessageID",
-		"TableSubTotalID" => "The sub-total for the order. Use as Order.AjaxDefinitions.TableMessageID",
-		"TotalItemsClassName" => "The total number of items in the order. Use as Order.AjaxDefinitions.TotalItemsClassName",
-		"ExpectedCountryClassName" => "The holder of the expected country name. Use as Order.AjaxDefinitions.ExpectedCountryClassName",
-		"CountryFieldID" => "The field used for selecting the country. Use as Order.AjaxDefinitions.CountryFieldID",
-		"RegionFieldID" => "The field used for selecting the region. Use as Order.AjaxDefinitions.RegionFieldID",
-		"TableTitleID" => "The title for the item in the checkout page. Use as OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID",
-		"CartTitleID" => "The title for the item in the cart (not on the checkout page). Use as OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID",
-		"TableSubTitleID" => "The sub-title for the item in the checkout page. Use as OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ",
-		"CartSubTitleID" => "The sub-title for the item in the cart (not on the checkout page).. Use as OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ",
-		"QuantityFieldName" => "The quantity field for the order item. Use as OrderItem.AjaxDefinitions.QuantityFieldName",
-		"UniqueIdentifier" => "Unique identifier for the buyable (product). Use as Buyable.AjaxDefinitions.UniqueIdentifier",
+		"TableID" => "The main definition on which a lot of others are based. Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID",
+		"TableTotalID" => "The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID",
+		"SideBarCartID" => "The sidebar cart. Use in the following context: Order.AjaxDefinitions.SideBarCartID",
+		"SmallCartID" => "The small cart. Use in the following context: Order.AjaxDefinitions.SmallCartID",
+		"TinyCartClassName" => "The tiny cart. Use in the following context: Order.AjaxDefinitions.SmallCartID ",
+		"TableMessageID" => "The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID",
+		"TableSubTotalID" => "The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID",
+		"TotalItemsClassName" => "The total number of items in the order. Use in the following context: Order.AjaxDefinitions.TotalItemsClassName",
+		"ExpectedCountryClassName" => "The holder of the expected country name. Use in the following context: Order.AjaxDefinitions.ExpectedCountryClassName",
+		"CountryFieldID" => "The field used for selecting the country. Use in the following context: Order.AjaxDefinitions.CountryFieldID",
+		"RegionFieldID" => "The field used for selecting the region. Use in the following context: Order.AjaxDefinitions.RegionFieldID",
+		"TableTitleID" => "The title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID",
+		"CartTitleID" => "The title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID",
+		"TableSubTitleID" => "The sub-title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ",
+		"CartSubTitleID" => "The sub-title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ",
+		"QuantityFieldName" => "The quantity field for the order item. Use in the following context: OrderItem.AjaxDefinitions.QuantityFieldName",
+		"UniqueIdentifier" => "Unique identifier for the buyable (product). Use in the following context: Buyable.AjaxDefinitions.UniqueIdentifier",
 	);
 
 
@@ -493,10 +493,18 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$obj = EcommerceConfigAjax::get_one($requestor);
 		foreach($methodArray as $method => $description) {
 			if($method != "setRequestor") {
-					$note = "This is a list of variables that you can use in your templates, like this: <pre>&lt;div id=\"\$AJAXDefinitions.".$method."\"&gt;&lt;/div&gt;</pre>. Ajax will then use this selector to put appropriate content. To view the data that currently is being replaced, please visit the <a href=\"/shoppingcart/test/\">shopping-cart test</a> (must be logged-in as admin).";
-					$this->definitions["Templates"]["AJAXDefinitions_$method"] = $description."<br />".$note;
-					$this->configs["Templates"]["AJAXDefinitions_$method"] = $obj->$method();
-					$this->defaults["Templates"]["AJAXDefinitions_$method"] = "";
+				if(strpos($method, "lassName")) {
+					$selector ="classname";
+				}
+				else {
+					$selector ="id";
+				}
+				$note = "
+					This variable can be used like this: <pre>&lt;div $selector=\"\$AJAXDefinitions.".$method."\"&gt;&lt;/div&gt;</pre>
+					<a href=\"/shoppingcart/test/\">AJAX</a> will then use this selector to put the following content: ";
+				$this->definitions["Templates"]["AJAXDefinitions_$method"] = $note."<br />".$description;
+				$this->configs["Templates"]["AJAXDefinitions_$method"] = $obj->$method();
+				$this->defaults["Templates"]["AJAXDefinitions_$method"] = "";
 			}
 		}
 	}

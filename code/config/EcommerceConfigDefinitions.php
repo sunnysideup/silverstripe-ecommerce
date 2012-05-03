@@ -150,7 +150,9 @@ class EcommerceConfigDefinitions extends Object {
 				"url_segment" => "URL Segment used for the payment process."
 			),
 			"EcommerceConfigAjax" => array(
-				"definitions_class_name" => "Class Name (string) for the class used to define and name all the ajax IDs and Classes."
+				"definitions_class_name" => "Class Name (string) for the class used to define and name all the ajax IDs and Classes.",
+				"cart_js_file_location" => "The location for the EcomCart.js (javascipt that runs the cart) file.  The default one is ecommerce/javascript/EcomCart.js",
+				"dialogue_js_file_location" => "The location for the dialogue (pop-up) javascript.  E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue, but you can also use your own (e.g. prettyPhoto or Greybox)."
 			),
 			"FlatTaxModifier" => array(
 				"name" => "Name of the tax - e.g. VAT",

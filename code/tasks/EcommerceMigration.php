@@ -780,13 +780,15 @@ class EcommerceMigration extends BuildTask {
 		if($ecomConfig && $sc) {
 			foreach($fields as $field) {
 				if($this->hasTableAndField("SiteConfig", $field)) {
-					DB::alteration_message("Migrated SiteConfig.$field", "created");
-					$ecomConfig->$field = $sc->$field;
 					if(!$this->hasTableAndField("EcommerceDBConfig", $field)) {
 						DB::alteration_message("Could not find EcommerceDBConfig.$field - this is unexpected!", "deleted");
 					}
-					$ecomConfig->write();
-					$this->makeFieldObsolete("SiteConfig", $field);
+					else {
+						DB::alteration_message("Migrated SiteConfig.$field", "created");
+						$ecomConfig->$field = DB::query("SELECT \"$field\" FROM \"SiteConfig\" WHERE \"ID\" = ".$sc->ID)->value();
+						$ecomConfig->write();
+						$this->makeFieldObsolete("SiteConfig", $field);
+					}
 				}
 				else {
 					DB::alteration_message("SiteConfig.$field is not available", "edited");
