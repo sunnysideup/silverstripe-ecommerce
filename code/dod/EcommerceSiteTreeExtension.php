@@ -56,7 +56,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 		//todo: check if we even need this (via ShoppingCartsRequirements.ss)
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "cart_js_file_location"));
-		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "cart_js_file_location"));
+		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "dialogue_js_file_location"));
 		Requirements::themedCSS("Cart");
 		Requirements::themedCSS("jquery.simpledialog");
 	}
