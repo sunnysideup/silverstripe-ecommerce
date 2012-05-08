@@ -55,6 +55,12 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected $defaults = array();
 
 	/**
+	 * Array of classes (partially) missing in configs.
+	 * @var Array
+	 */
+	protected $missingClasses = array();
+
+	/**
 	 * LIST of ajax methods
 	 *
 	 */
@@ -212,6 +218,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		foreach($this->definitions as $className => $setting) {
 			if(!isset($this->configs[$className])) {
 				DB::alteration_message("$className", "deleted");
+				$this->missingClasses[$className] = $className;
 				$allOK = false;
 			}
 			else {
@@ -219,6 +226,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 				foreach($classConfigs as $key => $classConfig) {
 					if(!isset($this->configs[$className][$key])) {
 						DB::alteration_message("$className.$key", "deleted");
+						$this->missingClasses[$className] = $className;
 						$allOK = false;
 					}
 				}
@@ -228,7 +236,18 @@ class EcommerceCheckConfiguration extends BuildTask{
 			DB::alteration_message("Perfect match, nothing to report", "created");
 		}
 		else {
-			DB::alteration_message("Recommended course of action: add to your config file.", "edited");
+			DB::alteration_message("Recommended course of action: add to your config file :", "edited");
+			if(is_array($this->missingClasses) && count($this->missingClasses)) {
+				foreach($this->missingClasses as $className) {
+					echo "<br /><pre>$className:";
+					$classConfigs = $this->definitions[$className];
+					foreach($classConfigs as $key => $classConfig) {
+						echo "
+	$key: ".$this->defaults[$className][$key];
+					}
+					echo "</pre>";
+				}
+			}
 		}
 	}
 

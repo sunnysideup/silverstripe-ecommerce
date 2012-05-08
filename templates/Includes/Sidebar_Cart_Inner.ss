@@ -7,7 +7,7 @@
 				<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotal.Nice</td>
 			</tr>
 			<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
-				<td colspan="3" scope="row" class="center"><% _t("Cart.NOITEMS","There are no items in your cart") %></td>
+				<td colspan="3" scope="row" class="center"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></td>
 			</tr>
 		</tfoot>
 		<tbody>
@@ -33,6 +33,6 @@
 	</table>
 	<p class="goToCart"><a href="$EcomConfig.CheckoutLink" class="action goToCheckoutLink"><% _t("Cart.GOTOCHECKOUTLINK","Go to the checkout") %></a></p>
 <% else %>
-		<p class="noItems"><% _t("Cart.NOITEMS","There are no items in your cart") %>.</p>
+		<p class="noItems"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></p>
 <% end_if %>
 
