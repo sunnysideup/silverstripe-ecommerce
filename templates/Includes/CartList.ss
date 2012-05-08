@@ -14,6 +14,6 @@
 		<% end_control %>
 <li><a href="$EcomConfig.CheckoutLink" class="shoppingCartLink"><% _t("Cart.GOTOCHECKOUTLINK","Go to the checkout") %></a></li>
 	<% else %>
-<li>There are no items in your cart</li>
+<li><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></li>
 	<% end_if %>
 <% end_control %>
