@@ -19,5 +19,5 @@
 	</table>
 	<p class="goToCheckout"><a href="$EcomConfig.CheckoutLink" class="action goToCheckoutLink"><% _t("Cart.GOTOCHECKOUTLINK","Go to the checkout") %></a></p>
 <% else %>
-		<p class="noItems"><% _t("Cart.NOITEMS","There are no items in your cart.") %>.</p>
+		<p class="noItems"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></p>
 <% end_if %>
