@@ -43,7 +43,7 @@ class EcommerceDefaultRecords extends BuildTask {
 
 		//CHECKOUT PAGE
 
-		$checkoutPage = DataObject::get_one('CheckoutPage', "ClassName = 'CheckoutPage'");
+		$checkoutPage = DataObject::get_one('CheckoutPage');
 		if(!$checkoutPage) {
 			$checkoutPage = new CheckoutPage();
 			$checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
