@@ -275,6 +275,25 @@ class Product extends Page implements BuyableModel {
 
 
 	//IMAGE
+	/**
+	 * returns a "BestAvailable" image if the current one is not available
+	 * In some cases this is appropriate and in some cases this is not.
+	 * For example, consider the following setup
+	 * - product A with three variations
+	 * - Product A has an image, but the variations have no images
+	 * With this scenario, you want to show ONLY the product image
+	 * on the product page, but if one of the variations is added to the
+	 * cart, then you want to show the product image.
+	 * This can be achieved bu using the BestAvailable image.
+	 * @return Image | Null
+	 */
+	public function BestAvailableImage() {
+		$image = $this->Image();
+		if($image && $image->exists()) {
+			return $image;
+		}
+	}
+
 
 	/**
 	 * Returns a link to a default image.
