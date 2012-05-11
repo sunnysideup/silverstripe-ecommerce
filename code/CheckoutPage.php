@@ -40,10 +40,16 @@ class CheckoutPage extends CartPage {
 
 	public static $db = array (
 		'HasCheckoutSteps' => 'Boolean',
+		'TermsAndConditionsMessage' => 'Varchar(200)',
 	);
 
 	public static $has_one = array (
 		'TermsPage' => 'Page'
+	);
+
+	public static $defaults = array (
+		'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.',
+		'HasCheckoutSteps' => 1
 	);
 
 	/**
@@ -135,27 +141,35 @@ class CheckoutPage extends CartPage {
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"CurrentOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"SaveOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"DeleteOrderLinkLabel");
-		$fields->addFieldToTab('Root.Content.Process', new TreeDropdownField('TermsPageID', 'Terms and Conditions Page', 'SiteTree'));
-		$fields->addFieldToTab('Root.Content.Process', new CheckboxField('HasCheckoutSteps', 'Checkout Process in Steps'));
-		$fields->addFieldToTab('Root.Content.Main', new HtmlEditorField('InvitationToCompleteOrder', 'Invitation to complete order ... shown when the customer can do a regular checkout', $row = 4));
+		$fields->addFieldToTab('Root.Content.Process', new TreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree'));
+		$fields->addFieldToTab('Root.Content.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
+		$fields->addFieldToTab('Root.Content.Process', new CheckboxField('HasCheckoutSteps', _t("CheckoutPage.HASCHECKOUTSTEPS", "Checkout Process in Steps")));
+		$fields->addFieldToTab('Root.Content.Main', new HtmlEditorField('InvitationToCompleteOrder', _t("CheckoutPage.INVITATIONTOCOMPLETEORDER", 'Invitation to complete order ... shown when the customer can do a regular checkout'), $row = 4));
 		//The Content field has a slightly different meaning for the Checkout Page.
 		$fields->removeFieldFromTab('Root.Content.Main', "Content");
-		$fields->addFieldToTab('Root.Content.Messages.Messages.AlwaysVisible', new HtmlEditorField('Content', 'General note - always visible on the checkout page', 7, 7));
+		$fields->addFieldToTab('Root.Content.Messages.Messages.AlwaysVisible', new HtmlEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page'), 7, 7));
 		if(DataObject::get_one("OrderModifier_Descriptor")) {
-			$orderModifierDescriptionField = new ComplexTableField($controller = $this, $name = "Order Extras Explanations", "OrderModifier_Descriptor");
+			$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
 			$orderModifierDescriptionField->setRelationAutoSetting(false);
-			$orderModifierDescriptionField->setTitle("edit messages above order extras forms");
+			$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
 			$orderModifierDescriptionField->setPermissions(array("show", "edit"));
 			$fields->addFieldToTab('Root.Content.Messages.Messages.OrderExtras',$orderModifierDescriptionField);
 		}
 		if(DataObject::get_one("CheckoutPage_StepDescription")) {
-			$checkoutStepDescriptionField = new ComplexTableField($controller = $this, $name = "Checkout Step Descriptions", "CheckoutPage_StepDescription");
+			$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
 			$checkoutStepDescriptionField->setRelationAutoSetting(false);
-			$checkoutStepDescriptionField->setTitle("Checkout Step Descriptions");
+			$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
 			$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
 			$fields->addFieldToTab('Root.Content.Messages.Messages.CheckoutSteps',$checkoutStepDescriptionField);
 		}
 		return $fields;
+	}
+
+	function onBeforeWrite(){
+		parent::onBeforeWrite();
+		if(!$this->TermsAndConditionsMessage) {
+			$this->TermsPageID = 0;
+		}
 	}
 
 }
@@ -173,6 +187,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	public function init() {
 		parent::init();
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
+		Requirements::customScript('EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');', "TermsAndConditionsMessage");
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		if($this->HasCheckoutSteps) {
 			if($this->currentStep && in_array($this->currentStep, $this->steps)) {
