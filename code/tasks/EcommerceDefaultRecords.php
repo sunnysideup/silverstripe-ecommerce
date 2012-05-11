@@ -48,6 +48,7 @@ class EcommerceDefaultRecords extends BuildTask {
 			$checkoutPage = new CheckoutPage();
 			$checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
 			$checkoutPage->Title = 'Checkout';
+			$checkoutPage->TermsAndConditionsMessage = 'You must agree with the terms and conditions to proceed. ';
 			$checkoutPage->MetaTitle = 'Checkout';
 			$checkoutPage->MenuTitle = 'Checkout';
 			$checkoutPage->URLSegment = 'checkout';

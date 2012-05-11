@@ -21,7 +21,8 @@ var EcomOrderForm = {
 
 	termsAndConditionsCheckBoxSelector: "#ReadTermsAndConditions input",
 
-	tAndcMessage: 'You must agree with the terms and conditions to proceed.',
+	TermsAndConditionsMessage: 'You must agree with the terms and conditions to proceed.',
+		set_TermsAndConditionsMessage: function(s) {self.TermsAndConditionsMessage = s;},
 
 	init: function() {
 		jQuery(EcomOrderForm.submitButtonSelector).click(
@@ -35,11 +36,13 @@ var EcomOrderForm = {
 	},
 
 	TandCcheck: function() {
-		if(jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).length == 1){
-			if(!jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).is(":checked")) {
-				jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).focus();
-				alert(EcomOrderForm.tAndcMessage);
-				return false;
+		if(self.TermsAndConditionsMessage) {
+			if(jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).length == 1){
+				if(!jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).is(":checked")) {
+					jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).focus();
+					alert(EcomOrderForm.TermsAndConditionsMessage);
+					return false;
+				}
 			}
 		}
 		return true;

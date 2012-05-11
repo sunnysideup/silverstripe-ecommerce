@@ -52,8 +52,15 @@ class OrderForm extends Form {
 		$finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER','Complete Order'), 3));
 		// If a terms and conditions page exists, we need to create a field to confirm the user has read it
 		if($termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page()) {
-			$finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1','I have read and agree with the ').' <a href="'.$termsAndConditionsPage->Link().'">'.Convert::raw2xml($termsAndConditionsPage->Title).'</a>'._t('OrderForm.AGREEWITHTERMS2','.')));
-			$requiredFields[] = 'ReadTermsAndConditions';
+			$checkoutPage = DataObject::get_one("CheckoutPage");
+			if($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
+				$alreadyTicked = false;
+				$requiredFields[] = 'ReadTermsAndConditions';
+			}
+			else {
+				$alreadyTicked = true;
+			}
+			$finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1','I have read and agree with the ').' <a href="'.$termsAndConditionsPage->Link().'">'.Convert::raw2xml($termsAndConditionsPage->Title).'</a>'._t('OrderForm.AGREEWITHTERMS2','.'), $alreadyTicked));
 		}
 		$finalFields->push(new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE','Note / Question'), 7, 30));
 
@@ -206,14 +213,17 @@ class OrderForm_Validator extends RequiredFields{
 	 */
 	function php($data){
 		$valid = parent::php($data);
-		if(isset($data["ReadTermsAndConditions"])) {
-			if(!$data["ReadTermsAndConditions"]) {
-				$this->validationError(
-					"ReadTermsAndConditions",
-					_t("OrderForm.READTERMSANDCONDITIONS", "Have you read the terms and conditions?"),
-					"required"
-				);
-				$valid = false;
+		$checkoutPage = DataObject::get_one("CheckoutPage");
+		if($checkoutPage->TermsAndConditionsMessage) {
+			if(isset($data["ReadTermsAndConditions"])) {
+				if(!$data["ReadTermsAndConditions"]) {
+					$this->validationError(
+						"ReadTermsAndConditions",
+						$checkoutPage->TermsAndConditionsMessage,
+						"required"
+					);
+					$valid = false;
+				}
 			}
 		}
 		return $valid;
