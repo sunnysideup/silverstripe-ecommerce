@@ -59,32 +59,40 @@ class OrderFormAddress extends Form {
 		}
 
 		//member fields
-		$addressFields = new FieldSet();
+		$addressFieldsBilling = new FieldSet();
 		$memberFields = $this->orderMember->getEcommerceFields();
 		$requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
-		$addressFields->merge($memberFields);
+		$addressFieldsBilling->merge($memberFields);
 
 		//billing address field
 		$billingAddress = $order->CreateOrReturnExistingAddress("BillingAddress");
 		$billingAddressFields = $billingAddress->getFields($this->orderMember);
 		$requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
-		$addressFields->merge($billingAddressFields);
+		$addressFieldsBilling->merge($billingAddressFields);
 
 		//shipping address field
+		$addressFieldsShipping = null;
 		if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
+			$addressFieldsShipping = new FieldSet();
 			//add the important CHECKBOX
 			$useShippingAddressField = new FieldSet(new CheckboxField("UseShippingAddress", _t("OrderForm.USESHIPPINGADDRESS", "Use an alternative shipping address")));
-			$addressFields->merge($useShippingAddressField);
+			$addressFieldsShipping->merge($useShippingAddressField);
 			//now we can add the shipping fields
 			$shippingAddress = $order->CreateOrReturnExistingAddress("ShippingAddress");
 			$shippingAddressFields = $shippingAddress->getFields($this->orderMember);
 			//we have left this out for now as it was giving a lot of grief...
 			//$requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
 			//finalise left fields
-			$addressFields->merge($shippingAddressFields);
+			$addressFieldsShipping->merge($shippingAddressFields);
 		}
-		$leftFields = new CompositeField($addressFields);
+		$leftFields = new CompositeField($addressFieldsBilling);
 		$leftFields->setID('LeftOrder');
+		$allLeftFields = new Composite($leftFields);
+		if($addressFieldsShipping) {
+			$extraLeftFields = new CompositeField($addressFieldsShipping);
+			$extraLeftFields->setID('ExtraLeftOrder');
+			$allLeftFields->push($extraLeftFields);
+		}
 
 
 		//  ________________  2) Log in / vs Create Account fields - RIGHT-HAND-SIDE fields
@@ -132,7 +140,7 @@ class OrderFormAddress extends Form {
 		//  ________________  5) Put all the fields in one FieldSet
 
 
-		$fields = new FieldSet($rightFields, $leftFields);
+		$fields = new FieldSet($rightFields, $allLeftFields);
 
 
 
