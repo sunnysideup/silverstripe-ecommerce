@@ -87,7 +87,7 @@ class OrderFormAddress extends Form {
 		}
 		$leftFields = new CompositeField($addressFieldsBilling);
 		$leftFields->setID('LeftOrder');
-		$allLeftFields = new Composite($leftFields);
+		$allLeftFields = new CompositeField($leftFields);
 		if($addressFieldsShipping) {
 			$extraLeftFields = new CompositeField($addressFieldsShipping);
 			$extraLeftFields->setID('ExtraLeftOrder');
