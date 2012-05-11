@@ -46,6 +46,7 @@ class EcommerceMigration extends BuildTask {
 		$this->setFixedPriceForSubmittedOrderItems_120();
 		$this->moveSiteConfigToEcommerceDBConfig_140();
 		$this->addClassNameToOrderItems_150();
+		$this->addTermsAndConditionsMessage_160();
 		$this->theEnd_9999();
 	}
 
@@ -546,45 +547,66 @@ class EcommerceMigration extends BuildTask {
 						case "Cart":
 							if(!$CartObject) {
 								if(!($CartObject = DataObject::get_one("OrderStep", "\"Code\" = 'CREATED'"))) {
+									DB::alteration_message("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
 							if($CartObject = DataObject::get_one("OrderStep", "\"Code\" = 'CREATED'")) {
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$CartObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]. " AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
+							else {
+								DB::alteration_message("Could not find CREATED status", "deleted");
+							}
 							break;
 						case "Query":
 						case "Unpaid":
 							if(!$UnpaidObject) {
 								if(!($UnpaidObject = DataObject::get_one("OrderStep", "\"Code\" = 'SUBMITTED'"))) {
+									DB::alteration_message("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
 							if($UnpaidObject = DataObject::get_one("OrderStep", "\"Code\" = 'SUBMITTED'")) {
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$UnpaidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
-
+							else {
+								DB::alteration_message("Could not find SUBMITTED status", "deleted");
+							}
 							break;
 						case "Processing":
 						case "Paid":
 							if(!$PaidObject) {
 								if(!($PaidObject = DataObject::get_one("OrderStep", "\"Code\" = 'PAID'"))) {
+									DB::alteration_message("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
 							if($PaidObject = DataObject::get_one("OrderStep", "\"Code\" = 'PAID'")) {
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$PaidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]. " AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
+								DB::alteration_message("Updating to PAID status", "created");
+							}
+							else {
+								DB::alteration_message("Could not find new status", "deleted");
 							}
 							break;
 						case "Sent":
 						case "Complete":
 							if(!$PaidObject) {
 								if(!($SentObject = DataObject::get_one("OrderStep", "\"Code\" = 'SENT'"))) {
+									DB::alteration_message("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
 							if($SentObject = DataObject::get_one("OrderStep", "\"Code\" = 'SENT'")) {
+								DB::alteration_message("Updating to SENT status", "created");
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$SentObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
+							}
+							elseif($archivedObject = DataObject::get_one("OrderStep", "\"Code\" = 'ARCHIVED'")) {
+								DB::alteration_message("Updating to ARCHIVED status", "created");
+								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$archivedObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
+							}
+							else {
+								DB::alteration_message("Could not find new status", "deleted");
 							}
 							break;
 						case "AdminCancelled":
@@ -597,6 +619,7 @@ class EcommerceMigration extends BuildTask {
 							if(!$adminID) {
 								$adminID = 1;
 							}
+							DB::alteration_message("Updating to Admin Cancelled", "created");
 							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$AdminCancelledObject->ID.", \"CancelledByID\" = ".$adminID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							break;
 						case "MemberCancelled":
@@ -605,8 +628,11 @@ class EcommerceMigration extends BuildTask {
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
+							DB::alteration_message("Updating to MemberCancelled", "created");
 							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$MemberCancelledObject->ID.", \"CancelledByID\" = \"MemberID\" WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							break;
+						default:
+							DB::alteration_message("Unexpected status", "deleted");
 					}
 				}
 			}
@@ -831,6 +857,35 @@ class EcommerceMigration extends BuildTask {
 		}
 		else {
 			DB::alteration_message("No order items could be found.");
+		}
+	}
+
+
+	function addTermsAndConditionsMessage_160() {
+		DB::alteration_message("
+			<h1>160. Add checkout message TermsAndConditionsMessage message.</h1>
+			<p>Adds TermsAndConditionsMessage if there is a terms page.</p>
+		");
+		$checkoutPage = DataObject::get_one("CheckoutPage");
+		if($checkoutPage) {
+			if($checkoutPage->TermsPageID) {
+				if(!$checkoutPage->TermsAndConditionsMessage) {
+					$checkoutPage->TermsAndConditionsMessage = CheckoutPage::$defaults["TermsAndConditionsMessage"];
+					$checkoutPage->writeToStage('Stage');
+					$checkoutPage->publish('Stage', 'Live');
+					DB::alteration_message("Added TermsAndConditionsMessage", "created");
+					return;
+				}
+				else {
+					DB::alteration_message("There was no need to add a terms and conditions message because there was already a message.");
+				}
+			}
+			else {
+				DB::alteration_message("There was no need to add a terms and conditions message because there is no terms and conditions page.");
+			}
+		}
+		else {
+			DB::alteration_message("There was no need to add a terms and conditions message because there is no checkout page", "deleted");
 		}
 	}
 
