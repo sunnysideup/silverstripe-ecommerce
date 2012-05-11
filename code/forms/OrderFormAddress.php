@@ -86,12 +86,13 @@ class OrderFormAddress extends Form {
 			$addressFieldsShipping->merge($shippingAddressFields);
 		}
 		$leftFields = new CompositeField($addressFieldsBilling);
-		$leftFields->setID('LeftOrder');
+		$leftFields->setID('LeftOrderBilling');
 		$allLeftFields = new CompositeField($leftFields);
+		$allLeftFields->setID('LeftOrder');
 		if($addressFieldsShipping) {
-			$extraLeftFields = new CompositeField($addressFieldsShipping);
-			$extraLeftFields->setID('ExtraLeftOrder');
-			$allLeftFields->push($extraLeftFields);
+			$leftFieldsShipping = new CompositeField($addressFieldsShipping);
+			$leftFieldsShipping->setID('LeftOrderShipping');
+			$allLeftFields->push($leftFieldsShipping);
 		}
 
 
