@@ -158,7 +158,7 @@
 	var _show = function (content) {
 		jQuery(document).keyup(_escKeyEvent);
 
-		var body = '';
+		var body = '<div id="'+_t.opts.containerClass+'_inner"><div id="'+_t.opts.containerClass+'_inner_inner">';
 
 		if (_title != '')
 			body += '<div class="sd_header">' + _title + '</div>';
@@ -167,6 +167,8 @@
 
 		if (_caption != '' && typeof _caption != 'undefined')
 			body += ' <div class="sd_footer">' + _caption + '</div>';
+
+		body += "</div></div>";
 
 		var tmp = jQuery('<div />')
 			.addClass(_t.opts.containerClass)
@@ -180,8 +182,11 @@
 
 		var w = (_t.opts.width) ? parseInt(_t.opts.width) : tmp.width();
 		var h = (_t.opts.height) ? parseInt(_t.opts.height) : tmp.height();
+		w = w * 1.3
+		h = h * 1.7
 		tmp.remove();
 		var pos = _center(w, h);
+
 
 		_container
 			.removeClass(_t.opts.loadingClass)
