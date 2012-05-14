@@ -465,7 +465,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 			$task->run();
 			$checkoutPage = DataObject::get_one("CheckoutPage");
 			if(!$checkoutPage) {
-				user_error("There is no checkout page available and it seems impossible to create one.")
+				user_error("There is no checkout page available and it seems impossible to create one.");
 			}
 		}
 		$steps = DataObject::get("CheckoutPage_StepDescription");
