@@ -143,6 +143,23 @@ EcomCart = {
 		set_hideClass: function(s) {this.hideClass = s;},
 
 
+	/**
+	 * a method called before the update
+	 * params for onBeforeUpdate:
+	 * url, params, EcomCart.setChanges
+	 * EcomCart.set_onBeforeUpdate(function(url, params, setChanges) {alert("before");});
+	 */
+	onBeforeUpdate: null,
+		set_onBeforeUpdate: function(f) {this.onBeforeUpdate = f;},
+
+	/**
+	 * a method called after the update
+	 * params for onAfterUpdate:
+	 * changes, status
+	 * EcomCart.set_onAfterUpdate(function(change, status) {alert("after");});
+	 */
+	onAfterUpdate: null,
+		set_onAfterUpdate: function(f) {this.onAfterUpdate = f;},
 
 	//#################################
 	// ITEMS (OR LACK OF) IN THE CART
@@ -364,6 +381,11 @@ EcomCart = {
 		}
 		var loadingIndex = this.addLoadingSelector(loadingElement)
 		params.loadingindex = loadingIndex;
+		if(EcomCart.onBeforeUpdate) {
+			if(typeof EcomCart.onBeforeUpdate == 'function'){
+				EcomCart.onBeforeUpdate.call(url, params, EcomCart.setChanges);
+			}
+		}
 		jQuery.getJSON(url, params, EcomCart.setChanges);
 	},
 
@@ -512,6 +534,11 @@ EcomCart = {
 				else if(type == "loadingindex") {
 					jQuery(EcomCart.loadingSelectors[value]).removeClass(EcomCart.classToShowLoading);
 				}
+			}
+		}
+		if(EcomCart.onAfterUpdate) {
+			if(typeof EcomCart.onAfterUpdate == 'function'){
+				EcomCart.onAfterUpdate.call(changes, status);
 			}
 		}
 		EcomCart.reinit();
