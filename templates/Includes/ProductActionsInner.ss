@@ -11,10 +11,10 @@
 	</li>
 <% else %>
 	<li class="removeLink">
-		<a class="ajaxBuyableRemove action" href="$RemoveAllLink" title="<% _t("Product.REMOVELINK","Remove from Cart") %>"><% _t("Product.REMOVELINK","Remove from Cart") %></a>
+		<a class="ajaxBuyableRemove action ajaxAddToCartLink" href="$RemoveAllLink" title="<% _t("Product.REMOVELINK","Remove from Cart") %>"><% _t("Product.REMOVELINK","Remove from Cart") %></a>
 	</li>
 	<li class="addLink">
-		<a class="ajaxBuyableAdd action" href="$AddLink" title="<% _t("Product.ADDLINK","Add to Cart") %>"><% _t("Product.ADDLINK","Add to Cart") %></a>
+		<a class="ajaxBuyableAdd action ajaxAddToCartLink" href="$AddLink" title="<% _t("Product.ADDLINK","Add to Cart") %>"><% _t("Product.ADDLINK","Add to Cart") %></a>
 	</li>
 <% end_if %>
 </ul>
