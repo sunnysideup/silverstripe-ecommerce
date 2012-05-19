@@ -1,6 +1,6 @@
 <% if Items %>
 	<p class="thereAreItems">
-		<% _t("order.YOUHAVE", "You have" %>
+		<% _t("order.YOUHAVE", "You have") %>
 		<a href="/shoppingcart/showcart/" class="simpledialog" rel="SimpleDialogueCart">
 			 $TotalItems <% if MoreThanOneItemInCart %><% _t("Order.ITEMS", "Items") %><% else %><% _t("Order.ITEM", "Item") %><% end_if %>
 		</a>
