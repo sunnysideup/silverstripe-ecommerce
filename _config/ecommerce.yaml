@@ -181,7 +181,7 @@ EcommercePaymentController:
 	url_segment: "ecommercepayment"
 
 EcommerceConfigAjax:
-	definitions_class_name: "EcommerceConfigAjaxDefinitions"
+	definitions_class_name: EcommerceConfigAjaxDefinitions
 	cart_js_file_location: ecommerce/javascript/EcomCart.js
 	dialogue_js_file_location: ecommerce/thirdparty/simpledialogue_fixed/jquery.simpledialog.0.1.js
 
