@@ -120,8 +120,15 @@ class EcommerceDBConfig extends DataObject {
 	);//use fieldName => Default Value
 
 	public function populateDefaults() {
-		$this->ReceiptEmail = Email::getAdminEmail();
 		parent::populateDefaults();
+		if(isset(self::$defaults)) {
+			foreach(self::$defaults as $fieldName => $fieldValue) {
+				if(!isset($this->$fieldName) || $this->$fieldName === null) {
+					$this->$fieldName = $fieldValue;
+				}
+			}
+		}
+		$this->ReceiptEmail = Email::getAdminEmail();
 	}
 
 

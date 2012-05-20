@@ -172,10 +172,11 @@ class OrderStep extends DataObject {
 
 	function populateDefaults() {
 		parent::populateDefaults();
-		$array = Object::uninherited_static($this->ClassName, 'defaults');
-		if($array && count($array)) {
-			foreach($array as $field => $value) {
-				$this->$field = $value;
+		if(isset(self::$defaults)) {
+			foreach(self::$defaults as $fieldName => $fieldValue) {
+				if(!isset($this->$fieldName) || $this->$fieldName === null) {
+					$this->$fieldName = $fieldValue;
+				}
 			}
 		}
 		$this->Description = $this->myDescription();
