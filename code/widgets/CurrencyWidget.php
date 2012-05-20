@@ -5,11 +5,11 @@
  * @Authors Jeremy + Nicolaas
  */
 
-class CartWidget extends Widget{
+class CurrencyWidget extends Widget{
 
-	public static $title = "Shopping Cart";
+	public static $title = "Select Currency";
 
-	public static $cmsTitle = "Shopping Cart";
+	public static $cmsTitle = "Select Currency";
 
 	public static $description = "Displays the current contents of the user's cart.";
 

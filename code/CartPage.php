@@ -72,6 +72,13 @@ class CartPage extends Page{
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
+		if(isset(self::$defaults)) {
+			foreach(self::$defaults as $fieldName => $fieldValue) {
+				if(!isset($this->$fieldName) || $this->$fieldName === null) {
+					$this->$fieldName = $fieldValue;
+				}
+			}
+		}
 		$continuePage = DataObject::get_one("ProductGroup", "ParentID = 0");
 		if($continuePage || $continuePage = DataObject::get_one("ProductGroup")) {
 			$this->ContinuePageID = $continuePage->ID;
