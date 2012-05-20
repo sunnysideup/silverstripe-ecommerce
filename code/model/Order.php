@@ -2070,13 +2070,6 @@ class Order extends DataObject {
 	 **/
 	function populateDefaults() {
 		parent::populateDefaults();
-		if(isset(self::$defaults)) {
-			foreach(self::$defaults as $fieldName => $fieldValue) {
-				if(!isset($this->$fieldName) || $this->$fieldName === null) {
-					$this->$fieldName = $fieldValue;
-				}
-			}
-		}
 		if($this->StatusID) {
 			//do nothing
 		}

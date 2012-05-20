@@ -113,13 +113,6 @@ class OrderStatusLog extends DataObject {
 
 	function populateDefaults() {
 		parent::populateDefaults();
-		if(isset(self::$defaults)) {
-			foreach(self::$defaults as $fieldName => $fieldValue) {
-				if(!isset($this->$fieldName) || $this->$fieldName === null) {
-					$this->$fieldName = $fieldValue;
-				}
-			}
-		}
 		$this->AuthorID = Member::currentUserID();
 	}
 
@@ -407,13 +400,6 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 
 	function populateDefaults() {
 		parent::populateDefaults();
-		if(isset(self::$defaults)) {
-			foreach(self::$defaults as $fieldName => $fieldValue) {
-				if(!isset($this->$fieldName) || $this->$fieldName === null) {
-					$this->$fieldName = $fieldValue;
-				}
-			}
-		}
 		$this->Title = _t("OrderStatusLog.ORDERDISPATCHED", "Order Dispatched");
 		$this->DispatchedOn =  date('Y-m-d');
 		$this->DispatchedBy =  Member::currentUser()->getTitle();
