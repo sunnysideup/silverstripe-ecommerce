@@ -211,7 +211,31 @@ class OrderStatusLog extends DataObject {
 		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
+	/**
+	 * Debug helper method.
+	 * Can be called from /shoppingcart/debug/
+	 * @return String
+	 */
+	public function debug() {
+		$html =  "
+			<h2>".$this->ClassName."</h2><ul>";
+		$fields = Object::get_static($this->ClassName, "db");
+		foreach($fields as  $key => $type) {
+			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
+		}
+		$fields = Object::get_static($this->ClassName, "casting");
+		foreach($fields as  $key => $type) {
+			$method = "get".$key;
+			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
+		}
+		$html .= "</ul>";
+		return $html;
+	}
+
+
 }
+
+
 
 /**
  * OrderStatusLog_Submitted is an important class that is created when an order is submitted.
