@@ -575,27 +575,9 @@ class OrderModifier extends OrderAttribute {
 
 // ######################################## ***  12. debug functions
 
-	/**
-	 * Debug helper method.
-	 */
-	public function debug() {
-		return "
-			<h2>".$this->ClassName."</h2>
-			<h3>OrderModifier class details</h3>
-			<p>
-				<b>ID : </b>".$this->ID."<br/>
-				<b>Order ID : </b>".$this->OrderID."<br/>
-				<b>Calculation Value : </b>".$this->CalculatedTotal."<br/>
-				<b>Table Title: </b>".$this->TableTitle()."<br/>
-				<b>Table Sub Title: </b>".$this->TableSubTitle()."<br/>
-				<b>Cart Title: </b>".$this->CartTitle()."<br/>
-				<b>Cart Sub Title: </b>".$this->CartSubTitle()."<br/>
-				<b>Table Value: </b>".$this->TableValue."<br/>
-			</p>";
-	}
+
 
 }
-
 
 class OrderModifier_Descriptor extends DataObject {
 
