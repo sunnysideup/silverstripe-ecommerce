@@ -274,7 +274,7 @@ class ShoppingCart extends Object{
 	 * Clears the cart contents completely by removing the orderID from session, and thus creating a new cart on next request.
 	 */
 	public function clear(){
-		$sessionVariableNamesArray = array("ID", "Messages");
+		$sessionVariableNamesArray = array("OrderID", "Messages");
 		foreach($sessionVariableNamesArray as $name){
 			$sessionVariableName = $this->sessionVariableName($name);
 			Session::clear($sessionVariableName); //clear the orderid from session
@@ -397,7 +397,84 @@ class ShoppingCart extends Object{
 	 */
 	public function debug(){
 		if(Director::isDev() || Permission::check("ADMIN")){
-			Debug::show($this->currentOrder());
+			debug::show($this->currentOrder());
+			echo "<blockquote><blockquote><blockquote><blockquote>";
+
+			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Items</h1>";
+			$items = $this->currentOrder()->Items();
+			if($items) {
+				foreach($items as $item) {
+					Debug::show($item);
+				}
+			}
+			else {
+				echo "<p>there are no items for this order</p>";
+			}
+
+			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Modifiers</h1>";
+			$modifiers = $this->currentOrder()->Modifiers();
+			if($modifiers) {
+				foreach($modifiers as $modifier) {
+					Debug::show($modifier);
+				}
+			}
+			else {
+				echo "<p>there are no modifiers for this order</p>";
+			}
+
+			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Addresses</h1>";
+			$billingAddress = $this->currentOrder()->BillingAddress();
+			if($billingAddress && $billingAddress->exists()) {
+				Debug::show($billingAddress);
+			}
+			else {
+				echo "<p>there is no billing address for this order</p>";
+			}
+			$shippingAddress = $this->currentOrder()->ShippingAddress();
+			if($shippingAddress && $shippingAddress->exists()) {
+				Debug::show($shippingAddress);
+			}
+			else {
+				echo "<p>there is no shipping address for this order</p>";
+			}
+
+			$currencyUsed = $this->currentOrder()->CurrencyUsed();
+			if($currencyUsed && $currencyUsed->exists()) {
+				echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Currency</h1>";
+				Debug::show($currencyUsed);
+			}
+
+			$cancelledBy = $this->currentOrder()->CancelledBy();
+			if($cancelledBy && $cancelledBy->exists()) {
+				echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Cancelled By</h1>";
+				Debug::show($cancelledBy);
+			}
+
+			$logs = $this->currentOrder()->OrderStatusLogs();
+			if($logs && $logs->count()) {
+				echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Logs</h1>";
+				foreach($logs as $log) {
+					Debug::show($log);
+				}
+			}
+
+			$payments = $this->currentOrder()->Payments();
+			if($payments  && $payments->count()) {
+				echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Payments</h1>";
+				foreach($payments as $payment) {
+					Debug::show($payment);
+				}
+			}
+
+			$emails = $this->currentOrder()->Emails();
+			if($emails && $emails->count()) {
+				echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Emails</h1>";
+				foreach($emails as $email) {
+					Debug::show($email);
+				}
+			}
+
+			echo "</blockquote></blockquote></blockquote></blockquote>";
 		}
 	}
 
