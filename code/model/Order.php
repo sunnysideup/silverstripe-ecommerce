@@ -2183,21 +2183,25 @@ class Order extends DataObject {
    * 11. DEBUG
 *******************************************************/
 
-	function debug(){
-		$val = "<h3>Database record: $this->class</h3>\n<ul>\n";
-		if($this->record) foreach($this->record as $fieldName => $fieldVal) {
-			$val .= "\t<li>$fieldName: " . Debug::text($fieldVal) . "</li>\n";
+	/**
+	 * Debug helper method.
+	 * Can be called from /shoppingcart/debug/
+	 * @return String
+	 */
+	public function debug() {
+		$html =  "
+			<h2>".$this->ClassName."</h2><ul>";
+		$fields = Object::get_static($this->ClassName, "db");
+		foreach($fields as  $key => $type) {
+			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
 		}
-		$val .= "</ul>\n";
-		$val .= "<h4>Items</h4>";
-		if($this->Items()) {
-			$val .= $this->Items()->debug();
+		$fields = Object::get_static($this->ClassName, "casting");
+		foreach($fields as  $key => $type) {
+			$method = "get".$key;
+			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
 		}
-		$val .= "<h4>Modifiers</h4>";
-		if($this->Modifiers()) {
-			$val .= $this->Modifiers()->debug();
-		}
-		return $val;
+		$html .= "</ul>";
+		return $html;
 	}
 
 }
