@@ -85,9 +85,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	}
 
 	function ecommercecheckconfiguration($request){
-		$buildTask = new EcommerceCheckConfiguration();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("EcommerceCheckConfiguration", $request);
 	}
 
 
@@ -117,27 +115,19 @@ class EcommerceDatabaseAdmin extends Controller{
 	}
 
 	function setorderidstartingnumber($request){
-		$buildTask = new SetOrderIDStartingNumber();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("SetOrderIDStartingNumber", $request);
 	}
 
 	function createecommercemembergroups($request){
-		$buildTask = new CreateEcommerceMemberGroups();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("CreateEcommerceMemberGroups", $request);
 	}
 
 	function ecommercedefaultrecords($request){
-		$buildTask = new EcommerceDefaultRecords();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("EcommerceDefaultRecords", $request);
 	}
 
 	function adddefaultecommerceproducts($request){
-		$buildTask = new AddDefaultEcommerceProducts();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("AddDefaultEcommerceProducts", $request);
 	}
 
 
@@ -170,9 +160,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *
 	 */
 	function clearoldcarts($request) {
-		$buildTask = new ClearOldCarts();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("ClearOldCarts", $request);
 	}
 
 	/**
@@ -180,18 +168,14 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *
 	 */
 	function recalculatethenumberofproductssold($request) {
-		$buildTask = new RecalculateTheNumberOfProductsSold();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("RecalculateTheNumberOfProductsSold", $request);
 	}
 	/**
 	 * executes build task: AddCustomersToCustomerGroups
 	 *
 	 */
 	function addcustomerstocustomergroups($request) {
-		$buildTask = new AddCustomersToCustomerGroups();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("AddCustomersToCustomerGroups", $request);
 	}
 
 	/**
@@ -199,16 +183,23 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *
 	 */
 	function fixbrokenordersubmissiondata($request) {
-		$buildTask = new FixBrokenOrderSubmissionData();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("FixBrokenOrderSubmissionData", $request);
 	}
+
+
+
+
+
+
+
 
 	//##############################
 	// 3. DEBUG ACTIONS
 	//##############################
 
 	protected $debugActions = array(
+		"cartmanipulation_current",
+		"cartmanipulation_debug"
 	);
 
 	/**
@@ -216,10 +207,17 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *
 	 */
 	function DebugActions() {
-		return $this->createMenuDOSFromArray($this->debugActions, $type = "debugActions");
+		return $this->createMenuDOSFromArray($this->debugActions, $type = "DebugActions");
 	}
 
 
+	function cartmanipulation_current($request){
+		$this->runTask("CartManipulation_Current", $request);
+	}
+
+	function CartManipulation_Debug($request){
+		$this->runTask("CartManipulation_Debug", $request);
+	}
 
 
 
@@ -264,9 +262,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *
 	 */
 	function ecommercemigration($request) {
-		$buildTask = new EcommerceMigration();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("EcommerceMigration", $request);
 	}
 
 
@@ -276,9 +272,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *
 	 */
 	function setdefaultproductgroupvalues($request) {
-		$buildTask = new SetDefaultProductGroupValues();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("SetDefaultProductGroupValues", $request);
 	}
 
 
@@ -303,9 +297,7 @@ class EcommerceDatabaseAdmin extends Controller{
 
 
 	function deleteallorders($request){
-		$buildTask = new DeleteAllOrders();
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+		$this->runTask("DeleteAllOrders", $request);
 	}
 
 
@@ -374,6 +366,12 @@ class EcommerceDatabaseAdmin extends Controller{
 			$dos->push($do);
 		}
 		return $dos;
+	}
+
+	protected function runTask($className, $request) {
+		$buildTask = new $className();
+		$buildTask->run($request);
+		$this->displayCompletionMessage($buildTask);
 	}
 
 
