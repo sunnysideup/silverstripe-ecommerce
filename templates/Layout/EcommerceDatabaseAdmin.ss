@@ -2,7 +2,7 @@
 
 
 <% if OverallConfig %>
-<h3>Check your settings!</h3>
+<h3>Check your settings</h3>
 <p>Check your settings whenever you are working on this site to make sure they are all up-to-date and valid.</p>
 <ul>
 <% control OverallConfig %>
@@ -65,8 +65,8 @@
 <% end_if %>
 
 <% if CrazyShit %>
-<h3>You are MAD!</h3>
-<p>Start again?</p>
+<h3>You are MAD?</h3>
+<p>I guess you are ...</p>
 <ul>
 <% control CrazyShit %>
 	<li><a href="$Link">$Title</a>: $Description</li>
