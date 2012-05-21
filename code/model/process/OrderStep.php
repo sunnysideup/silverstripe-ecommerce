@@ -385,6 +385,9 @@ class OrderStep extends DataObject {
 		if($this->isDefaultStatusOption()) {
 			return false;
 		}
+		if(in_array($this->Code, self::get_codes_for_order_steps_to_include())) {
+			return false;
+		}
 		return true;
 	}
 
@@ -437,6 +440,7 @@ class OrderStep extends DataObject {
 				$step->write();
 			}
 		}
+
 	}
 
 	/**
