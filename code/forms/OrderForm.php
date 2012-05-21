@@ -262,7 +262,7 @@ class OrderForm_Payment extends Form {
 			$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 		}
 		$actions = new FieldSet(
-			new FormAction('dopayment', _t('OrderForm.PAYORDER','Pay outstanding balance'))
+			new FormAction('dopayment', _t('OrderForm.PAYORDER','Pay balance'))
 		);
 		$form = parent::__construct($controller, $name, $fields, $actions, $requiredFields);
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
