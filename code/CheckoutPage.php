@@ -187,7 +187,10 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	public function init() {
 		parent::init();
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
-		Requirements::customScript('EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');', "TermsAndConditionsMessage");
+		Requirements::customScript('
+			if (typeof EcomOrderForm != "undefined") {
+				EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
+			}', "TermsAndConditionsMessage");
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		if($this->HasCheckoutSteps) {
 			if($this->currentStep && in_array($this->currentStep, $this->steps)) {
