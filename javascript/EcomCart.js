@@ -88,16 +88,6 @@ EcomCart = {
 		set_ajaxRegionFieldSelector: function(s) {this.ajaxRegionFieldSelector = s;},
 
 	/**
-	 * the selector for the link that allows the customer to change their country
-	 */
-	selectorChangeCountryLink: ".changeCountryLink",
-
-	/**
-	 * the selector for the dom element used for allowing the customer to change their country
-	 */
-	selectorChangeCountryFieldHolder: "#ChangeCountryHolder",
-
-	/**
 	 * the selector of the main country field used to select the country of sale
 	 */
 	selectorMainCountryField: "#Country",
@@ -330,26 +320,6 @@ EcomCart = {
 	 * to select a new country.
 	 */
 	changeCountryFieldSwap: function() {
-		jQuery(EcomCart.selectorChangeCountryFieldHolder).hide();
-		jQuery(EcomCart.selectorChangeCountryLink).click(
-			function(event) {
-				if(jQuery(EcomCart.selectorChangeCountryFieldHolder).is(":hidden")) {
-					var options = jQuery(EcomCart.ajaxCountryFieldSelector).html();
-					var html = "<select>" + options + "</select>";
-					jQuery(EcomCart.selectorChangeCountryFieldHolder).html(html).slideDown();
-					jQuery(EcomCart.selectorChangeCountryFieldHolder+" select").val(jQuery(EcomCart.ajaxCountryFieldSelector).val());
-				}
-				else {
-					jQuery(EcomCart.selectorChangeCountryFieldHolder).slideUp(
-						"slow",
-						function() {
-							jQuery(EcomCart.selectorChangeCountryFieldHolder).html("");
-						}
-					);
-				}
-				event.preventDefault();
-			}
-		);
 		jQuery(EcomCart.countryAndRegionRootSelector).delegate(
 			EcomCart.selectorChangeCountryFieldHolder + " select",
 			"change",
