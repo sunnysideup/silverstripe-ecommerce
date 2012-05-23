@@ -537,3 +537,4 @@ class EcommerceCheckConfiguration extends BuildTask{
 	}
 
 }
+
