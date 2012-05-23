@@ -45,6 +45,38 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 
 	/*___________________
 
+	  0. without context
+	 ___________________*/
+
+
+	/**
+	 * id that is used in templates and in the JSON return @see CartResponse
+	 * The Side bar cart ID is used for populating a small cart on the side bar.
+	 * @see Sidebar_Cart.ss
+	 * @return String
+	 **/
+	function SideBarCartID() {return self::$prefix.'Side_Bar_Cart';}
+
+
+	/**
+	 * Small representation of cart
+	 * @see CartShort.ss
+	 * @return String
+	 **/
+	function SmallCartID() {return self::$prefix.'small_cart_id';}
+	/**
+	 * class that is used in templates and in the JSON return @see CartResponse
+	 * The Menu Cart class is used for populating a tiny cart on your site
+	 * (e.g. you have 3 items in your cart ($1343))
+	 * @see CartTiny.ss
+	 * @return String
+	 **/
+	function TinyCartClassName() {return self::$prefix.'tiny_cart_class';}
+
+
+
+	/*___________________
+
 	  1. Generic (Order / Modifier / OrderItem)
 	 ___________________*/
 
@@ -67,28 +99,6 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 ___________________*/
 
 
-	/**
-	 * id that is used in templates and in the JSON return @see CartResponse
-	 * The Side bar cart ID is used for populating a small cart on the side bar.
-	 * @see Sidebar_Cart.ss
-	 * @return String
-	 **/
-	function SideBarCartID() {return self::$prefix.'Side_Bar_Cart';}
-
-	/**
-	 * Small representation of cart
-	 * @see CartShort.ss
-	 * @return String
-	 **/
-	function SmallCartID() {return self::$prefix.'small_cart_id';}
-	/**
-	 * class that is used in templates and in the JSON return @see CartResponse
-	 * The Menu Cart class is used for populating a tiny cart on your site
-	 * (e.g. you have 3 items in your cart ($1343))
-	 * @see CartTiny.ss
-	 * @return String
-	 **/
-	function TinyCartClassName() {return self::$prefix.'tiny_cart_class';}
 	/**
 	 * id that is used in templates and in the JSON return @see CartResponse
 	 * @return String
