@@ -32,7 +32,7 @@
 <% end_if %>
 
 <% if DebugActions %>
-<h3>Debug</h3>
+<h3>Building and Debugging</h3>
 <p>Use the options listed below to debug your e-commerce application.</p>
 <ul>
 <% control DebugActions %>
