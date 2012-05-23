@@ -199,7 +199,8 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	protected $debugActions = array(
 		"cartmanipulation_current",
-		"cartmanipulation_debug"
+		"cartmanipulation_debug",
+		"ecommercetemplatetesttask"
 	);
 
 	/**
@@ -217,6 +218,10 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	function CartManipulation_Debug($request){
 		$this->runTask("CartManipulation_Debug", $request);
+	}
+
+	function ecommercetemplatetesttask($request){
+		$this->runTask("EcommerceTemplateTestTask", $request);
 	}
 
 
