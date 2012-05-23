@@ -462,7 +462,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$checkoutPage = DataObject::get_one("CheckoutPage");
 		if(!$checkoutPage) {
 			$task = new EcommerceDefaultRecords();
-			$task->run();
+			$task->run(null);
 			$checkoutPage = DataObject::get_one("CheckoutPage");
 			if(!$checkoutPage) {
 				user_error("There is no checkout page available and it seems impossible to create one.");
