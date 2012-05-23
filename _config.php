@@ -13,7 +13,8 @@
 // with a higher number.
 Director::addRules(50, array(
 	'shoppingcart/$Action/$ID/$OtherID' => 'ShoppingCart_Controller',
-	'ecommercepayment/$Action/$ID/$OtherID' => 'EcommercePaymentController'
+	'ecommercepayment/$Action/$ID/$OtherID' => 'EcommercePaymentController',
+	'ecommercetemplatetest/$Action/$ID/$OtherID' => 'EcommerceTemplateTest'
 ));
 Object::add_extension("Member", "EcommerceRole");
 Object::add_extension("Payment", "EcommercePayment");
