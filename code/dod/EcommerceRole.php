@@ -176,11 +176,10 @@ class EcommerceRole extends DataObjectDecorator {
 
 	/**
 	 * Save a preferred currency for a member.
-	 * @param String $code - code for the currency
+	 * @param EcommerceCurrency $currency - object for the currency
 	 */
-	function SetPreferredCurrency($code){
-		$preferredCurrency = DataObject::get_one("EcommerceCurrency", "\"Code\" = '$code'");
-		$this->owner->PreferredCurrencyID = $preferredCurrency->ID;
+	function SetPreferredCurrency($currency){
+		$this->owner->PreferredCurrencyID = $currency->ID;
 		$this->owner->write();
 	}
 
