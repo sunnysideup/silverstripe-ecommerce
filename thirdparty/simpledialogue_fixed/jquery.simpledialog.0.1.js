@@ -213,7 +213,7 @@
 								.css({
 									position: 'absolute',
 									top: 0,
-									left: (w-scObj.width()) + 'px',
+									right: '18px',
 									opacity: 0.85
 								})
 								.find('a').click(jQuery.simpleDialog.close);
