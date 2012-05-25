@@ -16,11 +16,18 @@
  *@author: Jeremy Shipman, Nicolaas Francken
  *@package: ecommerce
  *
- * @todo handle rendering?
- * @todo copying order - repeat orders
+ *
  *
  */
 class ShoppingCart extends Object{
+
+	/**
+	 *
+	 * List of names that can be used as session variables.
+	 * Also @see ShoppingCart::sessionVariableName
+	 * @var Array
+	 */
+	private static $session_variable_names = array("OrderID", "Messages");
 
 	/**
 	 *
@@ -110,7 +117,12 @@ class ShoppingCart extends Object{
 			$this->addMessage($msg,'good');
 			return $item;
 		}
-		$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEADDED", "Item could not be added."),'bad');
+		elseif(!$item) {
+			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
+		}
+		else {
+			$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEADDED", "Item could not be added."),'bad');
+		}
 		return false;
 	}
 
@@ -122,13 +134,16 @@ class ShoppingCart extends Object{
 	 * @return false | DataObject (OrderItem)
 	 */
 	function setQuantity($buyable, $quantity, $parameters = array()) {
-		$item = $this->prepareOrderItem($mustBeExistingItem = true, $buyable, $parameters);
+		$item = $this->prepareOrderItem($mustBeExistingItem = false, $buyable, $parameters);
 		$quantity = $this->prepareQuantity($quantity, $buyable);
 		if($item) {
 			$item->Quantity = $quantity; //remove quantity
 			$item->write();
-			$this->addMessage(_t("ShoppingCart.CANTREMOVENONE", "Item updated."),'good');
+			$this->addMessage(_t("ShoppingCart.ITEMUPDATED", "Item updated."),'good');
 			return $item;
+		}
+		else {
+			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
 		}
 		return false;
 	}
@@ -158,6 +173,9 @@ class ShoppingCart extends Object{
 			$this->addMessage($msg ,'good');
 			return $item;
 		}
+		else {
+			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
+		}
 		return false;
 	}
 
@@ -165,7 +183,7 @@ class ShoppingCart extends Object{
 	 * Delete item from the cart.
 	 * @param OrderItem $buyable - the buyable (generally a product) being added to the cart
 	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
-	 * @return boolean - successfully removed
+	 * @return boolean | item - successfully removed
 	 */
 	function deleteBuyable($buyable, $parameters = array()) {
 		$item = $this->prepareOrderItem($mustBeExistingItem = true, $buyable, $parameters);
@@ -176,12 +194,15 @@ class ShoppingCart extends Object{
 			$this->addMessage(_t("ShoppingCart.ITEMCOMPLETELYREMOVED", "Item removed from cart."),'good');
 			return $item;
 		}
-		return false;
+		else {
+			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
+			return false;
+		}
 	}
 
 	/**
 	 * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
-	 * @param Boolean $mustBeExistingItems - if false, the Order Item get created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
+	 * @param Boolean $mustBeExistingItems - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
 	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
 	 * @param Integer $quantity - number of items add.
 	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5*
@@ -206,7 +227,6 @@ class ShoppingCart extends Object{
 			$item = $this->findOrMakeItem($buyable,$parameters); //find existing order item or make one
 		}
 		if(!$item){//check for existence of item
-			$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEFOUNDINCART", "Item could not found in cart."),'warning');
 			return false;
 		}
 		return $item;
@@ -240,11 +260,13 @@ class ShoppingCart extends Object{
 			return $item;
 		}
 		//otherwise create a new item
-		if(!in_array("BuyableModel", class_implements($buyable))) {
-			user_error("No buyable provided");
+		if(!($buyable instanceof BuyableModel)) {
+			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item is not buyable.") ,'bad');
+			return false;
 		}
 		$className = $buyable->classNameForOrderItem();
 		$item = new $className();
+		$item->OrderID = $this->currentOrder()->ID;
 		$item->BuyableID = $buyable->ID;
 		$item->BuyableClassName = $buyable->ClassName;
 		if(isset($buyable->Version)) {
@@ -270,12 +292,16 @@ class ShoppingCart extends Object{
 		}
 	}
 
+	function save(){
+		$this->currentOrder()->write();
+		$this->addMessage(_t("ShoppingCart.ORDERSAVED", "Order Saved."),'good');
+	}
+
 	/**
 	 * Clears the cart contents completely by removing the orderID from session, and thus creating a new cart on next request.
 	 */
 	public function clear(){
-		$sessionVariableNamesArray = array("OrderID", "Messages");
-		foreach($sessionVariableNamesArray as $name){
+		foreach(self::$session_variable_names as $name){
 			$sessionVariableName = $this->sessionVariableName($name);
 			Session::clear($sessionVariableName); //clear the orderid from session
 			Session::set($sessionVariableName, null); //clear the orderid from session
@@ -294,32 +320,48 @@ class ShoppingCart extends Object{
 	/**
 	 * Removes a modifier from the cart
 	 * @param Object(modifier)
+	 * @return Boolean
 	 */
 	public function removeModifier($modifier){
 		$modifier = (is_numeric($modifier)) ? DataObject::get_by_id('OrderModifier',$modifier) : $modifier;
-		if(!$modifier || !$modifier->CanBeRemoved()){
-			$this->addMessage(_t("ShoppingCart.MODIFIERNOTREMOVED", "Could not be removed."),'bad');
-			return;
+		if(!$modifier){
+			$this->addMessage(_t("ShoppingCart.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
+			return false;
+		}
+		if(!$modifier->CanBeRemoved()) {
+			$this->addMessage(_t("ShoppingCart.MODIFIERCANNOTBEREMOVED", "Modifier can not be removed."),'bad');
+			return false;
 		}
 		$modifier->HasBeenRemoved = 1;
 		$modifier->onBeforeRemove();
 		$modifier->write();
 		$modifier->onAfterRemove();
 		$this->addMessage(_t("ShoppingCart.MODIFIERREMOVED", "Removed."), 'good');
+		return true;
 	}
 	/**
 	 * Removes a modifier from the cart
+	 * @param Int/ OrderModifier
+	 * @return Boolean
 	 */
 	public function addModifier($modifier){
-		$modifier = (is_numeric($modifier)) ? DataObject::get_by_id('OrderModifier',$modifier) : $modifier;
+		if(is_numeric($modifier)) {
+			$modifier = DataObject::get_by_id('OrderModifier',$modifier);
+		}
+		if(!$modifier){
+			$this->addMessage(_t("ShoppingCart.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
+			return false;
+		}
 		$modifier->HasBeenRemoved = 0;
 		$modifier->write();
 		$this->addMessage(_t("ShoppingCart.MODIFIERREMOVED", "Added."), 'good');
+		return true;
 	}
 
 	/**
 	 * Sets an order as the current order.
 	 * @param Object (Order) $order
+	 * @return Boolean
 	 */
 	public function loadOrder($order){
 
@@ -335,9 +377,11 @@ class ShoppingCart extends Object{
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			Session::set($sessionVariableName, $order->ID);
 			$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
+			return true;
 		}
 		else {
 			$this->addMessage(_t("ShoppingCart.NOORDER", "Order can not be found."),'bad');
+			return false;
 		}
 	}
 
@@ -354,8 +398,8 @@ class ShoppingCart extends Object{
 		else {
 			$newOrder = new Order();
 			//for later use...
+			$newOrder->MemberID = $oldOrder->MemberID;
 			$newOrder->write();
-			$fieldList = array_keys(DB::fieldList("Order"));
 			$this->loadOrder($newOrder);
 			$items = DataObject::get("OrderItem", "\"OrderID\" = ".$oldOrder->ID);
 			if($items) {
@@ -375,21 +419,54 @@ class ShoppingCart extends Object{
 	/**
 	 * sets country in order so that modifiers can be recalculated, etc...
 	 * @param String - $countryCode
+	 * @return Boolean
 	 **/
 	public function setCountry($countryCode) {
 		if(EcommerceCountry::code_allowed($countryCode)) {
 			$this->currentOrder()->SetCountryFields($countryCode);
+			$this->addMessage(_t("ShoppingCart.UPDATEDCOUNTRY", "Updated country."),'good');
+			return true;
 		}
 		else {
-			//user_error("country not allowed", E_USER_NOTICE);
+			$this->addMessage(_t("ShoppingCart.NOTUPDATEDCOUNTRY", "Could not update country."),'bad');
+			return false;
 		}
 	}
+
 	/**
 	 * sets region in order so that modifiers can be recalculated, etc...
-	 *@param Integer - $regionID - EcommerceRegion.ID
+	 * @param Integer - $regionID - EcommerceRegion.ID
+	 * @return Boolean
 	 **/
 	public function setRegion($regionID) {
 		$this->currentOrder()->SetRegionFields($regionID);
+		$this->addMessage(_t("ShoppingCart.REGIONUPDATED", "Region country."),'good');
+		return true;
+	}
+
+	/**
+	 * sets the display currency for the cart.
+	 * @param String $currencyCode
+	 * @return Boolean
+	 **/
+	public function setCurrency($currencyCode) {
+		if($currency = EcommerceCurrency::get_currency_id_from_code($currencyCode)) {
+			if($this->currentOrder()->MemberID) {
+				$member = $this->currentOrder()->Member();
+				if($member && $member->exists()) {
+					$member->SetPreferredCurrency($currency->ID);
+				}
+			}
+			$this->currentOrder()->SetCurrency($currency);
+			$msg = _t("ShoppingCart.CURRENCYUPDATED", "Currency updated.");
+			$this->addMessage($msg ,'good');
+			return true;
+		}
+		else {
+			$msg = _t("ShoppingCart.CURRENCYCOULDNOTBEUPDATED", "Currency could not be updated.");
+			$this->addMessage($msg ,'bad');
+			return false;
+		}
 	}
 
 	/**
@@ -485,6 +562,7 @@ class ShoppingCart extends Object{
 	 */
 	public function addMessage($message, $status = 'good'){
 		//clean status for the lazy programmer
+		//TODO: remove the awkward replace
 		$status = strtolower($status);
 		str_replace(array("success", "failure"), array("good", "bad"), $status);
 		$statusOptions = array("good", "bad", "warning");
@@ -696,6 +774,9 @@ class ShoppingCart extends Object{
 	 * @return String
 	 */
 	protected function sessionVariableName($name = "") {
+		if(!in_array($name, self::$session_variable_names)) {
+			user_error("Tried to set session variable $name, that is not in use", E_USER_NOTICE);
+		}
 		$sessionCode = EcommerceConfig::get("ShoppingCart", "session_code");
 		return $sessionCode."_".$name;
 	}
@@ -727,7 +808,10 @@ class ShoppingCart_Controller extends Controller{
 	protected static $url_segment = 'shoppingcart';
 		static function get_url_segment() {return self::$url_segment;}
 
-
+	/**
+	 *
+	 * @var ShoppingCart
+	 */
 	protected $cart = null;
 
 	function init() {
@@ -745,6 +829,7 @@ class ShoppingCart_Controller extends Controller{
 		'addmodifier',
 		'setcountry',
 		'setregion',
+		'setcurrency',
 		'setquantityitem',
 		'clear',
 		'clearandlogout',
@@ -843,7 +928,7 @@ class ShoppingCart_Controller extends Controller{
 	 * Adds item to cart via controller action; one by default.
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 */
-	public function additem(){
+	public function additem($request){
 		$this->cart->addBuyable($this->buyable(),$this->quantity(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
@@ -853,7 +938,7 @@ class ShoppingCart_Controller extends Controller{
 	 * Note: If no ?quantity=x is specified in URL, then quantity will be set to 1.
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 */
-	public function setquantityitem(){
+	public function setquantityitem($request){
 		$this->cart->setQuantity($this->buyable(),$this->quantity(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
@@ -862,7 +947,7 @@ class ShoppingCart_Controller extends Controller{
 	 * Removes item from cart via controller action; one by default.
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 */
-	public function removeitem(){
+	public function removeitem($request){
 		$this->cart->decrementBuyable($this->buyable(),$this->quantity(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
@@ -871,7 +956,7 @@ class ShoppingCart_Controller extends Controller{
 	 * Removes all of a specific item
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 */
-	public function removeallitem(){
+	public function removeallitem($request){
 		$this->cart->deleteBuyable($this->buyable(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
@@ -880,7 +965,7 @@ class ShoppingCart_Controller extends Controller{
 	 * Removes all of a specific item AND return back
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 */
-	public function removeallitemandedit(){
+	public function removeallitemandedit($request){
 		$buyable = $this->buyable();
 		if($buyable) {
 			$link = $buyable->Link();
@@ -897,7 +982,8 @@ class ShoppingCart_Controller extends Controller{
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 */
 	public function removemodifier($request){
-		$this->cart->removeModifier($request->param('ID'));
+		$modifierID = intval($request->param('ID'));
+		$this->cart->removeModifier($modifierID);
 		return $this->cart->setMessageAndReturn();
 	}
 
@@ -906,7 +992,8 @@ class ShoppingCart_Controller extends Controller{
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 */
 	public function addmodifier($request){
-		$this->cart->addModifier($request->param('ID'));
+		$modifierID = intval($request->param('ID'));
+		$this->cart->addModifier($modifierID);
 		return $this->cart->setMessageAndReturn();
 	}
 
@@ -916,30 +1003,37 @@ class ShoppingCart_Controller extends Controller{
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 **/
 	function setcountry($request) {
-		$request = $this->getRequest();
-		$countryCode = $request->param('ID');
-		if($countryCode) {
-			//set_country will check if the country code is actually allowed....
-			$this->cart->setCountry($countryCode);
-		}
+		$countryCode = Convert::raw2sql($request->param('ID'));
+		//set_country will check if the country code is actually allowed....
+		$this->cart->setCountry($countryCode);
 		return $this->cart->setMessageAndReturn();
 	}
 
 	/**
-	 *@return String (message)
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 **/
 	function setregion($request) {
-		$request = $this->getRequest();
 		$regionID = intval($request->param('ID'));
-		if($regionID) {
-			//set_country will check if the country code is actually allowed....
-			$this->cart->setRegion($regionID);
-		}
+		$this->cart->setRegion($regionID);
 		return $this->cart->setMessageAndReturn();
 	}
 
-	function clear() {
+	/**
+	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 **/
+	function setcurrency($request) {
+		$currencyCode = Convert::raw2sql($request->param('ID'));
+		$this->cart->setRegion($currencyCode);
+		return $this->cart->setMessageAndReturn();
+	}
+
+	function save($request) {
+		$order = $this->cart->save();
+		return $this->cart->setMessageAndReturn();
+	}
+
+
+	function clear($request) {
 		$this->cart->clear();
 		Director::redirectBack();
 		return;
@@ -952,13 +1046,6 @@ class ShoppingCart_Controller extends Controller{
 		if($m = Member::currentUser()) {
 			$m->logout();
 		}
-		Director::redirectBack();
-		return;
-	}
-
-	function save() {
-		$order = $this->cart->CurrentOrder();
-		$order->write();
 		Director::redirectBack();
 		return;
 	}
@@ -981,7 +1068,6 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	function removeaddress($request) {
-		$request = $this->getRequest();
 		$id = intval($request->param('ID'));
 		$className = Convert::raw2sql($request->param('OtherID'));
 		$address = DataObject::get_by_id($className, $id);
@@ -999,9 +1085,8 @@ class ShoppingCart_Controller extends Controller{
 	 *@return DataObject | Null - returns buyable
 	 */
 	protected function buyable(){
-		$request = $this->getRequest();
-		$buyableClassName = Convert::raw2sql($request->param('OtherID'));
-		$buyableID = intval($request->param('ID'));
+		$buyableClassName = Convert::raw2sql($this->getRequest()->param('OtherID'));
+		$buyableID = intval($this->getRequest()->param('ID'));
 		if($buyableClassName && $buyableID){
 			if(EcommerceDBConfig::is_buyable($buyableClassName)) {
 				$obj = DataObject::get_by_id($buyableClassName,intval($buyableID));
@@ -1038,7 +1123,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return Array
 	 */
 	protected function parameters($getpost = 'GET'){
-		return ($getpost == 'GET') ? $this->request->getVars() : $_POST;
+		return ($getpost == 'GET') ? $this->getRequest()->getVars() : $_POST;
 	}
 
 
