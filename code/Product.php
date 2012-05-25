@@ -539,8 +539,16 @@ class Product extends Page implements BuyableModel {
 	 *
 	 * @return boolean
 	 */
-	function IsInCart(){
+	public function IsInCart(){
 		return ($this->OrderItem() && $this->OrderItem()->Quantity > 0) ? true : false;
+	}
+
+	/**
+	 *
+	 * @return EcomQuantityField
+	 */
+	public function EcomQuantityField() {
+		return new EcomQuantityField($this);
 	}
 
 	/**
@@ -585,7 +593,12 @@ class Product extends Page implements BuyableModel {
 	function CalculatedPrice() {return $this->getCalculatedPrice();}
 	function getCalculatedPrice() {
 		$price = $this->Price;
-		$this->extend('updateCalculatedPrice',$price);
+		$updatedPrice = $this->extend('updateCalculatedPrice',$price);
+		if($updatedPrice !== null) {
+			if(is_array($updatedPrice) && count($updatedPrice)) {
+				$price = $updatedPrice[0];
+			}
+		}
 		return $price;
 	}
 
@@ -596,15 +609,22 @@ class Product extends Page implements BuyableModel {
 	function DisplayPrice() {return $this->getDisplayPrice();}
 	function getDisplayPrice() {
 		$price = $this->CalculatedPrice();
-		if($this->Cart()->HasAlternativeCurrency()) {
-			$exchangeRate = $this->Cart()->ExchangeRate;
-			if($exchangeRate) {
-				$price = $exchangeRate * $price;
+		$order = ShoppingCart::current_order();
+		if($order) {
+			if($order->HasAlternativeCurrency()) {
+				$exchangeRate = $order->ExchangeRate;
+				if($exchangeRate && $exchangeRate != 1) {
+					$price = $exchangeRate * $price;
+				}
 			}
 		}
 		$moneyObject = new Money("DisplayPrice");
-		$moneyObject->setCurrency($this->Cart()->DisplayCurrency());
+		$moneyObject->setCurrency($order->CurrencyUsed()->Code);
 		$moneyObject->setValue($price);
+		$updatedObject = $this->extend('updateDisplayPrice',$moneyObject);
+		if($updatedObject !== null) {
+			$moneyObject = $updatedObject[0];
+		}
 		return $moneyObject;
 	}
 
