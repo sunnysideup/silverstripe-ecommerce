@@ -182,8 +182,8 @@
 
 		var w = (_t.opts.width) ? parseInt(_t.opts.width) : tmp.width();
 		var h = (_t.opts.height) ? parseInt(_t.opts.height) : tmp.height();
-		w = w * 1.3
-		h = h * 1.7
+		w = w * 1.1
+		h = h * 1.1
 		tmp.remove();
 		var pos = _center(w, h);
 
