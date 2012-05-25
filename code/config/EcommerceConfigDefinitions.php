@@ -131,6 +131,9 @@ class EcommerceConfigDefinitions extends Object {
 				"css_file_location" => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
 				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?",
 			),
+			"EcommerceCurrency" => array(
+				"exchange_provider_class" => "The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.",
+			),
 			"ExpiryDateField" => array(
 				"short_months" => "Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?",
 			),
