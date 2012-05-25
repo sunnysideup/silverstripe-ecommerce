@@ -2,7 +2,7 @@
 
 class CreateEcommerceMemberGroups extends BuildTask{
 
-	protected $title = "Create E-commerce Member Groups";
+	protected $title = "Create E-commerce Member (Customer) Groups";
 
 	protected $description = "Create the member groups and members for e-commerce.";
 
@@ -21,8 +21,9 @@ class CreateEcommerceMemberGroups extends BuildTask{
 			Permission::grant($customerGroup->ID, $customerPermissionCode);
 			DB::alteration_message(EcommerceConfig::get("EcommerceRole", "customer_group_name").' permissions granted',"created");
 		}
-		if(!$customerGroup = EcommerceRole::get_customer_group()) {
-			die("ERROR");
+		$customerGroup = EcommerceRole::get_customer_group();
+		if(!$customerGroup) {
+			user_error("could not create user group");
 		}
 		else {
 			DB::alteration_message(EcommerceConfig::get("EcommerceRole", "customer_group_name").' is ready for use',"created");
