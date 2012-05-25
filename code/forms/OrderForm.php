@@ -226,6 +226,15 @@ class OrderForm_Validator extends RequiredFields{
 				}
 			}
 		}
+		$order = ShoppingCart::current_order();
+		if(!$order->BillingAddressID) {
+			$this->validationError(
+				"BillingAddress",
+				_t("OrderForm.MUSTHAVEBILLINGADDRESS", "All orders must have a billing address"),
+				"required"
+			);
+			$valid = false;
+		}
 		return $valid;
 	}
 
