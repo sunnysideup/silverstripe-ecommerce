@@ -165,7 +165,7 @@ class EcommerceRole extends DataObjectDecorator {
 	 * Is the member a member of the ShopAdmin Group
 	 * @return Boolean
 	 **/
-	function IsShopAdmin() {
+	public function IsShopAdmin() {
 		if($this->owner->IsAdmin()) {
 			return true;
 		}
@@ -178,7 +178,7 @@ class EcommerceRole extends DataObjectDecorator {
 	 * Save a preferred currency for a member.
 	 * @param EcommerceCurrency $currency - object for the currency
 	 */
-	function SetPreferredCurrency($currency){
+	public function SetPreferredCurrency($currency){
 		$this->owner->PreferredCurrencyID = $currency->ID;
 		$this->owner->write();
 	}
