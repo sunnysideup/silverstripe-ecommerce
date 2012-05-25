@@ -287,7 +287,8 @@
 				left: pos[0] + 'px',
 				top: pos[1] + 'px',
 				width: w + 'px',
-				height: h + 'px',
+				height: 'auto', //h + 'px',
+				maxHeight: h + 'px',
 				zIndex: _t.opts.zIndex + 1000
 			})
 			.show();
