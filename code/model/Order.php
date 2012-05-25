@@ -99,6 +99,7 @@ class Order extends DataObject {
 		'SubTotal' => 'Currency',
 		'TotalPaid' => 'Currency',
 		'TotalOutstanding' => 'Currency',
+		'HasAlternativeCurrency' => 'Boolean',
 		'TotalItems' => 'Int',
 		'TotalItemsTimesQuantity' => 'Int',
 		'IsCancelled' => 'Boolean',
@@ -506,7 +507,7 @@ class Order extends DataObject {
 			$fields->addFieldToTab("Root.Next", new LiteralField("VeryFirstStep", "<p>".$msg."</p>"));
 		}
 		$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
-		$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), DataObject::get("EcommerceCurrency")));
+		$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), DataObject::get("EcommerceCurrency"), EcommerceCurrency::default_currency_id()));
 		$this->extend('updateCMSFields',$fields);
 		return $fields;
 	}
@@ -922,11 +923,16 @@ class Order extends DataObject {
 		}
 	}
 
-
-
-
-
-
+	/**
+	 * Stores the preferred currency of the order.
+	 * IMPORTANTLY we store the exchange rate for future reference...
+	 * @param EcommerceCurrency $currency
+	 */
+	public function SetCurrency($currency) {
+		$this->CurrencyUsedID = $currency->ID;
+		$this->ExchangeRate = $currency->ExchangeRate();
+		$this->write();
+	}
 
 
 
@@ -1806,6 +1812,26 @@ class Order extends DataObject {
 		}
 	}
 
+
+	/**
+	 * Casted variable - has the order been submitted?
+	 *
+	 *@return Boolean
+	 **/
+	function HasAlternativeCurrency(){return $this->getHasAlternativeCurrency();}
+	function getHasAlternativeCurrency() {
+		if(!$this->CurrencyUsedID) {
+			return false;
+		}
+		elseif($currency = $this->CurrencyUsed()) {
+			if($currency->exists()) {
+				if($currency->IsDefault()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * Casted variable - has the order been submitted?
