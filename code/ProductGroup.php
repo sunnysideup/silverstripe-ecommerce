@@ -810,6 +810,7 @@ class ProductGroup_Controller extends Page_Controller {
 		Requirements::themedCSS('ProductGroup');
 		Requirements::themedCSS('ProductGroupPopUp');
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
+		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 	}
 
 	/**
