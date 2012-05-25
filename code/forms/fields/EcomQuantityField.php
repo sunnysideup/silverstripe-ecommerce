@@ -161,4 +161,16 @@ class EcomQuantityField extends NumericField {
 	protected function getQuantityLink(){
 		return ShoppingCart_Controller::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
 	}
+
+	/**
+	 *
+	 * @return Float
+	 */
+	protected function Quantity() {
+		if($this->orderItem) {
+			return floatval($this->orderItem->Quantity)-0;
+		}
+		return 0;
+	}
+
 }
