@@ -10,22 +10,23 @@
 
 class EcommerceCurrency extends DataObject {
 
-	static $db = array(
+	public static $db = array(
 		"Code" => "Varchar(5)",
 		"Name" => "Varchar(100)",
-		"InUse" => "Boolean",
+		"InUse" => "Boolean"
 	);
 
 	public static $has_one = array(
 		"EcommerceCurrencyFormat" => "EcommerceCurrencyFormat"
 	);
 
-	static $indexes = array(
+	public static $indexes = array(
 		"Code" => true,
 	);
 
-	static $casting = array(
+	public static $casting = array(
 		"IsDefault" => "Boolean",
+		"ExchangeRate" => "Double"
 	);
 	//formatting
 
@@ -49,18 +50,54 @@ class EcommerceCurrency extends DataObject {
 		function i18n_plural_name() { return _t("EcommerceCurrency.CURRENCIES", "Currencies");}
 
 	//defaults
-	public static $default_sort = "InUse DESC, Code ASC, Name ASC";
+	public static $default_sort = "\"InUse\" DESC, \"Code\" ASC, \"Name\" ASC";
 
 	public static $defaults = array(
-		"InUse" => true
+		"InUse" => true,
+		"ExchangeRate" => 1
 	);
+
+	/**
+	 *
+	 * @return Int - the ID of the currency
+	 */
+	public static function default_currency_id($currencyCode) {
+		$currency = DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
+		if($currency) {
+			return $currency->ID;
+		}
+		return 0;
+	}
+
+	/**
+	 * Only returns a currency when it is a valid currency.
+	 * @param String $currencyCode - the code of the currency
+	 * @return EcommerceCurrency | Null
+	 */
+	public static function get_currency_from_code($currencyCode) {
+		$currency = DataObject::get_one("EcommerceCurrency", "\"Code\"  = '$currencyCode' AND \"InUse\" = 1");
+		if($currency) {
+			return $currency;
+		}
+		return null;
+	}
 
 	/**
 	 * casted variable method
 	 */
-	function IsDefault(){ return $this->getIsDefault();}
-	function getIsDefault(){
-		return strtolower($this->code) ==  Payment::site_currency();
+	public function IsDefault(){ return $this->getIsDefault();}
+	public function getIsDefault(){
+		if(!$this->Code) {
+			user_error("This currency (ID = ".$this->ID.") does not have a code ");
+		}
+		return strtolower($this->Code) ==  Payment::site_currency();
+	}
+
+	public function ExchangeRate(){ return $this->getExchangeRate();}
+	public function getExchangeRate(){
+		$className = EcommerceConfig::get("EcommerceCurrency", "exchange_provider_class");
+		$obj = new ExchangeRateProvider();
+		return $obj->ExchangeRate($from = Payment::site_currency(), $to = $this->Code);
 	}
 
 	/**
@@ -107,6 +144,8 @@ class EcommerceCurrency extends DataObject {
 		$html .= "</ul>";
 		return $html;
 	}
+
+
 
 }
 
