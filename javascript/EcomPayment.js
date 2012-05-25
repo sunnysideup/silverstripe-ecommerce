@@ -10,24 +10,30 @@
 
 var EcomPayment = {
 
+	paymentInputsSelector: '#PaymentMethod input[type=radio]',
+
+	paymentFieldSelector: 'div.paymentfields',
+
+	paymentMethodPrefix: '#MethodFields_',
+
 	init: function () {
-		var paymentInputs = jQuery('#PaymentMethod input[type=radio]');
-		var methodFields = jQuery('div.paymentfields');
+		var paymentInputs = jQuery(EcomPayment.paymentInputsSelector);
+		var methodFields = jQuery(EcomPayment.paymentFieldSelector);
 
 		methodFields.hide();
 
 		paymentInputs.each(function(e) {
 			if(jQuery(this).attr('checked') == true) {
-				jQuery('#MethodFields_' + jQuery(this).attr('value')).show();
+				jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
 			}
 		});
 
 		paymentInputs.click(function(e) {
 			methodFields.hide();
-			jQuery('#MethodFields_' + jQuery(this).attr('value')).show();
+			jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
 		});
 
-		jQuery('#PaymentMethod input[type=radio]').first().click();
+		jQuery(EcomPayment.paymentInputsSelector).first().click();
 
 	}
 

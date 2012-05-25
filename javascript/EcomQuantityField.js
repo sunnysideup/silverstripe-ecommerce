@@ -57,8 +57,17 @@ EcomQuantityField = {
 					else {
 						this.value = this.value.replace(/[^0-9.]+/g, '');
 					}
+					if(this.value == 0) {
+						jQuery(EcomQuantityField.removeSelector).css("visibility", "hidden");
+					}
+					else {
+						jQuery(EcomQuantityField.removeSelector).css("visibility", "visible");
+					}
 					var url = jQuery('base').attr('href') + URLSegment + '?quantity=' + this.value;
 					EcomCart.getChanges(url, null, this);
+				}
+				else {
+					console.debug("EcomQuantityField.getSetQuantityURLSegment did not work");
 				}
 			}
 		);
