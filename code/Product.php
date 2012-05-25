@@ -719,6 +719,7 @@ class Product_Controller extends Page_Controller {
 	function init() {
 		parent::init();
 		Requirements::themedCSS('Products');
+		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 	}
 
 	function viewversion($request) {
