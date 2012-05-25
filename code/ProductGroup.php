@@ -529,7 +529,7 @@ class ProductGroup extends Page {
 			if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
 				foreach($buyables as $buyable) {
 					if(!$buyable->canPurchase()) {
-						$buyable->remove($buyable);
+						$buyables->remove($buyable);
 					}
 				}
 			}
