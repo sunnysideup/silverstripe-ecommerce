@@ -162,6 +162,11 @@ Order_Email:
 
 
 
+################### CURRENCY #####################
+
+EcommerceCurrency:
+	exchange_provider_class: ExchangeRateProvider
+
 ################### CONTROL #####################
 
 CartPage_Controller:
