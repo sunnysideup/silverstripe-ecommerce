@@ -173,6 +173,12 @@ interface BuyableModel {
 	function IsInCart();
 
 	/**
+	 *
+	 * @return EcomQuantityField
+	 */
+	function EcomQuantityField();
+
+	/**
 	 * returns the instance of EcommerceConfigAjax for use in templates.
 	 * In templates, it is used like this:
 	 * $EcommerceConfigAjax.TableID
