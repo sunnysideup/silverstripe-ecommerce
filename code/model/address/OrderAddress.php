@@ -491,10 +491,11 @@ class OrderAddress extends DataObject {
 	}
 
 	/**
-	 * find the member associated with the current Order.
-	 * @return DataObject (Member)
+	 * find the member associated with the current Order and address.
+	 * @return DataObject (Member) | Null
+	 * @Note: this needs to be public to give DODS (extensions access to this!)
 	 **/
-	protected function getMemberFromOrder() {
+	public function getMemberFromOrder() {
 		if($this->exists()) {
 			$fieldName = $this->ClassName."ID";
 			if($order = DataObject::get_one("Order", "\"Order\".\"$fieldName\" = ".$this->ID)) {
