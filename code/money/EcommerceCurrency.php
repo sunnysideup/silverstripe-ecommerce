@@ -53,15 +53,14 @@ class EcommerceCurrency extends DataObject {
 	public static $default_sort = "\"InUse\" DESC, \"Code\" ASC, \"Name\" ASC";
 
 	public static $defaults = array(
-		"InUse" => true,
-		"ExchangeRate" => 1
+		"InUse" => true
 	);
 
 	/**
 	 *
 	 * @return Int - the ID of the currency
 	 */
-	public static function default_currency_id($currencyCode) {
+	public static function default_currency_id() {
 		$currency = DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
 		if($currency) {
 			return $currency->ID;
