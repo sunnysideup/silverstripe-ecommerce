@@ -13,8 +13,6 @@
 
 class EcommerceRole extends DataObjectDecorator {
 
-
-
 	/**
 	 * standard SS method
 	 * defines additional statistics
@@ -22,7 +20,7 @@ class EcommerceRole extends DataObjectDecorator {
 	function extraStatics() {
 		return array(
 			'db' => array(
-				'Notes' => 'HTMLText'
+				'Notes' => 'Text'
 			),
 			'has_one' => array(
 				'PreferredCurrency' => 'EcommerceCurrency'
@@ -32,7 +30,11 @@ class EcommerceRole extends DataObjectDecorator {
 			),
 			'api_access' => array(
 				'view' =>
-					array('ID', 'Orders')
+					array(
+						'ID',
+						'Orders',
+						'PreferredCurrency'
+					)
 				)
 		);
 	}
@@ -97,13 +99,14 @@ class EcommerceRole extends DataObjectDecorator {
 	/**
 	 * returns content for a literal field for the CMS that links through to the member.
 	 * @return String
+	 * @author: nicolaas
 	 **/
-
 	function getEcommerceFieldsForCMSAsString() {
 		$v = $this->owner->renderWith("Order_Member");
 		if($group = EcommerceRole::get_customer_group()) {
 			$v .= '<p><a href="/admin/security/show/'.$group->ID.'/" target="_blank">view (and edit) all customers</a></p>';
 		}
+		$this->owner->extend('augmentEcommerceFieldsForCMSAsString', $v);
 		return $v;
 	}
 
@@ -136,9 +139,9 @@ class EcommerceRole extends DataObjectDecorator {
 	 */
 	function getEcommerceRequiredFields() {
 		$fields = array(
-			//'FirstName',
-			//'Surname',
-			//'Email'
+			'Email',
+			'FirstName',
+			'Surname'
 		);
 		$this->owner->extend('augmentEcommerceRequiredFields', $fields);
 		return $fields;
@@ -150,8 +153,6 @@ class EcommerceRole extends DataObjectDecorator {
 	 * Make sure the member is added as a customer
 	 */
 	public function onAfterWrite() {
-		parent::onAfterWrite();
-		//...
 		$customerGroup = EcommerceRole::get_customer_group();
 		if($customerGroup){
 			$existingMembers = $customerGroup->Members();
