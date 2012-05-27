@@ -202,7 +202,7 @@ class EcommerceDBConfig extends DataObject {
 			new Tab('ProductDisplay',
 				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
 				new CheckboxField("OnlyShowProductsThatCanBePurchased", $fieldLabels["OnlyShowProductsThatCanBePurchased"]),
-				new CheckboxField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
+				new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"], 2, 2),
 				new CheckboxField("ProductsHaveWeight", $fieldLabels["ProductsHaveWeight"]),
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
