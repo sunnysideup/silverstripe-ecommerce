@@ -381,7 +381,7 @@ class OrderItem extends OrderAttribute {
 			$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
 		}
 		else {
-			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
+			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID-0);
 		}
 		if (Object::has_extension($this->BuyableClassName,'Translatable')) {
 			Translatable::enable_locale_filter();
