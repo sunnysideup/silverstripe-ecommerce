@@ -73,6 +73,74 @@ class ShoppingCart extends Object{
 		return self::singleton()->currentOrder();
 	}
 
+
+	/**
+	 * Gets or creates the current order.
+	 * IMPORTANT FUNCTION!
+	 * @todo - does this need to be public????
+	 * @return void
+	 */
+	public function currentOrder(){
+		if (!$this->order) {
+			$sessionVariableName = $this->sessionVariableName("OrderID");
+			$orderIDFromSession = intval(Session::get($sessionVariableName));
+			$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
+			//order has already been submitted - immediately remove it because we dont want to change it.
+			$member = Member::currentMember();
+			if($this->order) {
+				if($this->order->IsSubmitted()) {
+					$this->order = null;
+				}
+				//make sure we have permissions
+				if(!$this->order->canView()) {
+					$this->order = null;
+				}
+
+				//logged in, add Member.ID to order->MemberID
+				if($member && $member->exists()) {
+					if($this->order->MemberID != $member->ID) {
+						$this->order->MemberID = $member->ID;
+						$this->order->write();
+					}
+				}
+			}
+			if(!$this->order) {
+				if($member) {
+					$oldOrders = DataObject::get("Order", "\"MemberID\" = ".$member->ID);
+					if($oldOrders) {
+						foreach($oldOrders as $order) {
+							if(!$order->IsSubmitted()) {
+								$this->order = $order;
+							}
+						}
+					}
+				}
+				if(!$this->order) {
+					$this->order = new Order();
+					if($member) {
+						$this->order->MemberID = $member->ID;
+					}
+					$this->order->write();
+				}
+				Session::set($sessionVariableName,intval($this->order->ID));
+				//}
+			}
+			//member just logged in and is not associated with order yet
+			//if you are not logged in but the order belongs to a member then clear the cart.
+			/***** THIS IS NOT CORRECT, BECAUSE YOU CAN CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!! ***
+			elseif($this->order->MemberID && !$member) {
+				$this->clear();
+				return false;
+			}
+			*/
+			if($this->order->exists()) {
+				$this->order->calculateOrderAttributes();
+			}
+		}
+		return $this->order;
+	}
+
+
 	/**
 	 * Allows access to the current order from anywhere in the code..
 	 * @return ShoppingCart Object
@@ -279,7 +347,7 @@ class ShoppingCart extends Object{
 	 * submit the order so that it is no longer available
 	 * in the cart but will continue its journey through the
 	 * order steps.
-	 *
+	 * @return Boolean
 	 */
 	public function submit() {
 		$this->currentOrder()->tryToFinaliseOrder();
@@ -290,15 +358,21 @@ class ShoppingCart extends Object{
 			$obj = new CartCleanupTask();
 			$obj->runSilently();
 		}
+		return true;
 	}
 
+	/**
+	 * @return Boolean
+	 */
 	function save(){
 		$this->currentOrder()->write();
 		$this->addMessage(_t("ShoppingCart.ORDERSAVED", "Order Saved."),'good');
+		return true;
 	}
 
 	/**
 	 * Clears the cart contents completely by removing the orderID from session, and thus creating a new cart on next request.
+	 * @return Boolean
 	 */
 	public function clear(){
 		foreach(self::$session_variable_names as $name){
@@ -308,13 +382,14 @@ class ShoppingCart extends Object{
 			Session::save(); //clear the orderid from session
 		}
 		$this->order = null; //clear local variable
+		return true;
 	}
 
 	/**
 	 * alias for clear
 	 */
 	public function reset(){
-		$this->clear();
+		return $this->clear();
 	}
 
 	/**
@@ -578,60 +653,6 @@ class ShoppingCart extends Object{
 	/*******************************************************
 	* HELPER FUNCTIONS
 	*******************************************************/
-
-	/**
-	 * Gets or creates the current order.
-	 * IMPORTANT FUNCTION!
-	 * @return void
-	 */
-	public function currentOrder(){
-		if (!$this->order) {
-			$sessionVariableName = $this->sessionVariableName("OrderID");
-			$orderIDFromSession = intval(Session::get($sessionVariableName));
-			$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
-			//order has already been submitted - immediately remove it because we dont want to change it.
-			if($this->order && $this->order->IsSubmitted()) {
-				$this->order = null;
-			}
-			//make sure we have permissions
-			if($this->order && !$this->order->canView()) {
-				$this->order = null;
-			}
-			$member = Member::currentMember();
-			if($this->order){
-				//logged in, add Member.ID to order->MemberID
-				if($member && $member->exists()) {
-					if($this->order->MemberID != $member->ID) {
-						$this->order->MemberID = $member->ID;
-						$this->order->write();
-					}
-				}
-			}
-			else {
-				$this->order = new Order();
-				if($member) {
-					$this->order->MemberID = $member->ID;
-				}
-				//TO DO:only write when
-				//if($this->requireSavedOrder) {
-				$this->order->write();
-				Session::set($sessionVariableName,intval($this->order->ID));
-				//}
-			}
-			//member just logged in and is not associated with order yet
-			//if you are not logged in but the order belongs to a member then clear the cart.
-			/***** THIS IS NOT CORRECT, BECAUSE YOU CAN CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!! ***
-			elseif($this->order->MemberID && !$member) {
-				$this->clear();
-				return false;
-			}
-			*/
-			if($this->order->exists()) {
-				$this->order->calculateOrderAttributes();
-			}
-		}
-		return $this->order;
-	}
 
 
 	/**
