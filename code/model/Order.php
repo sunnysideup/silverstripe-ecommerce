@@ -1061,64 +1061,73 @@ class Order extends DataObject {
 	/**
 	 * Returns the items of the order.
 	 * Items are the order items (products) and NOT the modifiers (discount, tax, etc...)
-	 *
-	 *@param String filter - where statement to exclude certain items.
-	 *
-	 *@return DataObjectSet (OrderItems)
+	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
+	 * @return DataObjectSet (OrderItems)
 	 */
-	function Items($filter = "") {
+	function Items($filterOrClassName = "") {
  		if(!$this->exists()){
  			$this->write();
 		}
-		return $this->itemsFromDatabase($filter);
+		return $this->itemsFromDatabase($filterOrClassName);
 	}
 
 	/**
-	 *@alias function of Items
-	 **/
-	function OrderItems($filter = "") {
-		return $this->Items();
+	 * @alias function of Items
+	 */
+	function OrderItems($filterOrClassName = "") {
+		return $this->Items($filterOrClassName);
 	}
 
 	/**
 	 * Return all the {@link OrderItem} instances that are
 	 * available as records in the database.
-	 *
 	 * @param String filter - where statement to exclude certain items.
-	 *
 	 * @return DataObjectSet
 	 */
-	protected function itemsFromDatabase($filter = null) {
-		$extrafilter = ($filter) ? " AND $filter" : "";
-		$items = DataObject::get("OrderItem", "\"OrderID\" = '$this->ID' AND \"Quantity\" > 0 $extrafilter");
-		return $items;
+	protected function itemsFromDatabase($filterOrClassName = "") {
+		$className = "OrderItem";
+		$extrafilter = "";
+		if($filterOrClassName) {
+			if(class_exists($filterOrClassName)) {
+				$className = $filterOrClassName;
+			}
+			else {
+				$extrafilter = " AND $filterOrClassName";
+			}
+		}
+		return DataObject::get($className, "\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
 	}
 
 	/**
 	 * Returns the modifiers of the order, if it hasn't been saved yet
 	 * it returns the modifiers from session, if it has, it returns them
 	 * from the DB entry. ONLY USE OUTSIDE ORDER
-	 *
-	 *@param String filter - where statement to exclude certain items.
-	 *
-	 *@return DataObjectSet(OrderModifiers)
+	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
+	 * @return DataObjectSet(OrderModifiers)
 	 */
- 	function Modifiers($filter = '') {
-		return $this->modifiersFromDatabase();
+ 	function Modifiers($filterOrClassName = '') {
+		return $this->modifiersFromDatabase($filterOrClassName);
 	}
 
 	/**
 	 * Get all {@link OrderModifier} instances that are
 	 * available as records in the database.
 	 * NOTE: includes REMOVED Modifiers, so that they do not get added again...
-	 *
-	 *@param String filter - where statement to exclude certain items.
-	 *
+	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
 	 * @return DataObjectSet
 	 */
-	protected function modifiersFromDatabase($filter = '') {
-		$extrafilter = ($filter) ? " AND $filter" : "";
-		return DataObject::get('OrderModifier', "\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
+	protected function modifiersFromDatabase($filterOrClassName = '') {
+		$className = "OrderModifier";
+		$extrafilter = "";
+		if($filterOrClassName) {
+			if(class_exists($filterOrClassName)) {
+				$className = $filterOrClassName;
+			}
+			else {
+				$extrafilter = " AND $filterOrClassName";
+			}
+		}
+		return DataObject::get($className, "\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
 	}
 
 	/**
