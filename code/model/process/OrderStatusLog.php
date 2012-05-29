@@ -40,10 +40,12 @@ class OrderStatusLog extends DataObject {
 		"InternalUseOnly" => true
 	);
 
-
+	/**
+	 * casted method
+	 * @return String
+	 */
 	function InternalUseOnlyNice() {return $this->getInternalUseOnlyNice();}
 	function getInternalUseOnlyNice() {if($this->InternalUseOnly) { return _t("OrderStatusLog.YES", "Yes");} return _t("OrderStatusLog.No", "No");}
-
 
 	/**
 	*
@@ -111,6 +113,9 @@ class OrderStatusLog extends DataObject {
 
 	public static $default_sort = "\"Created\" DESC";
 
+	/**
+	 * standard SS method
+	 */
 	function populateDefaults() {
 		parent::populateDefaults();
 		$this->AuthorID = Member::currentUserID();
@@ -156,24 +161,28 @@ class OrderStatusLog extends DataObject {
 	}
 
 	/**
-	*
-	*@return String
-	**/
+	 *
+	 * @return String
+	 **/
 	function Type() {return $this->getType();}
 	function getType() {
 		return $this->i18n_singular_name();
 	}
 
 	/**
-	*
-	*@return Fieldset
-	**/
+	 *
+	 *@return Fieldset
+	 **/
 	function scaffoldSearchFields(){
 		$fields = parent::scaffoldSearchFields();
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		return $fields;
 	}
 
+	/**
+	 * standard SS method
+	 *
+	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		//START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS....
@@ -189,14 +198,14 @@ class OrderStatusLog extends DataObject {
 			$this->AuthorID = $m->ID;
 		}
 		if(!$this->Title) {
-			$this->Title = "Order Update";
+			$this->Title = _t("OrderStatusLog.ORDERUPDATE", "Order Update");
 		}
 	}
 
 	/**
-	*
-	*@return String
-	**/
+	 *
+	 *@return String
+	 **/
 	function CustomerNote() {return $this->getCustomerNote();}
 	function getCustomerNote() {
 		return $this->Note;
@@ -231,7 +240,6 @@ class OrderStatusLog extends DataObject {
 		$html .= "</ul>";
 		return $html;
 	}
-
 
 }
 
@@ -450,15 +458,12 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 	/**
 	*
 	*@return String
-	*@To do: move formatting to template
 	**/
+	function CustomerNote() {return $this->getCustomerNote();}
 	function getCustomerNote() {
 		return $this->renderWith("LogDispatchPhysicalOrderCustomerNote");
 	}
 
-	function CustomerNote() {
-		return $this->getCustomerNote();
-	}
 
 }
 
@@ -533,6 +538,7 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 	*
 	*@return String
 	**/
+	function CustomerNote(){return $this->getCustomerNote();}
 	function getCustomerNote() {
 		if($this->Author()) {
 			if($this->PaymentConfirmed) {
@@ -544,9 +550,6 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 		}
 	}
 
-	function CustomerNote(){
-		return $this->getCustomerNote();
-	}
 
 }
 
