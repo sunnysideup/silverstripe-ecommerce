@@ -1,3 +1,4 @@
+<div class="cartShortInner">
 <% if Items %>
 	<table id="InformationTable" class="editable" cellspacing="0" cellpadding="0" summary="<% _t("TABLESUMMARY","The contents of your cart are displayed in this table - go to the Checkout Page to make final adjustments and review additional charges and deductions.") %>">
 		<tbody>
@@ -21,3 +22,4 @@
 <% else %>
 		<p class="noItems"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></p>
 <% end_if %>
+</div>
