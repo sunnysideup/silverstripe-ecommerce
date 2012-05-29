@@ -47,6 +47,7 @@ class EcommerceMigration extends BuildTask {
 		$this->moveSiteConfigToEcommerceDBConfig_140();
 		$this->addClassNameToOrderItems_150();
 		$this->addTermsAndConditionsMessage_160();
+		$this->mergeUncompletedOrderForOneMember_170();
 		$this->theEnd_9999();
 	}
 
@@ -77,12 +78,17 @@ class EcommerceMigration extends BuildTask {
 	 * @return Boolean
 	 */
 	protected function makeFieldObsolete($table, $field, $format = "") {
-		$db = DB::getConn();
 		if($this->hasTableAndField($table, $field)) {
+			$db = DB::getConn();
 			$db->dontRequireField($table, $field);
 			DB::alteration_message("removed $field from $table", "deleted");
 		}
-		DB::alteration_message("could not find $field in $table so it could not be removed", "deleted");
+		else {
+			DB::alteration_message("ERROR: could not find $field in $table so it could not be removed", "deleted");
+		}
+		if($this->hasTableAndField($table, $field)) {
+			DB::alteration_message("ERROR: tried to remove $field from $table but it still seems to be there", "deleted");
+		}
 	}
 
 
@@ -722,7 +728,7 @@ class EcommerceMigration extends BuildTask {
 
 	protected function setFixedPriceForSubmittedOrderItems_120() {
 		DB::alteration_message("
-			<h1>Set Fixed Price for Submitted Order Items: </h1>
+			<h1>120. Set Fixed Price for Submitted Order Items: </h1>
 			<p>Migration task to fix the price for submitted order items.</p>
 		");
 		if($this->hasTableAndField("OrderModifier", "CalculationValue")) {
@@ -739,24 +745,32 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There is no need to move values from OrderModifier.CalculationValue to OrderAttribute.CalculatedTotal");
 		}
-		$limit = 1000;
 		$orderItems = DataObject::get(
 			"OrderItem",
 			"\"Quantity\" <> 0 AND \"OrderAttribute\".\"CalculatedTotal\" = 0",
 			"\"Created\" ASC",
 			"INNER JOIN
-				\"Order\" ON \"Order\".\"ID\" = \"OrderAttribute\".\"OrderID\"",
-			1000
+				\"Order\" ON \"Order\".\"ID\" = \"OrderAttribute\".\"OrderID\""
 		);
+		return;
+		/////////////////////////////////
+		///////// We should not include the code below
+		///////// Because it may affect past orders badly.
+		/////////////////////////////////
+		/////////////////////////////////
 		$count = 0;
 		if($orderItems) {
 			foreach($orderItems as $orderItem) {
 				if($orderItem->Order()) {
 					if($orderItem->Order()->IsSubmitted()) {
-						$orderItem->CalculatedTotal = $orderItem->UnitPrice(true) * $orderItem->Quantity;
-						$orderItem->write();
-						$count++;
-						DB::alteration_message($orderItem->UnitPrice(true)." * ".$orderItem->Quantity  ." = ".$orderItem->CalculatedTotal, "created");
+						//TO DO: WHAT THE HELL IS THAT (true)
+						$unitPrice = $orderItem->UnitPrice($recalculate = true);
+						if($unitPrice) {
+							$orderItem->CalculatedTotal = $unitPrice * $orderItem->Quantity;
+							$orderItem->write();
+							$count++;
+							DB::alteration_message("RECALCULATING: ".$orderItem->UnitPrice($recalculate = true)." * ".$orderItem->Quantity  ." = ".$orderItem->CalculatedTotal." for OrderItem #".$orderItem->ID, "created");
+						}
 					}
 					else {
 						DB::alteration_message("OrderItem is part of not-submitted order.");
@@ -817,12 +831,12 @@ class EcommerceMigration extends BuildTask {
 					}
 				}
 				else {
-					DB::alteration_message("SiteConfig.$field is not available", "edited");
+					DB::alteration_message("SiteConfig.$field has been moved");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("SiteConfig or EcommerceDBConfig are not available", "edited");
+			DB::alteration_message("ERROR: SiteConfig or EcommerceDBConfig are not available", "deleted");
 		}
 	}
 
@@ -848,7 +862,7 @@ class EcommerceMigration extends BuildTask {
 						SET \"BuyableClassName\" = '$className'
 						WHERE \"ID\" = $id;
 					");
-					DB::alteration_message("Updating Order BuyableClassName ( ID = $id ) to $className.");
+					DB::alteration_message("Updating Order.BuyableClassName ( ID = $id ) to $className.", "created");
 				}
 				else {
 					DB::alteration_message("Order Item with ID = $id does not have a valid class name. This needs investigation.", "deleted");
@@ -856,7 +870,7 @@ class EcommerceMigration extends BuildTask {
 			}
 		}
 		else {
-			DB::alteration_message("No order items could be found.");
+			DB::alteration_message("No order items could be found that need updating.");
 		}
 	}
 
@@ -887,6 +901,94 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There was no need to add a terms and conditions message because there is no checkout page", "deleted");
 		}
+	}
+
+	function mergeUncompletedOrderForOneMember_170() {
+		DB::alteration_message("
+			<h1>170. Merge uncompleted orders into one.</h1>
+			<p>Merges uncompleted orders by the same user into one.</p>
+		");
+		$orders = DataObject::get(
+			"Order",
+			"\"MemberID\" > 0",
+			"\"MemberID\", \"Order\".\"Created\" DESC", // THIS ORDER IS CRUCIAL!!!!
+			"INNER JOIN \"Member\" ON \"Order\".\"MemberID\" = \"Member\".\"ID\" ",
+			1000
+		);
+		$count = 0;
+		$previousOrderMemberID = 0;
+		$lastOrderFromMember = null;
+		if($orders) {
+			foreach($orders as $order) {
+				//crucial ONLY for non-submitted orders...
+				if($order->IsSubmitted()) {
+					//do nothing!
+					$count++;
+				}
+				else {
+					$memberID = $order->MemberID;
+					//recurring member
+					if($previousOrderMemberID == $memberID && $lastOrderFromMember) {
+						DB::alteration_message("We have a duplicate order for a member: ".$order->Member()->Email, "created");
+						$orderAttributes = DataObject::get("OrderAttribute", "\"OrderID\" = ".$order->ID);
+						if($orderAttributes) {
+							foreach($orderAttributes as $orderAttribute) {
+								$orderAttribute->OrderID = $lastOrderFromMember->ID;
+								$orderAttribute->write();
+								DB::alteration_message("Moving attribute #".$orderAttribute->ID, "created");
+							}
+						}
+						else {
+							DB::alteration_message("There are no attributes for this order");
+						}
+						$orderStatusLogs = DataObject::get("OrderStatusLog", "\"OrderID\" = ".$order->ID);
+						if($orderStatusLogs) {
+							foreach($orderStatusLogs as $orderStatusLog) {
+								$orderStatusLog->OrderID = $lastOrderFromMember->ID;
+								$orderStatusLog->write();
+								DB::alteration_message("Moving order status log #".$orderStatusLog->ID, "created");
+							}
+						}
+						else {
+							DB::alteration_message("There are no order status logs for this order");
+						}
+						$orderEmailRecords = DataObject::get("OrderEmailRecord", "\"OrderID\" = ".$order->ID);
+						if($orderEmailRecords) {
+							foreach($orderEmailRecords as $orderEmailRecord) {
+								$orderEmailRecord->OrderID = $lastOrderFromMember->ID;
+								$orderEmailRecord->write();
+								DB::alteration_message("Moving email #".$orderEmailRecord->ID, "created");
+							}
+						}
+						else {
+							DB::alteration_message("There are no emails for this order.");
+						}
+					}
+					//new member
+					else {
+						$previousOrderMemberID = $order->MemberID;
+						$lastOrderFromMember = $order;
+						DB::alteration_message("Found last order from member.");
+					}
+					if($order->BillingAddressID && !$lastOrderFromMember->BillingAddressID) {
+						$lastOrderFromMember->BillingAddressID = $order->BillingAddressID;
+						$lastOrderFromMember->write();
+						DB::alteration_message("Moving Billing Address.");
+					}
+					if($order->ShippingAddressID && !$lastOrderFromMember->ShippingAddressID) {
+						$lastOrderFromMember->ShippingAddressID = $order->ShippingAddressID;
+						$lastOrderFromMember->write();
+						DB::alteration_message("Moving Shipping Address.");
+					}
+					$order->delete();
+				}
+			}
+			DB::alteration_message("Ignored $count Orders that have already been submitted.");
+		}
+		else {
+			DB::alteration_message("There were no orders at all to work through.");
+		}
+
 	}
 
 	function theEnd_9999(){
