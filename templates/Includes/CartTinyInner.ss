@@ -1,3 +1,4 @@
+<div class="cartTinyInner">
 <% if Items %>
 	<p class="thereAreItems">
 		<% _t("order.YOUHAVE", "You have") %>
@@ -9,3 +10,4 @@
 <% else %>
 	<p class="noItems"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></p>
 <% end_if %>
+</div>
