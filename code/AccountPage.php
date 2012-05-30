@@ -15,11 +15,15 @@
 
 class AccountPage extends Page {
 
+	/**
+	 * Standard SS variable
+	 * @Var String
+	 */
 	public static $icon = 'ecommerce/images/icons/AccountPage';
 
 	/**
 	 * standard SS method
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
 		return !DataObject :: get_one("AccountPage", "\"ClassName\" = 'AccountPage'");
@@ -35,31 +39,38 @@ class AccountPage extends Page {
 		}
 	}
 
-
 	/**
-	 *@return DataObjectSet or Null - DataObjectSet contains DataObjects. Each DataObject has two params: Heading and Orders
+	 * Each DataObject in the DataObjectSet return has two params: Heading and Orders
 	 * we use this format so that we can easily iterate through all the orders in the template.
 	 * TO DO: make this more standardised.
 	 * TO DO: create Object called OrdersDataObject with standardised fields (Title, Orders, etc...)
-	 **/
+	 * @return DataObjectSet |  Null - DataObjectSet contains DataObjects.
+	 */
 	public function AllMemberOrders() {
 		$dos = new DataObjectSet();
-		$doCurrentOrders = $this->putTogetherOrderDataObjectSet("ShoppingCartOrders", _t("Account.CURRENTORDER", "Current Shopping Cart"));
-		if($doCurrentOrders){
-			$dos->push($doCurrentOrders);
-		}
-		$incompleteOrders = $this->putTogetherOrderDataObjectSet("IncompleteOrders", _t("Account.INCOMPLETEORDERS", "Incomplete Orders"));
-		if($incompleteOrders){
-			$dos->push($incompleteOrders);
-		}
-		$inProcessOrders = $this->putTogetherOrderDataObjectSet("InProcessOrders", _t("Account.INPROCESSORDERS", "In Process Orders"));
-		if($inProcessOrders){
-			$dos->push($inProcessOrders);
-		}
-		$completeOrders = $this->putTogetherOrderDataObjectSet("CompleteOrders", _t("Account.COMPLETEORDERS", "Completed Orders"));
-		if($completeOrders){
-			$dos->push($completeOrders);
-		}
+		$doCurrentOrders = $this->putTogetherOrderDataObjectSet(
+			"ShoppingCartOrders",
+			_t("Account.CURRENTORDER", "Current Shopping Cart")
+		);
+		if($doCurrentOrders){$dos->push($doCurrentOrders);}
+
+		$incompleteOrders = $this->putTogetherOrderDataObjectSet(
+			"IncompleteOrders",
+			_t("Account.INCOMPLETEORDERS", "Incomplete Orders")
+		);
+		if($incompleteOrders){$dos->push($incompleteOrders);}
+
+		$inProcessOrders = $this->putTogetherOrderDataObjectSet(
+			"InProcessOrders",
+			_t("Account.INPROCESSORDERS", "In Process Orders")
+		);
+		if($inProcessOrders){$dos->push($inProcessOrders);}
+
+		$completeOrders = $this->putTogetherOrderDataObjectSet(
+			"CompleteOrders",
+			_t("Account.COMPLETEORDERS", "Completed Orders")
+		);
+		if($completeOrders){$dos->push($completeOrders);}
 		if($dos->count()) {
 			return $dos;
 		}
