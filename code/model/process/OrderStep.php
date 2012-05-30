@@ -1053,13 +1053,13 @@ class OrderStep_Sent extends OrderStep {
 				if(!$this->hasBeenSent($order)) {
 					$subject = $this->EmailSubject;
 					$message = $this->CustomerMessage;
-					return $order->sendStatusChange($subject, $message);
+					$order->sendStatusChange($subject, $message);
 				}
 			}
 			else {
 				if(!$this->hasBeenSent($order)) {
 					$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-					return $order->sendError($subject, $message);
+					$order->sendError($subject, $message);
 				}
 			}
 			return parent::nextStep($order);
