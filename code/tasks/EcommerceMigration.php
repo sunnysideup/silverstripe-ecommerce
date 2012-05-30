@@ -29,6 +29,9 @@ class EcommerceMigration extends BuildTask {
 	";
 
 	function run($request) {
+		echo "
+			<h1>IMPORTANT</h1>
+			<p>Make sure that this page ends with <i>THE END</i> to ensure that all migrations were completed.</p>";
 		$this->shopMemberToMemberTableMigration_10();
 		$this->moveItemToBuyable_20();
 		$this->productVersionToOrderItem_25();
@@ -48,6 +51,7 @@ class EcommerceMigration extends BuildTask {
 		$this->addClassNameToOrderItems_150();
 		$this->addTermsAndConditionsMessage_160();
 		$this->mergeUncompletedOrderForOneMember_170();
+		$this->updateFullSiteTreeSortFieldForAllProducts_180();
 		$this->theEnd_9999();
 	}
 
@@ -989,6 +993,18 @@ class EcommerceMigration extends BuildTask {
 			DB::alteration_message("There were no orders at all to work through.");
 		}
 
+	}
+
+
+	function updateFullSiteTreeSortFieldForAllProducts_180() {
+		DB::alteration_message("
+			<h1>180. Set starting value Product.FullSiteTreeSort Field.</h1>
+			<p>Sets a starting value for a new field: FullSiteTreeSortField.</p>
+		");
+		//level 10
+		$task = new CleanupProductFullSiteTreeSorting();
+		$task->setDeleteFirst(false);
+		$task->run(null);
 	}
 
 	function theEnd_9999(){
