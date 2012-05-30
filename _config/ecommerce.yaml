@@ -30,7 +30,7 @@ ProductGroup:
 	sort_options:
 		default:
 			Title: 'Default Order'
-			SQL: "\"FullSiteTreeSort\" ASC, "\"Sort\" ASC, \"Title\" ASC"
+			SQL: "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"Title\" ASC"
 		title:
 			Title: 'Alphabetical'
 			SQL: "\"Title\" ASC"
