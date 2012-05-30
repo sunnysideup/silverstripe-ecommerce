@@ -50,7 +50,8 @@ class Product extends Page implements BuyableModel {
 		'FeaturedProduct' => 'Boolean',
 		'AllowPurchase' => 'Boolean',
 		'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
-		'NumberSold' => 'Int' //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
+		'NumberSold' => 'Int', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
+		'FullSiteTreeSort' => 'Varchar(100)' //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
 	);
 
 	/**
@@ -73,6 +74,13 @@ class Product extends Page implements BuyableModel {
 	public static $casting = array(
 		"CalculatedPrice" => "Currency",
 		"DisplayPrice" => "Money"
+	);
+
+	/**
+	 * Standard SS variable.
+	 */
+	public static $indexes = array(
+		"FullSiteTreeSort" => true
 	);
 
 	/**
@@ -232,6 +240,15 @@ class Product extends Page implements BuyableModel {
 				}
 			}
 		}
+		$this->FullSiteTreeSort = "";
+		$parentSortArray = array($this->Sort);
+		$obj = $this;
+		while($obj->ParentID) {
+			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
+			$parentSortArray[] = $obj->Sort;
+		}
+		$reverseArray = array_reverse($parentSortArray);
+		$this->FullSiteTreeSort = implode(",", $reverseArray);
 	}
 
 
