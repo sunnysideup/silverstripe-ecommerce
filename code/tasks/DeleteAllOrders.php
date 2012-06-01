@@ -57,13 +57,13 @@ class DeleteAllOrders extends BuildTask {
 	 **/
 	public function run($request){
 		$oldCarts = DataObject::get('Order');
+		$count = 0;
 		if($oldCarts){
 			if($this->verbose) {
 				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\"");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("<h2>Total number of orders: ".$totalToDelete." .... now deleting: </h2>", "deleted");
 			}
-			$count = 0;
 			foreach($oldCarts as $oldCart){
 				$count++;
 				if($this->verbose) {
@@ -123,7 +123,7 @@ class DeleteAllOrders extends BuildTask {
 		}
 	}
 
-	private function deleteObject($objectToDelete){
+	private function deleteObject($unlinkedObject){
 		$objectToDelete = DataObject::get_by_id($unlinkedObject->ClassName,$unlinkedObject->ID);
 		$objectToDelete->delete();
 		$objectToDelete->destroy();
