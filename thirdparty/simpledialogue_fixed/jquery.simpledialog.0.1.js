@@ -133,7 +133,7 @@
 			jQuery('#' + _t.opts.overlayId).remove();
 			jQuery(document).unbind("keyup", _escKeyEvent);
 			return false;
-		},
+		}
 
 	};
 
