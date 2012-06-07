@@ -97,7 +97,8 @@ class BillingAddress extends OrderAddress {
 		"Surname" => "PartialMatchFilter",
 		"Address" => "PartialMatchFilter",
 		"City" => "PartialMatchFilter",
-		"Country" => "PartialMatchFilter"
+		"Country" => "PartialMatchFilter",
+		"Obsolete"
 	);
 
 	public static $summary_fields = array(
@@ -161,7 +162,7 @@ class BillingAddress extends OrderAddress {
 		$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Prefix')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));
 		$billingFields->push(new TextField('Address2', _t('OrderAddress.ADDRESS2','&nbsp;')));
-		$billingFields->push(new TextField('City', _t('OrderAddress.CITY','City')));
+		$billingFields->push(new TextField('City', _t('OrderAddress.CITY','Town')));
 		$billingFields->push($this->getPostalCodeField("PostalCode"));
 		$billingFields->push($this->getRegionField("RegionID"));
 		$billingFields->push($this->getCountryField("Country"));
