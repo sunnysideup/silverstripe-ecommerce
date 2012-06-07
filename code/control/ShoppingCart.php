@@ -1092,8 +1092,8 @@ class ShoppingCart_Controller extends Controller{
 		$id = intval($request->param('ID'));
 		$className = Convert::raw2sql($request->param('OtherID'));
 		$address = DataObject::get_by_id($className, $id);
-		if($address->canView()) {
-			$address->Obsolete = true;
+		if($address && $address->canView()) {
+			$address->Obsolete = 1;
 			$address->write();
 			return _t("ShoppingCart.ADDRESSREMOVED", "Address removed.");
 		}
