@@ -343,14 +343,26 @@ class OrderAddress extends DataObject {
 	 * returns the field prefix string for shipping addresses
 	 * @return String
 	 **/
-	protected function fieldPrefix() {
+	protected function baseClassLinkingToOrder() {
 		if($this instanceOf BillingAddress) {
-			$fieldPrefix = "";
+			return "BillingAddress";
 		}
 		elseif($this instanceOf ShippingAddress) {
-			$fieldPrefix = "Shipping";
+			return "ShippingAddress";
 		}
-		return $fieldPrefix;
+	}
+
+	/**
+	 * returns the field prefix string for shipping addresses
+	 * @return String
+	 **/
+	protected function fieldPrefix() {
+		if($this->baseClassLinkingToOrder() == "BillingAddress") {
+			return "";
+		}
+		else {
+			return "Shipping";
+		}
 	}
 
 
@@ -360,6 +372,7 @@ class OrderAddress extends DataObject {
 	 * @return DataObject (OrderAddress / ShippingAddress / BillingAddfress)
 	 * @param Object (Member) $member
 	 * @param Boolean $write - should the address be written
+	 * @todo: are there times when the Shipping rather than the Billing address should be linked?
 	 */
 	public function FillWithLastAddressFromMember($member, $write = false) {
 		$excludedFields = array("ID", "OrderID");
@@ -493,14 +506,16 @@ class OrderAddress extends DataObject {
 	/**
 	 * find the member associated with the current Order and address.
 	 * @return DataObject (Member) | Null
-	 * @Note: this needs to be public to give DODS (extensions access to this!)
+	 * @Note: this needs to be public to give DODS (extensions access to this)
+	 * @todo: can wre write $this->Order() instead????
 	 **/
 	public function getMemberFromOrder() {
 		if($this->exists()) {
-			$fieldName = $this->ClassName."ID";
-			if($order = DataObject::get_one("Order", "\"Order\".\"$fieldName\" = ".$this->ID)) {
-				if($order->MemberID) {
-					return DataObject::get_by_id("Member", $order->MemberID);
+			if($order = $this->Order()) {
+				if($order->exists()) {
+					if($order->MemberID) {
+						return DataObject::get_by_id("Member", $order->MemberID);
+					}
 				}
 			}
 		}
