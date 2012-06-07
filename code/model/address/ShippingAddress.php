@@ -91,7 +91,8 @@ class ShippingAddress extends OrderAddress {
 		"ShippingSurname" => "PartialMatchFilter",
 		"ShippingAddress" => "PartialMatchFilter",
 		"ShippingCity" => "PartialMatchFilter",
-		"ShippingCountry" => "PartialMatchFilter"
+		"ShippingCountry" => "PartialMatchFilter",
+		"Obsolete"
 	);
 
 	public static $summary_fields = array(
@@ -160,7 +161,7 @@ class ShippingAddress extends OrderAddress {
 			$shippingFields->push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Prefix')));
 			$shippingFields->push(new TextField('ShippingAddress', _t('OrderAddress.ADDRESS','Address')));
 			$shippingFields->push(new TextField('ShippingAddress2', _t('OrderAddress.ADDRESS2','&nbsp;')));
-			$shippingFields->push(new TextField('ShippingCity', _t('OrderAddress.CITY','City')));
+			$shippingFields->push(new TextField('ShippingCity', _t('OrderAddress.CITY','Town')));
 			$shippingFields->push($this->getPostalCodeField("ShippingPostalCode"));
 			$shippingFields->push($this->getRegionField("ShippingRegionID"));
 			$shippingFields->push($this->getCountryField("ShippingCountry"));
@@ -171,13 +172,6 @@ class ShippingAddress extends OrderAddress {
 			$fields->push($shippingFieldsHeader);
 			$shippingFields->SetID('ShippingFields');
 			$fields->push($shippingFields);
-
-			$this->extend('augmentEcommerceShippingAddressFields', $fields);
-
-
-
-
-
 		}
 		$this->extend('augmentEcommerceShippingAddressFields', $fields);
 		return $fields;
