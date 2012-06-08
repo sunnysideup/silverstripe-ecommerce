@@ -52,7 +52,14 @@ class OrderStepField extends DatalessField {
 		}
 		$html .= "</ol><div class=\"clear\"></div></div>";
 		if($currentStep->Description) {
-			$html .= "<p><strong>".$currentStep->Title."</strong>: ".$currentStep->Description."</p>";
+			$html .= "
+				<p>".
+				_t("OrderStepField.COMPLETINGTHISSTEP", "Completings this step").
+				" <strong>".$currentStep->Title."</strong> ".
+				_t("OrderStepField.COMPLETINGTHISSTEP", "means").
+				": ".
+				$currentStep->Description.
+				"</p>";
 		}
 		$this->content = $html;
 		Requirements::themedCSS("OrderStepField");
