@@ -233,7 +233,8 @@ class Order extends DataObject {
 	 * STANDARD SILVERSTRIPE STUFF
 	 **/
 	public static $summary_fields = array(
-		"Title" => "Title"
+		"Title" => "Title",
+		"Status.Title" => "Status"
 	);
 		public static function get_summary_fields() {return self::$summary_fields;}
 
