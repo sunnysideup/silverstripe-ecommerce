@@ -625,7 +625,11 @@ jQuery.fn.extend({
 			function(){
 				if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
 					var url = jQuery(this).attr("href");
-					jQuery(this).parents(EcomCart.orderItemHolderSelector).slideUp();
+					var el = jQuery(this).parents(EcomCart.orderItemHolderSelector);
+					jQuery(el).slideUp(
+						"slow",
+						function() {jQuery(el).remove();}
+					);
 					EcomCart.getChanges(url, null, this);
 				}
 				return false;

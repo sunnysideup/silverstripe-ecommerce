@@ -9,10 +9,10 @@
 		<% if CanEditOrder %>
 			<% control Order %><% include Order_Content_Editable %><% end_control %>
 		<% else %>
-	<p>Sorry, you can not edit this order.</p>
+	<p class="message canNotEdit">Sorry, you can not edit this order.</p>
 		<% end_if %>
 	<% else %>
-	<p>Sorry, there is no order to view.</p>
+	<p class="message canNotView">Sorry, there is no order to view.</p>
 	<% end_if %>
 	</div>
 
