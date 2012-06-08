@@ -15,7 +15,7 @@
 	<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
 	<td class="right remove">
 		<strong>
-			<a class="ajaxQuantityLink" href="$removeallLink" title="<% sprintf(_t("Order.REMOVEALL","Remove all of &quot;%s&quot; from your cart"),$TableTitle) %>">
+			<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$removeallLink" title="<% sprintf(_t("Order.REMOVEALL","Remove &quot;%s&quot; from your cart"),$TableTitle) %>">
 				<img src="ecommerce/images/remove.gif" alt="x"/>
 			</a>
 		</strong>
