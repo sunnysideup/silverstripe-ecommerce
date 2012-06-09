@@ -448,11 +448,17 @@ class ShoppingCart extends Object{
 		else {
 			$this->order = $order;
 		}
-		if($order){
-			$sessionVariableName = $this->sessionVariableName("OrderID");
-			Session::set($sessionVariableName, $order->ID);
-			$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
-			return true;
+		if($this->order){
+			if($this->order->canView()) {
+				$sessionVariableName = $this->sessionVariableName("OrderID");
+				Session::set($sessionVariableName, $this->order->ID);
+				$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
+				return true;
+			}
+			else {
+				$this->addMessage(_t("ShoppingCart.NOPERMISSION", "You do not have permission to view this order."),'bad');
+				return false;
+			}
 		}
 		else {
 			$this->addMessage(_t("ShoppingCart.NOORDER", "Order can not be found."),'bad');
