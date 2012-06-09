@@ -26,7 +26,7 @@ class AccountPage extends Page {
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return !DataObject :: get_one("AccountPage", "\"ClassName\" = 'AccountPage'");
+		return !DataObject::get_one("AccountPage", "\"ClassName\" = 'AccountPage'");
 	}
 
 	/**

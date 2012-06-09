@@ -5,6 +5,9 @@
 	</p>
 <% end_if %>
 
+
+<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
+
 <% if PastOrders %>
 <h3>previous orders</h3>
 <table summary="PastOrders">
@@ -38,6 +41,8 @@
 	<% end_control %>
 	</tbody>
 </table>
+<% else %>
+<p class="message noPreviousOrders">You do not have any previous orders.</p>
 <% end_if %>
 
 <% if MemberForm %>
@@ -45,8 +50,6 @@
 		$MemberForm
 	</div>
 <% end_if %>
-
-<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 
 </div>
 
