@@ -865,6 +865,7 @@ class ShoppingCart_Controller extends Controller{
 		'loadorder',
 		'copyorder',
 		'removeaddress',
+		'submittedbuyable',
 		'debug' => 'ADMIN',
 		'test' => 'ADMIN'
 	);
@@ -1106,6 +1107,38 @@ class ShoppingCart_Controller extends Controller{
 		return _t("ShoppingCart.ADDRESSNOTREMOVED", "Address could not be removed.");
 	}
 
+	/**
+	 * allows us to view out-dated buyables that have been deleted
+	 * where only old versions exist.
+	 * this method should redirect
+	 *
+	 */
+	function submittedbuyable(){
+		$buyableID = intval($this->getRequest()->param('ID'));
+		$buyableClassName = Convert::raw2sql($this->getRequest()->param('OtherID'));
+		$version = intval($this->getRequest()->param('Version'));
+		if($buyableClassName && $buyableID){
+			if(EcommerceDBConfig::is_buyable($buyableClassName)) {
+				$bestBuyable = DataObject::get_by_id($buyableClassName, $buyableID);
+				if(!$bestBuyable) {
+					$bestBuyable = DataObject::get_one($buyableClassName, "ClassName = '$buyableClassName'");
+				}
+				if($bestBuyable) {
+					//show singleton with old version
+					Director::redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
+					return;
+				}
+			}
+		}
+		$page = DataObject::get_one("ErrorPage", "ErrorCode = '404'");
+		if($page) {
+			Director::redirect($page->Link());
+			return;
+		}
+		return null;
+	}
+
+
 
 	/**
 	 * Gets a buyable object based on URL actions
@@ -1142,7 +1175,6 @@ class ShoppingCart_Controller extends Controller{
 		}
 		return 1;
 	}
-
 
 	/**
 	 * Gets the request parameters
