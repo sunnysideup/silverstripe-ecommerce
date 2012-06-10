@@ -52,6 +52,7 @@ class EcommerceMigration extends BuildTask {
 		$this->addTermsAndConditionsMessage_160();
 		$this->mergeUncompletedOrderForOneMember_170();
 		$this->updateFullSiteTreeSortFieldForAllProducts_180();
+		$this->updateOrderStatusLogSequentialOrderNumber_190();
 		$this->theEnd_9999();
 	}
 
@@ -1005,6 +1006,34 @@ class EcommerceMigration extends BuildTask {
 		$task = new CleanupProductFullSiteTreeSorting();
 		$task->setDeleteFirst(false);
 		$task->run(null);
+	}
+
+
+
+	function updateOrderStatusLogSequentialOrderNumber_190() {
+		DB::alteration_message("
+			<h1>190. Set sequential order numbers</h1>
+			<p>Prepopulates old orders for OrderStatusLog_Submitted.SequentialOrderNumber.</p>
+		");
+		$objects = DataObject::get("OrderStatusLog_Submitted", "", "\"Created\" ASC", null, 1000);
+		$changes = 0;
+		if($objects) {
+			foreach($objects as $object) {
+				$old = $object->SequentialOrderNumber;
+				$object->write();
+				$new = $object->SequentialOrderNumber;
+				if($old != $new) {
+					$changes++;
+					DB::alteration_message("Changed the SequentialOrderNumber for order #".$object->OrderID." from $old to $new ");
+				}
+			}
+			if(!$changes) {
+				DB::alteration_message("There were no changes in any of the OrderStatusLog_Submitted.SequentialOrderNumber fields.");
+			}
+		}
+		else {
+			DB::alteration_message("There are no logs to update.");
+		}
 	}
 
 	function theEnd_9999(){
