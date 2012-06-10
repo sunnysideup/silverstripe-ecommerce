@@ -32,6 +32,15 @@ class ProductGroup extends Page {
 	 * @static Array
 	 *
 	 */
+	public static $has_one = array(
+		'Image' => 'Product_Image'
+	);
+
+	/**
+	 * standard SS variable
+	 * @static Array
+	 *
+	 */
 	public static $belongs_many_many = array(
 		'AlsoShowProducts' => 'Product'
 	);
@@ -271,6 +280,7 @@ class ProductGroup extends Page {
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
+		$fields->addFieldToTab('Root.Content.Images', new ImageField('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
 		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because it is set to zero)") : "";
 		$fields->addFieldToTab(
@@ -787,6 +797,28 @@ class ProductGroup extends Page {
 		}
 		else {
 			return $this->ChildGroups($filter);
+		}
+	}
+
+	/**
+	 * returns a "BestAvailable" image if the current one is not available
+	 * In some cases this is appropriate and in some cases this is not.
+	 * For example, consider the following setup
+	 * - product A with three variations
+	 * - Product A has an image, but the variations have no images
+	 * With this scenario, you want to show ONLY the product image
+	 * on the product page, but if one of the variations is added to the
+	 * cart, then you want to show the product image.
+	 * This can be achieved bu using the BestAvailable image.
+	 * @return Image | Null
+	 */
+	public function BestAvailableImage() {
+		$image = $this->Image();
+		if($image && $image->exists()) {
+			return $image;
+		}
+		elseif($parent = $this->ParentGroup()) {
+			return $parent->BestAvailableImage();
 		}
 	}
 
