@@ -641,7 +641,9 @@ class OrderStep_Submitted extends OrderStep {
           */
 					$obj->OrderID = $order->ID;
 					$obj->Title = $this->Name;
-
+					//it is important we add this here so that we can save the 'submitted' version.
+					//this is particular important for the Order Item Links.
+					$obj->write();
 					$saved = false;
 					if($this->SaveOrderAsJSON)												{$obj->OrderAsJSON = $order->ConvertToJSON(); $saved = true;}
 					if($this->SaveOrderAsHTML)												{$obj->OrderAsHTML = $order->ConvertToHTML(); $saved = true;}
@@ -651,7 +653,6 @@ class OrderStep_Submitted extends OrderStep {
 				else {
 					user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
 				}
-
 			}
 			else {
 				user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
