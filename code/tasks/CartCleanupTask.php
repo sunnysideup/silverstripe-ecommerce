@@ -71,7 +71,7 @@ class CartCleanupTask extends HourlyTask {
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("
 					<h2>Total number of abandonned carts: ".$totalToDelete."</h2>
-					<br />now deleting: ".$maximumNumberOfObjectsDeleted."
+					<br />number of records deleted at one time: ".$maximumNumberOfObjectsDeleted."
 					<br />Criteria: last edited ".$clearMinutes." minutes ago or more and not linked to a member", "created");
 				if($neverDeleteIfLinkedToMember) {
 					DB::alteration_message("<h3>Carts linked to a member will NEVER be deleted.</h3>", "edited");
