@@ -133,7 +133,7 @@ class ShoppingCart extends Object{
 				return false;
 			}
 			*/
-			if($this->order->exists()) {
+			if($this->order && $this->order->exists()) {
 				$this->order->calculateOrderAttributes();
 			}
 		}
