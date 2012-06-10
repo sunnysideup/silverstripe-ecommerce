@@ -69,7 +69,7 @@ class CartCleanupTask extends HourlyTask {
 			if($this->verbose) {
 				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
-				DB::alteration_message("<h2>Total number of abandonned carts: ".$totalToDelete." .... now deleting: ".$maximumNumberOfObjectsDeleted." from ".$clearMinutes." minutes ago or more.</h2>", "created");
+				DB::alteration_message("<h2>Total number of abandonned carts: ".$totalToDelete." .... <br />now deleting: ".$maximumNumberOfObjectsDeleted." <br />Criteria: ".$clearMinutes." minutes ago or more.</h2>", "created");
 				if($neverDeleteIfLinkedToMember) {
 					DB::alteration_message("<h3>Carts linked to a member will NEVER be deleted.</h3>", "edited");
 				}
