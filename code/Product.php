@@ -370,14 +370,17 @@ class Product extends Page implements BuyableModel {
 	}
 
 	/**
-	 * Action to return specific version of a product.
+	 * Action to return specific version of a specific product.
 	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
-	 * @param Int $versionNumber
+	 * @param Int $id
+	 * @param Int $version
 	 * @return DataObject | Null
 	 */
-	function getVersionOfProduct($versionNumber){
-		if($versionNumber) {
-			return Versioned::get_version($this->ClassName, $this->ID, $versionNumber);
+	function getVersionOfProduct($id = 0, $version = 0){
+		if($id) {
+			if($version) {
+				return Versioned::get_version($this->ClassName, $id, $version);
+			}
 		}
 	}
 
@@ -739,13 +742,18 @@ class Product_Controller extends Page_Controller {
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 	}
 
+	/**
+	 * view earlier version of a product
+	 */
 	function viewversion($request) {
-		$version = intval($request->param("ID"));
-		if($record = $this->getVersionOfProduct($version)) {
+		$id = intval($request->param("ID"));
+		$version = intval($request->param("OtherID"));
+		if($record = $this->getVersionOfProduct($id, $version)) {
 			$this->record = $record;
 		}
 		return array();
 	}
+
 
 
 	/**
