@@ -194,8 +194,10 @@ class OrderStatusLog extends DataObject {
 			}
 		}
 		//END HACK TO PREVENT LOSS
-		if(!$this->AuthorID && $m = Member::currentUser()) {
-			$this->AuthorID = $m->ID;
+		if(!$this->AuthorID) {
+			if($member = Member::currentUser()) {
+				$this->AuthorID = $member->ID;
+			}
 		}
 		if(!$this->Title) {
 			$this->Title = _t("OrderStatusLog.ORDERUPDATE", "Order Update");
@@ -255,7 +257,8 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 	public static $db = array(
 		"OrderAsHTML" => "HTMLText",
 		"OrderAsString" => "Text",
-		"OrderAsJSON" => "Text"
+		"OrderAsJSON" => "Text",
+		"SequentialOrderNumber" => "Int"
 	);
 
 	public static $defaults = array(
@@ -297,6 +300,11 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 		return true;
 	}
 
+
+	/**
+	* can only be created when the order is submitted
+	*@return String
+	**/
 	function HTMLRepresentation(){return $this->getHTMLRepresentation();}
 	function getHTMLRepresentation(){
 		if($this->OrderAsHTML) {
@@ -309,6 +317,40 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 			return $this->OrderAsJSON;
 		}
 	}
+
+	/**
+	 * adding a sequential order number.
+	 */
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		if(!$this->SequentialOrderNumber) {
+			if(isset($this->ID)) {
+				$id = $this->ID;
+			}
+			else {
+				$id = 0;
+			}
+			$lastOneAsDos = DataObject::get(
+				"OrderStatusLog_Submitted",
+				"\"OrderStatusLog_Submitted\".\"ID\" <> $id",
+				"\"SequentialOrderNumber\" DESC",
+				null,
+				1 //make sure limit is 1.
+			);
+			if($lastOneAsDos) {
+				foreach($lastOneAsDos as $lastOne) {
+					$this->SequentialOrderNumber = $lastOne->SequentialOrderNumber + 1;
+				}
+			}
+			else {
+				$this->SequentialOrderNumber = intval(EcommerceConfig::get("Order", "order_id_start_number"));
+			}
+		}
+		if(!intval($this->SequentialOrderNumber)) {
+			$this->SequentialOrderNumber = 1;
+		}
+	}
+
 }
 
 class OrderStatusLog_Cancel extends OrderStatusLog {
