@@ -428,8 +428,14 @@ class OrderItem extends OrderAttribute {
 	function Link() {
 		$item = $this->Buyable();
 		if($item) {
-			if($this->Order()->IsSubmitted()) {
-				return $item->Link("viewversion/".$this->Version."/");
+			$order = $this->Order();
+			if($order && $order->IsSubmitted()) {
+				return
+					"/". EcommerceConfig::get("ShoppingCart_Controller", "url_segment").
+					"/submittedbuyable".
+					"/".$item->ClassName.
+					"/".$item->ID.
+					"/".$item->Version."/";
 			}
 			else {
 				return $item->Link();
