@@ -43,11 +43,27 @@ class DeleteAllOrders extends BuildTask {
 		"BillingAddress" => "OrderAddress",
 		"ShippingAddress" => "OrderAddress",
 		"OrderStatusLog" =>"OrderStatusLog",
-		"OrderEmailRecord" =>"OrderEmailRecord"
+		"OrderEmailRecord" =>"OrderEmailRecord",
+		"Payment" =>"Payment"
 	);
 		static function set_linked_objects_array($a) {self::$linked_objects_array = $a;}
 		static function get_linked_objects_array() {return self::$linked_objects_array;}
 		static function add_linked_object($s) {self::$linked_objects_array[] = $s;}
+
+	/**
+	 *
+	 *key = table where OrderID is saved
+	 *value = table where LastEdited is saved
+	 **/
+	protected static $double_check_objects = array(
+		"Order",
+		"OrderItem",
+		"OrderModifier",
+		"Payment"
+	);
+		static function set_double_check_objects($a) {self::$double_check_objects = $a;}
+		static function get_double_check_objects() {return self::$double_check_objects;}
+		static function add_double_check_objects($s) {self::$double_check_objects[] = $s;}
 /*******************************************************
 	 * DELETE OLD SHOPPING CARTS
 *******************************************************/
@@ -87,6 +103,7 @@ class DeleteAllOrders extends BuildTask {
 			DB::alteration_message("PASS: in testing <i>Orders</i> there seem to be no records left.", "created");
 		}
 		$this->cleanupUnlinkedOrderObjects();
+		$this->doubleCheckModifiersAndItems();
 		return $count;
 	}
 
@@ -114,11 +131,24 @@ class DeleteAllOrders extends BuildTask {
 				}
 				$countCheck = DB::query("Select COUNT(ID) FROM \"$classWithLastEdited\"")->value();
 				if($countCheck) {
-					DB::alteration_message("ERROR: in testing <i>".$classWithLastEdited."</i> it appears there are ".$countCheck." records left.", "deleted");
+					DB::alteration_message("ERROR: in testing <i>".$classWithOrderID."</i> it appears there are ".$countCheck." records left.", "deleted");
 				}
 				else {
-					DB::alteration_message("PASS: in testing <i>".$classWithLastEdited."</i> there seem to be no records left.", "created");
+					DB::alteration_message("PASS: in testing <i>".$classWithOrderID."</i> there seem to be no records left.", "created");
 				}
+			}
+		}
+	}
+
+	private function doubleCheckModifiersAndItems() {
+		DB::alteration_message("<hr />double-check:</hr />");
+		foreach(self::$double_check_objects as $table) {
+			$countCheck = DB::query("Select COUNT(ID) FROM \"$table\"")->value();
+			if($countCheck) {
+				DB::alteration_message("ERROR: in testing <i>".$table."</i> it appears there are ".$countCheck." records left.", "deleted");
+			}
+			else {
+				DB::alteration_message("PASS: in testing <i>".$table."</i> there seem to be no records left.", "created");
 			}
 		}
 	}
