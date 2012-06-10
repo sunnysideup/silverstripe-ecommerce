@@ -227,10 +227,19 @@ class OrderForm_Validator extends RequiredFields{
 			}
 		}
 		$order = ShoppingCart::current_order();
-		if(!$order->BillingAddressID) {
+		if(!$order) {
+			$this->validationError(
+				"Order",
+				_t("OrderForm.ORDERNOTFOUND", "There was an error in processing your order, please try again or contact the administrator."),
+				"required"
+			);
+			$valid = false;
+		}
+		$billingAddress = DataObject::get_by_id("BillingAddress", $order->BillingAddressID)
+		if(!$billingAddress) {
 			$this->validationError(
 				"BillingAddress",
-				_t("OrderForm.MUSTHAVEBILLINGADDRESS", "All orders must have a billing address"),
+				_t("OrderForm.MUSTHAVEBILLINGADDRESS", "All orders must have a billing address."),
 				"required"
 			);
 			$valid = false;
