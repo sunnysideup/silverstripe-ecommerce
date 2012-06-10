@@ -309,6 +309,9 @@ class Product extends Page implements BuyableModel {
 		if($image && $image->exists()) {
 			return $image;
 		}
+		elseif($parent = $this->MainParentGroup()) {
+			return $parent->BestAvailableImage();
+		}
 	}
 
 
