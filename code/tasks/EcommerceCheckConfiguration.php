@@ -120,7 +120,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 			}
 		}
 		else {
-			DB::alteration_message("ERROR: could not find any defitions", "deleted");
+			DB::alteration_message("ERROR: could not find any definitions", "deleted");
 		}
 
 	}
@@ -317,6 +317,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 				}
 				else {
 					$description = $this->definitions[$className][$key];
+					$description .= $this->specialCases($className, $key, $actualValue);
 				}
 				$htmlTable .= "<tr>
 			<td>
@@ -386,9 +387,13 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
 
 		$siteConfig = SiteConfig::current_site_config();
-		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. <br />This is <a href=\"/admin/show/root\">set in the site configuration</a>";
+		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. <br />This is set in the <a href=\"/admin/show/root\">site configuration</a>.";
 		$this->configs["SiteConfig"]["website_title"] = $siteConfig->Title;
 		$this->defaults["SiteConfig"]["website_title"] = "[no default set]";
+		$this->definitions["SiteConfig"]["website_tagline"] = "The subtitle or tagline of the website. <br />This is set in the <a href=\"/admin/show/root\">site configuration</a>.";
+		$this->configs["SiteConfig"]["website_tagline"] = $siteConfig->Tagline;
+		$this->defaults["SiteConfig"]["website_tagline"] = "[no default set]";
+
 	}
 
 	protected function addPages(){
@@ -533,6 +538,23 @@ class EcommerceCheckConfiguration extends BuildTask{
 				$this->configs["Templates"]["AJAXDefinitions_$method"] = $obj->$method();
 				$this->defaults["Templates"]["AJAXDefinitions_$method"] = "";
 			}
+		}
+	}
+
+	/**
+	 *
+	 *
+	 */
+	private function specialCases($className, $key, $actualValue){
+		switch($className.".".$key) {
+			case "Order_Email.css_file_location":
+				if(!file_exists(Director::baseFolder()."/$actualValue")) {
+					return "<span style=\"color: red\">ADDITIONAL CHECK: this file does not exist! For proper functioning of e-commerce, please make sure to create this file.</span>";
+				}
+				else {
+					return "<span style=\"color: green\">ADDITIONAL CHECK: file exists.</span>";
+				}
+				break;
 		}
 	}
 
