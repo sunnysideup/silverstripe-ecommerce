@@ -326,6 +326,16 @@ class Order extends DataObject {
 				"Main"
 			);
 			if($submitted) {
+				$submissionLog = $this->SubmissionLog();
+				if($submissionLog) {
+					$fields->addFieldToTab('Root.Main',
+						new ReadonlyField(
+							'SequentialOrderNumber',
+							_t("Order.SEQUENTIALORDERNUMBER", "Sequential order number for submitted orders (e.g. 1,2,3,4,5...)"),
+							$submissionLog->SequentialOrderNumber
+						)
+					);
+				}
 				$htmlSummary = $this->renderWith("Order");
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
 				$paymentsTable = new HasManyComplexTableField(
@@ -1621,14 +1631,19 @@ class Order extends DataObject {
 	 **/
 	function TotalOutstanding(){return $this->getTotalOutstanding();}
 	function getTotalOutstanding(){
-		$total = $this->Total();
-		$paid = $this->TotalPaid();
-		$outstanding = $total - $paid;
-		$maxDifference = EcommerceConfig::get("Order", "maximum_ignorable_sales_payments_difference");
-		if(abs($outstanding) < $maxDifference) {
-			$outstanding = 0;
+		if($this->IsSubmitted()) {
+			$total = $this->Total();
+			$paid = $this->TotalPaid();
+			$outstanding = $total - $paid;
+			$maxDifference = EcommerceConfig::get("Order", "maximum_ignorable_sales_payments_difference");
+			if(abs($outstanding) < $maxDifference) {
+				$outstanding = 0;
+			}
+			return floatval($outstanding);
 		}
-		return floatval($outstanding);
+		else {
+			return 0;
+		}
 	}
 
 	/**
@@ -1850,14 +1865,23 @@ class Order extends DataObject {
 	 **/
 	function IsSubmitted(){return $this->getIsSubmitted();}
 	function getIsSubmitted() {
-		$className = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
-		$submissionLog = DataObject::get_one($className, "\"OrderID\" = ".$this->ID, $cache = false);
-		if($submissionLog) {
+		if($this->SubmissionLog()) {
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+
+
+	/**
+	 * Submission Log for this Order (if any)
+	 *
+	 * @return Submission Log (OrderStatusLog_Submitted) | Null
+	 **/
+	public function SubmissionLog(){
+		$className = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
+		return DataObject::get_one($className, "\"OrderID\" = ".$this->ID, $cache = false);
 	}
 
 	/**
