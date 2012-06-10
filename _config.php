@@ -12,7 +12,7 @@
 //NOTE - if you dont like these URLs then you can change them by adding another rule
 // with a higher number.
 Director::addRules(50, array(
-	'shoppingcart/$Action/$ID/$OtherID' => 'ShoppingCart_Controller',
+	'shoppingcart/$Action/$ID/$OtherID/$Version' => 'ShoppingCart_Controller',
 	'ecommercepayment/$Action/$ID/$OtherID' => 'EcommercePaymentController',
 	'ecommercetemplatetest/$Action/$ID/$OtherID' => 'EcommerceTemplateTest'
 ));
