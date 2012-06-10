@@ -177,12 +177,10 @@ ShoppingCart:
 	default_param_filters: []
 	response_class: "CartResponse"
 ShoppingCart_Controller:
-#TO BE CHANGED
-	url_segment: "shoppingcart"
+	url_segment: shoppingcart
 
 EcommercePaymentController:
-#TO BE CHANGED
-	url_segment: "ecommercepayment"
+	url_segment: ecommercepayment
 
 EcommerceConfigAjax:
 	definitions_class_name: EcommerceConfigAjaxDefinitions
