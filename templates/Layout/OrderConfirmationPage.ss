@@ -11,22 +11,8 @@
 	<% end_control %>
 	<div id="PaymentForm">$PaymentForm</div>
 	<div id="CancelForm">$CancelForm</div>
-
-
 <% else %>
-	<% if AllMemberOrders %>
-	<div id="PastOrders">
-		<h3 class="formHeading"><% _t("OrderConfirmation.HISTORY","Your Order History") %></h3>
-		<% control AllMemberOrders %>
-		<h4>$Heading</h4>
-		<ul>
-			<% control Orders %><li><a href="$Link">$Title</a></li><% end_control %>
-		</ul>
-		<% end_control %>
-	</div>
-	<% else %>
-		$YouDontHaveSavedOrders
-	<% end_if %>
+	<p class="message bad"><% _t("OrderConfirmationPage.COULDNOTBEFOUND","Your order could not be found.") %></p>
 <% end_if %>
 
 	<h3><% _t("OrderConfirmation.NEXT", "Next") %></h3>
