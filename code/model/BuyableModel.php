@@ -57,11 +57,13 @@ interface BuyableModel {
 
 	/**
 	 * Action to return specific version of a product.
+	 * This can be any product to enable the retrieval of deleted products.
 	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
-	 * @param Int $versionNumber
+	 * @param Int $id
+	 * @param Int $version
 	 * @return DataObject | Null
 	 */
-	function getVersionOfProduct($versionNumber);
+	function getVersionOfProduct($id = 0, $version = 0);
 
 
 

@@ -374,17 +374,20 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Action to return specific version of a specific product.
+	 * This can be any product to enable the retrieval of deleted products.
 	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
 	 * @param Int $id
 	 * @param Int $version
 	 * @return DataObject | Null
 	 */
 	function getVersionOfProduct($id = 0, $version = 0){
-		if($id) {
-			if($version) {
-				return Versioned::get_version($this->ClassName, $id, $version);
-			}
+		if(!$id) {
+			$id = $this->ID;
 		}
+		if(!$version) {
+			$version = $this->Version;
+		}
+		return Versioned::get_version($this->ClassName, $id, $version);
 	}
 
 
