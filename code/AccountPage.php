@@ -15,6 +15,37 @@
 
 class AccountPage extends Page {
 
+
+	/**
+	 * standard SS variable
+	 *@var Array
+	 */
+	static $casting = array(
+		"RunningTotal" => "Currency",
+		"RunningPaid" => "Currency",
+		"RunningOutstanding" => "Currency"
+	);
+
+	/**
+	 *@var float
+	 */
+	protected $calculatedTotal = 0;
+
+	/**
+	 *@var float
+	 */
+	protected $calculatedPaid = 0;
+
+	/**
+	 *@var float
+	 */
+	protected $calculatedOutstanding = 0;
+
+	/**
+	 *@var Null | DataObjectSet
+	 */
+	protected $pastOrders = null;
+
 	/**
 	 * Standard SS variable
 	 * @Var String
@@ -39,132 +70,64 @@ class AccountPage extends Page {
 		}
 	}
 
+
+	function PastOrders(){
+		$this->calculatePastOrders(); 
+		return $this->pastOrders;
+	}
+
 	/**
-	 * Each DataObject in the DataObjectSet return has two params: Heading and Orders
-	 * we use this format so that we can easily iterate through all the orders in the template.
-	 * TO DO: make this more standardised.
-	 * TO DO: create Object called OrdersDataObject with standardised fields (Title, Orders, etc...)
-	 * @return DataObjectSet |  Null - DataObjectSet contains DataObjects.
+	 * casted variable
+	 * @return Float (casted as Currency)
 	 */
-	public function AllMemberOrders() {
-		$dos = new DataObjectSet();
-		$doCurrentOrders = $this->putTogetherOrderDataObjectSet(
-			"ShoppingCartOrders",
-			_t("Account.CURRENTORDER", "Current Shopping Cart")
-		);
-		if($doCurrentOrders){$dos->push($doCurrentOrders);}
-
-		$incompleteOrders = $this->putTogetherOrderDataObjectSet(
-			"IncompleteOrders",
-			_t("Account.INCOMPLETEORDERS", "Incomplete Orders")
-		);
-		if($incompleteOrders){$dos->push($incompleteOrders);}
-
-		$inProcessOrders = $this->putTogetherOrderDataObjectSet(
-			"InProcessOrders",
-			_t("Account.INPROCESSORDERS", "In Process Orders")
-		);
-		if($inProcessOrders){$dos->push($inProcessOrders);}
-
-		$completeOrders = $this->putTogetherOrderDataObjectSet(
-			"CompleteOrders",
-			_t("Account.COMPLETEORDERS", "Completed Orders")
-		);
-		if($completeOrders){$dos->push($completeOrders);}
-		if($dos->count()) {
-			return $dos;
-		}
-		return null;
+	function getRunningTotal(){return $this->getRunningTotal();}
+	function RunningTotal(){
+		$this->calculatePastOrders(); 
+		return $this->calculatedTotal;
 	}
 
 	/**
-	 *
-	 *
-	 *@return DataObject - returns a dataobject with two variables: Orders and Heading.... Orders contains a dataobjectset of orders, Heading is the name of the Orders.
-	 **/
-	protected function putTogetherOrderDataObjectSet($method, $title) {
-		$dos = new DataObject();
-		$dos->Orders = $this->$method();
-		if($dos->Orders) {
-			$dos->Heading = DBField::create($className = "TextField", $title);
-		}
-		return null;
-	}
-
-	/**
-	 * Returns all {@link Order} records for this
-	 * member that are incomplete.
-	 *
-	 * @return DataObjectSet | null
+	 * casted variable
+	 * @return Float (casted as Currency)
 	 */
-	function ShoppingCartOrders() {
-		$order = ShoppingCart::current_order();
-		if($order) {
-			$dos = new DataObjectSet();
-			$dos->push($order);
-			return $dos;
-		}
-		return null;
+	function getRunningPaid(){return $this->getRunningPaid();}
+	function RunningPaid(){
+		$this->calculatePastOrders(); 
+		return $this->calculatedPaid;
 	}
 
 	/**
-	 * Returns all {@link Order} records for this
-	 * member that are incomplete.
-	 *
-	 * @return DataObjectSet | null
+	 * casted variable
+	 * @return Float (casted as Currency)
 	 */
-	function IncompleteOrders() {
-		$statusFilter = "\"OrderStep\".\"ShowAsUncompletedOrder\" = 1 ";
-		return $this->otherOrderSQL($statusFilter);
+	function getRunningOutstanding(){return $this->getRunningOutstanding();}
+	function RunningOutstanding(){
+		$this->calculatePastOrders(); 
+		return $this->calculatedOutstanding;
 	}
 
-	/**
-	 * Returns all {@link Order} records for this
-	 * member that are completed.
-	 *
-	 * @return DataObjectSet | null
-	 */
-	function InProcessOrders() {
-		$statusFilter = "\"OrderStep\".\"ShowAsInProcessOrder\" = 1";
-		return $this->otherOrderSQL($statusFilter);
-	}
 
-	/**
-	 * Returns all {@link Order} records for this
-	 * member that are completed.
-	 *
-	 * @return DataObjectSet | null
-	 */
-	function CompleteOrders() {
-		$statusFilter = "\"OrderStep\".\"ShowAsCompletedOrder\" = 1";
-		return $this->otherOrderSQL($statusFilter);
-	}
-
-	/**
-	 *@return DataObjectSet  | null
-	 **/
-	protected function otherOrderSQL ($statusFilter) {
-		$memberID = Member::currentUserID();
-		if($memberID) {
-			$orders = DataObject::get(
-				$className = 'Order',
-				$where = "\"Order\".\"MemberID\" = '$memberID' AND ".$statusFilter." AND \"CancelledByID\" = 0",
-				$sort = "\"Created\" DESC",
-				$join = "INNER JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\""
+	protected function calculatePastOrders(){
+		if(!$this->pastOrders) {
+			$this->pastOrders = DataObject::get(
+				"Order",
+				"\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID." AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL) ",
+				"\"Created\" DESC",
+				//why do we have this?
+				"INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"OrderID\" = \"Order\".\"ID\" INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\""
 			);
-			if($orders) {
-				foreach($orders as $order) {
-					if(!$order->Items() || !$order->canView()) {
-						$orders->remove($order);
-					}
-					elseif($order->IsSubmitted())  {
-						$order->tryToFinaliseOrder();
-					}
+			$this->calculatedTotal = 0;
+			$this->calculatedPaid = 0;
+			$this->calculatedOutstanding = 0;
+			if($this->pastOrders) {
+				foreach($this->pastOrders as $order) {
+					$this->calculatedTotal += $order->Total();
+					$this->calculatedPaid += $order->TotalPaid();
+					$this->calculatedOutstanding += $order->TotalOutstanding();
 				}
-				return $orders;
 			}
 		}
-		return null;
+		return $this->pastOrders;
 	}
 
 	/**
@@ -207,34 +170,6 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function MemberForm() {
 		return new ShopAccountForm($this, 'MemberForm');
-	}
-
-	protected $total, $paid, $outstanding;
-
-	function PastOrders(){
-		$pastOrders = DataObject::get("Order", "\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID, "\"Created\" ASC", "INNER JOIN OrderAttribute ON OrderAttribute.OrderID = \"Order\".\"ID\" INNER JOIN OrderItem ON OrderItem.ID = OrderAttribute.ID");
-		$this->total = 0;
-		$this->paid = 0;
-		$this->outstanding = 0;
-		if($pastOrders) {
-			foreach($pastOrders as $order) {
-				$this->total += $order->Total;
-				$this->paid += $order->TotalPaid;
-				$this->outstanding += $order->TotalOutstanding;
-
-			}
-		}
-		return $pastOrders;
-	}
-
-	function RunningTotal(){
-		return DBField::create("Currency", $this->total, "total")->Nice();
-	}
-	function RunningPaid(){
-		return DBField::create("Currency", $this->paid, "paid")->Nice();
-	}
-	function RunningOutstanding(){
-		return DBField::create("Currency", $this->outstanding, "outstanding")->Nice();
 	}
 
 }
