@@ -259,6 +259,8 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 		"OrderAsString" => "Text",
 		"OrderAsJSON" => "Text",
 		"SequentialOrderNumber" => "Int"
+		"Total" => "Currency",
+		"SubTotal" => "Currency"
 	);
 
 	public static $defaults = array(
@@ -323,9 +325,16 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
-		if(!$this->SequentialOrderNumber) {
+		if($order = $this->Order()) {
+			if(!$this->Total) {
+				$this->Total = $order->Total();
+				$this->SubTotal = $order->SubTotal();
+			}
+		}
+		if(!intval($this->SequentialOrderNumber)) {
+			$min = intval(EcommerceConfig::get("Order", "order_id_start_number"));
 			if(isset($this->ID)) {
-				$id = $this->ID;
+				$id = intval($this->ID);
 			}
 			else {
 				$id = 0;
@@ -339,11 +348,14 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 			);
 			if($lastOneAsDos) {
 				foreach($lastOneAsDos as $lastOne) {
-					$this->SequentialOrderNumber = $lastOne->SequentialOrderNumber + 1;
+					$this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
+					if($this->SequentialOrderNumber < $min) {
+						$this->SequentialOrderNumber = $min;
+					}
 				}
 			}
 			else {
-				$this->SequentialOrderNumber = intval(EcommerceConfig::get("Order", "order_id_start_number"));
+				$this->SequentialOrderNumber = $min;
 			}
 		}
 		if(!intval($this->SequentialOrderNumber)) {
