@@ -258,7 +258,7 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 		"OrderAsHTML" => "HTMLText",
 		"OrderAsString" => "Text",
 		"OrderAsJSON" => "Text",
-		"SequentialOrderNumber" => "Int"
+		"SequentialOrderNumber" => "Int",
 		"Total" => "Currency",
 		"SubTotal" => "Currency"
 	);
