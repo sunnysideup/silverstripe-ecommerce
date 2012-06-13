@@ -1560,13 +1560,23 @@ class Order extends DataObject {
 			if($this->CancelledByID) {
 				$name = " - "._t("Order.CANCELLED","CANCELLED");
 			}
-			if(!$name && $this->MemberID && $member = $this->Member()) {
-				if($member->exists() && $name = $member->getName()) {
-					$name = " - ".$name;
+			if(!$name) {
+				if($this->MemberID){
+					if($member = $this->Member()) {
+						if($member->exists()) {
+							if($memberName = $member->getName()) {
+								$name = " - ".$memberName;
+							}
+						}
+					}
 				}
 			}
-			elseif(!$name && $this->BillingAddressID && $billingAddress = $this->BillingAddress()) {
-				$name = " - ".$billingAddress->Prefix." ".$billingAddress->FirstName." ".$billingAddress->Surname;
+			if(!$name) {
+				if($this->BillingAddressID) {
+					if($billingAddress = $this->BillingAddress()) {
+						$name = " - ".$billingAddress->Prefix." ".$billingAddress->FirstName." ".$billingAddress->Surname;
+					}
+				}
 			}
 			$title .= $name;
 		}
