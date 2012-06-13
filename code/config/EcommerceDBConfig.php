@@ -18,6 +18,7 @@ class EcommerceDBConfig extends DataObject {
 		"UseThisOne" => "Boolean",
 		"ShopClosed" => "Boolean",
 		"ShopPricesAreTaxExclusive" => "Boolean",
+		"InvoiceTitle" => "Varchar(200)",
 		"ShopPhysicalAddress" => "HTMLText",
 		"ReceiptEmail" => "Varchar(255)",
 		"PostalCodeURL" => "Varchar(255)",
@@ -106,7 +107,7 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveQuantifiers" => false,
 		"ProductsAlsoInOtherGroups" => false,
 		"ProductsHaveVariations" => false
-	);//use fieldName => Default Value
+	);
 
 	public function populateDefaults() {
 		parent::populateDefaults();
@@ -155,6 +156,7 @@ class EcommerceDBConfig extends DataObject {
 			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch configurations)."),
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
+			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Invoice title (e.g. Tax Invoice or Update from ...)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),
 			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address (e.g. sales@mysite.com)"),
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
@@ -204,7 +206,8 @@ class EcommerceDBConfig extends DataObject {
 				new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),
 				new ImageField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos")
 			),
-			new Tab('Legal',
+			new Tab('Invoice',
+				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"]),
 				new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"] , 5,5)
 			),
 			new Tab('Process',
