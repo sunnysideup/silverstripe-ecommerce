@@ -17,7 +17,7 @@
 			<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
 				<td class="product title" scope="row">
 					<% if Link %>
-						<a id="AJAXDefinitions.$CartTitleID" href="$Link">$CartTitle</a>
+						<a id="$AJAXDefinitions.CartTitleID" href="$Link">$CartTitle</a>
 					<% else %>
 						<span id="$AJAXDefinitions.CartTitleID">$CartTitle</span>
 					<% end_if %>
