@@ -66,7 +66,7 @@
 				<% if CanBeRemoved %>
 					<strong>
 						<a class="ajaxQuantityLink" href="$RemoveLink" title="<% sprintf(_t("Order.REMOVE","Remove &quot;%s&quot; from your order"),$TableTitle) %>">
-							<img src="ecommerce/images/remove.gif" alt="x"/>
+							<img src="ecommerce/images/remove.gif" alt="x" />
 						</a>
 					</strong>
 				<% end_if %>
