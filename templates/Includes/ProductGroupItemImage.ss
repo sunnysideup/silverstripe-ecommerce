@@ -2,7 +2,7 @@
 <% if Image %>
 	<a href="$Link"><img src="$Image.SmallImage.URL" alt="<% sprintf(_t("Product.IMAGE","%s image"),$Title) %>" width="$Image.SmallImage.Width" height="$Image.SmallImage.Height" /></a>
 <% else %>
-	<a href="$Link" class="noImage"><img src="$EcomConfig.DefaultImageLink" alt="<% _t("Product.NOIMAGEAVAILABLE","no image available") %>" width="$DummyImage.SmallWidth" height="$DummyImage.SmallHeight" ></a>
+	<a href="$Link" class="noImage"><img src="$EcomConfig.DefaultImageLink" alt="<% _t("Product.NOIMAGEAVAILABLE","no image available") %>" width="$DummyImage.SmallWidth" height="$DummyImage.SmallHeight" /></a>
 <% end_if %>
 </div>
 
