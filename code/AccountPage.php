@@ -70,9 +70,12 @@ class AccountPage extends Page {
 		}
 	}
 
-
+	/**
+	 * Returns a list of all previous orders for the member / account
+	 * @return Null | DataObjectSet
+	 */
 	function PastOrders(){
-		$this->calculatePastOrders(); 
+		$this->calculatePastOrders();
 		return $this->pastOrders;
 	}
 
@@ -82,7 +85,7 @@ class AccountPage extends Page {
 	 */
 	function getRunningTotal(){return $this->getRunningTotal();}
 	function RunningTotal(){
-		$this->calculatePastOrders(); 
+		$this->calculatePastOrders();
 		return $this->calculatedTotal;
 	}
 
@@ -92,7 +95,7 @@ class AccountPage extends Page {
 	 */
 	function getRunningPaid(){return $this->getRunningPaid();}
 	function RunningPaid(){
-		$this->calculatePastOrders(); 
+		$this->calculatePastOrders();
 		return $this->calculatedPaid;
 	}
 
@@ -102,20 +105,18 @@ class AccountPage extends Page {
 	 */
 	function getRunningOutstanding(){return $this->getRunningOutstanding();}
 	function RunningOutstanding(){
-		$this->calculatePastOrders(); 
+		$this->calculatePastOrders();
 		return $this->calculatedOutstanding;
 	}
 
 
+	/**
+	 * retrieves previous orders and adds totals to it...
+	 * return NULL | DataObjectSet
+	 **/
 	protected function calculatePastOrders(){
 		if(!$this->pastOrders) {
-			$this->pastOrders = DataObject::get(
-				"Order",
-				"\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID." AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL) ",
-				"\"Created\" DESC",
-				//why do we have this?
-				"INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"OrderID\" = \"Order\".\"ID\" INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\""
-			);
+			$this->pastOrders = $this->pastOrdersSelection();
 			$this->calculatedTotal = 0;
 			$this->calculatedPaid = 0;
 			$this->calculatedOutstanding = 0;
@@ -128,6 +129,20 @@ class AccountPage extends Page {
 			}
 		}
 		return $this->pastOrders;
+	}
+
+	/**
+	 *
+	 * @return DataObjectSet | NULL
+	 */
+	protected function pastOrdersSelection(){
+		return DataObject::get(
+			"Order",
+			"\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID." AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL) ",
+			"\"Created\" DESC",
+			//why do we have this?
+			"INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"OrderID\" = \"Order\".\"ID\" INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\""
+		);
 	}
 
 	/**
@@ -151,7 +166,7 @@ class AccountPage_Controller extends Page_Controller {
 	 **/
 	function init() {
 		parent::init();
-		if(!Member::CurrentMember()) {
+		if(!$this->AccountMember()) {
 			$messages = array(
 				'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
 				'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.')
@@ -170,6 +185,14 @@ class AccountPage_Controller extends Page_Controller {
 	 */
 	function MemberForm() {
 		return new ShopAccountForm($this, 'MemberForm');
+	}
+
+	/**
+	 * Returns the current member
+	 * @return NULL | Member
+	 */
+	function AccountMember(){
+		return Member::CurrentMember();
 	}
 
 }
