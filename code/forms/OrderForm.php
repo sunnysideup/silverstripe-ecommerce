@@ -154,12 +154,12 @@ class OrderForm extends Form {
 		ShoppingCart::singleton()->submit();
 
 		//-------------- ACTION PAYMENT -------------
-		$paymentIsWorking = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
+		$payment = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
 
 		//------------- WHAT DO WE DO NEXT? -----------------
-		if($paymentIsWorking) {
+		if($payment) {
 			//redirection is taken care of by EcommercePayment
-			return $paymentProcessStarted;
+			return $payment;
 		}
 		else {
 			//there is an error with payment
