@@ -163,7 +163,7 @@ class OrderForm extends Form {
 		}
 		else {
 			//there is an error with payment
-			if(!Director::redirected_to()) {
+			if(!Controller::curr()->redirectedTo()) {
 				Director::redirect($order->Link());
 			}
 			return false;
