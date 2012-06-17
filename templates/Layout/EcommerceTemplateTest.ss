@@ -1,4 +1,4 @@
-<div class="typography">
+<div id="EcommereTemplateTest">
 
 <h1>Ecommerce Template Test Page</h1>
 <p>
