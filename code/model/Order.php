@@ -1026,7 +1026,7 @@ class Order extends DataObject {
 			}
 		}
 		if(!$subject) {
-			$subject = str_replace("{OrderNumber}", $this->ID,Order_Email::get_subject());
+			$subject = str_replace("{OrderNumber}", $this->ID, Order_Email::get_subject());
 		}
 		$replacementArray = array("Message" => $message);
 		$replacementArray["Order"] = $this;
