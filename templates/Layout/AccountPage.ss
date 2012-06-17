@@ -9,7 +9,7 @@
 <% include AccountPastOrders %>
 
 <% if MemberForm %>
-	<div id="MemberForm" class="typography">
+	<div id="MemberForm">
 		$MemberForm
 	</div>
 <% end_if %>
