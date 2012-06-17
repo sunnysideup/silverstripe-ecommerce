@@ -282,7 +282,7 @@ class ProductGroup extends Page {
 		$fields = parent::getCMSFields();
 		$fields->addFieldToTab('Root.Content.Images', new ImageField('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
-		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because it is set to zero)") : "";
+		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
 		$fields->addFieldToTab(
 			'Root.Content',
 			new Tab(
@@ -713,10 +713,9 @@ class ProductGroup extends Page {
 
 	/**
 	 * Returns children ProductGroup pages of this group.
-	 * @param Int $maxRecursiveLevel - maximum depth , e.g. 1 = one level down
+	 * @param Int $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Groups are returned...
 	 * @param String $filter - additional filter to be added
 	 * @param Int $numberOfRecursions - current level of depth
-	 * @param DataObjectSet | Null $output - child groups already found
 	 * @return DataObjectSet | null
 	 */
 	function ChildGroups($maxRecursiveLevel, $filter = "", $numberOfRecursions = 0) {
@@ -740,6 +739,10 @@ class ProductGroup extends Page {
 		return $output;
 	}
 
+
+	/**
+	 * Deprecated method
+	 */
 	function ChildGroupsBackup($maxRecursiveLevel, $filter = "") {
 		if($maxRecursiveLevel > 24) {
 			$maxRecursiveLevel = 24;
@@ -900,9 +903,17 @@ class ProductGroup_Controller extends Page_Controller {
 
 
 	/**
+	 * returns child product groups for use in
+	 * 'in this section'
+	 * @return NULL | DataObjectSet
+	 */
+	function MenuChildGroups() {
+		return $this->ChildGroups(2, "\"ShowInMenus\" = 1");
+	}
+
+	/**
 	 *
 	 * This method can be extended to show products in the side bar.
-	 *
 	 * @return Object DataObjectSet
 	 */
 	function SidebarProducts(){
