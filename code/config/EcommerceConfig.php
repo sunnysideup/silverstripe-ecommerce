@@ -116,7 +116,7 @@ class EcommerceConfig extends Object {
 			".implode(", ", self::$folder_and_file_locations)."<br />
 			<pre>
 $className:
-	 $identifier: [put desired value here]
+	 $identifier: [check default configuration (ecommerce/_config/ecommerce.yaml) for example value]
 			</pre><br />
 			Please also make sure to visit <a href=\"/dev/ecommerce/\">/dev/ecommerce/</a> to check all your configurations and run any migration scripts!";
 		user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
