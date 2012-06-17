@@ -436,9 +436,9 @@ class EcommerceCheckConfiguration extends BuildTask{
 						$defaultsArray[$fieldKey] = "[default not set]";
 					}
 				}
-				$page->defaultsArray = $defaultsArray;
-				$page->configArray = print_r($configArray, 1);
 			}
+			$page->defaultsArray = $defaultsArray;
+			$page->configArray = print_r($configArray, 1);
 		}
 	}
 
