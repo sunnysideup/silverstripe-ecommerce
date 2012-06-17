@@ -96,9 +96,12 @@ class EcommercePayment extends DataObjectDecorator {
 			if($result->isProcessing()) {
 				//IMPORTANT!!!
 				// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)
+				//redirection is taken care of by payment processor
 				return $result->getValue();
 			}
 			else {
+				//payment is done, redirect to either returntolink
+				//OR to the link of the order ....
 				if(isset($data["returntolink"])) {
 					Director::redirect($data["returntolink"]);
 				}

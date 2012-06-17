@@ -149,17 +149,21 @@ class OrderForm extends Form {
 		$this->clearSessionData(); //clears the stored session form data that might have been needed if validation failed
 		//----------------- PAYMENT ------------------------------
 
-		//-------------- ACTION PAYMENT -------------
-		$paymentProcessStarted = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
+		//-------------- NOW SUBMIT -------------
+		// this should be done before paying, as only submitted orders can be paid!
+		ShoppingCart::singleton()->submit();
 
-		//------------- NOW THE ORDER GETS SUBMITTED FOR REAL -----------------
-		if($paymentProcessStarted) {
-			ShoppingCart::singleton()->submit();
+		//-------------- ACTION PAYMENT -------------
+		$paymentIsWorking = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
+
+		//------------- WHAT DO WE DO NEXT? -----------------
+		if($paymentIsWorking) {
+			//redirection is taken care of by EcommercePayment
 			return $paymentProcessStarted;
 		}
 		else {
-			$form->sessionMessage(_t('OrderForm.PAYMENTCOULDNOTBEPROCESSED','Payment could not be processed.'), 'bad');
-			Director::redirectBack();
+			//there is an error with payment
+			Director::redirect($order->Link());
 			return false;
 		}
 		//------------------------------
