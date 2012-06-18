@@ -29,7 +29,10 @@
 
 class Order extends DataObject {
 
-
+	/**
+	 * API Control
+	 * @var Array
+	 */
 	public static $api_access = array(
 		'view' => array(
 			'OrderEmail',
