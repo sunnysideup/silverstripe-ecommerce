@@ -27,13 +27,12 @@ class Product extends Page implements BuyableModel {
 	public static $api_access = array(
 		'view' => array(
 			"Title",
-			"AllowPurchase",
-			"InternalItemID",
 			"Price",
 			"Weight",
 			"Model",
 			"Quantifier",
 			"FeaturedProduct",
+			"AllowPurchase",
 			"InternalItemID", //ie SKU, ProductID etc (internal / existing recognition of product)
 			"NumberSold" //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
 		)
