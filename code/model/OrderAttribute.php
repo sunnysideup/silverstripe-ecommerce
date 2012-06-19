@@ -22,7 +22,7 @@ class OrderAttribute extends DataObject {
 			'Sort',
 			'GroupSort',
 			'TableTitle',
-			'TableSubTitle',
+			'TableSubTitleNOHTML',
 			'CartTitle',
 			'CartSubTitle',
 			'Order'
@@ -229,7 +229,7 @@ class OrderAttribute extends DataObject {
 	 * @return String
 	  **/
 	function TableSubTitle() {return $this->getTableSubTitle();}
-	function TableSubTitleNOHTML() {return strip_tags($this->TableSubTitle());}
+	function getTableSubTitleNOHTML() {return strip_tags($this->getTableSubTitle());}
 	function getTableSubTitle() {
 		return "";
 	}
