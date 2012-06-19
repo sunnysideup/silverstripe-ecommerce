@@ -368,18 +368,24 @@ class OrderItem extends OrderAttribute {
 		if(!$this->BuyableClassName) {
 			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
 		}
+		$turnTranslatableBackOn = false;
 		if (!$current && Object::has_extension($this->BuyableClassName,'Translatable')) {
 			Translatable::disable_locale_filter();
+			$turnTranslatableBackOn = true;
 		}
 		//end hack!
 		$obj = null;
-		if(!$current && $this->Version) {
+		if($current) {
+			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
+			if(!$obj) {
+				$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
+				$obj->Title .= _t("OrderItem.ORDERITEMNOLONGERAVAILABLE", " - NO LONGER AVAILABLE.");
+			}
+		}
+		elseif($this->Version) {
 			$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
 		}
-		else {
-			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID-0);
-		}
-		if (Object::has_extension($this->BuyableClassName,'Translatable')) {
+		if ($turnTranslatableBackOn) {
 			Translatable::enable_locale_filter();
 		}
 		return $obj;
