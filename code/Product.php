@@ -1001,7 +1001,7 @@ class Product_Image extends Image {
 }
 
 class Product_OrderItem extends OrderItem {
-
+	
 	/**
 	 *
 	 * @return Boolean
