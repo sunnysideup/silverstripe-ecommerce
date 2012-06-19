@@ -698,7 +698,9 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Once the item has been sold, it can not be deleted.
 	 * @return Boolean
-	 */
+	 * UPDATE: this method is no longer needed as we can now safely retrieve
+	 * "deleted" Products from versions
+	 *
 	function canDelete($member = null) {
 		//can we delete sold items? or can we only make them invisible
 		if($this->HasBeenSold()) {
@@ -706,6 +708,7 @@ class Product extends Page implements BuyableModel {
 		}
 		return parent::canDelete($member);
 	}
+	*/
 
 	/**
 	 * Standard SS method
