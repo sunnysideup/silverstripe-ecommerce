@@ -14,7 +14,8 @@
 Director::addRules(50, array(
 	'shoppingcart/$Action/$ID/$OtherID/$Version' => 'ShoppingCart_Controller',
 	'ecommercepayment/$Action/$ID/$OtherID' => 'EcommercePaymentController',
-	'ecommercetemplatetest/$Action/$ID/$OtherID' => 'EcommerceTemplateTest'
+	'ecommercetemplatetest/$Action/$ID/$OtherID' => 'EcommerceTemplateTest',
+	'api/ecommerce' => 'EcommerceRestfulServer'
 ));
 Object::add_extension("Member", "EcommerceRole");
 Object::add_extension("Payment", "EcommercePayment");
