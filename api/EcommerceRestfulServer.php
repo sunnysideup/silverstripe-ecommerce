@@ -1,4 +1,17 @@
 <?php
+/**
+ * extends the standard RestfulServer to:
+ * - provide better access to extended classes  
+ *
+ *
+ *
+ *
+ */ 
+
+
+
+
+
 
 class EcommerceRestfulServer extends RestfulServer {
 	
