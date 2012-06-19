@@ -1002,6 +1002,28 @@ class Product_Image extends Image {
 
 class Product_OrderItem extends OrderItem {
 	
+	public static $api_access = array(
+		'view' => array(
+			'CalculatedTotal',
+			'TableTitle',
+			'TableSubTitleNOHTML',
+			'Name',
+			'TableValue',
+			'Quantity',
+			'BuyableID',
+			'BuyableClassName',
+			'Version',
+			'UnitPrice',
+			'Total',
+			'Order',
+			'InternalItemID'
+		)
+	);
+	
+	static $casting = array(
+		'InternalItemID' => 'Varchar'
+	);
+	
 	/**
 	 *
 	 * @return Boolean
@@ -1096,6 +1118,10 @@ HTML;
 		$this->extend('updateDebug',$html);
 		return $html;
 	}
-
-
+	
+	function InternalItemID() {return $this->getInternalItemID();}
+	function getInternalItemID() {
+		$product = $this->Product();
+		return $product->InternalItemID;
+	}
 }
