@@ -1080,12 +1080,12 @@ class Product_OrderItem extends OrderItem {
 	 **/
 	function TableTitle() {return $this->getTableTitle();}
 	function getTableTitle() {
-		$tabletitle = _t("Product.UNKNOWN", "Unknown Product");
+		$tableTitle = _t("Product.UNKNOWN", "Unknown Product");
 		if($product = $this->Product()) {
-			$tabletitle = $product->Title;
-			$this->extend('updateTableTitle',$tabletitle);
+			$tableTitle = $product->Title;
+			$this->extend('updateTableTitle',$tableTitle);
 		}
-		return $tabletitle;
+		return $tableTitle;
 	}
 
 	/**
@@ -1119,7 +1119,8 @@ HTML;
 
 	function InternalItemID() {return $this->getInternalItemID();}
 	function getInternalItemID() {
-		$product = $this->Product();
-		return $product->InternalItemID;
+		if($product = $this->Product()) {
+			return $product->InternalItemID;
+		}
 	}
 }
