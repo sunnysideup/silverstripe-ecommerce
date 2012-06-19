@@ -695,20 +695,15 @@ class Product extends Page implements BuyableModel {
 		return parent::canEdit($member);
 	}
 
+
 	/**
-	 * Once the item has been sold, it can not be deleted.
+	 * Standard SS method
 	 * @return Boolean
-	 * UPDATE: this method is no longer needed as we can now safely retrieve
-	 * "deleted" Products from versions
-	 *
-	function canDelete($member = null) {
-		//can we delete sold items? or can we only make them invisible
-		if($this->HasBeenSold()) {
-			return false;
-		}
-		return parent::canDelete($member);
+	 */
+	public function canDelete($member = null) {
+		return $this->canEdit($member);
 	}
-	*/
+
 
 	/**
 	 * Standard SS method
@@ -1004,7 +999,7 @@ class Product_Image extends Image {
 }
 
 class Product_OrderItem extends OrderItem {
-	
+
 	public static $api_access = array(
 		'view' => array(
 			'CalculatedTotal',
@@ -1022,11 +1017,11 @@ class Product_OrderItem extends OrderItem {
 			'InternalItemID'
 		)
 	);
-	
+
 	static $casting = array(
 		'InternalItemID' => 'Varchar'
 	);
-	
+
 	/**
 	 *
 	 * @return Boolean
@@ -1121,7 +1116,7 @@ HTML;
 		$this->extend('updateDebug',$html);
 		return $html;
 	}
-	
+
 	function InternalItemID() {return $this->getInternalItemID();}
 	function getInternalItemID() {
 		$product = $this->Product();
