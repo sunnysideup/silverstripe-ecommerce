@@ -18,15 +18,15 @@ class OrderAttribute extends DataObject {
 	 */
 	public static $api_access = array(
 		'view' => array(
-				'CalculatedTotal',
-				'Sort',
-				'GroupSort',
-				'TableTitle',
-				'TableSubTitle',
-				'CartTitle',
-				'CartSubTitle',
-				'Order'
-			)
+			'CalculatedTotal',
+			'Sort',
+			'GroupSort',
+			'TableTitle',
+			'TableSubTitle',
+			'CartTitle',
+			'CartSubTitle',
+			'Order'
+		)
 	 );
 
 	public static $db = array(
@@ -228,6 +228,7 @@ class OrderAttribute extends DataObject {
 	 * @return String
 	  **/
 	function TableSubTitle() {return $this->getTableSubTitle();}
+	function TableSubTitleNOHTML() {return strip_tags($this->TableSubTitle());}
 	function getTableSubTitle() {
 		return "";
 	}

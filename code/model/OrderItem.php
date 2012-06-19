@@ -18,23 +18,19 @@ class OrderItem extends OrderAttribute {
 	 */
 	public static $api_access = array(
 		'view' => array(
-				'CalculatedTotal',
-				'Sort',
-				'GroupSort',
-				'TableTitle',
-				'TableSubTitle',
-				'CartTitle',
-				'CartSubTitle',
-				'Name',
-				'TableValue',
-				'Quantity',
-				'BuyableID',
-				'BuyableClassName',
-				'Version',
-				'UnitPrice',
-				'Total',
-				'Order'
-			)
+			'CalculatedTotal',
+			'TableTitle',
+			'TableSubTitleNOHTML',
+			'Name',
+			'TableValue',
+			'Quantity',
+			'BuyableID',
+			'BuyableClassName',
+			'Version',
+			'UnitPrice',
+			'Total',
+			'Order'
+		)
 	 );
 
 	/**
