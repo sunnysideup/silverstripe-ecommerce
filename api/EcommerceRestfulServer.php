@@ -3,7 +3,7 @@
 class EcommerceRestfulServer extends RestfulServer {
 	
 	function index() {
-		XMLDataFormatter::$api_base = 'api/v2/';
+		XMLDataFormatter::$api_base = 'api/ecommerce/';
 		if(!isset($this->urlParams['ClassName'])) return $this->notFound();
 		$className = $this->urlParams['ClassName'];
 		$id = (isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null;
