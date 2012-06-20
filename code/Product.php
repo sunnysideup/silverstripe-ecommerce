@@ -228,8 +228,8 @@ class Product extends Page implements BuyableModel {
 	 */
 	function onBeforeWrite(){
 		parent::onBeforeWrite();
-	//we are adding all the fields to the keyword fields here for searching purposes.
-	//because the MetaKeywords Field is being searched.
+		//we are adding all the fields to the keyword fields here for searching purposes.
+		//because the MetaKeywords Field is being searched.
 		$this->MetaKeywords = "";
 		foreach($this->db() as $fieldName => $fieldType) {
 			if(is_string($this->$fieldName) && strlen($this->$fieldName) > 2) {
@@ -240,14 +240,25 @@ class Product extends Page implements BuyableModel {
 				}
 			}
 		}
-		$this->FullSiteTreeSort = "";
+		//FullName
+		$fullName = "";
+		if($this->InternalItemID) {
+			$fullName .= $this->InternalItemID." - ";
+		}
+		$fullName .= $this->Title;
+		$parentString = " (";
+		//FullSiteTreeSort
 		$parentSortArray = array($this->Sort);
 		$obj = $this;
 		while($obj->ParentID) {
 			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
 			$parentSortArray[] = $obj->Sort;
+			$parentString .= $obj->Title . " / ".$parentString;
 		}
 		$reverseArray = array_reverse($parentSortArray);
+		$parentString .= ")";
+		//setting fields with new values!
+		$this->FullName = $fullName.$parentString;
 		$this->FullSiteTreeSort = implode(",", $reverseArray);
 	}
 
@@ -655,7 +666,6 @@ class Product extends Page implements BuyableModel {
 		}
 		return $moneyObject;
 	}
-
 
 
 
