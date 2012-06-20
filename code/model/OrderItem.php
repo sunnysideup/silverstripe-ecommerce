@@ -329,7 +329,7 @@ class OrderItem extends OrderAttribute {
 	 * returns InternalItemID from Buyable
 	 * @return NULL | String
 	 */
-	function InternalItemID() { return $this->getInternalItemID()}
+	function InternalItemID() { return $this->getInternalItemID();}
 	function getInternalItemID() {
 		if($buyable = $this->Buyable()) {
 			return $buyable->InternalItemID;
