@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * describes the buyable classes
+ * CONTENT:
+ * //GROUPS AND SIBLINGS
+ * //IMAGES
+ * //VERSIONING
+ * //ORDER ITEM
+ * //LINKS
+ * //TEMPLATE STUFF
+ * //CRUD SETTINGS
+ *
+ */
 
 interface BuyableModel {
 
@@ -218,7 +229,6 @@ interface BuyableModel {
 	 * @return Currency (casted variable)
 	 */
 	function DisplayPrice();
-
 
 
 
