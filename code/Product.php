@@ -50,7 +50,8 @@ class Product extends Page implements BuyableModel {
 		'AllowPurchase' => 'Boolean',
 		'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
 		'NumberSold' => 'Int', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
-		'FullSiteTreeSort' => 'Varchar(100)' //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
+		'FullSiteTreeSort' => 'Varchar(100)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
+		'FullName' => 'Text' //Name for look-up lists
 	);
 
 	/**
@@ -1018,10 +1019,6 @@ class Product_OrderItem extends OrderItem {
 		)
 	);
 
-	static $casting = array(
-		'InternalItemID' => 'Varchar'
-	);
-
 	/**
 	 *
 	 * @return Boolean
@@ -1117,10 +1114,4 @@ HTML;
 		return $html;
 	}
 
-	function InternalItemID() {return $this->getInternalItemID();}
-	function getInternalItemID() {
-		if($product = $this->Product()) {
-			return $product->InternalItemID;
-		}
-	}
 }
