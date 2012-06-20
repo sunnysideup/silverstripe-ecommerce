@@ -18,6 +18,7 @@ class OrderItem extends OrderAttribute {
 	 */
 	public static $api_access = array(
 		'view' => array(
+			'InternalItemID',
 			'CalculatedTotal',
 			'TableTitle',
 			'TableSubTitleNOHTML',
@@ -60,7 +61,8 @@ class OrderItem extends OrderAttribute {
 	 */
 	public static $casting = array(
 		'UnitPrice' => 'Currency',
-		'Total' => 'Currency'
+		'Total' => 'Currency',
+		'InternalItemID' => 'Varchar'
 	);
 
 	######################
@@ -321,6 +323,19 @@ class OrderItem extends OrderAttribute {
 		return $total;
 	}
 
+
+	/**
+	 * Casted variable
+	 * returns InternalItemID from Buyable
+	 * @return NULL | String
+	 */
+	function InternalItemID() { return $this->getInternalItemID()}
+	function getInternalItemID() {
+		if($buyable = $this->Buyable()) {
+			return $buyable->InternalItemID;
+		}
+	}
+
 	/**
 	 *
 	 * @return Field (EcomQuantityField)
@@ -379,7 +394,7 @@ class OrderItem extends OrderAttribute {
 			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
 			if(!$obj) {
 				$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
-				$obj->Title .= _t("OrderItem.ORDERITEMNOLONGERAVAILABLE", " - NO LONGER AVAILABLE.");
+				$obj->Title .= _t("OrderItem.ORDERITEMNOLONGERAVAILABLE", " - NO LONGER AVAILABLE");
 			}
 		}
 		elseif($this->Version) {
