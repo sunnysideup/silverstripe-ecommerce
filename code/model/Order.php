@@ -399,7 +399,13 @@ class Order extends DataObject {
 				$fields->addFieldToTab('Root.Log', $oldOrderStatusLogs);
 			}
 			else {
-				$msg = _t("Order.NOSUBMITTEDYET", 'No details are shown here as this order has not been submitted yet. Once you change the status of the order more options will be available.');
+				$msg = sprintf(
+					_t("Order.NOSUBMITTEDYET",
+						'No details are shown here as this order has not been submitted yet.
+						You can %1$s to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .'
+					),
+					'<a href="'.$this->RetrieveLink().'" target="_blank">load this order</a>'
+				);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$msg.'</p>'));
 				$orderItemsTable = new HasManyComplexTableField(
 					$this, //$controller
@@ -1264,7 +1270,7 @@ class Order extends DataObject {
 	 **/
 	 //TODO: please comment why we make use of this function
 	protected function getMemberForCanFunctions($member = null) {
-		if(!$member) {$member = Member::currentMember();}
+		if(!$member) {$member = Member::currentUser();}
 		if(!$member) {
 			$member = new Member();
 			$member->ID = 0;
@@ -1539,16 +1545,16 @@ class Order extends DataObject {
 	 */
 	function RetrieveLink(){return $this->getRetrieveLink();}
 	function getRetrieveLink() {
-		if(!$this->IsSubmitted()) {
-			return CheckoutPage::find_link();
-		}
-		else {
+		if($this->IsSubmitted()) {
 			if(!$this->SessionID) {
 				$this->SessionID = session_id();
 				$this->write();
 			}
+			return Director::AbsoluteURL(OrderConfirmationPage::find_link())."retrieveorder/".$this->SessionID."/".$this->ID."/";
 		}
-		return Director::AbsoluteURL(OrderConfirmationPage::find_link())."retrieveorder/".$this->SessionID."/".$this->ID."/";
+		else {
+			return Director::AbsoluteURL("/shoppingcart/loadorder/".$this->ID."/");
+		}
 	}
 
 	/**
