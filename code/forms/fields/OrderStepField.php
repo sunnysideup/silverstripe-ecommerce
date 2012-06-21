@@ -54,11 +54,10 @@ class OrderStepField extends DatalessField {
 		if($currentStep->Description) {
 			$html .= "
 				<p>".
-				_t("OrderStepField.COMPLETINGTHISSTEP", "Completings this step").
-				" <strong>".$currentStep->Title."</strong> ".
-				_t("OrderStepField.COMPLETINGTHISSTEP", "means").
+				"<strong>".$currentStep->Title."</strong> ".
+				_t("OrderStepField.STEP", "step").
 				": ".
-				$currentStep->Description.
+				"<i>".$currentStep->Description."</i>".
 				"</p>";
 		}
 		$this->content = $html;

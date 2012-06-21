@@ -519,7 +519,7 @@ class Order extends DataObject {
 				}
 			}
 			$this->MyStep()->addOrderStepFields($fields, $this);
-			$fields->addFieldToTab("Root.Next", new DropdownField("StatusID", _t("Order.OVERRIDE", "Override Status Manually (not recommended)"), DataObject::get("OrderStep")->toDropDownMap()));
+			$fields->addFieldToTab("Root.Next", new LiteralField("StatusIDExplanation", _t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.")));
 		}
 		else {
 			$fields->removeByName("Main");
@@ -640,7 +640,7 @@ class Order extends DataObject {
 
 	/**
 	 * Goes through the order steps and tries to "apply" the next
-	 *@return Integer (StatusID or false if the next status can not be "applied")
+	 * @return Integer (StatusID or false if the next status can not be "applied")
 	 **/
 	public function doNextStatus() {
 		if($this->MyStep()->initStep($this)) {
@@ -652,7 +652,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		return false;
+		return 0;
 	}
 
 
