@@ -51,7 +51,7 @@ class Product extends Page implements BuyableModel {
 		'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
 		'NumberSold' => 'Int', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
 		'FullSiteTreeSort' => 'Varchar(100)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
-		'FullName' => 'Text' //Name for look-up lists
+		'FullName' => 'Varchar(255)' //Name for look-up lists
 	);
 
 	/**
@@ -105,13 +105,22 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	public static $searchable_fields = array(
-		'Title' => "PartialMatchFilter",
-		'InternalItemID' => "PartialMatchFilter",
+		"FullName" => array(
+			'title' => 'Keyword',
+			'field' => 'TextField'
+		),
+		"Price" => array(
+			'title' => 'Price',
+			'field' => 'NumericField'
+		),
+		"InternalItemID" => array(
+			'title' => 'Internal Item ID',
+			'filter' => 'PartialMatchFilter'
+		),
+		'AllowPurchase',
 		'ShowInSearch',
 		'ShowInMenus',
-		'AllowPurchase',
-		'FeaturedProduct',
-		'Price'
+		'FeaturedProduct'
 	);
 
 	/**
