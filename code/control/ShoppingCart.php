@@ -81,38 +81,50 @@ class ShoppingCart extends Object{
 	 * @return void
 	 */
 	public function currentOrder(){
-		if (!$this->order) {
+		if(!$this->order) {
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
 			$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
 			//order has already been submitted - immediately remove it because we dont want to change it.
-			$member = Member::currentMember();
+			$member = Member::currentUser();
 			if($this->order) {
+				//first reason to set to null: it is already submitted
 				if($this->order->IsSubmitted()) {
 					$this->order = null;
 				}
-				//make sure we have permissions
-				if(!$this->order->canView()) {
+				//second reason to set to null: make sure we have permissions
+				elseif(!$this->order->canView()) {
 					$this->order = null;
 				}
-
 				//logged in, add Member.ID to order->MemberID
-				if($member && $member->exists()) {
+				elseif($member) {
 					if($this->order->MemberID != $member->ID) {
 						$this->order->MemberID = $member->ID;
 						$this->order->write();
+					}
+					//current order has nothing in it AND the member already has an order: use the old one first
+					if($this->order->TotalItems() == 0) {
+						$firstStep = DataObject::get_one("OrderStep");
+						//we assume the first step always exists.
+						$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND \"StatusID\" = ".$firstStep->ID. " AND \"Order\".\"ID\" <> ".$this->order->ID);
+						if($previousOrderFromMember) {
+							if($previousOrderFromMember->TotalItems() > 0) {
+								$this->order->delete();
+								$this->order = $previousOrderFromMember;
+							}
+							else {
+								$previousOrderFromMember->delete();
+							}
+						}
 					}
 				}
 			}
 			if(!$this->order) {
 				if($member) {
-					$oldOrders = DataObject::get("Order", "\"MemberID\" = ".$member->ID);
-					if($oldOrders) {
-						foreach($oldOrders as $order) {
-							if(!$order->IsSubmitted()) {
-								$this->order = $order;
-							}
-						}
+					$firstStep = DataObject::get_one("OrderStep");
+					$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND \"StatusID\" = ".$firstStep->ID);
+					if($previousOrderFromMember) {
+						$this->order = $previousOrderFromMember;
 					}
 				}
 				if(!$this->order) {
@@ -354,6 +366,8 @@ class ShoppingCart extends Object{
 		$this->clear();
 		//we cleanup the old orders here so that we immediately know if there is a problem.
 		$cleanUpEveryTime = EcommerceConfig::get("ShoppingCart", "cleanup_every_time");
+		//@TODO: watch racing condition???? still trying to finalise order but
+		//also deleting it in a clean?
 		if($cleanUpEveryTime) {
 			$obj = new CartCleanupTask();
 			$obj->runSilently();
@@ -435,23 +449,38 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Sets an order as the current order.
-	 * @param Object (Order) $order
+	 * @param Int | Order $order
 	 * @return Boolean
 	 */
 	public function loadOrder($order){
-
 		//TODO: how to handle existing order
 		//TODO: permission check - does this belong to another member? ...or should permission be assumed already?
 		if(is_numeric($order)) {
 			 $this->order = DataObject::get_by_id('Order',$order);
 		}
-		else {
+		elseif($order instanceof Order) {
 			$this->order = $order;
 		}
 		if($this->order){
 			if($this->order->canView()) {
 				$sessionVariableName = $this->sessionVariableName("OrderID");
 				Session::set($sessionVariableName, $this->order->ID);
+				//log in as the member...
+				if($this->order->MemberID) {
+					if($member = Member::currentUser()) {
+						if($member->ID && ($this->order->MemberID <> $member->ID)) {
+							//this next line in crucial
+							if($member->IsShopAdmin()) {
+								$newMember = DataObject::get_by_id("Member", $this->order->MemberID);
+								if($newMember) {
+									$member->logOut();
+									//@todo RACE CONDITION???
+									$newMember->logIn();
+								}
+							}
+						}
+					}
+				}
 				$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
 				return true;
 			}
@@ -469,33 +498,46 @@ class ShoppingCart extends Object{
 
 	/**
 	 * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
+	 * @param Int | Order $order
 	 * @return DataObject(Order)
 	 **/
-	public function copyOrder($oldOrderID) {
-		$oldOrder = Order::get_by_id_if_can_view($oldOrderID);
-		if(!$oldOrder) {
-			$this->addMessage(_t("ShoppingCart.NOORDER", "No such order."),'bad');
+	public function copyOrder($order) {
+		if(is_numeric($order)) {
+			 $this->order = DataObject::get_by_id('Order',$order);
 		}
-		else {
-			$newOrder = new Order();
-			//for later use...
-			$newOrder->MemberID = $oldOrder->MemberID;
-			$newOrder->write();
-			$this->loadOrder($newOrder);
-			$items = DataObject::get("OrderItem", "\"OrderID\" = ".$oldOrder->ID);
-			if($items) {
-				foreach($items as $item) {
-					$buyable = $item->Buyable($current = true);
-					if($buyable->canPurchase()) {
-						$this->addBuyable($buyable, $item->Quantity);
+		elseif($order instanceof Order) {
+			$this->order = $order;
+		}
+		if($this->order){
+			if($this->order->canView()) {
+				$newOrder = new Order();
+				//for later use...
+				$newOrder->MemberID = $oldOrder->MemberID;
+				$newOrder->write();
+				$this->loadOrder($newOrder);
+				$items = DataObject::get("OrderItem", "\"OrderID\" = ".$oldOrder->ID);
+				if($items) {
+					foreach($items as $item) {
+						$buyable = $item->Buyable($current = true);
+						if($buyable->canPurchase()) {
+							$this->addBuyable($buyable, $item->Quantity);
+						}
 					}
 				}
+				$newOrder->write();
+				$this->addMessage(_t("ShoppingCart.ORDERCOPIED", "Order has been copied."),'good');
+				return true;
 			}
-			$newOrder->write();
-			$this->addMessage(_t("ShoppingCart.ORDERCOPIED", "Order has been copied."),'good');
+			else {
+				$this->addMessage(_t("ShoppingCart.NOPERMISSION", "You do not have permission to view this order."),'bad');
+				return false;
+			}
+		}
+		else {
+			$this->addMessage(_t("ShoppingCart.NOORDER", "Order can not be found."),'bad');
+			return false;
 		}
 	}
-
 
 	/**
 	 * sets country in order so that modifiers can be recalculated, etc...
@@ -1093,6 +1135,21 @@ class ShoppingCart_Controller extends Controller{
 	 */
 	public function showcart($request) {
 		return $this->customise($this->cart->CurrentOrder())->renderWith("AjaxCart");
+	}
+
+	/**
+	 * loads an order
+	 *
+	 */
+	public function loadorder($request) {
+		$this->cart->loadOrder(intval($request->param('ID')));
+		$cartPageLink = CartPage::find_link();
+		if($cartPageLink) {
+			Director::redirect($cartPageLink);
+		}
+		else {
+			Director::redirect("/");
+		}
 	}
 
 	function removeaddress($request) {
