@@ -280,12 +280,12 @@ class OrderStep extends DataObject {
 	}
 
 	/**
-		*nextStep:
-		*returns the next step (checks if everything is in place for the next step to run...)
-	*@see Order::doNextStatus
-		*@param Order object
-		*@return DataObject | Null (next step OrderStep object)
-		**/
+	 * nextStep:
+	 * returns the next step (checks if everything is in place for the next step to run...)
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return DataObject | Null (next step OrderStep object)
+	 **/
 	public function nextStep($order) {
 		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
 		if($nextOrderStepObject) {
@@ -511,8 +511,8 @@ class OrderStep_Created extends OrderStep {
 
 	/**
 	 * We can run the next step, once any items have been added.
-	 *@param DataObject - $order Order
-	 *@return DataObject | Null (nextStep DataObject)
+	 * @param DataObject - $order Order
+	 * @return DataObject | Null (nextStep DataObject)
 	 **/
 	public function nextStep($order) {
 		if($order->TotalItems()) {
