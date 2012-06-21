@@ -329,16 +329,6 @@ class Order extends DataObject {
 				"Main"
 			);
 			if($submitted) {
-				$submissionLog = $this->SubmissionLog();
-				if($submissionLog) {
-					$fields->addFieldToTab('Root.Main',
-						new ReadonlyField(
-							'SequentialOrderNumber',
-							_t("Order.SEQUENTIALORDERNUMBER", "Sequential order number for submitted orders (e.g. 1,2,3,4,5...)"),
-							$submissionLog->SequentialOrderNumber
-						)
-					);
-				}
 				$htmlSummary = $this->renderWith("Order");
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
 				$paymentsTable = new HasManyComplexTableField(
@@ -397,6 +387,16 @@ class Order extends DataObject {
 				);
 				$oldOrderStatusLogs->setPermissions(array("show"));
 				$fields->addFieldToTab('Root.Log', $oldOrderStatusLogs);
+				$submissionLog = $this->SubmissionLog();
+				if($submissionLog) {
+					$fields->addFieldToTab('Root.Log',
+						new ReadonlyField(
+							'SequentialOrderNumber',
+							_t("Order.SEQUENTIALORDERNUMBER", "Sequential order number for submitted orders (e.g. 1,2,3,4,5...)"),
+							$submissionLog->SequentialOrderNumber
+						)
+					);
+				}
 			}
 			else {
 				$msg = sprintf(
