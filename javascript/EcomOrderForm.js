@@ -21,6 +21,8 @@ var EcomOrderForm = {
 
 	termsAndConditionsCheckBoxSelector: "#ReadTermsAndConditions input",
 
+	termsAndConditionsLinkSelector: "#ReadTermsAndConditions a",
+
 	TermsAndConditionsMessage: 'You must agree with the terms and conditions to proceed.',
 		set_TermsAndConditionsMessage: function(s) {EcomOrderForm.TermsAndConditionsMessage = s;},
 
@@ -36,6 +38,11 @@ var EcomOrderForm = {
 			}
 		);
 		EcomOrderForm.ajaxifyForm();
+		EcomOrderForm.TandCclick();
+	},
+
+	TandCclick: function() {
+		jQuery(EcomOrderForm.termsAndConditionsLinkSelector).attr("target", "termsandconditions");
 	},
 
 	TandCcheck: function() {
