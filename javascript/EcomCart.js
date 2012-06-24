@@ -52,6 +52,10 @@
 
 EcomCart = {
 
+	/**
+	 * Set to TRUE to see debug info.
+	 * @var Boolean
+	 */
 	debug: false,
 		set_debug: function(b) {this.debug = b;},
 
@@ -234,7 +238,6 @@ EcomCart = {
 	 * <a href="/shoppingcart/showcart/" class="simpledialog" rel="SimpleDialogueCart">show cart</a>
 	 * <div id="SimpleDialogueCart">content for pop-up</div> (this line is optional)
 	 */
-
 	simpleDialogSelector: ".simpledialog",
 		set_simpleDialogueSelector: function(s) {this.simpleDialogSelector = s;},
 
@@ -269,11 +272,11 @@ EcomCart = {
 		EcomCart.changeCountryFieldSwap();
 		if(EcomCart.ajaxButtonsOn) {
 			//make sure that "add to cart" links are updated with AJAX
-			jQuery(EcomCart.ajaxLinksAreaSelector).addAddLinks();
+			EcomCart.addAddLinks(EcomCart.ajaxLinksAreaSelector);
 			//make sure that "remove from cart" links are updated with AJAX
-			jQuery(EcomCart.ajaxLinksAreaSelector).addRemoveLinks();
+			EcomCart.addRemoveLinks(EcomCart.ajaxLinksAreaSelector);
 			//make sure that "delete from cart" links are updated with AJAX - looking at the actual cart itself.
-			jQuery(EcomCart.ajaxLinksAreaSelector).addCartRemove();
+			EcomCart.addCartRemove(EcomCart.ajaxLinksAreaSelector);
 		}
 		EcomCart.reinit();
 	},
@@ -287,6 +290,8 @@ EcomCart = {
 		EcomCart.initSimpleDialogue();
 		this.processing = false;
 	},
+
+
 
 	//#################################
 	// COUNTRY AND REGION CHANGES
@@ -336,11 +341,76 @@ EcomCart = {
 
 
 	//#################################
+	// SETUP PAGE
+	//#################################
+
+	/**
+	 * adds the "add to cart" ajax functionality to links.
+	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+	 */
+	addAddLinks: function(withinSelector) {
+		jQuery(withinSelector).delegate(
+			EcomCart.addLinkSelector,
+			"click",
+			function(){
+				var url = jQuery(this).attr("href");
+				EcomCart.getChanges(url, null, this);
+				return false;
+			}
+		);
+	},
+
+	/**
+	 * adds the "remove from cart" ajax functionality to links.
+	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+	 */
+	addCartRemove: function (withinSelector) {
+		jQuery(withinSelector).delegate(
+			EcomCart.removeCartSelector,
+			"click",
+			function(){
+				if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
+					var url = jQuery(this).attr("href");
+					var el = jQuery(this).parents(EcomCart.orderItemHolderSelector);
+					jQuery(el).slideUp(
+						"slow",
+						function() {jQuery(el).remove();}
+					);
+					EcomCart.getChanges(url, null, this);
+				}
+				return false;
+			}
+		);
+	},
+
+	/**
+	 * add ajax functionality to "remove from cart" links
+	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+	 */
+	addRemoveLinks: function (withinSelector) {
+		jQuery(withinSelector).delegate(
+			EcomCart.removeLinkSelector,
+			"click",
+			function(){
+				if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
+					var url = jQuery(this).attr("href");
+					EcomCart.getChanges(url, null, this);
+					return false;
+				}
+				return false;
+			}
+		);
+	},
+
+	//#################################
 	// UPDATE PAGE
 	//#################################
 
 	/**
 	 * get JSON data from server
+	 * @param String url: URL for getting data (ajax request)
+	 * @param Array params: parameters to add to ajax request
+	 * @param Object loadingElement: the element that is being clicked or should be shown as "loading"
 	 */
 	getChanges: function(url, params, loadingElement) {
 		if(params === null) {
@@ -378,6 +448,8 @@ EcomCart = {
 
 	/**
 	 * apply changes to the page using the JSON data from the server.
+	 * @param JSON OBJECT changes: a JSON object of changes
+	 * @param String status: status of updates
 	 */
 	setChanges: function (changes, status) {
 		//change to switch
@@ -514,10 +586,8 @@ EcomCart = {
 		EcomCart.reinit();
 	},
 
-
 	/**
 	 * changes to the cart based on zero OR one or more rows
-	 *
 	 */
 	updateForZeroVSOneOrMoreRows: function() {
 		if(EcomCart.cartHasItems()) {
@@ -544,6 +614,7 @@ EcomCart = {
 
 	/**
 	 * cleaning up strings
+	 * @param String str
 	 * @return string
 	 */
 	escapeHTML: function (str) {
@@ -561,6 +632,7 @@ EcomCart = {
 
 	/**
 	 * check if a particular variable is set
+	 * @param Mixed
 	 * @return Boolean
 	 */
 	variableIsSet: function(variable) {
@@ -573,6 +645,7 @@ EcomCart = {
 
 	/**
 	 * check if a particular variable is set AND has a value
+	 * @param Mixed
 	 * @return Boolean
 	 */
 	variableSetWithValue: function(variable) {
@@ -604,59 +677,6 @@ EcomCart = {
 
 }
 
-
-jQuery.fn.extend({
-	addAddLinks: function() {
-		jQuery(this).delegate(
-			EcomCart.addLinkSelector,
-			"click",
-			function(){
-				var url = jQuery(this).attr("href");
-				EcomCart.getChanges(url, null, this);
-				return false;
-			}
-		);
-	},
-
-	addCartRemove: function () {
-		jQuery(this).delegate(
-			EcomCart.removeCartSelector,
-			"click",
-			function(){
-				if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
-					var url = jQuery(this).attr("href");
-					var el = jQuery(this).parents(EcomCart.orderItemHolderSelector);
-					jQuery(el).slideUp(
-						"slow",
-						function() {jQuery(el).remove();}
-					);
-					EcomCart.getChanges(url, null, this);
-				}
-				return false;
-			}
-		);
-	},
-
-	/**
-	 * add ajax functionality to "remove from cart" links
-	 *
-	 */
-	addRemoveLinks: function () {
-		jQuery(this).delegate(
-			EcomCart.removeLinkSelector,
-			"click",
-			function(){
-				if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
-					var url = jQuery(this).attr("href");
-					EcomCart.getChanges(url, null, this);
-					return false;
-				}
-				return false;
-			}
-		);
-	}
-
-});
 
 
 
