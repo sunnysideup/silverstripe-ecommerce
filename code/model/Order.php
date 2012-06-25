@@ -55,11 +55,13 @@ class Order extends DataObject {
 			'CustomerStatus',
 			'CanHaveShippingAddress',
 			'CancelledBy',
+			'CurrencyUsed',
 			'BillingAddress',
 			'UseShippingAddress',
 			'ShippingAddress',
 			'Status',
-			'Attributes'
+			'Attributes',
+			'OrderStatusLogs'
 		)
 	);
 
