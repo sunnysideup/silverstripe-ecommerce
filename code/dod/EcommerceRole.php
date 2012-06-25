@@ -84,7 +84,6 @@ class EcommerceRole extends DataObjectDecorator {
 	 *
 	 * @return Field / ComponentSet
 	 **/
-
 	public function getEcommerceFieldsForCMS() {
 		$fields = new CompositeField();
 		$memberTitle = new TextField("MemberTitle", "Name", $this->owner->getTitle());
