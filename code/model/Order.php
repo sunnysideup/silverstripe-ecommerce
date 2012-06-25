@@ -1719,9 +1719,9 @@ class Order extends DataObject {
 	 * returns the total number of OrderItems (not modifiers).
 	 *@return Integer
 	 **/
-	public function TotalItems(){return $this->getTotalItems();}
-	public function getTotalItems() {
-		if(self::$total_items === null) {
+	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
+	public function getTotalItems($recalculate = false) {
+		if(self::$total_items === null || $recalculate) {
 			//to do, why do we check if you can edit ????
 			self::$total_items = DB::query("
 				SELECT COUNT(\"OrderItem\".\"ID\")
@@ -2103,7 +2103,7 @@ class Order extends DataObject {
 			't' => 'class',
 			's' => $ajaxObject->TotalItemsClassName(),
 			'p' => 'innerHTML',
-			'v' => $this->TotalItems()
+			'v' => $this->TotalItems(true)
 		);
 		$js[] = array(
 			't' => 'class',
