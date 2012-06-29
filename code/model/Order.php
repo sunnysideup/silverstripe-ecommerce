@@ -1982,6 +1982,14 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * Returns to link to access the Order's API
+	 * @return String(URL)
+	 */
+	function APILink($version = "v1", $extension = "xml"){
+		return Director::AbsoluteURL("/api/ecommerce/$version/Order/".$this->ID."/.$extension");
+	}
+
+	/**
 	 * returns the link to view the Order
 	 * WHY NOT CHECKOUT PAGE: first we check for cart page.
 	 * If a cart page has been created then we refer through to Cart Page.
