@@ -187,6 +187,10 @@ class OrderStep extends DataObject {
 			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use {OrderNumber} as a tag that will be replaced with the actual Order Number.")));
 			$fields->addFieldToTab("Root.CustomerMessage", new HTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)"), 5));
 		}
+		else {
+			$fields->removeFieldFromTab("Root.Main", "EmailSubject");
+			$fields->removeFieldFromTab("Root.Main", "CustomerMessage");
+		}
 		//adding
 		if(!$this->exists() || !$this->isDefaultStatusOption()) {
 			$fields->removeFieldFromTab("Root.Main", "Code");
@@ -426,7 +430,7 @@ class OrderStep extends DataObject {
 					if(!DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'")) {
 						$obj = new $className();
 						$obj->Code = strtoupper($obj->Code);
-						$obj->Description = $this->myDescription();
+						$obj->Description = $obj->myDescription();
 						$obj->write();
 						DB::alteration_message("Created \"$code\" as $className.", "created");
 					}
