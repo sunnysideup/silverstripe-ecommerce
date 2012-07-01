@@ -1,11 +1,13 @@
-<div id="Sidebar">
-	<div class="sidebarTop"></div>
-	<% include Sidebar_PreviousAndNextProduct %>
-	<% include Sidebar_Cart %>
-	<% include Sidebar %>
-	<div class="sidebarBottom"></div>
-</div>
-<div id="Product" class="mainSection">
+<aside>
+	<div id="Sidebar">
+		<div class="sidebarTop"></div>
+		<% include Sidebar_PreviousAndNextProduct %>
+		<% include Sidebar_Cart %>
+		<% include Sidebar %>
+		<div class="sidebarBottom"></div>
+	</div>
+</aside>
+<div id="Product" class="mainSection content-container withSidebar">
 	<h1 class="pageTitle">$Title</h1>
 	<div class="productDetails">
 <% include ProductImage %>

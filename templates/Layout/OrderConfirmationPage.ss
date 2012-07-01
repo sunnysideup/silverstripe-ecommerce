@@ -1,4 +1,4 @@
-<div id="OrderConformation">
+<div id="OrderConformation" class="mainSection content-container noSidebar">
 
 	<h1 class="pagetitle">$Title</h1>
 

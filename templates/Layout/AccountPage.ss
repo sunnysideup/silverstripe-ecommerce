@@ -1,4 +1,4 @@
-<div id="AccountPage">
+<div id="AccountPage" class="mainSection content-container noSidebar">
 <% if Message %>
 	<p id="AccountPageMessage" class="message">$Message</p>
 <% end_if %>

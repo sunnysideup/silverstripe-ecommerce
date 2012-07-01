@@ -1,4 +1,4 @@
-<div id="EcommereTemplateTest">
+<div id="EcommereTemplateTest" class="mainSection content-container noSidebar">
 
 <h1>Ecommerce Template Test Page</h1>
 <p>

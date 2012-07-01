@@ -1,4 +1,4 @@
-<div id="CartPage">
+<div id="CartPage" class="mainSection content-container noSidebar">
 
 	<h1 class="pagetitle">$Title</h1>
 
