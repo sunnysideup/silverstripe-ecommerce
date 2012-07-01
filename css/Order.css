@@ -5,18 +5,6 @@
   **/
 
 
-/**
- * table general
- */
-table {width: 100%;}
-.right {text-align: right;}
-.center {text-align: center;}
-
-/**
- * table items
- */
-td div.productImage {float: left; }
-td div.itemTitleAndSubTitle { margin-left: 90px;}
 
 
 

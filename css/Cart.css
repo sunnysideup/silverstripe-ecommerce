@@ -7,6 +7,20 @@
   *
   **/
 
+
+/**
+ * table general
+ */
+table {width: 100%;}
+.right {text-align: right;}
+.center {text-align: center;}
+
+/**
+ * table items
+ */
+td div.productImage {float: left; }
+td div.itemTitleAndSubTitle { margin-left: 90px;}
+
 .hideOnZeroItems {}
 .hideForNow{display: none;}
 
@@ -33,21 +47,10 @@ even when theme-ing ecommerce, these should not be themed
 
 .loadingCartData #InformationTable, .loadingCartData #Amount {color: #e7e7e7!important;}
 
-
-#action_useDifferentShippingAddress { display: none; }
-
 .doNotShow { display: none; }
 .loading { background-image: url(/ecommerce/images/loading.gif); background-repeat: no-repeat; background-position: 95% 0; }
 
 
-/*
- * Past orders div containing the order history styling
- */
 
-#PastOrders { float: right; width: 45%; }
-#ShopAccountForm_MemberForm { width: 45%; }
-	#ShopAccountForm_MemberForm label.left, #LoginForm_LoginForm label.left { font-weight: bold; float: left; width: 150px; }
-	#ShopAccountForm_MemberForm #Country select { width: 305px; }
-#PrintPageIcon img { cursor: pointer; }
 
 
