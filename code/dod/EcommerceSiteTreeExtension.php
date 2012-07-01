@@ -46,21 +46,19 @@ class EcommerceSiteTreeExtension extends DataObjectDecorator {
 
 class EcommerceSiteTreeExtension_Controller extends Extension {
 
-	/**
-	 * WATCH: does this get included too early to too much?
-	 * This is called by Controller::init();
-	 **/
-	function onBeforeInit() {
+	function onBeforeInit(){
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 		//todo: check if we even need this (via ShoppingCartsRequirements.ss)
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "cart_js_file_location"));
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "dialogue_js_file_location"));
+	}
+
+	function onAfterInit(){
 		Requirements::themedCSS("Cart");
 		Requirements::themedCSS("jquery.simpledialog");
 	}
-
 
 	/**
 	 * This returns a link that displays just the cart, for use in ajax calls.
