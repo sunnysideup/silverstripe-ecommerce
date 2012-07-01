@@ -186,6 +186,8 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 **/
 	public function init() {
 		parent::init();
+		Requirements::themedCSS('CheckoutPage');
+
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
