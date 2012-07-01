@@ -1,4 +1,4 @@
-<div id="Checkout">
+<div id="Checkout" class="mainSection content-container noSidebar">
 
 	<h1 class="pagetitle">$Title</h1>
 
@@ -31,7 +31,7 @@
 		<% if StepsContentBelow(1) %><p class="below headerFooterDescription">$StepsContentBelow(1)</p><% end_if %>
 
 		<% if HasCheckoutSteps %>
-		<div class="checkoutStepPrevNextHolder next">
+		<div class="checkoutStepPrevNextHolder next Actions">
 			<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action"><% _t("NEXT","next") %></a>
 		</div>
 		<% end_if %>
@@ -45,7 +45,7 @@
 	<div id="OrderFormAddressOuter" class="checkoutStep">
 
 		<% if HasCheckoutSteps %>
-		<div class="checkoutStepPrevNextHolder prev">
+		<div class="checkoutStepPrevNextHolder prev Actions">
 			<a href="{$Link}checkoutstep/orderitems/#OrderItemsOuter" class="action"><% _t("GOBACK","go back") %></a>
 		</div>
 		<% end_if %>
@@ -73,11 +73,11 @@
 	<div id="OrderConfirmationAndPayment" class="checkoutStep">
 
 		<% if HasCheckoutSteps %>
-		<div class="checkoutStepPrevNextHolder prev">
+		<div class="checkoutStepPrevNextHolder prev Actions">
 			<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action"><% _t("GOBACK","go back") %></a>
 		</div>
 		<% else %>
-		<div class="checkoutStepPrevNextHolder prev">
+		<div class="checkoutStepPrevNextHolder prev Actions">
 			<a href="{$Link}" class="action"><% _t("GOBACK","go back") %></a>
 		</div>
 		<% end_if %>
