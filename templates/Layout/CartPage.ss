@@ -1,4 +1,4 @@
-<div id="CartPage" class="mainSection content-container noSidebar">
+<div id="CartPage" class="mainSection content-container withSidebar">
 
 	<h1 class="pagetitle">$Title</h1>
 
@@ -21,4 +21,10 @@
 	<% include CartActionsAndMessages %>
 </div>
 
-
+<aside>
+	<div id="Sidebar">
+		<div class="sidebarTop"></div>
+		<% include Sidebar_UserAccount %>
+		<div class="sidebarBottom"></div>
+	</div>
+</aside>
