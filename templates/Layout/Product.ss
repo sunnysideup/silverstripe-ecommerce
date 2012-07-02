@@ -1,12 +1,3 @@
-<aside>
-	<div id="Sidebar">
-		<div class="sidebarTop"></div>
-		<% include Sidebar_PreviousAndNextProduct %>
-		<% include Sidebar_Cart %>
-		<% include Sidebar %>
-		<div class="sidebarBottom"></div>
-	</div>
-</aside>
 <div id="Product" class="mainSection content-container withSidebar">
 	<h1 class="pageTitle">$Title</h1>
 	<div class="productDetails">
@@ -19,6 +10,15 @@
 	<% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>
 </div>
 
+<aside>
+	<div id="Sidebar">
+		<div class="sidebarTop"></div>
+		<% include Sidebar_PreviousAndNextProduct %>
+		<% include Sidebar_Cart %>
+		<% include Sidebar %>
+		<div class="sidebarBottom"></div>
+	</div>
+</aside>
 
 
 
