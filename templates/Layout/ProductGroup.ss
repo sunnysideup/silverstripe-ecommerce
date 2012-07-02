@@ -1,11 +1,4 @@
-<aside>
-	<div id="Sidebar">
-		<div class="sidebarTop"></div>
-		<% include Sidebar_Cart %>
-		<% include Sidebar %>
-		<div class="sidebarBottom"></div>
-	</div>
-</aside>
+
 <div id="ProductGroup" class="mainSection content-container withSidebar">
 	<h1 id="PageTitle">$Title</h1>
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
@@ -22,7 +15,6 @@
 		<% else %><% control Products %><% include ProductGroupItem %><% end_control %>
 		<% end_if %><% end_if %>
 		</ul>
-		<div class="clear"><!-- --></div>
 	</div>
 <% include ProductGroupPagination %>
 <% else %>
@@ -33,6 +25,13 @@
 	<% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>
 </div>
 
-
+<aside>
+	<div id="Sidebar">
+		<div class="sidebarTop"></div>
+		<% include Sidebar_Cart %>
+		<% include Sidebar %>
+		<div class="sidebarBottom"></div>
+	</div>
+</aside>
 
 
