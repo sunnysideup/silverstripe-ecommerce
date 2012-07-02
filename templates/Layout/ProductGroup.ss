@@ -6,8 +6,10 @@
 <% if Products %>
 	<div id="Products" class="category">
 		<div class="resultsBar">
-			<% if TotalCount %><span class="totalCout">$TotalCount <% _t('ProductGroup.PRODUCTSFOUND','products found.') %></span><% end_if %>
-			<% if SortLinks %><span class="sortOptions"><% _t('ProductGroup.SORTBY','Sort by') %> <% control SortLinks %><a href="$Link" class="sortlink $Current">$Name</a> <% end_control %></span><% end_if %>
+			<small>
+				<% if TotalCount %><span class="totalCout">$TotalCount <% _t('ProductGroup.PRODUCTSFOUND','products found.') %></span><% end_if %>
+				<% if SortLinks %><span class="sortOptions"><% _t('ProductGroup.SORTBY','Sort by') %> <% control SortLinks %><a href="$Link" class="sortlink $Current">$Name</a> <% end_control %></span><% end_if %>
+			</small>
 		</div>
 		<ul class="productList displayStyle$MyDefaultDisplayStyle">
 		<% if MyDefaultDisplayStyle = Short %><% control Products %><% include ProductGroupItemShort %><% end_control %>
@@ -30,6 +32,7 @@
 		<div class="sidebarTop"></div>
 		<% include Sidebar_Cart %>
 		<% include Sidebar %>
+		<% include Sidebar_UserAccount %>
 		<div class="sidebarBottom"></div>
 	</div>
 </aside>

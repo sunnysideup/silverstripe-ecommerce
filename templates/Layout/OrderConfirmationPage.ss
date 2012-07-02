@@ -1,4 +1,4 @@
-<div id="OrderConformation" class="mainSection content-container noSidebar">
+<div id="OrderConformation" class="mainSection content-container withSidebar">
 
 	<h1 class="pagetitle">$Title</h1>
 
@@ -20,3 +20,11 @@
 
 </div>
 
+
+<aside>
+	<div id="Sidebar">
+		<div class="sidebarTop"></div>
+		<% include Sidebar_UserAccount %>
+		<div class="sidebarBottom"></div>
+	</div>
+</aside>
