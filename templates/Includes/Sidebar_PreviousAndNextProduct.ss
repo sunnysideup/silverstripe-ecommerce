@@ -8,6 +8,5 @@
 		<li class="next"><span>Next:</span> <a href="$NextProduct.Link">$NextProduct.MenuTitle</a></li>
 	<% end_if %>
 	</ul>
-	<div class="clear"></div>
 </div>
 <% end_if %>
