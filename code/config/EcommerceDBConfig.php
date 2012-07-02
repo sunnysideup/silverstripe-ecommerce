@@ -257,12 +257,20 @@ class EcommerceDBConfig extends DataObject {
 		return false;
 	}
 
+	/**
+	 * Returns the Current Member
+	 * @return Null | Member
+	 */
+	public function Customer (){
+		return Member::currentUser();
+	}
+
 
 	/**
 	 * Return the currency being used on the site.
 	 * @return string Currency code, e.g. "NZD" or "USD"
 	 */
-	function Currency() {
+	public function Currency() {
 		if(class_exists('Payment')) {
 			return Payment::site_currency();
 		}
