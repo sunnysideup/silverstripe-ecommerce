@@ -42,6 +42,21 @@ class EcommerceSiteTreeExtension extends DataObjectDecorator {
 	}
 
 
+	/**
+	 * Log in link
+	 * @return String
+	 */
+	function EcommerceLogInLink (){
+		if($this->owner->IsEcommercePage()) {
+			$link = $this->owner->Link();
+		}
+		else {
+			$link = $this->EcomConfig()->AccountPage->Link();
+		}
+		return "/Security/login?BackURL=".urlencode($link);
+	}
+
+
 }
 
 class EcommerceSiteTreeExtension_Controller extends Extension {
