@@ -1,11 +1,12 @@
 /**
-  * IMPORTANT NOTE:
-  * The default e-commerce css only includes the basics and it is recommended that you theme these files.
-  * Also make sure you have the site's general layout and typography styled before you do this.
-  *
-  * This file is used to format any order that has not bee submitted yet (e.g. CartPage, CheckoutPage)
-  *
-  **/
+ * IMPORTANT NOTE:
+ * The default e-commerce css only includes the basics and it is recommended that you theme these files.
+ * Also make sure you have the site's general layout and typography styled before you do this.
+ *
+ * This file is used to format any order that has not been submitted yet (e.g. CartPage, CheckoutPage)
+ * It is also used for add to cart buttons, etc...
+ *
+ **/
 
 
 /**
@@ -35,12 +36,14 @@ td div.itemTitleAndSubTitle { margin-left: 90px;}
 .inCart .removeLink {display: block!important;}
 .inCart .goToCheckoutLink {display: block!important;}
 
+.productItem .productActions li {text-align: center;}
+
 /*
 even when theme-ing ecommerce, these should not be themed
 */
 
 
-.ajaxQuantityField {text-align: center;}
+.ajaxQuantityField {text-align: center; width: 2em;}
 .removeOneLink {float: left; padding-right: 5px;}
 
 
@@ -52,5 +55,58 @@ even when theme-ing ecommerce, these should not be themed
 
 
 
+a.action {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 8px 20px 6px 20px;
+	display: inline-block;
+	width: auto;
+	background: -moz-linear-gradient(
+		top,
+		#edf4fa 0%,
+		#a8a8a8);
+	background: -webkit-gradient(
+		linear, left top, left bottom,
+		from(#edf4fa),
+		to(#a8a8a8));
+	border-radius: 1em;
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	border: 1px solid #949494;
+	-moz-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 1px rgba(255,255,255,0.5);
+	-webkit-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 1px rgba(255,255,255,0.5);
+	text-shadow:
+		0px -1px 0px rgba(000,000,000,0.3),
+		0px 1px 0px rgba(255,255,255,0.9);
 
+	font: bold 0.9em/0.9em Helvetica, Sans-Serif; text-align: center;
+	text-transform: uppercase; text-decoration: none;
+	color: #147032;
+	text-shadow: 0px 1px 2px #b4d1ad;
+	-moz-transition: color 0.25s ease-in-out;
+	-webkit-transition: color 0.25s ease-in-out;
+	transition: color 0.25s ease-in-out;
+}
 
+a.action:hover {
+	color: #000;
+	-moz-transition: color 0.25s ease-in-out;
+	-webkit-transition: color 0.25s ease-in-out;
+	transition: color 0.25s ease-in-out;
+}
+
+.productActions.loading {
+	background-image: none;
+}
+.productActions.loading a {
+	background-image: url(/ecommerce/images/loading.gif)!important;
+	background-repeat: no-repeat;
+	background-position: top left;
+	-moz-transition: color 0.25s ease-in-out;
+	-webkit-transition: color 0.25s ease-in-out;
+	transition: color 0.25s ease-in-out;
+}
