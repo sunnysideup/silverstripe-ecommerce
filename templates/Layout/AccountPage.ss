@@ -1,4 +1,5 @@
 <div id="AccountPage" class="mainSection content-container noSidebar">
+
 <% if Message %>
 	<p id="AccountPageMessage" class="message">$Message</p>
 <% end_if %>
@@ -6,7 +7,10 @@
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 
-<% include AccountPastOrders %>
+<div id="PastOrderHolder">
+	<h3><% _t("Account.PreviousOrders","Previous Orders") %></h3>
+	<% include AccountPastOrders %>
+</div>
 
 <% if MemberForm %>
 	<div id="MemberForm">
