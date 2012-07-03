@@ -5,10 +5,12 @@
  *
  * see: http://api.silverstripe.org/2.4/sapphire/api/RestfulServer.html
  *
- * YOu can show JSON by hacking: RestfulServer::getDataFormatter
-www * NOTE: JSON IS NOT AVAILABLE YET WITHIN RESTFUL SERVER
- *
- *
+ * You can show JSON by hacking: RestfulServer::getDataFormatter
+ * NOTE: JSON IS NOT AVAILABLE YET WITHIN RESTFUL SERVER
+ * @todo:
+ * - fix http://site/api/ecommerce/v1/Order/123/BillingAddress.xml
+ * - fix http://site/api/ecommerce/v1/Order/123/ShippingAddress.xml
+ * - fix http://site/api/ecommerce/v1/Order/123/Member.xml
  */
 
 
@@ -33,7 +35,12 @@ class EcommerceRestfulServer extends RestfulServer {
 		// fix
 		if($id) {
 			$obj = DataObject::get_by_id($className, $id);
-			$className = $this->urlParams['ClassName'] = $obj->ClassName;
+			if($obj) {
+				$className = $this->urlParams['ClassName'] = $obj->ClassName;
+			}
+			else {
+				return $this->notFound();
+			}
 		}
 
 		// if api access is disabled, don't proceed
