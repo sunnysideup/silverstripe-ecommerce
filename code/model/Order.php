@@ -262,6 +262,7 @@ class Order extends DataObject {
 			'filter' => 'OrderFilters_AroundDateFilter',
 			'title' => 'Date (e.g. Today, 1 jan 2007, or last week)'
 		),
+		//make sure to keep the items below, otherwise they do not show in form
 		'StatusID' => array(
 			'filter' => 'OrderFilters_MultiOptionsetStatusIDFilter'
 		),
@@ -277,9 +278,35 @@ class Order extends DataObject {
 	function scaffoldSearchFields(){
 		$fieldSet = parent::scaffoldSearchFields();
 		if($statusOptions = self::get_order_status_options()) {
-			$fieldSet->push(new CheckboxSetField("StatusID", "Status", $statusOptions->toDropDownMap()));
+			$createdOrderStatusID = 0;
+			$preSelected = array();
+			if($createdOrderStatus = DataObject::get_one("OrderStep")) {
+				$createdOrderStatusID = $createdOrderStatus->ID;
+			}
+			$arrayOfStatusOptions = $statusOptions->toDropDownMap();
+			if(count($arrayOfStatusOptions)) {
+				foreach($arrayOfStatusOptions as $key => $value) {
+					$count = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = ".intval($key).";")->value();
+					if($count < 1) {
+						unset($arrayOfStatusOptions[$key]);
+					}
+					else {
+						$arrayOfStatusOptions[$key] .= " ($count)";
+					}
+					//we use 100 here because if there is such a big list, an additional filter should be added
+					if($count > 100) {
+					}
+					else {
+						if($key != $createdOrderStatusID) {
+							$preSelected[$key] = $key;
+						}
+					}
+				}
+			}
+			$statusField = new CheckboxSetField("StatusID", "Status", $arrayOfStatusOptions);
+			$statusField->setValue($preSelected);
+			$fieldSet->push($statusField);
 		}
-		$fieldSet->push(new DropdownField("TotalPaid", "Has Payment", array(-1 => "(Any)", 1 => "yes", 0 => "no")));
 		$fieldSet->push(new DropdownField("CancelledByID", "Cancelled", array(-1 => "(Any)", 1 => "yes", 0 => "no")));
 		return $fieldSet;
 	}
