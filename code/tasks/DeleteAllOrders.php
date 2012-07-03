@@ -24,13 +24,6 @@ class DeleteAllOrders extends BuildTask {
 
 	protected $description = "Deletes all the orders ever placed - CAREFULL!";
 
-	public static function run_on_demand() {
-		$obj = new CartCleanupTask();
-		$obj->verbose = true;
-		$obj->run();
-		$obj->cleanupUnlinkedOrderObjects();
-	}
-
 	public $verbose = false;
 
 	/**
@@ -72,39 +65,44 @@ class DeleteAllOrders extends BuildTask {
 	 *@return Integer - number of carts destroyed
 	 **/
 	public function run($request){
-		$oldCarts = DataObject::get('Order');
-		$count = 0;
-		if($oldCarts){
-			if($this->verbose) {
-				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\"");
-				$totalToDelete = $totalToDeleteSQLObject->value();
-				DB::alteration_message("<h2>Total number of orders: ".$totalToDelete." .... now deleting: </h2>", "deleted");
-			}
-			foreach($oldCarts as $oldCart){
-				$count++;
+		if(!Director::isDev() || Director::isLive() ) {
+			DB::alteration_message("you can only run this in dev mode!")
+		}
+		else {
+			$oldCarts = DataObject::get('Order');
+			$count = 0;
+			if($oldCarts){
 				if($this->verbose) {
-					DB::alteration_message("$count ... deleting abandonned order #".$oldCart->ID, "deleted");
+					$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\"");
+					$totalToDelete = $totalToDeleteSQLObject->value();
+					DB::alteration_message("<h2>Total number of orders: ".$totalToDelete." .... now deleting: </h2>", "deleted");
 				}
-				$oldCart->delete();
-				$oldCart->destroy();
+				foreach($oldCarts as $oldCart){
+					$count++;
+					if($this->verbose) {
+						DB::alteration_message("$count ... deleting abandonned order #".$oldCart->ID, "deleted");
+					}
+					$oldCart->delete();
+					$oldCart->destroy();
+				}
 			}
-		}
-		else {
-			if($this->verbose) {
-				$count = DB::query("SELECT COUNT(\"ID\") FROM \"Order\"")->value();
-				DB::alteration_message("There are no abandonned orders. There are $count 'live' Orders.", "created");
+			else {
+				if($this->verbose) {
+					$count = DB::query("SELECT COUNT(\"ID\") FROM \"Order\"")->value();
+					DB::alteration_message("There are no abandonned orders. There are $count 'live' Orders.", "created");
+				}
 			}
+			$countCheck = DB::query("Select COUNT(ID) FROM \"Order\"")->value();
+			if($countCheck) {
+				DB::alteration_message("ERROR: in testing <i>Orders</i> it appears there are ".$countCheck." records left.", "deleted");
+			}
+			else {
+				DB::alteration_message("PASS: in testing <i>Orders</i> there seem to be no records left.", "created");
+			}
+			$this->cleanupUnlinkedOrderObjects();
+			$this->doubleCheckModifiersAndItems();
+			return $count;
 		}
-		$countCheck = DB::query("Select COUNT(ID) FROM \"Order\"")->value();
-		if($countCheck) {
-			DB::alteration_message("ERROR: in testing <i>Orders</i> it appears there are ".$countCheck." records left.", "deleted");
-		}
-		else {
-			DB::alteration_message("PASS: in testing <i>Orders</i> there seem to be no records left.", "created");
-		}
-		$this->cleanupUnlinkedOrderObjects();
-		$this->doubleCheckModifiersAndItems();
-		return $count;
 	}
 
 	function cleanupUnlinkedOrderObjects() {

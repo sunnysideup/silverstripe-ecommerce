@@ -23,7 +23,6 @@ class CartCleanupTask extends HourlyTask {
 		'*' => 'SHOPADMIN'
 	);
 
-
 	protected $title = 'Clear old carts';
 
 	protected $description = "Deletes abandonned carts";
