@@ -66,7 +66,7 @@ class DeleteAllOrders extends BuildTask {
 	 **/
 	public function run($request){
 		if(!Director::isDev() || Director::isLive() ) {
-			DB::alteration_message("you can only run this in dev mode!")
+			DB::alteration_message("you can only run this in dev mode!");
 		}
 		else {
 			$oldCarts = DataObject::get('Order');
