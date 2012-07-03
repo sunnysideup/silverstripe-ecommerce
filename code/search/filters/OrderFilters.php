@@ -143,7 +143,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 class OrderFilters_MultiOptionsetFilter extends SearchFilter {
 
 	/**
-	 *
+	 * @TODO: not used.... ????
 	 *@return SQLQuery
 	 **/
 	public function apply(SQLQuery $query) {
@@ -184,11 +184,19 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
 		$values = $this->getValue();
-		if(count($values)) {
+		if(count($values) && is_array($values)) {
 			foreach($values as $value) {
 				$matches[] = "\"StatusID\" = ".intval($value);
 			}
 			$query->where(implode(" OR ", $matches));
+		}
+		else {
+			$orderStep = DataObject::get_one("OrderStep");
+			if($orderStep) {
+				$value = $orderStep->ID;
+				$matches[] = "\"StatusID\" <> ".intval($value);
+				$query->where(implode(" AND ", $matches));
+			}
 		}
 		return $query;
 	}
@@ -198,6 +206,7 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
+		return false;
 		if(is_array($this->getValue())) {
 			return count($this->getValue()) == 0;
 		}
