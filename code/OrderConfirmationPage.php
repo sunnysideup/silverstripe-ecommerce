@@ -133,7 +133,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	function showorder($request) {
 		if(isset($_REQUEST["print"])) {
 			Requirements::clear();
-			Requirements::themedCSS("Typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport_Print", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			return $this->renderWith("Invoice");
@@ -212,7 +212,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		$baseFolder = Director::baseFolder() ;
 		require_once($baseFolder . '/ecommerce/thirdparty/Emogrifier.php');
 		Requirements::clear();
-		Requirements::themedCSS("Typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		Requirements::themedCSS("OrderReport_Print", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		$html =  $this->renderWith("Order_ReceiptEmail");
