@@ -201,7 +201,7 @@ class EcommercePayment extends DataObjectDecorator {
 		parent::onAfterWrite();
 		$order = $this->owner->PaidObject();
 		if($order && $order instanceof Order && $order->IsSubmitted()) {
-		 $order->tryToFinaliseOrder();
+			$order->tryToFinaliseOrder();
 		}
 	}
 
