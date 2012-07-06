@@ -27,7 +27,8 @@
 				<td>
 					<% control Order %>
 					<div id="OrderInformation">
-						<h2 class="orderHeading"><a href="$RetrieveLink">$Title</a></h2>
+						<h2 class="orderHeading">$Title</h2>
+						<small><a href="$RetrieveLink"><% _t("Order.VIEWONLINE", "view order on website.") %></a></small>
 						<% include Order_Addresses %>
 						<% include Order_Content %>
 						<% include Order_Payments %>
