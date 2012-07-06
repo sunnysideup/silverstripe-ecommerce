@@ -261,9 +261,9 @@ class OrderStep extends DataObject {
 		*initStep:
 		* makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
 		* should be able to run this function many times to check if the step is ready
-		*@see Order::doNextStatus
-		*@param Order object
-		*@return Boolean - true if the current step is ready to be run...
+		* @see Order::doNextStatus
+		* @param Order object
+		* @return Boolean - true if the current step is ready to be run...
 		**/
 	public function initStep($order) {
 		user_error("Please implement this in a subclass of OrderStep", E_USER_WARNING);
@@ -756,7 +756,15 @@ class OrderStep_SentInvoice extends OrderStep {
 	 * @return Boolean
 	 **/
 	public function initStep($order) {
-		return $order->IsSubmitted() && $order->Payments();
+		if( $order->IsSubmitted()) {
+			if($payments = $order->Payments()) {
+				if($payments->count()) {
+					return true;
+				}
+			}
+		}
+		return false;
+
 	}
 
 	/**
