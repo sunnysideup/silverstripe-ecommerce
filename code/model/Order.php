@@ -313,19 +313,6 @@ class Order extends DataObject {
 
 	/**
 	 * STANDARD SILVERSTRIPE STUFF
-	 **/
-	function validate() {
-		if($this->StatusID) {
-			//do nothing
-		}
-		elseif(DataObject::get_one("OrderStep")) {
-			//return new ValidationResult(false, _t("Order.MUSTSETSTATUS", "You must set a status.  This could not be set..."));
-		}
-		return parent::validate();
-	}
-
-	/**
-	 * STANDARD SILVERSTRIPE STUFF
 	 * broken up into submitted and not (yet) submitted
 	 **/
 	function getCMSFields(){
@@ -600,57 +587,51 @@ class Order extends DataObject {
 	/**
 	 * init runs on start of a new Order (@see onAfterWrite)
 	 * it adds all the modifiers to the orders and the starting OrderStep
-	 *
+	 * @param Boolean $force
 	 * @return DataObject (Order)
 	 **/
-	public function init() {
+	public function init($force = false) {
 		//to do: check if shop is open....
-		if(!$this->StatusID) {
-			if($newStatus = DataObject::get_one("OrderStep")) {
-				$this->StatusID = $newStatus->ID;
+		if($this->StatusID || $force) {
+			$createdModifiersClassNames = array();
+			$this->modifiers = $this->modifiersFromDatabase($includingRemoved = true);
+			if($this->modifiers) {
+				foreach($this->modifiers as $modifier) {
+					$createdModifiersClassNames[$modifier->ID] = $modifier->ClassName;
+				}
 			}
 			else {
-				//user_error("There are no OrderSteps ... please Run Dev/Build", E_USER_WARNING);
+				$this->modifiers = new DataObjectSet();
 			}
-		}
-		$createdModifiersClassNames = array();
-		$this->modifiers = $this->modifiersFromDatabase($includingRemoved = true);
-		if($this->modifiers) {
-			foreach($this->modifiers as $modifier) {
-				$createdModifiersClassNames[$modifier->ID] = $modifier->ClassName;
-			}
-		}
-		else {
-			$this->modifiers = new DataObjectSet();
-		}
-		$modifiers = EcommerceConfig::get("Order", "modifiers");
-		if(is_array($modifiers) && count($modifiers) > 0) {
-			foreach($modifiers as $numericKey => $className) {
-				if(!in_array($className, $createdModifiersClassNames)) {
-					if(class_exists($className)) {
-						$modifier = new $className();
-						//only add the ones that should be added automatically
-						if(!$modifier->DoNotAddAutomatically()) {
-							if($modifier instanceof OrderModifier) {
-								$modifier->OrderID = $this->ID;
-								$modifier->Sort = $numericKey;
-								//init method includes a WRITE
-								$modifier->init();
-								//IMPORTANT - add as has_many relationship  (Attributes can be a modifier OR an OrderItem)
-								$this->Attributes()->add($modifier);
-								$this->modifiers->push($modifier);
+			$modifiers = EcommerceConfig::get("Order", "modifiers");
+			if(is_array($modifiers) && count($modifiers) > 0) {
+				foreach($modifiers as $numericKey => $className) {
+					if(!in_array($className, $createdModifiersClassNames)) {
+						if(class_exists($className)) {
+							$modifier = new $className();
+							//only add the ones that should be added automatically
+							if(!$modifier->DoNotAddAutomatically()) {
+								if($modifier instanceof OrderModifier) {
+									$modifier->OrderID = $this->ID;
+									$modifier->Sort = $numericKey;
+									//init method includes a WRITE
+									$modifier->init();
+									//IMPORTANT - add as has_many relationship  (Attributes can be a modifier OR an OrderItem)
+									$this->Attributes()->add($modifier);
+									$this->modifiers->push($modifier);
+								}
 							}
 						}
-					}
-					else{
-						user_error("reference to a non-existing class: ".$className." in modifiers", E_USER_NOTICE);
+						else{
+							user_error("reference to a non-existing class: ".$className." in modifiers", E_USER_NOTICE);
+						}
 					}
 				}
 			}
+			$this->extend('onInit', $this);
+			//careful - this will call "onAfterWrite" again
+			$this->write();
 		}
-		$this->extend('onInit', $this);
-		//careful - this will call "onAfterWrite" again
-		$this->write();
 		return $this;
 	}
 
@@ -719,7 +700,6 @@ class Order extends DataObject {
 		if(!$obj) {
 			$obj = DataObject::get_one("OrderStep"); //TODO: this could produce strange results
 		}
-		$this->StatusID = $obj->ID;
 		return $obj;
 	}
 
@@ -1041,7 +1021,19 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->sendEmail('Order_ErrorEmail', $subject, $message, $resend = true, $adminOnly = true);
+		return $this->sendEmail('Order_ErrorEmail', "ERROR: ".$subject, $message, $resend = true, $adminOnly = true);
+	}
+
+	/**
+	 * Sends a message to the shop admin ONLY and not to the customer
+	 * This can be used by ordersteps and orderlogs to notify the admin of any potential problems.
+	 *
+	 * @param String $subject - subject for the email
+	 * @param String $message - message to be added with the email
+	 * @return Boolean TRUE for success, FALSE for failure (not tested)
+	 */
+	public function sendAdminNotification($subject = "", $message = "") {
+		return $this->sendEmail('Order_ErrorEmail', $subject, $message, $resend = false, $adminOnly = true);
 	}
 
 	/**
@@ -2186,34 +2178,8 @@ class Order extends DataObject {
 	 **/
 	function populateDefaults() {
 		parent::populateDefaults();
-		if($this->StatusID) {
-			//do nothing
-		}
-		else {
-			$firstStep = DataObject::get_one("OrderStep");
-			if($firstStep) {
-				$this->StatusID = $firstStep->ID;
-			}
-		}
 		if(!$this->SessionID) {
 			$this->SessionID = session_id();
-		}
-	}
-
-	/**
- 	 * Marks if a records has been "init"-ed....
- 	 * @var Boolean
- 	 **/
-	protected $newRecord = true;
-
-	/**
-	 *standard SS method
-	 *
-	 **/
-	function onBeforeWrite() {
-		parent::onBeforeWrite();
-		if($this->exists()) {
-			$this->newRecord = false;
 		}
 	}
 
@@ -2223,16 +2189,18 @@ class Order extends DataObject {
 	 **/
 	function onAfterWrite() {
 		parent::onAfterWrite();
-		if($this->newRecord) {
-			$this->init();
+		if($this->IsSubmitted()) {
+			//do nothing
 		}
-		elseif(!$this->IsSubmitted()) {
-			$this->calculateOrderAttributes();
-			if(EcommerceRole::current_member_is_shop_admin()){
-				if(isset($_REQUEST["SubmitOrderViaCMS"])) {
-					$this->tryToFinaliseOrder();
-					//just in case it writes again...
-					unset($_REQUEST["SubmitOrderViaCMS"]);
+		else {
+			if($this->StatusID) {
+				$this->calculateOrderAttributes();
+				if(EcommerceRole::current_member_is_shop_admin()){
+					if(isset($_REQUEST["SubmitOrderViaCMS"])) {
+						$this->tryToFinaliseOrder();
+						//just in case it writes again...
+						unset($_REQUEST["SubmitOrderViaCMS"]);
+					}
 				}
 			}
 		}
