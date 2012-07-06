@@ -140,7 +140,7 @@ class OrderStep extends DataObject {
 		static function get_not_created_codes_for_order_steps_to_include() {
 			$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 			if(is_array($array) && count($array)) {
-				foreach($array as $className => $code) {
+				foreach($array as $className) {
 					if(DataObject::get_one($className)) {
 						unset($array[$className]);
 					}
@@ -424,15 +424,17 @@ class OrderStep extends DataObject {
 		parent::requireDefaultRecords();
 		$orderStepsToInclude = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 		$codesToInclude = self::get_codes_for_order_steps_to_include();
-		if($orderStepsToInclude && count($orderStepsToInclude) && count($codesToInclude)) {
-			foreach($codesToInclude as $className => $code) {
-				if(!DataObject::get_one($className)) {
-					if(!DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'")) {
-						$obj = new $className();
-						$obj->Code = strtoupper($obj->Code);
-						$obj->Description = $obj->myDescription();
-						$obj->write();
-						DB::alteration_message("Created \"$code\" as $className.", "created");
+		if($orderStepsToInclude && count($orderStepsToInclude)) {
+			if($codesToInclude && count($codesToInclude)) {
+				foreach($codesToInclude as $className => $code) {
+					if(!DataObject::get_one($className)) {
+						if(!DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'")) {
+							$obj = new $className();
+							$obj->Code = strtoupper($obj->Code);
+							$obj->Description = $obj->myDescription();
+							$obj->write();
+							DB::alteration_message("Created \"$code\" as $className.", "created");
+						}
 					}
 				}
 			}
