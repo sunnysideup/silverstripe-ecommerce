@@ -253,6 +253,7 @@ class OrderAttribute extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Debug helper method.
 	 */
