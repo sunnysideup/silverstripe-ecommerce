@@ -19,12 +19,13 @@
 	<% if Items %>
 		<% control Items %>
 		<tr  class="itemRow $EvenOdd $FirstLast">
-			<td class="product title" scope="row">
+			<td class="product title">
 				<% if Link %>
-					<a href="$Link" target="_blank">$TableTitle</a> $TableSubTitle
+					<a href="$Link" target="_blank">$TableTitle<% if OrderItemID %> ($OrderItemID)<% end_if %></a>
 				<% else %>
-					$TableTitle $TableSubTitle
+					<span class="tableTitle">$TableTitle</span>
 				<% end_if %>
+				<span class="tableSubTitle">$TableSubTitle</span>
 			</td>
 			<td class="center quantity">$Quantity</td>
 			<td class="right unitprice">$UnitPrice.Nice</td>
