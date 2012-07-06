@@ -27,6 +27,12 @@ class CartCleanupTask extends HourlyTask {
 
 	protected $description = "Deletes abandonned carts";
 
+	/**
+	 * Output feedback about task?
+	 * @var Boolean
+	 */
+	public $verbose = false;
+
 	public static function run_on_demand() {
 		$obj = new CartCleanupTask();
 		$obj->verbose = true;
@@ -34,11 +40,8 @@ class CartCleanupTask extends HourlyTask {
 	}
 
 	/**
-	 * Output feedback about task?
-	 * @var Boolean
+	 * runs the task without output
 	 */
-	public $verbose = false;
-
 	public function runSilently(){
 		$this->verbose = false;
 		return $this->run(null);
@@ -48,13 +51,15 @@ class CartCleanupTask extends HourlyTask {
 	 **/
 	public function run($request){
 		if($this->verbose) {
-			DB::alteration_message("<h2>deleting carts</h2>.");
+			$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"Order\"")->value();
+			DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = $countAll)</h2>.");
 		}
-		$count = 0;
+
+		//ABANDONNED CARTS
 		$clearMinutes = EcommerceConfig::get("CartCleanupTask", "clear_minutes");
 		$maximumNumberOfObjectsDeleted = EcommerceConfig::get("CartCleanupTask", "maximum_number_of_objects_deleted");
-		$time = date('Y-m-d H:i:s', strtotime("-".$clearMinutes." minutes"));
-		$where = "\"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND \"Order\".\"LastEdited\" < '$time'";
+		$time = strtotime("-".$clearMinutes." minutes");
+		$where = "\"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
 		$join = "";
 		$limit = "0, ".$maximumNumberOfObjectsDeleted;
@@ -62,22 +67,21 @@ class CartCleanupTask extends HourlyTask {
 		if($neverDeleteIfLinkedToMember) {
 			$where .= " AND \"Member\".\"ID\" IS NULL";
 			$join .= "LEFT JOIN \"Member\" ON \"Member\".\"ID\" = \"Order\".\"MemberID\" ";
+			$memberDeleteNote = "(Carts linked to a member will NEVER be deleted)";
+		}
+		else {
+			$memberDeleteNote = "(We will also delete carts in this category that are linked to a member)";
 		}
 		$oldCarts = DataObject::get('Order',$where, $sort, $join, $limit);
 		if($oldCarts){
+			$count = 0;
 			if($this->verbose) {
 				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("
 					<h2>Total number of abandonned carts: ".$totalToDelete."</h2>
-					<br />number of records deleted at one time: ".$maximumNumberOfObjectsDeleted."
-					<br />Criteria: last edited ".$clearMinutes." minutes ago or more and not linked to a member", "created");
-				if($neverDeleteIfLinkedToMember) {
-					DB::alteration_message("<h3>Carts linked to a member will NEVER be deleted.</h3>", "edited");
-				}
-				else {
-					DB::alteration_message("<h3>We will also delete carts in this category that are linked to a member.</h3>", "edited");
-				}
+					<br /><b>number of records deleted at one time:</b> ".$maximumNumberOfObjectsDeleted."
+					<br /><b>Criteria:</b> last edited ".$clearMinutes." minutes ago or more $memberDeleteNote", "created");
 			}
 			foreach($oldCarts as $oldCart){
 				$count++;
@@ -88,11 +92,53 @@ class CartCleanupTask extends HourlyTask {
 			}
 		}
 		if($this->verbose) {
-			$countAll = DB::query("SELECT COUNT(\"ID\") FROM \"Order\"")->value();
+			$timeLegible = date('Y-m-d H:i:s', $time);
 			$countCart = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." ")->value();
-			DB::alteration_message("There are no abandonned orders. There are $countAll orders, $countCart of them are still in the intial cart state (not submitted).", "created");
+			$countCartWithinTimeLimit = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") >= '$time' ")->value();
+			DB::alteration_message("$countCart Orders are still in the intial cart state (not submitted), $countCartWithinTimeLimit of them are within the time limit (last edited after $timeLegible) so they are not deleted yet.", "created");
 		}
 
+		//EMPTY ORDERS
+		$clearMinutes = EcommerceConfig::get("CartCleanupTask", "clear_minutes_empty_carts");
+		$time = strtotime("-".$clearMinutes." minutes");
+		$where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
+		$sort = "\"Order\".\"Created\" ASC";
+		$join = "";
+		$limit = "0, ".$maximumNumberOfObjectsDeleted;
+		$neverDeleteIfLinkedToMember = EcommerceConfig::get("CartCleanupTask", "never_delete_if_linked_to_member");
+		if($neverDeleteIfLinkedToMember) {
+			$where .= " AND \"Member\".\"ID\" IS NULL";
+			$join .= "LEFT JOIN \"Member\" ON \"Member\".\"ID\" = \"Order\".\"MemberID\" ";
+			$memberDeleteNote = "(Carts linked to a member will NEVER be deleted)";
+		}
+		else {
+			$memberDeleteNote = "(We will also delete carts in this category that are linked to a member)";
+		}
+		$oldCarts = DataObject::get('Order',$where, $sort, $join, $limit);
+		if($oldCarts){
+			$count = 0;
+			if($this->verbose) {
+				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
+				$totalToDelete = $totalToDeleteSQLObject->value();
+				DB::alteration_message("
+					<h2>Total number of empty carts: ".$totalToDelete."</h2>
+					<br /><b>number of records deleted at one time:</b> ".$maximumNumberOfObjectsDeleted."
+					<br /><b>Criteria:</b> there are no order items and the order was last edited $clearMinutes minutes ago $memberDeleteNote", "created");
+			}
+			foreach($oldCarts as $oldCart){
+				$count++;
+				if($this->verbose) {
+					DB::alteration_message("$count ... deleting empty order #".$oldCart->ID, "deleted");
+				}
+				$this->deleteObject($oldCart);
+			}
+		}
+		if($this->verbose) {
+			$timeLegible = date('Y-m-d H:i:s', $time);
+			$countCart = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = 0 ")->value();
+			$countCartWithinTimeLimit = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") <= '$time'")->value();
+			DB::alteration_message("$countCart Orders are empty, $countCartWithinTimeLimit are within the time limit (last edited after $timeLegible) so they are not deleted yet.", "created");
+		}
 
 		$oneToMany = EcommerceConfig::get("CartCleanupTask", "one_to_many_classes");
 		$oneToOne = EcommerceConfig::get("CartCleanupTask", "one_to_one_classes");
