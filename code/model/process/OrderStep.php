@@ -383,8 +383,12 @@ class OrderStep extends DataObject {
 	 *@return Boolean
 	 **/
 	public function canDelete($member = null) {
-		if($order = DataObject::get_one("Order", "\"StatusID\" = ".$this->ID)) {
-			return false;
+		//cant delete last status if there are orders with this status
+		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
+		if(!$nextOrderStepObject) {
+			if($ordersWithThisStatus = DataObject::get_one("Order", "\"StatusID\" =".$this->ID)) {
+				return false;
+			}
 		}
 		if($this->isDefaultStatusOption()) {
 			return false;
@@ -411,6 +415,20 @@ class OrderStep extends DataObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		$this->Code = strtoupper($this->Code);
+	}
+
+	function onBeforeDelete() {
+		parent::onBeforeDelete();
+		$ordersWithThisStatus = DataObject::get("Order", "\"StatusID\" =".$this->ID);
+		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
+		if($nextOrderStepObject) {
+			if($ordersWithThisStatus) {
+				foreach($ordersWithThisStatus as $orderWithThisStatus) {
+					$orderWithThisStatus->StatusID = $nextOrderStepObject->ID;
+					$orderWithThisStatus->write();
+				}
+			}
+		}
 	}
 
 	function onAfterDelete() {
