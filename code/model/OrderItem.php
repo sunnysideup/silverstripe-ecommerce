@@ -278,6 +278,26 @@ class OrderItem extends OrderAttribute {
 	}
 
 	/**
+	 * Standard SS method
+	 * the method below is very important...
+	 * We initialise the order once it has an OrderItem
+	 */
+	function onAfterWrite(){
+		parent::onAfterWrite();
+		$order = $this->Order();
+		if($order) {
+			if(!$order->StatusID) {
+				$createdOrderStatus = DataObject::get_one("OrderStep");
+				$order->StatusID = $createdOrderStatus->ID;
+				$order->write();
+				//this adds the modifiers
+				$order->init();
+			}
+		}
+	}
+
+
+	/**
 	 * Check if two Order Items are the same.
 	 * Useful when adding two items to cart.
 	 * @return Boolean
