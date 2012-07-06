@@ -34,7 +34,8 @@ class Product extends Page implements BuyableModel {
 			"FeaturedProduct",
 			"AllowPurchase",
 			"InternalItemID", //ie SKU, ProductID etc (internal / existing recognition of product)
-			"NumberSold" //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
+			"NumberSold", //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
+			"Version"
 		)
 	);
 
@@ -246,6 +247,14 @@ class Product extends Page implements BuyableModel {
 				if(!in_array($fieldName, $this->fieldsToExcludeFromSearch)) {
 				//END HACK
 					$this->MetaKeywords .= strip_tags($this->$fieldName);
+				}
+			}
+		}
+		if($this->hasExtension("ProductWithVariationDecorator")) {
+			$variations = $this->Variations();
+			if($variations) {
+				foreach($variations as $variation) {
+					$this->MetaKeywords .= " - ".$variation->FullName;
 				}
 			}
 		}
@@ -769,11 +778,19 @@ class Product_Controller extends Page_Controller {
 	 * view earlier version of a product
 	 */
 	function viewversion($request) {
+		$currentVersion = $this->Version;
 		$id = intval($request->param("ID"));
 		$version = intval($request->param("OtherID"));
 		if($record = $this->getVersionOfProduct($id, $version)) {
 			$this->record = $record;
 		}
+		/**
+		 TO DO: to complete, consider variations vs products!
+		if($record && $record->Version != $this->Version) {
+			$this->Title .= " (Older Version)";
+			$this->MetaTitle .= " (Older Version)";
+		}
+		*/
 		return array();
 	}
 
