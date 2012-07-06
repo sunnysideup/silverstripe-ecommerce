@@ -1061,7 +1061,7 @@ class Order extends DataObject {
 		$replacementArray = array("Message" => $message);
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
-		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress();
+		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
