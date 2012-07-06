@@ -84,7 +84,9 @@ class ShoppingCart extends Object{
 		if(!$this->order) {
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
-			$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
+			if($orderIDFromSession > 0) {
+				$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
+			}
 			//order has already been submitted - immediately remove it because we dont want to change it.
 			$member = Member::currentUser();
 			if($this->order) {
@@ -106,7 +108,7 @@ class ShoppingCart extends Object{
 					if($this->order->TotalItems() == 0) {
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
-						$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND \"StatusID\" = ".$firstStep->ID. " AND \"Order\".\"ID\" <> ".$this->order->ID);
+						$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0) AND \"Order\".\"ID\" <> ".$this->order->ID);
 						if($previousOrderFromMember) {
 							if($previousOrderFromMember->TotalItems() > 0) {
 								$this->order->delete();
@@ -122,12 +124,18 @@ class ShoppingCart extends Object{
 			if(!$this->order) {
 				if($member) {
 					$firstStep = DataObject::get_one("OrderStep");
-					$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND \"StatusID\" = ".$firstStep->ID);
+					$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID." OR \"StatusID\" = 0)");
 					if($previousOrderFromMember) {
 						$this->order = $previousOrderFromMember;
 					}
 				}
 				if(!$this->order) {
+					//here we cleanup old orders, because they should be cleaned at the same rate that they are created...
+					$cleanUpEveryTime = EcommerceConfig::get("ShoppingCart", "cleanup_every_time");
+					if($cleanUpEveryTime) {
+						$obj = new CartCleanupTask();
+						$obj->runSilently();
+					}
 					$this->order = new Order();
 					if($member) {
 						$this->order->MemberID = $member->ID;
@@ -135,7 +143,6 @@ class ShoppingCart extends Object{
 					$this->order->write();
 				}
 				Session::set($sessionVariableName,intval($this->order->ID));
-				//}
 			}
 			//member just logged in and is not associated with order yet
 			//if you are not logged in but the order belongs to a member then clear the cart.
@@ -151,7 +158,6 @@ class ShoppingCart extends Object{
 		}
 		return $this->order;
 	}
-
 
 	/**
 	 * Allows access to the current order from anywhere in the code..
@@ -346,13 +352,15 @@ class ShoppingCart extends Object{
 		}
 		$className = $buyable->classNameForOrderItem();
 		$item = new $className();
-		$item->OrderID = $this->currentOrder()->ID;
-		$item->BuyableID = $buyable->ID;
-		$item->BuyableClassName = $buyable->ClassName;
-		if(isset($buyable->Version)) {
-			$item->Version = $buyable->Version;
+		if($order = $this->currentOrder()) {
+			$item->OrderID = $order->ID;
+			$item->BuyableID = $buyable->ID;
+			$item->BuyableClassName = $buyable->ClassName;
+			if(isset($buyable->Version)) {
+				$item->Version = $buyable->Version;
+			}
+			return $item;
 		}
-		return $item;
 	}
 
 	/**
@@ -365,13 +373,6 @@ class ShoppingCart extends Object{
 		$this->currentOrder()->tryToFinaliseOrder();
 		$this->clear();
 		//we cleanup the old orders here so that we immediately know if there is a problem.
-		$cleanUpEveryTime = EcommerceConfig::get("ShoppingCart", "cleanup_every_time");
-		//@TODO: watch racing condition???? still trying to finalise order but
-		//also deleting it in a clean?
-		if($cleanUpEveryTime) {
-			$obj = new CartCleanupTask();
-			$obj->runSilently();
-		}
 		return true;
 	}
 
@@ -711,15 +712,17 @@ class ShoppingCart extends Object{
 	 */
 	protected function getExistingItem($buyable,$parameters = array()){
 		$filterString = $this->parametersToSQL($parameters);
-		$orderID = $this->currentOrder()->ID;
-		$obj = DataObject::get_one(
-			"OrderItem",
-			" \"BuyableClassName\" = '".$buyable->ClassName."' AND
-				\"BuyableID\" = ".$buyable->ID." AND
-				\"OrderID\" = ".$orderID." ".
-				$filterString
-		);
-		return $obj;
+		if($order = $this->currentOrder()) {
+			$orderID = $order->ID;
+			$obj = DataObject::get_one(
+				"OrderItem",
+				" \"BuyableClassName\" = '".$buyable->ClassName."' AND
+					\"BuyableID\" = ".$buyable->ID." AND
+					\"OrderID\" = ".$orderID." ".
+					$filterString
+			);
+			return $obj;
+		}
 	}
 
 	/**
@@ -1102,22 +1105,19 @@ class ShoppingCart_Controller extends Controller{
 		return $this->cart->setMessageAndReturn();
 	}
 
-
 	function clear($request) {
 		$this->cart->clear();
-		Director::redirectBack();
-		return;
+		Director::redirect("/");
+		return false;
 	}
 
 	function clearandlogout() {
 		$this->cart->clear();
-		$this->cart->clear();
-		$this->cart->clear();
 		if($m = Member::currentUser()) {
 			$m->logout();
 		}
-		Director::redirectBack();
-		return;
+		Director::redirect("/");
+		return false;
 	}
 
 	/**
@@ -1131,7 +1131,7 @@ class ShoppingCart_Controller extends Controller{
 
 	/**
 	 * return cart for ajax call
-	 *@return HTML
+	 * @return HTML
 	 */
 	public function showcart($request) {
 		return $this->customise($this->cart->CurrentOrder())->renderWith("AjaxCart");
@@ -1152,6 +1152,10 @@ class ShoppingCart_Controller extends Controller{
 		}
 	}
 
+
+	/**
+	 * remove address from list of available addresses in checkout.
+	 */
 	function removeaddress($request) {
 		$id = intval($request->param('ID'));
 		$className = Convert::raw2sql($request->param('OtherID'));
@@ -1171,15 +1175,12 @@ class ShoppingCart_Controller extends Controller{
 	 *
 	 */
 	function submittedbuyable(){
-		$buyableID = intval($this->getRequest()->param('ID'));
-		$buyableClassName = Convert::raw2sql($this->getRequest()->param('OtherID'));
+		$buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
+		$buyableID = intval($this->getRequest()->param('OtherID'));
 		$version = intval($this->getRequest()->param('Version'));
 		if($buyableClassName && $buyableID){
 			if(EcommerceDBConfig::is_buyable($buyableClassName)) {
 				$bestBuyable = DataObject::get_by_id($buyableClassName, $buyableID);
-				if(!$bestBuyable) {
-					$bestBuyable = DataObject::get_one($buyableClassName, "ClassName = '$buyableClassName'");
-				}
 				if($bestBuyable) {
 					//show singleton with old version
 					Director::redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
@@ -1194,8 +1195,6 @@ class ShoppingCart_Controller extends Controller{
 		}
 		return null;
 	}
-
-
 
 	/**
 	 * Gets a buyable object based on URL actions
@@ -1250,7 +1249,6 @@ class ShoppingCart_Controller extends Controller{
 	function debug(){
 		$this->cart->debug();
 	}
-
 
 	function test(){
 		$_REQUEST["ajax"] = 1;
