@@ -596,10 +596,10 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 	function getCustomerNote() {
 		if($this->Author()) {
 			if($this->PaymentConfirmed) {
-				return _t("OrderStatus.PAYMENTCONFIRMEDBY", "Payment Confirmed by: ").$this->Author()->getTitle()." | ".$this->Created;
+				return _t("OrderStatusLog.PAYMENTCONFIRMEDBY", "Payment Confirmed by: ").$this->Author()->getTitle()." | ".$this->Created;
 			}
 			else {
-				return _t("OrderStatus.PAYMENTDECLINEDBY", "Payment DECLINED by: ").$this->Author()->getTitle()." | ".$this->Created;
+				return _t("OrderStatusLog.PAYMENTDECLINEDBY", "Payment DECLINED by: ").$this->Author()->getTitle()." | ".$this->Created;
 			}
 		}
 	}

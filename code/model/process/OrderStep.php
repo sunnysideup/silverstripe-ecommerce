@@ -730,11 +730,13 @@ class OrderStep_SentInvoice extends OrderStep {
 
 	/**
 	 * can run step once order has been submitted.
-	 *@param DataObject $order Order
-	 *@return Boolean
+	 * NOTE: must have a payment (even if it is a fake payment).
+	 * The reason for this is if people pay straight away then they want to see the payment shown on their invoice.
+	 * @param DataObject $order Order
+	 * @return Boolean
 	 **/
 	public function initStep($order) {
-		return $order->IsSubmitted();
+		return $order->IsSubmitted() && $order->Payments();
 	}
 
 	/**
@@ -754,8 +756,9 @@ class OrderStep_SentInvoice extends OrderStep {
 		}
 		else {
 			if(!$this->hasBeenSent($order)) {
+				//looks like we are sending an error, but we are actually just sending a message to admin
 				$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-				return $order->sendError($subject, $message);
+				return $order->sendAdminNotification($subject, $message);
 			}
 		}
 		return true;
@@ -956,13 +959,14 @@ class OrderStep_SentReceipt extends OrderStep {
 		$message = $this->CustomerMessage;
 		if($this->SendReceiptToCustomer){
 			if(!$this->hasBeenSent($order)) {
-				return $order->sendReceipt($subject, $message);
+				$order->sendReceipt($subject, $message);
 			}
 		}
 		else {
+			//looks like we are sending an error, but we are just using this for notification
 			if(!$this->hasBeenSent($order)) {
 				$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-				return $order->sendError($subject, $message);
+				return $order->sendAdminNotification($subject, $message);
 			}
 		}
 		return true;
@@ -1063,8 +1067,9 @@ class OrderStep_Sent extends OrderStep {
 			}
 			else {
 				if(!$this->hasBeenSent($order)) {
+					//looks like we are sending an error, but we are just using this for notification
 					$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-					$order->sendError($subject, $message);
+					$order->sendAdminNotification($subject, $message);
 				}
 			}
 			return parent::nextStep($order);
