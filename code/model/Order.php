@@ -61,7 +61,8 @@ class Order extends DataObject {
 			'ShippingAddress',
 			'Status',
 			'Attributes',
-			'OrderStatusLogs'
+			'OrderStatusLogs',
+			'MemberID'
 		)
 	);
 
