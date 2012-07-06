@@ -156,6 +156,9 @@ class OrderForm extends Form {
 		//-------------- ACTION PAYMENT -------------
 		$payment = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
 
+		//-------------- DO WE HAVE ANY PROGRESS NOW -------------
+		$order->tryToFinaliseOrder();
+
 		//------------- WHAT DO WE DO NEXT? -----------------
 		if($payment) {
 			//redirection is taken care of by EcommercePayment
