@@ -153,7 +153,7 @@ class EcommerceDBConfig extends DataObject {
 
 	function customFieldLabels(){
 		$newLabels = array(
-			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch configurations)."),
+			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch between configurations)."),
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
 			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Invoice title (e.g. Tax Invoice or Update from ...)"),
