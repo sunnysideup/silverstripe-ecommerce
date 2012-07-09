@@ -486,7 +486,7 @@ class OrderAddress extends DataObject {
 		if(!$member) {
 			$member = $this->getMemberFromOrder();
 		}
-		if($member) {
+		if($member && $member->exists()) {
 			$limit = null;
 			if($onlyLastRecord) {
 				$limit = 1;
