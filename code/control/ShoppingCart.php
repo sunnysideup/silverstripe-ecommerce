@@ -477,6 +477,7 @@ class ShoppingCart extends Object{
 		}
 		if($this->order){
 			if($this->order->canView()) {
+				$this->order->init();
 				$sessionVariableName = $this->sessionVariableName("OrderID");
 				Session::set($sessionVariableName, $this->order->ID);
 				//log in as the member...

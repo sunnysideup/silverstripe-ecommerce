@@ -455,16 +455,15 @@ class Order extends DataObject {
 				$fields->addFieldToTab('Root.Extras',$modifierTable);
 
 				//MEMBER STUFF
-				$array = array();
+				$specialOptionsArray = array();
 				if($this->MemberID) {
-					$array[0] =  "Remove Customer";
-					$array[$this->MemberID] =  _t("Order.LEAVEWITHCURRENTCUSTOMER", "Leave with current customer: ").$this->Member()->getTitle();
+					$specialOptionsArray[0] =  "--  - Remove Customer -- ";
+					$specialOptionsArray[$this->MemberID] =  _t("Order.LEAVEWITHCURRENTCUSTOMER", "- Leave with current customer: ").$this->Member()->getTitle();
 				}
-				else {
-					$array[0] =  " -- Select Customer -- ";
-					$currentMember = Member::currentUser();
+				elseif($currentMember = Member::currentUser()) {
+					$specialOptionsArray[0] =  "--  - Select Customer -- ";
 					$currentMemberID = $currentMember->ID;
-					$array[$currentMemberID] = _t("Order.ASSIGNTHISORDERTOME", "Assign this order to me: ").Member::currentUser()->getTitle();
+					$specialOptionsArray[$currentMemberID] = _t("Order.ASSIGNTHISORDERTOME", "- Assign this order to me: ").$currentMember->getTitle();
 				}
 				$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
 				$group = DataObject::get_one("Group", "\"Code\" = '".$customerCode."'");
@@ -472,9 +471,13 @@ class Order extends DataObject {
 					$members = $group->Members();
 					if($members) {
 						$membersArray = $members->toDropDownMap($index = 'ID', $titleField = 'Title', $emptyString = _t("Order.SELECTEXISTINGCUSTOMER", "---- select an existing customer ---"), $sort = true);
-						$array = array_merge($array, $membersArray);
+						$array = $specialOptionsArray + $membersArray;
 					}
 				}
+				foreach($array as $key => $value) {
+					$array[intval($key)] = trim($value);
+				}
+				natcasesort($array);
 				$fields->addFieldToTab("Root.Main", new DropdownField("MemberID", _t("Order.SELECTCUSTOMER", "Select Cutomer"), $array),"CustomerOrderNote");
 			}
 			$fields->addFieldToTab('Root.Addresses',new HeaderField("BillingAddressHeader", _t("Order.BILLINGADDRESS", "Billing Address")));
@@ -592,6 +595,10 @@ class Order extends DataObject {
 	public function init($force = false) {
 		//to do: check if shop is open....
 		if($this->StatusID || $force) {
+			if(!$this->StatusID) {
+				$createdOrderStatus = DataObject::get_one("OrderStep");
+				$order->StatusID = $createdOrderStatus->ID;
+			}
 			$createdModifiersClassNames = array();
 			$this->modifiers = $this->modifiersFromDatabase($includingRemoved = true);
 			if($this->modifiers) {
