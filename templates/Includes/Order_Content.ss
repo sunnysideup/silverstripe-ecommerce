@@ -20,6 +20,7 @@
 		<% control Items %>
 		<tr  class="itemRow $EvenOdd $FirstLast">
 			<td class="product title">
+				<% if InternalItemID %><span class="internalItemID">$InternalItemID: </span><% end_if %>
 				<% if Link %>
 					<a href="$Link" target="_blank">$TableTitle<% if OrderItemID %> ($OrderItemID)<% end_if %></a>
 				<% else %>
