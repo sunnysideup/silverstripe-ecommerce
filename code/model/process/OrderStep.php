@@ -522,10 +522,10 @@ class OrderStep_Created extends OrderStep {
 	 **/
 	public function doStep($order) {
 		if(!$order->MemberID) {
-			$m = Member::currentUser();
-			if($m) {
-				if(!$m->IsShopAdmin()) {
-					$order->MemberID = $m->ID();
+			$member = Member::currentUser();
+			if($member) {
+				if(!$member->IsShopAdmin()) {
+					$order->MemberID = $member->ID();
 					$order->write();
 				}
 			}
@@ -539,7 +539,7 @@ class OrderStep_Created extends OrderStep {
 	 * @return DataObject | Null (nextStep DataObject)
 	 **/
 	public function nextStep($order) {
-		if($order->TotalItems()) {
+		if($order->TotalItems($recalculate = true)) {
 			return parent::nextStep($order);
 		}
 		return null;
@@ -634,7 +634,7 @@ class OrderStep_Submitted extends OrderStep {
 	 *@return Boolean
 	 **/
 	public function initStep($order) {
-		return (bool) $order->TotalItems();
+		return (bool) $order->TotalItems($recalculate = true);
 	}
 
 	/**
