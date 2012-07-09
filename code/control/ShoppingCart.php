@@ -99,18 +99,28 @@ class ShoppingCart extends Object{
 					$this->order = null;
 				}
 				//logged in, add Member.ID to order->MemberID
-				elseif($member) {
+				elseif($member && $member->exists()) {
 					if($this->order->MemberID != $member->ID) {
-						$this->order->MemberID = $member->ID;
-						$this->order->write();
+						$updateMember = false;
+						if(!$this->order->MemberID) {
+							$updateMember = true;
+						}
+						if(!$member->IsShopAdmin()) {
+							$updateMember = true;
+						}
+						if($updateMember) {
+							$this->order->MemberID = $member->ID;
+							$this->order->write();
+						}
 					}
 					//current order has nothing in it AND the member already has an order: use the old one first
-					if($this->order->TotalItems() == 0) {
+					if($this->order->TotalItems($recalculate = true) == 0) {
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
+						//TODO: what sort order?
 						$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0) AND \"Order\".\"ID\" <> ".$this->order->ID);
-						if($previousOrderFromMember) {
-							if($previousOrderFromMember->TotalItems() > 0) {
+						if($previousOrderFromMember && $previousOrderFromMember->canView()) {
+							if($previousOrderFromMember->TotalItems($recalculate = true) > 0) {
 								$this->order->delete();
 								$this->order = $previousOrderFromMember;
 							}
@@ -126,7 +136,9 @@ class ShoppingCart extends Object{
 					$firstStep = DataObject::get_one("OrderStep");
 					$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID." OR \"StatusID\" = 0)");
 					if($previousOrderFromMember) {
-						$this->order = $previousOrderFromMember;
+						if($previousOrderFromMember->canView()) {
+							$this->order = $previousOrderFromMember;
+						}
 					}
 				}
 				if(!$this->order) {
@@ -136,6 +148,7 @@ class ShoppingCart extends Object{
 						$obj = new CartCleanupTask();
 						$obj->runSilently();
 					}
+					//create new order
 					$this->order = new Order();
 					if($member) {
 						$this->order->MemberID = $member->ID;
@@ -152,7 +165,7 @@ class ShoppingCart extends Object{
 				return false;
 			}
 			*/
-			if($this->order && $this->order->exists()) {
+			if($this->order && $this->order->exists() && $this->order->StatusID) {
 				$this->order->calculateOrderAttributes();
 			}
 		}
@@ -468,13 +481,13 @@ class ShoppingCart extends Object{
 				Session::set($sessionVariableName, $this->order->ID);
 				//log in as the member...
 				if($this->order->MemberID) {
-					if($member = Member::currentUser()) {
-						if($member->ID && ($this->order->MemberID <> $member->ID)) {
+					if($currentLoggedInMember = Member::currentUser()) {
+						if($currentLoggedInMember->ID && ($this->order->MemberID <> $currentLoggedInMember->ID)) {
 							//this next line in crucial
-							if($member->IsShopAdmin()) {
+							if($currentLoggedInMember->IsShopAdmin()) {
 								$newMember = DataObject::get_by_id("Member", $this->order->MemberID);
 								if($newMember) {
-									$member->logOut();
+									$currentLoggedInMember->logOut();
 									//@todo RACE CONDITION???
 									$newMember->logIn();
 								}
@@ -1126,7 +1139,7 @@ class ShoppingCart_Controller extends Controller{
 	 **/
 	function numberofitemsincart() {
 		$order = $this->cart->CurrentOrder();
-		return $order->TotalItems();
+		return $order->TotalItems($recalculate = true);
 	}
 
 	/**
@@ -1225,9 +1238,9 @@ class ShoppingCart_Controller extends Controller{
 	 * Gets the requested quantity
 	 */
 	protected function quantity(){
-		$qty = $this->getRequest()->getVar('quantity');
-		if(is_numeric($qty)){
-			return $qty;
+		$quantity = $this->getRequest()->getVar('quantity');
+		if(is_numeric($quantity)){
+			return $quantity;
 		}
 		return 1;
 	}
