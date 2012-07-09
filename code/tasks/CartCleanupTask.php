@@ -256,7 +256,6 @@ class CartCleanupTask extends HourlyTask {
 
 
 	private function deleteObject($objectToDelete){
-		$objectToDelete = DataObject::get_by_id($objectToDelete->ClassName,$objectToDelete->ID);
 		$objectToDelete->delete();
 		$objectToDelete->destroy();
 	}
