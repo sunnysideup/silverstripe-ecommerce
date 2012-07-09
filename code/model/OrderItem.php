@@ -287,10 +287,8 @@ class OrderItem extends OrderAttribute {
 		$order = $this->Order();
 		if($order) {
 			if(!$order->StatusID) {
-				$createdOrderStatus = DataObject::get_one("OrderStep");
-				$order->StatusID = $createdOrderStatus->ID;
 				//this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
-				$order->init();
+				$order->init(true);
 			}
 		}
 	}
