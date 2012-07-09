@@ -22,10 +22,16 @@ class OrderFormAddress extends Form {
 	protected $orderMember = null;
 
 	/**
+	 *
+	 * @var Object (Member)
+	 */
+	protected $loggedInMember = null;
+
+	/**
 	 * ID of the member that has just been created.
 	 * @var Int
 	 */
-	protected $newlyCreatedMember = 0;
+	protected $newlyCreatedMemberID = 0;
 
 	function __construct($controller, $name) {
 
@@ -43,26 +49,27 @@ class OrderFormAddress extends Form {
 
 		//  ________________ 1) Member + Address fields
 
-		//security
-		$this->orderMember = $order->CreateOrReturnExistingMember();
+		//find member
+		$this->orderMember = $order->CreateOrReturnExistingMember(false);
+		$this->loggedInMember = Member::currentUser();
+
 		//strange security situation...
-		if($this->orderMember->exists()) {
-			$currentUserID = Member::currentUserID();
-			if($currentUserID) {
-				if($this->orderMember->ID != $currentUserID) {
-					$loggedInMember = Member::currentUser();
-					if($loggedInMember) {
-						$loggedInMember->logOut();
-					}
+		if($this->orderMember->exists() && $this->loggedInMember) {
+			if($this->orderMember->ID != $this->loggedInMember->ID) {
+				if(!$this->loggedInMember->IsShopAdmin()) {
+					$this->loggedInMember->logOut();
 				}
 			}
 		}
 
-		//member fields
 		$addressFieldsBilling = new FieldSet();
-		$memberFields = $this->orderMember->getEcommerceFields();
-		$requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
-		$addressFieldsBilling->merge($memberFields);
+
+		//member fields
+		if($this->orderMember) {
+			$memberFields = $this->orderMember->getEcommerceFields();
+			$requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
+			$addressFieldsBilling->merge($memberFields);
+		}
 
 		//billing address field
 		$billingAddress = $order->CreateOrReturnExistingAddress("BillingAddress");
@@ -103,12 +110,14 @@ class OrderFormAddress extends Form {
 		$rightFields->setID('RightOrder');
 		//to do: simplify
 		if(EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
-			if($this->orderDoesNotHaveValidMember()) {
+			if($this->orderDoesNotHaveFullyOperationalMember()) {
 				//general header
-				$rightFields->push(
-					//TODO: check EXACT link!!!
-					new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you are already have an account then please')." <a href=\"Security/login?BackURL=" . $controller->Link() . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
-				);
+				if(!$this->loggedInMember) {
+					$rightFields->push(
+						//TODO: check EXACT link!!!
+						new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you are already have an account then please')." <a href=\"Security/login/?BackURL=" . urlencode($controller->Link()) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
+					);
+				}
 				$passwordField = new ConfirmedPasswordField('Password', _t('OrderForm.PASSWORD','Password'));
 				//login invite right on the top
 				if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
@@ -129,11 +138,21 @@ class OrderFormAddress extends Form {
 				);
 				$rightFields->push(new FieldGroup($passwordField));
 			}
-			elseif(Member::currentUserID()) {
-				$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
-				$rightFields->push(
-					new LiteralField('LogoutNote', "<p class=\"message warning\">" . _t("Account.LOGGEDIN","You are currently logged in as ") . $this->orderMember->FirstName . ' ' . $this->orderMember->Surname . '</p>')
-				);
+			else {
+				if($loggedInAs) {
+					$rightFields->push(
+						new LiteralField('LoginNote', "<p class=\"message good\">" . _t("Account.LOGGEDIN","You are logged in as ") . $loggedInAs->FirstName . ' ' . $loggedInAs->Surname . ' ('.$loggedInAs->Email.').</p>')
+					);
+				}
+			}
+			if($this->orderMember->exists()) {
+				if($loggedInAs) {
+					if($loggedInAs->ID !=  $this->orderMember->ID) {
+						$rightFields->push(
+							new LiteralField('OrderAddedTo', "<p class=\"message good\">" . _t("Account.ORDERADDEDTO","Order will be added to ") . $this->orderMember->FirstName . ' ' . $this->orderMember->Surname . ' ('.$this->orderMember->Email.').</p>')
+						);
+					}
+				}
 			}
 		}
 
@@ -193,7 +212,7 @@ class OrderFormAddress extends Form {
 	 * - has password
 	 * @return Boolean
 	 */
-	protected function orderHasValidMember(){
+	protected function orderHasFullyOperationalMember(){
 		if($this->orderMember) {
 			if($this->orderMember->exists()) {
 				if($this->orderMember->Password) {
@@ -204,11 +223,11 @@ class OrderFormAddress extends Form {
 	}
 
 	/**
-	 * Opposite of orderHasValidMember method.
+	 * Opposite of orderHasFullyOperationalMember method.
 	 * @return Boolean
 	 */
-	protected function orderDoesNotHaveValidMember(){
-		return $this->orderHasValidMember() ? false : true;
+	protected function orderDoesNotHaveFullyOperationalMember(){
+		return $this->orderHasFullyOperationalMember() ? false : true;
 	}
 
 
@@ -233,7 +252,7 @@ class OrderFormAddress extends Form {
 			Director::redirectBack();
 			return false;
 		}
-		if($order && $order->TotalItems() < 1) {
+		if($order && ($order->TotalItems($recalculate = true) < 1) ) {
 			// WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
 			$form->sessionMessage(_t('OrderForm.NOITEMSINCART','Please add some items to your cart.'), 'bad');
 			Director::redirectBack();
@@ -244,11 +263,8 @@ class OrderFormAddress extends Form {
 		//does NOT change the FORM only DATA, but we save to the new details using $form->saveInto($member)
 		//and NOT $data->saveInto($member)
 		$password = "";
-		if(isset($data['Password']) && is_array($data['Password'])) {
-			$data['Password'] = $data['Password']['_Password'];
-			if(strlen($data['Password']) > 3) {
-				$password = $data['Password'];
-			}
+		if($this->validPassword($data)) {
+			$password = $data['Password']['Password'];
 		}
 
 		//----------- START BY SAVING INTO ORDER
@@ -258,7 +274,7 @@ class OrderFormAddress extends Form {
 		//MEMBER
 		$member = $this->createOrFindMember($data);
 
-		if(is_object($member)) {
+		if($member && is_object($member)) {
 			if($this->memberShouldBeSaved($data)) {
 				$form->saveInto($member);
 				if($password) {
@@ -269,7 +285,6 @@ class OrderFormAddress extends Form {
 			if($this->memberShouldBeLoggedIn($data)) {
 				$member->logIn();
 			}
-			//$order->MemberID = $member->ID;
 		}
 
 		//BILLING ADDRESS
@@ -333,36 +348,41 @@ class OrderFormAddress extends Form {
 	/**
 	 * works out the most likely member for the order after submission of the form.
 	 * It returns a member if appropriate.
+	 * 1. does the order already have a member?
+	 * 2. can we create a member
+	 * 3. can the entered data be used?
+	 * 4. is there no member yet?
+	 * 5. find member from data entered (even if not logged in)
 	 * At this stage, if we dont have a member, we will create one!
 	 * @param Array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
 	 * @return DataObject| Null
 	 **/
 	protected function createOrFindMember($data) {
-		if(	EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
-			$currentUserID = Member::currentUserID();
+		$order = ShoppingCart::current_order();
+		$member = $order->CreateOrReturnExistingMember(false);
+		if($member->exists()) {
+			//do nothing
+		}
+		elseif(EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
 			$member = null;
-			//simplest case... the member is already logged in and the entered email is OK (not someone else's email)
+			//member that will be added does not exist somewhere else.
 			if($this->uniqueMemberFieldCanBeUsed($data)) {
-				$member = Member::currentUser();
-				if(!$member) {
-					//second option: an existing member email is used, return member (but this member will not be logged in!)
-					if(!$member) {
-						$member = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
+				//no logged in member
+				if(!$this->loggedInMember) {
+					//another member with the same email?
+					$member = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
 					//in case we still dont have a member AND we should create a member for every customer, then we do this below...
-						if(!$member) {
-							if($this->memberShouldBeCreated($data)) {
-								$order = ShoppingCart::current_order();
-								$member = $order->CreateOrReturnExistingMember();
-								$member->write($forceCreation = true);
-								$this->newlyCreatedMember = $member->ID;
-							}
+					if(!$member) {
+						//are we allowed to create a member?
+						if($this->memberShouldBeCreated($data)) {
+							$member->write($forceCreation = true);
+							$this->newlyCreatedMemberID = $member->ID;
 						}
 					}
 				}
 			}
-			return $member;
 		}
-		return null;
+		return $member;
 	}
 
 	/**
@@ -372,13 +392,15 @@ class OrderFormAddress extends Form {
 	 * - AND unique field does not exist already (someone else has used that email)
 	 *
 	 * @Todo: explain why password needs to be more than three characters...
+	 * @todo: create class that checks if password is good enough
 	 * @param Array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
 	 * @return Boolean
 	 **/
 	protected function memberShouldBeCreated($data) {
-		if(!Member::currentUserID() && !$this->newlyCreatedMember) {
+		if(!$this->loggedInMember && !$this->newlyCreatedMemberID) {
 			$automaticMembership = EcommerceConfig::get("EcommerceRole", "automatic_membership");
-			if( ($automaticMembership) || (isset($data["Password"]) && strlen($data["Password"]) > 3) ) {
+			$validPassword = $this->validPassword($data);
+			if( $automaticMembership || $validPassword) {
 				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){
 				 return true;
 				}
@@ -398,8 +420,8 @@ class OrderFormAddress extends Form {
 	 * @return Boolean
 	 **/
 	protected function memberShouldBeLoggedIn($data) {
-		if(!Member::currentUserID()) {
-			return $this->newlyCreatedMember ? true : false;
+		if(!$this->loggedInMember) {
+			return $this->newlyCreatedMemberID ? true : false;
 		}
 		return false;
 	}
@@ -417,7 +439,7 @@ class OrderFormAddress extends Form {
 				(
 					$this->memberShouldBeCreated($data)
 				) || (
-					Member::currentUserID() &&
+					$this->loggedInMember &&
 					!$this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
 					EcommerceConfig::get("EcommerceRole", "automatically_update_member_details")
 				)
@@ -442,7 +464,7 @@ class OrderFormAddress extends Form {
 	 * @return Boolean
 	 **/
 	public function uniqueMemberFieldCanBeUsed($data) {
-		if($this->anotherExistingMemberWithSameUniqueFieldValue($data) && Member::currentUserID()) {
+		if($this->anotherExistingMemberWithSameUniqueFieldValue($data) && $this->loggedInMember) {
 			return false;
 		}
 		return true;
@@ -455,17 +477,33 @@ class OrderFormAddress extends Form {
 	 * @return  Null | DataObject (Member)
 	 **/
 	protected function anotherExistingMemberWithSameUniqueFieldValue($data) {
-		$currentUserID = Member::currentUserID();
 		$uniqueField = Member::get_unique_identifier_field();
 		//The check below covers both Scenario 3 and 4....
 		if(isset($data[$uniqueField])) {
+			$currentUserID = $this->loggedInMember->ID;
 			$uniqueFieldValue = Convert::raw2xml($data[$uniqueField]);
 			return DataObject::get_one('Member', "\"$uniqueField\" = '{$uniqueFieldValue}' AND \"Member\".\"ID\" <> ".$currentUserID);
 		}
 		return null;
 	}
 
-
+	/**
+	 * Check if the password is good enough
+	 * @param data
+	 * @return Boolean
+	 */
+	protected function validPassword($data){
+		if(isset($data['Password']) && is_array($data['Password'])) {
+			if(isset($data['Password']['_Password']) && isset($data['Password']['Password'])) {
+				if($data['Password']['_Password'] == $data['Password']['Password']) {
+					if(strlen($data["Password"]) > 3) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 }
 
