@@ -114,13 +114,13 @@ class ShoppingCart extends Object{
 						}
 					}
 					//current order has nothing in it AND the member already has an order: use the old one first
-					if($this->order->TotalItems($recalculate = true) == 0) {
+					if($this->order->StatusID) {
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
 						//TODO: what sort order?
 						$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0) AND \"Order\".\"ID\" <> ".$this->order->ID);
 						if($previousOrderFromMember && $previousOrderFromMember->canView()) {
-							if($previousOrderFromMember->TotalItems($recalculate = true) > 0) {
+							if($previousOrderFromMember->StatusID) {
 								$this->order->delete();
 								$this->order = $previousOrderFromMember;
 							}
