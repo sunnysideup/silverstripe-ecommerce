@@ -95,8 +95,10 @@ class ShopAccountForm extends Form {
 			$form->saveInto($member);
 			$member->write();
 			if($member->exists()) {
-				$order->MemberID = $member->ID;
-				$order->write();
+				if(!$order->MemberID) {
+					$order->MemberID = $member->ID;
+					$order->write();
+				}
 				$member->login();
 				$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "bad");
 			}
