@@ -142,10 +142,12 @@ class ShippingAddress extends OrderAddress {
 				new LiteralField('ShippingHelp', '<p>'._t('OrderAddress.SHIPPINGHELP','You can use this for gift giving. No billing information will be disclosed to this address.').'</p>')
 			);
 
-			if($member->exists()) {
-				$addresses = $this->previousAddressesFromMember($member);
-				if($addresses) {
-					$shippingFieldsHeader->push(new SelectOrderAddressField('SelectShippingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Shipping Address'), $addresses));
+			if($member) {
+				if($member->exists()) {
+					$addresses = $this->previousAddressesFromMember($member);
+					if($addresses) {
+						$shippingFieldsHeader->push(new SelectOrderAddressField('SelectShippingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Shipping Address'), $addresses));
+					}
 				}
 				$shippingFields = new CompositeField(
 					new TextField('ShippingFirstName', _t('OrderAddress.FIRSTNAME','First Name')),

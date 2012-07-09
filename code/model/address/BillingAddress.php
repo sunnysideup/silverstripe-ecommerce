@@ -141,10 +141,12 @@ class BillingAddress extends OrderAddress {
 	public function getFields($member = null) {
 		$fields = parent::getEcommerceFields();
 		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Details'), 3));
-		if($member->exists()) {
-			$addresses = $this->previousAddressesFromMember($member);
-			if($addresses) {
-				$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
+		if($member) {
+			if($member->exists()) {
+				$addresses = $this->previousAddressesFromMember($member);
+				if($addresses) {
+					$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
+				}
 			}
 			$billingFields = new CompositeField(
 				new EmailField('Email', _t('OrderAddress.EMAIL','Email')),
