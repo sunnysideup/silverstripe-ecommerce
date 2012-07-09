@@ -139,15 +139,15 @@ class OrderFormAddress extends Form {
 				$rightFields->push(new FieldGroup($passwordField));
 			}
 			else {
-				if($loggedInAs) {
+				if($this->loggedInMember) {
 					$rightFields->push(
-						new LiteralField('LoginNote', "<p class=\"message good\">" . _t("Account.LOGGEDIN","You are logged in as ") . $loggedInAs->FirstName . ' ' . $loggedInAs->Surname . ' ('.$loggedInAs->Email.').</p>')
+						new LiteralField('LoginNote', "<p class=\"message good\">" . _t("Account.LOGGEDIN","You are logged in as ") . $this->loggedInMember->FirstName . ' ' . $this->loggedInMember->Surname . ' ('.$this->loggedInMember->Email.').</p>')
 					);
 				}
 			}
 			if($this->orderMember->exists()) {
-				if($loggedInAs) {
-					if($loggedInAs->ID !=  $this->orderMember->ID) {
+				if($this->loggedInMember) {
+					if($this->loggedInMember->ID !=  $this->orderMember->ID) {
 						$rightFields->push(
 							new LiteralField('OrderAddedTo', "<p class=\"message good\">" . _t("Account.ORDERADDEDTO","Order will be added to ") . $this->orderMember->FirstName . ' ' . $this->orderMember->Surname . ' ('.$this->orderMember->Email.').</p>')
 						);
