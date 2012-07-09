@@ -129,15 +129,6 @@ class Order extends DataObject {
 		function i18n_plural_name() { return _t("Order.ORDERS", "Orders");}
 
 	/**
-	 * Total Items : total items in cart
-	 *
-	 * @var integer / null
-	 */
-
-	protected static $total_items = null;
-
-
-	/**
 	 * Modifiers represent the additional charges or
 	 * deductions associated to an order, such as
 	 * shipping, taxes, vouchers etc.
@@ -145,6 +136,13 @@ class Order extends DataObject {
 	 * @var array
 	 */
 	protected static $modifiers = array();
+
+	/**
+	 * Total Items : total items in cart
+	 *
+	 * @var integer / null
+	 */
+	protected $totalItems = null;
 
 
 	public static function get_modifier_forms($controller) {
@@ -867,14 +865,17 @@ class Order extends DataObject {
 			$member = $this->Member();
 		}
 		elseif($member = Member::currentMember()) {
-			$this->MemberID = $member->ID;
-			$this->write();
+			if(!$member->IsShopAdmin()) {
+				$this->MemberID = $member->ID;
+				$this->write();
+			}
 		}
+		$member = $this->Member();
 		if(!$member) {
 			$member = new Member();
-			if($forceCreation) {
-				$member->write();
-			}
+		}
+		if($member && $forceCreation) {
+			$member->write();
 		}
 		return $member;
 	}
@@ -1742,9 +1743,9 @@ class Order extends DataObject {
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
 	public function getTotalItems($recalculate = false) {
-		if(self::$total_items === null || $recalculate) {
+		if($this->totalItems === null || $recalculate) {
 			//to do, why do we check if you can edit ????
-			self::$total_items = DB::query("
+			$this->totalItems = DB::query("
 				SELECT COUNT(\"OrderItem\".\"ID\")
 				FROM \"OrderItem\"
 					INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"ID\" = \"OrderItem\".\"ID\"
@@ -1753,7 +1754,7 @@ class Order extends DataObject {
 					AND \"OrderItem\".\"Quantity\" > 0"
 			)->value();
 		}
-		return self::$total_items;
+		return $this->totalItems;
 	}
 
 
@@ -1763,13 +1764,13 @@ class Order extends DataObject {
 	 **/
 	function TotalItemsTimesQuantity() {return $this->getTotalItemsTimesQuantity();}
 	function getTotalItemsTimesQuantity() {
-		$qty = 0;
+		$quantity = 0;
 		if($orderItems = $this->Items()) {
 			foreach($orderItems as $item) {
-				$qty += $item->Quantity;
+				$quantity += $item->Quantity;
 			}
 		}
-		return $qty;
+		return $quantity;
 	}
 
 
@@ -2132,7 +2133,7 @@ class Order extends DataObject {
 			't' => 'class',
 			's' => $ajaxObject->TotalItemsClassName(),
 			'p' => 'innerHTML',
-			'v' => $this->TotalItems(true)
+			'v' => $this->TotalItems($recalculate = true)
 		);
 		$js[] = array(
 			't' => 'class',
@@ -2161,8 +2162,8 @@ class Order extends DataObject {
 	 * @ToDO: move to more appropriate class
 	 * @return Integer
 	 **/
-	public function NumItemsInCart() {
-		return $this->TotalItems();
+	public function NumItemsInCart($recalculate = false) {
+		return $this->TotalItems($recalculate);
 	}
 
 
