@@ -58,6 +58,9 @@ class CartCleanupTask extends HourlyTask {
 		//ABANDONNED CARTS
 		$clearMinutes = EcommerceConfig::get("CartCleanupTask", "clear_minutes");
 		$maximumNumberOfObjectsDeleted = EcommerceConfig::get("CartCleanupTask", "maximum_number_of_objects_deleted");
+		if(isset($_GET["limit"]) && $this->verbose) {
+			$maximumNumberOfObjectsDeleted = intval($_GET["limit"]);
+		}
 		$time = strtotime("-".$clearMinutes." minutes");
 		$where = "\"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
