@@ -372,6 +372,7 @@ class OrderFormAddress extends Form {
 					if(!$member) {
 						//are we allowed to create a member?
 						if($this->memberShouldBeCreated($data)) {
+							$member = $order->CreateOrReturnExistingMember(false);
 							$member->write($forceCreation = true);
 							$this->newlyCreatedMemberID = $member->ID;
 						}
