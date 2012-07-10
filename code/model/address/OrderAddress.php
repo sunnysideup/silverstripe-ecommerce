@@ -38,20 +38,6 @@ class OrderAddress extends DataObject {
 		"JSONData" => "Text"
 	);
 
-
-
-	/**
-	 * e.g. http://www.nzpost.co.nz/Cultures/en-NZ/OnlineTools/PostCodeFinder
-	 * @return String
-	 */
-	public static function get_postal_code_url() {EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeURL;}
-
-	/**
-	 * e.g. "click here to check post code"
-	 * @return String
-	 */
-	public static function get_postal_code_label() {EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;}
-
 	/**
 	 * returns the id of the MAIN country field for template manipulation.
 	 * Main means the one that is used as the primary one (e.g. for tax purposes).
@@ -196,9 +182,11 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function getPostalCodeField($name) {
 		$field = new TextField($name, _t('OrderAddress.POSTALCODE','Postal Code'));
-		if(self::get_postal_code_url()){
+		$postalCodeURL = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeURL;
+		$postalCodeLabel = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;
+		if($postalCodeURL && $postalCodeLabel){
 			$prefix = EcommerceConfig::get("OrderAddress", "field_class_and_id_prefix");
-			$field->setRightTitle('<a href="'.self::get_postal_code_url().'" id="'.$prefix.$name.'Link" class="'.$prefix.'postalCodeLink">'.self::get_postal_code_label().'</a>');
+			$field->setRightTitle('<a href="'.$postalCodeURL.'" id="'.$prefix.$name.'Link" class="'.$prefix.'postalCodeLink">'.$postalCodeLabel.'</a>');
 		}
 		return $field;
 	}
