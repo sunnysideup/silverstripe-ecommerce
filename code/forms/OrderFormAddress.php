@@ -484,9 +484,12 @@ class OrderFormAddress extends Form {
 		if(isset($data[$uniqueField])) {
 			if($this->loggedInMember) {
 				$currentUserID = $this->loggedInMember->ID;
-				$uniqueFieldValue = Convert::raw2xml($data[$uniqueField]);
-				return DataObject::get_one('Member', "\"$uniqueField\" = '{$uniqueFieldValue}' AND \"Member\".\"ID\" <> ".$currentUserID);
 			}
+			else {
+				$currentUserID = 0;
+			}
+			$uniqueFieldValue = Convert::raw2xml($data[$uniqueField]);
+			return DataObject::get_one('Member', "\"$uniqueField\" = '{$uniqueFieldValue}' AND \"Member\".\"ID\" <> ".$currentUserID);
 		}
 		return null;
 	}
