@@ -149,8 +149,8 @@ class ShopAccountForm_Validator extends RequiredFields{
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
+		$loggedInMemberID = $loggedInMember->ID;
 		if(isset($data[$uniqueFieldName]) && $loggedInMember && $data[$uniqueFieldName]){
-			$loggedInMemberID = $loggedInMember->ID;
 			if(!$loggedInMember->IsShopAdmin()) {
 				$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
 				//can't be taken
@@ -179,7 +179,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 				);
 				$valid = false;
 			}
-			if(!$memberID && !$data["Password"]["_Password"]) {
+			if(!$loggedInMember && !$data["Password"]["_Password"]) {
 				$this->validationError(
 					"Password",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
