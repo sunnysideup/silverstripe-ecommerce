@@ -183,6 +183,28 @@ class EcommerceRole extends DataObjectDecorator {
 		$this->owner->write();
 	}
 
+	/**
+	 * returns an aray of members
+	 * @return Array
+	 */
+	public static function list_of_customers(){
+		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
+		$group = DataObject::get_one("Group", "\"Code\" = '".$customerCode."'");
+		$array = Array();
+		if($group) {
+			$members = $group->Members();
+			if($members) {
+				foreach($members as $member) {
+					if($member->Email) {
+						$array[$member->ID] = $member->Email." (".$member->getTitle().")";
+					}
+				}
+			}
+		}
+		natcasesort($array);
+		return $array;
+	}
+
 }
 
 
