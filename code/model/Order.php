@@ -229,7 +229,8 @@ class Order extends DataObject {
 		'OrderDate',
 		'ExchangeRate',
 		'CurrencyUsedID',
-		'StatusID'
+		'StatusID',
+		'Currency'
 	);
 
 
@@ -320,6 +321,9 @@ class Order extends DataObject {
 			$submitted = $this->IsSubmitted() ? true : false;
 			if($submitted) {
 				$this->tryToFinaliseOrder();
+			}
+			else {
+				$this->init(true);
 			}
 			if($submitted) {
 				$this->fieldsAndTabsToBeRemoved[] = "CustomerOrderNote";
@@ -457,28 +461,18 @@ class Order extends DataObject {
 				//MEMBER STUFF
 				$specialOptionsArray = array();
 				if($this->MemberID) {
-					$specialOptionsArray[0] =  "--  - Remove Customer -- ";
+					$specialOptionsArray[0] =  _t("Order.SELECTCUSTOMER", "-- - Remover Customer -- -");
 					$specialOptionsArray[$this->MemberID] =  _t("Order.LEAVEWITHCURRENTCUSTOMER", "- Leave with current customer: ").$this->Member()->getTitle();
 				}
 				elseif($currentMember = Member::currentUser()) {
-					$specialOptionsArray[0] =  "--  - Select Customer -- ";
+					$specialOptionsArray[0] =  _t("Order.SELECTCUSTOMER", "-- - Select Customers -- -");
 					$currentMemberID = $currentMember->ID;
 					$specialOptionsArray[$currentMemberID] = _t("Order.ASSIGNTHISORDERTOME", "- Assign this order to me: ").$currentMember->getTitle();
 				}
-				$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
-				$group = DataObject::get_one("Group", "\"Code\" = '".$customerCode."'");
-				if($group) {
-					$members = $group->Members();
-					if($members) {
-						$membersArray = $members->toDropDownMap($index = 'ID', $titleField = 'Title', $emptyString = _t("Order.SELECTEXISTINGCUSTOMER", "---- select an existing customer ---"), $sort = true);
-						$array = $specialOptionsArray + $membersArray;
-					}
-				}
-				foreach($array as $key => $value) {
-					$array[intval($key)] = trim($value);
-				}
-				natcasesort($array);
-				$fields->addFieldToTab("Root.Main", new DropdownField("MemberID", _t("Order.SELECTCUSTOMER", "Select Cutomer"), $array),"CustomerOrderNote");
+				//MEMBER FIELD!!!!!!!
+				$memberArray = $specialOptionsArray + EcommerceRole::list_of_customers();
+				$fields->addFieldToTab("Root.Main", new DropdownField("MemberID", _t("Order.SELECTCUSTOMER", "Select Cutomer"), $memberArray),"CustomerOrderNote");
+				$memberArray = null;
 			}
 			$fields->addFieldToTab('Root.Addresses',new HeaderField("BillingAddressHeader", _t("Order.BILLINGADDRESS", "Billing Address")));
 
@@ -538,14 +532,18 @@ class Order extends DataObject {
 			}
 			$this->MyStep()->addOrderStepFields($fields, $this);
 			$fields->addFieldToTab("Root.Next", new LiteralField("StatusIDExplanation", _t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.")));
+			$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
+			$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), DataObject::get("EcommerceCurrency"), EcommerceCurrency::default_currency_id()));
 		}
 		else {
 			$fields->removeByName("Main");
+			$firstStep = DataObject::get_one("OrderStep");
 			$msg = _t("Order.VERYFIRSTSTEP", "The first step in creating an order is to save (<i>add</i>) it.");
 			$fields->addFieldToTab("Root.Next", new LiteralField("VeryFirstStep", "<p>".$msg."</p>"));
+			if($firstStep) {
+				$fields->addFieldToTab("Root.Next", new HiddenField("StatusID", $firstStep->ID, $firstStep->ID));
+			}
 		}
-		$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
-		$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), DataObject::get("EcommerceCurrency"), EcommerceCurrency::default_currency_id()));
 		$this->extend('updateCMSFields',$fields);
 		return $fields;
 	}
