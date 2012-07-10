@@ -5,7 +5,7 @@
 		<% base_tag %>
 		$MetaTags
 		<link rel="shortcut icon" href="/favicon.ico" />
-		<script type="text/javascript" src="/sapphire/jquery/jquery.js"></script>
+		<script type="text/javascript" src="/sapphire/thirdparty/jquery/jquery.js"></script>
 		<style type="text/css">
 			html, body {
 				width: 100%;
@@ -42,7 +42,7 @@
 		<div id="Inner">
 			<div id="PaymentLogoImage">$Logo</div>
 			<div id="PaymentLoadingImage"><img src="ecommerce/images/loading.gif" alt="Loading image"></div>
-			<div id="PaymentForm">$Form</div>
+			<div id="PaymentFormHolder">$Form</div>
 		</div>
 	</div>
 	</body>
