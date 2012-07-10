@@ -148,22 +148,25 @@ class ShopAccountForm_Validator extends RequiredFields{
 	function php($data){
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
-		$memberID = Member::currentUserID();
-		if(isset($data[$uniqueFieldName]) && $memberID && $data[$uniqueFieldName]){
-			$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
-			//can't be taken
-			if(DataObject::get_one('Member',"\"$uniqueFieldName\" = '$uniqueFieldValue' AND ID <> ".$memberID)){
-				$message = sprintf(
-					_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
-					$uniqueFieldValue,
-					$uniqueFieldName
-				);
-				$this->validationError(
-					$uniqueFieldName,
-					$message,
-					"required"
-				);
-				$valid = false;
+		$loggedInMember = Member::currentUser();
+		if(isset($data[$uniqueFieldName]) && $loggedInMember && $data[$uniqueFieldName]){
+			$loggedInMemberID = $loggedInMember->ID;
+			if(!$loggedInMember->IsShopAdmin()) {
+				$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
+				//can't be taken
+				if(DataObject::get_one('Member',"\"$uniqueFieldName\" = '$uniqueFieldValue' AND ID <> ".$loggedInMemberID)){
+					$message = sprintf(
+						_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
+						$uniqueFieldValue,
+						$uniqueFieldName
+					);
+					$this->validationError(
+						$uniqueFieldName,
+						$message,
+						"required"
+					);
+					$valid = false;
+				}
 			}
 		}
 		// check password fields are the same before saving

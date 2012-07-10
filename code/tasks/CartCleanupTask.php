@@ -25,7 +25,7 @@ class CartCleanupTask extends HourlyTask {
 
 	protected $title = 'Clear old carts';
 
-	protected $description = "Deletes abandonned carts";
+	protected $description = "Deletes abandonned carts (add ?limit=xxxx to the end of the URL to set the number of records (xxx = number of records) to be deleted in one load)";
 
 	/**
 	 * Output feedback about task?

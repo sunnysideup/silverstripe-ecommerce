@@ -465,7 +465,9 @@ class OrderFormAddress extends Form {
 	 **/
 	public function uniqueMemberFieldCanBeUsed($data) {
 		if($this->anotherExistingMemberWithSameUniqueFieldValue($data) && $this->loggedInMember) {
-			return false;
+			if(!$this->loggedInMember->IsShopAdmin()) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -494,8 +496,8 @@ class OrderFormAddress extends Form {
 	 */
 	protected function validPassword($data){
 		if(isset($data['Password']) && is_array($data['Password'])) {
-			if(isset($data['Password']['_Password']) && isset($data['Password']['Password'])) {
-				if($data['Password']['_Password'] == $data['Password']['Password']) {
+			if(isset($data['Password']['_Password']) && isset($data['Password']['_ConfirmPassword'])) {
+				if($data['Password']['_Password'] == $data['Password']['_ConfirmPassword']) {
 					if(strlen($data["Password"]) > 3) {
 						return true;
 					}

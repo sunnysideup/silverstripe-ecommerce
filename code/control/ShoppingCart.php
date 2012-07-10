@@ -477,7 +477,7 @@ class ShoppingCart extends Object{
 		}
 		if($this->order){
 			if($this->order->canView()) {
-				$this->order->init();
+				$this->order->init(true);
 				$sessionVariableName = $this->sessionVariableName("OrderID");
 				Session::set($sessionVariableName, $this->order->ID);
 				//log in as the member...
@@ -488,9 +488,9 @@ class ShoppingCart extends Object{
 							if($currentLoggedInMember->IsShopAdmin()) {
 								$newMember = DataObject::get_by_id("Member", $this->order->MemberID);
 								if($newMember) {
-									$currentLoggedInMember->logOut();
+									//$currentLoggedInMember->logOut();
 									//@todo RACE CONDITION???
-									$newMember->logIn();
+									//$newMember->logIn();
 								}
 							}
 						}
