@@ -482,9 +482,11 @@ class OrderFormAddress extends Form {
 		$uniqueField = Member::get_unique_identifier_field();
 		//The check below covers both Scenario 3 and 4....
 		if(isset($data[$uniqueField])) {
-			$currentUserID = $this->loggedInMember->ID;
-			$uniqueFieldValue = Convert::raw2xml($data[$uniqueField]);
-			return DataObject::get_one('Member', "\"$uniqueField\" = '{$uniqueFieldValue}' AND \"Member\".\"ID\" <> ".$currentUserID);
+			if($this->loggedInMember) {
+				$currentUserID = $this->loggedInMember->ID;
+				$uniqueFieldValue = Convert::raw2xml($data[$uniqueField]);
+				return DataObject::get_one('Member', "\"$uniqueField\" = '{$uniqueFieldValue}' AND \"Member\".\"ID\" <> ".$currentUserID);
+			}
 		}
 		return null;
 	}
