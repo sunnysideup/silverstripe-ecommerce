@@ -262,10 +262,7 @@ class OrderFormAddress extends Form {
 		//PASSWORD HACK ... TO DO: test that you can actually update a password as the method below
 		//does NOT change the FORM only DATA, but we save to the new details using $form->saveInto($member)
 		//and NOT $data->saveInto($member)
-		$password = "";
-		if($this->validPassword($data)) {
-			$password = $data['Password']['Password'];
-		}
+		$password = $this->validPassword($data);
 
 		//----------- START BY SAVING INTO ORDER
 		$form->saveInto($order);
@@ -497,19 +494,19 @@ class OrderFormAddress extends Form {
 	/**
 	 * Check if the password is good enough
 	 * @param data
-	 * @return Boolean
+	 * @return String
 	 */
 	protected function validPassword($data){
 		if(isset($data['Password']) && is_array($data['Password'])) {
 			if(isset($data['Password']['_Password']) && isset($data['Password']['_ConfirmPassword'])) {
 				if($data['Password']['_Password'] == $data['Password']['_ConfirmPassword']) {
-					if(strlen($data["Password"]) > 3) {
-						return true;
+					if(strlen($data["Password"]['_Password']) > 3) {
+						return $data["Password"]['_Password'];
 					}
 				}
 			}
 		}
-		return false;
+		return "";
 	}
 
 }
