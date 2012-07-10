@@ -5,6 +5,7 @@
 		<% base_tag %>
 		$MetaTags
 		<link rel="shortcut icon" href="/favicon.ico" />
+		<script type="text/javascript" src="/sapphire/jquery/jquery.js"></script>
 		<style type="text/css">
 			html, body {
 				width: 100%;
@@ -13,23 +14,24 @@
 				background-color: #ffffff;
 			}
 			body {
-				display: table;
-				overflow: hidden;
-				margin-left: auto;
-				margin-right: auto;
 				text-align: center;
 			}
 			#Outer {
+				text-align: center;
 				position: relative;
 				top: 50%;
-				display: table-cell;
-				vertical-align: middle;
+				left: 50%;
 			}
 			#Inner {
-				position: relative;
-				top: -50%;
+				position: absolute;
+				margin-top: -200px;
+				margin-left: -200px;
+				height: 400px;
+				width: 400px;
+				overflow: auto;
 			}
 			#Inner img {
+				display: block;
 				margin: 10px 0;
 				border: 0;
 			}
