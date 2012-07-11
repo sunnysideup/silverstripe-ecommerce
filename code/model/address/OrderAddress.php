@@ -224,7 +224,7 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function getCountryField($name) {
 		$countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
-		$countryField = new DropdownField($name, EcommerceCountry::$singular_name, $countriesForDropdown, EcommerceCountry::get_country());
+		$countryField = new DropdownField($name, EcommerceCountry::i18n_singular_name(), $countriesForDropdown, EcommerceCountry::get_country());
 		if(count($countriesForDropdown) < 2) {
 			$countryField = $countryField->performReadonlyTransformation();
 			if(count($countriesForDropdown) < 1) {
