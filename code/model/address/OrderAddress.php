@@ -199,7 +199,7 @@ class OrderAddress extends DataObject {
 	protected function getRegionField($name) {
 		if(EcommerceRegion::show()) {
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
-			$regionField = new DropdownField($name,EcommerceRegion::$singular_name, $regionsForDropdown);
+			$regionField = new DropdownField($name,EcommerceRegion::i18n_singular_name(), $regionsForDropdown);
 			if(count($regionsForDropdown) < 2) {
 				$regionField = $regionField->performReadonlyTransformation();
 				if(count($regionsForDropdown) < 1) {
