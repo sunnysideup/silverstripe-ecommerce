@@ -800,11 +800,8 @@ class Product_Controller extends Page_Controller {
 	 * Standard SS method
 	 * Returns a snippet when requested by ajax.
 	 */
-	function index(){
-		if(Director::is_ajax()) {
-			return $this->renderWith("ProductGroupItemMoreDetail");
-		}
-		return array();
+	function ajaxview(){
+		return $this->renderWith("ProductGroupItemMoreDetail");
 	}
 
 	/**
