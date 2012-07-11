@@ -246,6 +246,7 @@ class CartPage_Controller extends Page_Controller{
 		parent::init();
 		// find the current order if any
 		$orderID = 0;
+		$overrideCanView = false;
 		//WE HAVE THIS FOR SUBMITTING FORMS!
 		if(isset($_REQUEST['OrderID'])) {
 			$orderID = intval($_REQUEST['OrderID']);
@@ -264,6 +265,7 @@ class CartPage_Controller extends Page_Controller{
 				$sessionID = Convert::raw2sql($id);
 				$retrievedOrder = DataObject::get_one("Order", "\"Order\".\"SessionID\" = '".$sessionID."' AND \"Order\".\"ID\" = $otherID");
 				$this->currentOrder = $retrievedOrder;
+				$overrideCanView = true;
 			}
 			elseif(intval($id) && in_array($action, $this->stat("allowed_actions"))){
 				$this->currentOrder = DataObject::get_by_id("Order", intval($id));
@@ -275,7 +277,7 @@ class CartPage_Controller extends Page_Controller{
 		//redirect if we are viewing the order with the wrong page!
 		if($this->currentOrder) {
 			//IMPORTANT SECURITY QUESTION!
-			if($this->currentOrder->canView()) {
+			if($this->currentOrder->canView() || $overrideCanView) {
 				if(!$this->currentOrder->IsSubmitted() && $this->ClassName == "CartPage") {
 					//always allow to view with cart page if not submitted
 				}
