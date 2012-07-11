@@ -419,7 +419,9 @@ class OrderFormAddress extends Form {
 	 **/
 	protected function memberShouldBeLoggedIn($data) {
 		if(!$this->loggedInMember) {
-			return $this->newlyCreatedMemberID ? true : false;
+			if($this->newlyCreatedMemberID && $this->validPassword($data)) {
+				return true;
+			}
 		}
 		return false;
 	}
