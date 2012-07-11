@@ -232,6 +232,10 @@ class Product extends Page implements BuyableModel {
 		return $field;
 	}
 
+	function AjaxLink(){
+		return $this->Link("ajaxview");
+	}
+
 	/**
 	 * Adds keywords to the MetaKeyword
 	 * Standard SS Method
