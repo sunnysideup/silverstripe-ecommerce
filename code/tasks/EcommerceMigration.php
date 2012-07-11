@@ -669,7 +669,7 @@ class EcommerceMigration extends BuildTask {
 				"\"StatusID\" = 0 OR \"StatusID\" IS NULL OR \"OrderStep\".\"ID\" IS NULL", "", " LEFT JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
 			if($badOrders) {
 				foreach($badOrders as $order) {
-					if($order->TotalItems()) {
+					if($order->TotalItems() > 0) {
 						$order->StatusID = $firstOption->ID;
 						$order->write();
 						DB::alteration_message("No order status for order number #".$order->ID." reverting to: $firstOption->Name.","error");
