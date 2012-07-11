@@ -442,6 +442,8 @@ class OrderFormAddress extends Form {
 					$this->loggedInMember &&
 					!$this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
 					EcommerceConfig::get("EcommerceRole", "automatically_update_member_details")
+				) || (
+					$this->newlyCreatedMemberID
 				)
 		){
 			return true;
