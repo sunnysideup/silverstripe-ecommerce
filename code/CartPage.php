@@ -258,15 +258,15 @@ class CartPage_Controller extends Page_Controller{
 			$id = $this->request->param('ID');
 			$action = $this->request->param('Action');
 			$otherID = intval($this->request->param("OtherID"));
-			if(intval($id) && in_array($action, $this->stat("allowed_actions"))){
-				$this->currentOrder = DataObject::get_by_id("Order", intval($id));
-			}
-		//the code below is for submitted orders, but we still put it here so
-		//we can do all the retrieval options in once.
-			elseif(($action == "retrieveorder") && $id && $otherID) {
+			//the code below is for submitted orders, but we still put it here so
+			//we can do all the retrieval options in once.
+			if(($action == "retrieveorder") && $id && $otherID) {
 				$sessionID = Convert::raw2sql($id);
 				$retrievedOrder = DataObject::get_one("Order", "\"Order\".\"SessionID\" = '".$sessionID."' AND \"Order\".\"ID\" = $otherID");
 				$this->currentOrder = $retrievedOrder;
+			}
+			elseif(intval($id) && in_array($action, $this->stat("allowed_actions"))){
+				$this->currentOrder = DataObject::get_by_id("Order", intval($id));
 			}
 		}
 		if(!$this->currentOrder) {
