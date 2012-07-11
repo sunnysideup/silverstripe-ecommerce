@@ -664,12 +664,16 @@ class EcommerceMigration extends BuildTask {
 		");
 		$firstOption = DataObject::get_one("OrderStep");
 		if($firstOption) {
-			$badOrders = DataObject::get("Order", "\"StatusID\" = 0 OR \"StatusID\" IS NULL OR \"OrderStep\".\"ID\" IS NULL", "", " LEFT JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
+			$badOrders = DataObject::get(
+				"Order",
+				"\"StatusID\" = 0 OR \"StatusID\" IS NULL OR \"OrderStep\".\"ID\" IS NULL", "", " LEFT JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
 			if($badOrders) {
 				foreach($badOrders as $order) {
-					$order->StatusID = $firstOption->ID;
-					$order->write();
-					DB::alteration_message("No order status for order number #".$order->ID." reverting to: $firstOption->Name.","error");
+					if($order->TotalItems()) {
+						$order->StatusID = $firstOption->ID;
+						$order->write();
+						DB::alteration_message("No order status for order number #".$order->ID." reverting to: $firstOption->Name.","error");
+					}
 				}
 			}
 			else {
