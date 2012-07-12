@@ -128,32 +128,14 @@ class OrderItem extends OrderAttribute {
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
+		$fields->replaceField("BuyableID", new HiddenField("BuyableID"));
+		$fields->replaceField("BuyableClassName", new HiddenField("BuyableClassName"));
 		$fields->removeByName("Version");
 		$fields->removeByName("Sort");
+		$fields->removeByName("CalculatedTotal");
 		$fields->removeByName("GroupSort");
 		$fields->removeByName("OrderAttribute_GroupID");
-		$buyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
-		$classNameArray = array();
-		$buyablesArray = array();
-		if($buyables && count($buyables)) {
-			foreach($buyables as $buyable) {
-				$classNameArray[$buyable] = $buyable;
-				$newObjects = DataObject::get($buyable);
-				if($newObjects) {
-					foreach($newObjects as $object) {
-						if(!$object->canPurchase()) {
-							$newObjects->remove($object);
-						}
-					}
-					$buyablesArray = $buyablesArray + $newObjects->toDropDownMap();
-				}
-			}
-		}
-		if(count($classNameArray)) {
-			$fields->addFieldToTab("Root.Main", new DropdownField("BuyableClassName", _t("OrderItem.TYPE", "Type"), $classNameArray));
-			$fields->replaceField("BuyableID", new DropdownField("BuyableID", _t("OrderItem.BOUGHT", "Bought"), $buyablesArray));
-		}
-		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
+		$fields->addFieldToTab("Root.Main", new BuyableSelectField("Buyable"));
 		return $fields;
 	}
 
@@ -269,12 +251,22 @@ class OrderItem extends OrderAttribute {
 	 * TODO: evaluate this rule.
 	 */
 	function onBeforeWrite() {
+		if(!$this->exists()) {
+			if($buyable = $this->Buyable(true)) {
+				if($this->ClassName == "OrderItem" && $this->BuyableClassName != "OrderItem") {
+					$this->setClassName($buyable->classNameForOrderItem());
+				}
+			}
+		}
+		//now we can do the parent thing
 		parent::onBeforeWrite();
 		//always keep quantity above 0
 		if(floatval($this->Quantity) == 0) {
 			$this->Quantity = 1;
 		}
-		//product ID and version ID need to be set in subclasses
+		if(!$this->Version && $buyable = $this->Buyable(true)) {
+			$this->Version = $buyable->Version;
+		}
 	}
 
 	/**
