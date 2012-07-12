@@ -170,6 +170,7 @@ class Product extends Page implements BuyableModel {
 		//NOTE: IMAGE FIELD WAS GIVING ERRORS IN ModelAdmin
 		//$fields->addFieldToTab('Root.Content.Images', new TreeDropdownField('ImageID', _t('Product.IMAGE', 'Product Image'), "Image"));
 		$fields->addFieldToTab('Root.Content.Images', new ImageField('Image', _t('Product.IMAGE', 'Product Image')));
+		$fields->addFieldToTab('Root.Content.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
 		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
 		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
 		$fields->addFieldToTab('Root.Content.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
@@ -265,22 +266,24 @@ class Product extends Page implements BuyableModel {
 		//FullName
 		$fullName = "";
 		if($this->InternalItemID) {
-			$fullName .= $this->InternalItemID." - ";
+			$fullName .= $this->InternalItemID.": ";
 		}
 		$fullName .= $this->Title;
-		$parentString = " (";
 		//FullSiteTreeSort
 		$parentSortArray = array($this->Sort);
 		$obj = $this;
+		$parentTitleArray = array();
 		while($obj->ParentID) {
 			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
-			$parentSortArray[] = $obj->Sort;
-			$parentString .= $obj->Title . " / ".$parentString;
+			if($obj) {
+				$parentSortArray[] = $obj->Sort;
+				$parentTitleArray[] = $obj->Title;
+			}
 		}
 		$reverseArray = array_reverse($parentSortArray);
-		$parentString .= ")";
+		$parentTitle = " (".implode(" / ", $parentTitleArray).")";
 		//setting fields with new values!
-		$this->FullName = $fullName.$parentString;
+		$this->FullName = $fullName.$parentTitle;
 		$this->FullSiteTreeSort = implode(",", $reverseArray);
 	}
 
