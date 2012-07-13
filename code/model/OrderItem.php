@@ -130,12 +130,12 @@ class OrderItem extends OrderAttribute {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("BuyableID", new HiddenField("BuyableID"));
 		$fields->replaceField("BuyableClassName", new HiddenField("BuyableClassName"));
-		$fields->removeByName("Version");
+		$fields->replaceField("Version", new HiddenField("Version"));
 		$fields->removeByName("Sort");
 		$fields->removeByName("CalculatedTotal");
 		$fields->removeByName("GroupSort");
 		$fields->removeByName("OrderAttribute_GroupID");
-		$fields->addFieldToTab("Root.Main", new BuyableSelectField("Buyable"));
+		$fields->addFieldToTab("Root.Main", new BuyableSelectField("FindBuyable", _t("OrderItem.SELECITEM", "Select Item"), $this->Buyable()));
 		return $fields;
 	}
 
@@ -309,6 +309,9 @@ class OrderItem extends OrderAttribute {
 	public function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}
 	public function getUnitPrice($recalculate = false) {
 		if($this->priceHasBeenFixed() && !$recalculate) {
+			if(!$this->Quantity){
+				$this->Quantity = 1;
+			}
 			return $this->CalculatedTotal / $this->Quantity;
 		}
 		else {
