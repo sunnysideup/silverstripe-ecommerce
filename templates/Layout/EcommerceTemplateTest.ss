@@ -144,3 +144,4 @@ The Cart can be accessed from anywhere using:</p>
 <% end_control %>
 
 </div>
+
