@@ -277,7 +277,9 @@ class Product extends Page implements BuyableModel {
 			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
 			if($obj) {
 				$parentSortArray[] = $obj->Sort;
-				$parentTitleArray[] = $obj->Title;
+				if($obj instanceOf ProductGroup) {
+					$parentTitleArray[] = $obj->Title;
+				}
 			}
 		}
 		$reverseArray = array_reverse($parentSortArray);
