@@ -441,6 +441,7 @@ EcomCart = {
 	addLoadingSelector: function(loadingElement) {
 		loadingElement = jQuery(loadingElement).parent().parent();
 		jQuery(loadingElement).addClass(EcomCart.classToShowLoading);
+		//jQuery("body").css("cursor", "progress");
 		EcomCart.loadingSelectors[EcomCart.loadingSelectors.length] = loadingElement;
 		return EcomCart.loadingSelectors.length-1;
 	},
@@ -575,6 +576,7 @@ EcomCart = {
 				//remove loading class from selected loading element
 				else if(type == "loadingindex") {
 					jQuery(EcomCart.loadingSelectors[value]).removeClass(EcomCart.classToShowLoading);
+					//jQuery("body").css("cursor", "auto");
 				}
 			}
 		}
