@@ -87,6 +87,7 @@ class BuyableSelectField extends FormField {
 
 				jQuery( "#'.$this->name().'-FindBuyable").autocomplete({
 					 source: function(request, response) {
+						jQuery("body").css("cursor", "progress");
 						requestTerm = request.term;
 						jQuery.ajax({
 							type: "POST",
@@ -134,6 +135,7 @@ class BuyableSelectField extends FormField {
 							jQuery("input[name=\''.$this->fieldSelectedBuyable->name().'\']").val(ui.item.title);
 							jQuery("span#'.$this->fieldSelectedBuyable->id().'").text(ui.item.title);
 						}
+						jQuery("body").css("cursor", "auto");
 					}
 				});
 			});
