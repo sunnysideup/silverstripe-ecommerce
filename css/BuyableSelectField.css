@@ -1,0 +1,5 @@
+.findBuyable {position: relative;}
+ul.ui-autocomplete {list-style: none; background-color: #fff; left: 0px!important; padding-left: 0px!important; width: auto!important; }
+ul.ui-autocomplete li {list-style: none; background-color: #EBEADB; color: #aaa; width: auto!important; padding: 0.2em; border: 2px solid #fff;}
+ul.ui-autocomplete li a{color: #000; display: block; text-decoration: none; padding: 0px; }
+ul.ui-autocomplete li a:hover{color: red; cursor: pointer;}
