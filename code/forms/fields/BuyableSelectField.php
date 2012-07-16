@@ -7,7 +7,6 @@
  */
 class BuyableSelectField extends FormField {
 
-	protected $suggestions;
 
 	/**
 	 * number of suggestions
@@ -37,7 +36,7 @@ class BuyableSelectField extends FormField {
 	 * @param Int $countOfSuggestions - number of suggestions shown (max)
 	 * @param Form $form
 	 */
-	function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 12, $form = null) {
+	function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 3, $form = null) {
 		$this->countOfSuggestions = $countOfSuggestions;
 		$this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Find Product'));
 		$this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ''), _t('BuyableSelectField.NONE', 'None'));
@@ -186,39 +185,46 @@ class BuyableSelectField_DataList extends Controller {
 		$arrayOfAddedItemIDsByClassName = array();
 		$array = array();
 		//search by InternalID ....
-		foreach($this->fieldsToSearch as $fieldName) {
-			foreach($arrayOfBuyables as $buyableClassName) {
-				if(!isset($arrayOfAddedItemIDsByClassName[$buyableClassName])) {
-					$arrayOfAddedItemIDsByClassName[$buyableClassName] = array(-1);
-				}
-				$obj = DataObject::get_one(
-					$buyableClassName,
-					"\"$fieldName\" LIKE '%$term%'
-						AND \"$buyableClassName\".\"ID\" NOT IN (".implode(",", $arrayOfAddedItemIDsByClassName[$buyableClassName]).")
-						AND \"AllowPurchase\" = 1
-					"
-				);
-				if($obj) {
-					$arrayOfAddedItemIDsByClassName[$buyableClassName][] = $obj->ID;
-					if($obj->canPurchase()) {
-						$array[$buyableClassName.$obj->ID] = array(
-							"ClassName" => $buyableClassName,
-							"ID" => $obj->ID,
-							"Version" => $obj->Version,
-							"Title" => $obj->FullName ? $obj->FullName : $obj->getTitle(),
-						);
+		$absoluteCount = 0;
+		while(count($array) <= $countOfSuggestions && $absoluteCount < 100) {
+			$absoluteCount++;
+			foreach($this->fieldsToSearch as $fieldName) {
+				foreach($arrayOfBuyables as $buyableClassName) {
+					if(!isset($arrayOfAddedItemIDsByClassName[$buyableClassName])) {
+						$arrayOfAddedItemIDsByClassName[$buyableClassName] = array(-1);
 					}
-				}
-				if(count($array) >= $countOfSuggestions) {
-					$this->fieldsToSearch = array();
-					$arrayOfBuyables = array();
+					$singleton = singleton($buyableClassName);
+					if($singleton->hasDatabaseField($fieldName)) {
+						$obj = DataObject::get_one(
+							$buyableClassName,
+							"\"$fieldName\" LIKE '%$term%'
+								AND \"$buyableClassName\".\"ID\" NOT IN (".implode(",", $arrayOfAddedItemIDsByClassName[$buyableClassName]).")
+								AND \"AllowPurchase\" = 1
+							"
+						);
+						if($obj) {
+							$arrayOfAddedItemIDsByClassName[$buyableClassName][] = $obj->ID;
+							if($obj->canPurchase()) {
+								$array[$buyableClassName.$obj->ID] = array(
+									"ClassName" => $buyableClassName,
+									"ID" => $obj->ID,
+									"Version" => $obj->Version,
+									"Title" => $obj->FullName ? $obj->FullName : $obj->getTitle(),
+								);
+							}
+						}
+					}
 				}
 			}
 		}
 		//remove KEYS
 		$finalArray = array();
+		$count = 0;
 		foreach($array as $item) {
-			$finalArray[] = $item;
+			if($count < $countOfSuggestions) {
+				$finalArray[] = $item;
+			}
+			$count++;
 		}
 		return $this->array2json($finalArray);
 	}
