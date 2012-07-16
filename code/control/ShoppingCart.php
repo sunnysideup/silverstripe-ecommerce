@@ -902,6 +902,14 @@ class ShoppingCart_Controller extends Controller{
 
 	function init() {
 		parent::init();
+		if(isset($_GET["SecurityID"])) {
+			if($_GET["SecurityID"] == Session::get("SecurityID")) {
+				//$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+			}
+			else {
+				$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+			}
+		}
 		$this->cart = ShoppingCart::singleton();
 	}
 
@@ -1003,12 +1011,16 @@ class ShoppingCart_Controller extends Controller{
 	 *@todo: check that comment description actually matches what it does
 	 *@return String (URLSegment)
 	 */
+
 	protected static function params_to_get_string($array){
+		$string = "?";
 		if($array & count($array > 0)){
 			array_walk($array , create_function('&$v,$k', '$v = $k."=".$v ;'));
-			return "?".implode("&",$array);
+			$string = implode("&",$array);
 		}
-		return "";
+		$token = SecurityToken::inst();
+		$string .= "&amp;SecurityID=".$token->getValue();
+		return $string;
 	}
 
 	/**
