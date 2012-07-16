@@ -171,6 +171,7 @@ class BillingAddress extends OrderAddress {
 		$billingFields->push(new TextField('Phone', _t('OrderAddress.PHONE','Phone')));
 		$billingFields->push(new TextField('MobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 		$billingFields->SetID('BillingFields');
+		$billingFields->addExtraClass("orderAddressHolder");
 		$this->makeSelectedFieldsReadOnly($billingFields);
 		$fields->push($billingFields);
 		$this->extend('augmentEcommerceBillingAddressFields', $fields);
