@@ -12,12 +12,41 @@
 
 var EcomSelectOrderAddressField = {
 
-	fieldSelector: ".selectorderaddress input[class='radio']",
+	/**
+	 * selector for the "select address field"
+	 * @var String
+	 */
+	fieldSelector: ".selectorderaddress",
 
+	/**
+	 * selector for the "select address field" input element
+	 * @var String
+	 */
+	inputSelector: "input[class='radio']",
+
+	/**
+	 * selector for the related address field holder
+	 * @var String
+	 */
+	addressSelector: ".orderAddressHolder",
+
+	/**
+	 * selector for the link that removes an 'obsolete' address
+	 * @var String
+	 */
 	removeLinkSelector: ".noLongerInUse",
 
+
+	/**
+	 * message shown before an address is removed
+	 * @var String
+	 */
 	areYouSureMessage: "Are you sure you want to remove this address?",
 
+	/**
+	 * array of data connected to each "selectable" address
+	 * @var Array
+	 */
 	data: [],
 		set_data: function(i, object) {EcomSelectOrderAddressField.data[i] = object; },
 
@@ -27,20 +56,26 @@ var EcomSelectOrderAddressField = {
 	},
 
 	setupAddressChanges: function(){
-		jQuery(EcomSelectOrderAddressField.fieldSelector).change(
-			function(e) {
-				id = jQuery(this).val();
-				var data = EcomSelectOrderAddressField.data[id];
-				if(data) {
-					jQuery.each(
-						data,
-						function(i, n){
-							jQuery("input[name='"+i+"'], select[name='"+i+"']").val(n);
+		jQuery(EcomSelectOrderAddressField.fieldSelector).each(
+			function(i, el){
+				jQuery(el).next(EcomSelectOrderAddressField.addressSelector).hide();
+				jQuery(el).find(EcomSelectOrderAddressField.inputSelector).change(
+					function(e) {
+						jQuery(this).parents(EcomSelectOrderAddressField.fieldSelector).next(EcomSelectOrderAddressField.addressSelector).show();
+						id = jQuery(this).val();
+						var data = EcomSelectOrderAddressField.data[id];
+						if(data) {
+							jQuery.each(
+								data,
+								function(i, n){
+									jQuery("input[name='"+i+"'], select[name='"+i+"']").val(n);
+								}
+							);
 						}
-					);
-				}
+					}
+				);
 			}
-		);
+		)
 	},
 
 	setupNoLongerInUseLinks: function(){
