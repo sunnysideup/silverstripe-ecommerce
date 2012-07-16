@@ -171,6 +171,7 @@ class ShippingAddress extends OrderAddress {
 			$shippingFields->push(new TextField('ShippingMobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 			$this->makeSelectedFieldsReadOnly($shippingFields);
 			$shippingFieldsHeader->SetID("ShippingFieldsHeader");
+			$shippingFields->addExtraClass("orderAddressHolder");
 			$fields->push($shippingFieldsHeader);
 			$shippingFields->SetID('ShippingFields');
 			$fields->push($shippingFields);
