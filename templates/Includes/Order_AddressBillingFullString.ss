@@ -9,5 +9,5 @@
 	<% if Phone %>$Phone, <% end_if %>
 	<% if MobilePhone %>$MobilePhone, <% end_if %>
 	<% if Email %>$Email, <% end_if %>
-	<br /><a href="$RemoveLink" class="noLongerInUse" rel="$ID"><% _t("NOLONGERINUSE", "no longer in use") %>.</a>
+	<br /><a href="$RemoveLink" class="noLongerInUse" rel="$ID"><% _t("Order.REMOVETHISADDRESS", "remove this address.") %></a>
 </span>

@@ -66,7 +66,11 @@ EcomQuantityField = {
 					if(URLSegment.indexOf("?") == -1) {
 						URLSegment = URLSegment + "?";
 					}
+					else {
+						URLSegment = URLSegment + "&";
+					}
 					var url = jQuery('base').attr('href') + URLSegment + 'quantity=' + this.value;
+					url = url.replace("&amp;", "&");
 					EcomCart.getChanges(url, null, this);
 				}
 			}
