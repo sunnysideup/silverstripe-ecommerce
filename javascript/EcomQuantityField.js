@@ -63,7 +63,10 @@ EcomQuantityField = {
 					else {
 						jQuery(this).siblings(EcomQuantityField.removeSelector).css("visibility", "visible");
 					}
-					var url = jQuery('base').attr('href') + URLSegment + '?quantity=' + this.value;
+					if(URLSegment.indexOf("?") == -1) {
+						URLSegment = URLSegment + "?";
+					}
+					var url = jQuery('base').attr('href') + URLSegment + 'quantity=' + this.value;
 					EcomCart.getChanges(url, null, this);
 				}
 			}
