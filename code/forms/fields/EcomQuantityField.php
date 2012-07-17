@@ -137,14 +137,14 @@ class EcomQuantityField extends NumericField {
 	 *@return String (URLSegment)
 	 **/
 	function IncrementLink(){
-		return Convert::raw2att(ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters));
+		return ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
 	}
 
 	/**
 	 *@return String (URLSegment)
 	 **/
 	function DecrementLink(){
-		return Convert::raw2att(ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters));
+		return ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
 	}
 
 	/**
