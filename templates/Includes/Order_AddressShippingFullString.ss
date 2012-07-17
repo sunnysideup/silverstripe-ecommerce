@@ -8,5 +8,5 @@
 	<% if ShippingFullCountryName %>$ShippingFullCountryName,<% end_if %>
 	<% if ShippingMobilePhone %>$ShippingMobilePhone,<% end_if %>
 	<% if ShippingPhone %>$ShippingPhone,<% end_if %>
-	<br /><a href="$RemoveLink" class="noLongerInUse" rel="$ID"><% _t("NOLONGERINUSE", "no longer in use") %>.</a>
+	<br /><a href="$RemoveLink" class="noLongerInUse" rel="$ID"><% _t("Order.REMOVETHISADDRESS", "remove this address.") %></a>
 </span>
