@@ -488,9 +488,9 @@ class CheckoutPage_StepDescription extends DataObject{
 
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
-		$fields->replaceField("Description", new TextareaField("Description", "Description", 3));
-		$fields->addFieldToTab("Root.Main", new ReadonlyField("Above", "Text Above"));
-		$fields->addFieldToTab("Root.Main", new ReadonlyField("Below", "Text Below"));
+		$fields->replaceField("Description", new TextareaField("Description", _t("Checkout.DESCRIPTION", "Description"), 3));
+		$fields->replaceField("Above", new TextareaField("Above", _t("Checkout.ABOVE", "Top of section note"), 3));
+		$fields->replaceField("Below", new TextareaField("Below", _t("Checkout.BELOW", "Bottom of section note"), 3));
 		return $fields;
 	}
 
