@@ -980,23 +980,23 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	static function remove_modifier_link($modifierID) {
-		return self::$url_segment.'/removemodifier/'.$modifierID."/";
+		return self::$url_segment.'/removemodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
 	static function add_modifier_link($modifierID) {
-		return self::$url_segment.'/addmodifier/'.$modifierID."/";
+		return self::$url_segment.'/addmodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
 	static function clear_cart_link() {
-		return self::$url_segment.'/clear/';
+		return self::$url_segment.'/clear/'.self::params_to_get_string($parameters);
 	}
 
 	static function save_cart_link() {
-		return self::$url_segment.'/save/';
+		return self::$url_segment.'/save/'.self::params_to_get_string($parameters);
 	}
 
 	static function clear_cart_and_logout_link() {
-		return self::$url_segment.'/clearandlogout/';
+		return self::$url_segment.'/clearandlogout/'.self::params_to_get_string($parameters);
 	}
 
 	/**
