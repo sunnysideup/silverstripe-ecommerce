@@ -172,18 +172,20 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 * @return Null | DataObjectSet (CheckoutPage_Description)
 	 */
 	function CheckoutSteps() {
-		if($this->isPartOfTheCheckoutSteps) {
-			$dos = DataObject::get("CheckoutPage_StepDescription", null, "\"ID\" ASC");
-			foreach($dos as $do) {
-				$do->LinkingMode = "link completed";
-				$do->Completed = 1;
-				$do->Link = "";
+		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
+			if($this->isPartOfTheCheckoutSteps) {
+				$dos = DataObject::get("CheckoutPage_StepDescription", null, "\"ID\" ASC");
+				foreach($dos as $do) {
+					$do->LinkingMode = "link completed";
+					$do->Completed = 1;
+					$do->Link = "";
+				}
+				$do = $this->CurrentCheckoutStep();
+				if($do) {
+					$dos->push($do);
+				}
+				return $dos;
 			}
-			$do = $this->CurrentCheckoutStep();
-			if($do) {
-				$dos->push($do);
-			}
-			return $dos;
 		}
 	}
 

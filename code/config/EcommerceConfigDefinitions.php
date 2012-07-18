@@ -66,6 +66,9 @@ class EcommerceConfigDefinitions extends Object {
 			"CheckoutPage_Controller" => array(
 				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."
 			),
+			"OrderConfirmationPage_Controller" => array(
+				"include_as_checkout_step" => "Include the order confirmation as one of the checkout steps, visually, in the list of steps shown."
+			),
 			"ProductGroup" => array(
 				"sort_options" => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
 				"filter_options" => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Featured' => 'default', 'SQL' => 'Featured = 1')",
