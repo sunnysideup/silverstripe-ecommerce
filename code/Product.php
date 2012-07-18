@@ -81,7 +81,8 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	public static $indexes = array(
-		"FullSiteTreeSort" => true
+		"FullSiteTreeSort" => true,
+		"FullName" => true
 	);
 
 	/**
@@ -243,6 +244,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	function onBeforeWrite(){
 		parent::onBeforeWrite();
+		$this->prepareFullFields();
 		//we are adding all the fields to the keyword fields here for searching purposes.
 		//because the MetaKeywords Field is being searched.
 		$this->MetaKeywords = "";
@@ -258,11 +260,22 @@ class Product extends Page implements BuyableModel {
 		if($this->hasExtension("ProductWithVariationDecorator")) {
 			$variations = $this->Variations();
 			if($variations) {
-				foreach($variations as $variation) {
-					$this->MetaKeywords .= " - ".$variation->FullName;
+				if($variations->count()) {
+					foreach($variations as $variation) {
+						$this->MetaKeywords .= " - ".$variation->FullName;
+					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * sets the FullName and FullSiteTreeField to the latest values
+	 * This can be useful as you can compare it to the ones saved in the database.
+	 * Returns true if the value is different from the one in the database.
+	 * @return Boolean
+	 */
+	public function prepareFullFields(){
 		//FullName
 		$fullName = "";
 		if($this->InternalItemID) {
@@ -273,7 +286,7 @@ class Product extends Page implements BuyableModel {
 		$parentSortArray = array($this->Sort);
 		$obj = $this;
 		$parentTitleArray = array();
-		while($obj->ParentID) {
+		while($obj && $obj->ParentID) {
 			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
 			if($obj) {
 				$parentSortArray[] = $obj->Sort;
@@ -287,10 +300,11 @@ class Product extends Page implements BuyableModel {
 		//setting fields with new values!
 		$this->FullName = $fullName.$parentTitle;
 		$this->FullSiteTreeSort = implode(",", $reverseArray);
+		if(($this->dbObject("FullName") != $this->FullName) || ($this->dbObject("FullSiteTreeSort") != $this->FullSiteTreeSort)) {
+			return true;
+		}
+		return false;
 	}
-
-
-
 
 	//GROUPS AND SIBLINGS
 
@@ -792,6 +806,8 @@ class Product_Controller extends Page_Controller {
 		$version = intval($request->param("OtherID"));
 		if($record = $this->getVersionOfProduct($id, $version)) {
 			$this->record = $record;
+			$this->record->AllowPurchase = false;
+			$this->AllowPurchase = false;
 		}
 		/**
 		 TO DO: to complete, consider variations vs products!

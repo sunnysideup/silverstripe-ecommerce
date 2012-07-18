@@ -1,6 +1,7 @@
-
 <div id="ProductGroup" class="mainSection content-container withSidebar">
+
 	<h1 id="PageTitle">$Title</h1>
+
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 
 <% if Products %>
@@ -25,6 +26,7 @@
 <% end_if %>
 	<% if Form %><div id="FormHolder">$Form</div><% end_if %>
 	<% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>
+
 </div>
 
 <aside>
