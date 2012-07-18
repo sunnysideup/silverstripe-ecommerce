@@ -2,17 +2,8 @@
 
 	<h1 class="pagetitle">$Title</h1>
 
-<% if ShowOnlyCurrentStep %><% if CanCheckout %>
-	<ol class="steps youHave{$PercentageDone}PercentageDone">
-	<% control Steps %>
-		<% if Completed %>
-			<li class="$LinkingMode"><a href="$Link">$Title</a></li>
-		<% else %>
-			<li class="$LinkingMode">$Title</li>
-		<% end_if %>
-	<% end_control %>
-	</ol>
-<% end_if %><% end_if %>
+	<% if ShowOnlyCurrentStep %><% if CanCheckout %><% include CheckoutStepsList %><% end_if %><% end_if %>
+
 
 	<% include CartActionsAndMessages %>
 
