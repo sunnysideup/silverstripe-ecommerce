@@ -404,10 +404,13 @@ class OrderItem extends OrderAttribute {
 		$obj = null;
 		if($current) {
 			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
-			if(!$obj) {
+			/*
+			 * TO DO: this needs more thought!
+			if(!$obj && $this->Version) {
 				$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
 				$obj->Title .= _t("OrderItem.ORDERITEMNOLONGERAVAILABLE", " - NO LONGER AVAILABLE");
 			}
+			* */
 		}
 		elseif($this->Version) {
 			$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
