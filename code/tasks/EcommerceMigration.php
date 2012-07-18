@@ -12,7 +12,8 @@
  *
  * @package: ecommerce
  * @sub-package: setup
- *
+ * @todo: change methods to simple names f10, f20, etc... and then allow individual ones to be run.
+ * @todo: 200 + 210 need attention.
  **/
 
 
@@ -53,6 +54,8 @@ class EcommerceMigration extends BuildTask {
 		$this->mergeUncompletedOrderForOneMember_170();
 		$this->updateFullSiteTreeSortFieldForAllProducts_180();
 		$this->updateOrderStatusLogSequentialOrderNumber_190();
+		$this->resaveAllPRoducts_200();
+		$this->resaveAllPRoductsVariations_210();
 		$this->theEnd_9999();
 	}
 
@@ -1038,6 +1041,56 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There are no logs to update.");
 		}
+	}
+
+	function resaveAllPRoducts_200() {
+		DB::alteration_message("
+			<h1>200. Resave All Products to update the FullName and FullSiteTreeSort Field</h1>
+			<p>Saves and PUBLISHES all the products on the site. You may need to run this task several times.</p>
+		");
+		$limit = 10000;
+		$count = 0;
+		$objects = DataObject::get("Product", null, null, null, 1000);
+		if($objects) {
+			foreach($objects as $object) {
+				if($object->prepareFullFields()) {
+					$count++;
+					$object->writeToStage('Stage');
+					$object->publish('Stage', 'Live');
+				}
+			}
+			if($count >= $limit) {
+				DB::alteration_message("This task has not completed yet, please run again!", "deleted");
+			}
+		}
+		else {
+			DB::alteration_message("No products to update", "deleted");
+		}
+	}
+
+	function resaveAllPRoductsVariations_210() {
+		DB::alteration_message("
+			<h1>210. Resave All Product Variations to update the FullName and FullSiteTreeSort Field</h1>
+			<p>Saves all the product variations on the site. You may need to run this task several times.</p>
+		");
+		$limit = 10000;
+		$count = 0;
+		$objects = DataObject::get("ProductVariation", null, null, null, $limit);
+		if($objects) {
+			foreach($objects as $object) {
+				if($object->prepareFullFields()) {
+					$count++;
+					$object->write();
+				}
+			}
+			if($count >= $limit) {
+				DB::alteration_message("This task has not completed yet, please run again!", "deleted");
+			}
+		}
+		else {
+			DB::alteration_message("No products to update", "deleted");
+		}
+
 	}
 
 	function theEnd_9999(){

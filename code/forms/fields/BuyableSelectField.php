@@ -36,7 +36,7 @@ class BuyableSelectField extends FormField {
 	 * @param Int $countOfSuggestions - number of suggestions shown (max)
 	 * @param Form $form
 	 */
-	function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 3, $form = null) {
+	function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 7, $form = null) {
 		$this->countOfSuggestions = $countOfSuggestions;
 		$this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Find Product'));
 		$this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ''), _t('BuyableSelectField.NONE', 'None'));
@@ -186,36 +186,66 @@ class BuyableSelectField_DataList extends Controller {
 		$array = array();
 		//search by InternalID ....
 		$absoluteCount = 0;
-		while(count($array) <= $countOfSuggestions && $absoluteCount < 100) {
+		$buyables = array();
+		foreach($arrayOfBuyables as $key => $buyableClassName) {
+			$buyables[$key] = array();
+			$singleton = singleton($buyableClassName);
+			$buyables[$key]["Singleton"] = $singleton;
+			$buyables[$key]["ClassName"] = $buyableClassName;
+			if($singleton instanceOf SiteTree) {
+				if(Versioned::current_stage() == "Live") {
+					$buyables[$key]["ClassName"] .= "_Live";
+				}
+			}
+		}
+		unset($arrayOfBuyables);
+		while(count($array) <= $countOfSuggestions && $absoluteCount < 300) {
 			$absoluteCount++;
-			foreach($this->fieldsToSearch as $fieldName) {
-				foreach($arrayOfBuyables as $buyableClassName) {
-					if(!isset($arrayOfAddedItemIDsByClassName[$buyableClassName])) {
-						$arrayOfAddedItemIDsByClassName[$buyableClassName] = array(-1);
+			for($i = 0; $i < count($this->fieldsToSearch); $i++) {
+				$fieldName = $this->fieldsToSearch[$i];
+				for($j = 0; $j < count($buyables); $j++) {
+					$buyableArray = $buyables[$j];
+					$className = $buyableArray["ClassName"];
+					$singleton = $buyableArray["Singleton"];
+					if(!isset($arrayOfAddedItemIDsByClassName[$className])) {
+						$arrayOfAddedItemIDsByClassName[$className] = array(-1 => -1);
 					}
-					$singleton = singleton($buyableClassName);
 					if($singleton->hasDatabaseField($fieldName)) {
-						$obj = DataObject::get_one(
-							$buyableClassName,
-							"\"$fieldName\" LIKE '%$term%'
-								AND \"$buyableClassName\".\"ID\" NOT IN (".implode(",", $arrayOfAddedItemIDsByClassName[$buyableClassName]).")
-								AND \"AllowPurchase\" = 1
-							"
-						);
+						$where = "\"$fieldName\" LIKE '%$term%'
+								AND \"".$className."\".\"ID\" NOT IN (".implode(",", $arrayOfAddedItemIDsByClassName[$className]).")
+								AND \"AllowPurchase\" = 1";
+						$obj = DataObject::get_one($className,$where);
 						if($obj) {
-							$arrayOfAddedItemIDsByClassName[$buyableClassName][] = $obj->ID;
+							//we found an object, we dont need to find it again.
+							$arrayOfAddedItemIDsByClassName[$className][$obj->ID] = $obj->ID;
+							//now we are only going to add it, if it is available!
 							if($obj->canPurchase()) {
-								$array[$buyableClassName.$obj->ID] = array(
-									"ClassName" => $buyableClassName,
-									"ID" => $obj->ID,
-									"Version" => $obj->Version,
-									"Title" => $obj->FullName ? $obj->FullName : $obj->getTitle(),
-								);
+								$useVariationsInstead = false;
+								if($obj->hasExtension("ProductWithVariationDecorator")) {
+									$variations = $obj->Variations();
+									if($variations->count()) {
+										$useVariationsInstead = true;
+									}
+								}
+								if(!$useVariationsInstead) {
+									$name = $obj->FullName ? $obj->FullName : $obj->getTitle();
+									$array[$className.$obj->ID] = array(
+										"ClassName" => $className,
+										"ID" => $obj->ID,
+										"Version" => $obj->Version,
+										"Title" => $name
+									);
+								}
 							}
 						}
 					}
+					else {
+						//echo $singleton->ClassName ." does not have $fieldName";
+					}
 				}
+				reset($buyables);
 			}
+			reset($this->fieldsToSearch);
 		}
 		//remove KEYS
 		$finalArray = array();
