@@ -114,6 +114,7 @@ class OrderConfirmationPage extends CartPage{
 		$do->Code = $this->URLSegment;
 		$do->LinkingMode = "current notCompleted";
 		$do->Completed = 0;
+		$do->ID = 99;
 		return $do;
 	}
 
