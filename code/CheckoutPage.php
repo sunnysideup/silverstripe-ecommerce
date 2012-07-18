@@ -322,11 +322,13 @@ class CheckoutPage_Controller extends CartPage_Controller {
 			}
 			$do->Completed = $completed;
 		}
-		$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
-		if($orderConfirmationPage) {
-			$do = $orderConfirmationPage->CurrentCheckoutStep();
-			if($do) {
-				$dos->push($do);
+		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
+			$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
+			if($orderConfirmationPage) {
+				$do = $orderConfirmationPage->CurrentCheckoutStep();
+				if($do) {
+					$dos->push($do);
+				}
 			}
 		}
 		return $dos;

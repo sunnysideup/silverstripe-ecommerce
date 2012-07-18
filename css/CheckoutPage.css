@@ -11,10 +11,11 @@
 /**
  * Steps
  */
-#Checkout ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em;}
+#Checkout ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; 	}
 #Checkout ol.steps li {
+	display: block;
 	float: left;
-	width: 33%;
+	width: 24.5%;
 	height: 1em;
 	background-color: #EDEDED;
 	padding-top: 1em;
