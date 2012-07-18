@@ -297,46 +297,57 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 *
 	 * @return Null | DataObject (CheckoutPage_Description) | DataObjectSet (CheckoutPage_Description)
 	 */
-	function Steps($number = 0) {
+	function CheckoutSteps($number = 0) {
 		$where = '';
 		if($number) {
 			$where = "\"CheckoutPage_StepDescription\".\"ID\" = $number";
 		}
 		$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
+		if($number) {
+			return $dos->First();
+		}
 		$completed = 1;
+		$completedClass = "completed";
 		foreach($dos as $do) {
 			if($this->currentStep && $do->Code() == $this->currentStep) {
 				$do->LinkingMode = "current";
 				$completed = 0;
+				$completedClass = "notCompleted";
 			}
 			else {
-				$do->LinkingMode = "link";
+				if($completed) {
+					$do->Link = $this->Link("checkoutstep")."/".$do->Code."/";
+				}
+				$do->LinkingMode = "link $completedClass";
 			}
 			$do->Completed = $completed;
-			$do->Link = $this->Link("checkoutstep")."/".$do->Code."/";
 		}
-		if($number) {
-			return $dos->First();
+		$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
+		if($orderConfirmationPage) {
+			$do = $orderConfirmationPage->CurrentCheckoutStep();
+			if($do) {
+				$dos->push($do);
+			}
 		}
 		return $dos;
 	}
 
 	function StepsContentHeading($number) {
-		$do = $this->Steps($number);
+		$do = $this->CheckoutSteps($number);
 		if($do) {
 			return $do->Heading;
 		}
 	}
 
 	function StepsContentAbove($number) {
-		$do = $this->Steps($number);
+		$do = $this->CheckoutSteps($number);
 		if($do) {
 			return $do->Above;
 		}
 	}
 
 	function StepsContentBelow($number) {
-		$do = $this->Steps($number);
+		$do = $this->CheckoutSteps($number);
 		if($do) {
 			return $do->Below;
 		}
@@ -414,10 +425,11 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 	/**
 	 * returns the total number of steps (e.g. 3)
+	 * we add one for the confirmation page
 	 * @return Integer
 	 */
 	protected function numberOfSteps(){
-		return count($this->steps);
+		return count($this->steps) + 1;
 	}
 
 	/**

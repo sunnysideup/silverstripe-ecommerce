@@ -103,11 +103,30 @@ class OrderConfirmationPage extends CartPage{
 		return self::get_order_link($orderID);
 	}
 
+	/**
+	 * returns the Checkout_StepDescription assocatiated with the final step: the order confirmation.
+	 * @return Checkout_StepDescription
+	 */
+	public function CurrentCheckoutStep() {
+		$do = new CheckoutPage_StepDescription();
+		$do->Link = $this->Link;
+		$do->Heading = $this->MenuTitle;
+		$do->Code = $this->URLSegment;
+		$do->LinkingMode = "current notCompleted";
+		$do->Completed = 0;
+		return $do;
+	}
+
 }
 
 class OrderConfirmationPage_Controller extends CartPage_Controller{
 
 
+	/**
+	 * Is part of the checkout steps process?
+	 * @var Boolean
+	 */
+	protected $isPartOfTheCheckoutSteps = false;
 	/**
 	 * standard controller function
 	 **/
@@ -120,6 +139,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		//clear steps from checkout page otherwise in the next order
 		//you go straight to the last step.
+		$this->isPartOfTheCheckoutSteps = Session::get("CheckoutPage_Controller_Step");
 		Session::set("CheckoutPage_Controller_Step", 0);
 		Session::clear("CheckoutPage_Controller_Step");
 	}
@@ -141,6 +161,38 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		return array();
 	}
 
+
+
+	/**
+	 * Returns a dataobject set of the checkout steps if
+	 * the OrderConfirmationPage is shown as part of the checkout process
+	 * We repeat these here so that you can show the user that (s)he has reached the last step
+	 *
+	 * @return Null | DataObjectSet (CheckoutPage_Description)
+	 */
+	function CheckoutSteps() {
+		if($this->isPartOfTheCheckoutSteps) {
+			$dos = DataObject::get("CheckoutPage_StepDescription", null, "\"ID\" ASC");
+			foreach($dos as $do) {
+				$do->LinkingMode = "link completed";
+				$do->Completed = 1;
+				$do->Link = "";
+			}
+			$do = $this->CurrentCheckoutStep();
+			if($do) {
+				$dos->push($do);
+			}
+			return $dos;
+		}
+	}
+
+	/**
+	 * returns the percentage of checkout steps done (0 - 100)
+	 * @return Integer
+	 */
+	public function PercentageDone(){
+		return 100;
+	}
 
 	/**
 	 * Returns the form to cancel the current order,
@@ -226,6 +278,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		$html = $emog->emogrify();
 		return $html;
 	}
+
 
 
 }

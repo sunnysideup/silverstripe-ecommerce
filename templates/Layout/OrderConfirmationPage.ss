@@ -2,6 +2,8 @@
 
 	<h1 class="pagetitle">$Title</h1>
 
+	<% if CheckoutSteps %><% include CheckoutStepsList %><% end_if %>
+
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 
 
