@@ -3,7 +3,12 @@
 /**
  * This class defines all the names for IDs and Classes that are used
  * within the e-commerce ajax framework.
- */
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: configuration
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class EcommerceConfigAjaxDefinitions extends ViewableData {
 

@@ -1,10 +1,21 @@
 <?php
 
+
+/**
+ * create the e-commerce specific Member Groups
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
+
 class CreateEcommerceMemberGroups extends BuildTask{
 
-	protected $title = "Create E-commerce Member (Customer) Groups";
+	protected $title = "Create E-commerce Member Groups";
 
-	protected $description = "Create the member groups and members for e-commerce.";
+	protected $description = "Create the member groups and members for e-commerce, such as customers and shop-admins.";
 
 	function run($request){
 		$customerGroup = EcommerceRole::get_customer_group();

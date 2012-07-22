@@ -1,16 +1,16 @@
 <?php
 
 
-/**
- * @description:
- *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
- * @package: ecommerce
- * @sub-package: setup
- *
- **/
 
+/**
+ * create default records for e-commerce
+ * This does not include any products.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class EcommerceDefaultRecords extends BuildTask {
 

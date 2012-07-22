@@ -4,12 +4,13 @@
  * Images should be uploaded before import,
  * where the Photo/Image field corresponds to the filename of a file that was uploaded.
  *
- * @authors: Silverstripe, Jeremy, Tony, Nicolaas
+ * @TODO: test and update to Ecommerce 1.0
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- *
- */
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class ProductBulkLoader extends CsvBulkLoader{
 

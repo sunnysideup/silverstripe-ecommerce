@@ -4,15 +4,14 @@
 /**
  * @description: cleans up old (abandonned) carts...
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: cms
- *
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-
-class CartCleanupTask extends HourlyTask {
+class CartCleanupTask extends BuildTask {
 
 	/**
 	 * Standard SS Variable
@@ -33,6 +32,10 @@ class CartCleanupTask extends HourlyTask {
 	 */
 	public $verbose = false;
 
+
+	/**
+	 * run in verbose mode
+	 */
 	public static function run_on_demand() {
 		$obj = new CartCleanupTask();
 		$obj->verbose = true;

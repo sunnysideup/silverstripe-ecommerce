@@ -1,12 +1,13 @@
 <?php
 
+
 /**
  * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)
- * @authors: Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class StoreAdmin extends ModelAdmin{

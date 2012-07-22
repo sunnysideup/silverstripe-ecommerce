@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * One stop shop for massaging e-commerce related data
  * AND running tests.
@@ -14,11 +15,14 @@
  * 3. debug
  * 4. migration
  * 5. tests
- *
- * @author jeremy, nicolaas
  * @todo: work out a standard "silent" option and a display option the "display" options shows all output when running it from ecommerce/dev/
  * We also have to work out an easy way to extend this.
- */
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: cms
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class EcommerceDatabaseAdmin extends Controller{
 
@@ -103,6 +107,7 @@ class EcommerceDatabaseAdmin extends Controller{
 		"setorderidstartingnumber",
 		"createecommercemembergroups",
 		"ecommercedefaultrecords",
+		"ecommercecountryandregiontasks",
 		"adddefaultecommerceproducts"
 	);
 
@@ -130,6 +135,10 @@ class EcommerceDatabaseAdmin extends Controller{
 		$this->runTask("AddDefaultEcommerceProducts", $request);
 	}
 
+	function ecommercecountryandregiontasks($request){
+		$this->runTask("EcommerceCountryAndRegionTasks", $request);
+	}
+
 
 
 
@@ -141,7 +150,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	//##############################
 
 	protected $regularMaintenance = array(
-		"clearoldcarts",
+		"cartcleanuptask",
 		"recalculatethenumberofproductssold",
 		"addcustomerstocustomergroups",
 		"fixbrokenordersubmissiondata",
@@ -160,8 +169,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	 * executes build task
 	 *
 	 */
-	function clearoldcarts($request) {
-		$this->runTask("ClearOldCarts", $request);
+	function cartcleanuptask($request) {
+		$this->runTask("CartCleanupTask", $request);
 	}
 
 	/**
@@ -299,7 +308,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	//##############################
 
 	protected $crazyshit = array(
-		"deleteallorders"
+		"deleteallorders",
+		"deleteecommerceproductstask"
 	);
 
 	/**
@@ -313,6 +323,10 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	function deleteallorders($request){
 		$this->runTask("DeleteAllOrders", $request);
+	}
+
+	function deleteecommerceproductstask($request){
+		$this->runTask("DeleteEcommerceProductsTask", $request);
 	}
 
 
@@ -385,6 +399,7 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	protected function runTask($className, $request) {
 		$buildTask = new $className();
+		$buildTask->verbose = true;
 		$buildTask->run($request);
 		$this->displayCompletionMessage($buildTask);
 	}

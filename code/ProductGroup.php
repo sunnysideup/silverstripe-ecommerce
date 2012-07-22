@@ -4,12 +4,13 @@
   * It contains functions for versioning child products
   *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: Products
- *
+ * @sub-package: Pages
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 
 class ProductGroup extends Page {
 

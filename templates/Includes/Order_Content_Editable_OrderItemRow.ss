@@ -2,11 +2,10 @@
 	<td class="product title" scope="row">
 		<% if Buyable %><% control Buyable %><% include ProductGroupItemImageThumb %><% end_control %><% end_if %>
 		<div class="itemTitleAndSubTitle">
-			<% if InternalItemID %><span class="internalItemID">$InternalItemID: </span><% end_if %>
 			<% if Link %>
 				<a id="$AJAXDefinitions.TableTitleID" href="$Link" title="<% sprintf(_t("Order.READMORE","Click here to read more on &quot;%s&quot;"),$TableTitle) %>">$TableTitle</a>
 			<% else %>
-				<span id="$AJAXDefinitions.TableTitleID">$TableTitle </span>
+				<span id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 			<% end_if %>
 			<div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div>
 		</div>

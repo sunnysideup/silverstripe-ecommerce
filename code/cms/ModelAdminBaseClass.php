@@ -1,13 +1,15 @@
 <?php
+
+
 /**
  * @Descrition: Common functionality for ModelAdmin
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- *
- */
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class ModelAdminEcommerceClass_CollectionController extends ModelAdmin_CollectionController {
 

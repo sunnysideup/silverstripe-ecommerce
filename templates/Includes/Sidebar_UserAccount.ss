@@ -1,10 +1,10 @@
 <div class="sidebarBox userAccount">
-	<h3><% _t("Cart.YOURACCOUNT","Your Account") %></h3>
+	<h3><% _t("SideBar.YOURACCOUNT","Your Account") %></h3>
 	<p>
 <% if EcomConfig.Customer %>
-	<% _t("Cart.LOGGEDINAS","Your are logged in as") %> <a href="$EcomConfig.AccountPageLink">$EcomConfig.Customer.Title</a>.
+	<% _t("SideBar.LOGGEDINAS","Your are logged in as") %> <a href="$EcomConfig.AccountPageLink">$EcomConfig.Customer.Title</a>.
 <% else %>
-	<% _t("Cart.YOUARENOT","Your are not") %> <a href="$EcommerceLogInLink"><% _t("Cart.LOGGEDIN","logged in") %></a>.
+	<% _t("SideBar.YOUARENOT","Your are not") %> <a href="$EcommerceLogInLink"><% _t("SideBar.LOGGEDIN","logged in") %></a>.
 <% end_if %>
 	</p>
 </div>

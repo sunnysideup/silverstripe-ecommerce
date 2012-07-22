@@ -6,17 +6,17 @@
  * or whatever other geographical borders you are using.
  * Each region has one country, so a region can not span more than one country.
  *
- * @author nicolaas [at] sunnysideup.co.nz
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommerceRegion extends DataObject {
 
 	/**
-	 * what variables are accessible through  http://mysite.com/api/v1/EcommerceRegion/
+	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceRegion/
 	 * @var array
 	 */
 	public static $api_access = array(

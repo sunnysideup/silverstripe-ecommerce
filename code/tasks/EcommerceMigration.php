@@ -6,12 +6,12 @@
  * This has been placed here rather than in the individual classes for the following reasons:
  * - not to clog up individual classes
  * - to get a complete overview in one class
- * - to be able to run parts and older and newer versionw without having to go through several clases to retrieve them
+ * - to be able to run parts and older and newer version without having to go through several clases to retrieve them
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: setup
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
  * @todo: change methods to simple names f10, f20, etc... and then allow individual ones to be run.
  * @todo: 200 + 210 need attention.
  **/
@@ -20,6 +20,8 @@
 
 
 class EcommerceMigration extends BuildTask {
+
+	protected $limit = 1000;
 
 	protected $title = "Ecommerce Migration";
 
@@ -30,9 +32,9 @@ class EcommerceMigration extends BuildTask {
 	";
 
 	function run($request) {
-		echo "
+		DB::alteration_message("
 			<h1>IMPORTANT</h1>
-			<p>Make sure that this page ends with <i>THE END</i> to ensure that all migrations were completed.</p>";
+			<p>Make sure that this page ends with <i>THE END</i> to ensure that all migrations were completed.</p>");
 		$this->shopMemberToMemberTableMigration_10();
 		$this->moveItemToBuyable_20();
 		$this->productVersionToOrderItem_25();
@@ -925,7 +927,7 @@ class EcommerceMigration extends BuildTask {
 			"\"MemberID\" > 0",
 			"\"MemberID\", \"Order\".\"Created\" DESC", // THIS ORDER IS CRUCIAL!!!!
 			"INNER JOIN \"Member\" ON \"Order\".\"MemberID\" = \"Member\".\"ID\" ",
-			1000
+			$this->limit
 		);
 		$count = 0;
 		$previousOrderMemberID = 0;
@@ -1022,7 +1024,7 @@ class EcommerceMigration extends BuildTask {
 			<h1>190. Set sequential order numbers</h1>
 			<p>Prepopulates old orders for OrderStatusLog_Submitted.SequentialOrderNumber.</p>
 		");
-		$objects = DataObject::get("OrderStatusLog_Submitted", "", "\"Created\" ASC", null, 1000);
+		$objects = DataObject::get("OrderStatusLog_Submitted", "", "\"Created\" ASC", null, $this->limit);
 		$changes = 0;
 		if($objects) {
 			foreach($objects as $object) {
@@ -1048,9 +1050,8 @@ class EcommerceMigration extends BuildTask {
 			<h1>200. Resave All Products to update the FullName and FullSiteTreeSort Field</h1>
 			<p>Saves and PUBLISHES all the products on the site. You may need to run this task several times.</p>
 		");
-		$limit = 10000;
 		$count = 0;
-		$objects = DataObject::get("Product", null, null, null, 1000);
+		$objects = DataObject::get("Product", "\"FullName\" = '' OR \"FullName\" IS NULL", "\"FullName\" ASC", null, $this->limit);
 		if($objects) {
 			foreach($objects as $object) {
 				if($object->prepareFullFields()) {
@@ -1059,12 +1060,12 @@ class EcommerceMigration extends BuildTask {
 					$object->publish('Stage', 'Live');
 				}
 			}
-			if($count >= $limit) {
+			if($count >= $this->limit) {
 				DB::alteration_message("This task has not completed yet, please run again!", "deleted");
 			}
 		}
 		else {
-			DB::alteration_message("No products to update", "deleted");
+			DB::alteration_message("No products to update.");
 		}
 	}
 
@@ -1073,9 +1074,8 @@ class EcommerceMigration extends BuildTask {
 			<h1>210. Resave All Product Variations to update the FullName and FullSiteTreeSort Field</h1>
 			<p>Saves all the product variations on the site. You may need to run this task several times.</p>
 		");
-		$limit = 10000;
 		$count = 0;
-		$objects = DataObject::get("ProductVariation", null, null, null, $limit);
+		$objects = DataObject::get("ProductVariation", "\"FullName\" = '' OR \"FullName\" IS NULL", "\"FullName\" ASC", null, $this->limit);
 		if($objects) {
 			foreach($objects as $object) {
 				if($object->prepareFullFields()) {
@@ -1083,12 +1083,12 @@ class EcommerceMigration extends BuildTask {
 					$object->write();
 				}
 			}
-			if($count >= $limit) {
+			if($count >= $this->limit) {
 				DB::alteration_message("This task has not completed yet, please run again!", "deleted");
 			}
 		}
 		else {
-			DB::alteration_message("No products to update", "deleted");
+			DB::alteration_message("No product variations to update.");
 		}
 
 	}

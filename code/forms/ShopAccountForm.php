@@ -1,16 +1,14 @@
 <?php
 /**
- * @description: ShopAccountForm allows shop members to update their details with the shop.
- *
- * @see OrderModifier
+ * @description: ShopAccountForm allows shop members to update their details.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 class ShopAccountForm extends Form {
 
 	function __construct($controller, $name) {

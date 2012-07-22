@@ -4,7 +4,10 @@
  * works out how many products have been sold, per product.
  *
  * @TODO: consider whether this does not sit better in its own module.
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class RecalculateTheNumberOfProductsSold extends BuildTask{
@@ -13,6 +16,15 @@ class RecalculateTheNumberOfProductsSold extends BuildTask{
 
 	protected $description = "Works out how many of each product have been sold";
 
+	/**
+	 * Should be equal to SUM or COUNT.
+	 * Determines if we count of sum up the number of times a product has been sold.
+	 * if two people buy product A, person 1 buying two of them and person 1 buying three then
+	 * SUM = 5
+	 * COUNT = 2
+	 *
+	 * @var String
+	 */
 	protected static $number_sold_calculation_type = "SUM"; //SUM or COUNT
 		static function set_number_sold_calculation_type($s){self::$number_sold_calculation_type = $s;}
 		static function get_number_sold_calculation_type(){return self::$number_sold_calculation_type;}

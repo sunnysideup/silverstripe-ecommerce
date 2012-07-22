@@ -1,12 +1,15 @@
 <?php
 
 /**
- * Database Settings for Ecommerce
+ * Database Settings for E-commerce
+ * Similar to SiteConfig but then for E-commerce
  *
  *
- *
- *
- */
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class EcommerceDBConfig extends DataObject {
 
@@ -30,7 +33,8 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveModelNames" => "Boolean",
 		"ProductsHaveQuantifiers" => "Boolean",
 		"ProductsAlsoInOtherGroups" => "Boolean",
-		"ProductsHaveVariations" => "Boolean"
+		"ProductsHaveVariations" => "Boolean",
+		"CurrenciesExplanation" => "HTMLText"
 	);
 
 	/**
@@ -106,7 +110,8 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveModelNames" => false,
 		"ProductsHaveQuantifiers" => false,
 		"ProductsAlsoInOtherGroups" => false,
-		"ProductsHaveVariations" => false
+		"ProductsHaveVariations" => false,
+		"CurrenciesExplanation" => "<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>"
 	);
 
 	public function populateDefaults() {
@@ -169,6 +174,7 @@ class EcommerceDBConfig extends DataObject {
 			"ProductsHaveQuantifiers" => _t("EcommerceDBConfig.PRODUCTSHAVEQUANTIFIERS", "Products have quantifiers (e.g. per year, each, per dozen, etc...) - untick to hide model field"),
 			"ProductsAlsoInOtherGroups" => _t("EcommerceDBConfig.PRODUCTSALSOINOTHERGROUPS", "Allow products to show in multiple product groups."),
 			"ProductsHaveVariations" => _t("EcommerceDBConfig.PRODUCTSHAVEVARIATIONS", "Products have variations (e.g. size, colour, etc...)."),
+			"CurrenciesExplanation" => _t("EcommerceDBConfig.CURRENCIESEXPLANATION", "Explanation on how the currency options work (if any)."),
 			"EmailLogo" => _t("EcommerceDBConfig.EMAILLOGO", "Email Logo"),
 			"DefaultProductImage" => _t("EcommerceDBConfig.DEFAULTPRODUCTIMAGE", "Default Product Image")
 		);
@@ -186,7 +192,8 @@ class EcommerceDBConfig extends DataObject {
 		$versionInfo = new EcommerceConfigDefinitions();
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
-				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"])
+				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
+				new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"], 2, 2)
 			),
 			new Tab('ProductDisplay',
 				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
@@ -196,6 +203,7 @@ class EcommerceDBConfig extends DataObject {
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
 				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
+				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"]),
 				new ImageField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image")
 			),
 			new Tab('Checkout',
@@ -245,9 +253,11 @@ class EcommerceDBConfig extends DataObject {
 
 
 	/**
-	 * tells is if a classanme is a buyable
-	 * @param String $className - name of the class to be tested
-	 * @return Boolean
+	 * tells us if a Class Name is a buyable
+	 * @todo: consider using Ecomerce Configuration instead?
+	 * In EcomConfig we only list base classes.
+	 *@param String $className - name of the class to be tested
+	 *@return Boolean
 	 */
 	static function is_buyable($className) {
 		$implementorsArray = class_implements($className);
@@ -265,7 +275,6 @@ class EcommerceDBConfig extends DataObject {
 		return Member::currentUser();
 	}
 
-
 	/**
 	 * Return the currency being used on the site.
 	 * @return string Currency code, e.g. "NZD" or "USD"
@@ -274,6 +283,14 @@ class EcommerceDBConfig extends DataObject {
 		if(class_exists('Payment')) {
 			return Payment::site_currency();
 		}
+	}
+
+	/**
+	 *
+	 * return DataObjectSet (list of EcommerceCurrencies)
+	 */
+	function Currencies(){
+		return EcommerceCurrency::ecommerce_currency_list();
 	}
 
 

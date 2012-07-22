@@ -1,14 +1,15 @@
 <?php
 
+
 /**
  * @description: Manages everything you sell.
  * Products and Product Groups are included by default - can also include ProductVariations, etc..
  *
- * @authors: Silverstripe, Jeremy, Tony, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class ProductsAndGroupsModelAdmin extends ModelAdmin {

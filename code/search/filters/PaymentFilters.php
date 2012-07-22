@@ -1,15 +1,14 @@
 <?php
 
+
 /**
  * @description: provides a bunch of filters for search in ModelAdmin (CMS)
  *
- * @authors: Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: cms
- *
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
 
 class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 

@@ -110,3 +110,29 @@ a.action:hover {
 	-webkit-transition: color 0.25s ease-in-out;
 	transition: color 0.25s ease-in-out;
 }
+
+
+/**
+ * Checkout Steps
+ **/
+/**
+ * Steps
+ */
+ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; 	}
+ol.steps li {
+	display: block;
+	float: left;
+	width: 24.5%;
+	height: 1em;
+	background-color: #EDEDED;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	border-right: 1px solid #fff;
+	text-align: center;
+	color: #888888;
+	line-height: 1;
+	list-style-type: none;
+	margin: 0px;
+}
+ol.steps li.link {color: #000;}
+ol.steps li.current {color: #000;}

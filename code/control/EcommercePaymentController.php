@@ -1,6 +1,15 @@
 <?php
 
 
+/**
+ * @description: Used to diplay the payment form.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: control
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class EcommercePaymentController extends Controller {
 
 	protected static $url_segment = "ecommercepayment";
@@ -8,7 +17,9 @@ class EcommercePaymentController extends Controller {
 		static function get_url_segment() {return self::$url_segment;}
 
 	protected $currentOrder = null;
+
 	protected $errorMessage = "";
+
 	protected $goodMessage = "";
 
 	static function make_payment_link($orderID){

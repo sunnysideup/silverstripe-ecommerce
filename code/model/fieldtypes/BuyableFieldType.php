@@ -2,18 +2,13 @@
 
 
 /**
- * Implements the "Money" pattern.
  *
- * @see http://www.martinfowler.com/eaaCatalog/money.html
- *
- * @todo Support different ways of rounding
- * @todo Equality operators
- * @todo Addition, substraction and allocation of values
- * @todo Model validation for $allowedCurrencies
- *
- * @package sapphire
- * @subpackage model
- */
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class BuyableFieldType extends DBField implements CompositeDBField {
 
 	/**

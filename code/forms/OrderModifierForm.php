@@ -1,23 +1,13 @@
 <?php
 
-if(function_exists('lcfirst') === false) {
-	function lcfirst($str) {
-		$str[0] = strtolower($str[0]);
-		return $str;
-	}
-}
-
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
  *
- * @see OrderModifier
  *
- *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class OrderModifierForm extends Form {
@@ -135,4 +125,16 @@ class OrderModifierForm_Controller extends Controller{
 class OrderModifierForm_Validator extends RequiredFields{
 
 
+}
+
+
+/**
+ * HACK for PHP versions that do not include the lcfirst method
+ *
+ */
+if(function_exists('lcfirst') === false) {
+	function lcfirst($str) {
+		$str[0] = strtolower($str[0]);
+		return $str;
+	}
 }

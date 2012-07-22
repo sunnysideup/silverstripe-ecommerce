@@ -7,12 +7,13 @@
  * once submitted, the Order Confirmation page shows the
  * finalised detail of the order.
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: pages
- *
+ * @sub-package: Pages
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 
 class OrderConfirmationPage extends CartPage{
 
@@ -107,12 +108,15 @@ class OrderConfirmationPage extends CartPage{
 	 * returns the Checkout_StepDescription assocatiated with the final step: the order confirmation.
 	 * @return Checkout_StepDescription
 	 */
-	public function CurrentCheckoutStep() {
+	public function CurrentCheckoutStep($current = false) {
 		$do = new CheckoutPage_StepDescription();
 		$do->Link = $this->Link;
 		$do->Heading = $this->MenuTitle;
 		$do->Code = $this->URLSegment;
-		$do->LinkingMode = "current notCompleted";
+		$do->LinkingMode = "notCompleted";
+		if($current) {
+			$do->LinkingMode .= " current";
+		}
 		$do->Completed = 0;
 		$do->ID = 99;
 		return $do;
@@ -180,7 +184,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 					$do->Completed = 1;
 					$do->Link = "";
 				}
-				$do = $this->CurrentCheckoutStep();
+				$do = $this->CurrentCheckoutStep(true);
 				if($do) {
 					$dos->push($do);
 				}

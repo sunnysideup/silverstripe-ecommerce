@@ -4,11 +4,11 @@
 /**
  * @Description: Email spefically for communicating with customer about order.
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class Order_Email extends Email {
@@ -26,6 +26,7 @@ class Order_Email extends Email {
 			return Email::getAdminEmail();
 		}
 	}
+
 	/**
 	 * returns the subject for the email (doh!).
 	 * @return String
@@ -33,10 +34,10 @@ class Order_Email extends Email {
 	static function get_subject() {
 		$siteConfig = SiteConfig::current_site_config();
 		if($siteConfig && $siteConfig->Title) {
-			return _t("Order_Email.SALEUPDATE", "Sale Update {OrderNumber} from ").$siteConfig->Title;
+			return _t("Order_Email.SALEUPDATE", "Sale Update [OrderNumber] from ").$siteConfig->Title;
 		}
 		else {
-			return _t("Order_Email.SALEUPDATE", "Sale Update {OrderNumber} ");
+			return _t("Order_Email.SALEUPDATE", "Sale Update [OrderNumber] ");
 		}
 	}
 
@@ -48,6 +49,10 @@ class Order_Email extends Email {
 	 * @return Boolean - TRUE for success and FALSE for failure.
 	 */
 	public function send($messageID = null, $order, $resend = false) {
+		if(!$this->subject) {
+			$this->subject = self::get_subject();
+		}
+		$this->subject = str_replace("[OrderNumber]", $order->ID, $this->subject);
 		if(!$this->hasBeenSent($order) || $resend) {
 			if(EcommerceConfig::get("Order_Email", "copy_to_admin_for_all_emails") && ($this->to != Email::getAdminEmail())) {
 				$this->setBcc(Email::getAdminEmail());
@@ -65,7 +70,9 @@ class Order_Email extends Email {
 
 
 	/**
-	 *@return DataObject (OrderEmailRecord)
+	 * @param Boolean $result: how did the email go? 1 = sent, 0 = not sent
+	 * @param Order $order: the order to which the email is associated.
+	 * @return DataObject (OrderEmailRecord)
 	 **/
 	protected function createRecord($result, $order) {
 		$obj = new OrderEmailRecord();
@@ -83,13 +90,20 @@ class Order_Email extends Email {
 		return $obj;
 	}
 
+	/**
+	 * converts an Email to A Varchar
+	 * @param String $email - emal address
+	 * @return String - returns email address without &gt; and &lt;
+	 */
 	function emailToVarchar($email) {
 		$email = str_replace(array("<", ">", '"', "'"), " - ", $email);
 		return $email;
 	}
 
 	/**
-	 *@return boolean
+	 * Checks if an email has been sent for this Order for this status.
+	 * @param Order $order
+	 * @return boolean
 	 **/
 	function hasBeenSent($order) {
 		if(DataObject::get_one("OrderEmailRecord", "\"OrderEmailRecord\".\"OrderID\" = ".$order->ID." AND \"OrderEmailRecord\".\"OrderStepID\" = ".intval($order->StatusID)." AND  \"OrderEmailRecord\".\"Result\" = 1")) {
