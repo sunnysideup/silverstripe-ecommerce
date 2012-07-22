@@ -14,11 +14,11 @@
  * 	FlatTaxModifier::set_tax(0.15, 'GST', false);
  * </code>
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: modifiers
- *
+ * @sub-package: forms
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class FlatTaxModifier extends OrderModifier {
