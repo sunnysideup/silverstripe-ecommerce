@@ -5,11 +5,11 @@
  * @description: each order has an address: a Shipping and a Billing address
  * This is a base-class for both.
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class OrderAddress extends DataObject {

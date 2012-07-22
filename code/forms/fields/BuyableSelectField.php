@@ -1,10 +1,14 @@
 <?php
 /**
- * Text input field.
- * @package forms
- * @subpackage fields
+ * Text input field that allows the user to select a Buyable
+ * using the auto-complete technique from jQuery UI.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: forms
  * @inspiration: https://github.com/sheadawson/silverstripe-zenautocompletefield
- */
+ **/
+
 class BuyableSelectField extends FormField {
 
 

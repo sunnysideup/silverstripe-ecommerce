@@ -25,6 +25,13 @@ Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller"
 Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
+SS_Report::register("SideReport", "EcommerceSideReport_FeaturedProducts");
+SS_Report::register("SideReport", "EcommerceSideReport_AllProducts");
+SS_Report::register("SideReport", "EcommerceSideReport_NoImageProducts");
+SS_Report::register("SideReport", "EcommerceSideReport_NoInternalIDProducts");
+SS_Report::register("SideReport", "EcommerceSideReport_NoPriceProducts");
+SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
+
 //Object::useCustomClass('Currency','CurrencyImprovements', true);
 
 // copy the lines below to your mysite/_config.php file and set as required.
@@ -35,11 +42,6 @@ DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
 // * * * DEFINITELY MUST SET
 //EcommerceConfig::set_folder_and_file_locations(array("ecommerce/_config/ecommerce.yaml"));
-
-// * * * PRODUCTS
-//SS_Report::register("SideReport", "EcommerceSideReport_AllProducts");
-//SS_Report::register("SideReport", "EcommerceSideReport_FeaturedProducts");
-//SS_Report::register("SideReport", "EcommerceSideReport_NoImageProducts");
 
 
 // * * * CMS

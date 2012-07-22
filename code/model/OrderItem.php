@@ -4,16 +4,17 @@
  * An order item links to a Buyable (product) by class name
  * That is, we only store the BuyableID and the ClassName
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 class OrderItem extends OrderAttribute {
 
 	/**
-	 * what variables are accessible through  http://mysite.com/api/v1/OrderItem/
+	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderItem/
 	 * @var array
 	 */
 	public static $api_access = array(

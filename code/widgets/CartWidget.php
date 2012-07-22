@@ -2,8 +2,12 @@
 
 /**
  * CartWidget displays the current contents of the user's cart.
- * @Authors Jeremy + Nicolaas
- */
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: widgets
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class CartWidget extends Widget{
 

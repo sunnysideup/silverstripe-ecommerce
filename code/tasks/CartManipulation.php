@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * shows you the link to remove the current cart
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class CartManipulation_Current extends BuildTask{
 
 	protected $title = "Clears the current Cart";
@@ -12,6 +21,15 @@ class CartManipulation_Current extends BuildTask{
 
 }
 
+
+/**
+ * shows you the link to remove the current cart
+ *
+ * @authors: Nicolaas
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class CartManipulation_Debug extends BuildTask{
 
 	protected $title = "Shows you the values of the current cart";

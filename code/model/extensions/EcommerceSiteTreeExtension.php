@@ -1,15 +1,15 @@
 <?php
 
 /**
- *@description: adds a few functions to SiteTree to give each page some e-commerce related functionality.
+ * @description: adds a few functions to SiteTree to give each page
+ * some e-commerce related functionality.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
- * @package ecommerce
- * @sub-package integration
- * @todo: move all items into EcommerceConfig.
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: extensions
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 
@@ -61,6 +61,11 @@ class EcommerceSiteTreeExtension extends DataObjectDecorator {
 
 class EcommerceSiteTreeExtension_Controller extends Extension {
 
+	/**
+	 * standard SS method.
+	 * Runs before the Page::init method is called.
+	 *
+	 */
 	function onBeforeInit(){
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
@@ -70,6 +75,10 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "dialogue_js_file_location"));
 	}
 
+	/**
+	 * Standard SS method.
+	 * Runs after the Page::init method is called.
+	 */
 	function onAfterInit(){
 		Requirements::themedCSS("Cart");
 		Requirements::themedCSS("jquery.simpledialog");

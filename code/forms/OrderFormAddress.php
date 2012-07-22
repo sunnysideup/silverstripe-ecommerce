@@ -1,14 +1,14 @@
 <?php
 
 /**
- * This class is the form for editing the Order Addresses
+ * This class is the form for editing the Order Addresses.
  * It is also used to link the order to a member.
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- * @author Nicolaas [at] sunnysideup dot co dot nz
- *
- */
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 
 

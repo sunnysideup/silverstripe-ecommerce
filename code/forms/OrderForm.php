@@ -6,12 +6,10 @@
  * @Description: form to submit order.
  * @see CheckoutPage
  *
- *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class OrderForm extends Form {
@@ -32,7 +30,8 @@ class OrderForm extends Form {
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
 		$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
-		$paymentFields = Payment::combined_form_fields($totalAsCurrencyObject->Nice());
+		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
+		$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
 		foreach($paymentFields as $paymentField) {
 			if($paymentField->class == "HeaderField") {
 				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
@@ -96,9 +95,6 @@ class OrderForm extends Form {
 		$this->extend('updateOrderForm',$this);
 
 	}
-
-
-
 
 	/**
 	 * Process final confirmation and payment
@@ -205,14 +201,16 @@ class OrderForm extends Form {
 }
 
 
-
 /**
- * @Description: allows customer to make additional payments for their order
+ * @Description: checks the data for the OrderForm, before submission.
  *
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- * @authors: Nicolaas
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 class OrderForm_Validator extends RequiredFields{
 
 	/**
@@ -263,10 +261,12 @@ class OrderForm_Validator extends RequiredFields{
 /**
  * @Description: allows customer to make additional payments for their order
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- * @authors: Nicolaas
- */
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class OrderForm_Payment extends Form {
 
 	function __construct($controller, $name, $order, $returnToLink = '') {
@@ -277,7 +277,8 @@ class OrderForm_Payment extends Form {
 			$fields->push(new HiddenField("returntolink", "", convert::raw2att($returnToLink)));
 		}
 		$totalAsCurrencyObject = $order->TotalAsCurrencyObject();
-		$paymentFields = Payment::combined_form_fields($totalAsCurrencyObject->Nice());
+		$totalOutstandingAsMoneyObject = $order->TotalOutstandingAsMoneyObject();
+		$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
 		foreach($paymentFields as $paymentField) {
 			if($paymentField->class == "HeaderField") {
 				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
@@ -319,12 +320,13 @@ class OrderForm_Payment extends Form {
 
 
 /**
- * @Description: allows customer to make additional payments for their order
+ * @Description: allows customer to cancel their order.
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- * @authors: Nicolaas
- */
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderForm_Cancel extends Form {
 

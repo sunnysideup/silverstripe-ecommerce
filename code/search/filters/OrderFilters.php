@@ -1,15 +1,14 @@
 <?php
 
+
 /**
  * @description: provides a bunch of filters for search in ModelAdmin (CMS)
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: cms
- *
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
 
 class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 
@@ -69,8 +68,12 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
  * Filter that searches the Two Addresses (billing + shipping)
  * and the member. It searches all the relevant fields.
  *
- *
- */
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 
 	/**
@@ -139,41 +142,14 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 }
 
 
-
-class OrderFilters_MultiOptionsetFilter extends SearchFilter {
-
-	/**
-	 * @TODO: not used.... ????
-	 *@return SQLQuery
-	 **/
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
-		$values = $this->getValue();
-		if(count($values)) {
-			foreach($values as $value) {
-				$matches[] = sprintf("%s LIKE '%s%%'",
-					$this->getDbName(),
-					Convert::raw2sql(str_replace("'", '', $value))
-				);
-			}
-			$query->where(implode(" OR ", $matches));
-		}
-		return $query;
-	}
-
-	/**
-	 *
-	 *@return Boolean
-	 **/
-	public function isEmpty() {
-		if(is_array($this->getValue())) {
-			return count($this->getValue()) == 0;
-		}
-		else {
-			return $this->getValue() == null || $this->getValue() == '';
-		}
-	}
-}
+/**
+ * Allows you to filter orders for multiple statusIDs
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 
@@ -207,6 +183,16 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 	}
 }
 
+
+/**
+ * Allows you to filter for orders that have been cancelled.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class OrderFilters_HasBeenCancelled extends SearchFilter {
 
 	/**
@@ -230,6 +216,16 @@ class OrderFilters_HasBeenCancelled extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
 	}
 }
+
+
+/**
+ * Allows you to filter for orders that have at leat one payment
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderFilters_MustHaveAtLeastOnePayment extends SearchFilter {
 

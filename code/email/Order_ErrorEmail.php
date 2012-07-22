@@ -6,11 +6,11 @@
  *
  * At present, this class is used to send any email that goes to admin only.
  *
- * @authors: Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class Order_ErrorEmail extends Order_Email {

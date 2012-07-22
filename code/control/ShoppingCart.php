@@ -13,12 +13,13 @@
  * - Message handling done in one place.
  * This is not taking a step backward, be cause the old ShoppingCart / Controller seperation had all static variables/functions on ShoppingCart
  *
- *@author: Jeremy Shipman, Nicolaas Francken
- *@package: ecommerce
  *
- *
- *
- */
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: control
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class ShoppingCart extends Object{
 
 	/**
@@ -588,11 +589,11 @@ class ShoppingCart extends Object{
 	 * @return Boolean
 	 **/
 	public function setCurrency($currencyCode) {
-		if($currency = EcommerceCurrency::get_currency_id_from_code($currencyCode)) {
+		if($currency = EcommerceCurrency::get_currency_from_code($currencyCode)) {
 			if($this->currentOrder()->MemberID) {
 				$member = $this->currentOrder()->Member();
 				if($member && $member->exists()) {
-					$member->SetPreferredCurrency($currency->ID);
+					$member->SetPreferredCurrency($currency);
 				}
 			}
 			$this->currentOrder()->SetCurrency($currency);
@@ -979,24 +980,32 @@ class ShoppingCart_Controller extends Controller{
 		return self::$url_segment.'/setquantityitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
-	static function remove_modifier_link($modifierID) {
+	static function remove_modifier_link($modifierID, $parameters = array()) {
 		return self::$url_segment.'/removemodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
-	static function add_modifier_link($modifierID) {
+	static function add_modifier_link($modifierID, $parameters = array()) {
 		return self::$url_segment.'/addmodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
-	static function clear_cart_link() {
+	static function clear_cart_link($parameters = array()) {
 		return self::$url_segment.'/clear/'.self::params_to_get_string($parameters);
 	}
 
-	static function save_cart_link() {
+	static function save_cart_link($parameters = array()) {
 		return self::$url_segment.'/save/'.self::params_to_get_string($parameters);
 	}
 
-	static function clear_cart_and_logout_link() {
+	static function clear_cart_and_logout_link($parameters = array()) {
 		return self::$url_segment.'/clearandlogout/'.self::params_to_get_string($parameters);
+	}
+
+	/**
+	 * @param String $code
+	 * @return String
+	 */
+	static function set_currency_link($code, $parameters = array()) {
+		return self::$url_segment.'/setcurrency/'.$code.'/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1118,11 +1127,12 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	/**
+	 * @param HTTP_Request
 	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 **/
 	function setcurrency($request) {
 		$currencyCode = Convert::raw2sql($request->param('ID'));
-		$this->cart->setRegion($currencyCode);
+		$this->cart->setCurrency($currencyCode);
 		return $this->cart->setMessageAndReturn();
 	}
 

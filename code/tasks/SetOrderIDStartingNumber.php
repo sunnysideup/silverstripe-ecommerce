@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * set the order id number.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class SetOrderIDStartingNumber extends BuildTask{
 
 	protected $title = "Set Order ID Starting Number";

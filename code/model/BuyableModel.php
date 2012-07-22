@@ -10,7 +10,12 @@
  * //TEMPLATE STUFF
  * //CRUD SETTINGS
  *
- */
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 interface BuyableModel {
 

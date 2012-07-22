@@ -4,13 +4,11 @@
  * The Account Page allows the user to update their details.
  * You do not need to be logged in to the account page in order to view it... If you are not logged in
  * then the account page can be a page to create an account.
-
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: pages
- *
+ * @sub-package: Pages
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class AccountPage extends Page {

@@ -8,7 +8,13 @@
  *
  * @TODO: compare to default
  *
- */
+ * shows you the link to remove the current cart
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class EcommerceCheckConfiguration extends BuildTask{
 
@@ -60,31 +66,6 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 */
 	protected $missingClasses = array();
 
-	/**
-	 * LIST of ajax methods
-	 *
-	 */
-	protected $ajaxMethods = array(
-		"TableID" => "The main definition on which a lot of others are based. Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID",
-		"TableTotalID" => "The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID",
-		"SideBarCartID" => "The sidebar cart. Use in the following context: Order.AjaxDefinitions.SideBarCartID",
-		"SmallCartID" => "The small cart. Use in the following context: Order.AjaxDefinitions.SmallCartID",
-		"TinyCartClassName" => "The tiny cart. Use in the following context: Order.AjaxDefinitions.SmallCartID ",
-		"TableMessageID" => "The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID",
-		"TableSubTotalID" => "The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID",
-		"TotalItemsClassName" => "The total number of items in the order. Use in the following context: Order.AjaxDefinitions.TotalItemsClassName",
-		"ExpectedCountryClassName" => "The holder of the expected country name. Use in the following context: Order.AjaxDefinitions.ExpectedCountryClassName",
-		"CountryFieldID" => "The field used for selecting the country. Use in the following context: Order.AjaxDefinitions.CountryFieldID",
-		"RegionFieldID" => "The field used for selecting the region. Use in the following context: Order.AjaxDefinitions.RegionFieldID",
-		"TableTitleID" => "The title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID",
-		"CartTitleID" => "The title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID",
-		"TableSubTitleID" => "The sub-title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ",
-		"CartSubTitleID" => "The sub-title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ",
-		"QuantityFieldName" => "The quantity field for the order item. Use in the following context: OrderItem.AjaxDefinitions.QuantityFieldName",
-		"UniqueIdentifier" => "Unique identifier for the buyable (product). Use in the following context: Buyable.AjaxDefinitions.UniqueIdentifier",
-	);
-
-
 
 
 	/**
@@ -109,6 +90,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->orderSteps();
 					$this->checkoutAndModifierDetails();
 					$this->getAjaxDefinitions();
+					$this->AllEcommerceClasses();
 					$this->definedConfigs();
 				}
 				else {
@@ -284,7 +266,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 			$count++;
 			$htmlTOC .= "<li><a href=\"#$className\">$className</a></li>";
 			if($className != $oldClassName) {
-				$htmlTable .= "<tr id=\"$className\"><th colspan=\"2\" scope=\"col\">$count. $className <a class=\"backToTop\" href=\"#TOC\">top</a></th></tr>";
+				$htmlTable .= "<tr id=\"$className\"><th colspan=\"2\" scope=\"col\">
+					<a href=\"/dev/viewcode/$className\" target=\"_blank\">$count. $className</a>
+					<a class=\"backToTop\" href=\"#TOC\">top</a>
+					</th></tr>";
 				$oldClassName = $className;
 			}
 
@@ -319,6 +304,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$description = $this->definitions[$className][$key];
 					$description .= $this->specialCases($className, $key, $actualValue);
 				}
+				$defaultValueHMTL = "";
+				if($defaultValue) {
+					$defaultValueHMTL = "<span><sub>e-commerce defaults:</sub><pre>$defaultValue</span></span>";
+				}
 				$htmlTable .= "<tr>
 			<td>
 				$key
@@ -326,7 +315,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 			</td>
 			<td class=\"$class\">
 				<pre>$actualValue</pre>
-				<span><sub>e-commerce defaults:</sub><pre>$defaultValue</span></span>
+				$defaultValueHMTL
 			</td>
 		</tr>";
 			}
@@ -515,7 +504,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 	}
 
 	private function getAjaxDefinitions(){
-		$methodArray = $this->ajaxMethods;
+		$definitionsObject = new EcommerceConfigDefinitions();
+		$methodArray = $definitionsObject->getAjaxMethods();
 		$requestor = new ArrayData(
 			array(
 				"ID" => "[ID]",
@@ -542,7 +532,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	}
 
 	/**
-	 *
+	 * check for any additional settings
 	 *
 	 */
 	private function specialCases($className, $key, $actualValue){
@@ -558,5 +548,17 @@ class EcommerceCheckConfiguration extends BuildTask{
 		}
 	}
 
+	/**
+	 * extracts other E-commerce Classes
+	 * @todo: retrieve description
+	 */
+	protected function AllEcommerceClasses(){
+		$otherClasses = ClassInfo::classes_for_folder("ecommerce");
+		foreach($otherClasses as $otherClass) {
+			$this->definitions["AllEcommerceClasses"][$otherClass] = "";
+			$this->defaults["AllEcommerceClasses"][$otherClass] = "";
+			$this->configs["AllEcommerceClasses"][$otherClass] = "<a href=\"/dev/viewcode/".$otherClass."\" target=\"_blank\">view</a>";
+		}
+	}
 }
 

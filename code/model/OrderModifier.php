@@ -23,16 +23,16 @@
  * Cart is used for other pages (pre-checkout for example). At times, the values and names may differ
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: modifiers
- *
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 class OrderModifier extends OrderAttribute {
 
 	/**
-	 * what variables are accessible through  http://mysite.com/api/v1/OrderModifier/
+	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderModifier/
 	 * @var array
 	 */
 	public static $api_access = array(

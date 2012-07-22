@@ -7,11 +7,11 @@
  * NOTE: both the Account and the Checkout Page extend from this class as they
  * share some functionality.
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: pages
- *
+ * @sub-package: Pages
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class CartPage extends Page{

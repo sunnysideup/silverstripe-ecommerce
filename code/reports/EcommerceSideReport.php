@@ -6,11 +6,11 @@
  * as well as a report on all products within the system.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: reports
- *
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommerceSideReport_FeaturedProducts extends SS_Report {
@@ -26,18 +26,27 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report {
 		return 0;
 	}
 	function records() {
-		return DataObject::get("Product", "\"FeaturedProduct\" = 1", "\"Title\"");
+		return DataObject::get("Product", "\"FeaturedProduct\" = 1", "\"FullSiteTreeSort\"");
 	}
 
 	function columns() {
 		return array(
 			"Title" => array(
-				"title" => "Title",
+				"title" => "FullName",
 				"link" => true
 			)
 		);
 	}
 }
+
+/**
+ * Selects all products
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class EcommerceSideReport_AllProducts extends SS_Report {
 
@@ -52,13 +61,13 @@ class EcommerceSideReport_AllProducts extends SS_Report {
 		return 0;
 	}
 	function records() {
-		return DataObject::get("Product", "", "\"Title\"");
+		return DataObject::get("Product", "", "\"FullSiteTreeSort\"");
 	}
 
 	function columns() {
 		return array(
 			"Title" => array(
-				"title" => "Title",
+				"title" => "FullName",
 				"link" => true
 			)
 		);
@@ -66,10 +75,20 @@ class EcommerceSideReport_AllProducts extends SS_Report {
 
 }
 
+
+/**
+ * Selects all products without an image.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class EcommerceSideReport_NoImageProducts extends SS_Report {
 
 	function title() {
-		return _t('EcommerceSideReport.NOIMAGE',"Products with no image");
+		return _t('EcommerceSideReport.NOIMAGE',"Products without image");
 	}
 	function group() {
 		return _t('EcommerceSideReport.ECOMMERCEGROUP', "Ecommerce");
@@ -78,14 +97,131 @@ class EcommerceSideReport_NoImageProducts extends SS_Report {
 		return 0;
 	}
 	function sourceRecords($params = null) {
-		return DataObject::get("Product", "\"Product\".\"ImageID\" IS NULL OR \"Product\".\"ImageID\" <= 0", "\"Title\" ASC");
+		return DataObject::get("Product", "\"Product\".\"ImageID\" IS NULL OR \"Product\".\"ImageID\" <= 0", "\"FullSiteTreeSort\" ASC");
 	}
 	function columns() {
 		return array(
 			"Title" => array(
-				"title" => "Title",
+				"title" => "FullName",
 				"link" => true
 			)
 		);
 	}
 }
+
+
+/**
+ * Selects all products without an InternalID
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
+class EcommerceSideReport_NoInternalIDProducts extends SS_Report {
+
+	function title() {
+		return _t('EcommerceSideReport.NOINTERNALID',"Products without Internal ID (SKU)");
+	}
+
+	function group() {
+		return _t('EcommerceSideReport.ECOMMERCEGROUP', "Ecommerce");
+	}
+
+	function sort() {
+		return 0;
+	}
+
+	function sourceRecords($params = null) {
+		return DataObject::get("Product", "\"Product\".\"InternalID\" IS NULL OR \"Product\".\"InternalID\" = '' ", "\"FullSiteTreeSort\" ASC");
+	}
+
+	function columns() {
+		return array(
+			"Title" => array(
+				"title" => "FullName",
+				"link" => true
+			)
+		);
+	}
+}
+
+
+/**
+ * Selects all products without a price.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
+class EcommerceSideReport_NoPriceProducts extends SS_Report {
+
+	function title() {
+		return _t('EcommerceSideReport.NOPRICE',"Products without Price");
+	}
+
+	function group() {
+		return _t('EcommerceSideReport.ECOMMERCEGROUP', "Ecommerce");
+	}
+
+	function sort() {
+		return 0;
+	}
+
+	function sourceRecords($params = null) {
+		return DataObject::get("Product", "\"Product\".\"Price\" IS NULL OR \"Product\".\"Price\" = 0 ", "\"FullSiteTreeSort\" ASC");
+	}
+
+	function columns() {
+		return array(
+			"Title" => array(
+				"title" => "FullName",
+				"link" => true
+			)
+		);
+	}
+
+}
+
+
+/**
+ * Selects all products that are not for sale.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
+class EcommerceSideReport_NotForSale extends SS_Report {
+
+	function title() {
+		return _t('EcommerceSideReport.NOTFORSALE',"Products not for sale");
+	}
+
+	function group() {
+		return _t('EcommerceSideReport.ECOMMERCEGROUP', "Ecommerce");
+	}
+
+	function sort() {
+		return 0;
+	}
+
+	function sourceRecords($params = null) {
+		return DataObject::get("Product", " \"Product\".\"AllowPurchase\" = 0 ", "\"FullSiteTreeSort\" ASC");
+	}
+
+	function columns() {
+		return array(
+			"Title" => array(
+				"title" => "FullName",
+				"link" => true
+			)
+		);
+	}
+
+}
+

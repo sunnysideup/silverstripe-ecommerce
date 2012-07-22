@@ -1,7 +1,6 @@
 <?php
 /**
- * extends the standard RestfulServer to:
- * - provide better access to extended classes
+ * extends the standard RestfulServer to provide better access to extended classes.
  *
  * see: http://api.silverstripe.org/2.4/sapphire/api/RestfulServer.html
  *
@@ -11,12 +10,37 @@
  * - fix http://site/api/ecommerce/v1/Order/123/BillingAddress.xml
  * - fix http://site/api/ecommerce/v1/Order/123/ShippingAddress.xml
  * - fix http://site/api/ecommerce/v1/Order/123/Member.xml
- */
+ *
+ * <b>Test Post</b>
+ * <code>
+ * $baseURL = Director::absoluteBaseURL();
+ * 	// 1) My Personal Data
+ * 	$className = 'EcommerceClassWithEditableFields';
+ * 	$fields = array(
+ * 		'MyField' => 1
+ * 	);
+ * 	// 2) The Query
+ * 	$url = "{$baseURL}/api/ecommerce/v1/{$className}.xml";
+ * 	$body = $fields;
+ * 	$c = curl_init($url);
+ * 	curl_setopt($c, CURLOPT_POST, true);
+ * 	curl_setopt($c, CURLOPT_POSTFIELDS, $body);
+ * 	curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+ * 	$page = curl_exec($c);
+ * 	curl_close($c);
 
+ * 	// 3) The XML Result
 
-
-
-
+ * 	return $page;
+ * </code>
+ *
+ *
+ * @authors: Romain [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: api
+ * @inspiration: Silverstripe Ltd, Jeremy
+ *
+ **/
 
 class EcommerceRestfulServer extends RestfulServer {
 

@@ -1,8 +1,8 @@
+<% if SidebarProducts %>
 <div class="sidebarBox products">
-	<!-- to be redone -->
-	<% if SidebarProducts %>
+	<h3><% _t("SideBar.ALSOSEE","Also see ...") %></h3>
 	<ul>
 		<% control SidebarProducts %><li><a href="$Link" class="$LinkingMode">$MenuTitle</a></li><% end_control %>
 	</ul>
-	<% end_if %>
 </div>
+<% end_if %>

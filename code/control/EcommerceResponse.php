@@ -3,12 +3,12 @@
 /**
  * @description: This class is a base class for Ecommerce Responses such as Cart Response
  *
- * @authors: Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 abstract class EcommerceResponse extends SS_HTTPResponse {
 
 

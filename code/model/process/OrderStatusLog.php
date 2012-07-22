@@ -2,13 +2,12 @@
 /**
  * @description: see OrderStep.md
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: cms
- *
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
 
 class OrderStatusLog extends DataObject {
 
@@ -250,6 +249,11 @@ class OrderStatusLog extends DataObject {
 /**
  * OrderStatusLog_Submitted is an important class that is created when an order is submitted.
  * It is created by the order and it signifies to the OrderStep to continue to the next step.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class OrderStatusLog_Submitted extends OrderStatusLog {
@@ -365,6 +369,15 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 
 }
 
+
+
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class OrderStatusLog_Cancel extends OrderStatusLog {
 
 	public static $defaults = array(
@@ -405,6 +418,14 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
 
 
 }
+
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class OrderStatusLog_Dispatch extends OrderStatusLog {
 
 	public static $defaults = array(
@@ -427,6 +448,14 @@ class OrderStatusLog_Dispatch extends OrderStatusLog {
 
 
 }
+
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class OrderStatusLog_DispatchElectronicOrder extends OrderStatusLog_Dispatch {
 
 	public static $db = array(
@@ -441,6 +470,13 @@ class OrderStatusLog_DispatchElectronicOrder extends OrderStatusLog_Dispatch {
 
 }
 
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 
 	public static $db = array(
@@ -522,14 +558,17 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 }
 
 /**
- *@Description: We use this payment check class to double check that payment has arrived against
+ * @Description: We use this payment check class to double check that payment has arrived against
  * the order placed.  We do this independently of Order as a double-check.  It is important
  * that we do this because the main risk in an e-commerce operation is a fake payment.
  * Any e-commerce operator may set up their own policies on what a payment check
  * entails exactly.  It could include a bank reconciliation or even a phone call to the customer.
  * it is important here that we do not add any payment details. Rather, all we have is a tickbox
- * to state that the checks have been run.
-
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 
@@ -610,8 +649,11 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 
 
 /**
- * OrderStatusLog_Submitted is an important class that is created when an order is submitted.
- * It is created by the order and it signifies to the OrderStep to continue to the next step.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class OrderStatusLog_Archived extends OrderStatusLog {

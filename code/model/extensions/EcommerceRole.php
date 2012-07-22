@@ -1,14 +1,14 @@
 <?php
 /**
- * @description EcommerceRole provides customisations to the {@link Member}
- * class specifically for this ecommerce module.
+ * @description EcommerceRole provides specific customisations to the {@link Member}
+ * class for the ecommerce module.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
- * @package ecommerce
- * @sub-package member
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: extensions
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommerceRole extends DataObjectDecorator {
@@ -39,9 +39,6 @@ class EcommerceRole extends DataObjectDecorator {
 		);
 	}
 
-
-
-
 	/**
 	 *@return DataObject (Group)
 	 **/
@@ -56,6 +53,11 @@ class EcommerceRole extends DataObjectDecorator {
    * SHOP ADMIN
 *******************************************************/
 
+	/**
+	 * tells us if the current member is in the Shop Administrators Group.
+	 * @param Member | Null $member
+	 * @return Boolean
+	 */
 	public static function current_member_is_shop_admin($member = null) {
 		if(!$member) {
 			$member = Member::currentUser();
@@ -109,7 +111,6 @@ class EcommerceRole extends DataObjectDecorator {
 		return $v;
 	}
 
-
 	/**
 	 * @param Boolean $additionalFields: extra fields to be added.
 	 * @return FieldSet
@@ -146,7 +147,6 @@ class EcommerceRole extends DataObjectDecorator {
 		return $fields;
 	}
 
-
 	/**
 	 * standard SS method
 	 * Make sure the member is added as a customer
@@ -179,18 +179,25 @@ class EcommerceRole extends DataObjectDecorator {
 	 * @param EcommerceCurrency $currency - object for the currency
 	 */
 	public function SetPreferredCurrency($currency){
-		$this->owner->PreferredCurrencyID = $currency->ID;
-		$this->owner->write();
+		if($this->owner->exists()) {
+			if($currency && $currency->exists()) {
+				$this->owner->PreferredCurrencyID = $currency->ID;
+				$this->owner->write();
+			}
+		}
 	}
 
 	/**
 	 * returns an aray of members
 	 * @return Array
 	 */
-	public static function list_of_customers(){
+	public static function list_of_customers($showUnselectedOption = false){
 		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
 		$group = DataObject::get_one("Group", "\"Code\" = '".$customerCode."'");
 		$array = Array();
+		if($showUnselectedOption) {
+			$array[0] = _t("Member.SELECTCUSTOMER", " --- SELECT CUSTOMER ---");
+		}
 		if($group) {
 			$members = $group->Members();
 			if($members) {

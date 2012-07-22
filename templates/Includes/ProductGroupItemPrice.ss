@@ -6,7 +6,7 @@
 	<% else %>
 	$CalculatedPrice.Nice
 	<% end_if %>
-	<% if Currency %><span class="currencyQuantifier">$Currency</span><% end_if %>
+	<% include Order_Content_DisplayPrice %>
 <% else %>
 <% _t("Product.FREE", "FREE") %>
 <% end_if %>
