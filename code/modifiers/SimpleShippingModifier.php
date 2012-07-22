@@ -1,19 +1,25 @@
 <?php
+
+
 /**
  * SimpleShoppingModifier is the default shipping calculation
  * scheme. It lets you set fixed shipping* costs, or a fixed
  * cost for each country you're delivering to.
  *
+ * This is a very basic class that is more like an example than
+ * a usable class.
+ *
  * If you require more advanced shipping control, we suggest
  * that you create your own subclass of {@link OrderModifier}
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: modifiers
- *
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 class SimpleShippingModifier extends OrderModifier {
 
 
