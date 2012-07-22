@@ -4,16 +4,18 @@
  * @see OrderModifier
  * @see OrderItem
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 
 class OrderAttribute extends DataObject {
 
 	/**
-	 * what variables are accessible through  http://mysite.com/api/v1/ShippingAddress/
+	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/ShippingAddress/
 	 * @var array
 	 */
 	public static $api_access = array(
@@ -44,7 +46,8 @@ class OrderAttribute extends DataObject {
 		'TableSubTitle' => 'HTMLText',
 		'TableSubTitleNOHTML' => 'Text',
 		'CartTitle' => 'HTMLText',
-		'CartSubTitle' => 'HTMLText'
+		'CartSubTitle' => 'HTMLText',
+		'DisplayPrice' => 'Money'
 	);
 
 	public static $create_table_options = array(
@@ -242,6 +245,15 @@ class OrderAttribute extends DataObject {
 	function CartSubTitle() {return $this->getCartSubTitle();}
 	function getCartSubTitle() {
 		return $this->TableSubTitle();
+	}
+
+	/**
+	 * Returns the Money object of the CalculatedTotal
+	 * @return Money | Null
+	 **/
+	function DisplayPrice() {return $this->getDisplayPrice();}
+	function getDisplayPrice() {
+		return EcommerceCurrency::display_price($this->CalculatedTotal, $this->Order());
 	}
 
 	function onBeforeWrite() {

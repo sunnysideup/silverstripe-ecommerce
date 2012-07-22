@@ -4,11 +4,10 @@
  * @description: see OrderStep.md
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class OrderStep extends DataObject {
@@ -184,7 +183,7 @@ class OrderStep extends DataObject {
 		//replacing
 		$fields->addFieldToTab("Root.InternalDescription", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only"), 5));
 		if($this->hasCustomerMessage()) {
-			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use {OrderNumber} as a tag that will be replaced with the actual Order Number.")));
+			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use [OrderNumber] as a tag that will be replaced with the actual Order Number.")));
 			$fields->addFieldToTab("Root.CustomerMessage", new HTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)"), 5));
 		}
 		else {
@@ -488,11 +487,11 @@ class OrderStep extends DataObject {
 /**
  * This is the first Order Step.
  *
- *
- *
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
 
 class OrderStep_Created extends OrderStep {
 
@@ -600,6 +599,14 @@ class OrderStep_Created extends OrderStep {
 
 }
 
+
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class OrderStep_Submitted extends OrderStep {
 
 	static $db = array(
@@ -723,7 +730,13 @@ class OrderStep_Submitted extends OrderStep {
 
 }
 
-
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderStep_SentInvoice extends OrderStep {
 
@@ -834,6 +847,15 @@ class OrderStep_SentInvoice extends OrderStep {
 	}
 }
 
+
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
 class OrderStep_Paid extends OrderStep {
 
 	public static $defaults = array(
@@ -895,6 +917,13 @@ class OrderStep_Paid extends OrderStep {
 
 }
 
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderStep_Confirmed extends OrderStep {
 
@@ -953,6 +982,13 @@ class OrderStep_Confirmed extends OrderStep {
 
 }
 
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderStep_SentReceipt extends OrderStep {
 
@@ -1045,6 +1081,13 @@ class OrderStep_SentReceipt extends OrderStep {
 
 }
 
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderStep_Sent extends OrderStep {
 
@@ -1137,6 +1180,13 @@ class OrderStep_Sent extends OrderStep {
 
 }
 
+/**
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class OrderStep_Archived extends OrderStep {
 

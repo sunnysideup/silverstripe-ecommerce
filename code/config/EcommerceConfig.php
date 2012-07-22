@@ -45,6 +45,10 @@
  * One of the problems now is to know what "configs" are used by individual classes.
  * Therefore, it is important to clearly document that at the top of each class.
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: configuration
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommerceConfig extends Object {
@@ -111,7 +115,6 @@ class EcommerceConfig extends Object {
 			return $this->fixtureDictionary[$className][$identifier];
 		}
 		if(Director::isDev()) {
-
 			echo "Please add the following line to one of these files : <br />
 			".implode(", ", self::$folder_and_file_locations)."<br />
 			<pre>
@@ -119,7 +122,18 @@ $className:
 	 $identifier: [check default configuration (ecommerce/_config/ecommerce.yaml) for example value]
 			</pre><br />
 			Please also make sure to visit <a href=\"/dev/ecommerce/\">/dev/ecommerce/</a> to check all your configurations and run any migration scripts!";
-		user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
+			user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
+		}
+		//when in live mode, try to keep the boat floating.
+		if(Director::isLive()) {
+			$realFiles = self::$folder_and_file_locations;
+			$backupFiles = "ecommerce/_config/ecommerce.yaml";
+			if($realFiles != $backupFiles) {
+				self::$folder_and_file_locations = $backupFiles;
+				$outcome = self::getStaticValue($className, $identifier, $subIdentifier);
+				self::$folder_and_file_locations = $realFiles;
+				return $outcome;
+			}
 		}
 		return null;
 	}

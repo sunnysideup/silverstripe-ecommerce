@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @authors: Silverstripe, Jeremy, Nicolaas
+ * @description: returns the cart as JSON
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
- * @Description: this class
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class CartResponse extends EcommerceResponse {
@@ -23,8 +23,6 @@ class CartResponse extends EcommerceResponse {
 	public static function set_force_reload() {
 		self::$force_reload = true;
 	}
-
-
 
 	/**
 	 * Builds json object to be returned via ajax.

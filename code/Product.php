@@ -11,12 +11,12 @@
  * of this page type to the shopping cart.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: products
- *
+ * @sub-package: Pages
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 
 
 class Product extends Page implements BuyableModel {
@@ -682,32 +682,12 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * How do we display the price?
-	 * @return Money
+	 * @return EcommerceMoney | Null
 	 */
 	function DisplayPrice() {return $this->getDisplayPrice();}
 	function getDisplayPrice() {
-		$price = $this->CalculatedPrice();
-		$order = ShoppingCart::current_order();
-		if($order) {
-			if($order->HasAlternativeCurrency()) {
-				$exchangeRate = $order->ExchangeRate;
-				if($exchangeRate && $exchangeRate != 1) {
-					$price = $exchangeRate * $price;
-				}
-			}
-		}
-		$moneyObject = new Money("DisplayPrice");
-		$moneyObject->setCurrency($order->CurrencyUsed()->Code);
-		$moneyObject->setValue($price);
-		$updatedObject = $this->extend('updateDisplayPrice',$moneyObject);
-		if($updatedObject !== null) {
-			if(is_array($updatedObject) && count($updatedObject)) {
-				$moneyObject = $updatedObject[0];
-			}
-		}
-		return $moneyObject;
+		return EcommerceCurrency::display_price($this->CalculatedPrice(), null);
 	}
-
 
 
 	//CRUD SETTINGS
@@ -1137,7 +1117,11 @@ class Product_OrderItem extends OrderItem {
 	function getTableTitle() {
 		$tableTitle = _t("Product.UNKNOWN", "Unknown Product");
 		if($product = $this->Product()) {
-			$tableTitle = $product->Title;
+			$tableTitle = "";
+			if($product->InternalItemID) {
+				$tableTitle = $product->InternalItemID.": ";
+			}
+			$tableTitle .= $product->Title;
 			$this->extend('updateTableTitle',$tableTitle);
 		}
 		return $tableTitle;

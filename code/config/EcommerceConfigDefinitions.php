@@ -4,9 +4,14 @@
 
 /**
  * This class sets out the static config variables for e-commerce.
- * It also adds the definitions of any classes that extend
- * EcommerceConfigDefitions.
+ * It also adds the definitions of any classes that extend EcommerceConfigDefitions.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: configuration
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 
 
 class EcommerceConfigDefinitions extends Object {
@@ -27,6 +32,39 @@ class EcommerceConfigDefinitions extends Object {
 		return $this->version;
 	}
 
+
+	/**
+	 * LIST of ajax methods
+	 *
+	 */
+	protected $ajaxMethods = array(
+		"TableID" => "The main definition on which a lot of others are based. Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID",
+		"TableTotalID" => "The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID",
+		"SideBarCartID" => "The sidebar cart. Use in the following context: Order.AjaxDefinitions.SideBarCartID",
+		"SmallCartID" => "The small cart. Use in the following context: Order.AjaxDefinitions.SmallCartID",
+		"TinyCartClassName" => "The tiny cart. Use in the following context: Order.AjaxDefinitions.SmallCartID ",
+		"TableMessageID" => "The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID",
+		"TableSubTotalID" => "The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID",
+		"TotalItemsClassName" => "The total number of items in the order. Use in the following context: Order.AjaxDefinitions.TotalItemsClassName",
+		"ExpectedCountryClassName" => "The holder of the expected country name. Use in the following context: Order.AjaxDefinitions.ExpectedCountryClassName",
+		"CountryFieldID" => "The field used for selecting the country. Use in the following context: Order.AjaxDefinitions.CountryFieldID",
+		"RegionFieldID" => "The field used for selecting the region. Use in the following context: Order.AjaxDefinitions.RegionFieldID",
+		"TableTitleID" => "The title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID",
+		"CartTitleID" => "The title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID",
+		"TableSubTitleID" => "The sub-title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ",
+		"CartSubTitleID" => "The sub-title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ",
+		"QuantityFieldName" => "The quantity field for the order item. Use in the following context: OrderItem.AjaxDefinitions.QuantityFieldName",
+		"UniqueIdentifier" => "Unique identifier for the buyable (product). Use in the following context: Buyable.AjaxDefinitions.UniqueIdentifier",
+	);
+
+	/**
+	 * returns the array of ajax definitions.
+	 * @return Array
+	 *
+	 */
+	function getAjaxMethods(){
+		return $this->ajaxMethods;
+	}
 
 	/**
 	 * Tells us the svn revision of e-commerce in use.
@@ -61,7 +99,7 @@ class EcommerceConfigDefinitions extends Object {
 		################### PAGES #####################
 			"EcommerceDBConfig" => array(
 				"ecommerce_db_config_class_name" => "Class Name for the DataObject that contains the settings for the e-commerce application",
-				"array_of_buyables" => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable."
+				"array_of_buyables" => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable.  You do not need to include a class that extends a buyable.  For example, if you create a class called 'MyProduct' extending Product then you do not need to list it here."
 			),
 			"CheckoutPage_Controller" => array(
 				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."

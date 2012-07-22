@@ -1,17 +1,15 @@
 <?php
 
 
-/**
- * @description:
- * Deletes all orders
- *
- * @authors: Nicolaas
- *
- * @package: ecommerce
- * @sub-package: cms
- *
- **/
 
+/**
+ * @description (see $this->description)
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 class DeleteAllOrders extends BuildTask {
 

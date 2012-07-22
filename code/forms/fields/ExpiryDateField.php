@@ -2,14 +2,12 @@
 
 /**
  * @Description: ExpiryDate field, contains validation and formspec for expirydate fields.
+ * This can be useful when collecting a credit card.
  *
- *
- *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class ExpiryDateField extends TextField {

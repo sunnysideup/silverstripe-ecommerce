@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Get examples for building templates.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 class EcommerceTemplateTestTask extends BuildTask{
 
 	protected $title = "Get help with building templates";

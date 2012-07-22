@@ -4,11 +4,10 @@
 /**
  * @description: resets fields in the product group class to "inherit" in case their value does not exist.
  *
- * @authors: nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: setup
- *
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 

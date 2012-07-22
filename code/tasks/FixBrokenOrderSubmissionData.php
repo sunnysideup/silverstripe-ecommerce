@@ -5,7 +5,11 @@
  * This "fixer"  was introduced to fix older orders
  * without a submission record.
  *
- */
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
 
 
 class FixBrokenOrderSubmissionData extends BuildTask{

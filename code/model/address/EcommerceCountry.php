@@ -5,17 +5,18 @@
  * For example: To what countries can be sold.
  * /dev/build/?resetecommercecountries=1 will reset the list of countries...
  *
- * @author nicolaas [at] sunnysideup.co.nz
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 
 class EcommerceCountry extends DataObject {
 
 	/**
-	 * what variables are accessible through  http://mysite.com/api/v1/EcommerceCountry/
+	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceCountry/
 	 * @var array
 	 */
 	public static $api_access = array(
@@ -193,15 +194,8 @@ class EcommerceCountry extends DataObject {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		if(!DataObject::get("EcommerceCountry") || isset($_REQUEST["resetecommercecountries"])) {
-			$array = Geoip::getCountryDropDown();
-			foreach($array as $key => $value) {
-				if(!DataObject::get_one("EcommerceCountry", "\"Code\" = '".$key."'")) {
-					$obj = new EcommerceCountry();
-					$obj->Code = $key;
-					$obj->Name = $value;
-					$obj->write();
-				}
-			}
+			$task = new EcommerceCountryAndRegionTasks();
+			$task->run(null);
 		}
 	}
 

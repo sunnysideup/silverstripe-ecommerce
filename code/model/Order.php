@@ -6,11 +6,6 @@
  * until it has been paid for / confirmed by the user.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
- * @package: ecommerce
- * @sub-package: model
- *
  * CONTENTS:
  * ----------------------------------------------
  * 1. CMS STUFF
@@ -25,6 +20,10 @@
  * 10. STANDARD SS METHODS (requireDefaultRecords, onBeforeDelete, etc...)
  * 11. DEBUG
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: model
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class Order extends DataObject {
@@ -105,6 +104,8 @@ class Order extends DataObject {
 		'SubTotal' => 'Currency',
 		'TotalPaid' => 'Currency',
 		'TotalOutstanding' => 'Currency',
+		'TotalOutstandingAsMoneyObject' => 'Money',
+		'DisplayPrice' => 'Money',
 		'HasAlternativeCurrency' => 'Boolean',
 		'TotalItems' => 'Int',
 		'TotalItemsTimesQuantity' => 'Int',
@@ -1062,9 +1063,6 @@ class Order extends DataObject {
 				$message = $latestEmailableLog->Note;
 			}
 		}
-		if(!$subject) {
-			$subject = str_replace("{OrderNumber}", $this->ID, Order_Email::get_subject());
-		}
 		$replacementArray = array("Message" => $message);
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
@@ -1672,6 +1670,25 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * @return Money
+	 **/
+	function TotalAsMoneyObject(){return $this->getTotalAsMoneyObject();}
+	function getTotalAsMoneyObject(){
+		return EcommerceCurrency::display_price($this->Total(), $this, "", true);
+	}
+
+	/**
+	 *
+	 *@return Money | Null
+	 **/
+	function DisplayPrice(){return $this->getDisplayPrice();}
+	function getDisplayPrice(){
+		return EcommerceCurrency::display_price($this->Total(), $this);
+	}
+
+
+
+	/**
 	 * Checks to see if any payments have been made on this order
 	 * and if so, subracts the payment amount from the order
 	 *
@@ -1703,18 +1720,10 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *todo: should this be the preferred currency or the originating currency of the site
 	 *@return Money
 	 **/
 	function TotalOutstandingAsMoneyObject(){
-		$money = DBField::create(
-			'Money',
-			array(
-				"Amount" => $this->TotalOutstanding(),
-				"Currency" => $this->EcomConfig()->Currency()
-			)
-		);
-		return $money;
+		return EcommerceCurrency::display_price($this->TotalOutstanding(), $this, "", true);
 	}
 
 	/**
@@ -1730,7 +1739,11 @@ class Order extends DataObject {
 				}
 			}
 		}
-		return $paid;
+		$reverseExchange = 1;
+		if($this->ExchangeRate && $this->ExchangeRate != 1) {
+			$reverseExchange = 1/$this->ExchangeRate;
+		}
+		return $paid * $reverseExchange;
 	}
 
 
@@ -1888,22 +1901,19 @@ class Order extends DataObject {
 
 	/**
 	 * Casted variable - has the order been submitted?
-	 *
-	 *@return Boolean
+	 * Currency is not the same as the standard one.
+	 * @return Boolean
 	 **/
 	function HasAlternativeCurrency(){return $this->getHasAlternativeCurrency();}
 	function getHasAlternativeCurrency() {
-		if(!$this->CurrencyUsedID) {
-			return false;
-		}
-		elseif($currency = $this->CurrencyUsed()) {
+		if($currency = $this->CurrencyUsed()) {
 			if($currency->exists()) {
-				if($currency->IsDefault()) {
-					return false;
+				if(!$currency->IsDefault()) {
+					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**

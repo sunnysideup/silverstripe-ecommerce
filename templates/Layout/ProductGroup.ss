@@ -3,7 +3,7 @@
 	<h1 id="PageTitle">$Title</h1>
 
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
-
+	<% include ProductGroupChildGroups %>
 <% if Products %>
 	<div id="Products" class="category">
 		<div class="resultsBar">
@@ -22,7 +22,6 @@
 <% include ProductGroupPagination %>
 <% else %>
 	<p class="noProductsFound"><% _t("Product.NOPRODUCTSFOUND", "Sorry, no products could be found.") %></p>
-	<% include ProductGroupChildGroups %>
 <% end_if %>
 	<% if Form %><div id="FormHolder">$Form</div><% end_if %>
 	<% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>
@@ -34,6 +33,7 @@
 		<div class="sidebarTop"></div>
 		<% include Sidebar_Cart %>
 		<% include Sidebar %>
+		<% include Sidebar_Currency %>
 		<% include Sidebar_UserAccount %>
 		<div class="sidebarBottom"></div>
 	</div>

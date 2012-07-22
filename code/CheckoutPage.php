@@ -27,12 +27,12 @@
  *
  * TO DO: get rid of all the messages...
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: pages
- *
+ * @sub-package: Pages
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 
 class CheckoutPage extends CartPage {
 
@@ -325,7 +325,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
 			$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
 			if($orderConfirmationPage) {
-				$do = $orderConfirmationPage->CurrentCheckoutStep();
+				$do = $orderConfirmationPage->CurrentCheckoutStep(false);
 				if($do) {
 					$dos->push($do);
 				}

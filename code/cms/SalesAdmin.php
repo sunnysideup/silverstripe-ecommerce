@@ -1,13 +1,13 @@
 <?php
 
+
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
  *
- * @authors: Silverstripe, Jeremy, Romain, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class SalesAdmin extends ModelAdmin{

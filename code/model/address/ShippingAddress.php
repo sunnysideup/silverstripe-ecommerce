@@ -4,17 +4,17 @@
  * @description: each order has a shipping address.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class ShippingAddress extends OrderAddress {
 
 	/**
-	 * what variables are accessible through  http://mysite.com/api/v1/ShippingAddress/
+	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/ShippingAddress/
 	 * @var array
 	 */
 	public static $api_access = array(

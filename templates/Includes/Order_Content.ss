@@ -3,26 +3,28 @@
 		<tr>
 			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
 			<th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
-			<th scope="col" class="right"><% _t("Order.PRICE","Price") %></th>
-			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %></th>
+			<th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($EcomConfig.Currency->Code)</th>
+			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %> ($EcomConfig.Currency->Code)</th>
 		</tr>
 	</thead>
-	<tfoot>
 	<% if Items %>
+	<tfoot>
 		<tr class="gap total summary">
 			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
-			<td class="right total" id="$AJAXDefinitions.TableTotalID"><span class="value">$Total.Nice</span> <span class="currency">$Currency</span></td>
+			<td class="right total" id="$AJAXDefinitions.TableTotalID">
+				<span class="value">$Total.Nice</span>
+				<% include Order_Content_DisplayPrice %>
+			</td>
 		</tr>
-	<% end_if %>
 	</tfoot>
+	<% end_if %>
 	<tbody>
 	<% if Items %>
 		<% control Items %>
 		<tr  class="itemRow $EvenOdd $FirstLast">
 			<td class="product title">
-				<% if InternalItemID %><span class="internalItemID">$InternalItemID: </span><% end_if %>
 				<% if Link %>
-					<a href="$Link" target="_blank">$TableTitle<% if OrderItemID %> ($OrderItemID)<% end_if %></a>
+					<a href="$Link" target="_blank">$TableTitle</a>
 				<% else %>
 					<span class="tableTitle">$TableTitle</span>
 				<% end_if %>

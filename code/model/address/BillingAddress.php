@@ -4,17 +4,17 @@
  * @description: each order has a billing address.
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
  *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
- *
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class BillingAddress extends OrderAddress {
 
 	/**
-	 * what variables are accessible through  http://mysite.com/api/v1/BillingAddress/
+	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/BillingAddress/
 	 * @var array
 	 */
 	public static $api_access = array(

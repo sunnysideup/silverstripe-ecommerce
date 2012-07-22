@@ -2,13 +2,12 @@
 /**
  * @description Customisations to {@link Payment} specifically for the ecommerce module.
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
- *
- * @package: ecommerce
- * @sub-package: payment
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: payment
+ * @sub-package: ecommerce
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 class EcommercePayment extends DataObjectDecorator {
 
 	public static $summary_fields = array(
