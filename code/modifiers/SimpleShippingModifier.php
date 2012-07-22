@@ -8,12 +8,12 @@
  * that you create your own subclass of {@link OrderModifier}
  *
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: modifiers
- *
+ * @sub-package: forms
+ * @inspiration: Silverstripe Ltd, Jeremy
  **/
+
 class SimpleShippingModifier extends OrderModifier {
 
 
