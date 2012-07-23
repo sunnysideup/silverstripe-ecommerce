@@ -481,22 +481,6 @@ class ShoppingCart extends Object{
 				$this->order->init(true);
 				$sessionVariableName = $this->sessionVariableName("OrderID");
 				Session::set($sessionVariableName, $this->order->ID);
-				//log in as the member...
-				if($this->order->MemberID) {
-					if($currentLoggedInMember = Member::currentUser()) {
-						if($currentLoggedInMember->ID && ($this->order->MemberID <> $currentLoggedInMember->ID)) {
-							//this next line in crucial
-							if($currentLoggedInMember->IsShopAdmin()) {
-								$newMember = DataObject::get_by_id("Member", $this->order->MemberID);
-								if($newMember) {
-									//$currentLoggedInMember->logOut();
-									//@todo RACE CONDITION???
-									//$newMember->logIn();
-								}
-							}
-						}
-					}
-				}
 				$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
 				return true;
 			}
