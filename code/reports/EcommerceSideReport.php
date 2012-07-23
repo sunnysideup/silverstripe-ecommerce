@@ -227,7 +227,7 @@ class EcommerceSideReport_NotForSale extends SS_Report {
 
 
 /**
- * Products with variations
+ * Products without variations
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -238,7 +238,7 @@ class EcommerceSideReport_NotForSale extends SS_Report {
 class EcommerceSideReport_ProductsWithVariations extends SS_Report {
 
 	function title() {
-		return _t('EcommerceSideReport.PRODUCTSWITHVARIATIONS',"Products with variations");
+		return _t('EcommerceSideReport.PRODUCTSWITHVARIATIONS',"Products without variations");
 	}
 
 	function group() {

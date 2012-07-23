@@ -31,7 +31,6 @@ SS_Report::register("SideReport", "EcommerceSideReport_NoImageProducts");
 SS_Report::register("SideReport", "EcommerceSideReport_NoInternalIDProducts");
 SS_Report::register("SideReport", "EcommerceSideReport_NoPriceProducts");
 SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
-SS_Report::register("SideReport", "EcommerceSideReport_ProductsWithVariations");
 
 //Object::useCustomClass('Currency','CurrencyImprovements', true);
 
