@@ -276,8 +276,8 @@ class EcommerceDBConfig extends DataObject {
 	}
 
 	/**
-	 * Return the currency being used on the site.
-	 * @return string Currency code, e.g. "NZD" or "USD"
+	 * Return the currency being used on the site e.g. "NZD" or "USD"
+	 * @return String
 	 */
 	public function Currency() {
 		if(class_exists('Payment')) {

@@ -3,8 +3,8 @@
 		<tr>
 			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
 			<th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
-			<th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($EcomConfig.Currency->Code)</th>
-			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %> ($EcomConfig.Currency->Code)</th>
+			<th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($EcomConfig.Currency)</th>
+			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %> ($EcomConfig.Currency)</th>
 		</tr>
 	</thead>
 	<% if Items %>
