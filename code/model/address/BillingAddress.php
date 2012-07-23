@@ -145,7 +145,9 @@ class BillingAddress extends OrderAddress {
 			if($member->exists()) {
 				$addresses = $this->previousAddressesFromMember($member);
 				if($addresses) {
-					$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
+					if($addresses->count() > 1) {
+						$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
+					}
 				}
 			}
 			$billingFields = new CompositeField(
