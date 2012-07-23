@@ -21,7 +21,7 @@ class EcommerceProductVariationsFixesTask extends BuildTask{
 			$products = Versioned::get_one_by_stage("Product", $stage, "", "", "", $limit = 1000);
 			if($products) {
 				foreach($products as $product) {
-					$product->cleaningUpVariationData();
+					$product->cleaningUpVariationData($verbose = true);
 				}
 			}
 		}
