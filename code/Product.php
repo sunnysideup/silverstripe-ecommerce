@@ -432,14 +432,14 @@ class Product extends Page implements BuyableModel {
 	 * @param Int $version
 	 * @return DataObject | Null
 	 */
-	function getVersionOfProduct($id = 0, $version = 0){
+	function getVersionOfBuyable($id = 0, $version = 0){
 		if(!$id) {
 			$id = $this->ID;
 		}
 		if(!$version) {
 			$version = $this->Version;
 		}
-		return Versioned::get_version($this->ClassName, $id, $version);
+		return OrderItem::get_version($this->ClassName, $id, $version);
 	}
 
 
@@ -784,9 +784,9 @@ class Product_Controller extends Page_Controller {
 		$currentVersion = $this->Version;
 		$id = intval($request->param("ID"));
 		$version = intval($request->param("OtherID"));
-		if($record = $this->getVersionOfProduct($id, $version)) {
-			$this->record = $record;
-			$this->record->AllowPurchase = false;
+		if($record = $this->getVersionOfBuyable($id, $version)) {
+			$this->dataRecord = $record;
+			$this->dataRecord->AllowPurchase = false;
 			$this->AllowPurchase = false;
 		}
 		/**

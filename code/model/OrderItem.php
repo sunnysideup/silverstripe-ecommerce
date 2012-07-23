@@ -123,6 +123,34 @@ class OrderItem extends OrderAttribute {
 	public static $plural_name = "Order Items";
 		function i18n_plural_name() { return _t("OrderItem.ORDERITEMS", "Order Items");}
 
+
+	/**
+	 * HACK: Versioned is BROKEN this method helps in fixing it.
+	 * Basically, in Versioned, you get a hard-coded error
+	 * when you retrieve an older version of a DataObject.
+	 * This method returns null if it does not exist.
+	 *
+	 * Idea is from Jeremy: https://github.com/burnbright/silverstripe-shop/blob/master/code/products/FixVersioned.php
+	 * @param String $class
+	 * @param Int $id
+	 * @param Int $version
+	 * @return DataObject | Null
+	 */
+
+	public static function get_version($class, $id, $version) {
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::set_reading_mode('');
+		$baseTable = ClassInfo::baseDataClass($class);
+		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id AND \"{$baseTable}\".\"Version\" = $version");
+		$record = $query->execute()->record();
+		$className = $record['ClassName'];
+		if(!$className) {
+			return null;
+		}
+		Versioned::set_reading_mode($oldMode);
+		return new $className($record);
+	}
+
 	/**
 	 * Standard SS method
 	 * @var String
@@ -421,11 +449,11 @@ class OrderItem extends OrderAttribute {
 				");
 				if($result->value()) {
 			 */
-			$obj = @Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
+			$obj = OrderItem::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
 		}
 		//our last resort
 		if(!$obj) {
-			$obj = @Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
+			$obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
 		}
 		if ($turnTranslatableBackOn) {
 			Translatable::enable_locale_filter();
