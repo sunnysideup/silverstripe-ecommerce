@@ -225,3 +225,46 @@ class EcommerceSideReport_NotForSale extends SS_Report {
 
 }
 
+
+/**
+ * Products with variations
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: search
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
+class EcommerceSideReport_NotForSale extends SS_Report {
+
+	function title() {
+		return _t('EcommerceSideReport.PRODUCTSWITHVARIATIONS',"Products with variations");
+	}
+
+	function group() {
+		return _t('EcommerceSideReport.ECOMMERCEGROUP', "Ecommerce");
+	}
+
+	function sort() {
+		return 0;
+	}
+
+	function sourceRecords($params = null) {
+		$stage = '';
+		if(Versioned::current_stage() == "Live") {
+			$stage = "_Live";
+		}
+		return DataObject::get("Product", " ProductVariation.ID IS NULL ", "\"FullSiteTreeSort\" ASC", "LEFT JOIN \"ProductVariation\" ON \"ProductVariation\".\"ProductID\" = \"Product".$stage."\".\"ID\"");
+	}
+
+	function columns() {
+		return array(
+			"Title" => array(
+				"title" => "FullName",
+				"link" => true
+			)
+		);
+	}
+
+}
+
