@@ -22,10 +22,13 @@ class EcommerceProductVariationsFixesTask extends BuildTask{
 			$count = 0;
 			if($products) {
 				foreach($products as $product) {
-					if($product->cleaningUpVariationData($verbose = true));
+					if($product->cleaningUpVariationData($verbose = true)) {
+						$count++;
+					}
 				}
 			}
 		}
+		DB::alteration_message("Updated $count Products (".$products->count()." products)");
 	}
 
 }
