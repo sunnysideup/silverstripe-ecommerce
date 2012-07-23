@@ -56,7 +56,7 @@ class EcommerceCurrency extends DataObject {
 		function i18n_plural_name() { return _t("EcommerceCurrency.CURRENCIES", "Currencies");}
 
 	//defaults
-	public static $default_sort = "\"InUse\" DESC, \"Code\" ASC, \"Name\" ASC";
+	public static $default_sort = "\"InUse\" DESC, \"Name\" ASC, \"Code\" ASC";
 
 	public static $defaults = array(
 		"InUse" => true
@@ -67,7 +67,11 @@ class EcommerceCurrency extends DataObject {
 	 * @return DataObjectSet (EcommerceCurrency list)
 	 */
 	public static function ecommerce_currency_list(){
-		return DataObject::get("EcommerceCurrency", "\"InUse\" = 1", "\"InUse\" DESC, \"Code\" ASC, \"Name\" ASC");
+		return DataObject::get(
+			"EcommerceCurrency",
+			"\"InUse\" = 1",
+			"IF(\"Code\" = '".Payment::site_currency()."', 0, 1)  ASC, \"InUse\" DESC, \"Code\" ASC, \"Name\" ASC"
+		);
 	}
 
 	/**
@@ -223,7 +227,7 @@ class EcommerceCurrency extends DataObject {
 	function requireDefaultRecords(){
 		parent::requireDefaultRecords();
 		$defaultCurrencyCode = Payment::site_currency();
-		if(!DataObject::get("EcommerceCurrency", "\"Code\" = '$defaultCurrencyCode'")) {
+		if(!DataObject::get_one("EcommerceCurrency", "\"Code\" = '$defaultCurrencyCode'")) {
 			$obj = new EcommerceCurrency();
 			$obj->Code = $defaultCurrencyCode;
 			$obj->Name = $defaultCurrencyCode;
