@@ -24,9 +24,11 @@ class CleanupProductFullSiteTreeSorting extends BuildTask{
 	function run($request){
 		$stagingArray = array("_Live", "");
 		foreach($stagingArray as $extension) {
-			DB::alteration_message("updating staging: $extension");
 			if($this->deleteFirst) {
 				DB::query("UPDATE Product$extension SET \"FullSiteTreeSort\" = '';");
+			}
+			else {
+				DB::alteration_message("updating Product$extension");
 			}
 			for($i = 30; $i > 0; $i--) {
 				$joinStatement = "

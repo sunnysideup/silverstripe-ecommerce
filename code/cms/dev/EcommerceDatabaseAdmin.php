@@ -154,7 +154,8 @@ class EcommerceDatabaseAdmin extends Controller{
 		"recalculatethenumberofproductssold",
 		"addcustomerstocustomergroups",
 		"fixbrokenordersubmissiondata",
-		"cleanupproductfullsitetreesorting"
+		"cleanupproductfullsitetreesorting",
+		"ecommerceproductvariationsfixestask"
 	);
 
 	/**
@@ -202,6 +203,14 @@ class EcommerceDatabaseAdmin extends Controller{
 	 */
 	function cleanupproductfullsitetreesorting($request) {
 		$this->runTask("CleanupProductFullSiteTreeSorting", $request);
+	}
+
+	/**
+	 * executes build task: EcommerceProductVariationsFixesTask
+	 *
+	 */
+	function ecommerceproductvariationsfixestask($request) {
+		$this->runTask("EcommerceProductVariationsFixesTask", $request);
 	}
 
 

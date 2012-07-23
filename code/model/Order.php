@@ -2203,7 +2203,7 @@ class Order extends DataObject {
 
 	/**
 	 * standard SS method
-	 * adds the ability to do something after writing
+	 * adds the ability to update order after writing it.
 	 **/
 	function onAfterWrite() {
 		parent::onAfterWrite();
