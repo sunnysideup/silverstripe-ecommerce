@@ -299,6 +299,25 @@ class OrderAddress extends DataObject {
 	}
 		public function FullString(){ return $this->getFullString();}
 
+	/**
+	 * returns a string that can be used to find out if two addresses are the same.
+	 * @return String
+	 */
+	protected function comparisonString(){
+		$comparisonString = "";
+		$excludedFields = array("ID", "OrderID");
+		$fields = $this->stat("db");
+		$regionFieldName = $this->fieldPrefix()."RegionID";
+		$fields[$regionFieldName] = $regionFieldName;
+		if($fields) {
+			foreach($fields as $field => $useless) {
+				if(!in_array($field, $excludedFields)) {
+					$comparisonString .= $this->$field;
+				}
+			}
+		}
+		return strtolower(trim($comparisonString));
+	}
 
 	/**
 	 *@param String - $prefix = either "" or "Shipping"
@@ -419,11 +438,11 @@ class OrderAddress extends DataObject {
 	/**
 	 * Finds previous addresses from the member of the current address
 	 * @param Object (Member)
-	 * @return Null | DataObjectSet (ShippingAddress / BillingAddress)
+	 * @return Null | DataObjectSet (filled with ShippingAddress / BillingAddress)
 	 **/
-	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false) {
+	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
 		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
-		$addresses = null;
+		$returnDos = null;
 		if($orders) {
 			$fieldName = $this->ClassName."ID";
 			$array = $orders->map($fieldName, $fieldName);
@@ -439,30 +458,50 @@ class OrderAddress extends DataObject {
 					"INNER JOIN \"Order\" ON \"Order\".\"$fieldName\" = \"".$this->ClassName."\".\"ID\" ",
 					$limit
 				);
-				$addressCompare = array();
-				if($addresses) {
-					$excludedFields = array("ID", "OrderID");
-					foreach($addresses as $address) {
-						$fields = $this->stat("db");
-						if($fields) {
-							$myString = "";
-							foreach($fields as $field => $useless) {
-								if(!in_array($field, $excludedFields)) {
-									$myString .= strtolower(trim($address->$field));
-								}
+				//NOTE the !
+				if($keepDoubles || $onlyLastRecord) {
+					$returnDos = $addresses;
+				}
+				else {
+					if($addresses) {
+						$addressCompare = array();
+						foreach($addresses as $address) {
+							$comparisonString = $address->comparisonString();
+							if(in_array($comparisonString, $addressCompare)) {
+
 							}
-						}
-						if(in_array($myString, $addressCompare)) {
-							$addresses->remove($address);
-						}
-						else {
-							$addressCompare[$address->ID] = $myString;
+							else {
+								$addressCompare[$address->ID] = $comparisonString;
+								if(!$returnDos) {
+									$returnDos = new DataObjectSet();
+								}
+								$returnDos->push($address);
+							}
 						}
 					}
 				}
 			}
 		}
-		return $addresses;
+		return $returnDos;
+	}
+
+	/**
+	 * make an address obsolete and include all the addresses that are identical.
+	 *
+	 */
+	public function MakeObsolete($member = null){
+		$addresses = $this->previousAddressesFromMember($member, $onlyLastRecord = false, $includeDoubles = true);
+		$comparisonString = $this->comparisonString();
+		if($addresses) {
+			foreach($addresses as $address) {
+				if($address->comparisonString() == $comparisonString) {
+					$address->Obsolete = 1;
+					$address->write();
+				}
+			}
+		}
+		$this->Obsolete = 1;
+		$this->write();
 	}
 
 	/**
@@ -524,13 +563,17 @@ class OrderAddress extends DataObject {
 		return ShoppingCart_Controller::get_url_segment()."/removeaddress/".$this->ID."/".$this->ClassName."/";
 	}
 
-
+	/**
+	 * converts an address into JSON
+	 * @return String (JSON)
+	 */
 	function getJSONData(){return $this->JSONData();}
 	function JSONData(){
 		$jsArray = array();
 		if(!isset($fields)) {
 			$fields = $this->stat("db");
-			$fields["RegionID"] = "RegionID";
+			$regionFieldName = $this->fieldPrefix()."RegionID";
+			$fields[$regionFieldName] = $regionFieldName;
 		}
 		if($fields) {
 			foreach($fields as $name => $field) {
