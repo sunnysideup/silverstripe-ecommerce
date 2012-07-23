@@ -397,7 +397,7 @@ class OrderItem extends OrderAttribute {
 			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
 		}
 		$turnTranslatableBackOn = false;
-		if (!$current && Object::has_extension($this->BuyableClassName,'Translatable')) {
+		if (Object::has_extension($this->BuyableClassName,'Translatable')) {
 			Translatable::disable_locale_filter();
 			$turnTranslatableBackOn = true;
 		}
@@ -405,16 +405,27 @@ class OrderItem extends OrderAttribute {
 		$obj = null;
 		if($current) {
 			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
-			/*
-			 * TO DO: this needs more thought!
-			if(!$obj && $this->Version) {
-				$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
-				$obj->Title .= _t("OrderItem.ORDERITEMNOLONGERAVAILABLE", " - NO LONGER AVAILABLE");
-			}
-			* */
 		}
-		elseif($this->Version) {
-			$obj = Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
+		//run if current not available or current = false
+		if(!$obj && $this->Version) {
+			/* @TODO: check if the version exists?? - see sample below
+			$versionTable = $this->BuyableClassName."_versions";
+			$dbConnection = DB::getConn();
+			if($dbConnection && $dbConnection instanceOf MySQLDatabase && $dbConnection->hasTable($versionTable)) {
+				$result = DB::query("
+					SELECT COUNT(\"ID\")
+					FROM \"$versionTable\"
+					WHERE
+						\"RecordID\" = ".intval($this->BuyableID)."
+						AND \"Version\" = ".intval($this->Version)."
+				");
+				if($result->value()) {
+			 */
+			$obj = @Versioned::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
+		}
+		//our last resort
+		if(!$obj) {
+			$obj = @Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
 		}
 		if ($turnTranslatableBackOn) {
 			Translatable::enable_locale_filter();

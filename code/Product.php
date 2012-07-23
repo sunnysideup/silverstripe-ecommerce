@@ -1132,12 +1132,12 @@ class Product_OrderItem extends OrderItem {
 	 **/
 	function TableSubTitle() {return $this->getTableSubTitle();}
 	function getTableSubTitle() {
-		$tablesubtitle = '';
+		$tableSubtitle = '';
 		if($product = $this->Product()) {
-			$tablesubtitle = $product->Quantifier;
-			$this->extend('updateTableSubTitle',$tablesubtitle);
+			$tableSubtitle = $product->Quantifier;
 		}
-		return $tablesubtitle;
+		$this->extend('updateTableSubTitle',$tableSubtitle);
+		return $tableSubtitle;
 	}
 
 	public function debug() {
