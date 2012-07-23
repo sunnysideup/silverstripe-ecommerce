@@ -18,10 +18,11 @@ class EcommerceProductVariationsFixesTask extends BuildTask{
 	function run($request){
 		$stagingArray = array("Live", "Stage");
 		foreach($stagingArray as $stage) {
-			$products = Versioned::get_one_by_stage("Product", $stage, "", "", "", $limit = 1000);
+			$products = Versioned::get_by_stage("Product", $stage);
+			$count = 0;
 			if($products) {
 				foreach($products as $product) {
-					$product->cleaningUpVariationData($verbose = true);
+					if($product->cleaningUpVariationData($verbose = true));
 				}
 			}
 		}
