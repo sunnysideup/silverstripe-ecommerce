@@ -79,7 +79,7 @@ interface BuyableModel {
 	 * @param Int $version
 	 * @return DataObject | Null
 	 */
-	function getVersionOfProduct($id = 0, $version = 0);
+	function getVersionOfBuyable($id = 0, $version = 0);
 
 
 
