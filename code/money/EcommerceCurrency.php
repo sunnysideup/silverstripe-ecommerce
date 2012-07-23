@@ -70,7 +70,7 @@ class EcommerceCurrency extends DataObject {
 		return DataObject::get(
 			"EcommerceCurrency",
 			"\"InUse\" = 1",
-			"IF(\"Code\" = '".Payment::site_currency()."', 0, 1)  ASC, \"InUse\" DESC, \"Code\" ASC, \"Name\" ASC"
+			"IF(\"Code\" = '".Payment::site_currency()."', 0, 1) ASC, \"InUse\" DESC, \"NAME\" ASC, \"Code\" ASC"
 		);
 	}
 
