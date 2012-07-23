@@ -235,7 +235,7 @@ class EcommerceSideReport_NotForSale extends SS_Report {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceSideReport_NotForSale extends SS_Report {
+class EcommerceSideReport_ProductsWithVariations extends SS_Report {
 
 	function title() {
 		return _t('EcommerceSideReport.PRODUCTSWITHVARIATIONS',"Products with variations");
