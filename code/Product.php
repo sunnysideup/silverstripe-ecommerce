@@ -1084,7 +1084,6 @@ class Product_OrderItem extends OrderItem {
 		return $this->Buyable($current);
 	}
 
-
 	/**
 	 *@return Boolean
 	 **/
