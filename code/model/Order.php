@@ -2002,7 +2002,7 @@ class Order extends DataObject {
 	 * WHY NOT CHECKOUT PAGE: first we check for cart page.
 	 * If a cart page has been created then we refer through to Cart Page.
 	 * Otherwise it will default to the checkout page
-	 *@return String(URLSegment)
+	 * @return String(URLSegment)
 	 */
 	function Link() {
 		$page = $this->DisplayPage();

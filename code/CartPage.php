@@ -371,11 +371,27 @@ class CartPage_Controller extends Page_Controller{
 	}
 
 	/**
-	 *@return array just so that template shows -  sets CurrentOrder variable
+	 * shows an order and loads it if it is not submitted.
+	 * @todo: do we still need loadorder controller method????
+	 * @param SS_HTTPRequest
+	 * @return array just so that template shows
 	 **/
 	function showorder($request) {
 		if(!$this->currentOrder) {
 			$this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
+		}
+		else {
+			if(!$this->currentOrder->IsSubmitted()){
+				$shoppingCart = ShoppingCart::current_order();
+				if($shoppingCart->ID != $this->currentOrder->ID) {
+					if(ShoppingCart::singleton()->loadOrder($this->currentOrder)) {
+						$this->message = _t('CartPage.ORDERHASBEENLOADED', 'Order has been loaded.');
+					}
+					else {
+						$this->message = _t('CartPage.ORDERNOTLOADED', 'Order could not be loaded.');
+					}
+				}
+			}
 		}
 		return array();
 	}
