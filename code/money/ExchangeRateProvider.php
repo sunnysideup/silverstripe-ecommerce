@@ -86,7 +86,9 @@ class ExchangeRateProvider extends Object {
 				$rate = $currencyData[2];
 			}
 		}
-		$rate = $rate * $this->exchangeCostMultiplier;
+		if($rate != 1) {
+			$rate = $rate * $this->exchangeCostMultiplier;
+		}
 		return $rate;
 	}
 
