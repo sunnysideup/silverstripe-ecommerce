@@ -383,9 +383,9 @@ class OrderStep extends DataObject {
 	 **/
 	public function canDelete($member = null) {
 		//cant delete last status if there are orders with this status
-		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
+		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".intval($this->Sort) -0);
 		if(!$nextOrderStepObject) {
-			if($ordersWithThisStatus = DataObject::get_one("Order", "\"StatusID\" =".$this->ID)) {
+			if($ordersWithThisStatus = DataObject::get_one("Order", "\"StatusID\" =".intval($this->ID)-0)) {
 				return false;
 			}
 		}
