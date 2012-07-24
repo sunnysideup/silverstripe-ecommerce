@@ -130,7 +130,7 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * Standard SS function
-	 *@return FieldSet
+	 * @return FieldSet
 	 **/
 	function getCMSFields() {
 		$fields = parent :: getCMSFields();
@@ -141,7 +141,8 @@ class CheckoutPage extends CartPage {
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"CurrentOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"SaveOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"DeleteOrderLinkLabel");
-		$fields->addFieldToTab('Root.Content.Process', new TreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree'));
+		$termsPageIDField = new OptionalTreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
+		$fields->addFieldToTab('Root.Content.Process', $termsPageIDField);
 		$fields->addFieldToTab('Root.Content.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
 		$fields->addFieldToTab('Root.Content.Process', new CheckboxField('HasCheckoutSteps', _t("CheckoutPage.HASCHECKOUTSTEPS", "Checkout Process in Steps")));
 		$fields->addFieldToTab('Root.Content.Main', new HtmlEditorField('InvitationToCompleteOrder', _t("CheckoutPage.INVITATIONTOCOMPLETEORDER", 'Invitation to complete order ... shown when the customer can do a regular checkout'), $row = 4));
@@ -163,13 +164,6 @@ class CheckoutPage extends CartPage {
 			$fields->addFieldToTab('Root.Content.Messages.Messages.CheckoutSteps',$checkoutStepDescriptionField);
 		}
 		return $fields;
-	}
-
-	function onBeforeWrite(){
-		parent::onBeforeWrite();
-		if(!$this->TermsAndConditionsMessage) {
-			$this->TermsPageID = 0;
-		}
 	}
 
 }
@@ -211,8 +205,6 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		}
 	}
 
-
-
 	/**
 	 * Returns a DataObjectSet of {@link OrderModifierForm} objects. These
 	 * forms are used in the OrderInformation HTML table for the user to fill
@@ -241,7 +233,6 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		}
 		return $form;
 	}
-
 
 	/**
 	 * Returns a form allowing a user to enter their
