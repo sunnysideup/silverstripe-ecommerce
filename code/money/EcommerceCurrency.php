@@ -63,15 +63,21 @@ class EcommerceCurrency extends DataObject {
 	);
 
 	/**
-	 *
-	 * @return DataObjectSet (EcommerceCurrency list)
+	 * NOTE: when there is only one currency we return NULL as one currency is meaningless.
+	 * @return DataObjectSet (EcommerceCurrency list) | Null
 	 */
 	public static function ecommerce_currency_list(){
-		return DataObject::get(
+		$dos = DataObject::get(
 			"EcommerceCurrency",
 			"\"InUse\" = 1",
 			"IF(\"Code\" = '".Payment::site_currency()."', 0, 1) ASC, \"InUse\" DESC, \"NAME\" ASC, \"Code\" ASC"
 		);
+		if($dos) {
+			if(1 == $dos->count()) {
+				$dos = null;
+			}
+		}
+		return $dos;
 	}
 
 	/**
