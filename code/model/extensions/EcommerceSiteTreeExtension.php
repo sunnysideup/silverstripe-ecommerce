@@ -51,7 +51,7 @@ class EcommerceSiteTreeExtension extends DataObjectDecorator {
 			$link = $this->owner->Link();
 		}
 		else {
-			$link = $this->EcomConfig()->AccountPage->Link();
+			$link = $this->EcomConfig()->AccountPageLink();
 		}
 		return "/Security/login?BackURL=".urlencode($link);
 	}
