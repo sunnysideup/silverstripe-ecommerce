@@ -1,14 +1,14 @@
 ###############################################
-E-commerce SSU Branch
-version 0.2alpha
+Silverstripe E-commerce 
 ###############################################
 
-This is the Sunny Side Up branch of e-commerce.
-Many
 
 Developers
 -----------------------------------------------
 Nicolaas Francken [at] sunnysideup.co.nz
+Silverstripe Ltd and Jeremy and many others 
+also contributed to this project. THANK YOU!
+
 
 Requirements
 -----------------------------------------------
@@ -18,10 +18,18 @@ SilverStripe 2.4+
 Project Home
 -----------------------------------------------
 See http://code.google.com/p/silverstripe-ecommerce
++
+See http://www.silverstripe-ecommerce.com
 
 Demo
 -----------------------------------------------
 See http://www.silverstripe-ecommerce.com
+
+
+GIT HOME
+-----------------------------------------------
+https://github.com/sunnysideup/silverstripe-ecommerce
+
 
 Installation Instructions
 -----------------------------------------------
