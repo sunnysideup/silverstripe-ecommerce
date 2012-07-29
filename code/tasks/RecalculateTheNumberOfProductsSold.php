@@ -30,28 +30,36 @@ class RecalculateTheNumberOfProductsSold extends BuildTask{
 		static function get_number_sold_calculation_type(){return self::$number_sold_calculation_type;}
 
 	function run($request){
-		$ps = singleton('Product');
-		$q = $ps->buildSQL("\"Product\".\"AllowPurchase\" = 1");
-		$select = $q->select;
+		$orderItemSingleton = singleton('OrderItem');
+		$query = $orderItemSingleton->buildSQL("\"Quantity\" > 0");
+		$select = $query->select;
 
 		$select['NewNumberSold'] = self::$number_sold_calculation_type."(\"OrderItem\".\"Quantity\") AS \"NewNumberSold\"";
 
-		$q->select($select);
-		$q->groupby("\"Product\".\"ID\"");
-		$q->orderby("\"NewNumberSold\" DESC");
+		$query->select($select);
+		$query->groupby("\"BuyableClassName\", \"BuyableID\" ");
+		$query->orderby("\"BuyableClassName\", \"BuyableID\" ");
 
-		$q->leftJoin('OrderItem','"Product"."ID" = "OrderItem"."BuyableID"');
-		$q->where("\"OrderItem\".\"BuyableClassName\" = 'Product'");
-		$records = $q->execute();
-		$productssold = $ps->buildDataObjectSet($records, "DataObjectSet", $q, 'Product');
-
-		foreach($productssold as $product){
-			if(!$product->NewNumberSold) {
-				$product->NewNumberSold = 0;
-			}
-			if($product->NewNumberSold != $product->NumberSold){
-				DB::query("Update \"Product\" SET \"NumberSold\" = ".$product->NewNumberSold." WHERE ID = ".$product->ID);
-				DB::query("Update \"Product_Live\" SET \"NumberSold\" = ".$product->NewNumberSold." WHERE ID = ".$product->ID);
+		//$q->leftJoin('OrderItem','"Product"."ID" = "OrderItem"."BuyableID"');
+		//$q->where("\"OrderItem\".\"BuyableClassName\" = 'Product'");
+		$records = $query->execute();
+		$orderItems = $orderItemSingleton->buildDataObjectSet($records, "DataObjectSet", $query, 'OrderItem');
+		if($orderItems) {
+			foreach($orderItems as $orderItem){
+				if(!$orderItem->NewNumberSold) {
+					$orderItem->NewNumberSold = 0;
+				}
+				$buyable = DataObject::get_by_id($orderItem->BuyableClassName, $orderItem->BuyableID);
+				if($buyable) {
+					if($orderItem->NewNumberSold != $buyable->NumberSold){
+						$buyable->NumberSold = $orderItem->NewNumberSold;
+						if($buyable instanceOf SiteTree) {
+						}
+					}
+				}
+				else {
+					DB::alteration_message("could not find ".$orderItem->BuyableClassName.".".$orderItem->BuyableID." ... ", "deleted" );
+				}
 			}
 		}
 	}
