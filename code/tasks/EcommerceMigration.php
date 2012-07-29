@@ -1148,7 +1148,7 @@ class EcommerceMigration extends BuildTask {
 		$changes = 0;
 		if($submittedOrdersLog) {
 			foreach($submittedOrdersLog as $submittedOrderLog) {
-				$old = $object->SequentialOrderNumber;
+				$old = $submittedOrderLog->SequentialOrderNumber;
 				$submittedOrderLog->write();
 				$new = $submittedOrderLog->SequentialOrderNumber;
 				if($old != $new) {
