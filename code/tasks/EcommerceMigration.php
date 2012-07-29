@@ -57,11 +57,18 @@ class EcommerceMigration extends BuildTask {
 		"updateOrderStatusLogSequentialOrderNumber_190",
 		"resaveAllPRoducts_200",
 		"resaveAllPRoductsVariations_210",
+		"addConfirmationPage_250",
 		"theEnd_9999"
 	);
 
 
 	function run($request) {
+		if(isset($_REQUEST["limit"])) {
+			$this->limit = intval($_REQUEST["limit"]);
+		}
+		if(isset($_REQUEST["limit"])) {
+			$this->start = intval($_REQUEST["start"]);
+		}
 		$canDoNext = true;
 		$step = ($request->Param("ID"));
 		$this->start = intval($request->Param("OtherID"))-0;
@@ -74,10 +81,10 @@ class EcommerceMigration extends BuildTask {
 				$nextDescription = "run next batch ...";
 			}
 		}
-		$html = "<ol>";
+		$html = "<ul>";
 		if($canDoNext) {
 			$next = $this->listOfMigrationTasks[0];
-			$nextDescription = "Start Migration by clicking on <i>'Next'</i> until all tasks have been completed. Make sure to read all the messages carefully.";
+			$nextDescription = "Start Migration by clicking on <i>'Next'</i> until all tasks have been completed.";
 		}
 		foreach($this->listOfMigrationTasks as $key => $task) {
 			if($task == $step) {
@@ -95,18 +102,22 @@ class EcommerceMigration extends BuildTask {
 			}
 			$html .=  "<li><a href=\"/dev/ecommerce/ecommercemigration/".$task."/\">$task </a></li>";
 		}
-		$html .= "</ol>";
+		$html .= "</ul>";
 		echo "
 			<hr />
 			<h3><a href=\"/dev/ecommerce/ecommercemigration/".$next."/\">NEXT: $nextDescription</a></h3>
 			<hr />
-			<h3>ALL MIGRATION TASKS: </h3>
+			<h3>LIST OF MIGRATION TASKS:</h3>
 			$html
 		";
 		DB::alteration_message("
 			<h1>IMPORTANT</h1>
-			<p>Make sure that this page ends with <i>THE END</i> to ensure that all migrations were completed.</p>");
-
+			<p>
+				Make sure that this page ends with <i>THE END</i> to ensure that all migrations were completed.
+				Make sure to read all the messages carefully.
+				You can change the start and limit by adding get parameters (?start=xxx&limit=yyy).
+				Current start = ".$this->start." AND limit = ".$this->limit.".
+			</p>");
 	}
 
 
@@ -354,7 +365,7 @@ class EcommerceMigration extends BuildTask {
 				"\"HasShippingCost\" = 1 AND \"Shipping\" IS NOT NULL",
 				null,
 				null,
-				$this->Start.", ".$this->limit
+				$this->start.", ".$this->limit
 			);
 			if($orders) {
 				foreach($orders as $order) {
@@ -366,11 +377,10 @@ class EcommerceMigration extends BuildTask {
 					$modifier1->write();
 					DB::alteration_message(" ------------- Added shipping cost.", "created");
 				}
-				return $this->limit + $this->start;
+				return $this->start + $this->limit;
 			}
 			else {
 				DB::alteration_message("There are no orders with HasShippingCost =1 and Shipping IS NOT NULL.");
-				return 0;
 			}
 			$this->makeFieldObsolete("Order", "HasShippingCost", "tinyint(1)");
 			$this->makeFieldObsolete("Order", "Shipping", "decimal(9,2)");
@@ -378,6 +388,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("No need to update shipping cost.");
 		}
+		return 0;
 	}
 
 	protected function orderTax_45(){
@@ -416,13 +427,13 @@ class EcommerceMigration extends BuildTask {
 			}
 			else {
 				DB::alteration_message("There are no orders with a AddedTax field greater than zero.");
-				return 0;
 			}
 			$this->makeFieldObsolete("Order", "AddedTax");
 		}
 		else {
 			DB::alteration_message("No need to update taxes.");
 		}
+		return 0;
 	}
 
 
@@ -467,7 +478,6 @@ class EcommerceMigration extends BuildTask {
 				}
 				else {
 					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
-					return 0;
 				}
 				$this->makeFieldObsolete("Order", "ShippingName");
 				$this->makeFieldObsolete("Order", "ShippingAddress");
@@ -487,6 +497,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("Orders do not have the shipping address to migrate.");
 		}
+		return 0;
 	}
 
 
@@ -497,7 +508,14 @@ class EcommerceMigration extends BuildTask {
 		");
 		if($this->hasTableAndField("Order", "Address")) {
 			if($this->hasTableAndField("Order", "City")) {
-				if($orders = DataObject::get('Order', " AND \"BillingAddress\".\"ID\" IS NULL", "", " LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"")) {
+				$orders = DataObject::get(
+					'Order',
+					" \"BillingAddress\".\"ID\" = 0 OR \"BillingAddress\".\"ID\" IS NULL",
+					"",
+					" LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"",
+					$this->start.",".$this->limit
+				);
+				if($orders) {
 					foreach($orders as $order) {
 						if(!$order->BillingAddressID) {
 							$obj = new BillingAddress();
@@ -523,6 +541,7 @@ class EcommerceMigration extends BuildTask {
 							DB::alteration_message("Strange contradiction occurred in Order with ID".$order->ID, "deleted");
 						}
 					}
+					return $this->start + $this->limit;
 				}
 				else {
 					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
@@ -547,9 +566,8 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("Orders do not have the Billing address to migrate.");
 		}
+		return 0;
 	}
-
-
 
 	protected function memberBillingAddress_52(){
 		DB::alteration_message("
@@ -558,7 +576,14 @@ class EcommerceMigration extends BuildTask {
 		");
 		if($this->hasTableAndField("Member", "Address")) {
 			if($this->hasTableAndField("Member", "City")) {
-				if($orders = DataObject::get('Order', "\"MemberID\" > 0 AND \"BillingAddress\".\"ID\" IS NULL AND \"BillingAddressID\" = 0", "", " LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"")) {
+				$orders = DataObject::get(
+					'Order',
+					"\"MemberID\" > 0 AND \"BillingAddress\".\"ID\" IS NULL AND \"BillingAddressID\" = 0",
+					"",
+					" LEFT JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"",
+					$this->start.",".$this->limit
+				);
+				if($orders) {
 					foreach($orders as $order) {
 						if(!$order->BillingAddressID) {
 							$member = DataObject::get_by_id("Member", $order->MemberID);
@@ -589,6 +614,7 @@ class EcommerceMigration extends BuildTask {
 							DB::alteration_message("Strange contraduction occurred!", "deleted");
 						}
 					}
+					$this->start+$this->limit;
 				}
 				else {
 					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
@@ -601,8 +627,8 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("Members do not have a billing address to migrate.");
 		}
+		return 0;
 	}
-
 
 	protected function moveOrderStatus_60() {
 		DB::alteration_message("
@@ -611,21 +637,20 @@ class EcommerceMigration extends BuildTask {
 		");
 		if($this->hasTableAndField("Order", "Status")) {
 		// 2) Cancel status update
-			$orders = DataObject::get('Order', "\"Status\" = 'Cancelled'");
+			$orders = DataObject::get(
+				'Order',
+				"\"Status\" = 'Cancelled'",
+				null,
+				null,
+				$this->start.",".$this->limit
+			);
 			if($orders) {
-				$admin = Member::currentMember();
-				if($admin && $admin->IsAdmin()) {
-					foreach($orders as $order) {
-						$order->CancelledByID = $admin->ID;
-						$order->write();
-					}
-
-					DB::alteration_message('The orders which status was \'Cancelled\' have been successfully changed to the status \'AdminCancelled\'', 'changed');
+				foreach($orders as $order) {
+					$order->CancelledByID = $admin->ID;
+					$order->write();
+					DB::alteration_message('The order which status was \'Cancelled\' have been successfully changed to the status \'AdminCancelled\'', 'created');
 				}
-				else {
-					DB::alteration_message("You need to be logged in as admin to run this task", "deleted");
-					return 0;
-				}
+				return $this->start + $this->limit;
 			}
 			else {
 				DB::alteration_message('There are no orders that are cancelled');
@@ -740,6 +765,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There is no Status field in the Order Table.");
 		}
+		return 0;
 	}
 
 	protected function fixBadOrderStatus_68(){
@@ -751,7 +777,11 @@ class EcommerceMigration extends BuildTask {
 		if($firstOption) {
 			$badOrders = DataObject::get(
 				"Order",
-				"\"StatusID\" = 0 OR \"StatusID\" IS NULL OR \"OrderStep\".\"ID\" IS NULL", "", " LEFT JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
+				"\"StatusID\" = 0 OR \"StatusID\" IS NULL OR \"OrderStep\".\"ID\" IS NULL",
+				"",
+				" LEFT JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\"",
+				$this->start.",".$this->limit
+			);
 			if($badOrders) {
 				foreach($badOrders as $order) {
 					if($order->TotalItems() > 0) {
@@ -760,6 +790,7 @@ class EcommerceMigration extends BuildTask {
 						DB::alteration_message("No order status for order number #".$order->ID." reverting to: $firstOption->Name.","error");
 					}
 				}
+				return $this->start + $this->limit;
 			}
 			else {
 				DB::alteration_message("There are no orders with incorrect order status.");
@@ -768,6 +799,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("No first order step.","error");
 		}
+		return 0;
 	}
 
 
@@ -818,6 +850,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("there is no need for resetting product 'show' levels");
 		}
+		return 0;
 	}
 
 	protected function setFixedPriceForSubmittedOrderItems_120() {
@@ -839,19 +872,19 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There is no need to move values from OrderModifier.CalculationValue to OrderAttribute.CalculatedTotal");
 		}
-		$orderItems = DataObject::get(
-			"OrderItem",
-			"\"Quantity\" <> 0 AND \"OrderAttribute\".\"CalculatedTotal\" = 0",
-			"\"Created\" ASC",
-			"INNER JOIN
-				\"Order\" ON \"Order\".\"ID\" = \"OrderAttribute\".\"OrderID\""
-		);
-		return;
 		/////////////////////////////////
 		///////// We should not include the code below
 		///////// Because it may affect past orders badly.
 		/////////////////////////////////
 		/////////////////////////////////
+		return;
+		$orderItems = DataObject::get(
+			"OrderItem",
+			"\"Quantity\" <> 0 AND \"OrderAttribute\".\"CalculatedTotal\" = 0",
+			"\"Created\" ASC",
+			"INNER JOIN \"Order\" ON \"Order\".\"ID\" = \"OrderAttribute\".\"OrderID\"",
+			$this->start.",".$this->limit
+		);
 		$count = 0;
 		if($orderItems) {
 			foreach($orderItems as $orderItem) {
@@ -881,6 +914,7 @@ class EcommerceMigration extends BuildTask {
 		if($count) {
 			DB::alteration_message("Fixed price for all submmitted orders without a fixed one - affected: $count order items", "created");
 		}
+		return 0;
 	}
 
 	protected function moveSiteConfigToEcommerceDBConfig_140(){
@@ -932,6 +966,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("ERROR: SiteConfig or EcommerceDBConfig are not available", "deleted");
 		}
+		return 0;
 	}
 
 	function addClassNameToOrderItems_150() {
@@ -966,8 +1001,8 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("No order items could be found that need updating.");
 		}
+		return 0;
 	}
-
 
 	function addTermsAndConditionsMessage_160() {
 		DB::alteration_message("
@@ -982,7 +1017,6 @@ class EcommerceMigration extends BuildTask {
 					$checkoutPage->writeToStage('Stage');
 					$checkoutPage->publish('Stage', 'Live');
 					DB::alteration_message("Added TermsAndConditionsMessage", "created");
-					return 0;
 				}
 				else {
 					DB::alteration_message("There was no need to add a terms and conditions message because there was already a message.");
@@ -995,6 +1029,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There was no need to add a terms and conditions message because there is no checkout page", "deleted");
 		}
+		return 0;
 	}
 
 	function mergeUncompletedOrderForOneMember_170() {
@@ -1007,7 +1042,7 @@ class EcommerceMigration extends BuildTask {
 			"\"MemberID\" > 0",
 			"\"MemberID\", \"Order\".\"Created\" DESC", // THIS ORDER IS CRUCIAL!!!!
 			"INNER JOIN \"Member\" ON \"Order\".\"MemberID\" = \"Member\".\"ID\" ",
-			$this->start.", ".$this->limit
+			$this->start.",".$this->limit
 		);
 		$count = 0;
 		$previousOrderMemberID = 0;
@@ -1078,13 +1113,13 @@ class EcommerceMigration extends BuildTask {
 				}
 			}
 			DB::alteration_message("Ignored $count Orders that have already been submitted.");
+			$this->start+$this->limit;
 		}
 		else {
 			DB::alteration_message("There were no orders at all to work through.");
 		}
-
+		return 0;
 	}
-
 
 	function updateFullSiteTreeSortFieldForAllProducts_180() {
 		DB::alteration_message("
@@ -1095,16 +1130,15 @@ class EcommerceMigration extends BuildTask {
 		$task = new CleanupProductFullSiteTreeSorting();
 		$task->setDeleteFirst(false);
 		$task->run(null);
+		return 0;
 	}
-
-
 
 	function updateOrderStatusLogSequentialOrderNumber_190() {
 		DB::alteration_message("
 			<h1>190. Set sequential order numbers</h1>
 			<p>Prepopulates old orders for OrderStatusLog_Submitted.SequentialOrderNumber.</p>
 		");
-		$objects = DataObject::get(
+		$submittedOrdersLog = DataObject::get(
 			"OrderStatusLog_Submitted",
 			"",
 			"\"Created\" ASC",
@@ -1112,25 +1146,25 @@ class EcommerceMigration extends BuildTask {
 			$this->start.", ".$this->limit
 		);
 		$changes = 0;
-		if($objects) {
-			foreach($objects as $object) {
+		if($submittedOrdersLog) {
+			foreach($submittedOrdersLog as $submittedOrderLog) {
 				$old = $object->SequentialOrderNumber;
-				$object->write();
-				$new = $object->SequentialOrderNumber;
+				$submittedOrderLog->write();
+				$new = $submittedOrderLog->SequentialOrderNumber;
 				if($old != $new) {
 					$changes++;
-					DB::alteration_message("Changed the SequentialOrderNumber for order #".$object->OrderID." from $old to $new ");
+					DB::alteration_message("Changed the SequentialOrderNumber for order #".$submittedOrderLog->OrderID." from $old to $new ");
 				}
 			}
 			if(!$changes) {
 				DB::alteration_message("There were no changes in any of the OrderStatusLog_Submitted.SequentialOrderNumber fields.");
 			}
-			return $this->limit + $this->start;
+			return $this->start + $this->limit;
 		}
 		else {
 			DB::alteration_message("There are no logs to update.");
-			return 0;
 		}
+		return 0;
 	}
 
 	function resaveAllPRoducts_200() {
@@ -1139,30 +1173,27 @@ class EcommerceMigration extends BuildTask {
 			<p>Saves and PUBLISHES all the products on the site. You may need to run this task several times.</p>
 		");
 		$count = 0;
-		$objects = DataObject::get(
+		$products = DataObject::get(
 			"Product",
 			"\"FullName\" = '' OR \"FullName\" IS NULL OR 1 = 1",
 			"\"FullName\" ASC",
 			null,
 			$this->start.", ".$this->limit
 		);
-		if($objects) {
-			foreach($objects as $object) {
-				if($object->prepareFullFields()) {
+		if($products) {
+			foreach($products as $product) {
+				if($product->prepareFullFields()) {
 					$count++;
-					$object->writeToStage('Stage');
-					$object->publish('Stage', 'Live');
+					$product->writeToStage('Stage');
+					$product->publish('Stage', 'Live');
 				}
-			}
-			if($count >= $this->limit) {
-				DB::alteration_message("This task has not completed yet, please run again!", "deleted");
 			}
 			return $this->start + $this->limit;
 		}
 		else {
 			DB::alteration_message("No products to update.");
-			return 0;
 		}
+		return 0;
 	}
 
 	function resaveAllPRoductsVariations_210() {
@@ -1172,33 +1203,30 @@ class EcommerceMigration extends BuildTask {
 		");
 		$count = 0;
 		if(class_exists("ProductVariation")) {
-			$objects = DataObject::get(
+			$variations = DataObject::get(
 				"ProductVariation",
 				"\"FullName\" = '' OR \"FullName\" IS NULL",
 				"\"FullName\" ASC",
 				null,
 				$this->start.", ".$this->limit
 			);
-			if($objects) {
-				foreach($objects as $object) {
-					if($object->prepareFullFields()) {
+			if($variations) {
+				foreach($variations as $variation) {
+					if($variation->prepareFullFields()) {
 						$count++;
-						$object->write();
+						$variation->write();
 					}
-				}
-				if($count >= $this->limit) {
-					DB::alteration_message("This task has not completed yet, please run again!", "deleted");
 				}
 				return $this->start + $this->limit;
 			}
 			else {
 				DB::alteration_message("No product variations to update.");
-				return 0;
 			}
 		}
 		else {
 			DB::alteration_message("There are not ProductVariations in this project");
 		}
+		return 0;
 	}
 
 	function addConfirmationPage_250(){
@@ -1209,12 +1237,21 @@ class EcommerceMigration extends BuildTask {
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
 				$orderConfirmationPage->writeToStage('Stage');
 				$orderConfirmationPage->publish('Stage', 'Live');
+				DB::alteration_message("Creating an Order Confirmation Page", "created");
+			}
+			else {
+				DB::alteration_message("No need to create an Order Confirmation Page");
 			}
 		}
+		else {
+			DB::alteration_message("There is no CheckoutPage available", "deleted");
+		}
+		return 0;
 	}
 
 	function theEnd_9999(){
 		DB::alteration_message("<hr /><hr /><hr /><hr />THE END <hr /><hr /><hr /><hr /><hr /><hr />");
+		return 0;
 	}
 
 }
