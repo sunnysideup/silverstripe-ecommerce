@@ -242,7 +242,7 @@ class OrderForm_Validator extends RequiredFields{
 			);
 			$valid = false;
 		}
-		$billingAddress = DataObject::get_by_id("BillingAddress", $order->BillingAddressID);
+		$billingAddress = DataObject::get_by_id("BillingAddress", intval($order->BillingAddressID)-0);
 		if(!$billingAddress) {
 			$this->validationError(
 				"BillingAddress",
