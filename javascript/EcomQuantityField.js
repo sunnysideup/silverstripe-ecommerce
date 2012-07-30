@@ -51,13 +51,11 @@ EcomQuantityField = {
 			function() {
 				var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this);
 				if(URLSegment.length > 0) {
-					if(! this.value) {
-						this.value = 0;
+					this.value = this.value.replace(/[^0-9.]+/g, '');
+					if(this.value == 0 || !this.value) {
+						this.value = 1;
 					}
-					else {
-						this.value = this.value.replace(/[^0-9.]+/g, '');
-					}
-					if(this.value == 0) {
+					if(this.value < 2) {
 						jQuery(this).siblings(EcomQuantityField.removeSelector).css("visibility", "hidden");
 					}
 					else {
