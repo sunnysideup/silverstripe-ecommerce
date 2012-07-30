@@ -56,8 +56,15 @@ class CartResponse extends EcommerceResponse {
 		if ($items = $currentOrder->Items()) {
 			foreach ($items as $item) {
 				$item->updateForAjax($js);
-				//products in cart
-				$inCartArray[] = $item->Buyable()->AJAXDefinitions()->UniqueIdentifier();
+				$buyable = $item->Buyable(true);
+				if($buyable) {
+					//products in cart
+					$inCartArray[] = $buyable->AJAXDefinitions()->UniqueIdentifier();
+					//HACK TO INCLUDE PRODUCT IN PRODUCT VARIATION
+					if($buyable instanceOf ProductVariation){
+						$inCartArray[] = $buyable->Product()->AJAXDefinitions()->UniqueIdentifier();
+					}
+				}
 			}
 		}
 
