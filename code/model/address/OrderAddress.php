@@ -242,6 +242,7 @@ class OrderAddress extends DataObject {
 	 * @param Object(FieldSet)
 	 */
 	protected function makeSelectedFieldsReadOnly(&$fields) {
+		$this->extend("augmentMakeSelectedFieldsReadOnly");
 		if(is_array($this->readOnlyFields) && count($this->readOnlyFields) ) {
 			foreach($this->readOnlyFields as $readOnlyField) {
 				if($oldField = $fields->fieldByName($readOnlyField)) {
