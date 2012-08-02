@@ -67,9 +67,9 @@ class CheckoutPage extends CartPage {
 	 * Returns the link or the Link to the account page on this site
 	 * @return String (URLSegment)
 	 */
-	public static function find_link() {
+	public static function find_link($action = "") {
 		if ($page = DataObject::get_one("CheckoutPage")) {
-			return $page->Link();
+			return $page->Link($action);
 		}
 		user_error("No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.", E_USER_NOTICE);
 		return "";
