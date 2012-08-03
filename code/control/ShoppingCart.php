@@ -509,7 +509,7 @@ class ShoppingCart extends Object{
 			//$oldOrder = $oldOrder;
 		}
 		if($oldOrder){
-			if($this->order->canView()) {
+			if($oldOrder->canView()) {
 				$newOrder = new Order();
 				//for later use...
 				$newOrder->MemberID = $oldOrder->MemberID;
