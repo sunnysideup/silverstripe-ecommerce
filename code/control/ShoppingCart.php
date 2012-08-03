@@ -501,14 +501,14 @@ class ShoppingCart extends Object{
 	 * @param Int | Order $order
 	 * @return DataObject(Order)
 	 **/
-	public function copyOrder($order) {
-		if(is_numeric($order)) {
-			 $this->order = DataObject::get_by_id('Order',$order);
+	public function copyOrder($oldOrder) {
+		if(is_numeric($oldOrder)) {
+			 $oldOrder = DataObject::get_by_id('Order',intval($oldOrder));
 		}
-		elseif($order instanceof Order) {
-			$this->order = $order;
+		elseif($oldOrder instanceof Order) {
+			//$oldOrder = $oldOrder;
 		}
-		if($this->order){
+		if($oldOrder){
 			if($this->order->canView()) {
 				$newOrder = new Order();
 				//for later use...
