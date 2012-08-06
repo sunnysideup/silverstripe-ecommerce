@@ -436,10 +436,8 @@ class OrderFormAddress extends Form {
 	 **/
 	protected function memberShouldBeSaved($data) {
 		$a = $this->memberShouldBeCreated($data) ? true : false;
-		$b = $this->loggedInMember &&
-					!$this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
-					EcommerceConfig::get("EcommerceRole", "automatically_update_member_details") ? true : false;
-		$c = $this->newlyCreatedMemberID;
+		$b = ($this->loggedInMember && !$this->anotherExistingMemberWithSameUniqueFieldValue($data) && EcommerceConfig::get("EcommerceRole", "automatically_update_member_details")) ? true : false;
+		$c = $this->newlyCreatedMemberID ? true : false;
 		if( ($a) || ($b) || ($c) ){
 			return true;
 		}
