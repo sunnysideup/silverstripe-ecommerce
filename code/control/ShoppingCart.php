@@ -119,7 +119,13 @@ class ShoppingCart extends Object{
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
 						//TODO: what sort order?
-						$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0) AND \"Order\".\"ID\" <> ".$this->order->ID);
+						$previousOrderFromMember = DataObject::get_one(
+							"Order",
+							"
+								\"MemberID\" = ".$member->ID."
+								AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
+								AND \"Order\".\"ID\" <> ".$this->order->ID
+						);
 						if($previousOrderFromMember && $previousOrderFromMember->canView()) {
 							if($previousOrderFromMember->StatusID) {
 								$this->order->delete();
@@ -313,7 +319,8 @@ class ShoppingCart extends Object{
 			user_error("No buyable was provided", E_USER_WARNING);
 		}
 		if(!$buyable->canPurchase()) {
-			if($item->exists()) {
+			$item = $this->getExistingItem($buyable,$parameters);
+			if($item && $item->exists()) {
 				$item->delete();
 				$item->destroy();
 			}
@@ -887,9 +894,13 @@ class ShoppingCart_Controller extends Controller{
 
 	function init() {
 		parent::init();
-		if(isset($_GET["SecurityID"])) {
-			if($_GET["SecurityID"] == Session::get("SecurityID")) {
-				//$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+		if(!isset($_GET["SecurityID"])) {
+			$_GET["SecurityID"] = "";
+		}
+		$savedSecurityID = Session::get("SecurityID");
+		if($savedSecurityID) {
+			if($_GET["SecurityID"] != $savedSecurityID) {
+				$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
 			}
 			else {
 				$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
