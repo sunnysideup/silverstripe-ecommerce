@@ -435,17 +435,12 @@ class OrderFormAddress extends Form {
 	 * @return Boolean
 	 **/
 	protected function memberShouldBeSaved($data) {
-		if(
-				(
-					$this->memberShouldBeCreated($data)
-				) || (
-					$this->loggedInMember &&
+		$a = $this->memberShouldBeCreated($data) ? true : false;
+		$b = $this->loggedInMember &&
 					!$this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
-					EcommerceConfig::get("EcommerceRole", "automatically_update_member_details")
-				) || (
-					$this->newlyCreatedMemberID
-				)
-		){
+					EcommerceConfig::get("EcommerceRole", "automatically_update_member_details") ? true : false;
+		$c = $this->newlyCreatedMemberID;
+		if( ($a) || ($b) || ($c) ){
 			return true;
 		}
 		return false;
