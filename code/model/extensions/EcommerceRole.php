@@ -49,9 +49,31 @@ class EcommerceRole extends DataObjectDecorator {
 	}
 
 
-/*******************************************************
-   * SHOP ADMIN
-*******************************************************/
+	/**
+	 * returns an aray of members
+	 * @return Array
+	 */
+	public static function list_of_customers($showUnselectedOption = false){
+		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
+		$group = DataObject::get_one("Group", "\"Code\" = '".$customerCode."'");
+		$array = Array();
+		if($showUnselectedOption) {
+			$array[0] = _t("Member.SELECTCUSTOMER", " --- SELECT CUSTOMER ---");
+		}
+		if($group) {
+			$members = $group->Members();
+			if($members) {
+				foreach($members as $member) {
+					if($member->Email) {
+						$array[$member->ID] = $member->Email." (".$member->getTitle().")";
+					}
+				}
+			}
+		}
+		natcasesort($array);
+		return $array;
+	}
+
 
 	/**
 	 * tells us if the current member is in the Shop Administrators Group.
@@ -80,6 +102,18 @@ class EcommerceRole extends DataObjectDecorator {
 	}
 
 
+	/**
+	 * Save a preferred currency for a member.
+	 * @param EcommerceCurrency $currency - object for the currency
+	 */
+	public function SetPreferredCurrency($currency){
+		if($this->owner->exists()) {
+			if($currency && $currency->exists()) {
+				$this->owner->PreferredCurrencyID = $currency->ID;
+				$this->owner->write();
+			}
+		}
+	}
 
 	/**
 	 * get CMS fields describing the member in the CMS when viewing the order.
@@ -147,19 +181,6 @@ class EcommerceRole extends DataObjectDecorator {
 		return $fields;
 	}
 
-	/**
-	 * standard SS method
-	 * Make sure the member is added as a customer
-	 */
-	public function onAfterWrite() {
-		$customerGroup = EcommerceRole::get_customer_group();
-		if($customerGroup){
-			$existingMembers = $customerGroup->Members();
-			if($existingMembers){
-				$existingMembers->add($this->owner);
-			}
-		}
-	}
 
 	/**
 	 * Is the member a member of the ShopAdmin Group
@@ -175,41 +196,34 @@ class EcommerceRole extends DataObjectDecorator {
 	}
 
 	/**
-	 * Save a preferred currency for a member.
-	 * @param EcommerceCurrency $currency - object for the currency
+	 * returns the last (submitted) order  by the member
+	 * @param Boolean $includeUnsubmittedOrders - set to TRUE to include unsubmitted orders
+	 * @return Null | Order
 	 */
-	public function SetPreferredCurrency($currency){
-		if($this->owner->exists()) {
-			if($currency && $currency->exists()) {
-				$this->owner->PreferredCurrencyID = $currency->ID;
-				$this->owner->write();
+	function LastOrder($includeUnsubmittedOrders = false){
+		//limit to 30
+		$orders = DataObject::get("Order", "MemberID =".$this->owner->ID, null, null, 30);
+		if($orders) {
+			foreach($orders as $order) {
+				if($order->IsSubmitted() || $includeUnsubmittedOrders) {
+					return $order;
+				}
 			}
 		}
 	}
 
 	/**
-	 * returns an aray of members
-	 * @return Array
+	 * standard SS method
+	 * Make sure the member is added as a customer
 	 */
-	public static function list_of_customers($showUnselectedOption = false){
-		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
-		$group = DataObject::get_one("Group", "\"Code\" = '".$customerCode."'");
-		$array = Array();
-		if($showUnselectedOption) {
-			$array[0] = _t("Member.SELECTCUSTOMER", " --- SELECT CUSTOMER ---");
-		}
-		if($group) {
-			$members = $group->Members();
-			if($members) {
-				foreach($members as $member) {
-					if($member->Email) {
-						$array[$member->ID] = $member->Email." (".$member->getTitle().")";
-					}
-				}
+	public function onAfterWrite() {
+		$customerGroup = EcommerceRole::get_customer_group();
+		if($customerGroup){
+			$existingMembers = $customerGroup->Members();
+			if($existingMembers){
+				$existingMembers->add($this->owner);
 			}
 		}
-		natcasesort($array);
-		return $array;
 	}
 
 }
