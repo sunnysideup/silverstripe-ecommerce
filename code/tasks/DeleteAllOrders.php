@@ -20,7 +20,7 @@ class DeleteAllOrders extends BuildTask {
 
 	protected $title = 'Deletes all orders - CAREFUL!';
 
-	protected $description = "Deletes all the orders ever placed - CAREFULL!";
+	protected $description = "Deletes all the orders and payments ever placed - CAREFULL!";
 
 	public $verbose = false;
 
@@ -150,9 +150,29 @@ class DeleteAllOrders extends BuildTask {
 	}
 
 	private function deleteObject($unlinkedObject){
-		$objectToDelete = DataObject::get_by_id($unlinkedObject->ClassName,$unlinkedObject->ID);
-		$objectToDelete->delete();
-		$objectToDelete->destroy();
+		if($unlinkedObject) {
+			if($unlinkedObject->ClassName) {
+				if(class_exists($unlinkedObject->ClassName) && $unlinkedObjects instanceOf DataObject) {
+					$objectToDelete = DataObject::get_by_id($unlinkedObject->ClassName,$unlinkedObject->ID);
+					if($objectToDelete)
+						$objectToDelete->delete();
+						$objectToDelete->destroy();
+					}
+					elseif($this->verbose) {
+						DB::alteration_message("ERROR: could not find ".$unlinkedObject->ClassName." with ID = ".$unlinkedObject->ID, "deleted");
+					}
+				}
+				elseif($this->verbose) {
+					DB::alteration_message("ERROR: trying to delete an object that is not a dataobject: ".$unlinkedObject->ClassName, "deleted");
+				}
+			}
+			elseif($this->verbose) {
+				DB::alteration_message("ERROR: trying to delete object without a class name", "deleted");
+			}
+		}
+		elseif($this->verbose) {
+			DB::alteration_message("ERROR: trying to delete non-existing object.", "deleted");
+		}
 	}
 
 }
