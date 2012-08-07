@@ -67,6 +67,9 @@ class DeleteAllOrders extends BuildTask {
 			DB::alteration_message("you can only run this in dev mode!");
 		}
 		else {
+			if(!isset($_REQUEST["i-am-sure"])) {
+				die("ARE YOU SURE? please add the 'i-am-sure' get variable to your request ... e.g. http://www.mysite.com/dev/ecommerce/deleteallorders/?i-am-sure=1");
+			}
 			$oldCarts = DataObject::get('Order');
 			$count = 0;
 			if($oldCarts){
