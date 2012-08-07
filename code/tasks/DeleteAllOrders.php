@@ -154,7 +154,7 @@ class DeleteAllOrders extends BuildTask {
 			if($unlinkedObject->ClassName) {
 				if(class_exists($unlinkedObject->ClassName) && $unlinkedObjects instanceOf DataObject) {
 					$objectToDelete = DataObject::get_by_id($unlinkedObject->ClassName,$unlinkedObject->ID);
-					if($objectToDelete)
+					if($objectToDelete) {
 						$objectToDelete->delete();
 						$objectToDelete->destroy();
 					}
