@@ -84,6 +84,17 @@ class ProductGroup extends Page {
 	public static $icon = 'ecommerce/images/icons/productgroup';
 
 	/**
+	 * Standard SS variable.
+	 */
+	public static $singular_name = "Product Category";
+		function i18n_singular_name() { return _t("ProductGroup.PRODUCTCATEGORY", "Product Category");}
+
+	/**
+	 * Standard SS variable.
+	 */
+	public static $plural_name = "Product Categories";
+		function i18n_plural_name() { return _t("ProductGroup.PRODUCTCATEGORIES", "Product Categories");}
+	/**
 	 * returns the default Sort key.
 	 * @return String
 	 */

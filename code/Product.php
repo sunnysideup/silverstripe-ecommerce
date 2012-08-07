@@ -95,6 +95,11 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
+	public static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
+
+	/**
+	 * Standard SS variable.
+	 */
 	public static $summary_fields = array(
 		'ID',
 		'InternalItemID',

@@ -903,7 +903,7 @@ class ShoppingCart_Controller extends Controller{
 				$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
 			}
 			else {
-				$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+				//all OK!
 			}
 		}
 		$this->cart = ShoppingCart::singleton();
