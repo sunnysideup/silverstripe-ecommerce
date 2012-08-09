@@ -1,4 +1,4 @@
-<div id="OrderConformation" class="mainSection content-container withSidebar">
+<div id="OrderConfirmationPage" class="mainSection content-container withSidebar">
 
 	<h1 class="pagetitle">$Title</h1>
 
