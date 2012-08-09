@@ -13,8 +13,9 @@
  * table general
  */
 table {width: 100%;}
-.right {text-align: right;}
-.center {text-align: center;}
+table .right { text-align: right; float: none!important}
+table .center { text-align: center; float: none!important}
+table .left, table th { text-align: left; float: none!important}
 
 /**
  * table items
@@ -42,9 +43,10 @@ td div.itemTitleAndSubTitle { margin-left: 90px;}
 even when theme-ing ecommerce, these should not be themed
 */
 
-
+.ecomquantityfield {text-align: center; }
 .ajaxQuantityField {text-align: center; width: 2em;}
-.removeOneLink {float: left; padding-right: 5px;}
+.removeOneLink {padding-right: 5px;}
+.removeOneLink, .addOneLink {text-decoration: none!important;}
 
 
 
@@ -55,7 +57,7 @@ even when theme-ing ecommerce, these should not be themed
 
 
 
-a.action {
+a.action, #OrderFormAddressHolder .Actions input, #OrderFormHolder .Actions input {
 	margin-left: auto;
 	margin-right: auto;
 	padding: 8px 20px 6px 20px;
@@ -90,6 +92,7 @@ a.action {
 	-moz-transition: color 0.25s ease-in-out;
 	-webkit-transition: color 0.25s ease-in-out;
 	transition: color 0.25s ease-in-out;
+	height: auto;
 }
 
 a.action:hover {
@@ -118,8 +121,9 @@ a.action:hover {
 /**
  * Steps
  */
-ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; 	}
-ol.steps li {
+#Checkout ol.steps, #OrderConfirmationPage ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; 	}
+#Checkout ol.steps li, #OrderConfirmationPage ol.steps li {
+	padding: 0px;
 	display: block;
 	float: left;
 	width: 24.5%;
@@ -131,8 +135,11 @@ ol.steps li {
 	text-align: center;
 	color: #888888;
 	line-height: 1;
-	list-style-type: none;
+	list-style-type: decimal;
 	margin: 0px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #000;
+
 }
 ol.steps li.link {color: #000;}
 ol.steps li.current {color: #000;}
