@@ -47,9 +47,9 @@ table.infotable { border: 1px solid #CDDDDD; border-collapse: collapse; width: 1
 			table.infotable tr td a { color: #4EA3D7; text-decoration: underline; }
 				table.infotable tr td a:hover { text-decoration: none; }
 	table.infotable .modifierRow,table.infotable .threeColHeader { text-align: right; }
-		table.infotable .right { text-align: right; }
-		table.infotable .center { text-align: center; }
-		table.infotable .left, table.infotable th { text-align: left; }
+		table.infotable .right { text-align: right; float: none!important}
+		table.infotable .center { text-align: center; float: none!important}
+		table.infotable .left, table.infotable th { text-align: left; float: none!important}
 #ShippingTable td, #ShippingTable th { width: 50%; }
 
 .warningMessage { margin: 4px 0 0 3px; padding: 5px; width: 92%; color: #DC1313; border: 4px solid #FF7373; background: #FED0D0; }
