@@ -313,7 +313,7 @@ class OrderAddress extends DataObject {
 		if($fields) {
 			foreach($fields as $field => $useless) {
 				if(!in_array($field, $excludedFields)) {
-					$comparisonString .= $this->$field;
+					$comparisonString .= preg_replace('/\s+/', '', $this->$field);
 				}
 			}
 		}
@@ -561,7 +561,7 @@ class OrderAddress extends DataObject {
 	}
 
 	function RemoveLink(){
-		return ShoppingCart_Controller::get_url_segment()."/removeaddress/".$this->ID."/".$this->ClassName."/";
+		return ShoppingCart_Controller::remove_address_link($this->ID, $this->ClassName);
 	}
 
 	/**
