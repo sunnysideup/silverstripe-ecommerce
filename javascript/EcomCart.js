@@ -108,6 +108,12 @@ EcomCart = {
 	classToShowLoading: "loading",
 		set_classToShowLoading: function(s) {this.classToShowLoading = s;},
 
+	/**
+	 * class used to 'lock' the page while cart updates are being processed.
+	 */
+	classToShowPageIsUpdating: "ecomCartIsUpdating",
+		set_classToShowPageIsUpdating: function(s) {this.classToShowPageIsUpdating = s;},
+
 
 	/**
 	 * this is a collection of dom elements that hold the item causing the change
@@ -441,7 +447,7 @@ EcomCart = {
 	addLoadingSelector: function(loadingElement) {
 		loadingElement = jQuery(loadingElement).parent().parent();
 		jQuery(loadingElement).addClass(EcomCart.classToShowLoading);
-		//jQuery("body").css("cursor", "progress");
+		jQuery("body").addClass(EcomCart.classToShowPageIsUpdating);
 		EcomCart.loadingSelectors[EcomCart.loadingSelectors.length] = loadingElement;
 		return EcomCart.loadingSelectors.length-1;
 	},
@@ -576,6 +582,9 @@ EcomCart = {
 				//remove loading class from selected loading element
 				else if(type == "loadingindex") {
 					jQuery(EcomCart.loadingSelectors[value]).removeClass(EcomCart.classToShowLoading);
+					if((EcomCart.loadingSelectors.length -1) == value) {
+						jQuery("body").removeClass(EcomCart.classToShowPageIsUpdating);
+					}
 					//jQuery("body").css("cursor", "auto");
 				}
 			}
