@@ -485,7 +485,7 @@ EcomCart = {
 					}
 					//hide or show row...
 					if(parameter == "hide") {
-						if(change.value) {
+						if(value) {
 							jQuery(selector).hide();
 						}
 						else {
