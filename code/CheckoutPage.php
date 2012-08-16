@@ -181,7 +181,6 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	public function init() {
 		parent::init();
 		Requirements::themedCSS('CheckoutPage');
-
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
@@ -189,18 +188,12 @@ class CheckoutPage_Controller extends CartPage_Controller {
 			}', "TermsAndConditionsMessage");
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		if($this->HasCheckoutSteps) {
-			if($this->currentStep && in_array($this->currentStep, $this->steps)) {
-				//do nothing
-			}
-			else {
-				$this->currentStep = Session::get("CheckoutPage_Controller_Step");
-			}
+			$this->currentStep = $this->request->Param("ID");
 			if($this->currentStep && in_array($this->currentStep, $this->steps)) {
 				//do nothing
 			}
 			else {
 				$this->currentStep = array_shift(($this->steps));
-				Session::set("CheckoutPage_Controller_Step", $this->currentStep);
 			}
 		}
 	}
@@ -351,13 +344,6 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 */
 	function checkoutstep($request) {
 		$this->HasCheckoutSteps = true;
-		$step = $request->Param("ID");
-		if($step) {
-			if (in_array($step, $this->steps)) {
-				$this->currentStep = $step;
-				Session::set("CheckoutPage_Controller_Step", $step);
-			}
-		}
 		return array ();
 	}
 
