@@ -1,6 +1,6 @@
 <% if BillingAddressID %>
 	<% control BillingAddress %>
-<address class="addressSection" cellspacing="0" cellpadding="0" id="BillingAddressSection">
+<address class="addressSection" id="BillingAddressSection">
 	<% include Order_AddressBillingInner %>
 </address>
 	<% end_control %>
