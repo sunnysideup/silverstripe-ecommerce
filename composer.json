@@ -1,0 +1,25 @@
+ {
+    "name": "silverstripe/ecommerce",
+    "type": "silverstripe-module",
+    "description": "Silverstripe E-commerce Application",
+    "keywords": ["e-commerce", "ecommerce", "payment", "shop", "sales"],
+    "license": "Sunny Side Up (BSD-3-Clause with some restrictions)",
+    "authors":[
+        {
+            "name": "Nicolaas Francken",
+            "homepage": "https://github.com/sunnysideup",
+            "email" : "modules@sunnysideup.co.nz",
+            "role" : "lead developer"
+        }
+    ],
+    "require":
+        {
+            "php": ">=5.3.2",
+            "silverstripe/framework": "2.4*"
+            "silverstripe/payment": "0.3*"
+        },
+    "extra":
+        {
+            "snapshot" : "http://silverstripe-ecommerce.com/_help/screenshot.png"
+        }
+}
