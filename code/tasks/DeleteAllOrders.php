@@ -68,7 +68,10 @@ class DeleteAllOrders extends BuildTask {
 		}
 		else {
 			if(!isset($_REQUEST["i-am-sure"])) {
-				die("ARE YOU SURE? please add the 'i-am-sure' get variable to your request ... e.g. http://www.mysite.com/dev/ecommerce/deleteallorders/?i-am-sure=1");
+				$_REQUEST["i-am-sure"] = "";
+			}
+			if("yes" != $_REQUEST["i-am-sure"]) {
+				die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/deleteallorders/?i-am-sure=yes");
 			}
 			$oldCarts = DataObject::get('Order');
 			$count = 0;
