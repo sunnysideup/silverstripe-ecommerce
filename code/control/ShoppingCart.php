@@ -983,6 +983,10 @@ class ShoppingCart_Controller extends Controller{
 		return self::$url_segment.'/addmodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
+	static function remove_address_link($addressID, $addressClassName, $parameters = array()) {
+		return self::$url_segment.'/removeaddress/'.$addressID."/".$addressClassName."/".self::params_to_get_string($parameters);
+	}
+
 	static function clear_cart_link($parameters = array()) {
 		return self::$url_segment.'/clear/'.self::params_to_get_string($parameters);
 	}
