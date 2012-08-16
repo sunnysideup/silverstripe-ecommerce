@@ -37,19 +37,19 @@ class OrderModifier extends OrderAttribute {
 	 */
 	public static $api_access = array(
 		'view' => array(
-				'CalculatedTotal',
-				'Sort',
-				'GroupSort',
-				'TableTitle',
-				'TableSubTitle',
-				'CartTitle',
-				'CartSubTitle',
-				'Name',
-				'TableValue',
-				'HasBeenRemoved',
-				'Order'
-			)
-	 );
+			'CalculatedTotal',
+			'Sort',
+			'GroupSort',
+			'TableTitle',
+			'TableSubTitle',
+			'CartTitle',
+			'CartSubTitle',
+			'Name',
+			'TableValue',
+			'HasBeenRemoved',
+			'Order'
+		)
+	);
 
 // ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
 
