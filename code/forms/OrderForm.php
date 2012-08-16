@@ -123,10 +123,11 @@ class OrderForm extends Form {
 		}
 
 		//RUN UPDATES TO CHECK NOTHING HAS CHANGED
-		$oldtotal = $order->Total();
+		$oldTotal = $order->Total();
 		$order->calculateOrderAttributes($force = true);
 		$newTotal = $order->Total();
-		if($newTotal != $oldtotal) {
+		debug::log($oldTotal."-".$newTotal);
+		if(floatval($newTotal) != floatval($oldTotal)) {
 			$form->sessionMessage(_t('OrderForm.PRICEUPDATED','The order price has been updated, please review the order and submit again.'), 'warning');
 			Director::redirectBack();
 			return false;
