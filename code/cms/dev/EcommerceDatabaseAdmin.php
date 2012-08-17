@@ -155,7 +155,8 @@ class EcommerceDatabaseAdmin extends Controller{
 		"addcustomerstocustomergroups",
 		"fixbrokenordersubmissiondata",
 		"cleanupproductfullsitetreesorting",
-		"ecommerceproductvariationsfixestask"
+		"ecommerceproductvariationsfixestask",
+		"ecommerceproductimagereset"
 	);
 
 	/**
@@ -211,6 +212,14 @@ class EcommerceDatabaseAdmin extends Controller{
 	 */
 	function ecommerceproductvariationsfixestask($request) {
 		$this->runTask("EcommerceProductVariationsFixesTask", $request);
+	}
+
+	/**
+	 * executes build task: EcommerceProductImageReset
+	 *
+	 */
+	function ecommerceproductimagereset($request) {
+		$this->runTask("EcommerceProductImageReset", $request);
 	}
 
 
