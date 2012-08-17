@@ -43,16 +43,16 @@ class EcommerceProductImageReset extends BuildTask{
 				}
 			}
 			if($removeCount) {
-				DB::alteration_message("$tableName: Removed $removeCount image(s) from products and variations because they do not exist in the file-system or database", "deleted");
+				DB::alteration_message("<strong>$tableName:</strong> Removed $removeCount image(s) from products and variations because they do not exist in the file-system or database", "deleted");
 			}
 			else {
-				DB::alteration_message("$tableName: All product images are accounted for", "created");
+				DB::alteration_message("<strong>$tableName:</strong> All product images are accounted for", "created");
 			}
 			if($updateClassCount) {
-				DB::alteration_message("$tableName: $removeCount image(s) did not match the requirement 'instanceOF Product_Image', this has been corrected.", "deleted");
+				DB::alteration_message("<strong>$tableName:</strong> $removeCount image(s) did not match the requirement 'instanceOF Product_Image', this has been corrected.", "deleted");
 			}
 			else {
-				DB::alteration_message("$tableName: All product images instancesOF Product_Image", "created");
+				DB::alteration_message("<strong>$tableName:</strong> All product images instancesOF Product_Image", "created");
 			}
 		}
 	}
