@@ -126,7 +126,7 @@ class OrderForm extends Form {
 		$oldTotal = $order->Total();
 		$order->calculateOrderAttributes($force = true);
 		$newTotal = $order->Total();
-		debug::log($oldTotal."-".$newTotal);
+		//debug::log($oldTotal."-".$newTotal);
 		if(floatval($newTotal) != floatval($oldTotal)) {
 			$form->sessionMessage(_t('OrderForm.PRICEUPDATED','The order price has been updated, please review the order and submit again.'), 'warning');
 			Director::redirectBack();
