@@ -16,6 +16,14 @@
 		</a>
 	</li>
 	<% end_if %>
+
+	<% if PackingSlipLink %>
+	<li id="PrintPackingSlip" >
+		<a href="$PackingSlipLink" target="_blank">
+			<% _t("Order.PRINTPACKINGSLIP","print packing slip") %>
+		</a>
+	</li>
+	<% end_if %>
 </ul>
 <% require javascript(ecommerce/javascript/EcomPrintAndMail.js) %>
 <% end_if %>
