@@ -6,25 +6,24 @@
 		<link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
-	<div style="page-break-after: always;">
+	<div style="page-break-after: always;" id="Wrapper">
 		<h2><% _t("Order.PACKINGSLIP", "Packing Slip") %></h2>
-		<hr />
-		<div id="Sender">
-			<h3><% _t("Order.SENDER", "sender:") %></h3>
-			<% include Order_ShopInfo %>
-			<hr />
-		</div>
+		<div id="AddressesHolder">
+			<div id="Sender" class="section">
+				<h3><% _t("Order.SENDER", "Sender:") %></h3>
+				<% include Order_ShopInfo %>
+			</div>
 		<% control Order %>
-			<div id="ItemsHolder">
-				<h3><% _t("Order.ITEMS", "Items:") %></h3>
-				<% include Order_Content_Items_Only_No_Prices %>
-				<hr />
-			</div>
-			<div id="Recipient">
-				<h3><% _t("Order.DELIVERTO", "deliver to:") %></h3>
+			<div id="Recipient" class="section">
+				<h3><% _t("Order.DELIVERTO", "Deliver to:") %></h3>
 				<% include Order_AddressShipping %>
-				<hr />
 			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="ItemsHolder" class="section">
+			<h3><% _t("Order.ITEMS", "Items:") %></h3>
+			<% include Order_Content_Items_Only_No_Prices %>
+		</div>
 		<% end_control %>
 	</div>
 	<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>

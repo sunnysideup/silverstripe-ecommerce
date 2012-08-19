@@ -17,8 +17,11 @@ table.infotable { width: 100%; }
 table.infotable  .right { text-align: right }
 table.infotable  .title span { display: block; }
 
+ul#OrderPrintAndMail {
+	margin-bottom: 3em;
+}
+#OrderPrintAndMail li {padding-bottom: 0.5em; }
 
 #OrderConformation h3 {margin-top: 3em;}
 #OrderConformation .Actions input {margin-top: 0px;}
-
 
