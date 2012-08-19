@@ -126,12 +126,6 @@ class OrderConfirmationPage extends CartPage{
 
 class OrderConfirmationPage_Controller extends CartPage_Controller{
 
-
-	/**
-	 * Is part of the checkout steps process?
-	 * @var Boolean
-	 */
-	protected $isPartOfTheCheckoutSteps = false;
 	/**
 	 * standard controller function
 	 **/
@@ -144,9 +138,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		//clear steps from checkout page otherwise in the next order
 		//you go straight to the last step.
-		$this->isPartOfTheCheckoutSteps = Session::get("CheckoutPage_Controller_Step");
-		Session::set("CheckoutPage_Controller_Step", 0);
-		Session::clear("CheckoutPage_Controller_Step");
 	}
 
 	/**
@@ -177,7 +168,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 */
 	function CheckoutSteps() {
 		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
-			if($this->isPartOfTheCheckoutSteps) {
+			if($this->currentOrder->SessionID && $this->currentOrder->SessionID == session_id()) {
 				$dos = DataObject::get("CheckoutPage_StepDescription", null, "\"ID\" ASC");
 				foreach($dos as $do) {
 					$do->LinkingMode = "link completed";
