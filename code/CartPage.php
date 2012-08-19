@@ -504,7 +504,7 @@ class CartPage_Controller extends Page_Controller{
 			$this->actionLinks = new DataObjectSet();
 			//what order are we viewing?
 			$viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
-
+			$currentUserID = Member::currentUserID();
 			//Continue Shopping
 			if(isset($this->ContinueShoppingLabel) && $this->ContinueShoppingLabel) {
 				if($viewingRealCurrentOrder) {
@@ -539,7 +539,7 @@ class CartPage_Controller extends Page_Controller{
 			if(isset($this->ShowAccountLabel) && $this->ShowAccountLabel) {
 				if($this->isOrderConfirmationPage() || $this->isCartPage()) {
 					if(AccountPage::find_link()) {
-						if(Member::currentUserID()) {
+						if($currentUserID) {
 							$this->actionLinks->push(new ArrayData(array (
 								"Title" => $this->ShowAccountLabel,
 								"Link" => AccountPage::find_link()
@@ -565,12 +565,14 @@ class CartPage_Controller extends Page_Controller{
 			//Save order - we assume only current ones can be saved.
 			if(isset($this->SaveOrderLinkLabel) && $this->SaveOrderLinkLabel) {
 				if($viewingRealCurrentOrder) {
-					if($this->isCartPage()) {
-						if($this->currentOrder && $this->currentOrder->Items() && !$this->currentOrder->IsSubmitted()) {
-							$this->actionLinks->push(new ArrayData(array (
-								"Title" => $this->SaveOrderLinkLabel,
-								"Link" => $this->Link("saveorder")."/".$this->currentOrder->ID."/"
-							)));
+					if($currentUserID && $this->currentOrder->MemberID == $currentUserID) {
+						if($this->isCartPage()) {
+							if($this->currentOrder && $this->currentOrder->Items() && !$this->currentOrder->IsSubmitted()) {
+								$this->actionLinks->push(new ArrayData(array (
+									"Title" => $this->SaveOrderLinkLabel,
+									"Link" => $this->Link("saveorder")."/".$this->currentOrder->ID."/"
+								)));
+							}
 						}
 					}
 				}

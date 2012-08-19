@@ -5,11 +5,17 @@
 		<ul class="menuChildGroupsList">
 	<% control MenuChildGroups %>
 			<li>
+	<% if Image %>
+				<div class="productGroupImage">
+					<a href="$Link">
+						<img class="productGroupSmallImage" src="$Image.SmallImage.URL" alt="<% sprintf(_t("Product.IMAGE","%s image"),$Title.ATT) %>" />
+					</a>
+				</div>
+	<% end_if %>
 				<h4><a href="$Link">$Title</a></h4>
 				<div class="childGroupContent">
 					$Content.Summary
 				</div>
-
 			</li>
 	<% end_control %>
 		</ul>
