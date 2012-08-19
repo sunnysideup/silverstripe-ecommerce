@@ -151,8 +151,15 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			Requirements::clear();
 			Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			Requirements::themedCSS("OrderReport_Print", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("Order_Invoice", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			return $this->renderWith("Invoice");
+		}
+		elseif(isset($_REQUEST["packingslip"])) {
+			Requirements::clear();
+			Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("Order_PackingSlip", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			return $this->renderWith("PackingSlip");
 		}
 		return array();
 	}
@@ -264,7 +271,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		Requirements::clear();
 		Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("OrderReport_Print", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("Order_Invoice", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		$html =  $this->renderWith("Order_ReceiptEmail");
 		// if it's an html email, filter it through emogrifier
 		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;
