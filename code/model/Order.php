@@ -1566,6 +1566,21 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * returns the absolute link to the order for printing
+	 * @return String
+	 */
+	function PackingSlipLink(){return $this->getPackingSlipLink();}
+	function getPackingSlipLink() {
+		$member = Member::curentUser();
+		if($member->IsShopAdmin()) {
+			if($this->IsSubmitted() ) {
+				return Director::AbsoluteURL(OrderConfirmationPage::get_order_link($this->ID))."?print=1";
+			}
+		}
+	}
+
+
+	/**
 	 * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
 	 * @todo: is this a security risk?
 	 * @return String

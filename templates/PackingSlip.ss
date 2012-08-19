@@ -7,9 +7,24 @@
 </head>
 <body>
 	<div style="page-break-after: always;">
-		<% include Order_ShopInfo %>
+		<h2><% _t("Order.PACKINGSLIP", "Packing Slip") %></h2>
+		<hr />
+		<div id="Sender">
+			<h3><% _t("Order.SENDER", "sender:") %></h3>
+			<% include Order_ShopInfo %>
+			<hr />
+		</div>
 		<% control Order %>
-			<% include Order_AddressShipping %>
+			<div id="ItemsHolder">
+				<h3><% _t("Order.ITEMS", "Items:") %></h3>
+				<% include Order_Content_Items_Only_No_Prices %>
+				<hr />
+			</div>
+			<div id="Recipient">
+				<h3><% _t("Order.DELIVERTO", "deliver to:") %></h3>
+				<% include Order_AddressShipping %>
+				<hr />
+			</div>
 		<% end_control %>
 	</div>
 	<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>
