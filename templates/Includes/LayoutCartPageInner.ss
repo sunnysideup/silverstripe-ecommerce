@@ -7,10 +7,10 @@
 	<% if CanEditOrder %>
 		<% control Order %><% include Order_Content_Editable %><% end_control %>
 	<% else %>
-<p class="message canNotEdit">Sorry, you can not edit this order.</p>
+<div class="message bad canNotEdit">$NonExistingOrderMessage</p>
 	<% end_if %>
 <% else %>
-<p class="message canNotView">Sorry, there is no order to view.</p>
+<div class="message bad canNotView">$NonExistingOrderMessage</p>
 <% end_if %>
 </div>
 
