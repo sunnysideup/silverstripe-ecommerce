@@ -15,10 +15,12 @@
 
 EcomPrintAndMail = {
 
-	selectors: "#SendCopyOfReceipt a, #PrintCopyOfReceipt a",
+	selectors: "#OrderPrintAndMail",
 
 	init: function() {
-		jQuery(EcomPrintAndMail.selectors).click(
+		jQuery(EcomPrintAndMail.selectors).delegate(
+			"a",
+			"click",
 			function(e) {
 				e.preventDefault();
 				var id = jQuery(this).parent("li").attr("id");
