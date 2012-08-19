@@ -158,7 +158,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			Requirements::clear();
 			Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			Requirements::themedCSS("Order_PackingSlip", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("Order_PackingSlip"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			return $this->renderWith("PackingSlip");
 		}
 		return array();

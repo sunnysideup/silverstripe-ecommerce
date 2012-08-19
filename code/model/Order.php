@@ -1571,10 +1571,10 @@ class Order extends DataObject {
 	 */
 	function PackingSlipLink(){return $this->getPackingSlipLink();}
 	function getPackingSlipLink() {
-		$member = Member::curentUser();
-		if($member->IsShopAdmin()) {
+		$member = Member::currentUser();
+		if($member && $member->IsShopAdmin()) {
 			if($this->IsSubmitted() ) {
-				return Director::AbsoluteURL(OrderConfirmationPage::get_order_link($this->ID))."?print=1";
+				return Director::AbsoluteURL(OrderConfirmationPage::get_order_link($this->ID))."?packingslip=1";
 			}
 		}
 	}
