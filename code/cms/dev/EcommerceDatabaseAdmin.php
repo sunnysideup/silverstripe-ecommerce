@@ -156,7 +156,8 @@ class EcommerceDatabaseAdmin extends Controller{
 		"fixbrokenordersubmissiondata",
 		"cleanupproductfullsitetreesorting",
 		"ecommerceproductvariationsfixestask",
-		"ecommerceproductimagereset"
+		"ecommerceproductimagereset",
+		"ecommercetaskarchiveallsubmittedorders"
 	);
 
 	/**
@@ -220,6 +221,14 @@ class EcommerceDatabaseAdmin extends Controller{
 	 */
 	function ecommerceproductimagereset($request) {
 		$this->runTask("EcommerceProductImageReset", $request);
+	}
+
+	/**
+	 * executes build task: EcommerceTaskArchiveAllSubmittedOrders
+	 *
+	 */
+	function ecommercetaskarchiveallsubmittedorders($request) {
+		$this->runTask("EcommerceTaskArchiveAllSubmittedOrders", $request);
 	}
 
 

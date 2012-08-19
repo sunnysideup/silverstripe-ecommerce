@@ -163,7 +163,7 @@ class EcommerceDBConfig extends DataObject {
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
 			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Invoice title (e.g. Tax Invoice or Update from ...)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),
-			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address (e.g. sales@mysite.com)"),
+			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address (e.g. sales@mysite.com, you can also use something like: \"Our Shop Name Goes Here\" &lt;sales@mysite.com&gt;)"),
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
 			"PostalCodeLabel" => _t("EcommerceDBConfig.POSTALCODELABEL", "Postal code link label"),
 			"NumberOfProductsPerPage" => _t("EcommerceDBConfig.NUMBEROFPRODUCTSPERPAGE", "Number of products per page"),

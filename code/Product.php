@@ -781,6 +781,12 @@ class Product extends Page implements BuyableModel {
 class Product_Controller extends Page_Controller {
 
 	/**
+	 * is this the current version?
+	 * @var Boolean
+	 */
+	protected $isCurrentVersion = true;
+
+	/**
 	 *
 	 * Standard SS method.
 	 */
@@ -798,15 +804,19 @@ class Product_Controller extends Page_Controller {
 		$id = intval($request->param("ID"));
 		$version = intval($request->param("OtherID"));
 		if($record = $this->getVersionOfBuyable($id, $version)) {
-			$this->dataRecord = $record;
+			$this->record = $record;
 			$this->dataRecord->AllowPurchase = false;
 			$this->AllowPurchase = false;
+			$this->isCurrentVersion = false;
+			$this->Title .= _t("Product.OLDERVERSION", " - Older Version");
+			$this->MetaTitle .= _t("Product.OLDERVERSION", " - Older Version");
+		}
+		else {
+			return $this->httpError(404);
 		}
 		/**
 		 TO DO: to complete, consider variations vs products!
 		if($record && $record->Version != $this->Version) {
-			$this->Title .= " (Older Version)";
-			$this->MetaTitle .= " (Older Version)";
 		}
 		*/
 		return array();
@@ -877,6 +887,14 @@ class Product_Controller extends Page_Controller {
 		else {
 			return new EcomQuantityField($this);
 		}
+	}
+
+	/**
+	 * Is this an older version?
+	 * @return Boolean
+	 */
+	function IsOlderVersion() {
+		return $this->isCurrentVersion ? false : true;
 	}
 
 	/**

@@ -128,8 +128,8 @@ class BillingAddress extends OrderAddress {
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->replaceField("OrderID", new ReadonlyField("OrderID"));
-		$fields->replaceField("Email", new EmailField("Email"));
+		$fields->replaceField("OrderID", new ReadonlyField("OrderID", _t("OrderAddress.ORDERID", "Order #")));
+		$fields->replaceField("Email", new EmailField("Email", _t("OrderAddress.EMAIL", "Email")));
 		$fields->replaceField("RegionID", $this->getRegionField("RegionID"));
 		$fields->replaceField("Country", $this->getCountryField("Country"));
 		return $fields;
