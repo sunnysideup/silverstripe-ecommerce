@@ -181,6 +181,7 @@ class Product extends Page implements BuyableModel {
 		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
 		$fields->addFieldToTab('Root.Content.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
 		$fields->addFieldToTab('Root.Content.Details',new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
+		$fields->addFieldToTab('Root.Content.Details',new TextField('FullSiteTreeSortTEST', '', $this->FullSiteTreeSort));
 		if($this->EcomConfig()->ProductsHaveWeight) {
 			$fields->addFieldToTab('Root.Content.Details',new NumericField('Weight', _t('Product.WEIGHT', 'Weight')));
 		}
