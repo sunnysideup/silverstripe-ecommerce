@@ -199,21 +199,29 @@ class Product extends Page implements BuyableModel {
 				)
 			);
 		}
-		$fields->addFieldToTab('Root.Content.Orders',
-			new ComplexTableField(
-				$this,
-				'OrderItems',
-				'OrderItem',
-				array(
-					'Order.ID' => '#',
-					'Order.Created' => 'When',
-					'Quantity' => 'Quantity'
-				),
-				new FieldSet(),
-				"\"BuyableID\" = '".$this->ID."' AND \"BuyableClassName\" = '".$this->ClassName."'",
-				"\"Created\" DESC"
-			)
+		$orderTableField = new ComplexTableField(
+			$this,
+			'OrderItems',
+			'OrderItem',
+			array(
+				'Order.ID' => '#',
+				'Order.Created' => 'When',
+				'Quantity' => 'Quantity'
+			),
+			new FieldSet(),
+			"\"BuyableID\" = '".$this->ID."' AND \"BuyableClassName\" = '".$this->ClassName."'",
+			"\"Created\" DESC"
 		);
+		$orderTableField->setPermissions(array("show"));
+		$orderTableField->setShowPagination(true);
+		$orderTableField->setRelationAutoSetting(true);
+		/*
+		$orderTableField->addSummary(
+			_t("Product.TOTALCOUNT", "Total Count"),
+			array("TotalCount" => array("sum","Quantity->Nice"))
+		);
+		*/
+		$fields->addFieldToTab('Root.Content.Orders', $orderTableField);
 		if($siteTreeFieldExtensions) {
 			$this->extend('updateCMSFields', $fields);
 		}
