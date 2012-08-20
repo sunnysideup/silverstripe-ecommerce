@@ -21,7 +21,8 @@ class EcommerceProductImageReset extends BuildTask{
 			$classErrorCount = 0;
 			$removeCount = 0;
 			$updateClassCount = 0;
-			DB::alteration_message("<h2><strong>CHECKING $tableName:</strong></h2>");
+			$rowCount = DB::query("SELECT COUNT(\"ImageID\") FROM \"$tableName\" WHERE ImageID > 0;")->value();
+			DB::alteration_message("<h2><strong>CHECKING $tableName ( $rowCount records ):</strong></h2>");
 			$rows = DB::query("SELECT \"ImageID\", \"$tableName\".\"ID\" FROM \"$tableName\" WHERE ImageID > 0;");
 			if($rows) {
 				foreach ($rows as $row) {
