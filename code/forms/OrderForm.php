@@ -21,6 +21,7 @@ class OrderForm extends Form {
 
 		//set basics
 		$order = ShoppingCart::current_order();
+		$order->calculateOrderAttributes($force = true);
 		$requiredFields = array();
 
 
