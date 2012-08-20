@@ -58,6 +58,7 @@ class EcommerceMigration extends BuildTask {
 		"resaveAllPRoducts_200",
 		"resaveAllPRoductsVariations_210",
 		"addConfirmationPage_250",
+		"cleanupImages_260",
 		"theEnd_9999"
 	);
 
@@ -1230,6 +1231,10 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function addConfirmationPage_250(){
+		DB::alteration_message("
+			<h1>250. Add Confirmation Page</h1>
+			<p>Creates a checkout page and order confirmation page in case they do not exist.</p>
+		");
 		$checkoutPage = DataObject::get_one("CheckoutPage");
 		if($checkoutPage) {
 			if(!DataObject::get_one("OrderConfirmationPage")) {
@@ -1246,6 +1251,16 @@ class EcommerceMigration extends BuildTask {
 		else {
 			DB::alteration_message("There is no CheckoutPage available", "deleted");
 		}
+		return 0;
+	}
+
+	function cleanupImages_260(){
+		DB::alteration_message("
+			<h1>260. Cleanup Images</h1>
+			<p>Checks the class name of all product images and makes sure they exist.</p>
+		");
+		$task = new EcommerceProductImageReset();
+		$task->run(null);
 		return 0;
 	}
 
