@@ -1737,7 +1737,8 @@ class Order extends DataObject {
 	/**
 	 *@return Money
 	 **/
-	function TotalOutstandingAsMoneyObject(){
+	function TotalOutstandingAsMoneyObject(){return $this->getTotalOutstandingAsMoneyObject();}
+	function getTotalOutstandingAsMoneyObject(){
 		return EcommerceCurrency::display_price($this->TotalOutstanding(), $this, "", true);
 	}
 
