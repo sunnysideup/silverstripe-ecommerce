@@ -2307,6 +2307,7 @@ class Order extends DataObject {
 	 * @return String
 	 */
 	public function debug() {
+		$this->calculateOrderAttributes(true);
 		$html =  "
 			<h2>".$this->ClassName."</h2><ul>";
 		$fields = Object::get_static($this->ClassName, "db");
