@@ -897,7 +897,7 @@ class ShoppingCart_Controller extends Controller{
 		$savedSecurityID = Session::get("SecurityID");
 		if($savedSecurityID) {
 			if(!isset($_GET["SecurityID"])) {
-				if($request->param('Action') == "submittedbuyable") {
+				if($this->request->param('Action') == "submittedbuyable") {
 					$_GET["SecurityID"] = $savedSecurityID;
 				}
 				else {
