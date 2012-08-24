@@ -802,7 +802,7 @@ class Product_Controller extends Page_Controller {
 	function viewversion($request) {
 		$id = intval($request->param("ID"))-0;
 		$version = intval($request->param("OtherID"))-0;
-		$currentVersion = $this->record->Version;
+		$currentVersion = $this->Version;
 		if($id != $this->ID) {
 			if($productVariation = DataObject::get_by_id("ProductVariation", $id)) {
 				if($productVariation->Version != $version) {
