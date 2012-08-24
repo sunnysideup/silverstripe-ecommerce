@@ -800,25 +800,33 @@ class Product_Controller extends Page_Controller {
 	 * view earlier version of a product
 	 */
 	function viewversion($request) {
-		$currentVersion = $this->Version;
-		$id = intval($request->param("ID"));
-		$version = intval($request->param("OtherID"));
-		if($record = $this->getVersionOfBuyable($id, $version)) {
-			$this->record = $record;
-			$this->dataRecord->AllowPurchase = false;
-			$this->AllowPurchase = false;
-			$this->isCurrentVersion = false;
-			$this->Title .= _t("Product.OLDERVERSION", " - Older Version");
-			$this->MetaTitle .= _t("Product.OLDERVERSION", " - Older Version");
+		$id = intval($request->param("ID"))-0;
+		$version = intval($request->param("OtherID"))-0;
+		$currentVersion = $this->record->Version;
+		if($id != $this->ID) {
+			if($productVariation = DataObject::get_by_id("ProductVariation", $id)) {
+				if($productVariation->Version != $version) {
+					$productVariation = $productVariation->getVersionOfBuyable($id, $version);
+				}
+				///to do: how to add this to product page???
+			}
+			if(!$productVariation) {
+				return $this->httpError(404);
+			}
 		}
-		else {
-			return $this->httpError(404);
+		elseif($currentVersion != $version)
+			if($record = $this->getVersionOfBuyable($id, $version)) {
+				$this->record = $record;
+				$this->dataRecord->AllowPurchase = false;
+				$this->AllowPurchase = false;
+				$this->isCurrentVersion = false;
+				$this->Title .= _t("Product.OLDERVERSION", " - Older Version");
+				$this->MetaTitle .= _t("Product.OLDERVERSION", " - Older Version");
+			}
+			else {
+				return $this->httpError(404);
+			}
 		}
-		/**
-		 TO DO: to complete, consider variations vs products!
-		if($record && $record->Version != $this->Version) {
-		}
-		*/
 		return array();
 	}
 
