@@ -814,7 +814,7 @@ class Product_Controller extends Page_Controller {
 				return $this->httpError(404);
 			}
 		}
-		elseif($currentVersion != $version)
+		elseif($currentVersion != $version) {
 			if($record = $this->getVersionOfBuyable($id, $version)) {
 				$this->record = $record;
 				$this->dataRecord->AllowPurchase = false;
