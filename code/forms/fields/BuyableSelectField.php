@@ -86,9 +86,10 @@ class BuyableSelectField extends FormField {
 	protected function getJavascript(){
 		return '
 		EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->name()).'");
+		EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->Name()).'");
 		EcomBuyableSelectField.set_countOfSuggestions('.$this->countOfSuggestions.');
-		EcomBuyableSelectField.set_selectedFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->name()).'");
-		EcomBuyableSelectField.set_selectedFieldID("'.Convert::raw2js($this->fieldSelectedBuyable->name()).'");
+		EcomBuyableSelectField.set_selectedBuyableFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->name()).'");
+		EcomBuyableSelectField.set_selectedBuyableFieldID("'.Convert::raw2js($this->fieldSelectedBuyable->id()).'");
 		';
 	}
 
