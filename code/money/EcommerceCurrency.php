@@ -11,28 +11,47 @@
 
 class EcommerceCurrency extends DataObject {
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $db = array(
 		"Code" => "Varchar(5)",
 		"Name" => "Varchar(100)",
 		"InUse" => "Boolean"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $indexes = array(
 		"Code" => true,
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		"IsDefault" => "Boolean",
 		"IsDefaultNice" => "Varchar",
 		"ExchangeRate" => "Double"
 	);
-	//formatting
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $searchable_fields = array(
 		"Code" => "PartialMatchFilter",
 		"Name" => "PartialMatchFilter"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $field_labels = array(
 		"Code" => "Short Code (e.g. NZD)",
 		"Name" => "Name (e.g. New Zealand Dollar)",
@@ -41,6 +60,10 @@ class EcommerceCurrency extends DataObject {
 		"IsDefaultNice" => "Is default currency for site"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $summary_fields = array(
 		"Code" => "Code",
 		"Name" => "Name",
@@ -49,15 +72,30 @@ class EcommerceCurrency extends DataObject {
 		"IsDefaultNice" => "Is default"
 	); //note no => for relational fields
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Currency";
 		function i18n_singular_name() { return _t("EcommerceCurrency.CURRENCY", "Currency");}
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Currencies";
 		function i18n_plural_name() { return _t("EcommerceCurrency.CURRENCIES", "Currencies");}
 
-	//defaults
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $default_sort = "\"InUse\" DESC, \"Name\" ASC, \"Code\" ASC";
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $defaults = array(
 		"InUse" => true
 	);
@@ -263,10 +301,15 @@ class EcommerceCurrency extends DataObject {
 		return $html;
 	}
 
-
+	/**
+	 * returns a list of currencies
+	 * "Code" => Name
+	 * @var array
+	 */
 	public function getCurrencyList(){
 		return $this->currencyList;
 	}
+
 	/**
 	 * list of currencies
 	 * @var Array
@@ -375,8 +418,6 @@ class EcommerceCurrency extends DataObject {
 		"vnd" => "vietnam dong",
 		"zmk" => "zambia kwacha"
 	);
-
-
 
 }
 
