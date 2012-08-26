@@ -10,6 +10,9 @@
 
 EcomBuyableSelectField = {
 
+	loadingClass: "loading",
+		set_loadingClass: function(s) {this.loadingClass = i;},
+
 	requestTerm: "",
 		set_requestTerm: function(s) {this.requestTerm = i;},
 
@@ -25,13 +28,14 @@ EcomBuyableSelectField = {
 	selectedFieldName: "",
 		set_selectedFieldName: function(s) {this.selectedFieldName = s;},
 
-	selectedFieldID: 0,
-		set_selectedFieldID: function(i) {this.selectedFieldID = i;},
+	selectedFieldID: "",
+		set_selectedFieldID: function(s) {this.selectedFieldID = s;},
 
 	init: function() {
 		jQuery( "#"+EcomBuyableSelectField.fieldName+"-FindBuyable").autocomplete({
-			 delay: 500,
+			 delay: 700,
 			 source: function(request, response) {
+				jQuery( "#"+EcomBuyableSelectField.fieldName+"-FindBuyable").addClass(EcomBuyableSelectField.loadingClass);
 				jQuery("body").css("cursor", "progress");
 				EcomBuyableSelectField.requestTerm = request.term;
 				jQuery.ajax({
@@ -67,20 +71,20 @@ EcomBuyableSelectField = {
 			minLength: EcomBuyableSelectField.minLength,
 			select: function(event, ui) {
 				if(
-					jQuery("input[name=\'selectedFieldID\']").length == 0 ||
+					jQuery("input[name=\'BuyableID\']").length == 0 ||
 					jQuery("input[name=\'BuyableClassName\']").length  == 0 ||
 					jQuery("input[name=\'Version\']").length  == 0
 				) {
 					alert("Error: can not find selectedFieldID or BuyableClassName or Version field");
 				}
 				else {
-					jQuery("input[name=\'selectedFieldID\']").val(ui.item.id);
+					jQuery("input[name=\'BuyableID\']").val(ui.item.id);
 					jQuery("input[name=\'BuyableClassName\']").val(ui.item.className);
 					jQuery("input[name=\'Version\']").val(ui.item.version);
 					jQuery("input[name=\'"+EcomBuyableSelectField.selectedFieldName+"\']").val(ui.item.title);
 					jQuery("span#"+EcomBuyableSelectField.selectedFieldID+"").text(ui.item.title);
 				}
-				jQuery("body").css("cursor", "auto");
+				jQuery( "#"+EcomBuyableSelectField.fieldName+"-FindBuyable").removeClass(EcomBuyableSelectField.loadingClass);
 			}
 		});
 	}
