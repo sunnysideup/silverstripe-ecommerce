@@ -153,7 +153,7 @@ class BuyableSelectField_DataList extends Controller {
 			}
 		}
 		unset($arrayOfBuyables);
-		while((count($array) <= $countOfSuggestions) && ($absoluteCount < 300)) {
+		while((count($array) <= $countOfSuggestions) && ($absoluteCount < 30)) {
 			$absoluteCount++;
 			for($i = 0; $i < $lengthOfFieldsToSearch; $i++) {
 				$fieldName = $this->fieldsToSearch[$i];
