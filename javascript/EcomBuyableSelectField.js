@@ -1,5 +1,10 @@
-(function($){
+/**
+ * manages autocomplete for the Buyable Select Field.
+ *
+ *
+ */
 
+(function($){
 	jQuery(document).ready(
 		function() {
 			EcomBuyableSelectField.init();
@@ -10,83 +15,140 @@
 
 EcomBuyableSelectField = {
 
+
+	/**
+	 * the class that is being added when we are searching...
+	 * @var String
+	 */
 	loadingClass: "loading",
 		set_loadingClass: function(s) {this.loadingClass = i;},
 
+
+	/**
+	 * the term that is being searched for
+	 * @var String
+	 */
 	requestTerm: "",
 		set_requestTerm: function(s) {this.requestTerm = i;},
 
-	fieldName: "",
-		set_fieldName: function(s) {this.fieldName = s;},
 
+	/**
+	 * number of suggestions that are being returned
+	 * @var Int
+	 */
 	countOfSuggestions: 7,
 		set_countOfSuggestions: function(i) {this.countOfSuggestions = i;},
 
+
+	/**
+	 * number of characters before we start searching
+	 * @var Int
+	 */
 	minLength: 2,
 		set_minLength: function(i) {this.minLength = i;},
 
-	selectedFieldName: "",
-		set_selectedFieldName: function(s) {this.selectedFieldName = s;},
+	/**
+	 * delay in milliseconds before we start searching
+	 * @var Int
+	 */
+	delayInMilliSeconds: 500,
+		set_delayInMilliSeconds: function(i) {this.delayInMilliSeconds = i;},
 
-	selectedFieldID: "",
-		set_selectedFieldID: function(s) {this.selectedFieldID = s;},
+	/**
+	 * name of the field that you enter your search criteria
+	 * @var String
+	 */
+	fieldName: "",
+		set_fieldName: function(s) {this.fieldName = s;},
+
+	/**
+	 * name of the form
+	 * @var String
+	 */
+	formName: "",
+		set_formName: function(s) {this.formName = s;},
+
+	/**
+	 * selector of the field that shows the buyable when the buyable has already been selected
+	 * @var String
+	 */
+	selectedBuyableFieldName: "",
+		set_selectedBuyableFieldName: function(s) {this.selectedBuyableFieldName = s;},
+
+	/**
+	 * selector of the field that shows the buyable when the buyable has already been selected
+	 * @var String
+	 */
+	selectedBuyableFieldID: "",
+		set_selectedBuyableFieldID: function(s) {this.selectedBuyableFieldID = s;},
 
 	init: function() {
-		jQuery( "#"+EcomBuyableSelectField.fieldName+"-FindBuyable").autocomplete({
-			 delay: 700,
-			 source: function(request, response) {
-				jQuery( "#"+EcomBuyableSelectField.fieldName+"-FindBuyable").addClass(EcomBuyableSelectField.loadingClass);
-				jQuery("body").css("cursor", "progress");
-				EcomBuyableSelectField.requestTerm = request.term;
-				jQuery.ajax({
-					type: "POST",
-					url: "/ecommercebuyabledatalist/json/",
-					dataType: "json",
-					data: {
-						term: request.term,
-						countOfSuggestions: EcomBuyableSelectField.countOfSuggestions
-					},
-					error: function(xhr, textStatus, errorThrown) {
-						alert("Error: " + xhr.responseText+errorThrown+textStatus);
-					},
-					success: function(data) {
-						response(
-							jQuery.map(
-								data,
-								function(c) {
-									return {
-										label: c.Title,
-										value: EcomBuyableSelectField.requestTerm,
-										title: c.Title,
-										className: c.ClassName,
-										id: c.ID,
-										version: c.Version
-									}
-								}
-							)
-						);
+		EcomBuyableSelectField.fieldName += "-FindBuyable" ;
+		jQuery( "#"+EcomBuyableSelectField.fieldName).autocomplete(
+			{
+
+				//delay before we start searching
+				delay: EcomBuyableSelectField.delayInMilliSeconds,
+
+				//number of characters entered before we start searching
+				minLength: EcomBuyableSelectField.minLength,
+
+				source: function(request, response) {
+					jQuery("label[for='"+EcomBuyableSelectField.fieldName+"']'").addClass(EcomBuyableSelectField.loadingClass);
+					EcomBuyableSelectField.requestTerm = request.term;
+					jQuery.ajax(
+						{
+							type: "POST",
+							url: "/ecommercebuyabledatalist/json/",
+							dataType: "json",
+							data: {
+								term: request.term,
+								countOfSuggestions: EcomBuyableSelectField.countOfSuggestions
+							},
+							error: function(xhr, textStatus, errorThrown) {
+								alert("Error: " + xhr.responseText+errorThrown+textStatus);
+							},
+							success: function(data) {
+								response(
+									jQuery.map(
+										data,
+										function(c) {
+											return {
+												label: c.Title,
+												value: EcomBuyableSelectField.requestTerm,
+												title: c.Title,
+												className: c.ClassName,
+												id: c.ID,
+												version: c.Version
+											}
+										}
+									)
+								);
+								jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").removeClass(EcomBuyableSelectField.loadingClass);
+							}
+						}
+					);
+				},
+
+				//after we finish the search (what happens when the data comes back...
+				select: function(event, ui) {
+					if(
+						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").length == 0 ||
+						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").length  == 0 ||
+						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").length  == 0
+					) {
+						alert("Error: can not find BuyableID or BuyableClassName or Version field");
 					}
-				});
-			},
-			minLength: EcomBuyableSelectField.minLength,
-			select: function(event, ui) {
-				if(
-					jQuery("input[name=\'BuyableID\']").length == 0 ||
-					jQuery("input[name=\'BuyableClassName\']").length  == 0 ||
-					jQuery("input[name=\'Version\']").length  == 0
-				) {
-					alert("Error: can not find selectedFieldID or BuyableClassName or Version field");
+					else {
+						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").val(ui.item.id);
+						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").val(ui.item.className);
+						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").val(ui.item.version);
+						jQuery("input[name=\'"+EcomBuyableSelectField.selectedBuyableFieldName+"\']").val(ui.item.title);
+						jQuery("span#"+EcomBuyableSelectField.selectedBuyableFieldID+"").text(ui.item.title);
+					}
 				}
-				else {
-					jQuery("input[name=\'BuyableID\']").val(ui.item.id);
-					jQuery("input[name=\'BuyableClassName\']").val(ui.item.className);
-					jQuery("input[name=\'Version\']").val(ui.item.version);
-					jQuery("input[name=\'"+EcomBuyableSelectField.selectedFieldName+"\']").val(ui.item.title);
-					jQuery("span#"+EcomBuyableSelectField.selectedFieldID+"").text(ui.item.title);
-				}
-				jQuery( "#"+EcomBuyableSelectField.fieldName+"-FindBuyable").removeClass(EcomBuyableSelectField.loadingClass);
 			}
-		});
+		);
 	}
 
 }
