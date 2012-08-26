@@ -17,15 +17,25 @@
 
 class OrderConfirmationPage extends CartPage{
 
+	/**
+	 * Standard SS variable
+	 * @var String
+	 */
 	public static $icon = 'ecommerce/images/icons/OrderConfirmationPage';
 
-
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $db = array(
 		'StartNewOrderLinkLabel' => 'Varchar(100)',
 		'CopyOrderLinkLabel' => 'Varchar(100)'
 	);
 
-
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $defaults = array(
 		"ShowInMenus" => false,
 		"ShowInSearch" => false,
@@ -33,8 +43,12 @@ class OrderConfirmationPage extends CartPage{
 		"CopyOrderLinkLabel" => "copy order items into a new order"
 	);
 
+	/**
+	 * Standard SS method
+	 * @var Boolean
+	 */
 	function canCreate($member = null) {
-		return !DataObject :: get_one("OrderConfirmationPage", "\"ClassName\" = 'OrderConfirmationPage'");
+		return !DataObject::get_one("OrderConfirmationPage", "\"ClassName\" = 'OrderConfirmationPage'");
 	}
 
 	/**
@@ -66,7 +80,6 @@ class OrderConfirmationPage extends CartPage{
 		}
 		return CartPage::find_link();
 	}
-
 
 	/**
 	 * Return a link to view the order on this page.
@@ -164,8 +177,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		return array();
 	}
 
-
-
 	/**
 	 * Returns a dataobject set of the checkout steps if
 	 * the OrderConfirmationPage is shown as part of the checkout process
@@ -218,7 +229,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		}
 	}
 
-
 	/**
 	 * show the payment form
 	 *@return Form (OrderForm_Payment) or Null
@@ -232,7 +242,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		}
 	}
 
-
 	/**
 	 * This is an additional way to look at an order.
 	 * The order is already retrieved from the
@@ -241,7 +250,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	function retrieveorder(){
 		return array();
 	}
-
 
 	/**
 	 *@return Array - just so the template is still displayed
@@ -283,8 +291,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		$html = $emog->emogrify();
 		return $html;
 	}
-
-
 
 }
 

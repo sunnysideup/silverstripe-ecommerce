@@ -2,7 +2,7 @@
 
 
 /**
- *
+ * NOTE: this is not yet being used!!!
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model

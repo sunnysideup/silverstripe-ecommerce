@@ -155,6 +155,7 @@ class AccountPage extends Page {
 
 class AccountPage_Controller extends Page_Controller {
 
+	//TODO: why do we need this?
 	static $allowed_actions = array(
 		'MemberForm'
 	);

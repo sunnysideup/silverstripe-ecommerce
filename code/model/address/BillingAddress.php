@@ -33,6 +33,10 @@ class BillingAddress extends OrderAddress {
 		)
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	static $db = array(
 		'Prefix' => 'Varchar(10)',
 		'FirstName' => 'Varchar(100)',
@@ -72,6 +76,10 @@ class BillingAddress extends OrderAddress {
 	 */
 	public static $default_sort = "\"BillingAddress\".\"ID\" DESC";
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	static $indexes = array(
 		// "SearchFields" => "fulltext (FirstName, Surname, Address, Address2, City, PostalCode, Email)"
 		array(
@@ -83,10 +91,18 @@ class BillingAddress extends OrderAddress {
 		"OrderID" => true
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $casting = array(
 		"FullCountryName" => "Varchar"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $searchable_fields = array(
 		"OrderID" => array(
 			"field" => "NumericField",
@@ -101,15 +117,27 @@ class BillingAddress extends OrderAddress {
 		"Obsolete"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $summary_fields = array(
 		"Order.Title",
 		"Surname",
 		"City"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $singular_name = "Billing Address";
 		function i18n_singular_name() { return _t("OrderAddress.BILLINGADDRESS", "Billing Address");}
 
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $plural_name = "Billing Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.BILLINGADDRESSES", "Billing Addresses");}
 

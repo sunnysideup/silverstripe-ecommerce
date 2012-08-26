@@ -16,10 +16,15 @@ EcomProducts = {
 
 	selectVariationSelector: 'a.selectVariation',
 
+	imagePopupSelector: '.colorboxImagePopup',
+
 	init: function(){
 		//select all the a tag with name equal to modal
-		jQuery(EcomProducts.selectVariationSelector).simpleDialog(
+		jQuery(EcomProducts.selectVariationSelector).colorbox(
 			EcomCart.simpleDialogOptions
+		);
+		jQuery(EcomProducts.imagePopupSelector).colorbox(
+			{}
 		);
 	}
 

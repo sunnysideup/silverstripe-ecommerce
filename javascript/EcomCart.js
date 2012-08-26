@@ -241,26 +241,28 @@ EcomCart = {
 	/**
 	 * the selector used to identify any links that open a pop-up dialogue
 	 * the syntax is as follows:
-	 * <a href="/shoppingcart/showcart/" class="simpledialog" rel="SimpleDialogueCart">show cart</a>
-	 * <div id="SimpleDialogueCart">content for pop-up</div> (this line is optional)
+	 * <a href="#colorboxDialogCart" class="colorboxDialog" rel="">show cart</a>
+	 * <div id="colorboxDialogCart">content for pop-up</div> (this line is optional)
 	 */
-	simpleDialogSelector: ".simpledialog",
-		set_simpleDialogueSelector: function(s) {this.simpleDialogSelector = s;},
+	colorboxDialogSelector: ".colorboxDialog",
+		set_colorboxDialogSelector: function(s) {this.colorboxDialogSelector = s;},
 
 	/**
-	 * The options set for the simple dialogue, see: http://code.google.com/p/jquery-simpledialog/
+	 * The options set for the colorbox dialogue, see: https://github.com/jackmoore/colorbox
 	 * @var Int
 	 */
-	simpleDialogOptions: {
-		width: 650,
-		height: 300,
+	colorboxDialogOptions: {
+		width: "500px",
+		height: "500px",
+		maxHeight: "90%",
+		maxWidth: "90%",
 		loadingClass: "loading",
-		open: function (event) {
-			jQuery("#sd_container").css("overflow", "auto");
+		iframe: true,
+		onOpen: function (event) {
 			EcomCart.reinit();
 		}
 	},
-		set_simpleDialogOptions: function(o){this.simpleDialogOptions = o;},
+		set_colorboxDialogOptions: function(o){this.colorboxDialogOptions = o;},
 
 
 
@@ -294,7 +296,7 @@ EcomCart = {
 	reinit: function(){
 		//hide or show "zero items" information
 		EcomCart.updateForZeroVSOneOrMoreRows();
-		EcomCart.initSimpleDialogue();
+		EcomCart.initColorboxDialog();
 		this.processing = false;
 	},
 
@@ -678,9 +680,9 @@ EcomCart = {
 	/**
 	 * Setup dialogue links
 	 */
-	initSimpleDialogue: function(){
-		jQuery(EcomCart.simpleDialogSelector).simpleDialog(
-			EcomCart.simpleDialogOptions
+	initColorboxDialog: function(){
+		jQuery(EcomCart.colorboxDialogSelector).colorbox(
+			EcomCart.colorboxDialogOptions
 		);
 	}
 

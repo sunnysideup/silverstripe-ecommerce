@@ -247,6 +247,13 @@ class Product extends Page implements BuyableModel {
 		return $field;
 	}
 
+	/**
+	 * How to view using AJAX
+	 * e.g. if you want to load the produyct in a list - using AJAX
+	 * then use this link
+	 * Opening the link will return a HTML snippet
+	 * @return String
+	 */
 	function AjaxLink(){
 		return $this->Link("ajaxview");
 	}
@@ -794,6 +801,7 @@ class Product_Controller extends Page_Controller {
 		parent::init();
 		Requirements::themedCSS('Products');
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
+		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
 	}
 
 	/**
@@ -1078,6 +1086,10 @@ class Product_Image extends Image {
 
 class Product_OrderItem extends OrderItem {
 
+	/**
+	 * standard SS method
+	 * @var Array
+	 */
 	public static $api_access = array(
 		'view' => array(
 			'CalculatedTotal',
@@ -1147,7 +1159,6 @@ class Product_OrderItem extends OrderItem {
 		return $unitprice;
 	}
 
-
 	/**
 	 *@return String
 	 **/
@@ -1178,6 +1189,11 @@ class Product_OrderItem extends OrderItem {
 		return $tableSubtitle;
 	}
 
+	/**
+	 * method for developers only
+	 * you can access it like this: /shoppingcart/debug/
+	 * @return String
+	 */
 	public function debug() {
 		$title = $this->TableTitle();
 		$productID = $this->BuyableID;

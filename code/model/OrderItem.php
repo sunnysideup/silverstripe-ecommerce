@@ -36,8 +36,8 @@ class OrderItem extends OrderAttribute {
 	 );
 
 	/**
+	 * stardard SS variable
 	 * @var array
-	 * stardard SS definition
 	 */
 	public static $db = array(
 		'Quantity' => 'Double',

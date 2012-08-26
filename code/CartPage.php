@@ -16,8 +16,16 @@
 
 class CartPage extends Page{
 
+	/**
+	 * Standard SS variable
+	 * @var String
+	 */
 	public static $icon = 'ecommerce/images/icons/CartPage';
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $db = array(
 		'ContinueShoppingLabel' => 'Varchar(100)',
 		'ProceedToCheckoutLabel' => 'Varchar(100)',
@@ -31,10 +39,18 @@ class CartPage extends Page{
 		'NonExistingOrderMessage' => 'HTMLText'
 	);
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $has_one = array(
 		'ContinuePage' => 'SiteTree'
 	);
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $defaults = array(
 		'ContinueShoppingLabel' => 'continue shopping',
 		'ProceedToCheckoutLabel' => 'proceed to checkout',
@@ -48,7 +64,10 @@ class CartPage extends Page{
 		'NonExistingOrderMessage' => '<p>Sorry, the order you are trying to open does not exist</p>'
 	);
 
-
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		'MenuTitle' => 'HTMLVarchar'
 	);
@@ -78,8 +97,12 @@ class CartPage extends Page{
 		}
 	}
 
+	/**
+	 * Standard SS method
+	 * @return Boolean
+	 */
 	function canCreate($member = null) {
-		return !DataObject :: get_one("CartPage", "\"ClassName\" = 'CartPage'");
+		return !DataObject::get_one("CartPage", "\"ClassName\" = 'CartPage'");
 	}
 
 	/**
@@ -179,6 +202,10 @@ class CartPage extends Page{
 		return $this->OriginalMenuTitle();
 	}
 
+	/**
+	 * The original menu title of the page
+	 * @return String
+	 */
 	function OriginalMenuTitle(){
 		return $this->MenuTite;
 	}
@@ -186,7 +213,6 @@ class CartPage extends Page{
 }
 
 class CartPage_Controller extends Page_Controller{
-
 
 	/**
 	 * @static array
@@ -209,27 +235,26 @@ class CartPage_Controller extends Page_Controller{
 
 	/**
 	 * This DataObjectSet holds DataObjects with a Link and Title each....
-	 *@var $actionLinks DataObjectSet
+	 * @var $actionLinks DataObjectSet
 	 **/
 	protected $actionLinks = null;
 
 	/**
 	 * to ensure messages and actions links are only worked out once...
-	 *@var $workedOutMessagesAndActions Boolean
+	 * @var $workedOutMessagesAndActions Boolean
 	 **/
 	protected $workedOutMessagesAndActions = false;
 
 	/**
 	 * order currently being shown on this page
-	 *@var $order DataObject
+	 * @var $order DataObject
 	 **/
 	protected $currentOrder = null;
-
 
 	/**
 	 * Message shown (e.g. no current order, could not find order, order updated, etc...)
 	 *
-	 *@var $message String
+	  *@var $message String
 	 * @todo: check if we need this....!
 	 **/
 	protected $message = "";
@@ -304,7 +329,7 @@ class CartPage_Controller extends Page_Controller{
 
 	/**
 	 * This returns a DataObjectSet, each dataobject has two vars: Title and Link
-	 *@return DataObjectSet | Null
+	 * @return DataObjectSet | Null
 	 **/
 	function ActionLinks() {
 		$this->workOutMessagesAndActions();
@@ -316,7 +341,7 @@ class CartPage_Controller extends Page_Controller{
 
 
 	/**
-	 *@return String
+	 * @return String
 	 **/
 	function Message() {
 		$this->workOutMessagesAndActions();
@@ -334,7 +359,7 @@ class CartPage_Controller extends Page_Controller{
 
 	/**
 	 *
-	 *@return DataObject | Null - Order
+	 * @return DataObject | Null - Order
 	 **/
 	public function Order() {
 		return $this->currentOrder;
@@ -342,7 +367,7 @@ class CartPage_Controller extends Page_Controller{
 
 	/**
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function CanEditOrder() {
 		if($this->currentOrder) {
@@ -357,7 +382,7 @@ class CartPage_Controller extends Page_Controller{
 
 	/**
 	 * Tells you if the order you are viewing at the moment is also in the cart
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function CurrentOrderIsInCart() {
 		$viewingRealCurrentOrder = false;
@@ -424,8 +449,15 @@ class CartPage_Controller extends Page_Controller{
 	}
 
 
+	/**
+	 * @var Boolean
+	 */
 	protected $showCreateAccountForm = false;
 
+	/**
+	 * Do we need to show the Create Account Form?
+	 * @return Boolean
+	 */
 	function ShowCreateAccountForm(){
 		if(Session::get("CartPageCreateAccountForm")) {
 			Session::set("CartPageCreateAccountForm", false);
@@ -440,9 +472,14 @@ class CartPage_Controller extends Page_Controller{
 		}
 	}
 
+	/**
+	 * Returns the CreateAccountForm
+	 * @return ShopAccountForm
+	 */
 	function CreateAccountForm() {
 		return new ShopAccountForm($this, "CreateAccountForm");
 	}
+
 	/**
 	 * save the order to a member. If no member exists then create the member first using the ShopAccountForm.
 	 *
@@ -666,13 +703,27 @@ class CartPage_Controller extends Page_Controller{
 		}
 	}
 
+	/**
+	 * Is this a CartPage or is it another type (Checkout / OrderConfirmationPage)?
+	 * @return Boolean
+	 */
 	protected function isCartPage() {
 		if(($this->isCheckoutPage()) || ($this->isOrderConfirmationPage())) {
 			return false;
 		}
 		return true;
 	}
+
+	/**
+	 * Is this a CheckoutPage or is it another type (CartPage / OrderConfirmationPage)?
+	 * @return Boolean
+	 */
 	protected function isCheckoutPage() {if($this->dataRecord instanceOf CheckoutPage){ return true;}else {return false;}}
+
+	/**
+	 * Is this a OrderConfirmationPage or is it another type (CartPage / CheckoutPage)?
+	 * @return Boolean
+	 */
 	protected function isOrderConfirmationPage() {if($this->dataRecord instanceOf OrderConfirmationPage){ return true;}else {return false;}}
 
 }
