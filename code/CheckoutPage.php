@@ -36,17 +36,33 @@
 
 class CheckoutPage extends CartPage {
 
+	/**
+	 * standard SS variable
+	 * @Var string
+	 */
 	public static $icon = 'ecommerce/images/icons/CheckoutPage';
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	public static $db = array (
 		'HasCheckoutSteps' => 'Boolean',
 		'TermsAndConditionsMessage' => 'Varchar(200)',
 	);
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	public static $has_one = array (
 		'TermsPage' => 'Page'
 	);
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	public static $defaults = array (
 		'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.',
 		'HasCheckoutSteps' => 1
@@ -243,7 +259,6 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		return $form;
 	}
 
-
 	/**
 	 * Can the user proceed? It must be an editable order (see @link CartPage)
 	 * and is must also contain items.
@@ -254,7 +269,9 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		return $this->currentOrder->Items()  && !$this->currentOrder->IsSubmitted();
 	}
 
-
+	/**
+	 * Catch for incompatable coding only....
+	 */
 	function ModifierForm($request) {
 		user_error("Make sure that you set the controller for your ModifierForm to a controller directly associated with the Modifier", E_USER_WARNING);
 		return array ();
@@ -278,7 +295,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	/**
 	 * returns a dataobject set of the steps.
 	 * Or just one step if that is more relevant.
-	 *
+	 * @param Int $number - if set, it returns that one step.
 	 * @return Null | DataObject (CheckoutPage_Description) | DataObjectSet (CheckoutPage_Description)
 	 */
 	function CheckoutSteps($number = 0) {
@@ -318,29 +335,49 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		return $dos;
 	}
 
+	/**
+	 * returns the heading for the Checkout Step
+	 * @param Int $number
+	 * @return String
+	 */
 	function StepsContentHeading($number) {
 		$do = $this->CheckoutSteps($number);
 		if($do) {
 			return $do->Heading;
 		}
+		return "";
 	}
 
+
+	/**
+	 * returns the top of the page content for the Checkout Step
+	 * @param Int $number
+	 * @return String
+	 */
 	function StepsContentAbove($number) {
 		$do = $this->CheckoutSteps($number);
 		if($do) {
 			return $do->Above;
 		}
+		return "";
 	}
 
+	/**
+	 * returns the bottom of the page content for the Checkout Step
+	 * @param Int $number
+	 * @return String
+	 */
 	function StepsContentBelow($number) {
 		$do = $this->CheckoutSteps($number);
 		if($do) {
 			return $do->Below;
 		}
+		return "";
 	}
 
 	/**
-	 * Show only one step in the order process (e.g. only show OrderItems)
+	 * sets a checkout step
+	 * @param HTTP_Request $request
 	 */
 	function checkoutstep($request) {
 		$this->HasCheckoutSteps = true;
@@ -433,50 +470,102 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 class CheckoutPage_StepDescription extends DataObject{
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	static $db = array(
 		"Heading" => "Varchar",
 		"Above" => "Text",
 		"Below" => "Text"
 	);
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	public static $searchable_fields = array(
 		"Heading" => "PartialMatchFilter",
 		"Above" => "PartialMatchFilter",
 		"Below" => "PartialMatchFilter"
 	);
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	public static $field_labels = array(
 		"Above" => "Above Checkout Step",
 		"Below" => "Below Checkout Step"
 	);
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	public static $summary_fields = array(
 		"ID" => "Step Number",
 		"Code" => "Code",
 		"Heading" => "Heading"
 	);
 
+	/**
+	 * standard SS variable
+	 * @Var Array
+	 */
 	public static $casting = array(
 		"Code" => "Varchar",
 		"Title" => "Varchar"
 	);
 
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
 	public static $singular_name = "Checkout Step Description";
 		function i18n_singular_name() { return _t("CheckoutPage.CHECKOUTSTEPDESCRIPTION", "Checkout Step Description");}
 
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
 	public static $plural_name = "Checkout Step Descriptions";
 		function i18n_plural_name() { return _t("CheckoutPage.CHECKOUTSTEPDESCRIPTIONS", "Checkout Step Descriptions");}
 
+	/**
+	 * standard SS variable
+	 * @return Boolean
+	 */
 	static $can_create = false;
 
+	/**
+	 * standard SS method
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {return false;}
 
+	/**
+	 * standard SS method
+	 * @return Boolean
+	 */
 	public function canView($member = null) {return true;}
 
+	/**
+	 * standard SS method
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {return true;}
 
+	/**
+	 * standard SS method
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {return false;}
 
+	/**
+	 * standard SS method
+	 * @return FieldSet
+	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
 		$fields->replaceField("Description", new TextareaField("Description", _t("Checkout.DESCRIPTION", "Description"), 3));
@@ -508,6 +597,10 @@ class CheckoutPage_StepDescription extends DataObject{
 		return $this->Heading;
 	}
 
+
+	/**
+	 * standard SS method
+	 */
 	function requireDefaultRecords(){
 		parent::requireDefaultRecords();
 		$steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");

@@ -11,23 +11,39 @@
 
 class OrderStatusLog extends DataObject {
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $db = array(
 		'Title' => 'Varchar(100)',
 		'Note' => 'HTMLText',
 		'InternalUseOnly' => 'Boolean'
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $has_one = array(
 		"Author" => "Member",
 		"Order" => "Order"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		"CustomerNote" => "HTMLText",
 		"Type" => "Varchar",
 		"InternalUseOnlyNice" => "Varchar"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $summary_fields = array(
 		"Created" => "Date",
 		"Type" => "Type",
@@ -35,6 +51,10 @@ class OrderStatusLog extends DataObject {
 		"InternalUseOnlyNice" => "Internal use only"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $defaults = array(
 		"InternalUseOnly" => true
 	);
@@ -84,8 +104,8 @@ class OrderStatusLog extends DataObject {
 	}
 
 	/**
-	*
-	*@return Boolean
+	* @param Member $member
+	* @return Boolean
 	**/
 	public function canEdit($member = null) {
 		if($o = $this->Order()) {
@@ -94,6 +114,10 @@ class OrderStatusLog extends DataObject {
 		return false;
 	}
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
@@ -103,13 +127,24 @@ class OrderStatusLog extends DataObject {
 		"Note" => "PartialMatchFilter"
 	);
 
-
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Order Log Entry";
 		function i18n_singular_name() { return _t("OrderStatusLog.ORDERLOGENTRY", "Order Log Entry");}
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Order Log Entries";
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGENTRIES", "Order Log Entries");}
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $default_sort = "\"Created\" DESC";
 
 	/**

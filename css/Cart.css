@@ -54,7 +54,7 @@ even when theme-ing ecommerce, these should not be themed
 
 .doNotShow { display: none; }
 .loading { background-image: url(/ecommerce/images/loading.gif); background-repeat: no-repeat; background-position: 95% 0; }
-.loading * {display: none!important;}
+.loading * {visibility: hidden;}
 
 
 a.action, #OrderFormAddressHolder .Actions input, #OrderFormHolder .Actions input {

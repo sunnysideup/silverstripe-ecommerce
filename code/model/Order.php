@@ -65,6 +65,10 @@ class Order extends DataObject {
 		)
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $db = array(
 		'SessionID' => "Varchar(32)", //so that in the future we can link sessions with Orders.... One session can have several orders, but an order can onnly have one session
 		'UseShippingAddress' => 'Boolean',
@@ -81,6 +85,10 @@ class Order extends DataObject {
 		'CurrencyUsed' => 'EcommerceCurrency'
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $has_many = array(
 		'Attributes' => 'OrderAttribute',
 		'OrderStatusLogs' => 'OrderStatusLog',
@@ -88,12 +96,24 @@ class Order extends DataObject {
 		'Emails' => 'OrderEmailRecord'
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $indexes = array(
 		"SessionID" => true
 	);
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $default_sort = "\"Created\" DESC";
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		'OrderEmail' => 'Text',
 		'EmailLink' => 'Text',
@@ -117,15 +137,31 @@ class Order extends DataObject {
 		'CanHaveShippingAddress' => 'Boolean',
 	);
 
-	function OrderModifiers() {return DataObject::get("OrderModifier", "OrderID = ".$this->ID); }
-
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 
+	/**
+	 *
+	 * @return DataObjectSet | Null
+	 */
+	function OrderModifiers() {return DataObject::get("OrderModifier", "OrderID = ".$this->ID); }
+
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Order";
 		function i18n_singular_name() { return _t("Order.ORDER", "Order");}
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Orders";
 		function i18n_plural_name() { return _t("Order.ORDERS", "Orders");}
 
@@ -218,6 +254,10 @@ class Order extends DataObject {
    * 1. CMS STUFF
 *******************************************************/
 
+	/**
+	 * fields that we remove from the parent::getCMSFields object set
+	 * @var Array
+	 */
 	protected $fieldsAndTabsToBeRemoved = array(
 		'MemberID',
 		'Attributes',

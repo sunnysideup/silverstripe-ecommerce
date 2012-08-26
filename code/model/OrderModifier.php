@@ -53,19 +53,31 @@ class OrderModifier extends OrderAttribute {
 
 // ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
 
+	/**
+	 * @var array
+	 * stardard SS definition
+	 */
 	public static $db = array(
 		'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
 		'TableValue' => 'Currency', //the $$ shown in the checkout table
 		'HasBeenRemoved' => 'Boolean' // we add this so that we can see what modifiers have been removed
 	);
 
-	// make sure to choose the right Type and Name for this.
+	/**
+	 * make sure to choose the right Type and Name for this.
+	 * stardard SS variable
+	 * @var Array
+	 */
 	public static $defaults = array(
 		'Name' => 'Modifier' //making sure that you choose a different name for any class extensions.
 	);
 
 // ########################################  *** 2. cms variables  + functions (e.g. getCMSFields, $searchableFields)
 
+	/**
+	 * stardard SS variable
+	 * @var array
+	 */
 	public static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
@@ -76,18 +88,34 @@ class OrderModifier extends OrderAttribute {
 		"HasBeenRemoved"
 	);
 
+	/**
+	 * stardard SS definition
+	 * @var array
+	 */
 	public static $summary_fields = array(
 		"Order.ID" => "Order ID",
 		"TableTitle" => "Table Title",
 		"TableValue" => "Value Shown"
 	);
 
+	/**
+	 * stardard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Order Extra";
 		function i18n_singular_name() { return _t("OrderModifier.ORDERMODIFIER", "Order Extra");}
 
+	/**
+	 * stardard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Order Extras";
 		function i18n_plural_name() { return _t("OrderModifier.ORDERMODIFIERS", "Order Extras");}
 
+	/**
+	 * stardard SS metbod
+	 * @return FieldSet
+	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
 		$fields->removeByName("Sort");
@@ -497,15 +525,30 @@ class OrderModifier extends OrderAttribute {
 // ######################################## ***  11. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
 	/**
+	 * standard SS method
 	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 	}
 
+	/**
+	 * removing the Order Modifier does not delete it
+	 * rather, it ignores it (e.g. remove discount coupon)
+	 * We cant delete it, because we need to have a positive record
+	 * of it being removed.
+	 * Extend on Child Classes
+	 */
 	function onBeforeRemove(){
 		//you can add more stuff here in sub classes
 	}
 
+	/**
+	 * removing the Order Modifier does not delete it
+	 * rather, it ignores it (e.g. remove discount coupon)
+	 * We cant delete it, because we need to have a positive record
+	 * of it being removed.
+	 * Extend on Child Classes
+	 */
 	function onAfterRemove(){
 		//you can add more stuff here in sub classes
 	}
@@ -581,56 +624,119 @@ class OrderModifier extends OrderAttribute {
 
 class OrderModifier_Descriptor extends DataObject {
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	static $db = array(
 		"ModifierClassName" => "Varchar(100)",
 		"Heading" => "Varchar",
 		"Description" => "Text"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	static $has_one = array(
 		"Link" => "SiteTree"
 	);
 
-	//database related settings
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	static $indexes = array(
 		"ModifierClassName" => true
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $searchable_fields = array(
 		"Heading" => "PartialMatchFilter",
 		"Description" => "PartialMatchFilter"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $field_labels = array(
 		"ModifierClassName" => "Code"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $summary_fields = array(
 		"RealName" => "Code",
 		"Heading" => "Heading",
 		"Description" => "Description"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		"RealName" => "Varchar"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Order Extra Description";
 		function i18n_singular_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTION", "Order Extra Description");}
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Order Extra Descriptions";
 		function i18n_plural_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTIONS", "Order Extra Descriptions");}
 
+	/**
+	 * standard SS variable
+	 * @var Boolean
+	 */
 	static $can_create = false;
 
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {return false;}
 
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canView($member = null) {return true;}
 
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {return true;}
 
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {return false;}
 
+	/**
+	 * standard SS method
+	 * @return FieldSet
+	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
 		$fields->replaceField("ModifierClassName", new ReadonlyField("RealName", "Name"));
@@ -642,10 +748,12 @@ class OrderModifier_Descriptor extends DataObject {
 		return $fields;
 	}
 
-	function RealName(){
-		return $this->getRealName();
-	}
 
+	/**
+	 * casted Variable
+	 * @return String.
+	 */
+	function RealName(){return $this->getRealName();}
 	function getRealName(){
 		if(class_exists($this->ModifierClassName)) {
 			$obj = DataObject::get_one($this->ModifierClassName);
@@ -654,6 +762,9 @@ class OrderModifier_Descriptor extends DataObject {
 		return $this->ModifierClassName;
 	}
 
+	/**
+	 * stardard SS method
+	 */
 	function onBeforeWrite(){
 		parent::onBeforeWrite();
 		if(isset($_REQUEST["NoLinkForOrderModifier_Descriptor"]) && $_REQUEST["NoLinkForOrderModifier_Descriptor"]) {
@@ -661,6 +772,9 @@ class OrderModifier_Descriptor extends DataObject {
 		}
 	}
 
+	/**
+	 * stardard SS method
+	 */
 	function requireDefaultRecords(){
 		parent::requireDefaultRecords();
 		$arrayOfModifiers = EcommerceConfig::get("Order", "modifiers");
