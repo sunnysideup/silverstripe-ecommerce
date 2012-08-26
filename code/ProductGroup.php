@@ -94,6 +94,7 @@ class ProductGroup extends Page {
 	 */
 	public static $plural_name = "Product Categories";
 		function i18n_plural_name() { return _t("ProductGroup.PRODUCTCATEGORIES", "Product Categories");}
+
 	/**
 	 * returns the default Sort key.
 	 * @return String
@@ -142,7 +143,6 @@ class ProductGroup extends Page {
 			return "\"Sort\" ASC";
 		}
 	}
-
 
 	/**
 	 * Returns the Title for a sorting key.
@@ -194,7 +194,6 @@ class ProductGroup extends Page {
 		return $array;
 	}
 
-
 	/**
 	 * Returns the sql associated with a filter option.
 	 * @param String $key - the option selected
@@ -231,7 +230,6 @@ class ProductGroup extends Page {
 		}
 	}
 
-
 	/**
 	 * Returns the options for product display styles.
 	 * These can include: Default, Short and MoreDetail
@@ -264,7 +262,6 @@ class ProductGroup extends Page {
 	protected function getDefaultDisplayStyle(){
 		return "default";
 	}
-
 
 	/**
 	 * @var Array
@@ -433,8 +430,6 @@ class ProductGroup extends Page {
 		return $allProducts;
 	}
 
-
-
 	/**
 	 * Returns the class we are working with
 	 * @return String
@@ -443,7 +438,6 @@ class ProductGroup extends Page {
 		return "Product";
 	}
 
-
 	/**
 	 * Do products occur in more than one group
 	 * @return Boolean
@@ -451,9 +445,6 @@ class ProductGroup extends Page {
 	protected function getProductsAlsoInOtherGroups(){
 		return $this->EcomConfig()->ProductsAlsoInOtherGroups;
 	}
-
-
-
 
 	/**
 	 * returns the filter SQL, based on the $_GET or default entry.
@@ -535,7 +526,6 @@ class ProductGroup extends Page {
 		return null;
 	}
 
-
 	/**
 	 * returns the final products, based on the all the eligile products
 	 * for the page.
@@ -568,9 +558,7 @@ class ProductGroup extends Page {
 				);
 			}
 		}
-
 	}
-
 
 	/**
 	 * returns the CLASSNAME part of the final selection of products.
@@ -722,7 +710,6 @@ class ProductGroup extends Page {
 		return $displayStyle;
 	}
 
-
 	/**
 	 * Returns children ProductGroup pages of this group.
 	 * @param Int $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Groups are returned...
@@ -750,7 +737,6 @@ class ProductGroup extends Page {
 		}
 		return $output;
 	}
-
 
 	/**
 	 * Deprecated method
@@ -800,7 +786,6 @@ class ProductGroup extends Page {
 			return DataObject::get_by_id("ProductGroup", $this->ParentID);
 		}
 	}
-
 
 	/**
 	 * Recursively generate a product menu.
@@ -912,7 +897,6 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 		return $dos;
 	}
-
 
 	/**
 	 * returns child product groups for use in

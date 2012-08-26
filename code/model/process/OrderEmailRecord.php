@@ -15,6 +15,10 @@
 
 class OrderEmailRecord extends DataObject {
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $db = array(
 		"From" => "Varchar(255)",
 		"To" => "Varchar(255)",
@@ -23,16 +27,28 @@ class OrderEmailRecord extends DataObject {
 		"Result" => "Boolean"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $has_one = array(
 		"Order" => "Order",
 		"OrderStep" => "OrderStep"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		"OrderStepNice" => "Varchar",
 		"ResultNice" => "Varchar"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $summary_fields = array(
 		"Created" => "Send",
 		"OrderStepNice" => "What",
@@ -42,6 +58,10 @@ class OrderEmailRecord extends DataObject {
 		"ResultNice" => "Sent Succesfully"
 	);
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
@@ -53,6 +73,10 @@ class OrderEmailRecord extends DataObject {
 		"Result" => true
 	);
 
+	/**
+	 * casted Variable
+	 * @var String
+	 */
 	function ResultNice() {return $this->getResultNice();}
 	function getResultNice() {
 		if($this->Result) {
@@ -61,20 +85,52 @@ class OrderEmailRecord extends DataObject {
 		return _t("OrderEmailRecord.NO", "No");
 	}
 
-
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Customer Email";
 		function i18n_singular_name() { return _t("OrderEmailRecord.CUSTOMEREMAIL", "Customer Email");}
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Customer Emails";
 		function i18n_plural_name() { return _t("OrderEmailRecord.CUSTOMEREMAILS", "Customer Emails");}
-	//CRUD settings
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {return false;}
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {return false;}
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {return false;}
 	//defaults
+
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $default_sort = "\"Created\" DESC";
 
-
+	/**
+	 * standard SS method
+	 * @return FieldSet
+	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
@@ -82,6 +138,10 @@ class OrderEmailRecord extends DataObject {
 		return $fields;
 	}
 
+	/**
+	 * standard SS method
+	 * @return FieldSet
+	 */
 	function scaffoldSearchFields(){
 		$fields = parent::scaffoldSearchFields();
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
@@ -89,9 +149,9 @@ class OrderEmailRecord extends DataObject {
 	}
 
 	/**
-	 *
+	 * casted variable
 	 *@ return String
-	  **/
+	 **/
 	function OrderStepNice() {return $this->getOrderStepNice();}
 	function getOrderStepNice() {
 		if($this->OrderStepID) {

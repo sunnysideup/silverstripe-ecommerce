@@ -11,7 +11,11 @@
  **/
 
 class OrderStep extends DataObject {
-	//database
+
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $db = array(
 		"Name" => "Varchar(50)",
 		"Code" => "Varchar(50)",
@@ -31,16 +35,28 @@ class OrderStep extends DataObject {
 		"Sort" => "Int"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $indexes = array(
 		"Code" => true,
 		"Sort" => true
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $has_many = array(
 		"Orders" => "Order",
 		"OrderEmailRecords" => "OrderEmailRecord"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $field_labels = array(
 		"Sort" => "Sorting Index",
 		"CustomerCanEdit" => "Customer can edit order",
@@ -48,6 +64,10 @@ class OrderStep extends DataObject {
 		"CustomerCanCancel" => "Customer can cancel order"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $summary_fields = array(
 		"Name" => "Name",
 		"CustomerCanEditNice" => "customer can edit",
@@ -59,6 +79,10 @@ class OrderStep extends DataObject {
 		"HideStepFromCustomerNice" => "hide step from customer"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $casting = array(
 		"CustomerCanEditNice" => "Varchar",
 		"CustomerCanPayNice" => "Varchar",
@@ -69,6 +93,10 @@ class OrderStep extends DataObject {
 		"HideStepFromCustomerNice" => "Varchar"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $searchable_fields = array(
 		'Name' => array(
 			'title' => 'Name',
@@ -80,36 +108,79 @@ class OrderStep extends DataObject {
 		)
 	);
 
+	/**
+	 * casted variable
+	 * @return String
+	 */
 	function CustomerCanEditNice() {return $this->getCustomerCanEditNice();}
-	function getCustomerCanEditNice() {if($this->CustomerCanEdit) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
+		function getCustomerCanEditNice() {if($this->CustomerCanEdit) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
 
+
+	/**
+	 * casted variable
+	 * @return String
+	 */
 	function CustomerCanPayNice() {return $this->getCustomerCanPayNice();}
-	function getCustomerCanPayNice() {if($this->CustomerCanPay) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
+		function getCustomerCanPayNice() {if($this->CustomerCanPay) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
 
+
+	/**
+	 * casted variable
+	 * @return String
+	 */
 	function CustomerCanCancelNice() {return $this->getCustomerCanCancelNice();}
-	function getCustomerCanCancelNice() {if($this->CustomerCanCancel) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
+		function getCustomerCanCancelNice() {if($this->CustomerCanCancel) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
 
 	function ShowAsUncompletedOrderNice() {return $this->getShowAsUncompletedOrderNice();}
 	function getShowAsUncompletedOrderNice() {if($this->ShowAsUncompletedOrder) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
 
+	/**
+	 * casted variable
+	 * @return String
+	 */
 	function ShowAsInProcessOrderNice() {return $this->getShowAsInProcessOrderNice();}
-	function getShowAsInProcessOrderNice() {if($this->ShowAsInProcessOrder) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
+		function getShowAsInProcessOrderNice() {if($this->ShowAsInProcessOrder) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
 
+	/**
+	 * casted variable
+	 * @return String
+	 */
 	function ShowAsCompletedOrderNice() {return $this->getShowAsCompletedOrderNice();}
-	function getShowAsCompletedOrderNice() {if($this->ShowAsCompletedOrder) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
+		function getShowAsCompletedOrderNice() {if($this->ShowAsCompletedOrder) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
 
+	/**
+	 * casted variable
+	 * @return String
+	 */
 	function HideStepFromCustomerNice() {return $this->getHideStepFromCustomerNice();}
-	function getHideStepFromCustomerNice() {if($this->HideStepFromCustomer) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
+		function getHideStepFromCustomerNice() {if($this->HideStepFromCustomer) {return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");}
 
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $singular_name = "Order Step";
 		function i18n_singular_name() { return _t("OrderStep.ORDERSTEP", "Order Step");}
 
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $plural_name = "Order Steps";
 		function i18n_plural_name() { return _t("OrderStep.ORDERSTEPS", "Order Steps");}
 
-	// SUPER IMPORTANT TO KEEP ORDER!
+	/**
+	 * SUPER IMPORTANT TO KEEP ORDER!
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $default_sort = "\"Sort\" ASC";
 
+	/**
+	 * turns code into ID
+	 * @param String $code
+	 * @param Int
+	 */
 	public static function get_status_id_from_code($code) {
 		if($otherStatus = DataObject::get_one("OrderStep", "\"Code\" = '".$code."'")) {
 			return $otherStatus->ID;
@@ -117,48 +188,53 @@ class OrderStep extends DataObject {
 		return 0;
 	}
 
-		/**
-		 *
-		 *@return Array
-		 **/
-		static function get_codes_for_order_steps_to_include() {
-			$newArray = array();
-			$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
-			if(is_array($array) && count($array)) {
-				foreach($array as $className) {
-					$code = singleton($className)->getMyCode();
-					$newArray[$className] = strtoupper($code);
+	/**
+	 *
+	 *@return Array
+	 **/
+	static function get_codes_for_order_steps_to_include() {
+		$newArray = array();
+		$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
+		if(is_array($array) && count($array)) {
+			foreach($array as $className) {
+				$code = singleton($className)->getMyCode();
+				$newArray[$className] = strtoupper($code);
+			}
+		}
+		return $newArray;
+	}
+
+	/**
+	 *
+	 *@return Array
+	 **/
+	static function get_not_created_codes_for_order_steps_to_include() {
+		$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
+		if(is_array($array) && count($array)) {
+			foreach($array as $className) {
+				if(DataObject::get_one($className)) {
+					unset($array[$className]);
 				}
 			}
-			return $newArray;
 		}
-		/**
-		 *
-		 *@return Array
-		 **/
-		static function get_not_created_codes_for_order_steps_to_include() {
-			$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
-			if(is_array($array) && count($array)) {
-				foreach($array as $className) {
-					if(DataObject::get_one($className)) {
-						unset($array[$className]);
-					}
-				}
-			}
-			return $array;
-		}
+		return $array;
+	}
 
-		/**
-		 *
-		 *@return String
-		 **/
-		function getMyCode() {
-			$array = Object::uninherited_static($this->ClassName, 'defaults');
-			if(!isset($array["Code"])) {user_error($this->class." does not have a default code specified");}
-			return $array["Code"];
-		}
+	/**
+	 *
+	 *@return String
+	 **/
+	function getMyCode() {
+		$array = Object::uninherited_static($this->ClassName, 'defaults');
+		if(!isset($array["Code"])) {user_error($this->class." does not have a default code specified");}
+		return $array["Code"];
+	}
 
-	//IMPORTANT:: MUST HAVE Code must be defined!!!
+	/**
+	 * IMPORTANT:: MUST HAVE Code must be defined!!!
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
@@ -169,6 +245,9 @@ class OrderStep extends DataObject {
 		"Code" => "ORDERSTEP"
 	);
 
+	/**
+	 * standard SS method
+	 */
 	function populateDefaults() {
 		parent::populateDefaults();
 		$this->Description = $this->myDescription();
@@ -410,12 +489,18 @@ class OrderStep extends DataObject {
 		return false;
 	}
 
-
+	/**
+	 * standard SS method
+	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		$this->Code = strtoupper($this->Code);
 	}
 
+	/**
+	 * move linked orders to the next status
+	 * standard SS method
+	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
 		$ordersWithThisStatus = DataObject::get("Order", "\"StatusID\" =".$this->ID);
@@ -430,13 +515,19 @@ class OrderStep extends DataObject {
 		}
 	}
 
+	/**
+	 * standard SS method
+	 */
 	function onAfterDelete() {
 		parent::onAfterDelete();
 		$this->requireDefaultRecords();
 	}
 
 
-	//USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart
+	/**
+	 * standard SS method
+	 * USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart
+	 */
 	public function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		$orderStepsToInclude = EcommerceConfig::get("OrderStep", "order_steps_to_include");

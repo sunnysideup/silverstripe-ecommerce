@@ -90,8 +90,6 @@ class EcommerceRole extends DataObjectDecorator {
 		return false;
 	}
 
-
-
 	/**
 	 *@return DataObject (Group)
 	 **/
@@ -100,7 +98,6 @@ class EcommerceRole extends DataObjectDecorator {
 		$adminName = EcommerceConfig::get("EcommerceRole", "admin_group_name");
 		return DataObject::get_one("Group", "\"Code\" = '".$adminCode."' OR \"Title\" = '".$adminName."'");
 	}
-
 
 	/**
 	 * Save a preferred currency for a member.
@@ -180,7 +177,6 @@ class EcommerceRole extends DataObjectDecorator {
 		$this->owner->extend('augmentEcommerceRequiredFields', $fields);
 		return $fields;
 	}
-
 
 	/**
 	 * Is the member a member of the ShopAdmin Group

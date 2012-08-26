@@ -31,16 +31,28 @@ class OrderAttribute extends DataObject {
 		)
 	 );
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $db = array(
 		'CalculatedTotal' => 'Currency',
 		'Sort' => 'Int',
 		'GroupSort' => 'Int'
 	);
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $has_one = array(
 		'Order' => 'Order'
 	);
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		'TableTitle' => 'HTMLText',
 		'TableSubTitle' => 'HTMLText',
@@ -50,22 +62,39 @@ class OrderAttribute extends DataObject {
 		'DisplayPrice' => 'Money'
 	);
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 
 	/**
 	* @note: we can add the \"OrderAttribute_Group\".\"Sort\" part because this table is always included (see extendedSQL).
+	* @var String
 	**/
 	public static $default_sort = "\"OrderAttribute\".\"GroupSort\" ASC, \"OrderAttribute\".\"Sort\" ASC, \"OrderAttribute\".\"Created\" ASC";
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $indexes = array(
 		"Sort" => true,
 	);
 
+	/**
+	 * Standard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Order Entry";
 		function i18n_singular_name() { return _t("OrderAttribute.ORDERENTRY", "Order Entry");}
 
+	/**
+	 * Standard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Order Extra Descriptions";
 		function i18n_plural_name() { return _t("OrderAttribute.ORDERENTRIES", "Order Entries");}
 
@@ -81,6 +110,13 @@ class OrderAttribute extends DataObject {
 	 */
 	protected $_canView = null;
 
+
+	/**
+	 * extended in OrderModifier and OrderItem
+	 * Starts up the order Atribute
+	 * TODO: introduce system like we have for Controller
+	 * which makes sure that all parent init methods are called.
+	 */
 	function init() {
 		return true;
 	}
@@ -256,6 +292,9 @@ class OrderAttribute extends DataObject {
 		return EcommerceCurrency::display_price($this->CalculatedTotal, $this->Order());
 	}
 
+	/**
+	 * Standard SS method
+	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		if($this->OrderAttribute_GroupID) {
@@ -265,9 +304,9 @@ class OrderAttribute extends DataObject {
 		}
 	}
 
-
 	/**
 	 * Debug helper method.
+	 * Access through : /shoppingcart/debug/
 	 */
 	public function debug() {
 		$html =  "
