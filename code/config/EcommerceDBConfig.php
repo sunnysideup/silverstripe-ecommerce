@@ -14,7 +14,8 @@
 class EcommerceDBConfig extends DataObject {
 
 	/**
-	 * Standard SS Method
+	 * Standard SS Variable
+	 * @var Array
 	 */
 	public static $db = array(
 		"Title" => "Varchar(30)",
@@ -27,7 +28,7 @@ class EcommerceDBConfig extends DataObject {
 		"PostalCodeURL" => "Varchar(255)",
 		"PostalCodeLabel" => "Varchar(255)",
 		"NumberOfProductsPerPage" => "Int",
-		"OnlyShowProductsThatCanBePurchased" => "Int",
+		"OnlyShowProductsThatCanBePurchased" => "Boolean",
 		"NotForSaleMessage" => "HTMLText",
 		"ProductsHaveWeight" => "Boolean",
 		"ProductsHaveModelNames" => "Boolean",
@@ -38,7 +39,8 @@ class EcommerceDBConfig extends DataObject {
 	);
 
 	/**
-	 * Standard SS Method
+	 * Standard SS Variable
+	 * @var Array
 	 */
 	public static $has_one = array(
 		"EmailLogo" => "Image",
@@ -46,38 +48,73 @@ class EcommerceDBConfig extends DataObject {
 	);
 
 
-	//database
-
-	//todo: would it be faster if we index everything?
+	/**
+	 * Standard SS Variable
+	 * @var Array
+	 */
 	static $indexes = array(
+		"UseThisOne" => true,
+		"ShopClosed" => true,
+		"ShopPricesAreTaxExclusive" => true,
+		"NumberOfProductsPerPage" => true,
+		"OnlyShowProductsThatCanBePurchased" => true
 	);
-	//formatting
 
+	/**
+	 * Standard SS Variable
+	 * @var Array
+	 */
 	public static $casting = array(
 		"UseThisOneNice" => "Varchar"
 	); //adds computed fields that can also have a type (e.g.
 
+	/**
+	 * Standard SS Variable
+	 * @var Array
+	 */
 	public static $searchable_fields = array(
 		"Title" => "PartialMatchFilter"
 	);
 
+	/**
+	 * Standard SS Variable
+	 * @var Array
+	 */
 	public static $field_labels = array();
 
+	/**
+	 * Standard SS Variable
+	 * @var Array
+	 */
 	public static $summary_fields = array(
 		"Title" => "Title",
 		"UseThisOneNice" => "Use this configuration set"
 	); //note no => for relational fields
 
-	//CRUD settings
 
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
 	public function canCreate($member = null) {
 		return $this->canEdit($member);
 	}
 
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
 	public function canView($member = null) {
 		return $this->canEdit($member);
 	}
 
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
 	public function canEdit($member = null) {
 		if(!$member) {
 			$member == Member::currentUser();
@@ -89,11 +126,23 @@ class EcommerceDBConfig extends DataObject {
 		return parent::canEdit($member);
 	}
 
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
 	public function canDelete($member = null) {return false;}
-	//defaults
 
+	/**
+	 * Standard SS variable
+	 * @var String
+	 */
 	public static $default_sort = "\"UseThisOne\" DESC, \"Created\" ASC";
 
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
 	public static $defaults = array(
 		"Title" => "Ecommerce Site Config",
 		"UseThisOne" => true,
@@ -114,24 +163,35 @@ class EcommerceDBConfig extends DataObject {
 		"CurrenciesExplanation" => "<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>"
 	);
 
+	/**
+	 * Standard SS Method
+	 * @var Array
+	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
 		$this->ReceiptEmail = Email::getAdminEmail();
 	}
 
-
+	/**
+	 * Standard SS variable
+	 * @var String
+	 */
 	public static $singular_name = "Ecommerce Configuration";
 		function i18n_singular_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATION", "Ecommerce Configuration");}
 
+	/**
+	 * Standard SS variable
+	 * @var String
+	 */
 	public static $plural_name = "Ecommerce Configuration";
 		function i18n_plural_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATIONS", "Ecommerce Configurations");}
-
 
 	/**
 	 * static holder for its own (or other EcommerceDBConfig) class.
 	 * @var String
 	 */
 	protected static $my_current_one = null;
+
 	/**
 	 * implements singleton pattern
 	 * @return EcommerceDBConfig
@@ -143,6 +203,7 @@ class EcommerceDBConfig extends DataObject {
 		}
 		return self::$my_current_one;
 	}
+
 	/**
 	 * standard SS method for decorators.
 	 * @param Array - $fields: array of fields to start with
@@ -156,6 +217,11 @@ class EcommerceDBConfig extends DataObject {
 		return $labels;
 	}
 
+	/**
+	 * definition of field lables
+	 * TODO: is this a common SS method?
+	 * @return Array
+	 */
 	function customFieldLabels(){
 		$newLabels = array(
 			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch between configurations)."),
@@ -181,7 +247,10 @@ class EcommerceDBConfig extends DataObject {
 		return $newLabels;
 	}
 
-
+	/**
+	 * standard SS method
+	 * @return FieldSet
+	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		foreach($this->fieldLabels() as $name => $label) {
@@ -357,6 +426,9 @@ class EcommerceDBConfig extends DataObject {
 		return $obj;
 	}
 
+	/**
+	 * standard SS method
+	 */
 	function onAfterWrite(){
 		if($this->UseThisOne) {
 			$configs = DataObject::get("EcommerceDBConfig", "\"UseThisOne\" = 1 AND \"ID\" <>".$this->ID);
