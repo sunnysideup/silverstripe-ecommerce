@@ -33,6 +33,21 @@ EcomBuyableSelectField = {
 
 
 	/**
+	 * the term that is being searched for
+	 * @var String
+	 */
+	nothingFound: "nothing items found",
+		set_nothingFound: function(s) {this.nothingFound = s;},
+
+	/**
+	 * the term that is being searched for
+	 * @var String
+	 */
+	saerching: "searching",
+		set_searching: function(s) {this.searching = s;},
+
+
+	/**
 	 * number of suggestions that are being returned
 	 * @var Int
 	 */
@@ -124,6 +139,9 @@ EcomBuyableSelectField = {
 										}
 									)
 								);
+								if(data.length < 1) {
+									EcomBuyableSelectField.showCurrentSituation(EcomBuyableSelectField.nothingFound);
+								}
 								jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").removeClass(EcomBuyableSelectField.loadingClass);
 							}
 						}
@@ -137,18 +155,22 @@ EcomBuyableSelectField = {
 						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").length  == 0 ||
 						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").length  == 0
 					) {
-						alert("Error: can not find BuyableID or BuyableClassName or Version field");
+						EcomBuyableSelectField.showCurrentSituation("Error: can not find BuyableID or BuyableClassName or Version field");
 					}
 					else {
 						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").val(ui.item.id);
 						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").val(ui.item.className);
 						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").val(ui.item.version);
-						jQuery("input[name=\'"+EcomBuyableSelectField.selectedBuyableFieldName+"\']").val(ui.item.title);
-						jQuery("span#"+EcomBuyableSelectField.selectedBuyableFieldID+"").text(ui.item.title);
+						EcomBuyableSelectField.showCurrentSituation(ui.item.title);
 					}
 				}
 			}
 		);
+	},
+
+	showCurrentSituation: function(situation) {
+		jQuery("input[name=\'"+EcomBuyableSelectField.selectedBuyableFieldName+"\']").val(situation);
+		jQuery("span#"+EcomBuyableSelectField.selectedBuyableFieldID+"").text(situation);
 	}
 
 }
