@@ -99,7 +99,7 @@ EcomBuyableSelectField = {
 
 	init: function() {
 		EcomBuyableSelectField.fieldName += "-FindBuyable" ;
-		jQuery( "#"+EcomBuyableSelectField.fieldName).autocomplete(
+		jQuery("#"+EcomBuyableSelectField.fieldName).autocomplete(
 			{
 
 				//delay before we start searching
