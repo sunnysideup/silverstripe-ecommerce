@@ -42,8 +42,8 @@ class BuyableSelectField extends FormField {
 	 */
 	function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 7, $form = null) {
 		$this->countOfSuggestions = $countOfSuggestions;
-		$this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Find Product'));
-		$this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ''), _t('BuyableSelectField.NONE', 'None'));
+		$this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Enter product code or title'));
+		$this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ''), _t('BuyableSelectField.NONE', 'No product selected yet.'));
 		$this->buyable = $buyable;
 		if($this->buyable) {
 			$value = $this->buyable->FullName ? $this->buyable->FullName : $this->buyable->getTitle();
@@ -85,6 +85,7 @@ class BuyableSelectField extends FormField {
 
 	protected function getJavascript(){
 		return '
+		EcomBuyableSelectField.set_nothingFound("'._t('BuyableSelectField.NOTHINGFOUND', 'no products found - please try again').'");
 		EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->name()).'");
 		EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->Name()).'");
 		EcomBuyableSelectField.set_countOfSuggestions('.$this->countOfSuggestions.');
