@@ -13,6 +13,18 @@ class BuyableSelectField extends FormField {
 
 
 	/**
+	 * Location for jQuery UI library location
+	 * @var String
+	 */
+	protected $jquery_UI_JS_location = 'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.min.js';
+
+	/**
+	 * Location for jQuery UI library location
+	 * @var String
+	 */
+	protected $jquery_UI_CSS_location = 'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.css';
+
+	/**
 	 * number of suggestions
 	 * @var Int
 	 */
@@ -67,19 +79,17 @@ class BuyableSelectField extends FormField {
 			user_error("You must have a BuyableClassName field in your form");
 		}
 		if(!$this->form->dataFieldByName("BuyableID")) {
-			user_error("You must have a BuyableID field in your form");
+			user_error("You must have a BuyableID field in your form.");
 		}
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.core.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.widget.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.position.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.autocomplete.js');
+		Requirements::javascript($this->jquery_UI_JS_location);
+		Requirements::css($this->jquery_UI_CSS_location);
 		Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
 		Requirements::customScript($this->getJavascript(), "BuyableSelectField".$this->id());
 		Requirements::themedCSS("BuyableSelectField");
 		return
 		"<div class=\"fieldgroup\">" .
-			"<div class=\"selectedBuyable fieldGroupInner\">" . $this->fieldSelectedBuyable->SmallFieldHolder()."</div>".
 			"<div class=\"findBuyable fieldGroupInner\">" . $this->fieldFindBuyable->SmallFieldHolder()."</div>" .
+			"<div class=\"selectedBuyable fieldGroupInner\">" . $this->fieldSelectedBuyable->SmallFieldHolder()."</div>".
 		"</div>";
 	}
 
@@ -97,6 +107,7 @@ class BuyableSelectField extends FormField {
 	function setValue($data) {
 		if($this->buyable) {
 			$value = $this->buyable->FullName ? $this->buyable->FullName : $this->buyable->getTitle();
+			//to TEST!!!
 			$this->fieldSelectedBuyable->setValue($value);
 		}
 	}
@@ -119,6 +130,8 @@ class BuyableSelectField extends FormField {
 			$this->fieldSelectedBuyable = $this->fieldSelectedBuyable->performReadonlyTransformation();
 		}
 	}
+
+	function
 
 }
 
