@@ -191,7 +191,7 @@ class BillingAddress extends OrderAddress {
 				new TextField('Surname', _t('OrderAddress.SURNAME','Surname'))
 			);
 		}
-		$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Prefix')));
+		$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));
 		$billingFields->push(new TextField('Address2', _t('OrderAddress.ADDRESS2','&nbsp;')));
 		$billingFields->push(new TextField('City', _t('OrderAddress.CITY','Town')));
