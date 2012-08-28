@@ -131,7 +131,23 @@ class BuyableSelectField extends FormField {
 		}
 	}
 
-	function
+	/**
+	 * set alternative location for jQuerry UI Autocomplete JAVASCRIPT FILE
+	 * @see http://jqueryui.com/download
+	 * @param String $pathFileName
+	 */
+	public function set_jquery_UI_JS_location($pathFileName) {
+		$this->jquery_UI_JS_location = $pathFileName;
+	}
+
+	/**
+	 * set alternative location for jQuerry UI Autocomplete CSS File
+	 * @see http://jqueryui.com/download
+	 * @param String $pathFileName
+	 */
+	public function set_jquery_UI_CSS_location($pathFileName) {
+		$this->jquery_UI_CSS_location = $pathFileName;
+	}
 
 }
 
