@@ -889,9 +889,9 @@ class ShoppingCart_Controller extends Controller{
 	/**
 	 * We need to only use the Security ID on a few
 	 * actions, these are listed here.
-	 *
+	 * @var Array
 	 */
-	protected $methodsWithSecurityID = array(
+	protected $methodsRequiringSecurityID = array(
 		'additem',
 		'removeitem',
 		'removeallitem',
@@ -909,7 +909,7 @@ class ShoppingCart_Controller extends Controller{
 	function init() {
 		parent::init();
 		$action = $this->request->param('Action');
-		if($action && (in_array($action, $this->methodsWithSecurityID))) {
+		if($action && (in_array($action, $this->methodsRequiringSecurityID))) {
 			$savedSecurityID = Session::get("SecurityID");
 			if($savedSecurityID) {
 				if(!isset($_GET["SecurityID"])) {
