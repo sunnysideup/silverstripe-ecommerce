@@ -32,7 +32,7 @@ class CartManipulation_Current extends BuildTask{
  **/
 class CartManipulation_Debug extends BuildTask{
 
-	protected $title = "Shows you the values of the current cart";
+	protected $title = "Show the values of the current cart";
 
 	protected $description = "Iterates through all the values related to the current cart and displays them.";
 
