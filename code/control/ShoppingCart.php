@@ -887,6 +887,20 @@ class ShoppingCart_Controller extends Controller{
 		static function get_url_segment() {return self::$url_segment;}
 
 	/**
+	 * We need to only use the Security ID on a few
+	 * actions, these are listed here.
+	 *
+	 */
+	protected $methodsWithSecurityID = array(
+		'additem',
+		'removeitem',
+		'removeallitem',
+		'removeallitemandedit',
+		'removemodifier',
+		'addmodifier'
+	);
+
+	/**
 	 *
 	 * @var ShoppingCart
 	 */
@@ -894,22 +908,20 @@ class ShoppingCart_Controller extends Controller{
 
 	function init() {
 		parent::init();
-		$savedSecurityID = Session::get("SecurityID");
-		if($savedSecurityID) {
-			if(!isset($_GET["SecurityID"])) {
-				if($this->request->param('Action') == "submittedbuyable") {
-					$_GET["SecurityID"] = $savedSecurityID;
-				}
-				else {
+		$action = $this->request->param('Action');
+		if($action && (in_array($action, $this->methodsWithSecurityID))) {
+			$savedSecurityID = Session::get("SecurityID");
+			if($savedSecurityID) {
+				if(!isset($_GET["SecurityID"])) {
 					$_GET["SecurityID"] = "";
 				}
-			}
-			if($savedSecurityID) {
-				if($_GET["SecurityID"] != $savedSecurityID) {
-					$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
-				}
-				else {
-					//all OK!
+				if($savedSecurityID) {
+					if($_GET["SecurityID"] != $savedSecurityID) {
+						$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+					}
+					else {
+						//all OK!
+					}
 				}
 			}
 		}
