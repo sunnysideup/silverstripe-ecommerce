@@ -111,7 +111,9 @@ class OrderModifier extends OrderAttribute {
 	 */
 	public static $plural_name = "Order Extras";
 		function i18n_plural_name() { return _t("OrderModifier.ORDERMODIFIERS", "Order Extras");}
-
+	
+	public static $include_form_in_order_table = false;
+	
 	/**
 	 * stardard SS metbod
 	 * @return FieldSet
@@ -276,6 +278,10 @@ class OrderModifier extends OrderAttribute {
 		return false;
 	}
 
+	public function IncludeFormInOrderTable() {
+		return $this->stat('include_form_in_order_table');
+	}
+	
 	/**
 	 * This function returns a form that allows a user
 	 * to change the modifier to the order.
