@@ -15,5 +15,4 @@
 <p class="message bad"><% _t("OrderConfirmationPage.COULDNOTBEFOUND","Your order could not be found.") %></p>
 <% end_if %>
 
-<h3><% _t("OrderConfirmation.NEXT", "Next") %></h3>
 <% include CartActionsAndMessages %>
