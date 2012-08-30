@@ -199,7 +199,7 @@ class Order extends DataObject {
 		$dos = new DataObjectSet();
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
-				if($modifier->showForm()) {
+				if($modifier->ShowForm()) {
 					if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
 						$dos->push($form);
 					}

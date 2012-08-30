@@ -8,7 +8,7 @@
  * *** 3. other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
  * *** 4. CRUD functions (e.g. canEdit)
  * *** 5. init and update functions
- * *** 6. form functions (e. g. showform and getform)
+ * *** 6. form functions (e. g. Showform and getform)
  * *** 7. template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
  * *** 8. inner calculations.... USES CALCULATED VALUES
  * *** 9. calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
@@ -266,7 +266,7 @@ class OrderModifier extends OrderAttribute {
 		return $this->CalculatedTotal;
 	}
 
-// ########################################  *** 6. form functions (showform and getform)
+// ########################################  *** 6. form functions (Showform and getform)
 
 	/**
 	 * This determines whether the OrderModifierForm is shown or not. {@link OrderModifier::get_form()}.
@@ -293,7 +293,7 @@ class OrderModifier extends OrderAttribute {
 	 * @return OrderModifierForm or subclass
 	 */
 	public function getModifierForm($optionalController = null, $optionalValidator = null) {
-		if($this->showForm()) {
+		if($this->ShowForm()) {
 			$fields = new FieldSet();
 			$fields->push($this->headingField());
 			$fields->push($this->descriptionField());
