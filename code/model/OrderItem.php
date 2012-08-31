@@ -420,6 +420,9 @@ class OrderItem extends OrderAttribute {
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
 	  **/
 	function Buyable($current = false) {
+		if(!$this->BuyableID) {
+			return null;
+		}
 		//start hack
 		if(!$this->BuyableClassName) {
 			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);

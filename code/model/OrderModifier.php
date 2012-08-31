@@ -111,9 +111,7 @@ class OrderModifier extends OrderAttribute {
 	 */
 	public static $plural_name = "Order Extras";
 		function i18n_plural_name() { return _t("OrderModifier.ORDERMODIFIERS", "Order Extras");}
-	
-	public static $include_form_in_order_table = false;
-	
+
 	/**
 	 * stardard SS metbod
 	 * @return FieldSet
@@ -278,10 +276,26 @@ class OrderModifier extends OrderAttribute {
 		return false;
 	}
 
-	public function IncludeFormInOrderTable() {
-		return $this->stat('include_form_in_order_table');
+	/**
+	 * Should the form be included in the EDITABLE form
+	 * on the checkout page?
+	 * @return Boolean
+	 */
+	public function ShowFormInEditableOrderTable() {
+		//extend in OrderModifier Extensions
+		return false;
 	}
-	
+
+	/**
+	 * Should the form be shown outside of editable table
+	 * on the checkout page (opposite of ShowFormInEditableOrderTable)?
+	 * @return Boolean
+	 */
+	public function ShowFormOutsideEditableOrderTable() {
+		//extend in OrderModifier Extensions
+		return $this->ShowFormInEditableOrderTable() ? false : true;
+	}
+
 	/**
 	 * This function returns a form that allows a user
 	 * to change the modifier to the order.
