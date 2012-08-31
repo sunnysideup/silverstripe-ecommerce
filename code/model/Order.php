@@ -204,10 +204,10 @@ class Order extends DataObject {
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
 				if($modifier->ShowForm()) {
-					if($modifier->ShowFormOutsideEditableOrderTable()) {
-						if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
-							$dos->push($form);
-						}
+					if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
+						$form->ShowFormInEditableOrderTable = $modifier->ShowFormInEditableOrderTable();
+						$form->ShowFormOutsideEditableOrderTable = $modifier->ShowFormOutsideEditableOrderTable();
+						$dos->push($form);
 					}
 				}
 			}
