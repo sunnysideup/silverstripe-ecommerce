@@ -3,9 +3,13 @@
 		<% if MoreInfoPage %>
 			<a class="tableTitle" id="$AJAXDefinitions.TableTitleID" href="$MoreInfoPage.Link" >$TableTitle</a>
 		<% else %>
-			<span class="tableTitle" id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
+			<% if ShowFormInEditableOrderTable %>
+				<div class="modifierForm">$ModifierForm</div>
+			<% else %>
+				<span class="tableTitle" id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
+				<div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div >
+			<% end_if %>
 		<% end_if %>
-		<div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div >
 	</td>
 	<td class="right total" id="$AJAXDefinitions.TableTotalID">$TableValue.Nice</td>
 	<td class="right remove">
