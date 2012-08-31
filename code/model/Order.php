@@ -190,6 +190,10 @@ class Order extends DataObject {
 	 * Returns a set of modifier forms for use in the checkout order form,
 	 * Controller is optional, because the orderForm has its own default controller.
 	 *
+	 * This method only returns the Forms that should be included outside
+	 * the editable table... Forms within it can be called
+	 * from through the modifier itself.
+	 *
 	 * @return Null | DataObjectSet of OrderModiferForms
 	 * @param Controller $optionalController
 	 * @param Validator $optionalValidator
@@ -200,8 +204,10 @@ class Order extends DataObject {
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
 				if($modifier->ShowForm()) {
-					if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
-						$dos->push($form);
+					if($modifier->ShowFormOutsideEditableOrderTable()) {
+						if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
+							$dos->push($form);
+						}
 					}
 				}
 			}
