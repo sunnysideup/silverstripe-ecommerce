@@ -13,7 +13,7 @@
 	<% if StepsContentHeading(1) %><h2 class="orderStepHeading">$StepsContentHeading(1)</h2><% end_if %>
 	<% if StepsContentAbove(1) %><p class="above headerFooterDescription">$StepsContentAbove(1)</p><% end_if %>
 	<% control Order %><% include Order_Content_Editable %><% end_control %>
-	<% if ModifierForms %><% control ModifierForms %><div class="modifierFormInner">$Me</div><% end_control %><% end_if %>
+	<% include Order_Content_Editable_ModifierForms %>
 	<% if StepsContentBelow(1) %><p class="below headerFooterDescription">$StepsContentBelow(1)</p><% end_if %>
 
 	<% if HasCheckoutSteps %>
