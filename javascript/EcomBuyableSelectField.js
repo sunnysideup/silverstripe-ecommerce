@@ -130,8 +130,8 @@ EcomBuyableSelectField = {
 				}
 			)
 			.autocomplete(
-				{
-
+					{
+					delay: EcomBuyableSelectField.delayInMilliSeconds,
 					//delay before we start searching
 					delay: EcomBuyableSelectField.delayInMilliSeconds,
 
