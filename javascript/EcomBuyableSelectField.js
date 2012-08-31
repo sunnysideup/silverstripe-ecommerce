@@ -99,73 +99,103 @@ EcomBuyableSelectField = {
 
 	init: function() {
 		EcomBuyableSelectField.fieldName += "-FindBuyable" ;
-		jQuery("#"+EcomBuyableSelectField.fieldName).autocomplete(
-			{
-
-				//delay before we start searching
-				delay: EcomBuyableSelectField.delayInMilliSeconds,
-
-				//number of characters entered before we start searching
-				minLength: EcomBuyableSelectField.minLength,
-
-				source: function(request, response) {
-					jQuery("label[for='"+EcomBuyableSelectField.fieldName+"']'").addClass(EcomBuyableSelectField.loadingClass);
-					EcomBuyableSelectField.requestTerm = request.term;
-					jQuery.ajax(
-						{
-							type: "POST",
-							url: "/ecommercebuyabledatalist/json/",
-							dataType: "json",
-							data: {
-								term: request.term,
-								countOfSuggestions: EcomBuyableSelectField.countOfSuggestions
-							},
-							error: function(xhr, textStatus, errorThrown) {
-								alert("Error: " + xhr.responseText+errorThrown+textStatus);
-							},
-							success: function(data) {
-								response(
-									jQuery.map(
-										data,
-										function(c) {
-											return {
-												label: c.Title,
-												value: EcomBuyableSelectField.requestTerm,
-												title: c.Title,
-												className: c.ClassName,
-												id: c.ID,
-												version: c.Version
-											}
-										}
-									)
-								);
-								if(data.length < 1) {
-									EcomBuyableSelectField.showCurrentSituation(EcomBuyableSelectField.nothingFound);
-								}
-								jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").removeClass(EcomBuyableSelectField.loadingClass);
-							}
-						}
-					);
-				},
-
-				//after we finish the search (what happens when the data comes back...
-				select: function(event, ui) {
-					if(
-						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").length == 0 ||
-						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").length  == 0 ||
-						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").length  == 0
-					) {
-						EcomBuyableSelectField.showCurrentSituation("Error: can not find BuyableID or BuyableClassName or Version field");
+		jQuery("#"+EcomBuyableSelectField.fieldName)
+			.focus(
+				function() {
+					var labelSelector = "label[for='" + jQuery(this).attr("id") + "']";
+					jQuery(labelSelector).addClass("hasFocus");
+				}
+			)
+			.blur(
+				function() {
+					var labelSelector = "label[for='" + jQuery(this).attr("id") + "']";
+					jQuery(labelSelector).removeClass("hasFocus");
+					if(jQuery(this).val().length == 0) {
+						jQuery(labelSelector).removeClass("hasText");
 					}
 					else {
-						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").val(ui.item.id);
-						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").val(ui.item.className);
-						jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").val(ui.item.version);
-						EcomBuyableSelectField.showCurrentSituation(ui.item.title);
+						jQuery(labelSelector).addClass("hasText");
 					}
 				}
-			}
-		);
+			)
+			.keydown(
+				function(event) {
+					var labelSelector = "label[for='" + jQuery(this).attr("id") + "']";
+					if(jQuery(this).val().length > 1) {
+						jQuery(labelSelector).addClass("hasText");
+					}
+					else {
+						jQuery(labelSelector).removeClass("hasText");
+					}
+				}
+			)
+			.autocomplete(
+				{
+
+					//delay before we start searching
+					delay: EcomBuyableSelectField.delayInMilliSeconds,
+
+					//number of characters entered before we start searching
+					minLength: EcomBuyableSelectField.minLength,
+
+					source: function(request, response) {
+						jQuery("label[for='"+EcomBuyableSelectField.fieldName+"']'").addClass(EcomBuyableSelectField.loadingClass);
+						EcomBuyableSelectField.requestTerm = request.term;
+						jQuery.ajax(
+							{
+								type: "POST",
+								url: "/ecommercebuyabledatalist/json/",
+								dataType: "json",
+								data: {
+									term: request.term,
+									countOfSuggestions: EcomBuyableSelectField.countOfSuggestions
+								},
+								error: function(xhr, textStatus, errorThrown) {
+									alert("Error: " + xhr.responseText+errorThrown+textStatus);
+								},
+								success: function(data) {
+									response(
+										jQuery.map(
+											data,
+											function(c) {
+												return {
+													label: c.Title,
+													value: EcomBuyableSelectField.requestTerm,
+													title: c.Title,
+													className: c.ClassName,
+													id: c.ID,
+													version: c.Version
+												}
+											}
+										)
+									);
+									if(data.length < 1) {
+										EcomBuyableSelectField.showCurrentSituation(EcomBuyableSelectField.nothingFound);
+									}
+									jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").removeClass(EcomBuyableSelectField.loadingClass);
+								}
+							}
+						);
+					},
+
+					//after we finish the search (what happens when the data comes back...
+					select: function(event, ui) {
+						if(
+							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").length == 0 ||
+							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").length  == 0 ||
+							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").length  == 0
+						) {
+							EcomBuyableSelectField.showCurrentSituation("Error: can not find BuyableID or BuyableClassName or Version field");
+						}
+						else {
+							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").val(ui.item.id);
+							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").val(ui.item.className);
+							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").val(ui.item.version);
+							EcomBuyableSelectField.showCurrentSituation(ui.item.title);
+						}
+					}
+				}
+			);
 	},
 
 	showCurrentSituation: function(situation) {
