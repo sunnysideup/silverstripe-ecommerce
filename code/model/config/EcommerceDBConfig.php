@@ -349,12 +349,12 @@ class EcommerceDBConfig extends DataObject {
 	 * @return String
 	 */
 	public function Currency() {
-		return EcommerceConfig::get("EcommerceCurrency", "site_currency")
+		return EcommerceConfig::get("EcommerceCurrency", "site_currency");
 	}
 
 	/**
 	 *
-	 * return DataObjectSet (list of EcommerceCurrencies)
+	 * return DataList
 	 */
 	function Currencies(){
 		return EcommerceCurrency::ecommerce_currency_list();

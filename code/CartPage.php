@@ -235,8 +235,8 @@ class CartPage_Controller extends Page_Controller{
 
 
 	/**
-	 * This DataObjectSet holds DataObjects with a Link and Title each....
-	 * @var $actionLinks DataObjectSet
+	 * This ArraList holds DataObjects with a Link and Title each....
+	 * @var ArraList
 	 **/
 	protected $actionLinks = null;
 
@@ -329,8 +329,8 @@ class CartPage_Controller extends Page_Controller{
 	}
 
 	/**
-	 * This returns a DataObjectSet, each dataobject has two vars: Title and Link
-	 * @return DataObjectSet | Null
+	 * This returns a ArraList, each dataobject has two vars: Title and Link
+	 * @return ArraList
 	 **/
 	function ActionLinks() {
 		$this->workOutMessagesAndActions();
@@ -432,7 +432,7 @@ class CartPage_Controller extends Page_Controller{
 	function loadorder() {
 		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
 		ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
-		Director::redirect($this->Link());
+		$this->redirect($this->Link());
 		return array();
 	}
 	/**
@@ -445,7 +445,7 @@ class CartPage_Controller extends Page_Controller{
 	function copyorder() {
 		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
 		ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
-		Director::redirect($this->Link());
+		$this->redirect($this->Link());
 		return array();
 	}
 
@@ -499,7 +499,7 @@ class CartPage_Controller extends Page_Controller{
 		else {
 			self::set_message(_t("CartPage.ORDERCOULDNOTBESAVED", "Your order could not be saved."));
 		}
-		Director::redirectBack();
+		$this->redirectBack();
 		return array();
 	}
 
@@ -535,11 +535,10 @@ class CartPage_Controller extends Page_Controller{
 
 	/**
 	 * work out the options for the user
-	 * @return void
 	 **/
 	protected function workOutMessagesAndActions(){
 		if(!$this->workedOutMessagesAndActions) {
-			$this->actionLinks = new DataObjectSet();
+			$this->actionLinks = new ArraList();
 			//what order are we viewing?
 			$viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
 			$currentUserID = Member::currentUserID();

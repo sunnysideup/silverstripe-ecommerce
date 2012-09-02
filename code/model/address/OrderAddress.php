@@ -452,7 +452,7 @@ class OrderAddress extends DataObject {
 	/**
 	 * Finds previous addresses from the member of the current address
 	 * @param Object (Member)
-	 * @return Null | DataObjectSet (filled with ShippingAddress / BillingAddress)
+	 * @return ArrayList
 	 **/
 	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
 		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
@@ -487,7 +487,7 @@ class OrderAddress extends DataObject {
 							else {
 								$addressCompare[$address->ID] = $comparisonString;
 								if(!$returnDos) {
-									$returnDos = new DataObjectSet();
+									$returnDos = new ArrayList();
 								}
 								$returnDos->push($address);
 							}
@@ -521,7 +521,7 @@ class OrderAddress extends DataObject {
 	/**
 	 * Finds previous orders from the member of the current address
 	 * @param Object (Member)
-	 * @return Null | DataObjectSet (Order)
+	 * @return DataList
 	 **/
 	protected function previousOrdersFromMember($member = null, $onlyLastRecord = false) {
 		if(!$member) {

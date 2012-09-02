@@ -833,7 +833,7 @@ class ShoppingCart extends Object{
 			if($form) {
 				$form->sessionMessage($message,$status);
 			}
-			Director::redirectBack();
+			Controller::curr()::redirectBack();
 			return;
 		}
 	}
@@ -954,13 +954,13 @@ class ShoppingCart_Controller extends Controller{
 
 	function index() {
 		if($this->cart) {
-			Director::redirect($this->cart->Link());
+			$this->redirect($this->cart->Link());
 			return;
 		}
 		user_error(_t("ShoppingCart.NOCARTINITIALISED", "no cart initialised"), E_USER_NOTICE);
 		$page = DataObject::get_one("ErrorPage", "ErrorCode = '404'");
 		if($page) {
-			Director::redirect($page->Link());
+			$this->redirect($page->Link());
 			return;
 		}
 		user_error(_t("ShoppingCart.NOCARTINITIALISED", "no 404 page available"), E_USER_ERROR);
@@ -1096,10 +1096,10 @@ class ShoppingCart_Controller extends Controller{
 		if($buyable) {
 			$link = $buyable->Link();
 			$this->cart->deleteBuyable($buyable,$this->parameters());
-			Director::redirect($link);
+			$this->redirect($link);
 		}
 		else {
-			Director::redirectBack();
+			$this->redirectBack();
 		}
 	}
 
@@ -1161,7 +1161,7 @@ class ShoppingCart_Controller extends Controller{
 
 	function clear($request) {
 		$this->cart->clear();
-		Director::redirect("/");
+		$this->redirect("/");
 		return false;
 	}
 
@@ -1170,7 +1170,7 @@ class ShoppingCart_Controller extends Controller{
 		if($m = Member::currentUser()) {
 			$m->logout();
 		}
-		Director::redirect("/");
+		$this->redirect("/");
 		return false;
 	}
 
@@ -1239,14 +1239,14 @@ class ShoppingCart_Controller extends Controller{
 				$bestBuyable = DataObject::get_by_id($buyableClassName, $buyableID);
 				if($bestBuyable) {
 					//show singleton with old version
-					Director::redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
+					$this->redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
 					return;
 				}
 			}
 		}
 		$page = DataObject::get_one("ErrorPage", "ErrorCode = '404'");
 		if($page) {
-			Director::redirect($page->Link());
+			$this->redirect($page->Link());
 			return;
 		}
 		return null;

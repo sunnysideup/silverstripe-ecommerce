@@ -101,8 +101,9 @@ class EcommerceCurrency extends DataObject {
 	);
 
 	/**
-	 * NOTE: when there is only one currency we return NULL as one currency is meaningless.
-	 * @return DataObjectSet (EcommerceCurrency list) | Null
+	 * NOTE: when there is only one currency we return an empty DataList
+	 * as one currency is meaningless.
+	 * @return DataList
 	 */
 	public static function ecommerce_currency_list(){
 		$dos = DataObject::get(
@@ -112,7 +113,7 @@ class EcommerceCurrency extends DataObject {
 		);
 		if($dos) {
 			if(1 == $dos->count()) {
-				$dos = null;
+				$dos = new DataList();
 			}
 		}
 		return $dos;

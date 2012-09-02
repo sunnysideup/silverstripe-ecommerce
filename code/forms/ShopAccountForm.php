@@ -107,7 +107,7 @@ class ShopAccountForm extends Form {
 		else {
 			$this->sessionMessage(_t("ShopAccountForm.COULDNOTFINDORDER", "Could not find order."), "bad");
 		}
-		Director::redirectBack();
+		$this->controller->redirectBack();
 	}
 
 
@@ -119,16 +119,16 @@ class ShopAccountForm extends Form {
 		$member = Member::currentUser();
 		if(!$member) {
 			$form->sessionMessage(_t('Account.DETAILSNOTSAVED','Your details could not be saved.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 		}
 		$form->saveInto($member);
 		$member->write();
 		if($link) {
-			Director::redirect($link);
+			$this->controller->redirect($link);
 		}
 		else {
 			$form->sessionMessage(_t('Account.DETAILSSAVED','Your details have been saved.'), 'good');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 		}
 		return true;
 	}

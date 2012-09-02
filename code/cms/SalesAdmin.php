@@ -12,15 +12,41 @@
 
 class SalesAdmin extends ModelAdmin{
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $url_segment = 'sales';
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $menu_title = 'Sales';
 
+	/**
+	 * standard SS variable
+	 * @var Int
+	 */
 	public static $menu_priority = 1;
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $collection_controller_class = 'SalesAdmin_CollectionController';
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $record_controller_class = 'SalesAdmin_RecordController';
+
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
+	public static $menu_icon = "";
 
 	/**
 	 * Standard SS Method

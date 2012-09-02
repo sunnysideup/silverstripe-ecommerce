@@ -249,13 +249,13 @@ class OrderFormAddress extends Form {
 		//check for cart items
 		if(!$order) {
 			$form->sessionMessage(_t('OrderForm.ORDERNOTFOUND','Your order could not be found.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 		if($order && ($order->TotalItems($recalculate = true) < 1) ) {
 			// WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
 			$form->sessionMessage(_t('OrderForm.NOITEMSINCART','Please add some items to your cart.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 
@@ -310,7 +310,7 @@ class OrderFormAddress extends Form {
 		//-----------------------------------------------
 
 		$nextStepLink = CheckoutPage::find_next_step_link("orderformaddress");
-		Director::redirect($nextStepLink);
+		$this->controller->redirect($nextStepLink);
 		return true;
 	}
 

@@ -103,7 +103,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 		$results = parent::processAll($filepath, $preview);
 
 		//After results have been processed, publish all created & updated products
-		$objects = new DataObjectSet();
+		$objects = new DataList();
 		$objects->merge($results->Created());
 		$objects->merge($results->Updated());
 		foreach($objects as $object){

@@ -124,7 +124,7 @@ class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordControl
 			return $this->edit($request);
 		}
 		else {
-			Director::redirectBack();
+			$this->redirectBack();
 		}
 	}
 

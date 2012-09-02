@@ -382,7 +382,7 @@ class ProductGroup extends Page {
 	 *
 	 * @param mixed $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @param boolean $recursive
-	 * @return DataObjectSet | Null
+	 * @return DataList
 	 */
 	public function ProductsShowable($extraFilter = ''){
 		$allProducts = $this->currentInitialProducts($extraFilter);
@@ -401,7 +401,7 @@ class ProductGroup extends Page {
 	 * NOTE: there is no sort and limit for the initial retrieval
 	 *
 	 * @param string $extraFilter Additional SQL filters to apply to the Product retrieval
-	 * @return DataObjectSet | Null
+	 * @return DataList
 	 **/
 	protected function currentInitialProducts($extraFilter = ''){
 		$className = $this->getClassNameSQL();
@@ -532,11 +532,11 @@ class ProductGroup extends Page {
 	 *
 	 * All of the 'current' methods are to support the currentFinalProducts Method.
 	 *
-	 * @param Object $allProducts DataObjectSet of all eligile products before sorting and limiting
-	 * @returns Object DataObjectSet of products
+	 * @param Object $allProducts DataList of all eligile products before sorting and limiting
+	 * @return DataList
 	 **/
 	protected function currentFinalProducts($buyables){
-		if($buyables && $buyables instanceOf DataObjectSet) {
+		if($buyables && $buyables instanceOf DataList) {
 			$buyables->removeDuplicates();
 			if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
 				foreach($buyables as $buyable) {
@@ -574,7 +574,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function currentWhereSQL($buyables) {
-		if($buyables instanceOf DataObjectSet) {
+		if($buyables instanceOf DataList) {
 			$buyablesIDArray = $buyables->map("ID", "ID");
 		}
 		else {
@@ -715,7 +715,7 @@ class ProductGroup extends Page {
 	 * @param Int $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Groups are returned...
 	 * @param String $filter - additional filter to be added
 	 * @param Int $numberOfRecursions - current level of depth
-	 * @return DataObjectSet | null
+	 * @return DataList
 	 */
 	function ChildGroups($maxRecursiveLevel, $filter = "", $numberOfRecursions = 0) {
 		$output = null;
@@ -789,7 +789,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Recursively generate a product menu.
-	 * @return DataObjectSet
+	 * @return DataList
 	 */
 	function GroupsMenu($filter = "ShowInMenus = 1") {
 		if($parent = $this->ParentGroup()) {
@@ -848,7 +848,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * Return the products for this group.
 	 *
-	 *@return DataObjectSet(Products)
+	 * @return DataList
 	 **/
 	public function Products($recursive = true){
 	//	return $this->ProductsShowable("\"FeaturedProduct\" = 1",$recursive);
@@ -858,7 +858,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * Return products that are featured, that is products that have "FeaturedProduct = 1"
 	 *
-	 *@return DataObjectSet(Products)
+	 * @return DataList
 	 */
 	function FeaturedProducts($recursive = true) {
 		return $this->ProductsShowable("\"FeaturedProduct\" = 1",$recursive);
@@ -867,7 +867,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * Return products that are not featured, that is products that have "FeaturedProduct = 0"
 	 *
-	 *@return DataObjectSet(Products)
+	 *@return DataList
 	 */
 	function NonFeaturedProducts($recursive = true) {
 		return $this->ProductsShowable("\"FeaturedProduct\" = 0",$recursive);
@@ -876,14 +876,14 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * Provides a dataset of links for sorting products.
 	 *
-	 *@return DataObjectSet(Name, Link, Current (boolean), LinkingMode)
+	 *@return ArrayList(Name, Link, Current (boolean), LinkingMode)
 	 */
 	function SortLinks(){
 		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
 		if(count($sortOptions) <= 0) return null;
 		if($this->totalCount < 3) return null;
 		$sort = (isset($_GET['sortby'])) ? Convert::raw2sql($_GET['sortby']) : $this->MyDefaultSortOrder();
-		$dos = new DataObjectSet();
+		$dos = new ArrayList();
 		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
 		foreach($sortOptions as $key => $array){
 			$current = ($key == $sort) ? 'current' : false;
@@ -901,7 +901,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * returns child product groups for use in
 	 * 'in this section'
-	 * @return NULL | DataObjectSet
+	 * @return DataList
 	 */
 	function MenuChildGroups() {
 		return $this->ChildGroups(2, "\"ShowInMenus\" = 1");
@@ -910,7 +910,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 *
 	 * This method can be extended to show products in the side bar.
-	 * @return Object DataObjectSet
+	 * @return DataList
 	 */
 	function SidebarProducts(){
 		return null;

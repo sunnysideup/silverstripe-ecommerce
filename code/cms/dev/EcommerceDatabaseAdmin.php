@@ -81,8 +81,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of migration tasks
-	 *
+	 * list of config tasks
+	 * @return ArrayList
 	 */
 	function OverallConfig() {
 		return $this->createMenuDOSFromArray($this->overallconfig, $type = "Overall Config");
@@ -112,8 +112,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of data cleanup tasks
-	 *
+	 * list of data setup tasks
+	 * @return ArrayList
 	 */
 	function EcommerceSetup() {
 		return $this->createMenuDOSFromArray($this->ecommerceSetup, $type = "EcommerceSetup");
@@ -161,7 +161,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of data cleanup tasks
+	 * regular data cleanup tasks
+	 * @return ArrayList
 	 *
 	 */
 	function RegularMaintenance() {
@@ -249,8 +250,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of data debug actions
-	 *
+	 * list of data debug actions
+	 * @return ArrayList
 	 */
 	function DebugActions() {
 		return $this->createMenuDOSFromArray($this->debugActions, $type = "DebugActions");
@@ -285,8 +286,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of migration tasks
-	 *
+	 * list of migration tasks
+	 * @return ArrayList
 	 */
 	function Migrations() {
 		return $this->createMenuDOSFromArray($this->migrations, $type = "Migrations");
@@ -340,8 +341,8 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of migration tasks
-	 *
+	 * list of crazy actions tasks
+	 * @return ArrayList
 	 */
 	function CrazyShit() {
 		return $this->createMenuDOSFromArray($this->crazyshit, $type = "CrazyShit");
@@ -370,7 +371,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	function Tests(){
-		$dos = new DataObjectSet();
+		$dos = new ArrayList();
 		foreach($this->tests as $class => $name){
 			$dos->push(new ArrayData(array(
 				'Name' => $name,
@@ -409,7 +410,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	 */
 	protected function createMenuDOSFromArray($buildTasks, $type = "") {
 		$this->extend("updateEcommerceDevMenu".$type, $buildTasks);
-		$dos = new DataObjectSet();
+		$dos = new ArrayList();
 		foreach($buildTasks as $buildTask) {
 			$obj = new $buildTask();
 			$do = new ArrayData(

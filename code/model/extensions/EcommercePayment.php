@@ -57,7 +57,7 @@ class EcommercePayment extends DataExtension {
 	public static function process_payment_form_and_return_next_step($order, $form, $data) {
 		if(!$order){
 			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
-			Director::redirectBack();
+			$form->controller->redirectBack();
 			return false;
 		}
 		$paidBy = $order->Member();
@@ -68,7 +68,7 @@ class EcommercePayment extends DataExtension {
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
 		if(!($payment && $payment instanceof Payment)) {
 			$form->sessionMessage(_t('EcommercePayment.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
-			Director::redirectBack();
+			$form->controller->redirectBack();
 			return false;
 		}
 		// Save payment data from form and process payment
@@ -95,10 +95,10 @@ class EcommercePayment extends DataExtension {
 				//payment is done, redirect to either returntolink
 				//OR to the link of the order ....
 				if(isset($data["returntolink"])) {
-					Director::redirect($data["returntolink"]);
+					$form->controller->redirect($data["returntolink"]);
 				}
 				else {
-					Director::redirect($order->Link());
+					$form->controller->redirect($order->Link());
 				}
 			}
 			return true;
@@ -135,7 +135,7 @@ class EcommercePayment extends DataExtension {
 	function redirectToOrder() {
 		$order = $this->owner->Order();
 		if($order) {
-			Director::redirect($order->Link());
+			Controller::curr()::redirect($order->Link());
 		}
 		else {
 			user_error("No order found with this payment: ".$this->ID, E_USER_NOTICE);

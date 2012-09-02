@@ -11,17 +11,17 @@
 class SelectOrderAddressField extends OptionsetField {
 
 	/**
-	 * @var Null | DataObjectSet
+	 * @var DataList
 	 */
 	protected $addresses = null;
 
 	/**
 	 * Creates a new optionset field.
-	 * @param name The field name
-	 * @param title The field title
-	 * @param source DataObjectSet
-	 * @param value The current value
-	 * @param form The parent form
+	 * @param String $name The field name
+	 * @param String $title The field title
+	 * @param DataList $addresses
+	 * @param String $value The current value
+	 * @param Form $form - The parent form
 	 */
 	function __construct($name, $title = "", $addresses = null, $value = "", $form = null) {
 		$this->addresses = $addresses;

@@ -331,7 +331,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Returns all the parent groups for the product.
 	 * This function has been added her to contrast it with MainParentGroup (see below).
-	  *@return DataObjectSet(ProductGroup) or NULL
+	  *@return DataList
 	 **/
 	function AllParentGroups() {
 		return $this->ProductGroups();
@@ -348,7 +348,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Returns products in the same group
-	 * @return DataObjectSet
+	 * @return DataList
 	 **/
 	function Siblings() {
 		if($this->ParentID) {
@@ -435,7 +435,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * @TODO: complete
 	 * @param String $compontent - the has many relationship you are looking at, e.g. OrderAttribute
-	 * @return DataObjectSet
+	 * @return DataList
 	 */
 	public function getVersionedComponents($component = "ProductVariations") {
 		$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
@@ -897,7 +897,7 @@ class Product_Controller extends Page_Controller {
 			}
 			else {
 				$form->sessionMessage($msg,$status);
-				Director::redirectBack();
+				$this->redirectBack();
 			}
 		}
 		else {
@@ -917,7 +917,7 @@ class Product_Controller extends Page_Controller {
 	 *
 	 * This method can be extended to show products in the side bar.
 	 *
-	 * @return Object DataObjectSet
+	 * @return DataList
 	 */
 	function SidebarProducts(){
 		return null;
