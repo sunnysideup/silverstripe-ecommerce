@@ -173,6 +173,7 @@ class EcommerceConfigDefinitions extends Object {
 				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?",
 			),
 			"EcommerceCurrency" => array(
+				"site_currency" => "The default currency used on the site.",
 				"exchange_provider_class" => "The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.",
 			),
 			"ExpiryDateField" => array(

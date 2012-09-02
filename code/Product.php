@@ -165,7 +165,7 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	function getCMSFields() {
-		//prevent calling updateCMSFields extend function too early
+		//prevent calling updateSettingsFields extend function too early
 		$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
 		$this->disableCMSFieldsExtensions();
 		$fields = parent::getCMSFields();
@@ -223,7 +223,7 @@ class Product extends Page implements BuyableModel {
 		*/
 		$fields->addFieldToTab('Root.Content.Orders', $orderTableField);
 		if($siteTreeFieldExtensions) {
-			$this->extend('updateCMSFields', $fields);
+			$this->extend('updateSettingsFields', $fields);
 		}
 		return $fields;
 	}

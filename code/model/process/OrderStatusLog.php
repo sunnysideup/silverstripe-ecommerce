@@ -203,12 +203,24 @@ class OrderStatusLog extends DataObject {
 		return $this->i18n_singular_name();
 	}
 
+
 	/**
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
 	 *
-	 *@return Fieldset
-	 **/
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
+	 */
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		return $fields;
 	}
@@ -555,12 +567,12 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 
 	public static $default_sort = "\"DispatchedOn\" DESC, \"Created\" DESC";
 
-	function populateDefaults() {
-		parent::populateDefaults();
-		$this->Title = _t("OrderStatusLog.ORDERDISPATCHED", "Order Dispatched");
-		$this->DispatchedOn =  date('Y-m-d');
-		$this->DispatchedBy =  Member::currentUser()->getTitle();
-	}
+	//function populateDefaults() {
+		//parent::populateDefaults();
+		//$this->Title = _t("OrderStatusLog.ORDERDISPATCHED", "Order Dispatched");
+		//$this->DispatchedOn =  date('Y-m-d');
+		//$this->DispatchedBy =  Member::currentUser()->getTitle();
+	//}
 
 	/**
 	*

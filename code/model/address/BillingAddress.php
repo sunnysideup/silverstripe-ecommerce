@@ -82,11 +82,6 @@ class BillingAddress extends OrderAddress {
 	 */
 	static $indexes = array(
 		// "SearchFields" => "fulltext (FirstName, Surname, Address, Address2, City, PostalCode, Email)"
-		array(
-			'name' => 'SearchFields',
-			'type' => 'fulltext',
-			'value' => 'FirstName, Surname, Address, Address2, City, PostalCode, Email'
-		),
 		"Obsolete" => true,
 		"OrderID" => true
 	);
@@ -191,7 +186,7 @@ class BillingAddress extends OrderAddress {
 				new TextField('Surname', _t('OrderAddress.SURNAME','Surname'))
 			);
 		}
-		$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Prefix')));
+		$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));
 		$billingFields->push(new TextField('Address2', _t('OrderAddress.ADDRESS2','&nbsp;')));
 		$billingFields->push(new TextField('City', _t('OrderAddress.CITY','Town')));
@@ -230,10 +225,10 @@ class BillingAddress extends OrderAddress {
 	 * standard SS method
 	 * sets the country to the best known country {@link EcommerceCountry}
 	 **/
-	function populateDefaults() {
-		parent::populateDefaults();
-		$this->Country = EcommerceCountry::get_country();
-	}
+	//function populateDefaults() {
+		//parent::populateDefaults();
+		//$this->Country = EcommerceCountry::get_country();
+	//}
 
 
 

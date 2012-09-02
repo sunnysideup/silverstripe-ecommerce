@@ -93,7 +93,7 @@ class OrderConfirmationPage extends CartPage{
 	/**
 	 * Return a link to copy the order to cart
 	 * @return String (URLSegment)
-	 * @param int|string $orderID ID of the order
+	 * @param int $orderID ID of the order
 	 */
 	public static function new_order_link($orderID) {
 		return self::find_link(). 'copyorder/' . $orderID . '/';

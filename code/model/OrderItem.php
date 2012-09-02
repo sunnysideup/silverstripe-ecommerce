@@ -176,12 +176,24 @@ class OrderItem extends OrderAttribute {
 		return $this->canEdit($member);
 	}
 
+
 	/**
-	 * standard SS method
-	 * @return FieldSet
-	 **/
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
+	 */
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		return $fields;
 	}
@@ -420,6 +432,9 @@ class OrderItem extends OrderAttribute {
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
 	  **/
 	function Buyable($current = false) {
+		if(!$this->BuyableID) {
+			return null;
+		}
 		//start hack
 		if(!$this->BuyableClassName) {
 			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);

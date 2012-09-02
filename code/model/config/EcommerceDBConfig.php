@@ -349,9 +349,7 @@ class EcommerceDBConfig extends DataObject {
 	 * @return String
 	 */
 	public function Currency() {
-		if(class_exists('Payment')) {
-			return Payment::site_currency();
-		}
+		return EcommerceConfig::get("EcommerceCurrency", "site_currency")
 	}
 
 	/**

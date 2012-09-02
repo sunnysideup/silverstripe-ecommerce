@@ -68,11 +68,6 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 
 
 
-// __________________________________ START PAYMENT MODULE CONFIG __________________________________
-//MUST SET!
-//Payment::set_site_currency("NZD");
-//Payment::set_supported_methods(array('PayPalPayment' => 'Paypal Payment'));
-// __________________________________ END PAYMENT MODULE CONFIG __________________________________
 
 
 

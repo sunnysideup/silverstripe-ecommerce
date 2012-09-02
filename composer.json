@@ -15,8 +15,8 @@
 	],
 	"require":{
 		"php": ">=5.3.2",
-		"silverstripe/framework": "2.4.*",
-		"silverstripe/payment": "0.3.*"
+		"silverstripe/framework": "3.*",
+		"silverstripe/payment": "0.4.*"
 	},
 	"extra":{
 		"snapshot" : "http://silverstripe-ecommerce.com/_help/screenshot.png"
