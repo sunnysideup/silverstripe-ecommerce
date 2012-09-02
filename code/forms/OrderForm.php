@@ -113,13 +113,13 @@ class OrderForm extends Form {
 		//check for cart items
 		if(!$order) {
 			$form->sessionMessage(_t('OrderForm.ORDERNOTFOUND','Your order could not be found.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 		if($order && $order->TotalItems($recalculate = true) < 1) {
 			// WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
 			$form->sessionMessage(_t('OrderForm.NOITEMSINCART','Please add some items to your cart.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 
@@ -130,7 +130,7 @@ class OrderForm extends Form {
 		//debug::log($oldTotal."-".$newTotal);
 		if(floatval($newTotal) != floatval($oldTotal)) {
 			$form->sessionMessage(_t('OrderForm.PRICEUPDATED','The order price has been updated, please review the order and submit again.'), 'warning');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 
@@ -165,7 +165,7 @@ class OrderForm extends Form {
 		else {
 			//there is an error with payment
 			if(!Controller::curr()->redirectedTo()) {
-				Director::redirect($order->Link());
+				$this->controller->redirect($order->Link());
 			}
 			return false;
 		}
@@ -313,7 +313,7 @@ class OrderForm_Payment extends Form {
 			}
 		}
 		$form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT','Sorry, we could not process your payment.'),'bad');
-		Director::redirectBack();
+		$this->controller->redirectBack();
 		return false;
 	}
 
@@ -371,7 +371,7 @@ class OrderForm_Cancel extends Form {
 						$reason = $SQLData["CancellationReason"];
 					}
 					$order->Cancel($member, $reason);
-					Director::redirectBack();
+					$this->controller->redirectBack();
 					return false;
 				}
 			}
@@ -383,7 +383,7 @@ class OrderForm_Cancel extends Form {
 			),
 			'bad'
 		);
-		Director::redirectBack();
+		$this->controller->redirectBack();
 		return false;
 	}
 }

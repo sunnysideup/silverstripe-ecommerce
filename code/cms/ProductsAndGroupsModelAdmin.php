@@ -25,6 +25,13 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin {
 
 	public static $menu_title = 'Products';
 
+
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
+	public static $menu_icon = "";
+
 	public static $model_importers = array(
 		'Product' => 'ProductBulkLoader',
 		'ProductGroup' => null

@@ -43,7 +43,7 @@ class RecalculateTheNumberOfProductsSold extends BuildTask{
 		//$q->leftJoin('OrderItem','"Product"."ID" = "OrderItem"."BuyableID"');
 		//$q->where("\"OrderItem\".\"BuyableClassName\" = 'Product'");
 		$records = $query->execute();
-		$orderItems = $orderItemSingleton->buildDataObjectSet($records, "DataObjectSet", $query, 'OrderItem');
+		$orderItems = $orderItemSingleton->buildDataObjectSet($records, "DataList", $query, 'OrderItem');
 		if($orderItems) {
 			foreach($orderItems as $orderItem){
 				if(!$orderItem->NewNumberSold) {

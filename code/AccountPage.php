@@ -40,7 +40,7 @@ class AccountPage extends Page {
 	protected $calculatedOutstanding = 0;
 
 	/**
-	 *@var Null | DataObjectSet
+	 *@var DataList
 	 */
 	protected $pastOrders = null;
 
@@ -70,7 +70,7 @@ class AccountPage extends Page {
 
 	/**
 	 * Returns a list of all previous orders for the member / account
-	 * @return Null | DataObjectSet
+	 * @return DataList
 	 */
 	function PastOrders(){
 		$this->calculatePastOrders();
@@ -110,7 +110,7 @@ class AccountPage extends Page {
 
 	/**
 	 * retrieves previous orders and adds totals to it...
-	 * return NULL | DataObjectSet
+	 * return DataList
 	 **/
 	protected function calculatePastOrders(){
 		if(!$this->pastOrders) {
@@ -131,7 +131,7 @@ class AccountPage extends Page {
 
 	/**
 	 *
-	 * @return DataObjectSet | NULL
+	 * @return DataList
 	 */
 	protected function pastOrdersSelection(){
 		return DataObject::get(

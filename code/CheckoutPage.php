@@ -215,11 +215,11 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	}
 
 	/**
-	 * Returns a DataObjectSet of {@link OrderModifierForm} objects. These
+	 * Returns a ArrayList of {@link OrderModifierForm} objects. These
 	 * forms are used in the OrderInformation HTML table for the user to fill
 	 * in as needed for each modifier applied on the site.
 	 *
-	 * @return DataObjectSet
+	 * @return ArrayList
 	 */
 	function ModifierForms() {
 		if ($this->currentOrder) {
@@ -296,7 +296,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * returns a dataobject set of the steps.
 	 * Or just one step if that is more relevant.
 	 * @param Int $number - if set, it returns that one step.
-	 * @return Null | DataObject (CheckoutPage_Description) | DataObjectSet (CheckoutPage_Description)
+	 * @return Null | DataObject (CheckoutPage_Description) | ArrayList (CheckoutPage_Description)
 	 */
 	function CheckoutSteps($number = 0) {
 		$where = '';
@@ -305,7 +305,9 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		}
 		$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
 		if($number) {
-			return $dos->First();
+			if($dos) {
+				return $dos->First();
+			}
 		}
 		$completed = 1;
 		$completedClass = "completed";

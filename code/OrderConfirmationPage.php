@@ -182,12 +182,22 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 * the OrderConfirmationPage is shown as part of the checkout process
 	 * We repeat these here so that you can show the user that (s)he has reached the last step
 	 *
-	 * @return Null | DataObjectSet (CheckoutPage_Description)
+	 * @param Int $number - if set, it returns that one step.
+	 * @return Null | DataObject (CheckoutPage_Description) | ArrayList (CheckoutPage_Description)
 	 */
-	function CheckoutSteps() {
+	function CheckoutSteps($number = 0) {
+		$where = '';
+		if($number) {
+			$where = "\"CheckoutPage_StepDescription\".\"ID\" = $number";
+		}
 		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
 			if($this->currentOrder->SessionID && $this->currentOrder->SessionID == session_id()) {
-				$dos = DataObject::get("CheckoutPage_StepDescription", null, "\"ID\" ASC");
+				$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
+				if($number) {
+					if($dos) {
+						return $dos->First();
+					}
+				}
 				foreach($dos as $do) {
 					$do->LinkingMode = "link completed";
 					$do->Completed = 1;

@@ -147,7 +147,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 * @return DataObjectSet | Null
+	 * @return DataList
 	 */
 	function OrderModifiers() {return DataObject::get("OrderModifier", "OrderID = ".$this->ID); }
 
@@ -170,9 +170,9 @@ class Order extends DataObject {
 	 * deductions associated to an order, such as
 	 * shipping, taxes, vouchers etc.
 	 *
-	 * @var array
+	 * @var DataList
 	 */
-	protected static $modifiers = array();
+	protected static $modifiers = null;
 
 	/**
 	 * Total Items : total items in cart
@@ -194,13 +194,12 @@ class Order extends DataObject {
 	 * the editable table... Forms within it can be called
 	 * from through the modifier itself.
 	 *
-	 * @return Null | DataObjectSet of OrderModiferForms
 	 * @param Controller $optionalController
 	 * @param Validator $optionalValidator
-	 * @return DataObjectSet of OrderModiferForms
+	 * @return ArrayList
 	 **/
 	public function getModifierForms($optionalController = null, $optionalValidator = null) {
-		$dos = new DataObjectSet();
+		$dos = new ArrayList();
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
 				if($modifier->ShowForm()) {
@@ -212,12 +211,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if( $dos->count() ) {
-			return $dos;
-		}
-		else {
-			return null;
-		}
+		return $dos;
 	}
 
 
@@ -225,7 +219,7 @@ class Order extends DataObject {
 	/**
 	 * This function returns the OrderSteps
 	 *
-	 *@returns: DataObjectSet (OrderSteps)
+	 * @returns DataList (OrderSteps)
 	 **/
 	public static function get_order_status_options() {
 		return DataObject::get("OrderStep");
@@ -234,7 +228,7 @@ class Order extends DataObject {
 	/**
 	 * Like the standard get_by_id, but it checks whether we are allowed to view the order.
 	 *
-	 *@returns: DataObject (Order)
+	 * @returns: DataObject (Order)
 	 **/
 	public static function get_by_id_if_can_view($id) {
 		$order = DataObject::get_by_id("Order", $id);
@@ -665,11 +659,11 @@ class Order extends DataObject {
 				}
 			}
 			else {
-				$this->modifiers = new DataObjectSet();
+				$this->modifiers = new DataList();
 			}
-			$modifiers = EcommerceConfig::get("Order", "modifiers");
-			if(is_array($modifiers) && count($modifiers) > 0) {
-				foreach($modifiers as $numericKey => $className) {
+			$modifiersToAdd = EcommerceConfig::get("Order", "modifiers");
+			if(is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
+				foreach($modifiersToAdd as $numericKey => $className) {
 					if(!in_array($className, $createdModifiersClassNames)) {
 						if(class_exists($className)) {
 							$modifier = new $className();
@@ -1168,7 +1162,7 @@ class Order extends DataObject {
 	 * Returns the items of the order.
 	 * Items are the order items (products) and NOT the modifiers (discount, tax, etc...)
 	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
-	 * @return DataObjectSet (OrderItems)
+	 * @return DataList (OrderItems)
 	 */
 	function Items($filterOrClassName = "") {
  		if(!$this->exists()){
@@ -1179,6 +1173,8 @@ class Order extends DataObject {
 
 	/**
 	 * @alias function of Items
+	 * @param String filter - where statement to exclude certain items.
+	 * @return DataList
 	 */
 	function OrderItems($filterOrClassName = "") {
 		return $this->Items($filterOrClassName);
@@ -1188,7 +1184,7 @@ class Order extends DataObject {
 	 * Return all the {@link OrderItem} instances that are
 	 * available as records in the database.
 	 * @param String filter - where statement to exclude certain items.
-	 * @return DataObjectSet
+	 * @return DataList
 	 */
 	protected function itemsFromDatabase($filterOrClassName = "") {
 		$className = "OrderItem";
@@ -1209,9 +1205,9 @@ class Order extends DataObject {
 	 * it returns the modifiers from session, if it has, it returns them
 	 * from the DB entry. ONLY USE OUTSIDE ORDER
 	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
-	 * @return DataObjectSet(OrderModifiers)
+	 * @return DataList
 	 */
- 	function Modifiers($filterOrClassName = '') {
+	function Modifiers($filterOrClassName = '') {
 		return $this->modifiersFromDatabase($filterOrClassName);
 	}
 
@@ -1220,7 +1216,7 @@ class Order extends DataObject {
 	 * available as records in the database.
 	 * NOTE: includes REMOVED Modifiers, so that they do not get added again...
 	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
-	 * @return DataObjectSet
+	 * @return DataList
 	 */
 	protected function modifiersFromDatabase($filterOrClassName = '') {
 		$className = "OrderModifier";
@@ -1523,29 +1519,26 @@ class Order extends DataObject {
 	 * Returns all the order logs that the current member can view
 	 * i.e. some order logs can only be viewed by the admin (e.g. suspected fraud orderlog).
 	 *
-	 * @return DataObjectSet|Null (set of OrderLogs)
+	 * @return DataList
 	 **/
 
 	function CanViewOrderStatusLogs() {
-		$canViewOrderStatusLogs = new DataObjectSet();
+		$canViewOrderStatusLogs = new DataList();
 		$logs = $this->OrderStatusLogs();
 		foreach($logs as $log) {
 			if($log->canView()) {
 				$canViewOrderStatusLogs->push($log);
 			}
 		}
-		if($canViewOrderStatusLogs->count()) {
-			return $canViewOrderStatusLogs;
-		}
-		return null;
+		return $canViewOrderStatusLogs;
 	}
 
 	/**
 	 * returns all the logs that can be viewed by the customer.
-	 * @return null | DataObjectSet
+	 * @return DataList
 	 */
 	function CustomerViewableOrderStatusLogs() {
-		$customerViewableOrderStatusLogs = new DataObjectSet();
+		$customerViewableOrderStatusLogs = new DataList();
 		$logs = $this->OrderStatusLogs();
 		if($logs) {
 			foreach($logs as $log) {
@@ -1553,12 +1546,8 @@ class Order extends DataObject {
 					$customerViewableOrderStatusLogs->push($log);
 				}
 			}
-			if($customerViewableOrderStatusLogs->count()) {
-				return $customerViewableOrderStatusLogs;
-			}
 		}
-		return null;
-
+		return $customerViewableOrderStatusLogs;
 	}
 
 

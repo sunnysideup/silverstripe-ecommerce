@@ -12,17 +12,42 @@
 
 class StoreAdmin extends ModelAdmin{
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $url_segment = 'shop';
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $menu_title = "Shop";
 
+
+	/**
+	 * standard SS variable
+	 * @var Int
+	 */
 	public static $menu_priority = 3;
 
-	//static $url_priority = 50;
-
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $collection_controller_class = 'StoreAdmin_CollectionController';
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	public static $record_controller_class = 'StoreAdmin_RecordController';
+
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
+	public static $menu_icon = "";
 
 	/**
 	 * Standard SS Method
