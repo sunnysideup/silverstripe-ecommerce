@@ -139,11 +139,22 @@ class OrderEmailRecord extends DataObject {
 	}
 
 	/**
-	 * standard SS method
-	 * @return FieldSet
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
 	 */
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		return $fields;
 	}

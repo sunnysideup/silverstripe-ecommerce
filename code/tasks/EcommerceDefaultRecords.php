@@ -73,9 +73,9 @@ class EcommerceDefaultRecords extends BuildTask {
 			if(!DataObject::get_one('OrderConfirmationPage')) {
 				$orderConfirmationPage = new OrderConfirmationPage();
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
-				$orderConfirmationPage->Title = 'order confirmation';
-				$orderConfirmationPage->MenuTitle = 'order confirmation';
-				$orderConfirmationPage->MetaTitle = 'order confirmation';
+				$orderConfirmationPage->Title = 'Order confirmation';
+				$orderConfirmationPage->MenuTitle = 'Order confirmation';
+				$orderConfirmationPage->MetaTitle = 'Order confirmation';
 				$orderConfirmationPage->Content = '<p>This is the order confirmation page. It is used to confirm orders after they have been placed in the checkout page.</p>';
 				$orderConfirmationPage->URLSegment = 'order-confirmation';
 				$orderConfirmationPage->ShowInMenus = 0;

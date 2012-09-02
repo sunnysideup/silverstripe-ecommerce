@@ -252,8 +252,8 @@ EcomCart = {
 	 * @var Int
 	 */
 	colorboxDialogOptions: {
-		width: "500px",
-		height: "500px",
+		width: "500",
+		height: "500",
 		maxHeight: "90%",
 		maxWidth: "90%",
 		loadingClass: "loading",

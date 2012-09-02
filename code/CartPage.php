@@ -76,7 +76,7 @@ class CartPage extends Page{
 	 * override core function to turn "checkout" into "Checkout (1)"
 	 * @return DBField
 	 */
-	public function obj($fieldName) {
+	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		if($fieldName == "MenuTitle") {
 			return DBField::create('HTMLVarchar', $this->EcommerceMenuTitle(), "MenuTitle", $this);
 		}
@@ -91,10 +91,10 @@ class CartPage extends Page{
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
-		$continuePage = DataObject::get_one("ProductGroup", "ParentID = 0");
-		if($continuePage || $continuePage = DataObject::get_one("ProductGroup")) {
-			$this->ContinuePageID = $continuePage->ID;
-		}
+		//$continuePage = DataObject::get_one("ProductGroup", "ParentID = 0");
+		//if($continuePage || $continuePage = DataObject::get_one("ProductGroup")) {
+			//$this->ContinuePageID = $continuePage->ID;
+		//}
 	}
 
 	/**
@@ -152,9 +152,10 @@ class CartPage extends Page{
 
 	/**
 	 * Returns the "new order" link
+	 * @param Int $orderID - not used in CartPage
 	 * @return String (URLSegment)
 	 */
-	public static function new_order_link() {
+	public static function new_order_link($orderID) {
 		return self::find_link()."startneworder/";
 	}
 
@@ -646,7 +647,7 @@ class CartPage_Controller extends Page_Controller{
 				if($this->isOrderConfirmationPage()) {
 					$this->actionLinks->push(new ArrayData(array (
 						"Title" => $this->StartNewOrderLinkLabel,
-						"Link" => CartPage::new_order_link()
+						"Link" => CartPage::new_order_link($this->currentOrder->ID)
 					)));
 				}
 			}

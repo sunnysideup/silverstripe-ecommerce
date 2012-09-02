@@ -108,7 +108,7 @@ class EcommerceCurrency extends DataObject {
 		$dos = DataObject::get(
 			"EcommerceCurrency",
 			"\"InUse\" = 1",
-			"IF(\"Code\" = '".Payment::site_currency()."', 0, 1) ASC, \"InUse\" DESC, \"NAME\" ASC, \"Code\" ASC"
+			"IF(\"Code\" = '".EcommerceConfig::get("EcommerceCurrency", "site_currency")."', 0, 1) ASC, \"InUse\" DESC, \"NAME\" ASC, \"Code\" ASC"
 		);
 		if($dos) {
 			if(1 == $dos->count()) {
@@ -151,7 +151,7 @@ class EcommerceCurrency extends DataObject {
 				'Money',
 				array(
 					"Amount" => $price,
-					"Currency" => Payment::site_currency()
+					"Currency" => EcommerceConfig::get("EcommerceCurrency", "site_currency")
 				)
 			);
 		}
@@ -162,7 +162,7 @@ class EcommerceCurrency extends DataObject {
 	 * @return Int - the ID of the currency
 	 */
 	public static function default_currency_id() {
-		$currency = DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
+		$currency = DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".EcommerceConfig::get("EcommerceCurrency", "site_currency")."' AND \"InUse\" = 1");
 		if($currency) {
 			return $currency->ID;
 		}
@@ -186,7 +186,7 @@ class EcommerceCurrency extends DataObject {
 		if(!$this->Code) {
 			user_error("This currency (ID = ".$this->ID.") does not have a code ");
 		}
-		return strtolower($this->Code) ==  strtolower(Payment::site_currency());
+		return strtolower($this->Code) ==  strtolower(EcommerceConfig::get("EcommerceCurrency", "site_currency"));
 	}
 
 	/**
@@ -211,7 +211,7 @@ class EcommerceCurrency extends DataObject {
 	public function getExchangeRate(){
 		$className = EcommerceConfig::get("EcommerceCurrency", "exchange_provider_class");
 		$obj = new ExchangeRateProvider();
-		return $obj->ExchangeRate( Payment::site_currency(), $this->Code);
+		return $obj->ExchangeRate( EcommerceConfig::get("EcommerceCurrency", "site_currency"), $this->Code);
 	}
 
 	/**
@@ -270,7 +270,7 @@ class EcommerceCurrency extends DataObject {
 	 */
 	function requireDefaultRecords(){
 		parent::requireDefaultRecords();
-		$defaultCurrencyCode = Payment::site_currency();
+		$defaultCurrencyCode = EcommerceConfig::get("EcommerceCurrency", "site_currency");
 		if(!DataObject::get_one("EcommerceCurrency", "\"Code\" = '$defaultCurrencyCode'")) {
 			$obj = new EcommerceCurrency();
 			$obj->Code = $defaultCurrencyCode;

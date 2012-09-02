@@ -190,6 +190,10 @@ class Order extends DataObject {
 	 * Returns a set of modifier forms for use in the checkout order form,
 	 * Controller is optional, because the orderForm has its own default controller.
 	 *
+	 * This method only returns the Forms that should be included outside
+	 * the editable table... Forms within it can be called
+	 * from through the modifier itself.
+	 *
 	 * @return Null | DataObjectSet of OrderModiferForms
 	 * @param Controller $optionalController
 	 * @param Validator $optionalValidator
@@ -199,8 +203,10 @@ class Order extends DataObject {
 		$dos = new DataObjectSet();
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
-				if($modifier->showForm()) {
+				if($modifier->ShowForm()) {
 					if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
+						$form->ShowFormInEditableOrderTable = $modifier->ShowFormInEditableOrderTable();
+						$form->ShowFormOutsideEditableOrderTable = $modifier->ShowFormOutsideEditableOrderTable();
 						$dos->push($form);
 					}
 				}
@@ -313,11 +319,24 @@ class Order extends DataObject {
 		)
 	);
 
+
 	/**
-	 * STANDARD SILVERSTRIPE STUFF
-	 **/
-	function scaffoldSearchFields(){
-		$fieldSet = parent::scaffoldSearchFields();
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
+	 */
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		if($statusOptions = self::get_order_status_options()) {
 			$createdOrderStatusID = 0;
 			$preSelected = array();
@@ -585,7 +604,7 @@ class Order extends DataObject {
 				$fields->addFieldToTab("Root.Next", new HiddenField("StatusID", $firstStep->ID, $firstStep->ID));
 			}
 		}
-		$this->extend('updateCMSFields',$fields);
+		$this->extend('updateSettingsFields',$fields);
 		return $fields;
 	}
 

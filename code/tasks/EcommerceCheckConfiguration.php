@@ -363,10 +363,6 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	protected function addOtherValuesToConfigs(){
-		$this->definitions["Payment"]["site_currency"] = "Default currency for the site. <br />SET USING Payment::set_site_currency(\"NZD\") in the _config.php FILES";
-		$this->configs["Payment"]["site_currency"] = Payment::site_currency()." ";
-		$this->defaults["Payment"]["site_currency"] = "[no default set]";
-
 		$this->definitions["Geoip"]["default_country_code"] = "Default currency for the site. <br />SET USING Geoip::\$default_country_code in the _config.php FILES";
 		$this->configs["Geoip"]["default_country_code"] = Geoip::$default_country_code;
 		$this->defaults["Geoip"]["default_country_code"] = "[no default set]";

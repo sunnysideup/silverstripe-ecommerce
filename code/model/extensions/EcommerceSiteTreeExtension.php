@@ -13,7 +13,7 @@
  **/
 
 
-class EcommerceSiteTreeExtension extends DataObjectDecorator {
+class EcommerceSiteTreeExtension extends DataExtension {
 
 	/**
 	 * returns the instance of EcommerceConfigAjax for use in templates.

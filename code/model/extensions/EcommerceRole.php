@@ -11,33 +11,28 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceRole extends DataObjectDecorator {
+class EcommerceRole extends DataExtension {
 
 	/**
 	 * standard SS method
 	 * defines additional statistics
 	 */
-	function extraStatics() {
-		return array(
-			'db' => array(
-				'Notes' => 'Text'
-			),
-			'has_one' => array(
-				'PreferredCurrency' => 'EcommerceCurrency'
-			),
-			'has_many' => array(
-				'Orders' => 'Order'
-			),
-			'api_access' => array(
-				'view' =>
-					array(
-						'ID',
-						'Orders',
-						'PreferredCurrency'
-					)
-				)
-		);
-	}
+	static $db = array(
+		'Notes' => 'Text'
+	);
+	static $has_one = array(
+		'PreferredCurrency' => 'EcommerceCurrency'
+	);
+	static $has_many = array(
+		'Orders' => 'Order'
+	);
+	static $api_access = array(
+		'view' => array(
+			'ID',
+			'Orders',
+			'PreferredCurrency'
+		)
+	);
 
 	/**
 	 *@return DataObject (Group)

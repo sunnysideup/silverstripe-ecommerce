@@ -1,4 +1,4 @@
-<div id="Product" class="mainSection content-container withSidebar">
+<div id="Product" class="mainSection content-container withSidebar <% if IsOlderVersion %>olderVersion<% end_if %>">
 <% include LayoutProductInner %>
 </div>
 

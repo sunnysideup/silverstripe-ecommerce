@@ -8,7 +8,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommercePayment extends DataObjectDecorator {
+class EcommercePayment extends DataExtension {
 
 	public static $summary_fields = array(
 		"OrderID" => "Order ID",
@@ -17,37 +17,30 @@ class EcommercePayment extends DataObjectDecorator {
 		"Status" => "Status"
 	);
 
-	/**
-	 * Standard SS definitions
-	 *
-	 */
-	function extraStatics() {
-		return array(
-			'has_one' => array(
-				'Order' => 'Order' //redundant...should be using PaidObject
-			),
-			'casting' => array(
-				'AmountValue' => 'Currency'
-			),
-			'summary_fields' => self::$summary_fields,
-			'searchable_fields' => array(
-				'OrderID' => array(
-					'field' => 'TextField',
-					'title' => 'Order Number'
-				),
-				'Created' => array(
-					'title' => 'Date (e.g. today)',
-					'field' => 'TextField',
-					//'filter' => 'PaymentFilters_AroundDateFilter', //TODO: this breaks the sales section of the CMS
-				),
-				'IP' => array(
-					'title' => 'IP Address',
-					'filter' => 'PartialMatchFilter'
-				),
-				'Status'
-			)
-		);
-	}
+	static $has_one = array(
+		'Order' => 'Order' //redundant...should be using PaidObject
+	);
+
+	static $casting = array(
+		'AmountValue' => 'Currency'
+	);
+
+	static $searchable_fields = array(
+		'OrderID' => array(
+			'field' => 'TextField',
+			'title' => 'Order Number'
+		),
+		'Created' => array(
+			'title' => 'Date (e.g. today)',
+			'field' => 'TextField',
+			//'filter' => 'PaymentFilters_AroundDateFilter', //TODO: this breaks the sales section of the CMS
+		),
+		'IP' => array(
+			'title' => 'IP Address',
+			'filter' => 'PartialMatchFilter'
+		),
+		'Status'
+	);
 
 	/**
 	 * Process payment form and return next step in the payment process.
@@ -130,7 +123,7 @@ class EcommercePayment extends DataObjectDecorator {
 	 * standard SS method
 	 * @param FieldSet $fields (passed by reference)
 	 */
-	function updateCMSFields(&$fields){
+	function updateSettingsFields(&$fields){
 		$fields->replaceField("OrderID", new ReadonlyField("OrderID", "Order ID"));
 		return $fields;
 	}
@@ -167,11 +160,24 @@ class EcommercePayment extends DataObjectDecorator {
 	 **/
 	function AmountValue(){return $this->getAmountValue();}
 
+
 	/**
-	 * improve search fields
-	 **/
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
+	 */
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order ID"));
 		return $fields;
 	}

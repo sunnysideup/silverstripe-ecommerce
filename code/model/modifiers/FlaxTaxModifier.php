@@ -59,7 +59,7 @@ class FlatTaxModifier extends OrderModifier {
 		parent::runUpdate($force);
 	}
 
-// ######################################## *** form functions (showform and getform)
+// ######################################## *** form functions (Showform and getform)
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
 	public function ShowInTable() {
