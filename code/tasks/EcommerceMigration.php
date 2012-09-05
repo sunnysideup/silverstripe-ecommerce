@@ -59,6 +59,7 @@ class EcommerceMigration extends BuildTask {
 		"resaveAllPRoductsVariations_210",
 		"addConfirmationPage_250",
 		"cleanupImages_260",
+		"addNewPopUpManager_280",
 		"theEnd_9999"
 	);
 
@@ -1261,6 +1262,57 @@ class EcommerceMigration extends BuildTask {
 		");
 		$task = new EcommerceProductImageReset();
 		$task->run(null);
+		return 0;
+	}
+
+	function addNewPopUpManager_280(){
+		DB::alteration_message("
+			<h1>280. Add new pop-up manager</h1>
+			<p>Replaces a link to a JS Library in the config file</p>
+		");
+		$oldJSLibrary = "ecommerce/thirdparty/simpledialogue_fixed/jquery.simpledialog.0.1.js";
+		$newJSLibrary = "ecommerce/thirdparty/colorbox/colorbox/jquery.colorbox.js";
+		$fileArray = EcommerceConfig::get_folder_and_file_locations();
+		if($fileArray && count($fileArray)) {
+			foreach($fileArray as $folderAndFileLocationWithoutBase) {
+				if($folderAndFileLocationWithoutBase != "ecommerce/_config/ecommerce.yaml") {
+					$folderAndFileLocationWithBase = Director::baseFolder().'/'. $folderAndFileLocationWithoutBase;
+					if(file_exists($folderAndFileLocationWithBase)) {
+						$fp = @fopen($folderAndFileLocationWithBase, 'r');
+						if($fp){
+							$oldContent = fread($fp, filesize($folderAndFileLocationWithBase));
+							$newContent = str_replace($oldJSLibrary, $newJSLibrary, $oldContent);
+							if($oldContent != $newContent) {
+								fclose($fp);
+								$fp = fopen($folderAndFileLocationWithBase, 'w+');
+								if (fwrite($fp, $newContent)) {
+									DB::alteration_message("file updated from $oldJSLibrary to $newJSLibrary in  $folderAndFileLocationWithoutBase", "created");
+								}
+								else {
+									DB::alteration_message("Could NOT update from $oldJSLibrary to $newJSLibrary in  $folderAndFileLocationWithoutBase");
+								}
+								fclose($fp);
+							}
+							else {
+								DB::alteration_message("There is no need to update $folderAndFileLocationWithBase", "deleted");
+							}
+						}
+						else {
+							DB::alteration_message("it seems that $folderAndFileLocationWithBase - does not have the right permission, please change manually.", "deleted");
+						}
+					}
+					else {
+						DB::alteration_message("Could not find $folderAndFileLocationWithBase - even though it is referenced in EcommerceConfig::\$folder_and_file_locations", "deleted");
+					}
+				}
+				else {
+					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/_config/ecommerce.yaml", "created");
+				}
+			}
+		}
+		else {
+			DB::alteration_message("Could not find any config files (most usual place: mysite/_config/ecommerce.yaml)", "deleted");
+		}
 		return 0;
 	}
 

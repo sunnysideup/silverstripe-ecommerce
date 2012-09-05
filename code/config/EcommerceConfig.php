@@ -78,12 +78,13 @@ class EcommerceConfig extends Object {
 	}
 
 	/**
-	 * The location of the .yml fixture file, relative to the site base dir
+	 * The location(s) of the .yaml fixture file, relative to the site base dir
 	 *
-	 * @var string
+	 * @var Array
 	 */
 	protected static $folder_and_file_locations = array("ecommerce/_config/ecommerce.yaml");
 		static function set_folder_and_file_locations($a) {self::$folder_and_file_locations = $a;}
+		static function get_folder_and_file_locations() {return self::$folder_and_file_locations;}
 
 	/**
 	 * Array of fixture items
