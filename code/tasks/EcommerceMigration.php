@@ -27,6 +27,8 @@ class EcommerceMigration extends BuildTask {
 
 	protected $title = "Ecommerce Migration";
 
+	protected $retrieveInfoOnly = false;
+
 	protected $description = "
 		Migrates all the data from the oldest version of e-commerce to the current one.
 		Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.  The migration will not work so well if you have a very high number of Orders.
@@ -83,18 +85,28 @@ class EcommerceMigration extends BuildTask {
 				$nextDescription = "run next batch ...";
 			}
 		}
-		$html = "<ul>";
+
 		if($canDoNext) {
 			$next = $this->listOfMigrationTasks[0];
-			$nextDescription = "Start Migration by clicking on <i>'Next'</i> until all tasks have been completed.";
+			$nextDescription = "Start Migration by clicking on <i>'Next'</i> (this link) until all tasks have been completed.";
+		}
+		$this->retrieveInfoOnly = true;
+		$html = "";
+		if(!$step) {
+			$html .= "
+			<p>Always make a backup of your database before running any migration tasks.</p>
+			<ul>";
 		}
 		foreach($this->listOfMigrationTasks as $key => $task) {
+			$explanation = $this->$task();
+			$explanation = str_replace(array("<h1>","</h1>", "<p>", "</p>"), array("<strong>","</strong>: ", "<span style=\"color: grey;\">", "</span>"), $explanation);
 			if($task == $step) {
 				if($canDoNext) {
 					$keyPlusOne = $key + 1;
 					if(isset($this->listOfMigrationTasks[$keyPlusOne])) {
 						$next = $this->listOfMigrationTasks[$keyPlusOne];
-						$nextDescription = "".$this->listOfMigrationTasks[$keyPlusOne];
+						$nextDescription = $this->$next();
+						$nextDescription = str_replace(array("<h1>","</h1>", "<p>", "</p>"), array("<strong>","</strong>: ", "<span style=\"color: grey;\">", "</span>"), $nextDescription);
 					}
 					else {
 						$next = "/";
@@ -102,24 +114,15 @@ class EcommerceMigration extends BuildTask {
 					}
 				}
 			}
-			$html .=  "<li><a href=\"/dev/ecommerce/ecommercemigration/".$task."/\">$task </a></li>";
+			if(!$step) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercemigration/".$task."/\">$explanation </a></li>";}
 		}
-		$html .= "</ul>";
+		if(!$step) {$html .= "</ul>";}
 		echo "
-			<hr />
+			<hr style=\"margin-top: 50px;\"/>
 			<h3><a href=\"/dev/ecommerce/ecommercemigration/".$next."/\">NEXT: $nextDescription</a></h3>
-			<hr />
-			<h3>LIST OF MIGRATION TASKS:</h3>
+			<hr style=\"margin-bottom: 500px;\"/>
 			$html
 		";
-		DB::alteration_message("
-			<h1>IMPORTANT</h1>
-			<p>
-				Make sure that this page ends with <i>THE END</i> to ensure that all migrations were completed.
-				Make sure to read all the messages carefully.
-				You can change the start and limit by adding get parameters (?start=xxx&limit=yyy).
-				Current start = ".$this->start." AND limit = ".$this->limit.".
-			</p>");
 	}
 
 
@@ -164,10 +167,16 @@ class EcommerceMigration extends BuildTask {
 
 
 	protected function shopMemberToMemberTableMigration_10() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>10. ShopMember to Member</h1>
 			<p>In the first version of e-commerce we had the ShopMember class, then we moved this data to Member.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("ShopMember", "ID")) {
 			$exist = DB::query("SHOW TABLES LIKE 'ShopMember'")->numRecords();
 			if($exist > 0) {
@@ -196,10 +205,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function moveItemToBuyable_20(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>20. Move ItemID to Buyable</h1>
 			<p>Move the Product ID in OrderItem as ItemID to a new field called BuyableID.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("OrderItem", "ItemID")) {
 			DB::query("
 				UPDATE \"OrderItem\"
@@ -215,10 +230,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function productVersionToOrderItem_25() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>25. ProductVersion to Version</h1>
 			<p>Move the product version in the Product_OrderItem table to the OrderItem table.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Product_OrderItem", "ProductVersion")) {
 			DB::query("
 				UPDATE \"OrderItem\", \"Product_OrderItem\"
@@ -234,10 +255,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function productIDToBuyableID_26() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>26. ProductID to to BuyableID</h1>
 			<p>Move the product ID saved as Product_OrderItem.ProductID to OrderItem.BuyableID.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Product_OrderItem", "ProductID")) {
 			DB::query("
 				UPDATE \"OrderItem\"
@@ -287,10 +314,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function amountToCalculatedTotal_27(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>27. Move OrderModifier.Amount to OrderAttribute.CalculatedTotal</h1>
 			<p>Move the amount of the modifier in the OrderModifier.Amount field to the OrderAttribute.CalculatedTotal field.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("OrderModifier", "Amount")) {
 			DB::query("
 				UPDATE \"OrderModifier\"
@@ -308,10 +341,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function currencyToMoneyFields_30(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>30. Currency to Money Fields</h1>
 			<p>Move the Payment Amount in the Amount field to a composite DB field (AmountAmount + AmountCurrency) </p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Payment", "Amount")) {
 		//ECOMMERCE PAYMENT *************************
 			DB::query("
@@ -357,10 +396,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function orderShippingCost_40(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>40. Order Shipping Cost</h1>
 			<p>Move the shipping cost in the order to its own modifier.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Order", "Shipping") && $this->hasTableAndField("Order", "HasShippingCost")) {
 			$orders = DataObject::get(
 				'Order',
@@ -394,10 +439,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function orderTax_45(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>45. Order Added Tax</h1>
 			<p>Move the tax in the order to its own modifier.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Order", "AddedTax")) {
 			DB::alteration_message("Moving Order.AddedTax to Modifier.", "created");
 			$orders = DataObject::get(
@@ -440,10 +491,16 @@ class EcommerceMigration extends BuildTask {
 
 
 	protected function orderShippingAddress_50(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>50. Order Shipping Address</h1>
 			<p>Move a shipping address from within Order to its own class.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Order", "ShippingAddress")) {
 			if($this->hasTableAndField("Order", "UseShippingAddress")) {
 				$orders = DataObject::get(
@@ -504,10 +561,16 @@ class EcommerceMigration extends BuildTask {
 
 
 	protected function orderBillingAddress_51(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>51. Order Billing Address</h1>
 			<p>Move the billing address from the order to its own class.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Order", "Address")) {
 			if($this->hasTableAndField("Order", "City")) {
 				$orders = DataObject::get(
@@ -572,10 +635,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function memberBillingAddress_52(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>52. Member Billing Address</h1>
 			<p>Move address details in the member table to its own class (billingaddress)</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Member", "Address")) {
 			if($this->hasTableAndField("Member", "City")) {
 				$orders = DataObject::get(
@@ -633,10 +702,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function moveOrderStatus_60() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>60. Move Order Status</h1>
 			<p>Moving order status from the enum field to Order Step.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("Order", "Status")) {
 		// 2) Cancel status update
 			$orders = DataObject::get(
@@ -771,10 +846,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function fixBadOrderStatus_68(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>68. Fix Bad Order Status</h1>
 			<p>Fixing any orders with an StatusID that is not in use...</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$firstOption = DataObject::get_one("OrderStep");
 		if($firstOption) {
 			$badOrders = DataObject::get(
@@ -806,10 +887,16 @@ class EcommerceMigration extends BuildTask {
 
 
 	protected function updateProductGroups_110(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>110. Update Product Groups: </h1>
 			<p>Set the product groups 'show products' to the default.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$checkIfAnyLevelsAreSetAtAll = DB::query("SELECT COUNT(ID) FROM \"ProductGroup\" WHERE \"LevelOfProductsToShow\" <> 0 AND \"LevelOfProductsToShow\" IS NOT NULL")->value();
 		if($checkIfAnyLevelsAreSetAtAll == 0 && ProductGroup::$defaults["LevelOfProductsToShow"] != 0) {
 			//level of products to show
@@ -856,10 +943,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function setFixedPriceForSubmittedOrderItems_120() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>120. Set Fixed Price for Submitted Order Items: </h1>
 			<p>Migration task to fix the price for submitted order items.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		if($this->hasTableAndField("OrderModifier", "CalculationValue")) {
 			DB::query("
 				UPDATE \"OrderAttribute\"
@@ -920,10 +1013,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	protected function moveSiteConfigToEcommerceDBConfig_140(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>140. Move Site Config fields to Ecommerce DB Config</h1>
 			<p>Moving the general config fields from the SiteConfig to the EcommerceDBConfig.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$fields = array(
 			"ShopClosed",
 			"ShopPricesAreTaxExclusive",
@@ -972,10 +1071,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function addClassNameToOrderItems_150() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>150. Add a class name to all buyables.</h1>
 			<p>ClassNames used to be implied, this is now saved as OrderItem.BuyableClassName.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$rows = DB::query("
 			SELECT \"OrderAttribute\".\"ID\", \"ClassName\"
 			FROM \"OrderAttribute\"
@@ -1007,10 +1112,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function addTermsAndConditionsMessage_160() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>160. Add checkout message TermsAndConditionsMessage message.</h1>
 			<p>Adds TermsAndConditionsMessage if there is a terms page.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$checkoutPage = DataObject::get_one("CheckoutPage");
 		if($checkoutPage) {
 			if($checkoutPage->TermsPageID) {
@@ -1035,10 +1146,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function mergeUncompletedOrderForOneMember_170() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>170. Merge uncompleted orders into one.</h1>
 			<p>Merges uncompleted orders by the same user into one.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$orders = DataObject::get(
 			"Order",
 			"\"MemberID\" > 0",
@@ -1124,10 +1241,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function updateFullSiteTreeSortFieldForAllProducts_180() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>180. Set starting value Product.FullSiteTreeSort Field.</h1>
 			<p>Sets a starting value for a new field: FullSiteTreeSortField.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		//level 10
 		$task = new CleanupProductFullSiteTreeSorting();
 		$task->setDeleteFirst(false);
@@ -1136,10 +1259,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function updateOrderStatusLogSequentialOrderNumber_190() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>190. Set sequential order numbers</h1>
 			<p>Prepopulates old orders for OrderStatusLog_Submitted.SequentialOrderNumber.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$submittedOrdersLog = DataObject::get(
 			"OrderStatusLog_Submitted",
 			"",
@@ -1170,10 +1299,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function resaveAllPRoducts_200() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>200. Resave All Products to update the FullName and FullSiteTreeSort Field</h1>
 			<p>Saves and PUBLISHES all the products on the site. You may need to run this task several times.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$count = 0;
 		$products = DataObject::get(
 			"Product",
@@ -1199,10 +1334,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function resaveAllPRoductsVariations_210() {
-		DB::alteration_message("
+		$explanation = "
 			<h1>210. Resave All Product Variations to update the FullName and FullSiteTreeSort Field</h1>
 			<p>Saves all the product variations on the site. You may need to run this task several times.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$count = 0;
 		if(class_exists("ProductVariation")) {
 			$variations = DataObject::get(
@@ -1232,10 +1373,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function addConfirmationPage_250(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>250. Add Confirmation Page</h1>
 			<p>Creates a checkout page and order confirmation page in case they do not exist.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$checkoutPage = DataObject::get_one("CheckoutPage");
 		if($checkoutPage) {
 			if(!DataObject::get_one("OrderConfirmationPage")) {
@@ -1256,20 +1403,32 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function cleanupImages_260(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>260. Cleanup Images</h1>
 			<p>Checks the class name of all product images and makes sure they exist.</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$task = new EcommerceProductImageReset();
 		$task->run(null);
 		return 0;
 	}
 
 	function addNewPopUpManager_280(){
-		DB::alteration_message("
+		$explanation = "
 			<h1>280. Add new pop-up manager</h1>
 			<p>Replaces a link to a JS Library in the config file</p>
-		");
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$oldJSLibrary = "ecommerce/thirdparty/simpledialogue_fixed/jquery.simpledialog.0.1.js";
 		$newJSLibrary = "ecommerce/thirdparty/colorbox/colorbox/jquery.colorbox.js";
 		$fileArray = EcommerceConfig::get_folder_and_file_locations();
@@ -1294,7 +1453,7 @@ class EcommerceMigration extends BuildTask {
 								fclose($fp);
 							}
 							else {
-								DB::alteration_message("There is no need to update $folderAndFileLocationWithBase", "deleted");
+								DB::alteration_message("There is no need to update $folderAndFileLocationWithBase");
 							}
 						}
 						else {
@@ -1317,6 +1476,16 @@ class EcommerceMigration extends BuildTask {
 	}
 
 	function theEnd_9999(){
+		$explanation = "
+			<h1>9999. Migration Completed</h1>
+			<p>Finalise Migration</p>
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		DB::alteration_message("<hr /><hr /><hr /><hr />THE END <hr /><hr /><hr /><hr /><hr /><hr />");
 		return 0;
 	}
