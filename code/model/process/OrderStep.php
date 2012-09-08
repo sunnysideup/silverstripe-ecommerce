@@ -260,7 +260,6 @@ class OrderStep extends DataObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		//replacing
-		$fields->addFieldToTab("Root.InternalDescription", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only"), 5));
 		if($this->hasCustomerMessage()) {
 			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use [OrderNumber] as a tag that will be replaced with the actual Order Number.")));
 			$fields->addFieldToTab("Root.CustomerMessage", new HTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)"), 5));
@@ -278,10 +277,24 @@ class OrderStep extends DataObject {
 			$fields->replaceField("Code", $fields->dataFieldByName("Code")->performReadonlyTransformation());
 		}
 		//headers
-		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING1", _t("OrderStep.CAREFUL", "CAREFUL! please edit with care"), 1), "Name");
+		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING1", _t("OrderStep.CAREFUL", "CAREFUL! please edit with care"), 1), "Description");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING2", _t("OrderStep.CUSTOMERCANCHANGE", "What can be changed during this step?"), 3), "CustomerCanEdit");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING5", _t("OrderStep.ORDERGROUPS", "Order groups for customer?"), 3), "ShowAsUncompletedOrder");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING7", _t("OrderStep.SORTINGINDEXHEADER", "Index Number (lower number come first)"), 3), "Sort");
+		$orderTable = new HasManyComplexTableField(
+			$this,
+			"Orders", //$name
+			"Order", //$sourceClass =
+			null, //$fieldList =
+			null, //$detailedFormFields =
+			"\"StatusID\" = ".$this->ID."", //$sourceFilter =
+			"\"ID\" DESC", //$sourceSort =
+			null //$sourceJoin =
+		);
+		$orderTable->setPageSize(20);
+		$orderTable->setPermissions(array('export', 'show'));
+		$fields->addFieldToTab('Root.Orders',$orderTable);
+		$fields->addFieldToTab("Root.Main", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only"), 5), "WARNING1");
 		return $fields;
 	}
 
