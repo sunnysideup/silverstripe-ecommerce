@@ -1386,6 +1386,9 @@ class EcommerceMigration extends BuildTask {
 			echo $explanation;
 		}
 		$checkoutPage = DataObject::get_one("CheckoutPage");
+		$checkoutPage->HasCheckoutSteps = 1;
+		$checkoutPage->writeToStage('Stage');
+		$checkoutPage->publish('Stage', 'Live');
 		if($checkoutPage) {
 			if(!DataObject::get_one("OrderConfirmationPage")) {
 				$orderConfirmationPage = new OrderConfirmationPage();
