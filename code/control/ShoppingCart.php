@@ -1182,7 +1182,7 @@ class ShoppingCart_Controller extends Controller{
 
 	function deleteorder($request) {
 		$orderID = intval($request->param('ID'));
-		if($order = DataObject::get_by_id_if_can_view($orderID)) {
+		if($order = Order::get_by_id_if_can_view($orderID)) {
 			if($order->canDelete()) {
 				$order->delete();
 			}
