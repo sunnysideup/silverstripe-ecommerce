@@ -897,7 +897,8 @@ class ShoppingCart_Controller extends Controller{
 		'removeallitem',
 		'removeallitemandedit',
 		'removemodifier',
-		'addmodifier'
+		'addmodifier',
+		'deleteorder'
 	);
 
 	/**
@@ -942,6 +943,7 @@ class ShoppingCart_Controller extends Controller{
 		'setquantityitem',
 		'clear',
 		'clearandlogout',
+		'deleteorder',
 		'numberofitemsincart',
 		'showcart',
 		'loadorder',
@@ -1016,6 +1018,10 @@ class ShoppingCart_Controller extends Controller{
 
 	static function clear_cart_and_logout_link($parameters = array()) {
 		return self::$url_segment.'/clearandlogout/'.self::params_to_get_string($parameters);
+	}
+
+	static function delete_order_link($orderID, $parameters = array()) {
+		return self::$url_segment.'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1172,6 +1178,20 @@ class ShoppingCart_Controller extends Controller{
 		}
 		Director::redirect("/");
 		return false;
+	}
+
+	function deleteorder($request) {
+		$orderID = intval($request->param('ID'));
+		$currentOrder = $this->cart->CurrentOrder();
+		if($currentOrder->ID != $orderID) {
+			if($order = DataObject::get_by_id_if_can_view($orderID)) {
+				if($order->canDelete()) {
+					$order->delete();
+
+				}
+			}
+		}
+		$this->redirectBack();
 	}
 
 	/**

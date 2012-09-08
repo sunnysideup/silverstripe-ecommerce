@@ -1502,6 +1502,9 @@ class Order extends DataObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canDelete', $member->ID);
 		if($extended !== null) {return $extended;}
+		if(!$this->IsSubmitted() && $member->IsShopAdmin()){
+			return true;
+		}
 		return false;
 	}
 
@@ -1642,6 +1645,20 @@ class Order extends DataObject {
 		}
 		else {
 			return Director::AbsoluteURL("/shoppingcart/loadorder/".$this->ID."/");
+		}
+	}
+
+	/**
+	 * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
+	 * @return String
+	 */
+	function DeleteLink(){return $this->getDeleteLink();}
+	function getDeleteLink() {
+		if($this->canDelete()) {
+			return ShoppingCart_Controller::delete_order_link($this->ID);
+		}
+		else {
+			return "";
 		}
 	}
 

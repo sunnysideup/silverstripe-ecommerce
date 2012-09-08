@@ -1323,6 +1323,7 @@ class EcommerceMigration extends BuildTask {
 					$count++;
 					$product->writeToStage('Stage');
 					$product->publish('Stage', 'Live');
+					DB::alteration_message("Saving Product ".$product->Title);
 				}
 			}
 			return $this->start + $this->limit;
@@ -1358,6 +1359,7 @@ class EcommerceMigration extends BuildTask {
 					if($variation->prepareFullFields()) {
 						$count++;
 						$variation->write();
+						DB::alteration_message("Saving Variation ".$variation->getTitle());
 					}
 				}
 				return $this->start + $this->limit;

@@ -22,7 +22,9 @@
 		<% control PastOrders %>
 			<tr>
 				<td class="left"><a href="$Link">$Title</a></td>
-				<td class="left">$CustomerStatus</td>
+				<td class="left">$CustomerStatus
+					<% if DeleteLink %><br /><a href="$DeleteLink"><% _t("Account.REMOVE","remove") %></a><% end_if %>
+				</td>
 				<td class="right">$Total.Nice</td>
 				<td class="right">$TotalPaid.Nice</td>
 				<td class="right">$TotalOutstanding.Nice</td>
