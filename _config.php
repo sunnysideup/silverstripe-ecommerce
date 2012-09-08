@@ -44,12 +44,6 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 //EcommerceConfig::set_folder_and_file_locations(array("ecommerce/_config/ecommerce.yaml"));
 
 
-// * * * CMS
-//SalesAdmin::add_managed_model("MyOtherLogThing");
-//StoreAdmin::add_managed_model("MyOtherLogThing");
-//ProductsAndGroupsModelAdmin::add_managed_model("MyOtherLogThing");
-
-
 // * * * ECOMMERCE I18N SETTINGS NOTES
 // * * * for Currency &  Date Formats get this module: http://code.google.com/p/silverstripe-i18n-fieldtypes/
 //Object::useCustomClass('Currency','I18nCurrency',true);
