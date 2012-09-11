@@ -415,7 +415,7 @@ class ShoppingCart extends Object{
 		while(($order = $this->currentOrder()) && ($x < 100)) {
 			$x++;
 			if($order->exists()) {
-				if($order->canEdit())
+				if($order->canEdit()) {
 					$this->order->delete();
 				}
 			}
