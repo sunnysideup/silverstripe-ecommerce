@@ -287,7 +287,6 @@ EcomCart = {
 			EcomCart.addCartRemove(EcomCart.ajaxLinksAreaSelector);
 		}
 		EcomCart.reinit();
-		jQuery(EcomCart.selectorHideOnZeroItems).find("a").attr("target", "_blank");
 	},
 
 	/**
