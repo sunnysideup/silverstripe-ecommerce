@@ -201,7 +201,13 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
 				EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
-			}', "TermsAndConditionsMessage");
+			}',
+			"TermsAndConditionsMessage"
+		);
+		Requirements::customScript('
+			jQuery(".orderattribute a").attr("target", "_blank");',
+			"OpenProductLinksInNewTab"
+		);
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		if($this->HasCheckoutSteps) {
 			$this->currentStep = $this->request->Param("ID");
