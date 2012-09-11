@@ -545,6 +545,12 @@ class EcommerceCheckConfiguration extends BuildTask{
 					return "<span style=\"color: green\">ADDITIONAL CHECK: file exists.</span>";
 				}
 				break;
+			case "Order.modifiers":
+				$classes = ClassInfo::subclassesFor("OrderModifier");
+				unset($classes[0]);
+				$classesAsString = implode(", <br />", $classes);
+				return "<br /><h4>Available Modifiers</h4>$classesAsString";
+				break;
 		}
 	}
 

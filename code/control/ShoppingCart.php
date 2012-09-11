@@ -411,6 +411,16 @@ class ShoppingCart extends Object{
 	 * @return Boolean
 	 */
 	public function clear(){
+		$x = 0;
+		while($this->currentOrder() && $x < 100) {
+			if($this->currentOrder()->exists()) {
+				$x++;
+				$this->order->delete();
+			}
+			else {
+				$x = 101;
+			}
+		}
 		foreach(self::$session_variable_names as $name){
 			$sessionVariableName = $this->sessionVariableName($name);
 			Session::clear($sessionVariableName); //clear the orderid from session
