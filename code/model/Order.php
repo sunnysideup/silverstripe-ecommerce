@@ -1669,7 +1669,13 @@ class Order extends DataObject {
 	function Title() {return $this->getTitle();}
 	function getTitle() {
 		if($this->exists()) {
-			$title = $this->i18n_singular_name(). " #$this->ID - ".$this->dbObject('Created')->Nice();
+			if($submissionLog = $this->SubmissionLog()) {
+				$dateObject = $submissionLog->dbObject('Created');
+			}
+			else {
+				$dateObject = $this->dbObject('Created');
+			}
+			$title = $this->i18n_singular_name(). " #$this->ID - ".$dateObject->Nice();
 			$name = "";
 			if($this->CancelledByID) {
 				$name = " - "._t("Order.CANCELLED","CANCELLED");
