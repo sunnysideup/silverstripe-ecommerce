@@ -71,6 +71,5 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 
 
 // * * * HIGHLY RECOMMENDED SETTINGS NON-ECOMMERCE
-//Payment::set_site_currency('NZD');
 //Geoip::$default_country_code = 'NZ';
 //Email::setAdminEmail("cool@bool.com");
