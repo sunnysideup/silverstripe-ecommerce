@@ -412,14 +412,14 @@ class ShoppingCart extends Object{
 	 */
 	public function clear(){
 		$x = 0;
-		while($this->currentOrder() && $x < 100) {
-			if($this->currentOrder()->exists()) {
-				$x++;
-				$this->order->delete();
+		while(($order = $this->currentOrder()) && ($x < 100)) {
+			$x++;
+			if($order->exists()) {
+				if($order->canEdit())
+					$this->order->delete();
+				}
 			}
-			else {
-				$x = 101;
-			}
+			unset($order);
 		}
 		foreach(self::$session_variable_names as $name){
 			$sessionVariableName = $this->sessionVariableName($name);
