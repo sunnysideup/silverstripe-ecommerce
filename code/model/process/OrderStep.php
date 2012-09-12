@@ -572,7 +572,7 @@ class OrderStep extends DataObject {
 				$step->write();
 			}
 		}
-
+		DB::query("Update \"OrderStep\" SET ClassName = \"OrderStep\" WHERE ClassName = ''");
 	}
 
 	/**
