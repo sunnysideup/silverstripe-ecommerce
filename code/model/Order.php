@@ -826,6 +826,7 @@ class Order extends DataObject {
 
 	/**
 	 * Has the order been paid?
+	 * TODO: why do we check if there is a total at all?
 	 * @return boolean
 	 */
 	function IsPaid() {
