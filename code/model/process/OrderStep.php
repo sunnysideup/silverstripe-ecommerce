@@ -574,8 +574,9 @@ class OrderStep extends DataObject {
 		}
 		$otherOrderSteps = DataObject::get("OrderStep", "\"ClassName\" NOT IN ('".implode("', '", $orderStepsToInclude)."')");
 		if($otherOrderSteps) {
-			foreach($orderSteps as $orderStep) {
-				$orderStep->delete();
+			foreach($otherOrderSteps as $otherOrderStep) {
+				Database::alteration_message("Deleting OrderStep ".$otherOrderStep->Code, "deleted");
+				$otherOrderStep->delete();
 			}
 		}
 	}
