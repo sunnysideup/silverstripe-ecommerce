@@ -141,5 +141,5 @@ a.action:hover {
 	border-bottom: 1px solid #000;
 
 }
-ol.steps li.link {color: #000;}
-ol.steps li.current {color: #000;}
+#Checkout ol.steps li.link,  #OrderConfirmationPage ol.steps li.link {color: #000;}
+#Checkout ol.steps li.current,  #OrderConfirmationPage ol.steps li.current{color: green;}
