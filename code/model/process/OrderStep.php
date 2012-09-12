@@ -572,7 +572,12 @@ class OrderStep extends DataObject {
 				$step->write();
 			}
 		}
-		DB::query("Update \"OrderStep\" SET ClassName = \"OrderStep\" WHERE ClassName = ''");
+		$otherOrderSteps = DataObject::get("OrderStep", "\"ClassName\" NOT IN ('".implode("', '", $orderStepsToInclude)."')");
+		if($otherOrderSteps) {
+			foreach($orderSteps as $orderStep) {
+				$orderStep->delete();
+			}
+		}
 	}
 
 	/**
