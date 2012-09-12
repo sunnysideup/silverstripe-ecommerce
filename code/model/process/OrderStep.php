@@ -494,11 +494,7 @@ class OrderStep extends DataObject {
 	 *
 	 *@return Boolean
 	 **/
-	public function canAdd($member = null) {
-		$array = self::get_not_created_codes_for_order_steps_to_include();
-		if(is_array($array) && count($array)) {
-			return true;
-		}
+	public function canCreate($member = null) {
 		return false;
 	}
 
@@ -545,9 +541,11 @@ class OrderStep extends DataObject {
 		parent::requireDefaultRecords();
 		$orderStepsToInclude = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 		$codesToInclude = self::get_codes_for_order_steps_to_include();
+		$indexNumber = 0;
 		if($orderStepsToInclude && count($orderStepsToInclude)) {
 			if($codesToInclude && count($codesToInclude)) {
 				foreach($codesToInclude as $className => $code) {
+					$indexNumber +=10;
 					if(!DataObject::get_one($className)) {
 						if(!DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'")) {
 							$obj = new $className();
@@ -555,6 +553,13 @@ class OrderStep extends DataObject {
 							$obj->Description = $obj->myDescription();
 							$obj->write();
 							DB::alteration_message("Created \"$code\" as $className.", "created");
+						}
+					}
+					$obj = DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'");
+					if($obj) {
+						if($obj->Sort != $indexNumber) {
+							$obj->Sort = $indexNumber;
+							$obj->write();
 						}
 					}
 				}
@@ -605,7 +610,6 @@ class OrderStep_Created extends OrderStep {
 		"CustomerCanCancel" => 1,
 		"Name" => "Create",
 		"Code" => "CREATED",
-		"Sort" => 10,
 		"ShowAsUncompletedOrder" => 1
 	);
 
@@ -725,7 +729,6 @@ class OrderStep_Submitted extends OrderStep {
 		"CustomerCanCancel" => 0,
 		"Name" => "Submit",
 		"Code" => "SUBMITTED",
-		"Sort" => 20,
 		"ShowAsInProcessOrder" => 1,
 		"SaveOrderAsHTML" => 1,
 		"SaveOrderAsSerializedObject" => 0,
@@ -854,7 +857,6 @@ class OrderStep_SentInvoice extends OrderStep {
 		"CustomerCanPay" => 1,
 		"Name" => "Send invoice",
 		"Code" => "INVOICED",
-		"Sort" => 25,
 		"ShowAsInProcessOrder" => 1,
 		"SendInvoiceToCustomer" => 1
 	);
@@ -970,7 +972,6 @@ class OrderStep_Paid extends OrderStep {
 		"CustomerCanPay" => 1,
 		"Name" => "Pay",
 		"Code" => "PAID",
-		"Sort" => 30,
 		"ShowAsInProcessOrder" => 1
 	);
 
@@ -1037,7 +1038,6 @@ class OrderStep_Confirmed extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Confirm",
 		"Code" => "CONFIRMED",
-		"Sort" => 35,
 		"ShowAsInProcessOrder" => 1
 	);
 
@@ -1106,7 +1106,6 @@ class OrderStep_SentReceipt extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Send receipt",
 		"Code" => "RECEIPTED",
-		"Sort" => 40,
 		"ShowAsInProcessOrder" => 1,
 		"SendReceiptToCustomer" => 1
 	);
@@ -1205,7 +1204,6 @@ class OrderStep_Sent extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Send order",
 		"Code" => "SENT",
-		"Sort" => 50,
 		"ShowAsCompletedOrder" => 1
 	);
 
@@ -1300,7 +1298,6 @@ class OrderStep_Archived extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Archived order",
 		"Code" => "ARCHIVED",
-		"Sort" => 55,
 		"ShowAsCompletedOrder" => 1
 	);
 

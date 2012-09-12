@@ -407,7 +407,8 @@ class ShoppingCart extends Object{
 	}
 
 	/**
-	 * Clears the cart contents completely by removing the orderID from session, and thus creating a new cart on next request.
+	 * Clears the cart contents completely by removing the orderID from session, and
+	 * thus creating a new cart on next request.
 	 * @return Boolean
 	 */
 	public function clear(){
