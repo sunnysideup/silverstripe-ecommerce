@@ -320,6 +320,11 @@ class OrderAttribute extends DataObject {
 			$method = "get".$key;
 			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
 		}
+		if($this instanceOf OrderItem) {
+			$html .= "<li><b>Buyable Price:</b> ".$this->Buyable()->Price." </li>";
+			$html .= "<li><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </li>";
+			print_r($this->Buyable());
+		}
 		$html .= "</ul>";
 		return $html;
 	}
