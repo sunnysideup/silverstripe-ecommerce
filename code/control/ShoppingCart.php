@@ -684,6 +684,9 @@ class ShoppingCart extends Object{
 
 			echo "</blockquote></blockquote></blockquote></blockquote>";
 		}
+		else {
+			echo "Please log in as admin first";
+		}
 	}
 
 	/**
@@ -951,8 +954,8 @@ class ShoppingCart_Controller extends Controller{
 		'copyorder',
 		'removeaddress',
 		'submittedbuyable',
-		'debug' => 'ADMIN',
-		'test' => 'ADMIN'
+		'debug', // no need to set to  => 'ADMIN',
+		'ajaxtest' // no need to set to  => 'ADMIN',
 	);
 
 	function index() {
@@ -1323,11 +1326,20 @@ class ShoppingCart_Controller extends Controller{
 		$this->cart->debug();
 	}
 
-	function test(){
-		$_REQUEST["ajax"] = 1;
-		echo "<pre>";
-		echo $this->cart->setMessageAndReturn("test only");
-		echo "</pre>";
+	function ajaxtest(){
+		if(Director::isDev() || Permission::check("ADMIN")){
+			header("Content-Type: text/plain");
+			$_REQUEST["ajax"] = 1;
+			$v = $this->cart->setMessageAndReturn("test only");
+			$v = str_replace(",", ",\r\n\t\t", $v);
+			$v = str_replace("}", "\r\n\t}", $v);
+			$v = str_replace("{", "\t{\r\n\t\t", $v);
+			$v = str_replace("]", "\r\n]", $v);
+			echo $v;
+		}
+		else {
+			echo "please log in first.";
+		}
 	}
 
 
