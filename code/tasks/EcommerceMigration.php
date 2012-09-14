@@ -1500,7 +1500,6 @@ class EcommerceMigration extends BuildTask {
 	function theEnd_9999(){
 		$explanation = "
 			<h1>9999. Migration Completed</h1>
-			<p>Finalise Migration</p>
 		";
 		if($this->retrieveInfoOnly) {
 			return $explanation;
@@ -1508,7 +1507,6 @@ class EcommerceMigration extends BuildTask {
 		else {
 			echo $explanation;
 		}
-		DB::alteration_message("<hr /><hr /><hr /><hr />THE END <hr /><hr /><hr /><hr /><hr /><hr />");
 		return 0;
 	}
 
