@@ -117,9 +117,21 @@ class EcommerceMigration extends BuildTask {
 			if(!$step) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercemigration/".$task."/\">$explanation </a></li>";}
 		}
 		if(!$step) {$html .= "</ul>";}
+		$nextLink = "/dev/ecommerce/ecommercemigration/".$next."/";
 		echo "
 			<hr style=\"margin-top: 50px;\"/>
-			<h3><a href=\"/dev/ecommerce/ecommercemigration/".$next."/\">NEXT: $nextDescription</a></h3>
+			<h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>
+			<div style=\"width: 400px; height: 20px; padding-top: 20px; font-size: 11px; background: url(/ecommerce/images/loading.gif) no-repeat top left transparent\">
+				Next step, if any - will load automatically in ten seconds.
+			</div>
+			<script type=\"text/javascript\">
+				var t = window.setTimeout(
+					function(){
+						window.location = '$nextLink';
+					},
+					10000
+				);
+			</script>
 			<hr style=\"margin-bottom: 500px;\"/>
 			$html
 		";
