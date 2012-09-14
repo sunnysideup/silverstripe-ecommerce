@@ -260,7 +260,6 @@ class OrderStep extends DataObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		//replacing
-		$fields->addFieldToTab("Root.InternalDescription", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only"), 5));
 		if($this->hasCustomerMessage()) {
 			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use [OrderNumber] as a tag that will be replaced with the actual Order Number.")));
 			$fields->addFieldToTab("Root.CustomerMessage", new HTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)"), 5));
@@ -278,10 +277,24 @@ class OrderStep extends DataObject {
 			$fields->replaceField("Code", $fields->dataFieldByName("Code")->performReadonlyTransformation());
 		}
 		//headers
-		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING1", _t("OrderStep.CAREFUL", "CAREFUL! please edit with care"), 1), "Name");
+		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING1", _t("OrderStep.CAREFUL", "CAREFUL! please edit with care"), 1), "Description");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING2", _t("OrderStep.CUSTOMERCANCHANGE", "What can be changed during this step?"), 3), "CustomerCanEdit");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING5", _t("OrderStep.ORDERGROUPS", "Order groups for customer?"), 3), "ShowAsUncompletedOrder");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING7", _t("OrderStep.SORTINGINDEXHEADER", "Index Number (lower number come first)"), 3), "Sort");
+		$orderTable = new HasManyComplexTableField(
+			$this,
+			"Orders", //$name
+			"Order", //$sourceClass =
+			null, //$fieldList =
+			null, //$detailedFormFields =
+			"\"StatusID\" = ".$this->ID."", //$sourceFilter =
+			"\"ID\" DESC", //$sourceSort =
+			null //$sourceJoin =
+		);
+		$orderTable->setPageSize(20);
+		$orderTable->setPermissions(array('export', 'show'));
+		$fields->addFieldToTab('Root.Orders',$orderTable);
+		$fields->addFieldToTab("Root.Main", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only"), 5), "WARNING1");
 		return $fields;
 	}
 
@@ -481,11 +494,7 @@ class OrderStep extends DataObject {
 	 *
 	 *@return Boolean
 	 **/
-	public function canAdd($member = null) {
-		$array = self::get_not_created_codes_for_order_steps_to_include();
-		if(is_array($array) && count($array)) {
-			return true;
-		}
+	public function canCreate($member = null) {
 		return false;
 	}
 
@@ -532,9 +541,11 @@ class OrderStep extends DataObject {
 		parent::requireDefaultRecords();
 		$orderStepsToInclude = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 		$codesToInclude = self::get_codes_for_order_steps_to_include();
+		$indexNumber = 0;
 		if($orderStepsToInclude && count($orderStepsToInclude)) {
 			if($codesToInclude && count($codesToInclude)) {
 				foreach($codesToInclude as $className => $code) {
+					$indexNumber +=10;
 					if(!DataObject::get_one($className)) {
 						if(!DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'")) {
 							$obj = new $className();
@@ -542,6 +553,13 @@ class OrderStep extends DataObject {
 							$obj->Description = $obj->myDescription();
 							$obj->write();
 							DB::alteration_message("Created \"$code\" as $className.", "created");
+						}
+					}
+					$obj = DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'");
+					if($obj) {
+						if($obj->Sort != $indexNumber) {
+							$obj->Sort = $indexNumber;
+							$obj->write();
 						}
 					}
 				}
@@ -554,7 +572,13 @@ class OrderStep extends DataObject {
 				$step->write();
 			}
 		}
-
+		$otherOrderSteps = DataObject::get("OrderStep", "\"ClassName\" NOT IN ('".implode("', '", $orderStepsToInclude)."')");
+		if($otherOrderSteps) {
+			foreach($otherOrderSteps as $otherOrderStep) {
+				DB::alteration_message("Deleting OrderStep ".$otherOrderStep->Code, "deleted");
+				$otherOrderStep->delete();
+			}
+		}
 	}
 
 	/**
@@ -592,7 +616,6 @@ class OrderStep_Created extends OrderStep {
 		"CustomerCanCancel" => 1,
 		"Name" => "Create",
 		"Code" => "CREATED",
-		"Sort" => 10,
 		"ShowAsUncompletedOrder" => 1
 	);
 
@@ -712,7 +735,6 @@ class OrderStep_Submitted extends OrderStep {
 		"CustomerCanCancel" => 0,
 		"Name" => "Submit",
 		"Code" => "SUBMITTED",
-		"Sort" => 20,
 		"ShowAsInProcessOrder" => 1,
 		"SaveOrderAsHTML" => 1,
 		"SaveOrderAsSerializedObject" => 0,
@@ -841,7 +863,6 @@ class OrderStep_SentInvoice extends OrderStep {
 		"CustomerCanPay" => 1,
 		"Name" => "Send invoice",
 		"Code" => "INVOICED",
-		"Sort" => 25,
 		"ShowAsInProcessOrder" => 1,
 		"SendInvoiceToCustomer" => 1
 	);
@@ -957,7 +978,6 @@ class OrderStep_Paid extends OrderStep {
 		"CustomerCanPay" => 1,
 		"Name" => "Pay",
 		"Code" => "PAID",
-		"Sort" => 30,
 		"ShowAsInProcessOrder" => 1
 	);
 
@@ -1024,7 +1044,6 @@ class OrderStep_Confirmed extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Confirm",
 		"Code" => "CONFIRMED",
-		"Sort" => 35,
 		"ShowAsInProcessOrder" => 1
 	);
 
@@ -1093,7 +1112,6 @@ class OrderStep_SentReceipt extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Send receipt",
 		"Code" => "RECEIPTED",
-		"Sort" => 40,
 		"ShowAsInProcessOrder" => 1,
 		"SendReceiptToCustomer" => 1
 	);
@@ -1192,7 +1210,6 @@ class OrderStep_Sent extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Send order",
 		"Code" => "SENT",
-		"Sort" => 50,
 		"ShowAsCompletedOrder" => 1
 	);
 
@@ -1287,7 +1304,6 @@ class OrderStep_Archived extends OrderStep {
 		"CustomerCanPay" => 0,
 		"Name" => "Archived order",
 		"Code" => "ARCHIVED",
-		"Sort" => 55,
 		"ShowAsCompletedOrder" => 1
 	);
 

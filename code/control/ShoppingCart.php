@@ -172,8 +172,8 @@ class ShoppingCart extends Object{
 				return false;
 			}
 			*/
-			if($this->order && $this->order->exists() && $this->order->StatusID) {
-				$this->order->calculateOrderAttributes();
+			if($this->order && $this->order->exists()) {
+				$this->order->calculateOrderAttributes($force = true);
 			}
 		}
 		return $this->order;
@@ -407,7 +407,8 @@ class ShoppingCart extends Object{
 	}
 
 	/**
-	 * Clears the cart contents completely by removing the orderID from session, and thus creating a new cart on next request.
+	 * Clears the cart contents completely by removing the orderID from session, and
+	 * thus creating a new cart on next request.
 	 * @return Boolean
 	 */
 	public function clear(){
@@ -450,6 +451,7 @@ class ShoppingCart extends Object{
 		$this->addMessage(_t("ShoppingCart.MODIFIERREMOVED", "Removed."), 'good');
 		return true;
 	}
+
 	/**
 	 * Removes a modifier from the cart
 	 * @param Int/ OrderModifier
@@ -501,7 +503,6 @@ class ShoppingCart extends Object{
 			return false;
 		}
 	}
-
 
 	/**
 	 * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
@@ -682,6 +683,9 @@ class ShoppingCart extends Object{
 			}
 
 			echo "</blockquote></blockquote></blockquote></blockquote>";
+		}
+		else {
+			echo "Please log in as admin first";
 		}
 	}
 
@@ -897,7 +901,8 @@ class ShoppingCart_Controller extends Controller{
 		'removeallitem',
 		'removeallitemandedit',
 		'removemodifier',
-		'addmodifier'
+		'addmodifier',
+		'deleteorder'
 	);
 
 	/**
@@ -942,14 +947,15 @@ class ShoppingCart_Controller extends Controller{
 		'setquantityitem',
 		'clear',
 		'clearandlogout',
+		'deleteorder',
 		'numberofitemsincart',
 		'showcart',
 		'loadorder',
 		'copyorder',
 		'removeaddress',
 		'submittedbuyable',
-		'debug' => 'ADMIN',
-		'test' => 'ADMIN'
+		'debug', // no need to set to  => 'ADMIN',
+		'ajaxtest' // no need to set to  => 'ADMIN',
 	);
 
 	function index() {
@@ -1016,6 +1022,10 @@ class ShoppingCart_Controller extends Controller{
 
 	static function clear_cart_and_logout_link($parameters = array()) {
 		return self::$url_segment.'/clearandlogout/'.self::params_to_get_string($parameters);
+	}
+
+	static function delete_order_link($orderID, $parameters = array()) {
+		return self::$url_segment.'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1174,6 +1184,16 @@ class ShoppingCart_Controller extends Controller{
 		return false;
 	}
 
+	function deleteorder($request) {
+		$orderID = intval($request->param('ID'));
+		if($order = Order::get_by_id_if_can_view($orderID)) {
+			if($order->canDelete()) {
+				$order->delete();
+			}
+		}
+		$this->redirectBack();
+	}
+
 	/**
 	 * return number of items in cart
 	 *@return integer
@@ -1303,14 +1323,29 @@ class ShoppingCart_Controller extends Controller{
 	 * Log in as an administrator and visit mysite/shoppingcart/debug
 	 */
 	function debug(){
-		$this->cart->debug();
+		if(Director::isDev() || Permission::check("ADMIN")){
+			return $this->cart->debug();
+		}
+		else {
+			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/debug/")."\">log in</a> first.";
+		}
+
 	}
 
-	function test(){
-		$_REQUEST["ajax"] = 1;
-		echo "<pre>";
-		echo $this->cart->setMessageAndReturn("test only");
-		echo "</pre>";
+	function ajaxtest(){
+		if(Director::isDev() || Permission::check("ADMIN")){
+			$this->addHeader('Content-Type', 'text/plain');
+			$_REQUEST["ajax"] = 1;
+			$v = $this->cart->setMessageAndReturn("test only");
+			$v = str_replace(",", ",\r\n\t\t", $v);
+			$v = str_replace("}", "\r\n\t}", $v);
+			$v = str_replace("{", "\t{\r\n\t\t", $v);
+			$v = str_replace("]", "\r\n]", $v);
+			echo $v;
+		}
+		else {
+			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/ajaxtest/")."\">log in</a> first.";
+		}
 	}
 
 

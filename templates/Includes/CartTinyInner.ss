@@ -2,6 +2,7 @@
 <% if Items %>
 	<p class="thereAreItems">
 		<% _t("Order.YOUHAVE", "You have") %>
+		<!-- note: the hardcoded URL below points to an ajax pop-up alternatively you can use: EcomConfig.CheckoutLink (add dollar sign) -->
 		<a href="/shoppingcart/showcart/" class="simpledialog" rel="SimpleDialogueCart">
 			 $TotalItems <% if MoreThanOneItemInCart %><% _t("Order.ITEMS", "Items") %><% else %><% _t("Order.ITEM", "Item") %><% end_if %>
 		</a>
