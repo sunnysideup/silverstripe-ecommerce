@@ -172,8 +172,8 @@ class ShoppingCart extends Object{
 				return false;
 			}
 			*/
-			if($this->order && $this->order->exists() && $this->order->StatusID) {
-				$this->order->calculateOrderAttributes();
+			if($this->order && $this->order->exists()) {
+				$this->order->calculateOrderAttributes($force = true);
 			}
 		}
 		return $this->order;
@@ -451,6 +451,7 @@ class ShoppingCart extends Object{
 		$this->addMessage(_t("ShoppingCart.MODIFIERREMOVED", "Removed."), 'good');
 		return true;
 	}
+
 	/**
 	 * Removes a modifier from the cart
 	 * @param Int/ OrderModifier
@@ -502,7 +503,6 @@ class ShoppingCart extends Object{
 			return false;
 		}
 	}
-
 
 	/**
 	 * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
@@ -1323,12 +1323,18 @@ class ShoppingCart_Controller extends Controller{
 	 * Log in as an administrator and visit mysite/shoppingcart/debug
 	 */
 	function debug(){
-		$this->cart->debug();
+		if(Director::isDev() || Permission::check("ADMIN")){
+			return $this->cart->debug();
+		}
+		else {
+			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/debug/")."\">log in</a> first.";
+		}
+
 	}
 
 	function ajaxtest(){
 		if(Director::isDev() || Permission::check("ADMIN")){
-			header("Content-Type: text/plain");
+			$this->addHeader('Content-Type', 'text/plain');
 			$_REQUEST["ajax"] = 1;
 			$v = $this->cart->setMessageAndReturn("test only");
 			$v = str_replace(",", ",\r\n\t\t", $v);
@@ -1338,7 +1344,7 @@ class ShoppingCart_Controller extends Controller{
 			echo $v;
 		}
 		else {
-			echo "please log in first.";
+			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/ajaxtest/")."\">log in</a> first.";
 		}
 	}
 
