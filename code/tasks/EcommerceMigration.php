@@ -109,8 +109,8 @@ class EcommerceMigration extends BuildTask {
 						$nextDescription = str_replace(array("<h1>","</h1>", "<p>", "</p>"), array("<strong>","</strong>: ", "<span style=\"color: grey;\">", "</span>"), $nextDescription);
 					}
 					else {
-						$next = "/";
-						$nextDescription = "DONE!";
+						$next = "";
+						$nextDescription = "";
 					}
 				}
 			}
@@ -118,23 +118,28 @@ class EcommerceMigration extends BuildTask {
 		}
 		if(!$step) {$html .= "</ul>";}
 		$nextLink = "/dev/ecommerce/ecommercemigration/".$next."/";
-		echo "
-			<hr style=\"margin-top: 50px;\"/>
-			<h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>
-			<div style=\"width: 400px; height: 20px; padding-top: 20px; font-size: 11px; background: url(/ecommerce/images/loading.gif) no-repeat top left transparent\">
-				Next step, if any - will load automatically in ten seconds.
-			</div>
-			<script type=\"text/javascript\">
-				var t = window.setTimeout(
-					function(){
-						window.location = '$nextLink';
-					},
-					10000
-				);
-			</script>
-			<hr style=\"margin-bottom: 500px;\"/>
-			$html
-		";
+		if($next) {
+			echo "
+				<hr style=\"margin-top: 50px;\"/>
+				<h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>";
+			if($step) {
+				echo "
+				<div style=\"width: 400px; height: 20px; padding-top: 20px; font-size: 11px; background: url(/ecommerce/images/loading.gif) no-repeat top left transparent\">
+					Next step, if any - will load automatically in ten seconds.
+				</div>
+				<script type=\"text/javascript\">
+					var t = window.setTimeout(
+						function(){
+							window.location = '$nextLink';
+						},
+						10000
+					);
+				</script>
+				<hr style=\"margin-bottom: 500px;\"/>
+			";
+			}
+		}
+		echo $html;
 	}
 
 
