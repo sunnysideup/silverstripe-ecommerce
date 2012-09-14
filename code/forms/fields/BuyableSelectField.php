@@ -97,7 +97,7 @@ class BuyableSelectField extends FormField {
 		return '
 		EcomBuyableSelectField.set_nothingFound("'._t('BuyableSelectField.NOTHINGFOUND', 'no products found - please try again').'");
 		EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->name()).'");
-		EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->Name()).'");
+		EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->FormName()).'");
 		EcomBuyableSelectField.set_countOfSuggestions('.$this->countOfSuggestions.');
 		EcomBuyableSelectField.set_selectedBuyableFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->name()).'");
 		EcomBuyableSelectField.set_selectedBuyableFieldID("'.Convert::raw2js($this->fieldSelectedBuyable->id()).'");
