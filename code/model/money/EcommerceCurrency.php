@@ -36,6 +36,7 @@ class EcommerceCurrency extends DataObject {
 	public static $casting = array(
 		"IsDefault" => "Boolean",
 		"IsDefaultNice" => "Varchar",
+		"InUseNice" => "Varchar",
 		"ExchangeRate" => "Double"
 	);
 
@@ -55,8 +56,9 @@ class EcommerceCurrency extends DataObject {
 	public static $field_labels = array(
 		"Code" => "Short Code (e.g. NZD)",
 		"Name" => "Name (e.g. New Zealand Dollar)",
-		"InUse" => "Is it in use on the website",
+		"InUse" => "It is available for use?",
 		"ExchangeRate" => "Exchange Rate",
+		"ExchangeRateExplanation" => "Exchange Rate explanation",
 		"IsDefaultNice" => "Is default currency for site"
 	);
 
@@ -67,9 +69,9 @@ class EcommerceCurrency extends DataObject {
 	public static $summary_fields = array(
 		"Code" => "Code",
 		"Name" => "Name",
-		"IsDefaultNice" => "Is default currency for site",
-		"ExchangeRate" => "Exchange Rate",
-		"IsDefaultNice" => "Is default"
+		"InUseNice" => "Available",
+		"IsDefaultNice" => "Default Currency",
+		"ExchangeRate" => "Exchange Rate"
 	); //note no => for relational fields
 
 	/**
@@ -157,6 +159,7 @@ class EcommerceCurrency extends DataObject {
 		}
 	}
 
+
 	/**
 	 *
 	 * @return Int - the ID of the currency
@@ -176,6 +179,21 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public static function get_currency_from_code($currencyCode) {
 		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '$currencyCode' AND \"InUse\" = 1");
+	}
+
+
+	/**
+	 * STANDARD SILVERSTRIPE STUFF
+	 **/
+	function getCMSFields(){
+		$fields = parent::getCMSFields();
+		$fieldLabels = $this->fieldLabels();
+		$fields->addFieldToTab("Root.Main", new ReadonlyField("IsDefaulNice", $fieldLabels["IsDefaultNice"], $this->getIsDefaultNice()));
+		if(!$this->isDefault()) {
+			$fields->addFieldToTab("Root.Main", new ReadonlyField("ExchangeRate", $fieldLabels["ExchangeRate"], $this->ExchangeRate()));
+			$fields->addFieldToTab("Root.Main", new ReadonlyField("ExchangeRateExplanation", $fieldLabels["ExchangeRateExplanation"], $this->ExchangeRateExplanation()));
+		}
+		return $fields;
 	}
 
 	/**
@@ -204,6 +222,20 @@ class EcommerceCurrency extends DataObject {
 	}
 
 	/**
+	 * casted variable method
+	 * @return String
+	 */
+	public function InUseNice(){ return $this->getInUseNice();}
+	public function getInUseNice(){
+		if($this->InUse) {
+			return _t("EcommerceCurrency.YES", "Yes");
+		}
+		else {
+			return _t("EcommerceCurrency.NO", "No");
+		}
+	}
+
+	/**
 	 * casted variable
 	 * @return Double
 	 */
@@ -212,6 +244,17 @@ class EcommerceCurrency extends DataObject {
 		$className = EcommerceConfig::get("EcommerceCurrency", "exchange_provider_class");
 		$obj = new ExchangeRateProvider();
 		return $obj->ExchangeRate( Payment::site_currency(), $this->Code);
+	}
+
+	/**
+	 * casted variable
+	 * @return Double
+	 */
+	public function ExchangeRateExplanation(){ return $this->getExchangeRateExplanation();}
+	public function getExchangeRateExplanation(){
+		$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
+		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".Payment::site_currency();
+		return $string;
 	}
 
 	/**
@@ -418,6 +461,7 @@ class EcommerceCurrency extends DataObject {
 		"vnd" => "vietnam dong",
 		"zmk" => "zambia kwacha"
 	);
+
 
 }
 

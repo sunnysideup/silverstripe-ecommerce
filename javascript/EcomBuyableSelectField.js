@@ -181,16 +181,16 @@ EcomBuyableSelectField = {
 					//after we finish the search (what happens when the data comes back...
 					select: function(event, ui) {
 						if(
-							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").length == 0 ||
-							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").length  == 0 ||
-							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").length  == 0
+							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableID']").length == 0 ||
+							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableClassName']").length  == 0 ||
+							jQuery("#"+EcomBuyableSelectField.formName+" input[name='Version']").length  == 0
 						) {
 							EcomBuyableSelectField.showCurrentSituation("Error: can not find BuyableID or BuyableClassName or Version field");
 						}
 						else {
-							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableID").val(ui.item.id);
-							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_BuyableClassName").val(ui.item.className);
-							jQuery("input#Form_"+EcomBuyableSelectField.formName+"_Version").val(ui.item.version);
+							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableID']").val(ui.item.id);
+							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableClassName']").val(ui.item.className);
+							jQuery("#"+EcomBuyableSelectField.formName+" input[name='Version']").val(ui.item.version);
 							EcomBuyableSelectField.showCurrentSituation(ui.item.title);
 						}
 					}
