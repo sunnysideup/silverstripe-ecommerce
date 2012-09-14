@@ -71,6 +71,26 @@ class EcommerceCountry extends DataObject {
 	public static $plural_name = "Countries";
 		function i18n_plural_name() { return _t("EcommerceCountry.COUNTRIES", "Countries");}
 
+
+	/**
+	 * return false or true
+	 * @ return Boolean
+	 */
+	function canCreate($member = null){
+		if(!$member) {
+			$member = Member::currentMember();
+			return $member->IsShopAdmin ? true : false;
+		}
+	}
+
+	/**
+	 * return false or true
+	 * @ return Boolean
+	 */
+	function canDelete($member = null){
+		return false;
+	}
+
 		/**
 	 * This function exists as a shortcut.
 	 * If there is only ONE allowed country code
