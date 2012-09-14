@@ -25,6 +25,7 @@ Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller"
 Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
+SS_Report::register("SideReport", "EcommerceSideReport_EcommercePages");
 SS_Report::register("SideReport", "EcommerceSideReport_FeaturedProducts");
 SS_Report::register("SideReport", "EcommerceSideReport_AllProducts");
 SS_Report::register("SideReport", "EcommerceSideReport_NoImageProducts");
