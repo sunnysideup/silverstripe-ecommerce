@@ -25,6 +25,7 @@ Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller"
 Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
+SS_Report::register("SideReport", "EcommerceSideReport_EcommercePages");
 SS_Report::register("SideReport", "EcommerceSideReport_FeaturedProducts");
 SS_Report::register("SideReport", "EcommerceSideReport_AllProducts");
 SS_Report::register("SideReport", "EcommerceSideReport_NoImageProducts");
@@ -42,12 +43,6 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 
 // * * * DEFINITELY MUST SET
 //EcommerceConfig::set_folder_and_file_locations(array("ecommerce/_config/ecommerce.yaml"));
-
-
-// * * * CMS
-//SalesAdmin::add_managed_model("MyOtherLogThing");
-//StoreAdmin::add_managed_model("MyOtherLogThing");
-//ProductsAndGroupsModelAdmin::add_managed_model("MyOtherLogThing");
 
 
 // * * * ECOMMERCE I18N SETTINGS NOTES
@@ -72,6 +67,5 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 
 
 // * * * HIGHLY RECOMMENDED SETTINGS NON-ECOMMERCE
-//Payment::set_site_currency('NZD');
 //Geoip::$default_country_code = 'NZ';
 //Email::setAdminEmail("cool@bool.com");

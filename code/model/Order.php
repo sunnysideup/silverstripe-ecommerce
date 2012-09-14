@@ -586,8 +586,12 @@ class Order extends DataObject {
 			}
 			$this->MyStep()->addOrderStepFields($fields, $this);
 			$fields->addFieldToTab("Root.Next", new LiteralField("StatusIDExplanation", _t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.")));
-			$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
-			$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), DataObject::get("EcommerceCurrency"), EcommerceCurrency::default_currency_id()));
+			$currencies = EcommerceCurrency::ecommerce_currency_list();
+			if($currencies) {
+				$mapOfCurrencies = $currencies->map("ID", "Title");
+				$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
+				$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), $mapOfCurrencies, EcommerceCurrency::default_currency_id()));
+			}
 		}
 		else {
 			$fields->removeByName("Main");
@@ -833,6 +837,7 @@ class Order extends DataObject {
 
 	/**
 	 * Has the order been paid?
+	 * TODO: why do we check if there is a total at all?
 	 * @return boolean
 	 */
 	function IsPaid() {
@@ -1511,6 +1516,9 @@ class Order extends DataObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canDelete', $member->ID);
 		if($extended !== null) {return $extended;}
+		if(!$this->IsSubmitted() && $member->IsShopAdmin()){
+			return true;
+		}
 		return false;
 	}
 
@@ -1648,13 +1656,33 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
+	 * @return String
+	 */
+	function DeleteLink(){return $this->getDeleteLink();}
+	function getDeleteLink() {
+		if($this->canDelete()) {
+			return ShoppingCart_Controller::delete_order_link($this->ID);
+		}
+		else {
+			return "";
+		}
+	}
+
+	/**
 	 * A "Title" for the order, which summarises the main details (date, and customer) in a string.
 	 *@return String
 	 **/
 	function Title() {return $this->getTitle();}
 	function getTitle() {
 		if($this->exists()) {
-			$title = $this->i18n_singular_name(). " #$this->ID - ".$this->dbObject('Created')->Nice();
+			if($submissionLog = $this->SubmissionLog()) {
+				$dateObject = $submissionLog->dbObject('Created');
+			}
+			else {
+				$dateObject = $this->dbObject('Created');
+			}
+			$title = $this->i18n_singular_name(). " #$this->ID - ".$dateObject->Nice();
 			$name = "";
 			if($this->CancelledByID) {
 				$name = " - "._t("Order.CANCELLED","CANCELLED");

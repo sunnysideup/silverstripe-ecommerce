@@ -7,16 +7,74 @@
  *
  *
  *
+ *
+ */
+
+
+
+/**
+ * Ecommerce Pages except Products
+ *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: search
+ * @sub-package: reports
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
+class EcommerceSideReport_EcommercePages extends SS_Report {
+
+	function title() {
+		return _t('EcommerceSideReport.ECOMMERCEPAGES',"E-commerce Pages");
+	}
+
+	function group() {
+		return _t('EcommerceSideReport.ECOMMERCEGROUP', "Ecommerce");
+	}
+
+	function sort() {
+		return 0;
+	}
+
+	function sourceRecords($params = null) {
+		$dos = new DataObjectSet();
+		$array = array("CartPage", "AccountPage");
+		foreach($array as $className) {
+			if($add = DataObject::get($className)) {
+				if($add->exists()) {
+					foreach($add as $page) {
+						$dos->push($page);
+					}
+				}
+			}
+		}
+		if($dos->count()) {
+			return $dos;
+		}
+	}
+
+	function columns() {
+		return array(
+			"Title" => array(
+				"title" => "FullName",
+				"link" => true
+			)
+		);
+	}
+
+}
+
+
+
+/** @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: reports
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommerceSideReport_FeaturedProducts extends SS_Report {
 
 	function title() {
-		return _t('EcommerceSideReport.FEATUREDPRODUCTS', "Featured Products");
+		return _t('EcommerceSideReport.FEATUREDPRODUCTS', "Featured products");
 	}
 
 	function group() {
@@ -44,14 +102,14 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report {
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: search
+ * @sub-package: reports
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommerceSideReport_AllProducts extends SS_Report {
 
 	function title() {
-		return _t('EcommerceSideReport.ALLPRODUCTS', "All Products");
+		return _t('EcommerceSideReport.ALLPRODUCTS', "All products");
 	}
 
 	function group() {
@@ -81,7 +139,7 @@ class EcommerceSideReport_AllProducts extends SS_Report {
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: search
+ * @sub-package: reports
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
@@ -115,7 +173,7 @@ class EcommerceSideReport_NoImageProducts extends SS_Report {
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: search
+ * @sub-package: reports
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
@@ -153,7 +211,7 @@ class EcommerceSideReport_NoInternalIDProducts extends SS_Report {
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: search
+ * @sub-package: reports
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
@@ -192,7 +250,7 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report {
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: search
+ * @sub-package: reports
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
@@ -231,7 +289,7 @@ class EcommerceSideReport_NotForSale extends SS_Report {
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: search
+ * @sub-package: reports
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 

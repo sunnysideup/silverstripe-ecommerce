@@ -12,6 +12,16 @@
 
 class EcomQuantityField extends NumericField {
 
+
+	/**
+	 * the tabindex for the form field
+	 * we use this so that you can tab through all the
+	 * quantity fields without disruption.
+	 * It is saved like this: "FieldName (String)" => tabposition (int)
+	 * @var Array
+	 **/
+	protected static $tabindex = array();
+
 	/**
 	 *@var order OrderItem DataObject
 	 **/
@@ -33,6 +43,7 @@ class EcomQuantityField extends NumericField {
 	 **/
 	protected $maxLength = 3;
 
+
 	/**
 	 * max length in digits
 	 *@var Integer
@@ -43,6 +54,7 @@ class EcomQuantityField extends NumericField {
 	 *@var $template String
 	 **/
 	protected $template = 'EcomQuantityField';
+
 
 	/**
 	 *@param $object - the buyable / OrderItem
@@ -99,6 +111,9 @@ class EcomQuantityField extends NumericField {
 	 **/
 	function Field() {
 		$name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
+		if(!isset(self::$tabindex[$name])) {
+			self::$tabindex[$name] = count(self::$tabindex) + 1;
+		}
 		$attributes = array(
 			'type' => 'text',
 			'class' => implode(' ',$this->classes),
@@ -107,6 +122,7 @@ class EcomQuantityField extends NumericField {
 			'maxlength' => $this->maxLength,
 			'size' => $this->fieldSize,
 			'rel' => $this->getQuantityLink(),
+			'tabindex' => self::$tabindex[$name]
 		);
 		//IMPROVE ME: hack to use the form field createTag method ...perhaps this should become a form field instead
 		$formfield = new FormField($name);

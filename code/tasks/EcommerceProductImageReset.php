@@ -16,7 +16,11 @@ class EcommerceProductImageReset extends BuildTask{
 	protected $description = "(1) Checks if the image class is ProductImage, (2) Checks if the image exists and remove if it does not exist. NOTE: it is recommended that you update the file system before you run this task.";
 
 	function run($request){
-		$tables = array("ProductGroup", "ProductGroup_Live","Product", "Product_Live", "ProductVariation");
+		$tables = array("ProductGroup", "ProductGroup_Live","Product", "Product_Live");
+		if(class_exists("ProductVariation")) {
+			$tables[] = "ProductVariation";
+		}
+		//todo: make list based on buyables rather than hard-coded.
 		foreach($tables as $tableName) {
 			$classErrorCount = 0;
 			$removeCount = 0;

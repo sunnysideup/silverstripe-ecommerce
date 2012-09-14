@@ -118,6 +118,8 @@ class AccountPage extends Page {
 			$this->calculatedTotal = 0;
 			$this->calculatedPaid = 0;
 			$this->calculatedOutstanding = 0;
+			$member = Member::currentUser();
+			$canDelete = false;
 			if($this->pastOrders) {
 				foreach($this->pastOrders as $order) {
 					$this->calculatedTotal += $order->Total();

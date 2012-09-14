@@ -157,8 +157,8 @@ class EcommerceConfigDefinitions extends Object {
 				"admin_role_permission_codes" => "Permission codes for the shop administrator member group.",
 			),
 			"OrderModifierForm" => array(
-				"controller_class" => "The controller class is used for Order Modifers forms.",
-				"validator_class" => "The validator class is used for Order Modifer forms.",
+				"controller_class" => "The controller class is used for Order Modifier Forms.",
+				"validator_class" => "The validator class is used for Order Modifier Forms.",
 			),
 			"OrderStatusLogForm" => array(
 				"controller_class" => "The controller class is used for OrderStatusLogForm forms.",
