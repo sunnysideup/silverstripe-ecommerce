@@ -240,8 +240,9 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
-	* This method simply checks if a fields has changed and if it has changed it updates the field.
-	**/
+	 * @param String $fieldName
+	 * This method simply checks if a fields has changed and if it has changed it updates the field.
+	 **/
 	protected function checkField($fieldName) {
 		if($this->canBeUpdated()) {
 			$functionName = "Live".$fieldName;
