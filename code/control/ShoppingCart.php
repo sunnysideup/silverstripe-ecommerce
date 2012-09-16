@@ -172,7 +172,7 @@ class ShoppingCart extends Object{
 				return false;
 			}
 			*/
-			if($this->order && $this->order->exists()) {
+			if($this->order && $this->order->exists() && $this->order->StatusID) {
 				$this->order->calculateOrderAttributes($force = true);
 			}
 		}
@@ -821,7 +821,7 @@ class ShoppingCart extends Object{
 	 * @param Form $form
 	 * @returns String (JSON)
 	 */
-	public function setMessageAndReturn($message = "", $status = "", $form = null){
+	public function setMessageAndReturn($message = "", $status = "", Form $form = null){
 		if($message && $status) {
 			$this->addMessage($message,$status);
 		}
@@ -835,9 +835,14 @@ class ShoppingCart extends Object{
 			//TODO: handle passing a message back to a form->sessionMessage
 			$this->StoreMessagesInSession();
 			if($form) {
+				$this->currentOrder();
+				$this->order->calculateOrderAttributes($force = true);
 				$form->sessionMessage($message,$status);
+				//let the form controller do the redirectback or whatever else is needed.
 			}
-			Director::redirectBack();
+			else {
+				Director::redirectBack();
+			}
 			return;
 		}
 	}
