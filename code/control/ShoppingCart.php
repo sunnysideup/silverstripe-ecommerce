@@ -11,7 +11,6 @@
  * - Clearly define an API for editing the cart, trying to keep the number of functions to a minimum.
  * - Allow easier testing of cart functionality.
  * - Message handling done in one place.
- * This is not taking a step backward, be cause the old ShoppingCart / Controller seperation had all static variables/functions on ShoppingCart
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
