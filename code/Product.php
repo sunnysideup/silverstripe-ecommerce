@@ -618,8 +618,11 @@ class Product extends Page implements BuyableModel {
 		return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters(), array("quantity" => $quantity)));
 	}
 
+
 	/**
-	 * @todo: do we still need this?
+	 * Here you can add additional information to your product
+	 * links such as the AddLink and the RemoveLink.
+	 * One useful parameter you can add is the BackURL link.
 	 * @return Array
 	 **/
 	protected function linkParameters(){
