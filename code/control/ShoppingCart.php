@@ -834,13 +834,20 @@ class ShoppingCart extends Object{
 			//TODO: handle passing a message back to a form->sessionMessage
 			$this->StoreMessagesInSession();
 			if($form) {
+				//lets make sure that there is an order
 				$this->currentOrder();
+				//nowe we can (re)calculate the order
 				$this->order->calculateOrderAttributes($force = true);
 				$form->sessionMessage($message,$status);
 				//let the form controller do the redirectback or whatever else is needed.
 			}
 			else {
-				Director::redirectBack();
+				if(empty($_REQUEST["BackURL"])) {
+					Director::redirectBack();
+				}
+				else {
+					Director::redirect(urldecode($_REQUEST["BackURL"]));
+				}
 			}
 			return;
 		}
@@ -1054,14 +1061,9 @@ class ShoppingCart_Controller extends Controller{
 	 */
 
 	protected static function params_to_get_string($array){
-		$string = "?";
-		if($array & count($array > 0)){
-			array_walk($array , create_function('&$v,$k', '$v = $k."=".$v ;'));
-			$string = implode("&",$array);
-		}
 		$token = SecurityToken::inst();
-		$string .= "&amp;SecurityID=".$token->getValue();
-		return $string;
+		$array["SecurityID"] = $token->getValue();
+		return "?".http_build_query($array);
 	}
 
 	/**
