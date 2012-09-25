@@ -606,7 +606,7 @@ class Product extends Page implements BuyableModel {
 	 * @return String (Link)
 	 */
 	function RemoveAllAndEditLink() {
-		return ShoppingCart_Controller::remove_all_item_and_edit_link($this->ID, $this->ClassName, $this->linkParameters("removeandedit"));
+		return ShoppingCart_Controller::remove_all_item_and_edit_link($this->ID, $this->ClassName, $this->linkParameters("removeallandedit"));
 	}
 
 	/**
@@ -615,7 +615,7 @@ class Product extends Page implements BuyableModel {
 	 * @return String (Link)
 	 */
 	function SetSpecificQuantityItemLink($quantity) {
-		return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters("setquantity"), array("quantity" => $quantity)));
+		return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters("setspecificquantityitem"), array("quantity" => $quantity)));
 	}
 
 
