@@ -1900,7 +1900,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if($this->ShippingAddressID) {
+		if($this->ShippingAddressID && $this->UseShippingAddress) {
 			if($shippingAddress = DataObject::get_by_id("ShippingAddress", $this->ShippingAddressID)) {
 				if($shippingAddress->ShippingCountry) {
 					$countryCodes["Shipping"] = $shippingAddress->ShippingCountry;
