@@ -17,8 +17,8 @@
 		<tr>
 			<td class="center">$LastEdited.Nice24</td>
 			<td class="center">$Status</td>
-			<td class="center">$PaymentMethod</td>
-			<td class="left">$Message.NoHTML</td>
+			<td class="center">$PaymentMethod.XML</td>
+			<td class="left">$Message.NoHTML.XML</td>
 			<td class="right">$Amount.Nice $Currency</td>
 		</tr>
 	<% end_control %>
