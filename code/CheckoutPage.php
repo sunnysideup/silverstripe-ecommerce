@@ -97,6 +97,7 @@ class CheckoutPage extends CartPage {
 	 * @return String (URLSegment)
 	 */
 	public static function find_next_step_link($currentStep, $doPreviousInstead = false) {
+		$nextStep = null;
 		if($link = self::find_link()){
 			$steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 			if(in_array($currentStep, $steps)) {
@@ -113,8 +114,19 @@ class CheckoutPage extends CartPage {
 					}
 				}
 			}
+			else {
+				if($doPreviousInstead) {
+					$nextStep = array_shift($steps);
+				}
+				else {
+					$nextStep = array_pop($steps);
+				}
+			}
 			if($nextStep) {
 				return $link."checkoutstep"."/".$nextStep."/";
+			}
+			else {
+
 			}
 			return $link;
 		}
