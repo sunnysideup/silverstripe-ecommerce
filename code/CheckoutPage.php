@@ -566,7 +566,10 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS method
 	 * @return Boolean
 	 */
-	public function canDelete($member = null) {return false;}
+	public function canDelete($member = null) {
+		$array = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
+		return !in_array($this->getCode, $array);
+	}
 
 	/**
 	 * standard SS method
