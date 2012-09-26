@@ -289,6 +289,18 @@ class Product extends Page implements BuyableModel {
 		}
 	}
 
+	function onAfterWrite() {
+		parent::onAfterWrite();
+		if($this->ImageID) {
+			if($productImage = DataObject::get_by_id("Product_Image", $this->ImageID)) {
+				if($normalImage = DataObject::get_by_id("Image", $this->ImageID)) {
+					$normalImage->ClassName = "Product_Image";
+					$normalImage->write();
+				}
+			}
+		}
+	}
+
 	/**
 	 * sets the FullName and FullSiteTreeField to the latest values
 	 * This can be useful as you can compare it to the ones saved in the database.
