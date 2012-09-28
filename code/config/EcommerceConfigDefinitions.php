@@ -22,7 +22,7 @@ class EcommerceConfigDefinitions extends Object {
 	 *
 	 * @var Float
 	 */
-	private $version = 0.9;
+	private $version = 1;
 
 	/**
 	 * Tells us the version of e-commerce in use.
