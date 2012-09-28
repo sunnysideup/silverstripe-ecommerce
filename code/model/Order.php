@@ -834,7 +834,10 @@ class Order extends DataObject {
 	 * @return boolean
 	 */
 	function IsPaid() {
-		return (bool)($this->Total() > 0 && $this->TotalOutstanding() <= 0);
+		if($this->IsSubmitted()) {
+			return (bool)($this->Total() > 0 && $this->TotalOutstanding() <= 0);
+		}
+		return false;
 	}
 
 	/**
