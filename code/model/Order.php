@@ -844,13 +844,7 @@ class Order extends DataObject {
 	 * Has the order been cancelled?
 	 * @return boolean
 	 */
-	public function IsCancelled() {
-		return $this->getIsCancelled();
-	}
-
-	/**
-	 * IT is important to have both IsCancelled and getIsCancelled.
-	 **/
+	public function IsCancelled() {return $this->getIsCancelled();}
 	public function getIsCancelled() {
 		return $this->CancelledByID ? TRUE : FALSE;
 	}
@@ -860,7 +854,7 @@ class Order extends DataObject {
 	 * @return boolean
 	 */
 	function IsCustomerCancelled() {
-		if($this->MemberID == $this->IsCancelledID && $this->MemberID > 0) {
+		if($this->MemberID > 0 && $this->MemberID == $this->IsCancelledID) {
 			return true;
 		}
 		return false;
