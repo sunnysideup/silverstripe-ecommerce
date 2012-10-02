@@ -1231,8 +1231,11 @@ class Order extends DataObject {
 	 *
 	 */
 	public function calculateOrderAttributes($force = false) {
-		$this->calculateOrderItems($force);
-		$this->calculateModifiers($force);
+		if($this->TotalItems()) {
+			$this->calculateOrderItems($force);
+			$this->calculateModifiers($force);
+		}
+		$this->extend("onCalculateOrder");
 	}
 
 
@@ -1844,7 +1847,10 @@ class Order extends DataObject {
 
 	/**
 	 * returns the total number of OrderItems (not modifiers).
-	 *@return Integer
+	 * This is meant to run as fast as possible to quickly check
+	 * if there is anything in the cart.
+	 * @param Boolean $recalculate - do we need to recalculate (value is retained during lifetime of Object)
+	 * @return Integer
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
 	public function getTotalItems($recalculate = false) {
