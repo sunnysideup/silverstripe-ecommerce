@@ -31,8 +31,7 @@ class EcommerceMigration extends BuildTask {
 
 	protected $description = "
 		Migrates all the data from the oldest version of e-commerce to the current one.
-		Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.  The migration will not work so well if you have a very high number of Orders.
-		You may run it several times.
+		Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.
 	";
 
 	protected $listOfMigrationTasks = array(

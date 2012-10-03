@@ -14,7 +14,7 @@ class AddCustomersToCustomerGroups extends BuildTask {
 
 	protected $title = "Add Customers to Customer Group";
 
-	protected $description = "Takes all the members that have ordered something and adds them to the customer group.";
+	protected $description = "Takes all the Members that have ordered something and adds them to the Customer Security Group.";
 
 	function run($request) {
 		$customerGroup = EcommerceRole::get_customer_group();;
