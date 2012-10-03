@@ -10,9 +10,9 @@
  **/
 class SetOrderIDStartingNumber extends BuildTask{
 
-	protected $title = "Set Order ID Starting Number";
+	protected $title = "Set Order ID starting number";
 
-	protected $description = "sets the starting order number with all order numbers following this number.";
+	protected $description = "Sets the starting order number with all order numbers following this number.";
 
 	function run($request){
 
