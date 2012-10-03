@@ -11,9 +11,9 @@
 
 class EcommerceCountryAndRegionTasks extends BuildTask{
 
-	protected $title = "Create standard country and regions";
+	protected $title = "Create standard countries and regions";
 
-	protected $description = "Adds all the countries to the EcommerceCountry List";
+	protected $description = "Adds all countries to the EcommerceCountry list";
 
 	function run($request){
 		$count = 0;

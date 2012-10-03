@@ -16,7 +16,8 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask{
 
 	protected $title = "Archive all submitted orders";
 
-	protected $description = "This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
+	protected $description = "
+	This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
 
 	function run($request){
 		$orderStatusLogClassName = "OrderStatusLog";

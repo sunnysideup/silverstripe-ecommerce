@@ -15,7 +15,7 @@ class CreateEcommerceMemberGroups extends BuildTask{
 
 	protected $title = "Create E-commerce Member Groups";
 
-	protected $description = "Create the member groups and members for e-commerce, such as customers and shop-admins.";
+	protected $description = "Create the member groups and members for e-commerce, such as Customers and Shop Admininistrators.";
 
 	function run($request){
 		$customerGroup = EcommerceRole::get_customer_group();
