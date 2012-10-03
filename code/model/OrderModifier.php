@@ -455,7 +455,7 @@ class OrderModifier extends OrderAttribute {
 	 **/
 	public function AddLink() {
 		$param = array();
-		$this->extend("ModifierAddLinkUpdate", $param);
+		$this->extend("ModifierRemoveLinkUpdate", $param);
 		return ShoppingCart_Controller::add_modifier_link($this->ID, $param, $this->ClassName);
 	}
 
