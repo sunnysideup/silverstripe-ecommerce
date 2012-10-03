@@ -14,9 +14,9 @@
 class AddDefaultEcommerceProducts extends BuildTask {
 
 
-	protected $title = "Add default products";
+	protected $title = "Add default Products";
 
-	protected $description = "Adds two default products and a product group to your product.";
+	protected $description = "Adds two default Products and a Product Group (Category) to your site.";
 
 	function run($request) {
 		if(!DataObject::get_one('Product')) {

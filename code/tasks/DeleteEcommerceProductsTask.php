@@ -17,7 +17,7 @@ class DeleteEcommerceProductsTask extends BuildTask{
 
 	protected $title = "Delete e-commerce Buyables";
 
-	protected $description = "Removes all Buyables from the database.";
+	protected $description = "Removes all Buyables (Products) from the database - .";
 
 	function run($request){
 
@@ -25,6 +25,7 @@ class DeleteEcommerceProductsTask extends BuildTask{
 		foreach($arrayOfBuyables as $buyable) {
 			if($allproducts = DataObject::get($buyable)){
 				foreach($allproducts as $product){
+					DB::alteration_message("Deleting ".$product->ClassName." ID = ".$product->ID, "deleted");
 					if($product instanceOf SiteTree) {
 						$product->deleteFromStage('Live');
 						$product->deleteFromStage('Stage');

@@ -1340,7 +1340,8 @@ class ShoppingCart_Controller extends Controller{
 
 	function ajaxtest(){
 		if(Director::isDev() || Permission::check("ADMIN")){
-			$this->addHeader('Content-Type', 'text/plain');
+			header('Content-Type', 'text/plain');
+			echo "<pre>";
 			$_REQUEST["ajax"] = 1;
 			$v = $this->cart->setMessageAndReturn("test only");
 			$v = str_replace(",", ",\r\n\t\t", $v);
@@ -1348,6 +1349,7 @@ class ShoppingCart_Controller extends Controller{
 			$v = str_replace("{", "\t{\r\n\t\t", $v);
 			$v = str_replace("]", "\r\n]", $v);
 			echo $v;
+			echo "</pre>";
 		}
 		else {
 			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/ajaxtest/")."\">log in</a> first.";
