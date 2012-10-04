@@ -115,7 +115,7 @@ class OrderFormAddress extends Form {
 				if(!$this->loggedInMember) {
 					$rightFields->push(
 						//TODO: check EXACT link!!!
-						new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you are already have an account then please')." <a href=\"Security/login/?BackURL=" . urlencode($controller->Link()) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
+						new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login/?BackURL=/" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
 					);
 				}
 				$passwordField = new ConfirmedPasswordField('Password', _t('OrderForm.PASSWORD','Password'));
@@ -134,7 +134,10 @@ class OrderFormAddress extends Form {
 				$requiredFields[] = 'Password[_ConfirmPassword]';
 				Requirements::customScript('jQuery("#ChoosePassword").click();', "EommerceChoosePassword"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 				$rightFields->push(
-					new LiteralField('AccountInfo','<p>'._t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you can log in and check your order history in the future.').'</p>')
+					new LiteralField(
+						'AccountInfo',
+						'<p>'.
+						_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.').'</p>')
 				);
 				$rightFields->push(new FieldGroup($passwordField));
 			}
