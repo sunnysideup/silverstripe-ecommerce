@@ -36,7 +36,7 @@ class ShopAccountForm extends Form {
 			$member = new Member();
 			$fields = new FieldSet();
 			$fields->push(new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account')));
-			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you are already have an account then please')." <a href=\"Security/login?BackURL=" . $controller->Link() . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
+			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
 			$memberFields = $member->getEcommerceFields(true);
 			if($memberFields) {
 				foreach($memberFields as $memberField) {
