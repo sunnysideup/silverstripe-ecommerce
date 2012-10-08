@@ -1235,7 +1235,6 @@ class Order extends DataObject {
 			$this->calculateOrderItems($force);
 			$this->calculateModifiers($force);
 		}
-
 		$this->extend("onCalculateOrder");
 	}
 
