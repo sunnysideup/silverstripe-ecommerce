@@ -123,6 +123,10 @@ class OrderStatusLog extends DataObject {
 			'field' => 'NumericField',
 			'title' => 'Order Number'
 		),
+		"ClassName" => array(
+			'title' => 'Type',
+			'filter' => 'ExactMatchFilter'
+		),
 		"Title" => "PartialMatchFilter",
 		"Note" => "PartialMatchFilter"
 	);
@@ -168,31 +172,12 @@ class OrderStatusLog extends DataObject {
 			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
 		}
 		//get dropdown for ClassNames
-		$classes = ClassInfo::subclassesFor("OrderStatusLog");
-		$dropdownArray = array();
-		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
-		if(!is_array($availableLogs)) {
-			$availableLogs = array();
-		}
-		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
-		if($classes) {
-			foreach($classes as $className) {
-				$obj = singleton($className);
-				if($obj) {
-					if(in_array($className, $availableLogs )) {
-						$dropdownArray[$className] = $obj->i18n_singular_name();
-					}
-				}
-			}
-		}
-		if(count($dropdownArray)) {
-			$fields->addFieldToTab("Root.Main", new DropdownField("ClassName", "Type", $dropdownArray), "Title");
-			if($this->ClassName) {
-				$fields->replaceField("ClassName", $fields->dataFieldByName("ClassName")->performReadonlyTransformation());
-			}
-		}
+		$fields->addFieldToTab("Root.Main", new OrderStatusLog_ClassNameOrTypeDropdownField("ClassName", "Type", false), "Title");
+		$classNameField = $fields->dataFieldByName("ClassName");
+		$fields->replaceField("ClassName", $classNameField->performReadonlyTransformation());
 		return $fields;
 	}
+
 
 	/**
 	 *
@@ -210,6 +195,7 @@ class OrderStatusLog extends DataObject {
 	function scaffoldSearchFields(){
 		$fields = parent::scaffoldSearchFields();
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
+		$fields->replaceField("ClassName", new OrderStatusLog_ClassNameOrTypeDropdownField("ClassName", "Type", true));
 		return $fields;
 	}
 
@@ -732,3 +718,39 @@ class OrderStatusLog_Archived extends OrderStatusLog {
 
 }
 
+/**
+ * this is a dropdown field just for selecting the right
+ * classname for an order status log
+ *
+ *
+ */
+class OrderStatusLog_ClassNameOrTypeDropdownField extends DropdownField{
+
+	/**
+	 * returns a dropdown field with the available types
+	 * @return DropdownField
+	 */
+	public function __construct($name = "ClassName", $title = "Type", $canBeEmpty = false){
+		$classes = ClassInfo::subclassesFor("OrderStatusLog");
+		$dropdownArray = array();
+		if($canBeEmpty) {
+			$dropdownArray[""] = "-- Select --";
+		}
+		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
+		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
+		if($classes) {
+			foreach($classes as $className) {
+				$obj = singleton($className);
+				if($obj) {
+					if(in_array($className, $availableLogs )) {
+						$dropdownArray[$className] = $obj->i18n_singular_name();
+					}
+				}
+			}
+		}
+		if(!$dropdownArray || !count($dropdownArray)) {
+			$dropdownArray= array("OrderStatusLog" => "--- error ---");
+		}
+		parent::__construct($name, $title, $dropdownArray);
+	}
+}
