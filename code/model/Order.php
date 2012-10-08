@@ -1231,10 +1231,8 @@ class Order extends DataObject {
 	 *
 	 */
 	public function calculateOrderAttributes($force = false) {
-		if($this->TotalItems() || $this->StatusID) {
-			$this->calculateOrderItems($force);
-			$this->calculateModifiers($force);
-		}
+		$this->calculateOrderItems($force);
+		$this->calculateModifiers($force);
 		$this->extend("onCalculateOrder");
 	}
 
