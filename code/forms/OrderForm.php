@@ -123,11 +123,18 @@ class OrderForm extends Form {
 			return false;
 		}
 
+		if($this->extend("OrderFormBeforeFinalCalculation", $data, $form, $request)) {
+			$form->sessionMessage(_t('OrderForm.ERRORWITHFORM','There was an error with your order, please review and submit again.'), 'bad');
+			Director::redirectBack();
+			return false;
+		}
+
 		//RUN UPDATES TO CHECK NOTHING HAS CHANGED
 		$oldTotal = $order->Total();
+		//if the extend line below does not return null then we know there
+		// is an error in the form (e.g. Payment Option not entered)
 		$order->calculateOrderAttributes($force = true);
 		$newTotal = $order->Total();
-		//debug::log($oldTotal."-".$newTotal);
 		if(floatval($newTotal) != floatval($oldTotal)) {
 			$form->sessionMessage(_t('OrderForm.PRICEUPDATED','The order price has been updated, please review the order and submit again.'), 'warning');
 			Director::redirectBack();
@@ -148,6 +155,7 @@ class OrderForm extends Form {
 		//----------------- PAYMENT ------------------------------
 
 		//-------------- NOW SUBMIT -------------
+		$this->extend("OrderFormBeforeSubmit", $order);
 		// this should be done before paying, as only submitted orders can be paid!
 		ShoppingCart::singleton()->submit();
 
@@ -156,6 +164,7 @@ class OrderForm extends Form {
 
 		//-------------- DO WE HAVE ANY PROGRESS NOW -------------
 		$order->tryToFinaliseOrder();
+		//any changes to the order at this point can be taken care by ordsteps.
 
 		//------------- WHAT DO WE DO NEXT? -----------------
 		if($payment) {
