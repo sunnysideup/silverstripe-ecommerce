@@ -28,7 +28,7 @@
 				<% else %>
 					<span class="tableTitle">$TableTitle.XML</span>
 				<% end_if %>
-				<span class="tableSubTitle">$TableSubTitle.XML</span>
+				<span class="tableSubTitle">$TableSubTitle</span>
 			</td>
 			<td class="center quantity">$Quantity</td>
 			<td class="right unitprice">$UnitPrice.Nice</td>
