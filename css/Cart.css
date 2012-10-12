@@ -143,3 +143,15 @@ a.action:hover {
 }
 #Checkout ol.steps li.link,  #OrderConfirmationPage ol.steps li.link {color: #000;}
 #Checkout ol.steps li.current,  #OrderConfirmationPage ol.steps li.current{color: green;}
+
+td.remove a img {
+	filter: url(/ecommerce/css/filters.svg#grayscale); /* Firefox 3.5+ */
+	filter: gray; /* IE6-9 */
+	-webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+}
+
+
+td.remove a:hover img {
+	filter: none;
+	-webkit-filter: grayscale(0);
+}
