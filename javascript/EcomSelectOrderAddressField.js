@@ -65,7 +65,6 @@ var EcomSelectOrderAddressField = {
 	setupAddressChanges: function(){
 		jQuery(EcomSelectOrderAddressField.fieldSelector).each(
 			function(i, el){
-				jQuery(this).find("input:first").click();
 				//jQuery(el).next(EcomSelectOrderAddressField.addressSelector).hide();
 				jQuery(el).find(EcomSelectOrderAddressField.inputSelector).each(
 					function(i, el) {
@@ -87,7 +86,9 @@ var EcomSelectOrderAddressField = {
 							}
 						);
 					}
-				)
+				);
+				//must do the after setting change event.
+				jQuery(this).find("input:first").click();
 			}
 		);
 	},

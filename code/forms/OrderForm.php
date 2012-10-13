@@ -344,7 +344,7 @@ class OrderForm_Cancel extends Form {
 	function __construct($controller, $name, $order) {
 		$fields = new FieldSet(
 			array(
-				new HeaderField('CancelOrderHeading', _t("OrderForm.CANCELORDER", "Changed your mind?"), 2),
+				new HeaderField('CancelOrderHeading', _t("OrderForm.CANCELORDER", "Changed your mind?"), 3),
 				new TextField('CancellationReason', _t("OrderForm.CANCELLATIONREASON", "Reason for cancellation")),
 				new HiddenField('OrderID', '', $order->ID)
 			)
