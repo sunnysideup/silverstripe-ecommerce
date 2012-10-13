@@ -294,6 +294,12 @@ class OrderForm_Payment extends Form {
 			if($paymentField->class == "HeaderField") {
 				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
 			}
+			if($paymentField->Name() == "PaymentMethod") {
+				$source = $paymentField->getSource();
+				if($source && is_array($source) && count($source) == 1) {
+					$paymentField->performReadonlyTransformation();
+				}
+			}
 			$fields->push($paymentField);
 		}
 		$requiredFields = array();
