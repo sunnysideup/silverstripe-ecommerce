@@ -122,7 +122,8 @@ class EcomQuantityField extends NumericField {
 			'maxlength' => $this->maxLength,
 			'size' => $this->fieldSize,
 			'rel' => $this->getQuantityLink(),
-			'tabindex' => self::$tabindex[$name]
+			'tabindex' => self::$tabindex[$name],
+			'disabled' => 'disabled'
 		);
 		//IMPROVE ME: hack to use the form field createTag method ...perhaps this should become a form field instead
 		$formfield = new FormField($name);

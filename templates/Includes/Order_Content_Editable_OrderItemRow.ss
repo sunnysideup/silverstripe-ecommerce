@@ -16,10 +16,12 @@
 	<td class="right unitprice">$UnitPrice.Nice</td>
 	<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
 	<td class="right remove">
+		<% if RemoveAllLink %>
 		<strong>
-			<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$removeallLink" title="<% sprintf(_t("Order.REMOVEALL","Remove &quot;%s&quot; from your cart"),$TableTitle) %>">
+			<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveAllLink" title="<% sprintf(_t("Order.REMOVEALL","Remove &quot;%s&quot; from your cart"),$TableTitle) %>">
 				<img src="ecommerce/images/remove.gif" alt="x"/>
 			</a>
 		</strong>
+		<% end_if %>
 	</td>
 </tr>

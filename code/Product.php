@@ -1095,7 +1095,15 @@ class Product_Image extends Image {
 	}
 
 
-
+	function exists(){
+		if(isset($this->ID)) {
+			if($this->ID) {
+				if(file_exists($this->getFullPath())) {
+					return true;
+				}
+			}
+		}
+	}
 
 }
 

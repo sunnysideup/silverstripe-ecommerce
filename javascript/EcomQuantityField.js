@@ -13,6 +13,8 @@
 EcomQuantityField = {
 
 	//todo: make more specific! some selector that holds true for all cart holders.
+	hidePlusAndMinues: true,
+
 	delegateRootSelector: 'body',
 
 	quantityFieldSelector: ".ecomquantityfield input.ajaxQuantityField",
@@ -25,26 +27,36 @@ EcomQuantityField = {
 
 	//todo: auto-re-attach
 	init: function () {
-		jQuery(EcomQuantityField.delegateRootSelector).delegate(
-			EcomQuantityField.removeSelector,
-			"click",
-			function(e) {
-				e.preventDefault();
-				var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
-				jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
-				return false;
-			}
-		);
-		jQuery(EcomQuantityField.delegateRootSelector).delegate(
-			EcomQuantityField.addSelector,
-			"click",
-			function(e) {
-				e.preventDefault();
-				var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
-				jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
-				return false;
-			}
-		);
+		if(EcomQuantityField.hidePlusAndMinues) {
+			jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.removeSelector).hide();
+		}
+		else {
+			jQuery(EcomQuantityField.delegateRootSelector).delegate(
+				EcomQuantityField.removeSelector,
+				"click",
+				function(e) {
+					e.preventDefault();
+					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
+					jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
+					return false;
+				}
+			);
+		}
+		if(EcomQuantityField.hidePlusAndMinues) {
+			jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.addSelector).hide();
+		}
+		else {
+			jQuery(EcomQuantityField.delegateRootSelector).delegate(
+				EcomQuantityField.addSelector,
+				"click",
+				function(e) {
+					e.preventDefault();
+					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
+					jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
+					return false;
+				}
+			);
+		}
 		jQuery(EcomQuantityField.delegateRootSelector).delegate(
 			EcomQuantityField.quantityFieldSelector,
 			"change",
@@ -73,6 +85,7 @@ EcomQuantityField = {
 				}
 			}
 		);
+		jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.quantityFieldSelector).removeAttr("disabled");
 	},
 
 	getSetQuantityURLSegment: function (inputField) {
