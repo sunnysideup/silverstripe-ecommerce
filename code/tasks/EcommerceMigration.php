@@ -1402,10 +1402,17 @@ class EcommerceMigration extends BuildTask {
 			echo $explanation;
 		}
 		$checkoutPage = DataObject::get_one("CheckoutPage");
-		$checkoutPage->HasCheckoutSteps = 1;
-		$checkoutPage->writeToStage('Stage');
-		$checkoutPage->publish('Stage', 'Live');
+		if(!$checkoutPage) {
+			$checkoutPage = new OrderConfirmationPage();
+			DB::alteration_message("Creating a CheckoutPage", "created");
+		}
+		else {
+			DB::alteration_message("No need to create a CheckoutPage Page");
+		}
 		if($checkoutPage) {
+			$checkoutPage->HasCheckoutSteps = 1;
+			$checkoutPage->writeToStage('Stage');
+			$checkoutPage->publish('Stage', 'Live');
 			if(!DataObject::get_one("OrderConfirmationPage")) {
 				$orderConfirmationPage = new OrderConfirmationPage();
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
