@@ -1,5 +1,5 @@
 <% if HasPrintOrEmailLink %>
-<h2><% _t("Order.KEEPARECORD", "Keep a Record") %></h2>
+<h3><% _t("Order.KEEPARECORD", "Keep a Record") %></h3>
 <ul id="OrderPrintAndMail">
 	<% if EmailLink %>
 	<li id="SendCopyOfReceipt">
