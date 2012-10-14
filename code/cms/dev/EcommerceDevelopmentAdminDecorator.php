@@ -33,7 +33,6 @@ class EcommerceDevelopmentAdminDecorator extends Extension{
 
 			$da = Object::create('EcommerceDatabaseAdmin');
 			return $da->handleRequest($request);
-
 			echo "</div>";
 			$renderer->writeFooter();
 		}
