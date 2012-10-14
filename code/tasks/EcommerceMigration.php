@@ -25,9 +25,9 @@ class EcommerceMigration extends BuildTask {
 
 	protected $start = 0;
 
-	protected $title = "Ecommerce Migration";
-
 	protected $retrieveInfoOnly = false;
+
+	protected $title = "Ecommerce Migration";
 
 	protected $description = "
 		Migrates all the data from the oldest version of e-commerce to the current one.
@@ -63,7 +63,6 @@ class EcommerceMigration extends BuildTask {
 		"addNewPopUpManager_280",
 		"theEnd_9999"
 	);
-
 
 	function run($request) {
 		if(isset($_REQUEST["limit"])) {
@@ -1403,7 +1402,7 @@ class EcommerceMigration extends BuildTask {
 		}
 		$checkoutPage = DataObject::get_one("CheckoutPage");
 		if(!$checkoutPage) {
-			$checkoutPage = new OrderConfirmationPage();
+			$checkoutPage = new CheckoutPage();
 			DB::alteration_message("Creating a CheckoutPage", "created");
 		}
 		else {

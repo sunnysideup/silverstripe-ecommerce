@@ -5,8 +5,55 @@
  * One stop shop for massaging e-commerce related data
  * AND running tests.
  *
- * You can customise this menu by using the "decorating" this class
+ * You can customise this menu by "decorating" this class
  * and adding the method: "updateEcommerceDevMenu".
+ *
+ * Here is an example:
+
+<code php>
+<?php
+
+####################### in mysite/code/tasks/MyMigration.php
+
+class MyMigration extends BuildTask {
+
+	protected $title = "Mysite Database Fixes";
+
+	protected $description = "General DB fixes";
+
+	function run($request) {
+		DB::query("TRUNCATE TABLE MyUselessTable;");
+	}
+
+}
+
+class MyMigration_EXT extends Extension {
+
+	static $allowed_actions = array(
+		"mymigration" => true
+	);
+
+	//NOTE THAT updateEcommerceDevMenuConfig adds to Config options
+	//but you can als have: updateEcommerceDevMenuDebugActions
+	function updateEcommerceDevMenuConfig($buildTasks){
+		$buildTasks[] = "mymigration";
+		return $buildTasks;
+	}
+
+	function mymigration($request){
+		$this->owner->runTask("MyMigration", $request);
+	}
+
+}
+
+
+####################### in mysite/_config.php:
+
+Object::add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
+
+
+</code>
+
  *
  * SECTIONS
  *
@@ -85,7 +132,7 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *
 	 */
 	function OverallConfig() {
-		return $this->createMenuDOSFromArray($this->overallconfig, $type = "Overall Config");
+		return $this->createMenuDOSFromArray($this->overallconfig, $type = "Config");
 	}
 
 	function ecommercecheckconfiguration($request){
@@ -292,24 +339,9 @@ class EcommerceDatabaseAdmin extends Controller{
 		return $this->createMenuDOSFromArray($this->migrations, $type = "Migrations");
 	}
 
-	/**
-	 * runs all the available migration tasks.
-	 * TO DO:
-	 * - how long does this take?
-	 * - do we need a special sequence
-	 */
-	function runallmigrations($request){
-		foreach($this->migrations as $buildTask) {
-			$buildTask->run($request);
-		}
-		$this->displayCompletionMessage($buildTask);
-	}
-
-
-
 
 	/**
-	 * executes build task: FixBrokenOrderSubmissionData
+	 * executes build task: EcommerceMigration
 	 *
 	 */
 	function ecommercemigration($request) {
@@ -408,7 +440,12 @@ class EcommerceDatabaseAdmin extends Controller{
 	 *@param Array $buildTasks array of build tasks
 	 */
 	protected function createMenuDOSFromArray($buildTasks, $type = "") {
-		$this->extend("updateEcommerceDevMenu".$type, $buildTasks);
+		$extendedBuildTasksArray = $this->extend("updateEcommerceDevMenu".$type, $buildTasks);
+		if(is_array($extendedBuildTasksArray)) {
+			foreach($extendedBuildTasksArray as $extendedBuildTasks) {
+				$buildTasks += $extendedBuildTasks;
+			}
+		}
 		$dos = new DataObjectSet();
 		foreach($buildTasks as $buildTask) {
 			$obj = new $buildTask();
@@ -424,7 +461,7 @@ class EcommerceDatabaseAdmin extends Controller{
 		return $dos;
 	}
 
-	protected function runTask($className, $request) {
+	public function runTask($className, $request) {
 		$buildTask = new $className();
 		$buildTask->verbose = true;
 		$buildTask->run($request);
