@@ -16,6 +16,8 @@ EcomQuantityField = {
 	hidePlusAndMinues: true,
 
 	delegateRootSelector: 'body',
+		set_delegateRootSelector: function(s) {this.delegateRootSelector = s;},
+		unset_delegateRootSelector: function() {this.delegateRootSelector = 'body';},
 
 	quantityFieldSelector: ".ecomquantityfield input.ajaxQuantityField",
 
@@ -86,6 +88,11 @@ EcomQuantityField = {
 			}
 		);
 		jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.quantityFieldSelector).removeAttr("disabled");
+		jQuery(EcomQuantityField.delegateRootSelector).delegate(
+			EcomQuantityField.quantityFieldSelector,
+			"click",
+			function() {jQuery(this).removeAttr("disabled"); }
+		);
 	},
 
 	getSetQuantityURLSegment: function (inputField) {
