@@ -88,11 +88,6 @@ EcomQuantityField = {
 			}
 		);
 		jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.quantityFieldSelector).removeAttr("disabled");
-		jQuery(EcomQuantityField.delegateRootSelector).delegate(
-			EcomQuantityField.quantityFieldSelector,
-			"click",
-			function() {jQuery(this).removeAttr("disabled"); }
-		);
 	},
 
 	getSetQuantityURLSegment: function (inputField) {
