@@ -245,7 +245,7 @@ EcomCart = {
 	 * <div id="colorboxDialogCart">content for pop-up</div> (this line is optional)
 	 */
 	colorboxDialogSelector: ".colorboxDialog",
-		//set_colorboxDialogSelector: function(s) {this.colorboxDialogSelector = s;},
+		set_colorboxDialogSelector: function(s) {this.colorboxDialogSelector = s;},
 
 	/**
 	 * The options set for the colorbox dialogue, see: https://github.com/jackmoore/colorbox
@@ -260,7 +260,9 @@ EcomCart = {
 		iframe: true,
 		onOpen: function (event) {
 			EcomCart.reinit();
+			EcomQuantityField.set_delegateRootSelector("#colorbox");
 			EcomQuantityField.init();
+			EcomQuantityField.unset_delegateRootSelector();
 		}
 	},
 		set_colorboxDialogOptions: function(o){this.colorboxDialogOptions = o;},
