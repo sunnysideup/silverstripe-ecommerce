@@ -31,6 +31,8 @@ var EcomOrderFormAddress = {
 
 	postalCodeLinkTarget: "_postalcode",
 
+	formSelector: "#OrderFormAddress_OrderFormAddress",
+
 	setReadOnly: function(fieldName) {
 		jQuery("name=['"+fieldName+"']").attr("disabled", true);
 		jQuery("name=['"+fieldName+"']").attr("readonly", true);
@@ -42,6 +44,7 @@ var EcomOrderFormAddress = {
 	},
 
 	init: function() {
+		jQuery(this.formSelector).attr('autocomplete', 'off');
 		this.passwordInitalisation();
 		this.postalCodeLinkSetup();
 	},
