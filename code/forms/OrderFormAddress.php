@@ -283,7 +283,7 @@ class OrderFormAddress extends Form {
 				$member->write();
 			}
 			if($this->memberShouldBeLoggedIn($data)) {
-				$member->logIn();
+				$member->LogIn();
 			}
 		}
 
@@ -463,7 +463,12 @@ class OrderFormAddress extends Form {
 	 **/
 	public function uniqueMemberFieldCanBeUsed($data) {
 		if($this->anotherExistingMemberWithSameUniqueFieldValue($data) && $this->loggedInMember) {
-			if(!$this->loggedInMember->IsShopAdmin()) {
+			if($this->loggedInMember->IsShopAdmin()) {
+				if($this->orderMember->ID == $this->loggedInMember->ID) {
+					return false;
+				}
+			}
+			else {
 				return false;
 			}
 		}
