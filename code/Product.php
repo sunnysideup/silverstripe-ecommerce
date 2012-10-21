@@ -1063,7 +1063,7 @@ class Product_Image extends Image {
 	 * @return GD
 	 **/
 	function generateSmallImage($gd) {
-		$gd->setQuality(80);
+		$gd->setQuality(90);
 		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
 	}
 
@@ -1072,7 +1072,7 @@ class Product_Image extends Image {
 	 * @return GD
 	 **/
 	function generateThumbnail($gd) {
-		$gd->setQuality(80);
+		$gd->setQuality(90);
 		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
 	}
 
