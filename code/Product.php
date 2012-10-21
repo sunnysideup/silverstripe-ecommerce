@@ -1057,6 +1057,14 @@ class Product_Image extends Image {
 		return EcommerceConfig::get("Product_Image", "large_image_width");
 	}
 
+	/**
+	 * @usage can be used in a template like this $Image.Thumbnail.Link
+	 * @return GD
+	 **/
+	function generateThumbnail($gd) {
+		$gd->setQuality(90);
+		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
+	}
 
 	/**
 	 * @usage can be used in a template like this $Image.SmallImage.Link
@@ -1065,15 +1073,6 @@ class Product_Image extends Image {
 	function generateSmallImage($gd) {
 		$gd->setQuality(90);
 		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
-	}
-
-	/**
-	 * @usage can be used in a template like this $Image.Thumbnail.Link
-	 * @return GD
-	 **/
-	function generateThumbnail($gd) {
-		$gd->setQuality(90);
-		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
 	}
 
 	/**
