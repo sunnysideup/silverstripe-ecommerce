@@ -162,6 +162,7 @@ EcomCart = {
 		set_onAfterUpdate: function(f) {this.onAfterUpdate = f;},
 
 	/**
+	 * @var Array
 	 * Synonyms are used in the update to also update
 	 * They take the form of:
 	 * Selector (e.g. MyCart) => Other Selectors
@@ -171,6 +172,8 @@ EcomCart = {
 	 */
 	synonyms: [],
 		set_synonyms: function(a){this.synonyms = a;},
+		add_synonym: function(key, value){this.synonyms[key] = value;},
+		remove_synonym: function(key){this.synonyms.splice(key, 1);},
 
 	//#################################
 	// ITEMS (OR LACK OF) IN THE CART
