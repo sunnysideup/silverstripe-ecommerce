@@ -146,6 +146,7 @@ class ShippingAddress extends OrderAddress {
 				if($member->exists()) {
 					$addresses = $this->previousAddressesFromMember($member);
 					if($addresses) {
+						$this->FillWithLastAddressFromMember($member, true);
 						if($addresses->count() > 1) {
 							$shippingFieldsHeader->push(new SelectOrderAddressField('SelectShippingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Shipping Address'), $addresses));
 						}
