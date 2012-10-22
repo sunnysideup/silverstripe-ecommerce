@@ -171,9 +171,9 @@ class BillingAddress extends OrderAddress {
 		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Details'), 3));
 		if($member) {
 			if($member->exists()) {
+				$this->FillWithLastAddressFromMember($member, true);
 				$addresses = $this->previousAddressesFromMember($member);
 				if($addresses) {
-					$this->FillWithLastAddressFromMember($member, true);
 					if($addresses->count() > 1) {
 						$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
 					}
