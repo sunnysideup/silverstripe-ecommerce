@@ -509,10 +509,10 @@ EcomCart = {
 					//hide or show row...
 					if(parameter == "hide") {
 						if(value) {
-							jQuery(selector).hide();
+							jQuery(selector).hide().addClass("hideForNow");
 						}
 						else {
-							jQuery(selector).show();
+							jQuery(selector).show().removeClass("hideForNow");
 						}
 					}
 					//general message
