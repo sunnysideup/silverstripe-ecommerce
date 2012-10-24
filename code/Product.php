@@ -753,7 +753,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	function canEdit($member = null) {
 		if(!$member) {
-			$member == Member::currentUser();
+			$member = Member::currentUser();
 		}
 		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
 		if($member && Permission::checkMember($member, $shopAdminCode)) {
