@@ -259,6 +259,7 @@ class EcommerceDBConfig extends DataObject {
 		//new section
 		$fieldLabels = $this->fieldLabels();
 		$versionInfo = new EcommerceConfigDefinitions();
+		$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
 				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
