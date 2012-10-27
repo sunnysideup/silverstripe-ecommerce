@@ -66,7 +66,8 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	public static $many_many = array(
-		'ProductGroups' => 'ProductGroup'
+		'ProductGroups' => 'ProductGroup',
+		'AdditionalFiles' => 'File' //this may include images, pdfs, videos, etc...
 	);
 
 	/**

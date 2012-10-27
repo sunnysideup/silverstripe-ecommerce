@@ -18,7 +18,15 @@ class ShopAccountForm extends Form {
 			$fields = $member->getEcommerceFields(true);
 			$fields->push(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3));
 			$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
-			$fields->push(new LiteralField('LogoutNote', "<p class=\"message warning\">" . _t("Account.LOGGEDIN","You are currently logged in as ") . $member->FirstName . ' ' . $member->Surname . '. <a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?')."</a></p>"));
+			$fields->push(
+				new ReadonlyField(
+						'LoggedInAsNote',
+						_t("Account.LOGGEDIN", "You are currently logged in as "),
+						$member->FirstName . ' ' . $member->Surname .', '
+							.'<a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?').
+							"</a>"
+				)
+			);
 			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
 			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
 			$fields->push($passwordField);

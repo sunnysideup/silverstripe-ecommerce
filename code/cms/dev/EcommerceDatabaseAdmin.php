@@ -155,7 +155,8 @@ class EcommerceDatabaseAdmin extends Controller{
 		"createecommercemembergroups",
 		"ecommercedefaultrecords",
 		"ecommercecountryandregiontasks",
-		"adddefaultecommerceproducts"
+		"adddefaultecommerceproducts",
+		"ecommercetasklinkproductwithimages"
 	);
 
 	/**
@@ -184,6 +185,10 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	function ecommercecountryandregiontasks($request){
 		$this->runTask("EcommerceCountryAndRegionTasks", $request);
+	}
+
+	function ecommercetasklinkproductwithimages($request){
+		$this->runTask("EcommerceTaskLinkProductWithImages", $request);
 	}
 
 
