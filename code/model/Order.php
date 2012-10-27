@@ -646,7 +646,7 @@ class Order extends DataObject {
 		if($this->StatusID || $force) {
 			if(!$this->StatusID) {
 				$createdOrderStatus = DataObject::get_one("OrderStep");
-				$order->StatusID = $createdOrderStatus->ID;
+				$this->StatusID = $createdOrderStatus->ID;
 			}
 			$createdModifiersClassNames = array();
 			$this->modifiers = $this->modifiersFromDatabase($includingRemoved = true);
