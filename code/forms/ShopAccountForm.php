@@ -25,7 +25,7 @@ class ShopAccountForm extends Form {
 					.'<a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?').
 					"</a>"
 			);
-			$loginField->$dontEscape = true;
+			$loginField->dontEscape = true;
 			$fields->push($loginField);
 			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
 			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
