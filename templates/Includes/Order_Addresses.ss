@@ -1,6 +1,6 @@
 <table id="AddressesTable" class="infotable">
 	<tr>
-		<th scope="col" width="50%"><% _t("Order.PURCHASER","Purchaser") %></th>
+		<th scope="col" width="50%"><% _t("Order.CUSTOMER","Customer") %></th>
 		<% if CanHaveShippingAddress %><th scope="col"><% _t("Order.DELIVERTO","Deliver To") %></th><% end_if %>
 	</tr>
 	<tr>
