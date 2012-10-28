@@ -8,8 +8,8 @@
 			<th scope="col" class="center"><% _t("Order.DATE","Date") %></th>
 			<th scope="col" class="center"><% _t("Order.PAYMENTSTATUS","Payment Status") %></th>
 			<th scope="col" class="center"><% _t("Order.PAYMENTMETHOD","Method") %></th>
-			<th scope="col" class="center"><% _t("Order.PAYMENTNOTE","Note") %></th>
-			<th scope="col" class="center"><% _t("Order.AMOUNT","Amount") %></th>
+			<th scope="col" class="left"><% _t("Order.PAYMENTNOTE","Note") %></th>
+			<th scope="col" class="right"><% _t("Order.AMOUNT","Amount") %></th>
 		</tr>
 	</thead>
 	<tbody>
