@@ -86,7 +86,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 						if($this->verbose) {DB::alteration_message("No InternalItemID set for <i>".$product->Title."</i>: no images could be added.");}
 					}
 				}
-				$productCount = DB::query("SELECT COUNT(\"ID\") FROM "\"Product\";")->val();
+				$productCount = DB::query("SELECT COUNT(\"ID\") FROM \"Product\";")->val();
 
 				if($this->start < $productCount) {
 					Director::redirect($this->nextBatchLink());
