@@ -223,7 +223,20 @@ class CheckoutPage_Controller extends CartPage_Controller {
 			//do nothing
 		}
 		else {
-			$this->currentStep = array_shift(($this->steps));
+			$this->currentStep = array_shift($this->steps);
+		}
+		//redirect to current order -
+		// this is only applicable when people submit order (start to pay)
+		// and then return back
+		if($checkoutPageCurrentOrderID = Session::get("CheckoutPageCurrentOrderID")) {
+			if((!$this->currentOrder) || ($this->currentOrder->ID != $checkoutPageCurrentOrderID)) {
+				if($order = Order::get_by_id_if_can_view(intval($checkoutPageCurrentOrderID))) {
+					return Director::redirect($order->Link());
+				}
+			}
+		}
+		if($this->currentOrder) {
+			Session::set("CheckoutPageCurrentOrderID", $this->currentOrder->ID);
 		}
 	}
 
