@@ -257,7 +257,7 @@ class OrderForm_Validator extends RequiredFields{
 		if(!$billingAddress) {
 			$this->validationError(
 				"BillingAddress",
-				_t("OrderForm.MUSTHAVEBILLINGADDRESS", "All orders must have a billing address."),
+				_t("OrderForm.MUSTHAVEBILLINGADDRESS", "All orders must have a billing address, please go back and add your details."),
 				"required"
 			);
 			$valid = false;

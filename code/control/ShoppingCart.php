@@ -165,12 +165,11 @@ class ShoppingCart extends Object{
 			}
 			//member just logged in and is not associated with order yet
 			//if you are not logged in but the order belongs to a member then clear the cart.
-			/***** THIS IS NOT CORRECT, BECAUSE YOU CAN CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!! ***
+			// THIS MAY NOT BE CORRECT, BECAUSE YOU THIS MEANS YOU CAN NOT CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!! ***
 			elseif($this->order->MemberID && !$member) {
 				$this->clear();
 				return false;
 			}
-			*/
 			if($this->order && $this->order->exists() && $this->order->StatusID) {
 				$this->order->calculateOrderAttributes($force = true);
 			}
