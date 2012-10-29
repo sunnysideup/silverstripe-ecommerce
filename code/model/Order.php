@@ -2396,6 +2396,17 @@ class Order extends DataObject {
 			$method = "get".$key;
 			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
 		}
+		$fields = Object::get_static($this->ClassName, "has_one");
+		foreach($fields as  $key => $type) {
+			$value = "";
+			$field = $key."ID";
+			if($object = $this->$key()){
+				if($object && $object->exists()) {
+					$value = ", ".$object->Title;
+				}
+			}
+			$html .= "<li><b>$key ($type):</b> ".$this->$field.$value." </li>";
+		}
 		$html .= "</ul>";
 		return $html;
 	}
