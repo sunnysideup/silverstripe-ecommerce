@@ -138,10 +138,11 @@ class AccountPage extends Page {
 	protected function pastOrdersSelection(){
 		return DataObject::get(
 			"Order",
-			"\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID." AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL) ",
+			"\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID."
+				AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)
+				AND \"OrderStep\".\"ShowAsUncompletedOrder\" = 0 ",
 			"\"Created\" DESC",
-			//why do we have this?
-			"INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"OrderID\" = \"Order\".\"ID\" INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\""
+			"INNER JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\" "
 		);
 	}
 
