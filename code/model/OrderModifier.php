@@ -781,8 +781,8 @@ class OrderModifier_Descriptor extends DataObject {
 	function RealName(){return $this->getRealName();}
 	function getRealName(){
 		if(class_exists($this->ModifierClassName)) {
-			$obj = DataObject::get_one($this->ModifierClassName);
-			return $obj->i18n_singular_name(). " (".$this->ModifierClassName.")";
+			$singleton = singleton($this->ModifierClassName);
+			return $singleton->i18n_singular_name(). " (".$this->ModifierClassName.")";
 		}
 		return $this->ModifierClassName;
 	}
