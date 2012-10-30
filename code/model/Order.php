@@ -1134,6 +1134,14 @@ class Order extends DataObject {
 			$email->setSubject($subject);
 			$email->populateTemplate($replacementArray);
 			return $email->send(null, $this, $resend);
+
+			// This might be called from within the CMS, so we need to restore the theme, just in case
+			// templates within the theme exist
+			$oldTheme = SSViewer::current_theme();
+			SSViewer::set_theme(SSViewer::current_custom_theme());
+			$result = $email->send(null, $this, $resend);
+			SSViewer::current_theme($oldTheme);
+			return $result;
 		}
 		return false;
 	}
