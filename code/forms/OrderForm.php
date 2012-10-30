@@ -379,15 +379,17 @@ class OrderForm_Cancel extends Form {
 		$SQLData = Convert::raw2sql($data);
 		$member = Member::currentUser();
 		if($member) {
-			if(isset($SQLData['OrderID']) && $order = DataObject::get_one('Order', "\"ID\" = ".intval($SQLData['OrderID'])." AND \"MemberID\" = ".$member->ID)){
-				if($order->canCancel()) {
-					$reason = "";
-					if(isset($SQLData["CancellationReason"])) {
-						$reason = $SQLData["CancellationReason"];
+			if(isset($SQLData['OrderID'])){
+				$order = Order::get_by_id(intval($SQLData['OrderID']));
+				if($order) {
+					if($order->canCancel()) {
+						$reason = "";
+						if(isset($SQLData["CancellationReason"])) {
+							$reason = $SQLData["CancellationReason"];
+						}
+						$order->Cancel($member, $reason);
+						return Director::redirectBack();
 					}
-					$order->Cancel($member, $reason);
-					Director::redirectBack();
-					return false;
 				}
 			}
 		}
@@ -398,8 +400,7 @@ class OrderForm_Cancel extends Form {
 			),
 			'bad'
 		);
-		Director::redirectBack();
-		return false;
+		return Director::redirectBack();
 	}
 }
 

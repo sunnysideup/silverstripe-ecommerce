@@ -124,21 +124,31 @@ class OrderFormAddress extends Form {
 					$rightFields->push(new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3));
 					//allow people to purchase without creating a password
 					$passwordField->setCanBeEmpty(true);
+					$rightFields->push(
+						new LiteralField(
+							'AccountInfo',
+							'<p>'.
+							_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.')
+							.'</p>'
+						)
+					);
+					//close by default
 				}
 				else {
-					$rightFields->push(new HeaderField('SetupYourAccount', _t('OrderForm.SETUPYOURACCOUNT','Setup your account'), 3));
+					$rightFields->push(new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT','Create an account'), 3));
 					//dont allow people to purchase without creating a password
 					$passwordField->setCanBeEmpty(false);
+					$rightFields->push(
+						new LiteralField(
+							'AccountInfo',
+							'<p>'.
+							_t('OrderForm.MUSTCREATEPASSWORD','Please choose a password to create your account.')
+							.'</p>'
+						)
+					);
 				}
 				$requiredFields[] = 'Password[_Password]';
 				$requiredFields[] = 'Password[_ConfirmPassword]';
-				Requirements::customScript('jQuery("#ChoosePassword").click();', "EommerceChoosePassword"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-				$rightFields->push(
-					new LiteralField(
-						'AccountInfo',
-						'<p>'.
-						_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.').'</p>')
-				);
 				$rightFields->push(new FieldGroup($passwordField));
 			}
 			else {

@@ -276,7 +276,9 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
 		}
 		$baseFolder = Director::baseFolder() ;
-		require_once($baseFolder . '/ecommerce/thirdparty/Emogrifier.php');
+		if(!class_exists('Emogrifier')) {
+			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
+		}
 		Requirements::clear();
 		Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
