@@ -13,7 +13,7 @@
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: model
+ * @sub-package: buyables
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
@@ -53,6 +53,13 @@ interface BuyableModel {
 	 * @return Image | Null
 	 */
 	public function BestAvailableImage();
+
+	/**
+	 * Little hack to show thumbnail in summary fields in modeladmin in CMS.
+	 * @return String (HTML = formatted image)
+	 */
+	function CMSThumbnail();
+
 	/**
 	 * returns a link to the standard image
 	 * @return String
@@ -218,6 +225,12 @@ interface BuyableModel {
 	 */
 	function IsProductVariation();
 
+
+	/**
+	 * Turn AllowPurchase into Yes or no
+	 * @return String
+	 */
+	function AllowPurchaseNice();
 
 	/**
 	 * Products have a standard price, but for specific situations they have a calculated price.

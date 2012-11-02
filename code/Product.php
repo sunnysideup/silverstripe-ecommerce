@@ -13,7 +13,7 @@
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: Pages
+ * @sub-package: buyables
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
@@ -75,7 +75,8 @@ class Product extends Page implements BuyableModel {
 	 */
 	public static $casting = array(
 		"CalculatedPrice" => "Currency",
-		"DisplayPrice" => "Money"
+		"DisplayPrice" => "Money",
+		"AllowPurchaseNice" => "Varchar"
 	);
 
 	/**
@@ -102,11 +103,10 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	public static $summary_fields = array(
-		'ID',
-		'InternalItemID',
-		'Title',
-		'Price',
-		'NumberSold'
+		'CMSThumbnail' => 'Image',
+		'FullName' => 'Description',
+		'Price' => 'Price',
+		'AllowPurchaseNice' => 'For Sale'
 	);
 
 	/**
@@ -399,6 +399,18 @@ class Product extends Page implements BuyableModel {
 		}
 	}
 
+	/**
+	 * Little hack to show thumbnail in summary fields in modeladmin in CMS.
+	 * @return String (HTML = formatted image)
+	 */
+	function CMSThumbnail(){
+		if($image = $this->Image()) {
+			if($image->exists()) {
+				return $image->Thumbnail();
+			}
+		}
+		return "["._t("product.NOIMAGE", "no image")."]";
+	}
 
 	/**
 	 * Returns a link to a default image.
@@ -697,6 +709,10 @@ class Product extends Page implements BuyableModel {
 	 */
 	function IsEcommercePage () {
 		return true;
+	}
+
+	function AllowPurchaseNice(){
+		return $this->obj("AllowPurchase")->Nice();
 	}
 
 	/**
@@ -1067,6 +1083,10 @@ class Product_Image extends Image {
 		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
 	}
 
+	public function Thumbnail() {
+		return $this->getFormattedImage('Thumbnail');
+	}
+
 	/**
 	 * @usage can be used in a template like this $Image.SmallImage.Link
 	 * @return GD
@@ -1074,6 +1094,10 @@ class Product_Image extends Image {
 	function generateSmallImage($gd) {
 		$gd->setQuality(90);
 		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
+	}
+
+	public function SmallImage() {
+		return $this->getFormattedImage('SmallImage');
 	}
 
 	/**
@@ -1085,6 +1109,10 @@ class Product_Image extends Image {
 		return $gd->resizeByWidth($this->ContentWidth());
 	}
 
+
+	public function LargeImage() {
+		return $this->getFormattedImage('LargeImage');
+	}
 	/**
 	 * @usage can be used in a template like this $Image.LargeImage.Link
 	 * @return GD
