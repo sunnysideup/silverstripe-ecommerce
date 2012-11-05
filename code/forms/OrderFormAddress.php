@@ -119,6 +119,7 @@ class OrderFormAddress extends Form {
 					);
 				}
 				$passwordField = new ConfirmedPasswordField('Password', _t('OrderForm.PASSWORD','Password'));
+				$passwordField->setValue("");
 				//login invite right on the top
 				if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
 					$rightFields->push(new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3));
