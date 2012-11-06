@@ -27,6 +27,10 @@ EcomQuantityField = {
 
 	URLSegmentHiddenFieldSelectorAppendix: "_SetQuantityLink",
 
+	updateFX: null,
+
+	lastValue: 0,
+
 	//todo: auto-re-attach
 	init: function () {
 		if(EcomQuantityField.hidePlusAndMinues) {
@@ -37,6 +41,7 @@ EcomQuantityField = {
 				EcomQuantityField.removeSelector,
 				"click",
 				function(e) {
+					EcomQuantityField.updateFX = null;
 					e.preventDefault();
 					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
 					jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
@@ -52,6 +57,7 @@ EcomQuantityField = {
 				EcomQuantityField.addSelector,
 				"click",
 				function(e) {
+					EcomQuantityField.updateFX = null;
 					e.preventDefault();
 					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
 					jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
@@ -61,8 +67,25 @@ EcomQuantityField = {
 		}
 		jQuery(EcomQuantityField.delegateRootSelector).delegate(
 			EcomQuantityField.quantityFieldSelector,
+			"keydown",
+			function(){
+				EcomQuantityField.lastValue = jQuery(this).val();
+				var el = this;
+				EcomQuantityField.updateFX = window.setTimeout(
+					function(){
+						if(EcomQuantityField.lastValue != jQuery(el).val()) {
+							jQuery(el).change();
+						}
+					},
+					1000
+				);
+			}
+		);
+		jQuery(EcomQuantityField.delegateRootSelector).delegate(
+			EcomQuantityField.quantityFieldSelector,
 			"change",
 			function() {
+				EcomQuantityField.updateFX = null;
 				var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this);
 				if(URLSegment.length > 0) {
 					this.value = this.value.replace(/[^0-9.]+/g, '');
