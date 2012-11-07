@@ -170,7 +170,6 @@ class CheckoutPage extends CartPage {
 		$termsPageIDField = new OptionalTreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
 		$fields->addFieldToTab('Root.Content.Process', $termsPageIDField);
 		$fields->addFieldToTab('Root.Content.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
-		$fields->addFieldToTab('Root.Content.Main', new HtmlEditorField('InvitationToCompleteOrder', _t("CheckoutPage.INVITATIONTOCOMPLETEORDER", 'Invitation to complete order ... shown when the customer can do a regular checkout'), $row = 4));
 		//The Content field has a slightly different meaning for the Checkout Page.
 		$fields->removeFieldFromTab('Root.Content.Main', "Content");
 		$fields->addFieldToTab('Root.Content.Messages.Messages.AlwaysVisible', new HtmlEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page'), 7, 7));
