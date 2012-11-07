@@ -29,7 +29,9 @@ class OrderConfirmationPage extends CartPage{
 	 */
 	public static $db = array(
 		'StartNewOrderLinkLabel' => 'Varchar(100)',
-		'CopyOrderLinkLabel' => 'Varchar(100)'
+		'CopyOrderLinkLabel' => 'Varchar(100)',
+		'PaymentSuccessfulMessage' => 'HTMLText',
+		'PaymentNotSuccessfulMessage' => 'HTMLText'
 	);
 
 	/**
@@ -51,6 +53,29 @@ class OrderConfirmationPage extends CartPage{
 		return !DataObject::get_one("OrderConfirmationPage", "\"ClassName\" = 'OrderConfirmationPage'");
 	}
 
+	function customFieldLabels(){
+		$newLabels = array(
+			"StartNewOrderLinkLabel" => _t("EcommerceDBConfig.STARTNEWORDERLINKLABEL", 'Label for starting new order - e.g. click here to start new order'),
+			"CopyOrderLinkLabel" => _t("EcommerceDBConfig.COPYORDERLINKLABEL", 'Label for copying order items into a new one  - e.g. click here start a new order with the current order items'),
+			"PaymentSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULMESSAGE", "Message showing when order has been paid in full"),
+			"PaymentNotSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULMESSAGE", "Message showing when the order has not been paid in full")
+		);
+		return $newLabels;
+	}
+
+	/**
+	 * standard SS method for decorators.
+	 * @param Array - $fields: array of fields to start with
+	 * @return null ($fields variable is automatically updated)
+	 */
+	function fieldLabels($includerelations = true) {
+		$defaultLabels = parent::fieldLabels();
+		$newLabels = $this->customFieldLabels();
+		$labels = array_merge($defaultLabels, $newLabels);
+		$this->extend('updateFieldLabels', $labels);
+		return $labels;
+	}
+
 	/**
 	 *@return Fieldset
 	 **/
@@ -61,8 +86,11 @@ class OrderConfirmationPage extends CartPage{
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"ContinuePageID");
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"SaveOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Errors',"NoItemsInOrderMessage");
-		$fields->addFieldToTab('Root.Content.Messages.Messages.Actions', new TextField('StartNewOrderLinkLabel', 'Label for starting new order - e.g. click here to start new order'));
-		$fields->addFieldToTab('Root.Content.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', 'Label for copying order items into a new one  - e.g. click here start a new order with the current order items'));
+		$fieldLabels = $this->fieldLabels();
+		$fields->addFieldToTab('Root.Content.Messages.Messages.Actions', new TextField('StartNewOrderLinkLabel', $fieldLabels["StartNewOrderLinkLabel"]));
+		$fields->addFieldToTab('Root.Content.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', $fieldLabels["CopyOrderLinkLabel"]));
+		$fields->addFieldToTab('Root.Content.Messages.Messages.Payment', new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels["PaymentSuccessfulMessage"], 5));
+		$fields->addFieldToTab('Root.Content.Messages.Messages.Payment', new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5));
 		return $fields;
 	}
 
@@ -149,6 +177,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		Requirements::themedCSS('Order');
 		Requirements::themedCSS('Order_Print', "print");
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
+		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		//clear steps from checkout page otherwise in the next order
 		//you go straight to the last step.
 		Session::clear("CheckoutPageCurrentOrderID");
