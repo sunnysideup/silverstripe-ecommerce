@@ -186,6 +186,12 @@ class OrderFormAddress extends Form {
 		$validator = new OrderFormAddress_Validator($requiredFields);
 		//TODO: do we need this here?
 		$validator->setJavascriptValidationHandler("prototype");
+		foreach($requiredFields as $requiredField) {
+			$field = $fields->dataFieldByName($requiredField);
+			if($field) {
+				$field->addExtraClass("required");
+			}
+		}
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
