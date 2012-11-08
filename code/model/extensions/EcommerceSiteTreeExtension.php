@@ -102,13 +102,5 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		return ShoppingCart::current_order();
 	}
 
-	/**
-	 * returns the current order.
-	 * @return Order
-	 **/
-	function Order() {
-		return ShoppingCart::current_order();
-	}
-
 
 }
