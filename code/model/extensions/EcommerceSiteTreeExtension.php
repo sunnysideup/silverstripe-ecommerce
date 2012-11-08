@@ -94,12 +94,19 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		return ShoppingCart_Controller::get_url_segment()."/showcart/?ajax=1";
 	}
 
-
 	/**
 	 * returns the current order.
 	 * @return Order
 	 **/
 	function Cart() {
+		return ShoppingCart::current_order();
+	}
+
+	/**
+	 * returns the current order.
+	 * @return Order
+	 **/
+	function Order() {
 		return ShoppingCart::current_order();
 	}
 
