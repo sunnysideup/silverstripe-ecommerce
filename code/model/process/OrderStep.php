@@ -1119,7 +1119,8 @@ class OrderStep_SentReceipt extends OrderStep {
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab("Root.Main", new HeaderField("ActuallySendReceiptToCustomer", _t("OrderStep.ACTUALLYSENDRECEIPT", "Actually send the receipt?"), 3), "SendReceiptToCustomer");
+		$fields->addFieldToTab("Root.CustomerMessage", new HeaderField("ActuallySendReceiptToCustomer", _t("OrderStep.ACTUALLYSENDRECEIPT", "Actually send the receipt?"), 3));
+		$fields->addFieldToTab("Root.CustomerMessage", new CheckboxField("SendReceiptToCustomer", _t("OrderStep.SENDRECEIPTTOCUSTOMER", "Send receipt to customer?"), 3));
 		return $fields;
 	}
 

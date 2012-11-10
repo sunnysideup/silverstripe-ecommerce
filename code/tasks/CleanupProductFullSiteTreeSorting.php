@@ -13,7 +13,10 @@ class CleanupProductFullSiteTreeSorting extends BuildTask{
 
 	protected $title = "Cleanup Product Full SiteTree Sorting";
 
-	protected $description = "Resets all the sorting values in the Full Site Tree Sorting field in Products (not for the ProductVariations).  This field includes the sorting number for the product at hand, as well as all the sorting number of its parent pages... Allowing you to keep the SiteTree sort order for a collection of random products. ";
+	protected $description = "
+	Resets all the sorting values in the Full Site Tree Sorting field in Products (not for the ProductVariations).
+	This field includes the sorting number for the product at hand, as well as all the sorting number of its parent pages...
+	Allowing you to keep the SiteTree sort order for a collection of random products. ";
 
 	protected $deleteFirst = true;
 

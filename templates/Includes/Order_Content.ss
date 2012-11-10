@@ -24,9 +24,9 @@
 		<tr  class="itemRow $EvenOdd $FirstLast">
 			<td class="product title">
 				<% if Link %>
-					<a href="$Link" target="_blank">$TableTitle</a>
+					<a href="$Link" target="_blank">$TableTitle.XML</a>
 				<% else %>
-					<span class="tableTitle">$TableTitle</span>
+					<span class="tableTitle">$TableTitle.XML</span>
 				<% end_if %>
 				<span class="tableSubTitle">$TableSubTitle</span>
 			</td>

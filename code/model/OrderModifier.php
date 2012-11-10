@@ -252,8 +252,9 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
-	* This method simply checks if a fields has changed and if it has changed it updates the field.
-	**/
+	 * @param String $fieldName
+	 * This method simply checks if a fields has changed and if it has changed it updates the field.
+	 **/
 	protected function checkField($fieldName) {
 		if($this->canBeUpdated()) {
 			$functionName = "Live".$fieldName;
@@ -465,7 +466,9 @@ class OrderModifier extends OrderAttribute {
 	 * @return String
 	 **/
 	public function AddLink() {
-		return ShoppingCart_Controller::add_modifier_link($this->ID,$this->ClassName);
+		$param = array();
+		$this->extend("ModifierAddLinkUpdate", $param);
+		return ShoppingCart_Controller::add_modifier_link($this->ID, $param, $this->ClassName);
 	}
 
 	/**
@@ -473,7 +476,9 @@ class OrderModifier extends OrderAttribute {
 	 * @return String
 	 **/
 	public function RemoveLink() {
-		return ShoppingCart_Controller::remove_modifier_link($this->ID,$this->ClassName);
+		$param = array();
+		$this->extend("ModifierRemoveLinkUpdate", $param);
+		return ShoppingCart_Controller::remove_modifier_link($this->ID, $param, $this->ClassName);
 	}
 
 	/**
@@ -788,8 +793,8 @@ class OrderModifier_Descriptor extends DataObject {
 	function RealName(){return $this->getRealName();}
 	function getRealName(){
 		if(class_exists($this->ModifierClassName)) {
-			$obj = DataObject::get_one($this->ModifierClassName);
-			return $obj->i18n_singular_name(). " (".$this->ModifierClassName.")";
+			$singleton = singleton($this->ModifierClassName);
+			return $singleton->i18n_singular_name(). " (".$this->ModifierClassName.")";
 		}
 		return $this->ModifierClassName;
 	}

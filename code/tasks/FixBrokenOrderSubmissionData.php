@@ -16,7 +16,7 @@ class FixBrokenOrderSubmissionData extends BuildTask{
 
 	protected $title = "Fixes broken order submission links";
 
-	protected $description = "Fixes broken order submission links (submission records without an order)";
+	protected $description = "Fixes broken order submission links (submission records without an order).";
 
 	function run($request){
 		$problem = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = 0");

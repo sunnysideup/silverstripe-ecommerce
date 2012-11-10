@@ -16,7 +16,7 @@ class SetDefaultProductGroupValues extends BuildTask {
 
 	protected $title = "Set Default Product Group Values";
 
-	protected $description = "Set default product group values such as Number Of Page.";
+	protected $description = "Set default product group values such as DefaultSortOrder.";
 
 	protected $fieldsToCheck = array(
 		"getSortOptionsForDropdown" => "DefaultSortOrder",

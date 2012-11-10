@@ -216,7 +216,7 @@ class EcommerceRegion extends DataObject {
 	 * This function works out the most likely region for the current order
 	 * @return Int
 	 **/
-	public static function get_region() {
+	public static function get_region_id() {
 		$regionID = 0;
 		if($order = ShoppingCart::current_order()) {
 			if($region = $order->Region()) {
@@ -234,6 +234,13 @@ class EcommerceRegion extends DataObject {
 			}
 		}
 		return $regionID;
+	}
+
+	/**
+	 * @alias for get_region_id
+	 */
+	public static function get_region() {
+		return self::get_region_id();
 	}
 
 

@@ -13,7 +13,11 @@
 EcomQuantityField = {
 
 	//todo: make more specific! some selector that holds true for all cart holders.
+	hidePlusAndMinues: true,
+
 	delegateRootSelector: 'body',
+		set_delegateRootSelector: function(s) {this.delegateRootSelector = s;},
+		unset_delegateRootSelector: function() {this.delegateRootSelector = 'body';},
 
 	quantityFieldSelector: ".ecomquantityfield input.ajaxQuantityField",
 
@@ -23,32 +27,65 @@ EcomQuantityField = {
 
 	URLSegmentHiddenFieldSelectorAppendix: "_SetQuantityLink",
 
+	updateFX: null,
+
+	lastValue: 0,
+
 	//todo: auto-re-attach
 	init: function () {
+		if(EcomQuantityField.hidePlusAndMinues) {
+			jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.removeSelector).hide();
+		}
+		else {
+			jQuery(EcomQuantityField.delegateRootSelector).delegate(
+				EcomQuantityField.removeSelector,
+				"click",
+				function(e) {
+					EcomQuantityField.updateFX = null;
+					e.preventDefault();
+					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
+					jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
+					return false;
+				}
+			);
+		}
+		if(EcomQuantityField.hidePlusAndMinues) {
+			jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.addSelector).hide();
+		}
+		else {
+			jQuery(EcomQuantityField.delegateRootSelector).delegate(
+				EcomQuantityField.addSelector,
+				"click",
+				function(e) {
+					EcomQuantityField.updateFX = null;
+					e.preventDefault();
+					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
+					jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
+					return false;
+				}
+			);
+		}
 		jQuery(EcomQuantityField.delegateRootSelector).delegate(
-			EcomQuantityField.removeSelector,
-			"click",
-			function(e) {
-				e.preventDefault();
-				var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
-				jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
-				return false;
-			}
-		);
-		jQuery(EcomQuantityField.delegateRootSelector).delegate(
-			EcomQuantityField.addSelector,
-			"click",
-			function(e) {
-				e.preventDefault();
-				var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
-				jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
-				return false;
+			EcomQuantityField.quantityFieldSelector,
+			"keydown",
+			function(){
+				EcomQuantityField.lastValue = jQuery(this).val();
+				var el = this;
+				EcomQuantityField.updateFX = window.setTimeout(
+					function(){
+						if(EcomQuantityField.lastValue != jQuery(el).val()) {
+							jQuery(el).change();
+						}
+					},
+					1000
+				);
 			}
 		);
 		jQuery(EcomQuantityField.delegateRootSelector).delegate(
 			EcomQuantityField.quantityFieldSelector,
 			"change",
 			function() {
+				EcomQuantityField.updateFX = null;
 				var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this);
 				if(URLSegment.length > 0) {
 					this.value = this.value.replace(/[^0-9.]+/g, '');
@@ -73,6 +110,7 @@ EcomQuantityField = {
 				}
 			}
 		);
+		jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.quantityFieldSelector).removeAttr("disabled");
 	},
 
 	getSetQuantityURLSegment: function (inputField) {

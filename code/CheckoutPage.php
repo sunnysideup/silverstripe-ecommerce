@@ -47,8 +47,7 @@ class CheckoutPage extends CartPage {
 	 * @Var Array
 	 */
 	public static $db = array (
-		'HasCheckoutSteps' => 'Boolean',
-		'TermsAndConditionsMessage' => 'Varchar(200)',
+		'TermsAndConditionsMessage' => 'Varchar(200)'
 	);
 
 	/**
@@ -64,8 +63,7 @@ class CheckoutPage extends CartPage {
 	 * @Var Array
 	 */
 	public static $defaults = array (
-		'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.',
-		'HasCheckoutSteps' => 1
+		'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.'
 	);
 
 	/**
@@ -97,6 +95,7 @@ class CheckoutPage extends CartPage {
 	 * @return String (URLSegment)
 	 */
 	public static function find_next_step_link($currentStep, $doPreviousInstead = false) {
+		$nextStep = null;
 		if($link = self::find_link()){
 			$steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 			if(in_array($currentStep, $steps)) {
@@ -113,8 +112,19 @@ class CheckoutPage extends CartPage {
 					}
 				}
 			}
+			else {
+				if($doPreviousInstead) {
+					$nextStep = array_shift($steps);
+				}
+				else {
+					$nextStep = array_pop($steps);
+				}
+			}
 			if($nextStep) {
 				return $link."checkoutstep"."/".$nextStep."/";
+			}
+			else {
+
 			}
 			return $link;
 		}
@@ -160,8 +170,6 @@ class CheckoutPage extends CartPage {
 		$termsPageIDField = new OptionalTreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
 		$fields->addFieldToTab('Root.Content.Process', $termsPageIDField);
 		$fields->addFieldToTab('Root.Content.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
-		$fields->addFieldToTab('Root.Content.Process', new CheckboxField('HasCheckoutSteps', _t("CheckoutPage.HASCHECKOUTSTEPS", "Checkout Process in Steps")));
-		$fields->addFieldToTab('Root.Content.Main', new HtmlEditorField('InvitationToCompleteOrder', _t("CheckoutPage.INVITATIONTOCOMPLETEORDER", 'Invitation to complete order ... shown when the customer can do a regular checkout'), $row = 4));
 		//The Content field has a slightly different meaning for the Checkout Page.
 		$fields->removeFieldFromTab('Root.Content.Main', "Content");
 		$fields->addFieldToTab('Root.Content.Messages.Messages.AlwaysVisible', new HtmlEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page'), 7, 7));
@@ -209,16 +217,28 @@ class CheckoutPage_Controller extends CartPage_Controller {
 			"OpenProductLinksInNewTab"
 		);
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
-		if($this->HasCheckoutSteps) {
-			$this->currentStep = $this->request->Param("ID");
-			if($this->currentStep && in_array($this->currentStep, $this->steps)) {
-				//do nothing
-			}
-			else {
-				$this->currentStep = array_shift(($this->steps));
+		$this->currentStep = $this->request->Param("ID");
+		if($this->currentStep && in_array($this->currentStep, $this->steps)) {
+			//do nothing
+		}
+		else {
+			$this->currentStep = array_shift($this->steps);
+		}
+		//redirect to current order -
+		// this is only applicable when people submit order (start to pay)
+		// and then return back
+		if($checkoutPageCurrentOrderID = Session::get("CheckoutPageCurrentOrderID")) {
+			if((!$this->currentOrder) || ($this->currentOrder->ID != $checkoutPageCurrentOrderID)) {
+				if($order = Order::get_by_id_if_can_view(intval($checkoutPageCurrentOrderID))) {
+					return Director::redirect($order->Link());
+				}
 			}
 		}
+		if($this->currentOrder) {
+			Session::set("CheckoutPageCurrentOrderID", $this->currentOrder->ID);
+		}
 	}
+
 
 	/**
 	 * Returns a ArrayList of {@link OrderModifierForm} objects. These
@@ -388,10 +408,17 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * @param HTTP_Request $request
 	 */
 	function checkoutstep($request) {
-		$this->HasCheckoutSteps = true;
 		return array ();
 	}
 
+
+	/**
+	 * when you extend the CheckoutPage you can change this...
+	 * @return Boolean
+	 */
+	function HasCheckoutSteps(){
+		return true;
+	}
 
 	/**
 	 * @param String $part (OrderItems, OrderModifiers, OrderForm, OrderPayment)
@@ -568,7 +595,10 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS method
 	 * @return Boolean
 	 */
-	public function canDelete($member = null) {return false;}
+	public function canDelete($member = null) {
+		$array = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
+		return !in_array($this->getCode, $array);
+	}
 
 	/**
 	 * standard SS method

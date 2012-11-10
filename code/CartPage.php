@@ -326,6 +326,10 @@ class CartPage_Controller extends Page_Controller{
 		else {
 			$this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
 		}
+		//we always want to make sure the order is up-to-date.
+		if($this->currentOrder && $this->currentOrder->TotalItems() && !$this->currentOrder->IsSubmitted()) {
+			$this->currentOrder->calculateOrderAttributes($force = true);
+		}
 	}
 
 	/**

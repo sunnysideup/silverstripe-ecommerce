@@ -1,0 +1,1 @@
+svn merge -r 3305:HEAD https://silverstripe-ecommerce.googlecode.com/svn/trunk .

@@ -18,7 +18,15 @@ class ShopAccountForm extends Form {
 			$fields = $member->getEcommerceFields(true);
 			$fields->push(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3));
 			$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
-			$fields->push(new LiteralField('LogoutNote', "<p class=\"message warning\">" . _t("Account.LOGGEDIN","You are currently logged in as ") . $member->FirstName . ' ' . $member->Surname . '. <a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?')."</a></p>"));
+			$loginField = new ReadonlyField(
+				'LoggedInAsNote',
+				_t("Account.LOGGEDIN", "You are currently logged in as "),
+				$member->FirstName . ' ' . $member->Surname .', '
+					.'<a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?').
+					"</a>"
+			);
+			$loginField->dontEscape = true;
+			$fields->push($loginField);
 			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
 			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
 			$fields->push($passwordField);
@@ -36,7 +44,7 @@ class ShopAccountForm extends Form {
 			$member = new Member();
 			$fields = new FieldSet();
 			$fields->push(new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account')));
-			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you are already have an account then please')." <a href=\"Security/login?BackURL=" . $controller->Link() . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
+			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
 			$memberFields = $member->getEcommerceFields(true);
 			if($memberFields) {
 				foreach($memberFields as $memberField) {
