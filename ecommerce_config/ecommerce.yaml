@@ -167,7 +167,7 @@ Order_Email:
 ################### CURRENCY #####################
 
 EcommerceCurrency:
-	site_currency: NZD
+	default_currenty: NZD
 	exchange_provider_class: ExchangeRateProvider
 
 ################### CONTROL #####################
