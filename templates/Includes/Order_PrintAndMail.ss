@@ -1,4 +1,5 @@
 <% if HasPrintOrEmailLink %>
+<div id="OrderPrintAndMailOuter">
 <h3><% _t("Order.KEEPARECORD", "Keep a Record") %></h3>
 <ul id="OrderPrintAndMail">
 	<% if EmailLink %>
@@ -26,4 +27,5 @@
 	<% end_if %>
 </ul>
 <% require javascript(ecommerce/javascript/EcomPrintAndMail.js) %>
+</div>
 <% end_if %>

@@ -117,7 +117,7 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	public function canEdit($member = null) {
 		if(!$member) {
-			$member == Member::currentUser();
+			$member = Member::currentUser();
 		}
 		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
 		if($member && Permission::checkMember($member, $shopAdminCode)) {
@@ -224,6 +224,7 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	function customFieldLabels(){
 		$newLabels = array(
+			"Title" => _t("EcommerceDBConfig.TITLE", "Name"),
 			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch between configurations)."),
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
@@ -259,6 +260,7 @@ class EcommerceDBConfig extends DataObject {
 		//new section
 		$fieldLabels = $this->fieldLabels();
 		$versionInfo = new EcommerceConfigDefinitions();
+		$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
 				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),

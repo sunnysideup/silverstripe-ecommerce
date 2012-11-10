@@ -21,7 +21,6 @@
 		<% if ShowInTable %>
 		<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
 			<td class="product title" scope="row">
-				<% if Buyable %><% control Buyable %><% include ProductGroupItemImageThumb %><% end_control %><% end_if %>
 				<div class="itemTitleAndSubTitle">
 					<span id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 					<div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div>

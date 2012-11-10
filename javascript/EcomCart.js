@@ -161,6 +161,20 @@ EcomCart = {
 	onAfterUpdate: null,
 		set_onAfterUpdate: function(f) {this.onAfterUpdate = f;},
 
+	/**
+	 * @var Array
+	 * Synonyms are used in the update to also update
+	 * They take the form of:
+	 * Selector (e.g. MyCart) => Other Selectors
+	 * It updates the Other Selectors at the same time as it updates the Selector
+	 * e.g. Order_DB_302_Total => ".TotalAmounts"
+	 * As most of the core selctors are dynamic, they should be set at runtime.
+	 */
+	synonyms: [],
+		set_synonyms: function(a){this.synonyms = a;},
+		add_synonym: function(key, value){this.synonyms[key] = value;},
+		remove_synonym: function(key){this.synonyms.splice(key, 1);},
+
 	//#################################
 	// ITEMS (OR LACK OF) IN THE CART
 	//#################################
@@ -260,6 +274,9 @@ EcomCart = {
 		iframe: true,
 		onOpen: function (event) {
 			EcomCart.reinit();
+			EcomQuantityField.set_delegateRootSelector("#colorbox");
+			EcomQuantityField.init();
+			EcomQuantityField.unset_delegateRootSelector();
 		}
 	},
 		set_colorboxDialogOptions: function(o){this.colorboxDialogOptions = o;},
@@ -479,19 +496,23 @@ EcomCart = {
 				//class OR id
 				if(EcomCart.debug) {console.debug("type" + type +", selector: " + selector +", parameter:"+ parameter +", value");}
 				if(type == "class" || type == "id") {
+					var additionalSelectors = "";
+					if(typeof EcomCart.synonyms[selector] != 'undefined') {
+						selector += ", "+EcomCart.synonyms[selector];
+					}
 					if(type == "id") {
-						selector = '#' + selector;
+						selector = '#' + selector + additionalSelectors;
 					}
 					else {
-						var selector = '.' + selector;
+						var selector = '.' + selector + additionalSelectors;
 					}
 					//hide or show row...
 					if(parameter == "hide") {
 						if(value) {
-							jQuery(selector).hide();
+							jQuery(selector).hide().addClass("hideForNow");
 						}
 						else {
-							jQuery(selector).show();
+							jQuery(selector).show().removeClass("hideForNow");
 						}
 					}
 					//general message

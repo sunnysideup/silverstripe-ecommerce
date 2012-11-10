@@ -16,15 +16,32 @@ EcomProducts = {
 
 	selectVariationSelector: 'a.selectVariation',
 
+	colorboxDialogOptions_addVariations: {
+		width: "500",
+		height: "500",
+		maxHeight: "90%",
+		maxWidth: "90%",
+		loadingClass: "loading",
+		iframe: false,
+		model: true,
+		onComplete: function (event) {
+			EcomCart.reinit();
+			EcomQuantityField.set_delegateRootSelector("#colorbox");
+			EcomQuantityField.init();
+			EcomQuantityField.unset_delegateRootSelector();
+		}
+	},
+	colorboxDialogOptions_viewImages: {
+	},
+
 	imagePopupSelector: '.colorboxImagePopup',
 
 	init: function(){
-		//select all the a tag with name equal to modal
 		jQuery(EcomProducts.selectVariationSelector).colorbox(
-			EcomCart.simpleDialogOptions
+			EcomProducts.colorboxDialogOptions_addVariations
 		);
 		jQuery(EcomProducts.imagePopupSelector).colorbox(
-			{}
+			EcomProducts.colorboxDialogOptions_viewImages
 		);
 	}
 

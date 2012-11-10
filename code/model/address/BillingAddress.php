@@ -166,6 +166,7 @@ class BillingAddress extends OrderAddress {
 		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Details'), 3));
 		if($member) {
 			if($member->exists()) {
+				$this->FillWithLastAddressFromMember($member, true);
 				$addresses = $this->previousAddressesFromMember($member);
 				if($addresses) {
 					if($addresses->count() > 1) {
@@ -186,7 +187,7 @@ class BillingAddress extends OrderAddress {
 				new TextField('Surname', _t('OrderAddress.SURNAME','Surname'))
 			);
 		}
-		$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
+		//$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));
 		$billingFields->push(new TextField('Address2', _t('OrderAddress.ADDRESS2','&nbsp;')));
 		$billingFields->push(new TextField('City', _t('OrderAddress.CITY','Town')));

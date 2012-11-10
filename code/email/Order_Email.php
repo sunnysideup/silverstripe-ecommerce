@@ -118,7 +118,9 @@ class Order_Email extends Email {
 	 * @author Mark Guinn
 	 */
 	protected function parseVariables($isPlain = false) {
-		require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
+		if(!class_exists('Emogrifier')) {
+			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
+		}
 		parent::parseVariables($isPlain);
 		// if it's an html email, filter it through emogrifier
 		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");

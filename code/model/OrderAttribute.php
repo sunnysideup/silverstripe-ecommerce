@@ -331,7 +331,6 @@ class OrderAttribute extends DataObject {
 		if($this instanceOf OrderItem) {
 			$html .= "<li><b>Buyable Price:</b> ".$this->Buyable()->Price." </li>";
 			$html .= "<li><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </li>";
-			print_r($this->Buyable());
 		}
 		$html .= "</ul>";
 		return $html;

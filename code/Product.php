@@ -13,7 +13,7 @@
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: Pages
+ * @sub-package: buyables
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
@@ -66,7 +66,8 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	public static $many_many = array(
-		'ProductGroups' => 'ProductGroup'
+		'ProductGroups' => 'ProductGroup',
+		'AdditionalFiles' => 'File' //this may include images, pdfs, videos, etc...
 	);
 
 	/**
@@ -74,7 +75,8 @@ class Product extends Page implements BuyableModel {
 	 */
 	public static $casting = array(
 		"CalculatedPrice" => "Currency",
-		"DisplayPrice" => "Money"
+		"DisplayPrice" => "Money",
+		"AllowPurchaseNice" => "Varchar"
 	);
 
 	/**
@@ -101,11 +103,10 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	public static $summary_fields = array(
-		'ID',
-		'InternalItemID',
-		'Title',
-		'Price',
-		'NumberSold'
+		'CMSThumbnail' => 'Image',
+		'FullName' => 'Description',
+		'Price' => 'Price',
+		'AllowPurchaseNice' => 'For Sale'
 	);
 
 	/**
@@ -289,6 +290,18 @@ class Product extends Page implements BuyableModel {
 		}
 	}
 
+	function onAfterWrite() {
+		parent::onAfterWrite();
+		if($this->ImageID) {
+			if($productImage = DataObject::get_by_id("Product_Image", $this->ImageID)) {
+				if($normalImage = DataObject::get_by_id("Image", $this->ImageID)) {
+					$normalImage->ClassName = "Product_Image";
+					$normalImage->write();
+				}
+			}
+		}
+	}
+
 	/**
 	 * sets the FullName and FullSiteTreeField to the latest values
 	 * This can be useful as you can compare it to the ones saved in the database.
@@ -386,6 +399,18 @@ class Product extends Page implements BuyableModel {
 		}
 	}
 
+	/**
+	 * Little hack to show thumbnail in summary fields in modeladmin in CMS.
+	 * @return String (HTML = formatted image)
+	 */
+	function CMSThumbnail(){
+		if($image = $this->Image()) {
+			if($image->exists()) {
+				return $image->Thumbnail();
+			}
+		}
+		return "["._t("product.NOIMAGE", "no image")."]";
+	}
 
 	/**
 	 * Returns a link to a default image.
@@ -564,7 +589,7 @@ class Product extends Page implements BuyableModel {
 	 * @return String
 	 */
 	function AddLink() {
-		return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $this->linkParameters());
+		return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $this->linkParameters("add"));
 	}
 
 	/**
@@ -573,7 +598,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	function IncrementLink() {
 		//we can do this, because by default add link adds one
-		return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $this->linkParameters());
+		return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $this->linkParameters("increment"));
 	}
 
 	/**
@@ -582,7 +607,7 @@ class Product extends Page implements BuyableModel {
 	 * @return String
 	 */
 	function DecrementLink() {
-		return ShoppingCart_Controller::remove_item_link($this->ID, $this->ClassName, $this->linkParameters());
+		return ShoppingCart_Controller::remove_item_link($this->ID, $this->ClassName, $this->linkParameters("decrement"));
 	}
 
 	/**
@@ -590,7 +615,7 @@ class Product extends Page implements BuyableModel {
 	 * @return String (Link)
 	 */
 	function RemoveLink() {
-		return ShoppingCart_Controller::remove_item_link($this->ID, $this->ClassName, $this->linkParameters());
+		return ShoppingCart_Controller::remove_item_link($this->ID, $this->ClassName, $this->linkParameters("remove"));
 	}
 
 	/**
@@ -598,7 +623,7 @@ class Product extends Page implements BuyableModel {
 	 * @return String (Link)
 	 */
 	function RemoveAllLink() {
-		return ShoppingCart_Controller::remove_all_item_link($this->ID, $this->ClassName, $this->linkParameters());
+		return ShoppingCart_Controller::remove_all_item_link($this->ID, $this->ClassName, $this->linkParameters("removeall"));
 	}
 
 	/**
@@ -606,7 +631,7 @@ class Product extends Page implements BuyableModel {
 	 * @return String (Link)
 	 */
 	function RemoveAllAndEditLink() {
-		return ShoppingCart_Controller::remove_all_item_and_edit_link($this->ID, $this->ClassName, $this->linkParameters());
+		return ShoppingCart_Controller::remove_all_item_and_edit_link($this->ID, $this->ClassName, $this->linkParameters("removeallandedit"));
 	}
 
 	/**
@@ -615,16 +640,19 @@ class Product extends Page implements BuyableModel {
 	 * @return String (Link)
 	 */
 	function SetSpecificQuantityItemLink($quantity) {
-		return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters(), array("quantity" => $quantity)));
+		return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters("setspecificquantityitem"), array("quantity" => $quantity)));
 	}
 
+
 	/**
-	 * @todo: do we still need this?
+	 * Here you can add additional information to your product
+	 * links such as the AddLink and the RemoveLink.
+	 * One useful parameter you can add is the BackURL link.
 	 * @return Array
 	 **/
-	protected function linkParameters(){
+	protected function linkParameters($type = ""){
 		$array = array();
-		$this->extend('updateLinkParameters',$array);
+		$this->extend('updateLinkParameters',$array, $type);
 		return $array;
 	}
 
@@ -683,6 +711,10 @@ class Product extends Page implements BuyableModel {
 		return true;
 	}
 
+	function AllowPurchaseNice(){
+		return $this->obj("AllowPurchase")->Nice();
+	}
+
 	/**
 	 * Products have a standard price, but for specific situations they have a calculated price.
 	 * The Price can be changed for specific member discounts, etc...
@@ -738,7 +770,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	function canEdit($member = null) {
 		if(!$member) {
-			$member == Member::currentUser();
+			$member = Member::currentUser();
 		}
 		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
 		if($member && Permission::checkMember($member, $shopAdminCode)) {
@@ -1042,23 +1074,30 @@ class Product_Image extends Image {
 		return EcommerceConfig::get("Product_Image", "large_image_width");
 	}
 
+	/**
+	 * @usage can be used in a template like this $Image.Thumbnail.Link
+	 * @return GD
+	 **/
+	function generateThumbnail($gd) {
+		$gd->setQuality(90);
+		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
+	}
+
+	public function Thumbnail() {
+		return $this->getFormattedImage('Thumbnail');
+	}
 
 	/**
 	 * @usage can be used in a template like this $Image.SmallImage.Link
 	 * @return GD
 	 **/
 	function generateSmallImage($gd) {
-		$gd->setQuality(80);
+		$gd->setQuality(90);
 		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
 	}
 
-	/**
-	 * @usage can be used in a template like this $Image.Thumbnail.Link
-	 * @return GD
-	 **/
-	function generateThumbnail($gd) {
-		$gd->setQuality(80);
-		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
+	public function SmallImage() {
+		return $this->getFormattedImage('SmallImage');
 	}
 
 	/**
@@ -1070,6 +1109,10 @@ class Product_Image extends Image {
 		return $gd->resizeByWidth($this->ContentWidth());
 	}
 
+
+	public function LargeImage() {
+		return $this->getFormattedImage('LargeImage');
+	}
 	/**
 	 * @usage can be used in a template like this $Image.LargeImage.Link
 	 * @return GD
@@ -1080,7 +1123,15 @@ class Product_Image extends Image {
 	}
 
 
-
+	function exists(){
+		if(isset($this->ID)) {
+			if($this->ID) {
+				if(file_exists($this->getFullPath())) {
+					return true;
+				}
+			}
+		}
+	}
 
 }
 

@@ -123,11 +123,18 @@ class OrderForm extends Form {
 			return false;
 		}
 
+		if($this->extend("OrderFormBeforeFinalCalculation", $data, $form, $request)) {
+			$form->sessionMessage(_t('OrderForm.ERRORWITHFORM','There was an error with your order, please review and submit again.'), 'bad');
+			Director::redirectBack();
+			return false;
+		}
+
 		//RUN UPDATES TO CHECK NOTHING HAS CHANGED
 		$oldTotal = $order->Total();
+		//if the extend line below does not return null then we know there
+		// is an error in the form (e.g. Payment Option not entered)
 		$order->calculateOrderAttributes($force = true);
 		$newTotal = $order->Total();
-		//debug::log($oldTotal."-".$newTotal);
 		if(floatval($newTotal) != floatval($oldTotal)) {
 			$form->sessionMessage(_t('OrderForm.PRICEUPDATED','The order price has been updated, please review the order and submit again.'), 'warning');
 			$this->controller->redirectBack();
@@ -148,6 +155,7 @@ class OrderForm extends Form {
 		//----------------- PAYMENT ------------------------------
 
 		//-------------- NOW SUBMIT -------------
+		$this->extend("OrderFormBeforeSubmit", $order);
 		// this should be done before paying, as only submitted orders can be paid!
 		ShoppingCart::singleton()->submit();
 
@@ -156,6 +164,7 @@ class OrderForm extends Form {
 
 		//-------------- DO WE HAVE ANY PROGRESS NOW -------------
 		$order->tryToFinaliseOrder();
+		//any changes to the order at this point can be taken care by ordsteps.
 
 		//------------- WHAT DO WE DO NEXT? -----------------
 		if($payment) {
@@ -248,7 +257,7 @@ class OrderForm_Validator extends RequiredFields{
 		if(!$billingAddress) {
 			$this->validationError(
 				"BillingAddress",
-				_t("OrderForm.MUSTHAVEBILLINGADDRESS", "All orders must have a billing address."),
+				_t("OrderForm.MUSTHAVEBILLINGADDRESS", "All orders must have a billing address, please go back and add your details."),
 				"required"
 			);
 			$valid = false;
@@ -284,6 +293,12 @@ class OrderForm_Payment extends Form {
 		foreach($paymentFields as $paymentField) {
 			if($paymentField->class == "HeaderField") {
 				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
+			}
+			if($paymentField->Name() == "PaymentMethod") {
+				$source = $paymentField->getSource();
+				if($source && is_array($source) && count($source) == 1) {
+					$paymentField->performReadonlyTransformation();
+				}
 			}
 			$fields->push($paymentField);
 		}
@@ -364,11 +379,16 @@ class OrderForm_Cancel extends Form {
 		$SQLData = Convert::raw2sql($data);
 		$member = Member::currentUser();
 		if($member) {
-			if(isset($SQLData['OrderID']) && $order = DataObject::get_one('Order', "\"ID\" = ".intval($SQLData['OrderID'])." AND \"MemberID\" = ".$member->ID)){
-				if($order->canCancel()) {
-					$reason = "";
-					if(isset($SQLData["CancellationReason"])) {
-						$reason = $SQLData["CancellationReason"];
+			if(isset($SQLData['OrderID'])){
+				$order = Order::get_by_id(intval($SQLData['OrderID']));
+				if($order) {
+					if($order->canCancel()) {
+						$reason = "";
+						if(isset($SQLData["CancellationReason"])) {
+							$reason = $SQLData["CancellationReason"];
+						}
+						$order->Cancel($member, $reason);
+						return Director::redirectBack();
 					}
 					$order->Cancel($member, $reason);
 					$this->controller->redirectBack();

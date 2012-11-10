@@ -11,7 +11,6 @@
  * - Clearly define an API for editing the cart, trying to keep the number of functions to a minimum.
  * - Allow easier testing of cart functionality.
  * - Message handling done in one place.
- * This is not taking a step backward, be cause the old ShoppingCart / Controller seperation had all static variables/functions on ShoppingCart
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -166,13 +165,12 @@ class ShoppingCart extends Object{
 			}
 			//member just logged in and is not associated with order yet
 			//if you are not logged in but the order belongs to a member then clear the cart.
-			/***** THIS IS NOT CORRECT, BECAUSE YOU CAN CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!! ***
+			// THIS MAY NOT BE CORRECT, BECAUSE YOU THIS MEANS YOU CAN NOT CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!! ***
 			elseif($this->order->MemberID && !$member) {
 				$this->clear();
 				return false;
 			}
-			*/
-			if($this->order && $this->order->exists()) {
+			if($this->order && $this->order->exists() && $this->order->StatusID) {
 				$this->order->calculateOrderAttributes($force = true);
 			}
 		}
@@ -821,7 +819,7 @@ class ShoppingCart extends Object{
 	 * @param Form $form
 	 * @returns String (JSON)
 	 */
-	public function setMessageAndReturn($message = "", $status = "", $form = null){
+	public function setMessageAndReturn($message = "", $status = "", Form $form = null){
 		if($message && $status) {
 			$this->addMessage($message,$status);
 		}
@@ -835,9 +833,21 @@ class ShoppingCart extends Object{
 			//TODO: handle passing a message back to a form->sessionMessage
 			$this->StoreMessagesInSession();
 			if($form) {
+				//lets make sure that there is an order
+				$this->currentOrder();
+				//nowe we can (re)calculate the order
+				$this->order->calculateOrderAttributes($force = true);
 				$form->sessionMessage($message,$status);
+				//let the form controller do the redirectback or whatever else is needed.
 			}
-			Controller::curr()::redirectBack();
+			else {
+				if(empty($_REQUEST["BackURL"])) {
+					Controller::curr()::redirectBack();
+				}
+				else {
+					Controller::cur()::redirect(urldecode($_REQUEST["BackURL"]));
+				}
+			}
 			return;
 		}
 	}
@@ -1050,14 +1060,9 @@ class ShoppingCart_Controller extends Controller{
 	 */
 
 	protected static function params_to_get_string($array){
-		$string = "?";
-		if($array & count($array > 0)){
-			array_walk($array , create_function('&$v,$k', '$v = $k."=".$v ;'));
-			$string = implode("&",$array);
-		}
 		$token = SecurityToken::inst();
-		$string .= "&amp;SecurityID=".$token->getValue();
-		return $string;
+		$array["SecurityID"] = $token->getValue();
+		return "?".http_build_query($array);
 	}
 
 	/**
@@ -1334,7 +1339,8 @@ class ShoppingCart_Controller extends Controller{
 
 	function ajaxtest(){
 		if(Director::isDev() || Permission::check("ADMIN")){
-			$this->addHeader('Content-Type', 'text/plain');
+			header('Content-Type', 'text/plain');
+			echo "<pre>";
 			$_REQUEST["ajax"] = 1;
 			$v = $this->cart->setMessageAndReturn("test only");
 			$v = str_replace(",", ",\r\n\t\t", $v);
@@ -1342,6 +1348,7 @@ class ShoppingCart_Controller extends Controller{
 			$v = str_replace("{", "\t{\r\n\t\t", $v);
 			$v = str_replace("]", "\r\n]", $v);
 			echo $v;
+			echo "</pre>";
 		}
 		else {
 			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/ajaxtest/")."\">log in</a> first.";

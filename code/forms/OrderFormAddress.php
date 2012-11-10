@@ -115,27 +115,41 @@ class OrderFormAddress extends Form {
 				if(!$this->loggedInMember) {
 					$rightFields->push(
 						//TODO: check EXACT link!!!
-						new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you are already have an account then please')." <a href=\"Security/login/?BackURL=" . urlencode($controller->Link()) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
+						new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login/?BackURL=/" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
 					);
 				}
 				$passwordField = new ConfirmedPasswordField('Password', _t('OrderForm.PASSWORD','Password'));
+				$passwordField->setValue("");
 				//login invite right on the top
 				if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
 					$rightFields->push(new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3));
 					//allow people to purchase without creating a password
 					$passwordField->setCanBeEmpty(true);
+					$rightFields->push(
+						new LiteralField(
+							'AccountInfo',
+							'<p>'.
+							_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.')
+							.'</p>'
+						)
+					);
+					//close by default
 				}
 				else {
-					$rightFields->push(new HeaderField('SetupYourAccount', _t('OrderForm.SETUPYOURACCOUNT','Setup your account'), 3));
+					$rightFields->push(new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT','Create an account'), 3));
 					//dont allow people to purchase without creating a password
 					$passwordField->setCanBeEmpty(false);
+					$rightFields->push(
+						new LiteralField(
+							'AccountInfo',
+							'<p>'.
+							_t('OrderForm.MUSTCREATEPASSWORD','Please choose a password to create your account.')
+							.'</p>'
+						)
+					);
 				}
 				$requiredFields[] = 'Password[_Password]';
 				$requiredFields[] = 'Password[_ConfirmPassword]';
-				Requirements::customScript('jQuery("#ChoosePassword").click();', "EommerceChoosePassword"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-				$rightFields->push(
-					new LiteralField('AccountInfo','<p>'._t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you can log in and check your order history in the future.').'</p>')
-				);
 				$rightFields->push(new FieldGroup($passwordField));
 			}
 			else {
@@ -172,6 +186,12 @@ class OrderFormAddress extends Form {
 		$validator = new OrderFormAddress_Validator($requiredFields);
 		//TODO: do we need this here?
 		$validator->setJavascriptValidationHandler("prototype");
+		foreach($requiredFields as $requiredField) {
+			$field = $fields->dataFieldByName($requiredField);
+			if($field) {
+				$field->addExtraClass("required");
+			}
+		}
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
@@ -280,7 +300,7 @@ class OrderFormAddress extends Form {
 				$member->write();
 			}
 			if($this->memberShouldBeLoggedIn($data)) {
-				$member->logIn();
+				$member->LogIn();
 			}
 		}
 
@@ -460,7 +480,12 @@ class OrderFormAddress extends Form {
 	 **/
 	public function uniqueMemberFieldCanBeUsed($data) {
 		if($this->anotherExistingMemberWithSameUniqueFieldValue($data) && $this->loggedInMember) {
-			if(!$this->loggedInMember->IsShopAdmin()) {
+			if($this->loggedInMember->IsShopAdmin()) {
+				if($this->orderMember->ID == $this->loggedInMember->ID) {
+					return false;
+				}
+			}
+			else {
 				return false;
 			}
 		}

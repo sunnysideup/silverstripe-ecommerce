@@ -653,7 +653,7 @@ class Order extends DataObject {
 		if($this->StatusID || $force) {
 			if(!$this->StatusID) {
 				$createdOrderStatus = DataObject::get_one("OrderStep");
-				$order->StatusID = $createdOrderStatus->ID;
+				$this->StatusID = $createdOrderStatus->ID;
 			}
 			$createdModifiersClassNames = array();
 			$this->modifiers = $this->modifiersFromDatabase($includingRemoved = true);
@@ -841,20 +841,17 @@ class Order extends DataObject {
 	 * @return boolean
 	 */
 	function IsPaid() {
-		return (bool)($this->Total() > 0 && $this->TotalOutstanding() <= 0);
+		if($this->IsSubmitted()) {
+			return (bool)($this->Total() > 0 && $this->TotalOutstanding() <= 0);
+		}
+		return false;
 	}
 
 	/**
 	 * Has the order been cancelled?
 	 * @return boolean
 	 */
-	public function IsCancelled() {
-		return $this->getIsCancelled();
-	}
-
-	/**
-	 * IT is important to have both IsCancelled and getIsCancelled.
-	 **/
+	public function IsCancelled() {return $this->getIsCancelled();}
 	public function getIsCancelled() {
 		return $this->CancelledByID ? TRUE : FALSE;
 	}
@@ -864,7 +861,7 @@ class Order extends DataObject {
 	 * @return boolean
 	 */
 	function IsCustomerCancelled() {
-		if($this->MemberID == $this->IsCancelledID && $this->MemberID > 0) {
+		if($this->MemberID > 0 && $this->MemberID == $this->IsCancelledID) {
 			return true;
 		}
 		return false;
@@ -1144,6 +1141,14 @@ class Order extends DataObject {
 			$email->setSubject($subject);
 			$email->populateTemplate($replacementArray);
 			return $email->send(null, $this, $resend);
+
+			// This might be called from within the CMS, so we need to restore the theme, just in case
+			// templates within the theme exist
+			$oldTheme = SSViewer::current_theme();
+			SSViewer::set_theme(SSViewer::current_custom_theme());
+			$result = $email->send(null, $this, $resend);
+			SSViewer::current_theme($oldTheme);
+			return $result;
 		}
 		return false;
 	}
@@ -1243,8 +1248,11 @@ class Order extends DataObject {
 	 *
 	 */
 	public function calculateOrderAttributes($force = false) {
-		$this->calculateOrderItems($force);
-		$this->calculateModifiers($force);
+		if($this->TotalItems() || $this->StatusID) {
+			$this->calculateOrderItems($force);
+			$this->calculateModifiers($force);
+		}
+		$this->extend("onCalculateOrder");
 	}
 
 
@@ -1849,7 +1857,10 @@ class Order extends DataObject {
 
 	/**
 	 * returns the total number of OrderItems (not modifiers).
-	 *@return Integer
+	 * This is meant to run as fast as possible to quickly check
+	 * if there is anything in the cart.
+	 * @param Boolean $recalculate - do we need to recalculate (value is retained during lifetime of Object)
+	 * @return Integer
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
 	public function getTotalItems($recalculate = false) {
@@ -1902,7 +1913,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if($this->ShippingAddressID) {
+		if($this->ShippingAddressID && $this->UseShippingAddress) {
 			if($shippingAddress = DataObject::get_by_id("ShippingAddress", $this->ShippingAddressID)) {
 				if($shippingAddress->ShippingCountry) {
 					$countryCodes["Shipping"] = $shippingAddress->ShippingCountry;
@@ -2394,6 +2405,17 @@ class Order extends DataObject {
 		foreach($fields as  $key => $type) {
 			$method = "get".$key;
 			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
+		}
+		$fields = Object::get_static($this->ClassName, "has_one");
+		foreach($fields as  $key => $type) {
+			$value = "";
+			$field = $key."ID";
+			if($object = $this->$key()){
+				if($object && $object->exists()) {
+					$value = ", ".$object->Title;
+				}
+			}
+			$html .= "<li><b>$key ($type):</b> ".$this->$field.$value." </li>";
 		}
 		$html .= "</ul>";
 		return $html;

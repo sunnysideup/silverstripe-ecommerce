@@ -138,6 +138,7 @@ class ShippingAddress extends OrderAddress {
 
 			if($member) {
 				if($member->exists()) {
+					$this->FillWithLastAddressFromMember($member, true);
 					$addresses = $this->previousAddressesFromMember($member);
 					if($addresses) {
 						if($addresses->count() > 1) {
@@ -156,7 +157,7 @@ class ShippingAddress extends OrderAddress {
 					new TextField('ShippingSurname', _t('OrderAddress.SURNAME','Surname'))
 				);
 			}
-			$shippingFields->push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
+			//$shippingFields->push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 			$shippingFields->push(new TextField('ShippingAddress', _t('OrderAddress.ADDRESS','Address')));
 			$shippingFields->push(new TextField('ShippingAddress2', _t('OrderAddress.ADDRESS2','&nbsp;')));
 			$shippingFields->push(new TextField('ShippingCity', _t('OrderAddress.CITY','Town')));

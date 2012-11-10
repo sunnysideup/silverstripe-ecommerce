@@ -25,14 +25,13 @@ class EcommerceMigration extends BuildTask {
 
 	protected $start = 0;
 
-	protected $title = "Ecommerce Migration";
-
 	protected $retrieveInfoOnly = false;
+
+	protected $title = "Ecommerce Migration";
 
 	protected $description = "
 		Migrates all the data from the oldest version of e-commerce to the current one.
-		Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.  The migration will not work so well if you have a very high number of Orders.
-		You may run it several times.
+		Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.
 	";
 
 	protected $listOfMigrationTasks = array(
@@ -64,7 +63,6 @@ class EcommerceMigration extends BuildTask {
 		"addNewPopUpManager_280",
 		"theEnd_9999"
 	);
-
 
 	function run($request) {
 		if(isset($_REQUEST["limit"])) {
@@ -1403,10 +1401,17 @@ class EcommerceMigration extends BuildTask {
 			echo $explanation;
 		}
 		$checkoutPage = DataObject::get_one("CheckoutPage");
-		$checkoutPage->HasCheckoutSteps = 1;
-		$checkoutPage->writeToStage('Stage');
-		$checkoutPage->publish('Stage', 'Live');
+		if(!$checkoutPage) {
+			$checkoutPage = new CheckoutPage();
+			DB::alteration_message("Creating a CheckoutPage", "created");
+		}
+		else {
+			DB::alteration_message("No need to create a CheckoutPage Page");
+		}
 		if($checkoutPage) {
+			$checkoutPage->HasCheckoutSteps = 1;
+			$checkoutPage->writeToStage('Stage');
+			$checkoutPage->publish('Stage', 'Live');
 			if(!DataObject::get_one("OrderConfirmationPage")) {
 				$orderConfirmationPage = new OrderConfirmationPage();
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
