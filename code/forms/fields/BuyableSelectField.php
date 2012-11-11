@@ -52,7 +52,7 @@ class BuyableSelectField extends FormField {
 	 * @param Int $countOfSuggestions - number of suggestions shown (max)
 	 * @param Form $form
 	 */
-	function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 7, $form = null) {
+	function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 30, $form = null) {
 		$this->countOfSuggestions = $countOfSuggestions;
 		$this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Enter product code or title'));
 		$this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ''), _t('BuyableSelectField.NONE', 'No product selected yet.'));
