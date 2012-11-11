@@ -228,16 +228,18 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 						return $dos->First();
 					}
 				}
+				$arrayList = new ArrayList(array());
 				foreach($dos as $do) {
 					$do->LinkingMode = "link completed";
 					$do->Completed = 1;
 					$do->Link = "";
+					$arrayList->push($do);
 				}
 				$do = $this->CurrentCheckoutStep(true);
 				if($do) {
-					$dos->push($do);
+					$arrayList->push($do);
 				}
-				return $dos;
+				return $arrayList;
 			}
 		}
 	}

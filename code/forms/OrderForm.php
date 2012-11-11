@@ -32,17 +32,19 @@ class OrderForm extends Form {
 		$bottomFields->setID('BottomOrder');
 		$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
 		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
-		$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
-		foreach($paymentFields as $paymentField) {
-			if($paymentField->class == "HeaderField") {
-				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+		$paymentFields = null;
+		//$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
+		if($paymentFields) {
+			foreach($paymentFields as $paymentField) {
+				if($paymentField->class == "HeaderField") {
+					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+				}
+				$bottomFields->push($paymentField);
 			}
-			$bottomFields->push($paymentField);
+			if($paymentRequiredFields = Payment::combined_form_requirements()) {
+				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
+			}
 		}
-		if($paymentRequiredFields = Payment::combined_form_requirements()) {
-			$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
-		}
-
 
 		//  ________________  4) FINAL FIELDS
 
@@ -62,7 +64,8 @@ class OrderForm extends Form {
 			}
 			$finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1','I have read and agree with the ').' <a href="'.$termsAndConditionsPage->Link().'">'.Convert::raw2xml($termsAndConditionsPage->Title).'</a>'._t('OrderForm.AGREEWITHTERMS2','.'), $alreadyTicked));
 		}
-		$finalFields->push(new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE','Note / Question'), 7, 30));
+		$textAreaField = new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE','Note / Question'));
+		$finalFields->push($textAreaField);
 
 
 		//  ________________  5) Put all the fields in one FieldList
@@ -79,7 +82,7 @@ class OrderForm extends Form {
 		$validator = new OrderForm_Validator($requiredFields);
 		//we stick with standard validation here, because of the complexity and
 		//hard-coded payment validation that is required
-		$validator->setJavascriptValidationHandler("prototype");
+		//$validator->setJavascriptValidationHandler("prototype");
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
@@ -281,6 +284,7 @@ class OrderForm_Validator extends RequiredFields{
 class OrderForm_Payment extends Form {
 
 	function __construct($controller, $name, $order, $returnToLink = '') {
+		$requiredFields = null;
 		$fields = new FieldList(
 			new HiddenField('OrderID', '', $order->ID)
 		);
@@ -289,22 +293,25 @@ class OrderForm_Payment extends Form {
 		}
 		$totalAsCurrencyObject = $order->TotalAsCurrencyObject();
 		$totalOutstandingAsMoneyObject = $order->TotalOutstandingAsMoneyObject();
-		$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
-		foreach($paymentFields as $paymentField) {
-			if($paymentField->class == "HeaderField") {
-				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
-			}
-			if($paymentField->Name() == "PaymentMethod") {
-				$source = $paymentField->getSource();
-				if($source && is_array($source) && count($source) == 1) {
-					$paymentField->performReadonlyTransformation();
+		//$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
+		$paymentFields = null;
+		if($paymentFields) {
+			foreach($paymentFields as $paymentField) {
+				if($paymentField->class == "HeaderField") {
+					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
 				}
+				if($paymentField->Name() == "PaymentMethod") {
+					$source = $paymentField->getSource();
+					if($source && is_array($source) && count($source) == 1) {
+						$paymentField->performReadonlyTransformation();
+					}
+				}
+				$fields->push($paymentField);
 			}
-			$fields->push($paymentField);
-		}
-		$requiredFields = array();
-		if($paymentRequiredFields = Payment::combined_form_requirements()) {
-			$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
+			$requiredFields = array();
+			if($paymentRequiredFields = Payment::combined_form_requirements()) {
+				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
+			}
 		}
 		$actions = new FieldList(
 			new FormAction('dopayment', _t('OrderForm.PAYORDER','Pay balance'))

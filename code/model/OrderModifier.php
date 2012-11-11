@@ -781,7 +781,7 @@ class OrderModifier_Descriptor extends DataObject {
 		if($this->LinkID) {
 			$fields->addFieldToTab("Root", new CheckboxField("NoLinkForOrderModifier_Descriptor", "Remove Link"), "LinkID");
 		}
-		$fields->replaceField("Description", new TextareaField("Description", "Description", 3));
+		$fields->replaceField("Description", new TextareaField("Description", "Description"));
 		return $fields;
 	}
 
