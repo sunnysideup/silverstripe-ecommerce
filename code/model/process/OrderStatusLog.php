@@ -161,7 +161,7 @@ class OrderStatusLog extends DataObject {
 
 	/**
 	*
-	*@return FieldSet
+	*@return FieldList
 	**/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -562,7 +562,7 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 
 	/**
 	*
-	*@return FieldSet
+	*@return FieldList
 	**/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -574,7 +574,7 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		if(!$this->DispatchedOn) {
-			$this->DispatchedOn = DBField::create('Date', date('Y-m-d'));
+			$this->DispatchedOn = DBField::create_field('Date', date('Y-m-d'));
 		}
 	}
 

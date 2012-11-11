@@ -255,7 +255,7 @@ class OrderStep extends DataObject {
 
 	/**
 	 *
-	 *@return Fieldset
+	 *@return FieldList
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -318,9 +318,9 @@ class OrderStep extends DataObject {
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
 	 * Usually this is added before ActionNextStepManually
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	public function addOrderStepFields(&$fields, $order) {
 		return $fields;
@@ -660,9 +660,9 @@ class OrderStep_Created extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -820,9 +820,9 @@ class OrderStep_Submitted extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -931,9 +931,9 @@ class OrderStep_SentInvoice extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1003,9 +1003,9 @@ class OrderStep_Paid extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1070,9 +1070,9 @@ class OrderStep_Confirmed extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 * @param FieldSet $fields
+	 * @param FieldList $fields
 	 * @param Order $order
-	 * @return FieldSet
+	 * @return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1161,9 +1161,9 @@ class OrderStep_SentReceipt extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1259,9 +1259,9 @@ class OrderStep_Sent extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1328,9 +1328,9 @@ class OrderStep_Archived extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
+	 *@param FieldList $fields
 	 *@param Order $order
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);

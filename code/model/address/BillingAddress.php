@@ -147,7 +147,7 @@ class BillingAddress extends OrderAddress {
 
 	/**
 	 *
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();

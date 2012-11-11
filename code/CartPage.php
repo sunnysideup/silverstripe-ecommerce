@@ -78,7 +78,7 @@ class CartPage extends Page{
 	 */
 	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		if($fieldName == "MenuTitle") {
-			return DBField::create('HTMLVarchar', $this->EcommerceMenuTitle(), "MenuTitle", $this);
+			return DBField::create_field('HTMLVarchar', $this->EcommerceMenuTitle(), "MenuTitle", $this);
 		}
 		else {
 			return parent::obj($fieldName);
@@ -106,11 +106,11 @@ class CartPage extends Page{
 	}
 
 	/**
-	 *@return Fieldset
+	 *@return FieldList
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
-		$fields->addFieldsToTab('Root.Content.Messages',
+		$fields->addFieldsToTab('Root.Messages',
 			array (
 				new TabSet(
 					"Messages",
@@ -358,7 +358,7 @@ class CartPage_Controller extends Page_Controller{
 				Session::clear($sessionCode);
 			}
 		}
-		$field = DBField::create("HTMLText", $this->message);
+		$field = DBField::create_field("HTMLText", $this->message);
 		return $field;
 	}
 
@@ -468,7 +468,7 @@ class CartPage_Controller extends Page_Controller{
 			Session::set("CartPageCreateAccountForm", false);
 			return true;
 		}
-		if(Member::currentMember() || $this->currentOrder->MemberID) {
+		if(Member::currentUser() || $this->currentOrder->MemberID) {
 			return false;
 		}
 		else {
@@ -491,7 +491,7 @@ class CartPage_Controller extends Page_Controller{
 	 * TO DO: untested
 	 */
 	function saveorder() {
-		$member = Member::currentMember();
+		$member = Member::currentUser();
 		if(!$member) {
 			$this->showCreateAccountForm = true;
 			return array();
@@ -542,7 +542,7 @@ class CartPage_Controller extends Page_Controller{
 	 **/
 	protected function workOutMessagesAndActions(){
 		if(!$this->workedOutMessagesAndActions) {
-			$this->actionLinks = new ArraList();
+			$this->actionLinks = new ArrayList(array());
 			//what order are we viewing?
 			$viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
 			$currentUserID = Member::currentUserID();
@@ -683,7 +683,7 @@ class CartPage_Controller extends Page_Controller{
 			//log out
 			//Strictly speaking this is only part of the
 			//OrderConfirmationPage but we put it here for simplicity's sake
-			if(Member::currentMember()) {
+			if(Member::currentUser()) {
 				if($this->isOrderConfirmationPage()) {
 					$this->actionLinks->push(new ArrayData(array (
 						"Title" => _t("CartPage.LOGOUT","log out"),

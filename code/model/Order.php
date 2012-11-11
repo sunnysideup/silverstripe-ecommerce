@@ -630,7 +630,7 @@ class Order extends DataObject {
 
 
 	function OrderStepField() {
-		return new OrderStepField($name = "MyOrderStep", $this, Member::CurrentMember());
+		return new OrderStepField($name = "MyOrderStep", $this, Member::currentUser());
 	}
 
 
@@ -925,7 +925,7 @@ class Order extends DataObject {
 		if($this->MemberID) {
 			$member = $this->Member();
 		}
-		elseif($member = Member::currentMember()) {
+		elseif($member = Member::currentUser()) {
 			if(!$member->IsShopAdmin()) {
 				$this->MemberID = $member->ID;
 				$this->write();
@@ -1336,7 +1336,7 @@ class Order extends DataObject {
 	 *@return Currency (DB Object)
 	 **/
 	function ModifiersSubTotalAsCurrencyObject($excluded = null, $stopAtExcludedModifier = false) {
-		return DBField::create('Currency',$this->ModifiersSubTotal($excluded, $stopAtExcludedModifier));
+		return DBField::create_field('Currency',$this->ModifiersSubTotal($excluded, $stopAtExcludedModifier));
 	}
 
 
@@ -1551,10 +1551,10 @@ class Order extends DataObject {
 
 	/**
 	 * returns all the logs that can be viewed by the customer.
-	 * @return DataList
+	 * @return ArrayList
 	 */
 	function CustomerViewableOrderStatusLogs() {
-		$customerViewableOrderStatusLogs = new DataList();
+		$customerViewableOrderStatusLogs = new ArrayList();
 		$logs = $this->OrderStatusLogs();
 		if($logs) {
 			foreach($logs as $log) {
@@ -1747,7 +1747,7 @@ class Order extends DataObject {
 	 *@return Currency (DB Object)
 	 **/
 	function SubTotalAsCurrencyObject() {
-		return DBField::create('Currency',$this->SubTotal());
+		return DBField::create_field('Currency',$this->SubTotal());
 	}
 
 	/**
@@ -1765,7 +1765,7 @@ class Order extends DataObject {
 	 *@return Currency (DB Object)
 	 **/
 	function TotalAsCurrencyObject() {
-		return DBField::create('Currency',$this->Total());
+		return DBField::create_field('Currency',$this->Total());
 	}
 
 	/**
@@ -1815,7 +1815,7 @@ class Order extends DataObject {
 	 *@return Currency (DB Object)
 	 **/
 	function TotalOutstandingAsCurrencyObject(){
-		return DBField::create('Currency',$this->TotalOutstanding());
+		return DBField::create_field('Currency',$this->TotalOutstanding());
 	}
 
 	/**
@@ -1852,7 +1852,7 @@ class Order extends DataObject {
 	 *@return Currency (DB Object)
 	 **/
 	function TotalPaidAsCurrencyObject(){
-		return DBField::create('Currency',$this->TotalPaid());
+		return DBField::create_field('Currency',$this->TotalPaid());
 	}
 
 	/**

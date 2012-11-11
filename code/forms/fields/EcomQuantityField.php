@@ -107,9 +107,10 @@ class EcomQuantityField extends NumericField {
 	}
 
 	/**
+	 * @param properties
 	 *@return String (HTML)
 	 **/
-	function Field() {
+	function Field($properties = array()) {
 		$name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
 		if(!isset(self::$tabindex[$name])) {
 			self::$tabindex[$name] = count(self::$tabindex) + 1;

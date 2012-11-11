@@ -842,10 +842,10 @@ class ShoppingCart extends Object{
 			}
 			else {
 				if(empty($_REQUEST["BackURL"])) {
-					Controller::curr()::redirectBack();
+					Controller::curr()->redirectBack();
 				}
 				else {
-					Controller::cur()::redirect(urldecode($_REQUEST["BackURL"]));
+					Controller::cur()->redirect(urldecode($_REQUEST["BackURL"]));
 				}
 			}
 			return;

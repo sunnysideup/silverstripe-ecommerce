@@ -138,7 +138,7 @@ class AccountPage extends Page {
 	protected function pastOrdersSelection(){
 		return DataObject::get(
 			"Order",
-			"\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID."
+			"\"Order\".\"MemberID\" = ".Member::currentUserID."
 				AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)
 				AND \"OrderStep\".\"ShowAsUncompletedOrder\" = 0 ",
 			"\"Created\" DESC",
@@ -194,7 +194,7 @@ class AccountPage_Controller extends Page_Controller {
 	 * @return NULL | Member
 	 */
 	function AccountMember(){
-		return Member::CurrentMember();
+		return Member::currentUser();
 	}
 
 }

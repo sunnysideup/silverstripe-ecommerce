@@ -285,15 +285,15 @@ class ProductGroup extends Page {
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Content.Images', new ImageField('Image', _t('Product.IMAGE', 'Product Group Image')));
+		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
 		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
 		$fields->addFieldToTab(
-			'Root.Content',
+			'Root',
 			new Tab(
 				'ProductDisplay',
 				new DropdownField("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show ..."), $this->showProductLevels),
@@ -310,7 +310,7 @@ class ProductGroup extends Page {
 				$sortDropdownList["inherit"] = _t("ProductGroup.INHERIT", "Inherit").$actualValue;
 			}
 			$fields->addFieldToTab(
-				"Root.Content.ProductDisplay",
+				"Root.ProductDisplay",
 				new DropdownField("DefaultSortOrder", _t("ProductGroup.DEFAULTSORTORDER", "Default Sort Order"), $sortDropdownList)
 			);
 		}
@@ -323,7 +323,7 @@ class ProductGroup extends Page {
 				$filterDropdownList["inherit"] = _t("ProductGroup.INHERIT", "Inherit").$actualValue;
 			}
 			$fields->addFieldToTab(
-				"Root.Content.ProductDisplay",
+				"Root.ProductDisplay",
 				new DropdownField("DefaultFilter", _t("ProductGroup.DEFAULTFILTER", "Default Filter"), $filterDropdownList)
 			);
 		}
@@ -336,13 +336,13 @@ class ProductGroup extends Page {
 				$displayStyleDropdownList["inherit"] = _t("ProductGroup.INHERIT", "Inherit").$actualValue;
 			}
 			$fields->addFieldToTab(
-				"Root.Content.ProductDisplay",
+				"Root.ProductDisplay",
 				new DropdownField("DisplayStyle", _t("ProductGroup.DEFAULTDISPLAYSTYLE", "Default Display Style"), $displayStyleDropdownList)
 			);
 		}
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
 			$fields->addFieldsToTab(
-				'Root.Content.OtherProductsShown',
+				'Root.OtherProductsShown',
 				array(
 					new HeaderField('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
 					$this->getProductGroupsTable()
@@ -537,7 +537,8 @@ class ProductGroup extends Page {
 	 **/
 	protected function currentFinalProducts($buyables){
 		if($buyables && $buyables instanceOf DataList) {
-			$buyables->removeDuplicates();
+			//SS3.0: we cant use this... do we still need it?
+			//$buyables->removeDuplicates();
 			if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
 				foreach($buyables as $buyable) {
 					if(!$buyable->canPurchase()) {
@@ -547,7 +548,7 @@ class ProductGroup extends Page {
 			}
 		}
 		if($buyables) {
-			$this->totalCount = $buyables->Count();
+			$this->totalCount = $buyables->count();
 			if($this->totalCount) {
 				return DataObject::get(
 					$this->currentClassNameSQL(),
@@ -575,9 +576,9 @@ class ProductGroup extends Page {
 	 */
 	protected function currentWhereSQL($buyables) {
 		if($buyables instanceOf DataList) {
-			$buyablesIDArray = $buyables->map("ID", "ID");
+			$buyablesIDArray = $buyables->map("ID", "ID")->toArray();
 		}
-		else {
+		elseif(is_array($buyables)) {
 			$buyablesIDArray = $buyables;
 		}
 		$className = $this->currentClassNameSQL();

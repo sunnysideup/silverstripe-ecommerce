@@ -173,33 +173,34 @@ class Product extends Page implements BuyableModel {
 		if($siteTreeFieldExtensions) {
 			$this->enableCMSFieldsExtensions();
 		}
-		$fields->replaceField('Root.Content.Main', new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description'), 3));
+		$fields->replaceField('Root.Main', new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description'), 3));
 		//NOTE: IMAGE FIELD WAS GIVING ERRORS IN ModelAdmin
-		//$fields->addFieldToTab('Root.Content.Images', new TreeDropdownField('ImageID', _t('Product.IMAGE', 'Product Image'), "Image"));
-		$fields->addFieldToTab('Root.Content.Images', new ImageField('Image', _t('Product.IMAGE', 'Product Image')));
-		$fields->addFieldToTab('Root.Content.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
-		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
-		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
-		$fields->addFieldToTab('Root.Content.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
-		$fields->addFieldToTab('Root.Content.Details',new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
+		//$fields->addFieldToTab('Root.Images', new TreeDropdownField('ImageID', _t('Product.IMAGE', 'Product Image'), "Image"));
+		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Image')));
+		$fields->addFieldToTab('Root.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
+		$fields->addFieldToTab('Root.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
+		$fields->addFieldToTab('Root.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
+		$fields->addFieldToTab('Root.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
+		$fields->addFieldToTab('Root.Details',new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
 		if($this->EcomConfig()->ProductsHaveWeight) {
-			$fields->addFieldToTab('Root.Content.Details',new NumericField('Weight', _t('Product.WEIGHT', 'Weight')));
+			$fields->addFieldToTab('Root.Details',new NumericField('Weight', _t('Product.WEIGHT', 'Weight')));
 		}
 		if($this->EcomConfig()->ProductsHaveModelNames) {
-			$fields->addFieldToTab('Root.Content.Details',new TextField('Model', _t('Product.MODEL', 'Model')));
+			$fields->addFieldToTab('Root.Details',new TextField('Model', _t('Product.MODEL', 'Model')));
 		}
 		if($this->EcomConfig()->ProductsHaveQuantifiers) {
-			$fields->addFieldToTab('Root.Content.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
+			$fields->addFieldToTab('Root.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
 		}
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
 			$fields->addFieldsToTab(
-				'Root.Content.AlsoShowHere',
+				'Root.AlsoShowHere',
 				array(
 					new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
 					$this->getProductGroupsTable()
 				)
 			);
 		}
+		/*
 		$orderTableField = new ComplexTableField(
 			$this,
 			'OrderItems',
@@ -209,20 +210,21 @@ class Product extends Page implements BuyableModel {
 				'Order.Created' => 'When',
 				'Quantity' => 'Quantity'
 			),
-			new FieldSet(),
+			new FieldList(),
 			"\"BuyableID\" = '".$this->ID."' AND \"BuyableClassName\" = '".$this->ClassName."'",
 			"\"Created\" DESC"
 		);
 		$orderTableField->setPermissions(array("show"));
 		$orderTableField->setShowPagination(true);
 		$orderTableField->setRelationAutoSetting(true);
+		*/
 		/*
 		$orderTableField->addSummary(
 			_t("Product.TOTALCOUNT", "Total Count"),
 			array("TotalCount" => array("sum","Quantity->Nice"))
 		);
 		*/
-		$fields->addFieldToTab('Root.Content.Orders', $orderTableField);
+		//$fields->addFieldToTab('Root.Orders', $orderTableField);
 		if($siteTreeFieldExtensions) {
 			$this->extend('updateSettingsFields', $fields);
 		}
@@ -888,9 +890,9 @@ class Product_Controller extends Page_Controller {
 		if($this->canPurchase()) {
 			$farray = array();
 			$requiredFields = array();
-			$fields = new FieldSet($farray);
+			$fields = new FieldList($farray);
 			$fields->push(new NumericField('Quantity','Quantity',1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('addproductfromform', _t("Product.ADDLINK","Add this item to cart"))
 			);
 			$requiredfields[] = 'Quantity';

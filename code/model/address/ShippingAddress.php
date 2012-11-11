@@ -104,7 +104,7 @@ class ShippingAddress extends OrderAddress {
 
 	/**
 	 *
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -125,7 +125,7 @@ class ShippingAddress extends OrderAddress {
 
 	/**
 	 * Puts together the fields for the Order Form (and other front-end purposes).
-	 * @return Fieldset
+	 * @return FieldList
 	 **/
 	public function getFields($member = null) {
 		$fields = parent::getEcommerceFields();

@@ -62,7 +62,7 @@ class OrderFormAddress extends Form {
 			}
 		}
 
-		$addressFieldsBilling = new FieldSet();
+		$addressFieldsBilling = new FieldList();
 
 		//member fields
 		if($this->orderMember) {
@@ -80,9 +80,9 @@ class OrderFormAddress extends Form {
 		//shipping address field
 		$addressFieldsShipping = null;
 		if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
-			$addressFieldsShipping = new FieldSet();
+			$addressFieldsShipping = new FieldList();
 			//add the important CHECKBOX
-			$useShippingAddressField = new FieldSet(new CheckboxField("UseShippingAddress", _t("OrderForm.USESHIPPINGADDRESS", "Use an alternative shipping address")));
+			$useShippingAddressField = new FieldList(new CheckboxField("UseShippingAddress", _t("OrderForm.USESHIPPINGADDRESS", "Use an alternative shipping address")));
 			$addressFieldsShipping->merge($useShippingAddressField);
 			//now we can add the shipping fields
 			$shippingAddress = $order->CreateOrReturnExistingAddress("ShippingAddress");
@@ -171,10 +171,10 @@ class OrderFormAddress extends Form {
 		}
 
 
-		//  ________________  5) Put all the fields in one FieldSet
+		//  ________________  5) Put all the fields in one FieldList
 
 
-		$fields = new FieldSet($rightFields, $allLeftFields);
+		$fields = new FieldList($rightFields, $allLeftFields);
 
 
 
@@ -182,10 +182,10 @@ class OrderFormAddress extends Form {
 
 		$nextButton = new FormAction('saveAddress', _t('OrderForm.NEXT','Next'));
 		$nextButton->addExtraClass("next");
-		$actions = new FieldSet($nextButton);
+		$actions = new FieldList($nextButton);
 		$validator = new OrderFormAddress_Validator($requiredFields);
 		//TODO: do we need this here?
-		$validator->setJavascriptValidationHandler("prototype");
+		//$validator->setJavascriptValidationHandler("prototype");
 		foreach($requiredFields as $requiredField) {
 			$field = $fields->dataFieldByName($requiredField);
 			if($field) {

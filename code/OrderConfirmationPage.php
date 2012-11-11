@@ -81,16 +81,16 @@ class OrderConfirmationPage extends CartPage{
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"ProceedToCheckoutLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"ContinueShoppingLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"ContinuePageID");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"SaveOrderLinkLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Errors',"NoItemsInOrderMessage");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"ProceedToCheckoutLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"ContinueShoppingLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"ContinuePageID");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"SaveOrderLinkLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Errors',"NoItemsInOrderMessage");
 		$fieldLabels = $this->fieldLabels();
-		$fields->addFieldToTab('Root.Content.Messages.Messages.Actions', new TextField('StartNewOrderLinkLabel', $fieldLabels["StartNewOrderLinkLabel"]));
-		$fields->addFieldToTab('Root.Content.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', $fieldLabels["CopyOrderLinkLabel"]));
-		$fields->addFieldToTab('Root.Content.Messages.Messages.Payment', new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels["PaymentSuccessfulMessage"], 5));
-		$fields->addFieldToTab('Root.Content.Messages.Messages.Payment', new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5));
+		$fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('StartNewOrderLinkLabel', $fieldLabels["StartNewOrderLinkLabel"]));
+		$fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', $fieldLabels["CopyOrderLinkLabel"]));
+		$fields->addFieldToTab('Root.Messages.Messages.Payment', new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels["PaymentSuccessfulMessage"], 5));
+		$fields->addFieldToTab('Root.Messages.Messages.Payment', new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5));
 		return $fields;
 	}
 

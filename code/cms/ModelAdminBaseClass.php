@@ -10,7 +10,7 @@
  * @sub-package: cms
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
+/*
 class ModelAdminEcommerceClass_CollectionController extends ModelAdmin_CollectionController {
 
 
@@ -33,7 +33,6 @@ class ModelAdminEcommerceClass_CollectionController extends ModelAdmin_Collectio
 		return self::$url_segment;
 	}
 }
-
 class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordController {
 
 
@@ -48,7 +47,6 @@ class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordControl
 	 * Returns a form for editing the attached model
 	 *
 	 *@return Form
-	 **/
 	public function EditForm() {
 		$form = parent::EditForm();
 		if($this->currentRecord instanceof SiteTree){
@@ -98,7 +96,6 @@ class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordControl
 	 * @param Form $form
 	 * @param SS_HTTPRequest $request
 	 * @return mixed
-	 */
 	function doSave($data, $form, $request) {
 		$form->saveInto($this->currentRecord);
 		if($this->currentRecord instanceof SiteTree){
@@ -134,3 +131,4 @@ class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordControl
 
 
 }
+*/

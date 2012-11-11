@@ -1,4 +1,5 @@
 <% include Order_ConfirmCountry %>
+
 <table id="InformationTable" class="editable" cellspacing="0" cellpadding="0" summary="<% _t("Order.TABLESUMMARY","The contents of your cart are displayed in this form and summary of all fees associated with an order and a rundown of payments options.") %>">
 	<thead>
 		<tr>
@@ -62,6 +63,5 @@
 	</tbody>
 </table>
 
-<% include Order_OrderStatusLogs_PreSubmit %>
 
 <% include ShoppingCartRequirements %>

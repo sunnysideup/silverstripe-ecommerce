@@ -182,11 +182,11 @@ class OrderAddress extends DataObject {
 	/**
 	 *
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 
 	protected function getEcommerceFields() {
-		return new FieldSet();
+		return new FieldList();
 	}
 	/**
 	 * put together a textfield for a postal code field
@@ -212,7 +212,8 @@ class OrderAddress extends DataObject {
 	protected function getRegionField($name) {
 		if(EcommerceRegion::show()) {
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
-			$regionField = new DropdownField($name,EcommerceRegion::i18n_singular_name(), $regionsForDropdown);
+			$title = singleton("EcommerceRegion")->i18n_singular_name();
+			$regionField = new DropdownField($name,$title, $regionsForDropdown);
 			if(count($regionsForDropdown) < 2) {
 				$regionField = $regionField->performReadonlyTransformation();
 				if(count($regionsForDropdown) < 1) {
@@ -237,7 +238,8 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function getCountryField($name) {
 		$countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
-		$countryField = new DropdownField($name, EcommerceCountry::i18n_singular_name(), $countriesForDropdown, EcommerceCountry::get_country());
+		$title = singleton("EcommerceRegion")->i18n_singular_name();
+		$countryField = new DropdownField($name, $title, $countriesForDropdown, EcommerceCountry::get_country());
 		if(count($countriesForDropdown) < 2) {
 			$countryField = $countryField->performReadonlyTransformation();
 			if(count($countriesForDropdown) < 1) {
@@ -252,7 +254,7 @@ class OrderAddress extends DataObject {
 	/**
 	 * makes selected fields into read only using the $this->readOnlyFields array
 	 *
-	 * @param Object(FieldSet)
+	 * @param $fields FieldList
 	 */
 	protected function makeSelectedFieldsReadOnly(&$fields) {
 		$this->extend("augmentMakeSelectedFieldsReadOnly");

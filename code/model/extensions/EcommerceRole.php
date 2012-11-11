@@ -139,11 +139,11 @@ class EcommerceRole extends DataExtension {
 
 	/**
 	 * @param Boolean $additionalFields: extra fields to be added.
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getEcommerceFields($additionalFields = false) {
 		if($additionalFields) {
-			$fields = new FieldSet(
+			$fields = new FieldList(
 				new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
 				new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
 				new TextField('Surname', _t('EcommerceRole.SURNAME','Surname')),
@@ -151,7 +151,7 @@ class EcommerceRole extends DataExtension {
 			);
 		}
 		else {
-			$fields = new FieldSet();
+			$fields = new FieldList();
 		}
 		$this->owner->extend('augmentEcommerceFields', $fields);
 		return $fields;
@@ -178,7 +178,7 @@ class EcommerceRole extends DataExtension {
 	 * @return Boolean
 	 **/
 	public function IsShopAdmin() {
-		if($this->owner->IsAdmin()) {
+		if(Permission::checkMember($this->owner, 'ADMIN')) {
 			return true;
 		}
 		else{

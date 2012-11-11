@@ -83,7 +83,7 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report {
 	function sort() {
 		return 0;
 	}
-	function records() {
+	function records($params) {
 		return DataObject::get("Product", "\"FeaturedProduct\" = 1", "\"FullSiteTreeSort\"");
 	}
 
@@ -118,7 +118,7 @@ class EcommerceSideReport_AllProducts extends SS_Report {
 	function sort() {
 		return 0;
 	}
-	function records() {
+	function records($params) {
 		return DataObject::get("Product", "", "\"FullSiteTreeSort\"");
 	}
 

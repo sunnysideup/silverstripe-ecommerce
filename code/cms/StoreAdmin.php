@@ -71,6 +71,7 @@ class StoreAdmin extends ModelAdmin{
 	}
 }
 
+/*
 class StoreAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
 
 	public function ImportForm() {return false;}
@@ -84,3 +85,4 @@ class StoreAdmin_RecordController extends ModelAdminEcommerceClass_RecordControl
 
 
 }
+*/
