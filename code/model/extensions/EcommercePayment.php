@@ -121,7 +121,7 @@ class EcommercePayment extends DataExtension {
 
 	/**
 	 * standard SS method
-	 * @param FieldSet $fields (passed by reference)
+	 * @param FieldList $fields (passed by reference)
 	 */
 	function updateSettingsFields(&$fields){
 		$fields->replaceField("OrderID", new ReadonlyField("OrderID", "Order ID"));
@@ -135,7 +135,7 @@ class EcommercePayment extends DataExtension {
 	function redirectToOrder() {
 		$order = $this->owner->Order();
 		if($order) {
-			Controller::curr()::redirect($order->Link());
+			Controller::curr()->redirect($order->Link());
 		}
 		else {
 			user_error("No order found with this payment: ".$this->ID, E_USER_NOTICE);

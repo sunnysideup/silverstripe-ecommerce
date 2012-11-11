@@ -55,13 +55,13 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 			$manipulation['fields']['BuyableClassName'] = $this->prepValueForDB($this->getBuyableClassName());
 		}
 		else {
-			$manipulation['fields']['BuyableClassName'] = DBField::create('Varchar', $this->getBuyableClassName())->nullValue();
+			$manipulation['fields']['BuyableClassName'] = DBField::create_field('Varchar', $this->getBuyableClassName())->nullValue();
 		}
 		if($this->getBuyableID()) {
 			$manipulation['fields']['BuyableID'] = $this->getBuyableID();
 		}
 		else {
-			$manipulation['fields']['BuyableID'] = DBField::create('Decimal', $this->getBuyableID())->nullValue();
+			$manipulation['fields']['BuyableID'] = DBField::create_field('Decimal', $this->getBuyableID())->nullValue();
 		}
 	}
 

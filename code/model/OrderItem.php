@@ -140,15 +140,9 @@ class OrderItem extends OrderAttribute {
 	public static function get_version($class, $id, $version) {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::set_reading_mode('');
-		$baseTable = ClassInfo::baseDataClass($class);
-		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id AND \"{$baseTable}\".\"Version\" = $version");
-		$record = $query->execute()->record();
-		$className = $record['ClassName'];
-		if(!$className) {
-			return null;
-		}
+		$versionedObject = Versioned::get_version($class, $id, $version);
 		Versioned::set_reading_mode($oldMode);
-		return new $className($record);
+		return new $versionedObject;
 	}
 
 	/**
@@ -200,7 +194,7 @@ class OrderItem extends OrderAttribute {
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 **/
 	public function addBuyableToOrderItem($buyable, $quantity = 1) {
 		$this->Version = $buyable->Version;
@@ -402,7 +396,7 @@ class OrderItem extends OrderAttribute {
 	 * @return Currency (DB Object)
 	  **/
 	function TotalAsCurrencyObject() {
-		return DBField::create('Currency',$this->Total());
+		return DBField::create_field('Currency',$this->Total());
 	}
 
 

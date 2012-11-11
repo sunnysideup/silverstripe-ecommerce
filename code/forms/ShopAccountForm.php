@@ -31,7 +31,7 @@ class ShopAccountForm extends Form {
 			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
 			$fields->push($passwordField);
 			$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('submit', _t('Account.SAVE','Save Changes'))
 			);
 			if($order = ShoppingCart::current_order()) {
@@ -42,7 +42,7 @@ class ShopAccountForm extends Form {
 		}
 		else {
 			$member = new Member();
-			$fields = new FieldSet();
+			$fields = new FieldList();
 			$fields->push(new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account')));
 			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
 			$memberFields = $member->getEcommerceFields(true);
@@ -56,7 +56,7 @@ class ShopAccountForm extends Form {
 			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
 			$fields->push($passwordField);
 			$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('creatememberandaddtoorder', _t('Account.SAVE','Create Account'))
 			);
 		}

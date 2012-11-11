@@ -129,7 +129,7 @@ class OrderEmailRecord extends DataObject {
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();

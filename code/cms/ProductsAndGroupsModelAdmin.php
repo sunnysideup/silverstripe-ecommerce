@@ -60,6 +60,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin {
 }
 
 //remove side forms
+/*
 class ProductsAndGroupsModelAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
 
 	//public function CreateForm() {return false;}
@@ -70,7 +71,6 @@ class ProductsAndGroupsModelAdmin_CollectionController extends ModelAdminEcommer
 	/**
 	 *
 	 *@return Form
-	 **/
 	function ImportForm(){
 		$form = parent::ImportForm();
 		if($form){
@@ -98,7 +98,7 @@ class ProductsAndGroupsModelAdmin_CollectionController extends ModelAdminEcommer
 		}
 		return $form;
 	}
-	*/
+
 
 }
 
@@ -106,3 +106,4 @@ class ProductsAndGroupsModelAdmin_RecordController extends ModelAdminEcommerceCl
 
 
 }
+*/

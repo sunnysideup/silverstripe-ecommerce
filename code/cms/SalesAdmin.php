@@ -71,7 +71,8 @@ class SalesAdmin extends ModelAdmin{
 	}
 }
 
-class SalesAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
+/*
+SalesAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
 
 	//public function CreateForm() {return false;}
 
@@ -92,3 +93,4 @@ class SalesAdmin_RecordController extends ModelAdminEcommerceClass_RecordControl
 	}
 
 }
+*/

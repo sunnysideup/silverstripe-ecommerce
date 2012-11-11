@@ -114,7 +114,7 @@ class OrderModifier extends OrderAttribute {
 
 	/**
 	 * stardard SS metbod
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
@@ -321,7 +321,7 @@ class OrderModifier extends OrderAttribute {
 	 */
 	public function getModifierForm($optionalController = null, $optionalValidator = null) {
 		if($this->ShowForm()) {
-			$fields = new FieldSet();
+			$fields = new FieldList();
 			$fields->push($this->headingField());
 			$fields->push($this->descriptionField());
 			return new OrderModifierForm($optionalController, "ModifierForm", $fields, $actions = new FieldSet(), $optionalValidator);
@@ -603,7 +603,7 @@ class OrderModifier extends OrderAttribute {
 	function updateForAjax(array &$js) {
 		$ajaxObject = $this->AJAXDefinitions();
 		//TableValue is a database value
-		$tableValue = DBField::create('Currency',$this->TableValue)->Nice();
+		$tableValue = DBField::create_field('Currency',$this->TableValue)->Nice();
 		if($this->HideInAjaxUpdate()) {
 			$js[] = array(
 				't' => 'id',
@@ -772,7 +772,7 @@ class OrderModifier_Descriptor extends DataObject {
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();

@@ -105,17 +105,17 @@ class EcommerceCurrency extends DataObject {
 	/**
 	 * NOTE: when there is only one currency we return an empty DataList
 	 * as one currency is meaningless.
-	 * @return DataList
+	 * @return DataList | null
 	 */
 	public static function ecommerce_currency_list(){
-		$dos = DataObject::get(
+		$dos = EcommerceCurrency::get(
 			"EcommerceCurrency",
 			"\"InUse\" = 1",
 			"IF(\"Code\" = '".EcommerceConfig::get("EcommerceCurrency", "site_currency")."', 0, 1) ASC, \"InUse\" DESC, \"NAME\" ASC, \"Code\" ASC"
 		);
 		if($dos) {
-			if(1 == $dos->count()) {
-				$dos = new DataList();
+			if($dos->count() < 2) {
+				return null;
 			}
 		}
 		return $dos;
@@ -150,7 +150,7 @@ class EcommerceCurrency extends DataObject {
 			}
 		}
 		if($forceCreation){
-			return DBField::create(
+			return DBField::create_field(
 				'Money',
 				array(
 					"Amount" => $price,

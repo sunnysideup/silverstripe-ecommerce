@@ -363,8 +363,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	protected function addOtherValuesToConfigs(){
-		$this->definitions["Geoip"]["default_country_code"] = "Default currency for the site. <br />SET USING Geoip::\$default_country_code in the _config.php FILES";
-		$this->configs["Geoip"]["default_country_code"] = Geoip::$default_country_code;
+		$this->definitions["Geoip"]["default_country_code"] = "Default currency for the site. <br />SET USING Geoip::get_default_country_code() in the _config.php FILES";
+		$this->configs["Geoip"]["default_country_code"] = Geoip::get_default_country_code();
 		$this->defaults["Geoip"]["default_country_code"] = "[no default set]";
 
 		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. <br />SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";

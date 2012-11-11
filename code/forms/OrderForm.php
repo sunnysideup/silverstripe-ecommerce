@@ -65,17 +65,17 @@ class OrderForm extends Form {
 		$finalFields->push(new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE','Note / Question'), 7, 30));
 
 
-		//  ________________  5) Put all the fields in one FieldSet
+		//  ________________  5) Put all the fields in one FieldList
 
 
-		$fields = new FieldSet($bottomFields, $finalFields);
+		$fields = new FieldList($bottomFields, $finalFields);
 
 
 
 		//  ________________  6) Actions and required fields creation + Final Form construction
 
 
-		$actions = new FieldSet(new FormAction('processOrder', _t('OrderForm.PROCESSORDER','Place order and make payment')));
+		$actions = new FieldList(new FormAction('processOrder', _t('OrderForm.PROCESSORDER','Place order and make payment')));
 		$validator = new OrderForm_Validator($requiredFields);
 		//we stick with standard validation here, because of the complexity and
 		//hard-coded payment validation that is required
@@ -281,7 +281,7 @@ class OrderForm_Validator extends RequiredFields{
 class OrderForm_Payment extends Form {
 
 	function __construct($controller, $name, $order, $returnToLink = '') {
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new HiddenField('OrderID', '', $order->ID)
 		);
 		if($returnToLink) {
@@ -306,7 +306,7 @@ class OrderForm_Payment extends Form {
 		if($paymentRequiredFields = Payment::combined_form_requirements()) {
 			$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 		}
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('dopayment', _t('OrderForm.PAYORDER','Pay balance'))
 		);
 		$form = parent::__construct($controller, $name, $fields, $actions, $requiredFields);
@@ -348,14 +348,14 @@ class OrderForm_Payment extends Form {
 class OrderForm_Cancel extends Form {
 
 	function __construct($controller, $name, $order) {
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			array(
 				new HeaderField('CancelOrderHeading', _t("OrderForm.CANCELORDER", "Changed your mind?"), 3),
 				new TextField('CancellationReason', _t("OrderForm.CANCELLATIONREASON", "Reason for cancellation")),
 				new HiddenField('OrderID', '', $order->ID)
 			)
 		);
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('docancel', _t('OrderForm.CANCELORDER','Cancel this order'))
 		);
 		$requiredFields = array();
