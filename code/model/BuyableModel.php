@@ -139,8 +139,6 @@ interface BuyableModel {
 
 	//LINKS
 
-	function Link($action = null);
-
 	/**
 	 * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
 	 * @return String
