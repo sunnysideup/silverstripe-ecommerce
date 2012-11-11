@@ -294,7 +294,7 @@ class OrderStep extends DataObject {
 		$orderTable->setPageSize(20);
 		$orderTable->setPermissions(array('export', 'show'));
 		$fields->addFieldToTab('Root.Orders',$orderTable);
-		$fields->addFieldToTab("Root.Main", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only"), 5), "WARNING1");
+		$fields->addFieldToTab("Root.Main", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only")), "WARNING1");
 		return $fields;
 	}
 
