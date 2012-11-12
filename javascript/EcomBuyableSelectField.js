@@ -172,7 +172,7 @@ EcomBuyableSelectField = {
 									if(data.length < 1) {
 										EcomBuyableSelectField.showCurrentSituation(EcomBuyableSelectField.nothingFound);
 									}
-									jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").removeClass(EcomBuyableSelectField.loadingClass);
+									jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").parent().removeClass(EcomBuyableSelectField.loadingClass);
 								}
 							}
 						);
