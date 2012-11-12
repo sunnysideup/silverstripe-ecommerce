@@ -139,7 +139,7 @@ EcomBuyableSelectField = {
 					minLength: EcomBuyableSelectField.minLength,
 
 					source: function(request, response) {
-						jQuery("label[for='"+EcomBuyableSelectField.fieldName+"']'").addClass(EcomBuyableSelectField.loadingClass);
+						jQuery("label[for='"+EcomBuyableSelectField.fieldName+"']'").parent().addClass(EcomBuyableSelectField.loadingClass);
 						EcomBuyableSelectField.requestTerm = request.term;
 						jQuery.ajax(
 							{
