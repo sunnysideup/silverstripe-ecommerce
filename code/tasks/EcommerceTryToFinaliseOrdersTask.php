@@ -33,6 +33,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 	public function run($request){
 		//IMPORTANT!
 		Email::send_all_emails_to("no-one@lets-hope-this-goes-absolutely-no-where.co.nz");
+		Email::set_mailer("EcommerceTryToFinaliseOrdersTask_Mailer");
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 		if($submittedOrderStatusLogClassName) {
@@ -75,6 +76,30 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 		//echo "<script type=\"text/javascript\">location.reload();</script>";
 	}
 
+}
 
+class EcommerceTryToFinaliseOrdersTask_Mailer extends mailer {
+	/**
+	 * Send a plain-text email.
+	 *
+	 * @param string $to
+	 * @param string $from
+	 * @param string §subject
+	 * @param string $plainContent
+	 * @param bool $attachedFiles
+	 * @param array $customheaders
+	 * @return bool
+	 */
+	function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
+		return true;
+	}
 
+	/**
+	 * Send a multi-part HTML email.
+	 *
+	 * @return bool
+	 */
+	function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
+		return true;
+	}
 }
