@@ -52,10 +52,10 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 					$orders = DataObject::get("Order", $whereSQL, "\"LastEdited\" ASC", $joinSQL, $count);
 					if($orders) {
 						foreach($orders as $order) {
-							$order->write($showDebug = false, $forceInsert = false, $forceWrite = true, $writeComponents = false);
 							$stepBefore = DataObject::get_by_id("OrderStep", $order->StatusID);
 							$order->tryToFinaliseOrder();
 							$order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
+							$order->write($showDebug = false, $forceInsert = false, $forceWrite = true, $writeComponents = false);
 							$stepAfter = DataObject::get_by_id("OrderStep", $order->StatusID);
 							if($stepAfter->ID == $stepAfter->ID) {
 								DB::alteration_message("could not move Order #".$order->ID);
