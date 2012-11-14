@@ -57,7 +57,7 @@ class Emogrifier {
 try {
         $xmldoc->loadHTML($body);
 }
-} catch (Exception $e) {
+catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 		$xmldoc->normalizeDocument();
