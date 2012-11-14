@@ -1,4 +1,4 @@
-<p class="priceDisplay">
+<div class="priceDisplay">
 <% if Price != 0 %>
 	<% if Quantifier %><span class="mainQuantifier">$Quantifier: </span><% end_if %>
 	<% if HasDiscount %>
@@ -10,4 +10,4 @@
 <% else %>
 <% _t("Product.FREE", "FREE") %>
 <% end_if %>
-</p>
+</div>
