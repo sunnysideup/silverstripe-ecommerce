@@ -20,6 +20,8 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask{
 	This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
 
 	function run($request){
+		//IMPORTANT!
+		Email::send_all_emails_to("no-one@lets-hope-this-goes-absolutely-no-where.co.nz");
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 		if($submittedOrderStatusLogClassName) {
