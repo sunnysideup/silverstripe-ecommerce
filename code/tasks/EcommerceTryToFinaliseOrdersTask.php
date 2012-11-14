@@ -43,7 +43,13 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 				if($lastOrderStep) {
 					$joinSQL = "INNER JOIN \"$orderStatusLogClassName\" ON \"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"";
 					$whereSQL = "\"StatusID\" <> ".$lastOrderStep->ID." AND \"$orderStatusLogClassName\".ClassName = '$submittedOrderStatusLogClassName'";
-					$orders = DataObject::get("Order", $whereSQL, "\"LastEdited\" ASC", $joinSQL, 50);
+					if(isset($_GET["count"])) {
+						$count = $_GET["count"];
+					}
+					else {
+						$count = 50;
+					}
+					$orders = DataObject::get("Order", $whereSQL, "\"LastEdited\" ASC", $joinSQL, $count);
 					if($orders) {
 						foreach($orders as $order) {
 							$order->write($showDebug = false, $forceInsert = false, $forceWrite = true, $writeComponents = false);
