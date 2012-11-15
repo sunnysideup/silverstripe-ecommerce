@@ -45,11 +45,11 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 		$db = DB::getConn();
 		if( $db instanceof PostgreSQLDatabase ) {
 			// don't know whether functions should be used, hence the following code using an interval cast to an integer
-			$query->where("(\"Order\".\"Created\"::date - '$formattedDate'::date)::integer > -".$maxDays." AND (\"Order\".\"Created\"::date - '$formattedDate'::date)::integer < ".$maxDays);
+			$query->where("(\"Order\".\"LastEdited\"::date - '$formattedDate'::date)::integer > -".$maxDays." AND (\"Order\".\"Created\"::date - '$formattedDate'::date)::integer < ".$maxDays);
 		}
 		else {
 			// default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
-			$query->where("(DATEDIFF(\"Order\".\"Created\", '$formattedDate') > -".$maxDays." AND DATEDIFF(\"Order\".\"Created\", '$formattedDate') < ".$maxDays.")");
+			$query->where("(DATEDIFF(\"Order\".\"LastEdited\", '$formattedDate') > -".$maxDays." AND DATEDIFF(\"Order\".\"Created\", '$formattedDate') < ".$maxDays.")");
 		}
 		return $query;
 	}
