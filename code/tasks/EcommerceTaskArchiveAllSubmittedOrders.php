@@ -40,7 +40,7 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask{
 					$do = DB::query("
 						UPDATE \"Order\"
 						$joinSQL
-						SET \"StatusID\" = ".$lastOrderStep->ID."
+						SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
 						$whereSQL
 					");
 					if($count) {
