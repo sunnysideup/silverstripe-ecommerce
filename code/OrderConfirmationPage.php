@@ -31,7 +31,7 @@ class OrderConfirmationPage extends CartPage{
 		'StartNewOrderLinkLabel' => 'Varchar(100)',
 		'CopyOrderLinkLabel' => 'Varchar(100)',
 		'PaymentSuccessfulHeader' => 'Varchar(255)',
-		'PaymentNotSuccessfulHeader' => 'Varchar(255)'
+		'PaymentNotSuccessfulHeader' => 'Varchar(255)',
 		'PaymentSuccessfulMessage' => 'HTMLText',
 		'PaymentNotSuccessfulMessage' => 'HTMLText'
 	);
