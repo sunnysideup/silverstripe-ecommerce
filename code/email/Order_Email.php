@@ -84,7 +84,7 @@ class Order_Email extends Email {
 		$obj->OrderID = $order->ID;
 		$obj->OrderStepID = $order->StatusID;
 		if(Email::$send_all_emails_to) {
-			$obj->To .= Email::$send_all_emails_to;
+			$obj->To .= ", ".Email::$send_all_emails_to;
 		}
 		$obj->write();
 		return $obj;
