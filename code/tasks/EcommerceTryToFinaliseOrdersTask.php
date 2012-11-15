@@ -44,18 +44,24 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 					$joinSQL = "INNER JOIN \"$orderStatusLogClassName\" ON \"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"";
 					$whereSQL = "\"StatusID\" <> ".$lastOrderStep->ID." AND \"$orderStatusLogClassName\".ClassName = '$submittedOrderStatusLogClassName'";
 					if(isset($_GET["count"])) {
-						$count = $_GET["count"];
+						$count = intval($_GET["count"]);
 					}
-					else {
+					if(!$count) {
 						$count = 50;
 					}
-					$orders = DataObject::get("Order", $whereSQL, "\"LastEdited\" ASC", $joinSQL, $count);
+					if(isset($_GET["last"])) {
+						$last = intval($_GET["last"]);
+					}
+					else {
+						$last = intval(Session::get("EcommerceTryToFinaliseOrdersTask"));
+						if(!$last) {$last = 0;}
+						$orders = DataObject::get("Order", $whereSQL, "\"LastEdited\" ASC", $joinSQL, "$last, $count");
+						$last += $count;
+						Session::set("EcommerceTryToFinaliseOrdersTask", $last);
+					}
 					if($orders) {
 						foreach($orders as $order) {
 							$stepBefore = DataObject::get_by_id("OrderStep", $order->StatusID);
-							$order->tryToFinaliseOrder();
-							$order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
-							$order->write($showDebug = false, $forceInsert = false, $forceWrite = true, $writeComponents = false);
 							$stepAfter = DataObject::get_by_id("OrderStep", $order->StatusID);
 							if($stepAfter->ID == $stepAfter->ID) {
 								DB::alteration_message("could not move Order #".$order->ID);
