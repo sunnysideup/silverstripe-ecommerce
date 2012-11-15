@@ -802,7 +802,7 @@ class OrderStep_Submitted extends OrderStep {
 				user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
 			}
 			$order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
-			$order->write($showDebug = false, $forceInsert = false, $forceWrite = true, $writeComponents = false);
+			$order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
 		}
 		return true;
 	}
