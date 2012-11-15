@@ -243,7 +243,11 @@ class EcommerceDBConfig extends DataObject {
 			"ProductsHaveVariations" => _t("EcommerceDBConfig.PRODUCTSHAVEVARIATIONS", "Products have variations (e.g. size, colour, etc...)."),
 			"CurrenciesExplanation" => _t("EcommerceDBConfig.CURRENCIESEXPLANATION", "Explanation on how the currency options work (if any)."),
 			"EmailLogo" => _t("EcommerceDBConfig.EMAILLOGO", "Email Logo"),
-			"DefaultProductImage" => _t("EcommerceDBConfig.DEFAULTPRODUCTIMAGE", "Default Product Image")
+			"DefaultProductImage" => _t("EcommerceDBConfig.DEFAULTPRODUCTIMAGE", "Default Product Image"),
+			"DefaultThumbnailImageSize" => _t("EcommerceDBConfig.DEFAULTTHUMBNAILIMAGESIZE", "Product Thumbnail Optimised Size"),
+			"DefaultSmallImageSize" => _t("EcommerceDBConfig.DEFAULTSMALLIMAGESIZE", "Product Small Image Optimised Size"),
+			"DefaultContentImageSize" => _t("EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE", "Product Content Image Optimised Size"),
+			"DefaultLargeImageSize" => _t("EcommerceDBConfig.DEFAULTLARGEIMAGESIZE", "Product Large Image Optimised Size")
 		);
 		return $newLabels;
 	}
@@ -259,6 +263,7 @@ class EcommerceDBConfig extends DataObject {
 		}
 		//new section
 		$fieldLabels = $this->fieldLabels();
+		$productImage = new Product_Image();
 		$versionInfo = new EcommerceConfigDefinitions();
 		$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
 		$fields->addFieldsToTab("Root",array(
@@ -274,8 +279,14 @@ class EcommerceDBConfig extends DataObject {
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
 				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
-				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"]),
-				new ImageField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image")
+				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
+			),
+			new Tab('ProductImages',
+				new ImageField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
+				new ReadonlyField("DefaultThumbnailImageSize", $fieldLabels["DefaultThumbnailImageSize"], $productImage->ThumbWidth()."px x ".$productImage->ThumbHeight()."px "),
+				new ReadonlyField("DefaultSmallImageSize", $fieldLabels["DefaultSmallImageSize"], $productImage->SmallWidth()."px x ".$productImage->SmallHeight()."px "),
+				new ReadonlyField("DefaultContentImageSize", $fieldLabels["DefaultContentImageSize"], $productImage->ContentWidth()."px wide"),
+				new ReadonlyField("DefaultLargeImageSize", $fieldLabels["DefaultLargeImageSize"], $productImage->LargeWidth()."px wide")
 			),
 			new Tab('Checkout',
 				new TextField("PostalCodeURL", $fieldLabels["PostalCodeURL"]),

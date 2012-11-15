@@ -10,7 +10,7 @@
 	<% if Items %>
 	<tfoot>
 		<tr class="gap total summary">
-			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
+			<th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
 			<td class="right total" id="$AJAXDefinitions.TableTotalID">
 				<span class="value">$Total.Nice</span>
 				<% include Order_Content_DisplayPrice %>
