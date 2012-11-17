@@ -585,6 +585,8 @@ class Order extends DataObject {
 				$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
 				$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), $mapOfCurrencies, EcommerceCurrency::default_currency_id()));
 			}
+			$fields->addFieldToTab("Root.Log", new ReadonlyField("Created", _t("Root.CREATED", "Created")));
+			$fields->addFieldToTab("Root.Log", new ReadonlyField("LastEdited", _t("Root.LASTEDITED", "Last saved")));
 		}
 		else {
 			$fields->removeByName("Main");
@@ -696,6 +698,9 @@ class Order extends DataObject {
 	 *
 	 **/
 	public function tryToFinaliseOrder() {
+		if($this->CancelledByID) {
+			return;
+		}
 		do {
 			//status of order is being progressed
 			$nextStatusID = $this->doNextStatus();
