@@ -101,13 +101,14 @@ class Order_Email extends Email {
 	}
 
 	/**
-	 * Checks if an email has been sent for this Order for this status.
+	 * Checks if an email has been sent for this Order for this status (order step)
 	 * @param Order $order
 	 * @return boolean
 	 **/
 	function hasBeenSent($order) {
-		if(DataObject::get_one("OrderEmailRecord", "\"OrderEmailRecord\".\"OrderID\" = ".$order->ID." AND \"OrderEmailRecord\".\"OrderStepID\" = ".intval($order->StatusID)." AND  \"OrderEmailRecord\".\"Result\" = 1")) {
-			return true;
+		$orderStep = $order->Status();
+		if($orderStep instanceOf OrderStep)  {
+			return $orderStep->hasBeenSent($order);
 		}
 		return false;
 	}

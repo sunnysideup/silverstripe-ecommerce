@@ -450,10 +450,20 @@ class OrderStep extends DataObject {
 	//EMAIL
 
 	/**
+	 * Has an email been sent to the customer for this
+	 * order step.
 	 *
-	 *@return Boolean
+	 * @param Order $order
+	 * @param Boolean $sendEvenIfDelayed
+	 *
+	 * @return Boolean
 	 **/
-	protected function hasBeenSent($order) {
+	public function hasBeenSent($order, $checkDateOfOrder = true) {
+		//if it has been more than a week since the order was last edited (submitted) then we do not send emails as
+		//this would be embarrasing.
+		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-10 days"))) {
+			return true;
+		}
 		return DataObject::get_one("OrderEmailRecord", "\"OrderEmailRecord\".\"OrderID\" = ".$order->ID." AND \"OrderEmailRecord\".\"OrderStepID\" = ".$this->ID." AND	\"OrderEmailRecord\".\"Result\" = 1");
 	}
 
@@ -512,9 +522,9 @@ class OrderStep extends DataObject {
 	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
-		$ordersWithThisStatus = DataObject::get("Order", "\"StatusID\" =".$this->ID);
 		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
 		if($nextOrderStepObject) {
+			$ordersWithThisStatus = DataObject::get("Order", "\"StatusID\" =".$this->ID);
 			if($ordersWithThisStatus) {
 				foreach($ordersWithThisStatus as $orderWithThisStatus) {
 					$orderWithThisStatus->StatusID = $nextOrderStepObject->ID;
@@ -572,6 +582,8 @@ class OrderStep extends DataObject {
 				$step->write();
 			}
 		}
+		/*
+		 * This was causing errors
 		$otherOrderSteps = DataObject::get("OrderStep", "\"ClassName\" NOT IN ('".implode("', '", $orderStepsToInclude)."')");
 		if($otherOrderSteps) {
 			foreach($otherOrderSteps as $otherOrderStep) {
@@ -579,6 +591,7 @@ class OrderStep extends DataObject {
 				$otherOrderStep->delete();
 			}
 		}
+		*/
 	}
 
 	/**

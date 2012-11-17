@@ -131,7 +131,14 @@ class EcommerceDBConfig extends DataObject {
 	 * @param Member $member
 	 * @var Boolean
 	 */
-	public function canDelete($member = null) {return false;}
+	public function canDelete($member = null) {
+		if($this->UseThisOne) {
+			return false;
+		}
+		else {
+			return parent::canDelete($member);
+		}
+	}
 
 	/**
 	 * Standard SS variable
