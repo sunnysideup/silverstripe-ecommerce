@@ -441,6 +441,7 @@ class Order extends DataObject {
 				$cancelledField = $fields->dataFieldByName("CancelledByID");
 				$fields->removeByName("CancelledByID");
 				$fields->addFieldToTab("Root.Cancellation", $cancelledField);
+				$oldOrderStatusLogsSource = $this->OrderStatusLogs();
 				$oldOrderStatusLogs = new ComplexTableField(
 					$this,
 					$name ="OldOrderStatusLogs",
@@ -451,6 +452,7 @@ class Order extends DataObject {
 					$sourceSort = "",
 					$sourceJoin = ""
 				);
+				$oldOrderStatusLogs->setCustomSourceItems($oldOrderStatusLogsSource);
 				$oldOrderStatusLogs->setPermissions(array("show"));
 				$fields->addFieldToTab('Root.Log', $oldOrderStatusLogs);
 				$submissionLog = $this->SubmissionLog();

@@ -22,7 +22,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 		'*' => 'SHOPADMIN'
 	);
 
-	protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS.';
+	protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS';
 
 	protected $description = "This task can be useful in moving a bunch of orders through the latest order step. It will only move orders if they can be moved through order steps.  You may need to run this task several times to move all orders.";
 
@@ -58,8 +58,8 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 					if(!intval($last)) {
 						$last = intval(Session::get("EcommerceTryToFinaliseOrdersTask"));
 						if(!$last) {$last = 0;}
-						$orders = DataObject::get("Order", $whereSQL, "\"Order\".\"ID\" ASC", $joinSQL, "$last, $count");
 					}
+					$orders = DataObject::get("Order", $whereSQL, "\"Order\".\"ID\" ASC", $joinSQL, "$last, $count");
 					if($orders) {
 						DB::alteration_message("<h1>Moving $count Orders (starting from $last)</h1>");
 						foreach($orders as $order) {
