@@ -99,6 +99,25 @@ class EcommerceRole extends DataObjectDecorator {
 		return DataObject::get_one("Group", "\"Code\" = '".$adminCode."' OR \"Title\" = '".$adminName."'");
 	}
 
+	public function updateCMSFields(&$fields) {
+		//$orderField = $fields->dataFieldByName("Orders");
+		$preferredCurrencyField = $fields->dataFieldByName("PreferredCurrencyID");
+		$notesFields = $fields->dataFieldByName("Notes");
+		$link = Shoppingcart_Controller::get_url_segment()."/loginas/".$this->owner->ID."/";
+		$loginAsField = new LiteralField("LoginAsThisCustomer", "<a href=\"$link\" target=\"_blank\">Login as this customer</a>");
+		$fields->addFieldsToTab(
+			"Root.Orders",
+			array(
+				//$orderField,
+				$preferredCurrencyField,
+				$notesFields,
+				$loginAsField
+			)
+		);
+
+		return $fields;
+	}
+
 	/**
 	 * Save a preferred currency for a member.
 	 * @param EcommerceCurrency $currency - object for the currency

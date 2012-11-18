@@ -964,6 +964,7 @@ class ShoppingCart_Controller extends Controller{
 		'copyorder',
 		'removeaddress',
 		'submittedbuyable',
+		'loginas',
 		'debug', // no need to set to  => 'ADMIN',
 		'ajaxtest' // no need to set to  => 'ADMIN',
 	);
@@ -1276,6 +1277,36 @@ class ShoppingCart_Controller extends Controller{
 		}
 		return null;
 	}
+
+
+	/**
+	 * This can be used by admins to log in as customers
+	 * to place orders on their behalf...
+	 */
+	function loginas($request){
+		if(Permission::check("ADMIN") || Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))){
+			$newMember = DataObject::get_by_id("Member", intval($request->param("ID")));
+			if($newMember) {
+				$oldMember = Member::currentMember();
+				if($oldMember){
+					$oldMember->logout();
+					$newMember->login();
+					return Director::redirect("/");
+				}
+				else {
+					echo "Another error occurred.";
+				}
+			}
+			else {
+				echo "Can not find this member.";
+			}
+		}
+		else {
+			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/debug/")."\">log in</a> first.";
+		}
+
+	}
+
 
 	/**
 	 * Gets a buyable object based on URL actions
