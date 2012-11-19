@@ -160,32 +160,32 @@ class CheckoutPage extends CartPage {
 	 **/
 	function getCMSFields() {
 		$fields = parent :: getCMSFields();
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"ProceedToCheckoutLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"ContinueShoppingLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"ContinuePageID");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"LoadOrderLinkLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"CurrentOrderLinkLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"SaveOrderLinkLabel");
-		$fields->removeFieldFromTab('Root.Content.Messages.Messages.Actions',"DeleteOrderLinkLabel");
+		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'ProceedToCheckoutLabel');
+		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'ContinueShoppingLabel');
+		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'ContinuePageID');
+		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'LoadOrderLinkLabel');
+		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'CurrentOrderLinkLabel');
+		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'SaveOrderLinkLabel');
+		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'DeleteOrderLinkLabel');
 		$termsPageIDField = new OptionalTreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
 		$fields->addFieldToTab('Root.Content.Process', $termsPageIDField);
 		$fields->addFieldToTab('Root.Content.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
 		//The Content field has a slightly different meaning for the Checkout Page.
 		$fields->removeFieldFromTab('Root.Content.Main', "Content");
-		$fields->addFieldToTab('Root.Content.Messages.Messages.AlwaysVisible', new HtmlEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page'), 7, 7));
+		$fields->addFieldToTab('Root.Content.Messages.AlwaysVisible', new HtmlEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page'), 7, 7));
 		if(DataObject::get_one("OrderModifier_Descriptor")) {
 			$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
 			$orderModifierDescriptionField->setRelationAutoSetting(false);
 			$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
 			$orderModifierDescriptionField->setPermissions(array("show", "edit"));
-			$fields->addFieldToTab('Root.Content.Messages.Messages.OrderExtras',$orderModifierDescriptionField);
+			$fields->addFieldToTab('Root.Content.Messages.OrderExtras',$orderModifierDescriptionField);
 		}
 		if(DataObject::get_one("CheckoutPage_StepDescription")) {
 			$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
 			$checkoutStepDescriptionField->setRelationAutoSetting(false);
 			$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
 			$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
-			$fields->addFieldToTab('Root.Content.Messages.Messages.CheckoutSteps',$checkoutStepDescriptionField);
+			$fields->addFieldToTab('Root.Content.Messages.CheckoutSteps',$checkoutStepDescriptionField);
 		}
 		return $fields;
 	}
