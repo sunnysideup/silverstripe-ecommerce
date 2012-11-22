@@ -130,61 +130,61 @@ var EcomOrderFormWithShippingAddress = {
 		var MobilePhone = jQuery(EcomOrderFormWithShippingAddress.mobilePhoneSelector).val();
 		var ShippingMobilePhone = jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val();
 		if((!ShippingMobilePhone && MobilePhone) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val(MobilePhone);
+			jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val(MobilePhone).change();
 		}
 
 		//phone
 		var Phone = jQuery(EcomOrderFormWithShippingAddress.phoneSelector).val();
 		var ShippingPhone = jQuery(EcomOrderFormWithShippingAddress.shippingPhoneSelector).val();
 		if((!ShippingPhone && Phone) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingPhoneSelector).val(Phone);
+			jQuery(EcomOrderFormWithShippingAddress.shippingPhoneSelector).val(Phone).change();
 		}
 
 		//postal code
 		var PostalCode = jQuery(EcomOrderFormWithShippingAddress.postalCodeSelector).val();
 		var ShippingPostalCode = jQuery(EcomOrderFormWithShippingAddress.shippingPostalCodeSelector).val();
 		if((!ShippingPostalCode && PostalCode) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingPostalCodeSelector).val(PostalCode);
+			jQuery(EcomOrderFormWithShippingAddress.shippingPostalCodeSelector).val(PostalCode).change();
 		}
 
 		//country
 		var Country = jQuery(EcomOrderFormWithShippingAddress.countrySelector).val();
 		var ShippingCountry = jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val();
 		if(((!ShippingCountry || ShippingCountry == "AF") && Country) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val(Country);
+			jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val(Country).change();
 		}
 
 		//city
 		var City = jQuery(EcomOrderFormWithShippingAddress.citySelector).val();
 		var ShippingCity = jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val();
 		if((!ShippingCity && City) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val(City);
+			jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val(City).change();
 		}
 		//address
 		var Address = jQuery(EcomOrderFormWithShippingAddress.addressSelector).val();
 		var ShippingAddress = jQuery(EcomOrderFormWithShippingAddress.shippingAddressSelector).val();
 		if((!ShippingAddress && Address) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingAddressSelector).val(Address);
+			jQuery(EcomOrderFormWithShippingAddress.shippingAddressSelector).val(Address).change();
 		}
 		//address 2
 		var AddressLine2 = jQuery(EcomOrderFormWithShippingAddress.extraAddressSelector).val();
 		var ShippingAddress2 = jQuery(EcomOrderFormWithShippingAddress.shippingExtraAddressSelector).val();
 		if((!ShippingAddress2 && AddressLine2) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingExtraAddressSelector).val(AddressLine2);
+			jQuery(EcomOrderFormWithShippingAddress.shippingExtraAddressSelector).val(AddressLine2).change();
 		}
 
 		//surname
 		var Surname = jQuery(EcomOrderFormWithShippingAddress.surnameSelector).val();
 		var ShippingSurname = jQuery(EcomOrderFormWithShippingAddress.shippingSurnameSelector).val();
 		if((!ShippingSurname && Surname) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingSurnameSelector).val(Surname);
+			jQuery(EcomOrderFormWithShippingAddress.shippingSurnameSelector).val(Surname).change();
 		}
 
 		//first name
 		var FirstName = jQuery(EcomOrderFormWithShippingAddress.firstNameSelector).val();
 		var ShippingFirstName = jQuery(EcomOrderFormWithShippingAddress.shippingFirstNameSelector).val();
 		if((!ShippingFirstName && FirstName) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingFirstNameSelector).val(FirstName);
+			jQuery(EcomOrderFormWithShippingAddress.shippingFirstNameSelector).val(FirstName).change();
 		}
 
 	},
@@ -194,7 +194,7 @@ var EcomOrderFormWithShippingAddress = {
 		var pattern=/^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+/;
 		var shippingCitySelectorValue = jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val();
 		if(pattern.test(shippingCitySelectorValue)){
-			jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val(jQuery(EcomOrderFormWithShippingAddress.citySelector).val());
+			jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val(jQuery(EcomOrderFormWithShippingAddress.citySelector).val()).change();
 		}
 		else{
 			//do nothing
