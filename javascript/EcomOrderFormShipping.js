@@ -151,7 +151,7 @@ var EcomOrderFormWithShippingAddress = {
 		var Country = jQuery(EcomOrderFormWithShippingAddress.countrySelector).val();
 		var ShippingCountry = jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val();
 		if(((!ShippingCountry || ShippingCountry == "AF") && Country) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val(Country).change();
+			jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val(Country);
 		}
 
 		//city
