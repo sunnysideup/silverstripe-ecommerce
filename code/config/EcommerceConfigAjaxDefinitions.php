@@ -121,6 +121,12 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 * class that is used in templates and in the JSON return @see CartResponse
 	 * @return String
 	 **/
+	function TotalItemsTimesQuantityClassName() {return self::$prefix.'number_of_items_times_quantity';}
+
+	/**
+	 * class that is used in templates and in the JSON return @see CartResponse
+	 * @return String
+	 **/
 	function TotalItemsClassName() {return self::$prefix.'number_of_items';}
 	/**
 	 * class that is used in templates and in the JSON return @see CartResponse

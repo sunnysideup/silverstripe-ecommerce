@@ -122,7 +122,7 @@ class CartResponse extends EcommerceResponse {
 			);
 		}
 
-		//TO DO: set it up in such a way that ir specifically requests one of these
+		//TO DO: set it up in such a way that it specifically requests one of these
 		//tiny cart
 		$js[] = array(
 			"t" => "class",
