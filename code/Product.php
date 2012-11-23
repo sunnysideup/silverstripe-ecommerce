@@ -748,12 +748,17 @@ class Product extends Page implements BuyableModel {
 	 * Is the product for sale?
 	 * @return Boolean
 	 */
-	function canPurchase($member = null) {
-		if($this->EcomConfig()->ShopClosed) {
+	function canPurchase($member = null, $checkPrice = true) {
+		$config = $this->EcomConfig();
+		if($config->ShopClosed) {
 			return false;
 		}
 		$allowpurchase = $this->AllowPurchase;
-		if(!$allowpurchase) {
+		if(! $allowpurchase) {
+			return false;
+		}
+		$price = $this->getCalculatedPrice();
+		if($checkPrice && $price == 0 && ! $config->AllowFreeProductPurchase) {
 			return false;
 		}
 		// Standard mechanism for accepting permission changes from decorators
