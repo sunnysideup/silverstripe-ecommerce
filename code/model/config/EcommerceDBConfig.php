@@ -35,7 +35,8 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveQuantifiers" => "Boolean",
 		"ProductsAlsoInOtherGroups" => "Boolean",
 		"ProductsHaveVariations" => "Boolean",
-		"CurrenciesExplanation" => "HTMLText"
+		"CurrenciesExplanation" => "HTMLText",
+		'AllowFreeProductPurchase' => 'Boolean'
 	);
 
 	/**
@@ -167,7 +168,8 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveQuantifiers" => false,
 		"ProductsAlsoInOtherGroups" => false,
 		"ProductsHaveVariations" => false,
-		"CurrenciesExplanation" => "<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>"
+		"CurrenciesExplanation" => "<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>",
+		'AllowFreeProductPurchase' => true
 	);
 
 	/**
@@ -254,7 +256,8 @@ class EcommerceDBConfig extends DataObject {
 			"DefaultThumbnailImageSize" => _t("EcommerceDBConfig.DEFAULTTHUMBNAILIMAGESIZE", "Product Thumbnail Optimised Size"),
 			"DefaultSmallImageSize" => _t("EcommerceDBConfig.DEFAULTSMALLIMAGESIZE", "Product Small Image Optimised Size"),
 			"DefaultContentImageSize" => _t("EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE", "Product Content Image Optimised Size"),
-			"DefaultLargeImageSize" => _t("EcommerceDBConfig.DEFAULTLARGEIMAGESIZE", "Product Large Image Optimised Size")
+			"DefaultLargeImageSize" => _t("EcommerceDBConfig.DEFAULTLARGEIMAGESIZE", "Product Large Image Optimised Size"),
+			'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE', 'Allow free products to be purchased')
 		);
 		return $newLabels;
 	}
@@ -286,7 +289,8 @@ class EcommerceDBConfig extends DataObject {
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
 				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
-				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
+				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"]),
+				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase'])
 			),
 			new Tab('ProductImages',
 				new ImageField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
