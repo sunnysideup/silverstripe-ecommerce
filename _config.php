@@ -56,10 +56,7 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 //i18n::set_locale('en_NZ');
 //Object::useCustomClass('SS_Datetime','ZendDate',true);
 //Currency::setCurrencySymbol("€");
-////===================---------------- START php MODULE ----------------===================
-date_default_timezone_set("NZ");
-//===================---------------- END php MODULE ----------------===================
-
+//date_default_timezone_set("NZ");
 
 // __________________________________ END ECOMMERCE MODULE CONFIG __________________________________
 
