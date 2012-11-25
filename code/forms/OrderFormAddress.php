@@ -185,7 +185,7 @@ class OrderFormAddress extends Form {
 		$actions = new FieldSet($nextButton);
 		$validator = new OrderFormAddress_Validator($requiredFields);
 		//TODO: do we need this here?
-		$validator->setJavascriptValidationHandler("prototype");
+		//$validator->setJavascriptValidationHandler("prototype");
 		foreach($requiredFields as $requiredField) {
 			$field = $fields->dataFieldByName($requiredField);
 			if($field) {
