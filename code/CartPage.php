@@ -43,14 +43,6 @@ class CartPage extends Page{
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $has_one = array(
-		'ContinuePage' => 'SiteTree'
-	);
-
-	/**
-	 * Standard SS variable
-	 * @var Array
-	 */
 	public static $defaults = array(
 		'ContinueShoppingLabel' => 'continue shopping',
 		'ProceedToCheckoutLabel' => 'proceed to checkout',
@@ -91,10 +83,6 @@ class CartPage extends Page{
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
-		$continuePage = DataObject::get_one("ProductGroup", "ParentID = 0");
-		if($continuePage || $continuePage = DataObject::get_one("ProductGroup")) {
-			$this->ContinuePageID = $continuePage->ID;
-		}
 	}
 
 	/**
@@ -116,7 +104,6 @@ class CartPage extends Page{
 				new Tab(
 					'Actions',
 					new TextField('ContinueShoppingLabel', _t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping')),
-					new OptionalTreeDropdownField('ContinuePageID',_t('CartPage.CONTINUEPAGEID', 'Continue Shopping Landing Page'),"SiteTree"),
 					new TextField('ProceedToCheckoutLabel', _t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order')),
 					new TextField('ShowAccountLabel', _t('CartPage.SHOWACCOUNTLABEL', 'Label on the link \'view account details\' - e.g. click here to vuiew your account details')),
 					new TextField('CurrentOrderLinkLabel', _t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order')),
@@ -548,11 +535,11 @@ class CartPage_Controller extends Page_Controller{
 			if(isset($this->ContinueShoppingLabel) && $this->ContinueShoppingLabel) {
 				if($viewingRealCurrentOrder) {
 					if($this->isCartPage()) {
-						$continuePage = DataObject::get_by_id("SiteTree", $this->ContinuePageID );
-						if($continuePage) {
+						$continueLink = $this->ContinueShoppingLink();
+						if($continueLink) {
 							$this->actionLinks->push(new ArrayData(array (
 								"Title" => $this->ContinueShoppingLabel,
-								"Link" => $continuePage->Link()
+								"Link" => $continueLink
 							)));
 						}
 					}

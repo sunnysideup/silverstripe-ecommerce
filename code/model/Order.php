@@ -73,6 +73,7 @@ class Order extends DataObject {
 		'SessionID' => "Varchar(32)", //so that in the future we can link sessions with Orders.... One session can have several orders, but an order can onnly have one session
 		'UseShippingAddress' => 'Boolean',
 		'CustomerOrderNote' => 'Text',
+		'ExchangeRate' => 'Double',
 		'ExchangeRate' => 'Double'
 	);
 
@@ -1693,39 +1694,47 @@ class Order extends DataObject {
 	 * A "Title" for the order, which summarises the main details (date, and customer) in a string.
 	 *@return String
 	 **/
-	function Title() {return $this->getTitle();}
-	function getTitle() {
+	function Title($dateFormat = "D j M Y, G:i T", $includeName = true) {return $this->getTitle($dateFormat, $includeName);}
+	function getTitle($dateFormat = "D j M Y, G:i T", $includeName = true) {
 		if($this->exists()) {
 			if($submissionLog = $this->SubmissionLog()) {
 				$dateObject = $submissionLog->dbObject('Created');
+				$placed = _t("Order.PLACED", "placed");
 			}
 			else {
 				$dateObject = $this->dbObject('Created');
+				$placed = _t("Order.STARTED", "started");
 			}
-			$title = $this->i18n_singular_name(). " #$this->ID - ".$dateObject->Nice();
+			$title = $this->i18n_singular_name(). " #$this->ID - ".$placed." ".$dateObject->Format($dateFormat);
 			$name = "";
 			if($this->CancelledByID) {
 				$name = " - "._t("Order.CANCELLED","CANCELLED");
 			}
-			if(!$name) {
-				if($this->MemberID){
-					if($member = $this->Member()) {
-						if($member->exists()) {
-							if($memberName = $member->getName()) {
-								$name = " - ".$memberName;
+			if($includeName) {
+				$by = _t("Order.BY", "by");
+				if(!$name) {
+					if($this->BillingAddressID) {
+						if($billingAddress = $this->BillingAddress()) {
+							$name = " - ".$by." ".$billingAddress->Prefix." ".$billingAddress->FirstName." ".$billingAddress->Surname;
+						}
+					}
+				}
+				if(!$name) {
+					if($this->MemberID){
+						if($member = $this->Member()) {
+							if($member->exists()) {
+								if($memberName = $member->getName()) {
+									if(!trim($memberName)) {
+										$memberName = _t("Order.ANONYMOUS","anonymous");
+									}
+									$name = " - ".$by." ".$memberName;
+								}
 							}
 						}
 					}
 				}
+				$title .= $name;
 			}
-			if(!$name) {
-				if($this->BillingAddressID) {
-					if($billingAddress = $this->BillingAddress()) {
-						$name = " - ".$billingAddress->Prefix." ".$billingAddress->FirstName." ".$billingAddress->Surname;
-					}
-				}
-			}
-			$title .= $name;
 		}
 		else {
 			$title = _t("Order.NEW", "New")." ".$this->i18n_singular_name();
