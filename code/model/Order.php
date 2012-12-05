@@ -109,7 +109,7 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $default_sort = "\"Created\" DESC";
+	public static $default_sort = "\"LastEdited\" DESC";
 
 	/**
 	 * standard SS variable
