@@ -170,7 +170,7 @@ class ShoppingCart extends Object{
 				$this->clear();
 				return false;
 			}
-			if($this->order && $this->order->exists() && $this->order->StatusID) {
+			if($this->order && $this->order->exists()) {
 				$this->order->calculateOrderAttributes($force = true);
 			}
 		}
