@@ -457,6 +457,7 @@ EcomCart = {
 				EcomCart.onBeforeUpdate.call(url, params, EcomCart.setChanges);
 			}
 		}
+		EcomCart.openAjaxCalls++;
 		jQuery.getJSON(url, params, EcomCart.setChanges);
 	},
 
@@ -474,7 +475,6 @@ EcomCart = {
 		jQuery(loadingElement).addClass(EcomCart.classToShowLoading);
 		jQuery("body").addClass(EcomCart.classToShowPageIsUpdating);
 		EcomCart.loadingSelectors[EcomCart.loadingSelectors.length] = loadingElement;
-		EcomCart.openAjaxCalls++;
 		return EcomCart.loadingSelectors.length-1;
 	},
 
@@ -494,7 +494,7 @@ EcomCart = {
 			window.location = window.location;
 			return;
 		}
-		if(EcomCart.openAjaxCalls == 0) {
+		if(EcomCart.openAjaxCalls <= 0) {
 			for(var i in changes) {
 				var change = changes[i];
 				if(typeof(change.t) != 'undefined' && typeof(change.t) != 'undefined') {
