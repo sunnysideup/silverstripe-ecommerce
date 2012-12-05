@@ -294,7 +294,7 @@ class Order extends DataObject {
 	 **/
 	public static $summary_fields = array(
 		"Title" => "Title",
-		"Status.Title" => "Status"
+		"Status.Title" => "Next Step"
 	);
 		public static function get_summary_fields() {return self::$summary_fields;}
 
