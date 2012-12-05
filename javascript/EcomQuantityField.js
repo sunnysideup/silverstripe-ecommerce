@@ -27,9 +27,9 @@ EcomQuantityField = {
 
 	URLSegmentHiddenFieldSelectorAppendix: "_SetQuantityLink",
 
-	updateFX: null,
+	updateFX: [],
 
-	lastValue: 0,
+	lastValue: [],
 
 	//todo: auto-re-attach
 	init: function () {
@@ -41,7 +41,7 @@ EcomQuantityField = {
 				EcomQuantityField.removeSelector,
 				"click",
 				function(e) {
-					EcomQuantityField.updateFX = null;
+					EcomQuantityField.updateFX[jQuery(this).attr("name")] = null;
 					e.preventDefault();
 					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
 					jQuery(inputField).val(parseFloat(jQuery(inputField).val())-1).change();
@@ -57,8 +57,8 @@ EcomQuantityField = {
 				EcomQuantityField.addSelector,
 				"click",
 				function(e) {
-					EcomQuantityField.updateFX = null;
 					e.preventDefault();
+					EcomQuantityField.updateFX[jQuery(this).attr("name")] = null;
 					var inputField = jQuery(this).siblings(EcomQuantityField.quantityFieldSelector);
 					jQuery(inputField).val(parseFloat(jQuery(inputField).val())+1).change();
 					return false;
@@ -67,13 +67,19 @@ EcomQuantityField = {
 		}
 		jQuery(EcomQuantityField.delegateRootSelector).delegate(
 			EcomQuantityField.quantityFieldSelector,
+			"focus",
+			function(){
+				EcomQuantityField.lastValue[jQuery(this).attr("name")] = jQuery(this).val();
+			}
+		);
+		jQuery(EcomQuantityField.delegateRootSelector).delegate(
+			EcomQuantityField.quantityFieldSelector,
 			"keydown",
 			function(){
-				EcomQuantityField.lastValue = jQuery(this).val();
 				var el = this;
-				EcomQuantityField.updateFX = window.setTimeout(
+				EcomQuantityField.updateFX[jQuery(this).attr("name")] = window.setTimeout(
 					function(){
-						if(EcomQuantityField.lastValue != jQuery(el).val()) {
+						if(EcomQuantityField.lastValue[jQuery(el).attr("name")] != jQuery(el).val()) {
 							jQuery(el).change();
 						}
 					},
@@ -85,7 +91,7 @@ EcomQuantityField = {
 			EcomQuantityField.quantityFieldSelector,
 			"change",
 			function() {
-				EcomQuantityField.updateFX = null;
+				EcomQuantityField.updateFX[jQuery(this).attr("name")] = null;
 				var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this);
 				if(URLSegment.length > 0) {
 					this.value = this.value.replace(/[^0-9.]+/g, '');
@@ -98,16 +104,26 @@ EcomQuantityField = {
 					else {
 						jQuery(this).siblings(EcomQuantityField.removeSelector).css("visibility", "visible");
 					}
-					if(URLSegment.indexOf("?") == -1) {
-						URLSegment = URLSegment + "?";
+					if(EcomQuantityField.lastValue[jQuery(this).attr("name")] != jQuery(this).val()) {
+						EcomQuantityField.lastValue[jQuery(this).attr("name")] = jQuery(this).val();
+						if(URLSegment.indexOf("?") == -1) {
+							URLSegment = URLSegment + "?";
+						}
+						else {
+							URLSegment = URLSegment + "&";
+						}
+						var url = jQuery('base').attr('href') + URLSegment + 'quantity=' + this.value;
+						url = url.replace("&amp;", "&");
+						EcomCart.getChanges(url, null, this);
 					}
-					else {
-						URLSegment = URLSegment + "&";
-					}
-					var url = jQuery('base').attr('href') + URLSegment + 'quantity=' + this.value;
-					url = url.replace("&amp;", "&");
-					EcomCart.getChanges(url, null, this);
 				}
+			}
+		);
+		jQuery(EcomQuantityField.delegateRootSelector).delegate(
+			EcomQuantityField.quantityFieldSelector,
+			"blur",
+			function() {
+				EcomQuantityField.updateFX[jQuery(this).attr("name")] = null;
 			}
 		);
 		jQuery(EcomQuantityField.delegateRootSelector).find(EcomQuantityField.quantityFieldSelector).removeAttr("disabled");

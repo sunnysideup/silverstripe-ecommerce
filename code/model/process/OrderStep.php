@@ -879,7 +879,7 @@ class OrderStep_SentInvoice extends OrderStep {
 		"Name" => "Send invoice",
 		"Code" => "INVOICED",
 		"ShowAsInProcessOrder" => 1,
-		"SendInvoiceToCustomer" => 1
+		"SendInvoiceToCustomer" => 0
 	);
 
 	public function getCMSFields() {
@@ -970,7 +970,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 * @return String
 	 */
 	protected function myDescription(){
-		return _t("OrderStep.SENTINVOICE_DESCRIPTION", "Invoice gets sent to the customer via e-mail.");
+		return _t("OrderStep.SENTINVOICE_DESCRIPTION", "Invoice gets sent to the customer via e-mail. In many cases, it is better to only send a receipt and sent the invoice to the shop admin only so that they know an order is coming, while the customer only sees a receipt which shows payment as well as ");
 	}
 }
 
