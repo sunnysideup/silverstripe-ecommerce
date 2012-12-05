@@ -7,7 +7,7 @@
 	</thead>
 	<tbody>
 		<tr class="summary odd first">
-			<td class="left">$CustomerOrderNote</td>
+			<td class="left">$CustomerOrderNote.XML</td>
 		</tr>
 	</tbody>
 </table>
