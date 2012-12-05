@@ -11,7 +11,7 @@
 			<th class="left" scope="row">$Title.XML</th>
 			<td class="left">$Created.Long</td>
 			<td class="left">$Author.Name</td>
-			<td class="left"><% if CustomerNote %>$CustomerNote.XML<% else %><% _t("Order.NO_FURTHER_INFORMATION", "No further information.") %><% end_if %></td>
+			<td class="left"><% if CustomerNote %>$CustomerNote<% else %><% _t("Order.NO_FURTHER_INFORMATION", "No further information.") %><% end_if %></td>
 		</tr>
 	<% end_control %>
 	</tbody>
