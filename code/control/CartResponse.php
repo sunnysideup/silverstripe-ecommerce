@@ -168,7 +168,7 @@ class CartResponse extends EcommerceResponse {
 			$js = array_merge($js, $data);
 		}
 		//TODO: remove doubles!
-		$json = Convert::array2json($js);
+		$json = json_encode($js);
 		$json = str_replace('\t', " ", $json);
 		$json = str_replace('\r', " ", $json);
 		$json = str_replace('\n', " ", $json);

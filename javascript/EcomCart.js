@@ -450,6 +450,9 @@ EcomCart = {
 		if(EcomCart.ajaxButtonsOn) {
 			params.ajaxButtonsOn = true;
 		}
+		if(EcomCart.openAjaxCalls > 1) {
+			params.manyrequests = 1;
+		}
 		var loadingIndex = this.addLoadingSelector(loadingElement)
 		params.loadingindex = loadingIndex;
 		if(EcomCart.onBeforeUpdate) {
