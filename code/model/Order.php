@@ -1078,8 +1078,8 @@ class Order extends DataObject {
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false) {
-		return $this->sendEmail('Order_StatusEmail', $subject, $message, $resend, $adminOnly);
+	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false, $template = 'Order_StatusEmail') {
+		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
 	}
 
 
