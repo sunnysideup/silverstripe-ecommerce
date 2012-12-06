@@ -357,7 +357,7 @@ class OrderStep extends DataObject {
 		* @return Boolean - true if the current step is ready to be run...
 		**/
 	public function initStep($order) {
-		user_error("Please implement this in a subclass of OrderStep", E_USER_WARNING);
+		user_error("Please implement this in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
 		return true;
 	}
 
