@@ -1050,8 +1050,8 @@ class Order extends DataObject {
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	function sendInvoice($subject = "", $message = "", $resend = false, $adminOnly = false) {
-		return $this->sendEmail('Order_ReceiptEmail', $subject, $message, $resend, $adminOnly);
+	function sendInvoice($subject = "", $message = "", $resend = false, $adminOnly = false, $template = 'Order_ReceiptEmail') {
+		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
 	}
 
 	/**
@@ -1064,8 +1064,8 @@ class Order extends DataObject {
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	public function sendReceipt($subject = "", $message = "", $resend = false, $adminOnly = false) {
-		return $this->sendEmail('Order_ReceiptEmail', $subject, $message, $resend, $adminOnly);
+	public function sendReceipt($subject = "", $message = "", $resend = false, $adminOnly = false, $template = 'Order_ReceiptEmail') {
+		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
 	}
 
 	/**
