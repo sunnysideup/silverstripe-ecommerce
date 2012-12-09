@@ -116,12 +116,12 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 **/
 	function TableSubTotalID() {return $this->TableID().'_SubTotal';}
 
-
 	/**
 	 * class that is used in templates and in the JSON return @see CartResponse
 	 * @return String
 	 **/
 	function TotalItemsTimesQuantityClassName() {return self::$prefix.'number_of_items_times_quantity';}
+
 	/**
 	 * class that is used in templates and in the JSON return @see CartResponse
 	 * @return String
