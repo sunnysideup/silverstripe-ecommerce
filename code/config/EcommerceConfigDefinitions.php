@@ -46,7 +46,7 @@ class EcommerceConfigDefinitions extends Object {
 		"TableMessageID" => "The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID",
 		"TableSubTotalID" => "The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID",
 		"TotalItemsClassName" => "The total number of items in the order. Use in the following context: Order.AjaxDefinitions.TotalItemsClassName",
-		"TotalItemsClassNameTimesQuantity" => "The total number of items times their quantity in the order. Use in the following context: Order.AjaxDefinitions.TotalItemsClassNameTimesQuantity",
+		"TotalItemsTimesQuantityClassName" => "The total number of items times their quantity in the order. Use in the following context: Order.AjaxDefinitions.TotalItemsClassNameTimesQuantity",
 		"ExpectedCountryClassName" => "The holder of the expected country name. Use in the following context: Order.AjaxDefinitions.ExpectedCountryClassName",
 		"CountryFieldID" => "The field used for selecting the country. Use in the following context: Order.AjaxDefinitions.CountryFieldID",
 		"RegionFieldID" => "The field used for selecting the region. Use in the following context: Order.AjaxDefinitions.RegionFieldID",
