@@ -166,7 +166,7 @@ class EcommerceConfigDefinitions extends Object {
 				"validator_class" => "The validator class is used for OrderStatusLogForm forms.",
 			),
 			"EcommerceCountry" => array(
-				"allowed_country_codes" => "To what countries are you selling.  You can leave this as an emptry array, in case you are selling to anyone or you can restrict it to just one country or a handful.  It should also be formatted as an array.",
+				"allowed_country_codes" => "To what countries are you selling?  You can leave this as an empty array, in case you are selling to all countries or you can restrict it to just one country or a handful.  Once set, you can adjust this list in EcommerceCountry using the CMS. ",
 			),
 			"Order_Email" => array(
 				"send_all_emails_plain" => "Should all the emails be send as plain text?  Not recommended.",
