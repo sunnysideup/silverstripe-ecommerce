@@ -27,7 +27,7 @@ class EcommerceCountryFilters_AllowSales extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0 || $this->getValue() == false;
+		return $this->getValue() ? false : true;
 	}
 
 }
