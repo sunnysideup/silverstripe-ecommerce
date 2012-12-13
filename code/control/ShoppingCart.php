@@ -604,6 +604,11 @@ class ShoppingCart extends Object{
 	public function debug(){
 		if(Director::isDev() || Permission::check("ADMIN")){
 			debug::show($this->currentOrder());
+
+			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>";
+			$countryCode = @Geoip::visitor_country();
+			echo "GEOIP Country: ".$countryCode;
+
 			echo "<blockquote><blockquote><blockquote><blockquote>";
 
 			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Items</h1>";
@@ -679,10 +684,6 @@ class ShoppingCart extends Object{
 					Debug::show($email);
 				}
 			}
-
-			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>";
-			$countryCode = @Geoip::visitor_country();
-			echo "GEOIP Country: ".$countryCode;
 
 			echo "</blockquote></blockquote></blockquote></blockquote>";
 		}
