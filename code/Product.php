@@ -750,13 +750,20 @@ class Product extends Page implements BuyableModel {
 	 */
 	function canPurchase($member = null, $checkPrice = true) {
 		$config = $this->EcomConfig();
+		//shop closed
 		if($config->ShopClosed) {
 			return false;
 		}
+		//not sold at all
 		$allowpurchase = $this->AllowPurchase;
 		if(! $allowpurchase) {
 			return false;
 		}
+		//check country
+		if(!EcommerceCountry::allow_sales()) {
+			return false;
+		}
+		//price
 		$price = $this->getCalculatedPrice();
 		if($checkPrice && $price == 0 && ! $config->AllowFreeProductPurchase) {
 			return false;

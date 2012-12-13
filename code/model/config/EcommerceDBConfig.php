@@ -48,7 +48,6 @@ class EcommerceDBConfig extends DataObject {
 		"DefaultProductImage" => "Product_Image"
 	);
 
-
 	/**
 	 * Standard SS Variable
 	 * @var Array
