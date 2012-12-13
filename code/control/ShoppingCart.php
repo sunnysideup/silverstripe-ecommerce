@@ -680,6 +680,10 @@ class ShoppingCart extends Object{
 				}
 			}
 
+			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>";
+			$countryCode = @Geoip::visitor_country();
+			echo "GEOIP Country: ".$countryCode;
+
 			echo "</blockquote></blockquote></blockquote></blockquote>";
 		}
 		else {
