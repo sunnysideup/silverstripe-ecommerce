@@ -270,8 +270,10 @@ class OrderItem extends OrderAttribute {
 	 * @param Bool $force - run it, even if it has run already
 	 **/
 	function runUpdate($force = false){
+		if (isset($_GET['debug_profile'])) Profiler::mark('OrderItem::runUpdate-for-'.$this->ClassName);
 		$this->CalculatedTotal = $this->UnitPrice() * $this->Quantity;
 		$this->write();
+		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderItem::runUpdate-for-'.$this->ClassName);
 	}
 
 	/**

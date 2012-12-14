@@ -81,6 +81,7 @@ class ShoppingCart extends Object{
 	 * @return void
 	 */
 	public function currentOrder(){
+		if (isset($_GET['debug_profile'])) Profiler::mark('ShoppingCart::currentOrder');
 		if(!$this->order) {
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
@@ -174,6 +175,7 @@ class ShoppingCart extends Object{
 				$this->order->calculateOrderAttributes($force = true);
 			}
 		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('ShoppingCart::currentOrder');
 		return $this->order;
 	}
 
