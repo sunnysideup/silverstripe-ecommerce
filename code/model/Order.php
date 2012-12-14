@@ -208,6 +208,7 @@ class Order extends DataObject {
 	 * @return DataObjectSet of OrderModiferForms
 	 **/
 	public function getModifierForms($optionalController = null, $optionalValidator = null) {
+		if (isset($_GET['debug_profile'])) Profiler::mark('Order::getModifierForms');
 		$dos = new DataObjectSet();
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
@@ -220,6 +221,7 @@ class Order extends DataObject {
 				}
 			}
 		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::getModifierForms');
 		if( $dos->count() ) {
 			return $dos;
 		}
@@ -1316,6 +1318,7 @@ class Order extends DataObject {
 	 * @return Float
 	 */
 	function ModifiersSubTotal($excluded = null, $stopAtExcludedModifier = false) {
+		if (isset($_GET['debug_profile'])) Profiler::mark('Order::ModifiersSubTotal');
 		$total = 0;
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
@@ -1336,6 +1339,7 @@ class Order extends DataObject {
 				}
 			}
 		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::ModifiersSubTotal');
 		return $total;
 	}
 
