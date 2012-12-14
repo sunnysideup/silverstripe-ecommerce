@@ -219,6 +219,7 @@ class OrderModifier extends OrderAttribute {
 	 * @param Bool $force - run it, even if it has run already
 	**/
 	public function runUpdate($force = false) {
+		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::runUpdate-for-'.$this->ClassName);
 		if(!$this->IsRemoved()) {
 			$this->checkField("Name");
 			$this->checkField("CalculatedTotal");
@@ -229,6 +230,7 @@ class OrderModifier extends OrderAttribute {
 			$this->runningTotal += $this->CalculatedTotal;
 		}
 		$this->baseInitCalled = true;
+		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::runUpdate-for-'.$this->ClassName);
 	}
 
 	/**
