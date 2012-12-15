@@ -45,7 +45,7 @@ class CartResponse extends EcommerceResponse {
 		$currentOrder = ShoppingCart::current_order();
 
 		//THIS LINE TAKES UP MOST OF THE TIME OF THE RESPONSE!!!
-		$currentOrder->calculateOrderAttributes(true);
+		$currentOrder->calculateOrderAttributes($force = false);
 
 		$ajaxObject = $currentOrder->AJAXDefinitions();
 
