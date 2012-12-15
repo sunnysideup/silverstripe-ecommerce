@@ -25,7 +25,7 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 				$count++;
 			}
 			else {
-				DB::alteration_message("adding $value to Ecommerce Country", "created");
+				DB::alteration_message("adding $code to Ecommerce Country", "created");
 				$obj = new EcommerceCountry();
 				$obj->Code = $code;
 			}
