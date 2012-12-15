@@ -426,7 +426,7 @@ class OrderItem extends OrderAttribute {
 				self::$price_has_been_fixed[$this->OrderID] = $order->IsSubmitted() ? true : false;
 			}
 		}
-		return self::$price_has_been_fixed[$this->OrderID]
+		return self::$price_has_been_fixed[$this->OrderID];
 	}
 
 
