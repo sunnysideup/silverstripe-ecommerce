@@ -172,7 +172,7 @@ class ShoppingCart extends Object{
 				return false;
 			}
 			if($this->order && $this->order->exists()) {
-				$this->order->calculateOrderAttributes($force = true);
+				$this->order->calculateOrderAttributes($force = false);
 			}
 		}
 		if (isset($_GET['debug_profile'])) Profiler::unmark('ShoppingCart::currentOrder');
@@ -843,7 +843,7 @@ class ShoppingCart extends Object{
 				//lets make sure that there is an order
 				$this->currentOrder();
 				//nowe we can (re)calculate the order
-				$this->order->calculateOrderAttributes($force = true);
+				$this->order->calculateOrderAttributes($force = false);
 				$form->sessionMessage($message,$status);
 				//let the form controller do the redirectback or whatever else is needed.
 			}
