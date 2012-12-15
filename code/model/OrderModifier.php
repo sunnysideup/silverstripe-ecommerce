@@ -210,7 +210,7 @@ class OrderModifier extends OrderAttribute {
 		parent::init();
 		$this->write();
 		$this->mustUpdate = true;
-		$this->runUpdate();
+		$this->runUpdate($force = false);
 		return true;
 	}
 
@@ -246,12 +246,17 @@ class OrderModifier extends OrderAttribute {
 	 * This method simply checks if a fields has changed and if it has changed it updates the field.
 	 **/
 	protected function checkField($fieldName) {
+		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::checkField_'.$fieldName.'_'.$this->ClassName);
 		if($this->canBeUpdated()) {
 			$functionName = "Live".$fieldName;
-			$this->$fieldName = $this->$functionName();
-			$this->mustUpdate = true;
+			$oldValue = $this->$fieldName;
+			$newValue = $this->$functionName();
+			if($oldValue != $newValue) {
+				$this->$fieldName = $newValue;
+				$this->mustUpdate = true;
+			}
 		}
-		//debug::show($this->ClassName.".".$fieldName.": ".floatval(microtime() - $start));
+		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::checkField_'.$fieldName.'_'.$this->ClassName);
 	}
 
 	/**
