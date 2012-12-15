@@ -411,7 +411,7 @@ class OrderItem extends OrderAttribute {
 	 * This can be a static variable as it is the same for all OrderItems for an Order.
 	 * @var Boolean
 	 */
-	protected static $price_has_been_fixed = Array;
+	protected static $price_has_been_fixed = array();
 
 	/**
 	 * @description - tells you if an order item price has been "fixed"
