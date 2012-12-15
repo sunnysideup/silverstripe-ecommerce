@@ -1256,7 +1256,7 @@ class Order extends DataObject {
 	 *
 	 */
 	public function calculateOrderAttributes($force = false) {
-		if($this->TotalItems() || $this->StatusID) {
+		if($this->StatusID || $this->TotalItems()) {
 			if($this->IsSubmitted()) {
 				//do nothing
 			}
@@ -2054,18 +2054,28 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * speeds up processing by storing the IsSubmitted value
+	 * we start with -1 to know if it has been requested before.
+	 * @var Boolean
+	 */
+	protected $isSubmittedTempVar = -1;
+
+	/**
 	 * Casted variable - has the order been submitted?
 	 *
 	 *@return Boolean
 	 **/
 	function IsSubmitted(){return $this->getIsSubmitted();}
 	function getIsSubmitted() {
-		if($this->SubmissionLog()) {
-			return true;
+		if($this->isSubmittedTempVar == -1) {
+			if($this->SubmissionLog()) {
+				$this->isSubmittedTempVar = true;
+			}
+			else {
+				$this->isSubmittedTempVar = false;
+			}
 		}
-		else {
-			return false;
-		}
+		return $this->isSubmittedTempVar;
 	}
 
 
@@ -2355,7 +2365,7 @@ class Order extends DataObject {
 		}
 		else {
 			if($this->StatusID) {
-				$this->calculateOrderAttributes();
+				$this->calculateOrderAttributes($force = false);
 				if(EcommerceRole::current_member_is_shop_admin()){
 					if(isset($_REQUEST["SubmitOrderViaCMS"])) {
 						$this->tryToFinaliseOrder();
