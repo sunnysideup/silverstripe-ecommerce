@@ -1763,6 +1763,7 @@ class Order extends DataObject {
 	 */
 	function SubTotal(){return $this->getSubTotal();}
 	function getSubTotal() {
+		if (isset($_GET['debug_profile'])) Profiler::mark('Order::SubTotal');
 		$result = 0;
 		if($items = $this->Items()) {
 			foreach($items as $item) {
@@ -1771,6 +1772,7 @@ class Order extends DataObject {
 				}
 			}
 		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::SubTotal');
 		return $result;
 	}
 
