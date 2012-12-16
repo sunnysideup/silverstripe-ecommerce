@@ -14,8 +14,8 @@
 <% else %>
 <ul class="productActions <% if IsInCart %>inCart<% else %>notInCart<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
 	<li class="removeLink">
-		<a class="goToCartLink" href="$EcomConfig.CheckoutLink" title="<% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %>"><% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %></a>
-		<a class="ajaxBuyableRemove action ajaxAddToCartLink" href="$RemoveAllLink" title="<% _t("Product.REMOVELINK","Remove from Cart") %>"><% _t("Product.REMOVELINK","Remove from Cart") %></a>
+		<a class="goToCartLink action" href="$EcomConfig.CheckoutLink" title="<% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %>"><% _t("Product.GOTOCHECKOUTLINK","Checkout") %></a>
+		<a class="ajaxBuyableRemove ajaxAddToCartLink" href="$RemoveAllLink" title="<% _t("Product.REMOVELINK","Remove from Cart") %>"><% _t("Product.REMOVELINK","Remove from Cart") %></a>
 	</li>
 	<li class="addLink">
 		<a class="ajaxBuyableAdd action ajaxAddToCartLink" href="$AddLink" title="<% _t("Product.ADDLINK","Add to Cart") %>"><% _t("Product.ADDLINK","Add to Cart") %></a>

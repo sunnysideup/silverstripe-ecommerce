@@ -716,6 +716,9 @@ class Order extends DataObject {
 		do {
 			//status of order is being progressed
 			$nextStatusID = $this->doNextStatus();
+			//a little hack to make sure we do not rely on a stored value
+			//of "isSubmitted"
+			$this->isSubmittedTempVar = -1;
 		}
 		while ($nextStatusID);
 	}
@@ -2065,9 +2068,9 @@ class Order extends DataObject {
 	 *
 	 *@return Boolean
 	 **/
-	function IsSubmitted(){return $this->getIsSubmitted();}
-	function getIsSubmitted() {
-		if($this->isSubmittedTempVar == -1) {
+	function IsSubmitted($force = false){return $this->getIsSubmitted();}
+	function getIsSubmitted($force = false) {
+		if($this->isSubmittedTempVar == -1 || $force) {
 			if($this->SubmissionLog()) {
 				$this->isSubmittedTempVar = true;
 			}
