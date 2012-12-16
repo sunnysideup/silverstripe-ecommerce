@@ -115,7 +115,7 @@ class ShoppingCart extends Object{
 							$this->order->write();
 						}
 					}
-					//current order has nothing in it AND the member already has an order: use the old one first
+					//IF current order has nothing in it AND the member already has an order: use the old one first
 					//first, lets check if the current order is worthwhile keeping
 					if($this->order->StatusID || $this->order->TotalItems()) {
 						//do NOTHING!
@@ -124,20 +124,24 @@ class ShoppingCart extends Object{
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
 						//TODO: what sort order?
-						$previousOrderFromMember = DataObject::get_one(
-							"Order",
-							"
-								\"MemberID\" = ".$member->ID."
-								AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
-								AND \"Order\".\"ID\" <> ".$this->order->ID
-						);
-						if($previousOrderFromMember && $previousOrderFromMember->canView()) {
-							if($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
-								$this->order->delete();
-								$this->order = $previousOrderFromMember;
-							}
-							else {
-								$previousOrderFromMember->delete();
+						while(
+							$previousOrderFromMember = DataObject::get_one(
+								"Order",
+								"
+									\"MemberID\" = ".$member->ID."
+									AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
+									AND \"Order\".\"ID\" <> ".$this->order->ID
+							)
+						) {
+							if($previousOrderFromMember && $previousOrderFromMember->canView()) {
+								if($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
+									$this->order->delete();
+									$this->order = $previousOrderFromMember;
+									break;
+								}
+								else {
+									$previousOrderFromMember->delete();
+								}
 							}
 						}
 					}
