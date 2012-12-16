@@ -124,6 +124,7 @@ class ShoppingCart extends Object{
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
 						//TODO: what sort order?
+						$count = 0;
 						while(
 							$previousOrderFromMember = DataObject::get_one(
 								"Order",
@@ -131,8 +132,9 @@ class ShoppingCart extends Object{
 									\"MemberID\" = ".$member->ID."
 									AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
 									AND \"Order\".\"ID\" <> ".$this->order->ID
-							)
+							) && $count < 10
 						) {
+							$count++;
 							if($previousOrderFromMember && $previousOrderFromMember->canView()) {
 								if($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
 									$this->order->delete();
