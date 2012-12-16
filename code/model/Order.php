@@ -73,7 +73,6 @@ class Order extends DataObject {
 		'SessionID' => "Varchar(32)", //so that in the future we can link sessions with Orders.... One session can have several orders, but an order can onnly have one session
 		'UseShippingAddress' => 'Boolean',
 		'CustomerOrderNote' => 'Text',
-		'ExchangeRate' => 'Double',
 		'ExchangeRate' => 'Double'
 	);
 
@@ -966,7 +965,7 @@ class Order extends DataObject {
 	 * @return Null | DataObject (OrderAddress)
 	 **/
 
-	public function CreateOrReturnExistingAddress($className, $alternativeMethodName = '') {
+	public function CreateOrReturnExistingAddress($className = "BillingAddress", $alternativeMethodName = '') {
 		if($this->exists()) {
 			$variableName = $className."ID";
 			$methodName = $className;
@@ -985,6 +984,7 @@ class Order extends DataObject {
 					}
 				}
 			}
+			//we can remove this saving ????!
 			if($address) {
 				//save order
 				$this->$variableName = $address->write();
