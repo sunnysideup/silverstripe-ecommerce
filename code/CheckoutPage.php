@@ -78,7 +78,7 @@ class CheckoutPage extends CartPage {
 	}
 
 	/**
-	 * Returns the link or the Link to the account page on this site
+	 * Returns the link or the Link to the Checkout page on this site
 	 * @return String (URLSegment)
 	 */
 	public static function find_link($action = "") {
@@ -87,6 +87,24 @@ class CheckoutPage extends CartPage {
 		}
 		user_error("No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.", E_USER_NOTICE);
 		return "";
+	}
+
+	/**
+	 * Returns the link or the Link to the Checkout page on this site
+	 * For the last step
+	 * @return String (URLSegment)
+	 */
+	public static function find_last_step_link($step = "") {
+		if(!$step) {
+			$steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
+			if($steps && count($steps)) {
+				$step = array_pop($steps);
+			}
+		}
+		if($step) {
+			$step = "checkoutstep/".strtolower($step)."/#".$step;
+		}
+		return self::find_link($step);
 	}
 
 	/**

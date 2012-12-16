@@ -533,8 +533,11 @@ class ShoppingCart extends Object{
 		if($oldOrder){
 			if($oldOrder->canView()) {
 				$newOrder = new Order();
-				//for later use...
+				//copying fields.
+				$newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
+				$newOrder->CurrencyUsedID = $oldOrder->CurrencyUsedID;
 				$newOrder->MemberID = $oldOrder->MemberID;
+				//load the order
 				$newOrder->write();
 				$this->loadOrder($newOrder);
 				$items = DataObject::get("OrderItem", "\"OrderID\" = ".$oldOrder->ID);
@@ -546,6 +549,8 @@ class ShoppingCart extends Object{
 						}
 					}
 				}
+				$newOrder->CreateOrReturnExistingAddress("BillingAddress");
+				$newOrder->CreateOrReturnExistingAddress("ShippingAddress");
 				$newOrder->write();
 				$this->addMessage(_t("ShoppingCart.ORDERCOPIED", "Order has been copied."),'good');
 				return true;
