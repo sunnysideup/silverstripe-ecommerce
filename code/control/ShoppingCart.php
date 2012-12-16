@@ -132,8 +132,11 @@ class ShoppingCart extends Object{
 									\"MemberID\" = ".$member->ID."
 									AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
 									AND \"Order\".\"ID\" <> ".$this->order->ID
-							) && $count < 10
+							)
 						) {
+							if($count > 12) {
+								break;
+							}
 							$count++;
 							if($previousOrderFromMember && $previousOrderFromMember->canView()) {
 								if($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
