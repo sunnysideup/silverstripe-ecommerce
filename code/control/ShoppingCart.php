@@ -97,6 +97,7 @@ class ShoppingCart extends Object{
 				}
 				//second reason to set to null: make sure we have permissions
 				elseif(!$this->order->canView()) {
+					die("--------asdfsadf");
 					$this->order = null;
 				}
 				//logged in, add Member.ID to order->MemberID
@@ -115,7 +116,11 @@ class ShoppingCart extends Object{
 						}
 					}
 					//current order has nothing in it AND the member already has an order: use the old one first
-					if($this->order->StatusID) {
+					//first, lets check if the current order is worthwhile keeping
+					if($this->order->StatusID || $this->order->TotalItems()) {
+						//do NOTHING!
+					}
+					else {
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
 						//TODO: what sort order?
@@ -127,7 +132,7 @@ class ShoppingCart extends Object{
 								AND \"Order\".\"ID\" <> ".$this->order->ID
 						);
 						if($previousOrderFromMember && $previousOrderFromMember->canView()) {
-							if($previousOrderFromMember->StatusID) {
+							if($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
 								$this->order->delete();
 								$this->order = $previousOrderFromMember;
 							}
