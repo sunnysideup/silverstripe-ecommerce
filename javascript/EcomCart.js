@@ -280,9 +280,6 @@ EcomCart = {
 		iframe: true,
 		onOpen: function (event) {
 			EcomCart.reinit();
-			EcomQuantityField.set_delegateRootSelector("#colorbox");
-			EcomQuantityField.init();
-			EcomQuantityField.unset_delegateRootSelector();
 		}
 	},
 		set_colorboxDialogOptions: function(o){this.colorboxDialogOptions = o;},
