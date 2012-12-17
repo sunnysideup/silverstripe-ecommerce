@@ -319,7 +319,9 @@ EcomCart = {
 		//hide or show "zero items" information
 		EcomCart.updateForZeroVSOneOrMoreRows();
 		EcomCart.initColorboxDialog();
-		EcomQuantityField.init();
+		if (typeof EcomCart  != 'undefined') {
+			EcomQuantityField.init();
+		}
 		this.processing = false;
 	},
 
