@@ -422,6 +422,7 @@ class OrderItem extends OrderAttribute {
 	 **/
 	protected function priceHasBeenFixed(){
 		if(!isset(self::$price_has_been_fixed[$this->OrderID])) {
+			self::$price_has_been_fixed[$this->OrderID] = false;
 			if($order = $this->Order()) {
 				self::$price_has_been_fixed[$this->OrderID] = $order->IsSubmitted() ? true : false;
 			}
