@@ -319,7 +319,7 @@ EcomCart = {
 		//hide or show "zero items" information
 		EcomCart.updateForZeroVSOneOrMoreRows();
 		EcomCart.initColorboxDialog();
-		if (typeof EcomCart  != 'undefined') {
+		if (typeof EcomQuantityField  != 'undefined') {
 			EcomQuantityField.init();
 		}
 		this.processing = false;
