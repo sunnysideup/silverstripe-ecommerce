@@ -763,7 +763,13 @@ class Product extends Page implements BuyableModel {
 			return false;
 		}
 		//check country
-		if(!EcommerceCountry::allow_sales()) {
+		$extended = $this->extendedCan('canPurchaseByCountry');
+		if($extended === null) {
+			if(! EcommerceCountry::allow_sales()) {
+				return false;
+			}
+		}
+		else if($extended === false) {
 			return false;
 		}
 		//price
