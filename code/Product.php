@@ -763,7 +763,7 @@ class Product extends Page implements BuyableModel {
 			return false;
 		}
 		//check country
-		$extended = $this->extendedCan('canPurchaseByCountry');
+		$extended = $this->extendedCan('canPurchaseByCountry', $member);
 		if($extended === null) {
 			if(! EcommerceCountry::allow_sales()) {
 				return false;
