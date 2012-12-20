@@ -71,9 +71,9 @@ class OrderAttribute extends DataObject {
 	);
 
 	/**
-	* @note: we can add the \"OrderAttribute_Group\".\"Sort\" part because this table is always included (see extendedSQL).
-	* @var String
-	**/
+	 * Standard SS variable
+	 * @var String
+	 **/
 	public static $default_sort = "\"OrderAttribute\".\"GroupSort\" ASC, \"OrderAttribute\".\"Sort\" ASC, \"OrderAttribute\".\"Created\" ASC";
 
 	/**
@@ -82,6 +82,7 @@ class OrderAttribute extends DataObject {
 	 */
 	public static $indexes = array(
 		"Sort" => true,
+		"GroupSort" => true
 	);
 
 	/**
@@ -110,7 +111,6 @@ class OrderAttribute extends DataObject {
 	 */
 	protected $_canView = null;
 
-
 	/**
 	 * extended in OrderModifier and OrderItem
 	 * Starts up the order Atribute
@@ -120,7 +120,6 @@ class OrderAttribute extends DataObject {
 	function init() {
 		return true;
 	}
-
 
 	/**
 	 * standard SS method
@@ -193,7 +192,7 @@ class OrderAttribute extends DataObject {
 
 	/**
 	 * Return a string of class names, in order
-	 * of heirarchy from OrderAttribute for the
+	 * of hierarchy from OrderAttribute for the
 	 * current attribute.
 	 *
 	 * e.g.: "product_orderitem orderitem
@@ -302,14 +301,24 @@ class OrderAttribute extends DataObject {
 
 	/**
 	 * Standard SS method
+	 * We add the Sort value from the OrderAttribute_Group to the OrderAttribute.
 	 */
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		if($this->OrderAttribute_GroupID) {
-			if($group = $this->OrderAttribute_GroupID()) {
+			if($group = $this->OrderAttribute_Group()) {
 				$this->GroupSort = $group->Sort;
 			}
 		}
+	}
+
+	/**
+	 * Standard SS method
+	 */
+	function onAfterWrite() {
+		parent::onAfterWrite();
+		//crucial!
+		Order::set_needs_recalculating();
 	}
 
 	/**
@@ -339,3 +348,24 @@ class OrderAttribute extends DataObject {
 }
 
 
+/**
+ * Allows you to group OrderAttributes
+ *
+ *
+ */
+class OrderAttribute_Group extends DataObject {
+
+	static $db = array(
+		"Name" => "Varchar",
+		"Sort" => "Int"
+	);
+
+	/**
+	 * Standard SS variable
+	 * @var Array
+	 */
+	public static $indexes = array(
+		"Sort" => true
+	);
+
+}

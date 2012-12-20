@@ -175,6 +175,14 @@ class Order extends DataObject {
 	protected static $modifiers = array();
 
 	/**
+	 * Tells us if an order needs to be recalculated
+	 * @var Boolean
+	 */
+	protected static $needs_recalculating = false;
+		public static function set_needs_recalculating(){ self::$needs_recalculating = true;}
+		public static function get_needs_recalculating(){ return self::$needs_recalculating;}
+
+	/**
 	 * Total Items : total items in cart
 	 *
 	 * @var integer / null
@@ -1259,11 +1267,12 @@ class Order extends DataObject {
 	 *
 	 */
 	public function calculateOrderAttributes($force = false) {
-		if($this->StatusID || $this->TotalItems()) {
-			if($this->IsSubmitted()) {
-				//do nothing
-			}
-			else {
+		if($this->IsSubmitted()) {
+			//submitted order are NEVER recalculated.
+			//they are set in stone
+		}
+		elseif(Order::get_needs_recalculating() || $force) {
+			if($this->StatusID || $this->TotalItems()) {
 				$this->calculateOrderItems($force);
 				$this->calculateModifiers($force);
 				$this->extend("onCalculateOrder");
@@ -1288,7 +1297,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		$this->extend("onCalculateOrderItems");
+		$this->extend("onCalculateOrderItems", $orderItems);
 	}
 
 
@@ -1307,7 +1316,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		$this->extend("onCalculateModifiers");
+		$this->extend("onCalculateModifiers", $createdModifiers);
 	}
 
 
@@ -2365,6 +2374,8 @@ class Order extends DataObject {
 	 **/
 	function onAfterWrite() {
 		parent::onAfterWrite();
+		//crucial!
+		self::set_needs_recalculating();
 		if($this->IsSubmitted()) {
 			//do nothing
 		}
