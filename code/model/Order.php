@@ -747,18 +747,22 @@ class Order extends DataObject {
 		return 0;
 	}
 
-
+	/**
+	 * cancel an order.
+	 * @param Member $member - the user cancelling the order
+	 * @param String $reason - the reason the order is cancelled
+	 */
 	public function Cancel($member, $reason = "") {
 		$this->CancelledByID = $member->ID;
 		$this->write();
-		$obj = new OrderStatusLog_Cancel();
-		$obj->AuthorID = $member->ID;
-		$obj->OrderID = $this->ID;
-		$obj->Note = $reason;
+		$log = new OrderStatusLog_Cancel();
+		$log->AuthorID = $member->ID;
+		$log->OrderID = $this->ID;
+		$log->Note = $reason;
 		if($member->IsShopAdmin()) {
-			$obj->InternalUseOnly = true;
+			$log->InternalUseOnly = true;
 		}
-		$obj->write();
+		$log->write();
 	}
 
 
