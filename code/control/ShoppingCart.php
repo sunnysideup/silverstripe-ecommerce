@@ -1361,6 +1361,7 @@ class ShoppingCart_Controller extends Controller{
 
 	/**
 	 * Gets the requested quantity
+	 * @return Float
 	 */
 	protected function quantity(){
 		$quantity = $this->getRequest()->getVar('quantity');
@@ -1379,7 +1380,6 @@ class ShoppingCart_Controller extends Controller{
 		return ($getpost == 'GET') ? $this->getRequest()->getVars() : $_POST;
 	}
 
-
 	/**
 	 * Handy debugging action visit.
 	 * Log in as an administrator and visit mysite/shoppingcart/debug
@@ -1391,9 +1391,13 @@ class ShoppingCart_Controller extends Controller{
 		else {
 			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/debug/")."\">log in</a> first.";
 		}
-
 	}
 
+	/**
+	 * test the ajax response
+	 * for developers only
+	 * @return output to buffer
+	 */
 	function ajaxtest(){
 		if(Director::isDev() || Permission::check("ADMIN")){
 			header('Content-Type', 'text/plain');

@@ -90,11 +90,16 @@ class OrderStepField extends DatalessField {
 
 	/**
 	 * Synonym of {@link setContent()} so that LiteralField is more compatible with other field types.
+	 * @param mixed
 	 */
 	function setValue($value) {
 		return $this->setContent($value);
 	}
 
+	/**
+	 * standard SS method
+	 * @return Field
+	 */
 	function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->setReadonly(true);
