@@ -25,7 +25,7 @@
 <% if Order %>
 			<tr>
 				<td>
-					<% control Order %>
+					<% with Order %>
 					<div id="OrderInformation">
 						<h2 class="orderHeading">$Title</h2>
 						<% if RetrieveLink %><small><a href="$RetrieveLink"><% _t("Order.VIEWONLINE", "view order on website.") %></a></small><% end_if %>
@@ -38,7 +38,7 @@
 					</div>
 <% require themedCSS(Order) %>
 <% require themedCSS(Order_Print, print) %>
-					<% end_control %>
+					<% end_with %>
 				</td>
 			</tr>
 <% else %>

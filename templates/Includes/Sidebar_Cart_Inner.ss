@@ -18,7 +18,7 @@ If you are not using this snippet then theme it and remove its content to speed 
 			</tr>
 		</tfoot>
 		<tbody>
-	<% control Items %>
+	<% loop Items %>
 		<% if ShowInTable %>
 			<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
 				<td class="product title" scope="row">
@@ -35,7 +35,7 @@ If you are not using this snippet then theme it and remove its content to speed 
 				<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
 			</tr>
 		<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 		</tbody>
 	</table>
 	<p class="goToCart"><a href="$EcomConfig.CheckoutLink" class="action goToCheckoutLink"><% _t("Cart.GOTOCHECKOUTLINK","Go to the checkout") %></a></p>

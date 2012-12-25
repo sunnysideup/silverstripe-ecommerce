@@ -17,7 +17,7 @@
 	</tfoot>
 	<tbody>
 <% if Items %>
-	<% control Items %>
+	<% loop Items %>
 		<% if ShowInTable %>
 		<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
 			<td class="product title" scope="row">
@@ -31,7 +31,7 @@
 			</td>
 		</tr>
 		<% end_if %>
-	<% end_control %>
+	<% end_with %>
 <% end_if %>
 	</tbody>
 </table>

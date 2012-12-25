@@ -19,7 +19,7 @@
 			</tr>
 		</tfoot>
 		<tbody>
-		<% control PastOrders %>
+		<% loop PastOrders %>
 			<tr>
 				<td class="left"><a href="$Link">$Title</a></td>
 				<td class="left">$CustomerStatus
@@ -29,7 +29,7 @@
 				<td class="right">$TotalPaid.Nice</td>
 				<td class="right">$TotalOutstanding.Nice</td>
 			</tr>
-		<% end_control %>
+		<% end_loop %>
 		</tbody>
 	</table>
 <% else %>

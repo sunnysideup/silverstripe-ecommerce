@@ -5,7 +5,7 @@
 <div id="OrderHolder">
 <% if Order %>
 	<% if CanEditOrder %>
-		<% control Order %><% include Order_Content_Editable %><% end_control %>
+		<% with Order %><% include Order_Content_Editable %><% end_with %>
 	<% else %>
 <div class="message bad canNotEdit">$NonExistingOrderMessage</p>
 	<% end_if %>

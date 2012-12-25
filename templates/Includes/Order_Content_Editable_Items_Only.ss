@@ -20,11 +20,11 @@
 	</tfoot>
 	<tbody>
 <% if Items %>
-	<% control Items %>
+	<% loop Items %>
 		<% if ShowInTable %>
 			<% include Order_Content_Editable_OrderItemRow %>
 		<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 
 		<tr class="gap summary hideOnZeroItems">
 			<th colspan="3" scope="row"><% _t("Order.SUBTOTAL","Sub-total") %></th>
