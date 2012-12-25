@@ -78,7 +78,7 @@ class CheckoutPage extends CartPage {
 	}
 
 	/**
-	 * Returns the link or the Link to the account page on this site
+	 * Returns the link or the Link to the Checkout page on this site
 	 * @return String (URLSegment)
 	 */
 	public static function find_link($action = "") {
@@ -87,6 +87,24 @@ class CheckoutPage extends CartPage {
 		}
 		user_error("No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.", E_USER_NOTICE);
 		return "";
+	}
+
+	/**
+	 * Returns the link or the Link to the Checkout page on this site
+	 * For the last step
+	 * @return String (URLSegment)
+	 */
+	public static function find_last_step_link($step = "") {
+		if(!$step) {
+			$steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
+			if($steps && count($steps)) {
+				$step = array_pop($steps);
+			}
+		}
+		if($step) {
+			$step = "checkoutstep/".strtolower($step)."/#".$step;
+		}
+		return self::find_link($step);
 	}
 
 	/**
@@ -173,25 +191,22 @@ class CheckoutPage extends CartPage {
 		//The Content field has a slightly different meaning for the Checkout Page.
 		$fields->removeFieldFromTab('Root.Main', "Content");
 		$fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', new HtmlEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page'), 7, 7));
-		/*
 		if(DataObject::get_one("OrderModifier_Descriptor")) {
 			$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
 			$orderModifierDescriptionField->setRelationAutoSetting(false);
 			$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
 			$orderModifierDescriptionField->setPermissions(array("show", "edit"));
 			$fields->addFieldToTab('Root.Messages.Messages.OrderExtras',$orderModifierDescriptionField);
+			$fields->addFieldToTab('Root.Content.Messages.OrderExtras',$orderModifierDescriptionField);
 		}
-		*/
-		/*
-		 *
 		if(DataObject::get_one("CheckoutPage_StepDescription")) {
 			$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
 			$checkoutStepDescriptionField->setRelationAutoSetting(false);
 			$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
 			$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
 			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',$checkoutStepDescriptionField);
+			$fields->addFieldToTab('Root.Content.Messages.CheckoutSteps',$checkoutStepDescriptionField);
 		}
-		*/
 		return $fields;
 	}
 

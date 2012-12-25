@@ -81,6 +81,7 @@ class ShoppingCart extends Object{
 	 * @return void
 	 */
 	public function currentOrder(){
+		if (isset($_GET['debug_profile'])) Profiler::mark('ShoppingCart::currentOrder');
 		if(!$this->order) {
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
@@ -96,6 +97,7 @@ class ShoppingCart extends Object{
 				}
 				//second reason to set to null: make sure we have permissions
 				elseif(!$this->order->canView()) {
+					die("--------asdfsadf");
 					$this->order = null;
 				}
 				//logged in, add Member.ID to order->MemberID
@@ -113,25 +115,38 @@ class ShoppingCart extends Object{
 							$this->order->write();
 						}
 					}
-					//current order has nothing in it AND the member already has an order: use the old one first
-					if($this->order->StatusID) {
+					//IF current order has nothing in it AND the member already has an order: use the old one first
+					//first, lets check if the current order is worthwhile keeping
+					if($this->order->StatusID || $this->order->TotalItems()) {
+						//do NOTHING!
+					}
+					else {
 						$firstStep = DataObject::get_one("OrderStep");
 						//we assume the first step always exists.
 						//TODO: what sort order?
-						$previousOrderFromMember = DataObject::get_one(
-							"Order",
-							"
-								\"MemberID\" = ".$member->ID."
-								AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
-								AND \"Order\".\"ID\" <> ".$this->order->ID
-						);
-						if($previousOrderFromMember && $previousOrderFromMember->canView()) {
-							if($previousOrderFromMember->StatusID) {
-								$this->order->delete();
-								$this->order = $previousOrderFromMember;
+						$count = 0;
+						while(
+							$previousOrderFromMember = DataObject::get_one(
+								"Order",
+								"
+									\"MemberID\" = ".$member->ID."
+									AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
+									AND \"Order\".\"ID\" <> ".$this->order->ID
+							)
+						) {
+							if($count > 12) {
+								break;
 							}
-							else {
-								$previousOrderFromMember->delete();
+							$count++;
+							if($previousOrderFromMember && $previousOrderFromMember->canView()) {
+								if($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
+									$this->order->delete();
+									$this->order = $previousOrderFromMember;
+									break;
+								}
+								else {
+									$previousOrderFromMember->delete();
+								}
 							}
 						}
 					}
@@ -170,10 +185,11 @@ class ShoppingCart extends Object{
 				$this->clear();
 				return false;
 			}
-			if($this->order && $this->order->exists() && $this->order->StatusID) {
-				$this->order->calculateOrderAttributes($force = true);
+			if($this->order && $this->order->exists()) {
+				$this->order->calculateOrderAttributes($force = false);
 			}
 		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('ShoppingCart::currentOrder');
 		return $this->order;
 	}
 
@@ -517,8 +533,11 @@ class ShoppingCart extends Object{
 		if($oldOrder){
 			if($oldOrder->canView()) {
 				$newOrder = new Order();
-				//for later use...
+				//copying fields.
+				$newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
+				$newOrder->CurrencyUsedID = $oldOrder->CurrencyUsedID;
 				$newOrder->MemberID = $oldOrder->MemberID;
+				//load the order
 				$newOrder->write();
 				$this->loadOrder($newOrder);
 				$items = DataObject::get("OrderItem", "\"OrderID\" = ".$oldOrder->ID);
@@ -530,6 +549,8 @@ class ShoppingCart extends Object{
 						}
 					}
 				}
+				$newOrder->CreateOrReturnExistingAddress("BillingAddress");
+				$newOrder->CreateOrReturnExistingAddress("ShippingAddress");
 				$newOrder->write();
 				$this->addMessage(_t("ShoppingCart.ORDERCOPIED", "Order has been copied."),'good');
 				return true;
@@ -604,6 +625,11 @@ class ShoppingCart extends Object{
 	public function debug(){
 		if(Director::isDev() || Permission::check("ADMIN")){
 			debug::show($this->currentOrder());
+
+			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>";
+			$countryCode = @Geoip::visitor_country();
+			echo "GEOIP Country: ".$countryCode;
+
 			echo "<blockquote><blockquote><blockquote><blockquote>";
 
 			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Items</h1>";
@@ -836,7 +862,7 @@ class ShoppingCart extends Object{
 				//lets make sure that there is an order
 				$this->currentOrder();
 				//nowe we can (re)calculate the order
-				$this->order->calculateOrderAttributes($force = true);
+				$this->order->calculateOrderAttributes($force = false);
 				$form->sessionMessage($message,$status);
 				//let the form controller do the redirectback or whatever else is needed.
 			}
@@ -964,6 +990,7 @@ class ShoppingCart_Controller extends Controller{
 		'copyorder',
 		'removeaddress',
 		'submittedbuyable',
+		'loginas',
 		'debug', // no need to set to  => 'ADMIN',
 		'ajaxtest' // no need to set to  => 'ADMIN',
 	);
@@ -1277,6 +1304,36 @@ class ShoppingCart_Controller extends Controller{
 		return null;
 	}
 
+
+	/**
+	 * This can be used by admins to log in as customers
+	 * to place orders on their behalf...
+	 */
+	function loginas($request){
+		if(Permission::check("ADMIN") || Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))){
+			$newMember = DataObject::get_by_id("Member", intval($request->param("ID")));
+			if($newMember) {
+				$oldMember = Member::currentMember();
+				if($oldMember){
+					$oldMember->logout();
+					$newMember->login();
+					return Director::redirect("/");
+				}
+				else {
+					echo "Another error occurred.";
+				}
+			}
+			else {
+				echo "Can not find this member.";
+			}
+		}
+		else {
+			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/debug/")."\">log in</a> first.";
+		}
+
+	}
+
+
 	/**
 	 * Gets a buyable object based on URL actions
 	 *@return DataObject | Null - returns buyable
@@ -1304,6 +1361,7 @@ class ShoppingCart_Controller extends Controller{
 
 	/**
 	 * Gets the requested quantity
+	 * @return Float
 	 */
 	protected function quantity(){
 		$quantity = $this->getRequest()->getVar('quantity');
@@ -1322,7 +1380,6 @@ class ShoppingCart_Controller extends Controller{
 		return ($getpost == 'GET') ? $this->getRequest()->getVars() : $_POST;
 	}
 
-
 	/**
 	 * Handy debugging action visit.
 	 * Log in as an administrator and visit mysite/shoppingcart/debug
@@ -1334,9 +1391,13 @@ class ShoppingCart_Controller extends Controller{
 		else {
 			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/debug/")."\">log in</a> first.";
 		}
-
 	}
 
+	/**
+	 * test the ajax response
+	 * for developers only
+	 * @return output to buffer
+	 */
 	function ajaxtest(){
 		if(Director::isDev() || Permission::check("ADMIN")){
 			header('Content-Type', 'text/plain');

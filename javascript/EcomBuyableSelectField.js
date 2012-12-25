@@ -139,7 +139,7 @@ EcomBuyableSelectField = {
 					minLength: EcomBuyableSelectField.minLength,
 
 					source: function(request, response) {
-						jQuery("label[for='"+EcomBuyableSelectField.fieldName+"']'").addClass(EcomBuyableSelectField.loadingClass);
+						jQuery("label[for='"+EcomBuyableSelectField.fieldName+"']'").parent().addClass(EcomBuyableSelectField.loadingClass);
 						EcomBuyableSelectField.requestTerm = request.term;
 						jQuery.ajax(
 							{
@@ -172,7 +172,7 @@ EcomBuyableSelectField = {
 									if(data.length < 1) {
 										EcomBuyableSelectField.showCurrentSituation(EcomBuyableSelectField.nothingFound);
 									}
-									jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").removeClass(EcomBuyableSelectField.loadingClass);
+									jQuery( "label[for='"+EcomBuyableSelectField.fieldName+"']'").parent().removeClass(EcomBuyableSelectField.loadingClass);
 								}
 							}
 						);

@@ -46,7 +46,7 @@ class Product extends Page implements BuyableModel {
 		'Price' => 'Currency',
 		'Weight' => 'Decimal(9,4)',
 		'Model' => 'Varchar(30)',
-		'Quantifier' => 'Varchar(255)',
+		'Quantifier' => 'Varchar(30)',
 		'FeaturedProduct' => 'Boolean',
 		'AllowPurchase' => 'Boolean',
 		'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
@@ -158,6 +158,8 @@ class Product extends Page implements BuyableModel {
 	 * on more fields than just the standard ones.
 	 * This variables tells us what fields to exclude
 	 * (either they are being searched already OR they are not relevant)
+	 * So basically this is a list of products that have either already been included in search (e.g. Title)
+	 * AND products that are not relevant in search (e.g. Created)
 	 * @var Array
 	 */
 	protected $fieldsToExcludeFromSearch = array("Title","MenuTitle","Content","MetaTitle","MetaDescription","MetaKeywords", "Status", "ReportClass", "CanViewType", "CanEditType", "ToDo");
@@ -191,6 +193,7 @@ class Product extends Page implements BuyableModel {
 		if($this->EcomConfig()->ProductsHaveQuantifiers) {
 			$fields->addFieldToTab('Root.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
 		}
+		$fields->addFieldToTab('Root.Content.Sorting',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
 			$fields->addFieldsToTab(
 				'Root.AlsoShowHere',
@@ -750,12 +753,30 @@ class Product extends Page implements BuyableModel {
 	 * Is the product for sale?
 	 * @return Boolean
 	 */
-	function canPurchase($member = null) {
-		if($this->EcomConfig()->ShopClosed) {
+	function canPurchase($member = null, $checkPrice = true) {
+		$config = $this->EcomConfig();
+		//shop closed
+		if($config->ShopClosed) {
 			return false;
 		}
+		//not sold at all
 		$allowpurchase = $this->AllowPurchase;
-		if(!$allowpurchase) {
+		if(! $allowpurchase) {
+			return false;
+		}
+		//check country
+		$extended = $this->extendedCan('canPurchaseByCountry', $member);
+		if($extended === null) {
+			if(! EcommerceCountry::allow_sales()) {
+				return false;
+			}
+		}
+		else if($extended === false) {
+			return false;
+		}
+		//price
+		$price = $this->getCalculatedPrice();
+		if($checkPrice && $price == 0 && ! $config->AllowFreeProductPurchase) {
 			return false;
 		}
 		// Standard mechanism for accepting permission changes from decorators

@@ -20,12 +20,16 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask{
 	This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
 
 	function run($request){
+		//IMPORTANT!
+		Email::send_all_emails_to("no-one@lets-hope-this-goes-absolutely-no-where.co.nz");
+		Email::set_mailer( new EcommerceTryToFinaliseOrdersTask_Mailer() );
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 		if($submittedOrderStatusLogClassName) {
 			$sampleSubmittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
 			if($sampleSubmittedStatusLog) {
-				$lastOrderStep = DataObject::get_one("OrderStep", "", "\"Sort\" DESC");
+				$orderSteps = DataObject::get("OrderStep", "", "\"Sort\" DESC", "", 1);
+				$lastOrderStep = $orderSteps->First();
 				if($lastOrderStep) {
 					$joinSQL = "INNER JOIN \"$orderStatusLogClassName\" ON \"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"";
 					$whereSQL = "WHERE \"StatusID\" <> ".$lastOrderStep->ID." AND \"$orderStatusLogClassName\".ClassName = '$submittedOrderStatusLogClassName'";
@@ -38,7 +42,7 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask{
 					$do = DB::query("
 						UPDATE \"Order\"
 						$joinSQL
-						SET \"StatusID\" = ".$lastOrderStep->ID."
+						SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
 						$whereSQL
 					");
 					if($count) {

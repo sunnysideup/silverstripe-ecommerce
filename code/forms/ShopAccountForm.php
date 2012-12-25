@@ -11,6 +11,11 @@
 
 class ShopAccountForm extends Form {
 
+	/**
+	 *
+	 * @param Controller $controller
+	 * @param String $name, Name of the form
+	 */
 	function __construct($controller, $name) {
 		$member = Member::currentUser();
 		$requiredFields = null;
@@ -21,7 +26,7 @@ class ShopAccountForm extends Form {
 			$loginField = new ReadonlyField(
 				'LoggedInAsNote',
 				_t("Account.LOGGEDIN", "You are currently logged in as "),
-				$member->FirstName . ' ' . $member->Surname .', '
+				Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname) .', '
 					.'<a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?').
 					"</a>"
 			);

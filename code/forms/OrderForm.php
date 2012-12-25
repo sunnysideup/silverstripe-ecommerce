@@ -21,7 +21,7 @@ class OrderForm extends Form {
 
 		//set basics
 		$order = ShoppingCart::current_order();
-		$order->calculateOrderAttributes($force = true);
+		$order->calculateOrderAttributes($force = false);
 		$requiredFields = array();
 
 
@@ -82,7 +82,6 @@ class OrderForm extends Form {
 		$validator = new OrderForm_Validator($requiredFields);
 		//we stick with standard validation here, because of the complexity and
 		//hard-coded payment validation that is required
-		//$validator->setJavascriptValidationHandler("prototype");
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
@@ -211,6 +210,15 @@ class OrderForm extends Form {
 		Session::set("FormInfo.{$this->FormName()}.data", null);
 	}
 
+
+	/**
+	 * returns the instance of EcommerceDBConfig
+	 *
+	 * @return EcommerceDBConfig
+	 **/
+	protected function EcomConfig(){
+		return EcommerceDBConfig::current_ecommerce_db_config();
+	}
 
 }
 

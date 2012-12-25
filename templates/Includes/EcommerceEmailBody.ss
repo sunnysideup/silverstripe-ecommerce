@@ -29,18 +29,15 @@
 					<div id="OrderInformation">
 						<h2 class="orderHeading">$Title</h2>
 						<% if RetrieveLink %><small><a href="$RetrieveLink"><% _t("Order.VIEWONLINE", "view order on website.") %></a></small><% end_if %>
+						<% include Order_OrderStatusLogs %>
+						<% include Order_CustomerNote %>
 						<% include Order_Addresses %>
 						<% include Order_Content %>
 						<% include Order_Payments %>
 						<% include Order_OutstandingTotal %>
-						<% include Order_OrderStatusLogs %>
-						<% include Order_CustomerNote %>
 					</div>
 <% require themedCSS(Order) %>
 <% require themedCSS(Order_Print, print) %>
-
-
-
 					<% end_control %>
 				</td>
 			</tr>

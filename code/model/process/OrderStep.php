@@ -357,7 +357,7 @@ class OrderStep extends DataObject {
 		* @return Boolean - true if the current step is ready to be run...
 		**/
 	public function initStep($order) {
-		user_error("Please implement this in a subclass of OrderStep", E_USER_WARNING);
+		user_error("Please implement this in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
 		return true;
 	}
 
@@ -450,10 +450,20 @@ class OrderStep extends DataObject {
 	//EMAIL
 
 	/**
+	 * Has an email been sent to the customer for this
+	 * order step.
 	 *
-	 *@return Boolean
+	 * @param Order $order
+	 * @param Boolean $sendEvenIfDelayed
+	 *
+	 * @return Boolean
 	 **/
-	protected function hasBeenSent($order) {
+	public function hasBeenSent($order, $checkDateOfOrder = true) {
+		//if it has been more than a week since the order was last edited (submitted) then we do not send emails as
+		//this would be embarrasing.
+		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-10 days"))) {
+			return true;
+		}
 		return DataObject::get_one("OrderEmailRecord", "\"OrderEmailRecord\".\"OrderID\" = ".$order->ID." AND \"OrderEmailRecord\".\"OrderStepID\" = ".$this->ID." AND	\"OrderEmailRecord\".\"Result\" = 1");
 	}
 
@@ -512,9 +522,9 @@ class OrderStep extends DataObject {
 	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
-		$ordersWithThisStatus = DataObject::get("Order", "\"StatusID\" =".$this->ID);
 		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
 		if($nextOrderStepObject) {
+			$ordersWithThisStatus = DataObject::get("Order", "\"StatusID\" =".$this->ID);
 			if($ordersWithThisStatus) {
 				foreach($ordersWithThisStatus as $orderWithThisStatus) {
 					$orderWithThisStatus->StatusID = $nextOrderStepObject->ID;
@@ -572,6 +582,8 @@ class OrderStep extends DataObject {
 				$step->write();
 			}
 		}
+		/*
+		 * This was causing errors
 		$otherOrderSteps = DataObject::get("OrderStep", "\"ClassName\" NOT IN ('".implode("', '", $orderStepsToInclude)."')");
 		if($otherOrderSteps) {
 			foreach($otherOrderSteps as $otherOrderStep) {
@@ -579,6 +591,7 @@ class OrderStep extends DataObject {
 				$otherOrderStep->delete();
 			}
 		}
+		*/
 	}
 
 	/**
@@ -801,6 +814,8 @@ class OrderStep_Submitted extends OrderStep {
 			else {
 				user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
 			}
+			$order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
+			$order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
 		}
 		return true;
 	}
@@ -864,7 +879,7 @@ class OrderStep_SentInvoice extends OrderStep {
 		"Name" => "Send invoice",
 		"Code" => "INVOICED",
 		"ShowAsInProcessOrder" => 1,
-		"SendInvoiceToCustomer" => 1
+		"SendInvoiceToCustomer" => 0
 	);
 
 	public function getCMSFields() {
@@ -955,7 +970,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 * @return String
 	 */
 	protected function myDescription(){
-		return _t("OrderStep.SENTINVOICE_DESCRIPTION", "Invoice gets sent to the customer via e-mail.");
+		return _t("OrderStep.SENTINVOICE_DESCRIPTION", "Invoice gets sent to the customer via e-mail. In many cases, it is better to only send a receipt and sent the invoice to the shop admin only so that they know an order is coming, while the customer only sees a receipt which shows payment as well as ");
 	}
 }
 
