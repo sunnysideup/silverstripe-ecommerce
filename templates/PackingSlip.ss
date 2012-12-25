@@ -13,7 +13,7 @@
 				<h3><% _t("Order.SENDER", "Sender:") %></h3>
 				<% include Order_ShopInfo %>
 			</div>
-		<% control Order %>
+		<% with Order %>
 			<div id="Recipient" class="section">
 				<h3><% _t("Order.DELIVERTO", "Deliver to:") %></h3>
 				<% include Order_AddressShipping %>
@@ -24,7 +24,7 @@
 			<h3><% _t("Order.ITEMS", "Items:") %></h3>
 			<% include Order_Content_Items_Only_No_Prices %>
 		</div>
-		<% end_control %>
+		<% end_with %>
 	</div>
 	<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>
 </body>

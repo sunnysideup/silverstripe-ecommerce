@@ -1,5 +1,5 @@
 <div class="ecommerceWidget cartWidget">
-	<% control Cart %>
+	<% with Cart %>
 		<% include Sidebar_Cart_Inner %>
-	<% end_control %>
+	<% end_with %>
 </div>

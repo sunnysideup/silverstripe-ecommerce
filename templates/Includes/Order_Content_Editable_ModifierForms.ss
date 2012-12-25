@@ -1,7 +1,7 @@
 <% if ModifierForms %>
-	<% control ModifierForms %>
+	<% loop ModifierForms %>
 		<% if ShowFormOutsideEditableOrderTable %>
 			<div class="modifierFormInner">$Me</div>
 		<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 <% end_if %>

@@ -3,7 +3,7 @@
 	<div class="menuChildGroups">
 		<h3><% _t("Product.INTHISSECTION", "In this section") %></h3>
 		<ul class="menuChildGroupsList">
-	<% control MenuChildGroups %>
+	<% loop MenuChildGroups %>
 			<li>
 	<% if Image %>
 				<div class="productGroupImage">
@@ -17,7 +17,7 @@
 					$Content.Summary
 				</div>
 			</li>
-	<% end_control %>
+	<% end_loop %>
 		</ul>
 	</div>
 <% end_if %>

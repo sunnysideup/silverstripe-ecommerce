@@ -20,7 +20,7 @@
 	<% end_if %>
 	<tbody>
 	<% if Items %>
-		<% control Items %>
+		<% loop Items %>
 		<tr  class="itemRow $EvenOdd $FirstLast">
 			<td class="product title">
 				<% if Link %>
@@ -34,21 +34,21 @@
 			<td class="right unitprice">$UnitPrice.Nice</td>
 			<td class="right total">$Total.Nice</td>
 		</tr>
-		<% end_control %>
+		<% end_loop %>
 
 		<tr class="gap summary" id="SubTotal">
 			<th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
 			<td class="right">$SubTotal.Nice</td>
 		</tr>
 
-		<% control Modifiers %>
+		<% loop Modifiers %>
 			<% if ShowInTable %>
 		<tr class="modifierRow $EvenOdd $FirstLast $Classes <% if HideInAjaxUpdate %> hideForNow<% end_if %>">
 			<td colspan="3" scope="row">$TableTitle</td>
 			<td class="right total">$TableValue.Nice</td>
 		</tr>
 			<% end_if %>
-		<% end_control %>
+		<% end_loop %>
 	<% else %>
 		<tr class="showOnZeroItems">
 			<td colspan="4" scope="row" class="center">
