@@ -342,8 +342,7 @@ class OrderModifier extends OrderAttribute {
 	protected function descriptionField(){
 		$name = $this->ClassName.'Description';
 		if($this->Description()) {
-
-			return new LiteralField($name, "<div id=\"{$name}DescriptionHolder\" class=\"descriptionHolder\">".$this->Description()."</div>");
+			return new LiteralField($name, "<div id=\"".Convert::raw2att($name)."DescriptionHolder\" class=\"descriptionHolder\">".Convert::raw2xml($this->Description())."</div>");
 		}
 		return new LiteralField($name, "<!-- EmptyDescription -->","<!-- EmptyDescription -->");
 	}
