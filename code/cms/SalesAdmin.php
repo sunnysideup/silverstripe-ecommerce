@@ -10,7 +10,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class SalesAdmin extends ModelAdmin{
+class SalesAdmin extends ModelAdminEcommerceBaseClass{
 
 	/**
 	 * standard SS variable
@@ -47,14 +47,6 @@ class SalesAdmin extends ModelAdmin{
 	 * @var String
 	 */
 	public static $menu_icon = "";
-
-	/**
-	 * Standard SS Method
-	 * @return Array
-	 */
-	function getManagedModels() {
-		return EcommerceConfig::get("SalesAdmin", "managed_models");
-	}
 
 	function init() {
 		parent::init();

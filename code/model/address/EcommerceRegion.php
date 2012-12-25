@@ -99,6 +99,12 @@ class EcommerceRegion extends DataObject {
 		function i18n_plural_name() { return _t("EcommerceRegion.REGIONS", "Regions");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A region within a country.  This can be a state or a province or the equivalent.";
+
+	/**
 	 * do we use regions at all in this ecommerce application?
 	 * @return Bool
 	 **/

@@ -44,6 +44,8 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 // * * * DEFINITELY MUST SET
 //EcommerceConfig::set_folder_and_file_locations(array("ecommerce/_config/ecommerce.yaml"));
 
+//customising the CMS
+//LeftAndMain::require_css("ecommerce/css/ecommercecmsfixes.css");
 
 // * * * ECOMMERCE I18N SETTINGS NOTES
 // * * * for Currency &  Date Formats get this module: http://code.google.com/p/silverstripe-i18n-fieldtypes/

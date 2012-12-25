@@ -14,20 +14,17 @@
 
 class OrderAddress extends DataObject {
 
-
 	/**
 	 * standard SS static definition
 	 */
 	public static $singular_name = "Order Address";
 		function i18n_singular_name() { return _t("OrderAddress.ORDERADDRESS", "Order Address");}
 
-
 	/**
 	 * standard SS static definition
 	 */
 	public static $plural_name = "Order Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.ORDERADDRESSES", "Order Addresses");}
-
 
 	/**
 	 * standard SS static definition
@@ -66,7 +63,6 @@ class OrderAddress extends DataObject {
 			return "Region";
 		}
 	}
-
 
 	/**
 	 * There might be times when a modifier needs to make an address field read-only.

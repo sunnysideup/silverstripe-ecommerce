@@ -166,6 +166,12 @@ class Order extends DataObject {
 		function i18n_plural_name() { return _t("Order.ORDERS", "Orders");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A collection of items that together make up the 'Order'.  An order can be placed.";
+
+	/**
 	 * Modifiers represent the additional charges or
 	 * deductions associated to an order, such as
 	 * shipping, taxes, vouchers etc.
@@ -352,22 +358,23 @@ class Order extends DataObject {
 	 * @return FieldList
 	 */
 	public function scaffoldSearchFields($_params = null) {
-		$fields = parent::scaffoldSearchFields($_params);
+		$fieldList = parent::scaffoldSearchFields($_params);
 		if($statusOptions = self::get_order_status_options()) {
 			$createdOrderStatusID = 0;
 			$preSelected = array();
 			if($createdOrderStatus = DataObject::get_one("OrderStep")) {
 				$createdOrderStatusID = $createdOrderStatus->ID;
 			}
-			$arrayOfStatusOptions = $statusOptions->toDropDownMap();
+			$arrayOfStatusOptions = clone $statusOptions->map("ID", "Title");
+			$arrayOfStatusOptionsFinal = array();
 			if(count($arrayOfStatusOptions)) {
 				foreach($arrayOfStatusOptions as $key => $value) {
 					$count = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = ".intval($key).";")->value();
 					if($count < 1) {
-						unset($arrayOfStatusOptions[$key]);
+						//do nothing
 					}
 					else {
-						$arrayOfStatusOptions[$key] .= " ($count)";
+						$arrayOfStatusOptionsFinal[$key] = $value . " ($count)";
 					}
 					//we use 100 here because if there is such a big list, an additional filter should be added
 					if($count > 100) {
@@ -379,12 +386,12 @@ class Order extends DataObject {
 					}
 				}
 			}
-			$statusField = new CheckboxSetField("StatusID", "Status", $arrayOfStatusOptions);
+			$statusField = new CheckboxSetField("StatusID", "Status", $arrayOfStatusOptionsFinal);
 			$statusField->setValue($preSelected);
-			$fieldSet->push($statusField);
+			$fieldList->push($statusField);
 		}
-		$fieldSet->push(new DropdownField("CancelledByID", "Cancelled", array(-1 => "(Any)", 1 => "yes", 0 => "no")));
-		return $fieldSet;
+		$fieldList->push(new DropdownField("CancelledByID", "Cancelled", array(-1 => "(Any)", 1 => "yes", 0 => "no")));
+		return $fieldList;
 	}
 
 	/**
@@ -426,30 +433,8 @@ class Order extends DataObject {
 			if($submitted) {
 				$htmlSummary = $this->renderWith("Order");
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
-				$paymentsTable = new HasManyComplexTableField(
-					$this,
-					"Payments", //$name
-					"Payment", //$sourceClass =
-					null, //$fieldList =
-					null, //$detailedFormFields =
-					"\"OrderID\" = ".$this->ID."", //$sourceFilter =
-					"\"Created\" ASC", //$sourceSort =
-					null //$sourceJoin =
-				);
-				$paymentsTable->setPageSize(20);
-				$paymentsTable->addSummary(
-					_t("Order.TOTAL", "Total"),
-					array("Total" => array("sum","Currency->Nice"))
-				);
-				if($this->IsPaid()){
-					$paymentsTable->setPermissions(array('export', 'show'));
-				}
-				else {
-					$paymentsTable->setPermissions(array('edit', 'delete', 'export', 'show'));
-				}
-				$paymentsTable->setShowPagination(false);
-				$paymentsTable->setRelationAutoSetting(true);
-				$fields->addFieldToTab('Root.Payments',$paymentsTable);
+
+				$fields->addFieldToTab('Root.Payments',$this->getPaymentsField());
 				$fields->addFieldToTab("Root.Payments", new ReadOnlyField("TotalPaid", _t("Order.TOTALPAID", "Total Paid"), $this->getTotalPaid()));
 				$fields->addFieldToTab("Root.Payments", new ReadOnlyField("TotalOutstanding", _t("Order.TOTALOUTSTANDING", "Total Outstanding"), $this->getTotalOutstanding()));
 				if($this->canPay()) {
@@ -504,24 +489,7 @@ class Order extends DataObject {
 					'<a href="'.$this->RetrieveLink().'" target="_blank">load this order</a>'
 				);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$msg.'</p>'));
-				$orderItemsTable = new HasManyComplexTableField(
-					$this, //$controller
-					"Attributes", //$name =
-					"OrderItem", //$sourceClass =
-					null, //$fieldList =
-					null, //$detailedFormFields =
-					"\"OrderID\" = ".$this->ID."", //$sourceFilter =
-					"\"Created\" ASC", //$sourceSort =
-					null //$sourceJoin =
-				);
-				$orderItemsTable->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd', "show"));
-				$orderItemsTable->setShowPagination(false);
-				$orderItemsTable->setRelationAutoSetting(true);
-				$orderItemsTable->addSummary(
-					_t("Order.TOTAL", "Total"),
-					array("Total" => array("sum","Currency->Nice"))
-				);
-				$fields->addFieldToTab('Root.Items',$orderItemsTable);
+				$fields->addFieldToTab('Root.Items',$this->getOrderItemsField());
 				$modifierTable = new ComplexTableField(
 					$this, //$controller
 					"OrderModifiers", //$name =
@@ -554,58 +522,14 @@ class Order extends DataObject {
 			}
 			$fields->addFieldToTab('Root.Addresses',new HeaderField("BillingAddressHeader", _t("Order.BILLINGADDRESS", "Billing Address")));
 
-			$billingAddressObject = $this->CreateOrReturnExistingAddress("BillingAddress");
-			$billingAddressField = new HasOneComplexTableField(
-				$this, //$controller
-				"BillingAddress", //$name =
-				"BillingAddress", //$sourceClass =
-				null, //$fieldList =
-				null, //$detailedFormFields =
-				"\"BillingAddress\".\"ID\" = ".$this->BillingAddressID, //$sourceFilter =
-				"\"Created\" ASC", //$sourceSort =
-				null //"INNER JOIN \"Order\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"" //$sourceJoin =
-			);
-			if(!$this->BillingAddressID) {
-				$billingAddressField->setPermissions(array('edit', 'add', 'inlineadd', 'show'));
-			}
-			elseif($this->canEdit()) {
-				$billingAddressField->setPermissions(array('edit', 'show'));
-			}
-			else {
-				$billingAddressField->setPermissions(array( 'export',  'show'));
-			}
-			//DO NOT ADD!
-			//$billingAddressField->setRelationAutoSetting(true);
-			//$billingAddress->setShowPagination(false);
-			$fields->addFieldToTab('Root.Addresses',$billingAddressField);
+
+			$fields->addFieldToTab('Root.Addresses',$this->getBillingAddressField());
 
 			if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
 				$fields->addFieldToTab('Root.Addresses',new HeaderField("ShippingAddressHeader", _t("Order.SHIPPINGADDRESS", "Shipping Address")));
 				$fields->addFieldToTab('Root.Addresses',new CheckboxField("UseShippingAddress", _t("Order.USESEPERATEADDRESS", "Use seperate shipping address?")));
 				if($this->UseShippingAddress) {
-					$shippinggAddressObject = $this->CreateOrReturnExistingAddress("ShippingAddress");
-					$shippingAddressField = new HasOneComplexTableField(
-						$this, //$controller
-						"ShippingAddress", //$name =
-						"ShippingAddress", //$sourceClass =
-						null, //$fieldList =
-						null, //$detailedFormFields =
-						"\"ShippingAddress\".\"ID\" = ".$this->ShippingAddressID, //$sourceFilter =
-						"\"Created\" ASC", //$sourceSort =
-						null //"INNER JOIN \"Order\" ON \"Order\".\"ShippingAddressID\" = \"ShippingAddress\".\"ID\"" //$sourceJoin =
-					);
-					if(!$this->ShippingAddressID) {
-						$shippingAddressField->setPermissions(array('edit', 'add', 'inlineadd', 'show'));
-					}
-					elseif($this->canEdit()) {
-						$shippingAddressField->setPermissions(array('edit', 'show'));
-					}
-					else {
-						$shippingAddressField->setPermissions(array( 'export',  'show'));
-					}
-					//DO NOT ADD
-					//$shippingAddress->setRelationAutoSetting(true);
-					$fields->addFieldToTab('Root.Addresses',$shippingAddressField);
+					$fields->addFieldToTab('Root.Addresses',$this->getShippingAddressField());
 				}
 			}
 			$this->MyStep()->addOrderStepFields($fields, $this);
@@ -632,11 +556,84 @@ class Order extends DataObject {
 		return $fields;
 	}
 
+
+
 	/**
 	 *
-	 *@return HasManyComplexTableField
+	 *@return GridField
 	 **/
-	public function OrderStatusLogsTable($sourceClass, $title, $fieldList = null, $detailedFormFields = null) {
+	protected function getBillingAddressField(){
+		return new LiteralField("ShippingAddress", "<h3>BillingAddress GridField goes here</h3>");
+		return new GridField("BillingAddress", _t("Order.BILLING_ADDRESS", "Billing Address"), $this->BillingAddress());
+		/*
+		$billingAddressObject = $this->CreateOrReturnExistingAddress("BillingAddress");
+		$billingAddressField = new HasOneComplexTableField(
+			$this, //$controller
+			"BillingAddress", //$name =
+			"BillingAddress", //$sourceClass =
+			null, //$fieldList =
+			null, //$detailedFormFields =
+			"\"BillingAddress\".\"ID\" = ".$this->BillingAddressID, //$sourceFilter =
+			"\"Created\" ASC", //$sourceSort =
+			null //"INNER JOIN \"Order\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"" //$sourceJoin =
+		);
+		if(!$this->BillingAddressID) {
+			$billingAddressField->setPermissions(array('edit', 'add', 'inlineadd', 'show'));
+		}
+		elseif($this->canEdit()) {
+			$billingAddressField->setPermissions(array('edit', 'show'));
+		}
+		else {
+			$billingAddressField->setPermissions(array( 'export',  'show'));
+		}
+		//DO NOT ADD!
+		//$billingAddressField->setRelationAutoSetting(true);
+		//$billingAddress->setShowPagination(false);
+		*/
+	}
+
+
+	/**
+	 *
+	 *@return GridField
+	 **/
+	protected function getShippingAddressField(){
+		return new LiteralField("ShippingAddress", "<h3>ShippingAddress GridField goes here</h3>");
+		return new GridField("ShippingAddress", _t("Order.BILLING_ADDRESS", "Shipping Address"), $this->BillingAddress());
+		/*
+		$shippinggAddressObject = $this->CreateOrReturnExistingAddress("ShippingAddress");
+		$shippingAddressField = new HasOneComplexTableField(
+			$this, //$controller
+			"ShippingAddress", //$name =
+			"ShippingAddress", //$sourceClass =
+			null, //$fieldList =
+			null, //$detailedFormFields =
+			"\"ShippingAddress\".\"ID\" = ".$this->ShippingAddressID, //$sourceFilter =
+			"\"Created\" ASC", //$sourceSort =
+			null //"INNER JOIN \"Order\" ON \"Order\".\"ShippingAddressID\" = \"ShippingAddress\".\"ID\"" //$sourceJoin =
+		);
+		if(!$this->ShippingAddressID) {
+			$shippingAddressField->setPermissions(array('edit', 'add', 'inlineadd', 'show'));
+		}
+		elseif($this->canEdit()) {
+			$shippingAddressField->setPermissions(array('edit', 'show'));
+		}
+		else {
+			$shippingAddressField->setPermissions(array( 'export',  'show'));
+		}
+		//DO NOT ADD
+		//$shippingAddress->setRelationAutoSetting(true);
+		*/
+	}
+
+	/**
+	 *
+	 *@return GridField
+	 **/
+	protected function OrderStatusLogsTable($sourceClass, $title, $fieldList = null, $detailedFormFields = null) {
+		return new LiteralField("ShippingAddress", "<h3>OrderStatusLogsTable GridField goes here</h3>");
+		return new GridField("OrderStatusLogs", _t("Order.ORDERITEMS", "Order Items"), $this->OrderStatusLogs());
+		/*
 		$orderStatusLogsTable = new HasManyComplexTableField(
 			$this,
 			"OrderStatusLogs", //$name
@@ -652,8 +649,70 @@ class Order extends DataObject {
 			$orderStatusLogsTable->setAddTitle($title);
 		}
 		return $orderStatusLogsTable;
+		*/
 	}
 
+	/**
+	 *
+	 * @return GridField
+	 */
+	protected function getOrderItemsField(){
+		return new LiteralField("ShippingAddress", "<h3>Attributes GridField goes here</h3>");
+		return new GridField("Attributes", _t("Order.ORDERITEMS", "Order Items"), $this->OrderItems());
+		/*
+		$orderItemsTable = new HasManyComplexTableField(
+			$this, //$controller
+			"Attributes", //$name =
+			"OrderItem", //$sourceClass =
+			null, //$fieldList =
+			null, //$detailedFormFields =
+			"\"OrderID\" = ".$this->ID."", //$sourceFilter =
+			"\"Created\" ASC", //$sourceSort =
+			null //$sourceJoin =
+		);
+		$orderItemsTable->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd', "show"));
+		$orderItemsTable->setShowPagination(false);
+		$orderItemsTable->setRelationAutoSetting(true);
+		$orderItemsTable->addSummary(
+			_t("Order.TOTAL", "Total"),
+			array("Total" => array("sum","Currency->Nice"))
+		);
+		*/
+	}
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	protected function getPaymentsField(){
+		return new LiteralField("ShippingAddress", "<h3>Payments GridField goes here</h3>");
+		return new GridField("Payments", _t("Order.PAYMENTS", "Payments"), $this->Payments());
+		/*
+		$paymentsTable = new HasManyComplexTableField(
+			$this,
+			"Payments", //$name
+			"Payment", //$sourceClass =
+			null, //$fieldList =
+			null, //$detailedFormFields =
+			"\"OrderID\" = ".$this->ID."", //$sourceFilter =
+			"\"Created\" ASC", //$sourceSort =
+			null //$sourceJoin =
+		);
+		$paymentsTable->setPageSize(20);
+		$paymentsTable->addSummary(
+			_t("Order.TOTAL", "Total"),
+			array("Total" => array("sum","Currency->Nice"))
+		);
+		if($this->IsPaid()){
+			$paymentsTable->setPermissions(array('export', 'show'));
+		}
+		else {
+			$paymentsTable->setPermissions(array('edit', 'delete', 'export', 'show'));
+		}
+		$paymentsTable->setShowPagination(false);
+		$paymentsTable->setRelationAutoSetting(true);
+		*/
+	}
 
 	function OrderStepField() {
 		return new OrderStepField($name = "MyOrderStep", $this, Member::currentUser());

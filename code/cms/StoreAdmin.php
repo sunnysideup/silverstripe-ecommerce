@@ -10,7 +10,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class StoreAdmin extends ModelAdmin{
+class StoreAdmin extends ModelAdminEcommerceBaseClass{
 
 	/**
 	 * standard SS variable
@@ -22,26 +22,14 @@ class StoreAdmin extends ModelAdmin{
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $menu_title = "Shop";
+	public static $menu_title = "Shop Settings";
 
 
 	/**
 	 * standard SS variable
 	 * @var Int
 	 */
-	public static $menu_priority = 3;
-
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	public static $collection_controller_class = 'StoreAdmin_CollectionController';
-
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	public static $record_controller_class = 'StoreAdmin_RecordController';
+	public static $menu_priority = 23;
 
 	/**
 	 * standard SS variable
@@ -49,13 +37,14 @@ class StoreAdmin extends ModelAdmin{
 	 */
 	public static $menu_icon = "";
 
-	/**
-	 * Standard SS Method
-	 * @return Array
-	 */
-	function getManagedModels() {
-		return EcommerceConfig::get("StoreAdmin", "managed_models");
-	}
+
+	public static $managed_models = array(
+		'EcommerceDBConfig',
+		'OrderStep',
+		'EcommerceCountry',
+		'OrderModifier_Descriptor',
+		'EcommerceCurrency'
+	);
 
 	function init() {
 		parent::init();
@@ -69,6 +58,8 @@ class StoreAdmin extends ModelAdmin{
 	function urlSegmenter() {
 		return self::$url_segment;
 	}
+
+
 }
 
 /*

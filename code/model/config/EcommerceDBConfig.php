@@ -195,8 +195,14 @@ class EcommerceDBConfig extends DataObject {
 		function i18n_plural_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATIONS", "Ecommerce Configurations");}
 
 	/**
-	 * static holder for its own (or other EcommerceDBConfig) class.
+	 * Standard SS variable.
 	 * @var String
+	 */
+	public static $description = "A set of configurations for the online shop. Each shop needs to have one or more sets.";
+
+	/**
+	 * static holder for its own (or other EcommerceDBConfig) class.
+	 * @var String | NULL
 	 */
 	protected static $my_current_one = null;
 
@@ -278,12 +284,12 @@ class EcommerceDBConfig extends DataObject {
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
 				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
-				new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"], 2, 2)
+				new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"])
 			),
 			new Tab('ProductDisplay',
 				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
 				new CheckboxField("OnlyShowProductsThatCanBePurchased", $fieldLabels["OnlyShowProductsThatCanBePurchased"]),
-				new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"], 2, 2),
+				new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
 				new CheckboxField("ProductsHaveWeight", $fieldLabels["ProductsHaveWeight"]),
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
@@ -292,7 +298,7 @@ class EcommerceDBConfig extends DataObject {
 				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase'])
 			),
 			new Tab('ProductImages',
-				new ImageField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
+				new UploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
 				new ReadonlyField("DefaultThumbnailImageSize", $fieldLabels["DefaultThumbnailImageSize"], $productImage->ThumbWidth()."px x ".$productImage->ThumbHeight()."px "),
 				new ReadonlyField("DefaultSmallImageSize", $fieldLabels["DefaultSmallImageSize"], $productImage->SmallWidth()."px x ".$productImage->SmallHeight()."px "),
 				new ReadonlyField("DefaultContentImageSize", $fieldLabels["DefaultContentImageSize"], $productImage->ContentWidth()."px wide"),
@@ -304,11 +310,11 @@ class EcommerceDBConfig extends DataObject {
 			),
 			new Tab('Emails',
 				new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),
-				new ImageField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos")
+				new UploadField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos")
 			),
 			new Tab('Invoice',
 				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"]),
-				new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"] , 5,5)
+				new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
 			),
 			new Tab('Process',
 				new ComplexTableField($this, "OrderSteps", "OrderStep")
@@ -340,6 +346,10 @@ class EcommerceDBConfig extends DataObject {
 				new CheckboxField("ShopClosed", $fieldLabels["ShopClosed"])
 			)
 		);
+		//set cols
+		$fields->dataFieldByName("CurrenciesExplanation")->setRows(2);
+		$fields->dataFieldByName("NotForSaleMessage")->setRows(2);
+		$fields->dataFieldByName("ShopPhysicalAddress")->setRows(2);
 		return $fields;
 	}
 

@@ -146,6 +146,12 @@ class OrderStatusLog extends DataObject {
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGENTRIES", "Order Log Entries");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A record of anything that happened with an order.";
+
+	/**
 	 * standard SS variable
 	 * @var String
 	 */
@@ -315,6 +321,12 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 		function i18n_plural_name() { return _t("OrderStatusLog.SUBMITTEDORDERS", "Submitted Orders - Fulltext Backup");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "The record that the order has been submitted by the customer.  This is important in e-commerce, because from here, nothing can change to the order.";
+
+	/**
 	 * This record is not editable
 	 *@return Boolean
 	 **/
@@ -423,6 +435,12 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
 
 	public static $plural_name = "Cancelled Orders";
 		function i18n_plural_name() { return _t("OrderStatusLog.SUBMITTEDORDERS", "Cancelled Orders");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A record noting the cancellation of an order.  ";
 
 	/**
 	 * This record is not editable

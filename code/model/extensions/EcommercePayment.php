@@ -35,10 +35,12 @@ class EcommercePayment extends DataExtension {
 			'field' => 'TextField',
 			//'filter' => 'PaymentFilters_AroundDateFilter', //TODO: this breaks the sales section of the CMS
 		),
+		/*
 		'IP' => array(
 			'title' => 'IP Address',
 			'filter' => 'PartialMatchFilter'
 		),
+		*/
 		'Status'
 	);
 

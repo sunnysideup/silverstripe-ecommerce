@@ -106,6 +106,12 @@ class EcommerceCountry extends DataObject {
 		function i18n_plural_name() { return _t("EcommerceCountry.COUNTRIES", "Countries");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A country.";
+
+	/**
 	 * return false or true
 	 * @ return Boolean
 	 */

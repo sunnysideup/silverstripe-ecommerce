@@ -70,13 +70,7 @@ class OrderStep extends DataObject {
 	 */
 	public static $summary_fields = array(
 		"Name" => "Name",
-		"CustomerCanEditNice" => "customer can edit",
-		"CustomerCanPayNice" => "customer can pay",
-		"CustomerCanCancelNice" => "customer can cancel",
-		"ShowAsUncompletedOrderNice" => "show as uncomplete",
-		"ShowAsInProcessOrderNice" => "show as in process",
-		"ShowAsCompletedOrderNice" => "show as complete",
-		"HideStepFromCustomerNice" => "hide step from customer"
+		"Description" => "Description"
 	);
 
 	/**
@@ -168,6 +162,13 @@ class OrderStep extends DataObject {
 	 */
 	public static $plural_name = "Order Steps";
 		function i18n_plural_name() { return _t("OrderStep.ORDERSTEPS", "Order Steps");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A step that any order goes through.";
+
 
 	/**
 	 * SUPER IMPORTANT TO KEEP ORDER!
@@ -281,23 +282,9 @@ class OrderStep extends DataObject {
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING2", _t("OrderStep.CUSTOMERCANCHANGE", "What can be changed during this step?"), 3), "CustomerCanEdit");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING5", _t("OrderStep.ORDERGROUPS", "Order groups for customer?"), 3), "ShowAsUncompletedOrder");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING7", _t("OrderStep.SORTINGINDEXHEADER", "Index Number (lower number come first)"), 3), "Sort");
-		$orderTable = new HasManyComplexTableField(
-			$this,
-			"Orders", //$name
-			"Order", //$sourceClass =
-			null, //$fieldList =
-			null, //$detailedFormFields =
-			"\"StatusID\" = ".$this->ID."", //$sourceFilter =
-			"\"ID\" DESC", //$sourceSort =
-			null //$sourceJoin =
-		);
-		$orderTable->setPageSize(20);
-		$orderTable->setPermissions(array('export', 'show'));
-		$fields->addFieldToTab('Root.Orders',$orderTable);
 		$fields->addFieldToTab("Root.Main", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only")), "WARNING1");
 		return $fields;
 	}
-
 
 	/**
 	 * tells the order to display itself with an alternative display page.
@@ -322,7 +309,7 @@ class OrderStep extends DataObject {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	public function addOrderStepFields(&$fields, $order) {
+	public function addOrderStepFields(FieldList $fields, Order $order) {
 		return $fields;
 	}
 
@@ -356,7 +343,7 @@ class OrderStep extends DataObject {
 		* @param Order object
 		* @return Boolean - true if the current step is ready to be run...
 		**/
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		user_error("Please implement this in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
 		return true;
 	}
@@ -369,7 +356,7 @@ class OrderStep extends DataObject {
 		*@param Order object
 		*@return Boolean - true if run correctly
 		**/
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		user_error("Please implement this in a subclass of OrderStep", E_USER_WARNING);
 		return true;
 	}
@@ -381,7 +368,7 @@ class OrderStep extends DataObject {
 	 * @param Order object
 	 * @return DataObject | Null (next step OrderStep object)
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
 		if($nextOrderStepObject) {
 			return $nextOrderStepObject;
@@ -621,7 +608,7 @@ class OrderStep extends DataObject {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep_Created extends OrderStep {
+class OrderStep_Created extends OrderStep implements OrderStepInterface  {
 
 	public static $defaults = array(
 		"CustomerCanEdit" => 1,
@@ -637,7 +624,7 @@ class OrderStep_Created extends OrderStep {
 	 *@param DataObject - $order Order
 	 *@return Boolean
 	 **/
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return true;
 	}
 
@@ -646,7 +633,7 @@ class OrderStep_Created extends OrderStep {
 	 *@param DataObject - $order Order
 	 *@return Boolean
 	 **/
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		if(!$order->MemberID) {
 			$member = Member::currentUser();
 			if($member) {
@@ -664,7 +651,7 @@ class OrderStep_Created extends OrderStep {
 	 * @param DataObject - $order Order
 	 * @return DataObject | Null (nextStep DataObject)
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		if($order->TotalItems($recalculate = true)) {
 			return parent::nextStep($order);
 		}
@@ -677,7 +664,7 @@ class OrderStep_Created extends OrderStep {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		if(!$order->IsSubmitted()) {
 			//LINE BELOW IS NOT REQUIRED
@@ -734,7 +721,7 @@ class OrderStep_Created extends OrderStep {
  * @sub-package: model
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class OrderStep_Submitted extends OrderStep {
+class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
 	static $db = array(
 		"SaveOrderAsHTML" => "Boolean",
@@ -766,7 +753,7 @@ class OrderStep_Submitted extends OrderStep {
 	 *@param DataObject - $order Order
 	 *@return Boolean
 	 **/
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return (bool) $order->TotalItems($recalculate = true);
 	}
 
@@ -775,7 +762,7 @@ class OrderStep_Submitted extends OrderStep {
 	 *@param DataObject - $order Order
 	 *@return Boolean
 	 **/
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		if(!$order->IsSubmitted()) {
 			$className = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 			if(class_exists($className)) {
@@ -825,7 +812,7 @@ class OrderStep_Submitted extends OrderStep {
 	 *@param DataObject - $order Order
 	 *@return DataObject | Null	(next step OrderStep)
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		if($order->IsSubmitted()) {
 			return parent::nextStep($order);
 		}
@@ -839,7 +826,7 @@ class OrderStep_Submitted extends OrderStep {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
@@ -866,7 +853,7 @@ class OrderStep_Submitted extends OrderStep {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep_SentInvoice extends OrderStep {
+class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 
 	static $db = array(
 		"SendInvoiceToCustomer" => "Boolean"
@@ -895,7 +882,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 * @param DataObject $order Order
 	 * @return Boolean
 	 **/
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		if( $order->IsSubmitted()) {
 			if($payments = $order->Payments()) {
 				if($payments->count()) {
@@ -914,7 +901,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 * @param DataObject $order Order
 	 * @return Boolean
 	 **/
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		$subject = $this->EmailSubject;
 		$message = $this->CustomerMessage;
 		if($this->SendInvoiceToCustomer){
@@ -937,7 +924,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 * @param DataObject $order Order
 	 * @return DataObject | Null	(next step OrderStep object)
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		if(!$this->SendInvoiceToCustomer || $this->hasBeenSent($order)) {
 			return parent::nextStep($order);
 		}
@@ -950,7 +937,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
@@ -983,7 +970,7 @@ class OrderStep_SentInvoice extends OrderStep {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep_Paid extends OrderStep {
+class OrderStep_Paid extends OrderStep implements OrderStepInterface  {
 
 	public static $defaults = array(
 		"CustomerCanEdit" => 0,
@@ -996,11 +983,11 @@ class OrderStep_Paid extends OrderStep {
 		"ShowAsInProcessOrder" => 1
 	);
 
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return true;
 	}
 
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		return true;
 	}
 
@@ -1009,7 +996,7 @@ class OrderStep_Paid extends OrderStep {
 	 *@param DataObject $order Order
 	 *@return DataObject | Null	(next step OrderStep object)
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		if($order->IsPaid()) {
 			return parent::nextStep($order);
 		}
@@ -1022,7 +1009,7 @@ class OrderStep_Paid extends OrderStep {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		if(!$order->IsPaid()) {
 			$header = _t("OrderStep.SUBMITORDER", "Order NOT Paid");
@@ -1051,7 +1038,7 @@ class OrderStep_Paid extends OrderStep {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep_Confirmed extends OrderStep {
+class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 
 	public static $defaults = array(
 		"CustomerCanEdit" => 0,
@@ -1062,11 +1049,11 @@ class OrderStep_Confirmed extends OrderStep {
 		"ShowAsInProcessOrder" => 1
 	);
 
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return true;
 	}
 
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		return true;
 	}
 
@@ -1075,7 +1062,7 @@ class OrderStep_Confirmed extends OrderStep {
 	 *@param DataObject $order Order
 	 *@return DataObject | Null - DataObject = OrderStep
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		if(DataObject::get_one("OrderStatusLog_PaymentCheck", "\"OrderID\" = ".$order->ID." AND \"PaymentConfirmed\" = 1")) {
 			return parent::nextStep($order);
 		}
@@ -1089,7 +1076,7 @@ class OrderStep_Confirmed extends OrderStep {
 	 * @param Order $order
 	 * @return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.MUSTDOPAYMENTCHECK", " ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_PaymentCheck", $msg),"ActionNextStepManually");
@@ -1115,7 +1102,7 @@ class OrderStep_Confirmed extends OrderStep {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep_SentReceipt extends OrderStep {
+class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 
 	static $db = array(
 		"SendReceiptToCustomer" => "Boolean"
@@ -1139,11 +1126,11 @@ class OrderStep_SentReceipt extends OrderStep {
 		return $fields;
 	}
 
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return $order->IsPaid();
 	}
 
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		$subject = $this->EmailSubject;
 		$message = $this->CustomerMessage;
 		if($this->SendReceiptToCustomer){
@@ -1166,7 +1153,7 @@ class OrderStep_SentReceipt extends OrderStep {
 	 *@param DataObject $order Order
 	 *@return DataObject | Null - DataObject = next OrderStep
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		if(!$this->SendReceiptToCustomer || $this->hasBeenSent($order)) {
 			return parent::nextStep($order);
 		}
@@ -1180,7 +1167,7 @@ class OrderStep_SentReceipt extends OrderStep {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...)");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
@@ -1214,7 +1201,7 @@ class OrderStep_SentReceipt extends OrderStep {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep_Sent extends OrderStep {
+class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 
 	static $db = array(
 		"SendDetailsToCustomer" => "Boolean"
@@ -1236,11 +1223,11 @@ class OrderStep_Sent extends OrderStep {
 		return $fields;
 	}
 
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return true;
 	}
 
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		return true;
 	}
 
@@ -1249,7 +1236,7 @@ class OrderStep_Sent extends OrderStep {
 	 *@param DataObject $order Order
 	 *@return DataObject | Null - DataObject = OrderStep
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		if(DataObject::get_one("OrderStatusLog_DispatchPhysicalOrder", "\"OrderID\" = ".$order->ID)) {
 			$subject = $this->EmailSubject;
 			$message = $this->CustomerMessage;
@@ -1278,7 +1265,7 @@ class OrderStep_Sent extends OrderStep {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.MUSTENTERDISPATCHRECORD", " ... To move this order to the next step you enter the dispatch details in the logs.");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_DispatchPhysicalOrder", $msg),"ActionNextStepManually");
@@ -1312,7 +1299,7 @@ class OrderStep_Sent extends OrderStep {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep_Archived extends OrderStep {
+class OrderStep_Archived extends OrderStep implements OrderStepInterface  {
 
 	public static $defaults = array(
 		"CustomerCanEdit" => 0,
@@ -1323,11 +1310,11 @@ class OrderStep_Archived extends OrderStep {
 		"ShowAsCompletedOrder" => 1
 	);
 
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return true;
 	}
 
-	public function doStep($order) {
+	public function doStep(Order $order) {
 		return true;
 	}
 
@@ -1336,7 +1323,7 @@ class OrderStep_Archived extends OrderStep {
 	 *@param DataObject $order Order
 	 *@return DataObject | Null - DataObject = OrderStep
 	 **/
-	public function nextStep($order) {
+	public function nextStep(Order $order) {
 		//IMPORTANT
 		return null;
 	}
@@ -1347,7 +1334,7 @@ class OrderStep_Archived extends OrderStep {
 	 *@param Order $order
 	 *@return FieldList
 	 **/
-	function addOrderStepFields(&$fields, $order) {
+	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this order then do this here ...");
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_Archived", $msg),"ActionNextStepManually");

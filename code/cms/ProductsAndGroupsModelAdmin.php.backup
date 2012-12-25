@@ -12,14 +12,9 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class ProductsAndGroupsModelAdmin extends ModelAdmin {
+class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 
 	public static $menu_priority = 2;
-
-	public static $collection_controller_class = 'ProductsAndGroupsModelAdmin_CollectionController';
-
-	public static $record_controller_class = 'ProductsAndGroupsModelAdmin_RecordController';
-
 
 	public static $url_segment = 'products';
 
@@ -32,18 +27,6 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin {
 	 */
 	public static $menu_icon = "";
 
-	public static $model_importers = array(
-		'Product' => 'ProductBulkLoader',
-		'ProductGroup' => null
-	);
-
-	/**
-	 * Standard SS Method
-	 * @return Array
-	 */
-	function getManagedModels() {
-		return EcommerceConfig::get("ProductsAndGroupsModelAdmin", "managed_models");
-	}
 
 	function init() {
 		parent::init();

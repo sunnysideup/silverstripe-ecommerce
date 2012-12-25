@@ -123,6 +123,11 @@ class OrderItem extends OrderAttribute {
 	public static $plural_name = "Order Items";
 		function i18n_plural_name() { return _t("OrderItem.ORDERITEMS", "Order Items");}
 
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "Any item that is added to an order and sits before the sub-total. ";
 
 	/**
 	 * HACK: Versioned is BROKEN this method helps in fixing it.

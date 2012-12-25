@@ -13,7 +13,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderEmailRecord extends DataObject {
+class OrderEmailRecord extends DataObject{
 
 	/**
 	 * standard SS variable
@@ -98,6 +98,12 @@ class OrderEmailRecord extends DataObject {
 	 */
 	public static $plural_name = "Customer Emails";
 		function i18n_plural_name() { return _t("OrderEmailRecord.CUSTOMEREMAILS", "Customer Emails");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A record of any email that has been sent in relation to an order.";
 
 	/**
 	 * standard SS method
