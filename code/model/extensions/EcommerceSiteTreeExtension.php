@@ -71,6 +71,11 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 		//todo: check if we even need this (via ShoppingCartsRequirements.ss)
+		if($this->owner->dataRecord) {
+			if($this->owner->dataRecord instanceOf Product || $this->owner->dataRecord instanceOf ProductGroup) {
+				Session::set("ContinueShoppingLink", substr($_SERVER['REQUEST_URI'], strlen(Director::baseURL())));
+			}
+		}
 	}
 
 	/**
@@ -100,6 +105,14 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	 **/
 	function Cart() {
 		return ShoppingCart::current_order();
+	}
+
+	function ContinueShoppingLink(){
+		$link = Session::get("ContinueShoppingLink");
+		if(!$link) {
+			$link = Director::baseURL();
+		}
+		return $link;
 	}
 
 

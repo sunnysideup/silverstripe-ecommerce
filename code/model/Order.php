@@ -108,7 +108,7 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $default_sort = "\"Created\" DESC";
+	public static $default_sort = "\"LastEdited\" DESC";
 
 	/**
 	 * standard SS variable
@@ -128,7 +128,7 @@ class Order extends DataObject {
 		'DisplayPrice' => 'Money',
 		'HasAlternativeCurrency' => 'Boolean',
 		'TotalItems' => 'Int',
-		'TotalItemsTimesQuantity' => 'Int',
+		'TotalItemsTimesQuantity' => 'Double',
 		'IsCancelled' => 'Boolean',
 		'Country' => 'Varchar(3)', //This is the applicable country for the order - for tax purposes, etc....
 		'FullNameCountry' => 'Varchar',
@@ -175,11 +175,26 @@ class Order extends DataObject {
 	protected static $modifiers = null;
 
 	/**
+	 * Tells us if an order needs to be recalculated
+	 * @var Boolean
+	 */
+	protected static $needs_recalculating = false;
+		public static function set_needs_recalculating(){ self::$needs_recalculating = true;}
+		public static function get_needs_recalculating(){ return self::$needs_recalculating;}
+
+	/**
 	 * Total Items : total items in cart
 	 *
 	 * @var integer / null
 	 */
 	protected $totalItems = null;
+
+	/**
+	 * Total Items : total items in cart
+	 *
+	 * @var Double / null
+	 */
+	protected $totalItemsTimesQuantity = null;
 
 
 	public static function get_modifier_forms($controller) {
@@ -196,10 +211,11 @@ class Order extends DataObject {
 	 *
 	 * @param Controller $optionalController
 	 * @param Validator $optionalValidator
-	 * @return ArrayList
+	 * @return ArrayList | Null
 	 **/
 	public function getModifierForms($optionalController = null, $optionalValidator = null) {
 		$dos = new ArrayList();
+		if (isset($_GET['debug_profile'])) Profiler::mark('Order::getModifierForms');
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
 				if($modifier->ShowForm()) {
@@ -211,7 +227,13 @@ class Order extends DataObject {
 				}
 			}
 		}
-		return $dos;
+		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::getModifierForms');
+		if( $dos->count() ) {
+			return $dos;
+		}
+		else {
+			return null;
+		}
 	}
 
 
@@ -280,7 +302,7 @@ class Order extends DataObject {
 	 **/
 	public static $summary_fields = array(
 		"Title" => "Title",
-		"Status.Title" => "Status"
+		"Status.Title" => "Next Step"
 	);
 		public static function get_summary_fields() {return self::$summary_fields;}
 
@@ -448,6 +470,7 @@ class Order extends DataObject {
 				$cancelledField = $fields->dataFieldByName("CancelledByID");
 				$fields->removeByName("CancelledByID");
 				$fields->addFieldToTab("Root.Cancellation", $cancelledField);
+				$oldOrderStatusLogsSource = $this->OrderStatusLogs();
 				$oldOrderStatusLogs = new ComplexTableField(
 					$this,
 					$name ="OldOrderStatusLogs",
@@ -458,6 +481,7 @@ class Order extends DataObject {
 					$sourceSort = "",
 					$sourceJoin = ""
 				);
+				$oldOrderStatusLogs->setCustomSourceItems($oldOrderStatusLogsSource);
 				$oldOrderStatusLogs->setPermissions(array("show"));
 				$fields->addFieldToTab('Root.Log', $oldOrderStatusLogs);
 				$submissionLog = $this->SubmissionLog();
@@ -592,6 +616,8 @@ class Order extends DataObject {
 				$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
 				$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), $mapOfCurrencies, EcommerceCurrency::default_currency_id()));
 			}
+			$fields->addFieldToTab("Root.Log", new ReadonlyField("Created", _t("Root.CREATED", "Created")));
+			$fields->addFieldToTab("Root.Log", new ReadonlyField("LastEdited", _t("Root.LASTEDITED", "Last saved")));
 		}
 		else {
 			$fields->removeByName("Main");
@@ -703,9 +729,15 @@ class Order extends DataObject {
 	 *
 	 **/
 	public function tryToFinaliseOrder() {
+		if($this->CancelledByID) {
+			return;
+		}
 		do {
 			//status of order is being progressed
 			$nextStatusID = $this->doNextStatus();
+			//a little hack to make sure we do not rely on a stored value
+			//of "isSubmitted"
+			$this->isSubmittedTempVar = -1;
 		}
 		while ($nextStatusID);
 	}
@@ -727,18 +759,22 @@ class Order extends DataObject {
 		return 0;
 	}
 
-
+	/**
+	 * cancel an order.
+	 * @param Member $member - the user cancelling the order
+	 * @param String $reason - the reason the order is cancelled
+	 */
 	public function Cancel($member, $reason = "") {
 		$this->CancelledByID = $member->ID;
 		$this->write();
-		$obj = new OrderStatusLog_Cancel();
-		$obj->AuthorID = $member->ID;
-		$obj->OrderID = $this->ID;
-		$obj->Note = $reason;
+		$log = new OrderStatusLog_Cancel();
+		$log->AuthorID = $member->ID;
+		$log->OrderID = $this->ID;
+		$log->Note = $reason;
 		if($member->IsShopAdmin()) {
-			$obj->InternalUseOnly = true;
+			$log->InternalUseOnly = true;
 		}
-		$obj->write();
+		$log->write();
 	}
 
 
@@ -953,7 +989,7 @@ class Order extends DataObject {
 	 * @return Null | DataObject (OrderAddress)
 	 **/
 
-	public function CreateOrReturnExistingAddress($className, $alternativeMethodName = '') {
+	public function CreateOrReturnExistingAddress($className = "BillingAddress", $alternativeMethodName = '') {
 		if($this->exists()) {
 			$variableName = $className."ID";
 			$methodName = $className;
@@ -972,6 +1008,7 @@ class Order extends DataObject {
 					}
 				}
 			}
+			//we can remove this saving ????!
 			if($address) {
 				//save order
 				$this->$variableName = $address->write();
@@ -1042,8 +1079,8 @@ class Order extends DataObject {
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	function sendInvoice($subject = "", $message = "", $resend = false, $adminOnly = false) {
-		return $this->sendEmail('Order_ReceiptEmail', $subject, $message, $resend, $adminOnly);
+	function sendInvoice($subject = "", $message = "", $resend = false, $adminOnly = false, $template = 'Order_ReceiptEmail') {
+		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
 	}
 
 	/**
@@ -1056,8 +1093,8 @@ class Order extends DataObject {
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	public function sendReceipt($subject = "", $message = "", $resend = false, $adminOnly = false) {
-		return $this->sendEmail('Order_ReceiptEmail', $subject, $message, $resend, $adminOnly);
+	public function sendReceipt($subject = "", $message = "", $resend = false, $adminOnly = false, $template = 'Order_ReceiptEmail') {
+		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
 	}
 
 	/**
@@ -1070,8 +1107,8 @@ class Order extends DataObject {
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false) {
-		return $this->sendEmail('Order_StatusEmail', $subject, $message, $resend, $adminOnly);
+	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false, $template = 'Order_StatusEmail') {
+		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
 	}
 
 
@@ -1248,11 +1285,17 @@ class Order extends DataObject {
 	 *
 	 */
 	public function calculateOrderAttributes($force = false) {
-		if($this->TotalItems() || $this->StatusID) {
-			$this->calculateOrderItems($force);
-			$this->calculateModifiers($force);
+		if($this->IsSubmitted()) {
+			//submitted order are NEVER recalculated.
+			//they are set in stone
 		}
-		$this->extend("onCalculateOrder");
+		elseif(Order::get_needs_recalculating() || $force) {
+			if($this->StatusID || $this->TotalItems()) {
+				$this->calculateOrderItems($force);
+				$this->calculateModifiers($force);
+				$this->extend("onCalculateOrder");
+			}
+		}
 	}
 
 
@@ -1272,7 +1315,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		$this->extend("onCalculateOrderItems");
+		$this->extend("onCalculateOrderItems", $orderItems);
 	}
 
 
@@ -1291,7 +1334,7 @@ class Order extends DataObject {
 				}
 			}
 		}
-		$this->extend("onCalculateModifiers");
+		$this->extend("onCalculateModifiers", $createdModifiers);
 	}
 
 
@@ -1305,6 +1348,7 @@ class Order extends DataObject {
 	 * @return Float
 	 */
 	function ModifiersSubTotal($excluded = null, $stopAtExcludedModifier = false) {
+		if (isset($_GET['debug_profile'])) Profiler::mark('Order::ModifiersSubTotal');
 		$total = 0;
 		if($modifiers = $this->Modifiers()) {
 			foreach($modifiers as $modifier) {
@@ -1325,6 +1369,7 @@ class Order extends DataObject {
 				}
 			}
 		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::ModifiersSubTotal');
 		return $total;
 	}
 
@@ -1681,39 +1726,47 @@ class Order extends DataObject {
 	 * A "Title" for the order, which summarises the main details (date, and customer) in a string.
 	 *@return String
 	 **/
-	function Title() {return $this->getTitle();}
-	function getTitle() {
+	function Title($dateFormat = "D j M Y, G:i T", $includeName = true) {return $this->getTitle($dateFormat, $includeName);}
+	function getTitle($dateFormat = "D j M Y, G:i T", $includeName = true) {
 		if($this->exists()) {
 			if($submissionLog = $this->SubmissionLog()) {
 				$dateObject = $submissionLog->dbObject('Created');
+				$placed = _t("Order.PLACED", "placed");
 			}
 			else {
 				$dateObject = $this->dbObject('Created');
+				$placed = _t("Order.STARTED", "started");
 			}
-			$title = $this->i18n_singular_name(). " #$this->ID - ".$dateObject->Nice();
+			$title = $this->i18n_singular_name(). " #$this->ID - ".$placed." ".$dateObject->Format($dateFormat);
 			$name = "";
 			if($this->CancelledByID) {
 				$name = " - "._t("Order.CANCELLED","CANCELLED");
 			}
-			if(!$name) {
-				if($this->MemberID){
-					if($member = $this->Member()) {
-						if($member->exists()) {
-							if($memberName = $member->getName()) {
-								$name = " - ".$memberName;
+			if($includeName) {
+				$by = _t("Order.BY", "by");
+				if(!$name) {
+					if($this->BillingAddressID) {
+						if($billingAddress = $this->BillingAddress()) {
+							$name = " - ".$by." ".$billingAddress->Prefix." ".$billingAddress->FirstName." ".$billingAddress->Surname;
+						}
+					}
+				}
+				if(!$name) {
+					if($this->MemberID){
+						if($member = $this->Member()) {
+							if($member->exists()) {
+								if($memberName = $member->getName()) {
+									if(!trim($memberName)) {
+										$memberName = _t("Order.ANONYMOUS","anonymous");
+									}
+									$name = " - ".$by." ".$memberName;
+								}
 							}
 						}
 					}
 				}
+				$title .= $name;
 			}
-			if(!$name) {
-				if($this->BillingAddressID) {
-					if($billingAddress = $this->BillingAddress()) {
-						$name = " - ".$billingAddress->Prefix." ".$billingAddress->FirstName." ".$billingAddress->Surname;
-					}
-				}
-			}
-			$title .= $name;
 		}
 		else {
 			$title = _t("Order.NEW", "New")." ".$this->i18n_singular_name();
@@ -1730,6 +1783,7 @@ class Order extends DataObject {
 	 */
 	function SubTotal(){return $this->getSubTotal();}
 	function getSubTotal() {
+		if (isset($_GET['debug_profile'])) Profiler::mark('Order::SubTotal');
 		$result = 0;
 		if($items = $this->Items()) {
 			foreach($items as $item) {
@@ -1738,6 +1792,7 @@ class Order extends DataObject {
 				}
 			}
 		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::SubTotal');
 		return $result;
 	}
 
@@ -1864,7 +1919,7 @@ class Order extends DataObject {
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
 	public function getTotalItems($recalculate = false) {
-		if($this->totalItems === null || $recalculate) {
+		if($this->totalItemsTimesQuantity === null || $recalculate) {
 			//to do, why do we check if you can edit ????
 			$this->totalItems = DB::query("
 				SELECT COUNT(\"OrderItem\".\"ID\")
@@ -1878,20 +1933,24 @@ class Order extends DataObject {
 		return $this->totalItems;
 	}
 
-
 	/**
 	 * returns the total number of OrderItems (not modifiers) times their respectective quantities.
-	 *@return Integer
+	 *@return Double
 	 **/
-	function TotalItemsTimesQuantity() {return $this->getTotalItemsTimesQuantity();}
-	function getTotalItemsTimesQuantity() {
-		$quantity = 0;
-		if($orderItems = $this->Items()) {
-			foreach($orderItems as $item) {
-				$quantity += $item->Quantity;
-			}
+	public function TotalItemsTimesQuantity($recalculate = false){return $this->getTotalItemsTimesQuantity($recalculate);}
+	public function getTotalItemsTimesQuantity($recalculate = false) {
+		if($this->totalItemsTimesQuantity === null || $recalculate || 1 == 1) {
+			//to do, why do we check if you can edit ????
+			$this->totalItemsTimesQuantity = DB::query("
+				SELECT SUM(\"OrderItem\".\"Quantity\")
+				FROM \"OrderItem\"
+					INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"ID\" = \"OrderItem\".\"ID\"
+				WHERE
+					\"OrderAttribute\".\"OrderID\" = ".$this->ID."
+					AND \"OrderItem\".\"Quantity\" > 0"
+			)->value();
 		}
-		return $quantity;
+		return $this->totalItemsTimesQuantity-0;
 	}
 
 
@@ -2020,18 +2079,28 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * speeds up processing by storing the IsSubmitted value
+	 * we start with -1 to know if it has been requested before.
+	 * @var Boolean
+	 */
+	protected $isSubmittedTempVar = -1;
+
+	/**
 	 * Casted variable - has the order been submitted?
 	 *
 	 *@return Boolean
 	 **/
-	function IsSubmitted(){return $this->getIsSubmitted();}
-	function getIsSubmitted() {
-		if($this->SubmissionLog()) {
-			return true;
+	function IsSubmitted($force = false){return $this->getIsSubmitted();}
+	function getIsSubmitted($force = false) {
+		if($this->isSubmittedTempVar == -1 || $force) {
+			if($this->SubmissionLog()) {
+				$this->isSubmittedTempVar = true;
+			}
+			else {
+				$this->isSubmittedTempVar = false;
+			}
 		}
-		else {
-			return false;
-		}
+		return $this->isSubmittedTempVar;
 	}
 
 
@@ -2255,6 +2324,12 @@ class Order extends DataObject {
 		);
 		$js[] = array(
 			't' => 'class',
+			's' => $ajaxObject->TotalItemsTimesQuantityClassName(),
+			'p' => 'innerHTML',
+			'v' => $this->TotalItemsTimesQuantity()
+		);
+		$js[] = array(
+			't' => 'class',
 			's' => $ajaxObject->ExpectedCountryClassName(),
 			'p' => 'innerHTML',
 			'v' => $this->ExpectedCountryName()
@@ -2310,12 +2385,14 @@ class Order extends DataObject {
 	 **/
 	function onAfterWrite() {
 		parent::onAfterWrite();
+		//crucial!
+		self::set_needs_recalculating();
 		if($this->IsSubmitted()) {
 			//do nothing
 		}
 		else {
 			if($this->StatusID) {
-				$this->calculateOrderAttributes();
+				$this->calculateOrderAttributes($force = false);
 				if(EcommerceRole::current_member_is_shop_admin()){
 					if(isset($_REQUEST["SubmitOrderViaCMS"])) {
 						$this->tryToFinaliseOrder();

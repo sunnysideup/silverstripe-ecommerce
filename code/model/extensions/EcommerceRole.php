@@ -13,25 +13,28 @@
 
 class EcommerceRole extends DataExtension {
 
-	/**
-	 * standard SS method
-	 * defines additional statistics
-	 */
-	static $db = array(
-		'Notes' => 'Text'
-	);
-	static $has_one = array(
-		'PreferredCurrency' => 'EcommerceCurrency'
-	);
-	static $has_many = array(
-		'Orders' => 'Order'
-	);
+
 	static $api_access = array(
 		'view' => array(
 			'ID',
 			'Orders',
 			'PreferredCurrency'
 		)
+	);
+
+	/**
+	 * standard SS method
+	 */
+	static $db = array(
+		'Notes' => 'Text'
+	);
+
+	static $has_one = array(
+		'PreferredCurrency' => 'EcommerceCurrency'
+	);
+
+	static $has_many = array(
+		'Orders' => 'Order'
 	);
 
 	/**
@@ -92,6 +95,25 @@ class EcommerceRole extends DataExtension {
 		$adminCode = EcommerceConfig::get("EcommerceRole", "admin_group_code");
 		$adminName = EcommerceConfig::get("EcommerceRole", "admin_group_name");
 		return DataObject::get_one("Group", "\"Code\" = '".$adminCode."' OR \"Title\" = '".$adminName."'");
+	}
+
+	public function updateCMSFields(FieldList $fields) {
+		//$orderField = $fields->dataFieldByName("Orders");
+		$preferredCurrencyField = $fields->dataFieldByName("PreferredCurrencyID");
+		$notesFields = $fields->dataFieldByName("Notes");
+		$link = Shoppingcart_Controller::get_url_segment()."/loginas/".$this->owner->ID."/";
+		$loginAsField = new LiteralField("LoginAsThisCustomer", "<a href=\"$link\" target=\"_blank\">Login as this customer</a>");
+		$fields->addFieldsToTab(
+			"Root.Orders",
+			array(
+				//$orderField,
+				$preferredCurrencyField,
+				$notesFields,
+				$loginAsField
+			)
+		);
+
+		return $fields;
 	}
 
 	/**

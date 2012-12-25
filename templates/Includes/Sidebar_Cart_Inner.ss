@@ -1,3 +1,9 @@
+<!--
+NOTE:
+Any element with the following classname: $AJAXDefinitions.TinyCartClassName
+will be set to the contents of this file when the cart is updated using AJAX
+If you are not using this snippet then theme it and remove its content to speed up your AJAX cart.
+-->
 <div class="sidebarCartInner">
 <% if Items %>
 	<table id="InformationTable" class="editable" cellspacing="0" cellpadding="0" summary="<% _t("TABLESUMMARY","The contents of your cart are displayed in this table - go to the Checkout Page to make final adjustments and review additional charges and deductions.") %>">

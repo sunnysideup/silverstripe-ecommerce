@@ -43,16 +43,27 @@ class CartResponse extends EcommerceResponse {
 
 		//init Order - IMPORTANT
 		$currentOrder = ShoppingCart::current_order();
-		$currentOrder->calculateOrderAttributes(true);
-		//now we have done the calculations you may find that we need to reload...
+
+		//THIS LINE TAKES UP MOST OF THE TIME OF THE RESPONSE!!!
+		$currentOrder->calculateOrderAttributes($force = false);
 
 		$ajaxObject = $currentOrder->AJAXDefinitions();
 
 		// populate Javascript
 		$js = array ();
 
+		//must be first
+		if(isset($_REQUEST["loadingindex"])) {
+			$js[] = array(
+				"t" => "loadingindex",
+				"v" => $_REQUEST["loadingindex"]
+			);
+		}
+
 		//order items
+
 		$inCartArray = array();
+
 		if ($items = $currentOrder->Items()) {
 			foreach ($items as $item) {
 				$item->updateForAjax($js);
@@ -76,12 +87,6 @@ class CartResponse extends EcommerceResponse {
 			"v" => "inCart",
 			"without" => "notInCart"
 		);
-		if(isset($_REQUEST["loadingindex"])) {
-			$js[] = array(
-				"t" => "loadingindex",
-				"v" => $_REQUEST["loadingindex"]
-			);
-		}
 
 		//order modifiers
 		if ($modifiers = $currentOrder->Modifiers()) {
@@ -122,7 +127,7 @@ class CartResponse extends EcommerceResponse {
 			);
 		}
 
-		//TO DO: set it up in such a way that ir specifically requests one of these
+		//TO DO: set it up in such a way that it specifically requests one of these
 		//tiny cart
 		$js[] = array(
 			"t" => "class",
@@ -157,17 +162,20 @@ class CartResponse extends EcommerceResponse {
 				"reload" => 0
 			);
 		}
+
 		//merge and return
 		if(is_array($data)) {
 			$js = array_merge($js, $data);
 		}
 		//TODO: remove doubles!
-		$json = Convert::array2json($js);
+		$json = json_encode($js);
 		$json = str_replace('\t', " ", $json);
 		$json = str_replace('\r', " ", $json);
 		$json = str_replace('\n', " ", $json);
 		$json = preg_replace('/\s\s+/', ' ', $json);
-		$json = str_replace("{", "\r\n{", $json);
+		if(Director::isDev()) {
+			$json = str_replace("{", "\r\n{", $json);
+		}
 
 		return $json;
 	}

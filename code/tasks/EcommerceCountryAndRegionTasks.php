@@ -18,17 +18,30 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 	function run($request){
 		$count = 0;
 		$array = Geoip::getCountryDropDown();
-		foreach($array as $key => $value) {
-			if(!DataObject::get_one("EcommerceCountry", "\"Code\" = '".Convert::raw2sql($key)."'")) {
-				$obj = new EcommerceCountry();
-				$obj->Code = $key;
-				$obj->Name = $value;
-				$obj->write();
-				DB::alteration_message("adding $value to Ecommerce Country", "created");
+		$allowedArray = EcommerceConfig::get("EcommerceCountry", "allowed_country_codes");
+		foreach($array as $code => $name) {
+			if($obj = DataObject::get_one("EcommerceCountry", "\"Code\" = '".Convert::raw2sql($code)."'")) {
+				//do nothing
 				$count++;
 			}
+			else {
+				DB::alteration_message("adding $code to Ecommerce Country", "created");
+				$obj = new EcommerceCountry();
+				$obj->Code = $code;
+			}
+			if($allowedArray && count($allowedArray)) {
+				if(in_array($code, $allowedArray)) {
+					//do nothing
+					$obj->DoNotAllowSales = 0;
+				}
+				else {
+					$obj->DoNotAllowSales = 1;
+				}
+			}
+			$obj->Name = $name;
+			$obj->write();
 		}
-		DB::alteration_message("$count countries created");
+		DB::alteration_message("updated $count Ecommerce Countries", "edited");
 	}
 
 }

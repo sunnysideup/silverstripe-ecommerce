@@ -1,8 +1,8 @@
 <?php
 
 /**
- *@description: copy the commented lines to your own mysite/_config.php file for editing...
- *Make sure that you save this file as UTF-8 to get the right encoding for currency symbols.
+ * @description: copy the commented lines to your own mysite/_config.php file for editing...
+ * Make sure that you save this file as UTF-8 to get the right encoding for currency symbols.
  *
  *
  **/
@@ -56,7 +56,7 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 //i18n::set_locale('en_NZ');
 //Object::useCustomClass('SS_Datetime','ZendDate',true);
 //Currency::setCurrencySymbol("€");
-
+//date_default_timezone_set("NZ");
 
 // __________________________________ END ECOMMERCE MODULE CONFIG __________________________________
 

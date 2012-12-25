@@ -276,8 +276,14 @@ class OrderItem extends OrderAttribute {
 	 * @param Bool $force - run it, even if it has run already
 	 **/
 	function runUpdate($force = false){
-		$this->CalculatedTotal = $this->UnitPrice() * $this->Quantity;
-		$this->write();
+		if (isset($_GET['debug_profile'])) Profiler::mark('OrderItem::runUpdate-for-'.$this->ClassName);
+		$oldValue = $this->CalculatedTotal - 0;
+		$newValue = ($this->UnitPrice() * $this->Quantity) - 0;
+		if((round($newValue, 5) != round($oldValue, 5) ) || $force) {
+			$this->CalculatedTotal = $newValue;
+			$this->write();
+		}
+		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderItem::runUpdate-for-'.$this->ClassName);
 	}
 
 	/**
@@ -407,6 +413,13 @@ class OrderItem extends OrderAttribute {
 	##########################
 
 	/**
+	 * Helps in speeding up code.
+	 * This can be a static variable as it is the same for all OrderItems for an Order.
+	 * @var Boolean
+	 */
+	protected static $price_has_been_fixed = array();
+
+	/**
 	 * @description - tells you if an order item price has been "fixed"
 	 * meaning that is has been saved in the CalculatedTotal field so that
 	 * it can not be altered.
@@ -414,11 +427,27 @@ class OrderItem extends OrderAttribute {
 	 * @return Boolean
 	 **/
 	protected function priceHasBeenFixed(){
-		if( $this->Order() && $this->Order()->IsSubmitted() ) {
-			return true;
+		if(!isset(self::$price_has_been_fixed[$this->OrderID])) {
+			self::$price_has_been_fixed[$this->OrderID] = false;
+			if($order = $this->Order()) {
+				self::$price_has_been_fixed[$this->OrderID] = $order->IsSubmitted() ? true : false;
+			}
 		}
-		return false;
+		return self::$price_has_been_fixed[$this->OrderID];
 	}
+
+
+	/**
+	 * Store for buyables.
+	 * We store this here to speed up things a little
+	 * Format is like this
+	 * Array(
+	 *  0 => Buyable (versioned)
+	 *  1 => Buyable (current)
+	 * );
+	 * @var Array
+	 */
+	protected $tempBuyableStore = array();
 
 	/**
 	 *
@@ -426,48 +455,52 @@ class OrderItem extends OrderAttribute {
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
 	  **/
 	function Buyable($current = false) {
-		if(!$this->BuyableID) {
-			return null;
+		$tempBuyableStoreType = $current ? 1 : 0;
+		if(!isset($this->tempBuyableStore[$tempBuyableStoreType])) {
+			if(!$this->BuyableID) {
+				return null;
+			}
+			//start hack
+			if(!$this->BuyableClassName) {
+				$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
+			}
+			$turnTranslatableBackOn = false;
+			if (Object::has_extension($this->BuyableClassName,'Translatable')) {
+				Translatable::disable_locale_filter();
+				$turnTranslatableBackOn = true;
+			}
+			//end hack!
+			$obj = null;
+			if($current) {
+				$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
+			}
+			//run if current not available or current = false
+			if(!$obj && $this->Version) {
+				/* @TODO: check if the version exists?? - see sample below
+				$versionTable = $this->BuyableClassName."_versions";
+				$dbConnection = DB::getConn();
+				if($dbConnection && $dbConnection instanceOf MySQLDatabase && $dbConnection->hasTable($versionTable)) {
+					$result = DB::query("
+						SELECT COUNT(\"ID\")
+						FROM \"$versionTable\"
+						WHERE
+							\"RecordID\" = ".intval($this->BuyableID)."
+							AND \"Version\" = ".intval($this->Version)."
+					");
+					if($result->value()) {
+				 */
+				$obj = OrderItem::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
+			}
+			//our last resort
+			if(!$obj) {
+				$obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
+			}
+			if ($turnTranslatableBackOn) {
+				Translatable::enable_locale_filter();
+			}
+			$this->tempBuyableStore[$tempBuyableStoreType] = $obj;
 		}
-		//start hack
-		if(!$this->BuyableClassName) {
-			$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
-		}
-		$turnTranslatableBackOn = false;
-		if (Object::has_extension($this->BuyableClassName,'Translatable')) {
-			Translatable::disable_locale_filter();
-			$turnTranslatableBackOn = true;
-		}
-		//end hack!
-		$obj = null;
-		if($current) {
-			$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
-		}
-		//run if current not available or current = false
-		if(!$obj && $this->Version) {
-			/* @TODO: check if the version exists?? - see sample below
-			$versionTable = $this->BuyableClassName."_versions";
-			$dbConnection = DB::getConn();
-			if($dbConnection && $dbConnection instanceOf MySQLDatabase && $dbConnection->hasTable($versionTable)) {
-				$result = DB::query("
-					SELECT COUNT(\"ID\")
-					FROM \"$versionTable\"
-					WHERE
-						\"RecordID\" = ".intval($this->BuyableID)."
-						AND \"Version\" = ".intval($this->Version)."
-				");
-				if($result->value()) {
-			 */
-			$obj = OrderItem::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
-		}
-		//our last resort
-		if(!$obj) {
-			$obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
-		}
-		if ($turnTranslatableBackOn) {
-			Translatable::enable_locale_filter();
-		}
-		return $obj;
+		return $this->tempBuyableStore[$tempBuyableStoreType];
 	}
 
 	/**

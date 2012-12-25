@@ -155,7 +155,13 @@ class OrderFormAddress extends Form {
 			else {
 				if($this->loggedInMember) {
 					$rightFields->push(
-						new LiteralField('LoginNote', "<p class=\"message good\">" . _t("Account.LOGGEDIN","You are logged in as ") . $this->loggedInMember->FirstName . ' ' . $this->loggedInMember->Surname . ' ('.$this->loggedInMember->Email.').</p>')
+						new LiteralField(
+							'LoginNote',
+							"<p class=\"message good\">" . _t("Account.LOGGEDIN","You are logged in as ") .
+							Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
+							Convert::raw2xml($this->loggedInMember->Surname) .
+							' ('.Convert::raw2xml($this->loggedInMember->Email).').</p>'
+						)
 					);
 				}
 			}
@@ -163,7 +169,15 @@ class OrderFormAddress extends Form {
 				if($this->loggedInMember) {
 					if($this->loggedInMember->ID !=  $this->orderMember->ID) {
 						$rightFields->push(
-							new LiteralField('OrderAddedTo', "<p class=\"message good\">" . _t("Account.ORDERADDEDTO","Order will be added to ") . $this->orderMember->FirstName . ' ' . $this->orderMember->Surname . ' ('.$this->orderMember->Email.').</p>')
+							new LiteralField(
+								'OrderAddedTo',
+								"<p class=\"message good\">" .
+								_t("Account.ORDERADDEDTO","Order will be added to ") .
+								Convert::raw2xml($this->orderMember->FirstName) . ' ' .
+								Convert::raw2xml($this->orderMember->Surname) . ' ('.
+								Convert::raw2xml($this->orderMember->Email).
+								').</p>'
+							)
 						);
 					}
 				}

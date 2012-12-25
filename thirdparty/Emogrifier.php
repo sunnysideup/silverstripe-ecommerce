@@ -54,7 +54,12 @@ class Emogrifier {
 		$xmldoc->encoding = $encoding;
 		$xmldoc->strictErrorChecking = false;
 		$xmldoc->formatOutput = true;
+try {
         $xmldoc->loadHTML($body);
+}
+catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
 		$xmldoc->normalizeDocument();
 
 		$xpath = new DOMXPath($xmldoc);

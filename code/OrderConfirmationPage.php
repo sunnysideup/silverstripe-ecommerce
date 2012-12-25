@@ -30,6 +30,8 @@ class OrderConfirmationPage extends CartPage{
 	public static $db = array(
 		'StartNewOrderLinkLabel' => 'Varchar(100)',
 		'CopyOrderLinkLabel' => 'Varchar(100)',
+		'PaymentSuccessfulHeader' => 'Varchar(255)',
+		'PaymentNotSuccessfulHeader' => 'Varchar(255)',
 		'PaymentSuccessfulMessage' => 'HTMLText',
 		'PaymentNotSuccessfulMessage' => 'HTMLText'
 	);
@@ -57,6 +59,8 @@ class OrderConfirmationPage extends CartPage{
 		$newLabels = array(
 			"StartNewOrderLinkLabel" => _t("EcommerceDBConfig.STARTNEWORDERLINKLABEL", 'Label for starting new order - e.g. click here to start new order'),
 			"CopyOrderLinkLabel" => _t("EcommerceDBConfig.COPYORDERLINKLABEL", 'Label for copying order items into a new one  - e.g. click here start a new order with the current order items'),
+			"PaymentSuccessfulHeader" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULHEADER", "Message showing when order has been paid in full (usually at the top of the page)"),
+			"PaymentNotSuccessfulHeader" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULHEADER", "Message showing when the order has not been paid in full (usually at the top of the page)"),
 			"PaymentSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULMESSAGE", "Message showing when order has been paid in full"),
 			"PaymentNotSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULMESSAGE", "Message showing when the order has not been paid in full")
 		);
@@ -91,6 +95,14 @@ class OrderConfirmationPage extends CartPage{
 		$fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', $fieldLabels["CopyOrderLinkLabel"]));
 		$fields->addFieldToTab('Root.Messages.Messages.Payment', new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels["PaymentSuccessfulMessage"], 5));
 		$fields->addFieldToTab('Root.Messages.Messages.Payment', new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5));
+		$fields->addFieldsToTab('Root.Content.Messages.Payment', array(
+			new HeaderField('Successful'),
+			new TextField('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
+			new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage'], 5),
+			new HeaderField('Unsuccessful'),
+			new TextField('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
+			new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5)
+		));
 		return $fields;
 	}
 
