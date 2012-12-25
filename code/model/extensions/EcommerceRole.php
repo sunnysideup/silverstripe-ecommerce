@@ -99,6 +99,10 @@ class EcommerceRole extends DataObjectDecorator {
 		return DataObject::get_one("Group", "\"Code\" = '".$adminCode."' OR \"Title\" = '".$adminName."'");
 	}
 
+	/**
+	 * Standard SS method
+	 * @return FieldList
+	 */
 	public function updateCMSFields(&$fields) {
 		//$orderField = $fields->dataFieldByName("Orders");
 		$preferredCurrencyField = $fields->dataFieldByName("PreferredCurrencyID");
