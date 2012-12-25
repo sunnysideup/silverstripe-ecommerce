@@ -32,7 +32,7 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 		$date = new Date();
@@ -80,7 +80,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 		$billingAddressesIDs = array(-1 => -1);
@@ -157,7 +157,7 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query = $this->applyRelation($query);
 		$values = $this->getValue();
 		if(count($values) && is_array($values)) {
@@ -199,7 +199,7 @@ class OrderFilters_HasBeenCancelled extends SearchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 		if($value == 1) {
@@ -233,7 +233,7 @@ class OrderFilters_MustHaveAtLeastOnePayment extends SearchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 		if($value && in_array($value, array(0,1))) {

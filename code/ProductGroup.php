@@ -14,7 +14,6 @@
 
 class ProductGroup extends Page {
 
-
 	/**
 	 * standard SS variable
 	 * @static Array
@@ -87,13 +86,19 @@ class ProductGroup extends Page {
 	 * Standard SS variable.
 	 */
 	public static $singular_name = "Product Category";
-		function i18n_singular_name() { return _t("ProductGroup.PRODUCTCATEGORY", "Product Category");}
+		function i18n_singular_name() { return _t("ProductGroup.SINGULARNAME", "Product Category");}
 
 	/**
 	 * Standard SS variable.
 	 */
 	public static $plural_name = "Product Categories";
-		function i18n_plural_name() { return _t("ProductGroup.PRODUCTCATEGORIES", "Product Categories");}
+		function i18n_plural_name() { return _t("ProductGroup.PLURALNAME", "Product Categories");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A page the puts a bunch of products into a category.";
 
 	/**
 	 * returns the default Sort key.

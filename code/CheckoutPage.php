@@ -67,6 +67,26 @@ class CheckoutPage extends CartPage {
 	);
 
 	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $singular_name = "Checkout Page";
+		function i18n_singular_name() { return _t("CheckoutPage.SINGULARNAME", "Checkout Page");}
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $plural_name = "Checkout Pages";
+		function i18n_plural_name() { return _t("CheckoutPage.PLURALNAME", "Checkout Pages");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.";
+
+	/**
 	 * Returns the Terms and Conditions Page (if there is one).
 	 * @return DataObject (Page)
 	 */
@@ -588,6 +608,12 @@ class CheckoutPage_StepDescription extends DataObject{
 	 */
 	public static $plural_name = "Checkout Step Descriptions";
 		function i18n_plural_name() { return _t("CheckoutPage.CHECKOUTSTEPDESCRIPTIONS", "Checkout Step Descriptions");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A step within the checkout process (e.g. confirm details).";
 
 	/**
 	 * standard SS variable

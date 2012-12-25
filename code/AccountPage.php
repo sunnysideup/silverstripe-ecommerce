@@ -13,7 +13,6 @@
 
 class AccountPage extends Page {
 
-
 	/**
 	 * standard SS variable
 	 *@var Array
@@ -57,6 +56,26 @@ class AccountPage extends Page {
 	function canCreate($member = null) {
 		return !DataObject::get_one("AccountPage", "\"ClassName\" = 'AccountPage'");
 	}
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $singular_name = "Account Page";
+		function i18n_singular_name() { return _t("AccountPage.SINGULARNAME", "Account Page");}
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $plural_name = "Account Pages";
+		function i18n_plural_name() { return _t("AccountPage.PLURALNAME", "Account Pages");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A page where the customer can view all their orders and update their details.";
 
 	/**
 	 * Returns the link to the AccountPage on this site

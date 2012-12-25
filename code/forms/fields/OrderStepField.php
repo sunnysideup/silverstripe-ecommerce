@@ -65,11 +65,11 @@ class OrderStepField extends DatalessField {
 		parent::__construct($name);
 	}
 
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		return is_object($this->content) ? $this->content->forTemplate() : $this->content;
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 		return $this->FieldHolder();
 	}
 

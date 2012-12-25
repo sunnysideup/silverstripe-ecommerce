@@ -103,7 +103,7 @@ class OrderModifier extends OrderAttribute {
 	 * @var String
 	 */
 	public static $singular_name = "Order Extra";
-		function i18n_singular_name() { return _t("OrderModifier.ORDERMODIFIER", "Order Extra");}
+		function i18n_singular_name() { return _t("OrderModifier.SINGULARNAME", "Order Extra");}
 
 	/**
 	 * stardard SS variable
@@ -111,6 +111,12 @@ class OrderModifier extends OrderAttribute {
 	 */
 	public static $plural_name = "Order Extras";
 		function i18n_plural_name() { return _t("OrderModifier.ORDERMODIFIERS", "Order Extras");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "An addition to the order that sits between the sub-total and the total (e.g. tax, delivery, etc...).";
 
 	/**
 	 * stardard SS metbod

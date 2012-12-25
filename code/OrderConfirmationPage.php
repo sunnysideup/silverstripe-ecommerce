@@ -47,6 +47,28 @@ class OrderConfirmationPage extends CartPage{
 		"CopyOrderLinkLabel" => "copy order items into a new order"
 	);
 
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $singular_name = "Order Confirmation Page";
+		function i18n_singular_name() { return _t("OrderConfirmationpage.SINGULARNAME", "Order Confirmation Page");}
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $plural_name = "Order Confirmation Pages";
+		function i18n_plural_name() { return _t("OrderConfirmationpage.PLURALNAME", "Order Confirmation Pages");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.";
+
+
 	/**
 	 * Standard SS method
 	 * @var Boolean

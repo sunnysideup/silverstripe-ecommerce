@@ -137,6 +137,12 @@ class BillingAddress extends OrderAddress {
 		function i18n_plural_name() { return _t("OrderAddress.BILLINGADDRESSES", "Billing Addresses");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "The details of the person buying the order.";
+
+	/**
 	 * method for casted variable
 	 *@return String
 	 **/

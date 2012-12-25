@@ -145,6 +145,12 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A product that is for sale in the shop.";
+
+	/**
+	 * Standard SS variable.
 	 */
 	public static $default_parent = 'ProductGroup';
 
@@ -193,7 +199,7 @@ class Product extends Page implements BuyableModel {
 		if($this->EcomConfig()->ProductsHaveQuantifiers) {
 			$fields->addFieldToTab('Root.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
 		}
-		$fields->addFieldToTab('Root.Content.Sorting',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
+		$fields->addFieldToTab('Root.Sorting',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
 			$fields->addFieldsToTab(
 				'Root.AlsoShowHere',

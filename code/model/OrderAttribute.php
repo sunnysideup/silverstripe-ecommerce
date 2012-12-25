@@ -100,6 +100,12 @@ class OrderAttribute extends DataObject {
 		function i18n_plural_name() { return _t("OrderAttribute.ORDERENTRIES", "Order Entries");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "Any item that is added to the order - be it before (e.g. product) or after the subtotal (e.g. tax).";
+
+	/**
 	 * save edit status for speed's sake
 	 * @var Boolean
 	 */

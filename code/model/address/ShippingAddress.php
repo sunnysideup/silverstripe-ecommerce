@@ -101,6 +101,11 @@ class ShippingAddress extends OrderAddress {
 	public static $plural_name = "Shipping Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.SHIPPINGADDRESSES", "Shipping Addresses");}
 
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "The address for delivery of the order.";
 
 	/**
 	 *

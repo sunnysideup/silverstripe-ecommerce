@@ -203,7 +203,9 @@ class EcommerceCurrency extends DataObject {
 	public function IsDefault(){ return $this->getIsDefault();}
 	public function getIsDefault(){
 		if(!$this->Code) {
-			user_error("This currency (ID = ".$this->ID.") does not have a code ");
+			if($this->exists()) {
+				user_error("This currency (ID = ".$this->ID.") does not have a code ");
+			}
 		}
 		return strtolower($this->Code) ==  strtolower(EcommerceConfig::get("EcommerceCurrency", "site_currency"));
 	}
@@ -253,8 +255,8 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public function ExchangeRateExplanation(){ return $this->getExchangeRateExplanation();}
 	public function getExchangeRateExplanation(){
-		$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
-		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".Payment::site_currency();
+		$string = "1 ".EcommerceConfig::get("EcommerceCurrency", "site_currency")." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
+		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".EcommerceConfig::get("EcommerceCurrency", "site_currency");
 		return $string;
 	}
 

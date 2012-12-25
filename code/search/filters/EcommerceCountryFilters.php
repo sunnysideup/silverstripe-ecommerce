@@ -17,7 +17,7 @@ class EcommerceCountryFilters_AllowSales extends ExactMatchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query->where("\"DoNotAllowSales\" = 0");
 		return $query;
 	}

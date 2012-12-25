@@ -64,6 +64,24 @@ class CartPage extends Page{
 		'MenuTitle' => 'HTMLVarchar'
 	);
 
+	/**
+	 * Standard SS variable.
+	 */
+	public static $singular_name = "Cart Page";
+		function i18n_singular_name() { return _t("CartPage.SINGULARNAME", "Cart Page");}
+
+	/**
+	 * Standard SS variable.
+	 */
+	public static $plural_name = "Cart Pages";
+		function i18n_plural_name() { return _t("CartPage.PLURALNAME", "Cart Pages");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A page where the customer can view the current order (cart) without finalising the order.";
+
 	/***
 	 * override core function to turn "checkout" into "Checkout (1)"
 	 * @return DBField
@@ -102,25 +120,27 @@ class CartPage extends Page{
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
-		$fields->addFieldsToTab('Root.Messages',
+		$fields->addFieldsToTab(
+			'Root.Messages',
 			array (
 				new TabSet(
 					"Messages",
 					new Tab(
-					'Actions',
-					new TextField('ContinueShoppingLabel', _t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping')),
-					new TextField('ProceedToCheckoutLabel', _t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order')),
-					new TextField('ShowAccountLabel', _t('CartPage.SHOWACCOUNTLABEL', 'Label on the link \'view account details\' - e.g. click here to vuiew your account details')),
-					new TextField('CurrentOrderLinkLabel', _t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order')),
-					new TextField('LoginToOrderLinkLabel', _t('CartPage.LOGINTOORDERLINKLABEL', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order')),
-					new TextField('SaveOrderLinkLabel', _t('CartPage.SAVEORDERLINKLABEL', 'Label for the saving an order - e.g. click here to save current order')),
-					new TextField('LoadOrderLinkLabel', _t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order')),
-					new TextField('DeleteOrderLinkLabel', _t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'))
-				),
-				new Tab(
-					'Errors',
-					new HtmlEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE','No items in order - shown when the customer tries to view an order without items.'), $row = 4),
-					new HtmlEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE','Non-existing Order - shown when the customer tries to load a non-existing order.'), $row = 4)
+						'Actions',
+						new TextField('ContinueShoppingLabel', _t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping')),
+						new TextField('ProceedToCheckoutLabel', _t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order')),
+						new TextField('ShowAccountLabel', _t('CartPage.SHOWACCOUNTLABEL', 'Label on the link \'view account details\' - e.g. click here to vuiew your account details')),
+						new TextField('CurrentOrderLinkLabel', _t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order')),
+						new TextField('LoginToOrderLinkLabel', _t('CartPage.LOGINTOORDERLINKLABEL', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order')),
+						new TextField('SaveOrderLinkLabel', _t('CartPage.SAVEORDERLINKLABEL', 'Label for the saving an order - e.g. click here to save current order')),
+						new TextField('LoadOrderLinkLabel', _t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order')),
+						new TextField('DeleteOrderLinkLabel', _t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'))
+					),
+					new Tab(
+						'Errors',
+						new HtmlEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE','No items in order - shown when the customer tries to view an order without items.'), $row = 4),
+						new HtmlEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE','Non-existing Order - shown when the customer tries to load a non-existing order.'), $row = 4)
+					)
 				)
 			)
 		);
