@@ -240,7 +240,7 @@ class EcommerceConfigDefinitions extends Object {
 		//add more stuff through extensions
 		$this->extend("moreDefinitions", $array);
 		//add more stuff through child classes
-		$childClasses = ClassInfo::subclassesFor($this);
+		$childClasses = ClassInfo::subclassesFor($this->class);
 		if(is_array($childClasses) && count($childClasses)) {
 			foreach($childClasses as $class) {
 				if($class != $this->class) {
