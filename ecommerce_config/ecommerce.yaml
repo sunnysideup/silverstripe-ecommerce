@@ -168,7 +168,11 @@ Order_Email:
 
 EcommerceCurrency:
 	exchange_provider_class: ExchangeRateProvider
-	default_currency: NZD
+	site_currency: NZD
+
+
+
+
 ################### CONTROL #####################
 
 CartPage_Controller:
