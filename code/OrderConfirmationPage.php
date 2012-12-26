@@ -118,15 +118,13 @@ class OrderConfirmationPage extends CartPage{
 		$fields->addFieldsToTab('Root.Messages.Messages.Payment', array(
 			new HeaderField('Successful'),
 			new TextField('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
-			$htmlEditorField3 = new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage']),
+			$htmlEditorField1 = new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage']),
 			new HeaderField('Unsuccessful'),
 			new TextField('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
-			$htmlEditorField4 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5)
+			$htmlEditorField2 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5)
 		));
 		$htmlEditorField1->setRows(3);
 		$htmlEditorField2->setRows(3);
-		$htmlEditorField3->setRows(3);
-		$htmlEditorField4->setRows(3);
 		return $fields;
 	}
 
