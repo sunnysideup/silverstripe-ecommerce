@@ -204,7 +204,7 @@ class EcommerceCurrency extends DataObject {
 	public function getIsDefault(){
 		if(!$this->Code) {
 			if($this->exists()) {
-				user_error("This currency (ID = ".$this->ID.") does not have a code ");
+				//user_error("This currency (ID = ".$this->ID.") does not have a code ");
 			}
 		}
 		return strtolower($this->Code) ==  strtolower(EcommerceConfig::get("EcommerceCurrency", "site_currency"));
