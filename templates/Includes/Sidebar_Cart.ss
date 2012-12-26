@@ -5,7 +5,7 @@
 			<p>There are several types of (side) carts... We show one here... (CartShortInner, CartTinyInner, Sidebar_Cart_Inner (shown)</p>
 			<div id="$AJAXDefinitions.SideBarCartID"><% include Sidebar_Cart_Inner %></div>
 		</div>
-<% end_loop %><% end_if %>
+<% end_with %><% end_if %>
 </div>
 <% include ShoppingCartRequirements %>
 

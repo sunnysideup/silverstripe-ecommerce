@@ -147,7 +147,7 @@ class OrderItem extends OrderAttribute {
 		Versioned::set_reading_mode('');
 		$versionedObject = Versioned::get_version($class, $id, $version);
 		Versioned::set_reading_mode($oldMode);
-		return new $versionedObject;
+		return $versionedObject;
 	}
 
 	/**
@@ -477,10 +477,12 @@ class OrderItem extends OrderAttribute {
 			//end hack!
 			$obj = null;
 			if($current) {
-				$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
+				$className = $this->BuyableClassName;
+				$obj = $className::get()->byID($this->BuyableID);
 			}
 			//run if current not available or current = false
-			if(!$obj && $this->Version) {
+
+			if(((!$obj) || ($obj->exists())) && $this->Version) {
 				/* @TODO: check if the version exists?? - see sample below
 				$versionTable = $this->BuyableClassName."_versions";
 				$dbConnection = DB::getConn();
@@ -497,7 +499,7 @@ class OrderItem extends OrderAttribute {
 				$obj = OrderItem::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
 			}
 			//our last resort
-			if(!$obj) {
+			if((!$obj) || ($obj->exists())) {
 				$obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
 			}
 			if ($turnTranslatableBackOn) {
