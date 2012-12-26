@@ -222,7 +222,7 @@ class CheckoutPage extends CartPage {
 		}
 		if(DataObject::get_one("CheckoutPage_StepDescription")) {
 			$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
-			$checkoutStepDescriptionField->setRelationAutoSetting(false);
+			//$checkoutStepDescriptionField->setRelationAutoSetting(false);
 			$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
 			$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
 			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',$checkoutStepDescriptionField);
