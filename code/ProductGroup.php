@@ -386,6 +386,7 @@ class ProductGroup extends Page {
 	 * can setup all sorts of filters, while still using the ProductsShowable method.
 	 *
 	 * @param mixed $extraFilter Additional SQL filters to apply to the Product retrieval
+	 * @param boolean $recursive
 	 * @return DataList
 	 */
 	public function ProductsShowable($extraFilter = ''){
@@ -430,7 +431,8 @@ class ProductGroup extends Page {
 		$sort = $this->currentSortSQL; //NOTE: we sort here already to get some idea of the order of the products.
 		$join = $this->getGroupJoin();
 		$limit = null;
-		return $className::get()->where($where)->sort($sort)->innerJoin($join)->limit($limit);
+		$allProducts = DataObject::get($className,$where, $sort, $join, $limit);
+		return $allProducts;
 	}
 
 	/**
@@ -520,13 +522,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Join statement for the product groups.
-	 * Array is if the following
-	 *   "Table" => "MyTable",
-	 *   "OnClause" => "On MyTable.ID = YourTable.ID",
-	 *   "Alias" => "MyNewName" (OPTIONAL)
-	 * NOTE: innerJoin assumed!
-	 * @return Array
-	 *
+	 * @return Null | String
 	 */
 	protected function getGroupJoin() {
 		if($this->getProductsAlsoInOtherGroups()) {
@@ -559,12 +555,13 @@ class ProductGroup extends Page {
 		if($buyables) {
 			$this->totalCount = $buyables->count();
 			if($this->totalCount) {
-				$className = $this->currentClassNameSQL();
-				return $className::get()
-					->where($this->currentWhereSQL($buyables))
-					->sort($this->currentSortSQL())
-					->innerJoin($this->currentJoinSQL())
-					->limit($this->currentLimitSQL());
+				return DataObject::get(
+					$this->currentClassNameSQL(),
+					$this->currentWhereSQL($buyables),
+					$this->currentSortSQL(),
+					$this->currentJoinSQL(),
+					$this->currentLimitSQL()
+				);
 			}
 		}
 	}
@@ -735,8 +732,7 @@ class ProductGroup extends Page {
 				$filterWithAND = " AND $filter";
 			}
 			$where = "\"ParentID\" = '$this->ID' $filterWithAND";
-			$children = ProductGroup::get()->where($where);
-			if($children->count()){
+			if($children = DataObject::get('ProductGroup', $where)){
 				if($output == null) {
 					$output = $children;
 				}
