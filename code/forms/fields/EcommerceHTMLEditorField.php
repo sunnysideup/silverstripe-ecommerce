@@ -4,8 +4,8 @@
  *
  */
 
-class EcommerceHTMLEditorField extends HTMLTeditorField {
+class EcommerceHTMLEditorField extends HTMLEditorField {
 
-	protected $rows = 3;
+	protected $rows = 8;
 
 }

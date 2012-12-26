@@ -263,7 +263,8 @@ class OrderStep extends DataObject {
 		//replacing
 		if($this->hasCustomerMessage()) {
 			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use [OrderNumber] as a tag that will be replaced with the actual Order Number.")));
-			$fields->addFieldToTab("Root.CustomerMessage", new EcommerceHTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)")));
+			$fields->addFieldToTab("Root.CustomerMessage", $htmlEditorField = new HTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)")));
+			$htmlEditorField->setRows(3);
 		}
 		else {
 			$fields->removeFieldFromTab("Root.Main", "EmailSubject");
