@@ -1251,10 +1251,10 @@ class ShoppingCart_Controller extends Controller{
 		$this->cart->loadOrder(intval($request->param('ID')));
 		$cartPageLink = CartPage::find_link();
 		if($cartPageLink) {
-			Director::redirect($cartPageLink);
+			return $this->redirect($cartPageLink);
 		}
 		else {
-			Director::redirect("/");
+			return $this->redirect("/");
 		}
 	}
 
@@ -1317,7 +1317,7 @@ class ShoppingCart_Controller extends Controller{
 				if($oldMember){
 					$oldMember->logout();
 					$newMember->login();
-					return Director::redirect("/");
+					return $this->redirect("/");
 				}
 				else {
 					echo "Another error occurred.";

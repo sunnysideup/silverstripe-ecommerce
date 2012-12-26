@@ -115,16 +115,20 @@ class OrderConfirmationPage extends CartPage{
 		$fieldLabels = $this->fieldLabels();
 		$fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('StartNewOrderLinkLabel', $fieldLabels["StartNewOrderLinkLabel"]));
 		$fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', $fieldLabels["CopyOrderLinkLabel"]));
-		$fields->addFieldToTab('Root.Messages.Messages.Payment', new EcommerceHTMLEditorField('PaymentSuccessfulMessage', $fieldLabels["PaymentSuccessfulMessage"]));
-		$fields->addFieldToTab('Root.Messages.Messages.Payment', new EcommerceHTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"]));
+		$fields->addFieldToTab('Root.Messages.Messages.Payment', $htmlEditorField1 = new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels["PaymentSuccessfulMessage"]));
+		$fields->addFieldToTab('Root.Messages.Messages.Payment', $htmlEditorField2 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"]));
 		$fields->addFieldsToTab('Root.Content.Messages.Payment', array(
 			new HeaderField('Successful'),
 			new TextField('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
-			new EcommerceHTMLEditorField('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage']),
+			$htmlEditorField3 = new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage']),
 			new HeaderField('Unsuccessful'),
 			new TextField('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
-			new EcommerceHTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5)
+			$htmlEditorField4 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5)
 		));
+		$htmlEditorField1->setRows(3);
+		$htmlEditorField2->setRows(3);
+		$htmlEditorField3->setRows(3);
+		$htmlEditorField4->setRows(3);
 		return $fields;
 	}
 

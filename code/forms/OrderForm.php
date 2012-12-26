@@ -127,7 +127,7 @@ class OrderForm extends Form {
 
 		if($this->extend("OrderFormBeforeFinalCalculation", $data, $form, $request)) {
 			$form->sessionMessage(_t('OrderForm.ERRORWITHFORM','There was an error with your order, please review and submit again.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 
@@ -403,7 +403,7 @@ class OrderForm_Cancel extends Form {
 							$reason = $SQLData["CancellationReason"];
 						}
 						$order->Cancel($member, $reason);
-						return Director::redirectBack();
+						return $this->controller->redirectBack();
 					}
 					$order->Cancel($member, $reason);
 					$this->controller->redirectBack();

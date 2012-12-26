@@ -138,12 +138,14 @@ class CartPage extends Page{
 					),
 					new Tab(
 						'Errors',
-						new EcommerceHTMLEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE','No items in order - shown when the customer tries to view an order without items.')),
-						new EcommerceHTMLEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE','Non-existing Order - shown when the customer tries to load a non-existing order.'))
+						$htmlEditorField1 = new HTMLEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE','No items in order - shown when the customer tries to view an order without items.')),
+						$htmlEditorField2 = new HTMLEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE','Non-existing Order - shown when the customer tries to load a non-existing order.'))
 					)
 				)
 			)
 		);
+		$htmlEditorField1->setRows(3);
+		$htmlEditorField2->setRows(3);
 		return $fields;
 	}
 
@@ -318,7 +320,7 @@ class CartPage_Controller extends Page_Controller{
 					//always allow to view with cart page if not submitted
 				}
 				elseif($this->ID != $this->currentOrder->DisplayPage()->ID) {
-					Director::redirect($this->currentOrder->Link());
+					$this->redirect($this->currentOrder->Link());
 				}
 			}
 			else {
@@ -541,7 +543,7 @@ class CartPage_Controller extends Page_Controller{
 	function startneworder() {
 		ShoppingCart::singleton()->clear();
 		self::set_message(_t("CartPage.NEWORDERSTARTED", "New order has been started."));
-		Director::redirect($this->Link());
+		$this->redirect($this->Link());
 		return array();
 	}
 

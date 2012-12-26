@@ -210,7 +210,8 @@ class CheckoutPage extends CartPage {
 		$fields->addFieldToTab('Root.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
 		//The Content field has a slightly different meaning for the Checkout Page.
 		$fields->removeFieldFromTab('Root.Main', "Content");
-		$fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', new EcommerceHTMLEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page')));
+		$fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page')));
+		$htmlEditorField->setRows(3);
 		if(DataObject::get_one("OrderModifier_Descriptor")) {
 			$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
 			$orderModifierDescriptionField->setRelationAutoSetting(false);
@@ -270,7 +271,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		if($checkoutPageCurrentOrderID = Session::get("CheckoutPageCurrentOrderID")) {
 			if((!$this->currentOrder) || ($this->currentOrder->ID != $checkoutPageCurrentOrderID)) {
 				if($order = Order::get_by_id_if_can_view(intval($checkoutPageCurrentOrderID))) {
-					return Director::redirect($order->Link());
+					return $this->controller->redirect($order->Link());
 				}
 			}
 		}

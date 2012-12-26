@@ -89,7 +89,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 				$productCount = DB::query("SELECT COUNT(\"ID\") FROM \"Product\";")->val();
 
 				if($this->start < $productCount) {
-					Director::redirect($this->nextBatchLink());
+					$this->redirect($this->nextBatchLink());
 				}
 			}
 		}
