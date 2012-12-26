@@ -271,7 +271,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		if($checkoutPageCurrentOrderID = Session::get("CheckoutPageCurrentOrderID")) {
 			if((!$this->currentOrder) || ($this->currentOrder->ID != $checkoutPageCurrentOrderID)) {
 				if($order = Order::get_by_id_if_can_view(intval($checkoutPageCurrentOrderID))) {
-					return $this->controller->redirect($order->Link());
+					return $this->redirect($order->Link());
 				}
 			}
 		}

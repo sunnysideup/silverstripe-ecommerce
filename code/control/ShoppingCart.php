@@ -97,7 +97,6 @@ class ShoppingCart extends Object{
 				}
 				//second reason to set to null: make sure we have permissions
 				elseif(!$this->order->canView()) {
-					die("--------asdfsadf");
 					$this->order = null;
 				}
 				//logged in, add Member.ID to order->MemberID
