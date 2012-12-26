@@ -214,7 +214,7 @@ class CheckoutPage extends CartPage {
 		$htmlEditorField->setRows(3);
 		if(DataObject::get_one("OrderModifier_Descriptor")) {
 			$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
-			$orderModifierDescriptionField->setRelationAutoSetting(false);
+			//$orderModifierDescriptionField->setRelationAutoSetting(false);
 			$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
 			$orderModifierDescriptionField->setPermissions(array("show", "edit"));
 			$fields->addFieldToTab('Root.Messages.Messages.OrderExtras',$orderModifierDescriptionField);
