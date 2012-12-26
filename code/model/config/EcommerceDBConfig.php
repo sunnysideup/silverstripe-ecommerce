@@ -284,12 +284,12 @@ class EcommerceDBConfig extends DataObject {
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
 				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
-				new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"])
+				new EcommerceHTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"])
 			),
 			new Tab('ProductDisplay',
 				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
 				new CheckboxField("OnlyShowProductsThatCanBePurchased", $fieldLabels["OnlyShowProductsThatCanBePurchased"]),
-				new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
+				new EcommerceHTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
 				new CheckboxField("ProductsHaveWeight", $fieldLabels["ProductsHaveWeight"]),
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
@@ -314,7 +314,7 @@ class EcommerceDBConfig extends DataObject {
 			),
 			new Tab('Invoice',
 				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"]),
-				new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
+				new EcommerceHTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
 			),
 			new Tab('Process',
 				new ComplexTableField($this, "OrderSteps", "OrderStep")
