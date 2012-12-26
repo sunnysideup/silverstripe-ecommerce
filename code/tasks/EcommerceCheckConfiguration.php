@@ -90,7 +90,6 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->orderSteps();
 					$this->checkoutAndModifierDetails();
 					$this->getAjaxDefinitions();
-					$this->AllEcommerceClasses();
 					$this->definedConfigs();
 				}
 				else {
@@ -411,7 +410,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 	private function getPageDefinitions($page){
 		if($page) {
-			$fields = $page->combined_static($page->ClassName, "db", "Page");
+			$fields = $page->combined_static($page->ClassName, "db");
 			$defaultsArray = $page->stat("defaults", true);
 			$configArray = array();
 			if($fields) {
@@ -550,17 +549,5 @@ class EcommerceCheckConfiguration extends BuildTask{
 		}
 	}
 
-	/**
-	 * extracts other E-commerce Classes
-	 * @todo: retrieve description
-	 */
-	protected function AllEcommerceClasses(){
-		$otherClasses = ClassInfo::classes_for_folder("ecommerce");
-		foreach($otherClasses as $otherClass) {
-			$this->definitions["AllEcommerceClasses"][$otherClass] = "";
-			$this->defaults["AllEcommerceClasses"][$otherClass] = "";
-			$this->configs["AllEcommerceClasses"][$otherClass] = "<a href=\"/dev/viewcode/".$otherClass."\" target=\"_blank\">view</a>";
-		}
-	}
 }
 

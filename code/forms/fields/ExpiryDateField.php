@@ -15,7 +15,7 @@ class ExpiryDateField extends TextField {
 	/**
 	 *@return HTML
 	 **/
-	function Field() {
+	function Field($properties = array()) {
 		$monthValue = '';
 		$yearValue = '';
 		if(strlen($this->value) == 4) {
