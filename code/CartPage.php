@@ -138,8 +138,8 @@ class CartPage extends Page{
 					),
 					new Tab(
 						'Errors',
-						new HtmlEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE','No items in order - shown when the customer tries to view an order without items.'), $row = 4),
-						new HtmlEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE','Non-existing Order - shown when the customer tries to load a non-existing order.'), $row = 4)
+						new EcommerceHTMLEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE','No items in order - shown when the customer tries to view an order without items.')),
+						new EcommerceHTMLEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE','Non-existing Order - shown when the customer tries to load a non-existing order.'))
 					)
 				)
 			)
