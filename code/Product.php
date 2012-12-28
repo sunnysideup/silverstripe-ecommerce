@@ -773,9 +773,13 @@ class Product extends Page implements BuyableModel {
 			return false;
 		}
 		//price
-		$price = $this->getCalculatedPrice();
-		if($checkPrice && $price == 0 && ! $config->AllowFreeProductPurchase) {
-			return false;
+		if(!$config->AllowFreeProductPurchase) {
+			if($checkPrice) {
+				$price = $this->getCalculatedPrice();
+				if($price == 0) {
+					return false;
+				}
+			}
 		}
 		// Standard mechanism for accepting permission changes from decorators
 		$extended = $this->extendedCan('canPurchase', $member);
