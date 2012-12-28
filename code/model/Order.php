@@ -184,15 +184,16 @@ class Order extends DataObject {
 
 	/**
 	 * Total Items : total items in cart
+	 * We start with -1 to easily identify if it has been run before.
 	 *
-	 * @var integer / null
+	 * @var integer
 	 */
-	protected $totalItems = null;
+	protected $totalItems = -1;
 
 	/**
 	 * Total Items : total items in cart
-	 *
-	 * @var Double / null
+	 * We start with -1 to easily identify if it has been run before.
+	 * @var Double
 	 */
 	protected $totalItemsTimesQuantity = null;
 
@@ -1912,7 +1913,7 @@ class Order extends DataObject {
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
 	public function getTotalItems($recalculate = false) {
-		if($this->totalItemsTimesQuantity === null || $recalculate) {
+		if($this->totalItems == -1 || $recalculate) {
 			//to do, why do we check if you can edit ????
 			$this->totalItems = DB::query("
 				SELECT COUNT(\"OrderItem\".\"ID\")
@@ -1932,7 +1933,7 @@ class Order extends DataObject {
 	 **/
 	public function TotalItemsTimesQuantity($recalculate = false){return $this->getTotalItemsTimesQuantity($recalculate);}
 	public function getTotalItemsTimesQuantity($recalculate = false) {
-		if($this->totalItemsTimesQuantity === null || $recalculate || 1 == 1) {
+		if($this->totalItemsTimesQuantity == -1 || $recalculate) {
 			//to do, why do we check if you can edit ????
 			$this->totalItemsTimesQuantity = DB::query("
 				SELECT SUM(\"OrderItem\".\"Quantity\")
@@ -2169,7 +2170,7 @@ class Order extends DataObject {
 	 * Otherwise it will default to the checkout page
 	 * @return String(URLSegment)
 	 */
-	function Link() {
+	function Link($action = "") {
 		$page = $this->DisplayPage();
 		if($page) {
 			return $page->getOrderLink($this->ID);
@@ -2178,7 +2179,7 @@ class Order extends DataObject {
 			user_error("A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.", E_USER_NOTICE);
 			$page = DataObject::get_one("ErrorPage", "ErrorCode = '404'");
 			if($page) {
-				return $page->Link();
+				return $page->Link($action);
 			}
 		}
 	}

@@ -154,56 +154,75 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
+	 * Memory for the customer's country.
+	 * @var Null | String
+	 */
+	protected static $get_country_cache = null;
+
+	/**
 	 * This function works out the most likely country for the current order.
 	 * @return String - Country Code - e.g. NZ
 	 **/
 	public static function get_country() {
-		$countryCode = '';
-		//1. fixed country is first
-		$countryCode = self::get_fixed_country_code();
-		if(!$countryCode) {
-			//2. check shipping address
-			if($o = ShoppingCart::current_order()) {
-				$countryCode = $o->Country();
-			}
-			//3. check GEOIP information
+		if(self::$get_country_cache === null) {
+			$countryCode = '';
+			//1. fixed country is first
+			$countryCode = self::get_fixed_country_code();
 			if(!$countryCode) {
-				$countryCode = @Geoip::visitor_country();
-				//4 check default country set in GEO IP....
+				//2. check shipping address
+				if($o = ShoppingCart::current_order()) {
+					$countryCode = $o->Country();
+				}
+				//3. check GEOIP information
 				if(!$countryCode) {
-					$countryCode = Geoip::$default_country_code;
-					//5. take the FIRST country from the get_allowed_country_codes
+					$countryCode = @Geoip::visitor_country();
+					//4 check default country set in GEO IP....
 					if(!$countryCode) {
-						$countryArray = self::list_of_allowed_entries_for_dropdown();
-						if(is_array($countryArray) && count($countryArray)) {
-							foreach($countryArray as $countryCode => $countryName) {
-								//we stop at the first one... as we have no idea which one is the best.
-								break;
+						$countryCode = Geoip::$default_country_code;
+						//5. take the FIRST country from the get_allowed_country_codes
+						if(!$countryCode) {
+							$countryArray = self::list_of_allowed_entries_for_dropdown();
+							if(is_array($countryArray) && count($countryArray)) {
+								foreach($countryArray as $countryCode => $countryName) {
+									//we stop at the first one... as we have no idea which one is the best.
+									break;
+								}
 							}
 						}
 					}
 				}
 			}
+			self::$get_country_cache = $countryCode;
 		}
-		return $countryCode;
+		return self::$get_country_cache;
 	}
+
+	/**
+	 * Memory for allow country to check
+	 * @var Null | Boolean
+	 */
+	protected static $allow_sales_cache = null;
 
 	/**
 	 * Checks if we are allowed to sell to this person.
 	 * @return Boolean
 	 */
 	public static function allow_sales() {
-		$countryCode = @Geoip::visitor_country();
-		if($countryCode) {
-			if(DataObject::get_one("EcommerceCountry", "\"DoNotAllowSales\" = 1 AND \"Code\" = '$countryCode'")) {
-				return false;
+		if(self::$allow_sales_cache === null) {
+			self::$allow_sales_cache = true;
+			$countryCode = @Geoip::visitor_country();
+			if($countryCode) {
+				if(DataObject::get_one("EcommerceCountry", "\"DoNotAllowSales\" = 1 AND \"Code\" = '$countryCode'")) {
+					self::$allow_sales_cache = false;
+				}
 			}
 		}
-		return true;
+		return self::$allow_sales_cache;
 	}
 
 	/**
 	 * returns the ID of the country.
+	 * @param String
 	 * @return Int
 	 **/
 	public static function get_country_id($countryCode = "") {
