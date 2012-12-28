@@ -1461,7 +1461,7 @@ class EcommerceMigration extends BuildTask {
 		$fileArray = EcommerceConfig::get_folder_and_file_locations();
 		if($fileArray && count($fileArray)) {
 			foreach($fileArray as $folderAndFileLocationWithoutBase) {
-				if($folderAndFileLocationWithoutBase != "ecommerce/_config/ecommerce.yaml") {
+				if($folderAndFileLocationWithoutBase != "ecommerce/ecommerce_config/ecommerce.yaml") {
 					$folderAndFileLocationWithBase = Director::baseFolder().'/'. $folderAndFileLocationWithoutBase;
 					if(file_exists($folderAndFileLocationWithBase)) {
 						$fp = @fopen($folderAndFileLocationWithBase, 'r');
