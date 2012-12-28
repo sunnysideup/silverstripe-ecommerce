@@ -22,7 +22,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 * Default Location for Configuration File
 	 * @var String
 	 */
-	protected $defaultLocation = "ecommerce/_config/ecommerce.yaml";
+	protected $defaultLocation = "ecommerce/ecommerce_config/ecommerce.yaml";
 
 	/**
 	 * Standard (required) SS variable for BuildTasks
@@ -115,7 +115,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$files = implode(", ", $configsObject->fileLocations());
 		global $project;
 		$baseFolder = Director::baseFolder();
-		$projectFolder = $project."/_config";
+		$projectFolder = $project."/ecommerce_config";
 		$baseAndProjectFolder = $baseFolder."/".$projectFolder;
 		$file = "ecommerce.yaml";
 		$projectFolderAndFile = $projectFolder."/".$file;
