@@ -80,7 +80,6 @@ class CartCleanupTask extends BuildTask {
 		if($neverDeleteIfLinkedToMember) {
 			$oldCarts->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"");
 		}
-		$oldCarts = DataObject::get('Order',$where, $sort, $join, $limit);
 		if($oldCarts){
 			$count = 0;
 			if($this->verbose) {
