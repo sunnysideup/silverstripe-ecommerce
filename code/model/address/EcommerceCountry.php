@@ -184,7 +184,7 @@ class EcommerceCountry extends DataObject {
 					$countryCode = @Geoip::visitor_country();
 					//4 check default country set in GEO IP....
 					if(!$countryCode) {
-						$countryCode = Geoip::$default_country_code;
+						$countryCode = Geoip::get_default_country_code();
 						//5. take the FIRST country from the get_allowed_country_codes
 						if(!$countryCode) {
 							$countryArray = self::list_of_allowed_entries_for_dropdown();
