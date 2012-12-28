@@ -74,7 +74,7 @@ class ShopAccountForm extends Form {
 			$this->loadDataFrom($member);
 		}
 		if(!isset($_REQUEST["Password"])) {
-			$this->Fields()->fieldByName("Password")->setCanBeEmpty(true);
+			$this->Fields()->fieldByName("Password")->canBeEmpty = true;
 			$this->Fields()->fieldByName("Password")->setValue("");
 		}
 		$this->extend('updateShopAccountForm',$this);
