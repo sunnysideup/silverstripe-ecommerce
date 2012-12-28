@@ -155,14 +155,12 @@ class AccountPage extends Page {
 	 * @return DataList
 	 */
 	protected function pastOrdersSelection(){
-		return DataObject::get(
-			"Order",
-			"\"Order\".\"MemberID\" = ".Member::currentUserID."
+		return Order::get()
+			->where(
+				"\"Order\".\"MemberID\" = ".intval(Member::currentUserID())."
 				AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)
-				AND \"OrderStep\".\"ShowAsUncompletedOrder\" = 0 ",
-			"\"Created\" DESC",
-			"INNER JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\" "
-		);
+				AND \"OrderStep\".\"ShowAsUncompletedOrder\" = 0 ")
+			->innerJoin("OrderStep", "\"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
 	}
 
 	/**

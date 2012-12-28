@@ -216,7 +216,7 @@ class CheckoutPage extends CartPage {
 			$fields->addFieldToTab('Root.Messages.Messages.OrderExtras',$this->getOrderModifierDescriptionField());
 		}
 		if(DataObject::get_one("CheckoutPage_StepDescription")) {
-			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',getCheckoutStepDescriptionFieldField());
+			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',$this->getCheckoutStepDescriptionField());
 		}
 		return $fields;
 	}
@@ -226,21 +226,33 @@ class CheckoutPage extends CartPage {
 	 * @return GridField
 	 */
 	protected function getOrderModifierDescriptionField(){
-		$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
-		//$orderModifierDescriptionField->setRelationAutoSetting(false);
-		$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
-		$orderModifierDescriptionField->setPermissions(array("show", "edit"));
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldEditButton(),
+			new GridFieldDetailForm()
+		);
+		$title = _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)");
+		$source = OrderModifier_Descriptor::get();
+		return new GridField("OrderModifier_Descriptor", $title, $source , $gridFieldConfig);
 	}
 
 	/**
 	 *
 	 * @return GridField
 	 */
-	protected function getCheckoutStepDescriptionFieldField(){
-		$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
-		//$checkoutStepDescriptionField->setRelationAutoSetting(false);
-		$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
-		$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
+	protected function getCheckoutStepDescriptionField(){
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldEditButton(),
+			new GridFieldDetailForm()
+		);
+		$title =  _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions");
+		$source = CheckoutPage_StepDescription::get();
+		return new GridField("CheckoutPage_StepDescription", $title, $source , $gridFieldConfig);
 	}
 
 }

@@ -455,7 +455,7 @@ class Order extends DataObject {
 				}
 				//member
 				if($member = $this->Member()) {
-					$fields->addFieldToTab('Root.Customer', new LiteralField("MemberDetails", $member->getEcommerceFieldsForCMSAsString()));
+					$fields->addFieldToTab('Root.Customer', new LiteralField("MemberDetails", $member->getEcommerceFieldsForCMS()));
 				}
 
 
@@ -509,7 +509,7 @@ class Order extends DataObject {
 
 			if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
 				$fields->addFieldToTab('Root.Addresses',new HeaderField("ShippingAddressHeader", _t("Order.SHIPPINGADDRESS", "Shipping Address")));
-				$fields->addFieldToTab('Root.Addresses',new CheckboxField("UseShippingAddress", _t("Order.USESEPERATEADDRESS", "Use seperate shipping address?")));
+				$fields->addFieldToTab('Root.Addresses',new CheckboxField("UseShippingAddress", _t("Order.USESEPERATEADDRESS", "Use separate shipping address?")));
 				if($this->UseShippingAddress) {
 					$fields->addFieldToTab('Root.Addresses',$this->getShippingAddressField());
 				}
@@ -539,7 +539,7 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *
+	 * Field to add and edit Order Items
 	 * @return GridField
 	 */
 	protected function getOrderItemsField(){
@@ -550,7 +550,7 @@ class Order extends DataObject {
 
 
 	/**
-	 *
+	 * Field to add and edit Modifiers
 	 * @return GridField
 	 */
 	function getModifierTableField(){
@@ -561,44 +561,20 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 * @return GridField
-	 */
-	function getOldOrderStatusLogsField(){
-		return $this->getOrderStatusLogsTableField();
-	}
-
-	/**
-	 *
 	 *@return GridField
 	 **/
 	protected function getBillingAddressField(){
-		return new LiteralField("ShippingAddress", "<h3>BillingAddress GridField goes here</h3>");
-		return new GridField("BillingAddress", _t("Order.BILLING_ADDRESS", "Billing Address"), $this->BillingAddress());
-		/*
-		$billingAddressObject = $this->CreateOrReturnExistingAddress("BillingAddress");
-		$billingAddressField = new HasOneComplexTableField(
-			$this, //$controller
-			"BillingAddress", //$name =
-			"BillingAddress", //$sourceClass =
-			null, //$fieldList =
-			null, //$detailedFormFields =
-			"\"BillingAddress\".\"ID\" = ".$this->BillingAddressID, //$sourceFilter =
-			"\"Created\" ASC", //$sourceSort =
-			null //"INNER JOIN \"Order\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"" //$sourceJoin =
+		$this->CreateOrReturnExistingAddress("BillingAddress");
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldPaginator(10),
+			new GridFieldEditButton(),
+			new GridFieldDetailForm()
 		);
-		if(!$this->BillingAddressID) {
-			$billingAddressField->setPermissions(array('edit', 'add', 'inlineadd', 'show'));
-		}
-		elseif($this->canEdit()) {
-			$billingAddressField->setPermissions(array('edit', 'show'));
-		}
-		else {
-			$billingAddressField->setPermissions(array( 'export',  'show'));
-		}
-		//DO NOT ADD!
-		//$billingAddressField->setRelationAutoSetting(true);
-		//$billingAddress->setShowPagination(false);
-		*/
+		$source = BillingAddress::get()->filter(array("OrderID" => $this->ID));
+		return new GridField("BillingAddress", _t("BillingAddress.SINGULARNAME", "Billing Address"), $source , $gridFieldConfig);
 	}
 
 
@@ -607,32 +583,25 @@ class Order extends DataObject {
 	 *@return GridField
 	 **/
 	protected function getShippingAddressField(){
-		return new LiteralField("ShippingAddress", "<h3>ShippingAddress GridField goes here</h3>");
-		return new GridField("ShippingAddress", _t("Order.BILLING_ADDRESS", "Shipping Address"), $this->BillingAddress());
-		/*
-		$shippinggAddressObject = $this->CreateOrReturnExistingAddress("ShippingAddress");
-		$shippingAddressField = new HasOneComplexTableField(
-			$this, //$controller
-			"ShippingAddress", //$name =
-			"ShippingAddress", //$sourceClass =
-			null, //$fieldList =
-			null, //$detailedFormFields =
-			"\"ShippingAddress\".\"ID\" = ".$this->ShippingAddressID, //$sourceFilter =
-			"\"Created\" ASC", //$sourceSort =
-			null //"INNER JOIN \"Order\" ON \"Order\".\"ShippingAddressID\" = \"ShippingAddress\".\"ID\"" //$sourceJoin =
+		$this->CreateOrReturnExistingAddress("ShippingAddress");
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldPaginator(10),
+			new GridFieldEditButton(),
+			new GridFieldDetailForm()
 		);
-		if(!$this->ShippingAddressID) {
-			$shippingAddressField->setPermissions(array('edit', 'add', 'inlineadd', 'show'));
-		}
-		elseif($this->canEdit()) {
-			$shippingAddressField->setPermissions(array('edit', 'show'));
-		}
-		else {
-			$shippingAddressField->setPermissions(array( 'export',  'show'));
-		}
-		//DO NOT ADD
-		//$shippingAddress->setRelationAutoSetting(true);
-		*/
+		$source = ShippingAddress::get()->filter(array("OrderID" => $this->ID));
+		return new GridField("ShippingAddress", _t("BillingAddress.SINGULARNAME", "Shipping Address"), $source , $gridFieldConfig);
+	}
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	function getOldOrderStatusLogsField(){
+		return $this->getOrderStatusLogsTableField();
 	}
 
 	/**
@@ -673,32 +642,6 @@ class Order extends DataObject {
 			new GridFieldEditButton()
 		);
 		return new GridField("Emails", _t("Order.PAYMENTS", "Payments"), $this->Payments(), $gridFieldConfig);
-
-		/*
-		$paymentsTable = new HasManyComplexTableField(
-			$this,
-			"Payments", //$name
-			"Payment", //$sourceClass =
-			null, //$fieldList =
-			null, //$detailedFormFields =
-			"\"OrderID\" = ".$this->ID."", //$sourceFilter =
-			"\"Created\" ASC", //$sourceSort =
-			null //$sourceJoin =
-		);
-		$paymentsTable->setPageSize(20);
-		$paymentsTable->addSummary(
-			_t("Order.TOTAL", "Total"),
-			array("Total" => array("sum","Currency->Nice"))
-		);
-		if($this->IsPaid()){
-			$paymentsTable->setPermissions(array('export', 'show'));
-		}
-		else {
-			$paymentsTable->setPermissions(array('edit', 'delete', 'export', 'show'));
-		}
-		$paymentsTable->setShowPagination(false);
-		$paymentsTable->setRelationAutoSetting(true);
-		*/
 	}
 
 	function OrderStepField() {
@@ -1054,13 +997,20 @@ class Order extends DataObject {
 					}
 				}
 			}
-			//we can remove this saving ????!
 			if($address) {
-				//save order
-				$this->$variableName = $address->write();
-				//just in case!
-				$this->$variableName = $address->ID;
-				$this->write();
+				if(!$address->exists()) {
+					$address->write();
+				}
+				if($address->OrderID != $this->ID) {
+					$address->OrderID = $this->ID;
+					$address->write();
+				}
+				if($this->$variableName != $address->ID){
+					if(!$this->IsSubmitted()) {
+						$this->$variableName = $address->ID;
+						$this->write();
+					}
+				}
 				return $address;
 			}
 		}

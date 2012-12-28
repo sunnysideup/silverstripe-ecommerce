@@ -32,6 +32,10 @@ class ShippingAddress extends OrderAddress {
 		)
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $db = array(
 		'ShippingPrefix' => 'Varchar(10)',
 		'ShippingFirstName' => 'Varchar(100)',
@@ -67,16 +71,27 @@ class ShippingAddress extends OrderAddress {
 	 */
 	public static $default_sort = "\"ShippingAddress\".\"ID\" DESC";
 
-
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	static $indexes = array(
 		"Obsolete" => true,
 		"OrderID" => true
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $casting = array(
 		"ShippingFullCountryName" => "Varchar(200)"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $searchable_fields = array(
 		"OrderID" => array(
 			"field" => "NumericField",
@@ -89,15 +104,35 @@ class ShippingAddress extends OrderAddress {
 		"Obsolete"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $summary_fields = array(
 		"Order.Title",
 		"Surname",
 		"City"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
+	public static $field_labels = array(
+		"Order.Title" => "Order"
+	);
+
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $singular_name = "Shipping Address";
 		function i18n_singular_name() { return _t("OrderAddress.SHIPPINGADDRESS", "Shipping Address");}
 
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $plural_name = "Shipping Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.SHIPPINGADDRESSES", "Shipping Addresses");}
 

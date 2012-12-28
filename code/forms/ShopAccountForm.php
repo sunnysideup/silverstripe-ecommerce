@@ -32,7 +32,6 @@ class ShopAccountForm extends Form {
 			);
 			$loginField->dontEscape = true;
 			$fields->push($loginField);
-			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
 			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
 			$fields->push($passwordField);
 			$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
@@ -73,10 +72,10 @@ class ShopAccountForm extends Form {
 		if($this->extend('updateValidator',$requiredFields) !== null) {$this->setValidator($requiredFields);}
 		if($member && $member->Password ){
 			$this->loadDataFrom($member);
-			if(!isset($_REQUEST["Password"])) {
-				$this->fields()->fieldByName("Password")->SetValue("");
-			}
-			$this->fields()->fieldByName("Password")->setCanBeEmpty(true);
+		}
+		if(!isset($_REQUEST["Password"])) {
+			$this->Fields()->fieldByName("Password")->setCanBeEmpty(true);
+			$this->Fields()->fieldByName("Password")->setValue("");
 		}
 		$this->extend('updateShopAccountForm',$this);
 	}

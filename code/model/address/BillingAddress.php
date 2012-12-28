@@ -124,6 +124,14 @@ class BillingAddress extends OrderAddress {
 
 	/**
 	 * standard SS variable
+	 * @return Array
+	 */
+	public static $field_labels = array(
+		"Order.Title" => "Order"
+	);
+
+	/**
+	 * standard SS variable
 	 * @return String
 	 */
 	public static $singular_name = "Billing Address";

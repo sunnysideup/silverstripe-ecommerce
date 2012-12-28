@@ -136,27 +136,29 @@ class EcommerceRole extends DataExtension {
 	 **/
 	public function getEcommerceFieldsForCMS() {
 		$fields = new CompositeField();
-		$memberTitle = new TextField("MemberTitle", "Name", $this->owner->getTitle());
-		$fields->push($memberTitle->performReadonlyTransformation());
-		$memberEmail = new TextField("MemberEmail","Email", $this->owner->Email);
-		$fields->push($memberEmail->performReadonlyTransformation());
-		$lastLogin = new TextField("MemberLastLogin","Last login",$this->owner->dbObject('LastVisited')->Nice());
-		$fields->push($lastLogin->performReadonlyTransformation());
+		$memberTitle = new ReadonlyField("MemberTitle", _t("Member.TITLE", "Name"), "<p>"._t("Member.TITLE", "Name").": ".$this->owner->getTitle()."</p>");
+		$memberTitle->dontEscape = true;
+		$fields->push($memberTitle);
+		$memberEmail = new ReadonlyField("MemberEmail",_t("Member.EMAIL", "Email"), "<p>"._t("Member.EMAIL", "Email").": ".$this->owner->Email."</p>");
+		$memberEmail->dontEscape = true;
+		$fields->push($memberEmail);
+		$lastLogin = new ReadonlyField("MemberLastLogin",_t("Member.LASTLOGIN", "Last Login"),"<p>"._t("Member.LASTLOGIN", "Last Login").": ".$this->owner->dbObject('LastVisited')->Nice()."</p>");
+		$lastLogin->dontEscape = true;
+		$fields->push($lastLogin);
+		$group = EcommerceRole::get_customer_group();
+		if(!$group){$group = new Group();}
+		$linkField = new LiteralField(
+			"MemberLinkField",
+			"
+			<h3>"._t("Member.EDIT_CUSTOMER", "Edit Customer")."</h3>
+			<ul>
+				<li><a href=\"/admin/security/EditForm/field/Members/item/".$this->owner->ID."/edit\" target=\"_blank\">"._t("Member.EDIT", "Edit")." <i>".$this->owner->getTitle()."</i></a></li>
+				<li><a href=\"/admin/security/show/".$group->ID."/\" target=\"_blank\">"._t("Member.EDIT_ALL_CUSTOMERS", "Edit All Customers")."</a></li>
+			</ul>
+			"
+		);
+		$fields->push($linkField);
 		return $fields;
-	}
-
-	/**
-	 * returns content for a literal field for the CMS that links through to the member.
-	 * @return String
-	 * @author: nicolaas
-	 **/
-	function getEcommerceFieldsForCMSAsString() {
-		$v = $this->owner->renderWith("Order_Member");
-		if($group = EcommerceRole::get_customer_group()) {
-			$v .= '<p><a href="/admin/security/show/'.$group->ID.'/" target="_blank">view (and edit) all customers</a></p>';
-		}
-		$this->owner->extend('augmentEcommerceFieldsForCMSAsString', $v);
-		return $v;
 	}
 
 	/**

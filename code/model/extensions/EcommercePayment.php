@@ -11,7 +11,7 @@
 class EcommercePayment extends DataExtension {
 
 	public static $summary_fields = array(
-		"OrderID" => "Order ID",
+		"Order.Title",
 		"ClassName" => "Type",
 		"AmountValue" => "Amount",
 		"Status" => "Status"
@@ -42,6 +42,14 @@ class EcommercePayment extends DataExtension {
 		),
 		*/
 		'Status'
+	);
+
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
+	public static $field_labels = array(
+		"Order.Title" => "Order"
 	);
 
 	/**
