@@ -941,7 +941,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
-		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
+		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog", $msg),"ActionNextStepManually");
 		return $fields;
 	}
 

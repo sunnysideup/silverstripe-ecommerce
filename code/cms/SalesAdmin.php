@@ -50,11 +50,11 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 
 	function init() {
 		parent::init();
-		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("Order_Invoice", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("Order_PackingSlip", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("OrderStepField"); // LEAVE HERE
-		Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("OrderStepField",'ecommerce'); // LEAVE HERE
+		//Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 	}
 
 

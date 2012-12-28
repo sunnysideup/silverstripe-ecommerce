@@ -37,7 +37,7 @@ class SelectOrderAddressField extends OptionsetField {
 	 * Note that we include JS from this method.
 	 * @return HTML
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		$jsArray = array();
 		$js = '';
 		$jsonCompare = array();

@@ -290,6 +290,7 @@ class Order extends DataObject {
 		'MemberID',
 		'Attributes',
 		'SessionID',
+		'Emails',
 		'BillingAddressID',
 		'ShippingAddressID',
 		'UseShippingAddress',
@@ -432,8 +433,14 @@ class Order extends DataObject {
 			);
 			if($submitted) {
 				$htmlSummary = $this->renderWith("Order");
-				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
-
+				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<iframe src="'.$this->PrintLink().'" width="100%" height="500"></iframe>'));
+				$fields->insertAfter(
+					new Tab(
+						"Emails",
+						$this->getEmailsTableField()
+					),
+					"Next"
+				);
 				$fields->addFieldToTab('Root.Payments',$this->getPaymentsField());
 				$fields->addFieldToTab("Root.Payments", new ReadOnlyField("TotalPaid", _t("Order.TOTALPAID", "Total Paid"), $this->getTotalPaid()));
 				$fields->addFieldToTab("Root.Payments", new ReadOnlyField("TotalOutstanding", _t("Order.TOTALOUTSTANDING", "Total Outstanding"), $this->getTotalOutstanding()));
@@ -455,20 +462,7 @@ class Order extends DataObject {
 				$cancelledField = $fields->dataFieldByName("CancelledByID");
 				$fields->removeByName("CancelledByID");
 				$fields->addFieldToTab("Root.Cancellation", $cancelledField);
-				$oldOrderStatusLogsSource = $this->OrderStatusLogs();
-				$oldOrderStatusLogs = new ComplexTableField(
-					$this,
-					$name ="OldOrderStatusLogs",
-					$sourceClass = "OrderStatusLog",
-					$fieldList = null,
-					$detailFormFields = null,
-					$sourceFilter = "\"OrderID\" = ".$this->ID,
-					$sourceSort = "",
-					$sourceJoin = ""
-				);
-				$oldOrderStatusLogs->setCustomSourceItems($oldOrderStatusLogsSource);
-				$oldOrderStatusLogs->setPermissions(array("show"));
-				$fields->addFieldToTab('Root.Log', $oldOrderStatusLogs);
+				$fields->addFieldToTab('Root.Log', $this->getOldOrderStatusLogsField());
 				$submissionLog = $this->SubmissionLog();
 				if($submissionLog) {
 					$fields->addFieldToTab('Root.Log',
@@ -490,19 +484,7 @@ class Order extends DataObject {
 				);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$msg.'</p>'));
 				$fields->addFieldToTab('Root.Items',$this->getOrderItemsField());
-				$modifierTable = new ComplexTableField(
-					$this, //$controller
-					"OrderModifiers", //$name =
-					"OrderModifier", //$sourceClass =
-					null, //$fieldList =
-					null, //$detailedFormFields =
-					"\"OrderID\" = ".$this->ID."", //$sourceFilter =
-					"\"Created\" ASC", //$sourceSort =
-					null //$sourceJoin
-				);
-				$modifierTable->setPermissions(array('edit', 'delete', 'export', 'show'));
-				$modifierTable->setPageSize(100);
-				$fields->addFieldToTab('Root.Extras',$modifierTable);
+				$fields->addFieldToTab('Root.Extras', $this->getModifierTableField());
 
 				//MEMBER STUFF
 				$specialOptionsArray = array();
@@ -556,7 +538,34 @@ class Order extends DataObject {
 		return $fields;
 	}
 
+	/**
+	 *
+	 * @return GridField
+	 */
+	protected function getOrderItemsField(){
+		$gridFieldConfig = GridFieldConfig_RecordEditor::create();
+		$source = $this->OrderItems();
+		return new GridField("OrderItems", _t("OrderItems.PLURALNAME", "Order Items"), $source , $gridFieldConfig);
+	}
 
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	function getModifierTableField(){
+		$gridFieldConfig = GridFieldConfig_RecordEditor::create();
+		$source = $this->OrderModifiers();
+		return new GridField("OrderModifiers", _t("OrderItems.PLURALNAME", "Order Items"), $source , $gridFieldConfig);
+	}
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	function getOldOrderStatusLogsField(){
+		return $this->getOrderStatusLogsTableField();
+	}
 
 	/**
 	 *
@@ -627,57 +636,31 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *
+	 * Needs to be public because the OrderStep::getCMSFIelds accesses it.
 	 *@return GridField
 	 **/
-	protected function OrderStatusLogsTable($sourceClass, $title, $fieldList = null, $detailedFormFields = null) {
-		return new LiteralField("ShippingAddress", "<h3>OrderStatusLogsTable GridField goes here</h3>");
-		return new GridField("OrderStatusLogs", _t("Order.ORDERITEMS", "Order Items"), $this->OrderStatusLogs());
-		/*
-		$orderStatusLogsTable = new HasManyComplexTableField(
-			$this,
-			"OrderStatusLogs", //$name
-			$sourceClass, //$sourceClass =
-			null, //$fieldList =
-			null, //$detailedFormFields =
-			"\"OrderID\" = ".$this->ID.""
+	public function getOrderStatusLogsTableField($sourceClass = "OrderStatusLog", $title = "", $fieldList = null, $detailedFormFields = null) {
+		$gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
+			new GridFieldAddNewButton('toolbar-header-right'),
+			new GridFieldDetailForm()
 		);
-		$orderStatusLogsTable->setPageSize(100);
-		$orderStatusLogsTable->setShowPagination(false);
-		$orderStatusLogsTable->setRelationAutoSetting(true);
-		if($title) {
-			$orderStatusLogsTable->setAddTitle($title);
+		$title ? $title : $title = _t("OrderItem.PLURALNAME", "Order Items");
+		$source = $this->OrderStatusLogs();
+		if($source != "OrderStatusLog") {
+			$source->filter(array("ClassName" => $sourceClass));
 		}
-		return $orderStatusLogsTable;
-		*/
+		return new GridField($sourceClass, $title, $source , $gridFieldConfig);
 	}
 
 	/**
 	 *
 	 * @return GridField
-	 */
-	protected function getOrderItemsField(){
-		return new LiteralField("ShippingAddress", "<h3>Attributes GridField goes here</h3>");
-		return new GridField("Attributes", _t("Order.ORDERITEMS", "Order Items"), $this->OrderItems());
-		/*
-		$orderItemsTable = new HasManyComplexTableField(
-			$this, //$controller
-			"Attributes", //$name =
-			"OrderItem", //$sourceClass =
-			null, //$fieldList =
-			null, //$detailedFormFields =
-			"\"OrderID\" = ".$this->ID."", //$sourceFilter =
-			"\"Created\" ASC", //$sourceSort =
-			null //$sourceJoin =
+	 **/
+	public function getEmailsTableField() {
+		$gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
+			new GridFieldDetailForm()
 		);
-		$orderItemsTable->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd', "show"));
-		$orderItemsTable->setShowPagination(false);
-		$orderItemsTable->setRelationAutoSetting(true);
-		$orderItemsTable->addSummary(
-			_t("Order.TOTAL", "Total"),
-			array("Total" => array("sum","Currency->Nice"))
-		);
-		*/
+		return new GridField("Emails", _t("Order.CUSTOMER_EMAILS", "Customer Emails"), $this->Emails(), $gridFieldConfig);
 	}
 
 	/**
@@ -685,8 +668,12 @@ class Order extends DataObject {
 	 * @return GridField
 	 */
 	protected function getPaymentsField(){
-		return new LiteralField("ShippingAddress", "<h3>Payments GridField goes here</h3>");
-		return new GridField("Payments", _t("Order.PAYMENTS", "Payments"), $this->Payments());
+		$gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
+			new GridFieldDetailForm(),
+			new GridFieldEditButton()
+		);
+		return new GridField("Emails", _t("Order.PAYMENTS", "Payments"), $this->Payments(), $gridFieldConfig);
+
 		/*
 		$paymentsTable = new HasManyComplexTableField(
 			$this,

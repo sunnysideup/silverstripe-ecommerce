@@ -208,8 +208,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		//we retrieve the order in the parent page
 		//the parent page also takes care of the security
 		parent::init();
-		Requirements::themedCSS('Order');
-		Requirements::themedCSS('Order_Print', "print");
+		Requirements::themedCSS('Order', 'ecommerce');
+		Requirements::themedCSS('Order_Print', 'ecommerce', "print");
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		//clear steps from checkout page otherwise in the next order
@@ -224,18 +224,19 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 *@return array
 	 **/
 	function showorder($request) {
+		isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = "mysite";
 		if(isset($_REQUEST["print"])) {
 			Requirements::clear();
-			Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			Requirements::themedCSS("Order_Invoice", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("Order_Invoice", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			return $this->renderWith("Invoice");
 		}
 		elseif(isset($_REQUEST["packingslip"])) {
 			Requirements::clear();
-			Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			Requirements::themedCSS("Order_PackingSlip"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("Order_PackingSlip", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			return $this->renderWith("PackingSlip");
 		}
 		return array();
@@ -355,9 +356,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
 		}
 		Requirements::clear();
-		Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("Order_Invoice", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = "mysite";
+		Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("Order_Invoice", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		$html =  $this->renderWith("Order_ReceiptEmail");
 		// if it's an html email, filter it through emogrifier
 		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;

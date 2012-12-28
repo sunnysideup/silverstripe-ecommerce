@@ -85,8 +85,8 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	function onAfterInit(){
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "cart_js_file_location"));
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "dialogue_js_file_location"));
-		Requirements::themedCSS("Cart");
-		Requirements::themedCSS("jquery.colorbox");
+		Requirements::themedCSS("Cart", 'ecommerce');
+		Requirements::themedCSS("jquery.colorbox", 'ecommerce');
 	}
 
 	/**

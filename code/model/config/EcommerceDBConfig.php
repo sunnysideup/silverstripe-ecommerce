@@ -317,7 +317,7 @@ class EcommerceDBConfig extends DataObject {
 				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
 			),
 			new Tab('Process',
-				new ComplexTableField($this, "OrderSteps", "OrderStep")
+				$this->getOrderStepsField()
 			),
 			new Tab('Advanced',
 				new HeaderField("EcommerceVersionHeading", "Version"),
@@ -356,6 +356,20 @@ class EcommerceDBConfig extends DataObject {
 		return $fields;
 	}
 
+	protected function getOrderStepsField(){
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldAddNewButton('toolbar-footer-left'),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(10),
+			new GridFieldPaginator(10),
+			new GridFieldEditButton(),
+			new GridFieldDeleteAction(),
+			new GridFieldDetailForm(),
+			new GridFieldDeleteAction('unlinkrelation')
+		);
+		return new GridField("OrderSteps", _t("OrderStep.PLURALNAME", "Order Steps"), OrderStep::get(), $gridFieldConfig);
+	}
 
 	/**
 	 * tells us if a Class Name is a buyable
@@ -390,7 +404,7 @@ class EcommerceDBConfig extends DataObject {
 
 	/**
 	 *
-	 * return DataList
+	 * @return DataList
 	 */
 	function Currencies(){
 		return EcommerceCurrency::ecommerce_currency_list();
@@ -424,7 +438,6 @@ class EcommerceDBConfig extends DataObject {
 	public function OrderConfirmationPageLink() {
 		return OrderConfirmationPage::find_link();
 	}
-
 
 	/**
 	 * Returns a link to a default image.

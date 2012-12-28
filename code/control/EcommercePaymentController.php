@@ -29,7 +29,8 @@ class EcommercePaymentController extends Controller {
 
 	function init(){
 		parent::init();
-		Requirements::themedCSS("typography");
+		isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = "mysite";
+		Requirements::themedCSS("typography", $themeBaseFolder);
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");

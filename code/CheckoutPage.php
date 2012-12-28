@@ -213,22 +213,34 @@ class CheckoutPage extends CartPage {
 		$fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page')));
 		$htmlEditorField->setRows(3);
 		if(DataObject::get_one("OrderModifier_Descriptor")) {
-			$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
-			//$orderModifierDescriptionField->setRelationAutoSetting(false);
-			$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
-			$orderModifierDescriptionField->setPermissions(array("show", "edit"));
-			$fields->addFieldToTab('Root.Messages.Messages.OrderExtras',$orderModifierDescriptionField);
-			$fields->addFieldToTab('Root.Content.Messages.OrderExtras',$orderModifierDescriptionField);
+			$fields->addFieldToTab('Root.Messages.Messages.OrderExtras',$this->getOrderModifierDescriptionField());
 		}
 		if(DataObject::get_one("CheckoutPage_StepDescription")) {
-			$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
-			//$checkoutStepDescriptionField->setRelationAutoSetting(false);
-			$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
-			$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
-			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',$checkoutStepDescriptionField);
-			$fields->addFieldToTab('Root.Content.Messages.CheckoutSteps',$checkoutStepDescriptionField);
+			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',getCheckoutStepDescriptionFieldField());
 		}
 		return $fields;
+	}
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	protected function getOrderModifierDescriptionField(){
+		$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
+		//$orderModifierDescriptionField->setRelationAutoSetting(false);
+		$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
+		$orderModifierDescriptionField->setPermissions(array("show", "edit"));
+	}
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	protected function getCheckoutStepDescriptionFieldField(){
+		$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
+		//$checkoutStepDescriptionField->setRelationAutoSetting(false);
+		$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
+		$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
 	}
 
 }
@@ -245,7 +257,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 **/
 	public function init() {
 		parent::init();
-		Requirements::themedCSS('CheckoutPage');
+		Requirements::themedCSS('CheckoutPage', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
