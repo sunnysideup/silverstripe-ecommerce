@@ -24,7 +24,7 @@
 class EcommerceSideReport_EcommercePages extends SS_Report {
 
 	function title() {
-		return _t('EcommerceSideReport.ECOMMERCEPAGES',"E-commerce Pages");
+		return _t('EcommerceSideReport.ECOMMERCEPAGES',"E-commerce Pages (excluding products)");
 	}
 
 	function group() {
@@ -36,20 +36,20 @@ class EcommerceSideReport_EcommercePages extends SS_Report {
 	}
 
 	function sourceRecords($params = null) {
-		$dos = new DataObjectSet();
-		$array = array("CartPage", "AccountPage");
+		$array = array("CartPage", "AccountPage", "ProductSearchPage");
+		$dataList = new ArrayList();
 		foreach($array as $className) {
-			if($add = DataObject::get($className)) {
-				if($add->exists()) {
-					foreach($add as $page) {
-						$dos->push($page);
+			if(class_exists($className)) {
+				if($pages = $className::get()) {
+					if($pages && $pages->count()) {
+						foreach($pages as $page) {
+							$dataList->push($page);
+						}
 					}
 				}
 			}
 		}
-		if($dos->count()) {
-			return $dos;
-		}
+		return $dataList;
 	}
 
 	function columns() {
@@ -192,7 +192,7 @@ class EcommerceSideReport_NoInternalIDProducts extends SS_Report {
 	}
 
 	function sourceRecords($params = null) {
-		return DataObject::get("Product", "\"Product\".\"InternalID\" IS NULL OR \"Product\".\"InternalID\" = '' ", "\"FullSiteTreeSort\" ASC");
+		return DataObject::get("Product", "\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' ", "\"FullSiteTreeSort\" ASC");
 	}
 
 	function columns() {
@@ -312,7 +312,12 @@ class EcommerceSideReport_ProductsWithVariations extends SS_Report {
 		if(Versioned::current_stage() == "Live") {
 			$stage = "_Live";
 		}
-		return DataObject::get("Product", " ProductVariation.ID IS NULL ", "\"FullSiteTreeSort\" ASC", "LEFT JOIN \"ProductVariation\" ON \"ProductVariation\".\"ProductID\" = \"Product".$stage."\".\"ID\"");
+		if(class_exists("ProductVariation")) {
+			return Product::get()->where("\"ProductVariation\".\"ID\" IS NULL ")->sort("FullSiteTreeSort")->leftJoin("ProductVariation", "\"ProductVariation\".\"ProductID\" = \"Product".$stage."\".\"ID\"");
+		}
+		else {
+			return Product::get();
+		}
 	}
 
 	function columns() {

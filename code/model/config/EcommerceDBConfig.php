@@ -242,7 +242,7 @@ class EcommerceDBConfig extends DataObject {
 			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch between configurations)."),
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
-			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Invoice title (e.g. Tax Invoice or Update from ...)"),
+			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Email title (e.g. Tax Invoice or Update from ...)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),
 			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address (e.g. sales@mysite.com, you can also use something like: \"Our Shop Name Goes Here\" &lt;sales@mysite.com&gt;)"),
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
@@ -284,7 +284,8 @@ class EcommerceDBConfig extends DataObject {
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
 				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
-				$htmlEditorField1 = new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"])
+				$htmlEditorField1 = new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"]),
+				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase'])
 			),
 			new Tab('ProductDisplay',
 				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
@@ -294,8 +295,7 @@ class EcommerceDBConfig extends DataObject {
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
 				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
-				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"]),
-				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase'])
+				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
 			),
 			new Tab('ProductImages',
 				new UploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
@@ -304,17 +304,15 @@ class EcommerceDBConfig extends DataObject {
 				new ReadonlyField("DefaultContentImageSize", $fieldLabels["DefaultContentImageSize"], $productImage->ContentWidth()."px wide"),
 				new ReadonlyField("DefaultLargeImageSize", $fieldLabels["DefaultLargeImageSize"], $productImage->LargeWidth()."px wide")
 			),
-			new Tab('Checkout',
+			new Tab('Address',
 				new TextField("PostalCodeURL", $fieldLabels["PostalCodeURL"]),
-				new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"])
+				new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"]),
+				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
 			),
 			new Tab('Emails',
 				new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),
-				new UploadField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos")
-			),
-			new Tab('Invoice',
-				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"]),
-				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
+				new UploadField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos"),
+				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"])
 			),
 			new Tab('Process',
 				$this->getOrderStepsField()
@@ -359,14 +357,12 @@ class EcommerceDBConfig extends DataObject {
 	protected function getOrderStepsField(){
 		$gridFieldConfig = GridFieldConfig::create()->addComponents(
 			new GridFieldToolbarHeader(),
-			new GridFieldAddNewButton('toolbar-footer-left'),
 			new GridFieldSortableHeader(),
 			new GridFieldDataColumns(10),
 			new GridFieldPaginator(10),
 			new GridFieldEditButton(),
 			new GridFieldDeleteAction(),
-			new GridFieldDetailForm(),
-			new GridFieldDeleteAction('unlinkrelation')
+			new GridFieldDetailForm()
 		);
 		return new GridField("OrderSteps", _t("OrderStep.PLURALNAME", "Order Steps"), OrderStep::get(), $gridFieldConfig);
 	}
@@ -399,7 +395,7 @@ class EcommerceDBConfig extends DataObject {
 	 * @return String
 	 */
 	public function Currency() {
-		return EcommerceConfig::get("EcommerceCurrency", "site_currency");
+		return EcommerceConfig::get("EcommerceCurrency", "default_currency");
 	}
 
 	/**

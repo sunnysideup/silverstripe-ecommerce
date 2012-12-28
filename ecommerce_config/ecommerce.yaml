@@ -168,7 +168,7 @@ Order_Email:
 
 EcommerceCurrency:
  exchange_provider_class: ExchangeRateProvider
- site_currency: NZD
+ default_currency: NZD
 
 
 
