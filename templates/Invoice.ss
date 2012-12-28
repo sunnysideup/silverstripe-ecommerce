@@ -13,7 +13,7 @@
 			<% include Order %>
 		<% end_with %>
 	</div>
-	<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>
+	<script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 </body>
 </html>
 

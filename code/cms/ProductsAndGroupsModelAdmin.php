@@ -9,7 +9,6 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
@@ -38,6 +37,25 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 	 **/
 	function urlSegmenter() {
 		return self::$url_segment;
+	}
+
+
+	public function getEditForm($id = null, $fields = null) {
+		$form = parent::getEditForm($id, $fields);
+		$actions = $form->Actions();
+		$actions->push(new FormAction("Next", "Next"));
+		$form->setActions($actions);
+		return $form;
+	}
+
+	public function updateEditForm($form) {
+
+		if ( ! singleton($this->owner->modelClass)->hasExtension('Versioned') ) return;
+
+		$gridField = $form->Fields()->fieldByName($this->owner->modelClass);
+		$gridField->getConfig()->getComponentByType('GridFieldDetailForm')->setItemEditFormCallback(function ($form) {
+				$form->Actions()->push(FormAction::create('doPublish', 'Save & Publish'));
+		});
 	}
 
 }

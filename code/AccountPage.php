@@ -195,7 +195,7 @@ class AccountPage_Controller extends Page_Controller {
 			Security::permissionFailure($this, $messages);
 			return false;
 		}
-		Requirements::themedCSS("AccountPage");
+		Requirements::themedCSS("AccountPage", 'ecommerce');
 	}
 
 	/**

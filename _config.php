@@ -8,16 +8,6 @@
  **/
 
 
-
-//NOTE - if you dont like these URLs then you can change them by adding another rule
-// with a higher number.
-Director::addRules(50, array(
-	'shoppingcart/$Action/$ID/$OtherID/$Version' => 'ShoppingCart_Controller',
-	'ecommercepayment/$Action/$ID/$OtherID' => 'EcommercePaymentController',
-	'ecommercetemplatetest/$Action/$ID/$OtherID' => 'EcommerceTemplateTest',
-	'ecommercebuyabledatalist/$Action/$ID/$OtherID' => 'BuyableSelectField_DataList',
-	'api/ecommerce/v1' => 'EcommerceRestfulServer'
-));
 Object::add_extension("Member", "EcommerceRole");
 Object::add_extension("Payment", "EcommercePayment");
 Object::add_extension("SiteTree", "EcommerceSiteTreeExtension");

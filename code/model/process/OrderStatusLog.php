@@ -177,6 +177,9 @@ class OrderStatusLog extends DataObject {
 		if($this->OrderID) {
 			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
 		}
+		else {
+			$fields->replaceField("OrderID", new NumericField("OrderID"));
+		}
 		//get dropdown for ClassNames
 		$fields->addFieldToTab("Root.Main", new OrderStatusLog_ClassNameOrTypeDropdownField("ClassName", "Type", false), "Title");
 		$classNameField = $fields->dataFieldByName("ClassName");

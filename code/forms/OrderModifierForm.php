@@ -36,7 +36,7 @@ class OrderModifierForm extends Form {
 			$optionalValidator = new $validatorClassName();
 		}
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
-		Requirements::themedCSS($this->ClassName);
+		Requirements::themedCSS($this->ClassName, 'ecommerce');
 		$this->addExtraClass(lcfirst(ucwords($name)));
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
 		//add JS for the modifier - added in modifier

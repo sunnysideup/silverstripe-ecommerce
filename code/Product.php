@@ -206,35 +206,10 @@ class Product extends Page implements BuyableModel {
 				'Root.AlsoShowHere',
 				array(
 					new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
-					$this->getProductGroupsTable()
+					$this->getProductGroupsTableField()
 				)
 			);
 		}
-		/*
-		$orderTableField = new ComplexTableField(
-			$this,
-			'OrderItems',
-			'OrderItem',
-			array(
-				'Order.ID' => '#',
-				'Order.Created' => 'When',
-				'Quantity' => 'Quantity'
-			),
-			new FieldList(),
-			"\"BuyableID\" = '".$this->ID."' AND \"BuyableClassName\" = '".$this->ClassName."'",
-			"\"Created\" DESC"
-		);
-		$orderTableField->setPermissions(array("show"));
-		$orderTableField->setShowPagination(true);
-		$orderTableField->setRelationAutoSetting(true);
-		*/
-		/*
-		$orderTableField->addSummary(
-			_t("Product.TOTALCOUNT", "Total Count"),
-			array("TotalCount" => array("sum","Quantity->Nice"))
-		);
-		*/
-		//$fields->addFieldToTab('Root.Orders', $orderTableField);
 		if($siteTreeFieldExtensions) {
 			$this->extend('updateSettingsFields', $fields);
 		}
@@ -245,7 +220,7 @@ class Product extends Page implements BuyableModel {
 	 * Used in getCSMFields
 	 * @return TreeMultiselectField
 	 **/
-	protected function getProductGroupsTable() {
+	protected function getProductGroupsTableField() {
 		$field = new TreeMultiselectField(
 			$name = "ProductGroups",
 			$title = _t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
@@ -861,7 +836,7 @@ class Product_Controller extends Page_Controller {
 	 */
 	function init() {
 		parent::init();
-		Requirements::themedCSS('Products');
+		Requirements::themedCSS('Products', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
 	}

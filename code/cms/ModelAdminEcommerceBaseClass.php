@@ -1,5 +1,11 @@
 <?php
 
+/**
+ *
+ * @see: http://doc.silverstripe.org/framework/en/reference/ModelAdmin
+ * @author Nicolaas [at] sunnyside up . co .nz
+ */
+
 class ModelAdminEcommerceBaseClass extends ModelAdmin {
 
 
@@ -11,6 +17,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin {
 		self::$managed_models = $models;
 		return parent::getManagedModels();
 	}
+
 
 }
 /**

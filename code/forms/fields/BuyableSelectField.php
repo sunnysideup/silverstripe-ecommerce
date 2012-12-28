@@ -71,21 +71,21 @@ class BuyableSelectField extends FormField {
 	/**
 	 * @return string
 	 */
-	function Field() {
-		if(!$this->form->dataFieldByName("Version")) {
-			user_error("You must have a Version field in your form");
+	function Field($properties = array()) {
+		if(!$this->form->Fields()->fieldByName("Version")) {
+			//user_error("You must have a Version field in your form");
 		}
-		if(!$this->form->dataFieldByName("BuyableClassName")) {
-			user_error("You must have a BuyableClassName field in your form");
+		if(!$this->form->Fields()->fieldByName("BuyableClassName")) {
+			//user_error("You must have a BuyableClassName field in your form");
 		}
-		if(!$this->form->dataFieldByName("BuyableID")) {
-			user_error("You must have a BuyableID field in your form.");
+		if(!$this->form->Fields()->fieldByName("BuyableID")) {
+			//user_error("You must have a BuyableID field in your form.");
 		}
 		Requirements::javascript($this->jquery_UI_JS_location);
 		Requirements::css($this->jquery_UI_CSS_location);
 		Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
 		Requirements::customScript($this->getJavascript(), "BuyableSelectField".$this->id());
-		Requirements::themedCSS("BuyableSelectField");
+		Requirements::themedCSS("BuyableSelectField", 'ecommerce');
 		return
 		"<div class=\"fieldgroup\">" .
 			"<div class=\"findBuyable fieldGroupInner\">" . $this->fieldFindBuyable->SmallFieldHolder()."</div>" .
@@ -96,10 +96,10 @@ class BuyableSelectField extends FormField {
 	protected function getJavascript(){
 		return '
 		EcomBuyableSelectField.set_nothingFound("'._t('BuyableSelectField.NOTHINGFOUND', 'no products found - please try again').'");
-		EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->name()).'");
+		EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->getName()).'");
 		EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->FormName()).'");
 		EcomBuyableSelectField.set_countOfSuggestions('.$this->countOfSuggestions.');
-		EcomBuyableSelectField.set_selectedBuyableFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->name()).'");
+		EcomBuyableSelectField.set_selectedBuyableFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->getName()).'");
 		EcomBuyableSelectField.set_selectedBuyableFieldID("'.Convert::raw2js($this->fieldSelectedBuyable->id()).'");
 		';
 	}
