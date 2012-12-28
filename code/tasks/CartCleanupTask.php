@@ -68,7 +68,7 @@ class CartCleanupTask extends BuildTask {
 		$where = "\"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
 		$join = "";
-		$limit = $maximumNumberOfObjectsDeleted;
+		$limit = "0, ".$maximumNumberOfObjectsDeleted;
 		$neverDeleteIfLinkedToMember = EcommerceConfig::get("CartCleanupTask", "never_delete_if_linked_to_member");
 		if($neverDeleteIfLinkedToMember) {
 			$where .= " AND \"Member\".\"ID\" IS NULL";
@@ -78,7 +78,7 @@ class CartCleanupTask extends BuildTask {
 		else {
 			$memberDeleteNote = "(We will also delete carts in this category that are linked to a member)";
 		}
-		$oldCarts = Order::get()->where($where)->sort($sort)->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"")->limit(0, $maximumNumberOfObjectsDeleted);
+		$oldCarts = DataObject::get('Order',$where, $sort, $join, $limit);
 		if($oldCarts){
 			$count = 0;
 			if($this->verbose) {
