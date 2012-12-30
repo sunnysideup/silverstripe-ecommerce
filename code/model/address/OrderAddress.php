@@ -429,7 +429,7 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function lastAddressFromMember($member = null) {
 		$addresses = $this->previousAddressesFromMember($member, true);
-		if($addresses) {
+		if($addresses && $addresses->count()) {
 			return $addresses->First();
 		}
 	}
@@ -441,7 +441,7 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function lastOrderFromMember($member = null) {
 		$orders = $this->previousOrdersFromMember($member, true);
-		if($orders) {
+		if($orders && $orders->count()) {
 			return $orders->First();
 		}
 	}
@@ -457,7 +457,7 @@ class OrderAddress extends DataObject {
 	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
 		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
 		$returnDos = null;
-		if($orders) {
+		if($orders && $orders->count()) {
 			$fieldName = $this->ClassName."ID";
 			$array = $orders->map($fieldName, $fieldName);
 			if(is_array($array) && count($array)) {
@@ -470,6 +470,7 @@ class OrderAddress extends DataObject {
 					->filter(array("ID" => $array))
 					->filter(array("Obsolete" => 0))
 					->sort("LastEdited", "DESC")
+					//WHY ??? Do we include Orders here as Inner Join?
 					->innerJoin("Order", "\"Order\".\"$fieldName\" = \"".$this->ClassName."\".\"ID\"");
 				if($keepDoubles || $onlyLastRecord) {
 					$returnDos = $addresses;
@@ -499,12 +500,12 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * make an address obsolete and include all the addresses that are identical.
-	 *
+	 * @param Member $member
 	 */
 	public function MakeObsolete($member = null){
 		$addresses = $this->previousAddressesFromMember($member, $onlyLastRecord = false, $includeDoubles = true);
 		$comparisonString = $this->comparisonString();
-		if($addresses) {
+		if($addresses && $addresses->count()) {
 			foreach($addresses as $address) {
 				if($address->comparisonString() == $comparisonString) {
 					$address->Obsolete = 1;
@@ -518,7 +519,8 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * Finds previous orders from the member of the current address
-	 * @param Object (Member)
+	 * @param Member $member
+	 * @param Boolean $onlyLastRecord - only return the last Order from Member (still returns DataList)
 	 * @return DataList
 	 **/
 	protected function previousOrdersFromMember($member = null, $onlyLastRecord = false) {
@@ -526,31 +528,29 @@ class OrderAddress extends DataObject {
 			$member = $this->getMemberFromOrder();
 		}
 		if($member && $member->exists()) {
-			$limit = null;
-			if($onlyLastRecord) {
-				$limit = 1;
-			}
 			$fieldName = $this->ClassName."ID";
-			return Order::get()
-				->filter(array("MemberID" => $member->ID))
-				->exclude(array($fieldName => $this->ID))
-				->sort("LastEdited", "DESC")
-				->limit(0, $limit)
+			$list = Order::get_datalist_of_orders_with_submit_record();
+			$list->filter(array("MemberID" => $member->ID));
+			$list->exclude(array($fieldName => $this->ID));
+			if($onlyLastRecord) {
+				$list->limit(0, 1);
+			}
+			return $list;
 		}
 	}
 
 	/**
 	 * find the member associated with the current Order and address.
-	 * @return DataObject (Member) | Null
 	 * @Note: this needs to be public to give DODS (extensions access to this)
 	 * @todo: can wre write $this->Order() instead????
+	 * @return DataObject (Member) | Null
 	 **/
 	public function getMemberFromOrder() {
 		if($this->exists()) {
 			if($order = $this->Order()) {
 				if($order->exists()) {
 					if($order->MemberID) {
-						return DataObject::get_by_id("Member", $order->MemberID);
+						return Member::get()->byID($order->MemberID);
 					}
 				}
 			}
