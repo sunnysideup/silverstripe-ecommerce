@@ -450,6 +450,8 @@ class OrderAddress extends DataObject {
 	/**
 	 * Finds previous addresses from the member of the current address
 	 * @param Object (Member)
+	 * @param Boolean $onlyLastRecord - only select one
+	 * @param Boolean $keepDoubles - keep addresses that are the same (if set to false, only unique addresses are returned)
 	 * @return ArrayList
 	 **/
 	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
@@ -463,19 +465,17 @@ class OrderAddress extends DataObject {
 				if($onlyLastRecord) {
 					$limit = 1;
 				}
-				$addresses = DataObject::get(
-					$this->ClassName,
-					"\"".$this->ClassName."\".\"ID\" IN (".implode(",", $array).") AND \"Obsolete\" = 0",
-					"\"Order\".\"ID\" DESC",
-					"INNER JOIN \"Order\" ON \"Order\".\"$fieldName\" = \"".$this->ClassName."\".\"ID\" ",
-					$limit
-				);
-				//NOTE the !
+				$className = $this->ClassName;
+				$addresses = $className::get()
+					->filter(array("ID" => $array))
+					->filter(array("Obsolete" => 0))
+					->sort("LastEdited", "DESC")
+					->innerJoin("Order", "\"Order\".\"$fieldName\" = \"".$this->ClassName."\".\"ID\"");
 				if($keepDoubles || $onlyLastRecord) {
 					$returnDos = $addresses;
 				}
 				else {
-					if($addresses) {
+					if($addresses && $addresses->count()) {
 						$addressCompare = array();
 						foreach($addresses as $address) {
 							$comparisonString = $address->comparisonString();
@@ -531,14 +531,11 @@ class OrderAddress extends DataObject {
 				$limit = 1;
 			}
 			$fieldName = $this->ClassName."ID";
-			$orders = DataObject::get(
-				"Order",
-				"\"MemberID\" = ".$member->ID." AND \"$fieldName\" <> ".$this->ID,
-				"\"Order\".\"ID\" DESC ",
-				$join = null,
-				$limit
-			);
-			return $orders;
+			return Order::get()
+				->filter(array("MemberID" => $member->ID))
+				->exclude(array($fieldName => $this->ID))
+				->sort("LastEdited", "DESC")
+				->limit(0, $limit)
 		}
 	}
 

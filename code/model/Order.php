@@ -24,6 +24,9 @@
  * @package: ecommerce
  * @sub-package: model
  * @inspiration: Silverstripe Ltd, Jeremy
+ *
+ * NOTE: This is the SQL for selecting orders in sequence of
+ *
  **/
 
 class Order extends DataObject {
@@ -194,7 +197,7 @@ class Order extends DataObject {
 	 *
 	 * @var integer
 	 */
-	protected $totalItems = -1;
+	protected $totalItems = null;
 
 	/**
 	 * Total Items : total items in cart
@@ -271,11 +274,27 @@ class Order extends DataObject {
 		return null;
 	}
 
-
-
-
-
-
+	/**
+	 * returns a Datalist with the submitted order log included
+	 * this allows you to sort the orders by their submit dates.
+	 * You can retrieve this list and then add more to it (e.g. additional filters, additional joins, etc...)
+	 * @param Boolean $onlySubmittedOrders - only include Orders that have already been submitted.
+	 * @return DataList
+	 */
+	public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = false){
+		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
+		$list = Order::get()
+			->LeftJoin("OrderStatusLog", "\"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"")
+			->LeftJoin($submittedOrderStatusLogClassName, "\"OrderStatusLog\".\"ID\" = \"".$submittedOrderStatusLogClassName."\".\"ID\"")
+			->Sort("\"OrderStatusLog", "\"Created\"", "ASC");
+		if($onlySubmittedOrders) {
+			$list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName'");
+		}
+		else {
+			$list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName' OR \"OrderStatusLog\".\"ClassName\" IS NULL");
+		}
+		return $list;
+	}
 
 
 
@@ -615,9 +634,11 @@ class Order extends DataObject {
 			new GridFieldDetailForm()
 		);
 		$title ? $title : $title = _t("OrderItem.PLURALNAME", "Order Items");
-		$source = $this->OrderStatusLogs();
-		if($source != "OrderStatusLog") {
-			$source->filter(array("ClassName" => $sourceClass));
+		if($source == "OrderStatusLog") {
+			$source = $this->OrderStatusLogs();
+		}
+		else {
+			$source = $sourceClass::get()->filter(array("OrderID" => $this->ID));
 		}
 		return new GridField($sourceClass, $title, $source , $gridFieldConfig);
 	}
@@ -1147,9 +1168,11 @@ class Order extends DataObject {
 	protected function sendEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
 		if(!$message) {
 			$emailableLogs = DataObject::get('OrderStatusLog', "\"OrderID\" = {$this->ID} AND \"InternalUseOnly\" = 0", "\"Created\" DESC", null, 1);
-			if($emailableLogs) {
+			if($emailableLogs && $emailableLogs->count()) {
 				$latestEmailableLog = $emailableLogs->First();
-				$message = $latestEmailableLog->Note;
+				if($latestEmailableLog) {
+					$message = $latestEmailableLog->Note;
+				}
 			}
 		}
 		$replacementArray = array("Message" => $message);
@@ -1916,27 +1939,21 @@ class Order extends DataObject {
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
 	public function getTotalItems($recalculate = false) {
-		if($this->totalItems == -1 || $recalculate) {
-			//to do, why do we check if you can edit ????
-			$this->totalItems = DB::query("
-				SELECT COUNT(\"OrderItem\".\"ID\")
-				FROM \"OrderItem\"
-					INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"ID\" = \"OrderItem\".\"ID\"
-				WHERE
-					\"OrderAttribute\".\"OrderID\" = ".$this->ID."
-					AND \"OrderItem\".\"Quantity\" > 0"
-			)->value();
+		if($this->totalItems === null || $recalculate) {
+			$this->totalItems = OrderItem::get()
+				->where("\"OrderAttribute\".\"OrderID\" = ".$this->ID." AND \"OrderItem\".\"Quantity\" > 0")
+				->count();
 		}
 		return $this->totalItems;
 	}
 
 	/**
 	 * returns the total number of OrderItems (not modifiers) times their respectective quantities.
-	 *@return Double
+	 * @return Double
 	 **/
 	public function TotalItemsTimesQuantity($recalculate = false){return $this->getTotalItemsTimesQuantity($recalculate);}
 	public function getTotalItemsTimesQuantity($recalculate = false) {
-		if($this->totalItemsTimesQuantity == -1 || $recalculate) {
+		if($this->totalItemsTimesQuantity === null || $recalculate) {
 			//to do, why do we check if you can edit ????
 			$this->totalItemsTimesQuantity = DB::query("
 				SELECT SUM(\"OrderItem\".\"Quantity\")
@@ -1949,7 +1966,6 @@ class Order extends DataObject {
 		}
 		return $this->totalItemsTimesQuantity-0;
 	}
-
 
 	/**
 	 * Returns the country code for the country that applies to the order.
@@ -2056,7 +2072,6 @@ class Order extends DataObject {
 			}
 		}
 	}
-
 
 	/**
 	 * Casted variable - has the order been submitted?

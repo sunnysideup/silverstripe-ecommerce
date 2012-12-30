@@ -391,19 +391,14 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 			else {
 				$id = 0;
 			}
-			$lastOneAsDos = DataObject::get(
-				"OrderStatusLog_Submitted",
-				"\"OrderStatusLog_Submitted\".\"ID\" <> $id",
-				"\"SequentialOrderNumber\" DESC",
-				null,
-				1 //make sure limit is 1.
-			);
-			if($lastOneAsDos) {
-				foreach($lastOneAsDos as $lastOne) {
-					$this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
-					if($this->SequentialOrderNumber < $min) {
-						$this->SequentialOrderNumber = $min;
-					}
+			$lastOne = OrderStatusLog_Submitted::get()
+				->Filter(array("ID" => $id))
+				->Sort("SequentialOrderNumber", "DESC")
+				->First();
+			if($lastOne) {
+				$this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
+				if($this->SequentialOrderNumber < $min) {
+					$this->SequentialOrderNumber = $min;
 				}
 			}
 			else {

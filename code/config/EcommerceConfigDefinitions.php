@@ -135,6 +135,7 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"OrderStep" => array(
 				"order_steps_to_include" => "Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.",
+				"number_of_days_to_send_update_email" => "The maximum number of days available to send an status update for the customer for the specific order step",
 			),
 			"OrderStep_Confirmed" => array(
 				"list_of_things_to_check"   => "One of the steps in the order steps sequence is the Order Confirmation.  This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.  Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock, is there a delivery address, etc....)",

@@ -85,6 +85,7 @@ OrderStep:
   OrderStep_Sent,
   OrderStep_Archived
  ]
+ number_of_days_to_send_update_email: 10
 
 OrderStep_Confirmed:
  list_of_things_to_check: "<div id=\"ExamplesOfThingsToConfirm\">

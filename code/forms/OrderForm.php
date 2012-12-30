@@ -54,7 +54,7 @@ class OrderForm extends Form {
 		$finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER','Complete Order'), 3));
 		// If a terms and conditions page exists, we need to create a field to confirm the user has read it
 		if($termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page()) {
-			$checkoutPage = DataObject::get_one("CheckoutPage");
+			$checkoutPage = CheckoutPage::get()->First();
 			if($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
 				$alreadyTicked = false;
 				$requiredFields[] = 'ReadTermsAndConditions';
@@ -242,8 +242,8 @@ class OrderForm_Validator extends RequiredFields{
 	 */
 	function php($data){
 		$valid = parent::php($data);
-		$checkoutPage = DataObject::get_one("CheckoutPage");
-		if($checkoutPage->TermsAndConditionsMessage) {
+		$checkoutPage = CheckoutPage::get()->First();
+		if($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
 			if(isset($data["ReadTermsAndConditions"])) {
 				if(!$data["ReadTermsAndConditions"]) {
 					$this->validationError(
@@ -264,7 +264,7 @@ class OrderForm_Validator extends RequiredFields{
 			);
 			$valid = false;
 		}
-		$billingAddress = DataObject::get_by_id("BillingAddress", intval($order->BillingAddressID)-0);
+		$billingAddress = BillingAddress::get()->byID($order->BillingAddressID);
 		if(!$billingAddress) {
 			$this->validationError(
 				"BillingAddress",

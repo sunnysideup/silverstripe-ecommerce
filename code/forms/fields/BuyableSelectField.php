@@ -198,9 +198,12 @@ class BuyableSelectField_DataList extends Controller {
 					}
 					if($singleton->hasDatabaseField($fieldName)) {
 						$where = "\"$fieldName\" LIKE '%$term%'
-								AND \"".$tableName."\".\"ID\" NOT IN (".implode(",", $arrayOfAddedItemIDsByClassName[$className]).")
+								AND \"".$tableName."\".\"ID\" NOT IN
 								AND \"AllowPurchase\" = 1";
-						$obj = DataObject::get_one($className,$where);
+						$obj::get()
+							->filter(array($fieldName.":PartialMatch" => $term, "AllowPurchase" => 1))
+							->where("\"$tableName\".\"ID\" NOT IN (".implode(",", $arrayOfAddedItemIDsByClassName[$className]).")")
+							->First();
 						if($obj) {
 							//we found an object, we dont need to find it again.
 							$arrayOfAddedItemIDsByClassName[$className][$obj->ID] = $obj->ID;

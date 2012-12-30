@@ -1397,7 +1397,7 @@ class ShoppingCart_Controller extends Controller{
 	 * for developers only
 	 * @return output to buffer
 	 */
-	function ajaxtest(){
+	function ajaxtest($request){
 		if(Director::isDev() || Permission::check("ADMIN")){
 			header('Content-Type', 'text/plain');
 			echo "<pre>";
@@ -1412,6 +1412,9 @@ class ShoppingCart_Controller extends Controller{
 		}
 		else {
 			echo "please <a href=\"Security/login/?BackURL=".urlencode(self::$url_segment."/ajaxtest/")."\">log in</a> first.";
+		}
+		if(!$request->isAjax()) {
+			die("---- make sure to add ?ajax=1 to the URL ---");
 		}
 	}
 
