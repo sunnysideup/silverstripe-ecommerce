@@ -172,7 +172,7 @@ class OrderEmailRecord extends DataObject{
 	function OrderStepNice() {return $this->getOrderStepNice();}
 	function getOrderStepNice() {
 		if($this->OrderStepID) {
-			$orderStep = DataObject::get_by_id("OrderStep", $this->OrderStepID);
+			$orderStep = OrderStep::get()->byID($this->OrderStepID);
 			if($orderStep) {
 				return $orderStep->Name;
 			}

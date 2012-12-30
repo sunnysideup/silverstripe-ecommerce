@@ -25,6 +25,7 @@ class EcommerceCountry extends DataObject {
 				"Name"
 			)
 	 );
+
 	/**
 	 * Standard SS Variable
 	 * @var Array
@@ -169,8 +170,8 @@ class EcommerceCountry extends DataObject {
 	 * This function works out the most likely country for the current order.
 	 * @return String - Country Code - e.g. NZ
 	 **/
-	public static function get_country() {
-		if(self::$get_country_cache === null) {
+	public static function get_country($recalculate = false) {
+		if(self::$get_country_cache === null || $recalculate) {
 			$countryCode = '';
 			//1. fixed country is first
 			$countryCode = self::get_fixed_country_code();
@@ -218,7 +219,8 @@ class EcommerceCountry extends DataObject {
 			self::$allow_sales_cache = true;
 			$countryCode = @Geoip::visitor_country();
 			if($countryCode) {
-				if(DataObject::get_one("EcommerceCountry", "\"DoNotAllowSales\" = 1 AND \"Code\" = '$countryCode'")) {
+				$countries = EcommerceCountry::get()->filter(array("DoNotAllowSales" => 1, "Code" => $countryCode));
+				if($countries->count()) {
 					self::$allow_sales_cache = false;
 				}
 			}
@@ -235,7 +237,7 @@ class EcommerceCountry extends DataObject {
 		if(!$countryCode) {
 			$countryCode = self::get_country();
 		}
-		$country = DataObject::get_one("EcommerceCountry", "\"Code\" = '$countryCode'");
+		$country = EcommerceCountry::get()->filter(array("Code" => $countryCode))->first();
 		if($country) {
 			return $country->ID;
 		}
@@ -253,8 +255,8 @@ class EcommerceCountry extends DataObject {
 			$defaultArray[$code] = self::find_title($code);
 			return $defaultArray;
 		}
-		$countries = DataObject::get("EcommerceCountry", "DoNotAllowSales <> 1");
-		if($countries) {
+		$countries = EcommerceCountry::get()->exclude(array("DoNotAllowSales" => 1));
+		if($countries && $countries->count()) {
 			foreach($countries as $country) {
 				$defaultArray[$country->Code] = $country->Name;
 			}
@@ -263,21 +265,12 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
-	 * Standar SS method
-	 * @return FieldList
-	 **/
-	function getCMSFields() {
-		$fields = parent::getCMSFields();
-		return $fields;
-	}
-
-	/**
 	 *
 	 * standard SS method
 	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-		if(!DataObject::get("EcommerceCountry") || isset($_REQUEST["resetecommercecountries"])) {
+		if((!EcommerceCountry::get()->count()) || isset($_REQUEST["resetecommercecountries"])) {
 			$task = new EcommerceCountryAndRegionTasks();
 			$task->run(null);
 		}

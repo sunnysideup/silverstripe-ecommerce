@@ -250,7 +250,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			if($this->currentOrder->SessionID && $this->currentOrder->SessionID == session_id()) {
 				$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
 				if($number) {
-					if($dos) {
+					if($dos && $dos->count()) {
 						return $dos->First();
 					}
 				}

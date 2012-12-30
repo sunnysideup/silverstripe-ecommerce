@@ -396,7 +396,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		}
 		$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
 		if($number) {
-			if($dos) {
+			if($dos && $dos->count()) {
 				return $dos->First();
 			}
 		}

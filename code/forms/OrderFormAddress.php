@@ -522,15 +522,20 @@ class OrderFormAddress extends Form {
 			else {
 				$currentUserID = 0;
 			}
-			$uniqueFieldValue = Convert::raw2xml($data[$uniqueField]);
-			return DataObject::get_one('Member', "\"$uniqueField\" = '{$uniqueFieldValue}' AND \"Member\".\"ID\" <> ".$currentUserID);
+			$uniqueFieldValue = $data[$uniqueField];
+			return $otherMembersWithSameEmail = Member::get()->filter(
+				array(
+					$uniqueFieldName => $uniqueFieldValue,
+					"ID" => $loggedInMember->ID
+				)
+			)->First();
 		}
 		return null;
 	}
 
 	/**
 	 * Check if the password is good enough
-	 * @param data
+	 * @param data (from form)
 	 * @return String
 	 */
 	protected function validPassword($data){

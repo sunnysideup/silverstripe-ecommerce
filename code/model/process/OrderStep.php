@@ -183,7 +183,8 @@ class OrderStep extends DataObject {
 	 * @param Int
 	 */
 	public static function get_status_id_from_code($code) {
-		if($otherStatus = DataObject::get_one("OrderStep", "\"Code\" = '".$code."'")) {
+		$otherStatus = OrderStep::get()->filter(array("Code" => $code))->First();
+		if($otherStatus) {
 			return $otherStatus->ID;
 		}
 		return 0;
@@ -206,14 +207,15 @@ class OrderStep extends DataObject {
 	}
 
 	/**
-	 *
-	 *@return Array
+	 * returns a list of ordersteps that have not been created yet.
+	 * @return Array
 	 **/
 	static function get_not_created_codes_for_order_steps_to_include() {
 		$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 		if(is_array($array) && count($array)) {
 			foreach($array as $className) {
-				if(DataObject::get_one($className)) {
+				$obj = $className::get()->First();
+				if($obj) {
 					unset($array[$className]);
 				}
 			}
@@ -319,17 +321,19 @@ class OrderStep extends DataObject {
 	 *@return ValidationResult
 	 **/
 	function validate() {
-		$result = DataObject::get_one(
-			"OrderStep",
-			" (\"Name\" = '".$this->Name."' OR \"Code\" = '".strtoupper($this->Code)."') AND \"OrderStep\".\"ID\" <> ".intval($this->ID));
-		if($result) {
-			return new ValidationResult(false, _t("OrderStep.ORDERSTEPALREADYEXISTS", "An order status with this name already exists. Please change the name and try again."));
+		$result = parent::validate();
+		$anotherOrderStepWithSameNameOrCode = OrderStep::get()
+			->filter(
+				array(
+					"Name" => $this->Name
+				)
+			)->filter(array("Code" => strtoupper($this->Code)))
+			->exclude(array("ID" => intval($this->ID)))
+			->First();
+		if($anotherOrderStepWithSameNameOrCode) {
+			$result->error( _t("OrderStep.ORDERSTEPALREADYEXISTS", "An order status with this name already exists. Please change the name and try again."));
 		}
-		$result = ($this->ClassName == "OrderStep" ? true : false);
-		if($result) {
-			return new ValidationResult(false, _t("OrderStep.ORDERSTEPCLASSNOTSELECTED", "You need to select the right order status class."));
-		}
-		return parent::validate();
+		return $result;
 	}
 
 
@@ -364,31 +368,31 @@ class OrderStep extends DataObject {
 
 	/**
 	 * nextStep:
-	 * returns the next step (checks if everything is in place for the next step to run...)
+	 * returns the next step (after it checks if everything is in place for the next step to run...)
 	 * @see Order::doNextStatus
 	 * @param Order object
 	 * @return DataObject | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
-		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
+		$nextOrderStepObject = OrderStep::get()->filter(array("Sort::GreaterThan" => $this->Sort))->First();
 		if($nextOrderStepObject) {
 			return $nextOrderStepObject;
 		}
 		return null;
 	}
 
-
-
 /**************************************************
 * Boolean checks
 **************************************************/
 
 	/**
-	 *
-	 *@return Boolean
+	 * Checks if a step has passed (been completed) in comparison to the current step
+	 * @param String $code: the name of the step to check
+	 * @param Boolean $orIsEqualTo if set to true, this method will return TRUE if the step being checked is the current one
+	 * @return Boolean
 	 **/
 	public function hasPassed($code, $orIsEqualTo = false) {
-		$otherStatus = DataObject::get_one("OrderStep", "\"Code\" = '".$code."'");
+		$otherStatus = OrderStep::get()->filter(array("Code" => $code))->First();
 		if($otherStatus) {
 			if($otherStatus->Sort < $this->Sort) {
 				return true;
@@ -440,7 +444,7 @@ class OrderStep extends DataObject {
 	/**
 	 * Has an email been sent to the customer for this
 	 * order step.
-	 *
+	 *"-10 days"
 	 * @param Order $order
 	 * @param Boolean $sendEvenIfDelayed
 	 *
@@ -449,10 +453,14 @@ class OrderStep extends DataObject {
 	public function hasBeenSent($order, $checkDateOfOrder = true) {
 		//if it has been more than a week since the order was last edited (submitted) then we do not send emails as
 		//this would be embarrasing.
-		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-10 days"))) {
+		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-".EcommerceConfig::get("OrderStep", "number_of_days_to_send_update_email")))) {
 			return true;
 		}
-		return DataObject::get_one("OrderEmailRecord", "\"OrderEmailRecord\".\"OrderID\" = ".$order->ID." AND \"OrderEmailRecord\".\"OrderStepID\" = ".$this->ID." AND	\"OrderEmailRecord\".\"Result\" = 1");
+		return OrderEmailRecord::get()
+			->Filter(array("OrderID" => $order->ID))
+			->Filter(array("OrderStepID" => $this->ID))
+			->Filter(array("Result" => 1))
+			->count();
 	}
 
 	/**
@@ -473,9 +481,9 @@ class OrderStep extends DataObject {
 	 **/
 	public function canDelete($member = null) {
 		//cant delete last status if there are orders with this status
-		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".intval($this->Sort) -0);
+		$nextOrderStepObject = OrderStep::get()->filter(array("Sort::GreaterThan" => $this->Sort))->First();
 		if(!$nextOrderStepObject) {
-			if($ordersWithThisStatus = DataObject::get_one("Order", "\"StatusID\" =".intval($this->ID)-0)) {
+			if(Order::get()->filter(array("StatusID", intval($this->ID)-0))->count()) {
 				return false;
 			}
 		}
@@ -510,10 +518,14 @@ class OrderStep extends DataObject {
 	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
-		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
+		$nextOrderStepObject = OrderStep::get()->filter(array("Sort::GreaterThan" => $this->Sort))->First();
+		//backup
+		if(!$nextOrderStepObject) {
+			$nextOrderStepObject = OrderStep::get()->filter(array("Sort::LessThan" => $this->Sort))->Last();
+		}
 		if($nextOrderStepObject) {
-			$ordersWithThisStatus = DataObject::get("Order", "\"StatusID\" =".$this->ID);
-			if($ordersWithThisStatus) {
+			$ordersWithThisStatus = Order::get()->filter(array("StatusID" => $this->ID));
+			if($ordersWithThisStatus && $ordersWithThisStatus->count()) {
 				foreach($ordersWithThisStatus as $orderWithThisStatus) {
 					$orderWithThisStatus->StatusID = $nextOrderStepObject->ID;
 					$orderWithThisStatus->write();
@@ -544,8 +556,8 @@ class OrderStep extends DataObject {
 			if($codesToInclude && count($codesToInclude)) {
 				foreach($codesToInclude as $className => $code) {
 					$indexNumber +=10;
-					if(!DataObject::get_one($className)) {
-						if(!DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'")) {
+					if($className::get()->Count()) {
+						if(!OrderStep::get()->filter(array("Code" => strtoupper($code)))) {
 							$obj = new $className();
 							$obj->Code = strtoupper($obj->Code);
 							$obj->Description = $obj->myDescription();
@@ -553,7 +565,7 @@ class OrderStep extends DataObject {
 							DB::alteration_message("Created \"$code\" as $className.", "created");
 						}
 					}
-					$obj = DataObject::get_one("OrderStep", "\"Code\" = '".strtoupper($code)."'");
+					$obj = OrderStep::get()->filter(array("Code" => strtoupper($code)))->First();
 					if($obj) {
 						if($obj->Sort != $indexNumber) {
 							$obj->Sort = $indexNumber;
@@ -563,23 +575,13 @@ class OrderStep extends DataObject {
 				}
 			}
 		}
-		$steps = DataObject::get("OrderStep");
+		$steps = OrderStep::get();
 		foreach($steps as $step) {
 			if(!$step->Description) {
 				$step->Description = $step->myDescription();
 				$step->write();
 			}
 		}
-		/*
-		 * This was causing errors
-		$otherOrderSteps = DataObject::get("OrderStep", "\"ClassName\" NOT IN ('".implode("', '", $orderStepsToInclude)."')");
-		if($otherOrderSteps) {
-			foreach($otherOrderSteps as $otherOrderStep) {
-				DB::alteration_message("Deleting OrderStep ".$otherOrderStep->Code, "deleted");
-				$otherOrderStep->delete();
-			}
-		}
-		*/
 	}
 
 	/**
@@ -1060,11 +1062,12 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * can go to next step if order payment has been confirmed...
-	 *@param DataObject $order Order
-	 *@return DataObject | Null - DataObject = OrderStep
+	 * @param DataObject $order Order
+	 * @return DataObject | Null - DataObject = OrderStep
 	 **/
 	public function nextStep(Order $order) {
-		if(DataObject::get_one("OrderStatusLog_PaymentCheck", "\"OrderID\" = ".$order->ID." AND \"PaymentConfirmed\" = 1")) {
+		$orderStatusLog_PaymentChecks = OrderStatusLog_PaymentCheck::get()->Filter(array("OrderID" => $order->ID))->Filter(array("PaymentConfirmed" => 1));
+		if($orderStatusLog_PaymentChecks->Count()) {
 			return parent::nextStep($order);
 		}
 		return null;
@@ -1238,7 +1241,8 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 *@return DataObject | Null - DataObject = OrderStep
 	 **/
 	public function nextStep(Order $order) {
-		if(DataObject::get_one("OrderStatusLog_DispatchPhysicalOrder", "\"OrderID\" = ".$order->ID)) {
+		$orderStatusLog_DispatchPhysicalOrder = OrderStatusLog_PayOrderStatusLog_DispatchPhysicalOrdermentCheck::get()->Filter(array("OrderID" => $order->ID));
+		if($orderStatusLog_DispatchPhysicalOrder->count()) {
 			$subject = $this->EmailSubject;
 			$message = $this->CustomerMessage;
 			if($this->SendDetailsToCustomer){
