@@ -88,7 +88,6 @@ class ShoppingCart extends Object{
 			if($orderIDFromSession > 0) {
 				$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
 			}
-			//order has already been submitted - immediately remove it because we dont want to change it.
 			$member = Member::currentUser();
 			if($this->order) {
 				//first reason to set to null: it is already submitted
@@ -97,7 +96,6 @@ class ShoppingCart extends Object{
 				}
 				//second reason to set to null: make sure we have permissions
 				elseif(!$this->order->canView()) {
-					die("--------asdfsadf");
 					$this->order = null;
 				}
 				//logged in, add Member.ID to order->MemberID
