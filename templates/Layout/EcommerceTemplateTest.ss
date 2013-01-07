@@ -7,7 +7,7 @@
 </p>
 
 <h2>The Cart</h2>
-The Cart can be accessed from anywhere using:</p>
+<p>The Cart can be accessed from anywhere using:</p>
 <pre>
 &lt;% if Cart %&gt;
 	&lt;% control Cart %&gt;
@@ -44,8 +44,9 @@ The Cart can be accessed from anywhere using:</p>
 	<tr><th scope="row" style="width: 60%;">Cart Page Link (&#36;EcomConfig.CartPageLink):</th><td>$EcomConfig.CartPageLink</td></tr>
 	<tr><th scope="row" style="width: 60%;">Order Confirmation Page Link (&#36;EcomConfig.OrderConfirmationPageLink):</th><td>$EcomConfig.OrderConfirmationPageLink</td></tr>
 	<tr><th scope="row" style="width: 60%;">Default Image Link (you can also use &#36;DefaultImage.SetWidth(100) and that sort of jazz) (&#36;EcomConfig.DefaultImageLink):</th><td>$EcomConfig.DefaultImageLink</td></tr>
-	<tr><th scope="row" style="width: 60%;">Is E-commerce Page? (This will be TRUE (say YES) for the Product and Checkout type pages only.)</th><td><% if IsEcommercePage %>YES<% else %>NO<% end_if %></td></tr>
+	<tr><th scope="row" style="width: 60%;">Is E-commerce Page? (This will be TRUE (YES) for the Product and Checkout type pages only.)</th><td><% if IsEcommercePage %>YES<% else %>NO<% end_if %></td></tr>
 </table>
+
 
 <h2>Ajax Definitions</h2>
 <p>
@@ -54,12 +55,37 @@ The Cart can be accessed from anywhere using:</p>
 	The content of this div would automatically change when the number of items in the cart is updated.
 	NOTE: many of these ajax definitions are meant to be used within the <em>control</em> (context) of an order, order item, or order modifier.
 </p>
+<h3>Updating a page ...</h3>
+<p>To update a page, you can use the following Javascript</p>
+<pre>
+ //do something
+ ...
+ ...
+ // we are now ready to update the page:
+ // we send a URL (e.g. one to remove a product from cart)
+ EcomCart.getChanges(url, null, el);
+</pre>
+<p><i>EcomCart.getChanges</i> accepts the following parameters: </p>
+<pre>
+	/**
+	 * get JSON data from server
+	 * @param String url: URL for getting data (ajax request)
+	 * @param Array params: parameters to add to ajax request
+	 * @param Object loadingElement: the element that is being clicked or should be shown as "loading"
+	 */
+	getChanges: function(url, params, loadingElement) {
+</pre>
+<p>
+	<i>EcomCart.getChanges</i> will automatically update the elements on your page as defined below.
+	You can view a sample of the response here: <a href="shoppingcart/ajaxtest/" target="_blank">/shoppingcart/ajaxtest/</a> (you need to be logged in as Admin).
+</p>
 <h5>without context</h5>
 <table style="width: 95%;">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SideBarCartID</th><td>$AJAXDefinitions.SideBarCartID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SmallCartID</th><td>$AJAXDefinitions.SmallCartID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TinyCartClassName</th><td>$AJAXDefinitions.TinyCartClassName</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TotalItemsClassName</th><td>$AJAXDefinitions.TotalItemsClassName</td></tr>
+	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TotalItemsTimesQuantityClassName</th><td>$AJAXDefinitions.TotalItemsTimesQuantityClassName</td></tr>
 </table>
 <h5>without context, country and region related</h5>
 <table style="width: 95%;">
@@ -92,13 +118,14 @@ The Cart can be accessed from anywhere using:</p>
 
 <h4>Ajax Shopping Cart</h4>
 <p>
-	To view an ajax response for a <a href="$SimpleCartLinkAjax">shopping cart - </a>
-	This link can be used for
+	To view an ajax response for a <a href="$SimpleCartLinkAjax">shopping cart</a>
+	- this can be used to add to an html node using an ajax call.
 </p>
 
 <h2>Product</h2>
+<p>Randomly selected product for this exercise: <strong>$RandomProduct.MenuTitle</strong></p>
+<p>You can <a href="$Link">reload</a> this page to view another product.</p>
 <% control RandomProduct %>
-<p>We have selected a random product for this: <strong>$MenuTitle</strong></p>
 <h4>Image Controllers</h4>
 <table style="width: 95%;">
 	<tr><th scope="row" style="width: 60%;">&#36;Image.Link</th><td>$Image.SetWidth(100) $Image.Link</td></tr>
