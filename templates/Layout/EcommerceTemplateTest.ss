@@ -56,7 +56,7 @@
 	The content of this div would automatically change when the number of items in the cart is updated.
 	NOTE: many of these ajax definitions are meant to be used within the <em>control</em> (context) of an order, order item, or order modifier.
 </p>
-<h3>Updating a page ...</h3>
+<h4>Updating a page ...</h4>
 <p>To update a page, you can use the following Javascript</p>
 <pre>
  //do something
@@ -80,8 +80,8 @@
 	<i>EcomCart.getChanges</i> will automatically update the elements on your page as defined below.
 	You can view a sample of the response here: <a href="shoppingcart/ajaxtest/" target="_blank">/shoppingcart/ajaxtest/</a> (you need to be logged in as Admin).
 </p>
-<h3>Available variables for your templates ...</h3>
-<h5>without context</h5>
+<h4>Available variables for your templates ...</h4>
+<h5>without context (can be used at <i>root level</i> in any template)</h5>
 <table style="width: 95%;">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SideBarCartID</th><td>$AJAXDefinitions.SideBarCartID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SmallCartID</th><td>$AJAXDefinitions.SmallCartID</td></tr>
@@ -125,7 +125,7 @@
 </p>
 
 <h2>Product</h2>
-<p>Randomly selected product for this exercise: <strong>$RandomProduct.MenuTitle</strong></p>
+<p>The following product has been randomly selected product for this exercise: <strong><a href="$RandomProduct.Link">$RandomProduct.MenuTitle</a></strong></p>
 <p>You can <a href="$Link">reload</a> this page to view another product.</p>
 <% control RandomProduct %>
 <h4>Image Controllers</h4>
