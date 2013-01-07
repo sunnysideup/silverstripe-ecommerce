@@ -464,7 +464,6 @@ EcomCart = {
 		jQuery.getJSON(url, params, EcomCart.setChanges);
 	},
 
-
 	/**
 	 * when, for example, you click on an "add to cart" button
 	 * this method adds the loading class to the clicked button
@@ -624,8 +623,10 @@ EcomCart = {
 			}
 			EcomCart.reinit();
 			jQuery("body").removeClass(EcomCart.classToShowPageIsUpdating);
+			for(var i = 0; i < EcomCart.loadingSelectors.length; i++) {
+				jQuery(EcomCart.loadingSelectors[i]).removeClass(EcomCart.classToShowLoading);
+			}
 		}
-		jQuery(EcomCart.loadingSelectors[changes[0].v]).removeClass(EcomCart.classToShowLoading);
 	},
 
 	/**
