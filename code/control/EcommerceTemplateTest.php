@@ -20,4 +20,8 @@ class EcommerceTemplateTest extends Page_Controller {
 		}
 	}
 
+	function IsEcommercePage(){
+		return true;
+	}
+
 }
