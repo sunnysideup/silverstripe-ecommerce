@@ -38,12 +38,13 @@
 	<tr><th scope="row" style="width: 60%;">Receipt Email (&#36;EcomConfig.ReceiptEmail):</th><td>$EcomConfig.ReceiptEmail</td></tr>
 	<tr><th scope="row" style="width: 60%;">PostalCodeURL (&#36;EcomConfig.PostalCodeURL):</th><td>$EcomConfig.PostalCodeURL</td></tr>
 	<tr><th scope="row" style="width: 60%;">Postal Code Label (&#36;EcomConfig.PostalCodeLabel):</th><td>$EcomConfig.PostalCodeLabel</td></tr>
-	<tr><th scope="row" style="width: 60%;">Currency (&#36;EcomConfig.Currency):</th><td>$EcomConfig.Currency</td></tr>
+	<tr><th scope="row" style="width: 60%;">Currency (&#36;EcomConfig.Currency - you can also use Currencies for a list):</th><td>$EcomConfig.Currency</td></tr>
 	<tr><th scope="row" style="width: 60%;">Account Page Link (&#36;EcomConfig.AccountPageLink):</th><td>$EcomConfig.AccountPageLink</td></tr>
 	<tr><th scope="row" style="width: 60%;">Checkout Page Link (&#36;EcomConfig.CheckoutLink):</th><td>$EcomConfig.CheckoutLink</td></tr>
 	<tr><th scope="row" style="width: 60%;">Cart Page Link (&#36;EcomConfig.CartPageLink):</th><td>$EcomConfig.CartPageLink</td></tr>
 	<tr><th scope="row" style="width: 60%;">Order Confirmation Page Link (&#36;EcomConfig.OrderConfirmationPageLink):</th><td>$EcomConfig.OrderConfirmationPageLink</td></tr>
 	<tr><th scope="row" style="width: 60%;">Default Image Link (you can also use &#36;DefaultImage.SetWidth(100) and that sort of jazz) (&#36;EcomConfig.DefaultImageLink):</th><td>$EcomConfig.DefaultImageLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Current Customer Name (&#36;EcomConfig.Customer.Title, instead of Title, you can also use Email, FirstName, etc...):</th><td>$EcomConfig.Customer.Title</td></tr>
 	<tr><th scope="row" style="width: 60%;">Is E-commerce Page? (This will be TRUE (YES) for the Product and Checkout type pages only.)</th><td><% if IsEcommercePage %>YES<% else %>NO<% end_if %></td></tr>
 </table>
 
@@ -79,6 +80,7 @@
 	<i>EcomCart.getChanges</i> will automatically update the elements on your page as defined below.
 	You can view a sample of the response here: <a href="shoppingcart/ajaxtest/" target="_blank">/shoppingcart/ajaxtest/</a> (you need to be logged in as Admin).
 </p>
+<h3>Available variables for your templates ...</h3>
 <h5>without context</h5>
 <table style="width: 95%;">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SideBarCartID</th><td>$AJAXDefinitions.SideBarCartID</td></tr>
