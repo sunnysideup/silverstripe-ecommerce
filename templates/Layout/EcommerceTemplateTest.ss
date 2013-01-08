@@ -128,6 +128,7 @@
 <p>The following product has been randomly selected product for this exercise: <strong><a href="$RandomProduct.Link">$RandomProduct.MenuTitle</a></strong></p>
 <p>You can <a href="$Link">reload</a> this page to view another product.</p>
 <% control RandomProduct %>
+
 <h4>Image Controllers</h4>
 <table style="width: 95%;">
 	<tr><th scope="row" style="width: 60%;">&#36;Image.Link</th><td>$Image.SetWidth(100) $Image.Link</td></tr>
@@ -158,7 +159,7 @@
 	<tr><th scope="row" style="width: 60%;">&#36;DisplayPrice.Nice</th><td>$DisplayPrice.Nice</td></tr>
 </table>
 
-<h4>Actions</h4>
+<h4>Fields</h4>
 <table style="width: 95%;">
 	<tr><th scope="row" style="width: 60%;">&#36;EcomQuantityField</th><td>$EcomQuantityField</td></tr>
 </table>
