@@ -3,7 +3,7 @@
 /**
  * Database Settings for E-commerce
  * Similar to SiteConfig but then for E-commerce
- *
+ * To access a singleton here, use: EcommerceDBConfig::current_ecommerce_db_config()
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -52,7 +52,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	static $indexes = array(
+	public static $indexes = array(
 		"UseThisOne" => true,
 		"ShopClosed" => true,
 		"ShopPricesAreTaxExclusive" => true,
@@ -202,7 +202,7 @@ class EcommerceDBConfig extends DataObject {
 
 	/**
 	 * implements singleton pattern
-	 * @return EcommerceDBConfig
+	 * @return EcommerceDBConfig | Object
 	 */
 	public static function current_ecommerce_db_config(){
 		if(!self::$my_current_one) {
@@ -363,7 +363,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Returns the Current Member
 	 * @return Null | Member
 	 */
-	public function Customer (){
+	public function Customer(){
 		return Member::currentUser();
 	}
 
@@ -384,7 +384,6 @@ class EcommerceDBConfig extends DataObject {
 	function Currencies(){
 		return EcommerceCurrency::ecommerce_currency_list();
 	}
-
 
 	/**
 	 * @return String (URLSegment)
@@ -487,7 +486,6 @@ class EcommerceDBConfig extends DataObject {
 			"edited"
 		);
 	}
-
 
 	/**
 	 * returns site config
