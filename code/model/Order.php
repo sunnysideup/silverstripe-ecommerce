@@ -1094,10 +1094,11 @@ class Order extends DataObject {
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
+	 * @param String $emailClass - this is email class
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false, $template = 'Order_StatusEmail') {
-		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
+	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false, $emailClass = 'Order_StatusEmail') {
+		return $this->sendEmail($emailClass, $subject, $message, $resend, $adminOnly);
 	}
 
 
