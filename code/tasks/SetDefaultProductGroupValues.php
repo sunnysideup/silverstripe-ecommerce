@@ -25,7 +25,7 @@ class SetDefaultProductGroupValues extends BuildTask {
 	);
 
 	function run($request) {
-		$productGroup = DataObject::get_one("ProductGroup");
+		$productGroup = ProductGroup::get()->First();
 		if($productGroup) {
 			foreach($this->fieldsToCheck as $method => $fieldName) {
 				$acceptableValuesArray = array_flip($productGroup->$method());

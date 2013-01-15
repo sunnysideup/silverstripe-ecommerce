@@ -395,7 +395,7 @@ class OrderForm_Cancel extends Form {
 		$member = Member::currentUser();
 		if($member) {
 			if(isset($SQLData['OrderID'])){
-				$order = Order::get_by_id(intval($SQLData['OrderID']));
+				$order = Order::get()->byID(intval($SQLData['OrderID']));
 				if($order) {
 					if($order->canCancel()) {
 						$reason = "";

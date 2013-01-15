@@ -76,7 +76,7 @@ class CartCleanupTask extends BuildTask {
 		else {
 			$memberDeleteNote = "(We will also delete carts in this category that are linked to a member)";
 		}
-		$oldCarts = Order::get()->where($where)->sort($sort)->limit(0, $maximumNumberOfObjectsDeleted);
+		$oldCarts = Order::get()->where($where)->sort($sort)->limit($maximumNumberOfObjectsDeleted);
 		if($neverDeleteIfLinkedToMember) {
 			$oldCarts->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"");
 		}
@@ -119,7 +119,7 @@ class CartCleanupTask extends BuildTask {
 		else {
 			$memberDeleteNote = "(We will also delete carts in this category that are linked to a member)";
 		}
-		$oldCarts = Order::get()->where($where)->sort($sort)->limit(0, $maximumNumberOfObjectsDeleted);
+		$oldCarts = Order::get()->where($where)->sort($sort)->limit($maximumNumberOfObjectsDeleted);
 		if($neverDeleteIfLinkedToMember) {
 			$oldCarts->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"");
 		}

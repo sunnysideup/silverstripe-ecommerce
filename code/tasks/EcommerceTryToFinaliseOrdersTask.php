@@ -37,7 +37,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 		if($submittedOrderStatusLogClassName) {
-			$submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
+			$submittedStatusLog = $submittedOrderStatusLogClassName::get()->First();
 			if($submittedStatusLog) {
 				$orderSteps = DataObject::get("OrderStep", "", "\"Sort\" DESC", "", 1);
 				$lastOrderStep = $orderSteps->First();
@@ -65,14 +65,14 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 						foreach($orders as $order) {
 							$last++;
 							Session::set("EcommerceTryToFinaliseOrdersTask", $last);
-							$stepBefore = DataObject::get_by_id("OrderStep", $order->StatusID);
+							$stepBefore = OrderStep::get()->byID($order->StatusID);
 							try{
 								$order->tryToFinaliseOrder();
 							}
 							catch(Exception $e) {
 								DB::alteration_message($e, "deleted");
 							}
-							$stepAfter = DataObject::get_by_id("OrderStep", $order->StatusID);
+							$stepAfter = OrderStep::get()->byID($order->StatusID);
 							if($stepBefore) {
 								if($stepBefore->ID == $stepAfter->ID) {
 									DB::alteration_message("could not move Order ".$order->getTitle().", remains at <strong>".$stepBefore->Name."</strong>");

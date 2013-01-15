@@ -109,7 +109,7 @@ class EcommerceRegion extends DataObject {
 	 * @return Bool
 	 **/
 	public static function show() {
-		return DataObject::get_one("EcommerceRegion") ? true : false;
+		return EcommerceRegion::get()->First() ? true : false;
 	}
 
 	/**
@@ -155,8 +155,10 @@ class EcommerceRegion extends DataObject {
 	 **/
 	protected static function get_default_array() {
 		$defaultArray = array();
-		$regions = DataObject::get("EcommerceRegion", "\"DoNotAllowSales\" <> 1 AND \"CountryID\"  = '".EcommerceCountry::get_country_id()."'");
-		if($regions) {
+		$regions = EcommerceRegion::get()
+			->Exclude(array("DoNotAllowSales" => 1))
+			->Filter((array("CountryID" => EcommerceCountry::get_country_id));
+		if($regions && $regions->count()) {
 			foreach($regions as $region) {
 				$defaultArray[$region->Code] = $region->Name;
 			}

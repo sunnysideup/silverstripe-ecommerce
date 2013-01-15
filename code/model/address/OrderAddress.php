@@ -441,7 +441,7 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function lastOrderFromMember($member = null) {
 		$orders = $this->previousOrdersFromMember($member, true);
-		if($orders && $orders->count()) {
+		if($orders->count()) {
 			return $orders->First();
 		}
 	}
@@ -457,7 +457,7 @@ class OrderAddress extends DataObject {
 	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
 		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
 		$returnDos = null;
-		if($orders && $orders->count()) {
+		if($orders->count()) {
 			$fieldName = $this->ClassName."ID";
 			$array = $orders->map($fieldName, $fieldName);
 			if(is_array($array) && count($array)) {
@@ -533,7 +533,7 @@ class OrderAddress extends DataObject {
 			$list->filter(array("MemberID" => $member->ID));
 			$list->exclude(array($fieldName => $this->ID));
 			if($onlyLastRecord) {
-				$list->limit(0, 1);
+				$list->limit(1);
 			}
 			return $list;
 		}
@@ -557,10 +557,15 @@ class OrderAddress extends DataObject {
 		}
 	}
 
+	/**
+	 * standard SS method
+	 * We "hackishly" ensure that the OrderID is set to the right value.
+	 *
+	 */
 	function onAfterWrite(){
 		parent::onAfterWrite();
 		if($this->exists()) {
-			$order = DataObject::get_one("Order", "\"". $this->ClassName."ID\" = ".$this->ID);
+			$order = Order::get()->filter(array($this->ClassName."ID" => $this->ID))->First();
 			if($order && $order->ID != $this->OrderID) {
 				$this->OrderID = $order->ID;
 				$this->write();
@@ -568,6 +573,10 @@ class OrderAddress extends DataObject {
 		}
 	}
 
+	/**
+	 * returns the link that can be used to remove (make Obsolete) an address.
+	 * @return String
+	 */
 	function RemoveLink(){
 		return ShoppingCart_Controller::remove_address_link($this->ID, $this->ClassName);
 	}

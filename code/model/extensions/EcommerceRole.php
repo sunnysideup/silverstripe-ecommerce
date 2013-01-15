@@ -38,26 +38,28 @@ class EcommerceRole extends DataExtension {
 	);
 
 	/**
-	 *@return DataObject (Group)
+	 *@return DataObject (Group) | NULL
 	 **/
 	public static function get_customer_group() {
 		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
 		$customerName = EcommerceConfig::get("EcommerceRole", "customer_group_name");
-		return DataObject::get_one("Group", "\"Code\" = '".$customerCode."' OR \"Title\" = '".$customerName."'");
+		return Group::get()->Filter(array("Code" => $customerCode))->First();
 	}
 
-
 	/**
-	 * returns an aray of members
+	 * returns an aray of customers
 	 * @return Array
 	 */
 	public static function list_of_customers($showUnselectedOption = false){
-		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
-		$group = DataObject::get_one("Group", "\"Code\" = '".$customerCode."'");
+		//start array
 		$array = Array();
 		if($showUnselectedOption) {
 			$array[0] = _t("Member.SELECTCUSTOMER", " --- SELECT CUSTOMER ---");
 		}
+		//get customer group
+		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
+		Group::get()->Filter(array("Code" => $customerCode))->First();
+		//fill array
 		if($group) {
 			$members = $group->Members();
 			if($members) {
@@ -68,6 +70,7 @@ class EcommerceRole extends DataExtension {
 				}
 			}
 		}
+		//sort in a natural order
 		natcasesort($array);
 		return $array;
 	}
@@ -89,12 +92,12 @@ class EcommerceRole extends DataExtension {
 	}
 
 	/**
-	 *@return DataObject (Group)
+	 * @return DataObject (Group) | NULL
 	 **/
 	public static function get_admin_group() {
 		$adminCode = EcommerceConfig::get("EcommerceRole", "admin_group_code");
 		$adminName = EcommerceConfig::get("EcommerceRole", "admin_group_name");
-		return DataObject::get_one("Group", "\"Code\" = '".$adminCode."' OR \"Title\" = '".$adminName."'");
+		return Group::get()->FilterAny(array("Code" => $adminCode))->First();
 	}
 
 	public function updateCMSFields(FieldList $fields) {
@@ -216,15 +219,14 @@ class EcommerceRole extends DataExtension {
 	 * @return Null | Order
 	 */
 	function LastOrder($includeUnsubmittedOrders = false){
-		//limit to 30
-		$orders = DataObject::get("Order", "MemberID =".$this->owner->ID, null, null, 30);
-		if($orders) {
-			foreach($orders as $order) {
-				if($order->IsSubmitted() || $includeUnsubmittedOrders) {
-					return $order;
-				}
-			}
+		//limit to 10
+		if($includeUnsubmittedOrders) {
+			$orders = Order::get_datalist_of_orders_with_submit_record(false);
 		}
+		else {
+			$orders = Order::get_datalist_of_orders_with_submit_record(true);
+		}
+		return $orders->Filter(array("MemberID" => $this->owner->ID))->First();
 	}
 
 	/**

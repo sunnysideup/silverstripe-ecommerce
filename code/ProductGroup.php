@@ -101,6 +101,57 @@ class ProductGroup extends Page {
 	public static $description = "A page the puts a bunch of products into a category.";
 
 	/**
+	 * Shop Admins can edit
+	 * @return Boolean
+	 */
+	function canEdit($member = null) {
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
+		if($member && Permission::checkMember($member, $shopAdminCode)) {
+			return true;
+		}
+		return parent::canEdit($member);
+	}
+
+
+	/**
+	 * Standard SS method
+	 * @return Boolean
+	 */
+	public function canDelete($member = null) {
+		return $this->canEdit($member);
+	}
+
+
+	/**
+	 * Standard SS method
+	 * @return Boolean
+	 */
+	public function canPublish($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * //check if it is in a current cart?
+	 * @return Boolean
+	 */
+	public function canDeleteFromLive($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @return Boolean
+	 */
+	public function canCreate($member = null) {
+		return $this->canEdit($member);
+	}
+
+
+	/**
 	 * returns the default Sort key.
 	 * @return String
 	 */
@@ -789,7 +840,7 @@ class ProductGroup extends Page {
 	 **/
 	function ParentGroup() {
 		if($this->ParentID) {
-			return DataObject::get_by_id("ProductGroup", $this->ParentID);
+			return ProductGroup::get()->byID($this->ParentID);
 		}
 	}
 

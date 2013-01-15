@@ -280,8 +280,8 @@ class Product extends Page implements BuyableModel {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		if($this->ImageID) {
-			if($productImage = DataObject::get_by_id("Product_Image", $this->ImageID)) {
-				if($normalImage = DataObject::get_by_id("Image", $this->ImageID)) {
+			if($productImage = Product_Image::get()->byID($this->ImageID)) {
+				if($normalImage = Image::get()->byID($this->ImageID)) {
 					$normalImage->ClassName = "Product_Image";
 					$normalImage->write();
 				}
@@ -307,7 +307,7 @@ class Product extends Page implements BuyableModel {
 		$obj = $this;
 		$parentTitleArray = array();
 		while($obj && $obj->ParentID) {
-			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
+			$obj = SiteTree::get()->byID(intval($obj->ParentID)-0);
 			if($obj) {
 				$parentSortArray[] = $obj->Sort;
 				if($obj instanceOf ProductGroup) {
@@ -343,7 +343,7 @@ class Product extends Page implements BuyableModel {
 	 * @return DataObject(ProductGroup) or NULL
 	 **/
 	function MainParentGroup() {
-		return DataObject::get_by_id("ProductGroup", $this->ParentID);
+		return ProductGroup::get()->byID($this->ParentID);
 	}
 
 	/**
@@ -356,7 +356,9 @@ class Product extends Page implements BuyableModel {
 			if(Versioned::current_stage() == "Live") {
 				$extension = "_Live";
 			}
-			return DataObject::get("Product", "\"ShowInMenus\" = 1 AND \"ParentID\" = ".$this->ParentID." AND \"SiteTree{$extension}\".\"ID\" <> ".$this->ID);
+			return Product::get()
+				->filter(array("ShowInMenus" => 1,"ParentID" => $this->ParentID))
+				->exclude(array("ID" => $this->ID));
 		}
 	}
 
@@ -847,13 +849,17 @@ class Product_Controller extends Page_Controller {
 
 	/**
 	 * view earlier version of a product
+	 * returns error or changes datarecord to earlier version
+	 * if the ID does not match the Page then we look for the variation
+	 * @param HTTP_Request
 	 */
 	function viewversion($request) {
 		$id = intval($request->param("ID"))-0;
 		$version = intval($request->param("OtherID"))-0;
 		$currentVersion = $this->Version;
 		if($id != $this->ID) {
-			if($productVariation = DataObject::get_by_id("ProductVariation", $id)) {
+			//TO DO: CHECK VERSION!!! IS THIS CODE RIGHT
+			if($productVariation = ProductVariation::get()->byID($id)) {
 				if($productVariation->Version != $version) {
 					$productVariation = $productVariation->getVersionOfBuyable($id, $version);
 				}
@@ -921,7 +927,7 @@ class Product_Controller extends Page_Controller {
 			if(!$quantity) {
 				$quantity = 1;
 			}
-			$product = DataObject::get_by_id("Product", $this->ID);
+			$product = Product::get()->byID($this->ID);
 			if($product) {
 				ShoppingCart::singleton()->addBuyable($product,$quantity);
 			}
@@ -977,7 +983,7 @@ class Product_Controller extends Page_Controller {
 			$id = intval($id);
 			if($id == $this->ID) {
 				if(isset($array[$key + 1])) {
-					return DataObject::get_by_id("Product", intval($array[$key + 1]));
+					return Product::get()->byID(intval($array[$key + 1]));
 				}
 			}
 		}
@@ -991,13 +997,13 @@ class Product_Controller extends Page_Controller {
 	 */
 	function PreviousProduct(){
 		$array = $this->getListOfIDs();
-		$prev = 0;
+		$previousID = 0;
 		foreach($array as $key => $id) {
 			$id = intval($id);
 			if($id == $this->ID) {
-				return DataObject::get_by_id("Product", $prev);
+				return Product::get()->byID($previousID);
 			}
-			$prev = $id;
+			$previousID = $id;
 		}
 		return null;
 	}

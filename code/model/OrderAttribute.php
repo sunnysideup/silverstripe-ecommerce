@@ -193,7 +193,7 @@ class OrderAttribute extends DataObject {
 	 * @return Order | null
 	 */
 	public function Order(){
-		return DataObject::get_one("Order", "\"Order\".\"ID\" = ".intval($this->OrderID));
+		return Order::get()->byID($this->OrderID);
 	}
 
 	/**

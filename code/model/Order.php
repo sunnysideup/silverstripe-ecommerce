@@ -152,7 +152,7 @@ class Order extends DataObject {
 	 *
 	 * @return DataList
 	 */
-	function OrderModifiers() {return DataObject::get("OrderModifier", "OrderID = ".$this->ID); }
+	function OrderModifiers() {return OrderModifier::get()->Filter(array("OrderID" => $this->ID)); }
 
 	/**
 	 * standard SS variable
@@ -248,23 +248,15 @@ class Order extends DataObject {
 
 
 
-	/**
-	 * This function returns the OrderSteps
-	 *
-	 * @returns DataList (OrderSteps)
-	 **/
-	public static function get_order_status_options() {
-		return DataObject::get("OrderStep");
-	}
 
 	/**
-	 * Like the standard get_by_id, but it checks whether we are allowed to view the order.
+	 * Like the standard byID, but it checks whether we are allowed to view the order.
 	 *
-	 * @returns: DataObject (Order)
+	 * @returns: DataObject (Order) | Null
 	 **/
 	public static function get_by_id_if_can_view($id) {
-		$order = DataObject::get_by_id("Order", $id);
-		if($order && is_object($order) && $order->canView()){
+		$order = Order::get()->byID($id);
+		if($order && $order->canView()){
 			if($order->IsSubmitted()) {
 				// LITTLE HACK TO MAKE SURE WE SHOW THE LATEST INFORMATION!
 				$order->tryToFinaliseOrder();
@@ -380,17 +372,19 @@ class Order extends DataObject {
 	 */
 	public function scaffoldSearchFields($_params = null) {
 		$fieldList = parent::scaffoldSearchFields($_params);
-		if($statusOptions = self::get_order_status_options()) {
+		$statusOptions = OrderStep::get();
+		if($statusOptions && $statusOptions->count()) {
 			$createdOrderStatusID = 0;
 			$preSelected = array();
-			if($createdOrderStatus = DataObject::get_one("OrderStep")) {
+			$createdOrderStatus = $statusOptions->First();
+			if($createdOrderStatus) {
 				$createdOrderStatusID = $createdOrderStatus->ID;
 			}
 			$arrayOfStatusOptions = clone $statusOptions->map("ID", "Title");
 			$arrayOfStatusOptionsFinal = array();
 			if(count($arrayOfStatusOptions)) {
 				foreach($arrayOfStatusOptions as $key => $value) {
-					$count = DB::query("SELECT COUNT(\"ID\") FROM \"Order\" WHERE \"StatusID\" = ".intval($key).";")->value();
+					$count = Order::get()->Filter(array("StatusID", intval($key)))->count();
 					if($count < 1) {
 						//do nothing
 					}
@@ -547,7 +541,7 @@ class Order extends DataObject {
 		}
 		else {
 			$fields->removeByName("Main");
-			$firstStep = DataObject::get_one("OrderStep");
+			$firstStep = OrderStep::get()->First();
 			$msg = _t("Order.VERYFIRSTSTEP", "The first step in creating an order is to save (<i>add</i>) it.");
 			$fields->addFieldToTab("Root.Next", new LiteralField("VeryFirstStep", "<p>".$msg."</p>"));
 			if($firstStep) {
@@ -689,7 +683,7 @@ class Order extends DataObject {
 		//to do: check if shop is open....
 		if($this->StatusID || $force) {
 			if(!$this->StatusID) {
-				$createdOrderStatus = DataObject::get_one("OrderStep");
+				$createdOrderStatus = OrderStep::get()->First();
 				$this->StatusID = $createdOrderStatus->ID;
 			}
 			$createdModifiersClassNames = array();
@@ -804,10 +798,10 @@ class Order extends DataObject {
 	public function MyStep() {
 		$obj = null;
 		if($this->StatusID) {
-			$obj = DataObject::get_by_id("OrderStep", $this->StatusID);
+			$obj = OrderStep::get()->byID($this->StatusID);
 		}
 		if(!$obj) {
-			$obj = DataObject::get_one("OrderStep"); //TODO: this could produce strange results
+			$obj = OrderStep::get()->First(); //TODO: this could produce strange results
 		}
 		return $obj;
 	}
@@ -819,9 +813,9 @@ class Order extends DataObject {
 	public function CurrentStepVisibleToCustomer() {
 		$obj = $this->MyStep();
 		if($obj->HideStepFromCustomer) {
-			$obj = DataObject::get_one("OrderStep", "\"Sort\" < ".$obj->Sort." AND \"HideStepFromCustomer\" = 0");
+			$obj = OrderStep::get()->where("\"OrderStep\".\"Sort\" < ".$obj->Sort." AND \"HideStepFromCustomer\" = 0")->First();
 			if(!$obj) {
-				$obj = DataObject::get_one("OrderStep");
+				$obj = OrderStep::get()->First();
 			}
 		}
 		return $obj;
@@ -832,7 +826,7 @@ class Order extends DataObject {
 	 * @return boolean
 	 */
 	public function IsFirstStep() {
-		$firstStep = DataObject::get_one("OrderStep");
+		$firstStep = OrderStep::get()->First();
 		$currentStep = $this->MyStep();
 		if($firstStep && $currentStep) {
 			if($firstStep->ID == $currentStep->ID) {
@@ -922,7 +916,7 @@ class Order extends DataObject {
 	function IsAdminCancelled() {
 		if($this->IsCancelled()) {
 			if(!$this->IsCustomerCancelled()) {
-				$admin = DataObject::get_by_id("Member", $this->CancelledByID);
+				$admin = Member::get()->byID($this->CancelledByID);
 				if($admin) {
 					if($admin->IsShopAdmin()) {
 						return true;
@@ -1123,10 +1117,11 @@ class Order extends DataObject {
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
+	 * @param String $emailClass - this is email class
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false, $template = 'Order_StatusEmail') {
-		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
+	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false, $emailClass = 'Order_StatusEmail') {
+		return $this->sendEmail($emailClass, $subject, $message, $resend, $adminOnly);
 	}
 
 
@@ -1166,15 +1161,14 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	protected function sendEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
+		//START HACK
 		if(!$message) {
-			$emailableLogs = DataObject::get('OrderStatusLog', "\"OrderID\" = {$this->ID} AND \"InternalUseOnly\" = 0", "\"Created\" DESC", null, 1);
-			if($emailableLogs && $emailableLogs->count()) {
-				$latestEmailableLog = $emailableLogs->First();
-				if($latestEmailableLog) {
-					$message = $latestEmailableLog->Note;
-				}
+			$latestEmailableLog = OrderStatusLog::get()->filter(array("OrderID" => $this->ID, "InternalUseOnly" => 0))->sort("Created", "DESC")->First();
+			if($latestEmailableLog) {
+				$message = $latestEmailableLog->Note;
 			}
 		}
+		//END HACK
 		$replacementArray = array("Message" => $message);
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
@@ -1250,7 +1244,8 @@ class Order extends DataObject {
 	/**
 	 * Return all the {@link OrderItem} instances that are
 	 * available as records in the database.
-	 * @param String filter - where statement to exclude certain items.
+	 * @param String filter - where statement to exclude certain items,
+	 *   you can also pass a classname (e.g. MyOrderItem), in which case only this class will be returned (and any class extending your given class)
 	 * @return DataList
 	 */
 	protected function itemsFromDatabase($filterOrClassName = "") {
@@ -1264,7 +1259,7 @@ class Order extends DataObject {
 				$extrafilter = " AND $filterOrClassName";
 			}
 		}
-		return DataObject::get($className, "\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
+		return $className::get()->where("\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
 	}
 
 	/**
@@ -1296,7 +1291,7 @@ class Order extends DataObject {
 				$extrafilter = " AND $filterOrClassName";
 			}
 		}
-		return DataObject::get($className, "\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
+		return $className::get()->where("\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
 	}
 
 	/**
@@ -1979,14 +1974,16 @@ class Order extends DataObject {
 			"Shipping" => ""
 		);
 		if($this->BillingAddressID) {
-			if($billingAddress = DataObject::get_by_id("BillingAddress", $this->BillingAddressID)) {
+			$billingAddress = BillingAddress::get()->byID($this->BillingAddressID);
+			if($billingAddress) {
 				if($billingAddress->Country) {
 					$countryCodes["Billing"] = $billingAddress->Country;
 				}
 			}
 		}
 		if($this->ShippingAddressID && $this->UseShippingAddress) {
-			if($shippingAddress = DataObject::get_by_id("ShippingAddress", $this->ShippingAddressID)) {
+			$shippingAddress = BillingAddress::get()->byID($this->ShippingAddressID);
+			if($shippingAddress) {
 				if($shippingAddress->ShippingCountry) {
 					$countryCodes["Shipping"] = $shippingAddress->ShippingCountry;
 				}
@@ -2038,7 +2035,7 @@ class Order extends DataObject {
 	/**
 	 * Returns the region that applies to the order.
 	 * we check both billing and shipping, in case one of them is empty.
-	 *@return DataObject | Null (EcommerceRegion)
+	 * @return DataObject | Null (EcommerceRegion)
 	 **/
 	function Region(){return $this->getRegion();}
 	public function getRegion() {
@@ -2065,10 +2062,10 @@ class Order extends DataObject {
 		if(count($regionIDs)) {
 			//note the double-check with $this->CanHaveShippingAddress() and get_use_....
 			if($this->CanHaveShippingAddress() && EcommerceConfig::get("OrderAddress", "use_shipping_address_for_main_region_and_country") && $regionIDs["Shipping"]) {
-				return DataObject::get_by_id("EcommerceRegion", $regionIDs["Shipping"]);
+				return EcommerceRegion::get()->byID($regionIDs["Shipping"]);
 			}
 			else {
-				return DataObject::get_by_id("EcommerceRegion", $regionIDs["Billing"]);
+				return EcommerceRegion::get()->byID($regionIDs["Billing"]);
 			}
 		}
 	}
@@ -2123,7 +2120,7 @@ class Order extends DataObject {
 	 **/
 	public function SubmissionLog(){
 		$className = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
-		return DataObject::get_one($className, "\"OrderID\" = ".$this->ID, $cache = false);
+		return $className::get()->Filter(array("OrderID" => $this->ID))->First();
 	}
 
 	/**
@@ -2158,24 +2155,19 @@ class Order extends DataObject {
 	/**
 	 * returns the link to view the Order
 	 * WHY NOT CHECKOUT PAGE: first we check for cart page.
-	 * If a cart page has been created then we refer through to Cart Page.
-	 * Otherwise it will default to the checkout page
-	 * @return Object - Page
+	 * @return CartPage | Null
 	 */
 	function DisplayPage() {
 		if($this->MyStep() && $this->MyStep()->AlternativeDisplayPage()) {
 			$page = $this->MyStep()->AlternativeDisplayPage();
 		}
 		elseif($this->IsSubmitted()) {
-			$page = DataObject::get_one("OrderConfirmationPage", "\"ClassName\" = 'OrderConfirmationPage'");
+			$page = OrderConfirmationPage::get()->First();
 		}
 		else {
-			//make sure to get a Cart page and not some other extension of Cart Page
-			$page = DataObject::get_one("CheckoutPage");
+			$page = CartPage::get()->Filter(array("ClassName" => 'CartPage'))->First();
 			if(!$page) {
-				//lets get the checkout page
-				$page = DataObject::get_one("CartPage", "\"ClassName\" = 'CartPage'");
-
+				$page = CheckoutPage::get()->First();
 			}
 		}
 		return $page;
@@ -2195,7 +2187,7 @@ class Order extends DataObject {
 		}
 		else {
 			user_error("A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.", E_USER_NOTICE);
-			$page = DataObject::get_one("ErrorPage", "ErrorCode = '404'");
+			$page = ErrorPage::get()->Filter(array("ErrorCode" => '404'))->First();
 			if($page) {
 				return $page->Link($action);
 			}
@@ -2211,29 +2203,25 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * returns the link to view the Order
-	 * WHY NOT CHECKOUT PAGE: first we check for cart page.
-	 * If a cart page has been created then we refer through to Cart Page.
-	 * Otherwise it will default to the checkout page
+	 * returns the link to finalise the Order
 	 * @return String(URLSegment)
 	 */
 	function CheckoutLink() {
-		$page = DataObject::get_one("CheckoutPage");
+		$page = CheckoutPage::get()->First();
 		if($page) {
 			return $page->Link();
 		}
 		else {
-			$page = DataObject::get_one("ErrorPage", "\"ErrorCode\" = '404'");
+			$page = ErrorPage::get()->Filter(array("ErrorCode" => '404'))->First();
 			if($page) {
 				return $page->Link();
 			}
 		}
 	}
 
-
 	/**
 	 * Converts the Order into HTML, based on the Order Template.
-	 * @return String - HTML1
+	 * @return String - HTML
 	 **/
 	public function ConvertToHTML() {
 		return $this->renderWith("Order");

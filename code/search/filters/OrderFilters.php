@@ -84,7 +84,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 		$billingAddressesIDs = array(-1 => -1);
-		$billingAddresses = DataObject::get("BillingAddress", "
+		$billingAddresses = BillingAddress::get()->where("
 			\"FirstName\" LIKE '%$value%' OR
 			\"Surname\" LIKE '%$value%' OR
 			\"Email\" LIKE '%$value%' OR
@@ -96,12 +96,12 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"MobilePhone\" LIKE '%$value%'
 
 		");
-		if($billingAddresses) {
+		if($billingAddresses->count()) {
 			$billingAddressesIDs = $billingAddresses->map("ID", "ID");
 		}
 		$where[] = "\"BillingAddressID\" IN (".implode(",", $billingAddressesIDs).")";
 		$shippingAddressesIDs = array(-1 => -1);
-		$shippingAddresses = DataObject::get("ShippingAddress", "
+		$shippingAddresses = ShippingAddress::get()->where("
 			\"ShippingFirstName\" LIKE '%$value%' OR
 			\"ShippingSurname\" LIKE '%$value%' OR
 			\"ShippingAddress\" LIKE '%$value%' OR
@@ -112,17 +112,17 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"ShippingMobilePhone\" LIKE '%$value%'
 
 		");
-		if($shippingAddresses) {
+		if($shippingAddresses->count()) {
 			$shippingAddressesIDs = $shippingAddresses->map("ID", "ID");
 		}
 		$where[] = "\"ShippingAddressID\" IN (".implode(",", $shippingAddressesIDs).")";
 		$memberIDs = array(-1 => -1);
-		$members = DataObject::get("Member", "
+		$members = Member::get()->where("
 			\"FirstName\" LIKE '%$value%' OR
 			\"Surname\" LIKE '%$value%' OR
 			\"Email\" LIKE '%$value%'
 		");
-		if($members) {
+		if($members->count()) {
 			$memberIDs = $members->map("ID", "ID");
 		}
 		$where[] = "\"MemberID\" IN (".implode(",", $memberIDs).")";
@@ -150,7 +150,6 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
  * @sub-package: search
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
 class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 
 	/**
@@ -164,7 +163,7 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 			foreach($values as $value) {
 				$matches[] = "\"StatusID\" = ".intval($value);
 			}
-			$query->where(implode(" OR ", $matches));
+			$query->filter(array("StatusID" => $values));
 		}
 		return $query;
 	}
