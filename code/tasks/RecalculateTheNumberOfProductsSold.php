@@ -49,7 +49,8 @@ class RecalculateTheNumberOfProductsSold extends BuildTask{
 				if(!$orderItem->NewNumberSold) {
 					$orderItem->NewNumberSold = 0;
 				}
-				$buyable = DataObject::get_by_id($orderItem->BuyableClassName, $orderItem->BuyableID);
+				$buyableClassName = $orderItem->BuyableClassName;
+				$buyable = $buyableClassName::get()-byID(intval($orderItem->BuyableID));
 				if($buyable) {
 					if($orderItem->NewNumberSold != $buyable->NumberSold){
 						$buyable->NumberSold = $orderItem->NewNumberSold;

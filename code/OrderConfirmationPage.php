@@ -70,11 +70,12 @@ class OrderConfirmationPage extends CartPage{
 
 
 	/**
-	 * Standard SS method
-	 * @var Boolean
+	 * Standard SS function, we only allow for one OrderConfirmation Page to exist
+	 * but we do allow for extensions to exist at the same time.
+	 * @return Boolean
 	 */
 	function canCreate($member = null) {
-		return !DataObject::get_one("OrderConfirmationPage", "\"ClassName\" = 'OrderConfirmationPage'");
+		return OrderConfirmationPage::get()->filter(array("ClassName", "OrderConfirmationPage"))->Count() ? false : true;
 	}
 
 	function customFieldLabels(){
@@ -134,10 +135,10 @@ class OrderConfirmationPage extends CartPage{
 	 * @return String (URLSegment)
 	 */
 	public static function find_link() {
-		if($page = DataObject::get_one('OrderConfirmationPage', "\"ClassName\" = 'OrderConfirmationPage'")) {
+		if($page = OrderConfirmationPage::get()->filter(array("ClassName", "OrderConfirmationPage"))->First()) {
 			return $page->Link();
 		}
-		elseif($page = DataObject::get_one('OrderConfirmationPage')) {
+		elseif($page = OrderConfirmationPage::get()->First()) {
 			return $page->Link();
 		}
 		return CartPage::find_link();
@@ -248,7 +249,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		}
 		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
 			if($this->currentOrder->SessionID && $this->currentOrder->SessionID == session_id()) {
-				$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
+				$dos = CheckoutPage_StepDescription::get()->where($where)->sort("ID", "ASC");
 				if($number) {
 					if($dos && $dos->count()) {
 						return $dos->First();

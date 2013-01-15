@@ -17,8 +17,6 @@ EcomProducts = {
 	selectVariationSelector: 'a.selectVariation',
 
 	colorboxDialogOptions_addVariations: {
-		width: "500",
-		height: "500",
 		maxHeight: "90%",
 		maxWidth: "90%",
 		loadingClass: "loading",

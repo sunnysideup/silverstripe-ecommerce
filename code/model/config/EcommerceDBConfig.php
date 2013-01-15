@@ -3,7 +3,7 @@
 /**
  * Database Settings for E-commerce
  * Similar to SiteConfig but then for E-commerce
- *
+ * To access a singleton here, use: EcommerceDBConfig::current_ecommerce_db_config()
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -52,7 +52,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	static $indexes = array(
+	public static $indexes = array(
 		"UseThisOne" => true,
 		"ShopClosed" => true,
 		"ShopPricesAreTaxExclusive" => true,
@@ -208,12 +208,12 @@ class EcommerceDBConfig extends DataObject {
 
 	/**
 	 * implements singleton pattern
-	 * @return EcommerceDBConfig
+	 * @return EcommerceDBConfig | Object
 	 */
 	public static function current_ecommerce_db_config(){
 		if(!self::$my_current_one) {
 			$className =  EcommerceConfig::get("EcommerceDBConfig", "ecommerce_db_config_class_name");
-			self::$my_current_one = DataObject::get_one($className);
+			self::$my_current_one = $className::get()->First();
 		}
 		return self::$my_current_one;
 	}
@@ -386,7 +386,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Returns the Current Member
 	 * @return Null | Member
 	 */
-	public function Customer (){
+	public function Customer(){
 		return Member::currentUser();
 	}
 
@@ -405,7 +405,6 @@ class EcommerceDBConfig extends DataObject {
 	function Currencies(){
 		return EcommerceCurrency::ecommerce_currency_list();
 	}
-
 
 	/**
 	 * @return String (URLSegment)
@@ -474,16 +473,16 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	function onAfterWrite(){
 		if($this->UseThisOne) {
-			$configs = DataObject::get("EcommerceDBConfig", "\"UseThisOne\" = 1 AND \"ID\" <>".$this->ID);
-			if($configs){
+			$configs = EcommerceDBConfig::get()->Filter(array("UseThisOne" => 1))->Exclude(array("ID" => $this->ID));
+			if($configs && $configs->count()){
 				foreach($configs as $config) {
 					$config->UseThisOne = 0;
 					$config->write();
 				}
 			}
 		}
-		$configs = DataObject::get("EcommerceDBConfig", "\"Title\" = '".$this->Title."' AND \"ID\" <>".$this->ID);
-		if($configs){
+		$configs = EcommerceDBConfig::get()->Filter(array("Title" => $this->Title))->Exclude(array("ID" => $this->ID));
+		if($configs && $configs->count()){
 			foreach($configs as $key => $config) {
 				$config->Title = $config->Title."_".$config->ID;
 				$config->write();
@@ -507,7 +506,6 @@ class EcommerceDBConfig extends DataObject {
 			"edited"
 		);
 	}
-
 
 	/**
 	 * returns site config

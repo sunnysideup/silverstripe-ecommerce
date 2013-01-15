@@ -50,11 +50,12 @@ class AccountPage extends Page {
 	public static $icon = 'ecommerce/images/icons/AccountPage';
 
 	/**
-	 * standard SS method
+	 * Standard SS function, we only allow for one AccountPage to exist
+	 * but we do allow for extensions to exist at the same time.
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return !DataObject::get_one("AccountPage", "\"ClassName\" = 'AccountPage'");
+		return AccountPage::get()->filter(array("ClassName" => "AccountPage"))->Count() ? false : true;
 	}
 
 	/**
@@ -82,7 +83,7 @@ class AccountPage extends Page {
 	 * @return String (URLSegment)
 	 */
 	public static function find_link() {
-		if($page = DataObject::get_one('AccountPage', "\"ClassName\" = 'AccountPage'")) {
+		if($page = AccountPage::get()->filter(array("ClassName" => "AccountPage"))->First()) {
 			return $page->Link();
 		}
 	}

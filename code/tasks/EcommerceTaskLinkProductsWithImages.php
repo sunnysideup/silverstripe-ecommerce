@@ -55,7 +55,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 
 	function run($request){
 		if($this->productManyManyField) {
-			$products = DataObject::get("Product", "", "", "", "$this->start, $this->limit");
+			$products = Product::get()->limit($this->limit, $this->start);
 			if($products) {
 				foreach($products as $product) {
 					if($product->InternalItemID) {

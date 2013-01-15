@@ -95,24 +95,14 @@ class CartPage extends Page{
 		}
 	}
 
-	/**
-	 * standard SS method
-	 *
-	 */
-	public function populateDefaults() {
-		parent::populateDefaults();
-		//$continuePage = DataObject::get_one("ProductGroup", "ParentID = 0");
-		//if($continuePage || $continuePage = DataObject::get_one("ProductGroup")) {
-			//$this->ContinuePageID = $continuePage->ID;
-		//}
-	}
 
 	/**
-	 * Standard SS method
+	 * Standard SS function, we only allow for one CartPage page to exist
+	 * but we do allow for extensions to exist at the same time.
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
-		return !DataObject::get_one("CartPage", "\"ClassName\" = 'CartPage'");
+		return CartPage::get()->Filter(array("ClassName" => "CartPage"))->Count() ? false : true;
 	}
 
 	/**
@@ -154,7 +144,7 @@ class CartPage extends Page{
 	 * @return String (URLSegment)
 	 */
 	public static function find_link() {
-		if($page = DataObject::get_one("CartPage", "\"ClassName\" = 'CartPage'")) {
+		if($page = CartPage::get()->Filter(array("ClassName" => "CartPage"))->First()) {
 			return $page->Link();
 		}
 		else {
@@ -289,7 +279,7 @@ class CartPage_Controller extends Page_Controller{
 		if(isset($_REQUEST['OrderID'])) {
 			$orderID = intval($_REQUEST['OrderID']);
 			if($orderID) {
-				$this->currentOrder = DataObject::get_by_id("Order", $orderID);
+				$this->currentOrder = Order::get()->byID($orderID);
 			}
 		}
 		elseif($this->request && $this->request->param('ID') && $this->request->param('Action')) {
@@ -301,12 +291,12 @@ class CartPage_Controller extends Page_Controller{
 			//we can do all the retrieval options in once.
 			if(($action == "retrieveorder") && $id && $otherID) {
 				$sessionID = Convert::raw2sql($id);
-				$retrievedOrder = DataObject::get_one("Order", "\"Order\".\"SessionID\" = '".$sessionID."' AND \"Order\".\"ID\" = $otherID");
+				$retrievedOrder = Order::get()->Filter(array("SessionID" => $sessionID, "ID" => $otherID))->First();
 				$this->currentOrder = $retrievedOrder;
 				$overrideCanView = true;
 			}
 			elseif(intval($id) && in_array($action, $this->stat("allowed_actions"))){
-				$this->currentOrder = DataObject::get_by_id("Order", intval($id));
+				$this->currentOrder = Order::get()->byID(intval($id));
 			}
 		}
 		if(!$this->currentOrder) {

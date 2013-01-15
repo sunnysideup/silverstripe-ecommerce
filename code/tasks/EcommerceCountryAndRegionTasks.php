@@ -20,7 +20,8 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 		$array = Geoip::getCountryDropDown();
 		$allowedArray = EcommerceConfig::get("EcommerceCountry", "allowed_country_codes");
 		foreach($array as $code => $name) {
-			if($obj = DataObject::get_one("EcommerceCountry", "\"Code\" = '".Convert::raw2sql($code)."'")) {
+			$obj = EcommerceCountry::get()->Filter(array("Code" => Convert::raw2sql($code)))->First()
+			if($obj) {
 				//do nothing
 				$count++;
 			}

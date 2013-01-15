@@ -53,7 +53,7 @@ class EcommerceProductImageReset extends BuildTask{
 							 \"ClassName\" = ''
 							);
 					");
-					$image = DataObject::get_by_id("Product_Image", $row["ImageID"]);
+					$image = Product_Image::get()->byID($row["ImageID"]);
 					if(!$image) {
 						$remove = true;
 					}

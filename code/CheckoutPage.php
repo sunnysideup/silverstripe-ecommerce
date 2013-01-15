@@ -88,12 +88,12 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * Returns the Terms and Conditions Page (if there is one).
-	 * @return DataObject (Page)
+	 * @return Page | NULL
 	 */
 	public static function find_terms_and_conditions_page() {
-		$checkoutPage = DataObject::get_one('CheckoutPage');
-		if($checkoutPage) {
-			return DataObject::get_by_id('Page', $checkoutPage->TermsPageID);
+		$checkoutPage = CheckoutPage::get()->First();
+		if($checkoutPage && $checkoutPage->TermsPageID) {
+			return Page::get()->byID($checkoutPage->TermsPageID);
 		}
 	}
 
@@ -102,7 +102,8 @@ class CheckoutPage extends CartPage {
 	 * @return String (URLSegment)
 	 */
 	public static function find_link($action = "") {
-		if ($page = DataObject::get_one("CheckoutPage")) {
+		$page = CheckoutPage::get()->First();
+		if ($page) {
 			return $page->Link($action);
 		}
 		user_error("No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.", E_USER_NOTICE);
@@ -186,10 +187,11 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * Standard SS function, we only allow for one checkout page to exist
-	 *@return Boolean
+	 * but we do allow for extensions to exist at the same time.
+	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return !DataObject :: get_one("CheckoutPage", "\"ClassName\" = 'CheckoutPage'");
+		return CheckoutPage::get()->Filter(array("ClassName" => "CheckoutPage"))->Count() ? false : true;
 	}
 
 	/**
@@ -212,10 +214,10 @@ class CheckoutPage extends CartPage {
 		$fields->removeFieldFromTab('Root.Main', "Content");
 		$fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page')));
 		$htmlEditorField->setRows(3);
-		if(DataObject::get_one("OrderModifier_Descriptor")) {
+		if(OrderModifier_Descriptor::get()->count()) {
 			$fields->addFieldToTab('Root.Messages.Messages.OrderExtras',$this->getOrderModifierDescriptionField());
 		}
-		if(DataObject::get_one("CheckoutPage_StepDescription")) {
+		if(CheckoutPage_StepDescription::get()->count()) {
 			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',$this->getCheckoutStepDescriptionField());
 		}
 		return $fields;
@@ -391,10 +393,10 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 */
 	function CheckoutSteps($number = 0) {
 		$where = '';
+		$dos = CheckoutPage_StepDescription::get()->Sort("ID", "ASC");
 		if($number) {
-			$where = "\"CheckoutPage_StepDescription\".\"ID\" = $number";
+			$dos->Filter(array("ID" => $number));
 		}
-		$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
 		if($number) {
 			if($dos && $dos->count()) {
 				return $dos->First();
@@ -419,7 +421,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 			$returnData->push($do);
 		}
 		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
-			$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
+			$orderConfirmationPage = OrderConfirmationPage::get()->First();
 			if($orderConfirmationPage) {
 				$do = $orderConfirmationPage->CurrentCheckoutStep(false);
 				if($do) {
@@ -718,7 +720,7 @@ class CheckoutPage_StepDescription extends DataObject{
 		if(is_array($steps) && count($steps)) {
 			foreach($steps as $id => $code) {
 				$newID = $id + 1;
-				if($obj = DataObject::get_by_id("CheckoutPage_StepDescription", $newID)) {
+				if($obj = CheckoutPage_StepDescription::get()->byID($newID)) {
 					//do nothing
 				}
 				else {

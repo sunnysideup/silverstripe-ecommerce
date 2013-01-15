@@ -379,11 +379,30 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
+	 * caching of relevant OrderModifier_Descriptor
+	 * @var OrderModifier_Descriptor
+	 */
+	private $orderModifier_Descriptor = null;
+
+	/**
+	 * returns the relevant orderModifier_Descriptor
+	 * @return OrderModifier_Descriptor | Null
+	 */
+	protected function getOrderModifier_Descriptor(){
+		if($this->orderModifier_Descriptor === null) {
+			$this->orderModifier_Descriptor = OrderModifier_Descriptor::get()
+				->Filter(array("ModifierClassName" => $this->ClassName))
+				->First();
+		}
+		return $this->orderModifier_Descriptor;
+	}
+
+	/**
 	 * returns a heading if there is one.
 	 * @return String
 	 **/
 	public function Heading(){
-		if($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
+		if($obj = $this->getOrderModifier_Descriptor()) {
 			return $obj->Heading;
 		}
 		return "";
@@ -394,7 +413,7 @@ class OrderModifier extends OrderAttribute {
 	 * @return String (html)
 	 **/
 	public function Description(){
-		if($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
+		if($obj = $this->getOrderModifier_Descriptor()) {
 			return $obj->Description;
 		}
 		return "";
@@ -405,7 +424,7 @@ class OrderModifier extends OrderAttribute {
 	 * @return Object (SiteTree)
 	 **/
 	public function MoreInfoPage(){
-		if($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
+		if($obj = $this->getOrderModifier_Descriptor()) {
 			return $obj->Link();
 		}
 		return null;
@@ -798,7 +817,6 @@ class OrderModifier_Descriptor extends DataObject {
 		return $fields;
 	}
 
-
 	/**
 	 * casted Variable
 	 * @return String.
@@ -823,6 +841,7 @@ class OrderModifier_Descriptor extends DataObject {
 	}
 
 	/**
+	 * Adds OrderModifier_Descriptors and deletes the irrelevant ones
 	 * stardard SS method
 	 */
 	function requireDefaultRecords(){
@@ -833,7 +852,7 @@ class OrderModifier_Descriptor extends DataObject {
 		}
 		if(count($arrayOfModifiers)) {
 			foreach($arrayOfModifiers as $className) {
-				$obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$className."'");
+				$obj = $this->getOrderModifier_Descriptor();
 				if(!$obj) {
 					$modifier = singleton($className);
 					$obj = new OrderModifier_Descriptor();
@@ -844,8 +863,9 @@ class OrderModifier_Descriptor extends DataObject {
 				}
 			}
 		}
-		$orderModifierDescriptors = DataObject::get("OrderModifier_Descriptor");
-		if($orderModifierDescriptors) {
+		//delete the ones that are not relevant
+		$orderModifierDescriptors = OrderModifier_Descriptor::get();
+		if($orderModifierDescriptors && $orderModifierDescriptors->count()) {
 			foreach($orderModifierDescriptors as $orderModifierDescriptor) {
 				if(!in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers)) {
 					$orderModifierDescriptor->delete();

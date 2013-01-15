@@ -86,9 +86,8 @@ class ShoppingCart extends Object{
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
 			if($orderIDFromSession > 0) {
-				$this->order = DataObject::get_by_id("Order", $orderIDFromSession);
+				$this->order = Order::get()->byID($orderIDFromSession);
 			}
-			//order has already been submitted - immediately remove it because we dont want to change it.
 			$member = Member::currentUser();
 			if($this->order) {
 				//first reason to set to null: it is already submitted
@@ -120,18 +119,18 @@ class ShoppingCart extends Object{
 						//do NOTHING!
 					}
 					else {
-						$firstStep = DataObject::get_one("OrderStep");
+						$firstStep = OrderStep::get()->First();
 						//we assume the first step always exists.
 						//TODO: what sort order?
 						$count = 0;
 						while(
-							$previousOrderFromMember = DataObject::get_one(
-								"Order",
-								"
+							$previousOrderFromMember = Order::get()
+								->where("
 									\"MemberID\" = ".$member->ID."
 									AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
 									AND \"Order\".\"ID\" <> ".$this->order->ID
-							)
+								)
+								->First()
 						) {
 							if($count > 12) {
 								break;
@@ -153,8 +152,8 @@ class ShoppingCart extends Object{
 			}
 			if(!$this->order) {
 				if($member) {
-					$firstStep = DataObject::get_one("OrderStep");
-					$previousOrderFromMember = DataObject::get_one("Order", "\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID." OR \"StatusID\" = 0)");
+					$firstStep = OrderStep::get()->First();
+					$previousOrderFromMember = Order::get()->where("\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID." OR \"StatusID\" = 0)")->First();
 					if($previousOrderFromMember) {
 						if($previousOrderFromMember->canView()) {
 							$this->order = $previousOrderFromMember;
@@ -448,7 +447,7 @@ class ShoppingCart extends Object{
 	 * @return Boolean
 	 */
 	public function removeModifier($modifier){
-		$modifier = (is_numeric($modifier)) ? DataObject::get_by_id('OrderModifier',$modifier) : $modifier;
+		$modifier = (is_numeric($modifier)) ? OrderModifier::get()->byID($modifier) : $modifier;
 		if(!$modifier){
 			$this->addMessage(_t("ShoppingCart.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
 			return false;
@@ -472,7 +471,7 @@ class ShoppingCart extends Object{
 	 */
 	public function addModifier($modifier){
 		if(is_numeric($modifier)) {
-			$modifier = DataObject::get_by_id('OrderModifier',$modifier);
+			$modifier = OrderModifier::get()->byID($modifier);
 		}
 		if(!$modifier){
 			$this->addMessage(_t("ShoppingCart.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
@@ -493,7 +492,7 @@ class ShoppingCart extends Object{
 		//TODO: how to handle existing order
 		//TODO: permission check - does this belong to another member? ...or should permission be assumed already?
 		if(is_numeric($order)) {
-			 $this->order = DataObject::get_by_id('Order',$order);
+			 $this->order = Order::get()->byID($order);
 		}
 		elseif($order instanceof Order) {
 			$this->order = $order;
@@ -524,7 +523,7 @@ class ShoppingCart extends Object{
 	 **/
 	public function copyOrder($oldOrder) {
 		if(is_numeric($oldOrder)) {
-			 $oldOrder = DataObject::get_by_id('Order',intval($oldOrder));
+			 $oldOrder = Order::get()->byID(intval($oldOrder));
 		}
 		elseif($oldOrder instanceof Order) {
 			//$oldOrder = $oldOrder;
@@ -747,13 +746,14 @@ class ShoppingCart extends Object{
 		$filterString = $this->parametersToSQL($parameters);
 		if($order = $this->currentOrder()) {
 			$orderID = $order->ID;
-			$obj = DataObject::get_one(
-				"OrderItem",
-				" \"BuyableClassName\" = '".$buyable->ClassName."' AND
+			$obj = OrderItem::get()
+				->where(
+					" \"BuyableClassName\" = '".$buyable->ClassName."' AND
 					\"BuyableID\" = ".$buyable->ID." AND
 					\"OrderID\" = ".$orderID." ".
 					$filterString
-			);
+				)
+				->First();
 			return $obj;
 		}
 	}
@@ -1000,9 +1000,9 @@ class ShoppingCart_Controller extends Controller{
 			return;
 		}
 		user_error(_t("ShoppingCart.NOCARTINITIALISED", "no cart initialised"), E_USER_NOTICE);
-		$page = DataObject::get_one("ErrorPage", "ErrorCode = '404'");
-		if($page) {
-			$this->redirect($page->Link());
+		$errorPage404 = ErrorPage::get()->Filter(array("ErrorCode" => "404"))->First();
+		if($errorPage404) {
+			$this->redirect($errorPage404->Link());
 			return;
 		}
 		user_error(_t("ShoppingCart.NOCARTINITIALISED", "no 404 page available"), E_USER_ERROR);
@@ -1264,12 +1264,14 @@ class ShoppingCart_Controller extends Controller{
 	function removeaddress($request) {
 		$id = intval($request->param('ID'));
 		$className = Convert::raw2sql($request->param('OtherID'));
-		$address = DataObject::get_by_id($className, $id);
-		if($address && $address->canView()) {
-			$member = Member::currentUser();
-			if($member) {
-				$address->MakeObsolete($member);
-				return _t("ShoppingCart.ADDRESSREMOVED", "Address removed.");
+		if(class_exists($className)) {
+			$address = $className::get()->byID($id);
+			if($address && $address->canView()) {
+				$member = Member::currentUser();
+				if($member) {
+					$address->MakeObsolete($member);
+					return _t("ShoppingCart.ADDRESSREMOVED", "Address removed.");
+				}
 			}
 		}
 		return _t("ShoppingCart.ADDRESSNOTREMOVED", "Address could not be removed.");
@@ -1287,7 +1289,7 @@ class ShoppingCart_Controller extends Controller{
 		$version = intval($this->getRequest()->param('Version'));
 		if($buyableClassName && $buyableID){
 			if(EcommerceDBConfig::is_buyable($buyableClassName)) {
-				$bestBuyable = DataObject::get_by_id($buyableClassName, $buyableID);
+				$bestBuyable = $buyableClassName::get()->byID($buyableID);
 				if($bestBuyable) {
 					//show singleton with old version
 					$this->redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
@@ -1295,9 +1297,9 @@ class ShoppingCart_Controller extends Controller{
 				}
 			}
 		}
-		$page = DataObject::get_one("ErrorPage", "ErrorCode = '404'");
-		if($page) {
-			$this->redirect($page->Link());
+		$errorPage404 = ErrorPage::get()->Filter(array("ErrorCode" => "404"))->First();
+		if($errorPage404) {
+			$this->redirect($errorPage404->Link());
 			return;
 		}
 		return null;
@@ -1310,7 +1312,7 @@ class ShoppingCart_Controller extends Controller{
 	 */
 	function loginas($request){
 		if(Permission::check("ADMIN") || Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))){
-			$newMember = DataObject::get_by_id("Member", intval($request->param("ID")));
+			$newMember = Member::get()->byID(intval($request->param("ID")));
 			if($newMember) {
 				$oldMember = Member::currentMember();
 				if($oldMember){
@@ -1342,7 +1344,7 @@ class ShoppingCart_Controller extends Controller{
 		$buyableID = intval($this->getRequest()->param('ID'));
 		if($buyableClassName && $buyableID){
 			if(EcommerceDBConfig::is_buyable($buyableClassName)) {
-				$obj = DataObject::get_by_id($buyableClassName,intval($buyableID));
+				$obj = $buyableClassName::get()->byID(intval($buyableID));
 				if($obj) {
 					if($obj->ClassName == $buyableClassName) {
 						return $obj;
