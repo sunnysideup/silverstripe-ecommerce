@@ -150,7 +150,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
  * @sub-package: search
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
+class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter {
 
 	/**
 	 *
@@ -189,7 +189,7 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderFilters_HasBeenCancelled extends SearchFilter {
+class OrderFilters_HasBeenCancelled extends ExactMatchFilter {
 
 	/**
 	 *
@@ -223,7 +223,7 @@ class OrderFilters_HasBeenCancelled extends SearchFilter {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderFilters_MustHaveAtLeastOnePayment extends SearchFilter {
+class OrderFilters_MustHaveAtLeastOnePayment extends ExactMatchFilter {
 
 	/**
 	 *

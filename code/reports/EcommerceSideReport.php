@@ -128,7 +128,9 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report {
 	 * @return SS_List
 	 */
 	function sourceQuery($params = null) {
-		return Product::get()->filter(array("FeaturedProduct" => 1))->sort("FullSiteTreeSort", "ASC");
+		return Product::get()
+			->filter(array("FeaturedProduct" => 1))
+			->sort("FullSiteTreeSort", "ASC");
 	}
 
 	/**

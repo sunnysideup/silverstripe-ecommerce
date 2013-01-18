@@ -490,7 +490,7 @@ class OrderStep extends DataObject {
 	public function canDelete($member = null) {
 		//cant delete last status if there are orders with this status
 		$nextOrderStepObject = OrderStep::get()
-			->filter(array("Sort::GreaterThan" => $this->Sort))
+			->filter(array("Sort:GreaterThan" => $this->Sort))
 			->First();
 		if($nextOrderStepObject) {
 			//do nothing

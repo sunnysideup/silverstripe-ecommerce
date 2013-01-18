@@ -163,12 +163,13 @@ class ShopAccountForm_Validator extends RequiredFields{
 			if(!$loggedInMember->IsShopAdmin()) {
 				$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
 				//can't be taken
-				$otherMembersWithSameEmail = Member::get()->filter(
-					array(
-						$uniqueFieldName => $uniqueFieldValue,
-						"ID" => $loggedInMember->ID
-					)
-				);
+				$otherMembersWithSameEmail = Member::get()
+					->filter(
+						array(
+							$uniqueFieldName => $uniqueFieldValue,
+							"ID" => $loggedInMember->ID
+						)
+					);
 				if($otherMembersWithSameEmail->count()){
 					$message = _t(
 						"Account.ALREADYTAKEN",

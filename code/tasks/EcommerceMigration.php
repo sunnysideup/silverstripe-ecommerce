@@ -1379,7 +1379,7 @@ class EcommerceMigration extends BuildTask {
 		$count = 0;
 		if(class_exists("ProductVariation")) {
 			ProductVariation::get()
-				->filter("\"FullName\" = '' OR \"FullName\" IS NULL")
+				->where("\"FullName\" = '' OR \"FullName\" IS NULL")
 				->sort("FullName", "ASC")
 				->limit($this->limit, $this->start);
 			if($variations->count()) {
