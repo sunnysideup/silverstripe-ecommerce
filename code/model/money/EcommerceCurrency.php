@@ -169,7 +169,7 @@ class EcommerceCurrency extends DataObject {
 		return EcommerceCurrency::get()
 			->Filter(
 				array(
-					"EcommerceCurrency" => EcommerceConfig::get("EcommerceCurrency", "default_currency"),
+					"Code" => EcommerceConfig::get("EcommerceCurrency", "default_currency"),
 					"InUse" => 1
 				)
 			)
