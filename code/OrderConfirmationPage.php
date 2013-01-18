@@ -364,6 +364,19 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		return $html;
 	}
 
+
+	/**
+	 * Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?
+	 * @return Boolean
+	 */
+	protected function onlyShowSubmittedOrders() {return true;}
+
+	/**
+	 * Can this page only show Unsubmitted Orders (e.g. CartPage) ?
+	 * @return Boolean
+	 */
+	protected function onlyShowUnsubmittedOrders() {return false;}
+
 }
 
 

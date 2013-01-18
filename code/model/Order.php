@@ -388,7 +388,7 @@ class Order extends DataObject {
 			if(count($arrayOfStatusOptions)) {
 				foreach($arrayOfStatusOptions as $key => $value) {
 					$count = Order::get()
-						->Filter(array("StatusID", intval($key)))
+						->Filter(array("StatusID" => intval($key)))
 						->count();
 					if($count < 1) {
 						//do nothing

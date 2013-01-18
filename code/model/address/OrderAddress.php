@@ -532,7 +532,7 @@ class OrderAddress extends DataObject {
 		if($member && $member->exists()) {
 			$fieldName = $this->ClassName."ID";
 			$list = Order::get_datalist_of_orders_with_submit_record()
-				->filter(array("MemberID" => $member->ID));
+				->filter(array("MemberID" => $member->ID))
 				->exclude(array($fieldName => $this->ID));
 			if($onlyLastRecord) {
 				$list->limit(1);

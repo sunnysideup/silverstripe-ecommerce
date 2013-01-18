@@ -202,8 +202,8 @@ class BuyableSelectField_DataList extends Controller {
 								AND \"AllowPurchase\" = 1";
 						$obj::get()
 							->filter(array(
-								$fieldName.":PartialMatch" =>
-								$term, "AllowPurchase" => 1
+								$fieldName.":PartialMatch" => $term,
+								"AllowPurchase" => 1
 							))
 							->where("\"$tableName\".\"ID\" NOT IN (".implode(",", $arrayOfAddedItemIDsByClassName[$className]).")")
 							->First();

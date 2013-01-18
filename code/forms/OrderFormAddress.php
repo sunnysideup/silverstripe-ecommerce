@@ -521,12 +521,14 @@ class OrderFormAddress extends Form {
 				$currentUserID = 0;
 			}
 			$uniqueFieldValue = $data[$uniqueField];
-			return $otherMembersWithSameEmail = Member::get()->filter(
-				array(
-					$uniqueFieldName => $uniqueFieldValue,
-					"ID" => $loggedInMember->ID
+			return $otherMembersWithSameEmail = Member::get()
+				->filter(
+					array(
+						$uniqueFieldName => $uniqueFieldValue,
+						"ID" => $loggedInMember->ID
+					)
 				)
-			)->First();
+				->First();
 		}
 		return null;
 	}

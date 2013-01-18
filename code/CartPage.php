@@ -293,7 +293,10 @@ class CartPage_Controller extends Page_Controller{
 			if(($action == "retrieveorder") && $id && $otherID) {
 				$sessionID = Convert::raw2sql($id);
 				$retrievedOrder = Order::get()
-					->Filter(array("SessionID" => $sessionID, "ID" => $otherID))
+					->Filter(array(
+						"SessionID" => $sessionID,
+						"ID" => $otherID
+					))
 					->First();
 				$this->currentOrder = $retrievedOrder;
 				$overrideCanView = true;
@@ -309,10 +312,10 @@ class CartPage_Controller extends Page_Controller{
 		if($this->currentOrder) {
 			//IMPORTANT SECURITY QUESTION!
 			if($this->currentOrder->canView() || $overrideCanView) {
-				if(!$this->currentOrder->IsSubmitted() && $this->ClassName == "CartPage") {
-					//always allow to view with cart page if not submitted
+				if($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
+					$this->redirect($this->currentOrder->Link());
 				}
-				elseif($this->ID != $this->currentOrder->DisplayPage()->ID) {
+				elseif((!$this->currentOrder->IsSubmitted()) && $this->onlyShowSubmittedOrders()) {
 					$this->redirect($this->currentOrder->Link());
 				}
 			}
@@ -732,6 +735,18 @@ class CartPage_Controller extends Page_Controller{
 	 * @return Boolean
 	 */
 	protected function isOrderConfirmationPage() {if($this->dataRecord instanceOf OrderConfirmationPage){ return true;}else {return false;}}
+
+	/**
+	 * Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?
+	 * @return Boolean
+	 */
+	protected function onlyShowSubmittedOrders() {return false;}
+
+	/**
+	 * Can this page only show Unsubmitted Orders (e.g. CartPage) ?
+	 * @return Boolean
+	 */
+	protected function onlyShowUnsubmittedOrders() {return true;}
 
 }
 
