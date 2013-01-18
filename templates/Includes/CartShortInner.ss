@@ -24,7 +24,7 @@ If you are not using this snippet then theme it and remove its content to speed 
 	<% end_loop %>
 		</tbody>
 	</table>
-	<p class="goToCheckout"><a href="$EcomConfig.CheckoutLink" class="action goToCheckoutLink"><% _t("Cart.GOTOCHECKOUTLINK","Go to the checkout") %></a></p>
+	<p class="goToCheckout"><a href="$EcomConfig.CheckoutLink" class="action goToCheckoutLink"><% _t("Order.GOTOCHECKOUTLINK","Go to the checkout") %></a></p>
 <% else %>
 		<p class="noItems"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></p>
 <% end_if %>

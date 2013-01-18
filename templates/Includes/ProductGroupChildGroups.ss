@@ -8,7 +8,7 @@
 	<% if Image %>
 				<div class="productGroupImage">
 					<a href="$Link">
-						<img class="productGroupSmallImage" src="$Image.SmallImage.URL" alt="<% sprintf(_t("Product.IMAGE","%s image"),$Title.ATT) %>" />
+						<img class="productGroupSmallImage" src="$Image.SmallImage.URL" alt="<%t Product.IMAGE '{name} image' name=$Title.ATT %>" />
 					</a>
 				</div>
 	<% end_if %>

@@ -35,7 +35,7 @@ class ModelAdminBaseClass_CollectionController extends ModelAdmin_CollectionCont
 	function search($request, $form) {
 		// Get the results form to be rendered
 		$query = $this->getSearchQuery(array_merge($form->getData(), $request));
-		$resultMap = new SQLMap($query, $keyField = "ID", $titleField = "Title");
+		$resultMap = new SS_MAP($query, $keyField = "ID", $titleField = "Title");
 		$items = $resultMap->getItems();
 		$array = array();
 		if($items && $items->count()) {
@@ -144,7 +144,7 @@ class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordControl
 	}
 
 	//function doGoto($data, $form, $request) {
-		//Director::redirect($this->currentRecord->Link());
+		//$this->redirect($this->currentRecord->Link());
 	//}
 
 

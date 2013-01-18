@@ -225,9 +225,6 @@ class EcommerceConfigDefinitions extends Object {
 				//"collection_controller_class" => "The controller for the collection.  ",
 				//"record_controller_class" => "The controller for the record. ",
 			),
-			"RecalculateTheNumberOfProductsSold" => array(
-				"number_sold_calculation_type" => "Method for calculating the total number of items sold.  We either COUNT the number of orders or we make a SUM of the number of items sold. ",
-			),
 			"CartCleanupTask" => array(
 				"clear_minutes" => "The number of minutes after which carts are considered abandonned. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
 				"clear_minutes_empty_carts" => "The number of minutes after which empty carts should be deleted (to reduce the amount of empty (meaningless) carts in the database. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",

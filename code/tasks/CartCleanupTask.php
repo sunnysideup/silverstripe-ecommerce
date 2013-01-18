@@ -180,8 +180,9 @@ class CartCleanupTask extends BuildTask {
 						}
 					}
 					if(count($oneToOneIDArray)) {
-						$unlinkedObjects = DataObject::get($className, "\"$className\".\"ID\" IN (".implode(",", $oneToOneIDArray).")");
-						if($unlinkedObjects){
+						$unlinkedObjects = $className::get()
+							->filter(array("ID" => $oneToOneIDArray));
+						if($unlinkedObjects->count()){
 							foreach($unlinkedObjects as $unlinkedObject){
 								if($this->verbose) {
 									DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
@@ -236,8 +237,9 @@ class CartCleanupTask extends BuildTask {
 						}
 					}
 					if(count($oneToManyIDArray)) {
-						$unlinkedObjects = DataObject::get($classWithLastEdited, "\"$classWithLastEdited\".\"ID\" IN (".implode(",", $oneToManyIDArray).")");
-						if($unlinkedObjects){
+						$unlinkedObjects = $classWithLastEdited::get()
+							->filter(array("ID" => $oneToManyIDArray));
+						if($unlinkedObjects->count()){
 							foreach($unlinkedObjects as $unlinkedObject){
 								if($this->verbose) {
 									DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");

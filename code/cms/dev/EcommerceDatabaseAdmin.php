@@ -203,7 +203,6 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	protected $regularMaintenance = array(
 		"cartcleanuptask",
-		"recalculatethenumberofproductssold",
 		"addcustomerstocustomergroups",
 		"fixbrokenordersubmissiondata",
 		"cleanupproductfullsitetreesorting",
@@ -230,13 +229,6 @@ class EcommerceDatabaseAdmin extends Controller{
 		$this->runTask("CartCleanupTask", $request);
 	}
 
-	/**
-	 * executes build task
-	 *
-	 */
-	function recalculatethenumberofproductssold($request) {
-		$this->runTask("RecalculateTheNumberOfProductsSold", $request);
-	}
 	/**
 	 * executes build task: AddCustomersToCustomerGroups
 	 *

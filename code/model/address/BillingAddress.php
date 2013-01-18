@@ -173,7 +173,7 @@ class BillingAddress extends OrderAddress {
 	}
 
 	/**
-	 *@return Fieldset
+	 *@return FieldList
 	 **/
 	public function getFields($member = null) {
 		$fields = parent::getEcommerceFields();

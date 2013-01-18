@@ -473,16 +473,20 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	function onAfterWrite(){
 		if($this->UseThisOne) {
-			$configs = EcommerceDBConfig::get()->Filter(array("UseThisOne" => 1))->Exclude(array("ID" => $this->ID));
-			if($configs && $configs->count()){
+			$configs = EcommerceDBConfig::get()
+				->Filter(array("UseThisOne" => 1))
+				->Exclude(array("ID" => $this->ID));
+			if($configs->count()){
 				foreach($configs as $config) {
 					$config->UseThisOne = 0;
 					$config->write();
 				}
 			}
 		}
-		$configs = EcommerceDBConfig::get()->Filter(array("Title" => $this->Title))->Exclude(array("ID" => $this->ID));
-		if($configs && $configs->count()){
+		$configs = EcommerceDBConfig::get()
+			->Filter(array("Title" => $this->Title))
+			->Exclude(array("ID" => $this->ID));
+		if($configs->count()){
 			foreach($configs as $key => $config) {
 				$config->Title = $config->Title."_".$config->ID;
 				$config->write();

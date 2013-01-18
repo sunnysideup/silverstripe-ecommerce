@@ -16,8 +16,8 @@ class EcommerceDevelopmentAdminDecorator extends Extension{
 
 	/**
 	 * handles ecommerce request or provide options to run request in the form of HTML output.
-	 *@param SS_HTTPRequest
-	 *@return HTML
+	 * @param SS_HTTPRequest
+	 * @return HTML
 	 **/
 
 	function ecommerce($request) {

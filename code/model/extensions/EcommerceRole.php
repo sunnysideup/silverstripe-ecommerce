@@ -43,7 +43,8 @@ class EcommerceRole extends DataExtension {
 	public static function get_customer_group() {
 		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
 		$customerName = EcommerceConfig::get("EcommerceRole", "customer_group_name");
-		return Group::get()->Filter(array("Code" => $customerCode))->First();
+		return Group::get()
+			->Filter(array("Code" => $customerCode))->First();
 	}
 
 	/**
@@ -58,7 +59,9 @@ class EcommerceRole extends DataExtension {
 		}
 		//get customer group
 		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
-		Group::get()->Filter(array("Code" => $customerCode))->First();
+		Group::get()
+			->Filter(array("Code" => $customerCode))
+			->First();
 		//fill array
 		if($group) {
 			$members = $group->Members();
@@ -135,7 +138,7 @@ class EcommerceRole extends DataExtension {
 	/**
 	 * get CMS fields describing the member in the CMS when viewing the order.
 	 *
-	 * @return Field / ComponentSet
+	 * @return CompositeField
 	 **/
 	public function getEcommerceFieldsForCMS() {
 		$fields = new CompositeField();
@@ -226,7 +229,9 @@ class EcommerceRole extends DataExtension {
 		else {
 			$orders = Order::get_datalist_of_orders_with_submit_record(true);
 		}
-		return $orders->Filter(array("MemberID" => $this->owner->ID))->First();
+		return $orders
+			->Filter(array("MemberID" => $this->owner->ID))
+			->First();
 	}
 
 	/**

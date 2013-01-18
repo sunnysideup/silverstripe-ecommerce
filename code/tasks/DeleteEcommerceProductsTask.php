@@ -17,13 +17,13 @@ class DeleteEcommerceProductsTask extends BuildTask{
 
 	protected $title = "Delete e-commerce Buyables";
 
-	protected $description = "Removes all Buyables (Products) from the database - .";
+	protected $description = "Removes all Buyables (Products) from the database.";
 
 	function run($request){
-
 		$arrayOfBuyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
 		foreach($arrayOfBuyables as $buyable) {
-			if($allproducts = DataObject::get($buyable)){
+			$allproducts = $buyable::get();
+			if($allproducts->count()){
 				foreach($allproducts as $product){
 					DB::alteration_message("Deleting ".$product->ClassName." ID = ".$product->ID, "deleted");
 					if($product instanceOf SiteTree) {
@@ -36,7 +36,6 @@ class DeleteEcommerceProductsTask extends BuildTask{
 					$product->destroy();
 					//TODO: remove versions
 				}
-
 			}
 		}
 	}

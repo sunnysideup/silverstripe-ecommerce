@@ -152,7 +152,10 @@ class Order extends DataObject {
 	 *
 	 * @return DataList
 	 */
-	function OrderModifiers() {return OrderModifier::get()->Filter(array("OrderID" => $this->ID)); }
+	function OrderModifiers() {
+		return OrderModifier::get()
+			->Filter(array("OrderID" => $this->ID));
+	}
 
 	/**
 	 * standard SS variable
@@ -384,7 +387,9 @@ class Order extends DataObject {
 			$arrayOfStatusOptionsFinal = array();
 			if(count($arrayOfStatusOptions)) {
 				foreach($arrayOfStatusOptions as $key => $value) {
-					$count = Order::get()->Filter(array("StatusID", intval($key)))->count();
+					$count = Order::get()
+						->Filter(array("StatusID", intval($key)))
+						->count();
 					if($count < 1) {
 						//do nothing
 					}
@@ -489,14 +494,16 @@ class Order extends DataObject {
 				}
 			}
 			else {
-				$msg = sprintf(
-					_t("Order.NOSUBMITTEDYET",
-						'No details are shown here as this order has not been submitted yet.
-						You can %1$s to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .'
-					),
-					'<a href="'.$this->RetrieveLink().'" target="_blank">load this order</a>'
+				$linkText = _t(
+					"Order.LOAD_THIS_ORDER",
+					"load this order"
 				);
-				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$msg.'</p>'));
+				$message = _t(
+					"Order.NOSUBMITTEDYET",
+					"No details are shown here as this order has not been submitted yet. You can $link to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .",
+					array("link" => '<a href="'.$this->RetrieveLink().'" target="_blank">'.$linkText.'</a>')
+				);
+				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
 				$fields->addFieldToTab('Root.Items',$this->getOrderItemsField());
 				$fields->addFieldToTab('Root.Extras', $this->getModifierTableField());
 
@@ -587,7 +594,8 @@ class Order extends DataObject {
 			new GridFieldEditButton(),
 			new GridFieldDetailForm()
 		);
-		$source = BillingAddress::get()->filter(array("OrderID" => $this->ID));
+		$source = BillingAddress::get()
+			->filter(array("OrderID" => $this->ID));
 		return new GridField("BillingAddress", _t("BillingAddress.SINGULARNAME", "Billing Address"), $source , $gridFieldConfig);
 	}
 
@@ -606,7 +614,8 @@ class Order extends DataObject {
 			new GridFieldEditButton(),
 			new GridFieldDetailForm()
 		);
-		$source = ShippingAddress::get()->filter(array("OrderID" => $this->ID));
+		$source = ShippingAddress::get()
+			->filter(array("OrderID" => $this->ID));
 		return new GridField("ShippingAddress", _t("BillingAddress.SINGULARNAME", "Shipping Address"), $source , $gridFieldConfig);
 	}
 
@@ -632,7 +641,8 @@ class Order extends DataObject {
 			$source = $this->OrderStatusLogs();
 		}
 		else {
-			$source = $sourceClass::get()->filter(array("OrderID" => $this->ID));
+			$source = $sourceClass::get()
+				->filter(array("OrderID" => $this->ID));
 		}
 		return new GridField($sourceClass, $title, $source , $gridFieldConfig);
 	}
@@ -1163,7 +1173,13 @@ class Order extends DataObject {
 	protected function sendEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
 		//START HACK
 		if(!$message) {
-			$latestEmailableLog = OrderStatusLog::get()->filter(array("OrderID" => $this->ID, "InternalUseOnly" => 0))->sort("Created", "DESC")->First();
+			$latestEmailableLog = OrderStatusLog::get()
+				->filter(array(
+					"OrderID" => $this->ID,
+					"InternalUseOnly" => 0
+				))
+				->sort("Created", "DESC")
+				->First();
 			if($latestEmailableLog) {
 				$message = $latestEmailableLog->Note;
 			}
@@ -1457,7 +1473,7 @@ class Order extends DataObject {
 			return true;
 		}
 		$member = $this->getMemberForCanFunctions($member);
-		//check if this has been "altered" in a DataObjectDecorator
+		//check if this has been "altered" in any DataExtension
 		$extended = $this->extendedCan('canView', $member->ID);
 		//if this method has been extended in a data object decorator then use this
 		if($extended !== null) {
@@ -2120,7 +2136,9 @@ class Order extends DataObject {
 	 **/
 	public function SubmissionLog(){
 		$className = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
-		return $className::get()->Filter(array("OrderID" => $this->ID))->First();
+		return $className::get()
+			->Filter(array("OrderID" => $this->ID))
+			->First();
 	}
 
 	/**
@@ -2165,7 +2183,9 @@ class Order extends DataObject {
 			$page = OrderConfirmationPage::get()->First();
 		}
 		else {
-			$page = CartPage::get()->Filter(array("ClassName" => 'CartPage'))->First();
+			$page = CartPage::get()
+				->Filter(array("ClassName" => 'CartPage'))
+				->First();
 			if(!$page) {
 				$page = CheckoutPage::get()->First();
 			}
@@ -2187,7 +2207,9 @@ class Order extends DataObject {
 		}
 		else {
 			user_error("A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.", E_USER_NOTICE);
-			$page = ErrorPage::get()->Filter(array("ErrorCode" => '404'))->First();
+			$page = ErrorPage::get()
+				->Filter(array("ErrorCode" => '404'))
+				->First();
 			if($page) {
 				return $page->Link($action);
 			}
@@ -2212,7 +2234,9 @@ class Order extends DataObject {
 			return $page->Link();
 		}
 		else {
-			$page = ErrorPage::get()->Filter(array("ErrorCode" => '404'))->First();
+			$page = ErrorPage::get()
+				->Filter(array("ErrorCode" => '404'))
+				->First();
 			if($page) {
 				return $page->Link();
 			}
@@ -2472,30 +2496,7 @@ class Order extends DataObject {
 	 */
 	public function debug() {
 		$this->calculateOrderAttributes(true);
-		$html =  "
-			<h2>".$this->ClassName."</h2><ul>";
-		$fields = Object::get_static($this->ClassName, "db");
-		foreach($fields as  $key => $type) {
-			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
-		}
-		$fields = Object::get_static($this->ClassName, "casting");
-		foreach($fields as  $key => $type) {
-			$method = "get".$key;
-			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
-		}
-		$fields = Object::get_static($this->ClassName, "has_one");
-		foreach($fields as  $key => $type) {
-			$value = "";
-			$field = $key."ID";
-			if($object = $this->$key()){
-				if($object && $object->exists()) {
-					$value = ", ".$object->Title;
-				}
-			}
-			$html .= "<li><b>$key ($type):</b> ".$this->$field.$value." </li>";
-		}
-		$html .= "</ul>";
-		return $html;
+		return EcommerceTaskDebugCart::debug_object($this);
 	}
 
 }

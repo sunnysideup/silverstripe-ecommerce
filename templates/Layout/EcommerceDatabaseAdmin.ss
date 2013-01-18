@@ -77,9 +77,9 @@
 	<% if Tests %>
 	<h3>Ecommerce Unit Tests</h3>
 	<ul>
-		<li><a href="{$BaseHref}dev/tests/$AllTests"><strong>Run all ecommerce unit tests</strong></a></li>
+		<li><a href="/dev/tests/$AllTests"><strong>Run all ecommerce unit tests</strong></a></li>
 	<% loop Tests %>
-		<li><a href="{$BaseHref}dev/tests/$Class">$Name</a></li>
+		<li><a href="/dev/tests/$Class">$Name</a></li>
 	<% end_loop %>
 	</ul>
 	<% end_if %>

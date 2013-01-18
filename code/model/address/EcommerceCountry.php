@@ -219,7 +219,8 @@ class EcommerceCountry extends DataObject {
 			self::$allow_sales_cache = true;
 			$countryCode = @Geoip::visitor_country();
 			if($countryCode) {
-				$countries = EcommerceCountry::get()->filter(array("DoNotAllowSales" => 1, "Code" => $countryCode));
+				$countries = EcommerceCountry::get()
+					->filter(array("DoNotAllowSales" => 1, "Code" => $countryCode));
 				if($countries->count()) {
 					self::$allow_sales_cache = false;
 				}
@@ -237,7 +238,9 @@ class EcommerceCountry extends DataObject {
 		if(!$countryCode) {
 			$countryCode = self::get_country();
 		}
-		$country = EcommerceCountry::get()->filter(array("Code" => $countryCode))->first();
+		$country = EcommerceCountry::get()
+			->filter(array("Code" => $countryCode))
+			->first();
 		if($country) {
 			return $country->ID;
 		}

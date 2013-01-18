@@ -337,7 +337,7 @@ class OrderModifier extends OrderAttribute {
 			$fields = new FieldList();
 			$fields->push($this->headingField());
 			$fields->push($this->descriptionField());
-			return new OrderModifierForm($optionalController, "ModifierForm", $fields, $actions = new FieldSet(), $optionalValidator);
+			return new OrderModifierForm($optionalController, "ModifierForm", $fields, $actions = new FieldList(), $optionalValidator);
 		}
 	}
 

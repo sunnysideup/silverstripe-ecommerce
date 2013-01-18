@@ -246,9 +246,6 @@ SalesAdmin:
 
 ################### TASKS #####################
 
-RecalculateTheNumberOfProductsSold:
- number_sold_calculation_type: "SUM"
-
 CartCleanupTask:
  clear_minutes_empty_carts: 60
  clear_minutes: 10080

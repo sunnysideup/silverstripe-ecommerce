@@ -120,13 +120,13 @@ class OrderForm extends Form {
 		}
 		if($order && $order->TotalItems($recalculate = true) < 1) {
 			// WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
-			$form->sessionMessage(_t('OrderForm.NOITEMSINCART','Please add some items to your cart.'), 'bad');
+			$form->sessionMessage(_t('Order.NOITEMSINCART','Please add some items to your cart.'), 'bad');
 			$this->controller->redirectBack();
 			return false;
 		}
 
 		if($this->extend("OrderFormBeforeFinalCalculation", $data, $form, $request)) {
-			$form->sessionMessage(_t('OrderForm.ERRORWITHFORM','There was an error with your order, please review and submit again.'), 'bad');
+			$form->sessionMessage(_t('Order.ERRORWITHFORM','There was an error with your order, please review and submit again.'), 'bad');
 			$this->controller->redirectBack();
 			return false;
 		}

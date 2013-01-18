@@ -75,7 +75,7 @@ class OrderConfirmationPage extends CartPage{
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
-		return OrderConfirmationPage::get()->filter(array("ClassName", "OrderConfirmationPage"))->Count() ? false : true;
+		return OrderConfirmationPage::get()->filter(array("ClassName" => "OrderConfirmationPage"))->Count() ? false : true;
 	}
 
 	function customFieldLabels(){
@@ -104,7 +104,7 @@ class OrderConfirmationPage extends CartPage{
 	}
 
 	/**
-	 *@return Fieldset
+	 *@return FieldList
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
@@ -135,7 +135,7 @@ class OrderConfirmationPage extends CartPage{
 	 * @return String (URLSegment)
 	 */
 	public static function find_link() {
-		if($page = OrderConfirmationPage::get()->filter(array("ClassName", "OrderConfirmationPage"))->First()) {
+		if($page = OrderConfirmationPage::get()->filter(array("ClassName" => "OrderConfirmationPage"))->First()) {
 			return $page->Link();
 		}
 		elseif($page = OrderConfirmationPage::get()->First()) {

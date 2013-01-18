@@ -467,8 +467,10 @@ class OrderAddress extends DataObject {
 				}
 				$className = $this->ClassName;
 				$addresses = $className::get()
-					->filter(array("ID" => $array))
-					->filter(array("Obsolete" => 0))
+					->filter(array(
+						"ID" => $array,
+						"Obsolete" => 0
+					))
 					->sort("LastEdited", "DESC")
 					//WHY ??? Do we include Orders here as Inner Join?
 					->innerJoin("Order", "\"Order\".\"$fieldName\" = \"".$this->ClassName."\".\"ID\"");
@@ -529,9 +531,9 @@ class OrderAddress extends DataObject {
 		}
 		if($member && $member->exists()) {
 			$fieldName = $this->ClassName."ID";
-			$list = Order::get_datalist_of_orders_with_submit_record();
-			$list->filter(array("MemberID" => $member->ID));
-			$list->exclude(array($fieldName => $this->ID));
+			$list = Order::get_datalist_of_orders_with_submit_record()
+				->filter(array("MemberID" => $member->ID));
+				->exclude(array($fieldName => $this->ID));
 			if($onlyLastRecord) {
 				$list->limit(1);
 			}
@@ -565,7 +567,9 @@ class OrderAddress extends DataObject {
 	function onAfterWrite(){
 		parent::onAfterWrite();
 		if($this->exists()) {
-			$order = Order::get()->filter(array($this->ClassName."ID" => $this->ID))->First();
+			$order = Order::get()
+				->filter(array($this->ClassName."ID" => $this->ID))
+				->First();
 			if($order && $order->ID != $this->OrderID) {
 				$this->OrderID = $order->ID;
 				$this->write();
