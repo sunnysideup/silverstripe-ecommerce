@@ -157,7 +157,7 @@ class EcommerceRegion extends DataObject {
 		$defaultArray = array();
 		$regions = EcommerceRegion::get()
 			->Exclude(array("DoNotAllowSales" => 1))
-			->Filter(array("CountryID" => EcommerceCountry::get_country_id));
+			->Filter(array("CountryID" => EcommerceCountry::get_country_id()));
 		if($regions && $regions->count()) {
 			foreach($regions as $region) {
 				$defaultArray[$region->Code] = $region->Name;

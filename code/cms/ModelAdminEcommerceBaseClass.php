@@ -18,6 +18,35 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin {
 		return parent::getManagedModels();
 	}
 
+	public function getSearchContext() {
+		$context = parent::getSearchContext();
+		/*
+		if($this->modelClass::getM == 'Product') {
+				$context->getFields()->push(new CheckboxField('q[ExpensiveOnly]', 'Only expensive stuff'));
+		}
+		*/
+		return $context;
+	}
+	public function getList() {
+		$list = parent::getList();
+		/*
+		$params = $this->request->requestVar('q'); // use this to access search parameters
+		if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
+				$list->exclude('Price:LessThan', '100');
+		}
+		*/
+		return $list;
+	}
+	public function getExportFields() {
+		return array();
+		/*
+		return array(
+			'Name' => 'Name',
+			'ProductCode' => 'Product Code',
+			'Category.Title' => 'Category'
+		);
+		*/
+	}
 
 }
 /**
