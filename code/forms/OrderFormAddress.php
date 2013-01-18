@@ -276,6 +276,7 @@ class OrderFormAddress extends Form {
 	 * @param HTTPRequest $request Request object for this action
 	 */
 	function saveAddress($data, $form, $request) {
+		$data = Convert::raw2sql($data);
 		$this->saveDataToSession($data); //save for later if necessary
 		$order = ShoppingCart::current_order();
 		//check for cart items
@@ -511,21 +512,22 @@ class OrderFormAddress extends Form {
 	 * @return  Null | DataObject (Member)
 	 **/
 	protected function anotherExistingMemberWithSameUniqueFieldValue($data) {
-		$uniqueField = Member::get_unique_identifier_field();
+		$uniqueFieldName = Member::get_unique_identifier_field();
 		//The check below covers both Scenario 3 and 4....
-		if(isset($data[$uniqueField])) {
+		if(isset($data[$uniqueFieldName])) {
 			if($this->loggedInMember) {
 				$currentUserID = $this->loggedInMember->ID;
 			}
 			else {
 				$currentUserID = 0;
 			}
-			$uniqueFieldValue = $data[$uniqueField];
+			$uniqueFieldValue = $data[$uniqueFieldName];
+			//no need to convert raw2sql as this has already been done.
 			return $otherMembersWithSameEmail = Member::get()
 				->filter(
 					array(
 						$uniqueFieldName => $uniqueFieldValue,
-						"ID" => $loggedInMember->ID
+						"ID" => $currentUserID
 					)
 				)
 				->First();
@@ -573,10 +575,13 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator{
 		$valid = parent::php($data);
 		//Note the exclamation Mark - only applies if it return FALSE.
 		if(!$this->form->uniqueMemberFieldCanBeUsed($data)) {
-			$uniqueField = Member::get_unique_identifier_field();
+			$uniqueFieldName = Member::get_unique_identifier_field();
 			$this->validationError(
-				$uniqueField,
-				_t("OrderForm.EMAILFROMOTHERUSER", 'Sorry, an account with that email is already in use by another customer. If this is your email address then please log in first before placing your order.'),
+				$uniqueFieldName,
+				_t(
+					"OrderForm.EMAILFROMOTHERUSER",
+					'Sorry, an account with that email is already in use by another customer. If this is your email address then please log in first before placing your order.'
+				),
 				"required"
 			);
 			$valid = false;

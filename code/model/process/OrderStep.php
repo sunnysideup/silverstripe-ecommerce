@@ -376,7 +376,7 @@ class OrderStep extends DataObject {
 	 **/
 	public function nextStep(Order $order) {
 		$nextOrderStepObject = OrderStep::get()
-			->filter(array("Sort::GreaterThan" => $this->Sort))
+			->filter(array("Sort:GreaterThan" => $this->Sort))
 			->First();
 		if($nextOrderStepObject) {
 			return $nextOrderStepObject;
@@ -535,7 +535,7 @@ class OrderStep extends DataObject {
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
 		$nextOrderStepObject = OrderStep::get()
-			->filter(array("Sort::GreaterThan" => $this->Sort))
+			->filter(array("Sort:GreaterThan" => $this->Sort))
 			->First();
 		//backup
 		if($nextOrderStepObject) {
@@ -543,7 +543,7 @@ class OrderStep extends DataObject {
 		}
 		else {
 			$nextOrderStepObject = OrderStep::get()
-				->filter(array("Sort::LessThan" => $this->Sort))
+				->filter(array("Sort:LessThan" => $this->Sort))
 				->Last();
 		}
 		if($nextOrderStepObject) {
