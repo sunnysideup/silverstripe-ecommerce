@@ -281,7 +281,7 @@ class Order extends DataObject {
 		$list = Order::get()
 			->LeftJoin("OrderStatusLog", "\"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"")
 			->LeftJoin($submittedOrderStatusLogClassName, "\"OrderStatusLog\".\"ID\" = \"".$submittedOrderStatusLogClassName."\".\"ID\"")
-			->Sort("\"OrderStatusLog", "\"Created\"", "ASC");
+			->Sort("OrderStatusLog.Created", "ASC");
 		if($onlySubmittedOrders) {
 			$list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName'");
 		}
