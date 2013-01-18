@@ -22,7 +22,7 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 		foreach($array as $code => $name) {
 			$obj = EcommerceCountry::get()
 				->Filter(array("Code" => Convert::raw2sql($code)))
-				->First()
+				->First();
 			if($obj) {
 				//do nothing
 				$count++;

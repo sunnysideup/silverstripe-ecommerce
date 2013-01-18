@@ -417,7 +417,7 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report {
 	 */
 	function sourceQuery($params = null) {
 		return Product::get()
-			->where"Product\".\"Price\" IS NULL OR \"Product\".\"Price\" = 0 ")
+			->where("Product\".\"Price\" IS NULL OR \"Product\".\"Price\" = 0 ")
 			->sort("FullSiteTreeSort", "ASC");
 	}
 
