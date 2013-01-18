@@ -332,25 +332,13 @@ class OrderAttribute extends DataObject {
 	 * Access through : /shoppingcart/debug/
 	 */
 	public function debug() {
-		$html =  "
-			<h2>".$this->ClassName."</h2><ul>";
-		$fields = Object::get_static($this->ClassName, "db");
-		foreach($fields as  $key => $type) {
-			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
-		}
-		$fields = Object::get_static($this->ClassName, "casting");
-		foreach($fields as  $key => $type) {
-			$method = "get".$key;
-			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
-		}
+		$html =  EcommerceTaskDebugCart::debug_object($this);
 		if($this instanceOf OrderItem) {
-			$html .= "<li><b>Buyable Price:</b> ".$this->Buyable()->Price." </li>";
-			$html .= "<li><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </li>";
+			$html .= "<p><b>Buyable Price:</b> ".$this->Buyable()->Price." </p>";
+			$html .= "<p><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </p>";
 		}
-		$html .= "</ul>";
 		return $html;
 	}
-
 }
 
 

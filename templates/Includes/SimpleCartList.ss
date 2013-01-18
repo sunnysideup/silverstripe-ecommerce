@@ -12,7 +12,7 @@
 </li>
 			<% end_if %>
 		<% end_loop %>
-<li><a href="$EcomConfig.CheckoutLink" class="shoppingCartLink"><% _t("Cart.GOTOCHECKOUTLINK","Go to the checkout") %></a></li>
+<li><a href="$EcomConfig.CheckoutLink" class="shoppingCartLink"><% _t("Order.GOTOCHECKOUTLINK","Go to the checkout") %></a></li>
 	<% else %>
 <li><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></li>
 	<% end_if %>

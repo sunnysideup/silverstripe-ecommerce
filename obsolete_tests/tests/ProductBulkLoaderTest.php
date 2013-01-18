@@ -20,7 +20,8 @@ class ProductBulkLoaderTest extends FunctionalTest {
 		//$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 
 		// Test that columns were correctly imported
-		$obj = Product::get()->Filter(array("Title" => "Socks"));
+		$obj = Product::get()
+			->Filter(array("Title" => "Socks"));
 		$this->assertNotNull($obj);
 		$this->assertEquals("<p>The comfiest pair of socks you'll ever own.</p>", $obj->Content);
 		$this->assertEquals(12, $obj->Price,"Checking price matches.");

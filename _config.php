@@ -15,15 +15,10 @@ Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller"
 Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
-SS_Report::register("SideReport", "EcommerceSideReport_EcommercePages");
-SS_Report::register("SideReport", "EcommerceSideReport_FeaturedProducts");
-SS_Report::register("SideReport", "EcommerceSideReport_AllProducts");
-SS_Report::register("SideReport", "EcommerceSideReport_NoImageProducts");
-SS_Report::register("SideReport", "EcommerceSideReport_NoInternalIDProducts");
-SS_Report::register("SideReport", "EcommerceSideReport_NoPriceProducts");
-SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
+/*****************************************************
+* REQUIRES: GeoIP,
+******************************************************/
 
-//Object::useCustomClass('Currency','CurrencyImprovements', true);
 
 // copy the lines below to your mysite/_config.php file and set as required.
 // __________________________________START ECOMMERCE MODULE CONFIG __________________________________
@@ -49,6 +44,7 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 //Object::useCustomClass('SS_Datetime','ZendDate',true);
 //Currency::setCurrencySymbol("€");
 //date_default_timezone_set("NZ");
+//Object::useCustomClass('Currency','CurrencyImprovements', true);
 
 // __________________________________ END ECOMMERCE MODULE CONFIG __________________________________
 

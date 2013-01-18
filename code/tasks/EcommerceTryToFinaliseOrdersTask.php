@@ -39,10 +39,10 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 		if($submittedOrderStatusLogClassName) {
 			$submittedStatusLog = $submittedOrderStatusLogClassName::get()->First();
 			if($submittedStatusLog) {
-				$orderSteps = DataObject::get("OrderStep", "", "\"Sort\" DESC", "", 1);
+				$orderSteps = OrderStep::get()->sort("Sort", "DESC")->limit(1);
 				$lastOrderStep = $orderSteps->First();
 				if($lastOrderStep) {
-					$joinSQL = "INNER JOIN \"$orderStatusLogClassName\" ON \"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"";
+					$joinSQL = "INNER JOIN \"\" ON ";
 					$whereSQL = "\"StatusID\" <> ".$lastOrderStep->ID."";
 					$count = null;
 					if(isset($_GET["count"])) {
@@ -59,8 +59,12 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 						$last = intval(Session::get("EcommerceTryToFinaliseOrdersTask"));
 						if(!$last) {$last = 0;}
 					}
-					$orders = DataObject::get("Order", $whereSQL, "\"Order\".\"ID\" ASC", $joinSQL, "$last, $count");
-					if($orders) {
+					$orders = Order::get()
+						->where($whereSQL)
+						->sort("ID", "ASC")
+						->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
+						->limit($count, $last);
+					if($orders->count()) {
 						DB::alteration_message("<h1>Moving $count Orders (starting from $last)</h1>");
 						foreach($orders as $order) {
 							$last++;

@@ -62,7 +62,9 @@ class EcommerceDefaultRecords extends BuildTask {
 		if($checkoutPage) {
 			if(
 				$checkoutPage->TermsPageID == 0 &&
-				$termsPage = Page::get()->Filter(array("URLSegment" => "terms-and-conditions")->First()
+				$termsPage = Page::get()
+					->Filter(array("URLSegment" => "terms-and-conditions"))
+					->First()
 			) {
 				$checkoutPage->TermsPageID = $termsPage->ID;
 				DB::alteration_message('terms and conditions page linked.', "created");

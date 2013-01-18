@@ -67,8 +67,9 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 									$whereStringArray[] = $product->InteralItemID."_".$number;
 								}
 							}
-							$images = DataObject::get("File", "\"Name\" IN ('".implode("', '", $whereStringArray)."')");
-							if($images) {
+							$images = File::get()
+								->filter(array("Name" => $whereStringArray));
+							if($images->count()) {
 								$imageMap = $images->map("ID", "ID");
 								$method = $this->productManyManyField;
 								$collection = $product->$method();

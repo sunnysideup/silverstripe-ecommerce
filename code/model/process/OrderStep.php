@@ -228,7 +228,7 @@ class OrderStep extends DataObject {
 	 *@return String
 	 **/
 	function getMyCode() {
-		$array = Object::uninherited_static($this->ClassName, 'defaults');
+		$array = Config::inst()->get($this->ClassName, "defaults", Config::UNINHERITED);
 		if(!isset($array["Code"])) {user_error($this->class." does not have a default code specified");}
 		return $array["Code"];
 	}
@@ -325,9 +325,10 @@ class OrderStep extends DataObject {
 		$anotherOrderStepWithSameNameOrCode = OrderStep::get()
 			->filter(
 				array(
-					"Name" => $this->Name
+					"Name" => $this->Name,
+					"Code" => strtoupper($this->Code)
 				)
-			)->filter(array("Code" => strtoupper($this->Code)))
+			)
 			->exclude(array("ID" => intval($this->ID)))
 			->First();
 		if($anotherOrderStepWithSameNameOrCode) {
@@ -374,7 +375,9 @@ class OrderStep extends DataObject {
 	 * @return DataObject | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
-		$nextOrderStepObject = OrderStep::get()->filter(array("Sort::GreaterThan" => $this->Sort))->First();
+		$nextOrderStepObject = OrderStep::get()
+			->filter(array("Sort::GreaterThan" => $this->Sort))
+			->First();
 		if($nextOrderStepObject) {
 			return $nextOrderStepObject;
 		}
@@ -392,7 +395,9 @@ class OrderStep extends DataObject {
 	 * @return Boolean
 	 **/
 	public function hasPassed($code, $orIsEqualTo = false) {
-		$otherStatus = OrderStep::get()->filter(array("Code" => $code))->First();
+		$otherStatus = OrderStep::get()
+			->filter(array("Code" => $code))
+			->First();
 		if($otherStatus) {
 			if($otherStatus->Sort < $this->Sort) {
 				return true;
@@ -456,11 +461,14 @@ class OrderStep extends DataObject {
 		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-".EcommerceConfig::get("OrderStep", "number_of_days_to_send_update_email")))) {
 			return true;
 		}
-		return OrderEmailRecord::get()
-			->Filter(array("OrderID" => $order->ID))
-			->Filter(array("OrderStepID" => $this->ID))
-			->Filter(array("Result" => 1))
+		$count = OrderEmailRecord::get()
+			->Filter(array(
+				"OrderID" => $order->ID,
+				"OrderStepID" => $this->ID,
+				"Result" => 1
+			))
 			->count();
+		return $count ? true : false;
 	}
 
 	/**
@@ -481,9 +489,17 @@ class OrderStep extends DataObject {
 	 **/
 	public function canDelete($member = null) {
 		//cant delete last status if there are orders with this status
-		$nextOrderStepObject = OrderStep::get()->filter(array("Sort::GreaterThan" => $this->Sort))->First();
-		if(!$nextOrderStepObject) {
-			if(Order::get()->filter(array("StatusID", intval($this->ID)-0))->count()) {
+		$nextOrderStepObject = OrderStep::get()
+			->filter(array("Sort::GreaterThan" => $this->Sort))
+			->First();
+		if($nextOrderStepObject) {
+			//do nothing
+		}
+		else{
+			$orderCount = Order::get()
+				->filter(array("StatusID" => intval($this->ID)-0))
+				->count();
+			if($orderCount) {
 				return false;
 			}
 		}
@@ -518,10 +534,17 @@ class OrderStep extends DataObject {
 	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
-		$nextOrderStepObject = OrderStep::get()->filter(array("Sort::GreaterThan" => $this->Sort))->First();
+		$nextOrderStepObject = OrderStep::get()
+			->filter(array("Sort::GreaterThan" => $this->Sort))
+			->First();
 		//backup
-		if(!$nextOrderStepObject) {
-			$nextOrderStepObject = OrderStep::get()->filter(array("Sort::LessThan" => $this->Sort))->Last();
+		if($nextOrderStepObject) {
+			//do nothing
+		}
+		else {
+			$nextOrderStepObject = OrderStep::get()
+				->filter(array("Sort::LessThan" => $this->Sort))
+				->Last();
 		}
 		if($nextOrderStepObject) {
 			$ordersWithThisStatus = Order::get()->filter(array("StatusID" => $this->ID));
@@ -557,7 +580,13 @@ class OrderStep extends DataObject {
 				foreach($codesToInclude as $className => $code) {
 					$indexNumber +=10;
 					if($className::get()->Count()) {
-						if(!OrderStep::get()->filter(array("Code" => strtoupper($code)))) {
+						$itemCount = OrderStep::get()
+							->filter(array("Code" => strtoupper($code)))
+							->count();
+						if($itemCount) {
+							//do nothing
+						}
+						else {
 							$obj = new $className();
 							$obj->Code = strtoupper($obj->Code);
 							$obj->Description = $obj->myDescription();
@@ -565,7 +594,9 @@ class OrderStep extends DataObject {
 							DB::alteration_message("Created \"$code\" as $className.", "created");
 						}
 					}
-					$obj = OrderStep::get()->filter(array("Code" => strtoupper($code)))->First();
+					$obj = OrderStep::get()
+						->filter(array("Code" => strtoupper($code)))
+						->First();
 					if($obj) {
 						if($obj->Sort != $indexNumber) {
 							$obj->Sort = $indexNumber;
@@ -1066,7 +1097,8 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 	 * @return DataObject | Null - DataObject = OrderStep
 	 **/
 	public function nextStep(Order $order) {
-		$orderStatusLog_PaymentChecks = OrderStatusLog_PaymentCheck::get()->Filter(array("OrderID" => $order->ID))->Filter(array("PaymentConfirmed" => 1));
+		$orderStatusLog_PaymentChecks = OrderStatusLog_PaymentCheck::get()
+			->Filter(array("OrderID" => $order->ID, "PaymentConfirmed" => 1));
 		if($orderStatusLog_PaymentChecks->Count()) {
 			return parent::nextStep($order);
 		}
@@ -1241,8 +1273,9 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 *@return DataObject | Null - DataObject = OrderStep
 	 **/
 	public function nextStep(Order $order) {
-		$orderStatusLog_DispatchPhysicalOrder = OrderStatusLog_PayOrderStatusLog_DispatchPhysicalOrdermentCheck::get()->Filter(array("OrderID" => $order->ID));
-		if($orderStatusLog_DispatchPhysicalOrder->count()) {
+		$orderStatusLog_DispatchPhysicalOrder = OrderStatusLog_PayOrderStatusLog_DispatchPhysicalOrdermentCheck::get()
+			->Filter(array("OrderID" => $order->ID));
+		if($orderStatusLog_DispatchPhysicalOrder->Count()) {
 			$subject = $this->EmailSubject;
 			$message = $this->CustomerMessage;
 			if($this->SendDetailsToCustomer){

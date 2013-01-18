@@ -170,10 +170,10 @@ class ShopAccountForm_Validator extends RequiredFields{
 					)
 				);
 				if($otherMembersWithSameEmail->count()){
-					$message = sprintf(
-						_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
-						$uniqueFieldValue,
-						$uniqueFieldName
+					$message = _t(
+						"Account.ALREADYTAKEN",
+						"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}",
+						array("uniqueFieldValue" => $uniqueFieldValue, "uniqueFieldName" => $uniqueFieldName)
 					);
 					$this->validationError(
 						$uniqueFieldName,

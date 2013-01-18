@@ -30,7 +30,8 @@ class OrderStepField extends DatalessField {
 		}
 		else {
 			$currentStep = $order->CurrentStepVisibleToCustomer();
-			$orderSteps->filter(array("HideStepFromCustomer" => 0));
+			$orderSteps
+				->filter(array("HideStepFromCustomer" => 0));
 		}
 		$future = false;
 		$html = "

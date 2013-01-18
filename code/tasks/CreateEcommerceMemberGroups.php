@@ -56,7 +56,9 @@ class CreateEcommerceMemberGroups extends BuildTask{
 			Permission::grant($adminGroup->ID, $adminPermissionCode);
 			DB::alteration_message($adminName.' permissions granted',"created");
 		}
-		$permissionRole = PermissionRole::get()->Filter(array("Title" => $adminRoleTitle))->First();
+		$permissionRole = PermissionRole::get()
+			->Filter(array("Title" => $adminRoleTitle))
+			->First();
 		if($permissionRole) {
 			//do nothing
 		}
@@ -70,7 +72,9 @@ class CreateEcommerceMemberGroups extends BuildTask{
 			$permissionArray = EcommerceConfig::get("EcommerceRole", "admin_role_permission_codes");
 			if(is_array($permissionArray) && count($permissionArray) && $permissionRole) {
 				foreach($permissionArray as $permissionCode) {
-					$permissionRoleCode = PermissionRoleCode::get()->Filter(array("Code" => $permissionCode))->First();
+					$permissionRoleCode = PermissionRoleCode::get()
+						->Filter(array("Code" => $permissionCode))
+						->First();
 					if($permissionRoleCode) {
 						//do nothing
 					}

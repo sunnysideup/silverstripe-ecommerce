@@ -7,7 +7,7 @@
 	<% end_if %>
 		<span>
 	<% loop Products.PaginationSummary(4) %>
-		<% if CurrentBool %>$PageNum<% else %><% if Link %><a href="$Link" title="<% sprintf(_t("ProductGroup.GOTOPAGE","View page number %s"),$PageNum) %>">$PageNum</a><% else %>&hellip;<% end_if %><% end_if %>
+		<% if CurrentBool %>$PageNum<% else %><% if Link %><a href="$Link" title="<%t ProductGroup.GOTOPAGE 'View page number {number}.' number=$PageNum %>">$PageNum</a><% else %>&hellip;<% end_if %><% end_if %>
 	<% end_loop %>
 		</span>
 	<% if Products.NotLastPage %>

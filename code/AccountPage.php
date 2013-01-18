@@ -83,7 +83,10 @@ class AccountPage extends Page {
 	 * @return String (URLSegment)
 	 */
 	public static function find_link() {
-		if($page = AccountPage::get()->filter(array("ClassName" => "AccountPage"))->First()) {
+		$page = AccountPage::get()
+			->filter(array("ClassName" => "AccountPage"))
+			->First();
+		if($page) {
 			return $page->Link();
 		}
 	}

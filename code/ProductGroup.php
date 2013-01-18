@@ -598,7 +598,9 @@ class ProductGroup extends Page {
 			if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
 				foreach($buyables as $buyable) {
 					if(!$buyable->canPurchase()) {
-						$buyables->remove($buyable);
+						//NOTE: the ->remove we had here would have removed
+						//the product from the DB.
+						$buyables->exclude(array("ID" => $buyable->ID));
 					}
 				}
 			}

@@ -393,12 +393,13 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 */
 	function CheckoutSteps($number = 0) {
 		$where = '';
-		$dos = CheckoutPage_StepDescription::get()->Sort("ID", "ASC");
+		$dos = CheckoutPage_StepDescription::get()
+			->Sort("ID", "ASC");
 		if($number) {
 			$dos->Filter(array("ID" => $number));
 		}
 		if($number) {
-			if($dos && $dos->count()) {
+			if($dos->count()) {
 				return $dos->First();
 			}
 		}

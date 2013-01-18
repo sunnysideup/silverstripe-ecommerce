@@ -159,10 +159,7 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 	public function apply(DataQuery $query) {
 		$query = $this->applyRelation($query);
 		$values = $this->getValue();
-		if(count($values) && is_array($values)) {
-			foreach($values as $value) {
-				$matches[] = "\"StatusID\" = ".intval($value);
-			}
+		if(is_array($values) && count($values)) {
 			$query->filter(array("StatusID" => $values));
 		}
 		return $query;

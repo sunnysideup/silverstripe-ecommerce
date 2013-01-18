@@ -357,7 +357,10 @@ class Product extends Page implements BuyableModel {
 				$extension = "_Live";
 			}
 			return Product::get()
-				->filter(array("ShowInMenus" => 1,"ParentID" => $this->ParentID))
+				->filter(array(
+					"ShowInMenus" => 1,
+					"ParentID" => $this->ParentID
+				))
 				->exclude(array("ID" => $this->ID));
 		}
 	}
@@ -932,11 +935,11 @@ class Product_Controller extends Page_Controller {
 				ShoppingCart::singleton()->addBuyable($product,$quantity);
 			}
 			if($this->IsInCart()) {
-				$msg = _t("Product.SUCCESSFULLYADDED","Added to cart.");
+				$msg = _t("Order.SUCCESSFULLYADDED","Added to cart.");
 				$status = "good";
 			}
 			else {
-				$msg = _t("Product.NOTADDEDTOCART","Not added to cart.");
+				$msg = _t("Order.NOTADDEDTOCART","Not added to cart.");
 				$status = "bad";
 			}
 			if(Director::is_ajax()){

@@ -400,7 +400,9 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a><br />".$accountPage->configArray : " NOT CREATED!";
 		$this->defaults["Pages"]["AccountPage"] = $accountPage ? $accountPage->defaultsArray : "[add page first to see defaults]";
 
-		$cartPage = CartPage::get()->Filter(array("ClassName" => "CartPage"))->First();
+		$cartPage = CartPage::get()
+			->Filter(array("ClassName" => "CartPage"))
+			->First();
 		$this->getPageDefinitions($cartPage);
 		$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
 		$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
@@ -428,22 +430,24 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	function orderSteps(){
-		$steps = DataObject::get("OrderStep");
-		foreach($steps as $step) {
-			$fields = $step->combined_static($step->ClassName, "db");
-			$defaultsArray = $step->stat("defaults", true);
-			$configArray = array();
-			foreach($fields as $fieldKey => $fieldType) {
-				if($fields) {
-					$configArray[$fieldKey] = $step->$fieldKey;
-					if(!isset($defaultsArray[$fieldKey])) {
-						$defaultsArray[$fieldKey] = "[default not set]";
+		$steps = OrderStep::get();
+		if($steps->count()) {
+			foreach($steps as $step) {
+				$fields = $step->combined_static($step->ClassName, "db");
+				$defaultsArray = $step->stat("defaults", true);
+				$configArray = array();
+				foreach($fields as $fieldKey => $fieldType) {
+					if($fields) {
+						$configArray[$fieldKey] = $step->$fieldKey;
+						if(!isset($defaultsArray[$fieldKey])) {
+							$defaultsArray[$fieldKey] = "[default not set]";
+						}
 					}
 				}
+				$this->definitions["OrderStep"][$step->Code] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/shop/\">Ecommerce Configuration</a>.";
+				$this->configs["OrderStep"][$step->Code] = $configArray;
+				$this->defaults["OrderStep"][$step->Code] = $defaultsArray;
 			}
-			$this->definitions["OrderStep"][$step->Code] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/shop/\">Ecommerce Configuration</a>.";
-			$this->configs["OrderStep"][$step->Code] = $configArray;
-			$this->defaults["OrderStep"][$step->Code] = $defaultsArray;
 		}
 	}
 
@@ -457,8 +461,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 				user_error("There is no checkout page available and it seems impossible to create one.");
 			}
 		}
-		$steps = DataObject::get("CheckoutPage_StepDescription");
-		if($steps) {
+		$steps = CheckoutPage_StepDescription::get();
+		if($steps->count()) {
 			foreach($steps as $key => $step) {
 				$stepNumber = $key + 1;
 				$fields = $step->combined_static($step->ClassName, "db");
@@ -477,8 +481,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 				$this->defaults["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $defaultsArray;
 			}
 		}
-		$steps = DataObject::get("OrderModifier_Descriptor");
-		if($steps) {
+		$steps = OrderModifier_Descriptor::get();
+		if($steps->count()) {
 			foreach($steps as $step) {
 				$fields = $step->combined_static($step->ClassName, "db");
 				$defaultsArray = $step->stat("defaults", true);

@@ -12,12 +12,22 @@
 class EcommerceTemplateTest extends Page_Controller {
 
 	function RandomProduct(){
-		$products = DataObject::get("Product", "\"AllowPurchase\" = 1  AND \"Price\" > 0", "RAND()", null, 100);
-		foreach($products as $product) {
-			if($product->canPurchase()) {
-				return $product;
+		$offSet = 0;
+		$product = true;
+		$notForSale = true;
+		while($product && $notForSale) {
+			$notForSale = false;
+			$product = Product::get()
+				->where("\"AllowPurchase\" = 1  AND \"Price\" > 0")
+				->sort("RAND()")
+				->limit(1, $offSet)
+				->First();
+			if($product) {
+				$notForSale = $product->canPurchase() ? false : true;
 			}
+			$offSet++;
 		}
+		return $product;
 	}
 
 	function IsEcommercePage(){

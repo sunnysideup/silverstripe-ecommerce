@@ -211,11 +211,11 @@ class ShoppingCart extends Object{
 	 */
 	public function addBuyable($buyable, $quantity = 1, $parameters = array()){
 		if(!$buyable) {
-			$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEFOUND", "This item could not be found."),'bad');
+			$this->addMessage(_t("Order.ITEMCOULDNOTBEFOUND", "This item could not be found."),'bad');
 			return false;
 		}
 		if(!$buyable->canPurchase()) {
-			$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEADDED", "This item is not for sale."),'bad');
+			$this->addMessage(_t("Order.ITEMCOULDNOTBEADDED", "This item is not for sale."),'bad');
 			return false;
 		}
 		$item = $this->prepareOrderItem($mustBeExistingItem = false, $buyable, $parameters);
@@ -227,19 +227,19 @@ class ShoppingCart extends Object{
 			//TODO: distinquish between incremented and set
 			//TODO: use sprintf to allow product name etc to be included in message
 			if($quantity > 1) {
-				$msg = _t("ShoppingCart.ITEMSADDED", "Items added.");
+				$msg = _t("Order.ITEMSADDED", "Items added.");
 			}
 			else {
-				$msg = _t("ShoppingCart.ITEMADDED", "Item added.");
+				$msg = _t("Order.ITEMADDED", "Item added.");
 			}
 			$this->addMessage($msg,'good');
 			return $item;
 		}
 		elseif(!$item) {
-			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
+			$this->addMessage(_t("Order.ITEMNOTFOUND", "Item could not be found.") ,'bad');
 		}
 		else {
-			$this->addMessage(_t("ShoppingCart.ITEMCOULDNOTBEADDED", "Item could not be added."),'bad');
+			$this->addMessage(_t("Order.ITEMCOULDNOTBEADDED", "Item could not be added."),'bad');
 		}
 		return false;
 	}
@@ -257,11 +257,11 @@ class ShoppingCart extends Object{
 		if($item) {
 			$item->Quantity = $quantity; //remove quantity
 			$item->write();
-			$this->addMessage(_t("ShoppingCart.ITEMUPDATED", "Item updated."),'good');
+			$this->addMessage(_t("Order.ITEMUPDATED", "Item updated."),'good');
 			return $item;
 		}
 		else {
-			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
+			$this->addMessage(_t("Order.ITEMNOTFOUND", "Item could not be found.") ,'bad');
 		}
 		return false;
 	}
@@ -283,16 +283,16 @@ class ShoppingCart extends Object{
 			}
 			$item->write();
 			if($quantity > 1) {
-				$msg = _t("ShoppingCart.ITEMSREMOVED", "Items removed.");
+				$msg = _t("Order.ITEMSREMOVED", "Items removed.");
 			}
 			else {
-				$msg = _t("ShoppingCart.ITEMREMOVED", "Item removed.");
+				$msg = _t("Order.ITEMREMOVED", "Item removed.");
 			}
 			$this->addMessage($msg ,'good');
 			return $item;
 		}
 		else {
-			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
+			$this->addMessage(_t("Order.ITEMNOTFOUND", "Item could not be found.") ,'bad');
 		}
 		return false;
 	}
@@ -309,11 +309,11 @@ class ShoppingCart extends Object{
 			$this->currentOrder()->Attributes()->remove($item);
 			$item->delete();
 			$item->destroy();
-			$this->addMessage(_t("ShoppingCart.ITEMCOMPLETELYREMOVED", "Item removed from cart."),'good');
+			$this->addMessage(_t("Order.ITEMCOMPLETELYREMOVED", "Item removed from cart."),'good');
 			return $item;
 		}
 		else {
-			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item could not be found.") ,'bad');
+			$this->addMessage(_t("Order.ITEMNOTFOUND", "Item could not be found.") ,'bad');
 			return false;
 		}
 	}
@@ -360,7 +360,7 @@ class ShoppingCart extends Object{
 	protected function prepareQuantity($quantity, $buyable) {
 		$quantity = round($quantity, $buyable->QuantityDecimals());
 		if($quantity < 0 || (!$quantity && $quantity !== 0)) {
-			$this->addMessage(_t("ShoppingCart.INVALIDQUANTITY", "Invalid quantity."),'warning');
+			$this->addMessage(_t("Order.INVALIDQUANTITY", "Invalid quantity."),'warning');
 			return false;
 		}
 		return $quantity;
@@ -380,7 +380,7 @@ class ShoppingCart extends Object{
 		}
 		//otherwise create a new item
 		if(!($buyable instanceof BuyableModel)) {
-			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item is not buyable.") ,'bad');
+			$this->addMessage(_t("Order.ITEMNOTFOUND", "Item is not buyable.") ,'bad');
 			return false;
 		}
 		$className = $buyable->classNameForOrderItem();
@@ -414,7 +414,7 @@ class ShoppingCart extends Object{
 	 */
 	function save(){
 		$this->currentOrder()->write();
-		$this->addMessage(_t("ShoppingCart.ORDERSAVED", "Order Saved."),'good');
+		$this->addMessage(_t("Order.ORDERSAVED", "Order Saved."),'good');
 		return true;
 	}
 
@@ -449,18 +449,18 @@ class ShoppingCart extends Object{
 	public function removeModifier($modifier){
 		$modifier = (is_numeric($modifier)) ? OrderModifier::get()->byID($modifier) : $modifier;
 		if(!$modifier){
-			$this->addMessage(_t("ShoppingCart.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
+			$this->addMessage(_t("Order.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
 			return false;
 		}
 		if(!$modifier->CanBeRemoved()) {
-			$this->addMessage(_t("ShoppingCart.MODIFIERCANNOTBEREMOVED", "Modifier can not be removed."),'bad');
+			$this->addMessage(_t("Order.MODIFIERCANNOTBEREMOVED", "Modifier can not be removed."),'bad');
 			return false;
 		}
 		$modifier->HasBeenRemoved = 1;
 		$modifier->onBeforeRemove();
 		$modifier->write();
 		$modifier->onAfterRemove();
-		$this->addMessage(_t("ShoppingCart.MODIFIERREMOVED", "Removed."), 'good');
+		$this->addMessage(_t("Order.MODIFIERREMOVED", "Removed."), 'good');
 		return true;
 	}
 
@@ -474,12 +474,12 @@ class ShoppingCart extends Object{
 			$modifier = OrderModifier::get()->byID($modifier);
 		}
 		if(!$modifier){
-			$this->addMessage(_t("ShoppingCart.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
+			$this->addMessage(_t("Order.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
 			return false;
 		}
 		$modifier->HasBeenRemoved = 0;
 		$modifier->write();
-		$this->addMessage(_t("ShoppingCart.MODIFIERREMOVED", "Added."), 'good');
+		$this->addMessage(_t("Order.MODIFIERREMOVED", "Added."), 'good');
 		return true;
 	}
 
@@ -502,16 +502,16 @@ class ShoppingCart extends Object{
 				$this->order->init(true);
 				$sessionVariableName = $this->sessionVariableName("OrderID");
 				Session::set($sessionVariableName, $this->order->ID);
-				$this->addMessage(_t("ShoppingCart.LOADEDEXISTING", "Order loaded."),'good');
+				$this->addMessage(_t("Order.LOADEDEXISTING", "Order loaded."),'good');
 				return true;
 			}
 			else {
-				$this->addMessage(_t("ShoppingCart.NOPERMISSION", "You do not have permission to view this order."),'bad');
+				$this->addMessage(_t("Order.NOPERMISSION", "You do not have permission to view this order."),'bad');
 				return false;
 			}
 		}
 		else {
-			$this->addMessage(_t("ShoppingCart.NOORDER", "Order can not be found."),'bad');
+			$this->addMessage(_t("Order.NOORDER", "Order can not be found."),'bad');
 			return false;
 		}
 	}
@@ -538,8 +538,9 @@ class ShoppingCart extends Object{
 				//load the order
 				$newOrder->write();
 				$this->loadOrder($newOrder);
-				$items = DataObject::get("OrderItem", "\"OrderID\" = ".$oldOrder->ID);
-				if($items) {
+				$items = OrderItem::get()
+					->filter(array("OrderID" => $oldOrder->ID));
+				if($items->count()) {
 					foreach($items as $item) {
 						$buyable = $item->Buyable($current = true);
 						if($buyable->canPurchase()) {
@@ -550,16 +551,16 @@ class ShoppingCart extends Object{
 				$newOrder->CreateOrReturnExistingAddress("BillingAddress");
 				$newOrder->CreateOrReturnExistingAddress("ShippingAddress");
 				$newOrder->write();
-				$this->addMessage(_t("ShoppingCart.ORDERCOPIED", "Order has been copied."),'good');
+				$this->addMessage(_t("Order.ORDERCOPIED", "Order has been copied."),'good');
 				return true;
 			}
 			else {
-				$this->addMessage(_t("ShoppingCart.NOPERMISSION", "You do not have permission to view this order."),'bad');
+				$this->addMessage(_t("Order.NOPERMISSION", "You do not have permission to view this order."),'bad');
 				return false;
 			}
 		}
 		else {
-			$this->addMessage(_t("ShoppingCart.NOORDER", "Order can not be found."),'bad');
+			$this->addMessage(_t("Order.NOORDER", "Order can not be found."),'bad');
 			return false;
 		}
 	}
@@ -572,11 +573,11 @@ class ShoppingCart extends Object{
 	public function setCountry($countryCode) {
 		if(EcommerceCountry::code_allowed($countryCode)) {
 			$this->currentOrder()->SetCountryFields($countryCode);
-			$this->addMessage(_t("ShoppingCart.UPDATEDCOUNTRY", "Updated country."),'good');
+			$this->addMessage(_t("Order.UPDATEDCOUNTRY", "Updated country."),'good');
 			return true;
 		}
 		else {
-			$this->addMessage(_t("ShoppingCart.NOTUPDATEDCOUNTRY", "Could not update country."),'bad');
+			$this->addMessage(_t("Order.NOTUPDATEDCOUNTRY", "Could not update country."),'bad');
 			return false;
 		}
 	}
@@ -588,7 +589,7 @@ class ShoppingCart extends Object{
 	 **/
 	public function setRegion($regionID) {
 		$this->currentOrder()->SetRegionFields($regionID);
-		$this->addMessage(_t("ShoppingCart.REGIONUPDATED", "Region country."),'good');
+		$this->addMessage(_t("Order.REGIONUPDATED", "Region country."),'good');
 		return true;
 	}
 
@@ -606,12 +607,12 @@ class ShoppingCart extends Object{
 				}
 			}
 			$this->currentOrder()->SetCurrency($currency);
-			$msg = _t("ShoppingCart.CURRENCYUPDATED", "Currency updated.");
+			$msg = _t("Order.CURRENCYUPDATED", "Currency updated.");
 			$this->addMessage($msg ,'good');
 			return true;
 		}
 		else {
-			$msg = _t("ShoppingCart.CURRENCYCOULDNOTBEUPDATED", "Currency could not be updated.");
+			$msg = _t("Order.CURRENCYCOULDNOTBEUPDATED", "Currency could not be updated.");
 			$this->addMessage($msg ,'bad');
 			return false;
 		}
@@ -999,13 +1000,15 @@ class ShoppingCart_Controller extends Controller{
 			$this->redirect($this->cart->Link());
 			return;
 		}
-		user_error(_t("ShoppingCart.NOCARTINITIALISED", "no cart initialised"), E_USER_NOTICE);
-		$errorPage404 = ErrorPage::get()->Filter(array("ErrorCode" => "404"))->First();
+		user_error(_t("Order.NOCARTINITIALISED", "no cart initialised"), E_USER_NOTICE);
+		$errorPage404 = ErrorPage::get()
+			->Filter(array("ErrorCode" => "404"))
+			->First();
 		if($errorPage404) {
 			$this->redirect($errorPage404->Link());
 			return;
 		}
-		user_error(_t("ShoppingCart.NOCARTINITIALISED", "no 404 page available"), E_USER_ERROR);
+		user_error(_t("Order.NOCARTINITIALISED", "no 404 page available"), E_USER_ERROR);
 	}
 
 	/*******************************************************
@@ -1270,11 +1273,11 @@ class ShoppingCart_Controller extends Controller{
 				$member = Member::currentUser();
 				if($member) {
 					$address->MakeObsolete($member);
-					return _t("ShoppingCart.ADDRESSREMOVED", "Address removed.");
+					return _t("Order.ADDRESSREMOVED", "Address removed.");
 				}
 			}
 		}
-		return _t("ShoppingCart.ADDRESSNOTREMOVED", "Address could not be removed.");
+		return _t("Order.ADDRESSNOTREMOVED", "Address could not be removed.");
 	}
 
 	/**
@@ -1297,7 +1300,9 @@ class ShoppingCart_Controller extends Controller{
 				}
 			}
 		}
-		$errorPage404 = ErrorPage::get()->Filter(array("ErrorCode" => "404"))->First();
+		$errorPage404 = ErrorPage::get()
+			->Filter(array("ErrorCode" => "404"))
+			->First();
 		if($errorPage404) {
 			$this->redirect($errorPage404->Link());
 			return;
@@ -1314,7 +1319,7 @@ class ShoppingCart_Controller extends Controller{
 		if(Permission::check("ADMIN") || Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))){
 			$newMember = Member::get()->byID(intval($request->param("ID")));
 			if($newMember) {
-				$oldMember = Member::currentMember();
+				$oldMember = Member::currentUser();
 				if($oldMember){
 					$oldMember->logout();
 					$newMember->login();

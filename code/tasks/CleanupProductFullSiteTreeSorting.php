@@ -63,16 +63,21 @@ class CleanupProductFullSiteTreeSorting extends BuildTask{
 				}
 			}
 		}
-		$missedOnes = DataObject::get("Product", "\"FullSiteTreeSort\" IS NULL OR \"FullSiteTreeSort\" = ''");
-		if($missedOnes) {
+		$missedOnes = Product::get()
+			->where("\"FullSiteTreeSort\" IS NULL OR \"FullSiteTreeSort\" = ''");
+		if($missedOnes->count()) {
 			DB::alteration_message("ERROR: could not updated all Product.FullSiteTreeSort numbers!", "deleted");
 		}
 		else {
 			DB::alteration_message("All Product.FullSiteTreeSort have been updated");
 		}
-		$examples = DataObject::get("Product", "", "RAND()", null, 3);
-		foreach($examples as $key => $example) {
-			DB::alteration_message("EXAMPLE #$key: ".$example->Title.": <strong>".$example->FullSiteTreeSort."</strong>");
+		$examples = Product::get()
+			->sort("RAND()")
+			->limit(3);
+		if($examples->count()) {
+			foreach($examples as $key => $example) {
+				DB::alteration_message("EXAMPLE #$key: ".$example->Title.": <strong>".$example->FullSiteTreeSort."</strong>");
+			}
 		}
 	}
 
