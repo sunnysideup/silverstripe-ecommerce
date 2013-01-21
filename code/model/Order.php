@@ -140,11 +140,10 @@ class Order extends DataObject {
 	/**
 	 * standard SS variable
 	 * @var Array
-
+	 */
 	public static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
-	 */
 
 	/**
 	 *
