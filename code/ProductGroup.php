@@ -504,7 +504,7 @@ class ProductGroup extends Page {
 
 		// EXTRA FILTER
 		if(is_array($extraFilter) && count($extraFilter)) {
-			$finalFilterArray[] = $extraFilter;
+			$this->allProducts = $this->allProducts->filter($extraFilter);
 		}
 		elseif(is_string($extraFilter) && strlen($extraFilter) > 2) {
 			$this->allProducts = $this->allProducts->where($extraFilter);
@@ -671,7 +671,6 @@ class ProductGroup extends Page {
 	 * @return Array (Array("ID" => array(1,2,3,4))
 	 */
 	protected function currentWhereSQL() {
-		TO BE COMPLETED BY JUST SETTING IDs INTO STATIC
 		if($this->allProducts instanceOf DataList) {
 			$buyablesIDArray = $buyables->map("ID", "ID")->toArray();
 		}
@@ -686,8 +685,7 @@ class ProductGroup extends Page {
 		}
 		$listOfIDs = implode(",", $buyablesIDArray);
 		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $listOfIDs);
-		$where = "\"{$className}{$stage}\".\"ID\" IN (". $listOfIDs .")";
-		return $where;
+		return array("ID"  => $listOfIDs);
 	}
 
 	/**
