@@ -69,12 +69,13 @@ class ShippingAddress extends OrderAddress {
 
 
 	static $indexes = array(
-		// "SearchFields" => "fulltext (Address, Address2, City, PostalCode, Phone)"
-		array(
+		/* "SearchFields" => "fulltext (Address, Address2, City, PostalCode, Phone)"
+		 array(
 			'name' => 'SearchFields',
 			'type' => 'fulltext',
 			'value' => 'ShippingAddress, ShippingAddress2, ShippingCity, ShippingPostalCode, ShippingPhone'
 		),
+		*/
 		"Obsolete" => true,
 		"OrderID" => true
 	);
