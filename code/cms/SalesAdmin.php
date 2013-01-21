@@ -31,6 +31,13 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	public static $menu_priority = 1;
 
 	/**
+	 * Change this variable if you don't want the Import from CSV form to appear.
+	 * This variable can be a boolean or an array.
+	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')
+	 */
+	public $showImportForm = false;
+
+	/**
 	 * standard SS variable
 	 * @var String
 	 */
