@@ -28,33 +28,32 @@ CheckoutPage_Controller:
 
 OrderConfirmationPage_Controller:
  include_as_checkout_step: true
-
 ProductGroup:
  sort_options:
   default:
    Title: 'Default Order'
    SQL:
-    FullSiteTreeSort: "ASC",
-    Sort: "ASC",
-    Title: "ASC"
+    FullSiteTreeSort: ASC
+    Sort: ASC
+    Title: ASC
   title:
    Title: 'Alphabetical'
    SQL:
-    Title: "ASC"
+    Title: ASC
   price:
    Title: 'Lowest Price'
    SQL:
-    Price: "ASC",
-    Title: "ASC"
+    Price: ASC
+    Title: ASC
  filter_options:
   default:
    Title: 'All Searchable Products (default)'
    SQL:
     ShowInSearch: 1
   featuredonly:
-   Title: Featured Only'
+   Title: 'Featured Only'
    SQL:
-    ShowInSearch: 1,
+    ShowInSearch: 1
     FeaturedProduct: 1
   nonfeaturedonly:
    Title: 'Non Featured Only'
