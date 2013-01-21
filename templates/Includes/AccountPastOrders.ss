@@ -21,7 +21,10 @@
 		<tbody>
 		<% control PastOrders %>
 			<tr>
-				<td class="left"><a href="$Link">$Title</a></td>
+				<td class="left">
+					<a href="$Link" class="view">$Title</a>
+					<a href="$CopyOrderLink" class="copy">copy</a>
+				</td>
 				<td class="left">$CustomerStatus
 					<% if DeleteLink %><br /><a href="$DeleteLink"><% _t("Account.REMOVE","remove") %></a><% end_if %>
 				</td>
