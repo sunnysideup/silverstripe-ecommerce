@@ -1242,7 +1242,7 @@ class Product_OrderItem extends OrderItem {
 	function getTableTitle() {
 		$tableTitle = _t("Product.UNKNOWN", "Unknown Product");
 		if($product = $this->Product()) {
-			$tableTitle = $product->renderWith("ProductTableTitle");
+			$tableTitle = strip_tags($product->renderWith("ProductTableTitle"));
 		}
 		return $tableTitle;
 	}
