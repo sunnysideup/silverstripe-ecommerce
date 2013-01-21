@@ -70,6 +70,7 @@ class OrderAttribute extends DataObject {
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 
+
 	/**
 	 * Standard SS variable
 	 * @var String

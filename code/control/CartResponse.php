@@ -32,12 +32,19 @@ class CartResponse extends EcommerceResponse {
 	public function ReturnCartData($messages = array(), $data = null, $status = "success") {
 		//add header
 		$this->addHeader('Content-Type', 'application/json');
+
 		SSViewer::set_source_file_comments(false);
-		if($status != "success") {
-			$messagesImploded = '';
+
+		//merge messages
+		$messagesImploded = '';
+		if(is_array($messages) && count($messages)) {
 			foreach($messages as $messageArray) {
 				$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
 			}
+		}
+
+		//bad status
+		if($status != "success") {
 			$this->setStatusCode(400, $messagesImploded);
 		}
 
@@ -48,7 +55,6 @@ class CartResponse extends EcommerceResponse {
 		$currentOrder->calculateOrderAttributes($force = false);
 
 		$ajaxObject = $currentOrder->AJAXDefinitions();
-
 		// populate Javascript
 		$js = array ();
 
@@ -100,10 +106,6 @@ class CartResponse extends EcommerceResponse {
 
 		//messages
 		if(is_array($messages)) {
-			$messagesImploded = '';
-			foreach($messages as $messageArray) {
-				$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
-			}
 			$js[] = array(
 				"t" => "id",
 				"s" => $ajaxObject->TableMessageID(),
@@ -167,7 +169,7 @@ class CartResponse extends EcommerceResponse {
 		if(is_array($data)) {
 			$js = array_merge($js, $data);
 		}
-		//TODO: remove doubles!
+		//TODO: remove doubles?
 		$json = json_encode($js);
 		$json = str_replace('\t', " ", $json);
 		$json = str_replace('\r', " ", $json);
@@ -176,7 +178,6 @@ class CartResponse extends EcommerceResponse {
 		if(Director::isDev()) {
 			$json = str_replace("{", "\r\n{", $json);
 		}
-
 		return $json;
 	}
 

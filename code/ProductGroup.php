@@ -98,7 +98,7 @@ class ProductGroup extends Page {
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A page the puts a bunch of products into a category.";
+	public static $description = "A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)";
 
 	/**
 	 * Shop Admins can edit
@@ -123,7 +123,6 @@ class ProductGroup extends Page {
 	public function canDelete($member = null) {
 		return $this->canEdit($member);
 	}
-
 
 	/**
 	 * Standard SS method
@@ -184,8 +183,8 @@ class ProductGroup extends Page {
 	/**
 	 * Returns the sort sql for a particular sorting key.
 	 * If no key is provided then the default key will be returned.
-	 * @param String
-	 * @return String
+	 * @param String $key
+	 * @return Array (e.g. Array(MyField => "ASC", "MyOtherField" => "DESC")
 	 */
 	protected function getSortOptionSQL($key = ""){
 		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
@@ -196,7 +195,7 @@ class ProductGroup extends Page {
 			return $sortOptions[$key]["SQL"];
 		}
 		else {
-			return "\"Sort\" ASC";
+			return array("Sort" => "ASC");
 		}
 	}
 
@@ -253,7 +252,7 @@ class ProductGroup extends Page {
 	/**
 	 * Returns the sql associated with a filter option.
 	 * @param String $key - the option selected
-	 * @return String
+	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0))
 	 */
 	protected function getFilterOptionSQL($key = ""){
 		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
@@ -264,7 +263,7 @@ class ProductGroup extends Page {
 			return $filterOptions[$key]["SQL"];
 		}
 		else {
-			return " \"ShowInSearch\" = 1";
+			return array("ShowInSearch" => 1);
 		}
 	}
 
@@ -425,28 +424,63 @@ class ProductGroup extends Page {
 		return $field;
 	}
 
+	/*****************************************************
+	 *
+	 * START OF THE DATA LIST SYSTEM
+	 * The way this works is basically that any product group
+	 * page basically collects information to come to a
+	 * list of products, including
+	 * - PRESELECT: default level of child products (set in CMS)
+	 * - SORT: default sort (set in CMS)
+	 * - FILTER: default filter (set in CMS)
+	 * -
+	 *
+	 *****************************************************/
+
+	/**
+	 * This is the dataList that contains all the products
+	 * @var DataList $allProducts
+	 */
+	protected $allProducts = null;
+
+	/**
+	 * This is the dataList that
+	 * contains all the products, but is limited
+	 * and sorted
+	 * @var DataList $limitedSortedProducts
+	 */
+	protected $limitedSortedProducts = null;
+
+
+	/**
+	 * a list of relevant buyables that can
+	 * not be purchased and therefore should be excluded.
+	 * @var Array (like so: array(1,2,4,5,99))
+	 */
+	protected static $negative_can_purchase_array = null;
+
+
 	/**
 	 * Retrieve a set of products, based on the given parameters.
 	 * This method is usually called by the various controller methods.
-	 * The extraFilter and recursive help you to select different products,
+	 * The extraFilter helps you to select different products,
 	 * depending on the method used in the controller.
 	 *
-	 * We do not use the recursive here.
-	 * Furthermore, extrafilter can take onl all sorts of variables.
+	 * Furthermore, extrafilter can take all sorts of variables.
 	 * This is basically setup like this so that in ProductGroup extensions you
 	 * can setup all sorts of filters, while still using the ProductsShowable method.
 	 *
 	 * @param mixed $extraFilter Additional SQL filters to apply to the Product retrieval
-	 * @param boolean $recursive
 	 * @return DataList
 	 */
 	public function ProductsShowable($extraFilter = ''){
-		$allProducts = $this->currentInitialProducts($extraFilter);
-		return $this->currentFinalProducts($allProducts);
+		$this->allProducts = $this->currentInitialProducts($extraFilter);
+		$this->limitedSortedProducts = $this->currentFinalProducts();
+		return $this->limitedSortedProducts;
 	}
 
 	/**
-	 * returns the inital (all) products, based on the all the eligile products
+	 * returns the inital (all) products, based on the all the eligible products
 	 * for the page.
 	 *
 	 * This is THE pivotal method that probably changes for classes that
@@ -461,29 +495,68 @@ class ProductGroup extends Page {
 	 **/
 	protected function currentInitialProducts($extraFilter = ''){
 		$className = $this->getClassNameSQL();
-		//WHERE
-			// STANDARD FILTER
-		$finalFilterArray = array();
-		$filter = $this->getStandardFilter();
-		if(strlen(trim($filter)) > 2) {
-			$finalFilterArray[] = $filter;
-		}
-			// EXTRA FILTER
-		if(strlen(trim($extraFilter)) > 2) {
+
+		//init allProducts
+		$this->allProducts = $className::get();
+
+		// STANDARD FILTER
+		$this->getStandardFilter();
+
+		// EXTRA FILTER
+		if(is_array($extraFilter) && count($extraFilter)) {
 			$finalFilterArray[] = $extraFilter;
 		}
-			// GROUP FILTER
-		$groupFilter = $this->getGroupFilter();
-		if(strlen(trim($groupFilter)) > 2) {
-			$finalFilterArray[] = $groupFilter;
+		elseif(is_string($extraFilter) && strlen($extraFilter) > 2) {
+			$this->allProducts = $this->allProducts->where($extraFilter);
 		}
-		$where = " ( ".implode(" ) AND ( ", $finalFilterArray)." ) ";
-		//REST OF THE VARIABLES
-		$sort = $this->currentSortSQL; //NOTE: we sort here already to get some idea of the order of the products.
-		$join = $this->getGroupJoin();
-		$limit = null;
-		$allProducts = DataObject::get($className,$where, $sort, $join, $limit);
-		return $allProducts;
+
+		// GROUP FILTER
+		$this->allProducts = $this->getGroupFilter();
+
+		//JOINS
+		$this->allProducts = $this->getGroupJoin();
+
+		//EXLUDES ONE THAT ARE NOT FOR SALE
+		//we just add a little safety measure here...
+		if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
+			self::$negative_can_purchase_array[$buyable->ID] = array();
+			$rawCount = $this->allProducts->count();
+			if($rawCount && $rawCount < 500) {
+				if(empty(self::$negative_can_purchase_array)) {
+					foreach($this->allProducts as $buyable) {
+						if(!$buyable->canPurchase()) {
+							//NOTE: the ->remove we had here would have removed
+							//the product from the DB.
+							self::$negative_can_purchase_array[$buyable->ID] = $buyable->ID;
+						}
+					}
+				}
+			}
+			if(count(self::$negative_can_purchase_array[$buyable->ID])) {
+				$this->allProducts = $this->allProducts->Exclude(array("ID" => self::$negative_can_purchase_array));
+			}
+		}
+		return $this->allProducts;
+	}
+
+
+	/**
+	 * returns the final products, based on the all the eligile products
+	 * for the page.
+	 *
+	 * All of the 'current' methods are to support the currentFinalProducts Method.
+	 *
+	 * @return DataList
+	 **/
+	protected function currentFinalProducts(){
+		if($this->totalCount = $this->allProducts->count()) {
+			if($this->totalCount) {
+				$this->limitedSortedProducts = $this->allProducts
+					->Sort($this->currentSortSQL())
+					->Limit($this->currentLimitSQL());
+				return $this->limitedSortedProducts;
+			}
+		}
 	}
 
 	/**
@@ -503,10 +576,11 @@ class ProductGroup extends Page {
 	}
 
 	/**
-	 * returns the filter SQL, based on the $_GET or default entry.
+	 * adjust the allProducts, based on the $_GET or default entry.
 	 * The standard filter excludes the product group filter.
 	 * The default would be something like "ShowInSearch = 1"
-	 * @return String
+	 * IMPORTANT: Adjusts allProducts and returns it...
+	 * @return DataList
 	 */
 	protected function getStandardFilter(){
 		if(isset($_GET['filterfor'])) {
@@ -516,14 +590,16 @@ class ProductGroup extends Page {
 			$filterKey = $this->MyDefaultFilter();
 		}
 		$filter = $this->getFilterOptionSQL($filterKey);
-		return $filter;
+		$this->allProducts = $this->allProducts->Filter($filter);
+		return $this->allProducts;
 	}
 
 	/**
-	 * works out the group filter baswed on the LevelOfProductsToShow value
+	 * works out the group filter based on the LevelOfProductsToShow value
 	 * it also considers the other group many-many relationship
 	 * this filter ALWAYS returns something: 1 = 1 if nothing else.
-	 * @return String
+	 * IMPORTANT: Adjusts allProducts and returns it...
+	 * @return DataList
 	 */
 	protected function getGroupFilter(){
 		$groupFilter = "";
@@ -543,7 +619,8 @@ class ProductGroup extends Page {
 			}
 			$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ".$groupFilter;
 		}
-		return $groupFilter;
+		$this->allProducts = $this->allProducts->Where($groupFilter);
+		return $this->allProducts;
 	}
 
 	/**
@@ -573,51 +650,13 @@ class ProductGroup extends Page {
 
 	/**
 	 * Join statement for the product groups.
-	 * @return Null | String
+	 * IMPORTANT: Adjusts allProducts and returns it...
+	 * @return DataList
 	 */
 	protected function getGroupJoin() {
-		if($this->getProductsAlsoInOtherGroups()) {
-			return $this->getManyManyJoin('AlsoShowProducts','Product');
-		}
-		return null;
+		return $this->allProducts;
 	}
 
-	/**
-	 * returns the final products, based on the all the eligile products
-	 * for the page.
-	 *
-	 * All of the 'current' methods are to support the currentFinalProducts Method.
-	 *
-	 * @param Object $allProducts DataList of all eligile products before sorting and limiting
-	 * @return DataList
-	 **/
-	protected function currentFinalProducts($buyables){
-		if($buyables && $buyables instanceOf DataList) {
-			//SS3.0: we cant use this... do we still need it?
-			//$buyables->removeDuplicates();
-			if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
-				foreach($buyables as $buyable) {
-					if(!$buyable->canPurchase()) {
-						//NOTE: the ->remove we had here would have removed
-						//the product from the DB.
-						$buyables->exclude(array("ID" => $buyable->ID));
-					}
-				}
-			}
-		}
-		if($buyables) {
-			$this->totalCount = $buyables->count();
-			if($this->totalCount) {
-				return DataObject::get(
-					$this->currentClassNameSQL(),
-					$this->currentWhereSQL($buyables),
-					$this->currentSortSQL(),
-					$this->currentJoinSQL(),
-					$this->currentLimitSQL()
-				);
-			}
-		}
-	}
 
 	/**
 	 * returns the CLASSNAME part of the final selection of products.
@@ -629,11 +668,11 @@ class ProductGroup extends Page {
 
 	/**
 	 * returns the WHERE part of the final selection of products.
-	 * @param Object | Array $buyables - list of ALL products showable (without the applied LIMIT)
-	 * @return String
+	 * @return Array (Array("ID" => array(1,2,3,4))
 	 */
-	protected function currentWhereSQL($buyables) {
-		if($buyables instanceOf DataList) {
+	protected function currentWhereSQL() {
+		TO BE COMPLETED BY JUST SETTING IDs INTO STATIC
+		if($this->allProducts instanceOf DataList) {
 			$buyablesIDArray = $buyables->map("ID", "ID")->toArray();
 		}
 		elseif(is_array($buyables)) {

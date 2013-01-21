@@ -33,23 +33,34 @@ ProductGroup:
  sort_options:
   default:
    Title: 'Default Order'
-   SQL: "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"Title\" ASC"
+   SQL:
+    FullSiteTreeSort: "ASC",
+    Sort: "ASC",
+    Title: "ASC"
   title:
    Title: 'Alphabetical'
-   SQL: "\"Title\" ASC"
+   SQL:
+    Title: "ASC"
   price:
    Title: 'Lowest Price'
-   SQL: "\"Price\" ASC, \"Title\" ASC"
+   SQL:
+    Price: "ASC",
+    Title: "ASC"
  filter_options:
   default:
    Title: 'All Searchable Products (default)'
-   SQL: "\"ShowInSearch\" = 1"
+   SQL:
+    ShowInSearch: 1
   featuredonly:
-   Title: 'Featured Only'
-   SQL: "\"ShowInSearch\" = 1 AND \"FeaturedProduct\" = 1"
+   Title: Featured Only'
+   SQL:
+    ShowInSearch: 1,
+    FeaturedProduct: 1
   nonfeaturedonly:
    Title: 'Non Featured Only'
-   SQL: "\"ShowInSearch\" = 1 AND \"FeaturedProduct\" = 0"
+   SQL:
+    ShowInSearch: 1,
+    FeaturedProduct: 0
  allow_short_display_style: false
  allow_more_detail_display_style: false
  session_name_for_product_array: ProductGroupProductIDs

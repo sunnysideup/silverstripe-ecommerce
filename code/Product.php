@@ -1235,12 +1235,7 @@ class Product_OrderItem extends OrderItem {
 	function getTableTitle() {
 		$tableTitle = _t("Product.UNKNOWN", "Unknown Product");
 		if($product = $this->Product()) {
-			$tableTitle = "";
-			if($product->InternalItemID) {
-				$tableTitle = $product->InternalItemID.": ";
-			}
-			$tableTitle .= $product->Title;
-			$this->extend('updateTableTitle',$tableTitle);
+			$tableTitle = $product->renderWith("ProductTableTitle");
 		}
 		return $tableTitle;
 	}

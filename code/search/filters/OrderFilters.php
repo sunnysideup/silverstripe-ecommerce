@@ -157,7 +157,6 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter {
 	 *@return SQLQuery
 	 **/
 	public function apply(DataQuery $query) {
-		$query = $this->applyRelation($query);
 		$values = $this->getValue();
 		if(is_array($values) && count($values)) {
 			$query->filter(array("StatusID" => $values));
