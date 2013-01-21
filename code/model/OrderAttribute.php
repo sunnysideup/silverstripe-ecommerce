@@ -65,10 +65,11 @@ class OrderAttribute extends DataObject {
 	/**
 	 * Standard SS variable
 	 * @var Array
-	 */
+
 	public static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
+	 */
 
 	/**
 	 * Standard SS variable
