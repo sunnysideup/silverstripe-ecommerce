@@ -81,13 +81,12 @@ class BillingAddress extends OrderAddress {
 	 * @return Array
 	 */
 	static $indexes = array(
-		/* "SearchFields" => "fulltext (FirstName, Surname, Address, Address2, City, PostalCode, Email)"
+		"SearchFields" => "fulltext (FirstName, Surname, Address, Address2, City, PostalCode, Email)"
 		array(
 			'name' => 'SearchFields',
 			'type' => 'fulltext',
 			'value' => 'FirstName, Surname, Address, Address2, City, PostalCode, Email'
 		),
-		*/
 		"Obsolete" => true,
 		"OrderID" => true
 	);
