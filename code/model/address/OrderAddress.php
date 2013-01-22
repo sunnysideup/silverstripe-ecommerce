@@ -429,7 +429,7 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function lastAddressFromMember($member = null) {
 		$addresses = $this->previousAddressesFromMember($member, true);
-		if($addresses && $addresses->count()) {
+		if($addresses->count()) {
 			return $addresses->First();
 		}
 	}
@@ -452,11 +452,11 @@ class OrderAddress extends DataObject {
 	 * @param Object (Member)
 	 * @param Boolean $onlyLastRecord - only select one
 	 * @param Boolean $keepDoubles - keep addresses that are the same (if set to false, only unique addresses are returned)
-	 * @return ArrayList
+	 * @return ArrayList (BillingAddresses | ShippingAddresses)
 	 **/
-	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
+	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {0
+		$returnArrayList = new ArrayList();
 		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
-		$returnDos = null;
 		if($orders->count()) {
 			$fieldName = $this->ClassName."ID";
 			$array = $orders->map($fieldName, $fieldName);
@@ -474,30 +474,22 @@ class OrderAddress extends DataObject {
 					->sort("LastEdited", "DESC")
 					//WHY ??? Do we include Orders here as Inner Join?
 					->innerJoin("Order", "\"Order\".\"$fieldName\" = \"".$this->ClassName."\".\"ID\"");
-				if($keepDoubles || $onlyLastRecord) {
-					$returnDos = $addresses;
-				}
-				else {
-					if($addresses && $addresses->count()) {
-						$addressCompare = array();
-						foreach($addresses as $address) {
-							$comparisonString = $address->comparisonString();
-							if(in_array($comparisonString, $addressCompare)) {
+				if($addresses->count()) {
+					$addressCompare = array();
+					foreach($addresses as $address) {
+						$comparisonString = $address->comparisonString();
+						if((in_array($comparisonString, $addressCompare)) && (!$keepDoubles)) {
 
-							}
-							else {
-								$addressCompare[$address->ID] = $comparisonString;
-								if(!$returnDos) {
-									$returnDos = new ArrayList();
-								}
-								$returnDos->push($address);
-							}
+						}
+						else {
+							$addressCompare[$address->ID] = $comparisonString;
+							$returnArrayList->push($address);
 						}
 					}
 				}
 			}
 		}
-		return $returnDos;
+		return $returnArrayList;
 	}
 
 	/**
@@ -507,7 +499,7 @@ class OrderAddress extends DataObject {
 	public function MakeObsolete($member = null){
 		$addresses = $this->previousAddressesFromMember($member, $onlyLastRecord = false, $includeDoubles = true);
 		$comparisonString = $this->comparisonString();
-		if($addresses && $addresses->count()) {
+		if($addresses->count()) {
 			foreach($addresses as $address) {
 				if($address->comparisonString() == $comparisonString) {
 					$address->Obsolete = 1;
@@ -535,7 +527,7 @@ class OrderAddress extends DataObject {
 				->filter(array("MemberID" => $member->ID))
 				->exclude(array($fieldName => $this->ID));
 			if($onlyLastRecord) {
-				$list->limit(1);
+				$list = $list->limit(1);
 			}
 			return $list;
 		}

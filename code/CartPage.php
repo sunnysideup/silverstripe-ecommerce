@@ -383,7 +383,7 @@ class CartPage_Controller extends Page_Controller{
 	function CanEditOrder() {
 		if($this->currentOrder) {
 			if( $this->currentOrder->canEdit()) {
-				if($this->currentOrder->Items()) {
+				if($this->currentOrder->getTotalItems()) {
 					return true;
 				}
 			}
@@ -502,7 +502,7 @@ class CartPage_Controller extends Page_Controller{
 			$this->showCreateAccountForm = true;
 			return array();
 		}
-		if($this->currentOrder && $this->currentOrder->Items()) {
+		if($this->currentOrder && $this->currentOrder->getTotalItems()) {
 			$this->currentOrder->write();
 			self::set_message(_t("CartPage.ORDERSAVED", "Your order has been saved."));
 		}
@@ -572,7 +572,7 @@ class CartPage_Controller extends Page_Controller{
 				if($viewingRealCurrentOrder) {
 					if($this->isCartPage()) {
 						$checkoutPageLink = CheckoutPage::find_link();
-						if($checkoutPageLink && $this->currentOrder && $this->currentOrder->Items()) {
+						if($checkoutPageLink && $this->currentOrder && $this->currentOrder->getTotalItems()) {
 							$this->actionLinks->push(new ArrayData(array (
 								"Title" => $this->ProceedToCheckoutLabel,
 								"Link" => $checkoutPageLink
@@ -614,7 +614,7 @@ class CartPage_Controller extends Page_Controller{
 				if($viewingRealCurrentOrder) {
 					if($currentUserID && $this->currentOrder->MemberID == $currentUserID) {
 						if($this->isCartPage()) {
-							if($this->currentOrder && $this->currentOrder->Items() && !$this->currentOrder->IsSubmitted()) {
+							if($this->currentOrder && $this->currentOrder->getTotalItems() && !$this->currentOrder->IsSubmitted()) {
 								$this->actionLinks->push(new ArrayData(array (
 									"Title" => $this->SaveOrderLinkLabel,
 									"Link" => $this->Link("saveorder")."/".$this->currentOrder->ID."/"
@@ -675,8 +675,8 @@ class CartPage_Controller extends Page_Controller{
 
 			//actions from modifiers
 			if($this->isOrderConfirmationPage() && $this->currentOrder->ID) {
-				$modifiers = $this->currentOrder->OrderModifiers();
-				if($modifiers) {
+				$modifiers = $this->currentOrder->Modifiers();
+				if($modifiers->count()) {
 					foreach($modifiers as $modifier) {
 						$array = $modifier->PostSubmitAction();
 						if(is_array($array) && count($array)) {
@@ -700,7 +700,7 @@ class CartPage_Controller extends Page_Controller{
 
 			//no items
 			if($this->currentOrder) {
-				if(!$this->currentOrder->Items())  {
+				if(!$this->currentOrder->getTotalItems())  {
 					$this->message = $this->NoItemsInOrderMessage;
 				}
 			}

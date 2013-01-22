@@ -182,7 +182,7 @@ class BillingAddress extends OrderAddress {
 				$this->FillWithLastAddressFromMember($member, true);
 				$addresses = $this->previousAddressesFromMember($member);
 				//we want MORE than one here not just one.
-				if($addresses && $addresses->count() > 1) {
+				if($addresses->count() > 1) {
 					$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
 				}
 			}

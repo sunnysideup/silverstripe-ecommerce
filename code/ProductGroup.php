@@ -470,7 +470,7 @@ class ProductGroup extends Page {
 	 * This is basically setup like this so that in ProductGroup extensions you
 	 * can setup all sorts of filters, while still using the ProductsShowable method.
 	 *
-	 * @param mixed $extraFilter Additional SQL filters to apply to the Product retrieval
+	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList
 	 */
 	public function ProductsShowable($extraFilter = ''){
@@ -490,7 +490,7 @@ class ProductGroup extends Page {
 	 *
 	 * NOTE: there is no sort and limit for the initial retrieval
 	 *
-	 * @param string $extraFilter Additional SQL filters to apply to the Product retrieval
+	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList
 	 **/
 	protected function currentInitialProducts($extraFilter = ''){
@@ -611,7 +611,7 @@ class ProductGroup extends Page {
 			$groupIDs = array($this->ID => $this->ID);
 			$groupFilter .= $this->getProductsToBeIncludedFromOtherGroups();
 			$childGroups = $this->ChildGroups($this->LevelOfProductsToShow);
-			if($childGroups) {
+			if($childGroups->count()) {
 				foreach($childGroups as $childGroup) {
 					$groupIDs[$childGroup->ID] = $childGroup->ID;
 					$groupFilter .= $childGroup->getProductsToBeIncludedFromOtherGroups();
@@ -811,10 +811,10 @@ class ProductGroup extends Page {
 	 * @param Int $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Groups are returned...
 	 * @param String $filter - additional filter to be added
 	 * @param Int $numberOfRecursions - current level of depth
-	 * @return DataList
+	 * @return ArrayList (ProductGroups)
 	 */
 	function ChildGroups($maxRecursiveLevel, $filter = "", $numberOfRecursions = 0) {
-		$output = null;
+		$output = new ArrayList();
 		$numberOfRecursions++;
 		if($numberOfRecursions < $maxRecursiveLevel){
 			$filterWithAND = '';
@@ -822,12 +822,11 @@ class ProductGroup extends Page {
 				$filterWithAND = " AND $filter";
 			}
 			$where = "\"ParentID\" = '$this->ID' $filterWithAND";
-			if($children = DataObject::get('ProductGroup', $where)){
-				if($output == null) {
-					$output = $children;
-				}
+			$children = ProductGroup::get()->where($where);
+			if($children->count()){
 				foreach($children as $child){
-					$output->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions, $output));
+					$output->push($child);
+					$output->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions));
 				}
 			}
 		}
@@ -885,7 +884,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Recursively generate a product menu.
-	 * @return DataList
+	 * @return ArrayList (ProductGroups)
 	 */
 	function GroupsMenu($filter = "ShowInMenus = 1") {
 		if($parent = $this->ParentGroup()) {
@@ -946,8 +945,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 * @return DataList
 	 **/
-	public function Products($recursive = true){
-	//	return $this->ProductsShowable("\"FeaturedProduct\" = 1",$recursive);
+	public function Products(){
 		return $this->ProductsShowable('');
 	}
 
@@ -956,8 +954,8 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 * @return DataList
 	 */
-	function FeaturedProducts($recursive = true) {
-		return $this->ProductsShowable("\"FeaturedProduct\" = 1",$recursive);
+	function FeaturedProducts() {
+		return $this->ProductsShowable("\"FeaturedProduct\" = 1");
 	}
 
 	/**
@@ -965,14 +963,14 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 *@return DataList
 	 */
-	function NonFeaturedProducts($recursive = true) {
-		return $this->ProductsShowable("\"FeaturedProduct\" = 0",$recursive);
+	function NonFeaturedProducts() {
+		return $this->ProductsShowable("\"FeaturedProduct\" = 0");
 	}
 
 	/**
 	 * Provides a dataset of links for sorting products.
 	 *
-	 *@return ArrayList(Name, Link, Current (boolean), LinkingMode)
+	 * @return ArrayList( ArrayData(Name, Link, Current (boolean), LinkingMode))
 	 */
 	function SortLinks(){
 		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
@@ -981,15 +979,17 @@ class ProductGroup_Controller extends Page_Controller {
 		$sort = (isset($_GET['sortby'])) ? Convert::raw2sql($_GET['sortby']) : $this->MyDefaultSortOrder();
 		$dos = new ArrayList();
 		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		foreach($sortOptions as $key => $array){
-			$current = ($key == $sort) ? 'current' : false;
-			$dos->push(new ArrayData(array(
-				'Name' => _t('ProductGroup.SORTBY'.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
-				'Link' => $this->Link()."?sortby=$key",
-				'SelectKey' => $key,
-				'Current' => $current,
-				'LinkingMode' => $current ? "current" : "link"
-			)));
+		if(count($sortOptions)) {
+			foreach($sortOptions as $key => $array){
+				$current = ($key == $sort) ? 'current' : false;
+				$dos->push(new ArrayData(array(
+					'Name' => _t('ProductGroup.SORTBY'.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
+					'Link' => $this->Link()."?sortby=$key",
+					'SelectKey' => $key,
+					'Current' => $current,
+					'LinkingMode' => $current ? "current" : "link"
+				)));
+			}
 		}
 		return $dos;
 	}
@@ -997,7 +997,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * returns child product groups for use in
 	 * 'in this section'
-	 * @return DataList
+	 * @return ArrayList (ProductGroups)
 	 */
 	function MenuChildGroups() {
 		return $this->ChildGroups(2, "\"ShowInMenus\" = 1");
@@ -1006,7 +1006,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 *
 	 * This method can be extended to show products in the side bar.
-	 * @return DataList
+	 * @return Null | DataList
 	 */
 	function SidebarProducts(){
 		return null;

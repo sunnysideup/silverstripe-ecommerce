@@ -123,6 +123,10 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 0. OVERALL CONFIG
 	//##############################
 
+	/**
+	 * List of overall configuration BuildTasks
+	 * @var Array
+	 */
 	protected $overallconfig = array(
 		"ecommercecheckconfiguration"
 	);
@@ -135,6 +139,10 @@ class EcommerceDatabaseAdmin extends Controller{
 		return $this->createMenuDOSFromArray($this->overallconfig, $type = "Config");
 	}
 
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
 	function ecommercecheckconfiguration($request){
 		$this->runTask("EcommerceCheckConfiguration", $request);
 	}
@@ -150,6 +158,10 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 1. ECOMMERCE SETUP (DEFAULT RECORDS)
 	//##############################
 
+	/**
+	 * List of setup BuildTasks
+	 * @var Array
+	 */
 	protected $ecommerceSetup = array(
 		"setorderidstartingnumber",
 		"createecommercemembergroups",
@@ -167,26 +179,50 @@ class EcommerceDatabaseAdmin extends Controller{
 		return $this->createMenuDOSFromArray($this->ecommerceSetup, $type = "EcommerceSetup");
 	}
 
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
 	function setorderidstartingnumber($request){
 		$this->runTask("SetOrderIDStartingNumber", $request);
 	}
 
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
 	function createecommercemembergroups($request){
 		$this->runTask("CreateEcommerceMemberGroups", $request);
 	}
 
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
 	function ecommercedefaultrecords($request){
 		$this->runTask("EcommerceDefaultRecords", $request);
 	}
 
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
 	function adddefaultecommerceproducts($request){
 		$this->runTask("AddDefaultEcommerceProducts", $request);
 	}
 
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
 	function ecommercecountryandregiontasks($request){
 		$this->runTask("EcommerceCountryAndRegionTasks", $request);
 	}
 
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
 	function ecommercetasklinkproductwithimages($request){
 		$this->runTask("EcommerceTaskLinkProductWithImages", $request);
 	}
@@ -201,6 +237,10 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 2. REGULAR MAINTENANCE
 	//##############################
 
+	/**
+	 * List of regular maintenance BuildTasks
+	 * @var Array
+	 */
 	protected $regularMaintenance = array(
 		"cartcleanuptask",
 		"addcustomerstocustomergroups",
@@ -296,6 +336,10 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 3. DEBUG ACTIONS
 	//##############################
 
+	/**
+	 * List of debug actions BuildTasks
+	 * @var Array
+	 */
 	protected $debugActions = array(
 		"ecommercetemplatetesttask",
 		"cartmanipulation_current",
@@ -332,6 +376,10 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 4. MIGRATIONS
 	//##############################
 
+	/**
+	 * List of migration BuildTasks
+	 * @var Array
+	 */
 	protected $migrations = array(
 		"ecommercemigration",
 		"ecommercecheckconfiguration",
@@ -373,6 +421,11 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 5. CRAZY SHIT
 	//##############################
 
+
+	/**
+	 * List of crazy shit BuildTasks
+	 * @var Array
+	 */
 	protected $crazyshit = array(
 		"deleteallorders",
 		"deleteecommerceproductstask"
@@ -404,21 +457,33 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 6. TESTS
 	//##############################
 
+	/**
+	 * List of tests
+	 * @var Array
+	 */
 	protected $tests = array(
 		'ShoppingCartTest' => 'Shopping Cart'
 	);
 
 	function Tests(){
-		$dos = new ArrayList();
+		$arrayList = new ArrayList();
 		foreach($this->tests as $class => $name){
-			$dos->push(new ArrayData(array(
-				'Name' => $name,
-				'Class' => $class
-			)));
+			$arrayList->push(
+				new ArrayData(
+					array(
+						'Name' => $name,
+						'Class' => $class
+					)
+				)
+			);
 		}
-		return $dos;
+		return $arrayList;
 	}
 
+	/**
+	 *
+	 * @return Array ????
+	 */
 	function AllTests(){
 		return implode(',',array_keys($this->tests));
 	}
@@ -430,8 +495,10 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	/**
 	 * shows a "Task Completed Message" on the screen.
+	 * @param BuildTask $buildTask
+	 * @param String $extraMessage
 	 */
-	public function displayCompletionMessage($buildTask, $extraMessage = '') {
+	public function displayCompletionMessage(BuildTask $buildTask, $extraMessage = '') {
 		DB::alteration_message("
 			------------------------------------------------------- <br />
 			<strong>".$buildTask->getTitle()."</strong><br />
@@ -444,17 +511,19 @@ class EcommerceDatabaseAdmin extends Controller{
 
 	/**
 	 *
-	 *@param Array $buildTasks array of build tasks
+	 * @param Array $buildTasks array of build tasks
+	 * @param String $type
+	 * @return ArrayList(ArrayData(Link, Title, Description))
 	 */
-	protected function createMenuDOSFromArray($buildTasks, $type = "") {
-		$extendedBuildTasksArray = $this->extend("updateEcommerceDevMenu".$type, $buildTasks);
+	protected function createMenuDOSFromArray($buildTasksArray, $type = "") {
+		$extendedBuildTasksArray = $this->extend("updateEcommerceDevMenu".$type, $buildTasksArray);
 		if(is_array($extendedBuildTasksArray)) {
 			foreach($extendedBuildTasksArray as $extendedBuildTasks) {
-				$buildTasks += $extendedBuildTasks;
+				$buildTasksArray += $extendedBuildTasks;
 			}
 		}
-		$dos = new ArrayList();
-		foreach($buildTasks as $buildTask) {
+		$arrayList = new ArrayList();
+		foreach($buildTasksArray as $buildTask) {
 			$obj = new $buildTask();
 			$do = new ArrayData(
 				array(
@@ -463,11 +532,16 @@ class EcommerceDatabaseAdmin extends Controller{
 					"Description" => $obj->getDescription()
 				)
 			);
-			$dos->push($do);
+			$arrayList->push($do);
 		}
-		return $dos;
+		return $arrayList;
 	}
 
+	/**
+	 *
+	 * @param String $className
+	 * @param HTTPRequest request
+	 */
 	public function runTask($className, $request) {
 		$buildTask = new $className();
 		$buildTask->verbose = true;

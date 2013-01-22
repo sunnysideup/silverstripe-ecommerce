@@ -312,7 +312,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * forms are used in the OrderInformation HTML table for the user to fill
 	 * in as needed for each modifier applied on the site.
 	 *
-	 * @return ArrayList
+	 * @return ArrayList (ModifierForms) | Null
 	 */
 	function ModifierForms() {
 		if ($this->currentOrder) {
@@ -359,7 +359,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * @return boolean
 	 */
 	function CanCheckout() {
-		return $this->currentOrder->Items()  && !$this->currentOrder->IsSubmitted();
+		return $this->currentOrder->getTotalItems() && !$this->currentOrder->IsSubmitted();
 	}
 
 	/**

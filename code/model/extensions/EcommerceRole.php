@@ -229,9 +229,10 @@ class EcommerceRole extends DataExtension {
 		else {
 			$orders = Order::get_datalist_of_orders_with_submit_record(true);
 		}
-		return $orders
+		$orders = $orders
 			->Filter(array("MemberID" => $this->owner->ID))
 			->First();
+		return $orders;
 	}
 
 	/**

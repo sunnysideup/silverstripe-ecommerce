@@ -331,7 +331,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Returns all the parent groups for the product.
 	 * This function has been added her to contrast it with MainParentGroup (see below).
-	  *@return DataList
+	  *@return DataList (ProductGroups)
 	 **/
 	function AllParentGroups() {
 		return $this->ProductGroups();
@@ -348,9 +348,9 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Returns products in the same group
-	 * @return DataList
+	 * @return DataList (Products)
 	 **/
-	function Siblings() {
+	public function Siblings() {
 		if($this->ParentID) {
 			$extension = "";
 			if(Versioned::current_stage() == "Live") {
@@ -452,7 +452,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * @TODO: complete
 	 * @param String $compontent - the has many relationship you are looking at, e.g. OrderAttribute
-	 * @return DataList
+	 * @return DataList (CHECK!)
 	 */
 	public function getVersionedComponents($component = "ProductVariations") {
 		$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
@@ -967,7 +967,7 @@ class Product_Controller extends Page_Controller {
 	 *
 	 * This method can be extended to show products in the side bar.
 	 *
-	 * @return DataList
+	 * @return DataList (Products)
 	 */
 	function SidebarProducts(){
 		return null;
@@ -1235,7 +1235,7 @@ class Product_OrderItem extends OrderItem {
 	function getTableTitle() {
 		$tableTitle = _t("Product.UNKNOWN", "Unknown Product");
 		if($product = $this->Product()) {
-			$tableTitle = $product->renderWith("ProductTableTitle");
+			$tableTitle = strip_tags($product->renderWith("ProductTableTitle"));
 		}
 		return $tableTitle;
 	}
