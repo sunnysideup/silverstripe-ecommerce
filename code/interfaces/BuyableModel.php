@@ -32,7 +32,7 @@ interface BuyableModel {
 
 	/**
 	 * Returns Buybales in the same group
-	 * @return DataList
+	 * @return DataList (Products)
 	 **/
 	function Siblings();
 

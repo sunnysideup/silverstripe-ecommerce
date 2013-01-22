@@ -706,7 +706,7 @@ class OrderStep_Created extends OrderStep implements OrderStepInterface  {
 			$label = _t("OrderStep.SUBMITNOW", "Submit Now");
 			$msg = _t("OrderStep.MUSTDOSUBMITRECORD", "<p>Tick the box below to submit this order.</p>");
 			$problems = array();
-			if(!$order->Items()) {
+			if(!$order->getTotalItems()) {
 				$problems[] = "There are no items associated with this order.";
 			}
 			if(!$order->MemberID) {

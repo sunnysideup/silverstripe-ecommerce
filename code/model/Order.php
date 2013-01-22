@@ -149,15 +149,6 @@ class Order extends DataObject {
 	);
 
 	/**
-	 *
-	 * @return DataList
-	 */
-	function OrderModifiers() {
-		return OrderModifier::get()
-			->Filter(array("OrderID" => $this->ID));
-	}
-
-	/**
 	 * standard SS variable
 	 * @var String
 	 */
@@ -176,15 +167,6 @@ class Order extends DataObject {
 	 * @var String
 	 */
 	public static $description = "A collection of items that together make up the 'Order'.  An order can be placed.";
-
-	/**
-	 * Modifiers represent the additional charges or
-	 * deductions associated to an order, such as
-	 * shipping, taxes, vouchers etc.
-	 *
-	 * @var DataList
-	 */
-	protected static $modifiers = null;
 
 	/**
 	 * Tells us if an order needs to be recalculated
@@ -224,25 +206,26 @@ class Order extends DataObject {
 	 *
 	 * @param Controller $optionalController
 	 * @param Validator $optionalValidator
-	 * @return ArrayList | Null
+	 * @return ArrayList (ModifierForms) | Null
 	 **/
 	public function getModifierForms($optionalController = null, $optionalValidator = null) {
-		$dos = new ArrayList();
+		$arrayList = new ArrayList();
 		if (isset($_GET['debug_profile'])) Profiler::mark('Order::getModifierForms');
-		if($modifiers = $this->Modifiers()) {
+		$modifiers = $this->Modifiers();
+		if($modifiers->count()) {
 			foreach($modifiers as $modifier) {
 				if($modifier->ShowForm()) {
 					if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
 						$form->ShowFormInEditableOrderTable = $modifier->ShowFormInEditableOrderTable();
 						$form->ShowFormOutsideEditableOrderTable = $modifier->ShowFormOutsideEditableOrderTable();
-						$dos->push($form);
+						$arrayList->push($form);
 					}
 				}
 			}
 		}
 		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::getModifierForms');
-		if( $dos->count() ) {
-			return $dos;
+		if( $arrayList->count() ) {
+			return $arrayList;
 		}
 		else {
 			return null;
@@ -274,7 +257,7 @@ class Order extends DataObject {
 	 * this allows you to sort the orders by their submit dates.
 	 * You can retrieve this list and then add more to it (e.g. additional filters, additional joins, etc...)
 	 * @param Boolean $onlySubmittedOrders - only include Orders that have already been submitted.
-	 * @return DataList
+	 * @return DataList (Orders)
 	 */
 	public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = false){
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
@@ -283,10 +266,10 @@ class Order extends DataObject {
 			->LeftJoin($submittedOrderStatusLogClassName, "\"OrderStatusLog\".\"ID\" = \"".$submittedOrderStatusLogClassName."\".\"ID\"")
 			->Sort("OrderStatusLog.Created", "ASC");
 		if($onlySubmittedOrders) {
-			$list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName'");
+			$list = $list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName'");
 		}
 		else {
-			$list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName' OR \"OrderStatusLog\".\"ClassName\" IS NULL");
+			$list = $list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName' OR \"OrderStatusLog\".\"ClassName\" IS NULL");
 		}
 		return $list;
 	}
@@ -576,7 +559,7 @@ class Order extends DataObject {
 	 */
 	function getModifierTableField(){
 		$gridFieldConfig = GridFieldConfig_RecordEditor::create();
-		$source = $this->OrderModifiers();
+		$source = $this->Modifiers();
 		return new GridField("OrderModifiers", _t("OrderItems.PLURALNAME", "Order Items"), $source , $gridFieldConfig);
 	}
 
@@ -697,14 +680,20 @@ class Order extends DataObject {
 				$this->StatusID = $createdOrderStatus->ID;
 			}
 			$createdModifiersClassNames = array();
-			$this->modifiers = $this->modifiersFromDatabase($includingRemoved = true);
-			if($this->modifiers) {
-				foreach($this->modifiers as $modifier) {
+			$modifiersAsArrayList = new ArraList();
+			$modifiers = $this->modifiersFromDatabase($includingRemoved = true);
+			if($modifiers->count()) {
+				foreach($modifiers as $modifier) {
+					$modifiersAsArrayList->push($modifier);
+				}
+			}
+			if($modifiersAsArrayList->count()) {
+				foreach($modifiersAsArrayList as $modifier) {
 					$createdModifiersClassNames[$modifier->ID] = $modifier->ClassName;
 				}
 			}
 			else {
-				$this->modifiers = new DataList();
+
 			}
 			$modifiersToAdd = EcommerceConfig::get("Order", "modifiers");
 			if(is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
@@ -721,7 +710,7 @@ class Order extends DataObject {
 									$modifier->init();
 									//IMPORTANT - add as has_many relationship  (Attributes can be a modifier OR an OrderItem)
 									$this->Attributes()->add($modifier);
-									$this->modifiers->push($modifier);
+									$modifiersAsArrayList->push($modifier);
 								}
 							}
 						}
@@ -1251,7 +1240,7 @@ class Order extends DataObject {
 	/**
 	 * @alias function of Items
 	 * @param String filter - where statement to exclude certain items.
-	 * @return DataList
+	 * @return DataList (OrderItems)
 	 */
 	function OrderItems($filterOrClassName = "") {
 		return $this->Items($filterOrClassName);
@@ -1262,7 +1251,7 @@ class Order extends DataObject {
 	 * available as records in the database.
 	 * @param String filter - where statement to exclude certain items,
 	 *   you can also pass a classname (e.g. MyOrderItem), in which case only this class will be returned (and any class extending your given class)
-	 * @return DataList
+	 * @return DataList (OrderItems)
 	 */
 	protected function itemsFromDatabase($filterOrClassName = "") {
 		$className = "OrderItem";
@@ -1279,13 +1268,21 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * @alias for Modifiers
+	 * @return DataList (OrderModifiers)
+	 */
+	public function OrderModifiers() {
+		return $this->Modifiers();
+	}
+
+	/**
 	 * Returns the modifiers of the order, if it hasn't been saved yet
 	 * it returns the modifiers from session, if it has, it returns them
 	 * from the DB entry. ONLY USE OUTSIDE ORDER
 	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
-	 * @return DataList
+	 * @return DataList (OrderModifiers)
 	 */
-	function Modifiers($filterOrClassName = '') {
+	public function Modifiers($filterOrClassName = '') {
 		return $this->modifiersFromDatabase($filterOrClassName);
 	}
 
@@ -1294,7 +1291,7 @@ class Order extends DataObject {
 	 * available as records in the database.
 	 * NOTE: includes REMOVED Modifiers, so that they do not get added again...
 	 * @param String filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
-	 * @return DataList
+	 * @return DataList (OrderModifiers)
 	 */
 	protected function modifiersFromDatabase($filterOrClassName = '') {
 		$className = "OrderModifier";
@@ -1338,8 +1335,8 @@ class Order extends DataObject {
 		//check if order has modifiers already
 		//check /re-add all non-removable ones
 		//$start = microtime();
-		$orderItems = $this->orderItems();
-		if($orderItems) {
+		$orderItems = $this->itemsFromDatabase();
+		if($orderItems->count()) {
 			foreach($orderItems as $orderItem){
 				if($orderItem) {
 					$orderItem->runUpdate($force);
@@ -1358,7 +1355,7 @@ class Order extends DataObject {
 	 */
 	public function calculateModifiers($force = false) {
 		$createdModifiers = $this->modifiersFromDatabase();
-		if($createdModifiers) {
+		if($createdModifiers->count()) {
 			foreach($createdModifiers as $modifier){
 				if($modifier) {
 					$modifier->runUpdate($force);
@@ -1381,7 +1378,8 @@ class Order extends DataObject {
 	function ModifiersSubTotal($excluded = null, $stopAtExcludedModifier = false) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('Order::ModifiersSubTotal');
 		$total = 0;
-		if($modifiers = $this->Modifiers()) {
+		$modifiers = $this->Modifiers();
+		if($modifiers->count()) {
 			foreach($modifiers as $modifier) {
 				if(!$modifier->IsRemoved()) { //we just double-check this...
 					if(is_array($excluded) && in_array($modifier->ClassName, $excluded)) {
@@ -1421,7 +1419,8 @@ class Order extends DataObject {
 	 * @return DataObject (OrderModifier)
 	 **/
 	function RetrieveModifier($className) {
-		if($modifiers = $this->Modifiers()) {
+		$modifiers = $this->Modifiers()
+		if($modifers->count()) {
 			foreach($modifiers as $modifier) {
 				if($modifier instanceof $className) {
 					return $modifier;
@@ -1611,11 +1610,10 @@ class Order extends DataObject {
 	 * Returns all the order logs that the current member can view
 	 * i.e. some order logs can only be viewed by the admin (e.g. suspected fraud orderlog).
 	 *
-	 * @return DataList
+	 * @return ArrayList (OrderStatusLogs)
 	 **/
-
-	function CanViewOrderStatusLogs() {
-		$canViewOrderStatusLogs = new DataList();
+	public function CanViewOrderStatusLogs() {
+		$canViewOrderStatusLogs = new ArrayList();
 		$logs = $this->OrderStatusLogs();
 		foreach($logs as $log) {
 			if($log->canView()) {
@@ -1627,7 +1625,7 @@ class Order extends DataObject {
 
 	/**
 	 * returns all the logs that can be viewed by the customer.
-	 * @return ArrayList
+	 * @return ArrayList (OrderStausLogs)
 	 */
 	function CustomerViewableOrderStatusLogs() {
 		$customerViewableOrderStatusLogs = new ArrayList();
@@ -1816,7 +1814,8 @@ class Order extends DataObject {
 	function getSubTotal() {
 		if (isset($_GET['debug_profile'])) Profiler::mark('Order::SubTotal');
 		$result = 0;
-		if($items = $this->Items()) {
+		$items = $this->Items()
+		if($items->count()) {
 			foreach($items as $item) {
 				if($item instanceOf OrderAttribute) {
 					$result += $item->Total();
@@ -1837,9 +1836,9 @@ class Order extends DataObject {
 	}
 
 	/**
-  	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
-	 *@return float
-  	 */
+   * Returns the total cost of an order including the additional charges or deductions of its modifiers.
+	 * @return float
+   */
 	function Total() {return $this->getTotal();}
 	function getTotal() {
 		return $this->SubTotal() + $this->ModifiersSubTotal();
@@ -1949,7 +1948,7 @@ class Order extends DataObject {
 	 * @return Integer
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
-	public function getTotalItems($recalculate = false) {
+	public function getTotalItemsgetTotalItems($recalculate = false) {
 		if($this->totalItems === null || $recalculate) {
 			$this->totalItems = OrderItem::get()
 				->where("\"OrderAttribute\".\"OrderID\" = ".$this->ID." AND \"OrderItem\".\"Quantity\" > 0")

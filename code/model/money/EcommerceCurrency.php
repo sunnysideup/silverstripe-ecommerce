@@ -108,15 +108,17 @@ class EcommerceCurrency extends DataObject {
 	 * @return DataList | null
 	 */
 	public static function ecommerce_currency_list(){
-		$dos = EcommerceCurrency::get(
-			"EcommerceCurrency",
-			"\"InUse\" = 1",
-			"IF(\"Code\" = '".EcommerceConfig::get("EcommerceCurrency", "default_currency")."', 0, 1) ASC, \"InUse\" DESC, \"NAME\" ASC, \"Code\" ASC"
-		);
-		if($dos) {
-			if($dos->count() < 2) {
-				return null;
-			}
+		$dos = EcommerceCurrency::get()
+			->Filter(array("InUse" => 1))
+			->Sort(
+				array(
+					"IF(\"Code\" = '".EcommerceConfig::get("EcommerceCurrency", "default_currency")."', 0, 1)" => "ASC",
+					"Name" => "ASC",
+					"Code" => "ASC"
+				)
+			);
+		if($dos->count() < 2) {
+			return null;
 		}
 		return $dos;
 	}

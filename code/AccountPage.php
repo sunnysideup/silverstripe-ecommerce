@@ -143,7 +143,7 @@ class AccountPage extends Page {
 			$this->calculatedOutstanding = 0;
 			$member = Member::currentUser();
 			$canDelete = false;
-			if($this->pastOrders) {
+			if($this->pastOrders->count()) {
 				foreach($this->pastOrders as $order) {
 					$this->calculatedTotal += $order->Total();
 					$this->calculatedPaid += $order->TotalPaid();
@@ -156,14 +156,13 @@ class AccountPage extends Page {
 
 	/**
 	 *
-	 * @return DataList
+	 * @return DataList (Orders)
 	 */
 	protected function pastOrdersSelection(){
 		return Order::get()
 			->where(
 				"\"Order\".\"MemberID\" = ".intval(Member::currentUserID())."
-				AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)
-				AND \"OrderStep\".\"ShowAsUncompletedOrder\" = 0 ")
+				AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)")
 			->innerJoin("OrderStep", "\"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
 	}
 

@@ -633,7 +633,7 @@ class ShoppingCart extends Object{
 
 			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Items</h1>";
 			$items = $this->currentOrder()->Items();
-			if($items) {
+			if($items->count()) {
 				foreach($items as $item) {
 					Debug::show($item);
 				}
@@ -644,7 +644,7 @@ class ShoppingCart extends Object{
 
 			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Modifiers</h1>";
 			$modifiers = $this->currentOrder()->Modifiers();
-			if($modifiers) {
+			if($modifiers->count()) {
 				foreach($modifiers as $modifier) {
 					Debug::show($modifier);
 				}

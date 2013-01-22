@@ -399,8 +399,9 @@ class EcommerceDBConfig extends DataObject {
 	}
 
 	/**
-	 *
-	 * @return DataList
+	 * return null if there is less than two currencies in use
+	 * on the site.
+	 * @return DataList | Null
 	 */
 	function Currencies(){
 		return EcommerceCurrency::ecommerce_currency_list();
