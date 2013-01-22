@@ -111,7 +111,7 @@ class ShopAccountForm extends Form {
 					$order->write();
 				}
 				$member->login();
-				$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "bad");
+				$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "good");
 			}
 			else {
 				$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
