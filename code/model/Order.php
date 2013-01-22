@@ -680,7 +680,7 @@ class Order extends DataObject {
 				$this->StatusID = $createdOrderStatus->ID;
 			}
 			$createdModifiersClassNames = array();
-			$modifiersAsArrayList = new ArraList();
+			$modifiersAsArrayList = new ArrayList();
 			$modifiers = $this->modifiersFromDatabase($includingRemoved = true);
 			if($modifiers->count()) {
 				foreach($modifiers as $modifier) {
@@ -1419,7 +1419,7 @@ class Order extends DataObject {
 	 * @return DataObject (OrderModifier)
 	 **/
 	function RetrieveModifier($className) {
-		$modifiers = $this->Modifiers()
+		$modifiers = $this->Modifiers();
 		if($modifers->count()) {
 			foreach($modifiers as $modifier) {
 				if($modifier instanceof $className) {
@@ -1814,7 +1814,7 @@ class Order extends DataObject {
 	function getSubTotal() {
 		if (isset($_GET['debug_profile'])) Profiler::mark('Order::SubTotal');
 		$result = 0;
-		$items = $this->Items()
+		$items = $this->Items();
 		if($items->count()) {
 			foreach($items as $item) {
 				if($item instanceOf OrderAttribute) {
@@ -1948,7 +1948,7 @@ class Order extends DataObject {
 	 * @return Integer
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
-	public function getTotalItemsgetTotalItems($recalculate = false) {
+	public function getTotalItems($recalculate = false) {
 		if($this->totalItems === null || $recalculate) {
 			$this->totalItems = OrderItem::get()
 				->where("\"OrderAttribute\".\"OrderID\" = ".$this->ID." AND \"OrderItem\".\"Quantity\" > 0")

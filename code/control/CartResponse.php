@@ -95,7 +95,7 @@ class CartResponse extends EcommerceResponse {
 		);
 
 		//order modifiers
-		$modifiers = $currentOrder->Modifiers()
+		$modifiers = $currentOrder->Modifiers();
 		if ($modifiers->count()) {
 			foreach ($modifiers as $modifier) {
 				$modifier->updateForAjax($js);
