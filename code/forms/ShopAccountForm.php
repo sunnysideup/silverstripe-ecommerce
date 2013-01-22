@@ -35,7 +35,6 @@ class ShopAccountForm extends Form {
 			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
 			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
 			$fields->push($passwordField);
-			$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
 			$actions = new FieldSet(
 				new FormAction('submit', _t('Account.SAVE','Save Changes'))
 			);
@@ -56,16 +55,16 @@ class ShopAccountForm extends Form {
 					$fields->push($memberField);
 				}
 			}
-
-			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
 			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
+			$passwordFieldCheck = new PasswordField('PasswordCheck', _t('Account.PASSWORDCHECK','Password (repeat)'));
 			$fields->push($passwordField);
-			$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
+			$fields->push($passwordFieldCheck);
 			$actions = new FieldSet(
 				new FormAction('creatememberandaddtoorder', _t('Account.SAVE','Create Account'))
 			);
 		}
 
+		$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
@@ -193,6 +192,46 @@ class ShopAccountForm_Validator extends RequiredFields{
 				$this->validationError(
 					"Password",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
+					"required"
+				);
+				$valid = false;
+			}
+		}
+		//password for new user
+		if(isset($data["PasswordCheck"]) && isset($data["Password"])) {
+			if($data["PasswordCheck"] != $data["Password"]) {
+				$this->validationError(
+					"Password",
+					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
+					"required"
+				);
+				$valid = false;
+			}
+			if(strlen($data["Password"]) < 7 ) {
+				$this->validationError(
+					"Password",
+					_t('Account.PASSWORDMINIMUMLENGTH', 'Please enter a password of at least seven characters.'),
+					"required"
+				);
+				$valid = false;
+			}
+		}
+		//
+		if(isset($data["FirstName"])) {
+			if(strlen($data["FirstName"]) < 2) {
+				$this->validationError(
+					"FirstName",
+					_t('Account.NOFIRSTNAME', 'Please enter your first name.'),
+					"required"
+				);
+				$valid = false;
+			}
+		}
+		if(isset($data["Surname"])) {
+			if(strlen($data["Surname"]) < 2) {
+				$this->validationError(
+					"Surname",
+					_t('Account.NOSURNAME', 'Please enter your surname.'),
 					"required"
 				);
 				$valid = false;
