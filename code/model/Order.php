@@ -637,7 +637,7 @@ class Order extends DataObject {
 			new GridFieldDetailForm()
 		);
 		$title ? $title : $title = _t("OrderItem.PLURALNAME", "Order Items");
-		if($source == "OrderStatusLog") {
+		if($sourceClass == "OrderStatusLog") {
 			$source = $this->OrderStatusLogs();
 		}
 		else {
