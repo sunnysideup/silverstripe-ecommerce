@@ -234,7 +234,7 @@ class OrderAddress extends DataObject {
 	 **/
 	protected function getCountryField($name) {
 		$countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
-		$title = singleton("EcommerceRegion")->i18n_singular_name();
+		$title = singleton("EcommerceCountry")->i18n_singular_name();
 		$countryField = new DropdownField($name, $title, $countriesForDropdown, EcommerceCountry::get_country());
 		if(count($countriesForDropdown) < 2) {
 			$countryField = $countryField->performReadonlyTransformation();
@@ -454,7 +454,7 @@ class OrderAddress extends DataObject {
 	 * @param Boolean $keepDoubles - keep addresses that are the same (if set to false, only unique addresses are returned)
 	 * @return ArrayList (BillingAddresses | ShippingAddresses)
 	 **/
-	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {0
+	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
 		$returnArrayList = new ArrayList();
 		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
 		if($orders->count()) {
