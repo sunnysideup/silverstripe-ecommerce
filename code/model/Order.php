@@ -188,7 +188,7 @@ class Order extends DataObject {
 	 *
 	 * @var integer
 	 */
-	protected $totalItems = -1;
+	protected $totalItems = null;
 
 	/**
 	 * Total Items : total items in cart
@@ -1914,7 +1914,7 @@ class Order extends DataObject {
 	 **/
 	public function TotalItems($recalculate = false){return $this->getTotalItems($recalculate);}
 	public function getTotalItems($recalculate = false) {
-		if($this->totalItems == -1 || $recalculate) {
+		if($this->totalItems === null || $recalculate) {
 			//to do, why do we check if you can edit ????
 			$this->totalItems = DB::query("
 				SELECT COUNT(\"OrderItem\".\"ID\")
@@ -1934,7 +1934,7 @@ class Order extends DataObject {
 	 **/
 	public function TotalItemsTimesQuantity($recalculate = false){return $this->getTotalItemsTimesQuantity($recalculate);}
 	public function getTotalItemsTimesQuantity($recalculate = false) {
-		if($this->totalItemsTimesQuantity == -1 || $recalculate) {
+		if($this->totalItemsTimesQuantity === null || $recalculate) {
 			//to do, why do we check if you can edit ????
 			$this->totalItemsTimesQuantity = DB::query("
 				SELECT SUM(\"OrderItem\".\"Quantity\")
