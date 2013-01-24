@@ -1,6 +1,13 @@
-
+<style type="text/css">
+	#EcommerceDatabaseAdmin {margin: 20px;}
+	#EcommerceDatabaseAdmin h3 {margin-top: 40px; margin-bottom: 0px; padding-bottom: 0px; border-bottom: 1px solid #002137; }
+	#EcommerceDatabaseAdmin li {margin-top: 10px; margin-bottm: 10px; list-style: lower-greek; margin-left: 10px;}
+	#EcommerceDatabaseAdmin a:hover {background-color: yellow;}
+</style>
 <div id="EcommerceDatabaseAdmin">
-
+	<div id="Outcome">
+		$Outcome
+	</div>
 	<% if OverallConfig %>
 	<h3>Check your settings</h3>
 	<p>Check your settings whenever you are working on this site to make sure they are all up-to-date and valid.</p>

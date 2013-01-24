@@ -72,6 +72,7 @@ class OrderConfirmationPage extends CartPage{
 	/**
 	 * Standard SS function, we only allow for one OrderConfirmation Page to exist
 	 * but we do allow for extensions to exist at the same time.
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
@@ -92,7 +93,7 @@ class OrderConfirmationPage extends CartPage{
 
 	/**
 	 * standard SS method for decorators.
-	 * @param Array - $fields: array of fields to start with
+	 * @param Boolean - $includerelations: array of fields to start with
 	 * @return null ($fields variable is automatically updated)
 	 */
 	function fieldLabels($includerelations = true) {
@@ -146,8 +147,8 @@ class OrderConfirmationPage extends CartPage{
 
 	/**
 	 * Return a link to view the order on this page.
-	 * @return String (URLSegment)
 	 * @param int|string $orderID ID of the order
+	 * @return String (URLSegment)
 	 */
 	public static function get_order_link($orderID) {
 		return self::find_link(). 'showorder/' . $orderID . '/';
@@ -155,8 +156,8 @@ class OrderConfirmationPage extends CartPage{
 
 	/**
 	 * Return a link to view the order on this page.
-	 * @return String (URLSegment)
 	 * @param int|string $orderID ID of the order
+	 * @return String (URLSegment)
 	 */
 	public static function get_email_link($orderID) {
 		return self::find_link(). 'sendreceipt/' . $orderID . '/';
@@ -164,8 +165,8 @@ class OrderConfirmationPage extends CartPage{
 
 	/**
 	 * Return a link to view the order on this page.
-	 * @return String (URLSegment)
 	 * @param int|string $orderID ID of the order
+	 * @return String (URLSegment)
 	 */
 	public function getOrderLink($orderID) {
 		return self::get_order_link($orderID);
@@ -173,15 +174,16 @@ class OrderConfirmationPage extends CartPage{
 
 	/**
 	 * returns the Checkout_StepDescription assocatiated with the final step: the order confirmation.
+	 * @param Boolean $isCurrentStep
 	 * @return Checkout_StepDescription
 	 */
-	public function CurrentCheckoutStep($current = false) {
+	public function CurrentCheckoutStep($isCurrentStep = false) {
 		$do = new CheckoutPage_StepDescription();
 		$do->Link = $this->Link;
 		$do->Heading = $this->MenuTitle;
 		$do->Code = $this->URLSegment;
 		$do->LinkingMode = "notCompleted";
-		if($current) {
+		if($isCurrentStep) {
 			$do->LinkingMode .= " current";
 		}
 		$do->Completed = 0;
@@ -212,10 +214,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	/**
 	 * This method exists just so that template
 	 * sets CurrentOrder variable
-	 *
-	 *@return array
+	 * @param HTTPRequest
+	 * @return array
 	 **/
-	function showorder($request) {
+	function showorder(SS_HTTPRequest $request) {
 		isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = "mysite";
 		if(isset($_REQUEST["print"])) {
 			Requirements::clear();
@@ -232,6 +234,61 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			return $this->renderWith("PackingSlip");
 		}
 		return array();
+	}
+
+	/**
+	 * This is an additional way to look at an order.
+	 * The order is already retrieved from the init function
+	 *
+	 * @return Array
+	 **/
+	function retrieveorder(SS_HTTPRequest $request){
+		return array();
+	}
+
+	/**
+	 * @param HTTPRequest
+	 * @return Array - just so the template is still displayed
+	 **/
+	function sendreceipt(SS_HTTPRequest $request) {
+		if($o = $this->currentOrder) {
+			if($m = $o->Member()) {
+				if($m->Email) {
+					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
+					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
+					$o->sendReceipt($subject, $message, true);
+					$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An order receipt has been sent to: ').$m->Email.'.';
+				}
+				else {
+					$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOTSENDING', 'Email could NOT be sent.');
+				}
+			}
+			else {
+				$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No email could be found for sending this receipt.');
+			}
+		}
+		else {
+			$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
+		}
+		$baseFolder = Director::baseFolder() ;
+		if(!class_exists('Emogrifier')) {
+			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
+		}
+		Requirements::clear();
+		isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = "mysite";
+		Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		Requirements::themedCSS("Order_Invoice", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		$html =  $this->renderWith("Order_ReceiptEmail");
+		// if it's an html email, filter it through emogrifier
+		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;
+		$html .= "\r\n\r\n<!-- CSS can be found here: $cssFileLocation -->";
+		$cssFileHandler = fopen($cssFileLocation, 'r');
+		$css = fread($cssFileHandler,  filesize($cssFileLocation));
+		fclose($cssFileHandler);
+		$emog = new Emogrifier($html, $css);
+		$html = $emog->emogrify();
+		return $html;
 	}
 
 	/**
@@ -300,7 +357,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 
 	/**
 	 * show the payment form
-	 *@return Form (OrderForm_Payment) or Null
+	 *
+	 * @return Form (OrderForm_Payment) or Null
 	 **/
 	function PaymentForm(){
 		if($this->Order()){
@@ -309,59 +367,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 				return new OrderForm_Payment($this, 'PaymentForm', $this->currentOrder);
 			}
 		}
-	}
-
-	/**
-	 * This is an additional way to look at an order.
-	 * The order is already retrieved from the
-	 *@return Array
-	 **/
-	function retrieveorder(){
-		return array();
-	}
-
-	/**
-	 *@return Array - just so the template is still displayed
-	 **/
-	function sendreceipt($request) {
-		if($o = $this->currentOrder) {
-			if($m = $o->Member()) {
-				if($m->Email) {
-					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					$o->sendReceipt($subject, $message, true);
-					$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An order receipt has been sent to: ').$m->Email.'.';
-				}
-				else {
-					$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOTSENDING', 'Email could NOT be sent.');
-				}
-			}
-			else {
-				$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No email could be found for sending this receipt.');
-			}
-		}
-		else {
-			$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
-		}
-		$baseFolder = Director::baseFolder() ;
-		if(!class_exists('Emogrifier')) {
-			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
-		}
-		Requirements::clear();
-		isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = "mysite";
-		Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("Order_Invoice", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		$html =  $this->renderWith("Order_ReceiptEmail");
-		// if it's an html email, filter it through emogrifier
-		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;
-		$html .= "\r\n\r\n<!-- CSS can be found here: $cssFileLocation -->";
-		$cssFileHandler = fopen($cssFileLocation, 'r');
-		$css = fread($cssFileHandler,  filesize($cssFileLocation));
-		fclose($cssFileHandler);
-		$emog = new Emogrifier($html, $css);
-		$html = $emog->emogrify();
-		return $html;
 	}
 
 

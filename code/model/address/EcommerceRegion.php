@@ -135,7 +135,7 @@ class EcommerceRegion extends DataObject {
 
 	/**
 	 * converts a code into a proper title
-	 * @param $code String (Code)
+	 * @param String  $code (Code)
 	 * @return String ( name)
 	 */
 	public static function find_title($code) {
@@ -201,7 +201,7 @@ class EcommerceRegion extends DataObject {
 	 * @var Array of country codes, e.g. ("NZ", "NP", "AU");
 	**/
 	protected static $for_current_order_only_show_regions = array();
-		static function set_for_current_order_only_show_regions($a) {
+		static function set_for_current_order_only_show_regions(Array $a) {
 			if(count(self::$for_current_order_only_show_regions)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
 				self::$for_current_order_only_show_regions = array_intersect($a, self::$for_current_order_only_show_regions);
@@ -213,8 +213,12 @@ class EcommerceRegion extends DataObject {
 		//NOTE: this method below is more generic (does not have _regions part) so that it can be used by a method that is shared between EcommerceCountry and EcommerceRegion
 		static function get_for_current_order_only_show_regions() {return self::$for_current_order_only_show_regions;}
 
+	/**
+	 *
+	 * @var Array
+	 */
 	protected static $for_current_order_do_not_show_regions = array();
-		static function set_for_current_order_do_not_show_regions($a) {
+		static function set_for_current_order_do_not_show_regions(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_regions = array_merge($a, self::$for_current_order_do_not_show_regions);
 		}

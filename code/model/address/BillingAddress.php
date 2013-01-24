@@ -172,9 +172,10 @@ class BillingAddress extends OrderAddress {
 	}
 
 	/**
-	 *@return FieldList
+	 * @param Member $member
+	 * @return FieldList
 	 **/
-	public function getFields($member = null) {
+	public function getFields(Member $member = null) {
 		$fields = parent::getEcommerceFields();
 		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Details'), 3));
 		if($member) {

@@ -175,6 +175,7 @@ class OrderItem extends OrderAttribute {
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canDelete($member = null) {
@@ -205,9 +206,11 @@ class OrderItem extends OrderAttribute {
 
 	/**
 	 * standard SS method
+	 * @param BuyableModel $buyable
+	 * @param Double $quantity
 	 * @return FieldList
 	 **/
-	public function addBuyableToOrderItem($buyable, $quantity = 1) {
+	public function addBuyableToOrderItem(BuyableModel $buyable, $quantity = 1) {
 		$this->Version = $buyable->Version;
 		$this->BuyableID = $buyable->ID;
 		$this->BuyableClassName = $buyable->ClassName;
@@ -216,9 +219,10 @@ class OrderItem extends OrderAttribute {
 
 	/**
 	 * used to return data for ajax
+	 * @param Array
 	 * @return Array used to create JSON for AJAX
 	  **/
-	function updateForAjax(array &$js) {
+	function updateForAjax(array $js) {
 		$total = $this->TotalAsCurrencyObject()->Nice();
 		$ajaxObject = $this->AJAXDefinitions();
 		if($this->Quantity) {
@@ -280,17 +284,18 @@ class OrderItem extends OrderAttribute {
 				'v' => 1
 			);
 		}
+		return $js;
 	}
 
 	/**
 	 * saves details about the Order Item before the order is submittted
-	 * @param Bool $force - run it, even if it has run already
+	 * @param Bool $recalculate - run it, even if it has run already
 	 **/
-	function runUpdate($force = false){
+	function runUpdate($recalculate = false){
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderItem::runUpdate-for-'.$this->ClassName);
 		$oldValue = $this->CalculatedTotal - 0;
 		$newValue = ($this->UnitPrice() * $this->Quantity) - 0;
-		if((round($newValue, 5) != round($oldValue, 5) ) || $force) {
+		if((round($newValue, 5) != round($oldValue, 5) ) || $recalculate) {
 			$this->CalculatedTotal = $newValue;
 			$this->write();
 		}
@@ -341,9 +346,11 @@ class OrderItem extends OrderAttribute {
 	/**
 	 * Check if two Order Items are the same.
 	 * Useful when adding two items to cart.
+	 *
+	 * @param OrderItem $orderItem
 	 * @return Boolean
 	  **/
-	function hasSameContent($orderItem) {
+	function hasSameContent(OrderItem $orderItem) {
 		return
 			$orderItem instanceof OrderItem &&
 			$this->BuyableID == $orderItem->BuyableID &&
@@ -444,7 +451,7 @@ class OrderItem extends OrderAttribute {
 				self::$price_has_been_fixed[$this->OrderID] = $order->IsSubmitted() ? true : false;
 			}
 		}
-		return self::$price_has_been_fixed[$this->OrderID];
+		return isset(self::$price_has_been_fixed[$this->OrderID]) ? self::$price_has_been_fixed[$this->OrderID] : false;
 	}
 
 
@@ -462,8 +469,8 @@ class OrderItem extends OrderAttribute {
 
 	/**
 	 *
-	 * @return DataObject (Any type of Data Object that is buyable)
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
+	 * @return DataObject (Any type of Data Object that is buyable)
 	  **/
 	function Buyable($current = false) {
 		$tempBuyableStoreType = $current ? 1 : 0;

@@ -102,14 +102,14 @@ class ProductGroup extends Page {
 
 	/**
 	 * Shop Admins can edit
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
-		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
-		if($member && Permission::checkMember($member, $shopAdminCode)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		return parent::canEdit($member);
@@ -118,6 +118,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {
@@ -126,6 +127,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canPublish($member = null) {
@@ -135,6 +137,7 @@ class ProductGroup extends Page {
 	/**
 	 * Standard SS method
 	 * //check if it is in a current cart?
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDeleteFromLive($member = null) {
@@ -143,6 +146,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {
@@ -202,7 +206,7 @@ class ProductGroup extends Page {
 	/**
 	 * Returns the Title for a sorting key.
 	 * If no key is provided then the default key is used.
-	 * @param String
+	 * @param String $key
 	 * @return String
 	 */
 	protected function getSortOptionTitle($key = ""){ // NOT STATIC
@@ -334,9 +338,21 @@ class ProductGroup extends Page {
 		4 => "Direct Child Products + Grand Child Products + Great Grand Child Products + Great Great Grand Child Products",
 		99 => "All Child Products (default)"
 	);
-		public function SetShowProductLevels($a) {$this->showProductLevels = $a;}
-		public function RemoveShowProductLevel($i) {unset($this->showProductLevels[$i]);}
-		public function AddShowProductLevel($key, $value) {$this->showProductLevels[$key] = $value; ksort($this->showProductLevels);}
+	/**
+	 * @param Array $a
+	 */
+	public function SetShowProductLevels(Array $a) {$this->showProductLevels = $a;}
+
+	/**
+	 * @param Int $i
+	 */
+	public function RemoveShowProductLevel($i) {unset($this->showProductLevels[$i]);}
+
+	/**
+	 * @param String $key
+	 * @param Mixed $value
+	 */
+	public function AddShowProductLevel($key, $value) {$this->showProductLevels[$key] = $value; ksort($this->showProductLevels);}
 
 	/**
 	 * standard SS method
@@ -553,7 +569,7 @@ class ProductGroup extends Page {
 			if($this->totalCount) {
 				$this->limitedSortedProducts = $this->allProducts
 					->Sort($this->currentSortSQL())
-					->Limit($this->currentLimitSQL());
+					->Limit($this->currentLimitSQL(), $this->currentLimitOffsetSQL());
 				return $this->limitedSortedProducts;
 			}
 		}
@@ -712,14 +728,24 @@ class ProductGroup extends Page {
 	}
 
 	/**
-	 * returns the LIMIT part of the final selection of products.
-	 * @return String
+	 * returns the LIMIT part (OFFSET ONLY) of the final selection of products.
+	 * @see: ProductGroup::MyNumberOfProductsPerPage method as well
+	 * @return Int
 	 */
 	protected function currentLimitSQL() {
+		return $this->MyNumberOfProductsPerPage();
+	}
+
+	/**
+	 * returns the LIMIT part (OFFSET ONLY) of the final selection of products.
+	 * @return Int
+	 */
+	protected function currentLimitOffsetSQL() {
 		$limit = (isset($_GET['start']) && (int)$_GET['start'] > 0) ? (int)$_GET['start'] : "0";
-		$limit .= ", ".$this->MyNumberOfProductsPerPage();
 		return $limit;
 	}
+
+
 
 	/**
 	 * returns the total numer of products (before pagination)
@@ -808,13 +834,14 @@ class ProductGroup extends Page {
 
 	/**
 	 * Returns children ProductGroup pages of this group.
+	 *
 	 * @param Int $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Groups are returned...
 	 * @param String $filter - additional filter to be added
 	 * @param Int $numberOfRecursions - current level of depth
 	 * @return ArrayList (ProductGroups)
 	 */
 	function ChildGroups($maxRecursiveLevel, $filter = "", $numberOfRecursions = 0) {
-		$output = new ArrayList();
+		$arrayList = new ArrayList();
 		$numberOfRecursions++;
 		if($numberOfRecursions < $maxRecursiveLevel){
 			$filterWithAND = '';
@@ -825,12 +852,15 @@ class ProductGroup extends Page {
 			$children = ProductGroup::get()->where($where);
 			if($children->count()){
 				foreach($children as $child){
-					$output->push($child);
-					$output->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions));
+					$arrayList = $arrayList->push($child);
+					$arrayList = $arrayList->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions));
 				}
 			}
 		}
-		return $output;
+		if(!$arrayList instanceOf ArrayList) {
+			user_error("We expect an array list as output");
+		}
+		return $arrayList;
 	}
 
 	/**
@@ -884,6 +914,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Recursively generate a product menu.
+	 * @param String $filter
 	 * @return ArrayList (ProductGroups)
 	 */
 	function GroupsMenu($filter = "ShowInMenus = 1") {

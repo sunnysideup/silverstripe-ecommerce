@@ -49,7 +49,11 @@ class EcommerceRole extends DataExtension {
 
 	/**
 	 * returns an aray of customers
-	 * @return Array
+	 * The unselect option shows an extra line, basically allowing you to deselect the
+	 * current option.
+	 *
+	 * @param Boolean $showUnselectedOption
+	 * @return Array ( ID => Email (member.title) )
 	 */
 	public static function list_of_customers($showUnselectedOption = false){
 		//start array
@@ -59,7 +63,7 @@ class EcommerceRole extends DataExtension {
 		}
 		//get customer group
 		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
-		Group::get()
+		$group = Group::get()
 			->Filter(array("Code" => $customerCode))
 			->First();
 		//fill array
@@ -81,10 +85,11 @@ class EcommerceRole extends DataExtension {
 
 	/**
 	 * tells us if the current member is in the Shop Administrators Group.
+	 *
 	 * @param Member | Null $member
 	 * @return Boolean
 	 */
-	public static function current_member_is_shop_admin($member = null) {
+	public static function current_member_is_shop_admin(Member $member = null) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
@@ -103,6 +108,12 @@ class EcommerceRole extends DataExtension {
 		return Group::get()->FilterAny(array("Code" => $adminCode))->First();
 	}
 
+	/**
+	 * Update the CMS Fields
+	 *
+	 * @param FieldList $fields
+	 * @return FieldList
+	 */
 	public function updateCMSFields(FieldList $fields) {
 		//$orderField = $fields->dataFieldByName("Orders");
 		$preferredCurrencyField = $fields->dataFieldByName("PreferredCurrencyID");
@@ -126,7 +137,7 @@ class EcommerceRole extends DataExtension {
 	 * Save a preferred currency for a member.
 	 * @param EcommerceCurrency $currency - object for the currency
 	 */
-	public function SetPreferredCurrency($currency){
+	public function SetPreferredCurrency(EcommerceCurrency $currency){
 		if($this->owner->exists()) {
 			if($currency && $currency->exists()) {
 				$this->owner->PreferredCurrencyID = $currency->ID;
@@ -168,7 +179,7 @@ class EcommerceRole extends DataExtension {
 	}
 
 	/**
-	 * @param Boolean $additionalFields: extra fields to be added.
+	 * @param Boolean $additionalFields: add extra fields.
 	 * @return FieldList
 	 */
 	function getEcommerceFields($additionalFields = false) {
@@ -229,10 +240,10 @@ class EcommerceRole extends DataExtension {
 		else {
 			$orders = Order::get_datalist_of_orders_with_submit_record(true);
 		}
-		$orders = $orders
+		$lastOrder = $orders
 			->Filter(array("MemberID" => $this->owner->ID))
 			->First();
-		return $orders;
+		return $lastOrder;
 	}
 
 	/**

@@ -130,6 +130,7 @@ class OrderAttribute extends DataObject {
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
@@ -139,7 +140,7 @@ class OrderAttribute extends DataObject {
 	/**
 	 * Standard SS method
 	 * This is an important method.
-	 *
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canView($member = null) {
@@ -159,7 +160,7 @@ class OrderAttribute extends DataObject {
 	/**
 	 * Standard SS method
 	 * This is an important method.
-	 *
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
@@ -178,6 +179,7 @@ class OrderAttribute extends DataObject {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canDelete($member = null) {

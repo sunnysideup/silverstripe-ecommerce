@@ -41,18 +41,6 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $collection_controller_class = 'SalesAdmin_CollectionController';
-
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	public static $record_controller_class = 'SalesAdmin_RecordController';
-
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
 	public static $menu_icon = "";
 
 	function init() {

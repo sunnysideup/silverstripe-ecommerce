@@ -308,9 +308,10 @@ class OrderStep extends DataObject {
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
 	 * Usually this is added before ActionNextStepManually
-	 *@param FieldList $fields
-	 *@param Order $order
-	 *@return FieldList
+	 *
+	 * @param FieldList $fields
+	 * @param Order $order
+	 * @return FieldList
 	 **/
 	public function addOrderStepFields(FieldList $fields, Order $order) {
 		return $fields;
@@ -342,37 +343,38 @@ class OrderStep extends DataObject {
 * moving between statusses...
 **************************************************/
 	/**
-		*initStep:
-		* makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
-		* should be able to run this function many times to check if the step is ready
-		* @see Order::doNextStatus
-		* @param Order object
-		* @return Boolean - true if the current step is ready to be run...
-		**/
+	 *initStep:
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
+	 **/
 	public function initStep(Order $order) {
 		user_error("Please implement this in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
 		return true;
 	}
 
 	/**
-		*doStep:
-	* should only be able to run this function once (init stops you from running it twice - in theory....)
-		*runs the actual step
-	*@see Order::doNextStatus
-		*@param Order object
-		*@return Boolean - true if run correctly
-		**/
+	 *doStep:
+	 * should only be able to run this function once
+	 * (init stops you from running it twice - in theory....)
+	 * runs the actual step
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if run correctly.
+	 **/
 	public function doStep(Order $order) {
 		user_error("Please implement this in a subclass of OrderStep", E_USER_WARNING);
 		return true;
 	}
 
 	/**
-	 * nextStep:
+	 *nextStep:
 	 * returns the next step (after it checks if everything is in place for the next step to run...)
 	 * @see Order::doNextStatus
-	 * @param Order object
-	 * @return DataObject | Null (next step OrderStep object)
+	 * @param Order $order
+	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
 		$nextOrderStepObject = OrderStep::get()
@@ -390,6 +392,7 @@ class OrderStep extends DataObject {
 
 	/**
 	 * Checks if a step has passed (been completed) in comparison to the current step
+	 *
 	 * @param String $code: the name of the step to check
 	 * @param Boolean $orIsEqualTo if set to true, this method will return TRUE if the step being checked is the current one
 	 * @return Boolean
@@ -413,27 +416,28 @@ class OrderStep extends DataObject {
 	}
 
 	/**
-	 *
-	 *@return Boolean
+	 * @param String $code
+	 * @return Boolean
 	 **/
 	public function hasPassedOrIsEqualTo($code) {
 		return $this->hasPassed($code, true);
 	}
 
 	/**
-	 *
-	 *@return Boolean
+	 * @param String $code
+	 * @return Boolean
 	 **/
 	public function hasNotPassed($code) {
 		return (bool)!$this->hasPassed($code, true);
 	}
 
 	/**
-	 *
-	 *@return Boolean
+	 * Opposite of hasPassed
+	 * @param String $code
+	 * @return Boolean
 	 **/
 	public function isBefore($code) {
-		return (bool)!$this->hasPassed($code, false);
+		return (bool) $this->hasPassed($code, false) ? false : true;
 	}
 
 	/**
@@ -450,12 +454,12 @@ class OrderStep extends DataObject {
 	 * Has an email been sent to the customer for this
 	 * order step.
 	 *"-10 days"
-	 * @param Order $order
-	 * @param Boolean $sendEvenIfDelayed
 	 *
+	 * @param Order $order
+	 * @param Boolean $checkDateOfOrder
 	 * @return Boolean
 	 **/
-	public function hasBeenSent($order, $checkDateOfOrder = true) {
+	public function hasBeenSent(Order $order, $checkDateOfOrder = true) {
 		//if it has been more than a week since the order was last edited (submitted) then we do not send emails as
 		//this would be embarrasing.
 		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-".EcommerceConfig::get("OrderStep", "number_of_days_to_send_update_email")))) {
@@ -484,9 +488,10 @@ class OrderStep extends DataObject {
 **************************************************/
 
 	/**
-	 *
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		//cant delete last status if there are orders with this status
 		$nextOrderStepObject = OrderStep::get()
@@ -512,10 +517,12 @@ class OrderStep extends DataObject {
 		return true;
 	}
 
+
 	/**
-	 *
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return false;
 	}
@@ -654,18 +661,22 @@ class OrderStep_Created extends OrderStep implements OrderStepInterface  {
 	);
 
 	/**
-	 * Can always run step.
-	 *@param DataObject - $order Order
-	 *@return Boolean
-	 **/
+		*initStep:
+		* makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+		* should be able to run this function many times to check if the step is ready
+		* @see Order::doNextStatus
+		* @param Order object
+		* @return Boolean - true if the current step is ready to be run...
+		**/
 	public function initStep(Order $order) {
 		return true;
 	}
 
 	/**
 	 * Add the member to the order, in case the member is not an admin.
-	 *@param DataObject - $order Order
-	 *@return Boolean
+	 *
+	 * @param DataObject - $order Order
+	 * @return Boolean
 	 **/
 	public function doStep(Order $order) {
 		if(!$order->MemberID) {
@@ -682,8 +693,9 @@ class OrderStep_Created extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * We can run the next step, once any items have been added.
-	 * @param DataObject - $order Order
-	 * @return DataObject | Null (nextStep DataObject)
+	 * @see Order::doNextStatus
+	 * @param Order $order
+	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
 		if($order->TotalItems($recalculate = true)) {
@@ -784,8 +796,11 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * Can run this step once any items have been submitted.
-	 *@param DataObject - $order Order
-	 *@return Boolean
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
 	 **/
 	public function initStep(Order $order) {
 		return (bool) $order->TotalItems($recalculate = true);
@@ -793,10 +808,11 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * Add a member to the order - in case he / she is not a shop admin.
-	 *@param DataObject - $order Order
-	 *@return Boolean
+	 *
+	 * @param Order object
+	 * @return Boolean - true if run correctly.
 	 **/
-	public function doStep(Order $order) {
+	 public function doStep(Order $order) {
 		if(!$order->IsSubmitted()) {
 			$className = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 			if(class_exists($className)) {
@@ -843,8 +859,8 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * go to next step if order has been submitted.
-	 *@param DataObject - $order Order
-	 *@return DataObject | Null	(next step OrderStep)
+	 * @param Order $order
+	 * @return OrderStep | Null	(next step OrderStep)
 	 **/
 	public function nextStep(Order $order) {
 		if($order->IsSubmitted()) {
@@ -913,10 +929,10 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 * can run step once order has been submitted.
 	 * NOTE: must have a payment (even if it is a fake payment).
 	 * The reason for this is if people pay straight away then they want to see the payment shown on their invoice.
-	 * @param DataObject $order Order
-	 * @return Boolean
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
 	 **/
-	public function initStep(Order $order) {
+	 public function initStep(Order $order) {
 		if( $order->IsSubmitted()) {
 			if($payments = $order->Payments()) {
 				if($payments->count()) {
@@ -955,8 +971,8 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * can do next step once the invoice has been sent or in case the invoice does not need to be sent.
-	 * @param DataObject $order Order
-	 * @return DataObject | Null	(next step OrderStep object)
+	 * @param Order $order
+	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
 		if(!$this->SendInvoiceToCustomer || $this->hasBeenSent($order)) {
@@ -1017,18 +1033,36 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface  {
 		"ShowAsInProcessOrder" => 1
 	);
 
+	/**
+	 *initStep:
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
+	 **/
 	public function initStep(Order $order) {
 		return true;
 	}
 
+	/**
+	 *doStep:
+	 * should only be able to run this function once
+	 * (init stops you from running it twice - in theory....)
+	 * runs the actual step
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if run correctly.
+	 **/
 	public function doStep(Order $order) {
 		return true;
 	}
 
 	/**
 	 * can go to next step if order has been paid
-	 *@param DataObject $order Order
-	 *@return DataObject | Null	(next step OrderStep object)
+	 * @see Order::doNextStatus
+	 * @param Order $order
+	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
 		if($order->IsPaid()) {
@@ -1083,10 +1117,27 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 		"ShowAsInProcessOrder" => 1
 	);
 
+	/**
+	 *initStep:
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
+	 **/
 	public function initStep(Order $order) {
 		return true;
 	}
 
+	/**
+	 *doStep:
+	 * should only be able to run this function once
+	 * (init stops you from running it twice - in theory....)
+	 * runs the actual step
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if run correctly.
+	 **/
 	public function doStep(Order $order) {
 		return true;
 	}
@@ -1104,7 +1155,6 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 		}
 		return null;
 	}
-
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
@@ -1162,10 +1212,24 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 		return $fields;
 	}
 
+	/**
+	 *initStep:
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
+	 **/
 	public function initStep(Order $order) {
 		return $order->IsPaid();
 	}
 
+	/**
+	 * execute the step
+	 *
+	 * @param Order $order
+	 * @return Boolean
+	 */
 	public function doStep(Order $order) {
 		$subject = $this->EmailSubject;
 		$message = $this->CustomerMessage;
@@ -1186,8 +1250,9 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * can continue if receipt has been sent or if there is no need to send a receipt.
-	 *@param DataObject $order Order
-	 *@return DataObject | Null - DataObject = next OrderStep
+	 *
+	 * @param Order $order
+	 * @return OrderStep | Null - DataObject = next OrderStep
 	 **/
 	public function nextStep(Order $order) {
 		if(!$this->SendReceiptToCustomer || $this->hasBeenSent($order)) {
@@ -1196,12 +1261,12 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 		return null;
 	}
 
-
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldList $fields
-	 *@param Order $order
-	 *@return FieldList
+	 *
+	 * @param FieldList $fields
+	 * @param Order $order
+	 * @return FieldList
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1259,18 +1324,38 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 		return $fields;
 	}
 
+	/**
+	 *initStep:
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
+	 **/
 	public function initStep(Order $order) {
 		return true;
 	}
 
+	/**
+	 *doStep:
+	 * should only be able to run this function once
+	 * (init stops you from running it twice - in theory....)
+	 * runs the actual step
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if run correctly.
+	 **/
 	public function doStep(Order $order) {
 		return true;
 	}
 
+
 	/**
-	 *
-	 *@param DataObject $order Order
-	 *@return DataObject | Null - DataObject = OrderStep
+	 *nextStep:
+	 * returns the next step (after it checks if everything is in place for the next step to run...)
+	 * @see Order::doNextStatus
+	 * @param Order $order
+	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
 		$orderStatusLog_DispatchPhysicalOrder = OrderStatusLog_PayOrderStatusLog_DispatchPhysicalOrdermentCheck::get()
@@ -1299,9 +1384,10 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldList $fields
-	 *@param Order $order
-	 *@return FieldList
+	 *
+	 * @param FieldList $fields
+	 * @param Order $order
+	 * @return FieldList
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1348,18 +1434,39 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface  {
 		"ShowAsCompletedOrder" => 1
 	);
 
+	/**
+	 *initStep:
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
+	 **/
 	public function initStep(Order $order) {
 		return true;
 	}
 
+	/**
+	 *doStep:
+	 * should only be able to run this function once
+	 * (init stops you from running it twice - in theory....)
+	 * runs the actual step
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if run correctly.
+	 **/
 	public function doStep(Order $order) {
 		return true;
 	}
 
+
 	/**
-	 *
-	 *@param DataObject $order Order
-	 *@return DataObject | Null - DataObject = OrderStep
+	 *nextStep:
+	 * returns the next step (after it checks if everything is in place for the next step to run...)
+	 * As this is the last step, we always return NULL!
+	 * @see Order::doNextStatus
+	 * @param Order $order
+	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
 		//IMPORTANT
@@ -1368,9 +1475,10 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldList $fields
-	 *@param Order $order
-	 *@return FieldList
+	 *
+	 * @param FieldList $fields
+	 * @param Order $order
+	 * @return FieldList
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);

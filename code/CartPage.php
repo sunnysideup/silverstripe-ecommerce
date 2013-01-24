@@ -99,6 +99,7 @@ class CartPage extends Page{
 	/**
 	 * Standard SS function, we only allow for one CartPage page to exist
 	 * but we do allow for extensions to exist at the same time.
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
@@ -155,7 +156,7 @@ class CartPage extends Page{
 
 	/**
 	 * Returns the "new order" link
-	 * @param Int $orderID - not used in CartPage
+	 * @param Int | String $orderID - not used in CartPage
 	 * @return String (URLSegment)
 	 */
 	public static function new_order_link($orderID) {
@@ -164,8 +165,8 @@ class CartPage extends Page{
 
 	/**
 	 * Return a link to view the order on this page.
-	 * @return String (URLSegment)
 	 * @param int|string $orderID ID of the order
+	 * @return Int | String (URLSegment)
 	 */
 	public static function get_order_link($orderID) {
 		return self::find_link(). 'showorder/' . $orderID . '/';
@@ -173,8 +174,8 @@ class CartPage extends Page{
 
 	/**
 	 * Return a link to view the order on this page.
-	 * @return String (URLSegment)
 	 * @param int|string $orderID ID of the order
+	 * @return String (URLSegment)
 	 */
 	public function getOrderLink($orderID) {
 		return self::get_order_link($orderID);
@@ -338,6 +339,139 @@ class CartPage_Controller extends Page_Controller{
 		$this->currentOrder->calculateOrderAttributes($force = false);
 	}
 
+
+
+
+
+	/***********************
+	 * Actions
+	 ***********************
+
+
+
+
+	/**
+	 * shows an order and loads it if it is not submitted.
+	 * @todo: do we still need loadorder controller method????
+	 * @param SS_HTTPRequest
+	 * @return array just so that template shows
+	 **/
+	function showorder(SS_HTTPRequest $request) {
+		if(!$this->currentOrder) {
+			$this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
+		}
+		else {
+			if(!$this->currentOrder->IsSubmitted()){
+				$shoppingCart = ShoppingCart::current_order();
+				if($shoppingCart->ID != $this->currentOrder->ID) {
+					if(ShoppingCart::singleton()->loadOrder($this->currentOrder)) {
+						$this->message = _t('CartPage.ORDERHASBEENLOADED', 'Order has been loaded.');
+					}
+					else {
+						$this->message = _t('CartPage.ORDERNOTLOADED', 'Order could not be loaded.');
+					}
+				}
+			}
+		}
+		return array();
+	}
+
+	/**
+	 * Loads either the "current order""into the shopping cart.
+	 *
+	 * TO DO: untested
+	 * TO DO: what to do with old order
+	 * @param SS_HTTPRequest
+	 * @return Array
+	 */
+	function loadorder(SS_HTTPRequest $request) {
+		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
+		ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
+		$this->redirect($this->Link());
+		return array();
+	}
+	/**
+	 * copies either the current order into the shopping cart
+	 *
+	 * TO DO: untested
+	 * TO DO: what to do with old order
+	 * @param SS_HTTPRequest
+	 * @return Array
+	 */
+	function copyorder(SS_HTTPRequest $request) {
+		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
+		ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
+		$this->redirect(CheckoutPage::find_last_step_link());
+		return array();
+	}
+
+	/**
+	 * save the order to a member. If no member exists then create the member first using the ShopAccountForm.
+	 * @param SS_HTTPRequest
+	 * @return Array
+	 * TO DO: untested
+	 */
+	function saveorder(SS_HTTPRequest $request) {
+		$member = Member::currentUser();
+		if(!$member) {
+			$this->showCreateAccountForm = true;
+			return array();
+		}
+		if($this->currentOrder && $this->currentOrder->getTotalItems()) {
+			$this->currentOrder->write();
+			self::set_message(_t("CartPage.ORDERSAVED", "Your order has been saved."));
+		}
+		else {
+			self::set_message(_t("CartPage.ORDERCOULDNOTBESAVED", "Your order could not be saved."));
+		}
+		$this->redirectBack();
+		return array();
+	}
+
+	/**
+	 * Delete the currently viewed order.
+	 *
+	 * TO DO: untested
+	 * @param SS_HTTPRequest
+	 * @return Array
+	 */
+	function deleteorder(SS_HTTPRequest $request) {
+		if(!$this->CurrentOrderIsInCart()) {
+			if($this->currentOrder->canDelete()) {
+				$this->currentOrder->delete();
+				self::set_message(_t("CartPage.ORDERDELETED", "Order has been deleted."));
+			}
+		}
+		self::set_message(_t("CartPage.ORDERNOTDELETED", "Order could not be deleted."));
+		return array();
+	}
+
+
+	/**
+	 * Start a new order
+	 * @param SS_HTTPRequest
+	 * @return Array
+	 * TO DO: untested
+	 */
+	function startneworder(SS_HTTPRequest $request) {
+		ShoppingCart::singleton()->clear();
+		self::set_message(_t("CartPage.NEWORDERSTARTED", "New order has been started."));
+		$this->redirect($this->Link());
+		return array();
+	}
+
+
+
+
+	/***********************
+	 * For use in templates
+	 ***********************
+
+
+
+
+
+
 	/**
 	 * This returns a ArraList, each dataobject has two vars: Title and Link
 	 * @return ArraList
@@ -406,59 +540,6 @@ class CartPage_Controller extends Page_Controller{
 		return $viewingRealCurrentOrder;
 	}
 
-	/**
-	 * shows an order and loads it if it is not submitted.
-	 * @todo: do we still need loadorder controller method????
-	 * @param SS_HTTPRequest
-	 * @return array just so that template shows
-	 **/
-	function showorder($request) {
-		if(!$this->currentOrder) {
-			$this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
-		}
-		else {
-			if(!$this->currentOrder->IsSubmitted()){
-				$shoppingCart = ShoppingCart::current_order();
-				if($shoppingCart->ID != $this->currentOrder->ID) {
-					if(ShoppingCart::singleton()->loadOrder($this->currentOrder)) {
-						$this->message = _t('CartPage.ORDERHASBEENLOADED', 'Order has been loaded.');
-					}
-					else {
-						$this->message = _t('CartPage.ORDERNOTLOADED', 'Order could not be loaded.');
-					}
-				}
-			}
-		}
-		return array();
-	}
-
-	/**
-	 * Loads either the "current order""into the shopping cart.
-	 *
-	 * TO DO: untested
-	 * TO DO: what to do with old order
-	 *
-	 */
-	function loadorder() {
-		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
-		ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
-		$this->redirect($this->Link());
-		return array();
-	}
-	/**
-	 * copies either the current order into the shopping cart
-	 *
-	 * TO DO: untested
-	 * TO DO: what to do with old order
-	 *
-	 */
-	function copyorder() {
-		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
-		ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
-		$this->redirect(CheckoutPage::find_last_step_link());
-		return array();
-	}
-
 
 	/**
 	 * @var Boolean
@@ -489,58 +570,6 @@ class CartPage_Controller extends Page_Controller{
 	 */
 	function CreateAccountForm() {
 		return new ShopAccountForm($this, "CreateAccountForm");
-	}
-
-	/**
-	 * save the order to a member. If no member exists then create the member first using the ShopAccountForm.
-	 *
-	 * TO DO: untested
-	 */
-	function saveorder() {
-		$member = Member::currentUser();
-		if(!$member) {
-			$this->showCreateAccountForm = true;
-			return array();
-		}
-		if($this->currentOrder && $this->currentOrder->getTotalItems()) {
-			$this->currentOrder->write();
-			self::set_message(_t("CartPage.ORDERSAVED", "Your order has been saved."));
-		}
-		else {
-			self::set_message(_t("CartPage.ORDERCOULDNOTBESAVED", "Your order could not be saved."));
-		}
-		$this->redirectBack();
-		return array();
-	}
-
-	/**
-	 * Delete the currently viewed order.
-	 *
-	 * TO DO: untested
-	 *
-	 */
-	function deleteorder() {
-		if(!$this->CurrentOrderIsInCart()) {
-			if($this->currentOrder->canDelete()) {
-				$this->currentOrder->delete();
-				self::set_message(_t("CartPage.ORDERDELETED", "Order has been deleted."));
-			}
-		}
-		self::set_message(_t("CartPage.ORDERNOTDELETED", "Order could not be deleted."));
-		return array();
-	}
-
-
-	/**
-	 * Start a new order
-	 *
-	 * TO DO: untested
-	 */
-	function startneworder() {
-		ShoppingCart::singleton()->clear();
-		self::set_message(_t("CartPage.NEWORDERSTARTED", "New order has been started."));
-		$this->redirect($this->Link());
-		return array();
 	}
 
 	/**
@@ -712,6 +741,19 @@ class CartPage_Controller extends Page_Controller{
 			//does nothing at present....
 		}
 	}
+
+
+
+
+
+	/***********************
+	 * HELPER METHOD (PROTECTED)
+	 ***********************
+
+
+
+
+
 
 	/**
 	 * Is this a CartPage or is it another type (Checkout / OrderConfirmationPage)?

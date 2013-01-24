@@ -80,13 +80,15 @@ class CartCleanupTask extends BuildTask {
 			->where($where)
 			->sort($sort)
 			->limit($maximumNumberOfObjectsDeleted);
+		$leftMemberJoin = "";
 		if($neverDeleteIfLinkedToMember) {
 			$oldCarts = $oldCarts->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"");
+			$leftMemberJoin = "LEFT JOIN Member ON \"Member\".\"ID\" = \"Order\".\"MemberID\"";
 		}
 		if($oldCarts->count()){
 			$count = 0;
 			if($this->verbose) {
-				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
+				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $leftMemberJoin WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("
 					<h2>Total number of abandonned carts: ".$totalToDelete."</h2>
@@ -126,13 +128,15 @@ class CartCleanupTask extends BuildTask {
 			->where($where)
 			->sort($sort)
 			->limit($maximumNumberOfObjectsDeleted);
+		$leftMemberJoin = "";
 		if($neverDeleteIfLinkedToMember) {
 			$oldCarts = $oldCarts->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"");
+			$leftMemberJoin = "LEFT JOIN Member ON \"Member\".\"ID\" = \"Order\".\"MemberID\"";
 		}
-		if($oldCarts){
+		if($oldCarts->count()){
 			$count = 0;
 			if($this->verbose) {
-				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
+				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $leftMemberJoin WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("
 					<h2>Total number of empty carts: ".$totalToDelete."</h2>

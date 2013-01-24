@@ -64,7 +64,7 @@ class EcommercePayment extends DataExtension {
 	 * @param Array $data - Array of data that is submittted
 	 * @return Boolean - if successful, this method will return TRUE
 	 */
-	public static function process_payment_form_and_return_next_step($order, $form, $data) {
+	public static function process_payment_form_and_return_next_step(Order $order, Form $form, Array $data) {
 		if(!$order){
 			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
 			$form->controller->redirectBack();
@@ -116,24 +116,30 @@ class EcommercePayment extends DataExtension {
 	}
 
 	/**
-	 *@return Boolean
-	 **/
-	function canCreate($member = null) {
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canCreate($member) {
 		return EcommerceRole::current_member_is_shop_admin($member);
 	}
+
 	/**
-	 *@return Boolean
-	 **/
-	function canDelete($member = null) {
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canDelete($member) {
 		return false;
 	}
 
 
 	/**
 	 * standard SS method
-	 * @param FieldList $fields (passed by reference)
+	 * @param FieldList $fields
+	 * @return $Fields
 	 */
-	function updateSettingsFields(&$fields){
+	function updateSettingsFields(FieldList $fields){
 		$fields->replaceField("OrderID", new ReadonlyField("OrderID", "Order ID"));
 		return $fields;
 	}
@@ -153,13 +159,17 @@ class EcommercePayment extends DataExtension {
 		return;
 	}
 
+	/**
+	 * @param DataObject $do
+	 *
+	 */
 	function setPaidObject(DataObject $do){
 		$this->owner->PaidForID = $do->ID;
 		$this->owner->PaidForClass = $do->ClassName;
 	}
 
 	/**
-	 *@return float
+	 * @return float
 	 **/
 	function getAmountValue() {
 		return $this->owner->Amount->getAmount();
@@ -232,6 +242,8 @@ class EcommercePayment extends DataExtension {
 	/**
 	 * checks if a credit card is a real credit card number
 	 * @reference: http://en.wikipedia.org/wiki/Luhn_algorithm
+	 *
+	 * @param String | Int $number
 	 * @return Boolean
 	 */
 	public function validCreditCard($number) {
@@ -245,6 +257,7 @@ class EcommercePayment extends DataExtension {
 	/**
 	 * @todo: finish!
 	 * valid expiry date
+	 * @param String | Int $number
 	 * @return Boolean
 	 */
 	public function validExpiryDate($number) {
@@ -254,6 +267,8 @@ class EcommercePayment extends DataExtension {
 	/**
 	 * @todo: finish!
 	 * valid CVC number
+	 *
+	 * @param String | Int $number
 	 * @return Boolean
 	 */
 	public function validCVC($number) {
