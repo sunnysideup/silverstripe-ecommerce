@@ -215,7 +215,9 @@ class OrderModifier extends OrderAttribute {
 
 // ########################################  *** 5. init and update functions
 
-
+	/**
+	 *
+	 */
 	public static function init_for_order($className) {
 		user_error("the init_for_order method has been depreciated, instead, use \$myModifier->init()", E_USER_ERROR);
 		return false;
@@ -234,9 +236,9 @@ class OrderModifier extends OrderAttribute {
 
 	/**
 	* all classes extending OrderModifier must have this method if it has more fields
-	 * @param Bool $force - run it, even if it has run already
+	 * @param Bool $recalculate - run it, even if it has run already
 	**/
-	public function runUpdate($force = false) {
+	public function runUpdate($recalculate = false) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::runUpdate-for-'.$this->ClassName);
 		if(!$this->IsRemoved()) {
 			$this->checkField("Name");
@@ -260,8 +262,8 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
-	 * @param String $fieldName
 	 * This method simply checks if a fields has changed and if it has changed it updates the field.
+	 * @param String $fieldName
 	 **/
 	protected function checkField($fieldName) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::checkField_'.$fieldName.'_'.$this->ClassName);
@@ -332,7 +334,7 @@ class OrderModifier extends OrderAttribute {
 	 * @param Validator $optionalValidator  - optional custom validator class
 	 * @return OrderModifierForm or subclass
 	 */
-	public function getModifierForm($optionalController = null, $optionalValidator = null) {
+	public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null) {
 		if($this->ShowForm()) {
 			$fields = new FieldList();
 			$fields->push($this->headingField());
@@ -632,7 +634,7 @@ class OrderModifier extends OrderAttribute {
 	 * @param Array $js javascript array
 	 * @return Array for AJAX JSON
 	 **/
-	function updateForAjax(array &$js) {
+	function updateForAjax(array $js) {
 		$ajaxObject = $this->AJAXDefinitions();
 		//TableValue is a database value
 		$tableValue = DBField::create_field('Currency',$this->TableValue)->Nice();
@@ -682,6 +684,7 @@ class OrderModifier extends OrderAttribute {
 				'v' => $tableValue
 			);
 		}
+		return $js;
 	}
 
 

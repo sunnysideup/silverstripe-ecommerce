@@ -66,15 +66,17 @@ class OrderStatusLog extends DataObject {
 	function InternalUseOnlyNice() {return $this->getInternalUseOnlyNice();}
 	function getInternalUseOnlyNice() {if($this->InternalUseOnly) { return _t("OrderStatusLog.YES", "Yes");} return _t("OrderStatusLog.No", "No");}
 
+
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canView($member = null) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
-		if(EcommerceRole::current_member_is_shop_admin($member)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		if(!$this->InternalUseOnly) {
@@ -88,28 +90,31 @@ class OrderStatusLog extends DataObject {
 	}
 
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return true;
 	}
 
 	/**
-	* @param Member $member
-	* @return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
-		if($o = $this->Order()) {
-			return $o->canEdit($member);
+		if($order = $this->Order()) {
+			return $order->canEdit($member);
 		}
 		return false;
 	}
@@ -318,26 +323,28 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 	public static $description = "The record that the order has been submitted by the customer.  This is important in e-commerce, because from here, nothing can change to the order.";
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
 		return false;
 	}
 
-
 	/**
-	* can only be created when the order is submitted
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return true;
 	}
@@ -429,26 +436,28 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
 	public static $description = "A record noting the cancellation of an order.  ";
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
 		return false;
 	}
 
-
 	/**
-	* can only be created when the order is submitted
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return false;
 	}
@@ -476,9 +485,10 @@ class OrderStatusLog_Dispatch extends OrderStatusLog {
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGDISPATCHENTRIES", "Order Log Dispatch Entries");}
 
 	/**
-	 * Only shop admin can delete this
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return EcommerceRole::current_member_is_shop_admin($member);
 	}
@@ -618,9 +628,10 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 	);
 
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
@@ -708,26 +719,28 @@ class OrderStatusLog_Archived extends OrderStatusLog {
 		function i18n_plural_name() { return _t("OrderStatusLog.ARCHIVEDORDERS", "Archived Order - Additional Notes");}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
 		return true;
 	}
 
-
 	/**
-	* can only be created when the order is submitted
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return true;
 	}

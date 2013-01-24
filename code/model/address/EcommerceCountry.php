@@ -113,19 +113,24 @@ class EcommerceCountry extends DataObject {
 	public static $description = "A country.";
 
 	/**
-	 * return false or true
-	 * @ return Boolean
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
 	 */
 	function canCreate($member = null){
 		if(!$member) {
 			$member = Member::currentUser();
-			return $member->IsShopAdmin ? true : false;
 		}
+		if($member && $member->IsShopAdmin()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * return false or true
-	 * @ return Boolean
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
 	 */
 	function canDelete($member = null){
 		return false;
@@ -146,8 +151,8 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
-	 *@param $code String (Code)
-	 *@return String ( name)
+	 * @param String $code
+	 * @return String ( name)
 	 **/
 	public static function find_title($code) {
 		$options = Geoip::getCountryDropDown();
@@ -168,6 +173,8 @@ class EcommerceCountry extends DataObject {
 
 	/**
 	 * This function works out the most likely country for the current order.
+	 *
+	 * @param Boolean $recalculate
 	 * @return String - Country Code - e.g. NZ
 	 **/
 	public static function get_country($recalculate = false) {
@@ -234,7 +241,8 @@ class EcommerceCountry extends DataObject {
 
 	/**
 	 * returns the ID of the country.
-	 * @param String
+	 *
+	 * @param String $countryCode
 	 * @return Int
 	 **/
 	public static function get_country_id($countryCode = "") {
@@ -298,7 +306,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Array
 	 */
 	protected static $for_current_order_only_show_countries = array();
-		static function set_for_current_order_only_show_countries($a) {
+		static function set_for_current_order_only_show_countries(Array $a) {
 			if(count(self::$for_current_order_only_show_countries)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
 				self::$for_current_order_only_show_countries = array_intersect($a, self::$for_current_order_only_show_countries);
@@ -315,7 +323,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Array
 	 */
 	protected static $for_current_order_do_not_show_countries = array();
-		static function set_for_current_order_do_not_show_countries($a) {
+		static function set_for_current_order_do_not_show_countries(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);
 		}
@@ -356,9 +364,9 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
-	 *checks if a code is allowed
-	 *@param String $code - e.g. NZ, NSW, or CO
-	 *@return Boolean
+	 * checks if a code is allowed
+	 * @param String $code - e.g. NZ, NSW, or CO
+	 * @return Boolean
 	 **/
 	public static function code_allowed($code) {
 		return array_key_exists($code, self::list_of_allowed_entries_for_dropdown());

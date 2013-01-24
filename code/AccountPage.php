@@ -52,6 +52,7 @@ class AccountPage extends Page {
 	/**
 	 * Standard SS function, we only allow for one AccountPage to exist
 	 * but we do allow for extensions to exist at the same time.
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {

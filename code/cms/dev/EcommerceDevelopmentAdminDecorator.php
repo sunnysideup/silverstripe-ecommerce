@@ -20,24 +20,8 @@ class EcommerceDevelopmentAdminDecorator extends Extension{
 	 * @return HTML
 	 **/
 
-	function ecommerce($request) {
-		if(Director::is_cli()) {
-			$da = Object::create('EcommerceDatabaseAdmin');
-			return $da->handleRequest($request);
-		}
-		else {
-			$renderer = Object::create('DebugView');
-			$renderer->writeHeader();
-
-			//REDO!!!
-			$renderer->writeInfo("Ecommerce Development Tools", Director::absoluteBaseURL());
-			echo "<div style=\"margin: 0 2em\">";
-
-			$da = Object::create('EcommerceDatabaseAdmin');
-			$da->handleRequest($request, $renderer);
-			echo "</div>";
-			$renderer->writeFooter();
-		}
+	function ecommerce(SS_HTTPRequest $request) {
+		return EcommerceDatabaseAdmin::create();
 	}
 
 }

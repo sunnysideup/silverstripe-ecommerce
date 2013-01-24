@@ -99,6 +99,7 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * Returns the link or the Link to the Checkout page on this site
+	 * @param String $action
 	 * @return String (URLSegment)
 	 */
 	public static function find_link($action = "") {
@@ -112,7 +113,8 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * Returns the link or the Link to the Checkout page on this site
-	 * For the last step
+	 * for the last step
+	 * @param String $step
 	 * @return String (URLSegment)
 	 */
 	public static function find_last_step_link($step = "") {
@@ -131,6 +133,7 @@ class CheckoutPage extends CartPage {
 	/**
 	 * Returns the link to the next step
 	 * @param String - $currentStep is the step that has just been actioned....
+	 * @param Boolean - $doPreviousInstead - return previous rather than next step
 	 * @return String (URLSegment)
 	 */
 	public static function find_next_step_link($currentStep, $doPreviousInstead = false) {
@@ -175,7 +178,6 @@ class CheckoutPage extends CartPage {
 	 * a specific Order ID that already exists in the database.
 	 *
 	 * @param int $orderID ID of the {@link Order}
-	 * @param boolean $urlSegment If set to TRUE, only returns the URLSegment field
 	 * @return string Link to checkout page
 	 */
 	public static function get_checkout_order_link($orderID) {
@@ -188,6 +190,7 @@ class CheckoutPage extends CartPage {
 	/**
 	 * Standard SS function, we only allow for one checkout page to exist
 	 * but we do allow for extensions to exist at the same time.
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
@@ -376,7 +379,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 
 	/**
-	 *@var $currentStep Integer
+	 *@var $currentStep String
 	 **/
 	protected $currentStep = "";
 
@@ -475,9 +478,10 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 	/**
 	 * sets a checkout step
-	 * @param HTTP_Request $request
+	 * @param SS_HTTPRequest $request
+	 * @return Array
 	 */
-	function checkoutstep($request) {
+	function checkoutstep(SS_HTTPRequest $request) {
 		return array ();
 	}
 
@@ -491,7 +495,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	}
 
 	/**
-	 * @param String $part (OrderItems, OrderModifiers, OrderForm, OrderPayment)
+	 * @param String $step
 	 * @return Boolean
 	 **/
 	public function CanShowStep($step) {
@@ -651,24 +655,28 @@ class CheckoutPage_StepDescription extends DataObject{
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {return false;}
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canView($member = null) {return true;}
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canEdit($member = null) {return true;}
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {

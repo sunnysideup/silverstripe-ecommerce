@@ -62,18 +62,4 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 
 }
 
-/*
-class StoreAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
 
-	public function ImportForm() {return false;}
-
-}
-
-//remove delete action
-class StoreAdmin_RecordController extends ModelAdminEcommerceClass_RecordController {
-
-
-
-
-}
-*/

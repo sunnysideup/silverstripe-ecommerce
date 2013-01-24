@@ -483,7 +483,7 @@ class Order extends DataObject {
 				);
 				$message = _t(
 					"Order.NOSUBMITTEDYET",
-					"No details are shown here as this order has not been submitted yet. You can $link to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .",
+					"No details are shown here as this order has not been submitted yet. You can {link} to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .",
 					array("link" => '<a href="'.$this->RetrieveLink().'" target="_blank">'.$linkText.'</a>')
 				);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
@@ -612,9 +612,14 @@ class Order extends DataObject {
 
 	/**
 	 * Needs to be public because the OrderStep::getCMSFIelds accesses it.
-	 *@return GridField
+	 * @param String $sourceClass
+	 * @param String $title
+	 * @param FieldList $fieldList (Optional)
+	 * @param FieldList $detailedFormFields (Optional)
+	 *
+	 * @return GridField
 	 **/
-	public function getOrderStatusLogsTableField($sourceClass = "OrderStatusLog", $title = "", $fieldList = null, $detailedFormFields = null) {
+	public function getOrderStatusLogsTableField($sourceClass = "OrderStatusLog", $title = "", FieldList $fieldList = null, FieldList $detailedFormFields = null) {
 		$gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
 			new GridFieldAddNewButton('toolbar-header-right'),
 			new GridFieldDetailForm()
@@ -653,6 +658,9 @@ class Order extends DataObject {
 		return new GridField("Emails", _t("Order.PAYMENTS", "Payments"), $this->Payments(), $gridFieldConfig);
 	}
 
+	/**
+	 * @return OrderStepField
+	 */
 	function OrderStepField() {
 		return new OrderStepField($name = "MyOrderStep", $this, Member::currentUser());
 	}
@@ -669,12 +677,13 @@ class Order extends DataObject {
 	/**
 	 * init runs on start of a new Order (@see onAfterWrite)
 	 * it adds all the modifiers to the orders and the starting OrderStep
-	 * @param Boolean $force
+	 *
+	 * @param Boolean $recalculate
 	 * @return DataObject (Order)
 	 **/
-	public function init($force = false) {
+	public function init($recalculate = false) {
 		//to do: check if shop is open....
-		if($this->StatusID || $force) {
+		if($this->StatusID || $recalculate) {
 			if(!$this->StatusID) {
 				$createdOrderStatus = OrderStep::get()->First();
 				$this->StatusID = $createdOrderStatus->ID;
@@ -729,7 +738,7 @@ class Order extends DataObject {
 
 
 	/**
-	 * Goes through the order steps and tries to "apply" the next status to the order
+	 * Goes through the order steps and tries to "apply" the next status to the order.
 	 *
 	 **/
 	public function tryToFinaliseOrder() {
@@ -767,8 +776,9 @@ class Order extends DataObject {
 	 * cancel an order.
 	 * @param Member $member - the user cancelling the order
 	 * @param String $reason - the reason the order is cancelled
+	 * @returns OrderStatusLog_Cancel
 	 */
-	public function Cancel($member, $reason = "") {
+	public function Cancel(Member $member, $reason = "") {
 		$this->CancelledByID = $member->ID;
 		$this->write();
 		$log = new OrderStatusLog_Cancel();
@@ -778,7 +788,7 @@ class Order extends DataObject {
 		if($member->IsShopAdmin()) {
 			$log->InternalUseOnly = true;
 		}
-		$log->write();
+		return $log->write();
 	}
 
 
@@ -958,8 +968,9 @@ class Order extends DataObject {
 	 * OR the member is logged in / logs in.
 	 *
 	 * Also note that if a new member is created, it is not automatically written
+	 *
 	 * @param Boolean $forceCreation - if set to true then the member will always be saved in the database.
-	 * @return: DataObject (Member)
+	 * @return Member
 	 **/
 	public function CreateOrReturnExistingMember($forceCreation = false) {
 		if($this->MemberID) {
@@ -990,7 +1001,7 @@ class Order extends DataObject {
 	 * @param String $className   - ClassName of the Address (e.g. BillingAddress or ShippingAddress)
 	 * @param String $alternativeMethodName  - method to retrieve Address
 	 *
-	 * @return Null | DataObject (OrderAddress)
+	 * @return Null | OrderAddress
 	 **/
 
 	public function CreateOrReturnExistingAddress($className = "BillingAddress", $alternativeMethodName = '') {
@@ -1309,18 +1320,18 @@ class Order extends DataObject {
 
 	/**
 	 * Calculates and updates all the order attributes.
-	 * @param Bool $force - run it, even if it has run already
+	 * @param Bool $recalculate - run it, even if it has run already
 	 *
 	 */
-	public function calculateOrderAttributes($force = false) {
+	public function calculateOrderAttributes($recalculate = false) {
 		if($this->IsSubmitted()) {
 			//submitted order are NEVER recalculated.
 			//they are set in stone
 		}
-		elseif(Order::get_needs_recalculating() || $force) {
+		elseif(Order::get_needs_recalculating() || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
-				$this->calculateOrderItems($force);
-				$this->calculateModifiers($force);
+				$this->calculateOrderItems($recalculate);
+				$this->calculateModifiers($recalculate);
 				$this->extend("onCalculateOrder");
 			}
 		}
@@ -1329,9 +1340,9 @@ class Order extends DataObject {
 
 	/**
 	 * Calculates and updates all the product items.
-	 * @param Bool $force - run it, even if it has run already
+	 * @param Bool $recalculate - run it, even if it has run already
 	 */
-	public function calculateOrderItems($force = false) {
+	public function calculateOrderItems($recalculate = false) {
 		//check if order has modifiers already
 		//check /re-add all non-removable ones
 		//$start = microtime();
@@ -1339,7 +1350,7 @@ class Order extends DataObject {
 		if($orderItems->count()) {
 			foreach($orderItems as $orderItem){
 				if($orderItem) {
-					$orderItem->runUpdate($force);
+					$orderItem->runUpdate($recalculate);
 				}
 			}
 		}
@@ -1350,15 +1361,15 @@ class Order extends DataObject {
 
 	/**
 	 * Calculates and updates all the modifiers.
-	 * @param Bool $force - run it, even if it has run already
 	 *
+	 * @param Boolean $recalculate - run it, even if it has run already
 	 */
-	public function calculateModifiers($force = false) {
+	public function calculateModifiers($recalculate = false) {
 		$createdModifiers = $this->modifiersFromDatabase();
 		if($createdModifiers->count()) {
 			foreach($createdModifiers as $modifier){
 				if($modifier) {
-					$modifier->runUpdate($force);
+					$modifier->runUpdate($recalculate);
 				}
 			}
 		}
@@ -1386,12 +1397,14 @@ class Order extends DataObject {
 						if($stopAtExcludedModifier) {
 							break;
 						}
+						//do the next modifier
 						continue;
 					}
-					elseif($excluded && ($modifier->ClassName == $excluded)) {
+					elseif(is_string($excluded) && ($modifier->ClassName == $excluded)) {
 						if($stopAtExcludedModifier) {
 							break;
 						}
+						//do the next modifier
 						continue;
 					}
 					$total += $modifier->CalculationTotal();
@@ -1406,8 +1419,7 @@ class Order extends DataObject {
 	 *
 	 * @param string|array $excluded - Class(es) of modifier(s) to ignore in the calculation.
 	 * @param Boolean $stopAtExcludedModifier  - when this flag is TRUE, we stop adding the modifiers when we reach an excluded modifier.
-	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function ModifiersSubTotalAsCurrencyObject($excluded = null, $stopAtExcludedModifier = false) {
 		return DBField::create_field('Currency',$this->ModifiersSubTotal($excluded, $stopAtExcludedModifier));
@@ -1435,11 +1447,11 @@ class Order extends DataObject {
 *******************************************************/
 
 	/**
-	 *
+	 * @param Member $member
 	 * @return DataObject (Member)
 	 **/
 	 //TODO: please comment why we make use of this function
-	protected function getMemberForCanFunctions($member = null) {
+	protected function getMemberForCanFunctions(Member $member = null) {
 		if(!$member) {$member = Member::currentUser();}
 		if(!$member) {
 			$member = new Member();
@@ -1448,10 +1460,9 @@ class Order extends DataObject {
 		return $member;
 	}
 
-
 	/**
-	 *
-	 *@return Boolean
+	 * @param Member $member
+	 * @return Boolean
 	 **/
 	public function canCreate($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
@@ -1464,8 +1475,8 @@ class Order extends DataObject {
 
 	/**
 	 * Standard SS method - can the current member view this order?
-	 *
-	 *@return Boolean
+	 * @param Member $member
+	 * @return Boolean
 	 **/
 	public function canView($member = null) {
 		if(!$this->exists()) {
@@ -1535,19 +1546,18 @@ class Order extends DataObject {
 
 
 	/**
-	 *
-	 *@return Boolean
+	 * @param Member $member
+	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
 		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
 			return true;
 		}
-
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canEdit', $member->ID);
 		if($extended !== null) {return $extended;}
 
-		if(EcommerceRole::current_member_is_shop_admin($member)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 
@@ -1560,9 +1570,10 @@ class Order extends DataObject {
 
 	/**
 	 * Can a payment be made for this Order?
+	 * @param Member $member
 	 * @return Boolean
 	 **/
-	function canPay($member = null) {
+	function canPay(Member $member = null) {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canPay', $member->ID);
 		if($extended !== null) {return $extended;}
@@ -1573,10 +1584,11 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *
-	 *@return Boolean
+	 * Can the given member cancel this order?
+	 * @param Member $member
+	 * @return Boolean
 	 **/
-	function canCancel($member = null) {
+	function canCancel(Member $member = null) {
 		//if it is already cancelled it can be cancelled again
 		if($this->CancelledByID) {
 			return false;
@@ -1584,7 +1596,7 @@ class Order extends DataObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canCancel', $member->ID);
 		if($extended !== null) {return $extended;}
-		if(EcommerceRole::current_member_is_shop_admin($member)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		return $this->MyStep()->CustomerCanCancel;
@@ -1592,14 +1604,17 @@ class Order extends DataObject {
 
 
 	/**
-	 *
-	 *@return Boolean
+	 * @param Member $member
+	 * @return Boolean
 	 **/
 	public function canDelete($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canDelete', $member->ID);
 		if($extended !== null) {return $extended;}
-		if(!$this->IsSubmitted() && $member->IsShopAdmin()){
+		if($this->IsSubmitted()){
+			return false;
+		}
+		elseif($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		return false;
@@ -1753,7 +1768,7 @@ class Order extends DataObject {
 
 	/**
 	 * A "Title" for the order, which summarises the main details (date, and customer) in a string.
-	 *@return String
+	 * @return String
 	 **/
 	function Title($dateFormat = "D j M Y, G:i T", $includeName = true) {return $this->getTitle($dateFormat, $includeName);}
 	function getTitle($dateFormat = "D j M Y, G:i T", $includeName = true) {
@@ -1808,7 +1823,7 @@ class Order extends DataObject {
 
 	/**
 	 * Returns the subtotal of the items for this order.
-	 *@return float
+	 * @return float
 	 */
 	function SubTotal(){return $this->getSubTotal();}
 	function getSubTotal() {
@@ -1829,7 +1844,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function SubTotalAsCurrencyObject() {
 		return DBField::create_field('Currency',$this->SubTotal());
@@ -1847,7 +1862,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function TotalAsCurrencyObject() {
 		return DBField::create_field('Currency',$this->Total());
@@ -1863,7 +1878,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Money | Null
+	 * @return Money | Null
 	 **/
 	function DisplayPrice(){return $this->getDisplayPrice();}
 	function getDisplayPrice(){
@@ -1876,7 +1891,7 @@ class Order extends DataObject {
 	 * Checks to see if any payments have been made on this order
 	 * and if so, subracts the payment amount from the order
 	 *
-	 *@return float
+	 * @return float
 	 **/
 	function TotalOutstanding(){return $this->getTotalOutstanding();}
 	function getTotalOutstanding(){
@@ -1897,14 +1912,14 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function TotalOutstandingAsCurrencyObject(){
 		return DBField::create_field('Currency',$this->TotalOutstanding());
 	}
 
 	/**
-	 *@return Money
+	 * @return Money
 	 **/
 	function TotalOutstandingAsMoneyObject(){return $this->getTotalOutstandingAsMoneyObject();}
 	function getTotalOutstandingAsMoneyObject(){
@@ -1912,7 +1927,7 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *@return float
+	 * @return float
 	 */
 	function TotalPaid(){return $this->getTotalPaid();}
 	function getTotalPaid() {
@@ -1934,7 +1949,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function TotalPaidAsCurrencyObject(){
 		return DBField::create_field('Currency',$this->TotalPaid());
@@ -1944,6 +1959,7 @@ class Order extends DataObject {
 	 * returns the total number of OrderItems (not modifiers).
 	 * This is meant to run as fast as possible to quickly check
 	 * if there is anything in the cart.
+	 *
 	 * @param Boolean $recalculate - do we need to recalculate (value is retained during lifetime of Object)
 	 * @return Integer
 	 **/
@@ -1958,7 +1974,18 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * Little shorthand
+	 * @param Boolean $recalculate
+	 * @return Boolean
+	 **/
+	public function MoreThanOneItemInCart($recalculate = false) {
+		return $this->TotalItems($recalculate) > 1 ? true : false;
+	}
+
+	/**
 	 * returns the total number of OrderItems (not modifiers) times their respectective quantities.
+	 *
+	 * @param Boolean $recalculate - force recalculation
 	 * @return Double
 	 **/
 	public function TotalItemsTimesQuantity($recalculate = false){return $this->getTotalItemsTimesQuantity($recalculate);}
@@ -2014,7 +2041,7 @@ class Order extends DataObject {
 
 	/**
 	 * returns name of coutry
-	 *@return String - country name
+	 * @return String - country name
 	 **/
 	public function FullNameCountry() {return $this->getFullNameCountry();}
 	public function getFullNameCountry() {
@@ -2111,12 +2138,12 @@ class Order extends DataObject {
 
 	/**
 	 * Casted variable - has the order been submitted?
-	 *
-	 *@return Boolean
+	 * @param Boolean $recalculate
+	 * @return Boolean
 	 **/
-	function IsSubmitted($force = false){return $this->getIsSubmitted();}
-	function getIsSubmitted($force = false) {
-		if($this->isSubmittedTempVar == -1 || $force) {
+	function IsSubmitted($recalculate = false){return $this->getIsSubmitted();}
+	function getIsSubmitted($recalculate = false) {
+		if($this->isSubmittedTempVar == -1 || $recalculate) {
 			if($this->SubmissionLog()) {
 				$this->isSubmittedTempVar = true;
 			}
@@ -2142,10 +2169,10 @@ class Order extends DataObject {
 
 	/**
 	 * Casted variable - has the order been submitted?
-	 *
+	 * @param Boolean $withDetail
 	 * @return Text
 	 **/
-	function CustomerStatus(){return $this->getCustomerStatus();}
+	function CustomerStatus($withDetail = true){return $this->getCustomerStatus($withDetail);}
 	function getCustomerStatus($withDetail = true) {
 		if($this->MyStep()->ShowAsUncompletedOrder) { $v =  "Uncompleted";}
 		elseif($this->MyStep()->ShowAsInProcessOrder) { $v = "In Process";}
@@ -2197,6 +2224,7 @@ class Order extends DataObject {
 	 * WHY NOT CHECKOUT PAGE: first we check for cart page.
 	 * If a cart page has been created then we refer through to Cart Page.
 	 * Otherwise it will default to the checkout page
+	 * @param String $action - any action that should be added to the link.
 	 * @return String(URLSegment)
 	 */
 	function Link($action = "") {
@@ -2217,6 +2245,8 @@ class Order extends DataObject {
 
 	/**
 	 * Returns to link to access the Order's API
+	 * @param String $version
+	 * @param String $extension
 	 * @return String(URL)
 	 */
 	function APILink($version = "v1", $extension = "xml"){
@@ -2253,7 +2283,7 @@ class Order extends DataObject {
 	/**
 	 * Converts the Order into a serialized string
 	 * TO DO: check if this works and check if we need to use special sapphire serialization code
-	 *@return String - serialized object
+	 * @return String - serialized object
 	 **/
 	public function ConvertToString() {
 		return serialize($this->addHasOneAndHasManyAsVariables());
@@ -2262,7 +2292,7 @@ class Order extends DataObject {
 	/**
 	 * Converts the Order into a JSON object
 	 * TO DO: check if this works and check if we need to use special sapphire JSON code
-	 *@return String -  JSON
+	 * @return String -  JSON
 	 **/
 	public function ConvertToJSON() {
 		return json_encode($this->addHasOneAndHasManyAsVariables());
@@ -2271,22 +2301,23 @@ class Order extends DataObject {
 
 	/**
 	 * returns itself wtih more data added as variables.
-	 *@return DataObject - Order - with most important has one and has many items included as variables.
+	 * We add has_one and has_many as variables like this: $this->MyHasOne_serialized = serialize($this->MyHasOne())
+	 * @return Order - with most important has one and has many items included as variables.
 	 **/
 	protected function addHasOneAndHasManyAsVariables() {
 		/*
 			THIS HAS TO BE REDONE - IT IS NONSENSICAL!
-		$this->Member = $this->Member();
-		$this->BillingAddress = $this->BillingAddress();
-		$this->ShippingAddress = $this->ShippingAddress();
-		$this->Attributes = $this->Attributes();
-		$this->OrderStatusLogs = $this->OrderStatusLogs();
-		$this->Payments = $this->Payments();
-		$this->Emails = $this->Emails();
-		$this->Title = $this->Title();
-		$this->Total = $this->Total();
-		$this->SubTotal = $this->SubTotal();
-		$this->TotalPaid = $this->TotalPaid();
+		$this->Member_serialized = serialize($this->Member());
+		$this->BillingAddress_serialized = serialize($this->BillingAddress());
+		$this->ShippingAddress_serialized = serialize($this->ShippingAddress());
+		$this->Attributes_serialized = serialize($this->Attributes());
+		$this->OrderStatusLogs_serialized = serialize($this->OrderStatusLogs());
+		$this->Payments_serialized = serialize($this->Payments());
+		$this->Emails_serialized = serialize($this->Emails());
+		$this->Title_serialized = serialize($this->Title());
+		$this->Total_serialized = serialize($this->Total());
+		$this->SubTotal_serialized = serialize($this->SubTotal());
+		$this->TotalPaid_serialized = serialize($this->TotalPaid());
 		*/
 
 		return $this;
@@ -2320,8 +2351,9 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *
-	 *@return Array (for use in AJAX for JSON)
+	 * Collects the JSON data for an ajax return of the cart.
+	 * @param Array $js
+	 * @return Array (for use in AJAX for JSON)
 	 **/
 	function updateForAjax(array &$js) {
 		$subTotal = $this->SubTotalAsCurrencyObject()->Nice();
@@ -2357,14 +2389,9 @@ class Order extends DataObject {
 			'p' => 'innerHTML',
 			'v' => $this->ExpectedCountryName()
 		);
+		return $js;
 	}
 
-	/**
-	 *@return Boolean
-	 **/
-	public function MoreThanOneItemInCart() {
-		return $this->NumItemsInCart() > 1 ? true : false;
-	}
 
 	/**
 	 * @ToDO: move to more appropriate class
@@ -2372,14 +2399,6 @@ class Order extends DataObject {
 	 **/
 	public function SubTotalCartValue() {
 		return $this->SubTotal;
-	}
-
-	/**
-	 * @ToDO: move to more appropriate class
-	 * @return Integer
-	 **/
-	public function NumItemsInCart($recalculate = false) {
-		return $this->TotalItems($recalculate);
 	}
 
 
@@ -2415,7 +2434,7 @@ class Order extends DataObject {
 		}
 		else {
 			if($this->StatusID) {
-				$this->calculateOrderAttributes($force = false);
+				$this->calculateOrderAttributes($recalculate = false);
 				if(EcommerceRole::current_member_is_shop_admin()){
 					if(isset($_REQUEST["SubmitOrderViaCMS"])) {
 						$this->tryToFinaliseOrder();

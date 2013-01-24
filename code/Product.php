@@ -738,9 +738,11 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Is the product for sale?
+	 * @param Member $member
+	 * @param Boolean $checkPrice
 	 * @return Boolean
 	 */
-	function canPurchase($member = null, $checkPrice = true) {
+	function canPurchase(Member $member = null, $checkPrice = true) {
 		$config = $this->EcomConfig();
 		//shop closed
 		if($config->ShopClosed) {
@@ -780,14 +782,14 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Shop Admins can edit
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
-		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
-		if($member && Permission::checkMember($member, $shopAdminCode)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		return parent::canEdit($member);
@@ -796,6 +798,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {
@@ -805,6 +808,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canPublish($member = null) {
@@ -814,6 +818,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS method
 	 * //check if it is in a current cart?
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDeleteFromLive($member = null) {
@@ -822,6 +827,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {
@@ -854,9 +860,9 @@ class Product_Controller extends Page_Controller {
 	 * view earlier version of a product
 	 * returns error or changes datarecord to earlier version
 	 * if the ID does not match the Page then we look for the variation
-	 * @param HTTP_Request
+	 * @param SS_HTTPRequest
 	 */
-	function viewversion($request) {
+	function viewversion(SS_HTTPRequest $request) {
 		$id = intval($request->param("ID"))-0;
 		$version = intval($request->param("OtherID"))-0;
 		$currentVersion = $this->Version;
@@ -894,7 +900,7 @@ class Product_Controller extends Page_Controller {
 	 * Standard SS method
 	 * Returns a snippet when requested by ajax.
 	 */
-	function ajaxview(){
+	function ajaxview(SS_HTTPRequest $request){
 		return $this->renderWith("ProductGroupItemMoreDetail");
 	}
 
@@ -923,8 +929,10 @@ class Product_Controller extends Page_Controller {
 
 	/**
 	 * executes the AddProductForm
+	 * @param Array $data
+	 * @param Form $form
 	 */
-	function addproductfromform($data,$form){
+	function addproductfromform(Array $data, Form $form){
 		if(!$this->IsInCart()) {
 			$quantity = round($data['Quantity'], $this->QuantityDecimals());
 			if(!$quantity) {
@@ -1094,9 +1102,10 @@ class Product_Image extends Image {
 
 	/**
 	 * @usage can be used in a template like this $Image.Thumbnail.Link
+	 * @param GD $gd
 	 * @return GD
 	 **/
-	function generateThumbnail($gd) {
+	function generateThumbnail(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
 	}
@@ -1109,7 +1118,7 @@ class Product_Image extends Image {
 	 * @usage can be used in a template like this $Image.SmallImage.Link
 	 * @return GD
 	 **/
-	function generateSmallImage($gd) {
+	function generateSmallImage(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
 	}
@@ -1122,7 +1131,7 @@ class Product_Image extends Image {
 	 * @usage can be used in a template like this $Image.ContentImage.Link
 	 * @return GD
 	 **/
-	function generateContentImage($gd) {
+	function generateContentImage(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->resizeByWidth($this->ContentWidth());
 	}
@@ -1135,7 +1144,7 @@ class Product_Image extends Image {
 	 * @usage can be used in a template like this $Image.LargeImage.Link
 	 * @return GD
 	 **/
-	function generateLargeImage($gd) {
+	function generateLargeImage(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->resizeByWidth($this->LargeWidth());
 	}
@@ -1205,15 +1214,17 @@ class Product_OrderItem extends OrderItem {
 	}
 
 	/**
-	 *@return Boolean
+	 * @param OrderItem $orderItem
+	 * @return Boolean
 	 **/
-	function hasSameContent($orderItem) {
+	function hasSameContent(OrderItem $orderItem) {
 		$parentIsTheSame = parent::hasSameContent($orderItem);
 		return $parentIsTheSame && $orderItem instanceOf $this->class;
 	}
 
 	/**
-	 *@return Float
+	 * @param Boolean $recalculate
+	 * @return Float
 	 **/
 	function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}
 	function getUnitPrice($recalculate = false) {

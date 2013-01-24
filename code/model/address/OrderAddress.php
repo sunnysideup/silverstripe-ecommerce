@@ -76,6 +76,7 @@ class OrderAddress extends DataObject {
 	 * sets a field to readonly state
 	 * we use this when modifiers have been set that require a field to be a certain value
 	 * for example - a PostalCode field maybe set in the modifier.
+	 *
 	 * @param String $fieldName
 	 */
 	function addReadOnlyField($fieldName) {
@@ -84,6 +85,7 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * removes a field from the readonly state
+	 *
 	 * @param String $fieldName
 	 */
 	function removeReadOnlyField($fieldName) {
@@ -105,6 +107,7 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
@@ -114,7 +117,7 @@ class OrderAddress extends DataObject {
 	/**
 	 * Standard SS method
 	 * This is an important method.
-	 *
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canView($member = null) {
@@ -134,7 +137,7 @@ class OrderAddress extends DataObject {
 	/**
 	 * Standard SS method
 	 * This is an important method.
-	 *
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
@@ -150,7 +153,6 @@ class OrderAddress extends DataObject {
 		}
 		return $this->_canEdit;
 	}
-
 
 	/**
 	 * Determine which properties on the DataObject are
@@ -174,18 +176,18 @@ class OrderAddress extends DataObject {
 		return $fields;
 	}
 
-
 	/**
 	 *
 	 *
 	 * @return FieldList
 	 */
-
 	protected function getEcommerceFields() {
 		return new FieldList();
 	}
+
 	/**
 	 * put together a textfield for a postal code field
+	 *
 	 * @param String $name - name of the field
 	 * @return TextField
 	 **/
@@ -202,6 +204,7 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * put together a dropdown for the region field
+	 *
 	 * @param String $name - name of the field
 	 * @return DropdownField
 	 **/
@@ -229,6 +232,7 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * put together a dropdown for the country field
+	 *
 	 * @param String $name - name of the field
 	 * @return DropdownField
 	 **/
@@ -250,9 +254,10 @@ class OrderAddress extends DataObject {
 	/**
 	 * makes selected fields into read only using the $this->readOnlyFields array
 	 *
-	 * @param $fields FieldList
+	 * @param FieldList $fields
+	 * @return FieldList
 	 */
-	protected function makeSelectedFieldsReadOnly(&$fields) {
+	protected function makeSelectedFieldsReadOnly(FieldList $fields) {
 		$this->extend("augmentMakeSelectedFieldsReadOnly");
 		if(is_array($this->readOnlyFields) && count($this->readOnlyFields) ) {
 			foreach($this->readOnlyFields as $readOnlyField) {
@@ -261,11 +266,13 @@ class OrderAddress extends DataObject {
 				}
 			}
 		}
+		return $fields;
 	}
 
 	/**
 	 * Saves region - both shipping and billing fields are saved here for convenience sake (only one actually gets saved)
 	 * NOTE: do not call this method SetCountry as this has a special meaning! *
+	 *
 	 * @param Integer -  RegionID
 	 **/
 	public function SetRegionFields($regionID) {
@@ -277,6 +284,7 @@ class OrderAddress extends DataObject {
 	/**
 	 * Saves country - both shipping and billing fields are saved here for convenience sake (only one actually gets saved)
 	 * NOTE: do not call this method SetCountry as this has a special meaning!
+	 *
 	 * @param String - CountryCode - e.g. NZ
 	 */
 	public function SetCountryFields($countryCode) {
@@ -306,10 +314,10 @@ class OrderAddress extends DataObject {
 	 *
 	 * @return String
 	 */
+	public function FullString(){ return $this->getFullString();}
 	public function getFullString() {
 		return $this->renderWith("Order_Address".str_replace("Address", "", $this->ClassName)."FullString");
 	}
-		public function FullString(){ return $this->getFullString();}
 
 	/**
 	 * returns a string that can be used to find out if two addresses are the same.
@@ -332,8 +340,8 @@ class OrderAddress extends DataObject {
 	}
 
 	/**
-	 *@param String - $prefix = either "" or "Shipping"
-	 *@return array of fields for an Order DataObject
+	 * @param String - $prefix = either "" or "Shipping"
+	 * @return Array of fields for an Order DataObject
 	 **/
 	protected function getFieldNameArray($fieldPrefix = '') {
 		$fieldNameArray = array(
@@ -384,16 +392,15 @@ class OrderAddress extends DataObject {
 		}
 	}
 
-
-
 	/**
+	  *@todo: are there times when the Shipping rather than the Billing address should be linked?
 	 * Copies the last address used by the member.
-	 * @return DataObject (OrderAddress / ShippingAddress / BillingAddfress)
+	 *
 	 * @param Object (Member) $member
 	 * @param Boolean $write - should the address be written
-	 * @todo: are there times when the Shipping rather than the Billing address should be linked?
-	 */
-	public function FillWithLastAddressFromMember($member, $write = false) {
+	 * @return DataObject (OrderAddress / ShippingAddress / BillingAddress)
+	 **/
+	public function FillWithLastAddressFromMember(Member $member, $write = false) {
 		$excludedFields = array("ID", "OrderID");
 		$fieldPrefix = $this->fieldPrefix();
 		if($member && $member->exists()) {
@@ -422,12 +429,12 @@ class OrderAddress extends DataObject {
 		return $this;
 	}
 
-/**
+	/**
 	 * Finds the last address used by this member
 	 * @param Object (Member)
 	 * @return Null | DataObject (ShippingAddress / BillingAddress)
 	 **/
-	protected function lastAddressFromMember($member = null) {
+	protected function lastAddressFromMember(Member $member = null) {
 		$addresses = $this->previousAddressesFromMember($member, true);
 		if($addresses->count()) {
 			return $addresses->First();
@@ -439,7 +446,7 @@ class OrderAddress extends DataObject {
 	 * @param Object (Member)
 	 * @return Null | DataObject (Order)
 	 **/
-	protected function lastOrderFromMember($member = null) {
+	protected function lastOrderFromMember(Member $member = null) {
 		$orders = $this->previousOrdersFromMember($member, true);
 		if($orders->count()) {
 			return $orders->First();
@@ -449,12 +456,13 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * Finds previous addresses from the member of the current address
-	 * @param Object (Member)
+	 *
+	 * @param Member $member
 	 * @param Boolean $onlyLastRecord - only select one
 	 * @param Boolean $keepDoubles - keep addresses that are the same (if set to false, only unique addresses are returned)
 	 * @return ArrayList (BillingAddresses | ShippingAddresses)
 	 **/
-	protected function previousAddressesFromMember($member = null, $onlyLastRecord = false, $keepDoubles = false) {
+	protected function previousAddressesFromMember(Member $member = null, $onlyLastRecord = false, $keepDoubles = false) {
 		$returnArrayList = new ArrayList();
 		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
 		if($orders->count()) {
@@ -483,7 +491,7 @@ class OrderAddress extends DataObject {
 						}
 						else {
 							$addressCompare[$address->ID] = $comparisonString;
-							$returnArrayList->push($address);
+							$returnArrayList = $returnArrayList->push($address);
 						}
 					}
 				}
@@ -496,7 +504,7 @@ class OrderAddress extends DataObject {
 	 * make an address obsolete and include all the addresses that are identical.
 	 * @param Member $member
 	 */
-	public function MakeObsolete($member = null){
+	public function MakeObsolete(Member $member = null){
 		$addresses = $this->previousAddressesFromMember($member, $onlyLastRecord = false, $includeDoubles = true);
 		$comparisonString = $this->comparisonString();
 		if($addresses->count()) {
@@ -513,11 +521,12 @@ class OrderAddress extends DataObject {
 
 	/**
 	 * Finds previous orders from the member of the current address
+	 *
 	 * @param Member $member
 	 * @param Boolean $onlyLastRecord - only return the last Order from Member (still returns DataList)
 	 * @return DataList
 	 **/
-	protected function previousOrdersFromMember($member = null, $onlyLastRecord = false) {
+	protected function previousOrdersFromMember(Member $member = null, $onlyLastRecord = false) {
 		if(!$member) {
 			$member = $this->getMemberFromOrder();
 		}
@@ -537,6 +546,7 @@ class OrderAddress extends DataObject {
 	 * find the member associated with the current Order and address.
 	 * @Note: this needs to be public to give DODS (extensions access to this)
 	 * @todo: can wre write $this->Order() instead????
+	 *
 	 * @return DataObject (Member) | Null
 	 **/
 	public function getMemberFromOrder() {

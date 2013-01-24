@@ -165,9 +165,10 @@ class ShippingAddress extends OrderAddress {
 
 	/**
 	 * Puts together the fields for the Order Form (and other front-end purposes).
+	 * @param Member $member
 	 * @return FieldList
 	 **/
-	public function getFields($member = null) {
+	public function getFields(Member $member = null) {
 		$fields = parent::getEcommerceFields();
 		if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
 			$shippingFieldsHeader = new CompositeField(

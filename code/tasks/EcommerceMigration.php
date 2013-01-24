@@ -423,8 +423,8 @@ class EcommerceMigration extends BuildTask {
 		}
 		if($this->hasTableAndField("Order", "Shipping") && $this->hasTableAndField("Order", "HasShippingCost")) {
 			$orders = Order::get()
-				->where("\"HasShippingCost\" = 1 AND \"Shipping\" IS NOT NULL"),
-				->limit($this->limit, $this->start)
+				->where("\"HasShippingCost\" = 1 AND \"Shipping\" IS NOT NULL")
+				->limit($this->limit, $this->start);
 			if($orders->count()) {
 				foreach($orders as $order) {
 					$modifier1 = new SimpleShippingModifier();
@@ -1199,7 +1199,7 @@ class EcommerceMigration extends BuildTask {
 				"MemberID" => "ASC",
 				"\"Order\".\"Created\"" => "DESC"
 			))
-			->innerJoin("Member", "\"Order\".\"MemberID\" = \"Member\".\"ID\"")
+			->innerJoin("Member", "\"Order\".\"MemberID\" = \"Member\".\"ID\"");
 		$count = 0;
 		$previousOrderMemberID = 0;
 		$lastOrderFromMember = null;

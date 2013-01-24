@@ -190,6 +190,7 @@ class EcommerceCurrency extends DataObject {
 
 	/**
 	 * Only returns a currency when it is a valid currency.
+	 *
 	 * @param String $currencyCode - the code of the currency
 	 * @return EcommerceCurrency | Null
 	 */
@@ -205,13 +206,13 @@ class EcommerceCurrency extends DataObject {
 	}
 
 	/**
-	 *
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return $this->IsDefault ? false : true;
 	}
-
 
 	/**
 	 * STANDARD SILVERSTRIPE STUFF

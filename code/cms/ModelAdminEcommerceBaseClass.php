@@ -14,6 +14,11 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin {
 	 */
 	function getManagedModels() {
 		$models = EcommerceConfig::get($this->class, "managed_models");
+		foreach($models as $key => $model) {
+			if(!class_exists($model)) {
+				unset($models[$key]);
+			}
+		}
 		self::$managed_models = $models;
 		return parent::getManagedModels();
 	}

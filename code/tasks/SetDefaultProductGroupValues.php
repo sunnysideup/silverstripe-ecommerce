@@ -39,7 +39,7 @@ class SetDefaultProductGroupValues extends BuildTask {
 
 	protected function checkField($fieldName, $acceptableValuesArray, $resetValue) {
 		$faultyProductGroups = ProductGroup::get()
-			->exclude(array($fieldName =>  $acceptableValuesArray))
+			->exclude(array($fieldName =>  $acceptableValuesArray));
 		if($faultyProductGroups->count()) {
 			foreach($faultyProductGroups as $faultyProductGroup) {
 				$faultyProductGroup->$fieldName = $resetValue;

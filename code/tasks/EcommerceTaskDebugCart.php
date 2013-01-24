@@ -3,7 +3,14 @@
 
 class EcommerceTaskDebugCart extends BuildTask {
 
+	protected $title = "Debug your cart";
 
+	protected $description = "Check all the values in your cart to find any potential errors.";
+
+	function run($request){
+		$order = ShoppingCart::current_order();
+		self::debug_object($order);
+	}
 
 	public static function debug_object($obj){
 		$html =  "

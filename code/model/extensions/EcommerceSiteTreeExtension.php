@@ -107,6 +107,10 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		return ShoppingCart::current_order();
 	}
 
+	/**
+	 *
+	 * @return String (Link)
+	 */
 	function ContinueShoppingLink(){
 		$link = Session::get("ContinueShoppingLink");
 		if(!$link) {

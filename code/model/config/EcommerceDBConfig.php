@@ -119,8 +119,7 @@ class EcommerceDBConfig extends DataObject {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
-		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
-		if($member && Permission::checkMember($member, $shopAdminCode)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		return parent::canEdit($member);
@@ -220,8 +219,8 @@ class EcommerceDBConfig extends DataObject {
 
 	/**
 	 * standard SS method for decorators.
-	 * @param Array - $fields: array of fields to start with
-	 * @return null ($fields variable is automatically updated)
+	 * @param Boolean $includerelations
+	 * @return Array
 	 */
 	function fieldLabels($includerelations = true) {
 		$defaultLabels = parent::fieldLabels();
@@ -371,8 +370,9 @@ class EcommerceDBConfig extends DataObject {
 	 * tells us if a Class Name is a buyable
 	 * @todo: consider using Ecomerce Configuration instead?
 	 * In EcomConfig we only list base classes.
-	 *@param String $className - name of the class to be tested
-	 *@return Boolean
+	 *
+	 * @param String $className - name of the class to be tested
+	 * @return Boolean
 	 */
 	static function is_buyable($className) {
 		$implementorsArray = class_implements($className);
@@ -528,8 +528,6 @@ class EcommerceDBConfig extends DataObject {
 	public function UseThisOneNice(){
 		return $this->UseThisOne ? "YES" : "NO";
 	}
-
-
 
 }
 

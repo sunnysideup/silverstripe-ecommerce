@@ -17,7 +17,12 @@ class OrderStepField extends DatalessField {
 	 */
 	protected $content;
 
-	function __construct($name, $order, $member = null) {
+	/**
+	 * @param String $name
+	 * @param Order $order
+	 * @param Member $member
+	 */
+	function __construct($name, Order $order, Member $member = null) {
 		if(!$member) {
 			$member = $order->Member();
 		}
