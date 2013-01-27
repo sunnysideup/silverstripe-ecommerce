@@ -11,6 +11,12 @@
 
 class EcommerceTemplateTest extends Page_Controller {
 
+
+	/**
+	 * Goes through all products and find one that
+	 * "canPurchase".
+	 * @return Product
+	 */
 	function RandomProduct(){
 		$offSet = 0;
 		$product = true;
@@ -30,6 +36,10 @@ class EcommerceTemplateTest extends Page_Controller {
 		return $product;
 	}
 
+	/**
+	 * This is used for template-ty stuff.
+	 * @return Boolean
+	 */
 	function IsEcommercePage(){
 		return true;
 	}

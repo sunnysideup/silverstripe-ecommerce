@@ -125,17 +125,21 @@ class EcommerceRegion extends DataObject {
 
 	/**
 	 * checks if a code is allowed
-	 * @param String $code - e.g. NZ, NSW, or CO
+	 * @param String | Number $code - e.g. NZ, NSW, or CO
 	 * @return Boolean
 	 */
 	public static function code_allowed($code) {
+		if(is_numeric($code)) {
+			//TO DO: TO COMPLETE!
+			return true;
+		}
 		return array_key_exists($code, self::list_of_allowed_entries_for_dropdown());
 	}
 
 
 	/**
 	 * converts a code into a proper title
-	 * @param String  $code (Code)
+	 * @param String $code (Code)
 	 * @return String ( name)
 	 */
 	public static function find_title($code) {

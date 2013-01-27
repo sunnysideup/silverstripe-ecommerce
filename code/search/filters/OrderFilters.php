@@ -33,7 +33,7 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *@return SQLQuery
 	 **/
 	public function apply(DataQuery $query) {
-		$query = $this->applyRelation($query);
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		$date = new Date();
 		$date->setValue($value);
@@ -59,7 +59,8 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '';
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val == 0 || $val === array();
 	}
 
 }
@@ -81,7 +82,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 	 *@return SQLQuery
 	 **/
 	public function apply(DataQuery $query) {
-		$query = $this->applyRelation($query);
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		$billingAddressesIDs = array(-1 => -1);
 		$billingAddresses = BillingAddress::get()->where("
@@ -136,7 +137,8 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '';
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val == 0 || $val === array();
 	}
 
 }
@@ -157,9 +159,10 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter {
 	 *@return SQLQuery
 	 **/
 	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$values = $this->getValue();
 		if(is_array($values) && count($values)) {
-			$query->filter(array("StatusID" => $values));
+			$query->where("\"StatusID\" IN (".implode(", ", $values).")");
 		}
 		return $query;
 	}
@@ -169,12 +172,8 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		if(is_array($this->getValue())) {
-			return count($this->getValue()) == 0;
-		}
-		else {
-			return $this->getValue() == null || $this->getValue() == '';
-		}
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val == 0 || $val === array();
 	}
 }
 
@@ -195,7 +194,7 @@ class OrderFilters_HasBeenCancelled extends ExactMatchFilter {
 	 *@return SQLQuery
 	 **/
 	public function apply(DataQuery $query) {
-		$query = $this->applyRelation($query);
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		if($value == 1) {
 			$query->where("\"CancelledByID\" IS NOT NULL AND \"CancelledByID\" > 0");
@@ -208,7 +207,8 @@ class OrderFilters_HasBeenCancelled extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val == 0 || $val === array();
 	}
 }
 
@@ -229,7 +229,7 @@ class OrderFilters_MustHaveAtLeastOnePayment extends ExactMatchFilter {
 	 *@return SQLQuery
 	 **/
 	public function apply(DataQuery $query) {
-		$query = $this->applyRelation($query);
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		if($value && in_array($value, array(0,1))) {
 			$query->innerJoin(
@@ -246,6 +246,7 @@ class OrderFilters_MustHaveAtLeastOnePayment extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val == 0 || $val === array();
 	}
 }

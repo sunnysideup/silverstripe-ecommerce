@@ -23,7 +23,7 @@ class SelectOrderAddressField extends OptionsetField {
 	 * @param String $value The current value
 	 * @param Form $form - The parent form
 	 */
-	function __construct($name, $title = "", $addresses = null, $value = "", $form = null) {
+	function __construct($name, $title = "", $addresses = null, $value = "", Form $form = null) {
 		$this->addresses = $addresses;
 		$source = array();
 		if($this->addresses) {

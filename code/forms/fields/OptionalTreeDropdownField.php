@@ -28,15 +28,6 @@ class OptionalTreeDropdownField extends TreeDropdownField {
 		return $this->$field;
 	}
 
-	/**
-		* Return the site tree
-		* For version 2.3 and earlier
-		*/
-	function gettree() {
-		echo $this->preTree();
-		parent::gettree();
-		echo OptionalTreeDropdownField::$postTree;
-	}
 
 	/**
 		* Get the whole tree of a part of the tree via an AJAX request with empty / none item prepended.

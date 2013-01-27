@@ -167,7 +167,7 @@ class EcommerceCurrency extends DataObject {
 	 *
 	 * @return NULL | EcommerceCurrency
 	 */
-	function default_currency(){
+	public static function default_currency(){
 		return EcommerceCurrency::get()
 			->Filter(
 				array(
