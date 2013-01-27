@@ -250,7 +250,7 @@ class OrderModifier extends OrderAttribute {
 			$this->runningTotal += $this->CalculatedTotal;
 		}
 		$this->baseInitCalled = true;
-		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::runUpdate-for-'.$this->ClassName);
+		//if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::runUpdate-for-'.$this->ClassName);
 	}
 
 	/**

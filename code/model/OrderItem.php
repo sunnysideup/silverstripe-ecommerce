@@ -483,7 +483,7 @@ class OrderItem extends OrderAttribute {
 				$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
 			}
 			$turnTranslatableBackOn = false;
-			if (Object::has_extension($this->BuyableClassName,'Translatable')) {
+			if ($this->BuyableClassName::has_extension($this->BuyableClassName,'Translatable')) {
 				Translatable::disable_locale_filter();
 				$turnTranslatableBackOn = true;
 			}
