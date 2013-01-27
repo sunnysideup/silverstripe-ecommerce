@@ -14,9 +14,16 @@
 
 class EcommerceDefaultRecords extends BuildTask {
 
-
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	protected $title = "Create e-commerce default records";
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	protected $description = "These default records are basic stuff like an account page, a few products, a product group.";
 
 	function run($request) {
@@ -43,7 +50,7 @@ class EcommerceDefaultRecords extends BuildTask {
 
 		//CHECKOUT PAGE
 
-		CheckoutPage::get()->First();
+		$checkouPage = CheckoutPage::get()->First();
 		if(!$checkoutPage) {
 			$checkoutPage = new CheckoutPage();
 			$checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';

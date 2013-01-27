@@ -14,7 +14,12 @@
 
 class OrderForm extends Form {
 
-	function __construct($controller, $name) {
+	/**
+	 *
+	 * @param Controller $controller
+	 * @param String
+	 */
+	function __construct(Controller $controller, $name) {
 
 		//requirements
 		Requirements::javascript('ecommerce/javascript/EcomOrderForm.js');
@@ -109,7 +114,7 @@ class OrderForm extends Form {
 	 * @param Form $form Form object for this action
 	 * @param HTTPRequest $request Request object for this action
 	 */
-	function processOrder($data, $form, $request) {
+	function processOrder(Array $data, Form $form, SS_HTTPRequest $request) {
 		$this->saveDataToSession($data); //save for later if necessary
 		$order = ShoppingCart::current_order();
 		//check for cart items
@@ -187,7 +192,7 @@ class OrderForm extends Form {
 	 * saves the form into session
 	 * @param Array $data - data from form.
 	 */
-	function saveDataToSession($data){
+	function saveDataToSession(Array $data){
 		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
 
@@ -291,7 +296,13 @@ class OrderForm_Validator extends RequiredFields{
 
 class OrderForm_Payment extends Form {
 
-	function __construct($controller, $name, $order, $returnToLink = '') {
+	/**
+	 * @param Controller $controller
+	 * @param String $name
+	 * @param Order $order
+	 * @param String
+	 */
+	function __construct(Controller $controller, $name, Order $order, $returnToLink = '') {
 		$requiredFields = null;
 		$fields = new FieldList(
 			new HiddenField('OrderID', '', $order->ID)
@@ -362,7 +373,7 @@ class OrderForm_Payment extends Form {
 
 class OrderForm_Cancel extends Form {
 
-	function __construct($controller, $name, $order) {
+	function __construct(Controller $controller, $name, Order $order) {
 		$fields = new FieldList(
 			array(
 				new HeaderField('CancelOrderHeading', _t("OrderForm.CANCELORDER", "Changed your mind?"), 3),
@@ -390,7 +401,7 @@ class OrderForm_Cancel extends Form {
 	 * @param array $data The form request data submitted
 	 * @param Form $form The {@link Form} this was submitted on
 	 */
-	function docancel($data, $form) {
+	function docancel(Array $data, Form $form, SS_HTTPRequest $request) {
 		$SQLData = Convert::raw2sql($data);
 		$member = Member::currentUser();
 		if($member) {

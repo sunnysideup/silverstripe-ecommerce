@@ -148,7 +148,8 @@ EcommerceRole:
   CMS_ACCESS_StoreAdmin
  ]
 
-
+EcommercePaymentController
+ url_segment: ecommercepayment
 
 
 ################### FORMS AND FIELDS #####################

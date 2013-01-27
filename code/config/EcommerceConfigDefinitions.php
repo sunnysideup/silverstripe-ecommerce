@@ -158,6 +158,9 @@ class EcommerceConfigDefinitions extends Object {
 				"admin_role_title" => "Role title for the shop administrator member group.",
 				"admin_role_permission_codes" => "Permission codes for the shop administrator member group.",
 			),
+			"EcommercePaymentController" => array(
+				"url_segment" => "URL used for EcommercePaymentController.",
+			),
 			"OrderModifierForm" => array(
 				"controller_class" => "The controller class is used for Order Modifier Forms.",
 				"validator_class" => "The validator class is used for Order Modifier Forms.",

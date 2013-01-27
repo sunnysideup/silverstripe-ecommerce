@@ -27,7 +27,7 @@ class ShoppingCart extends Object{
 	 * Also @see ShoppingCart::sessionVariableName
 	 * @var Array
 	 */
-	private static $session_variable_names = array("OrderID", "Messages");
+	protected static $session_variable_names = array("OrderID", "Messages");
 
 	/**
 	 *
@@ -205,11 +205,11 @@ class ShoppingCart extends Object{
 	/**
 	 * Adds any number of items to the cart.
 	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
-	 * @param Integer $quantity - number of items add.
+	 * @param Float $quantity - number of items add.
 	 * @param $parameters - array of parameters to target a specific order item. eg: group=1, length=5
 	 * @return false | DataObject (OrderItem)
 	 */
-	public function addBuyable($buyable, $quantity = 1, $parameters = array()){
+	public function addBuyable(BuyableModel $buyable, $quantity = 1, Array $parameters = array()){
 		if(!$buyable) {
 			$this->addMessage(_t("Order.ITEMCOULDNOTBEFOUND", "This item could not be found."),'bad');
 			return false;
@@ -218,8 +218,8 @@ class ShoppingCart extends Object{
 			$this->addMessage(_t("Order.ITEMCOULDNOTBEADDED", "This item is not for sale."),'bad');
 			return false;
 		}
-		$item = $this->prepareOrderItem($mustBeExistingItem = false, $buyable, $parameters);
-		$quantity = $this->prepareQuantity($quantity, $buyable);
+		$item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+		$quantity = $this->prepareQuantity($buyable, $quantity);
 		if($item && $quantity){ //find existing order item or make one
 			$item->Quantity += $quantity;
 			$item->write();
@@ -247,13 +247,13 @@ class ShoppingCart extends Object{
 	/**
 	 * Sets quantity for an item in the cart.
 	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
-	 * @param Integer $quantity - number of items add.
+	 * @param Float $quantity - number of items add.
 	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
 	 * @return false | DataObject (OrderItem)
 	 */
-	function setQuantity($buyable, $quantity, $parameters = array()) {
-		$item = $this->prepareOrderItem($mustBeExistingItem = false, $buyable, $parameters);
-		$quantity = $this->prepareQuantity($quantity, $buyable);
+	function setQuantity(BuyableModel $buyable, $quantity, Array $parameters = array()) {
+		$item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+		$quantity = $this->prepareQuantity($buyable, $quantity);
 		if($item) {
 			$item->Quantity = $quantity; //remove quantity
 			$item->write();
@@ -268,14 +268,14 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Removes any number of items from the cart.
-	 *@param DataObject $buyable - the buyable (generally a product) being added to the cart
-	 *@param Integer $quantity - number of items add.
-	 *@param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
-	 *@return false | DataObject (OrderItem)
+	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
+	 * @param Float $quantity - number of items add.
+	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+	 * @return false | DataObject (OrderItem)
 	 */
-	public function decrementBuyable($buyable,$quantity = 1, $parameters = array()){
-		$item = $this->prepareOrderItem($mustBeExistingItem = false, $buyable, $parameters);
-		$quantity = $this->prepareQuantity($quantity, $buyable);
+	public function decrementBuyable(BuyableModel $buyable,$quantity = 1, Array $parameters = array()){
+		$item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+		$quantity = $this->prepareQuantity($buyable, $quantity);
 		if($item) {
 			$item->Quantity -= $quantity; //remove quantity
 			if($item->Quantity < 0 ) {
@@ -303,8 +303,8 @@ class ShoppingCart extends Object{
 	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5
 	 * @return boolean | item - successfully removed
 	 */
-	function deleteBuyable($buyable, $parameters = array()) {
-		$item = $this->prepareOrderItem($mustBeExistingItem = true, $buyable, $parameters);
+	function deleteBuyable(BuyableModel $buyable, Array $parameters = array()) {
+		$item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = true);
 		if($item) {
 			$this->currentOrder()->Attributes()->remove($item);
 			$item->delete();
@@ -320,13 +320,13 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
-	 * @param Boolean $mustBeExistingItems - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
 	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
-	 * @param Integer $quantity - number of items add.
+	 * @param Float $quantity - number of items add.
+	 * @param Boolean $mustBeExistingItems - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
 	 * @param Array $parameters - array of parameters to target a specific order item. eg: group=1, length=5*
 	 * @return boolean | DataObject ($orderItem)
 	 */
-	protected function prepareOrderItem($mustBeExistingItem = true, $buyable, $parameters = array()) {
+	protected function prepareOrderItem(BuyableModel $buyable, $parameters = array(), $mustBeExistingItem = true) {
 		if(!$buyable) {
 			user_error("No buyable was provided", E_USER_WARNING);
 		}
@@ -354,10 +354,10 @@ class ShoppingCart extends Object{
 	/**
 	 * @todo: what does this method do???
 	 * @return Integer
-	 * @param Integer $quantity
-	 * @param Object ($buyable)
+	 * @param DataObject ($buyable)
+	 * @param Float $quantity
 	 */
-	protected function prepareQuantity($quantity, $buyable) {
+	protected function prepareQuantity(BuyableModel $buyable, $quantity) {
 		$quantity = round($quantity, $buyable->QuantityDecimals());
 		if($quantity < 0 || (!$quantity && $quantity !== 0)) {
 			$this->addMessage(_t("Order.INVALIDQUANTITY", "Invalid quantity."),'warning');
@@ -374,7 +374,7 @@ class ShoppingCart extends Object{
 	 * @param Array $parameters
 	 * @return OrderItem
 	 */
-	public function findOrMakeItem($buyable,$parameters = array()){
+	public function findOrMakeItem(BuyableModel $buyable, Array $parameters = array()){
 		if($item = $this->getExistingItem($buyable,$parameters)){
 			return $item;
 		}
@@ -443,10 +443,13 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Removes a modifier from the cart
-	 * @param Object(modifier)
+	 * It does not actually remove it, but it just
+	 * sets it as "removed", to avoid that it is being
+	 * added again.
+	 * @param OrderModifier $modifier
 	 * @return Boolean
 	 */
-	public function removeModifier($modifier){
+	public function removeModifier(OrderModifier $modifier){
 		$modifier = (is_numeric($modifier)) ? OrderModifier::get()->byID($modifier) : $modifier;
 		if(!$modifier){
 			$this->addMessage(_t("Order.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
@@ -473,6 +476,9 @@ class ShoppingCart extends Object{
 		if(is_numeric($modifier)) {
 			$modifier = OrderModifier::get()->byID($modifier);
 		}
+		elseif(!($modifier InstanceOf OrderModifier)) {
+			user_error("Bad parameter provided to ShoppingCart::addModifier", E_USER_WARNING);
+		}
 		if(!$modifier){
 			$this->addMessage(_t("Order.MODIFIERNOTFOUND", "Modifier could not be found."),'bad');
 			return false;
@@ -496,6 +502,9 @@ class ShoppingCart extends Object{
 		}
 		elseif($order instanceof Order) {
 			$this->order = $order;
+		}
+		else {
+			user_error("Bad order provided as parameter to ShoppingCart::loadOrder()");
 		}
 		if($this->order){
 			if($this->order->canView()) {
@@ -527,6 +536,9 @@ class ShoppingCart extends Object{
 		}
 		elseif($oldOrder instanceof Order) {
 			//$oldOrder = $oldOrder;
+		}
+		else {
+			user_error("Bad order provided as parameter to ShoppingCart::loadOrder()");
 		}
 		if($oldOrder){
 			if($oldOrder->canView()) {
@@ -584,7 +596,7 @@ class ShoppingCart extends Object{
 
 	/**
 	 * sets region in order so that modifiers can be recalculated, etc...
-	 * @param Integer - $regionID - EcommerceRegion.ID
+	 * @param Integer | String - $regionID you can use the ID or the code.
 	 * @return Boolean
 	 **/
 	public function setRegion($regionID) {
@@ -714,8 +726,9 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Stores a message that can later be returned via ajax or to $form->sessionMessage();
-	 *@param $message - the message, which could be a notification of successful action, or reason for failure
-	 *@param $type - please use good, bad, warning
+	 *
+	 * @param $message - the message, which could be a notification of successful action, or reason for failure
+	 * @param $type - please use good, bad, warning
 	 */
 	public function addMessage($message, $status = 'good'){
 		//clean status for the lazy programmer
@@ -739,11 +752,12 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Gets an existing order item based on buyable and passed parameters
+	 *
 	 * @param DataObject $buyable
 	 * @param Array $parameters
 	 * @return OrderItem or null
 	 */
-	protected function getExistingItem($buyable,$parameters = array()){
+	protected function getExistingItem(BuyableModel $buyable, Array $parameters = array()){
 		$filterString = $this->parametersToSQL($parameters);
 		if($order = $this->currentOrder()) {
 			$orderID = $order->ID;
@@ -761,10 +775,10 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Removes parameters that aren't in the default array, merges with default parameters, and converts raw2SQL.
-	 *@param Array $parameters -  unclean array
-	 *@return cleaned array
+	 * @param Array $parameters
+	 * @return cleaned array
 	 */
-	protected function cleanParameters($params = array()){
+	protected function cleanParameters(Array $params = array()){
 		$defaultParamFilters = EcommerceConfig::get("ShoppingCart", "default_param_filters");
 		$newarray = array_merge(array(),$defaultParamFilters); //clone array
 		if(!count($newarray)) {
@@ -779,9 +793,10 @@ class ShoppingCart extends Object{
 	}
 
 	/**
+	 * @param Array $parameters
 	 * Converts parameter array to SQL query filter
 	 */
-	protected function parametersToSQL($parameters = array()){
+	protected function parametersToSQL(Array $parameters = array()){
 		$defaultParamFilters = EcommerceConfig::get("ShoppingCart", "default_param_filters");
 		if(!count($defaultParamFilters)) {
 			return ""; //no use for this if there are not parameters defined
@@ -889,6 +904,7 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Return the name of the session variable that should be used.
+	 * @param String $name
 	 * @return String
 	 */
 	protected function sessionVariableName($name = "") {
@@ -1015,55 +1031,129 @@ class ShoppingCart_Controller extends Controller{
 	* CONTROLLER LINKS
 	*******************************************************/
 
+	/**
+	 * @param String $action
+	 * @return String (Link)
+	 */
 	public function Link($action = null) {
 		return Controller::join_links(Director::baseURL(), $this->RelativeLink($action));
 	}
 
-	static function add_item_link($buyableID, $classNameForBuyable = "Product", $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $buyableID
+	 * @param String $classNameForBuyable
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function add_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
 		return self::$url_segment.'/additem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
-	static function remove_item_link($buyableID, $classNameForBuyable = "Product", $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $buyableID
+	 * @param String $classNameForBuyable
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function remove_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
 		return self::$url_segment.'/removeitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
-	static function remove_all_item_link($buyableID, $classNameForBuyable = "Product", $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $buyableID
+	 * @param String $classNameForBuyable
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function remove_all_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
 		return self::$url_segment.'/removeallitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
-	static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = "Product", $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $buyableID
+	 * @param String $classNameForBuyable
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
 		return self::$url_segment.'/removeallitemandedit/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
-	static function set_quantity_item_link($buyableID, $classNameForBuyable = "Product", $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $buyableID
+	 * @param String $classNameForBuyable
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function set_quantity_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
 		return self::$url_segment.'/setquantityitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
-	static function remove_modifier_link($modifierID, $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $modifierID
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function remove_modifier_link($modifierID, Array $parameters = array()) {
 		return self::$url_segment.'/removemodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
-	static function add_modifier_link($modifierID, $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $modifierID
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function add_modifier_link($modifierID, Array $parameters = array()) {
 		return self::$url_segment.'/addmodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
-	static function remove_address_link($addressID, $addressClassName, $parameters = array()) {
+	/**
+	 *
+	 * @param Integer $addressID
+	 * @param String $addressClassName
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function remove_address_link($addressID, $addressClassName, Array $parameters = array()) {
 		return self::$url_segment.'/removeaddress/'.$addressID."/".$addressClassName."/".self::params_to_get_string($parameters);
 	}
 
+	/**
+	 * @param Array $parameters
+	 * @return String
+	 */
 	static function clear_cart_link($parameters = array()) {
 		return self::$url_segment.'/clear/'.self::params_to_get_string($parameters);
 	}
 
-	static function save_cart_link($parameters = array()) {
+	/**
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function save_cart_link(Array $parameters = array()) {
 		return self::$url_segment.'/save/'.self::params_to_get_string($parameters);
 	}
 
-	static function clear_cart_and_logout_link($parameters = array()) {
+	/**
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function clear_cart_and_logout_link(Array $parameters = array()) {
 		return self::$url_segment.'/clearandlogout/'.self::params_to_get_string($parameters);
 	}
 
-	static function delete_order_link($orderID, $parameters = array()) {
+	/**
+	 * @param Array $parameters
+	 * @return String
+	 */
+	static function delete_order_link($orderID, Array $parameters = array()) {
 		return self::$url_segment.'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
 	}
 
@@ -1071,34 +1161,17 @@ class ShoppingCart_Controller extends Controller{
 	 * @param String $code
 	 * @return String
 	 */
-	static function set_currency_link($code, $parameters = array()) {
+	static function set_currency_link($code, Array $parameters = array()) {
 		return self::$url_segment.'/setcurrency/'.$code.'/'.self::params_to_get_string($parameters);
 	}
 
 	/**
-	 * Helper function used by link functions
-	 * Creates the appropriate url-encoded string parameters for links from array
-	 *
-	 * Produces string such as: MyParam%3D11%26OtherParam%3D1
-	 *     ...which decodes to: MyParam=11&OtherParam=1
-	 *
-	 * you will need to decode the url with javascript before using it.
-	 *
-	 *@todo: check that comment description actually matches what it does
-	 *@return String (URLSegment)
-	 */
-
-	protected static function params_to_get_string($array){
-		$token = SecurityToken::inst();
-		$array["SecurityID"] = $token->getValue();
-		return "?".http_build_query($array);
-	}
-
-	/**
 	 * Adds item to cart via controller action; one by default.
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 */
-	public function additem($request){
+	public function additem(SS_HTTPRequest $request){
 		$this->cart->addBuyable($this->buyable(),$this->quantity(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
@@ -1106,36 +1179,44 @@ class ShoppingCart_Controller extends Controller{
 	/**
 	 * Sets the exact passed quantity.
 	 * Note: If no ?quantity=x is specified in URL, then quantity will be set to 1.
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 */
-	public function setquantityitem($request){
+	public function setquantityitem(SS_HTTPRequest $request){
 		$this->cart->setQuantity($this->buyable(),$this->quantity(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
 
 	/**
 	 * Removes item from cart via controller action; one by default.
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 */
-	public function removeitem($request){
+	public function removeitem(SS_HTTPRequest $request){
 		$this->cart->decrementBuyable($this->buyable(),$this->quantity(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
 
 	/**
 	 * Removes all of a specific item
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 */
-	public function removeallitem($request){
+	public function removeallitem(SS_HTTPRequest $request){
 		$this->cart->deleteBuyable($this->buyable(),$this->parameters());
 		return $this->cart->setMessageAndReturn();
 	}
 
 	/**
 	 * Removes all of a specific item AND return back
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 */
-	public function removeallitemandedit($request){
+	public function removeallitemandedit(SS_HTTPRequest $request){
 		$buyable = $this->buyable();
 		if($buyable) {
 			$link = $buyable->Link();
@@ -1149,9 +1230,11 @@ class ShoppingCart_Controller extends Controller{
 
 	/**
 	 * Removes a specified modifier from the cart;
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 */
-	public function removemodifier($request){
+	public function removemodifier(SS_HTTPRequest $request){
 		$modifierID = intval($request->param('ID'));
 		$this->cart->removeModifier($modifierID);
 		return $this->cart->setMessageAndReturn();
@@ -1159,9 +1242,11 @@ class ShoppingCart_Controller extends Controller{
 
 	/**
 	 * Adds a specified modifier to the cart;
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 */
-	public function addmodifier($request){
+	public function addmodifier(SS_HTTPRequest $request){
 		$modifierID = intval($request->param('ID'));
 		$this->cart->addModifier($modifierID);
 		return $this->cart->setMessageAndReturn();
@@ -1169,10 +1254,12 @@ class ShoppingCart_Controller extends Controller{
 
 
 	/**
-	 *sets the country
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * sets the country
+	 * @param SS_HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 **/
-	function setcountry($request) {
+	function setcountry(SS_HTTPRequest $request) {
 		$countryCode = Convert::raw2sql($request->param('ID'));
 		//set_country will check if the country code is actually allowed....
 		$this->cart->setCountry($countryCode);
@@ -1180,45 +1267,65 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	/**
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param SS_HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 **/
-	function setregion($request) {
+	function setregion(SS_HTTPRequest $request) {
 		$regionID = intval($request->param('ID'));
 		$this->cart->setRegion($regionID);
 		return $this->cart->setMessageAndReturn();
 	}
 
 	/**
-	 * @param HTTP_Request
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param SS_HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
 	 **/
-	function setcurrency($request) {
+	function setcurrency(SS_HTTPRequest $request) {
 		$currencyCode = Convert::raw2sql($request->param('ID'));
 		$this->cart->setCurrency($currencyCode);
 		return $this->cart->setMessageAndReturn();
 	}
 
-	function save($request) {
+	/**
+	 * @param SS_HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+	 * If it is not AJAX it redirects back to requesting page.
+	 **/
+	function save(SS_HTTPRequest $request) {
 		$order = $this->cart->save();
 		return $this->cart->setMessageAndReturn();
 	}
 
-	function clear($request) {
+	/**
+	 * @param SS_HTTPRequest
+	 * @return REDIRECT
+	 **/
+	function clear(SS_HTTPRequest $request) {
 		$this->cart->clear();
 		$this->redirect("/");
-		return false;
+		return array();
 	}
 
-	function clearandlogout() {
+	/**
+	 * @param SS_HTTPRequest
+	 * @return REDIRECT
+	 **/
+	function clearandlogout(SS_HTTPRequest $request) {
 		$this->cart->clear();
-		if($m = Member::currentUser()) {
-			$m->logout();
+		if($member = Member::currentUser()) {
+			$member->logout();
 		}
 		$this->redirect("/");
-		return false;
+		return array();
 	}
 
-	function deleteorder($request) {
+	/**
+	 * @param SS_HTTPRequest
+	 * @return REDIRECT
+	 **/
+	function deleteorder(SS_HTTPRequest $request) {
 		$orderID = intval($request->param('ID'));
 		if($order = Order::get_by_id_if_can_view($orderID)) {
 			if($order->canDelete()) {
@@ -1230,26 +1337,29 @@ class ShoppingCart_Controller extends Controller{
 
 	/**
 	 * return number of items in cart
-	 *@return integer
+	 * @param SS_HTTPRequest
+	 * @return integer
 	 **/
-	function numberofitemsincart() {
+	function numberofitemsincart(SS_HTTPRequest $request) {
 		$order = $this->cart->CurrentOrder();
 		return $order->TotalItems($recalculate = true);
 	}
 
 	/**
 	 * return cart for ajax call
+	 * @param SS_HTTPRequest
 	 * @return HTML
 	 */
-	public function showcart($request) {
+	public function showcart(SS_HTTPRequest $request) {
 		return $this->customise($this->cart->CurrentOrder())->renderWith("AjaxCart");
 	}
 
 	/**
 	 * loads an order
-	 *
+	 * @param SS_HTTPRequest
+	 * @return REDIRECT
 	 */
-	public function loadorder($request) {
+	public function loadorder(SS_HTTPRequest $request) {
 		$this->cart->loadOrder(intval($request->param('ID')));
 		$cartPageLink = CartPage::find_link();
 		if($cartPageLink) {
@@ -1263,8 +1373,11 @@ class ShoppingCart_Controller extends Controller{
 
 	/**
 	 * remove address from list of available addresses in checkout.
+	 * @param SS_HTTPRequest
+	 * @return String | REDIRECT
+	 * @TODO: add non-ajax version of this request.
 	 */
-	function removeaddress($request) {
+	function removeaddress(SS_HTTPRequest $request) {
 		$id = intval($request->param('ID'));
 		$className = Convert::raw2sql($request->param('OtherID'));
 		if(class_exists($className)) {
@@ -1273,20 +1386,32 @@ class ShoppingCart_Controller extends Controller{
 				$member = Member::currentUser();
 				if($member) {
 					$address->MakeObsolete($member);
-					return _t("Order.ADDRESSREMOVED", "Address removed.");
+					if($request->isAjax()) {
+						return _t("Order.ADDRESSREMOVED", "Address removed.");
+					}
+					else {
+						$this->redirectBack();
+					}
 				}
 			}
 		}
-		return _t("Order.ADDRESSNOTREMOVED", "Address could not be removed.");
+		if($request->isAjax()) {
+			return _t("Order.ADDRESSNOTREMOVED", "Address could not be removed.");
+		}
+		else {
+			$this->redirectBack();
+		}
+		return Array();
 	}
 
 	/**
 	 * allows us to view out-dated buyables that have been deleted
 	 * where only old versions exist.
 	 * this method should redirect
-	 *
+	 * @param SS_HTTPRequest
+	 * @return REDIRECT
 	 */
-	function submittedbuyable(){
+	function submittedbuyable(SS_HTTPRequest $request){
 		$buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
 		$buyableID = intval($this->getRequest()->param('OtherID'));
 		$version = intval($this->getRequest()->param('Version'));
@@ -1295,8 +1420,7 @@ class ShoppingCart_Controller extends Controller{
 				$bestBuyable = $buyableClassName::get()->byID($buyableID);
 				if($bestBuyable) {
 					//show singleton with old version
-					$this->redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
-					return;
+					return $this->redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
 				}
 			}
 		}
@@ -1304,8 +1428,7 @@ class ShoppingCart_Controller extends Controller{
 			->Filter(array("ErrorCode" => "404"))
 			->First();
 		if($errorPage404) {
-			$this->redirect($errorPage404->Link());
-			return;
+			return $this->redirect($errorPage404->Link());
 		}
 		return null;
 	}
@@ -1314,8 +1437,10 @@ class ShoppingCart_Controller extends Controller{
 	/**
 	 * This can be used by admins to log in as customers
 	 * to place orders on their behalf...
+	 * @param SS_HTTPRequest
+	 * @return REDIRECT
 	 */
-	function loginas($request){
+	function loginas(SS_HTTPRequest $request){
 		if(Permission::check("ADMIN") || Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))){
 			$newMember = Member::get()->byID(intval($request->param("ID")));
 			if($newMember) {
@@ -1339,10 +1464,27 @@ class ShoppingCart_Controller extends Controller{
 
 	}
 
+	/**
+	 * Helper function used by link functions
+	 * Creates the appropriate url-encoded string parameters for links from array
+	 *
+	 * Produces string such as: MyParam%3D11%26OtherParam%3D1
+	 *     ...which decodes to: MyParam=11&OtherParam=1
+	 *
+	 * you will need to decode the url with javascript before using it.
+	 *
+	 * @todo: check that comment description actually matches what it does
+	 * @return String (URLSegment)
+	 */
+	protected static function params_to_get_string(Array $array){
+		$token = SecurityToken::inst();
+		$array["SecurityID"] = $token->getValue();
+		return "?".http_build_query($array);
+	}
 
 	/**
 	 * Gets a buyable object based on URL actions
-	 *@return DataObject | Null - returns buyable
+	 * @return DataObject | Null - returns buyable
 	 */
 	protected function buyable(){
 		$buyableClassName = Convert::raw2sql($this->getRequest()->param('OtherID'));
@@ -1404,7 +1546,7 @@ class ShoppingCart_Controller extends Controller{
 	 * for developers only
 	 * @return output to buffer
 	 */
-	function ajaxtest($request){
+	function ajaxtest(SS_HTTPRequest $request){
 		if(Director::isDev() || Permission::check("ADMIN")){
 			header('Content-Type', 'text/plain');
 			echo "<pre>";

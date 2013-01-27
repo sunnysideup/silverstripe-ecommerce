@@ -34,7 +34,8 @@ class EcommerceSideReport_EcommercePages extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.ECOMMERCEPAGES',"E-commerce Pages (excluding products)");
+		return _t('EcommerceSideReport.ECOMMERCEPAGES',"E-commerce: Non-product e-commerce pages").
+		" (".$this->sourceRecords()->count().")";
 	}
 
 	/**
@@ -50,15 +51,15 @@ class EcommerceSideReport_EcommercePages extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return DataList
 	 */
-	function sourceQuery($params = null) {
-		SiteTree::get()->filter("ClassName", array("CartPage", "AccountPage", "ProductSearchPage"));
+	function sourceRecords($params = null) {
+		return SiteTree::get()->filter("ClassName", array("CartPage", "AccountPage", "ProductSearchPage"));
 	}
 
 	/**
@@ -104,7 +105,9 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.FEATUREDPRODUCTS', "Featured products");
+		return _t('EcommerceSideReport.FEATUREDPRODUCTS', "E-commerce: Featured products").
+		" (".$this->sourceRecords()->count().")";
+
 	}
 
 	/**
@@ -120,14 +123,14 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return SS_List
 	 */
-	function sourceQuery($params = null) {
+	function sourceRecords($params = null) {
 		return Product::get()
 			->filter(array("FeaturedProduct" => 1))
 			->sort("FullSiteTreeSort", "ASC");
@@ -175,7 +178,8 @@ class EcommerceSideReport_AllProducts extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.ALLPRODUCTS', "All products");
+		return _t('EcommerceSideReport.ALLPRODUCTS', "E-commerce: All products").
+		" (".$this->sourceRecords()->count().")";
 	}
 
 	/**
@@ -191,14 +195,14 @@ class EcommerceSideReport_AllProducts extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return DataList
 	 */
-	function sourceQuery($params = null) {
+	function sourceRecords($params = null) {
 		return Product::get()->sort("FullSiteTreeSort", "ASC");
 	}
 
@@ -246,7 +250,8 @@ class EcommerceSideReport_NoImageProducts extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.NOIMAGE',"Products without image");
+		return _t('EcommerceSideReport.NOIMAGE',"E-commerce: Products without image").
+		" (".$this->sourceRecords()->count().")";
 	}
 
 	/**
@@ -262,14 +267,14 @@ class EcommerceSideReport_NoImageProducts extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return DataList
 	 */
-	function sourceQuery($params = null) {
+	function sourceRecords($params = null) {
 		return Product::get()
 			->where("\"Product\".\"ImageID\" IS NULL OR \"Product\".\"ImageID\" <= 0")
 			->sort("FullSiteTreeSort",  "ASC");
@@ -319,7 +324,8 @@ class EcommerceSideReport_NoInternalIDProducts extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.NOINTERNALID',"Products without Internal ID (SKU)");
+		return _t('EcommerceSideReport.NOINTERNALID',"E-commerce: Products without Internal ID / SKU ").
+		" (".$this->sourceRecords()->count().")";
 	}
 
 	/**
@@ -335,16 +341,16 @@ class EcommerceSideReport_NoInternalIDProducts extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return DataList
 	 */
-	function sourceQuery($params = null) {
+	function sourceRecords($params = null) {
 		return Product::get()
-			->where("Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' ")
+			->where("\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' ")
 			->sort("FullSiteTreeSort", "ASC");
 	}
 
@@ -393,7 +399,8 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.NOPRICE',"Products without Price");
+		return _t('EcommerceSideReport.NOPRICE',"E-commerce: Products without Price").
+		" (".$this->sourceRecords()->count().")";
 	}
 
 	/**
@@ -410,16 +417,16 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return DataList
 	 */
-	function sourceQuery($params = null) {
+	function sourceRecords($params = null) {
 		return Product::get()
-			->where("Product\".\"Price\" IS NULL OR \"Product\".\"Price\" = 0 ")
+			->where("\"Product\".\"Price\" IS NULL OR \"Product\".\"Price\" = 0 ")
 			->sort("FullSiteTreeSort", "ASC");
 	}
 
@@ -469,7 +476,8 @@ class EcommerceSideReport_NotForSale extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.NOTFORSALE',"Products not for sale");
+		return _t('EcommerceSideReport.NOTFORSALE',"E-commerce: Products not for sale").
+		" (".$this->sourceRecords()->count().")";
 	}
 
 	/**
@@ -485,14 +493,14 @@ class EcommerceSideReport_NotForSale extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return DataList
 	 */
-	function sourceQuery($params = null) {
+	function sourceRecords($params = null) {
 		return Product::get("Product")
 			->filter(array("AllowPurchase" => 0))
 			->sort("FullSiteTreeSort", "ASC");
@@ -542,7 +550,8 @@ class EcommerceSideReport_ProductsWithVariations extends SS_Report {
 	 * @return String
 	 */
 	function title() {
-		return _t('EcommerceSideReport.PRODUCTSWITHVARIATIONS',"Products without variations");
+		return _t('EcommerceSideReport.PRODUCTSWITHVARIATIONS',"E-commerce: Products without variations").
+		" (".$this->sourceRecords()->count().")";
 	}
 
 	/**
@@ -558,14 +567,14 @@ class EcommerceSideReport_ProductsWithVariations extends SS_Report {
 	 * @return INT - for sorting reports
 	 */
 	function sort() {
-		return 0;
+		return 7000;
 	}
 
 	/**
 	 * working out the items
 	 * @return DataList
 	 */
-	function sourceQuery($params = null) {
+	function sourceRecords($params = null) {
 		$stage = '';
 		if(Versioned::current_stage() == "Live") {
 			$stage = "_Live";

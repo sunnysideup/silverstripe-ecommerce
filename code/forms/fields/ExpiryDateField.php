@@ -15,7 +15,7 @@ class ExpiryDateField extends TextField {
 	/**
 	 *@return HTML
 	 **/
-	function Field($properties = array()) {
+	function Field(Array $properties = array()) {
 		$monthValue = '';
 		$yearValue = '';
 		if(strlen($this->value) == 4) {
@@ -82,9 +82,10 @@ JS;
 	}
 
 	/**
-	 *@return boolean
+	 * @param $validator Validator
+	 * @return boolean
 	 **/
-	function validate($validator){
+	function validate(Validator $validator){
 		// If the field is empty then don't return an invalidation message'
 		if(!isset($this->value[0])) {
 			$validator->validationError(
@@ -125,7 +126,7 @@ JS;
 	}
 
 	/**
-	 *@return array(2000 => 2000, 2001 => 2001, etc...)
+	 * @return array(2000 => 2000, 2001 => 2001, etc...)
 	 **/
 	protected function yearArray() {
 		$list = array();
@@ -139,9 +140,11 @@ JS;
 
 
 	/**
-	 *@return string (html)
+	 * @param $array - list of options...
+	 * @param String $currentValue
+	 * @return string (html)
 	 **/
-	protected function makeSelectList($array, $currentValue) {
+	protected function makeSelectList(Array $array, $currentValue) {
 		$string = '';
 		foreach($array as $key => $value) {
 			$select = '';
@@ -154,7 +157,7 @@ JS;
 	}
 
 	/**
-	 *@return array(1 => "Jan", etc...)
+	 * @return array(1 => "Jan", etc...)
 	 **/
 	protected function monthArray() {
 		$shortMonths = EcommerceConfig::get("ExpiryDateField", "short_months");

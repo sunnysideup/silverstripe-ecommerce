@@ -15,7 +15,10 @@
 
 class OrderStatusLogForm extends Form {
 
-
+	/**
+	 *
+	 * @var Order
+	 */
 	protected $order;
 
 
@@ -28,10 +31,15 @@ class OrderStatusLogForm extends Form {
 	 *@param $name String
 	 *@param $fields FieldList
 	 *@param $actions FieldList
-	 *@param $validator SS_Validator
+	 *@param $validator Validator
 	 **/
 
-	function __construct($optionalController = null, $name, FieldList $fields, FieldList $actions,$optionalValidator = null){
+	function __construct(
+		Controller $optionalController = null,
+		$name, FieldList $fields,
+		FieldList $actions,
+		Validator $optionalValidator = null
+	){
 		if(!$optionalController) {
 			$controllerClassName = EcommerceConfig::get("OrderStatusLogForm", "controller_class");
 			$optionalController = new $controllerClassName();
@@ -55,12 +63,23 @@ class OrderStatusLogForm extends Form {
  */
 class OrderStatusLogForm_Controller extends Controller{
 
+	/**
+	 * @var Order
+	 */
 	protected $currentOrder = null;
 
+	/**
+	 * @var Array
+	 */
 	static $allowed_actions = array(
 		'removeLog'
 	);
 
+	/**
+	 * init Class
+	 * sets order
+	 * creates virtual methods
+	 */
 	public function init() {
 		parent::init();
 		$this->currentOrder = ShoppingCart::current_order();
@@ -98,6 +117,11 @@ class OrderStatusLogForm_Controller extends Controller{
 		}
 	}
 
+	/**
+	 *
+	 * @param String $action
+	 * @return String
+	 */
 	function Link($action = null){
 		$action = ($action)? "/$action/" : "";
 		return $this->class.$action;

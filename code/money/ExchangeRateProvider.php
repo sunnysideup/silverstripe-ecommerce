@@ -34,11 +34,12 @@ class ExchangeRateProvider extends Object {
 	protected $exchangeCostMultiplier = 1.05;
 
 	/**
-	 *
-	 * @param String $fromCode
-	 * @param String $toCode
+	 * Get the exchange rate
+	 * @param String $fromCode e.g. NZD
+	 * @param String $toCode e.g. USD
+	 * @return Double
 	 */
-	function ExchangeRate($fromCode, $toCode) {
+	public function ExchangeRate($fromCode, $toCode) {
 		$fromCode = strtoupper($fromCode);
 		$toCode = strtoupper($toCode);
 		$cacheCode = $fromCode."-".$toCode;
@@ -60,6 +61,7 @@ class ExchangeRateProvider extends Object {
 
 	/**
 	 * gets a rate from a FROM and a TO currency
+	 *
 	 * @param String $fromCode - UPPERCASE Code, e.g. NZD
 	 * @param String $toCode - UPPERCASE Code, e.g. EUR
 	 * @return Double - returns exchange rate
