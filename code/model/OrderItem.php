@@ -512,8 +512,6 @@ class OrderItem extends OrderAttribute {
 		user_error("No Buyable could be found for OrderItem with ID: ".$this->ID, E_USER_WARNING);
 	}
 
-
-
 	/**
 	 *
 	 * @return String
