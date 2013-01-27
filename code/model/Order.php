@@ -655,7 +655,7 @@ class Order extends DataObject {
 			new GridFieldDetailForm(),
 			new GridFieldEditButton()
 		);
-		return new GridField("Emails", _t("Order.PAYMENTS", "Payments"), $this->Payments(), $gridFieldConfig);
+		return new GridField("Payments", _t("Order.PAYMENTS", "Payments"), $this->Payments(), $gridFieldConfig);
 	}
 
 	/**
