@@ -362,7 +362,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	protected function addOtherValuesToConfigs(){
-		if(class_exists(Geoip)) {
+		if(class_exists("Geoip")) {
 			$this->configs["Geoip"]["default_country_code"] = Geoip::get_default_country_code();
 		}
 		else {
