@@ -88,7 +88,7 @@ class CartPage extends Page{
 	 */
 	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		if($fieldName == "MenuTitle") {
-			return DBField::create_field('HTMLVarchar', $this->EcommerceMenuTitle(), "MenuTitle", $this);
+			return DBField::create_field('HTMLVarchar', strip_tags($this->EcommerceMenuTitle()), "MenuTitle", $this);
 		}
 		else {
 			return parent::obj($fieldName);
