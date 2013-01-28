@@ -121,6 +121,9 @@ class OrderAddress extends DataObject {
 	 * @return Boolean
 	 **/
 	function canView($member = null) {
+		if(!$this->exists()) {
+			return $this->canCreate($member);
+		}
 		if($this->_canView === null) {
 			$this->_canView = false;
 			if($this->Order()) {
@@ -141,6 +144,9 @@ class OrderAddress extends DataObject {
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
+		if(!$this->exists()) {
+			return $this->canCreate($member);
+		}
 		if($this->_canEdit === null) {
 			$this->_canEdit = false;
 			if($this->Order()) {

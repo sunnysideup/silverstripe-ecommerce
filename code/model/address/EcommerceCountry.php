@@ -113,18 +113,36 @@ class EcommerceCountry extends DataObject {
 	public static $description = "A country.";
 
 	/**
-	 * Standard SS method
+	 * Standard SS Method
 	 * @param Member $member
-	 * @return Boolean
+	 * @var Boolean
 	 */
-	function canCreate($member = null){
+	public function canCreate($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canView($member = null) {
+		return true;
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canEdit($member = null) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
 		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
-		return false;
+		return parent::canEdit($member);
 	}
 
 	/**

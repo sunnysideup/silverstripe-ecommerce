@@ -16,13 +16,13 @@ class BuyableSelectField extends FormField {
 	 * Location for jQuery UI library location
 	 * @var String
 	 */
-	protected $jquery_UI_JS_location = 'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.min.js';
+	protected $jquery_UI_JS_location = null; //'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.min.js';
 
 	/**
 	 * Location for jQuery UI library location
 	 * @var String
 	 */
-	protected $jquery_UI_CSS_location = 'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.css';
+	protected $jquery_UI_CSS_location = null; //'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.css';
 
 	/**
 	 * number of suggestions
@@ -81,8 +81,8 @@ class BuyableSelectField extends FormField {
 		if(!$this->form->Fields()->fieldByName("BuyableID")) {
 			//user_error("You must have a BuyableID field in your form.");
 		}
-		Requirements::javascript($this->jquery_UI_JS_location);
-		Requirements::css($this->jquery_UI_CSS_location);
+		//Requirements::javascript($this->jquery_UI_JS_location);
+		//Requirements::css($this->jquery_UI_CSS_location);
 		Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
 		Requirements::customScript($this->getJavascript(), "BuyableSelectField".$this->id());
 		Requirements::themedCSS("BuyableSelectField", 'ecommerce');
@@ -200,7 +200,7 @@ class BuyableSelectField_DataList extends Controller {
 						$where = "\"$fieldName\" LIKE '%$term%'
 								AND \"".$tableName."\".\"ID\" NOT IN
 								AND \"AllowPurchase\" = 1";
-						$obj::get()
+						$obj = $className::get()
 							->filter(array(
 								$fieldName.":PartialMatch" => $term,
 								"AllowPurchase" => 1

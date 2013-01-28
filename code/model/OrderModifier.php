@@ -141,9 +141,29 @@ class OrderModifier extends OrderAttribute {
 				new ReadonlyField("CalculatedTotal", "Raw Value", $this->CalculatedTotal)
 			)
 		);
-		$fields->addFieldToTab("Root.Status", new CheckboxField("HasBeenRemoved", "Has been removed"));
+
+		$fields->addFieldToTab("Root.Main", new CheckboxField("HasBeenRemoved", "Has been removed"));
 		$fields->removeByName("OrderAttribute_GroupID");
+
+
+		//OrderID Field
+		if($this->OrderID && $this->exists()) {
+			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
+		}
+		else {
+			$fields->replaceField("OrderID", new NumericField("OrderID"));
+		}
+
+		//ClassName Field
+		$availableModifiers = EcommerceConfig::get("Order", "modifiers");
+		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", "Type", "OrderModifier", $availableModifiers);
+		$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Name");
+		if($this->exists()) {
+			$classNameField = $fields->dataFieldByName("ClassName");
+			$fields->replaceField("ClassName", $classNameField->performReadonlyTransformation());
+		}
 		return $fields;
+
 	}
 
 
@@ -259,6 +279,22 @@ class OrderModifier extends OrderAttribute {
 	**/
 	protected function canBeUpdated() {
 		return $this->canEdit();
+	}
+
+	/**
+	* standard SS Method
+	* @return Boolean
+	**/
+	public function canCreate($member = null) {
+		return false;
+	}
+
+	/**
+	* standard SS Method
+	* @return Boolean
+	**/
+	public function canDelete($member = null) {
+		return false;
 	}
 
 	/**
@@ -772,38 +808,34 @@ class OrderModifier_Descriptor extends DataObject {
 		function i18n_plural_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTIONS", "Order Extra Descriptions");}
 
 	/**
-	 * standard SS variable
-	 * @var Boolean
-	 */
-	static $can_create = false;
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 **/
+	function canCreate($member = null) {
+		return false;
+	}
 
 	/**
 	 * standard SS method
 	 * @param Member $member
 	 * @return Boolean
-	 */
-	public function canCreate($member = null) {return false;}
+	 **/
+	function canEdit($member = null) {
+		if(!$member) {
+			$member = Member::currentMember();
+		}
+		return $member->IsShopAdmin();
+	}
 
 	/**
 	 * standard SS method
 	 * @param Member $member
 	 * @return Boolean
-	 */
-	public function canView($member = null) {return true;}
-
-	/**
-	 * standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canEdit($member = null) {return true;}
-
-	/**
-	 * standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDelete($member = null) {return false;}
+	 **/
+	function canDelete($member = null) {
+		return false;
+	}
 
 	/**
 	 * standard SS method
