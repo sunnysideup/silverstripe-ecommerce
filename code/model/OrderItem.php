@@ -159,11 +159,11 @@ class OrderItem extends OrderAttribute {
 		$fields->replaceField("BuyableID", new HiddenField("BuyableID"));
 		$fields->replaceField("BuyableClassName", new HiddenField("BuyableClassName"));
 		$fields->replaceField("Version", new HiddenField("Version"));
-		if($this->OrderID) {
+		if($this->OrderID && $this->exists()) {
 			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
 		}
 		else {
-			$fields->replaceField("OrderID", new NumericField("OrderID", _t("Order.SINGULARNAME")));
+			$fields->replaceField("OrderID", new NumericField("OrderID", _t("Order.SINGULARNAME", "Order")));
 		}
 		$fields->removeByName("Sort");
 		$fields->removeByName("CalculatedTotal");

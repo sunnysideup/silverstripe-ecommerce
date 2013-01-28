@@ -144,6 +144,9 @@ class OrderAttribute extends DataObject {
 	 * @return Boolean
 	 **/
 	function canView($member = null) {
+		if(!$this->exists()) {
+			return true;
+		}
 		if($this->_canView === null) {
 			$this->_canView = false;
 			if($this->OrderID) {
@@ -164,6 +167,9 @@ class OrderAttribute extends DataObject {
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
+		if(!$this->exists()) {
+			return true;
+		}
 		if($this->_canEdit === null) {
 			$this->_canEdit = false;
 			if($this->OrderID) {

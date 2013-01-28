@@ -316,7 +316,9 @@ class Product extends Page implements BuyableModel {
 			}
 		}
 		$reverseArray = array_reverse($parentSortArray);
-		$parentTitle = " (".implode(" / ", $parentTitleArray).")";
+		if(count($parentTitleArray)) {
+			$parentTitle = " ("._t("product.IN", "in")." ".implode(" / ", $parentTitleArray).")";
+		}
 		//setting fields with new values!
 		$this->FullName = $fullName.$parentTitle;
 		$this->FullSiteTreeSort = implode(",", $reverseArray);

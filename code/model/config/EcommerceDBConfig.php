@@ -91,7 +91,6 @@ class EcommerceDBConfig extends DataObject {
 		"UseThisOneNice" => "Use this configuration set"
 	); //note no => for relational fields
 
-
 	/**
 	 * Standard SS Method
 	 * @param Member $member

@@ -102,6 +102,48 @@ class EcommerceCurrency extends DataObject {
 		"InUse" => true
 	);
 
+/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canCreate($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canView($member = null) {
+		return true;
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canEdit($member = null) {
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->IsShopAdmin()) {
+			return true;
+		}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canDelete($member = null){
+		return $this->getIsDefault() ? false : true;
+	}
+
 	/**
 	 * NOTE: when there is only one currency we return an empty DataList
 	 * as one currency is meaningless.
@@ -205,14 +247,6 @@ class EcommerceCurrency extends DataObject {
 			->First();
 	}
 
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDelete($member = null) {
-		return $this->IsDefault ? false : true;
-	}
 
 	/**
 	 * STANDARD SILVERSTRIPE STUFF
@@ -287,7 +321,13 @@ class EcommerceCurrency extends DataObject {
 	public function ExchangeRateExplanation(){ return $this->getExchangeRateExplanation();}
 	public function getExchangeRateExplanation(){
 		$string = "1 ".EcommerceConfig::get("EcommerceCurrency", "default_currency")." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
-		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".EcommerceConfig::get("EcommerceCurrency", "default_currency");
+		$exchangeRate = $this->getExchangeRate();
+		$exchangeRateError = "";
+		if(!$exchangeRate) {
+			$exchangeRate = 1;
+			$exchangeRateError = _t("EcommerceCurrency.EXCHANGE_RATE_ERROR", "Error in exchange rate. ");
+		}
+		$string .= ", 1 ".$this->Code." = ".round(1 / $exchangeRate, 3)." ".EcommerceConfig::get("EcommerceCurrency", "default_currency").". ".$exchangeRateError;
 		return $string;
 	}
 
