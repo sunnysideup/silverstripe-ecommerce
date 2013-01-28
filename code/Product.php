@@ -316,6 +316,7 @@ class Product extends Page implements BuyableModel {
 			}
 		}
 		$reverseArray = array_reverse($parentSortArray);
+		$parentTitle = "";
 		if(count($parentTitleArray)) {
 			$parentTitle = " ("._t("product.IN", "in")." ".implode(" / ", $parentTitleArray).")";
 		}
