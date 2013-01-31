@@ -2,7 +2,7 @@
 
 
 /**
- * @Description: Email spefically for communicating with customer about order.
+ * @Description: Email specifically for communicating with customer about order.
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
