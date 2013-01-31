@@ -720,15 +720,15 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Order Extra Description";
-		function i18n_singular_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTION", "Order Extra Description");}
+	public static $singular_name = "Order Modifier Description";
+		function i18n_singular_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTION", "Order Modifier Description");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Order Extra Descriptions";
-		function i18n_plural_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTIONS", "Order Extra Descriptions");}
+	public static $plural_name = "Order Modifier Descriptions";
+		function i18n_plural_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTIONS", "Order Modifier Descriptions");}
 
 	/**
 	 * standard SS variable
