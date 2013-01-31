@@ -52,7 +52,8 @@ class Product extends Page implements BuyableModel {
 		'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
 		'NumberSold' => 'Int', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
 		'FullSiteTreeSort' => 'Varchar(100)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
-		'FullName' => 'Varchar(255)' //Name for look-up lists
+		'FullName' => 'Varchar(255)', //Name for look-up lists
+		'ShortDescription' => 'Varchar(255)' //For use in lists.
 	);
 
 	/**
@@ -183,8 +184,7 @@ class Product extends Page implements BuyableModel {
 		}
 		$fields->replaceField('Root.Main', $htmlEditorField = new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description')));
 		$htmlEditorField->setRows(3);
-		//NOTE: IMAGE FIELD WAS GIVING ERRORS IN ModelAdmin
-		//$fields->addFieldToTab('Root.Images', new TreeDropdownField('ImageID', _t('Product.IMAGE', 'Product Image'), "Image"));
+		$fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), "Content");
 		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Image')));
 		$fields->addFieldToTab('Root.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
 		$fields->addFieldToTab('Root.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));

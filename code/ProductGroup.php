@@ -756,6 +756,14 @@ class ProductGroup extends Page {
 	}
 
 	/**
+	 * returns the total numer of products (before pagination)
+	 * @return Boolean
+	 **/
+	public function TotalCountGreaterThanOne() {
+		return $this->totalCount > 1;
+	}
+
+	/**
 	 *@return Integer
 	 **/
 	function ProductsPerPage() {return $this->MyNumberOfProductsPerPage();}
