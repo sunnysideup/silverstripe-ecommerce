@@ -67,6 +67,13 @@ class EcommerceRegion extends DataObject {
 
 	/**
 	 * standard SS variable
+	 * @var String
+	 */
+	public static $plural_name = "Regions";
+		function i18n_plural_name() { return _t("EcommerceRegion.REGIONS", "Regions");}
+
+	/**
+	 * standard SS variable
 	 * @var Array
 	 */
 	public static $searchable_fields = array(
@@ -91,12 +98,6 @@ class EcommerceRegion extends DataObject {
 		"Country.Title"
 	);
 
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	public static $plural_name = "Regions";
-		function i18n_plural_name() { return _t("EcommerceRegion.REGIONS", "Regions");}
 
 	/**
 	 * do we use regions at all in this ecommerce application?
@@ -124,7 +125,6 @@ class EcommerceRegion extends DataObject {
 	public static function code_allowed($code) {
 		return array_key_exists($code, self::list_of_allowed_entries_for_dropdown());
 	}
-
 
 	/**
 	 * converts a code into a proper title
@@ -189,7 +189,7 @@ class EcommerceRegion extends DataObject {
 	 * these variables and methods allow to to "dynamically limit the regions available, based on, for example: ordermodifiers, item selection, etc....
 	 * for example, if hot delivery of a catering item is only available in a certain region, then the regions can be limited with the methods below.
 	 * NOTE: these methods / variables below are IMPORTANT, because they allow the dropdown for the region to be limited for just that order
-	 * @var Array of country codes, e.g. ("NZ", "NP", "AU");
+	 * @var Array of regions codes, e.g. ("NSW", "WA", "VIC");
 	**/
 	protected static $for_current_order_only_show_regions = array();
 		static function set_for_current_order_only_show_regions($a) {
@@ -201,7 +201,8 @@ class EcommerceRegion extends DataObject {
 				self::$for_current_order_only_show_regions = $a;
 			}
 		}
-		//NOTE: this method below is more generic (does not have _regions part) so that it can be used by a method that is shared between EcommerceCountry and EcommerceRegion
+		//NOTE: this method below is more generic (does not have _regions part)
+		//so that it can be used by a method that is shared between EcommerceCountry and EcommerceRegion
 		static function get_for_current_order_only_show_regions() {return self::$for_current_order_only_show_regions;}
 
 	protected static $for_current_order_do_not_show_regions = array();
@@ -227,8 +228,11 @@ class EcommerceRegion extends DataObject {
 		if(!$regionID) {
 			$regionArray = self::list_of_allowed_entries_for_dropdown();
 			if(is_array($regionArray) && count($regionArray)) {
-				foreach($regionArray as $regionID => $regionName) {
+				foreach($regionArray as $regionCode => $regionName) {
 					//we stop at the first one... as we have no idea which one is the best.
+					if($region = DataObject::get_one("EcommerceRegion", "\"Code\" = '$regionCode'")) {
+						$regionID = $region->ID;
+					}
 					break;
 				}
 			}

@@ -102,15 +102,15 @@ class OrderModifier extends OrderAttribute {
 	 * stardard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Order Extra";
-		function i18n_singular_name() { return _t("OrderModifier.ORDERMODIFIER", "Order Extra");}
+	public static $singular_name = "Order Modifier";
+		function i18n_singular_name() { return _t("OrderModifier.ORDERMODIFIER", "Order Modifier");}
 
 	/**
 	 * stardard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Order Extras";
-		function i18n_plural_name() { return _t("OrderModifier.ORDERMODIFIERS", "Order Extras");}
+	public static $plural_name = "Order Modifiers";
+		function i18n_plural_name() { return _t("OrderModifier.ORDERMODIFIERS", "Order Modifiers");}
 
 	/**
 	 * stardard SS metbod
