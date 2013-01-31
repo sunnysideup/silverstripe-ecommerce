@@ -71,10 +71,10 @@ Do you want to change something in the Order Process? E.g. sending an extra e-ma
 
 Do you want to customise the emails that are sent to customers after placing an order?
 	Edit Email Templates and/or OrderSteps
-		(1) The easiest way to change an email is to adjust the css. The location for the CSS is specified in the config file (see: http://www.mysite.com/dev/ecommerce/ecommercecheckconfiguration) under Order_Email.css_file_location
+		(1) The easiest way to change an email is to adjust the css. The location for the CSS is specified in the config file (see: http://www.mysite.com/dev/ecommerce/ecommercecheckconfiguration) under Order_Email.css_file_location. The CSS is automatically included inline, using the emogrifier extension.
 		(2) One email can be sent per orderstep. Review OrderStep_SentInvoice (in /code/model/process/OrderStep.php) for an example of how an orderstep sends an email. You may add / remove ordersteps to change emails (see topic on OrderSteps in this document).
-		(3) You may want to create a class that extend OrderEmail (see /code/email/Order_Email.php)
-		(4) Of course you can theme any of the templates that are used in the Emails (see templates/emails/)
+		(3) You may want to create a class that extends OrderEmail (see /code/email/Order_Email.php and examples in the same folder).
+		(4) Of course you can theme (see theme-ing topic) any of the templates that are used in the Emails (see templates/emails/)
 		(5) Nice to know: any use of [OrderNumber] in the email template will be replaced with the Order.ID (e.g. 134)
 
 Do you want a different payment method?
