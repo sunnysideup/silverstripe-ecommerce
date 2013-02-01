@@ -240,8 +240,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 		<style>
 			th[scope='col'] {text-align: left; border-bottom: 3px solid blue;padding-top: 40px;}
 			td {vertical-align: top; border-left: 1px solid blue; border-bottom: 1px solid blue;}
-			td span {color: grey; font-size: 0.8em;}
-			td span {color: grey; font-size: 0.8em; display: block}
+			td span {color: #333; font-size: 0.8em;}
+			td span {color: #333; font-size: 0.8em; display: block}
 			.sameConfig {color: #333;}
 			.newConfig{color: green; font-weight: bold; font-size: 1.2em;}
 			#TOC {
@@ -253,6 +253,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 				column-gap: 20px;
 			}
 			a.backToTop {display: block; font-size: 0.8em; }
+			td.newConfig {width: 70%;}
+			pre {white-space:pre-wrap; font-size: 9px!important; font-weight: bold;}
 		</style>
 		<h2>Configuration Report</h2>";
 		$htmlTable = "
