@@ -15,7 +15,7 @@ class ExpiryDateField extends TextField {
 	/**
 	 *@return HTML
 	 **/
-	function Field(Array $properties = array()) {
+	function Field($properties = array()) {
 		$monthValue = '';
 		$yearValue = '';
 		if(strlen($this->value) == 4) {
@@ -85,7 +85,7 @@ JS;
 	 * @param $validator Validator
 	 * @return boolean
 	 **/
-	function validate(Validator $validator){
+	function validate($validator){
 		// If the field is empty then don't return an invalidation message'
 		if(!isset($this->value[0])) {
 			$validator->validationError(
