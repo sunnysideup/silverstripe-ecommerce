@@ -1629,7 +1629,7 @@ class Order extends DataObject {
 	function getEmailLink($type = "Order_StatusEmail") {
 		if(!isset($_REQUEST["print"])) {
 			if($this->IsSubmitted()) {
-				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID));
+				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID, $this->MyOrderStep()->getEmailClassName(), $actuallySendEmail = true));
 			}
 		}
 	}
