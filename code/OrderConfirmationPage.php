@@ -292,19 +292,14 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			if((singleton($request->param("OtherID")) instanceOf Order_Email)) {
 				$emailClass = $request->param("OtherID");
 			}
-			if($m = $o->Member()) {
-				if($m->Email) {
-					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					if($o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClass)) {
-						$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$m->Email.'.';
-					}
-					else {
-						$this->message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email sent unsuccesfully to: ').$m->Email.'. EMAIL NOT SENT.';
-					}
+			if($email = $o->getOrderEmail()) {
+				$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
+				$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
+				if($o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClass)) {
+					$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
 				}
 				else {
-					$this->message = _t('OrderConfirmationPage.NO_EMAIL_PRESENT_WITH_MEMBER', 'No email address found. EMAIL NOT SENT.');
+					$this->message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email sent unsuccesfully to: ').$email.'. EMAIL NOT SENT.';
 				}
 			}
 			else {

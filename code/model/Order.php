@@ -1124,7 +1124,7 @@ class Order extends DataObject {
 			$to = Order_Email::get_from_email();
 		}
 		else {
-			$to = $this->OrderEmail();
+			$to = $this->getOrderEmail();
 		}
  		if($from && $to) {
 			$email = new $emailClass();
