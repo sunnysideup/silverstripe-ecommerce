@@ -50,6 +50,19 @@ table.infotable { border: 1px solid #CDDDDD; border-collapse: collapse; width: 1
 		table.infotable .right { text-align: right; float: none!important}
 		table.infotable .center { text-align: center; float: none!important}
 		table.infotable .left, table.infotable th { text-align: left; float: none!important}
-#ShippingTable td, #ShippingTable th { width: 50%; }
-
 .warningMessage { margin: 4px 0 0 3px; padding: 5px; width: 92%; color: #DC1313; border: 4px solid #FF7373; background: #FED0D0; }
+
+
+
+/*** WIDTHS FOR TABLE ***/
+#ShippingTable td, #ShippingTable th { width: 50%; }
+#InformationTable td.left {width: 50%;}
+#InformationTable td.center {width: 15%;}
+#InformationTable td.unitprice {width: 15%!important;}
+#InformationTable td.right {width: 20%;}
+#InformationTable td.threeColHeader {width: 80%;}
+#OrderPayment td.left {width: 35%;}
+#OrderPayment td.center {width: 15%;}
+#OrderPayment td.right {width: 20%;}
+#InformationTable td.threeColHeader {width: 850%;}
+#OutstandingTable td.right {width: 20%;}

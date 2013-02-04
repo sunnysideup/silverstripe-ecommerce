@@ -1099,41 +1099,12 @@ class Order extends DataObject {
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
+	 * @param String $emailClass - class used to send email
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	function sendInvoice($subject = "", $message = "", $resend = false, $adminOnly = false, $template = 'Order_ReceiptEmail') {
-		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
+	function sendEmail($subject = "", $message = "", $resend = false, $adminOnly = false, $emailClass = 'Order_InvoiceEmail') {
+		return $this->prepareEmail($emailClass, $subject, $message, $resend, $adminOnly);
 	}
-
-	/**
-	 * Send the receipt of the order by email.
-	 * Precondition: The order payment has been successful
-	 *
-	 * @param String $subject - subject for the email
-	 * @param String $message - the main message in the email
-	 * @param Boolean $resend - send the email even if it has been sent before
-	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
-	 * @return Boolean TRUE on success, FALSE on failure (in theory)
-	 */
-	public function sendReceipt($subject = "", $message = "", $resend = false, $adminOnly = false, $template = 'Order_ReceiptEmail') {
-		return $this->sendEmail($template, $subject, $message, $resend, $adminOnly);
-	}
-
-	/**
-	 * Send a message to the client containing the latest
-	 * note of {@link OrderStatusLog} and the current status.
-	 *
-	 * @param String $subject - subject for message
-	 * @param String $message - the main message in the email
-	 * @param Boolean $resend - send the email even if it has been sent before
-	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
-	 * @param String $emailClass - this is email class
-	 * @return Boolean TRUE on success, FALSE on failure (in theory)
-	 */
-	public function sendStatusChange($subject= '', $message = '', $resend = false, $adminOnly = false, $emailClass = 'Order_StatusEmail') {
-		return $this->sendEmail($emailClass, $subject, $message, $resend, $adminOnly);
-	}
-
 
 	/**
 	 * Sends a message to the shop admin ONLY and not to the customer
@@ -1144,7 +1115,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->sendEmail('Order_ErrorEmail', "ERROR: ".$subject, $message, $resend = true, $adminOnly = true);
+		return $this->prepareEmail('Order_ErrorEmail', "ERROR: ".$subject, $message, $resend = true, $adminOnly = true);
 	}
 
 	/**
@@ -1156,7 +1127,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendAdminNotification($subject = "", $message = "") {
-		return $this->sendEmail('Order_ErrorEmail', $subject, $message, $resend = false, $adminOnly = true);
+		return $this->prepareEmail('Order_ErrorEmail', $subject, $message, $resend = false, $adminOnly = true);
 	}
 
 	/**
@@ -1170,7 +1141,7 @@ class Order extends DataObject {
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function sendEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
+	protected function prepareEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
 		//START HACK
 		if(!$message) {
 			$latestEmailableLog = OrderStatusLog::get()
@@ -1184,11 +1155,7 @@ class Order extends DataObject {
 				$message = $latestEmailableLog->Note;
 			}
 		}
-		//END HACK
-		$replacementArray = array("Message" => $message);
-		$replacementArray["Order"] = $this;
-		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
-		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		$replacementArray = $this->createReplacementArrayForEmail($message);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
@@ -1196,7 +1163,7 @@ class Order extends DataObject {
 			$to = Order_Email::get_from_email();
 		}
 		else {
-			$to = $this->OrderEmail();
+			$to = $this->getOrderEmail();
 		}
  		if($from && $to) {
 			$email = new $emailClass();
@@ -1207,9 +1174,8 @@ class Order extends DataObject {
 			$email->setTo($to);
 			$email->setSubject($subject);
 			$email->populateTemplate($replacementArray);
-			return $email->send(null, $this, $resend);
-
-			// This might be called from within the CMS, so we need to restore the theme, just in case
+			// This might be called from within the CMS,
+			// so we need to restore the theme, just in case
 			// templates within the theme exist
 			$oldTheme = SSViewer::current_theme();
 			SSViewer::set_theme(SSViewer::current_custom_theme());
@@ -1220,7 +1186,18 @@ class Order extends DataObject {
 		return false;
 	}
 
-
+	/**
+	 * returns the Data that can be used in the bodry of an order Email
+	 * @param String $message - the additional message
+	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
+	 */
+	public function createReplacementArrayForEmail($message = ""){
+		$replacementArray = array("Message" => $message);
+		$replacementArray["Order"] = $this;
+		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
+		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		return $replacementArray;
+	}
 
 
 
@@ -1696,8 +1673,8 @@ class Order extends DataObject {
 	 * returns the absolute link to the order that can be used in the customer communication (email)
 	 * @return String
 	 */
-	function EmailLink(){return $this->getEmailLink();}
-	function getEmailLink() {
+	function EmailLink($type = "Order_StatusEmail"){return $this->getEmailLink();}
+	function getEmailLink($type = "Order_StatusEmail") {
 		if(!isset($_REQUEST["print"])) {
 			if($this->IsSubmitted()) {
 				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID));
