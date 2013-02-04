@@ -288,11 +288,11 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 **/
 	function sendemail($request) {
 		if($o = $this->currentOrder) {
+			$emailClass = "Order_ReceiptEmail";
 			if($m = $o->Member()) {
 				if($m->Email) {
-					$emailClass = $request->param("OtherID");
-					if(!(singleton($emailClass) instanceOf Order_Email)) {
-						$emailClass = "Order_ReceiptEmail";
+					if((singleton($request->param("OtherID")) instanceOf Order_Email)) {
+						$emailClass = $request->param("OtherID");
 					}
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
 					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
