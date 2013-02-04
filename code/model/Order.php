@@ -1116,10 +1116,7 @@ class Order extends DataObject {
 				$message = $latestEmailableLog->Note;
 			}
 		}
-		$replacementArray = array("Message" => $message);
-		$replacementArray["Order"] = $this;
-		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
-		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		$replacementArray = $this->createReplacementArrayForEmail($message);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
@@ -1150,7 +1147,13 @@ class Order extends DataObject {
 		return false;
 	}
 
-
+	public function createReplacementArrayForEmail($message = ""){
+		$replacementArray = array("Message" => $message);
+		$replacementArray["Order"] = $this;
+		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
+		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		return $replacementArray;
+	}
 
 
 

@@ -290,13 +290,13 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		if($o = $this->currentOrder) {
 			if($m = $o->Member()) {
 				if($m->Email) {
-					$type = $request->param("OtherID");
-					if(!($type instanceOf OrderEmail)) {
-						$type = "Order_ReceiptEmail";
+					$emailClass = $request->param("OtherID");
+					if(!(singleton($emailClass) instanceOf Email)) {
+						$emailClass = "Order_ReceiptEmail";
 					}
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
 					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					$o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClass = $type);
+					$o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClass);
 					$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An order receipt has been sent to: ').$m->Email.'.';
 				}
 				else {
@@ -306,21 +306,17 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			else {
 				$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No email could be found for sending this receipt.');
 			}
+			//display same data...
+			Requirements::clear();
+			$replacementArrayForEmail = $this->Order()->createReplacementArrayForEmail($this->message);
+			$arrayData = new ArrayData($replacementArrayForEmail);
+			$html =  $arrayData->renderWith($emailClass);
+			$html = Order_Email::emogrify_html($html);
+			return $html;
 		}
 		else {
-			$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
+			return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
 		}
-		//display same data...
-		Requirements::clear();
-		$arrayData = Array();
-		$arrayData["Order"] = $this->Order();
-		$arrayData["Message"] = $this->message;
-		$arrayData["EmailLogo"] = $this->EcomConfig()->EmailLogo();
-		$arrayData["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
-		$arrayData = new ArrayData($arrayData);
-		$html =  $arrayData->renderWith($type);
-		$html = Order_Email::emogrify_html($html);
-		return $html;
 	}
 
 }
