@@ -11,7 +11,35 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class Order_Email extends Email {
+Abstract class Order_Email extends Email {
+
+	/**
+	 * turns an html document into a formatted html document
+	 * using the emogrify method.
+	 * @param $html
+	 * @return String HTML
+	 */
+	public static function emogrify_html($html){
+		//get required files
+		$baseFolder = Director::baseFolder() ;
+		if(!class_exists('Emogrifier')) {
+			require_once($baseFolder . '/ecommerce/thirdparty/Emogrifier.php');
+		}
+		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");
+		$cssFileHandler = fopen($cssFileLocation, 'r');
+		$css = fread($cssFileHandler,  filesize($cssFileLocation));
+		fclose($cssFileHandler);
+		$emogrifier = new Emogrifier($html, $css);
+		return $emogrifier->emogrify();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTemplate() {
+		return get_class($this);
+	}
+
 
 	/**
 	 * returns the standard from email address (e.g. the shop admin email address)
@@ -46,16 +74,20 @@ class Order_Email extends Email {
 	 * @param Null|String $messageID - ID for the message, you can leave this blank
 	 * @param Order $order - the order to which the email relates
 	 * @param Boolean $resend - should the email be resent even if it has been sent already?
+	 * @param Boolean $returnBodyOnly - rather than sending the email, only return the HTML BODY
 	 * @return Boolean - TRUE for success and FALSE for failure.
 	 */
-	public function send($messageID = null, $order, $resend = false) {
-		if(!$this->subject) {
-			$this->subject = self::get_subject();
-		}
-		$this->subject = str_replace("[OrderNumber]", $order->ID, $this->subject);
-		if(!$this->hasBeenSent($order) || $resend) {
+	public function send($messageID = null, $order, $resend = false, $returnBodyOnly = false) {
+		if(!$this->hasBeenSent($order) || $resend || $returnBodyOnly) {
+			if(!$this->subject) {
+				$this->subject = self::get_subject();
+			}
+			$this->subject = str_replace("[OrderNumber]", $order->ID, $this->subject);
 			if(EcommerceConfig::get("Order_Email", "copy_to_admin_for_all_emails") && ($this->to != Email::getAdminEmail())) {
 				$this->setBcc(Email::getAdminEmail());
+			}
+			if($returnBodyOnly) {
+				return $this->Body();
 			}
 			if(EcommerceConfig::get("Order_Email", "send_all_emails_plain")) {
 				$result = parent::sendPlain($messageID);
@@ -67,7 +99,6 @@ class Order_Email extends Email {
 			return $result;
 		}
 	}
-
 
 	/**
 	 * @param Boolean $result: how did the email go? 1 = sent, 0 = not sent
@@ -116,20 +147,13 @@ class Order_Email extends Email {
 	/**
 	 * moves CSS to inline CSS in email
 	 * @param Boolean $isPlain - should we send the email as HTML or as TEXT
-	 * @author Mark Guinn
 	 */
 	protected function parseVariables($isPlain = false) {
-		if(!class_exists('Emogrifier')) {
-			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
-		}
+		//clear requirements - just in case.
+
+		//start parsing
 		parent::parseVariables($isPlain);
-		// if it's an html email, filter it through emogrifier
-		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");
-		$cssFileHandler = fopen($cssFileLocation, 'r');
-		$css = fread($cssFileHandler,  filesize($cssFileLocation));
-		fclose($cssFileHandler);
-		$emog = new Emogrifier($this->body, $css);
-		$this->body = $emog->emogrify();
+		$this->body = self::emogrify_html($this->body);
 	}
 
 	/**
@@ -141,24 +165,4 @@ class Order_Email extends Email {
 		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
-	/**
-	 * Debug helper method.
-	 * Can be called from /shoppingcart/debug/
-	 * @return String
-	 */
-	public function debug() {
-		$html =  "
-			<h2>".$this->ClassName."</h2><ul>";
-		$fields = Object::get_static($this->ClassName, "db");
-		foreach($fields as  $key => $type) {
-			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
-		}
-		$fields = Object::get_static($this->ClassName, "casting");
-		foreach($fields as  $key => $type) {
-			$method = "get".$key;
-			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
-		}
-		$html .= "</ul>";
-		return $html;
-	}
 }

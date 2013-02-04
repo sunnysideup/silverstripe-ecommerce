@@ -13,7 +13,5 @@
 
 class Order_InvoiceEmail extends Order_Email {
 
-	protected $ss_template = 'Order_InvoiceEmail';
-
 }
 

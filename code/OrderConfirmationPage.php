@@ -132,9 +132,10 @@ class OrderConfirmationPage extends CartPage{
 	 * Return a link to view the order on this page.
 	 * @return String (URLSegment)
 	 * @param int|string $orderID ID of the order
+	 * @param String $type - the type of email you want to send.
 	 */
-	public static function get_email_link($orderID) {
-		return self::find_link(). 'sendreceipt/' . $orderID . '/';
+	public static function get_email_link($orderID, $type = "Order_StatusEmail") {
+		return self::find_link(). 'sendemail/' . $orderID . '/'.$type.'/';
 	}
 
 	/**
@@ -283,15 +284,19 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	}
 
 	/**
-	 *@return Array - just so the template is still displayed
+	 *@return HTML
 	 **/
-	function sendreceipt($request) {
+	function sendemail($request) {
 		if($o = $this->currentOrder) {
 			if($m = $o->Member()) {
 				if($m->Email) {
+					$type = $request->param("OtherID");
+					if(!($type instanceOf OrderEmail)) {
+						$type = "Order_ReceiptEmail";
+					}
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
 					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					$o->sendReceipt($subject, $message, true);
+					$o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClass = $type);
 					$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An order receipt has been sent to: ').$m->Email.'.';
 				}
 				else {
@@ -305,23 +310,16 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		else {
 			$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
 		}
-		$baseFolder = Director::baseFolder() ;
-		if(!class_exists('Emogrifier')) {
-			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
-		}
+		//display same data...
 		Requirements::clear();
-		Requirements::themedCSS("typography"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("Order_Invoice", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		$html =  $this->renderWith("Order_ReceiptEmail");
-		// if it's an html email, filter it through emogrifier
-		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;
-		$html .= "\r\n\r\n<!-- CSS can be found here: $cssFileLocation -->";
-		$cssFileHandler = fopen($cssFileLocation, 'r');
-		$css = fread($cssFileHandler,  filesize($cssFileLocation));
-		fclose($cssFileHandler);
-		$emog = new Emogrifier($html, $css);
-		$html = $emog->emogrify();
+		$arrayData = Array();
+		$arrayData["Order"] = $this->Order();
+		$arrayData["Message"] = $this->message;
+		$arrayData["EmailLogo"] = $this->EcomConfig()->EmailLogo();
+		$arrayData["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		$arrayData = new ArrayData($arrayData);
+		$html =  $arrayData->renderWith($type);
+		$html = Order_Email::emogrify_html($html);
 		return $html;
 	}
 

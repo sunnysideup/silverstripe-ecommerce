@@ -212,7 +212,7 @@ class CartPage_Controller extends Page_Controller{
 		'copyorder',
 		'startneworder',
 		'showorder',
-		'sendreceipt',
+		'sendemail',
 		'CancelForm',
 		'PaymentForm',
 	);
