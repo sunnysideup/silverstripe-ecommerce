@@ -219,6 +219,7 @@ class OrderAddress extends DataObject {
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
 			$title = singleton("EcommerceRegion")->i18n_singular_name();
 			$regionField = new DropdownField($name,$title, $regionsForDropdown);
+			$regionField->setEmptyString(_t("OrderAdress.PLEASE_SELECT_REGION", "--- Select Region ---"));
 			if(count($regionsForDropdown) < 2) {
 				$regionField = $regionField->performReadonlyTransformation();
 				if(count($regionsForDropdown) < 1) {

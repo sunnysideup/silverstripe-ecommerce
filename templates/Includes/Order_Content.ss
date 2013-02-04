@@ -1,10 +1,10 @@
 <table id="InformationTable" class="infotable readonly">
 	<thead>
 		<tr>
-			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
-			<th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
-			<th scope="col" class="right"><% _t("Order.PRICE","Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
-			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
+			<th scope="col" class="left product title"><% _t("Order.PRODUCT","Product") %></th>
+			<th scope="col" class="center quantity"><% _t("Order.QUANTITY", "Quantity") %></th>
+			<th scope="col" class="right unitprice"><% _t("Order.PRICE","Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
+			<th scope="col" class="right total"><% _t("Order.TOTALPRICE","Total Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
 		</tr>
 	</thead>
 	<% if Items %>

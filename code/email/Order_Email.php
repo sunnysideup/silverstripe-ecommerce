@@ -2,7 +2,7 @@
 
 
 /**
- * @Description: Email spefically for communicating with customer about order.
+ * @Description: Email specifically for communicating with customer about order.
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class Order_Email extends Email {
+Abstract class Order_Email extends Email {
 
 	/**
 	 * @var Order
@@ -23,6 +23,34 @@ class Order_Email extends Email {
 	 * @var Boolean
 	 */
 	protected $resend = false;
+
+	/**
+	 * turns an html document into a formatted html document
+	 * using the emogrify method.
+	 * @param $html
+	 * @return String HTML
+	 */
+	public static function emogrify_html($html){
+		//get required files
+		$baseFolder = Director::baseFolder() ;
+		if(!class_exists('Emogrifier')) {
+			require_once($baseFolder . '/ecommerce/thirdparty/Emogrifier.php');
+		}
+		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");
+		$cssFileHandler = fopen($cssFileLocation, 'r');
+		$css = fread($cssFileHandler,  filesize($cssFileLocation));
+		fclose($cssFileHandler);
+		$emogrifier = new Emogrifier($html, $css);
+		return $emogrifier->emogrify();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTemplate() {
+		return get_class($this);
+	}
+
 
 	/**
 	 * returns the standard from email address (e.g. the shop admin email address)
@@ -73,6 +101,7 @@ class Order_Email extends Email {
 	 *
 	 * @param Null|String $messageID - ID for the message, you can leave this blank
 	 *
+	 * @param Boolean $returnBodyOnly - rather than sending the email, only return the HTML BODY
 	 * @return Boolean - TRUE for success and FALSE for failure.
 	 */
 	public function send($messageID = null) {
@@ -86,6 +115,9 @@ class Order_Email extends Email {
 		if((!$this->hasBeenSent()) || ($this->resend)) {
 			if(EcommerceConfig::get("Order_Email", "copy_to_admin_for_all_emails") && ($this->to != Email::getAdminEmail())) {
 				$this->setBcc(Email::getAdminEmail());
+			}
+			if($returnBodyOnly) {
+				return $this->Body();
 			}
 			if(EcommerceConfig::get("Order_Email", "send_all_emails_plain")) {
 				$result = parent::sendPlain($messageID);
@@ -130,7 +162,6 @@ class Order_Email extends Email {
 
 	/**
 	 * Checks if an email has been sent for this Order for this status (order step)
-	 * @param Order $order
 	 * @return boolean
 	 **/
 	function hasBeenSent() {
@@ -144,20 +175,13 @@ class Order_Email extends Email {
 	/**
 	 * moves CSS to inline CSS in email
 	 * @param Boolean $isPlain - should we send the email as HTML or as TEXT
-	 * @author Mark Guinn
 	 */
 	protected function parseVariables($isPlain = false) {
-		if(!class_exists('Emogrifier')) {
-			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
-		}
+		//clear requirements - just in case.
+
+		//start parsing
 		parent::parseVariables($isPlain);
-		// if it's an html email, filter it through emogrifier
-		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");
-		$cssFileHandler = fopen($cssFileLocation, 'r');
-		$css = fread($cssFileHandler,  filesize($cssFileLocation));
-		fclose($cssFileHandler);
-		$emog = new Emogrifier($this->body, $css);
-		$this->body = $emog->emogrify();
+		$this->body = self::emogrify_html($this->body);
 	}
 
 	/**
@@ -169,12 +193,4 @@ class Order_Email extends Email {
 		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
-	/**
-	 * Debug helper method.
-	 * Can be called from /shoppingcart/debug/
-	 * @return String
-	 */
-	public function debug() {
-		return EcommerceTaskDebugCart::debug_object($this);
-	}
 }
