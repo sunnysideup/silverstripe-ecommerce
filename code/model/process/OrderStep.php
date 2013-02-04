@@ -10,7 +10,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStep extends DataObject {
+abstract class OrderStep extends DataObject {
 
 	/**
 	 * standard SS variable
@@ -263,6 +263,9 @@ class OrderStep extends DataObject {
 		if($this->hasCustomerMessage()) {
 			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use [OrderNumber] as a tag that will be replaced with the actual Order Number.")));
 			$fields->addFieldToTab("Root.CustomerMessage", new HTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)"), 5));
+			if($testEmailLink = $this->testEmailLink()) {
+				$fields->addFieldToTab("Root.CustomerMessage", new LiteralField("testEmailLink", "<p><a href=\"".$testEmailLink."\" target=\"_blank\">"._t("OrderStep.TEST_EMAIL", "Test Email")."</a></p>"));
+			}
 		}
 		else {
 			$fields->removeFieldFromTab("Root.Main", "EmailSubject");
@@ -356,7 +359,7 @@ class OrderStep extends DataObject {
 		* @param Order object
 		* @return Boolean - true if the current step is ready to be run...
 		**/
-	public function initStep($order) {
+	abstract public function initStep($order) {
 		user_error("Please implement this in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
 		return true;
 	}
@@ -369,7 +372,7 @@ class OrderStep extends DataObject {
 		*@param Order object
 		*@return Boolean - true if run correctly
 		**/
-	public function doStep($order) {
+	abstract public function doStep($order) {
 		user_error("Please implement this in a subclass of OrderStep", E_USER_WARNING);
 		return true;
 	}
@@ -381,7 +384,7 @@ class OrderStep extends DataObject {
 	 * @param Order object
 	 * @return DataObject | Null (next step OrderStep object)
 	 **/
-	public function nextStep($order) {
+	abstract public function nextStep($order) {
 		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
 		if($nextOrderStepObject) {
 			return $nextOrderStepObject;
@@ -448,6 +451,36 @@ class OrderStep extends DataObject {
 	}
 
 	//EMAIL
+
+	/**
+	 * @var String
+	 */
+	protected $emailClassName = "";
+
+	public function getEmailClassName(){
+		return $this->emailClassName;
+	}
+
+	/**
+	 * returns a link that can be used to test
+	 * the email being sent during this step
+	 * this method returns NULL if no email
+	 * is being sent.
+	 * @return NULL | String
+	 */
+	protected function testEmailLink(){
+		if($this->emailClass) {
+			$order = DataObject::get_one(
+				"Order",
+				"\"OrderStep\".\"Sort\" >= ".$this->Sort,
+				"RAND() ASC",
+				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
+			);
+			if($order) {
+				return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false);
+			}
+		}
+	}
 
 	/**
 	 * Has an email been sent to the customer for this
