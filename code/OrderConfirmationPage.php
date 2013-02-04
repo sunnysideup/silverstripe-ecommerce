@@ -296,15 +296,19 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 				if($m->Email) {
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
 					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					$o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClass);
-					$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An order receipt has been sent to: ').$m->Email.'.';
+					if($o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClass)) {
+						$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$m->Email.'.';
+					}
+					else {
+						$this->message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email sent unsuccesfully to: ').$m->Email.'. EMAIL NOT SENT.';
+					}
 				}
 				else {
-					$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOTSENDING', 'Email could NOT be sent.');
+					$this->message = _t('OrderConfirmationPage.NO_EMAIL_PRESENT_WITH_MEMBER', 'No email address found. EMAIL NOT SENT.');
 				}
 			}
 			else {
-				$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No email could be found for sending this receipt.');
+				$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
 			}
 			//display same data...
 			Requirements::clear();
