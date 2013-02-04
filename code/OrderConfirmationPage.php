@@ -291,7 +291,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			if($m = $o->Member()) {
 				if($m->Email) {
 					$emailClass = $request->param("OtherID");
-					if(!(singleton($emailClass) instanceOf Email)) {
+					if(!(singleton($emailClass) instanceOf Order_Email)) {
 						$emailClass = "Order_ReceiptEmail";
 					}
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
@@ -308,7 +308,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			}
 			//display same data...
 			Requirements::clear();
-			$replacementArrayForEmail = $this->Order()->createReplacementArrayForEmail($this->message);
+			$replacementArrayForEmail = $this->currentOrder->createReplacementArrayForEmail($this->message);
 			$arrayData = new ArrayData($replacementArrayForEmail);
 			$html =  $arrayData->renderWith($emailClass);
 			$html = Order_Email::emogrify_html($html);

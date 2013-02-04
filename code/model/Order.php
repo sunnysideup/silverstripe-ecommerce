@@ -1147,6 +1147,11 @@ class Order extends DataObject {
 		return false;
 	}
 
+	/**
+	 * returns the Data that can be used in the bodry of an order Email
+	 * @param String $message - the additional message
+	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
+	 */
 	public function createReplacementArrayForEmail($message = ""){
 		$replacementArray = array("Message" => $message);
 		$replacementArray["Order"] = $this;
