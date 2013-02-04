@@ -1066,11 +1066,11 @@ class Order extends DataObject {
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
-	 * @param String $emailClass - class used to send email
+	 * @param String $emailClassName - class used to send email
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	function sendEmail($subject = "", $message = "", $resend = false, $adminOnly = false, $emailClass = 'Order_InvoiceEmail') {
-		return $this->prepareEmail($emailClass, $subject, $message, $resend, $adminOnly);
+	function sendEmail($subject = "", $message = "", $resend = false, $adminOnly = false, $emailClassName = 'Order_InvoiceEmail') {
+		return $this->prepareEmail($emailClassName, $subject, $message, $resend, $adminOnly);
 	}
 
 	/**
@@ -1100,7 +1100,7 @@ class Order extends DataObject {
 	/**
 	 * Send a mail of the order to the client (and another to the admin).
 	 *
-	 * @param String $emailClass - the class name of the email you wish to send
+	 * @param String $emailClassName - the class name of the email you wish to send
 	 * @param String $subject - email subject
 	 * @param Boolean $copyToAdmin - true by default, whether it should send a copy to the admin
 	 * @param Boolean $resend - sends the email even it has been sent before.
@@ -1108,7 +1108,7 @@ class Order extends DataObject {
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
+	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
 		if(!$message) {
 			$emailableLogs = DataObject::get('OrderStatusLog', "\"OrderID\" = {$this->ID} AND \"InternalUseOnly\" = 0", "\"Created\" DESC", null, 1);
 			if($emailableLogs) {
@@ -1127,7 +1127,7 @@ class Order extends DataObject {
 			$to = $this->getOrderEmail();
 		}
  		if($from && $to) {
-			$email = new $emailClass();
+			$email = new $emailClassName();
 			if(!($email instanceOf Email)) {
 				user_error("No correct email class provided.", E_USER_ERROR);
 			}
@@ -1629,7 +1629,7 @@ class Order extends DataObject {
 	function getEmailLink($type = "Order_StatusEmail") {
 		if(!isset($_REQUEST["print"])) {
 			if($this->IsSubmitted()) {
-				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID, $this->MyOrderStep()->getEmailClassName(), $actuallySendEmail = true));
+				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID, $this->MyStep()->getEmailClassName(), $actuallySendEmail = true));
 			}
 		}
 	}

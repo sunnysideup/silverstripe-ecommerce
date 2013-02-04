@@ -10,7 +10,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-abstract class OrderStep extends DataObject {
+class OrderStep extends DataObject {
 
 	/**
 	 * standard SS variable
@@ -264,7 +264,7 @@ abstract class OrderStep extends DataObject {
 			$fields->addFieldToTab("Root.CustomerMessage", new TextField("EmailSubject", _t("OrderStep.EMAILSUBJECT", "Email Subject (if any), you can use [OrderNumber] as a tag that will be replaced with the actual Order Number.")));
 			$fields->addFieldToTab("Root.CustomerMessage", new HTMLEditorField("CustomerMessage", _t("OrderStep.CUSTOMERMESSAGE", "Customer Message (if any)"), 5));
 			if($testEmailLink = $this->testEmailLink()) {
-				$fields->addFieldToTab("Root.CustomerMessage", new LiteralField("testEmailLink", "<p><a href=\"".$testEmailLink."\" target=\"_blank\">"._t("OrderStep.TEST_EMAIL", "Test Email")."</a></p>"));
+				$fields->addFieldToTab("Root.CustomerMessage", new LiteralField("testEmailLink", "<p><a href=\"".$testEmailLink."\" target=\"_blank\">"._t("OrderStep.VIEW_EMAIL_EXAMPLE", "View email example in browser")."</a></p>"));
 			}
 		}
 		else {
@@ -352,28 +352,28 @@ abstract class OrderStep extends DataObject {
 * moving between statusses...
 **************************************************/
 	/**
-		*initStep:
-		* makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
-		* should be able to run this function many times to check if the step is ready
-		* @see Order::doNextStatus
-		* @param Order object
-		* @return Boolean - true if the current step is ready to be run...
-		**/
-	abstract public function initStep($order) {
-		user_error("Please implement this in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
+	 * initStep:
+	 * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
+	 * should be able to run this function many times to check if the step is ready
+	 * @see Order::doNextStatus
+	 * @param Order object
+	 * @return Boolean - true if the current step is ready to be run...
+	 **/
+	public function initStep($order) {
+		user_error("Please implement the initStep method in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
 		return true;
 	}
 
 	/**
-		*doStep:
-	* should only be able to run this function once (init stops you from running it twice - in theory....)
-		*runs the actual step
-	*@see Order::doNextStatus
-		*@param Order object
-		*@return Boolean - true if run correctly
-		**/
-	abstract public function doStep($order) {
-		user_error("Please implement this in a subclass of OrderStep", E_USER_WARNING);
+	 *doStep:
+	 * should only be able to run this function once (init stops you from running it twice - in theory....)
+	 *runs the actual step
+	 * @see Order::doNextStatus
+	 *@param Order object
+	 * @return Boolean - true if run correctly
+	 **/
+	public function doStep($order) {
+		user_error("Please implement the initStep method in a subclass (".get_class().") of OrderStep", E_USER_WARNING);
 		return true;
 	}
 
@@ -384,7 +384,7 @@ abstract class OrderStep extends DataObject {
 	 * @param Order object
 	 * @return DataObject | Null (next step OrderStep object)
 	 **/
-	abstract public function nextStep($order) {
+	public function nextStep($order) {
 		$nextOrderStepObject = DataObject::get_one("OrderStep", "\"Sort\" > ".$this->Sort);
 		if($nextOrderStepObject) {
 			return $nextOrderStepObject;
@@ -457,27 +457,44 @@ abstract class OrderStep extends DataObject {
 	 */
 	protected $emailClassName = "";
 
+	/**
+	 * returns the email class used for emailing the
+	 * customer during a specific step (IF ANY!)
+	 * @return String
+	 */
 	public function getEmailClassName(){
 		return $this->emailClassName;
+	}
+
+	/**
+	 * sets the email class used for emailing the
+	 * customer during a specific step (IF ANY!)
+	 * @param String
+	 */
+	public function setEmailClassName($s){
+		$this->emailClassName = $s;
 	}
 
 	/**
 	 * returns a link that can be used to test
 	 * the email being sent during this step
 	 * this method returns NULL if no email
-	 * is being sent.
-	 * @return NULL | String
+	 * is being sent OR if there is no suitable Order
+	 * to test with...
+	 * @return String
 	 */
 	protected function testEmailLink(){
-		if($this->emailClass) {
-			$order = DataObject::get_one(
+		if($this->getEmailClassName()) {
+			$orders = DataObject::get(
 				"Order",
 				"\"OrderStep\".\"Sort\" >= ".$this->Sort,
 				"RAND() ASC",
 				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
 			);
-			if($order) {
-				return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false);
+			if($orders && $orders->count()) {
+				if($order = $orders->First()) {
+					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false);
+				}
 			}
 		}
 	}
@@ -901,6 +918,11 @@ class OrderStep_Submitted extends OrderStep {
 
 class OrderStep_SentInvoice extends OrderStep {
 
+	/**
+	 * @var String
+	 */
+	protected $emailClassName = "Order_InvoiceEmail";
+
 	static $db = array(
 		"SendInvoiceToCustomer" => "Boolean"
 	);
@@ -952,7 +974,7 @@ class OrderStep_SentInvoice extends OrderStep {
 		$message = $this->CustomerMessage;
 		if($this->SendInvoiceToCustomer){
 			if(!$this->hasBeenSent($order)) {
-				return $order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $emailClass = 'Order_InvoiceEmail');
+				return $order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
 			}
 		}
 		else {
@@ -1150,6 +1172,11 @@ class OrderStep_Confirmed extends OrderStep {
 
 class OrderStep_SentReceipt extends OrderStep {
 
+	/**
+	 * @var String
+	 */
+	protected $emailClassName = "Order_ReceiptEmail";
+
 	static $db = array(
 		"SendReceiptToCustomer" => "Boolean"
 	);
@@ -1181,7 +1208,7 @@ class OrderStep_SentReceipt extends OrderStep {
 		$message = $this->CustomerMessage;
 		if($this->SendReceiptToCustomer){
 			if(!$this->hasBeenSent($order)) {
-				$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $emailClass = 'Order_ReceiptEmail');
+				$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
 			}
 		}
 		else {
@@ -1249,6 +1276,11 @@ class OrderStep_SentReceipt extends OrderStep {
 
 class OrderStep_Sent extends OrderStep {
 
+	/**
+	 * @var String
+	 */
+	protected $emailClassName = "Order_StatusEmail";
+
 	static $db = array(
 		"SendDetailsToCustomer" => "Boolean"
 	);
@@ -1290,7 +1322,7 @@ class OrderStep_Sent extends OrderStep {
 				if(!$this->hasBeenSent($order)) {
 					$subject = $this->EmailSubject;
 					$message = $this->CustomerMessage;
-					$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $emailClass = 'Order_StatusEmail');
+					$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
 				}
 			}
 			else {

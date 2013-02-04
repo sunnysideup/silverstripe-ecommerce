@@ -139,6 +139,7 @@ class OrderConfirmationPage extends CartPage{
 		if($actuallySendEmail) {
 			$link .= "?send=1";
 		}
+		return $link;
 	}
 
 	/**
@@ -293,8 +294,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	function sendemail(SS_HTTPRequest $request) {
 		if($o = $this->currentOrder) {
 			$emailClassName = "Order_ReceiptEmail";
-			if((singleton($request->param("OtherID")) instanceOf Order_Email)) {
-				$emailClassName = $request->param("OtherID");
+			if(class_exists($request->param("OtherID"))) {
+				if(singleton($request->param("OtherID")) instanceOf Order_Email) {
+					$emailClassName = $request->param("OtherID");
+				}
 			}
 			if(isset($_GET["send"]) && $_GET["send"]) {
 				if($email = $o->getOrderEmail()) {
