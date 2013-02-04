@@ -104,6 +104,9 @@ class BuyableSelectField extends FormField {
 		';
 	}
 
+	/**
+	 * Do we do anything with data???
+	 */
 	function setValue($data) {
 		if($this->buyable) {
 			$value = $this->buyable->FullName ? $this->buyable->FullName : $this->buyable->getTitle();
@@ -160,7 +163,19 @@ class BuyableSelectField_DataList extends Controller {
 		"MetaKeywords"
 	);
 
-	function json($request){
+	/**
+	 * returns JSON in this format:
+	 * Array(
+	 *  ClassName => $className,
+	 *  ID => $obj->ID,
+	 *  Version => $obj->Version,
+	 *  Title => $name
+	 * );
+	 *
+	 * @param SS_HTTPRequest
+	 * @return String (JSON)
+	 */
+	function json(SS_HTTPRequest $request){
 		$countOfSuggestions = $request->requestVar("countOfSuggestions");
 		$term = Convert::raw2sql($request->requestVar("term"));
 		$arrayOfBuyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
@@ -243,13 +258,12 @@ class BuyableSelectField_DataList extends Controller {
 		return $this->array2json($finalArray);
 	}
 
-
 	/**
 	 * converts an Array into JSON and formats it nicely for easy debugging
 	 * @param Array $array
 	 * @return JSON
 	 */
-	protected function array2json($array){
+	protected function array2json(Array $array){
 		$json = Convert::array2json($array);
 		return $json;
 	}

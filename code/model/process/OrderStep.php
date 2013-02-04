@@ -919,7 +919,7 @@ class OrderStep_SentInvoice extends OrderStep {
 		$message = $this->CustomerMessage;
 		if($this->SendInvoiceToCustomer){
 			if(!$this->hasBeenSent($order)) {
-				return $order->sendInvoice($subject, $message);
+				return $order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $emailClass = 'Order_InvoiceEmail');
 			}
 		}
 		else {
@@ -1148,7 +1148,7 @@ class OrderStep_SentReceipt extends OrderStep {
 		$message = $this->CustomerMessage;
 		if($this->SendReceiptToCustomer){
 			if(!$this->hasBeenSent($order)) {
-				$order->sendReceipt($subject, $message);
+				$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $emailClass = 'Order_ReceiptEmail');
 			}
 		}
 		else {
@@ -1257,7 +1257,7 @@ class OrderStep_Sent extends OrderStep {
 				if(!$this->hasBeenSent($order)) {
 					$subject = $this->EmailSubject;
 					$message = $this->CustomerMessage;
-					$order->sendStatusChange($subject, $message);
+					$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $emailClass = 'Order_StatusEmail');
 				}
 			}
 			else {

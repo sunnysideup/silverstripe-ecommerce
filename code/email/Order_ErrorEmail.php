@@ -15,6 +15,5 @@
 
 class Order_ErrorEmail extends Order_Email {
 
-	protected $ss_template = 'Order_ErrorEmail';
 
 }
