@@ -56,13 +56,15 @@ table.infotable { border: 1px solid #CDDDDD; border-collapse: collapse; width: 1
 
 /*** WIDTHS FOR TABLE ***/
 #ShippingTable td, #ShippingTable th { width: 50%; }
-#InformationTable td.left {width: 50%;}
-#InformationTable td.center {width: 15%;}
-#InformationTable td.unitprice {width: 15%!important;}
-#InformationTable td.right {width: 20%;}
-#InformationTable td.threeColHeader {width: 80%;}
-#OrderPayment td.left {width: 35%;}
-#OrderPayment td.center {width: 15%;}
-#OrderPayment td.right {width: 20%;}
-#InformationTable td.threeColHeader {width: 85%;}
+
+#InformationTable td.left, #InformationTable th.left {width: 50%;}
+#InformationTable td.center, #InformationTable th.center {width: 15%;}
+#InformationTable td.unitprice, #InformationTable th.unitprice {width: 15%!important;}
+#InformationTable td.right, #InformationTable th.right {width: 20%;}
+#InformationTable td.threeColHeader, #InformationTable th.threeColHeader {width: 80%;}
+
+#OrderPayment td.left, #OrderPayment th.left {width: 35%;}
+#OrderPayment td.center, #OrderPayment th.center {width: 15%;}
+#OrderPayment td.right, #OrderPayment th.right {width: 20%;}
+
 #OutstandingTable td.right {width: 20%;}
