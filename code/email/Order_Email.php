@@ -34,14 +34,6 @@ Abstract class Order_Email extends Email {
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getTemplate() {
-		return get_class($this);
-	}
-
-
-	/**
 	 * returns the standard from email address (e.g. the shop admin email address)
 	 * @return String
 	 */
