@@ -28,8 +28,7 @@
 				<td>
 					<% control Order %>
 					<div id="OrderInformation">
-						<h2 class="orderHeading">$Title</h2>
-						<% if RetrieveLink %><small><a href="$RetrieveLink"><% _t("Order.VIEWONLINE", "view order on website.") %></a></small><% end_if %>
+						<h2 class="orderHeading"><% if RetrieveLink %><a href="$RetrieveLink"><% end_if %>$Title<% if RetrieveLink %></a><% end_if %></h2>
 						<% include Order_OrderStatusLogs %>
 						<% include Order_CustomerNote %>
 						<% include Order_Addresses %>
