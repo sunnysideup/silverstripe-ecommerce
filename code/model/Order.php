@@ -1109,17 +1109,11 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
-		if(!$message) {
-			$emailableLogs = DataObject::get('OrderStatusLog', "\"OrderID\" = {$this->ID} AND \"InternalUseOnly\" = 0", "\"Created\" DESC", null, 1);
-			if($emailableLogs) {
-				$latestEmailableLog = $emailableLogs->First();
-				$message = $latestEmailableLog->Note;
-			}
-		}
 		$replacementArray = $this->createReplacementArrayForEmail($message);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
+ 		$message .= $this->MyStep()->CustomerMessage;
 		if($adminOnly) {
 			$to = Order_Email::get_from_email();
 		}
