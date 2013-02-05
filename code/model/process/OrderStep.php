@@ -491,13 +491,9 @@ class OrderStep extends DataObject {
 				"\"OrderStep\".\"Sort\" ASC, RAND() ASC",
 				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
 			);
-			if(!$orders) {
-				$order = new Order();
-				$order->StatusID = $this->ID;
-				$orders->push($order);
-			}
 			if($orders && $orders->count()) {
 				if($order = $orders->First()) {
+					$order->StatusID = $this->ID;
 					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false);
 				}
 			}
