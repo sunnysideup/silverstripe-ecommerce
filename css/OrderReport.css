@@ -67,4 +67,5 @@ table.infotable { border: 1px solid #CDDDDD; border-collapse: collapse; width: 1
 #OrderPayment tbody td.center, #OrderPayment tbody th.center {width: 15%;}
 #OrderPayment tbody td.right, #OrderPayment tbody th.right {width: 20%;}
 
-#OutstandingTable body td.right {width: 20%;}
+#OutstandingTable tbody td.right {width: 20%;}
+
