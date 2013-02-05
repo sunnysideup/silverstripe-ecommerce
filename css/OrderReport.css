@@ -57,14 +57,14 @@ table.infotable { border: 1px solid #CDDDDD; border-collapse: collapse; width: 1
 /*** WIDTHS FOR TABLE ***/
 #ShippingTable td, #ShippingTable th { width: 50%; }
 
-#InformationTable td.left, #InformationTable th.left {width: 50%;}
-#InformationTable td.center, #InformationTable th.center {width: 15%;}
-#InformationTable td.unitprice, #InformationTable th.unitprice {width: 15%!important;}
-#InformationTable td.right, #InformationTable th.right {width: 20%;}
-#InformationTable td.threeColHeader, #InformationTable th.threeColHeader {width: 80%;}
+#InformationTable body td.left, #InformationTable body th.left {width: 50%;}
+#InformationTable body td.center, #InformationTable body th.center {width: 15%;}
+#InformationTable body td.right, #InformationTable body th.right {width: 20%;}
+#InformationTable body td.unitprice, #InformationTable body th.unitprice {width: 15%;}
+#InformationTable body td.threeColHeader, #InformationTable body th.threeColHeader {width: 80%;}
 
-#OrderPayment td.left, #OrderPayment th.left {width: 35%;}
-#OrderPayment td.center, #OrderPayment th.center {width: 15%;}
-#OrderPayment td.right, #OrderPayment th.right {width: 20%;}
+#OrderPayment body td.left, #OrderPayment body th.left {width: 35%;}
+#OrderPayment body td.center, #OrderPayment body th.center {width: 15%;}
+#OrderPayment body td.right, #OrderPayment body th.right {width: 20%;}
 
-#OutstandingTable td.right {width: 20%;}
+#OutstandingTable body td.right {width: 20%;}
