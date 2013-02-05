@@ -36,8 +36,6 @@
 						<% include Order_Payments %>
 						<% include Order_OutstandingTotal %>
 					</div>
-<% require themedCSS(Order) %>
-<% require themedCSS(Order_Print, print) %>
 					<% end_control %>
 				</td>
 			</tr>
