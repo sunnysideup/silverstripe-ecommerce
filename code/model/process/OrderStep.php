@@ -493,8 +493,7 @@ class OrderStep extends DataObject {
 			);
 			if($orders && $orders->count()) {
 				if($order = $orders->First()) {
-					$order->StatusID = $this->ID;
-					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false);
+					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false, $alternativeOrderStepID = $this->ID);
 				}
 			}
 		}
