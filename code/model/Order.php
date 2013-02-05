@@ -1154,7 +1154,17 @@ class Order extends DataObject {
 		return $replacementArray;
 	}
 
-
+	/**
+	 * returns the Data that can be used in the bodry of an order Email
+	 * @param String $message - the additional message
+	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
+	 */
+	public function renderOrderInEmailFormat($message = "") {
+			$replacementArrayForEmail = $this->currentOrder->createReplacementArrayForEmail($this->message);
+			$arrayData = new ArrayData($replacementArrayForEmail);
+			$html = $arrayData->renderWith($emailClassName);
+			return Order_Email::emogrify_html($html);
+	}
 
 
 
