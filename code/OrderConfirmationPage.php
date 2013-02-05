@@ -328,11 +328,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			}
 			//display same data...
 			Requirements::clear();
-			$replacementArrayForEmail = $this->currentOrder->createReplacementArrayForEmail($this->message);
-			$arrayData = new ArrayData($replacementArrayForEmail);
-			$html =  $arrayData->renderWith($emailClassName);
-			$html = Order_Email::emogrify_html($html);
-			return $html;
+			return $this->currentOrder->renderOrderInEmailFormat($this->message);
 		}
 		else {
 			return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
