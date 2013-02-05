@@ -45,14 +45,6 @@ Abstract class Order_Email extends Email {
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getTemplate() {
-		return get_class($this);
-	}
-
-
-	/**
 	 * returns the standard from email address (e.g. the shop admin email address)
 	 * @return String
 	 */
@@ -177,11 +169,11 @@ Abstract class Order_Email extends Email {
 	 * @param Boolean $isPlain - should we send the email as HTML or as TEXT
 	 */
 	protected function parseVariables($isPlain = false) {
-		//clear requirements - just in case.
-
 		//start parsing
 		parent::parseVariables($isPlain);
-		$this->body = self::emogrify_html($this->body);
+		if(!$isPlain) {
+			$this->body = self::emogrify_html($this->body);
+		}
 	}
 
 	/**
