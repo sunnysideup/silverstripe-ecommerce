@@ -487,12 +487,11 @@ class OrderStep extends DataObject {
 		if($this->getEmailClassName()) {
 			$orders = DataObject::get(
 				"Order",
-				"\"OrderStep\".\"ID\" = ".$this->ID,
-				"RAND() ASC",
+				"\"OrderStep\".\"Sirt\" >= ".$this->Sort,
+				"\"OrderStep\".\"Sort\" ASC, RAND() ASC",
 				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
 			);
 			if(!$orders) {
-				$orders = new DataObjectSet();
 				$order = new Order();
 				$order->StatusID = $this->ID;
 				$orders->push($order);
