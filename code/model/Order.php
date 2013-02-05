@@ -234,11 +234,19 @@ class Order extends DataObject {
 
 
 
+	/**
+	 * This function returns the OrderSteps
+	 *
+	 * @returns: DataObjectSet (OrderSteps)
+	 **/
+	public static function get_order_status_options() {
+		return OrderStep::get();
+	}
 
 	/**
 	 * Like the standard byID, but it checks whether we are allowed to view the order.
 	 *
-	 * @returns: DataObject (Order) | Null
+	 * @return: Order | Null
 	 **/
 	public static function get_by_id_if_can_view($id) {
 		$order = Order::get()->byID($id);
@@ -1099,11 +1107,11 @@ class Order extends DataObject {
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
 	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
-	 * @param String $emailClass - class used to send email
+	 * @param String $emailClassName - class used to send email
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	function sendEmail($subject = "", $message = "", $resend = false, $adminOnly = false, $emailClass = 'Order_InvoiceEmail') {
-		return $this->prepareEmail($emailClass, $subject, $message, $resend, $adminOnly);
+	function sendEmail($subject = "", $message = "", $resend = false, $adminOnly = false, $emailClassName = 'Order_InvoiceEmail') {
+		return $this->prepareEmail($emailClassName, $subject, $message, $resend, $adminOnly);
 	}
 
 	/**
@@ -1133,7 +1141,7 @@ class Order extends DataObject {
 	/**
 	 * Send a mail of the order to the client (and another to the admin).
 	 *
-	 * @param String $emailClass - the class name of the email you wish to send
+	 * @param String $emailClassName - the class name of the email you wish to send
 	 * @param String $subject - email subject
 	 * @param Boolean $copyToAdmin - true by default, whether it should send a copy to the admin
 	 * @param Boolean $resend - sends the email even it has been sent before.
@@ -1141,7 +1149,7 @@ class Order extends DataObject {
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail($emailClass, $subject, $message, $resend = false, $adminOnly = false) {
+	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
 		//START HACK
 		if(!$message) {
 			$latestEmailableLog = OrderStatusLog::get()
@@ -1166,7 +1174,7 @@ class Order extends DataObject {
 			$to = $this->getOrderEmail();
 		}
  		if($from && $to) {
-			$email = new $emailClass();
+			$email = new $emailClassName();
 			if(!($email instanceOf Email)) {
 				user_error("No correct email class provided.", E_USER_ERROR);
 			}
@@ -1396,6 +1404,7 @@ class Order extends DataObject {
 	 *
 	 * @param string|array $excluded - Class(es) of modifier(s) to ignore in the calculation.
 	 * @param Boolean $stopAtExcludedModifier  - when this flag is TRUE, we stop adding the modifiers when we reach an excluded modifier.
+	 *
 	 * @return Currency (DB Object)
 	 **/
 	function ModifiersSubTotalAsCurrencyObject($excluded = null, $stopAtExcludedModifier = false) {
@@ -1677,7 +1686,7 @@ class Order extends DataObject {
 	function getEmailLink($type = "Order_StatusEmail") {
 		if(!isset($_REQUEST["print"])) {
 			if($this->IsSubmitted()) {
-				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID));
+				return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID, $this->MyStep()->getEmailClassName(), $actuallySendEmail = true));
 			}
 		}
 	}
@@ -1730,7 +1739,7 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
+	 * link to delete order.
 	 * @return String
 	 */
 	function DeleteLink(){return $this->getDeleteLink();}
@@ -1828,9 +1837,9 @@ class Order extends DataObject {
 	}
 
 	/**
-   * Returns the total cost of an order including the additional charges or deductions of its modifiers.
+	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
 	 * @return float
-   */
+	 */
 	function Total() {return $this->getTotal();}
 	function getTotal() {
 		return $this->SubTotal() + $this->ModifiersSubTotal();
@@ -1861,8 +1870,6 @@ class Order extends DataObject {
 	function getDisplayPrice(){
 		return EcommerceCurrency::display_price($this->Total(), $this);
 	}
-
-
 
 	/**
 	 * Checks to see if any payments have been made on this order
@@ -2164,7 +2171,7 @@ class Order extends DataObject {
 	/**
 	 * Casted variable - does the order have a potential shipping address?
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function CanHaveShippingAddress() {return $this->getCanHaveShippingAddress();}
 	function getCanHaveShippingAddress() {
@@ -2369,6 +2376,12 @@ class Order extends DataObject {
 		return $js;
 	}
 
+	/**
+	 * @return Boolean
+	 **/
+	public function MoreThanOneItemInCart() {
+		return $this->NumItemsInCart() > 1 ? true : false;
+	}
 
 	/**
 	 * @ToDO: move to more appropriate class
