@@ -1682,7 +1682,7 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
+	 * link to delete order.
 	 * @return String
 	 */
 	function DeleteLink(){return $this->getDeleteLink();}
@@ -1697,7 +1697,7 @@ class Order extends DataObject {
 
 	/**
 	 * A "Title" for the order, which summarises the main details (date, and customer) in a string.
-	 *@return String
+	 * @return String
 	 **/
 	function Title($dateFormat = "D j M Y, G:i T", $includeName = true) {return $this->getTitle($dateFormat, $includeName);}
 	function getTitle($dateFormat = "D j M Y, G:i T", $includeName = true) {
@@ -1779,9 +1779,9 @@ class Order extends DataObject {
 	}
 
 	/**
-  	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
-	 *@return float
-  	 */
+	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
+	 * @return float
+	 **/
 	function Total() {return $this->getTotal();}
 	function getTotal() {
 		return $this->SubTotal() + $this->ModifiersSubTotal();
@@ -1790,7 +1790,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function TotalAsCurrencyObject() {
 		return DBField::create('Currency',$this->Total());
@@ -1806,20 +1806,18 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Money | Null
+	 * @return Money | Null
 	 **/
 	function DisplayPrice(){return $this->getDisplayPrice();}
 	function getDisplayPrice(){
 		return EcommerceCurrency::display_price($this->Total(), $this);
 	}
 
-
-
 	/**
 	 * Checks to see if any payments have been made on this order
 	 * and if so, subracts the payment amount from the order
 	 *
-	 *@return float
+	 * @return float
 	 **/
 	function TotalOutstanding(){return $this->getTotalOutstanding();}
 	function getTotalOutstanding(){
@@ -1840,14 +1838,14 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function TotalOutstandingAsCurrencyObject(){
 		return DBField::create('Currency',$this->TotalOutstanding());
 	}
 
 	/**
-	 *@return Money
+	 * @return Money
 	 **/
 	function TotalOutstandingAsMoneyObject(){return $this->getTotalOutstandingAsMoneyObject();}
 	function getTotalOutstandingAsMoneyObject(){
