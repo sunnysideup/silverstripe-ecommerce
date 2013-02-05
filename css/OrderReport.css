@@ -64,5 +64,5 @@ table.infotable { border: 1px solid #CDDDDD; border-collapse: collapse; width: 1
 #OrderPayment td.left {width: 35%;}
 #OrderPayment td.center {width: 15%;}
 #OrderPayment td.right {width: 20%;}
-#InformationTable td.threeColHeader {width: 850%;}
+#InformationTable td.threeColHeader {width: 85%;}
 #OutstandingTable td.right {width: 20%;}
