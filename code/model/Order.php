@@ -1147,7 +1147,8 @@ class Order extends DataObject {
 	 */
 	public function createReplacementArrayForEmail($message = ""){
 		$replacementArray = array();
- 		$replacementArray["Message"] = $message.$this->MyStep()->CustomerMessage;
+ 		$replacementArray["Message"] = $message;
+ 		$replacementArray["OrderStepMessage"] = $this->MyStep()->CustomerMessage;
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
 		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
@@ -1155,15 +1156,16 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * returns the Data that can be used in the bodry of an order Email
+	 * returns the order formatted as an email
 	 * @param String $message - the additional message
+	 * @param String $emailClassName - template to use.
 	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
 	 */
-	public function renderOrderInEmailFormat($message = "") {
-			$replacementArrayForEmail = $this->currentOrder->createReplacementArrayForEmail($this->message);
-			$arrayData = new ArrayData($replacementArrayForEmail);
-			$html = $arrayData->renderWith($emailClassName);
-			return Order_Email::emogrify_html($html);
+	public function renderOrderInEmailFormat($message = "", $emailClassName) {
+		$replacementArrayForEmail = $this->createReplacementArrayForEmail($message);
+		$arrayData = new ArrayData($replacementArrayForEmail);
+		$html = $arrayData->renderWith($emailClassName);
+		return Order_Email::emogrify_html($html);
 	}
 
 

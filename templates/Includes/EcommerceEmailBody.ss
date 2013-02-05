@@ -5,21 +5,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
 <title>$Subject</title>
 </head>
-<body>
+<body style="margin: 20px">
 <div id="EmailContent">
 	<table id="Content" cellspacing="0" cellpadding="0" summary="Email Information">
 		<thead>
-			<tr>
+			<tr class="shopAddress">
 				<th>
 					<% include Order_ShopInfo %>
 				</th>
 			</tr>
 
-			<tr>
-				<th>
+			<tr class="message">
+				<td class="left">
 					<h1 class="title">$Subject</h1>
-					<% if Message %>$Message<% end_if %>
-				</th>
+					<% if Message %><div class="message">$Message</div><% end_if %>
+					<% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage</div><% end_if %>
+				</td>
 			</tr>
 		</thead>
 		<tbody>
