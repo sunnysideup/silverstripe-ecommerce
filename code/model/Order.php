@@ -1113,7 +1113,6 @@ class Order extends DataObject {
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
- 		$message .= $this->MyStep()->CustomerMessage;
 		if($adminOnly) {
 			$to = Order_Email::get_from_email();
 		}
@@ -1147,7 +1146,8 @@ class Order extends DataObject {
 	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
 	 */
 	public function createReplacementArrayForEmail($message = ""){
-		$replacementArray = array("Message" => $message);
+		$replacementArray = array();
+ 		$replacementArray["Message"] = $message.$this->MyStep()->CustomerMessage;
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
 		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
