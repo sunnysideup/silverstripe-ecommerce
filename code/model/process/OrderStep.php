@@ -487,10 +487,16 @@ class OrderStep extends DataObject {
 		if($this->getEmailClassName()) {
 			$orders = DataObject::get(
 				"Order",
-				"\"OrderStep\".\"Sort\" >= ".$this->Sort,
+				"\"OrderStep\".\"ID\" = ".$this->ID,
 				"RAND() ASC",
 				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
 			);
+			if(!$orders) {
+				$orders = new DataObjectSet();
+				$order = new Order();
+				$order->StatusID = $this->ID;
+				$orders->push($order);
+			}
 			if($orders && $orders->count()) {
 				if($order = $orders->First()) {
 					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false);
@@ -971,7 +977,7 @@ class OrderStep_SentInvoice extends OrderStep {
 	 **/
 	public function doStep($order) {
 		$subject = $this->EmailSubject;
-		$message = $this->CustomerMessage;
+		$message = "";
 		if($this->SendInvoiceToCustomer){
 			if(!$this->hasBeenSent($order)) {
 				return $order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
@@ -1205,7 +1211,7 @@ class OrderStep_SentReceipt extends OrderStep {
 
 	public function doStep($order) {
 		$subject = $this->EmailSubject;
-		$message = $this->CustomerMessage;
+		$message = "";
 		if($this->SendReceiptToCustomer){
 			if(!$this->hasBeenSent($order)) {
 				$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
@@ -1317,11 +1323,10 @@ class OrderStep_Sent extends OrderStep {
 	public function nextStep($order) {
 		if(DataObject::get_one("OrderStatusLog_DispatchPhysicalOrder", "\"OrderID\" = ".$order->ID)) {
 			$subject = $this->EmailSubject;
-			$message = $this->CustomerMessage;
+			$message = "";
 			if($this->SendDetailsToCustomer){
 				if(!$this->hasBeenSent($order)) {
 					$subject = $this->EmailSubject;
-					$message = $this->CustomerMessage;
 					$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
 				}
 			}
