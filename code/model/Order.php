@@ -243,7 +243,7 @@ class Order extends DataObject {
 	/**
 	 * This function returns the OrderSteps
 	 *
-	 *@returns: DataObjectSet (OrderSteps)
+	 * @returns: DataObjectSet (OrderSteps)
 	 **/
 	public static function get_order_status_options() {
 		return DataObject::get("OrderStep");
@@ -252,7 +252,7 @@ class Order extends DataObject {
 	/**
 	 * Like the standard get_by_id, but it checks whether we are allowed to view the order.
 	 *
-	 *@returns: DataObject (Order)
+	 * @returns: DataObject (Order)
 	 **/
 	public static function get_by_id_if_can_view($id) {
 		$order = DataObject::get_by_id("Order", $id);
@@ -623,7 +623,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return HasManyComplexTableField
+	 * @return HasManyComplexTableField
 	 **/
 	public function OrderStatusLogsTable($sourceClass, $title, $fieldList = null, $detailedFormFields = null) {
 		$orderStatusLogsTable = new HasManyComplexTableField(
@@ -1344,7 +1344,7 @@ class Order extends DataObject {
 	 * @param string|array $excluded - Class(es) of modifier(s) to ignore in the calculation.
 	 * @param Boolean $stopAtExcludedModifier  - when this flag is TRUE, we stop adding the modifiers when we reach an excluded modifier.
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function ModifiersSubTotalAsCurrencyObject($excluded = null, $stopAtExcludedModifier = false) {
 		return DBField::create('Currency',$this->ModifiersSubTotal($excluded, $stopAtExcludedModifier));
@@ -1387,7 +1387,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	public function canCreate($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
@@ -1401,7 +1401,7 @@ class Order extends DataObject {
 	/**
 	 * Standard SS method - can the current member view this order?
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	public function canView($member = null) {
 		if(!$this->exists()) {
@@ -1472,7 +1472,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
 		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
@@ -1510,7 +1510,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function canCancel($member = null) {
 		//if it is already cancelled it can be cancelled again
@@ -1529,7 +1529,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	public function canDelete($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
@@ -1752,7 +1752,7 @@ class Order extends DataObject {
 
 	/**
 	 * Returns the subtotal of the items for this order.
-	 *@return float
+	 * @return float
 	 */
 	function SubTotal(){return $this->getSubTotal();}
 	function getSubTotal() {
@@ -1772,7 +1772,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function SubTotalAsCurrencyObject() {
 		return DBField::create('Currency',$this->SubTotal());
@@ -1853,7 +1853,7 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *@return float
+	 * @return float
 	 */
 	function TotalPaid(){return $this->getTotalPaid();}
 	function getTotalPaid() {
@@ -1875,7 +1875,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Currency (DB Object)
+	 * @return Currency (DB Object)
 	 **/
 	function TotalPaidAsCurrencyObject(){
 		return DBField::create('Currency',$this->TotalPaid());
@@ -1906,7 +1906,7 @@ class Order extends DataObject {
 
 	/**
 	 * returns the total number of OrderItems (not modifiers) times their respectective quantities.
-	 *@return Double
+	 * @return Double
 	 **/
 	public function TotalItemsTimesQuantity($recalculate = false){return $this->getTotalItemsTimesQuantity($recalculate);}
 	public function getTotalItemsTimesQuantity($recalculate = false) {
@@ -1960,7 +1960,7 @@ class Order extends DataObject {
 
 	/**
 	 * returns name of coutry
-	 *@return String - country name
+	 * @return String - country name
 	 **/
 	public function FullNameCountry() {return $this->getFullNameCountry();}
 	public function getFullNameCountry() {
@@ -1996,7 +1996,7 @@ class Order extends DataObject {
 	/**
 	 * Returns the region that applies to the order.
 	 * we check both billing and shipping, in case one of them is empty.
-	 *@return DataObject | Null (EcommerceRegion)
+	 * @return DataObject | Null (EcommerceRegion)
 	 **/
 	function Region(){return $this->getRegion();}
 	public function getRegion() {
@@ -2059,7 +2059,7 @@ class Order extends DataObject {
 	/**
 	 * Casted variable - has the order been submitted?
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function IsSubmitted($force = false){return $this->getIsSubmitted();}
 	function getIsSubmitted($force = false) {
@@ -2105,7 +2105,7 @@ class Order extends DataObject {
 	/**
 	 * Casted variable - does the order have a potential shipping address?
 	 *
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	function CanHaveShippingAddress() {return $this->getCanHaveShippingAddress();}
 	function getCanHaveShippingAddress() {
@@ -2201,7 +2201,7 @@ class Order extends DataObject {
 	/**
 	 * Converts the Order into a serialized string
 	 * TO DO: check if this works and check if we need to use special sapphire serialization code
-	 *@return String - serialized object
+	 * @return String - serialized object
 	 **/
 	public function ConvertToString() {
 		return serialize($this->addHasOneAndHasManyAsVariables());
@@ -2210,7 +2210,7 @@ class Order extends DataObject {
 	/**
 	 * Converts the Order into a JSON object
 	 * TO DO: check if this works and check if we need to use special sapphire JSON code
-	 *@return String -  JSON
+	 * @return String -  JSON
 	 **/
 	public function ConvertToJSON() {
 		return json_encode($this->addHasOneAndHasManyAsVariables());
@@ -2219,7 +2219,7 @@ class Order extends DataObject {
 
 	/**
 	 * returns itself wtih more data added as variables.
-	 *@return DataObject - Order - with most important has one and has many items included as variables.
+	 * @return DataObject - Order - with most important has one and has many items included as variables.
 	 **/
 	protected function addHasOneAndHasManyAsVariables() {
 		/*
@@ -2269,7 +2269,7 @@ class Order extends DataObject {
 
 	/**
 	 *
-	 *@return Array (for use in AJAX for JSON)
+	 * @return Array (for use in AJAX for JSON)
 	 **/
 	function updateForAjax(array &$js) {
 		$subTotal = $this->SubTotalAsCurrencyObject()->Nice();
@@ -2308,7 +2308,7 @@ class Order extends DataObject {
 	}
 
 	/**
-	 *@return Boolean
+	 * @return Boolean
 	 **/
 	public function MoreThanOneItemInCart() {
 		return $this->NumItemsInCart() > 1 ? true : false;
