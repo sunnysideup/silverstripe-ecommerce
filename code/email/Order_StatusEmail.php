@@ -13,5 +13,10 @@
 
 class Order_StatusEmail extends Order_Email {
 
+	/**
+	 * @param string $ss_template The name of the used template (without *.ss extension)
+	 */
+	protected $ss_template = "Order_StatusEmail";
+
 
 }

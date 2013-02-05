@@ -78,7 +78,7 @@ Abstract class Order_Email extends Email {
 	 * @return Boolean - TRUE for success and FALSE for failure.
 	 */
 	public function send($messageID = null, $order, $resend = false, $returnBodyOnly = false) {
-		if(!$this->hasBeenSent($order) || $resend || $returnBodyOnly) {
+		if((!$this->hasBeenSent($order)) || $resend || $returnBodyOnly) {
 			if(!$this->subject) {
 				$this->subject = self::get_subject();
 			}
@@ -149,11 +149,11 @@ Abstract class Order_Email extends Email {
 	 * @param Boolean $isPlain - should we send the email as HTML or as TEXT
 	 */
 	protected function parseVariables($isPlain = false) {
-		//clear requirements - just in case.
-
 		//start parsing
 		parent::parseVariables($isPlain);
-		$this->body = self::emogrify_html($this->body);
+		if(!$isPlain) {
+			$this->body = self::emogrify_html($this->body);
+		}
 	}
 
 	/**
