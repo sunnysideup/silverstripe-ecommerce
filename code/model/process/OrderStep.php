@@ -76,7 +76,8 @@ class OrderStep extends DataObject {
 		"ShowAsUncompletedOrderNice" => "show as uncomplete",
 		"ShowAsInProcessOrderNice" => "show as in process",
 		"ShowAsCompletedOrderNice" => "show as complete",
-		"HideStepFromCustomerNice" => "hide step from customer"
+		"HideStepFromCustomerNice" => "hide step from customer",
+		"HasCustomerMessageNice" => "includes message to customer"
 	);
 
 	/**
@@ -90,7 +91,8 @@ class OrderStep extends DataObject {
 		"ShowAsUncompletedOrderNice" => "Varchar",
 		"ShowAsInProcessOrderNice" => "Varchar",
 		"ShowAsCompletedOrderNice" => "Varchar",
-		"HideStepFromCustomerNice" => "Varchar"
+		"HideStepFromCustomerNice" => "Varchar",
+		"HasCustomerMessageNice" => "Varchar"
 	);
 
 	/**
@@ -523,6 +525,11 @@ class OrderStep extends DataObject {
 	 **/
 	protected function hasCustomerMessage() {
 		return false;
+	}
+
+	public function HasCustomerMessageNice() {return $this->getHasCustomerMessageNice();}
+	public function getHasCustomerMessageNice() {
+		return if($this->hasCustomerMessage()){return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");
 	}
 
 /**************************************************
@@ -1136,7 +1143,6 @@ class OrderStep_Confirmed extends OrderStep {
 		}
 		return null;
 	}
-
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
