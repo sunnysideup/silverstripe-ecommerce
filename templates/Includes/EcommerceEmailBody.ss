@@ -5,10 +5,11 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>$Subject</title>
 </head>
-<body style="margin: 20px">
-<div id="EmailContent">
+<body>
+<div id="EmailContent" style="margin: 20px">
 	<table id="Content" cellspacing="0" cellpadding="0" summary="Email Information">
 		<thead>
+
 			<tr class="shopAddress">
 				<th>
 					<% include Order_ShopInfo %>
@@ -24,10 +25,11 @@
 			</tr>
 		</thead>
 		<tbody>
-<% if Order %>
+
 			<tr>
 				<td>
-					<% control Order %>
+<% if Order %>
+	<% control Order %>
 					<div id="OrderInformation">
 						<h2 class="orderHeading"><% if RetrieveLink %><a href="$RetrieveLink"><% end_if %>$Title<% if RetrieveLink %></a><% end_if %></h2>
 						<% include Order_OrderStatusLogs %>
@@ -37,12 +39,13 @@
 						<% include Order_Payments %>
 						<% include Order_OutstandingTotal %>
 					</div>
-					<% end_control %>
+	<% end_control %>
+<% else %>
+					<p class="warning message">There was an error in retrieving this order. Please contact the store.</p>
+<% end_if %>
 				</td>
 			</tr>
-<% else %>
-<p>There was an error in retrieving this order. Please contact the store.</p>
-<% end_if %>
+
 		</tbody>
 	</table>
 </div>
