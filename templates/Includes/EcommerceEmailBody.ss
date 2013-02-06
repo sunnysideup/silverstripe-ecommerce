@@ -1,9 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
-<title>$Subject</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>$Subject</title>
 </head>
 <body style="margin: 20px">
 <div id="EmailContent">
@@ -19,7 +19,7 @@
 				<td class="left">
 					<h1 class="title">$Subject</h1>
 					<% if Message %><div class="message">$Message</div><% end_if %>
-					<% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage</div><% end_if %>
+					<% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage.RAW</div><% end_if %>
 				</td>
 			</tr>
 		</thead>
