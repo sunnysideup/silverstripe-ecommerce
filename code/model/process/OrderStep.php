@@ -533,7 +533,7 @@ class OrderStep extends DataObject {
 	 */
 	public function HasCustomerMessageNice() {return $this->getHasCustomerMessageNice();}
 	public function getHasCustomerMessageNice() {
-		return if($this->hasCustomerMessage()){return _t("OrderStep.YES", "Yes");}return _t("OrderStep.NO", "No");
+		if($this->hasCustomerMessage()){return _t("OrderStep.YES", "Yes");} return _t("OrderStep.NO", "No");
 	}
 
 /**************************************************
