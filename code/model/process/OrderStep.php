@@ -71,6 +71,14 @@ class OrderStep extends DataObject {
 	public static $summary_fields = array(
 		"Name" => "Name",
 		"Description" => "Description"
+		"CustomerCanEditNice" => "customer can edit",
+		"CustomerCanPayNice" => "customer can pay",
+		"CustomerCanCancelNice" => "customer can cancel",
+		"ShowAsUncompletedOrderNice" => "show as uncomplete",
+		"ShowAsInProcessOrderNice" => "show as in process",
+		"ShowAsCompletedOrderNice" => "show as complete",
+		"HideStepFromCustomerNice" => "hide step from customer",
+		"HasCustomerMessageNice" => "includes message to customer"
 	);
 
 	/**
@@ -84,7 +92,8 @@ class OrderStep extends DataObject {
 		"ShowAsUncompletedOrderNice" => "Varchar",
 		"ShowAsInProcessOrderNice" => "Varchar",
 		"ShowAsCompletedOrderNice" => "Varchar",
-		"HideStepFromCustomerNice" => "Varchar"
+		"HideStepFromCustomerNice" => "Varchar",
+		"HasCustomerMessageNice" => "Varchar"
 	);
 
 	/**
@@ -489,12 +498,12 @@ class OrderStep extends DataObject {
 			$orders = DataObject::get(
 				"Order",
 				"\"OrderStep\".\"Sort\" >= ".$this->Sort,
-				"RAND() ASC",
+				"\"OrderStep\".\"Sort\" ASC, RAND() ASC",
 				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
 			);
 			if($orders && $orders->count()) {
 				if($order = $orders->First()) {
-					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false);
+					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false, $alternativeOrderStepID = $this->ID);
 				}
 			}
 		}
@@ -531,6 +540,15 @@ class OrderStep extends DataObject {
 	 **/
 	protected function hasCustomerMessage() {
 		return false;
+	}
+
+	/**
+	 * Formatted answer for "hasCustomerMessage"
+	 * @return String
+	 */
+	public function HasCustomerMessageNice() {return $this->getHasCustomerMessageNice();}
+	public function getHasCustomerMessageNice() {
+		return $this->hasCustomerMessage() ?  _t("OrderStep.YES", "Yes") :  _t("OrderStep.NO", "No");
 	}
 
 /**************************************************
@@ -1008,7 +1026,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 **/
 	public function doStep(Order $order) {
 		$subject = $this->EmailSubject;
-		$message = $this->CustomerMessage;
+		$message = "";
 		if($this->SendInvoiceToCustomer){
 			if(!$this->hasBeenSent($order)) {
 				return $order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
@@ -1292,7 +1310,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 	 */
 	public function doStep(Order $order) {
 		$subject = $this->EmailSubject;
-		$message = $this->CustomerMessage;
+		$message = "";
 		if($this->SendReceiptToCustomer){
 			if(!$this->hasBeenSent($order)) {
 				$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
@@ -1427,11 +1445,10 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 			->Filter(array("OrderID" => $order->ID));
 		if($orderStatusLog_DispatchPhysicalOrder->Count()) {
 			$subject = $this->EmailSubject;
-			$message = $this->CustomerMessage;
+			$message = "";
 			if($this->SendDetailsToCustomer){
 				if(!$this->hasBeenSent($order)) {
 					$subject = $this->EmailSubject;
-					$message = $this->CustomerMessage;
 					$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
 				}
 			}
