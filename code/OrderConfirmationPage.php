@@ -157,13 +157,21 @@ class OrderConfirmationPage extends CartPage{
 	/**
 	 * Return a link to view the order on this page.
 	 * @param int|string $orderID ID of the order
-	 * @return String (URLSegment)
 	 * @param String $type - the type of email you want to send.
+	 * @param Boolean $actuallySendEmail - do we actually send the email
+	 * @param Int $alternativeOrderStepID - OrderStep to use
+	 *
+	 * NOTE: you can not ActuallySendEmail and have an AlternativeOrderStepID
+	 *
+	 * @return String (URLSegment)
 	 */
-	public static function get_email_link($orderID, $emailClassName = "Order_StatusEmail", $actuallySendEmail = false) {
+	public static function get_email_link($orderID, $emailClassName = "Order_StatusEmail", $actuallySendEmail = false, $alternativeOrderStepID = 0) {
 		$link = self::find_link(). 'sendemail/' . $orderID . '/'.$emailClassName.'/';
 		if($actuallySendEmail) {
 			$link .= "?send=1";
+		}
+		elseif($alternativeOrderStepID) {
+			$link .= "?use=".$alternativeOrderStepID;
 		}
 		return $link;
 	}
@@ -395,7 +403,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 * @return HTML
 	 **/
 	function sendemail(SS_HTTPRequest $request) {
-		if($o = $this->currentOrder) {
+		if($this->currentOrder) {
 			$emailClassName = "Order_ReceiptEmail";
 			if(class_exists($request->param("OtherID"))) {
 				if(singleton($request->param("OtherID")) instanceOf Order_Email) {
@@ -403,10 +411,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 				}
 			}
 			if(isset($_GET["send"]) && $_GET["send"]) {
-				if($email = $o->getOrderEmail()) {
+				if($email = $this->currentOrder->getOrderEmail()) {
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
 					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					if($o->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClassName)) {
+					if($this->currentOrder->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClassName)) {
 						$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
 					}
 					else {
@@ -417,13 +425,13 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 					$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
 				}
 			}
+			elseif(isset($_GET["use"]) && $_GET["use"]) {
+				//WE MUST MAKE SURE THAT WE DO NOT SAVE ORDER AS
+				$this->currentOrder->StatusID = intval($_GET["use"]);
+			}
 			//display same data...
 			Requirements::clear();
-			$replacementArrayForEmail = $this->currentOrder->createReplacementArrayForEmail($this->message);
-			$arrayData = new ArrayData($replacementArrayForEmail);
-			$html =  $arrayData->renderWith($emailClassName);
-			$html = Order_Email::emogrify_html($html);
-			return $html;
+			return $this->currentOrder->renderOrderInEmailFormat($this->message, $emailClassName);
 		}
 		else {
 			return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');

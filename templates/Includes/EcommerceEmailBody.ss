@@ -1,34 +1,37 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
-<title>$Subject</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>$Subject</title>
 </head>
 <body>
-<div id="EmailContent">
+<div id="EmailContent" style="margin: 20px">
 	<table id="Content" cellspacing="0" cellpadding="0" summary="Email Information">
 		<thead>
-			<tr>
+
+			<tr class="shopAddress">
 				<th>
 					<% include Order_ShopInfo %>
 				</th>
 			</tr>
 
-			<tr>
-				<th>
+			<tr class="message">
+				<td class="left">
 					<h1 class="title">$Subject</h1>
-					<% if Message %>$Message<% end_if %>
-				</th>
+					<% if Message %><div class="message">$Message</div><% end_if %>
+					<% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage.RAW</div><% end_if %>
+				</td>
 			</tr>
 		</thead>
 		<tbody>
-<% if Order %>
+
 			<tr>
 				<td>
-					<% with Order %>
+<% if Order %>
+	<% with Order %>
 					<div id="OrderInformation">
-						<h2 class="orderHeading">$Title</h2>
-						<% if RetrieveLink %><small><a href="$RetrieveLink"><% _t("Order.VIEWONLINE", "view order on website.") %></a></small><% end_if %>
+						<h2 class="orderHeading"><% if RetrieveLink %><a href="$RetrieveLink"><% end_if %>$Title<% if RetrieveLink %></a><% end_if %></h2>
 						<% include Order_OrderStatusLogs %>
 						<% include Order_CustomerNote %>
 						<% include Order_Addresses %>
@@ -36,14 +39,13 @@
 						<% include Order_Payments %>
 						<% include Order_OutstandingTotal %>
 					</div>
-<% require themedCSS(Order) %>
-<% require themedCSS(Order_Print, print) %>
-					<% end_with %>
+	<% end_with %>
+<% else %>
+					<p class="warning message">There was an error in retrieving this order. Please contact the store.</p>
+<% end_if %>
 				</td>
 			</tr>
-<% else %>
-<p>There was an error in retrieving this order. Please contact the store.</p>
-<% end_if %>
+
 		</tbody>
 	</table>
 </div>

@@ -1150,19 +1150,6 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
-		//START HACK
-		if(!$message) {
-			$latestEmailableLog = OrderStatusLog::get()
-				->filter(array(
-					"OrderID" => $this->ID,
-					"InternalUseOnly" => 0
-				))
-				->sort("Created", "DESC")
-				->First();
-			if($latestEmailableLog) {
-				$message = $latestEmailableLog->Note;
-			}
-		}
 		$replacementArray = $this->createReplacementArrayForEmail($message);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
@@ -1200,14 +1187,27 @@ class Order extends DataObject {
 	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
 	 */
 	public function createReplacementArrayForEmail($message = ""){
-		$replacementArray = array("Message" => $message);
+		$replacementArray = array();
+ 		$replacementArray["Message"] = $message;
+ 		$replacementArray["OrderStepMessage"] = $this->MyStep()->CustomerMessage;
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
 		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
 		return $replacementArray;
 	}
 
-
+	/**
+	 * returns the order formatted as an email
+	 * @param String $message - the additional message
+	 * @param String $emailClassName - template to use.
+	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
+	 */
+	public function renderOrderInEmailFormat($message = "", $emailClassName) {
+		$replacementArrayForEmail = $this->createReplacementArrayForEmail($message);
+		$arrayData = new ArrayData($replacementArrayForEmail);
+		$html = $arrayData->renderWith($emailClassName);
+		return Order_Email::emogrify_html($html);
+	}
 
 
 
