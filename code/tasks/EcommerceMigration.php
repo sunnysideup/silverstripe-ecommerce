@@ -1457,7 +1457,7 @@ class EcommerceMigration extends BuildTask {
 			echo $explanation;
 		}
 		$oldJSLibrary = "ecommerce/thirdparty/simpledialogue_fixed/jquery.simpledialog.0.1.js";
-		$newJSLibrary = "ecommerce/thirdparty/colorbox/colorbox/jquery.colorbox.js";
+		$newJSLibrary = "ecommerce/thirdparty/colorbox/jquery.colorbox-min.js";
 		$fileArray = EcommerceConfig::get_folder_and_file_locations();
 		if($fileArray && count($fileArray)) {
 			foreach($fileArray as $folderAndFileLocationWithoutBase) {
