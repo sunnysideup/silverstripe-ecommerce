@@ -1153,6 +1153,7 @@ class Order extends DataObject {
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
 		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
 		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
+		$replacementArray["BaseURL"] = Director::baseURL();
 		return $replacementArray;
 	}
 
