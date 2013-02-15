@@ -70,7 +70,7 @@ class OrderStep extends DataObject {
 	 */
 	public static $summary_fields = array(
 		"Name" => "Name",
-		"Description" => "Description"
+		"Description" => "Description",
 		"CustomerCanEditNice" => "customer can edit",
 		"CustomerCanPayNice" => "customer can pay",
 		"CustomerCanCancelNice" => "customer can cancel",

@@ -12,7 +12,7 @@ class EcommerceTaskExportAllOrderItems extends BuildTask{
 
 	protected $title = "Export all order items to CSV";
 
-	protected $description = "allows download of all sales items with all details as CSV. Excludes sales made by Admins";
+	protected $description = "allows download of all sales items with all details as CSV. Excludes sales made by Admins.";
 
 	function run($request){
 		//reset time limit

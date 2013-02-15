@@ -1193,6 +1193,8 @@ class Order extends DataObject {
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
 		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
+		$replacementArray["BaseURL"] = Director::baseURL();
 		return $replacementArray;
 	}
 
@@ -2374,13 +2376,6 @@ class Order extends DataObject {
 			'v' => $this->ExpectedCountryName()
 		);
 		return $js;
-	}
-
-	/**
-	 * @return Boolean
-	 **/
-	public function MoreThanOneItemInCart() {
-		return $this->NumItemsInCart() > 1 ? true : false;
 	}
 
 	/**
