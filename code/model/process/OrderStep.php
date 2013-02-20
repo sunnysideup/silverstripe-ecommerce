@@ -495,7 +495,7 @@ class OrderStep extends DataObject {
 			$orders = DataObject::get(
 				"Order",
 				"\"OrderStep\".\"Sort\" >= ".$this->Sort,
-				"\"OrderStep\".\"Sort\" DESC, RAND() ASC",
+				"IF(\"OrderStep\".\"Sort\" > ".$this->Sort.", 0, 1) ASC, \"OrderStep\".\"Sort\" ASC, RAND() ASC",
 				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
 			);
 			if($orders && $orders->count()) {
