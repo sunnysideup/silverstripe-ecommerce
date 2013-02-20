@@ -20,7 +20,7 @@ class OrderStepField extends DatalessField {
 	function __construct($name, $order, $member = null) {
 		$where = "\"HideStepFromCustomer\" = 0";
 		$currentStep = $order->CurrentStepVisibleToCustomer();
-		if($member->IsShopAdmin) {
+		if($member->IsShopAdmin()) {
 			$where = "";
 			$currentStep = $order->MyStep();
 		}

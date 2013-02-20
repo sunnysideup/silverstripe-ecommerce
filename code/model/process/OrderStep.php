@@ -452,7 +452,14 @@ class OrderStep extends DataObject {
 		return in_array($this->Code, self::get_codes_for_order_steps_to_include());
 	}
 
-	//EMAIL
+
+
+
+
+
+/**************************************************
+* Email
+**************************************************/
 
 	/**
 	 * @var String
@@ -535,6 +542,50 @@ class OrderStep extends DataObject {
 	public function getHasCustomerMessageNice() {
 		return $this->hasCustomerMessage() ?  _t("OrderStep.YES", "Yes") :  _t("OrderStep.NO", "No");
 	}
+
+
+
+
+
+
+/**************************************************
+* Order Status Logs
+**************************************************/
+
+	/**
+	 * The OrderStatusLog that is relevant to the particular step.
+	 * @var String
+	 */
+	protected $relevantLogEntryClassName = "";
+
+	/**
+	 * @return string
+	 */
+	public function getRelevantLogEntryClassName(){
+		return $this->relevantLogEntryClassName;
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setRelevantLogEntryClassName($s){
+		$this->relevantLogEntryClassName = $s;
+	}
+
+	/**
+	 * returns the OrderStatusLog that is relevant to this step.
+	 * @param Order $order
+	 * @return OrderStatusLog
+	 */
+	public function RelevantLogEntry(Order $order){
+		if($className = $this->getRelevantLogEntryClassName()) {
+			return DataObject::get_one($className, "\"OrderID\" = ".$order->ID);
+		}
+	}
+
+
+
+
 
 /**************************************************
 * Silverstripe Standard Data Object Methods
@@ -815,6 +866,18 @@ class OrderStep_Submitted extends OrderStep {
 		"SaveOrderAsJSON" => 0
 	);
 
+	/**
+	 * The OrderStatusLog that is relevant to the particular step.
+	 * @var String
+	 */
+	protected $relevantLogEntryClassName = "OrderStatusLog_Submitted";
+
+	/**
+	 * @return string
+	 */
+	public function getRelevantLogEntryClassName(){
+		return EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
+	}
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -838,7 +901,7 @@ class OrderStep_Submitted extends OrderStep {
 	 **/
 	public function doStep($order) {
 		if(!$order->IsSubmitted()) {
-			$className = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
+			$className = $this->getRelevantLogEntryClassName();
 			if(class_exists($className)) {
 				$obj = new $className();
 				if($obj instanceOf OrderStatusLog) {
@@ -907,7 +970,6 @@ class OrderStep_Submitted extends OrderStep {
 		return $fields;
 	}
 
-
 	/**
 	 * Explains the current order step.
 	 * @return String
@@ -915,7 +977,6 @@ class OrderStep_Submitted extends OrderStep {
 	protected function myDescription(){
 		return _t("OrderStep.SUBMITTED_DESCRIPTION", "The official moment the order gets submitted by the customer. The hand-shake for a commercial transaction.");
 	}
-
 
 }
 
@@ -1128,6 +1189,11 @@ class OrderStep_Confirmed extends OrderStep {
 		"ShowAsInProcessOrder" => 1
 	);
 
+	/**
+	 * @var String
+	 */
+	protected $relevantLogEntryClassName = "OrderStatusLog_PaymentCheck";
+
 	public function initStep($order) {
 		return true;
 	}
@@ -1142,7 +1208,7 @@ class OrderStep_Confirmed extends OrderStep {
 	 *@return DataObject | Null - DataObject = OrderStep
 	 **/
 	public function nextStep($order) {
-		if(DataObject::get_one("OrderStatusLog_PaymentCheck", "\"OrderID\" = ".$order->ID." AND \"PaymentConfirmed\" = 1")) {
+		if(DataObject::get_one($this->getRelevantLogEntryClassName(), "\"OrderID\" = ".$order->ID." AND \"PaymentConfirmed\" = 1")) {
 			return parent::nextStep($order);
 		}
 		return null;
@@ -1283,7 +1349,6 @@ class OrderStep_SentReceipt extends OrderStep {
  * @sub-package: model
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
 class OrderStep_Sent extends OrderStep {
 
 	/**
@@ -1304,6 +1369,11 @@ class OrderStep_Sent extends OrderStep {
 		"ShowAsCompletedOrder" => 1
 	);
 
+	/**
+	 * The OrderStatusLog that is relevant to the particular step.
+	 * @var String
+	 */
+	protected $relevantLogEntryClassName = "OrderStatusLog_DispatchPhysicalOrder";
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -1325,7 +1395,7 @@ class OrderStep_Sent extends OrderStep {
 	 *@return DataObject | Null - DataObject = OrderStep
 	 **/
 	public function nextStep($order) {
-		if(DataObject::get_one("OrderStatusLog_DispatchPhysicalOrder", "\"OrderID\" = ".$order->ID)) {
+		if($this->RelevantLogEntry($order)) {
 			$subject = $this->EmailSubject;
 			$message = "";
 			if($this->SendDetailsToCustomer){
@@ -1348,9 +1418,9 @@ class OrderStep_Sent extends OrderStep {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldSet $fields
-	 *@param Order $order
-	 *@return FieldSet
+	 * @param FieldSet $fields
+	 * @param Order $order
+	 * @return FieldSet
 	 **/
 	function addOrderStepFields(&$fields, $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
@@ -1358,7 +1428,6 @@ class OrderStep_Sent extends OrderStep {
 		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_DispatchPhysicalOrder", $msg),"ActionNextStepManually");
 		return $fields;
 	}
-
 
 	/**
 	 * For some ordersteps this returns true...
