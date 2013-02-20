@@ -71,11 +71,9 @@ class OrderStep extends DataObject {
 	public static $summary_fields = array(
 		"Name" => "Name",
 		"CustomerCanEditNice" => "customer can edit",
-		"CustomerCanPayNice" => "customer can pay",
-		"CustomerCanCancelNice" => "customer can cancel",
-		"ShowAsUncompletedOrderNice" => "show as uncomplete",
-		"ShowAsInProcessOrderNice" => "show as in process",
-		"ShowAsCompletedOrderNice" => "show as complete",
+		"ShowAsUncompletedOrderNice" => "uncomplete",
+		"ShowAsInProcessOrderNice" => "in process",
+		"ShowAsCompletedOrderNice" => "complete",
 		"HideStepFromCustomerNice" => "hide step from customer",
 		"HasCustomerMessageNice" => "includes message to customer"
 	);
@@ -497,7 +495,7 @@ class OrderStep extends DataObject {
 			$orders = DataObject::get(
 				"Order",
 				"\"OrderStep\".\"Sort\" >= ".$this->Sort,
-				"\"OrderStep\".\"Sort\" ASC, RAND() ASC",
+				"\"OrderStep\".\"Sort\" DESC, RAND() ASC",
 				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
 			);
 			if($orders && $orders->count()) {
