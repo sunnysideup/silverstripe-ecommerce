@@ -507,7 +507,8 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 	);
 
 	public static $indexes = array(
-		"DispatchedOn" => true
+		"DispatchedOn" => true,
+		"DispatchTicket" => true
 	);
 
 	public static $searchable_fields = array(

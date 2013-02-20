@@ -790,6 +790,12 @@ class Order extends DataObject {
 		return $obj;
 	}
 
+	/**
+	 * @return OrderStatusLog
+	 */
+	public function RelevantLogEntry(){
+		return $this->MyStep()->RelevantLogEntry($this);
+	}
 
 	/**
 	 * @return DataObject (current OrderStep that can be seen by customer)
@@ -1180,6 +1186,35 @@ class Order extends DataObject {
 /*******************************************************
    * 6. ITEM MANAGEMENT
 *******************************************************/
+
+	/**
+	 * returns a list of Order Attributes by type
+	 *
+	 * @param Array | String $types
+	 * @return ArrayList
+	 */
+	function getOrderAttributesByType($types){
+		if(!is_array($types) && is_string($types)){
+			$types = array($types);
+		}
+		if(!is_array($al)) {
+			user_error("wrong parameter (types) provided in Order::getOrderAttributesByTypes");
+		}
+		$al = new ArrayList();
+		$items = $this->Items();
+		foreach($items as $item) {
+			if(in_array($item->OrderAttributeType(), $types)){
+				$al->push($item);
+			}
+		}
+		$modifiers = $this->Modifiers();
+		foreach($modifiers as $modifier) {
+			if(in_array($modifier->OrderAttributeType(), $types)){
+				$al->push($modifier);
+			}
+		}
+		return $al;
+	}
 
 	/**
 	 * Returns the items of the order.

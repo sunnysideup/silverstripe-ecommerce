@@ -184,6 +184,22 @@ class OrderAttribute extends DataObject {
 	######################
 
 	/**
+	 * This is a key function that returns the type of the
+	 * object.  In principle anything can be returned
+	 * but the intention is to only return a few options
+	 * e.g. OrderItem, Tax, Delivery, etc... so that
+	 * computations can be carried out based on the type of
+	 * OrderAttribute we are looking at.
+	 * It also allows to get a group of Order Attributes that
+	 * contains both modifiers and orderItems.
+	 *
+	 * @return String
+	 */
+	public function OrderAttributeType(){
+		return $this->ClassName;
+	}
+
+	/**
 	 * returns the order - for some unknown reason it seems we need this.
 	 * @return Order | null
 	 */
