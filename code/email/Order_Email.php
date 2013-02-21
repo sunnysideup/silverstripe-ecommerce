@@ -30,7 +30,10 @@ Abstract class Order_Email extends Email {
 		$css = fread($cssFileHandler,  filesize($cssFileLocation));
 		fclose($cssFileHandler);
 		$emogrifier = new Emogrifier($html, $css);
-		return $emogrifier->emogrify();
+		$html = $emogrifier->emogrify();
+		//make links absolute!
+		$html = HTTP::absoluteURLs($html);
+		return $html;
 	}
 
 	/**
