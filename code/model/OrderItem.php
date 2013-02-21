@@ -64,7 +64,7 @@ class OrderItem extends OrderAttribute {
 		'UnitPrice' => 'Currency',
 		'Total' => 'Currency',
 		'InternalItemID' => 'Varchar',
-		'Link' => 'Varchar'
+		'Link' => 'Varchar',
 		'AbsoluteLink' => 'Varchar'
 	);
 
