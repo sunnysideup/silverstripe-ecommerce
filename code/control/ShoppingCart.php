@@ -936,6 +936,7 @@ class ShoppingCart_Controller extends Controller{
 		'removeallitemandedit',
 		'removemodifier',
 		'addmodifier',
+		'copyorder',
 		'deleteorder'
 	);
 
@@ -1061,6 +1062,10 @@ class ShoppingCart_Controller extends Controller{
 
 	static function delete_order_link($orderID, $parameters = array()) {
 		return self::$url_segment.'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
+	}
+
+	static function copy_order_link($orderID, $parameters = array()) {
+		return self::$url_segment.'/copyorder/'.$orderID.'/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1224,9 +1229,17 @@ class ShoppingCart_Controller extends Controller{
 		$this->redirectBack();
 	}
 
+	function copyorder($request) {
+		$orderID = intval($request->param('ID'));
+		if($order = Order::get_by_id_if_can_view($orderID)) {
+			$this->cart->copyOrder($order);
+		}
+		$this->redirectBack();
+	}
+
 	/**
 	 * return number of items in cart
-	 *@return integer
+	 * @return integer
 	 **/
 	function numberofitemsincart() {
 		$order = $this->cart->CurrentOrder();
