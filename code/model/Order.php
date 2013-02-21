@@ -1739,6 +1739,20 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * link to copy order.
+	 * @return String
+	 */
+	function CopyOrderLink(){return $this->getCopyOrderLink();}
+	function getCopyOrderLink() {
+		if($this->canView()) {
+			return ShoppingCart_Controller::copy_order_link($this->ID);
+		}
+		else {
+			return "";
+		}
+	}
+
+	/**
 	 * A "Title" for the order, which summarises the main details (date, and customer) in a string.
 	 * @return String
 	 **/
