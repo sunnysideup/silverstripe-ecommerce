@@ -601,7 +601,7 @@ class ShoppingCart extends Object{
 	 **/
 	public function setRegion($regionID) {
 		$this->currentOrder()->SetRegionFields($regionID);
-		$this->addMessage(_t("Order.REGIONUPDATED", "Region country."),'good');
+		$this->addMessage(_t("Order.REGIONUPDATED", "Region updated."),'good');
 		return true;
 	}
 
@@ -954,6 +954,7 @@ class ShoppingCart_Controller extends Controller{
 		'removeallitemandedit',
 		'removemodifier',
 		'addmodifier',
+		'copyorder',
 		'deleteorder'
 	);
 
@@ -1157,6 +1158,10 @@ class ShoppingCart_Controller extends Controller{
 		return self::$url_segment.'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
 	}
 
+	static function copy_order_link($orderID, $parameters = array()) {
+		return self::$url_segment.'/copyorder/'.$orderID.'/'.self::params_to_get_string($parameters);
+	}
+
 	/**
 	 * @param String $code
 	 * @return String
@@ -1331,6 +1336,14 @@ class ShoppingCart_Controller extends Controller{
 			if($order->canDelete()) {
 				$order->delete();
 			}
+		}
+		$this->redirectBack();
+	}
+
+	function copyorder($request) {
+		$orderID = intval($request->param('ID'));
+		if($order = Order::get_by_id_if_can_view($orderID)) {
+			$this->cart->copyOrder($order);
 		}
 		$this->redirectBack();
 	}

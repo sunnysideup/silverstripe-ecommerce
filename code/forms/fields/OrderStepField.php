@@ -30,7 +30,10 @@ class OrderStepField extends DatalessField {
 			$member = new Member();
 		}
 		$orderSteps = OrderStep::get();
-		if($member && $member->IsShopAdmin) {
+		$where = "\"HideStepFromCustomer\" = 0";
+		$currentStep = $order->CurrentStepVisibleToCustomer();
+		if($member->IsShopAdmin()) {
+			$where = "";
 			$currentStep = $order->MyStep();
 		}
 		else {

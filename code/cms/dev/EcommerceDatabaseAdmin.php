@@ -34,7 +34,7 @@ class MyMigration_EXT extends Extension {
 	);
 
 	//NOTE THAT updateEcommerceDevMenuConfig adds to Config options
-	//but you can als have: updateEcommerceDevMenuDebugActions
+	//but you can als have: updateEcommerceDevMenuDebugActions, or updateEcommerceDevMenuMaintenanceActions
 	function updateEcommerceDevMenuConfig($buildTasks){
 		$buildTasks[] = "mymigration";
 		return $buildTasks;

@@ -1,18 +1,18 @@
 <?php
 
 /**
- * exports all order items
+ * set the order id number.
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class EcommerceTaskExportAllOrderItems extends BuildTask{
+class EcommerceTaskOrderItemsPerCustomer extends BuildTask{
 
 	protected $title = "Export all order items to CSV";
 
-	protected $description = "allows download of all sales items with all details as CSV. Excludes sales made by Admins.";
+	protected $description = "allows download of all sales items with all details as CSV. Excludes sales made by Admins";
 
 	function run($request){
 		//reset time limit
@@ -34,7 +34,9 @@ class EcommerceTaskExportAllOrderItems extends BuildTask{
 				"",
 				"\"Order\".\"ID\" ASC",
 				"	INNER JOIN \"OrderStatusLog\" ON \"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"
-					INNER JOIN \"$orderStatusSubmissionLog\" ON \"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"",
+					INNER JOIN \"$orderStatusSubmissionLog\" ON \"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"
+					LEFT JOIN \"Member\" ON \"Member\".\"ID\" = \"Order\".\"MemberID\"
+				",
 				"$offset, $count"
 		)) {
 			$offset = $offset + $count;

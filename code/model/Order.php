@@ -823,6 +823,12 @@ class Order extends DataObject {
 		return $obj;
 	}
 
+	/**
+	 * @return OrderStatusLog
+	 */
+	public function RelevantLogEntry(){
+		return $this->MyStep()->RelevantLogEntry($this);
+	}
 
 	/**
 	 * @return DataObject (current OrderStep that can be seen by customer)
@@ -1187,12 +1193,15 @@ class Order extends DataObject {
 	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
 	 */
 	public function createReplacementArrayForEmail($message = ""){
+		$step = $this->MyStep();
+		$config = $this->EcomConfig();
 		$replacementArray = array();
+ 		$replacementArray["Subject"] = $step->EmailSubject;
  		$replacementArray["Message"] = $message;
- 		$replacementArray["OrderStepMessage"] = $this->MyStep()->CustomerMessage;
+ 		$replacementArray["OrderStepMessage"] = $step->CustomerMessage;
 		$replacementArray["Order"] = $this;
-		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
-		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		$replacementArray["EmailLogo"] = $config->EmailLogo();
+		$replacementArray["ShopPhysicalAddress"] = $config->ShopPhysicalAddress;
 		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
 		$replacementArray["BaseURL"] = Director::baseURL();
 		return $replacementArray;
@@ -1221,6 +1230,35 @@ class Order extends DataObject {
 /*******************************************************
    * 6. ITEM MANAGEMENT
 *******************************************************/
+
+	/**
+	 * returns a list of Order Attributes by type
+	 *
+	 * @param Array | String $types
+	 * @return ArrayList
+	 */
+	function getOrderAttributesByType($types){
+		if(!is_array($types) && is_string($types)){
+			$types = array($types);
+		}
+		if(!is_array($al)) {
+			user_error("wrong parameter (types) provided in Order::getOrderAttributesByTypes");
+		}
+		$al = new ArrayList();
+		$items = $this->Items();
+		foreach($items as $item) {
+			if(in_array($item->OrderAttributeType(), $types)){
+				$al->push($item);
+			}
+		}
+		$modifiers = $this->Modifiers();
+		foreach($modifiers as $modifier) {
+			if(in_array($modifier->OrderAttributeType(), $types)){
+				$al->push($modifier);
+			}
+		}
+		return $al;
+	}
 
 	/**
 	 * Returns the items of the order.
@@ -1748,6 +1786,20 @@ class Order extends DataObject {
 	function getDeleteLink() {
 		if($this->canDelete()) {
 			return ShoppingCart_Controller::delete_order_link($this->ID);
+		}
+		else {
+			return "";
+		}
+	}
+
+	/**
+	 * link to copy order.
+	 * @return String
+	 */
+	function CopyOrderLink(){return $this->getCopyOrderLink();}
+	function getCopyOrderLink() {
+		if($this->canView()) {
+			return ShoppingCart_Controller::copy_order_link($this->ID);
 		}
 		else {
 			return "";
