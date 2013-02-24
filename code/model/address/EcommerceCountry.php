@@ -233,6 +233,7 @@ class EcommerceCountry extends DataObject {
 		if($country) {
 			return $country->ID;
 		}
+		return 0;
 	}
 
 	/**
