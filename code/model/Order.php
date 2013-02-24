@@ -1152,12 +1152,15 @@ class Order extends DataObject {
 	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
 	 */
 	public function createReplacementArrayForEmail($message = ""){
+		$step = $this->MyStep();
+		$config = $this->EcomConfig();
 		$replacementArray = array();
+ 		$replacementArray["Subject"] = $step->EmailSubject;
  		$replacementArray["Message"] = $message;
- 		$replacementArray["OrderStepMessage"] = $this->MyStep()->CustomerMessage;
+ 		$replacementArray["OrderStepMessage"] = $step->CustomerMessage;
 		$replacementArray["Order"] = $this;
-		$replacementArray["EmailLogo"] = $this->EcomConfig()->EmailLogo();
-		$replacementArray["ShopPhysicalAddress"] = $this->EcomConfig()->ShopPhysicalAddress;
+		$replacementArray["EmailLogo"] = $config->EmailLogo();
+		$replacementArray["ShopPhysicalAddress"] = $config->ShopPhysicalAddress;
 		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
 		$replacementArray["BaseURL"] = Director::baseURL();
 		return $replacementArray;
