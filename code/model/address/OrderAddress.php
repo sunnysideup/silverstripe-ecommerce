@@ -217,16 +217,19 @@ class OrderAddress extends DataObject {
 	protected function getRegionField($name) {
 		if(EcommerceRegion::show()) {
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
-			$title = singleton("EcommerceRegion")->i18n_singular_name();
-			$regionField = new DropdownField($name,$title, $regionsForDropdown);
-			$regionField->setEmptyString(_t("OrderAdress.PLEASE_SELECT_REGION", "--- Select Region ---"));
-			if(count($regionsForDropdown) < 2) {
-				$regionField = $regionField->performReadonlyTransformation();
-				if(count($regionsForDropdown) < 1) {
+			$count = count($regionsForDropdown);
+			if($count< 1) {
 					$regionField = new HiddenField($name, '', 0);
+			}
+			else {
+				$regionField = new DropdownField($name,EcommerceRegion::i18n_singular_name(), $regionsForDropdown);
+				if($count < 2) {
+					$regionField = $regionField->performReadonlyTransformation();
+				}
+				else {
+					$regionField->setEmptyString(_t("OrderAdress.PLEASE_SELECT_REGION", "--- Select Region ---"));
 				}
 			}
-
 		}
 		else {
 			//adding region field here as hidden field to make the code easier below...
@@ -624,6 +627,22 @@ class OrderAddress extends DataObject {
 		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
+	/**
+	 * standard SS Method
+	 * saves the region code
+	 */
+	function onBeforeWrite(){
+		parent::onBeforeWrite();
+		$fieldPrefix = $this->fieldPrefix();
+		$idField = $fieldPrefix . "RegionID";
+		if($this->$idField) {
+			$region = DataObject::get_by_id("EcommerceRegion", $this->$idField);
+			if($region) {
+				$codeField = $fieldPrefix."RegionCode";
+				$this->$codeField = $region->Code;
+			}
+		}
+	}
 
 }
 

@@ -63,7 +63,9 @@ class OrderItem extends OrderAttribute {
 	public static $casting = array(
 		'UnitPrice' => 'Currency',
 		'Total' => 'Currency',
-		'InternalItemID' => 'Varchar'
+		'InternalItemID' => 'Varchar',
+		'Link' => 'Varchar',
+		'AbsoluteLink' => 'Varchar'
 	);
 
 	######################
@@ -573,6 +575,14 @@ class OrderItem extends OrderAttribute {
 				return $item->Link();
 			}
 		}
+	}
+
+	/**
+	 *
+	 * @return String
+	 */
+	function AbsoluteLink(){
+		return Director::absoluteURL($this->Link());
 	}
 
 	/**

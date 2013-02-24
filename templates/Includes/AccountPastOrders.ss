@@ -23,7 +23,7 @@
 			<tr>
 				<td class="left">
 					<a href="$Link" class="view">$Title</a>
-					<a href="$CopyOrderLink" class="copy">copy</a>
+					<% if CopyOrderLink %><a href="$CopyOrderLink" class="copy" title="<% _t("Account.COPY", "Copy") %>">copy</a><% end_if %>
 				</td>
 				<td class="left">$CustomerStatus
 					<% if DeleteLink %><br /><a href="$DeleteLink"><% _t("Account.REMOVE","remove") %></a><% end_if %>
