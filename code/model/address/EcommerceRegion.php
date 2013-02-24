@@ -122,20 +122,20 @@ class EcommerceRegion extends DataObject {
 	 * @param String $code - e.g. NZ, NSW, or CO
 	 * @return Boolean
 	 */
-	public static function code_allowed($code) {
-		return array_key_exists($code, self::list_of_allowed_entries_for_dropdown());
+	public static function regionid_allowed($regionID) {
+		return array_key_exists($regionID, self::list_of_allowed_entries_for_dropdown());
 	}
 
 	/**
 	 * converts a code into a proper title
-	 * @param $code String (Code)
+	 * @param Int $regionID (Code)
 	 * @return String ( name)
 	 */
-	public static function find_title($code) {
+	public static function find_title($regionID) {
 		$options = self::get_default_array();
 		// check if code was provided, and is found in the country array
-		if($options && isset($options[$code])) {
-			return $options[$code];
+		if($options && isset($options[$regionID])) {
+			return $options[$regionID];
 		}
 		else {
 			return "";
@@ -144,14 +144,18 @@ class EcommerceRegion extends DataObject {
 
 	/**
 	 * This function returns back the default list of regions, filtered by the currently selected country.
-	 * @return Array - array of CountryCode => Country
+	 * @return Array - array of Region.ID => Region.Name
 	 **/
 	protected static function get_default_array() {
 		$defaultArray = array();
-		$regions = DataObject::get("EcommerceRegion", "\"DoNotAllowSales\" <> 1 AND \"CountryID\"  = '".EcommerceCountry::get_country_id()."'");
+		$defaultRegion = EcommerceCountry::get_country_id();
+		if($defaultRegion) {
+			$defaultRegionWhere = "AND \"CountryID\"  = '".$defaultRegion."'";
+		}
+		$regions = DataObject::get("EcommerceRegion", "\"DoNotAllowSales\" <> 1 ".$defaultRegionWhere);
 		if($regions) {
 			foreach($regions as $region) {
-				$defaultArray[$region->Code] = $region->Name;
+				$defaultArray[$region->ID] = $region->Name;
 			}
 		}
 		return $defaultArray;
@@ -168,16 +172,16 @@ class EcommerceRegion extends DataObject {
 		$onlyShow = self::get_for_current_order_only_show_regions();
 		$doNotShow = self::get_for_current_order_do_not_show();
 		if(is_array($onlyShow) && count($onlyShow)) {
-			foreach($defaultArray as $key => $value) {
-				if(!in_array($key, $onlyShow)) {
-					unset($defaultArray[$key]);
+			foreach($defaultArray as $id => $value) {
+				if(!in_array($id, $onlyShow)) {
+					unset($defaultArray[$id]);
 				}
 			}
 		}
 		if(is_array($doNotShow) && count($doNotShow)) {
-			foreach($doNotShow as $code) {
-				if(isset($defaultArray[$code])) {
-					unset($defaultArray[$code]);
+			foreach($doNotShow as $id) {
+				if(isset($defaultArray[$id])) {
+					unset($defaultArray[$id]);
 				}
 			}
 		}
@@ -228,11 +232,7 @@ class EcommerceRegion extends DataObject {
 		if(!$regionID) {
 			$regionArray = self::list_of_allowed_entries_for_dropdown();
 			if(is_array($regionArray) && count($regionArray)) {
-				foreach($regionArray as $regionCode => $regionName) {
-					//we stop at the first one... as we have no idea which one is the best.
-					if($region = DataObject::get_one("EcommerceRegion", "\"Code\" = '$regionCode'")) {
-						$regionID = $region->ID;
-					}
+				foreach($regionArray as $regionID => $regionName) {
 					break;
 				}
 			}

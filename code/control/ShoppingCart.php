@@ -588,7 +588,7 @@ class ShoppingCart extends Object{
 	 **/
 	public function setRegion($regionID) {
 		$this->currentOrder()->SetRegionFields($regionID);
-		$this->addMessage(_t("ShoppingCart.REGIONUPDATED", "Region country."),'good');
+		$this->addMessage(_t("ShoppingCart.REGIONUPDATED", "Region updated."),'good');
 		return true;
 	}
 
@@ -1181,7 +1181,8 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	/**
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param SS_HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 **/
 	function setregion($request) {
 		$regionID = intval($request->param('ID'));
@@ -1190,8 +1191,8 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	/**
-	 * @param HTTP_Request
-	 *@return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
+	 * @param SS_HTTPRequest
+	 * @return Mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData(); If it is not AJAX it redirects back to requesting page.
 	 **/
 	function setcurrency($request) {
 		$currencyCode = Convert::raw2sql($request->param('ID'));
