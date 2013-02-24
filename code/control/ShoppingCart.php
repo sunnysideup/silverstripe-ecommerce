@@ -587,9 +587,15 @@ class ShoppingCart extends Object{
 	 * @return Boolean
 	 **/
 	public function setRegion($regionID) {
-		$this->currentOrder()->SetRegionFields($regionID);
-		$this->addMessage(_t("ShoppingCart.REGIONUPDATED", "Region updated."),'good');
-		return true;
+		if(EcommerceRegion::regionid_allowed($regionID)) {
+			$this->currentOrder()->SetRegionFields($regionID);
+			$this->addMessage(_t("ShoppingCart.REGIONUPDATED", "Region updated."),'good');
+			return true;
+		}
+		else {
+			$this->addMessage(_t("ORDER.NOTUPDATEDREGION", "Could not update region."),'bad');
+			return false;
+		}
 	}
 
 	/**
