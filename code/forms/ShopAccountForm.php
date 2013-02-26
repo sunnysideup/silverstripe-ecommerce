@@ -57,6 +57,7 @@ class ShopAccountForm extends Form {
 			}
 			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
 			$passwordFieldCheck = new PasswordField('PasswordCheck', _t('Account.PASSWORDCHECK','Password (repeat)'));
+			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
 			$fields->push($passwordField);
 			$fields->push($passwordFieldCheck);
 			$actions = new FieldSet(
