@@ -500,13 +500,11 @@ class OrderStep extends DataObject {
 	 */
 	protected function testEmailLink(){
 		if($this->getEmailClassName()) {
-			$orders = DataObject::get(
-				"Order",
-				"\"OrderStep\".\"Sort\" >= ".$this->Sort,
-				"IF(\"OrderStep\".\"Sort\" > ".$this->Sort.", 0, 1) ASC, \"OrderStep\".\"Sort\" ASC, RAND() ASC",
-				"INNER JOIN \"OrderStep\" ON \"OrderStep\".\"ID\" = \"Order\".\"StatusID\""
-			);
-			if($orders && $orders->count()) {
+			$orders = Order::get()
+				->where("\"OrderStep\".\"Sort\" >= ".$this->Sort)
+				->sort("IF(\"OrderStep\".\"Sort\" > ".$this->Sort.", 0, 1) ASC, \"OrderStep\".\"Sort\" ASC, RAND() ASC")
+				->innerJoin("OrderStep", "\"OrderStep\".\"ID\" = \"Order\".\"StatusID\"");
+			if($orders->count()) {
 				if($order = $orders->First()) {
 					return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false, $alternativeOrderStepID = $this->ID);
 				}
@@ -1262,7 +1260,7 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 	 * @param Order object
 	 * @return Boolean - true if the current step is ready to be run...
 	 **/
-	public function initStep($order) {
+	public function initStep(Order $order) {
 		return true;
 	}
 

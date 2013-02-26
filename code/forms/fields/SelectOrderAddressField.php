@@ -47,7 +47,7 @@ class SelectOrderAddressField extends OptionsetField {
 			}
 		}
 		Requirements::javascript("ecommerce/javascript/EcomSelectOrderAddressField.js");
-		Requirements::customScript($js, "Update_".$this->Name());
+		Requirements::customScript($js, "Update_".$this->getName());
 		return parent::Field();
 	}
 

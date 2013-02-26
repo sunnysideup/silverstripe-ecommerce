@@ -1,6 +1,6 @@
 <% include Order_ConfirmCountry %>
 
-<table id="InformationTable" class="editable" cellspacing="0" cellpadding="0" summary="<% _t("Order.TABLESUMMARY","The contents of your cart are displayed in this form and summary of all fees associated with an order and a rundown of payments options.") %>">
+<table id="InformationTable" class="editable">
 	<thead>
 		<tr>
 			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
@@ -30,10 +30,10 @@
 	<% end_loop %>
 <% end_if %>
 		<tr class="cartMessage">
-			<td colspan="5" scope="row" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
+			<td colspan="5" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
 		</tr>
 		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
-			<td colspan="5" scope="row" class="center">
+			<td colspan="5" class="center">
 				$DisplayPage.NoItemsInOrderMessage
 			</td>
 		</tr>

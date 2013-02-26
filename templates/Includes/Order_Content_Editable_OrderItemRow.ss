@@ -1,5 +1,5 @@
 <tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
-	<td class="product title" scope="row">
+	<td class="product title">
 		<% if Buyable %><% loop Buyable %><% include ProductGroupItemImageThumb %><% end_loop %><% end_if %>
 		<div class="itemTitleAndSubTitle">
 			<% if Link %>

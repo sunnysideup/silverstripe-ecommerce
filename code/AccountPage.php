@@ -160,11 +160,19 @@ class AccountPage extends Page {
 	 * @return DataList (Orders)
 	 */
 	protected function pastOrdersSelection(){
-		return Order::get()
-			->where(
-				"\"Order\".\"MemberID\" = ".intval(Member::currentUserID())."
-				AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)")
-			->innerJoin("OrderStep", "\"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
+		$memberID = intval(Member::currentUserID());
+		if(!$memberID) {
+			//set t
+			$memberID = RAND(0, 1000000) * -1;
+		}
+		if($memberID) {
+			return Order::get()
+				->where(
+					"\"Order\".\"MemberID\" = ".$memberID."
+					AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)")
+				->innerJoin("OrderStep", "\"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
+		}
+		return 0;
 	}
 
 	/**
@@ -189,7 +197,7 @@ class AccountPage_Controller extends Page_Controller {
 	 **/
 	function init() {
 		parent::init();
-		if(!$this->AccountMember()) {
+		if(!$this->AccountMember() && 1 == 2) {
 			$messages = array(
 				'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
 				'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.')
