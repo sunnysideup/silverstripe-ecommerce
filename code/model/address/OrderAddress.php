@@ -415,6 +415,7 @@ class OrderAddress extends DataObject {
 		$fieldPrefix = $this->fieldPrefix();
 		if($member && $member->exists()) {
 			$oldAddress = $member->previousOrderAddress($this->baseClassLinkingToOrder(), $this->ID);
+			print_r($oldAddress);
 			if($oldAddress) {
 				$fieldNameArray = $this->getFieldNameArray($fieldPrefix);
 				foreach($fieldNameArray as $field) {
