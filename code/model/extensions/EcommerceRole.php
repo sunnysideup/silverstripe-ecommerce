@@ -184,20 +184,33 @@ class EcommerceRole extends DataExtension {
 	 * @return FieldList
 	 */
 	function getEcommerceFields() {
-		Requirements::javascript('ecommerce/javascript/EcomOrderFormPassword.js');
-		$passwordField = new PasswordField('Password', _t('Account.CREATEPASSWORD','Create Account (enter password)'));
+		Requirements::javascript('ecommerce/javascript/EcomPasswordField.js');
 		if($this->owner->exists()) {
 			if($this->owner->Password) {
-				$passwordField = new PasswordField('Password', _t('Account.UPDATEPASSWORD','Update Password'));
+				$new =
+				$passwordField = new PasswordField('Password', _t('Account.NEW_PASSWORD','New Password'));
+				$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
+				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\" class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
 			}
+			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3);
 		}
-		$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.UPDATEPASSWORD','Confirm Password'));
-		//$passwordField->minLength = 7;
+		else {
+			$loginDetailsHeader = new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account'), 3);
+		}
+		if(empty($passwordField)) {
+			$passwordField = new PasswordField('Password', _t('Account.CREATE_PASSWORD','Create Account (enter password)'));
+			$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.CONFIRM_PASSWORD','Confirm Password'));
+		}
+		if(empty($updatePasswordLinkField)) {
+			$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "");
+		}
 		$fields = new FieldList(
 			new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
 			new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
 			new TextField('Surname', _t('EcommerceRole.SURNAME','Surname')),
+			$loginDetailsHeader,
 			new EmailField('Email', _t('EcommerceRole.EMAIL','Email')),
+			$updatePasswordLinkField,
 			$passwordField,
 			$passwordDoubleCheckField
 		);
@@ -313,17 +326,19 @@ class EcommerceRole extends DataExtension {
 			}
 			$addresses = $type::get()
 				->where(
-					"Obsolete = 0 AND \"Order\".\"MemberID\" = ".$this->owner->ID
+					"\"Obsolete\" = 0 AND \"Order\".\"MemberID\" = ".$this->owner->ID
 				)
 				->sort("LastEdited", "DESC")
 				->exclude(array("ID" => $excludeID))
-				->limit($limit)
+				//->limit($limit)
 				->innerJoin("Order", "\"Order\".\"".$fieldName."\" = \"".$type."\".\"ID\"");
 			if($keepDoubles) {
-				//do nothing
+				foreach($addresses as $address) {
+					$returnArrayList->push($address);
+				}
 			}
 			else {
-				if($addresses->count() > 1) {
+				if($addresses->count()) {
 					$addressCompare = array();
 					foreach($addresses as $address) {
 						$comparisonString = $address->comparisonString();

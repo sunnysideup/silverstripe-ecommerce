@@ -21,7 +21,6 @@ class ShopAccountForm extends Form {
 		$requiredFields = null;
 		if($member && $member->exists()) {
 			$fields = $member->getEcommerceFields();
-			$fields->push(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3));
 			$clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
 			$loginField = new ReadonlyField(
 				'LoggedInAsNote',
@@ -32,7 +31,6 @@ class ShopAccountForm extends Form {
 			);
 			$loginField->dontEscape = true;
 			$fields->push($loginField);
-
 			$actions = new FieldList(
 				new FormAction('submit', _t('Account.SAVE','Save Changes'))
 			);
@@ -45,7 +43,6 @@ class ShopAccountForm extends Form {
 		else {
 			$member = new Member();
 			$fields = new FieldList();
-			$fields->push(new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account')));
 			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
 			$memberFields = $member->getEcommerceFields();
 			if($memberFields) {
