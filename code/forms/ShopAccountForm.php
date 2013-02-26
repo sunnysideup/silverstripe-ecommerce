@@ -21,7 +21,7 @@ class ShopAccountForm extends Form {
 		$requiredFields = null;
 		if($member && $member->exists()) {
 			$fields = $member->getEcommerceFields(true);
-			$fields->push(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3));
+			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
 			$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
 			$loginField = new ReadonlyField(
 				'LoggedInAsNote',
