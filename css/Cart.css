@@ -38,6 +38,8 @@ td div.itemTitleAndSubTitle { margin-left: 90px;}
 .inCart .goToCheckoutLink {display: block!important;}
 
 .productItem .productActions li {text-align: center;}
+.productItem .productActions li.removeLink {text-align: left;}
+.productItem .productActions li.removeLink a {display: inline;}
 
 /*
 even when theme-ing ecommerce, these should not be themed

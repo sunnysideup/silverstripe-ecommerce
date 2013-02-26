@@ -17,8 +17,8 @@
 	<% if StepsContentBelow(1) %><p class="below headerFooterDescription">$StepsContentBelow(1)</p><% end_if %>
 
 	<% if HasCheckoutSteps %>
-	<div class="checkoutStepPrevNextHolder next Actions">
-		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action"><% _t("NEXT","next") %></a>
+	<div class="checkoutStepPrevNextHolder next">
+		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("NEXT","next") %></a>
 	</div>
 	<% end_if %>
 
@@ -31,8 +31,8 @@
 <div id="OrderFormAddressOuter" class="checkoutStep">
 
 	<% if HasCheckoutSteps %>
-	<div class="checkoutStepPrevNextHolder prev Actions">
-		<a href="{$Link}checkoutstep/orderitems/#OrderItemsOuter" class="action"><% _t("GOBACK","go back") %></a>
+	<div class="checkoutStepPrevNextHolder prev">
+		<a href="{$Link}checkoutstep/orderitems/#OrderItemsOuter" class="action btn"><% _t("GOBACK","go back") %></a>
 	</div>
 	<% end_if %>
 
@@ -59,12 +59,12 @@
 <div id="OrderConfirmationAndPayment" class="checkoutStep">
 
 	<% if HasCheckoutSteps %>
-	<div class="checkoutStepPrevNextHolder prev Actions">
-		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action"><% _t("GOBACK","go back") %></a>
+	<div class="checkoutStepPrevNextHolder prev">
+		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("GOBACK","go back") %></a>
 	</div>
 	<% else %>
-	<div class="checkoutStepPrevNextHolder prev Actions">
-		<a href="{$Link}" class="action"><% _t("GOBACK","go back") %></a>
+	<div class="checkoutStepPrevNextHolder prev">
+		<a href="{$Link}" class="action btn"><% _t("GOBACK","go back") %></a>
 	</div>
 	<% end_if %>
 
