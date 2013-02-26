@@ -152,7 +152,7 @@ class EcommerceRegion extends DataObject {
 	protected static function get_default_array() {
 		$defaultArray = array();
 		$regions = EcommerceRegion::get()
-			->Exclude(array("DoNotAllowSales" => 1))
+			->Exclude(array("DoNotAllowSales" => 1));
 		$defaultRegion = EcommerceCountry::get_country_id();
 		if($defaultRegion) {
 			$regions = $regions->Filter(array("CountryID" => EcommerceCountry::get_country_id()));

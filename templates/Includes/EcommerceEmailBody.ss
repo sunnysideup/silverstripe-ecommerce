@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="EmailContent" style="margin: 20px">
-	<table id="Content" cellspacing="0" cellpadding="0" summary="Email Information">
+	<table id="Content">
 		<thead>
 
 			<tr class="shopAddress">

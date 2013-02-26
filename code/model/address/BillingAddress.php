@@ -183,24 +183,16 @@ class BillingAddress extends OrderAddress {
 		if($member) {
 			if($member->exists()) {
 				$this->FillWithLastAddressFromMember($member, true);
-				$addresses = $this->previousAddressesFromMember($member);
+				$addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
 				//we want MORE than one here not just one.
 				if($addresses->count() > 1) {
 					$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
 				}
 			}
-			$billingFields = new CompositeField(
-				new EmailField('Email', _t('OrderAddress.EMAIL','Email')),
-				new TextField('FirstName', _t('OrderAddress.FIRSTNAME','First Name')),
-				new TextField('Surname', _t('OrderAddress.SURNAME','Surname'))
-			);
+			$billingFields = new CompositeField();
 		}
 		else {
-			$billingFields = new CompositeField(
-				new EmailField('Email', _t('OrderAddress.EMAIL','Email')),
-				new TextField('FirstName', _t('OrderAddress.FIRSTNAME','First Name')),
-				new TextField('Surname', _t('OrderAddress.SURNAME','Surname'))
-			);
+			$billingFields = new CompositeField();
 		}
 		//$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));

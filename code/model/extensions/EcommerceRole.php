@@ -110,6 +110,7 @@ class EcommerceRole extends DataExtension {
 
 	/**
 	 * Update the CMS Fields
+	 * for /admin/security
 	 *
 	 * @param FieldList $fields
 	 * @return FieldList
@@ -182,18 +183,24 @@ class EcommerceRole extends DataExtension {
 	 * @param Boolean $additionalFields: add extra fields.
 	 * @return FieldList
 	 */
-	function getEcommerceFields($additionalFields = false) {
-		if($additionalFields) {
-			$fields = new FieldList(
-				new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
-				new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
-				new TextField('Surname', _t('EcommerceRole.SURNAME','Surname')),
-				new EmailField('Email', _t('EcommerceRole.EMAIL','Email'))
-			);
+	function getEcommerceFields() {
+		Requirements::javascript('ecommerce/javascript/EcomOrderFormPassword.js');
+		$passwordField = new PasswordField('Password', _t('Account.CREATEPASSWORD','Create Account (enter password)'));
+		if($this->owner->exists()) {
+			if($this->owner->Password) {
+				$passwordField = new PasswordField('Password', _t('Account.UPDATEPASSWORD','Update Password'));
+			}
 		}
-		else {
-			$fields = new FieldList();
-		}
+		$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.UPDATEPASSWORD','Confirm Password'));
+		//$passwordField->minLength = 7;
+		$fields = new FieldList(
+			new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
+			new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
+			new TextField('Surname', _t('EcommerceRole.SURNAME','Surname')),
+			new EmailField('Email', _t('EcommerceRole.EMAIL','Email')),
+			$passwordField,
+			$passwordDoubleCheckField
+		);
 		$this->owner->extend('augmentEcommerceFields', $fields);
 		return $fields;
 	}
@@ -206,12 +213,39 @@ class EcommerceRole extends DataExtension {
 	 */
 	function getEcommerceRequiredFields() {
 		$fields = array(
-			'Email',
 			'FirstName',
-			'Surname'
+			'Surname',
+			'Email',
 		);
+		$passwordFieldIsRequired = true;
+		if($this->owner->exists()) {
+			if($this->owner->password) {
+				$passwordFieldIsRequired = false;
+			}
+			else {
+				if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
+					$passwordFieldIsRequired = false;
+				}
+			}
+		}
+		if($passwordFieldIsRequired) {
+			$fields[] = "Password";
+			$fields[] = "PasswordDoubleCheck";
+		}
 		$this->owner->extend('augmentEcommerceRequiredFields', $fields);
 		return $fields;
+	}
+
+	/**
+	 *
+	 * can be run $form->loadDataFrom($member);
+	 * @param Fieldlist
+	 * @return FieldList
+	 */
+	function afterLoadDataFrom(FieldList $fieldList) {
+		if($passwordField = $fieldList->dataFieldByName("Password")) {
+			$passwordField->setValue("");
+		}
 	}
 
 	/**
@@ -259,6 +293,67 @@ class EcommerceRole extends DataExtension {
 			}
 		}
 	}
+
+	/**
+	 * Finds previous addresses from the member of the current address
+	 *
+	 * @param String $type
+	 * @param Int $excludeID - the ID of the record to exlcude (if any)
+	 * @param Boolean $onlyLastRecord - only select one
+	 * @param Boolean $keepDoubles - keep addresses that are the same (if set to false, only unique addresses are returned)
+	 * @return ArrayList (BillingAddresses | ShippingAddresses)
+	 **/
+	public function previousOrderAddresses($type = "BillingAddress", $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false) {
+		$returnArrayList = new ArrayList();
+		if($this->owner->exists()) {
+			$fieldName = $type."ID";
+			$limit = 99999;
+			if($onlyLastRecord) {
+				$limit = 1;
+			}
+			$addresses = $type::get()
+				->where(
+					"Obsolete = 0 AND \"Order\".\"MemberID\" = ".$this->owner->ID
+				)
+				->sort("LastEdited", "DESC")
+				->exclude(array("ID" => $excludeID))
+				->limit($limit)
+				->innerJoin("Order", "\"Order\".\"".$fieldName."\" = \"".$type."\".\"ID\"");
+			if($keepDoubles) {
+				//do nothing
+			}
+			else {
+				if($addresses->count() > 1) {
+					$addressCompare = array();
+					foreach($addresses as $address) {
+						$comparisonString = $address->comparisonString();
+						if(in_array($comparisonString, $addressCompare)) {
+							//do nothing
+						}
+						else {
+							$addressCompare[$address->ID] = $comparisonString;
+							$returnArrayList->push($address);
+						}
+					}
+				}
+			}
+		}
+		return $returnArrayList;
+	}
+
+	/**
+	 * Finds the last address used by this member
+	 * @param String $type
+	 * @param Int $excludeID - the ID of the record to exlcude (if any)
+	 * @return Null | ShippingAddress | BillingAddress | another type
+	 **/
+	public function previousOrderAddress($type = "BillingAddress", $excludeID = 0) {
+		$addresses = $this->previousOrderAddresses($type, $excludeID, true, false);
+		if($addresses->count()) {
+			return $addresses->First();
+		}
+	}
+
 
 }
 

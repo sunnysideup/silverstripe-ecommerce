@@ -20,20 +20,19 @@ class ShopAccountForm extends Form {
 		$member = Member::currentUser();
 		$requiredFields = null;
 		if($member && $member->exists()) {
-			$fields = $member->getEcommerceFields(true);
+			$fields = $member->getEcommerceFields();
 			$fields->push(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3));
-			$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
+			$clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
 			$loginField = new ReadonlyField(
 				'LoggedInAsNote',
 				_t("Account.LOGGEDIN", "You are currently logged in as "),
 				Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname) .', '
-					.'<a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?').
+					.'<a href="'.$clearCartAndLogoutLink.'">'._t('Account.LOGOUT','Log out now?').
 					"</a>"
 			);
 			$loginField->dontEscape = true;
 			$fields->push($loginField);
-			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
-			$fields->push($passwordField);
+
 			$actions = new FieldList(
 				new FormAction('submit', _t('Account.SAVE','Save Changes'))
 			);
@@ -48,20 +47,17 @@ class ShopAccountForm extends Form {
 			$fields = new FieldList();
 			$fields->push(new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account')));
 			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
-			$memberFields = $member->getEcommerceFields(true);
+			$memberFields = $member->getEcommerceFields();
 			if($memberFields) {
 				foreach($memberFields as $memberField) {
 					$fields->push($memberField);
 				}
 			}
-			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
-			$passwordFieldCheck = new PasswordField('PasswordCheck', _t('Account.PASSWORDCHECK','Password (repeat)'));
-			$fields->push($passwordField);
-			$fields->push($passwordFieldCheck);
 			$actions = new FieldList(
 				new FormAction('creatememberandaddtoorder', _t('Account.SAVE','Create Account'))
 			);
 		}
+
 
 		$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
@@ -69,13 +65,10 @@ class ShopAccountForm extends Form {
 		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
 		if($this->extend('updateActions',$actions) !== null) {$this->setActions($actions);}
 		if($this->extend('updateValidator',$requiredFields) !== null) {$this->setValidator($requiredFields);}
-		if($member && $member->Password ){
+		if($member){
 			$this->loadDataFrom($member);
 		}
-		if(!isset($_REQUEST["Password"])) {
-			$this->Fields()->fieldByName("Password")->canBeEmpty = true;
-			$this->Fields()->fieldByName("Password")->setValue("");
-		}
+		$member->afterLoadDataFrom($this->Fields());
 		$this->extend('updateShopAccountForm',$this);
 	}
 
@@ -185,16 +178,16 @@ class ShopAccountForm_Validator extends RequiredFields{
 			}
 		}
 		// check password fields are the same before saving
-		if(isset($data["Password"]["_Password"]) && isset($data["Password"]["_ConfirmPassword"])) {
-			if($data["Password"]["_Password"] != $data["Password"]["_ConfirmPassword"]) {
+		if(isset($data["Password"]) && isset($data["PasswordDoubleCheck"])) {
+			if($data["Password"] != $data["PasswordDoubleCheck"]) {
 				$this->validationError(
-					"Password",
+					"PasswordDoubleCheck",
 					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
 					"required"
 				);
 				$valid = false;
 			}
-			if(!$loggedInMember && !$data["Password"]["_Password"]) {
+			if(!$loggedInMember && !$data["Password"]) {
 				$this->validationError(
 					"Password",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
@@ -204,16 +197,17 @@ class ShopAccountForm_Validator extends RequiredFields{
 			}
 		}
 		//password for new user
-		if(isset($data["PasswordCheck"]) && isset($data["Password"])) {
-			if($data["PasswordCheck"] != $data["Password"]) {
+		if(isset($data["Password"]) && isset($data["PasswordDoubleCheck"])) {
+			if($data["Password"] != $data["PasswordDoubleCheck"]) {
 				$this->validationError(
-					"Password",
+					"PasswordDoubleCheck",
 					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
 					"required"
 				);
 				$valid = false;
 			}
-			if(strlen($data["Password"]) < 7 ) {
+			$letterCount = strlen($data["Password"]);
+			if($letterCount > 0 && $letterCount < 7) {
 				$this->validationError(
 					"Password",
 					_t('Account.PASSWORDMINIMUMLENGTH', 'Please enter a password of at least seven characters.'),

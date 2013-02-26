@@ -286,8 +286,8 @@ class OrderAddress extends DataObject {
 	 * @param Integer -  RegionID
 	 **/
 	public function SetRegionFields($regionID) {
-		$this->RegionID = $regionID;
-		$this->ShippingRegionID = $regionID;
+		$regionField =  $this->fieldPrefix()."RegionID";
+		$this->$regionField = $regionID;
 		$this->write();
 	}
 
@@ -298,8 +298,8 @@ class OrderAddress extends DataObject {
 	 * @param String - CountryCode - e.g. NZ
 	 */
 	public function SetCountryFields($countryCode) {
-		$this->Country = $countryCode;
-		$this->ShippingCountry = $countryCode;
+		$countryField =  $this->fieldPrefix()."Country";
+		$this->$countryField = $countryCode;
 		$this->write();
 	}
 
@@ -333,7 +333,7 @@ class OrderAddress extends DataObject {
 	 * returns a string that can be used to find out if two addresses are the same.
 	 * @return String
 	 */
-	protected function comparisonString(){
+	public function comparisonString(){
 		$comparisonString = "";
 		$excludedFields = array("ID", "OrderID");
 		$fields = $this->stat("db");
@@ -414,7 +414,7 @@ class OrderAddress extends DataObject {
 		$excludedFields = array("ID", "OrderID");
 		$fieldPrefix = $this->fieldPrefix();
 		if($member && $member->exists()) {
-			$oldAddress = $this->lastAddressFromMember($member);
+			$oldAddress = $member->previousOrderAddress($this->baseClassLinkingToOrder(), $this->ID);
 			if($oldAddress) {
 				$fieldNameArray = $this->getFieldNameArray($fieldPrefix);
 				foreach($fieldNameArray as $field) {
@@ -430,7 +430,7 @@ class OrderAddress extends DataObject {
 			$fieldNameArray = array("FirstName" => $fieldPrefix."FirstName", "Surname" => $fieldPrefix."Surname");
 			foreach($fieldNameArray as $memberField => $fieldName) {
 				//NOTE, we always override the Billing Address (which does not have a fieldPrefix)
-				if(!$this->$fieldName || $this instanceOf BillingAddress) {$this->$fieldName = $member->$memberField;}
+				if(!$this->$fieldName || ($this instanceOf BillingAddress)) {$this->$fieldName = $member->$memberField;}
 			}
 		}
 		if($write) {
@@ -439,118 +439,6 @@ class OrderAddress extends DataObject {
 		return $this;
 	}
 
-	/**
-	 * Finds the last address used by this member
-	 * @param Object (Member)
-	 * @return Null | DataObject (ShippingAddress / BillingAddress)
-	 **/
-	protected function lastAddressFromMember(Member $member = null) {
-		$addresses = $this->previousAddressesFromMember($member, true);
-		if($addresses->count()) {
-			return $addresses->First();
-		}
-	}
-
-	/**
-	 * Finds the last order used by this member
-	 * @param Object (Member)
-	 * @return Null | DataObject (Order)
-	 **/
-	protected function lastOrderFromMember(Member $member = null) {
-		$orders = $this->previousOrdersFromMember($member, true);
-		if($orders->count()) {
-			return $orders->First();
-		}
-	}
-
-
-	/**
-	 * Finds previous addresses from the member of the current address
-	 *
-	 * @param Member $member
-	 * @param Boolean $onlyLastRecord - only select one
-	 * @param Boolean $keepDoubles - keep addresses that are the same (if set to false, only unique addresses are returned)
-	 * @return ArrayList (BillingAddresses | ShippingAddresses)
-	 **/
-	protected function previousAddressesFromMember(Member $member = null, $onlyLastRecord = false, $keepDoubles = false) {
-		$returnArrayList = new ArrayList();
-		$orders = $this->previousOrdersFromMember($member, $onlyLastRecord);
-		if($orders->count()) {
-			$fieldName = $this->ClassName."ID";
-			$array = $orders->map($fieldName, $fieldName);
-			if(is_array($array) && count($array)) {
-				$limit = null;
-				if($onlyLastRecord) {
-					$limit = 1;
-				}
-				$className = $this->ClassName;
-				$addresses = $className::get()
-					->filter(array(
-						"ID" => $array,
-						"Obsolete" => 0
-					))
-					->sort("LastEdited", "DESC")
-					//WHY ??? Do we include Orders here as Inner Join?
-					->innerJoin("Order", "\"Order\".\"$fieldName\" = \"".$this->ClassName."\".\"ID\"");
-				if($addresses->count()) {
-					$addressCompare = array();
-					foreach($addresses as $address) {
-						$comparisonString = $address->comparisonString();
-						if((in_array($comparisonString, $addressCompare)) && (!$keepDoubles)) {
-
-						}
-						else {
-							$addressCompare[$address->ID] = $comparisonString;
-							$returnArrayList = $returnArrayList->push($address);
-						}
-					}
-				}
-			}
-		}
-		return $returnArrayList;
-	}
-
-	/**
-	 * make an address obsolete and include all the addresses that are identical.
-	 * @param Member $member
-	 */
-	public function MakeObsolete(Member $member = null){
-		$addresses = $this->previousAddressesFromMember($member, $onlyLastRecord = false, $includeDoubles = true);
-		$comparisonString = $this->comparisonString();
-		if($addresses->count()) {
-			foreach($addresses as $address) {
-				if($address->comparisonString() == $comparisonString) {
-					$address->Obsolete = 1;
-					$address->write();
-				}
-			}
-		}
-		$this->Obsolete = 1;
-		$this->write();
-	}
-
-	/**
-	 * Finds previous orders from the member of the current address
-	 *
-	 * @param Member $member
-	 * @param Boolean $onlyLastRecord - only return the last Order from Member (still returns DataList)
-	 * @return DataList
-	 **/
-	protected function previousOrdersFromMember(Member $member = null, $onlyLastRecord = false) {
-		if(!$member) {
-			$member = $this->getMemberFromOrder();
-		}
-		if($member && $member->exists()) {
-			$fieldName = $this->ClassName."ID";
-			$list = Order::get_datalist_of_orders_with_submit_record()
-				->filter(array("MemberID" => $member->ID))
-				->exclude(array($fieldName => $this->ID));
-			if($onlyLastRecord) {
-				$list = $list->limit(1);
-			}
-			return $list;
-		}
-	}
 
 	/**
 	 * find the member associated with the current Order and address.
@@ -570,6 +458,26 @@ class OrderAddress extends DataObject {
 			}
 		}
 	}
+
+	/**
+	 * make an address obsolete and include all the addresses that are identical.
+	 * @param Member $member
+	 */
+	public function MakeObsolete(Member $member = null){
+		$addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = true);
+		$comparisonString = $this->comparisonString();
+		if($addresses->count()) {
+			foreach($addresses as $address) {
+				if($address->comparisonString() == $comparisonString) {
+					$address->Obsolete = 1;
+					$address->write();
+				}
+			}
+		}
+		$this->Obsolete = 1;
+		$this->write();
+	}
+
 
 	/**
 	 * standard SS method

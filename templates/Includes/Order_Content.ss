@@ -51,7 +51,7 @@
 		<% end_loop %>
 	<% else %>
 		<tr class="showOnZeroItems">
-			<td colspan="4" scope="row" class="center">
+			<td colspan="4" class="center">
 				<% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
 			</td>
 		</tr>

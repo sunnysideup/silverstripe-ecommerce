@@ -6,12 +6,12 @@ If you are not using this snippet then theme it and remove its content to speed 
 -->
 <div class="cartShortInner">
 <% if Items %>
-	<table id="InformationTable" class="editable" cellspacing="0" cellpadding="0" summary="<% _t("TABLESUMMARY","The contents of your cart are displayed in this table - go to the Checkout Page to make final adjustments and review additional charges and deductions.") %>">
+	<table id="InformationTable" class="editable">
 		<tbody>
 	<% loop Items %>
 		<% if ShowInTable %>
 			<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
-				<td class="product title" scope="row">
+				<td class="product title">
 					<% if Link %>
 					<a id="$AJAXDefinitions.TableTitleID" href="$Link">$TableTitle</a>
 					<% else %>

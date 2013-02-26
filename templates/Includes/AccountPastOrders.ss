@@ -1,5 +1,5 @@
 <% if PastOrders %>
-	<table summary="<% _t("Account.PreviousOrders","Previous Orders") %>">
+	<table>
 		<thead>
 			<tr>
 				<th scope="col" class="left"><% _t("Account.ORDER","Order") %></th>
