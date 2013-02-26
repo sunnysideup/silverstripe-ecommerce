@@ -418,7 +418,13 @@ class OrderAddress extends DataObject {
 			if($oldAddress) {
 				$fieldNameArray = $this->getFieldNameArray($fieldPrefix);
 				foreach($fieldNameArray as $field) {
-					if(!$this->$field && isset($oldAddress->$field) && !in_array($field, $excludedFields)) {
+					if(in_array($field, $excludedFields)) {
+						//do nothing
+					}
+					elseif($this->$field) {
+						//do nothing
+					}
+					elseif(isset($oldAddress->$field)) {
 						$this->$field = $oldAddress->$field;
 					}
 				}
@@ -430,7 +436,9 @@ class OrderAddress extends DataObject {
 			$fieldNameArray = array("FirstName" => $fieldPrefix."FirstName", "Surname" => $fieldPrefix."Surname");
 			foreach($fieldNameArray as $memberField => $fieldName) {
 				//NOTE, we always override the Billing Address (which does not have a fieldPrefix)
-				if(!$this->$fieldName || ($this instanceOf BillingAddress)) {$this->$fieldName = $member->$memberField;}
+				if(!$this->$fieldName || ($this instanceOf BillingAddress)) {
+					$this->$fieldName = $member->$memberField;
+				}
 			}
 		}
 		if($write) {
