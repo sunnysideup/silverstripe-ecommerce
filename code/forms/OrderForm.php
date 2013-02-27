@@ -88,6 +88,7 @@ class OrderForm extends Form {
 		//we stick with standard validation here, because of the complexity and
 		//hard-coded payment validation that is required
 		parent::__construct($controller, $name, $fields, $actions, $validator);
+		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
 		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}

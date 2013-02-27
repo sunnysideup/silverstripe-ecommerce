@@ -9,6 +9,8 @@
  **/
 
 
+.required label:before {content: "* ";}
+
 /**
  * table general
  */
@@ -78,7 +80,7 @@ even when theme-ing ecommerce, these should not be themed
 /**
  * Steps
  */
-#Checkout ol.steps, #OrderConfirmationPage ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; 	}
+#Checkout ol.steps, #OrderConfirmationPage ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; margin-left: 0px;}
 #Checkout ol.steps li, #OrderConfirmationPage ol.steps li {
 	padding: 0px;
 	display: block;
