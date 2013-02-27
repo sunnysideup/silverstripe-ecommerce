@@ -36,7 +36,7 @@ class ShopAccountForm extends Form {
 			);
 			if($order = ShoppingCart::current_order()) {
 				if($order->getTotalItems()) {
-					$actions->push(new FormAction('proceed', _t('Account.SAVEANDPROCEED','Save changes and proceed to checkout')));
+					$actions->push(new FormAction('proceed', _t('Account.SAVE_AND_PROCEED','Save changes and proceed to checkout')));
 				}
 			}
 		}
@@ -58,6 +58,7 @@ class ShopAccountForm extends Form {
 
 		$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
+		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
 		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
 		if($this->extend('updateActions',$actions) !== null) {$this->setActions($actions);}

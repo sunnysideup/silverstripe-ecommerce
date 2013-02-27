@@ -45,6 +45,7 @@ class OrderModifierForm extends Form {
 			$optionalValidator = new $validatorClassName();
 		}
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
+		$this->setAttribute("autocomplete", "off");
 		Requirements::themedCSS($this->ClassName, 'ecommerce');
 		$this->addExtraClass(lcfirst(ucwords($name)));
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");

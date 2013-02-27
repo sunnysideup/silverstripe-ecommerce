@@ -207,6 +207,7 @@ class OrderFormAddress extends Form {
 			}
 		}
 		parent::__construct($controller, $name, $fields, $actions, $validator);
+		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
 		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
