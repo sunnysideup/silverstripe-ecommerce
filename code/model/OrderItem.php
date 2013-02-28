@@ -234,13 +234,6 @@ class OrderItem extends OrderAttribute {
 				'p' => 'hide',
 				'v' => 0
 			);
-			//@TODO: is this correct, seems strange to replce the field with a number!
-			$js[] = array(
-				't' => 'id',
-				's' => $ajaxObject->QuantityFieldName(),
-				'p' => 'innerHTML',
-				'v' => $this->Quantity
-			);
 			$js[] = array(
 				't' => 'name',
 				's' => $ajaxObject->QuantityFieldName(),
