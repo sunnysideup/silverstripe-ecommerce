@@ -1064,11 +1064,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 **/
 	 public function initStep(Order $order) {
 		if( $order->IsSubmitted()) {
-			if($payments = $order->Payments()) {
-				if($payments->count()) {
-					return true;
-				}
-			}
+			return true;
 		}
 		return false;
 
@@ -1137,7 +1133,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 * @return String
 	 */
 	protected function myDescription(){
-		return _t("OrderStep.SENTINVOICE_DESCRIPTION", "Invoice gets sent to the customer via e-mail. In many cases, it is better to only send a receipt and sent the invoice to the shop admin only so that they know an order is coming, while the customer only sees a receipt which shows payment as well as ");
+		return _t("OrderStep.SENTINVOICE_DESCRIPTION", "Invoice gets sent to the customer via e-mail. In many cases, it is better to only send a receipt and sent the invoice to the shop admin only so that they know an order is coming, while the customer only sees a receipt which shows payment as well as the order itself.");
 	}
 }
 
