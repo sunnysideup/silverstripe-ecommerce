@@ -1093,7 +1093,7 @@ class Order extends DataObject {
 	 * IMPORTANTLY we store the exchange rate for future reference...
 	 * @param EcommerceCurrency $currency
 	 */
-	public function SetCurrency($currency) {
+	public function UpdateCurrency($currency) {
 		$this->CurrencyUsedID = $currency->ID;
 		$this->ExchangeRate = $currency->ExchangeRate();
 		$this->write();
