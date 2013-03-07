@@ -327,6 +327,23 @@ class CartPage_Controller extends Page_Controller{
 		return null;
 	}
 
+	/**
+	 * Gets the shopping cart message so that it can be displayed and
+	 * so that it gets removed from the session.
+	 * @return String
+	 */
+	function ShoppingCartMessages(){
+		$messagesImploded = "";
+		if($this->currentOrder) {
+			$messages = $this->getMessages();
+			if(is_array($messages) && count($messages)) {
+				foreach($messages as $messageArray) {
+					$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
+				}
+			}
+		}
+		return $messagesImploded;
+	}
 
 	/**
 	 * @return String
@@ -417,7 +434,7 @@ class CartPage_Controller extends Page_Controller{
 	 *
 	 */
 	function loadorder() {
-		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
+		self::set_message(_t("CartPage.ORDERHASBEENLOADED", "Order has been loaded."));
 		ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
 		Director::redirect($this->Link());
 		return array();
