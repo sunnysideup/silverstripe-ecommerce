@@ -66,7 +66,7 @@ class EcommerceTaskExportAllOrderItems extends BuildTask{
 		}
 		if($fileData){
 			file_put_contents($fileLocation, $fileData);
-			Director::redirect($fileName);
+			Director::redirect("/".$fileName);
 		}
 		else{
 			user_error("No records found", E_USER_ERROR);
