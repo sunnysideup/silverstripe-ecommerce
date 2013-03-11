@@ -30,17 +30,22 @@ class OrderForm extends Form {
 
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
-		$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
+		//$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
 		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
-		$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
-		foreach($paymentFields as $paymentField) {
-			if($paymentField->class == "HeaderField") {
-				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+		if($totalOutstandingAsMoneyObject->getAmount() > 0) {
+			$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
+			foreach($paymentFields as $paymentField) {
+				if($paymentField->class == "HeaderField") {
+					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+				}
+				$bottomFields->push($paymentField);
 			}
-			$bottomFields->push($paymentField);
+			if($paymentRequiredFields = Payment::combined_form_requirements()) {
+				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
+			}
 		}
-		if($paymentRequiredFields = Payment::combined_form_requirements()) {
-			$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
+		else {
+			$bottomFields->push(new HiddenField("PaymentMethod", "", ""));
 		}
 
 
