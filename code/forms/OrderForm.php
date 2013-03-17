@@ -35,7 +35,7 @@ class OrderForm extends Form {
 
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
-		$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
+		//$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
 		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
 		$paymentFields = null;
 		//$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
