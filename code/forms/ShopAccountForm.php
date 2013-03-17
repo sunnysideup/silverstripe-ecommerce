@@ -149,8 +149,21 @@ class ShopAccountForm_Validator extends RequiredFields{
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
-		if(isset($data[$uniqueFieldName]) && $loggedInMember && $data[$uniqueFieldName]){
-			if(!$loggedInMember->IsShopAdmin()) {
+		if(isset($data[$uniqueFieldName]) && $data[$uniqueFieldName]){
+			$isShopAdmin = false;
+			if($loggedInMember) {
+				$loggedInMemberID = $loggedInMember->ID;
+				if($loggedInMember->IsShopAdmin()) {
+					$isShopAdmin = true;
+				}
+			}
+			else {
+				$loggedInMemberID = 0;
+			}
+			if($isShopAdmin) {
+				//do nothing
+			}
+			else {
 				$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
 				//can't be taken
 				$otherMembersWithSameEmail = Member::get()
