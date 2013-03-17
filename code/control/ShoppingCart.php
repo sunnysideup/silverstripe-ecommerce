@@ -618,7 +618,7 @@ class ShoppingCart extends Object{
 					$member->SetPreferredCurrency($currency);
 				}
 			}
-			$this->currentOrder()->SetCurrency($currency);
+			$this->currentOrder()->UpdateCurrency($currency);
 			$msg = _t("Order.CURRENCYUPDATED", "Currency updated.");
 			$this->addMessage($msg ,'good');
 			return true;
