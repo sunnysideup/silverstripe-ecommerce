@@ -820,6 +820,9 @@ class Order extends DataObject {
 		if(!$obj) {
 			$obj = OrderStep::get()->First(); //TODO: this could produce strange results
 		}
+		if(!$obj) {
+			$obj = new OrderStep_Created();
+		}
 		return $obj;
 	}
 

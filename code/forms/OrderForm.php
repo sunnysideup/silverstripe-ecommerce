@@ -37,18 +37,36 @@ class OrderForm extends Form {
 		$bottomFields->setID('BottomOrder');
 		//$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
 		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
-		$paymentFields = null;
-		//$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
-		if($paymentFields) {
-			foreach($paymentFields as $paymentField) {
-				if($paymentField->class == "HeaderField") {
-					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+		//payment Field Collection
+		$paymentFieldsCollection = new CompositeField();
+		$paymentFieldsRequiredCollection = Array();
+		//loop through each payment gateway
+		$supportedPaymentGateways = PaymentProcessor::get_supported_methods();
+		if(count($supportedPaymentGateways)) {
+			//header for payment options
+			$paymentFieldsCollection->push(new HeaderField("ChoosePayment", _t("OrderForm.CHOOSE_PAYMENT", "Choose Payment")));
+			foreach($supportedPaymentGateways as $paymentClassName) {
+				$processor = PaymentFactory::factory($paymentClassName);
+				if($processor) {
+					$paymentFields = $processor->getFormFields();
+					if($paymentFields) {
+						foreach($paymentFields as $paymentField) {
+							$paymentFieldsCollection->push($paymentField);
+						}
+					}
+					$paymentFieldsRequired = $processor->getFormRequirements();
+					if($paymentFieldsRequired) {
+						foreach($paymentFieldsRequired as $paymentFieldRequired) {
+							$paymentFieldsRequiredCollection[] = $paymentFieldRequired;
+						}
+					}
 				}
-				$bottomFields->push($paymentField);
 			}
-			if($paymentRequiredFields = Payment::combined_form_requirements()) {
-				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
-			}
+		}
+
+		if($paymentFieldsCollection) {
+			$bottomFields->push($paymentFieldsCollection);
+			$requiredFields = array_merge($requiredFields, $paymentFieldsRequiredCollection);
 		}
 
 		//  ________________  4) FINAL FIELDS
