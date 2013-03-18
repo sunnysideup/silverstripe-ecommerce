@@ -391,6 +391,7 @@ class CartPage_Controller extends Page_Controller{
 		$this->redirect($this->Link());
 		return array();
 	}
+
 	/**
 	 * copies either the current order into the shopping cart
 	 *
@@ -558,20 +559,6 @@ class CartPage_Controller extends Page_Controller{
 		return $viewingRealCurrentOrder;
 	}
 
-
-	/**
-	 * Loads either the "current order""into the shopping cart.
-	 *
-	 * TO DO: untested
-	 * TO DO: what to do with old order
-	 *
-	 */
-	function loadorder() {
-		self::set_message(_t("CartPage.ORDERHASBEENLOADED", "Order has been loaded."));
-		ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
-		Director::redirect($this->Link());
-		return array();
-	}
 	/**
 	 * copies either the current order into the shopping cart
 	 *
@@ -585,7 +572,6 @@ class CartPage_Controller extends Page_Controller{
 		Director::redirect(CheckoutPage::find_last_step_link());
 		return array();
 	}
-
 
 	/**
 	 * @var Boolean
