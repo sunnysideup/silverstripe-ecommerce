@@ -40,7 +40,7 @@ Abstract class Order_Email extends Email {
 	 * returns the standard from email address (e.g. the shop admin email address)
 	 * @return String
 	 */
-	static function get_from_email() {
+	public static function get_from_email() {
 		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
 		if($ecommerceConfig && $ecommerceConfig->ReceiptEmail) {
 			return $ecommerceConfig->ReceiptEmail;
