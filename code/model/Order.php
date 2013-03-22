@@ -224,7 +224,7 @@ class Order extends DataObject {
 					if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
 						$form->ShowFormInEditableOrderTable = $modifier->ShowFormInEditableOrderTable();
 						$form->ShowFormOutsideEditableOrderTable = $modifier->ShowFormOutsideEditableOrderTable();
-						$form->Name = $modifier->ClassName;
+						$form->ModifierName = $modifier->ClassName;
 						$dos->push($form);
 					}
 				}
