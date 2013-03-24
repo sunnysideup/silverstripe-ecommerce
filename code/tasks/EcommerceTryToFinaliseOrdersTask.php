@@ -13,26 +13,16 @@
 
 class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 
-	/**
-	 * Standard SS Variable
-	 * TODO: either remove or add to all tasks
-	 */
-	static $allowed_actions = array(
-		'*' => 'ADMIN',
-		'*' => 'SHOPADMIN'
-	);
-
 	protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS';
 
 	protected $description = "This task can be useful in moving a bunch of orders through the latest order step. It will only move orders if they can be moved through order steps.  You may need to run this task several times to move all orders.";
-
 
 	/**
 	 *@return Integer - number of carts destroyed
 	 **/
 	public function run($request){
 		//IMPORTANT!
-		Email::send_all_emails_to("no-one@lets-hope-this-goes-absolutely-no-where.co.nz");
+		Email::send_all_emails_to("no-one@localhost");
 		Email::set_mailer( new EcommerceTryToFinaliseOrdersTask_Mailer() );
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
