@@ -1,6 +1,7 @@
 <?php
 /**
- * Text input field that allows the user to select a Buyable
+ * Text input field that allows the user to select a Buyable.
+ * A product, a product variation or any other buyable.
  * using the auto-complete technique from jQuery UI.
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
