@@ -1281,19 +1281,5 @@ HTML;
 		return $html;
 	}
 
-	function deletevariations(){
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
-		if($member && Permission::checkMember($member, $shopAdminCode)) {
-			$variations = $this->Variations();
-			if($variations) {
-				foreach($variations as $variation) {
-					$variation->delete();
-				}
-			}
-		}
-	}
 
 }
