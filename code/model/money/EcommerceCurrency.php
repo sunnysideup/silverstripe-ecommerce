@@ -25,6 +25,14 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
+	public static $many_many = array(
+		"EcommerceCountries" => "EcommerceCountry"
+	);
+
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	public static $indexes = array(
 		"Code" => true,
 	);
@@ -198,13 +206,17 @@ class EcommerceCurrency extends DataObject {
 
 	/**
 	 * casted variable method
+	 * @return Boolean
 	 */
 	public function IsDefault(){return $this->getIsDefault();}
 	public function getIsDefault(){
-		if($this->ID && !$this->Code) {
-			user_error("The currency #$this->ID does not have a code");
+		if($this->exists()) {
+			if(!$this->Code) {
+				user_error("This currency (ID = ".$this->ID.") does not have a code ");
+			}
+			return strtolower($this->Code) ==  strtolower(Payment::site_currency());
 		}
-		return strtolower($this->Code) ==  strtolower(Payment::site_currency());
+		return false;
 	}
 
 	/**
