@@ -188,7 +188,7 @@ EcommercePaymentController:
 EcommerceConfigAjax:
 	definitions_class_name: EcommerceConfigAjaxDefinitions
 	cart_js_file_location: ecommerce/javascript/EcomCart.js
-	dialogue_js_file_location: ecommerce/thirdparty/colorbox/jquery.colorbox-min.js
+	dialogue_js_file_location: ecommerce/javascript/jquery.colorbox.min.js
 
 ################### MODIFIERS #####################
 
