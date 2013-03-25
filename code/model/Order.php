@@ -1839,6 +1839,15 @@ class Order extends DataObject {
 	}
 
 	/**
+	 *
+	 * @return Money | Null
+	 **/
+	function DisplaySubTotal() {return $this->getDisplaySubTotal();}
+	function getDisplaySubTotal() {
+		return EcommerceCurrency::display_from_order_currency($this->SubTotal(), $this);
+	}
+
+	/**
 	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
 	 * @return float
 	 **/
@@ -1860,8 +1869,8 @@ class Order extends DataObject {
 	 *
 	 * @return Money | Null
 	 **/
-	function DisplayTotal(){return $this->getDisplayTotal();}
-	function getDisplayTotal(){
+	function DisplayTotal() {return $this->getDisplayTotal();}
+	function getDisplayTotal() {
 		return EcommerceCurrency::display_from_order_currency($this->Total(), $this);
 	}
 
