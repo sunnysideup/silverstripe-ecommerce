@@ -602,9 +602,9 @@ class Order extends DataObject {
 			$fields->addFieldToTab("Root.Next", new LiteralField("StatusIDExplanation", _t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.")));
 			$currencies = EcommerceCurrency::get_list();
 			if($currencies) {
-				$mapOfCurrencies = $currencies->map("ID", "Title");
+				$currencies = $currencies->map();
 				$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
-				$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), $mapOfCurrencies, EcommerceCurrency::default_currency_id()));
+				$fields->addFieldToTab("Root.Currency", new LookupField("CurrencyUsedID", _t("Order.CurrencyUsed", "Currency Used"), $currencies));
 			}
 			$fields->addFieldToTab("Root.Log", new ReadonlyField("Created", _t("Root.CREATED", "Created")));
 			$fields->addFieldToTab("Root.Log", new ReadonlyField("LastEdited", _t("Root.LASTEDITED", "Last saved")));
