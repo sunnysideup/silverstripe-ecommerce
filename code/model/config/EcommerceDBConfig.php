@@ -381,8 +381,8 @@ class EcommerceDBConfig extends DataObject {
 	 *
 	 * return DataObjectSet (list of EcommerceCurrencies)
 	 */
-	function Currencies(){
-		return EcommerceCurrency::ecommerce_currency_list();
+	function Currencies() {
+		return EcommerceCurrency::get_list();
 	}
 
 	/**
