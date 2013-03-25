@@ -2411,6 +2411,13 @@ class Order extends DataObject {
 		}
 	}
 
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		if(! $this->CurrencyUsedID) {
+			$this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
+		}
+	}
+
 	/**
 	 * standard SS method
 	 * adds the ability to update order after writing it.
@@ -2530,6 +2537,14 @@ class Order extends DataObject {
 		return $html;
 	}
 
+	function requireDefaultRecords() {
+		$order = DataObject::get_one('Order', 'CurrencyUsedID = 0');
+		if($order) {
+			$currencyID = EcommerceCurrency::default_currency_id();
+			DB::query("UPDATE \"Order\" SET \"CurrencyUsedID\" = $currencyID WHERE \"CurrencyUsedID\" = 0");
+			DB::alteration_message('All orders have been set a currency value.', 'changed');
+		}
+	}
 }
 
 
