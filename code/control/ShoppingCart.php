@@ -604,7 +604,8 @@ class ShoppingCart extends Object{
 	 * @return Boolean
 	 **/
 	public function setCurrency($currencyCode) {
-		if($currency = EcommerceCurrency::get_currency_from_code($currencyCode)) {
+		$currency = EcommerceCurrency::get_one_from_code($currencyCode);
+		if($currency) {
 			if($this->currentOrder()->MemberID) {
 				$member = $this->currentOrder()->Member();
 				if($member && $member->exists()) {

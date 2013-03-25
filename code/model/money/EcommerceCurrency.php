@@ -1,14 +1,13 @@
 <?php
 
-
 /**
  * Object to manage currencies
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: money
+ * Precondition : There should always be at least one currency usable.
  **/
-
 class EcommerceCurrency extends DataObject {
 
 	/**
@@ -16,8 +15,9 @@ class EcommerceCurrency extends DataObject {
 	 * @var Array
 	 */
 	public static $db = array(
-		"Code" => "Varchar(5)",
+		"Code" => "Varchar(3)",
 		"Name" => "Varchar(100)",
+		"Symbol" => "Varchar(2)",
 		"InUse" => "Boolean"
 	);
 
@@ -64,6 +64,7 @@ class EcommerceCurrency extends DataObject {
 	public static $field_labels = array(
 		"Code" => "Short Code (e.g. NZD)",
 		"Name" => "Name (e.g. New Zealand Dollar)",
+		"Symbol" => "Symbol (e.g. $)",
 		"InUse" => "It is available for use?",
 		"ExchangeRate" => "Exchange Rate",
 		"ExchangeRateExplanation" => "Exchange Rate explanation",
@@ -110,22 +111,8 @@ class EcommerceCurrency extends DataObject {
 		"InUse" => true
 	);
 
-	/**
-	 * NOTE: when there is only one currency we return NULL as one currency is meaningless.
-	 * @return DataObjectSet (EcommerceCurrency list) | Null
-	 */
-	public static function ecommerce_currency_list(){
-		$dos = DataObject::get(
-			"EcommerceCurrency",
-			"\"InUse\" = 1",
-			"IF(\"Code\" = '".Payment::site_currency()."', 0, 1) ASC, \"InUse\" DESC, \"NAME\" ASC, \"Code\" ASC"
-		);
-		if($dos) {
-			if(1 == $dos->count()) {
-				$dos = null;
-			}
-		}
-		return $dos;
+	public static function get_list() {
+		return DataObject::get('EcommerceCurrency', "\"InUse\" = 1", "IF(\"Code\" = '".Payment::site_currency()."', 0, 1) ASC, \"Name\" ASC, \"Code\" ASC");
 	}
 
 	/**
@@ -167,17 +154,12 @@ class EcommerceCurrency extends DataObject {
 		}
 	}
 
-
-	/**
-	 *
-	 * @return Int - the ID of the currency
-	 */
+	public static function default_currency() {
+		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
+	}	
 	public static function default_currency_id() {
-		$currency = DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
-		if($currency) {
-			return $currency->ID;
-		}
-		return 0;
+		$currency = self::default_currency();
+		return $currency ? $currency->ID : 0;
 	}
 
 	/**
@@ -185,7 +167,7 @@ class EcommerceCurrency extends DataObject {
 	 * @param String $currencyCode - the code of the currency
 	 * @return EcommerceCurrency | Null
 	 */
-	public static function get_currency_from_code($currencyCode) {
+	public static function get_one_from_code($currencyCode) {
 		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '$currencyCode' AND \"InUse\" = 1");
 	}
 
@@ -208,23 +190,22 @@ class EcommerceCurrency extends DataObject {
 	 * casted variable method
 	 * @return Boolean
 	 */
-	public function IsDefault(){return $this->getIsDefault();}
-	public function getIsDefault(){
+	public function IsDefault() {return $this->getIsDefault();}
+	public function getIsDefault() {
 		if($this->exists()) {
 			if(!$this->Code) {
 				user_error("This currency (ID = ".$this->ID.") does not have a code ");
 			}
 			return strtolower($this->Code) ==  strtolower(Payment::site_currency());
 		}
-		return false;
 	}
 
 	/**
 	 * casted variable method
 	 * @return String
 	 */
-	public function IsDefaultNice(){ return $this->getIsDefaultNice();}
-	public function getIsDefaultNice(){
+	public function IsDefaultNice() {return $this->getIsDefaultNice();}
+	public function getIsDefaultNice() {
 		if($this->getIsDefault()) {
 			return _t("EcommerceCurrency.YES", "Yes");
 		}
@@ -237,7 +218,7 @@ class EcommerceCurrency extends DataObject {
 	 * casted variable method
 	 * @return String
 	 */
-	public function InUseNice(){ return $this->getInUseNice();}
+	public function InUseNice() {return $this->getInUseNice();}
 	public function getInUseNice(){
 		if($this->InUse) {
 			return _t("EcommerceCurrency.YES", "Yes");
@@ -250,20 +231,21 @@ class EcommerceCurrency extends DataObject {
 	/**
 	 * casted variable
 	 * @return Double
+	 * @todo $className is not used at all here
 	 */
-	public function ExchangeRate(){ return $this->getExchangeRate();}
-	public function getExchangeRate(){
-		$className = EcommerceConfig::get("EcommerceCurrency", "exchange_provider_class");
+	public function ExchangeRate() {return $this->getExchangeRate();}
+	public function getExchangeRate() {
+		$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
 		$obj = new ExchangeRateProvider();
-		return $obj->ExchangeRate( Payment::site_currency(), $this->Code);
+		return $obj->ExchangeRate(Payment::site_currency(), $this->Code);
 	}
 
 	/**
 	 * casted variable
 	 * @return Double
 	 */
-	public function ExchangeRateExplanation(){ return $this->getExchangeRateExplanation();}
-	public function getExchangeRateExplanation(){
+	public function ExchangeRateExplanation() {return $this->getExchangeRateExplanation();}
+	public function getExchangeRateExplanation() {
 		$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
 		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".Payment::site_currency();
 		return $string;
@@ -272,14 +254,9 @@ class EcommerceCurrency extends DataObject {
 	/**
 	 * @return Boolean
 	 */
-	public function IsCurrent(){
-		$currentOrder = ShoppingCart::current_order();
-		if($currentOrder) {
-			if($currentOrder->CurrencyUsedID == $this->ID) {
-				return true;
-			}
-		}
-		return false;
+	public function IsCurrent() {
+		$order = ShoppingCart::current_order();
+		return $order ? $order->CurrencyUsedID == $this->ID : false;
 	}
 
 	/**
@@ -297,17 +274,42 @@ class EcommerceCurrency extends DataObject {
 	 * @return String (link | default | current)
 	 */
 	public function LinkingMode() {
-		$linkingMode = "";
+		$linkingMode = '';
 		if($this->IsDefault()) {
-			$linkingMode .= " default";
+			$linkingMode .= ' default';
 		}
 		if($this->IsCurrent()) {
-			$linkingMode .= " current";
+			$linkingMode .= ' current';
 		}
 		else {
-			$linkingMode .= " link";
+			$linkingMode .= ' link';
 		}
 		return $linkingMode;
+	}
+
+	protected function validate() {
+		$result = parent::validate();
+		$errors = array();
+		if(! $this->Code || strlen($this->Code) != 3) {
+			$errors[] = 'The code must be 3 characters long.';
+		}
+		if(! $this->Name) {
+			$errors[] = 'The name is required.';
+		}
+		if(! count($errors)) {
+			$this->Code = strtoupper($this->Code);
+			// Check that there are no 2 same code currencies in use
+			if($this->isChanged('Code')) {
+				$currencies = DataObject::get('EcommerceCurrency', "UPPER(\"Code\") = '$this->Code' AND \"InUse\" = 1");
+				if($currencies) {
+					$errors[] = "There is alreay another currency in use which code is '$this->Code'.";
+				}
+			}
+		}
+		foreach($errors as $error) {
+			$result->error($error);
+		}
+		return $result;
 	}
 
 	/**
@@ -319,19 +321,53 @@ class EcommerceCurrency extends DataObject {
 		$this->InUse = true;
 	}
 
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		// Check that there is always at least one currency in use
+		if(! $this->InUse) {
+			$list = self::get_list();
+			if(! $list || ($list->Count() == 1 && $list->First()->ID == $this->ID)) {
+				$this->InUse = true;
+			}
+		}
+	}
+
+	function canDelete() {
+		return ! $this->InUse || self::get_list()->Count() > 1;
+	}
+
 	/**
 	 * Standard SS Method
 	 * Adds the default currency
 	 */
-	function requireDefaultRecords(){
+	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-		$defaultCurrencyCode = Payment::site_currency();
-		if(!DataObject::get_one("EcommerceCurrency", "\"Code\" = '$defaultCurrencyCode'")) {
-			$obj = new EcommerceCurrency();
-			$obj->Code = $defaultCurrencyCode;
-			$obj->Name = $defaultCurrencyCode;
-			$obj->InUse = 1;
-			$obj->write();
+		$currency = self::default_currency();
+		if(! $currency) {
+			self::create_new(Payment::site_currency());
+		}
+	}
+
+	static function create_new($code) {
+		$code = strtolower($code);
+		$name = $code;
+		$symbol = null;
+		if(isset(self::$currencies[$code])) {
+			$name = self::$currencies[$code];
+			if(is_array($name)) {
+				list($name, $symbol) = $name;
+			}
+		}
+		$name = ucwords($name);
+		$currency = new EcommerceCurrency(array(
+			'Code' => $code,
+			'Name' => $name,
+			'Symbol' => $symbol,
+			'InUse' => true
+		));
+		$valid = $currency->write();
+		if($valid) {
+			return $currency;
 		}
 	}
 
@@ -341,144 +377,122 @@ class EcommerceCurrency extends DataObject {
 	 * @return String
 	 */
 	public function debug() {
-		$html =  "
-			<h2>".$this->ClassName."</h2><ul>";
-		$fields = Object::get_static($this->ClassName, "db");
-		foreach($fields as  $key => $type) {
+		$html =  "<h2>$this->ClassName</h2><ul>";
+		$fields = Object::get_static($this->ClassName, 'db');
+		foreach($fields as $key => $type) {
 			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
 		}
-		$fields = Object::get_static($this->ClassName, "casting");
-		foreach($fields as  $key => $type) {
-			$method = "get".$key;
+		$fields = Object::get_static($this->ClassName, 'casting');
+		foreach($fields as $key => $type) {
+			$method = "get$key";
 			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
 		}
 		$html .= "</ul>";
 		return $html;
 	}
 
-	/**
-	 * returns a list of currencies
-	 * "Code" => Name
-	 * @var array
-	 */
-	public function getCurrencyList(){
-		return $this->currencyList;
-	}
-
-	/**
-	 * list of currencies
-	 * @var Array
-	 */
-	protected $currencyList = array(
-		"afa" => "afghanistan afghanis",
-		"all" => "albania leke",
-		"dzd" => "algeria dinars",
-		"ars" => "argentina pesos",
-		"aud" => "australia dollars",
-		"ats" => "austria schillings*",
-		"bsd" => "bahamas dollars",
-		"bhd" => "bahrain dinars",
-		"bdt" => "bangladesh taka",
-		"bbd" => "barbados dollars",
-		"bef" => "belgium francs*",
-		"bmd" => "bermuda dollars",
-		"brl" => "brazil reais",
-		"bgn" => "bulgaria leva",
-		"cad" => "canada dollars",
-		"xof" => "cfa bceao francs",
-		"xaf" => "cfa beac francs",
-		"clp" => "chile pesos",
-		"cny" => "china yuan renminbi",
-		"cop" => "colombia pesos",
-		"crc" => "costa rica colones",
-		"hrk" => "croatia kuna",
-		"cyp" => "cyprus pounds",
-		"czk" => "czech republic koruny",
-		"dkk" => "denmark kroner",
-		"dem" => "deutsche (germany) marks*",
-		"dop" => "dominican republic pesos",
-		"nlg" => "dutch (netherlands) guilders*",
-		"xcd" => "eastern caribbean dollars",
-		"egp" => "egypt pounds",
-		"eek" => "estonia krooni",
-		"eur" => "euro",
-		"fjd" => "fiji dollars",
-		"fim" => "finland markkaa*",
-		"frf" => "france francs*",
-		"dem" => "germany deutsche marks*",
-		"xau" => "gold ounces",
-		"grd" => "greece drachmae*",
-		"nlg" => "holland (netherlands) guilders*",
-		"hkd" => "hong kong dollars",
-		"huf" => "hungary forint",
-		"isk" => "iceland kronur",
-		"xdr" => "imf special drawing right",
-		"inr" => "india rupees",
-		"idr" => "indonesia rupiahs",
-		"irr" => "iran rials",
-		"iqd" => "iraq dinars",
-		"iep" => "ireland pounds*",
-		"ils" => "israel new shekels",
-		"itl" => "italy lire*",
-		"jmd" => "jamaica dollars",
-		"jpy" => "japan yen",
-		"jod" => "jordan dinars",
-		"kes" => "kenya shillings",
-		"krw" => "korea (south) won",
-		"kwd" => "kuwait dinars",
-		"lbp" => "lebanon pounds",
-		"luf" => "luxembourg francs*",
-		"myr" => "malaysia ringgits",
-		"mtl" => "malta liri",
-		"mur" => "mauritius rupees",
-		"mxn" => "mexico pesos",
-		"mad" => "morocco dirhams",
-		"nlg" => "netherlands guilders*",
-		"nzd" => "new zealand dollars",
-		"nok" => "norway kroner",
-		"omr" => "oman rials",
-		"pkr" => "pakistan rupees",
-		"xpd" => "palladium ounces",
-		"pen" => "peru nuevos soles",
-		"php" => "philippines pesos",
-		"xpt" => "platinum ounces",
-		"pln" => "poland zlotych",
-		"pte" => "portugal escudos*",
-		"qar" => "qatar riyals",
-		"rol" => "romania lei",
-		"rub" => "russia rubles",
-		"sar" => "saudi arabia riyals",
-		"xag" => "silver ounces",
-		"sgd" => "singapore dollars",
-		"skk" => "slovakia koruny",
-		"sit" => "slovenia tolars",
-		"zar" => "south africa rand",
-		"krw" => "south korea won",
-		"esp" => "spain pesetas*",
-		"xdr" => "special drawing rights (imf)",
-		"lkr" => "sri lanka rupees",
-		"sdd" => "sudan dinars",
-		"sek" => "sweden kronor",
-		"chf" => "switzerland francs",
-		"twd" => "taiwan new dollars",
-		"thb" => "thailand baht",
-		"ttd" => "trinidad and tobago dollars",
-		"tnd" => "tunisia dinars",
-		"try" => "turkey new lira",
-		"trl" => "turkey lira*",
-		"aed" => "united arab emirates dirhams",
-		"gbp" => "united kingdom pounds",
-		"usd" => "united states dollars",
-		"veb" => "venezuela bolivares",
-		"vnd" => "vietnam dong",
-		"zmk" => "zambia kwacha"
+	static $currencies = array(
+		'afa' => 'afghanistan afghanis',
+		'all' => 'albania leke',
+		'dzd' => 'algeria dinars',
+		'ars' => 'argentina pesos',
+		'aud' => array('australia dollars', '$'),
+		'ats' => 'austria schillings*',
+		'bsd' => array('bahamas dollars', '$'),
+		'bhd' => 'bahrain dinars',
+		'bdt' => 'bangladesh taka',
+		'bbd' => array('barbados dollars', '$'),
+		'bef' => 'belgium francs*',
+		'bmd' => array('bermuda dollars', '$'),
+		'brl' => 'brazil reais',
+		'bgn' => 'bulgaria leva',
+		'cad' => array('canada dollars', '$'),
+		'xof' => 'cfa bceao francs',
+		'xaf' => 'cfa beac francs',
+		'clp' => 'chile pesos',
+		'cny' => 'china yuan renminbi',
+		'cop' => 'colombia pesos',
+		'crc' => 'costa rica colones',
+		'hrk' => 'croatia kuna',
+		'cyp' => array('cyprus pounds', '£'),
+		'czk' => 'czech republic koruny',
+		'dkk' => array('denmark kroner', 'kr'),
+		'dem' => 'deutsche (germany) marks*',
+		'dop' => 'dominican republic pesos',
+		'nlg' => 'dutch (netherlands) guilders*',
+		'xcd' => array('eastern caribbean dollars', '$'),
+		'egp' => array('egypt pounds', '£'),
+		'eek' => 'estonia krooni',
+		'eur' => array('euro', '€'),
+		'fjd' => array('fiji dollars', '$'),
+		'fim' => 'finland markkaa*',
+		'frf' => 'france francs*',
+		'dem' => 'germany deutsche marks*',
+		'xau' => 'gold ounces',
+		'grd' => 'greece drachmae*',
+		'nlg' => 'holland (netherlands) guilders*',
+		'hkd' => array('hong kong dollars', '$'),
+		'huf' => 'hungary forint',
+		'isk' => 'iceland kronur',
+		'xdr' => 'imf special drawing right',
+		'inr' => 'india rupees',
+		'idr' => 'indonesia rupiahs',
+		'irr' => 'iran rials',
+		'iqd' => 'iraq dinars',
+		'iep' => array('ireland pounds*', '£'),
+		'ils' => 'israel new shekels',
+		'itl' => 'italy lire*',
+		'jmd' => array('jamaica dollars', '$'),
+		'jpy' => 'japan yen',
+		'jod' => 'jordan dinars',
+		'kes' => 'kenya shillings',
+		'krw' => 'korea (south) won',
+		'kwd' => 'kuwait dinars',
+		'lbp' => array('lebanon pounds', '£'),
+		'luf' => 'luxembourg francs*',
+		'myr' => 'malaysia ringgits',
+		'mtl' => 'malta liri',
+		'mur' => 'mauritius rupees',
+		'mxn' => 'mexico pesos',
+		'mad' => 'morocco dirhams',
+		'nlg' => 'netherlands guilders*',
+		'nzd' => array('new zealand dollars', '$'),
+		'nok' => array('norway kroner', 'kr'),
+		'omr' => 'oman rials',
+		'pkr' => 'pakistan rupees',
+		'xpd' => 'palladium ounces',
+		'pen' => 'peru nuevos soles',
+		'php' => 'philippines pesos',
+		'xpt' => 'platinum ounces',
+		'pln' => array('poland zlotych', 'zł'),
+		'pte' => 'portugal escudos*',
+		'qar' => 'qatar riyals',
+		'rol' => 'romania lei',
+		'rub' => 'russia rubles',
+		'sar' => 'saudi arabia riyals',
+		'xag' => 'silver ounces',
+		'sgd' => array('singapore dollars', '$'),
+		'skk' => 'slovakia koruny',
+		'sit' => 'slovenia tolars',
+		'zar' => 'south africa rand',
+		'krw' => 'south korea won',
+		'esp' => 'spain pesetas*',
+		'xdr' => 'special drawing rights (imf)',
+		'lkr' => 'sri lanka rupees',
+		'sdd' => 'sudan dinars',
+		'sek' => array('sweden kronor', 'kr'),
+		'chf' => array('switzerland francs', 'S₣'),
+		'twd' => array('taiwan new dollars', '$'),
+		'thb' => 'thailand baht',
+		'ttd' => array('trinidad and tobago dollars', '$'),
+		'tnd' => 'tunisia dinars',
+		'try' => 'turkey new lira',
+		'trl' => 'turkey lira*',
+		'aed' => 'united arab emirates dirhams',
+		'gbp' => array('united kingdom pounds', '£'),
+		'usd' => array('united states dollars', '$'),
+		'veb' => 'venezuela bolivares',
+		'vnd' => 'vietnam dong',
+		'zmk' => 'zambia kwacha'
 	);
-
-
 }
-
-
-
-
-
-

@@ -19,7 +19,7 @@ class CurrencyWidget extends Widget{
 	public static $description = "Displays the current contents of the user's cart.";
 
 	function Currencies(){
-		return EcommerceCurrency::ecommerce_currency_list();
+		return EcommerceCurrency::get_list();
 	}
 
 }
