@@ -1,1 +1,1 @@
-<% if DisplayPrice %> <span class="currencyQuantifier">($DisplayPrice.Nice)</span><% end_if %>
+<% if DisplayPrice %> <span class="currencyQuantifier">($DisplayPrice)</span><% end_if %>
