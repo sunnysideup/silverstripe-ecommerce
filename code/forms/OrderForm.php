@@ -31,9 +31,8 @@ class OrderForm extends Form {
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
 		//$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
-		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
-		if($totalOutstandingAsMoneyObject->getAmount() > 0) {
-			$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
+		if($order->Total() > 0) {
+			$paymentFields = Payment::combined_form_fields($order->DisplayPrice());
 			foreach($paymentFields as $paymentField) {
 				if($paymentField->class == "HeaderField") {
 					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
@@ -301,9 +300,7 @@ class OrderForm_Payment extends Form {
 		if($returnToLink) {
 			$fields->push(new HiddenField("returntolink", "", convert::raw2att($returnToLink)));
 		}
-		$totalAsCurrencyObject = $order->TotalAsCurrencyObject();
-		$totalOutstandingAsMoneyObject = $order->TotalOutstandingAsMoneyObject();
-		$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
+		$paymentFields = Payment::combined_form_fields($order->DisplayTotalOutstanding());
 		foreach($paymentFields as $paymentField) {
 			if($paymentField->class == "HeaderField") {
 				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));

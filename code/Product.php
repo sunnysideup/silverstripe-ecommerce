@@ -740,7 +740,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	function DisplayPrice() {return $this->getDisplayPrice();}
 	function getDisplayPrice() {
-		return EcommerceCurrency::display_price_from_order_currency($this->CalculatedPrice());
+		return EcommerceCurrency::display_from_order_currency($this->CalculatedPrice());
 	}
 
 

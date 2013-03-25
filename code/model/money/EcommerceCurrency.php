@@ -154,12 +154,14 @@ class EcommerceCurrency extends DataObject {
 		}
 	}
 
-	public static function display_price_from_order_currency($price) {
-		$order = ShoppingCart::current_order();
+	public static function display_price_from_order_currency($price, Order $order = null, $function = 'Nice') {
+		if(! $order) {
+			$order = ShoppingCart::current_order();
+		}
 		$currency = $order->CurrencyUsed();
 		$money = DBField::create('Money', array('Amount' => $price, 'Currency' => $currency->Code));
 		$options = array('symbol' => $currency->Symbol ? $currency->Symbol : '');
-		return $money->Nice($options);
+		return $function ? $money->$function($options) : $money;
 	}
 
 	public static function default_currency() {
