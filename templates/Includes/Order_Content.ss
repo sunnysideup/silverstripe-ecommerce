@@ -3,8 +3,8 @@
 		<tr>
 			<th scope="col" class="left product title"><% _t("Order.PRODUCT","Product") %></th>
 			<th scope="col" class="center quantity"><% _t("Order.QUANTITY", "Quantity") %></th>
-			<th scope="col" class="right unitprice"><% _t("Order.PRICE","Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
-			<th scope="col" class="right total"><% _t("Order.TOTALPRICE","Total Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
+			<th scope="col" class="right unitprice"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)<% end_if %></th>
+			<th scope="col" class="right total"><% _t("Order.TOTALPRICE","Total Price") %> ($CurrencyUsed.Code)<% end_if %></th>
 		</tr>
 	</thead>
 	<% if Items %>
@@ -12,7 +12,7 @@
 		<tr class="gap total summary">
 			<th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
 			<td class="right total" id="$AJAXDefinitions.TableTotalID">
-				<span class="value">$Total.Nice</span>
+				<span class="value">$DisplayTotal</span>
 				<% include Order_Content_DisplayPrice %>
 			</td>
 		</tr>
@@ -31,21 +31,21 @@
 				<span class="tableSubTitle">$TableSubTitle</span>
 			</td>
 			<td class="center quantity">$Quantity</td>
-			<td class="right unitprice">$UnitPrice.Nice</td>
-			<td class="right total">$Total.Nice</td>
+			<td class="right unitprice">{$Order.CurrencyUsed.Symbol}{$UnitPrice}</td>
+			<td class="right total">$DisplayTotal</td>
 		</tr>
 		<% end_control %>
 
 		<tr class="gap summary" id="SubTotal">
 			<th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right">$SubTotal.Nice</td>
+			<td class="right">$DisplaySubTotal</td>
 		</tr>
 
 		<% control Modifiers %>
 			<% if ShowInTable %>
 		<tr class="modifierRow $EvenOdd $FirstLast $Classes <% if HideInAjaxUpdate %> hideForNow<% end_if %>">
 			<td colspan="3" scope="row">$TableTitle</td>
-			<td class="right total">$TableValue.Nice</td>
+			<td class="right total">$DisplayTotal</td>
 		</tr>
 			<% end_if %>
 		<% end_control %>
