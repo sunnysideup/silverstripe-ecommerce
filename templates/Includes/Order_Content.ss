@@ -3,8 +3,8 @@
 		<tr>
 			<th scope="col" class="left product title"><% _t("Order.PRODUCT","Product") %></th>
 			<th scope="col" class="center quantity"><% _t("Order.QUANTITY", "Quantity") %></th>
-			<th scope="col" class="right unitprice"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)<% end_if %></th>
-			<th scope="col" class="right total"><% _t("Order.TOTALPRICE","Total Price") %> ($CurrencyUsed.Code)<% end_if %></th>
+			<th scope="col" class="right unitprice"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
+			<th scope="col" class="right total"><% _t("Order.TOTALPRICE","Total Price") %> ($CurrencyUsed.Code)</th>
 		</tr>
 	</thead>
 	<% if Items %>
