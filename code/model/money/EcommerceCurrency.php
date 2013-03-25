@@ -158,7 +158,7 @@ class EcommerceCurrency extends DataObject {
 		$order = ShoppingCart::current_order();
 		$currency = $order->CurrencyUsed();
 		$money = DBField::create('Money', array('Amount' => $price, 'Currency' => $currency->Code));
-		$options = $currency->Symbol ? array('symbol' => $currency->Symbol) : null;
+		$options = array('symbol' => $currency->Symbol ? $currency->Symbol : '');
 		return $money->Nice($options);
 	}
 
