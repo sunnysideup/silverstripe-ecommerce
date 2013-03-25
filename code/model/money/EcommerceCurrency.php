@@ -154,7 +154,7 @@ class EcommerceCurrency extends DataObject {
 		}
 	}
 
-	public static function display_price_from_order_currency($price, Order $order = null, $function = 'Nice') {
+	public static function display_from_order_currency($price, Order $order = null, $function = 'Nice') {
 		if(! $order) {
 			$order = ShoppingCart::current_order();
 		}
