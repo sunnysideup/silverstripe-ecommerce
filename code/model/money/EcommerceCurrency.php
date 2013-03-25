@@ -17,7 +17,6 @@ class EcommerceCurrency extends DataObject {
 	public static $db = array(
 		"Code" => "Varchar(3)",
 		"Name" => "Varchar(100)",
-		"Symbol" => "Varchar(2)",
 		"InUse" => "Boolean"
 	);
 
@@ -45,7 +44,8 @@ class EcommerceCurrency extends DataObject {
 		"IsDefault" => "Boolean",
 		"IsDefaultNice" => "Varchar",
 		"InUseNice" => "Varchar",
-		"ExchangeRate" => "Double"
+		"ExchangeRate" => "Double",
+		"Symbol" => "Varchar"
 	);
 
 	/**
@@ -64,7 +64,6 @@ class EcommerceCurrency extends DataObject {
 	public static $field_labels = array(
 		"Code" => "Short Code (e.g. NZD)",
 		"Name" => "Name (e.g. New Zealand Dollar)",
-		"Symbol" => "Symbol (e.g. $)",
 		"InUse" => "It is available for use?",
 		"ExchangeRate" => "Exchange Rate",
 		"ExchangeRateExplanation" => "Exchange Rate explanation",
@@ -180,8 +179,7 @@ class EcommerceCurrency extends DataObject {
 	public static function get_one_from_code($currencyCode) {
 		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '$currencyCode' AND \"InUse\" = 1");
 	}
-
-
+	
 	/**
 	 * STANDARD SILVERSTRIPE STUFF
 	 **/
@@ -189,11 +187,23 @@ class EcommerceCurrency extends DataObject {
 		$fields = parent::getCMSFields();
 		$fieldLabels = $this->fieldLabels();
 		$fields->addFieldToTab("Root.Main", new ReadonlyField("IsDefaulNice", $fieldLabels["IsDefaultNice"], $this->getIsDefaultNice()));
+		$fields->addFieldToTab("Root.Main", new ReadonlyField("Symbol"));
 		if(!$this->isDefault()) {
 			$fields->addFieldToTab("Root.Main", new ReadonlyField("ExchangeRate", $fieldLabels["ExchangeRate"], $this->ExchangeRate()));
 			$fields->addFieldToTab("Root.Main", new ReadonlyField("ExchangeRateExplanation", $fieldLabels["ExchangeRateExplanation"], $this->ExchangeRateExplanation()));
 		}
 		return $fields;
+	}
+
+	function Symbol() {return $this->getSymbol();}
+	function getSymbol() {
+		$money = new Money();
+		$symbol = $money->getSymbol($this->Code);
+		$i = 0;
+		while($i < strlen($symbol) && $symbol[$i] === $this->Code[$i]) {
+			$i++;
+		}
+		return substr($symbol, $i);
 	}
 
 	/**
@@ -361,18 +371,13 @@ class EcommerceCurrency extends DataObject {
 	static function create_new($code) {
 		$code = strtolower($code);
 		$name = $code;
-		$symbol = null;
 		if(isset(self::$currencies[$code])) {
 			$name = self::$currencies[$code];
-			if(is_array($name)) {
-				list($name, $symbol) = $name;
-			}
 		}
 		$name = ucwords($name);
 		$currency = new EcommerceCurrency(array(
 			'Code' => $code,
 			'Name' => $name,
-			'Symbol' => $symbol,
 			'InUse' => true
 		));
 		$valid = $currency->write();
@@ -406,17 +411,17 @@ class EcommerceCurrency extends DataObject {
 		'all' => 'albania leke',
 		'dzd' => 'algeria dinars',
 		'ars' => 'argentina pesos',
-		'aud' => array('australia dollars', '$'),
+		'aud' => 'australia dollars',
 		'ats' => 'austria schillings*',
-		'bsd' => array('bahamas dollars', '$'),
+		'bsd' => 'bahamas dollars',
 		'bhd' => 'bahrain dinars',
 		'bdt' => 'bangladesh taka',
-		'bbd' => array('barbados dollars', '$'),
+		'bbd' => 'barbados dollars',
 		'bef' => 'belgium francs*',
-		'bmd' => array('bermuda dollars', '$'),
+		'bmd' => 'bermuda dollars',
 		'brl' => 'brazil reais',
 		'bgn' => 'bulgaria leva',
-		'cad' => array('canada dollars', '$'),
+		'cad' => 'canada dollars',
 		'xof' => 'cfa bceao francs',
 		'xaf' => 'cfa beac francs',
 		'clp' => 'chile pesos',
@@ -424,24 +429,24 @@ class EcommerceCurrency extends DataObject {
 		'cop' => 'colombia pesos',
 		'crc' => 'costa rica colones',
 		'hrk' => 'croatia kuna',
-		'cyp' => array('cyprus pounds', '£'),
+		'cyp' => 'cyprus pounds',
 		'czk' => 'czech republic koruny',
-		'dkk' => array('denmark kroner', 'kr'),
+		'dkk' => 'denmark kroner', 'kr'),
 		'dem' => 'deutsche (germany) marks*',
 		'dop' => 'dominican republic pesos',
 		'nlg' => 'dutch (netherlands) guilders*',
-		'xcd' => array('eastern caribbean dollars', '$'),
-		'egp' => array('egypt pounds', '£'),
+		'xcd' => 'eastern caribbean dollars',
+		'egp' => 'egypt pounds',
 		'eek' => 'estonia krooni',
-		'eur' => array('euro', '€'),
-		'fjd' => array('fiji dollars', '$'),
+		'eur' => 'euro',
+		'fjd' => 'fiji dollars',
 		'fim' => 'finland markkaa*',
 		'frf' => 'france francs*',
 		'dem' => 'germany deutsche marks*',
 		'xau' => 'gold ounces',
 		'grd' => 'greece drachmae*',
 		'nlg' => 'holland (netherlands) guilders*',
-		'hkd' => array('hong kong dollars', '$'),
+		'hkd' => 'hong kong dollars',
 		'huf' => 'hungary forint',
 		'isk' => 'iceland kronur',
 		'xdr' => 'imf special drawing right',
@@ -449,16 +454,16 @@ class EcommerceCurrency extends DataObject {
 		'idr' => 'indonesia rupiahs',
 		'irr' => 'iran rials',
 		'iqd' => 'iraq dinars',
-		'iep' => array('ireland pounds*', '£'),
+		'iep' => 'ireland pounds*',
 		'ils' => 'israel new shekels',
 		'itl' => 'italy lire*',
-		'jmd' => array('jamaica dollars', '$'),
+		'jmd' => 'jamaica dollars',
 		'jpy' => 'japan yen',
 		'jod' => 'jordan dinars',
 		'kes' => 'kenya shillings',
 		'krw' => 'korea (south) won',
 		'kwd' => 'kuwait dinars',
-		'lbp' => array('lebanon pounds', '£'),
+		'lbp' => 'lebanon pounds',
 		'luf' => 'luxembourg francs*',
 		'myr' => 'malaysia ringgits',
 		'mtl' => 'malta liri',
@@ -466,22 +471,22 @@ class EcommerceCurrency extends DataObject {
 		'mxn' => 'mexico pesos',
 		'mad' => 'morocco dirhams',
 		'nlg' => 'netherlands guilders*',
-		'nzd' => array('new zealand dollars', '$'),
-		'nok' => array('norway kroner', 'kr'),
+		'nzd' => 'new zealand dollars',
+		'nok' => 'norway kroner',
 		'omr' => 'oman rials',
 		'pkr' => 'pakistan rupees',
 		'xpd' => 'palladium ounces',
 		'pen' => 'peru nuevos soles',
 		'php' => 'philippines pesos',
 		'xpt' => 'platinum ounces',
-		'pln' => array('poland zlotych', 'zł'),
+		'pln' => 'poland zlotych',
 		'pte' => 'portugal escudos*',
 		'qar' => 'qatar riyals',
 		'rol' => 'romania lei',
 		'rub' => 'russia rubles',
 		'sar' => 'saudi arabia riyals',
 		'xag' => 'silver ounces',
-		'sgd' => array('singapore dollars', '$'),
+		'sgd' => 'singapore dollars',
 		'skk' => 'slovakia koruny',
 		'sit' => 'slovenia tolars',
 		'zar' => 'south africa rand',
@@ -490,17 +495,17 @@ class EcommerceCurrency extends DataObject {
 		'xdr' => 'special drawing rights (imf)',
 		'lkr' => 'sri lanka rupees',
 		'sdd' => 'sudan dinars',
-		'sek' => array('sweden kronor', 'kr'),
-		'chf' => array('switzerland francs', 'S₣'),
-		'twd' => array('taiwan new dollars', '$'),
+		'sek' => 'sweden kronor',
+		'chf' => 'switzerland francs',
+		'twd' => 'taiwan new dollars',
 		'thb' => 'thailand baht',
-		'ttd' => array('trinidad and tobago dollars', '$'),
+		'ttd' => 'trinidad and tobago dollars',
 		'tnd' => 'tunisia dinars',
 		'try' => 'turkey new lira',
 		'trl' => 'turkey lira*',
 		'aed' => 'united arab emirates dirhams',
-		'gbp' => array('united kingdom pounds', '£'),
-		'usd' => array('united states dollars', '$'),
+		'gbp' => 'united kingdom pounds',
+		'usd' => 'united states dollars',
 		'veb' => 'venezuela bolivares',
 		'vnd' => 'vietnam dong',
 		'zmk' => 'zambia kwacha'
