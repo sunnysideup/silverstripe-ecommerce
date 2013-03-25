@@ -125,7 +125,6 @@ class Order extends DataObject {
 		'TotalPaid' => 'Currency',
 		'TotalOutstanding' => 'Currency',
 		'TotalOutstandingAsMoneyObject' => 'Money',
-		'DisplayPrice' => 'Money',
 		'HasAlternativeCurrency' => 'Boolean',
 		'TotalItems' => 'Int',
 		'TotalItemsTimesQuantity' => 'Double',
@@ -1858,20 +1857,12 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * @return Money
-	 **/
-	function TotalAsMoneyObject(){return $this->getTotalAsMoneyObject();}
-	function getTotalAsMoneyObject(){
-		return EcommerceCurrency::display_price($this->Total(), $this, "", true);
-	}
-
-	/**
 	 *
 	 * @return Money | Null
 	 **/
-	function DisplayPrice(){return $this->getDisplayPrice();}
-	function getDisplayPrice(){
-		return EcommerceCurrency::display_price($this->Total(), $this);
+	function DisplayTotal(){return $this->getDisplayTotal();}
+	function getDisplayTotal(){
+		return EcommerceCurrency::display_from_order_currency($this->Total(), $this);
 	}
 
 	/**
@@ -1880,8 +1871,8 @@ class Order extends DataObject {
 	 *
 	 * @return float
 	 **/
-	function TotalOutstanding(){return $this->getTotalOutstanding();}
-	function getTotalOutstanding(){
+	function TotalOutstanding() {return $this->getTotalOutstanding();}
+	function getTotalOutstanding() {
 		if($this->IsSubmitted()) {
 			$total = $this->Total();
 			$paid = $this->TotalPaid();
@@ -1908,9 +1899,14 @@ class Order extends DataObject {
 	/**
 	 * @return Money
 	 **/
-	function TotalOutstandingAsMoneyObject(){return $this->getTotalOutstandingAsMoneyObject();}
-	function getTotalOutstandingAsMoneyObject(){
-		return EcommerceCurrency::display_price($this->TotalOutstanding(), $this, "", true);
+	function TotalOutstandingAsMoneyObject() {return $this->getTotalOutstandingAsMoneyObject();}
+	function getTotalOutstandingAsMoneyObject() {
+		return EcommerceCurrency::display_from_order_currency($this->TotalOutstanding(), $this, false);
+	}
+
+	function DisplayTotalOutstanding() {return $this->getDisplayTotalOutstanding();}
+	function getDisplayTotalOutstanding() {
+		return EcommerceCurrency::display_from_order_currency($this->TotalOutstanding(), $this);
 	}
 
 	/**
