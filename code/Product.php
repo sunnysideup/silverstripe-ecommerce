@@ -75,7 +75,6 @@ class Product extends Page implements BuyableModel {
 	 */
 	public static $casting = array(
 		"CalculatedPrice" => "Currency",
-		"DisplayPrice" => "Money",
 		"AllowPurchaseNice" => "Varchar"
 	);
 
@@ -741,7 +740,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	function DisplayPrice() {return $this->getDisplayPrice();}
 	function getDisplayPrice() {
-		return EcommerceCurrency::display_price($this->CalculatedPrice(), null);
+		return EcommerceCurrency::display_price_from_order_currency($this->CalculatedPrice());
 	}
 
 
