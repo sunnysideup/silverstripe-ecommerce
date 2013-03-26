@@ -12,7 +12,7 @@
 		<tr class="gap total summary">
 			<th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
 			<td class="right total" id="$AJAXDefinitions.TableTotalID">
-				<span class="value">$DisplayTotal</span>
+				<span class="value">$TotalAsMoney.NiceWithSymbol</span>
 				<% include Order_Content_DisplayPrice %>
 			</td>
 		</tr>
@@ -32,20 +32,20 @@
 			</td>
 			<td class="center quantity">$Quantity</td>
 			<td class="right unitprice">{$Order.CurrencyUsed.Symbol}{$UnitPrice}</td>
-			<td class="right total">$DisplayTotal</td>
+			<td class="right total">$CalculatedTotalAsMoney.NiceWithSymbol</td>
 		</tr>
 		<% end_control %>
 
 		<tr class="gap summary" id="SubTotal">
 			<th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right">$DisplaySubTotal</td>
+			<td class="right">$SubTotalAsMoney.NiceWithSymbol</td>
 		</tr>
 
 		<% control Modifiers %>
 			<% if ShowInTable %>
 		<tr class="modifierRow $EvenOdd $FirstLast $Classes <% if HideInAjaxUpdate %> hideForNow<% end_if %>">
 			<td colspan="3" scope="row">$TableTitle</td>
-			<td class="right total">$DisplayTotal</td>
+			<td class="right total">$CalculatedTotalAsMoney.NiceWithSymbol</td>
 		</tr>
 			<% end_if %>
 		<% end_control %>

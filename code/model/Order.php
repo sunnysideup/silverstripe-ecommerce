@@ -121,10 +121,13 @@ class Order extends DataObject {
 		'RetrieveLink' => 'Text',
 		'Title' => 'Text',
 		'Total' => 'Currency',
+		'TotalAsMoney' => 'Money',
 		'SubTotal' => 'Currency',
+		'SubTotalAsMoney' => 'Money',
 		'TotalPaid' => 'Currency',
+		'TotalPaidAsMoney' => 'Money',
 		'TotalOutstanding' => 'Currency',
-		'TotalOutstandingAsMoneyObject' => 'Money',
+		'TotalOutstandingAsMoney' => 'Money',
 		'HasAlternativeCurrency' => 'Boolean',
 		'TotalItems' => 'Int',
 		'TotalItemsTimesQuantity' => 'Double',
@@ -1829,23 +1832,23 @@ class Order extends DataObject {
 		return $result;
 	}
 
-
 	/**
 	 *
 	 * @return Currency (DB Object)
 	 **/
 	function SubTotalAsCurrencyObject() {
-		return DBField::create('Currency',$this->SubTotal());
+		return DBField::create('Currency', $this->SubTotal());
 	}
 
 	/**
 	 *
-	 * @return Money | Null
+	 * @return Money
 	 **/
-	function DisplaySubTotal() {return $this->getDisplaySubTotal();}
-	function getDisplaySubTotal() {
-		return EcommerceCurrency::display_from_order_currency($this->SubTotal(), $this);
+	function SubTotalAsMoney() {return $this->getSubTotalAsMoney();}
+	function getSubTotalAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->SubTotal(), $this);
 	}
+
 
 	/**
 	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
@@ -1856,23 +1859,23 @@ class Order extends DataObject {
 		return $this->SubTotal() + $this->ModifiersSubTotal();
 	}
 
-
 	/**
 	 *
 	 * @return Currency (DB Object)
 	 **/
 	function TotalAsCurrencyObject() {
-		return DBField::create('Currency',$this->Total());
+		return DBField::create('Currency', $this->Total());
 	}
 
 	/**
 	 *
-	 * @return Money | Null
+	 * @return Money
 	 **/
-	function DisplayTotal() {return $this->getDisplayTotal();}
-	function getDisplayTotal() {
-		return EcommerceCurrency::display_from_order_currency($this->Total(), $this);
+	function TotalAsMoney() {return $this->getTotalAsMoney();}
+	function getTotalAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->Total(), $this);
 	}
+
 
 	/**
 	 * Checks to see if any payments have been made on this order
@@ -1901,22 +1904,19 @@ class Order extends DataObject {
 	 *
 	 * @return Currency (DB Object)
 	 **/
-	function TotalOutstandingAsCurrencyObject(){
-		return DBField::create('Currency',$this->TotalOutstanding());
+	function TotalOutstandingAsCurrencyObject() {
+		return DBField::create('Currency', $this->TotalOutstanding());
 	}
 
 	/**
+	 *
 	 * @return Money
 	 **/
-	function TotalOutstandingAsMoneyObject() {return $this->getTotalOutstandingAsMoneyObject();}
-	function getTotalOutstandingAsMoneyObject() {
-		return EcommerceCurrency::display_from_order_currency($this->TotalOutstanding(), $this, false);
+	function TotalOutstandingAsMoney() {return $this->getTotalOutstandingAsMoney();}
+	function getTotalOutstandingAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->TotalOutstanding(), $this);
 	}
 
-	function DisplayTotalOutstanding() {return $this->getDisplayTotalOutstanding();}
-	function getDisplayTotalOutstanding() {
-		return EcommerceCurrency::display_from_order_currency($this->TotalOutstanding(), $this);
-	}
 
 	/**
 	 * @return float
@@ -1938,14 +1938,23 @@ class Order extends DataObject {
 		return $paid * $reverseExchange;
 	}
 
-
 	/**
 	 *
 	 * @return Currency (DB Object)
 	 **/
-	function TotalPaidAsCurrencyObject(){
-		return DBField::create('Currency',$this->TotalPaid());
+	function TotalPaidAsCurrencyObject() {
+		return DBField::create('Currency', $this->TotalPaid());
 	}
+
+	/**
+	 *
+	 * @return Money
+	 **/
+	function TotalPaidAsMoney() {return $this->getTotalPaidAsMoney();}
+	function getTotalPaidAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->TotalPaid(), $this);
+	}
+
 
 	/**
 	 * returns the total number of OrderItems (not modifiers).

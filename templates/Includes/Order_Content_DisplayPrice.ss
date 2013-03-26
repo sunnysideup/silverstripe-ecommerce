@@ -1,1 +1,1 @@
-<% if DisplayPrice %> <span class="currencyQuantifier">($DisplayPrice)</span><% end_if %>
+<% if $TotalAsMoney %> <span class="currencyQuantifier">($TotalAsMoney.NiceWithSymbol)</span><% end_if %>
