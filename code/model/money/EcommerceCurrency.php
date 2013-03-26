@@ -163,6 +163,16 @@ class EcommerceCurrency extends DataObject {
 		return $function ? $money->$function($options) : $money;
 	}
 
+	public static function get_money_object_from_order_currency($price, Order $order = null) {
+		if(! $order) {
+			$order = ShoppingCart::current_order();
+		}
+		$currency = $order->CurrencyUsed();
+		$money = DBField::create('Money', array('Amount' => $price, 'Currency' => $currency->Code));
+		$money->setSymbol($currency->getSymbol());
+		return $money;
+	}
+
 	public static function default_currency() {
 		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
 	}	
