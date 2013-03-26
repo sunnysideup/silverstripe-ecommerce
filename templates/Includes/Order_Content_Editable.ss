@@ -4,8 +4,8 @@
 		<tr>
 			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
 			<th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
-			<th scope="col" class="right"><% _t("Order.PRICE","Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
-			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %><% if EcomConfig.Currency %> ($EcomConfig.Currency)<% end_if %></th>
+			<th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
+			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %> ($CurrencyUsed.Code)</th>
 			<th scope="col" class="right"></th>
 		</tr>
 	</thead>
@@ -14,7 +14,7 @@
 		<tr class="gap total summary hideOnZeroItems">
 			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
 			<td class="right total" id="$AJAXDefinitions.TableTotalID">
-				<span class="value">$Total.Nice</span>
+				<span class="value">$TotalAsMoney.NiceWithSymbol</span>
 				<% include Order_Content_DisplayPrice %>
 			</td>
 			<td>&nbsp;</td>
@@ -47,7 +47,7 @@
 
 		<tr class="gap summary hideOnZeroItems">
 			<th colspan="3" scope="row"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotal.Nice</td>
+			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceWithSymbol</td>
 			<td>&nbsp;</td>
 		</tr>
 
