@@ -179,7 +179,7 @@ class EcommerceCurrency extends DataObject {
 	public static function get_one_from_code($currencyCode) {
 		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '$currencyCode' AND \"InUse\" = 1");
 	}
-	
+
 	/**
 	 * STANDARD SILVERSTRIPE STUFF
 	 **/
@@ -431,7 +431,7 @@ class EcommerceCurrency extends DataObject {
 		'hrk' => 'croatia kuna',
 		'cyp' => 'cyprus pounds',
 		'czk' => 'czech republic koruny',
-		'dkk' => 'denmark kroner', 'kr'),
+		'dkk' => 'denmark kroner',
 		'dem' => 'deutsche (germany) marks*',
 		'dop' => 'dominican republic pesos',
 		'nlg' => 'dutch (netherlands) guilders*',
@@ -510,4 +510,15 @@ class EcommerceCurrency extends DataObject {
 		'vnd' => 'vietnam dong',
 		'zmk' => 'zambia kwacha'
 	);
+}
+
+class EcommerceCurrency_MoneyEXT extends Extension {
+
+	protected $symbol;
+
+	function NiceWithSymbol() {
+		return $this->owner->Nice(array('symbol' => $this->symbol));
+	}
+
+	function setSymbol($symbol) {$this->symbol = $symbol;}
 }
