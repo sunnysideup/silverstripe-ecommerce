@@ -184,7 +184,7 @@ class EcommerceConfigDefinitions extends Object {
 			"EcommerceCurrency" => array(
 				"exchange_provider_class" => "The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.",
 			),
-			"EMoney" => array(
+			"EcommerceMoney" => array(
 				"default_format" => "Here you specify which function you want to be called as the default format for a Money object on the all site."
 			),
 			"ExpiryDateField" => array(

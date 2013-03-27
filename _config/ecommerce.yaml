@@ -175,7 +175,7 @@ Order_Email:
 
 EcommerceCurrency:
 	exchange_provider_class: ExchangeRateProvider
-EMoney:
+EcommerceMoney:
 	default_format: NiceShortSymbol
 
 ################### CONTROL #####################

@@ -1,6 +1,6 @@
 <?php
 
-class EMoney extends Extension {
+class EcommerceMoney extends Extension {
 
 	static function get_default_symbol($currency) {
 		$money = new Money();
@@ -29,5 +29,5 @@ class EMoney extends Extension {
 	function NiceDefaultSymbol() {return $this->owner->Nice(array('symbol' => '<span class="currencySymbol currencyDefaultSymbol">' . self::get_default_symbol($this->owner->currency) . '</span>'));}
 	function NiceShortSymbol() {return $this->owner->Nice(array('symbol' => '<span class="currencySymbol currencyShortSymbol">' . self::get_short_symbol($this->owner->currency) . '</span>'));}
 	function NiceLongSymbol() {return $this->owner->Nice(array('symbol' => '<span class="currencySymbol currencyLongSymbol">' . self::get_long_symbol($this->owner->currency) . '</span>'));}
-	function NiceDefaultFormat() {$function = EcommerceConfig::get('EMoney', 'default_format'); return $this->owner->$function();}
+	function NiceDefaultFormat() {$function = EcommerceConfig::get('EcommerceMoney', 'default_format'); return $this->owner->$function();}
 }
