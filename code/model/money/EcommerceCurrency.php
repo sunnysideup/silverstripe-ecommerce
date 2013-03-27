@@ -45,7 +45,9 @@ class EcommerceCurrency extends DataObject {
 		"IsDefaultNice" => "Varchar",
 		"InUseNice" => "Varchar",
 		"ExchangeRate" => "Double",
-		"Symbol" => "Varchar"
+		"DefaultSymbol" => "Varchar",
+		"ShortSymbol" => "Varchar",
+		"LongSymbol" => "Varchar"
 	);
 
 	/**
@@ -67,7 +69,10 @@ class EcommerceCurrency extends DataObject {
 		"InUse" => "It is available for use?",
 		"ExchangeRate" => "Exchange Rate",
 		"ExchangeRateExplanation" => "Exchange Rate explanation",
-		"IsDefaultNice" => "Is default currency for site"
+		"IsDefaultNice" => "Is default currency for site",
+		"DefaultSymbol" => "Default symbol",
+		"ShortSymbol" => "Short symbol",
+		"LongSymbol" => "Long symbol"
 	);
 
 	/**
@@ -158,9 +163,7 @@ class EcommerceCurrency extends DataObject {
 			$order = ShoppingCart::current_order();
 		}
 		$currency = $order->CurrencyUsed();
-		$money = DBField::create('Money', array('Amount' => $price, 'Currency' => $currency->Code));
-		$money->setSymbol($currency->getSymbol());
-		return $money;
+		return DBField::create('Money', array('Amount' => $price, 'Currency' => $currency->Code));
 	}
 
 	public static function default_currency() {
@@ -187,25 +190,28 @@ class EcommerceCurrency extends DataObject {
 		$fields = parent::getCMSFields();
 		$fieldLabels = $this->fieldLabels();
 		$fields->addFieldToTab("Root.Main", new ReadonlyField("IsDefaulNice", $fieldLabels["IsDefaultNice"], $this->getIsDefaultNice()));
-		$fields->addFieldToTab("Root.Main", new ReadonlyField("Symbol"));
 		if(!$this->isDefault()) {
 			$fields->addFieldToTab("Root.Main", new ReadonlyField("ExchangeRate", $fieldLabels["ExchangeRate"], $this->ExchangeRate()));
 			$fields->addFieldToTab("Root.Main", new ReadonlyField("ExchangeRateExplanation", $fieldLabels["ExchangeRateExplanation"], $this->ExchangeRateExplanation()));
 		}
+		$fields->addFieldsToTab("Root.Main", array(
+			new HeaderField("Symbols"),
+			new ReadonlyField("DefaultSymbol", "Default"),
+			new ReadonlyField("ShortSymbol", "Short"),
+			new ReadonlyField("LongSymbol", "Long")
+		));
 		return $fields;
 	}
 
-	function Symbol() {return $this->getSymbol();}
-	function getSymbol() {
-		$money = new Money();
-		$symbol = $money->getSymbol($this->Code);
-		$i = 0;
-		while($i < strlen($symbol) && $symbol[$i] === $this->Code[$i]) {
-			$i++;
-		}
-		return substr($symbol, $i);
-	}
+	function DefaultSymbol() {return $this->getDefaultSymbol();}
+	function getDefaultSymbol() {return EMoney::get_default_symbol($this->Code);}
 
+	function ShortSymbol() {return $this->getShortSymbol();}
+	function getShortSymbol() {return EMoney::get_short_symbol($this->Code);}
+
+	function LongSymbol() {return $this->getLongSymbol();}
+	function getLongSymbol() {return EMoney::get_long_symbol($this->Code);}
+	
 	/**
 	 * casted variable method
 	 * @return Boolean
@@ -255,9 +261,9 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public function ExchangeRate() {return $this->getExchangeRate();}
 	public function getExchangeRate() {
-		$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
+		/*$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
 		$obj = new ExchangeRateProvider();
-		return $obj->ExchangeRate(Payment::site_currency(), $this->Code);
+		return $obj->ExchangeRate(Payment::site_currency(), $this->Code);*/
 	}
 
 	/**
@@ -266,9 +272,9 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public function ExchangeRateExplanation() {return $this->getExchangeRateExplanation();}
 	public function getExchangeRateExplanation() {
-		$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
+		/*$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
 		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".Payment::site_currency();
-		return $string;
+		return $string;*/
 	}
 
 	/**
@@ -510,15 +516,4 @@ class EcommerceCurrency extends DataObject {
 		'vnd' => 'vietnam dong',
 		'zmk' => 'zambia kwacha'
 	);
-}
-
-class EcommerceCurrency_MoneyEXT extends Extension {
-
-	protected $symbol;
-
-	function NiceWithSymbol() {
-		return $this->owner->Nice(array('symbol' => $this->symbol));
-	}
-
-	function setSymbol($symbol) {$this->symbol = $symbol;}
 }

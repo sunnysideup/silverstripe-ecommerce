@@ -23,7 +23,7 @@ Object::add_extension("Payment", "EcommercePayment");
 Object::add_extension("SiteTree", "EcommerceSiteTreeExtension");
 Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller");
 Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
-Object::add_extension('Money', 'EcommerceCurrency_MoneyEXT');
+Object::add_extension('Money', 'EMoney');
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
 SS_Report::register("SideReport", "EcommerceSideReport_EcommercePages");
