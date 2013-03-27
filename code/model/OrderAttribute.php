@@ -59,8 +59,7 @@ class OrderAttribute extends DataObject {
 		'TableSubTitleNOHTML' => 'Text',
 		'CartTitle' => 'HTMLText',
 		'CartSubTitle' => 'HTMLText',
-		'CalculatedTotalAsMoney' => 'Money',
-		'CalculatedTableValueAsMoney' => 'Money'
+		'CalculatedTotalAsMoney' => 'Money'
 	);
 
 	/**
