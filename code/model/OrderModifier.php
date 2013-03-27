@@ -103,7 +103,7 @@ class OrderModifier extends OrderAttribute {
 	 * @var array
 	 */
 	public static $casting = array(
-		"CalculatedTableValueAsMoney" => "Money"
+		"TableValueAsMoney" => "Money"
 	);
 
 	/**
@@ -415,11 +415,11 @@ class OrderModifier extends OrderAttribute {
 
 
 	/**
-	 * Returns the Money object of the CalculatedTotal
+	 * Returns the Money object of the Table Value
 	 * @return Money
 	 **/
-	function CalculatedTableValueAsMoney() {return $this->getCalculatedTableValueAsMoney();}
-	function getCalculatedTableValueAsMoney() {
+	function TableValueAsMoney() {return $this->getTableValueAsMoney();}
+	function getTableValueAsMoney() {
 		return EcommerceCurrency::get_money_object_from_order_currency($this->TableValue, $this->Order());
 	}
 
