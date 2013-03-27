@@ -127,7 +127,15 @@ class EcommerceConfigDefinitions extends Object {
 				"modifiers" => "This is the single most important setting.  here you determine what modifiers are being added to every order.  You can just add them as a non-associative array.  However, their order is important!",
 				"maximum_ignorable_sales_payments_difference" => "The maximum allowable difference between the Order Total and the Payment Total. 	If this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered 'paid'",
 				"order_id_start_number" => "The starting number for the order number. For example, if you enter 1000 here then the first order will have number 1000, the next one 1001 and so on.",
-				"template_id_prefix" => "If you end up with conflicts in your templates (e.g. having the same ID twice) then you can use this variable to set an prefix to all PHP generated IDs in all templates. We use these PHP generated IDs for AJAX templates - where HTML, JS and PHP need to work together. "
+				"template_id_prefix" => "If you end up with conflicts in your templates (e.g. having the same ID twice) then you can use this variable to set an prefix to all PHP generated IDs in all templates. We use these PHP generated IDs for AJAX templates - where HTML, JS and PHP need to work together.",
+				"ajax_subtotal_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the SubTotal value. You can also specify if you want a format to be called on that function.",
+				"ajax_total_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function."
+			),
+			"OrderItem" => array(
+				"ajax_total_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function."
+			),
+			"OrderModifier" => array(
+				"ajax_total_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function."
 			),
 			"OrderStatusLog" => array(
 				"available_log_classes_array" => "Tells us what order log classes are to be used. OrderStatusLog_Submitted should always be used and does not need to be listed here.",
@@ -175,6 +183,9 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"EcommerceCurrency" => array(
 				"exchange_provider_class" => "The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.",
+			),
+			"EMoney" => array(
+				"default_format" => "Here you specify which function you want to be called as the default format for a Money object on the all site."
 			),
 			"ExpiryDateField" => array(
 				"short_months" => "Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?",
