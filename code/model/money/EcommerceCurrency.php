@@ -24,14 +24,6 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $many_many = array(
-		"EcommerceCountries" => "EcommerceCountry"
-	);
-
-	/**
-	 * standard SS variable
-	 * @var Array
-	 */
 	public static $indexes = array(
 		"Code" => true,
 	);
@@ -168,7 +160,7 @@ class EcommerceCurrency extends DataObject {
 
 	public static function default_currency() {
 		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
-	}	
+	}
 	public static function default_currency_id() {
 		$currency = self::default_currency();
 		return $currency ? $currency->ID : 0;
