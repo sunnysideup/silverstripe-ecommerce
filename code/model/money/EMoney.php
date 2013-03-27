@@ -11,7 +11,7 @@ class EMoney extends Extension {
 		$symbol = self::get_default_symbol($currency);
 		if($symbol) {
 			$i = 0;
-			while($i < strlen($symbol) && $symbol[$i] === $currency[$i]) {
+			while($i < mb_strlen($symbol) && $symbol[$i] === $currency[$i]) {
 				$i++;
 			}
 			return substr($symbol, $i);
@@ -20,8 +20,8 @@ class EMoney extends Extension {
 
 	static function get_long_symbol($currency) {
 		$symbol = self::get_default_symbol($currency);
-		if($symbol && strlen($symbol) < 3) {
-			$symbol = substr($currency, 0, 3 - strlen($symbol)) . $symbol;
+		if($symbol && mb_strlen($symbol) < 3) {
+			$symbol = substr($currency, 0, 3 - mb_strlen($symbol)) . $symbol;
 		}
 		return $symbol;
 	}
