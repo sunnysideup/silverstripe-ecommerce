@@ -99,6 +99,14 @@ class OrderModifier extends OrderAttribute {
 	);
 
 	/**
+	 * stardard SS definition
+	 * @var array
+	 */
+	public static $casting = array(
+		"CalculatedTableValueAsMoney" => "Money"
+	);
+
+	/**
 	 * stardard SS variable
 	 * @var String
 	 */
@@ -403,6 +411,16 @@ class OrderModifier extends OrderAttribute {
 			user_error("While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier", E_USER_ERROR);
 		}
 		return false;
+	}
+
+
+	/**
+	 * Returns the Money object of the CalculatedTotal
+	 * @return Money
+	 **/
+	function CalculatedTableValueAsMoney() {return $this->getCalculatedTableValueAsMoney();}
+	function getCalculatedTableValueAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->TableValue, $this->Order());
 	}
 
 	/**
