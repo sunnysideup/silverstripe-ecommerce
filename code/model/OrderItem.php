@@ -205,7 +205,14 @@ class OrderItem extends OrderAttribute {
 	 * @return Array used to create JSON for AJAX
 	  **/
 	function updateForAjax(array &$js) {
-		$total = $this->TotalAsCurrencyObject()->Nice();
+		$function = EcommerceConfig::get('OrderItem', 'ajax_total_format');
+		if(is_array($function)) {
+			list($function, $format) = $function;
+		}
+		$total = $this->$function();
+		if(isset($format)) {
+			$total = $total->$format();
+		}
 		$ajaxObject = $this->AJAXDefinitions();
 		if($this->Quantity) {
 			$js[] = array(
