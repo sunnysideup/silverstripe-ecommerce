@@ -196,13 +196,13 @@ class EcommerceCurrency extends DataObject {
 	}
 
 	function DefaultSymbol() {return $this->getDefaultSymbol();}
-	function getDefaultSymbol() {return EMoney::get_default_symbol($this->Code);}
+	function getDefaultSymbol() {return EcommerceMoney::get_default_symbol($this->Code);}
 
 	function ShortSymbol() {return $this->getShortSymbol();}
-	function getShortSymbol() {return EMoney::get_short_symbol($this->Code);}
+	function getShortSymbol() {return EcommerceMoney::get_short_symbol($this->Code);}
 
 	function LongSymbol() {return $this->getLongSymbol();}
-	function getLongSymbol() {return EMoney::get_long_symbol($this->Code);}
+	function getLongSymbol() {return EcommerceMoney::get_long_symbol($this->Code);}
 	
 	/**
 	 * casted variable method
