@@ -569,7 +569,8 @@ class OrderItem extends OrderAttribute {
 	 *
 	 * @return String
 	 */
-	function AbsoluteLink(){
+	function AbsoluteLink(){return $this->getAbsoluteLink();}
+	function getAbsoluteLink(){
 		return Director::absoluteURL($this->Link());
 	}
 
