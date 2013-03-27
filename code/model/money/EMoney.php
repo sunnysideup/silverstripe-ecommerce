@@ -26,8 +26,8 @@ class EMoney extends Extension {
 		return $symbol;
 	}
 
-	function NiceDefaultSymbol() {return $this->owner->Nice();}
-	function NiceShortSymbol() {return $this->owner->Nice(array('symbol' => self::get_short_symbol($this->owner->currency)));}
-	function NiceLongSymbol() {return $this->owner->Nice(array('symbol' => self::get_long_symbol($this->owner->currency)));}
+	function NiceDefaultSymbol() {return $this->owner->Nice(array('symbol' => '<span class="currencySymbol currencyDefaultSymbol">' . self::get_default_symbol($this->owner->currency) . '</span>'));}
+	function NiceShortSymbol() {return $this->owner->Nice(array('symbol' => '<span class="currencySymbol currencyShortSymbol">' . self::get_short_symbol($this->owner->currency) . '</span>'));}
+	function NiceLongSymbol() {return $this->owner->Nice(array('symbol' => '<span class="currencySymbol currencyLongSymbol">' . self::get_long_symbol($this->owner->currency) . '</span>'));}
 	function NiceDefaultFormat() {$function = EcommerceConfig::get('EMoney', 'default_format'); return $this->owner->$function();}
 }
