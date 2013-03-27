@@ -2347,8 +2347,23 @@ class Order extends DataObject {
 	 * @return Array (for use in AJAX for JSON)
 	 **/
 	function updateForAjax(array &$js) {
-		$subTotal = $this->SubTotalAsCurrencyObject()->Nice();
-		$total = $this->TotalAsCurrencyObject()->Nice();
+		$function = EcommerceConfig::get('Order', 'ajax_subtotal_format');
+		if(is_array($function)) {
+			list($function, $format) = $function;
+		}
+		$subTotal = $this->$function();
+		if(isset($format)) {
+			$subTotal = $subTotal->$format();
+			unset($format);
+		}
+		$function = EcommerceConfig::get('Order', 'ajax_total_format');
+		if(is_array($function)) {
+			list($function, $format) = $function;
+		}
+		$total = $this->$function();
+		if(isset($format)) {
+			$total = $total->$format();
+		}
 		$ajaxObject = $this->AJAXDefinitions();
 		$js[] = array(
 			't' => 'id',

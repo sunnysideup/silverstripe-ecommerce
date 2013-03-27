@@ -595,9 +595,15 @@ class OrderModifier extends OrderAttribute {
 	 * @return Array for AJAX JSON
 	 **/
 	function updateForAjax(array &$js) {
+		$function = EcommerceConfig::get('OrderModifier', 'ajax_total_format');
+		if(is_array($function)) {
+			list($function, $format) = $function;
+		}
+		$total = $this->$function();
+		if(isset($format)) {
+			$total = $total->$format();
+		}
 		$ajaxObject = $this->AJAXDefinitions();
-		//TableValue is a database value
-		$tableValue = DBField::create('Currency',$this->TableValue)->Nice();
 		if($this->HideInAjaxUpdate()) {
 			$js[] = array(
 				't' => 'id',
@@ -641,7 +647,7 @@ class OrderModifier extends OrderAttribute {
 				't' => 'id',
 				's' => $ajaxObject->TableTotalID(),
 				'p' => 'innerHTML',
-				'v' => $tableValue
+				'v' => $total
 			);
 		}
 	}

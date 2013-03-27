@@ -72,7 +72,14 @@ Order:
 	maximum_ignorable_sales_payments_difference: 0.01
 	order_id_start_number: 0
 	template_id_prefix: ""
+	ajax_subtotal_format: [SubTotalAsMoney, NiceDefaultFormat]
+	ajax_total_format: [TotalAsMoney, NiceDefaultFormat]
 
+OrderItem:
+	ajax_total_format: [CalculatedTotalAsMoney, NiceDefaultFormat]
+
+OrderModifier:
+	ajax_total_format: [CalculatedTotalAsMoney, NiceDefaultFormat]
 
 OrderStep:
 	order_steps_to_include: [
