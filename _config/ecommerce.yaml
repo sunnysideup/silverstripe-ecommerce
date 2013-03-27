@@ -168,6 +168,8 @@ Order_Email:
 
 EcommerceCurrency:
 	exchange_provider_class: ExchangeRateProvider
+EMoney:
+	default_format: NiceShortSymbol
 
 ################### CONTROL #####################
 

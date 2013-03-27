@@ -62,6 +62,7 @@ class OrderItem extends OrderAttribute {
 	 */
 	public static $casting = array(
 		'UnitPrice' => 'Currency',
+		'UnitPriceAsMoney' => 'Money',
 		'Total' => 'Currency',
 		'InternalItemID' => 'Varchar',
 		'Link' => 'Varchar',
@@ -355,6 +356,11 @@ class OrderItem extends OrderAttribute {
 		//NOTE: user_error("OrderItem::UnitPrice() called. Please implement UnitPrice() and getUnitPrice on $this->class", E_USER_NOTICE);
 			return 0;
 		}
+	}
+
+	public function UnitPriceAsMoney($recalculate = false) {return $this->getUnitPriceAsMoney($recalculate);}
+	public function getUnitPriceAsMoney($recalculate = false) {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->UnitPrice($recalculate), $this->Order());
 	}
 
 	/**

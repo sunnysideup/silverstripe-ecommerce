@@ -14,7 +14,7 @@
 		<tr class="gap total summary hideOnZeroItems">
 			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
 			<td class="right total" id="$AJAXDefinitions.TableTotalID">
-				<span class="value">$TotalAsMoney.NiceWithSymbol</span>
+				<span class="value">$TotalAsMoney.NiceDefaultFormat</span>
 				<% include Order_Content_DisplayPrice %>
 			</td>
 			<td>&nbsp;</td>
@@ -47,7 +47,7 @@
 
 		<tr class="gap summary hideOnZeroItems">
 			<th colspan="3" scope="row"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceWithSymbol</td>
+			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
 			<td>&nbsp;</td>
 		</tr>
 
