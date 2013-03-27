@@ -546,7 +546,8 @@ class OrderItem extends OrderAttribute {
 	 *
 	 * @return String (URLSegment)
 	  **/
-	function Link() {
+	function Link() {return $this->getLink();}
+	function getLink() {
 		$item = $this->Buyable();
 		if($item) {
 			$order = $this->Order();
