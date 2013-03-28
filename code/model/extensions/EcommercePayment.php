@@ -72,6 +72,10 @@ class EcommercePayment extends DataObjectDecorator {
 			$paidBy = Member::currentUser();
 		}
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
+		
+		// We call this static function instead of trying to do a setCurrency because most payment gateways use Payment::site_currency()
+		Payment::set_site_currency($order->CurrencyUsed()->Code);
+		
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
 		if(!($payment && $payment instanceof Payment)) {
 			$form->sessionMessage(_t('EcommercePayment.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
