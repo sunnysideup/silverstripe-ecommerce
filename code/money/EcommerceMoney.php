@@ -32,7 +32,7 @@ class EcommerceMoney extends Extension {
 	function NiceShortSymbol($html = true) {
 		$symbol = self::get_short_symbol($this->owner->currency);
 		if($html) {
-			$symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class\"currencySymbol\">$symbol</span></span>";
+			$symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">$symbol</span></span>";
 		}
 		return $this->owner->Nice(array('symbol' => $symbol));
 	}
@@ -41,7 +41,7 @@ class EcommerceMoney extends Extension {
 		if($html) {
 			$short = self::get_short_symbol($this->owner->currency);
 			$pre = substr($symbol, 0, mb_strlen($symbol) - mb_strlen($short));
-			$symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class\"currencyPreSymbol\">$pre</span><span class\"currencySymbol\">$short</span></span>";
+			$symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">$pre</span><span class=\"currencySymbol\">$short</span></span>";
 		}
 		return $this->owner->Nice(array('symbol' => $symbol));
 	}
