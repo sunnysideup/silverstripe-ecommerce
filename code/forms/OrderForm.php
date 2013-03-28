@@ -31,7 +31,7 @@ class OrderForm extends Form {
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
 		if($order->Total() > 0) {
-			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat());
+			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
 			foreach($paymentFields as $paymentField) {
 				if($paymentField->class == "HeaderField") {
 					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
@@ -299,7 +299,7 @@ class OrderForm_Payment extends Form {
 		if($returnToLink) {
 			$fields->push(new HiddenField("returntolink", "", convert::raw2att($returnToLink)));
 		}
-		$paymentFields = Payment::combined_form_fields($order->getTotalOutstandingAsMoney()->NiceDefaultFormat());
+		$paymentFields = Payment::combined_form_fields($order->getTotalOutstandingAsMoney()->NiceDefaultFormat(false));
 		foreach($paymentFields as $paymentField) {
 			if($paymentField->class == "HeaderField") {
 				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
