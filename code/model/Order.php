@@ -1166,6 +1166,7 @@ class Order extends DataObject {
 		$replacementArray["ShopPhysicalAddress"] = $config->ShopPhysicalAddress;
 		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
 		$replacementArray["BaseURL"] = Director::baseURL();
+		$this->extend('updateReplacementArrayForEmail', $replacementArray);
 		return $replacementArray;
 	}
 
