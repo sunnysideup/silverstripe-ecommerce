@@ -29,6 +29,7 @@ EcomProducts = {
 			EcomQuantityField.unset_delegateRootSelector();
 		}
 	},
+
 	colorboxDialogOptions_viewImages: {
 	},
 
