@@ -1244,6 +1244,15 @@ class Product_OrderItem extends OrderItem {
 		if($product = $this->Product()) {
 			$tableTitle = strip_tags($product->renderWith("ProductTableTitle"));
 		}
+		$updatedTableTitle = $this->extend('updateTableTitle',$tableTitle);
+		if($updatedTableTitle) {
+			if(is_array($updatedTableTitle)) {
+				$tableTitle = implode($updatedTableTitle);
+			}
+			else {
+				$tableTitle = $updatedTableTitle;
+			}
+		}
 		return $tableTitle;
 	}
 
@@ -1252,12 +1261,20 @@ class Product_OrderItem extends OrderItem {
 	 **/
 	function TableSubTitle() {return $this->getTableSubTitle();}
 	function getTableSubTitle() {
-		$tableSubtitle = '';
+		$tableSubTitle = '';
 		if($product = $this->Product()) {
-			$tableSubtitle = $product->Quantifier;
+			$tableSubTitle = $product->Quantifier;
 		}
-		$this->extend('updateTableSubTitle',$tableSubtitle);
-		return $tableSubtitle;
+		$updatedSubTableTitle = $this->extend('updateSubTableTitle',$tableSubTitle);
+		if($updatedSubTableTitle) {
+			if(is_array($updatedSubTableTitle)) {
+				$tableSubTitle = implode($updatedSubTableTitle);
+			}
+			else {
+				$tableSubTitle = $updatedSubTableTitle;
+			}
+		}
+		return $tableSubTitle;
 	}
 
 	/**

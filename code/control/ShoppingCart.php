@@ -376,24 +376,29 @@ class ShoppingCart extends Object{
 	 */
 	public function findOrMakeItem($buyable,$parameters = array()){
 		if($item = $this->getExistingItem($buyable,$parameters)){
-			return $item;
+			//do nothing
 		}
-		//otherwise create a new item
-		if(!($buyable instanceof BuyableModel)) {
-			$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item is not buyable.") ,'bad');
-			return false;
-		}
-		$className = $buyable->classNameForOrderItem();
-		$item = new $className();
-		if($order = $this->currentOrder()) {
-			$item->OrderID = $order->ID;
-			$item->BuyableID = $buyable->ID;
-			$item->BuyableClassName = $buyable->ClassName;
-			if(isset($buyable->Version)) {
-				$item->Version = $buyable->Version;
+		else {
+			//otherwise create a new item
+			if(!($buyable instanceof BuyableModel)) {
+				$this->addMessage(_t("ShoppingCart.ITEMNOTFOUND", "Item is not buyable.") ,'bad');
+				return false;
 			}
-			return $item;
+			$className = $buyable->classNameForOrderItem();
+			$item = new $className();
+			if($order = $this->currentOrder()) {
+				$item->OrderID = $order->ID;
+				$item->BuyableID = $buyable->ID;
+				$item->BuyableClassName = $buyable->ClassName;
+				if(isset($buyable->Version)) {
+					$item->Version = $buyable->Version;
+				}
+			}
 		}
+		if($parameters) {
+			$item->Parameters = $parameters;
+		}
+		return $item;
 	}
 
 	/**
