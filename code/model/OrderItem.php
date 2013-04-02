@@ -282,7 +282,7 @@ class OrderItem extends OrderAttribute {
 	function runUpdate($force = false){
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderItem::runUpdate-for-'.$this->ClassName);
 		$oldValue = $this->CalculatedTotal - 0;
-		$newValue = ($this->UnitPrice() * $this->Quantity) - 0;
+		$newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
 		if((round($newValue, 5) != round($oldValue, 5) ) || $force) {
 			$this->CalculatedTotal = $newValue;
 			$this->write();
@@ -351,18 +351,34 @@ class OrderItem extends OrderAttribute {
 	## TEMPLATE METHODS ##
 	######################
 
+	protected static $calculated_buyable_price = array();
+		public static function reset_calculated_buyable_price(){self::$calculated_buyable_price = array(); }
+
 	public function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}
 	public function getUnitPrice($recalculate = false) {
-		if($this->priceHasBeenFixed() && !$recalculate) {
+		//to do: what is the logic here???
+		if($this->priceHasBeenFixed($recalculate) && !$recalculate) {
 			if(!$this->Quantity){
 				$this->Quantity = 1;
 			}
 			return $this->CalculatedTotal / $this->Quantity;
 		}
-		else {
-		//NOTE: user_error("OrderItem::UnitPrice() called. Please implement UnitPrice() and getUnitPrice on $this->class", E_USER_NOTICE);
-			return 0;
+		elseif($buyable = $this->Buyable()){
+			if(!isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
+				self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
+			}
+			$unitPrice = self::$calculated_buyable_price[$this->ID];
 		}
+		else{
+			$unitPrice = 0;
+		}
+		$updatedUnitPrice = $this->extend('updateUnitPrice',$price);
+		if($updatedUnitPrice !== null) {
+			if(is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
+				$unitPrice = $updatedUnitPrice[0];
+			}
+		}
+		return $unitPrice;
 	}
 
 	public function UnitPriceAsMoney($recalculate = false) {return $this->getUnitPriceAsMoney($recalculate);}
@@ -378,10 +394,17 @@ class OrderItem extends OrderAttribute {
 	function getTotal() {
 		if($this->priceHasBeenFixed()) {
 			//get from database
-			return $this->CalculatedTotal;
+			$total = $this->CalculatedTotal;
 		}
-		$total = $this->UnitPrice() * $this->Quantity;
-		$this->extend('updateTotal',$total);
+		else {
+			$total = $this->getUnitPrice() * $this->Quantity;
+		}
+		$updatedTotal = $this->extend('updateTotal', $total);
+		if($updatedTotal !== null) {
+			if(is_array($$updatedTotal) && count($$updatedTotal)) {
+				$total = $$updatedTotal[0];
+			}
+		}
 		return $total;
 	}
 
@@ -427,22 +450,31 @@ class OrderItem extends OrderAttribute {
 	 * @var Boolean
 	 */
 	protected static $price_has_been_fixed = array();
+		public static function reset_price_has_been_fixed() {self::$price_has_been_fixed = array(); }
 
 	/**
 	 * @description - tells you if an order item price has been "fixed"
 	 * meaning that is has been saved in the CalculatedTotal field so that
 	 * it can not be altered.
 	 *
+	 * Default returns false; this is good for uncompleted orders
+	 * but not so good for completed ones.
+	 *
 	 * @return Boolean
 	 **/
-	protected function priceHasBeenFixed(){
-		if(!isset(self::$price_has_been_fixed[$this->OrderID])) {
+	protected function priceHasBeenFixed($recalculate = false){
+		if(!isset(self::$price_has_been_fixed[$this->OrderID]) || $recalculate) {
 			self::$price_has_been_fixed[$this->OrderID] = false;
 			if($order = $this->Order()) {
-				self::$price_has_been_fixed[$this->OrderID] = $order->IsSubmitted() ? true : false;
+				if( $order->IsSubmitted()) {
+					self::$price_has_been_fixed[$this->OrderID] = true;
+					if($recalculate) {
+						user_error("You are trying to recalculate an order that is already submitted.", E_USER_NOTICE);
+					}
+				}
 			}
 		}
-		return isset(self::$price_has_been_fixed[$this->OrderID]) ? self::$price_has_been_fixed[$this->OrderID] : false;
+		return self::$price_has_been_fixed[$this->OrderID];
 	}
 
 
