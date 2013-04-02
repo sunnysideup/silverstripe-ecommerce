@@ -410,6 +410,8 @@ class ShoppingCart extends Object{
 	public function submit() {
 		$this->currentOrder()->tryToFinaliseOrder();
 		$this->clear();
+		//little hack to clear static memory
+		OrderItem::reset_price_has_been_fixed();
 		//we cleanup the old orders here so that we immediately know if there is a problem.
 		return true;
 	}
