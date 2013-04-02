@@ -79,7 +79,7 @@ OrderItem:
 	ajax_total_format: [CalculatedTotalAsMoney, NiceDefaultFormat]
 
 OrderModifier:
-	ajax_total_format: [CalculatedTotalAsMoney, NiceDefaultFormat]
+	ajax_total_format: [TableValueAsMoney, NiceDefaultFormat]
 
 OrderStep:
 	order_steps_to_include: [
