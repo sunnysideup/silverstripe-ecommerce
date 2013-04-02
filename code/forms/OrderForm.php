@@ -161,6 +161,7 @@ class OrderForm extends Form {
 		$this->extend("OrderFormBeforeSubmit", $order);
 		// this should be done before paying, as only submitted orders can be paid!
 		ShoppingCart::singleton()->submit();
+		$this->extend("OrderFormAfterSubmit", $order);
 
 		//-------------- ACTION PAYMENT -------------
 		$payment = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
