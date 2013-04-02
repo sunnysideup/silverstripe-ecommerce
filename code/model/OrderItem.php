@@ -401,7 +401,7 @@ class OrderItem extends OrderAttribute {
 		}
 		$updatedTotal = $this->extend('updateTotal', $total);
 		if($updatedTotal !== null) {
-			if(is_array($$updatedTotal) && count($$updatedTotal)) {
+			if(is_array($updatedTotal) && count($updatedTotal)) {
 				$total = $$updatedTotal[0];
 			}
 		}
