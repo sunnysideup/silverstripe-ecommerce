@@ -175,6 +175,7 @@ class Order extends DataObject {
 	 * @var array
 	 */
 	protected static $modifiers = array();
+		public static function reset_modifiers() {self::$modifiers = array();}
 
 	/**
 	 * Tells us if an order needs to be recalculated

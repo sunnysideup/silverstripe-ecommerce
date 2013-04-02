@@ -26,6 +26,7 @@ class EcommercePayment extends DataObjectDecorator {
 			'has_one' => array(
 				'Order' => 'Order' //redundant...should be using PaidObject
 			),
+			'default_sort' => 'Created DESC',
 			'casting' => array(
 				'AmountValue' => 'Currency'
 			),
@@ -72,12 +73,12 @@ class EcommercePayment extends DataObjectDecorator {
 			$paidBy = Member::currentUser();
 		}
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
-		
+
 		// We call this static function instead of trying to do a setCurrency because most payment gateways use Payment::site_currency()
 		Payment::set_site_currency($order->CurrencyUsed()->Code);
-		
+
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
-		if(!($payment && $payment instanceof Payment)) {
+		if(!$payment) {
 			$form->sessionMessage(_t('EcommercePayment.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
 			Director::redirectBack();
 			return false;
@@ -88,6 +89,7 @@ class EcommercePayment extends DataObjectDecorator {
 		if(is_object($paidBy)) {
 			$payment->PaidByID = $paidBy->ID;
 		}
+		//important to set the amount and currency.
 		$payment->Amount = $order->TotalOutstandingAsMoney();
 		$payment->write();
 		// Process payment, get the result back

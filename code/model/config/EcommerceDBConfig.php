@@ -199,6 +199,7 @@ class EcommerceDBConfig extends DataObject {
 	 * @var String
 	 */
 	protected static $my_current_one = null;
+		public static function reset_my_current_one() {self::$my_current_one = null;}
 
 	/**
 	 * implements singleton pattern

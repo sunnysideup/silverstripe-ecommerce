@@ -172,7 +172,7 @@ class OrderModifier extends OrderAttribute {
 	 * $can_be_removed Identifies whether a modifier can be removed by the user.
 	 * @var Boolean
 	 **/
-	protected static $canBeRemoved = false;
+	protected $canBeRemoved = false;
 
 	/**
 	 * we use this variable to make sure that the parent::runUpdate() is called in all child classes
