@@ -180,6 +180,7 @@ class Product extends Page implements BuyableModel {
 		//$fields->addFieldToTab('Root.Content.Images', new TreeDropdownField('ImageID', _t('Product.IMAGE', 'Product Image'), "Image"));
 		$fields->addFieldToTab('Root.Content.Images', new ImageField('Image', _t('Product.IMAGE', 'Product Image')));
 		$fields->addFieldToTab('Root.Content.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
+		$fields->addFieldToTab('Root.Content.Details',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
 		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
 		$fields->addFieldToTab('Root.Content.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
@@ -193,7 +194,6 @@ class Product extends Page implements BuyableModel {
 		if($this->EcomConfig()->ProductsHaveQuantifiers) {
 			$fields->addFieldToTab('Root.Content.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
 		}
-		$fields->addFieldToTab('Root.Content.Sorting',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
 			$fields->addFieldsToTab(
 				'Root.Content.AlsoShowHere',
@@ -741,7 +741,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	function CalculatedPriceAsMoney() {return $this->getCalculatedPriceAsMoney();}
 	function getCalculatedPriceAsMoney() {
-		return EcommerceCurrency::get_money_object_from_order_currency($this->CalculatedPrice());
+		return EcommerceCurrency::get_money_object_from_order_currency($this->getCalculatedPrice());
 	}
 
 
@@ -1224,15 +1224,26 @@ class Product_OrderItem extends OrderItem {
 	 **/
 	function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}
 	function getUnitPrice($recalculate = false) {
-		$unitprice = 0;
-		if($this->priceHasBeenFixed() && !$recalculate) {
-			return parent::getUnitPrice($recalculate);
+		$unitPrice = 0;
+		if($this->priceHasBeenFixed($recalculate) && !$recalculate) {
+			$unitPrice = parent::getUnitPrice($recalculate);
 		}
 		elseif($product = $this->Product()){
-			$unitprice = $product->getCalculatedPrice();
-			$this->extend('updateUnitPrice',$unitprice);
+			if(!isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
+				self::$calculated_buyable_price[$this->ID] = $product->getCalculatedPrice();
+			}
+			$unitPrice = self::$calculated_buyable_price[$this->ID];
 		}
-		return $unitprice;
+		else {
+			$unitPrice = 0;
+		}
+		$updatedUnitPrice = $this->extend('updateUnitPrice',$unitPrice);
+		if($updatedUnitPrice !== null) {
+			if(is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
+				$unitPrice = $updatedUnitPrice[0];
+			}
+		}
+		return $unitPrice;
 	}
 
 	/**
