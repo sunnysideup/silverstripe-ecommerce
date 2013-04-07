@@ -1051,6 +1051,9 @@ class Product_Controller extends Page_Controller {
 
 class Product_Image extends Image {
 
+	static $casting = array(
+		"CMSThumb" => "HTMLText"
+	);
 
 	/**
 	 *
