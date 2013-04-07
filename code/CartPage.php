@@ -559,19 +559,7 @@ class CartPage_Controller extends Page_Controller{
 		return $viewingRealCurrentOrder;
 	}
 
-	/**
-	 * copies either the current order into the shopping cart
-	 *
-	 * TO DO: untested
-	 * TO DO: what to do with old order
-	 *
-	 */
-	function copyorder() {
-		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
-		ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
-		Director::redirect(CheckoutPage::find_last_step_link());
-		return array();
-	}
+
 
 	/**
 	 * @var Boolean
