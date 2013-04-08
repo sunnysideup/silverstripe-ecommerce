@@ -13,6 +13,8 @@
 
 class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 
+	protected $doNotSendEmails = true;
+
 	protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS';
 
 	protected $description = "This task can be useful in moving a bunch of orders through the latest order step. It will only move orders if they can be moved through order steps.  You may need to run this task several times to move all orders.";
@@ -22,8 +24,10 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 	 **/
 	public function run($request){
 		//IMPORTANT!
-		Email::send_all_emails_to("no-one@localhost");
-		Email::set_mailer( new EcommerceTryToFinaliseOrdersTask_Mailer() );
+		if($this->doNotSendEmails) {
+			Email::send_all_emails_to("no-one@localhost");
+			Email::set_mailer( new EcommerceTryToFinaliseOrdersTask_Mailer() );
+		}
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 		if($submittedOrderStatusLogClassName) {
@@ -96,6 +100,10 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 			DB::alteration_message("WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.", "deleted");
 			echo "<script type=\"text/javascript\">window.setTimeout(function() {location.reload();}, 5000);</script>";
 		}
+	}
+
+	function sendEmails(){
+		$this->doNotSendEmails = false;
 	}
 
 }
