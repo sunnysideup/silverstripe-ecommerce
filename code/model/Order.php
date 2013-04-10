@@ -1119,7 +1119,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
-		$replacementArray = $this->createReplacementArrayForEmail($message);
+		$arrayData = $this->createReplacementArrayForEmail($message);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
@@ -1137,7 +1137,7 @@ class Order extends DataObject {
 			$email->setFrom($from);
 			$email->setTo($to);
 			$email->setSubject($subject);
-			$email->populateTemplate($replacementArray);
+			$email->populateTemplate($arrayData);
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
 			// templates within the theme exist
@@ -1153,7 +1153,15 @@ class Order extends DataObject {
 	/**
 	 * returns the Data that can be used in the bodry of an order Email
 	 * @param String $message - the additional message
-	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
+	 * @return ArrayData
+	 * - Subject - EmailSubject
+	 * - Message - specific message for this order
+	 * - OrderStepMessage - generic message for step
+	 * - Order
+	 * - EmailLogo
+	 * - ShopPhysicalAddress
+	 * - CurrentDateAndTime
+	 * - BaseURL
 	 */
 	public function createReplacementArrayForEmail($message = ""){
 		$step = $this->MyStep();
@@ -1167,8 +1175,9 @@ class Order extends DataObject {
 		$replacementArray["ShopPhysicalAddress"] = $config->ShopPhysicalAddress;
 		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
 		$replacementArray["BaseURL"] = Director::baseURL();
-		$this->extend('updateReplacementArrayForEmail', $replacementArray);
-		return $replacementArray;
+		$arrayData = new ArrayData($replacementArrayForEmail);
+		$this->extend('updateReplacementArrayForEmail', $arrayData);
+		return $arrayData;
 	}
 
 	/**
@@ -1178,8 +1187,7 @@ class Order extends DataObject {
 	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
 	 */
 	public function renderOrderInEmailFormat($message = "", $emailClassName) {
-		$replacementArrayForEmail = $this->createReplacementArrayForEmail($message);
-		$arrayData = new ArrayData($replacementArrayForEmail);
+		$arrayData = $this->createReplacementArrayForEmail($message);
 		$html = $arrayData->renderWith($emailClassName);
 		return Order_Email::emogrify_html($html);
 	}
