@@ -81,6 +81,8 @@ Abstract class Order_Email extends Email {
 			if(EcommerceConfig::get("Order_Email", "copy_to_admin_for_all_emails") && ($this->to != Email::getAdminEmail())) {
 				$this->setBcc(Email::getAdminEmail());
 			}
+			//last chance to adjust
+			$this->extend("adjustOrderEmailSending", $this, $order);
 			if($returnBodyOnly) {
 				return $this->Body();
 			}
@@ -104,13 +106,19 @@ Abstract class Order_Email extends Email {
 		$obj = new OrderEmailRecord();
 		$obj->From = $this->emailToVarchar($this->from);
 		$obj->To = $this->emailToVarchar($this->to);
+		if($this->cc) {
+			$obj->To .= ", CC: ".$this->emailToVarchar($this->cc);
+		}
+		if($this->bcc) {
+			$obj->To .= ", BCC: ".$this->emailToVarchar($this->bcc);
+		}
 		$obj->Subject = $this->subject;
 		$obj->Content = $this->body;
 		$obj->Result = $result ? 1 : 0;
 		$obj->OrderID = $order->ID;
 		$obj->OrderStepID = $order->StatusID;
 		if(Email::$send_all_emails_to) {
-			$obj->To = Email::$send_all_emails_to." - Email::send_all_emails_to setting";
+			$obj->To = Email::$send_all_emails_to." - (Email::send_all_emails_to setting)";
 		}
 		$obj->write();
 		return $obj;
@@ -118,7 +126,7 @@ Abstract class Order_Email extends Email {
 
 	/**
 	 * converts an Email to A Varchar
-	 * @param String $email - emal address
+	 * @param String $email - email address
 	 * @return String - returns email address without &gt; and &lt;
 	 */
 	function emailToVarchar($email) {

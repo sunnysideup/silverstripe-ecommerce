@@ -137,7 +137,7 @@ class EcommerceCurrency extends DataObject {
 	}
 
 	public static function default_currency() {
-		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
+		return DataObject::get_one("EcommerceCurrency", "LOWER(\"Code\")  = '".strtolower(Payment::site_currency())."' AND \"InUse\" = 1");
 	}
 
 	public static function default_currency_id() {
@@ -288,8 +288,10 @@ class EcommerceCurrency extends DataObject {
 
 	protected function validate() {
 		$result = parent::validate();
+		//TO DO - FIX!!!!
+		return $result;
 		$errors = array();
-		if(! $this->Code || strlen($this->Code) != 3) {
+		if(! $this->Code || mb_strlen($this->Code) != 3) {
 			$errors[] = 'The code must be 3 characters long.';
 		}
 		if(! $this->Name) {
