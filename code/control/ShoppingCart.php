@@ -52,7 +52,7 @@ class ShoppingCart extends Object{
 	 * This variable is set to YES when we actually need an order (i.e. write it)
 	 * @var Boolean
 	 */
-	protected  $requireSavedOrder = false;
+	protected $requireSavedOrder = false;
 
 	/**
 	 * Allows access to the cart from anywhere in code.
@@ -161,9 +161,9 @@ class ShoppingCart extends Object{
 					}
 				}
 				if(!$this->order) {
-					//here we cleanup old orders, because they should be cleaned at the same rate that they are created...
-					$cleanUpEveryTime = EcommerceConfig::get("ShoppingCart", "cleanup_every_time");
-					if($cleanUpEveryTime) {
+					//here we cleanup old orders, because they should be
+					//cleaned at the same rate that they are created...
+					if(EcommerceConfig::get("ShoppingCart", "cleanup_every_time")) {
 						$obj = new CartCleanupTask();
 						$obj->runSilently();
 					}
@@ -431,13 +431,15 @@ class ShoppingCart extends Object{
 	 * @return Boolean
 	 */
 	public function clear(){
+		self::$singletoncart = null;
+		$this->order = null;
+		$this->messages = array();
 		foreach(self::$session_variable_names as $name){
 			$sessionVariableName = $this->sessionVariableName($name);
-			Session::clear($sessionVariableName); //clear the orderid from session
-			Session::set($sessionVariableName, null); //clear the orderid from session
-			Session::save(); //clear the orderid from session
+			Session::set($sessionVariableName, null);
+			Session::clear($sessionVariableName);
+			Session::save();
 		}
-		$this->order = null; //clear local variable
 		return true;
 	}
 

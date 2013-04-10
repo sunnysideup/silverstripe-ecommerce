@@ -114,53 +114,32 @@ class EcommerceCurrency extends DataObject {
 	/**
 	 * @param Float $price
 	 * @param Order $order
-	 * @param String $name
-	 * @param Boolean $forceCreation - set true to always return Money Object
 	 * @return EcommerceMoney | Null
 	 */
-	public static function display_price($price, $order = null, $name = "DisplayPrice", $forceCreation = false){
-		if(! $order) {
-			$order = ShoppingCart::current_order();
-		}
-		if($order) {
-			if($order->HasAlternativeCurrency()) {
-				$exchangeRate = $order->ExchangeRate;
-				if($exchangeRate && $exchangeRate != 1) {
-					$currency = $order->CurrencyUsed();
-					if($currency) {
-						$newPrice = $exchangeRate * $price;
-						if($newPrice) {
-							$ecommerceMoneyObject = new Money($name);
-							$ecommerceMoneyObject->SetAmount($newPrice);
-							$ecommerceMoneyObject->SetCurrency($currency->Code);
-							return $ecommerceMoneyObject;
-						}
-					}
-				}
-			}
-		}
-		if($forceCreation){
-			return DBField::create(
-				'Money',
-				array(
-					"Amount" => $price,
-					"Currency" => Payment::site_currency()
-				)
-			);
-		}
+	public static function display_price($price, Order $order = null){
+		return self::get_money_object_from_order_currency($price, $order);
 	}
-	
+
 	public static function get_money_object_from_order_currency($price, Order $order = null) {
 		if(! $order) {
 			$order = ShoppingCart::current_order();
 		}
 		$currency = $order->CurrencyUsed();
+		if($order) {
+			if($order->HasAlternativeCurrency()) {
+				$exchangeRate = $order->ExchangeRate;
+				if($exchangeRate && $exchangeRate != 1) {
+					$price = $exchangeRate * $price;
+				}
+			}
+		}
 		return DBField::create('Money', array('Amount' => $price, 'Currency' => $currency->Code));
 	}
 
 	public static function default_currency() {
 		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
 	}
+
 	public static function default_currency_id() {
 		$currency = self::default_currency();
 		return $currency ? $currency->ID : 0;
@@ -203,19 +182,21 @@ class EcommerceCurrency extends DataObject {
 
 	function LongSymbol() {return $this->getLongSymbol();}
 	function getLongSymbol() {return EcommerceMoney::get_long_symbol($this->Code);}
-	
+
 	/**
 	 * casted variable method
 	 * @return Boolean
 	 */
 	public function IsDefault() {return $this->getIsDefault();}
 	public function getIsDefault() {
+		$outcome = false;
 		if($this->exists()) {
 			if(!$this->Code) {
 				user_error("This currency (ID = ".$this->ID.") does not have a code ");
 			}
-			return strtolower($this->Code) ==  strtolower(Payment::site_currency());
+			$outcome = strtolower($this->Code) ==  strtolower(Payment::site_currency());
 		}
+		return $outcome;
 	}
 
 	/**
@@ -253,9 +234,9 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public function ExchangeRate() {return $this->getExchangeRate();}
 	public function getExchangeRate() {
-		/*$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
-		$obj = new ExchangeRateProvider();
-		return $obj->ExchangeRate(Payment::site_currency(), $this->Code);*/
+		$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
+		$exchangeRateProvider = new ExchangeRateProvider();
+		return $exchangeRateProvider->ExchangeRate(Payment::site_currency(), $this->Code);
 	}
 
 	/**
@@ -264,9 +245,9 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public function ExchangeRateExplanation() {return $this->getExchangeRateExplanation();}
 	public function getExchangeRateExplanation() {
-		/*$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
+		$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
 		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".Payment::site_currency();
-		return $string;*/
+		return $string;
 	}
 
 	/**

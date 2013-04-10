@@ -5,7 +5,7 @@ class EcommerceMoney extends Extension {
 	static function get_default_symbol($currency) {
 		$money = new Money();
 		return $money->getSymbol($currency);
-	}	
+	}
 
 	static function get_short_symbol($currency) {
 		$symbol = self::get_default_symbol($currency);
@@ -29,6 +29,7 @@ class EcommerceMoney extends Extension {
 	function NiceDefaultSymbol($html = true) {
 		return self::get_default_symbol($this->owner->currency) == self::get_short_symbol($this->owner->currency) ? $this->NiceShortSymbol($html) : $this->NiceLongSymbol($html);
 	}
+
 	function NiceShortSymbol($html = true) {
 		$symbol = self::get_short_symbol($this->owner->currency);
 		if($html) {
@@ -36,6 +37,7 @@ class EcommerceMoney extends Extension {
 		}
 		return $this->owner->Nice(array('symbol' => $symbol));
 	}
+
 	function NiceLongSymbol($html = true) {
 		$symbol = self::get_long_symbol($this->owner->currency);
 		if($html) {
@@ -45,5 +47,7 @@ class EcommerceMoney extends Extension {
 		}
 		return $this->owner->Nice(array('symbol' => $symbol));
 	}
+
 	function NiceDefaultFormat($html = true) {$function = EcommerceConfig::get('EcommerceMoney', 'default_format'); return $this->owner->$function($html);}
+
 }
