@@ -2117,10 +2117,11 @@ class Order extends DataObject {
 	function HasAlternativeCurrency(){return $this->getHasAlternativeCurrency();}
 	function getHasAlternativeCurrency() {
 		if($currency = $this->CurrencyUsed()) {
-			if($currency->exists()) {
-				if(!$currency->IsDefault()) {
-					return true;
+			if(!$currency->IsDefault()) {
+				if(!$this->ExchangeRate) {
+					user_error("Order is using alternative currency without exchange rate record.", E_USER_NOTICE);
 				}
+				return true;
 			}
 		}
 		return false;

@@ -37,11 +37,12 @@ class ExchangeRateProvider extends Object {
 	 *
 	 * @param String $fromCode
 	 * @param String $toCode
+	 * @return Float
 	 */
-	function ExchangeRate($fromCode, $toCode) {
+	public function ExchangeRate($fromCode, $toCode) {
 		$fromCode = strtoupper($fromCode);
 		$toCode = strtoupper($toCode);
-		$cacheCode = $fromCode."-".$toCode;
+		$cacheCode = $fromCode."_".$toCode;
 		if(isset(self::$memory_cache[$cacheCode])) {
 			return self::$memory_cache[$cacheCode];
 		}
@@ -94,4 +95,15 @@ class ExchangeRateProvider extends Object {
 
 
 
+}
+
+class ExchangeRateProvider_Dummy extends ExchangeRateProvider {
+		/**
+	 *
+	 * @param String $fromCode
+	 * @param String $toCode
+	 */
+	public function ExchangeRate($fromCode, $toCode) {
+		return 1;
+	}
 }

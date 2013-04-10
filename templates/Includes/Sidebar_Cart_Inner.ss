@@ -11,7 +11,7 @@ If you are not using this snippet then theme it and remove its content to speed 
 		<tfoot>
 			<tr class="gap summary hideOnZeroItems">
 				<td colspan="2" scope="row"><% _t("Cart.SUBTOTAL","Sub-total") %></td>
-				<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotal.Nice</td>
+				<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
 			</tr>
 			<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
 				<td colspan="3" scope="row" class="center"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></td>
@@ -32,7 +32,7 @@ If you are not using this snippet then theme it and remove its content to speed 
 				<td class="center quantity">
 					$QuantityField
 				</td>
-				<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
+				<td class="right total" id="$AJAXDefinitions.TableTotalID">$TotalAsMoney.NiceDefaultFormat</td>
 			</tr>
 		<% end_if %>
 	<% end_control %>
