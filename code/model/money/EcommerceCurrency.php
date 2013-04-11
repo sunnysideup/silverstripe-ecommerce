@@ -234,8 +234,8 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public function ExchangeRate() {return $this->getExchangeRate();}
 	public function getExchangeRate() {
-		$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
-		$exchangeRateProvider = new ExchangeRateProvider();
+		$exchangeRateProviderClassName = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
+		$exchangeRateProvider = new $exchangeRateProviderClassName();
 		return $exchangeRateProvider->ExchangeRate(Payment::site_currency(), $this->Code);
 	}
 
