@@ -641,8 +641,8 @@ class ShoppingCart extends Object{
 			debug::show($this->currentOrder());
 
 			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>";
-			$countryCode = EcommerceCountry::get_country_from_ip();
-			echo "GEOIP Country: ".$countryCode;
+			echo "GEOIP Country: ".EcommerceCountry::get_country_from_ip()."<br />";
+			echo "Calculated Country Country: ".EcommerceCountry::get_country()."<br />";
 
 			echo "<blockquote><blockquote><blockquote><blockquote>";
 
