@@ -175,6 +175,8 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"EcommerceCountry" => array(
 				"allowed_country_codes" => "To what countries are you selling?  You can leave this as an empty array, in case you are selling to all countries or you can restrict it to just one country or a handful.  Once set, you can adjust this list in EcommerceCountry using the CMS. ",
+				"visitor_country_provider" => "The class that is being used to provide the country of the customer. Usually this is GEOIP, but you can also setup your own one. This class just needs one public method: getCountry.",
+				"default_country_code" => "The default country code (e.g. NZ or CA or UK). "
 			),
 			"Order_Email" => array(
 				"send_all_emails_plain" => "Should all the emails be send as plain text?  Not recommended.",

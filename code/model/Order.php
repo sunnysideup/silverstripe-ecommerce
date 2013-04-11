@@ -1057,9 +1057,14 @@ class Order extends DataObject {
 	 * @param EcommerceCurrency $currency
 	 */
 	public function SetCurrency($currency) {
-		$this->CurrencyUsedID = $currency->ID;
-		$this->ExchangeRate = $currency->ExchangeRate();
-		$this->write();
+		if($this->IsSubmitted()) {
+			user_error("Can not set the exchange rate after the order has been submitted", E_USER_NOTICE);
+		}
+		else {
+			$this->CurrencyUsedID = $currency->ID;
+			$this->ExchangeRate = $currency->ExchangeRate();
+			$this->write();
+		}
 	}
 
 
@@ -2035,11 +2040,18 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if(count($countryCodes)) {
-			if(EcommerceConfig::get("OrderAddress", "use_shipping_address_for_main_region_and_country") && $countryCodes["Shipping"]) {
-				return $countryCodes["Shipping"];
-			}
+		if(
+			(EcommerceConfig::get("OrderAddress", "use_shipping_address_for_main_region_and_country") && $countryCodes["Shipping"])
+			||
+			(!$countryCodes["Billing"] && $countryCodes["Shipping"])
+		) {
+			return $countryCodes["Shipping"];
+		}
+		elseif($countryCodes["Billing"]) {
 			return $countryCodes["Billing"];
+		}
+		else {
+			return EcommerceCountry::get_country_from_ip();
 		}
 	}
 

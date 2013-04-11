@@ -114,6 +114,8 @@ OrderStatusLog:
 
 EcommerceCountry:
 	allowed_country_codes: []
+	visitor_country_provider: "EcommerceCountry_VisitorCountryProvider"
+	default_country_code: "NZ"
 
 OrderAddress:
 	use_separate_shipping_address: false
