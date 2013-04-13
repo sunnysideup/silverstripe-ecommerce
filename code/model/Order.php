@@ -1097,7 +1097,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', "ERROR: ".$subject, $message, $resend = true, $adminOnly = true);
+		return $this->prepareEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
 	}
 
 	/**
@@ -1124,7 +1124,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
-		$arrayData = $this->createReplacementArrayForEmail($message);
+		$arrayData = $this->createReplacementArrayForEmail($message, $subject);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
@@ -1141,7 +1141,8 @@ class Order extends DataObject {
 			}
 			$email->setFrom($from);
 			$email->setTo($to);
-			$email->setSubject($subject);
+			//we take the subject from the Array Data, just in case it has been adjusted.
+			$email->setSubject($arrayData->getValue("Subject"));
 			$email->populateTemplate($arrayData);
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
@@ -1157,7 +1158,10 @@ class Order extends DataObject {
 
 	/**
 	 * returns the Data that can be used in the bodry of an order Email
+	 * we add the subject here so that the subject, for example, can be added to the <title>
+	 * of the email template.
 	 * @param String $message - the additional message
+	 * @param String $subject - subject for email -
 	 * @return ArrayData
 	 * - Subject - EmailSubject
 	 * - Message - specific message for this order
@@ -1168,11 +1172,16 @@ class Order extends DataObject {
 	 * - CurrentDateAndTime
 	 * - BaseURL
 	 */
-	public function createReplacementArrayForEmail($message = ""){
+	public function createReplacementArrayForEmail($message = "", $subject = ""){
 		$step = $this->MyStep();
 		$config = $this->EcomConfig();
 		$replacementArray = array();
- 		$replacementArray["Subject"] = $step->EmailSubject;
+		if($subject) {
+			$replacementArray["Subject"] = $subject;
+		}
+		else {
+			$replacementArray["Subject"] = $step->EmailSubject;
+		}
  		$replacementArray["Message"] = $message;
  		$replacementArray["OrderStepMessage"] = $step->CustomerMessage;
 		$replacementArray["Order"] = $this;
