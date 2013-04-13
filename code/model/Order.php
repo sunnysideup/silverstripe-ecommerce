@@ -1142,7 +1142,7 @@ class Order extends DataObject {
 			$email->setFrom($from);
 			$email->setTo($to);
 			//we take the subject from the Array Data, just in case it has been adjusted.
-			$email->setSubject($arrayData->getValue("Subject"));
+			$email->setSubject($arrayData->getField("Subject"));
 			$email->populateTemplate($arrayData);
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
