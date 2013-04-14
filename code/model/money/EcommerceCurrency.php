@@ -172,7 +172,7 @@ class EcommerceCurrency extends DataObject {
 	}
 
 	public static function get_list() {
-		return DataObject::get('EcommerceCurrency', "\"InUse\" = 1", "IF(\"Code\" = '".Payment::site_currency()."', 0, 1) ASC, \"Name\" ASC, \"Code\" ASC");
+		return DataObject::get('EcommerceCurrency', "\"InUse\" = 1", "IF(\"Code\" = '".EcommerceConfig::get("EcommerceCurrency", "default_currency")."', 0, 1) ASC, \"Name\" ASC, \"Code\" ASC");
 	}
 
 	
@@ -223,7 +223,6 @@ class EcommerceCurrency extends DataObject {
 		return DBField::create('Money', array('Amount' => $price, 'Currency' => $currency->Code));
 	}
 
-<<<<<<< .working
 	/**
 	 * returns the default currency
 	 *
@@ -241,23 +240,12 @@ class EcommerceCurrency extends DataObject {
 	}
 
 	/**
-	 * @return Int - the ID of the currency
+	 *	
+	 * @return Int 
 	 */
-=======
-	public static function default_currency() {
-		return DataObject::get_one("EcommerceCurrency", "\"Code\"  = '".Payment::site_currency()."' AND \"InUse\" = 1");
-	}
->>>>>>> .merge-right.r4179
 	public static function default_currency_id() {
-<<<<<<< .working
-		if($currency = self::default_currency()) {
-			return $currency->ID;
-		}
-		return 0;
-=======
 		$currency = self::default_currency();
 		return $currency ? $currency->ID : 0;
->>>>>>> .merge-right.r4179
 	}
 
 	/**
@@ -310,27 +298,14 @@ class EcommerceCurrency extends DataObject {
 	 * casted variable method
 	 * @return Boolean
 	 */
-<<<<<<< .working
 	public function IsDefault(){ return $this->getIsDefault();}
 	public function getIsDefault(){
 		if(!$this->Code) {
 			if($this->exists()) {
 				//user_error("This currency (ID = ".$this->ID.") does not have a code ");
 			}
-=======
-	public function IsDefault() {return $this->getIsDefault();}
-	public function getIsDefault() {
-		if($this->exists()) {
-			if(!$this->Code) {
-				user_error("This currency (ID = ".$this->ID.") does not have a code ");
-			}
-			return strtolower($this->Code) ==  strtolower(Payment::site_currency());
->>>>>>> .merge-right.r4179
 		}
-<<<<<<< .working
 		return strtolower($this->Code) ==  strtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency"));
-=======
->>>>>>> .merge-right.r4179
 	}
 
 	/**
@@ -368,20 +343,15 @@ class EcommerceCurrency extends DataObject {
 	 */
 	public function ExchangeRate() {return $this->getExchangeRate();}
 	public function getExchangeRate() {
-		/*$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
+		$className = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
 		$obj = new ExchangeRateProvider();
-<<<<<<< .working
 		return $obj->ExchangeRate( EcommerceConfig::get("EcommerceCurrency", "default_currency"), $this->Code);
-=======
-		return $obj->ExchangeRate(Payment::site_currency(), $this->Code);*/
->>>>>>> .merge-right.r4179
 	}
 
 	/**
 	 * casted variable
 	 * @return Double
 	 */
-<<<<<<< .working
 	public function ExchangeRateExplanation(){ return $this->getExchangeRateExplanation();}
 	public function getExchangeRateExplanation(){
 		$string = "1 ".EcommerceConfig::get("EcommerceCurrency", "default_currency")." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
@@ -392,13 +362,6 @@ class EcommerceCurrency extends DataObject {
 			$exchangeRateError = _t("EcommerceCurrency.EXCHANGE_RATE_ERROR", "Error in exchange rate. ");
 		}
 		$string .= ", 1 ".$this->Code." = ".round(1 / $exchangeRate, 3)." ".EcommerceConfig::get("EcommerceCurrency", "default_currency").". ".$exchangeRateError;
-=======
-	public function ExchangeRateExplanation() {return $this->getExchangeRateExplanation();}
-	public function getExchangeRateExplanation() {
-		/*$string = "1 ".Payment::site_currency()." = ".round($this->getExchangeRate(), 3)." ".$this->Code;
-		$string .= ", 1 ".$this->Code." = ".round(1 / $this->getExchangeRate(), 3)." ".Payment::site_currency();
->>>>>>> .merge-right.r4179
-		return $string;*/
 	}
 
 	/**
@@ -482,29 +445,16 @@ class EcommerceCurrency extends DataObject {
 		}
 	}
 
-	function canDelete() {
-		return ! $this->InUse || self::get_list()->Count() > 1;
-	}
-
 	/**
 	 * Standard SS Method
 	 * Adds the default currency
 	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-<<<<<<< .working
-		if(!self::default_currency()) {
-			$defaultCurrencyCode = EcommerceConfig::get("EcommerceCurrency", "default_currency");
-			$obj = new EcommerceCurrency();
-			$obj->Code = $defaultCurrencyCode;
-			$obj->Name = $defaultCurrencyCode;
-			$obj->InUse = 1;
-			$obj->write();
-=======
+
 		$currency = self::default_currency();
 		if(! $currency) {
 			self::create_new(Payment::site_currency());
->>>>>>> .merge-right.r4179
 		}
 	}
 
@@ -532,22 +482,7 @@ class EcommerceCurrency extends DataObject {
 	 * @return String
 	 */
 	public function debug() {
-<<<<<<< .working
 		return EcommerceTaskDebugCart::debug_object($this);
-=======
-		$html =  "<h2>$this->ClassName</h2><ul>";
-		$fields = Object::get_static($this->ClassName, 'db');
-		foreach($fields as $key => $type) {
-			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
-		}
-		$fields = Object::get_static($this->ClassName, 'casting');
-		foreach($fields as $key => $type) {
-			$method = "get$key";
-			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
-		}
-		$html .= "</ul>";
-		return $html;
->>>>>>> .merge-right.r4179
 	}
 
 	static $currencies = array(

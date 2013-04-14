@@ -737,6 +737,16 @@ class Product extends Page implements BuyableModel {
 	}
 
 
+	/**
+	 * Products have a standard price, but for specific situations they have a calculated price.
+	 * The Price can be changed for specific member discounts, a different currency, etc...
+	 * @todo: return as Money
+	 * @return Currency (casted variable)
+	 */
+	function DisplayPrice() {
+		return 0;
+	}
+
 	//CRUD SETTINGS
 
 	/**
@@ -836,6 +846,8 @@ class Product extends Page implements BuyableModel {
 	public function canCreate($member = null) {
 		return $this->canEdit($member);
 	}
+
+
 
 }
 
@@ -1294,6 +1306,8 @@ class Product_OrderItem extends OrderItem {
 		}
 		return $tableSubTitle;
 	}
+
+
 
 	/**
 	 * method for developers only
