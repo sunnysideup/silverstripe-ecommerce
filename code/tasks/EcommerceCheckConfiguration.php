@@ -223,8 +223,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 					echo "<br /><pre>$className:";
 					$classConfigs = $this->definitions[$className];
 					foreach($classConfigs as $key => $classConfig) {
-						echo "
-	$key: ".$this->defaults[$className][$key];
+						echo 
+						"$key: ".$this->defaults[$className][$key];
 					}
 					echo "</pre>";
 				}
@@ -365,14 +365,6 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 	protected function addOtherValuesToConfigs(){
 
-		$this->definitions["Payment"]["site_currency"] = "Default currency for the site. <br />SET USING Payment::set_site_currency(\"NZD\") in the _config.php FILES";
-		$this->configs["Payment"]["site_currency"] = Payment::site_currency()." ";
-		$this->defaults["Payment"]["site_currency"] = "[no default set]";
-
-		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. <br />SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
-		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
-		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
-
 		$siteConfig = SiteConfig::current_site_config();
 		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. <br />This is set in the <a href=\"/admin/show/root\">site configuration</a>.";
 		$this->configs["SiteConfig"]["website_title"] = $siteConfig->Title;
@@ -415,7 +407,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 	private function getPageDefinitions(SiteTree $page){
 		if($page) {
-			$fields = $page->combined_static($page->ClassName, "db");
+			$fields = Config::inst()->get($page->ClassName, "db");
 			$defaultsArray = $page->stat("defaults", true);
 			$configArray = array();
 			if($fields) {
@@ -424,7 +416,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					if(!isset($defaultsArray[$fieldKey])) {
 						$defaultsArray[$fieldKey] = "[default not set]";
 					}
-				}
+				} 
 			}
 			$page->defaultsArray = $defaultsArray;
 			$page->configArray = print_r($configArray, 1);
@@ -436,7 +428,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$steps = OrderStep::get();
 		if($steps->count()) {
 			foreach($steps as $step) {
-				$fields = $step->combined_static($step->ClassName, "db");
+				$fields = Config::inst()->get($step->ClassName, "db");
 				$defaultsArray = $step->stat("defaults", true);
 				$configArray = array();
 				foreach($fields as $fieldKey => $fieldType) {
@@ -468,7 +460,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		if($steps->count()) {
 			foreach($steps as $key => $step) {
 				$stepNumber = $key + 1;
-				$fields = $step->combined_static($step->ClassName, "db");
+				$fields = Config::inst()->get($step->ClassName, "db");
 				$defaultsArray = $step->stat("defaults", true);
 				$configArray = array();
 				foreach($fields as $fieldKey => $fieldType) {
@@ -487,7 +479,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$steps = OrderModifier_Descriptor::get();
 		if($steps->count()) {
 			foreach($steps as $step) {
-				$fields = $step->combined_static($step->ClassName, "db");
+				$fields = Config::inst()->get($step->ClassName, "db");
 				$defaultsArray = $step->stat("defaults", true);
 				$configArray = array();
 				foreach($fields as $fieldKey => $fieldType) {
