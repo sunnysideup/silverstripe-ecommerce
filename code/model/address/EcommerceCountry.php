@@ -171,11 +171,12 @@ class EcommerceCountry extends DataObject {
 	/**
 	 * @param String $code
 	 * @return String ( name)
+	 * returns the country name from a code
 	 **/
 	public static function find_title($code) {
 		$options = Geoip::getCountryDropDown();
 		// check if code was provided, and is found in the country array
-		if($options && isset($options[$code])) {
+		if(isset($options[$code])) {
 			return $options[$code];
 		}
 		else {
@@ -188,6 +189,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Null | String
 	 */
 	protected static $get_country_cache = null;
+		public static function reset_get_country_cache() {self::$get_country_cache = null;}
 
 	/**
 	 * This function works out the most likely country for the current order.
@@ -234,6 +236,8 @@ class EcommerceCountry extends DataObject {
 	 * @var Null | Boolean
 	 */
 	protected static $allow_sales_cache = null;
+		public static function reset_allow_sales_cache() {self::$allow_sales_cache = null;}
+
 
 	/**
 	 * Checks if we are allowed to sell to this person.

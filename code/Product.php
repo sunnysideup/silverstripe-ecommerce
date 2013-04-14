@@ -76,7 +76,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	public static $casting = array(
 		"CalculatedPrice" => "Currency",
-		"DisplayPrice" => "Money",
+		"CalculatedPriceAsMoney" => "Money",
 		"AllowPurchaseNice" => "Varchar"
 	);
 
@@ -729,11 +729,11 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * How do we display the price?
-	 * @return EcommerceMoney | Null
+	 * @return Money
 	 */
-	function DisplayPrice() {return $this->getDisplayPrice();}
-	function getDisplayPrice() {
-		return EcommerceCurrency::display_price($this->CalculatedPrice(), null);
+	function CalculatedPriceAsMoney() {return $this->getCalculatedPriceAsMoney();}
+	function getCalculatedPriceAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->getCalculatedPrice());
 	}
 
 
@@ -1231,15 +1231,26 @@ class Product_OrderItem extends OrderItem {
 	 **/
 	function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}
 	function getUnitPrice($recalculate = false) {
-		$unitprice = 0;
-		if($this->priceHasBeenFixed() && !$recalculate) {
-			return parent::getUnitPrice($recalculate);
+		$unitPrice = 0;
+		if($this->priceHasBeenFixed($recalculate) && !$recalculate) {
+			$unitPrice = parent::getUnitPrice($recalculate);
 		}
 		elseif($product = $this->Product()){
-			$unitprice = $product->getCalculatedPrice();
-			$this->extend('updateUnitPrice',$unitprice);
+			if(!isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
+				self::$calculated_buyable_price[$this->ID] = $product->getCalculatedPrice();
+			}
+			$unitPrice = self::$calculated_buyable_price[$this->ID];
 		}
-		return $unitprice;
+		else {
+			$unitPrice = 0;
+		}
+		$updatedUnitPrice = $this->extend('updateUnitPrice',$unitPrice);
+		if($updatedUnitPrice !== null) {
+			if(is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
+				$unitPrice = $updatedUnitPrice[0];
+			}
+		}
+		return $unitPrice;
 	}
 
 	/**
@@ -1251,6 +1262,15 @@ class Product_OrderItem extends OrderItem {
 		if($product = $this->Product()) {
 			$tableTitle = strip_tags($product->renderWith("ProductTableTitle"));
 		}
+		$updatedTableTitle = $this->extend('updateTableTitle',$tableTitle);
+		if($updatedTableTitle) {
+			if(is_array($updatedTableTitle)) {
+				$tableTitle = implode($updatedTableTitle);
+			}
+			else {
+				$tableTitle = $updatedTableTitle;
+			}
+		}
 		return $tableTitle;
 	}
 
@@ -1259,12 +1279,20 @@ class Product_OrderItem extends OrderItem {
 	 **/
 	function TableSubTitle() {return $this->getTableSubTitle();}
 	function getTableSubTitle() {
-		$tableSubtitle = '';
+		$tableSubTitle = '';
 		if($product = $this->Product()) {
-			$tableSubtitle = $product->Quantifier;
+			$tableSubTitle = $product->Quantifier;
 		}
-		$this->extend('updateTableSubTitle',$tableSubtitle);
-		return $tableSubtitle;
+		$updatedSubTableTitle = $this->extend('updateSubTableTitle',$tableSubTitle);
+		if($updatedSubTableTitle) {
+			if(is_array($updatedSubTableTitle)) {
+				$tableSubTitle = implode($updatedSubTableTitle);
+			}
+			else {
+				$tableSubTitle = $updatedSubTableTitle;
+			}
+		}
+		return $tableSubTitle;
 	}
 
 	/**

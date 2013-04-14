@@ -35,6 +35,7 @@ class OrderForm extends Form {
 
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
+<<<<<<< .working
 		//$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
 		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
 		//payment Field Collection
@@ -60,6 +61,13 @@ class OrderForm extends Form {
 							$paymentFieldsRequiredCollection[] = $paymentFieldRequired;
 						}
 					}
+=======
+		if($order->Total() > 0) {
+			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
+			foreach($paymentFields as $paymentField) {
+				if($paymentField->class == "HeaderField") {
+					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+>>>>>>> .merge-right.r4179
 				}
 			}
 		}
@@ -184,6 +192,7 @@ class OrderForm extends Form {
 		$this->extend("OrderFormBeforeSubmit", $order);
 		// this should be done before paying, as only submitted orders can be paid!
 		ShoppingCart::singleton()->submit();
+		$this->extend("OrderFormAfterSubmit", $order);
 
 		//-------------- ACTION PAYMENT -------------
 		$payment = EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
@@ -329,6 +338,7 @@ class OrderForm_Payment extends Form {
 		if($returnToLink) {
 			$fields->push(new HiddenField("returntolink", "", convert::raw2att($returnToLink)));
 		}
+<<<<<<< .working
 		$totalAsCurrencyObject = $order->TotalAsCurrencyObject();
 		$totalOutstandingAsMoneyObject = $order->TotalOutstandingAsMoneyObject();
 		//$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
@@ -337,6 +347,17 @@ class OrderForm_Payment extends Form {
 			foreach($paymentFields as $paymentField) {
 				if($paymentField->class == "HeaderField") {
 					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
+=======
+		$paymentFields = Payment::combined_form_fields($order->getTotalOutstandingAsMoney()->NiceDefaultFormat(false));
+		foreach($paymentFields as $paymentField) {
+			if($paymentField->class == "HeaderField") {
+				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
+			}
+			if($paymentField->Name() == "PaymentMethod") {
+				$source = $paymentField->getSource();
+				if($source && is_array($source) && count($source) == 1) {
+					$paymentField->performReadonlyTransformation();
+>>>>>>> .merge-right.r4179
 				}
 				if($paymentField->Name() == "PaymentMethod") {
 					$source = $paymentField->getSource();

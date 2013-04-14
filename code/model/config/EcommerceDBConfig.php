@@ -203,6 +203,7 @@ class EcommerceDBConfig extends DataObject {
 	 * @var String | NULL
 	 */
 	protected static $my_current_one = null;
+		public static function reset_my_current_one() {self::$my_current_one = null;}
 
 	/**
 	 * implements singleton pattern
@@ -402,8 +403,8 @@ class EcommerceDBConfig extends DataObject {
 	 * on the site.
 	 * @return DataList | Null
 	 */
-	function Currencies(){
-		return EcommerceCurrency::ecommerce_currency_list();
+	function Currencies() {
+		return EcommerceCurrency::get_list();
 	}
 
 	/**

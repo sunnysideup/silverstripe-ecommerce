@@ -59,7 +59,7 @@ class OrderAttribute extends DataObject {
 		'TableSubTitleNOHTML' => 'Text',
 		'CartTitle' => 'HTMLText',
 		'CartSubTitle' => 'HTMLText',
-		'DisplayPrice' => 'Money'
+		'CalculatedTotalAsMoney' => 'Money'
 	);
 
 	/**
@@ -326,11 +326,11 @@ class OrderAttribute extends DataObject {
 
 	/**
 	 * Returns the Money object of the CalculatedTotal
-	 * @return Money | Null
+	 * @return Money
 	 **/
-	function DisplayPrice() {return $this->getDisplayPrice();}
-	function getDisplayPrice() {
-		return EcommerceCurrency::display_price($this->CalculatedTotal, $this->Order());
+	function CalculatedTotalAsMoney() {return $this->getCalculatedTotalAsMoney();}
+	function getCalculatedTotalAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->CalculatedTotal, $this->Order());
 	}
 
 	/**
