@@ -139,18 +139,23 @@ class EcommerceCountry extends DataObject {
 	 * @return Array
 	 * e.g.
 	 * "NZ" => "New Zealand"
-	 *
+	 * @return Array
 	 */
-	public static function get_country_dropdown($hideCountriesThatAreNotAllowed = true){
-		if(class_exists("Geoip")) {
+	public static function get_country_dropdown($showAllCountries = true){
+		if(class_exists("Geoip") && $showAllCountries) {
 			return Geoip::getCountryDropDown();
 		}
-		$objects = DataObject::get("EcommerceCountry");
-		$where = "";
-		if($hideCountriesThatAreNotAllowed) {
+		if($showAllCountries) {
+			$where = "";
+		}
+		else {
 			$where = "\"DoNotAllowSales\" = 0";
 		}
-		return $objects->map("ID", "Name", $where);
+		$objects = DataObject::get("EcommerceCountry", $where);
+		if($objects) {
+			return $objects->map("ID", "Name");
+		}
+		return array();
 	}
 
 	/**
