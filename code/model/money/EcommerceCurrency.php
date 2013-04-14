@@ -209,10 +209,6 @@ class EcommerceCurrency extends DataObject {
 			)
 			->First();
 	}
-	
-	public static function default_currency() {
-		return DataObject::get_one("EcommerceCurrency", "LOWER(\"Code\")  = '".strtolower(Payment::site_currency())."' AND \"InUse\" = 1");
-	}
 
 	/**
 	 *	
