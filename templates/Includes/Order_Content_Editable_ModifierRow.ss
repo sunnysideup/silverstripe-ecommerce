@@ -10,7 +10,7 @@
 			<div class="moreInfoLink"><a href="$MoreInfoPage.Link" ><% _t("Order.FIND_OUT_MORE","Find out more") %></a></div>
 		<% end_if %>
 	</td>
-	<td class="right total" id="$AJAXDefinitions.TableTotalID">$TableValue.Nice</td>
+	<td class="right total" id="$AJAXDefinitions.TableTotalID">$TableValueAsMoney.NiceDefaultFormat</td>
 	<td class="right remove">
 		<% if CanBeRemoved %>
 			<strong>

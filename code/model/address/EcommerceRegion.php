@@ -124,6 +124,25 @@ class EcommerceRegion extends DataObject {
 		return $fields;
 	}
 
+	/**
+	* checks if a code is allowed
+	* @param String $code - e.g. NZ, NSW, or CO
+	* @return Boolean
+	*/
+	public static function code_allowed($code) {
+		$region = EcommerceRegion::get()->filter("Code", $code)->First();
+		if($region) {
+			return self::regionid_allowed($region->ID);
+		}
+		return false;
+	}
+
+
+	/**
+	 * checks if a code is allowed
+	 * @param String $code - e.g. NZ, NSW, or CO
+	 * @return Boolean
+	 */
 
 	public static function regionid_allowed($regionID) {
 		return array_key_exists($regionID, self::list_of_allowed_entries_for_dropdown());

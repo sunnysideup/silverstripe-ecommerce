@@ -6,17 +6,16 @@
 			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
 			<th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
 			<th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
-			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %> ($CurrencyUsed.Code)</th>
+			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %></th>
 			<th scope="col" class="right"></th>
 		</tr>
 	</thead>
 	<tfoot>
 <% if Items %>
 		<tr class="gap total summary hideOnZeroItems">
-			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %></th>
+			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %> ($CurrencyUsed.Code)</th>
 			<td class="right total" id="$AJAXDefinitions.TableTotalID">
 				<span class="value">$TotalAsMoney.NiceDefaultFormat</span>
-				<% include Order_Content_DisplayPrice %>
 			</td>
 			<td>&nbsp;</td>
 		</tr>

@@ -11,9 +11,8 @@
 	<tfoot>
 		<tr class="gap total summary">
 			<th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
-			<td class="right total" id="$AJAXDefinitions.TableTotalID">
+			<td class="right total grandTotal">
 				<span class="value">$TotalAsMoney.NiceDefaultFormat</span>
-				<% include Order_Content_DisplayPrice %>
 			</td>
 		</tr>
 	</tfoot>
@@ -24,9 +23,9 @@
 		<tr  class="itemRow $EvenOdd $FirstLast">
 			<td class="product title">
 				<% if Link %>
-					<a href="$Link" target="_blank">$TableTitle.XML</a>
+					<a href="$Link" target="_blank">$TableTitle</a>
 				<% else %>
-					<span class="tableTitle">$TableTitle.XML</span>
+					<span class="tableTitle">$TableTitle</span>
 				<% end_if %>
 				<span class="tableSubTitle">$TableSubTitle</span>
 			</td>
@@ -38,14 +37,14 @@
 
 		<tr class="gap summary" id="SubTotal">
 			<th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right">$SubTotalAsMoney.NiceDefaultFormat</td>
+			<td class="right subTotal">$SubTotalAsMoney.NiceDefaultFormat</td>
 		</tr>
 
 		<% loop Modifiers %>
 			<% if ShowInTable %>
 		<tr class="modifierRow $EvenOdd $FirstLast $Classes <% if HideInAjaxUpdate %> hideForNow<% end_if %>">
-			<td colspan="3" scope="row">$TableTitle</td>
-			<td class="right total">$CalculatedTotalAsMoney.NiceDefaultFormat</td>
+			<td colspan="3" scope="row">$TableTitle.XML</td>
+			<td class="right total">$TableValueAsMoney.NiceDefaultFormat</td>
 		</tr>
 			<% end_if %>
 		<% end_loop %>

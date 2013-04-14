@@ -154,7 +154,41 @@ class EcommerceCountry extends DataObject {
 		return false;
 	}
 
-		/**
+	/**
+	 * returns the country based on the Visitor Country Provider.
+	 * this is some sort of IP recogniser system (e.g. Geoip Class)
+	 * @return String (country code)
+	 **/
+	public function get_country_from_ip(){
+		$visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
+		$visitorCountryProvider = new $visitorCountryProviderClassName();
+		return $visitorCountryProvider->getCountry();
+	}
+
+	/**
+	 * @return Array
+	 * e.g.
+	 * "NZ" => "New Zealand"
+	 * @return Array
+	 */
+	public static function get_country_dropdown($showAllCountries = true){
+		if(class_exists("Geoip") && $showAllCountries) {
+			return Geoip::getCountryDropDown();
+		}
+		if($showAllCountries) {
+			$where = "";
+		}
+		else {
+			$where = "\"DoNotAllowSales\" = 0";
+		}
+		$objects = DataObject::get("EcommerceCountry", $where);
+		if($objects) {
+			return $objects->map("ID", "Name");
+		}
+		return array();
+	}
+
+	/**
 	 * This function exists as a shortcut.
 	 * If there is only ONE allowed country code
 	 * then a lot of checking of countries can be avoided.
@@ -169,18 +203,28 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
+	 *
+	 * @alias for EcommerceCountry::find_title
 	 * @param String $code
-	 * @return String ( name)
+	 * We have this as this is the same as Geoip
+	 * @return String
+	 */
+	public static function countryCode2name($code){
+		return self::find_title($code);
+	}
+
+	/**
 	 * returns the country name from a code
+	 * @return String
 	 **/
 	public static function find_title($code) {
-		$options = Geoip::getCountryDropDown();
+		$options = EcommerceCountry::get_country_dropdown();
 		// check if code was provided, and is found in the country array
 		if(isset($options[$code])) {
 			return $options[$code];
 		}
 		else {
-			return "";
+			return "[COUNTRY NOT FOUND]";
 		}
 	}
 
@@ -209,10 +253,10 @@ class EcommerceCountry extends DataObject {
 				}
 				//3. check GEOIP information
 				if(!$countryCode) {
-					$countryCode = @Geoip::visitor_country();
+					$countryCode = self::get_country_from_ip();
 					//4 check default country set in GEO IP....
 					if(!$countryCode) {
-						$countryCode = Geoip::get_default_country_code();
+						$countryCode = EcommerceConfig::get('EcommerceCountry', 'default_country_code');
 						//5. take the FIRST country from the get_allowed_country_codes
 						if(!$countryCode) {
 							$countryArray = self::list_of_allowed_entries_for_dropdown();
@@ -240,13 +284,13 @@ class EcommerceCountry extends DataObject {
 
 
 	/**
-	 * Checks if we are allowed to sell to this person.
+	 * Checks if we are allowed to sell to the current country.
 	 * @return Boolean
 	 */
 	public static function allow_sales() {
 		if(self::$allow_sales_cache === null) {
 			self::$allow_sales_cache = true;
-			$countryCode = @Geoip::visitor_country();
+			$countryCode = EcommerceCountry::get_country();
 			if($countryCode) {
 				$countries = EcommerceCountry::get()
 					->filter(array(
@@ -422,5 +466,26 @@ class EcommerceCountry extends DataObject {
 		}
 	}
 
+
 }
 
+/**
+ * this is a very basic class with as its sole purpose providing
+ * the country of the customer.
+ * By default we are using the GEOIP class
+ * but you can switch it to your own system by changing
+ * the classname in the ecommerce.yaml config file.
+ *
+ *
+ */
+class EcommerceCountry_VisitorCountryProvider extends Object {
+
+	/**
+	 *
+	 * @return String (Country Code - e.g. NZ, AU, or AF)
+	 */
+	public function getCountry() {
+		return @Geoip::visitor_country();
+	}
+
+}

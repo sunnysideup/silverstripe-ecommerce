@@ -17,7 +17,7 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 
 	function run($request){
 		$count = 0;
-		$array = Geoip::getCountryDropDown();
+		$array = EcommerceCountry::get_country_dropdown();
 		$allowedArray = EcommerceConfig::get("EcommerceCountry", "allowed_country_codes");
 		foreach($array as $code => $name) {
 			$obj = EcommerceCountry::get()

@@ -64,6 +64,7 @@ class OrderItem extends OrderAttribute {
 		'UnitPrice' => 'Currency',
 		'UnitPriceAsMoney' => 'Money',
 		'Total' => 'Currency',
+		'TotalAsMoney' => 'Money',
 		'InternalItemID' => 'Varchar',
 		'Link' => 'Varchar',
 		'AbsoluteLink' => 'Varchar'
@@ -400,21 +401,23 @@ class OrderItem extends OrderAttribute {
 
 	public function UnitPriceAsMoney($recalculate = false) {return $this->getUnitPriceAsMoney($recalculate);}
 	public function getUnitPriceAsMoney($recalculate = false) {
-		return EcommerceCurrency::get_money_object_from_order_currency($this->UnitPrice($recalculate), $this->Order());
+		return EcommerceCurrency::get_money_object_from_order_currency($this->getUnitPrice($recalculate), $this->Order());
 	}
 
+
 	/**
-	 * Casted Variable
+	 *
+	 * @param Boolean $recalculate - forces recalculation of price
 	 * @return Float
-	  **/
-	function Total(){return $this->getTotal();}
-	function getTotal() {
+	 */
+	function Total($recalculate = false){return $this->getTotal();}
+	function getTotal($recalculate = false) {
 		if($this->priceHasBeenFixed()) {
 			//get from database
 			$total = $this->CalculatedTotal;
 		}
 		else {
-			$total = $this->getUnitPrice() * $this->Quantity;
+			$total = $this->getUnitPrice($recalculate) * $this->Quantity;
 		}
 		$updatedTotal = $this->extend('updateTotal', $total);
 		if($updatedTotal !== null) {
@@ -423,6 +426,16 @@ class OrderItem extends OrderAttribute {
 			}
 		}
 		return $total;
+	}
+
+	/**
+	 *
+	 * @param Boolean $recalculate - forces recalculation of price
+	 * @return Money
+	 */
+	public function TotalAsMoney($recalculate = false) {return $this->getTotalAsMoney($recalculate);}
+	public function getTotalAsMoney($recalculate = false) {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->getTotal($recalculate), $this->Order());
 	}
 
 
