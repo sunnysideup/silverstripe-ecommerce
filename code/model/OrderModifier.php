@@ -99,6 +99,14 @@ class OrderModifier extends OrderAttribute {
 	);
 
 	/**
+	 * stardard SS definition
+	 * @var array
+	 */
+	public static $casting = array(
+		"TableValueAsMoney" => "Money"
+	);
+
+	/**
 	 * stardard SS variable
 	 * @var String
 	 */
@@ -202,7 +210,7 @@ class OrderModifier extends OrderAttribute {
 	 * $can_be_removed Identifies whether a modifier can be removed by the user.
 	 * @var Boolean
 	 **/
-	protected static $canBeRemoved = false;
+	protected $canBeRemoved = false;
 
 	/**
 	 * we use this variable to make sure that the parent::runUpdate() is called in all child classes
@@ -480,6 +488,16 @@ class OrderModifier extends OrderAttribute {
 		return false;
 	}
 
+
+	/**
+	 * Returns the Money object of the Table Value
+	 * @return Money
+	 **/
+	function TableValueAsMoney() {return $this->getTableValueAsMoney();}
+	function getTableValueAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->TableValue, $this->Order());
+	}
+
 	/**
 	* some modifiers can be hidden after an ajax update (e.g. if someone enters a discount coupon and it does not exist).
 	* There might be instances where ShowInTable (the starting point) is TRUE and HideInAjaxUpdate return false.
@@ -670,6 +688,14 @@ class OrderModifier extends OrderAttribute {
 	 * @return Array for AJAX JSON
 	 **/
 	function updateForAjax(array $js) {
+		$function = EcommerceConfig::get('OrderModifier', 'ajax_total_format');
+		if(is_array($function)) {
+			list($function, $format) = $function;
+		}
+		$total = $this->$function();
+		if(isset($format)) {
+			$total = $total->$format();
+		}
 		$ajaxObject = $this->AJAXDefinitions();
 		//TableValue is a database value
 		$tableValue = DBField::create_field('Currency',$this->TableValue)->Nice();
@@ -716,7 +742,7 @@ class OrderModifier extends OrderAttribute {
 				't' => 'id',
 				's' => $ajaxObject->TableTotalID(),
 				'p' => 'innerHTML',
-				'v' => $tableValue
+				'v' => $total
 			);
 		}
 		return $js;

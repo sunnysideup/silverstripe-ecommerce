@@ -48,9 +48,39 @@ class EcommercePayment extends DataExtension {
 	 * standard SS variable
 	 * @return Array
 	 */
+
 	public static $field_labels = array(
 		"Order.Title" => "Order"
 	);
+	
+	function newExtraStatics() {
+		return array(
+			'has_one' => array(
+				'Order' => 'Order' //redundant...should be using PaidObject
+			),
+			'default_sort' => 'Created DESC',
+			'casting' => array(
+				'AmountValue' => 'Currency'
+			),
+			'summary_fields' => self::$summary_fields,
+			'searchable_fields' => array(
+				'OrderID' => array(
+					'field' => 'TextField',
+					'title' => 'Order Number'
+				),
+				'Created' => array(
+					'title' => 'Date (e.g. today)',
+					'field' => 'TextField',
+					//'filter' => 'PaymentFilters_AroundDateFilter', //TODO: this breaks the sales section of the CMS
+				),
+				'IP' => array(
+					'title' => 'IP Address',
+					'filter' => 'PartialMatchFilter'
+				),
+				'Status'
+			)
+		);
+	}
 
 	/**
 	 * Process payment form and return next step in the payment process.
@@ -75,8 +105,12 @@ class EcommercePayment extends DataExtension {
 			$paidBy = Member::currentUser();
 		}
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
+
+		// We call this static function instead of trying to do a setCurrency because most payment gateways use Payment::site_currency()
+		Payment::set_site_currency($order->CurrencyUsed()->Code);
+
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
-		if(!($payment && $payment instanceof Payment)) {
+		if(!$payment) {
 			$form->sessionMessage(_t('EcommercePayment.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
 			$form->controller->redirectBack();
 			return false;
@@ -87,7 +121,8 @@ class EcommercePayment extends DataExtension {
 		if(is_object($paidBy)) {
 			$payment->PaidByID = $paidBy->ID;
 		}
-		$payment->Amount = $order->TotalOutstandingAsMoneyObject();
+		//important to set the amount and currency.
+		$payment->Amount = $order->TotalOutstandingAsMoney();
 		$payment->write();
 		// Process payment, get the result back
 		$result = $payment->processPayment($data, $form);

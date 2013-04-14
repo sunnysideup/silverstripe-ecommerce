@@ -8,12 +8,13 @@
  **/
 
 
-Object::add_extension("Member", "EcommerceRole");
-Object::add_extension("Payment", "EcommercePayment");
-Object::add_extension("SiteTree", "EcommerceSiteTreeExtension");
-Object::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller");
-Object::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
-DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
+Member::add_extension("EcommerceRole");
+Payment::add_extension("EcommercePayment");
+SiteTree::add_extension("EcommerceSiteTreeExtension");
+Page_Controller::add_extension("EcommerceSiteTreeExtension_Controller");
+DevelopmentAdmin::add_extension("EcommerceDevelopmentAdminDecorator");
+Money::add_extension('EcommerceMoney');
+//DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 
 /*****************************************************
 * REQUIRES: GeoIP,

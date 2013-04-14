@@ -124,11 +124,13 @@ class Order extends DataObject {
 		'RetrieveLink' => 'Text',
 		'Title' => 'Text',
 		'Total' => 'Currency',
+		'TotalAsMoney' => 'Money',
 		'SubTotal' => 'Currency',
+		'SubTotalAsMoney' => 'Money',
 		'TotalPaid' => 'Currency',
+		'TotalPaidAsMoney' => 'Money',
 		'TotalOutstanding' => 'Currency',
-		'TotalOutstandingAsMoneyObject' => 'Money',
-		'DisplayPrice' => 'Money',
+		'TotalOutstandingAsMoney' => 'Money',
 		'HasAlternativeCurrency' => 'Boolean',
 		'TotalItems' => 'Int',
 		'TotalItemsTimesQuantity' => 'Double',
@@ -167,6 +169,7 @@ class Order extends DataObject {
 	 * @var String
 	 */
 	public static $description = "A collection of items that together make up the 'Order'.  An order can be placed.";
+		public static function reset_modifiers() {self::$modifiers = array();}
 
 	/**
 	 * Tells us if an order needs to be recalculated
@@ -218,6 +221,7 @@ class Order extends DataObject {
 					if($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
 						$form->ShowFormInEditableOrderTable = $modifier->ShowFormInEditableOrderTable();
 						$form->ShowFormOutsideEditableOrderTable = $modifier->ShowFormOutsideEditableOrderTable();
+						$form->ModifierName = $modifier->ClassName;
 						$arrayList->push($form);
 					}
 				}
@@ -528,11 +532,11 @@ class Order extends DataObject {
 			}
 			$this->MyStep()->addOrderStepFields($fields, $this);
 			$fields->addFieldToTab("Root.Next", new LiteralField("StatusIDExplanation", _t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.")));
-			$currencies = EcommerceCurrency::ecommerce_currency_list();
+			$currencies = EcommerceCurrency::get_list();
 			if($currencies) {
-				$mapOfCurrencies = $currencies->map("ID", "Title");
+				$currencies = $currencies->map();
 				$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
-				$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID ", _t("Order.CurrencyUsed", "Currency Used"), $mapOfCurrencies, EcommerceCurrency::default_currency_id()));
+				$fields->addFieldToTab("Root.Currency", new LookupField("CurrencyUsedID", _t("Order.CurrencyUsed", "Currency Used"), $currencies));
 			}
 			$fields->addFieldToTab("Root.Log", new ReadonlyField("Created", _t("Root.CREATED", "Created")));
 			$fields->addFieldToTab("Root.Log", new ReadonlyField("LastEdited", _t("Root.LASTEDITED", "Last saved")));
@@ -1207,6 +1211,7 @@ class Order extends DataObject {
 		$replacementArray["ShopPhysicalAddress"] = $config->ShopPhysicalAddress;
 		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
 		$replacementArray["BaseURL"] = Director::baseURL();
+		$this->extend('updateReplacementArrayForEmail', $replacementArray);
 		return $replacementArray;
 	}
 
@@ -1884,7 +1889,6 @@ class Order extends DataObject {
 		return $result;
 	}
 
-
 	/**
 	 *
 	 * @return Currency (DB Object)
@@ -1892,6 +1896,16 @@ class Order extends DataObject {
 	function SubTotalAsCurrencyObject() {
 		return DBField::create_field('Currency',$this->SubTotal());
 	}
+
+	/**
+	 *
+	 * @return Money
+	 **/
+	function SubTotalAsMoney() {return $this->getSubTotalAsMoney();}
+	function getSubTotalAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->SubTotal(), $this);
+	}
+
 
 	/**
 	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
@@ -1902,7 +1916,6 @@ class Order extends DataObject {
 		return $this->SubTotal() + $this->ModifiersSubTotal();
 	}
 
-
 	/**
 	 *
 	 * @return Currency (DB Object)
@@ -1912,21 +1925,14 @@ class Order extends DataObject {
 	}
 
 	/**
+	 *
 	 * @return Money
 	 **/
-	function TotalAsMoneyObject(){return $this->getTotalAsMoneyObject();}
-	function getTotalAsMoneyObject(){
-		return EcommerceCurrency::display_price($this->Total(), $this, "", true);
+	function TotalAsMoney() {return $this->getTotalAsMoney();}
+	function getTotalAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->Total(), $this);
 	}
 
-	/**
-	 *
-	 * @return Money | Null
-	 **/
-	function DisplayPrice(){return $this->getDisplayPrice();}
-	function getDisplayPrice(){
-		return EcommerceCurrency::display_price($this->Total(), $this);
-	}
 
 	/**
 	 * Checks to see if any payments have been made on this order
@@ -1934,8 +1940,8 @@ class Order extends DataObject {
 	 *
 	 * @return float
 	 **/
-	function TotalOutstanding(){return $this->getTotalOutstanding();}
-	function getTotalOutstanding(){
+	function TotalOutstanding() {return $this->getTotalOutstanding();}
+	function getTotalOutstanding() {
 		if($this->IsSubmitted()) {
 			$total = $this->Total();
 			$paid = $this->TotalPaid();
@@ -1960,12 +1966,14 @@ class Order extends DataObject {
 	}
 
 	/**
+	 *
 	 * @return Money
 	 **/
-	function TotalOutstandingAsMoneyObject(){return $this->getTotalOutstandingAsMoneyObject();}
-	function getTotalOutstandingAsMoneyObject(){
-		return EcommerceCurrency::display_price($this->TotalOutstanding(), $this, "", true);
+	function TotalOutstandingAsMoney() {return $this->getTotalOutstandingAsMoney();}
+	function getTotalOutstandingAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->TotalOutstanding(), $this);
 	}
+
 
 	/**
 	 * @return float
@@ -1987,7 +1995,6 @@ class Order extends DataObject {
 		return $paid * $reverseExchange;
 	}
 
-
 	/**
 	 *
 	 * @return Currency (DB Object)
@@ -1995,6 +2002,16 @@ class Order extends DataObject {
 	function TotalPaidAsCurrencyObject(){
 		return DBField::create_field('Currency',$this->TotalPaid());
 	}
+
+	/**
+	 *
+	 * @return Money
+	 **/
+	function TotalPaidAsMoney() {return $this->getTotalPaidAsMoney();}
+	function getTotalPaidAsMoney() {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->TotalPaid(), $this);
+	}
+
 
 	/**
 	 * returns the total number of OrderItems (not modifiers).
@@ -2397,8 +2414,23 @@ class Order extends DataObject {
 	 * @return Array (for use in AJAX for JSON)
 	 **/
 	function updateForAjax(array &$js) {
-		$subTotal = $this->SubTotalAsCurrencyObject()->Nice();
-		$total = $this->TotalAsCurrencyObject()->Nice();
+		$function = EcommerceConfig::get('Order', 'ajax_subtotal_format');
+		if(is_array($function)) {
+			list($function, $format) = $function;
+		}
+		$subTotal = $this->$function();
+		if(isset($format)) {
+			$subTotal = $subTotal->$format();
+			unset($format);
+		}
+		$function = EcommerceConfig::get('Order', 'ajax_total_format');
+		if(is_array($function)) {
+			list($function, $format) = $function;
+		}
+		$total = $this->$function();
+		if(isset($format)) {
+			$total = $total->$format();
+		}
 		$ajaxObject = $this->AJAXDefinitions();
 		$js[] = array(
 			't' => 'id',
@@ -2458,6 +2490,13 @@ class Order extends DataObject {
 		parent::populateDefaults();
 		if(!$this->SessionID) {
 			$this->SessionID = session_id();
+		}
+	}
+
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		if(! $this->CurrencyUsedID) {
+			$this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
 		}
 	}
 
@@ -2557,6 +2596,14 @@ class Order extends DataObject {
 		return EcommerceTaskDebugCart::debug_object($this);
 	}
 
+	function requireDefaultRecords() {
+		$order = DataObject::get_one('Order', 'CurrencyUsedID = 0');
+		if($order) {
+			$currencyID = EcommerceCurrency::default_currency_id();
+			DB::query("UPDATE \"Order\" SET \"CurrencyUsedID\" = $currencyID WHERE \"CurrencyUsedID\" = 0");
+			DB::alteration_message('All orders have been set a currency value.', 'changed');
+		}
+	}
 }
 
 
