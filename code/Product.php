@@ -1067,6 +1067,10 @@ class Product_Controller extends Page_Controller {
 
 class Product_Image extends Image {
 
+	static $casting = array(
+		"CMSThumb" => "HTMLText"
+	);
+
 	/**
 	 *
 	 * @return Int
@@ -1174,6 +1178,43 @@ class Product_Image extends Image {
 			}
 		}
 	}
+
+
+	/**
+	 * Fields
+	 * @return Array
+	 */
+	function summaryFields(){
+		return array(
+			"CMSThumb" => "CMSThumb",
+			"Title" => "Title"
+		);
+	}
+
+	/**
+	 *
+	 * @return String HTML
+	 */
+	function CMSThumb(){
+		return $this->getCMSThumb();
+	}
+
+
+	/**
+	 *
+	 * @return String HTML
+	 */
+	function getCMSThumb(){
+		$smallImage = $this->SmallImage();
+		if($smallImage) {
+			$icon = "<img src=\"".$smallImage->FileName."\" style=\"border: 1px solid black; height: 100px; \" />";
+		}
+		else {
+			$icon = "[MISSING IMAGE]";
+		}
+		return DBField::create("HTMLText", $icon);
+	}
+
 
 }
 

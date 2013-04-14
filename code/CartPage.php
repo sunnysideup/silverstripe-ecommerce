@@ -487,24 +487,6 @@ class CartPage_Controller extends Page_Controller{
 	}
 
 	/**
-	 * Gets the shopping cart message so that it can be displayed and
-	 * so that it gets removed from the session.
-	 * @return String
-	 */
-	function ShoppingCartMessages(){
-		$messagesImploded = "";
-		if($this->currentOrder) {
-			$messages = $this->getMessages();
-			if(is_array($messages) && count($messages)) {
-				foreach($messages as $messageArray) {
-					$messagesImploded .= '<span class="'.$messageArray["Type"].'">'.$messageArray["Message"].'</span>';
-				}
-			}
-		}
-		return $messagesImploded;
-	}
-
-	/**
 	 * @return String
 	 **/
 	function Message() {
@@ -601,6 +583,7 @@ class CartPage_Controller extends Page_Controller{
 			//what order are we viewing?
 			$viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
 			$currentUserID = Member::currentUserID();
+
 			//Continue Shopping
 			if(isset($this->ContinueShoppingLabel) && $this->ContinueShoppingLabel) {
 				if($viewingRealCurrentOrder) {

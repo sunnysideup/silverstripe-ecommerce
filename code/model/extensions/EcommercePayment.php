@@ -107,7 +107,8 @@ class EcommercePayment extends DataExtension {
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 
 		// We call this static function instead of trying to do a setCurrency because most payment gateways use Payment::site_currency()
-		Payment::set_site_currency($order->CurrencyUsed()->Code);
+		// DO NOT USE THE LINE BELOW!
+		//Payment::set_site_currency($order->CurrencyUsed()->Code);
 
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
 		if(!$payment) {
@@ -122,7 +123,7 @@ class EcommercePayment extends DataExtension {
 			$payment->PaidByID = $paidBy->ID;
 		}
 		//important to set the amount and currency.
-		$payment->Amount = $order->TotalOutstandingAsMoney();
+		$payment->Amount = $order->getTotalOutstandingAsMoney();
 		$payment->write();
 		// Process payment, get the result back
 		$result = $payment->processPayment($data, $form);

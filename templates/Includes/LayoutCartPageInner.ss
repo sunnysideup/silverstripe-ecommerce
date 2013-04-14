@@ -6,8 +6,6 @@
 <% if Order %>
 	<% if CanEditOrder %>
 		<% with Order %><% include Order_Content_Editable %><% end_with %>
-	<% else %>
-<div class="message bad canNotEdit">$NonExistingOrderMessage</p>
 	<% end_if %>
 <% else %>
 <div class="message bad canNotView">$NonExistingOrderMessage</p>

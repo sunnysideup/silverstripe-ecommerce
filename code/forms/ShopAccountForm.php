@@ -20,8 +20,9 @@ class ShopAccountForm extends Form {
 		$member = Member::currentUser();
 		$requiredFields = null;
 		if($member && $member->exists()) {
-			$fields = $member->getEcommerceFields();
-			$clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
+			$fields = $member->getEcommerceFields(true);
+			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
+			$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
 			$loginField = new ReadonlyField(
 				'LoggedInAsNote',
 				_t("Account.LOGGEDIN", "You are currently logged in as "),
@@ -50,6 +51,11 @@ class ShopAccountForm extends Form {
 					$fields->push($memberField);
 				}
 			}
+			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
+			$passwordFieldCheck = new PasswordField('PasswordCheck', _t('Account.PASSWORDCHECK','Password (repeat)'));
+			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
+			$fields->push($passwordField);
+			$fields->push($passwordFieldCheck);
 			$actions = new FieldList(
 				new FormAction('creatememberandaddtoorder', _t('Account.SAVE','Create Account'))
 			);

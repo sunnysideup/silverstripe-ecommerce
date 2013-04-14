@@ -1101,9 +1101,14 @@ class Order extends DataObject {
 	 * @param EcommerceCurrency $currency
 	 */
 	public function UpdateCurrency($currency) {
-		$this->CurrencyUsedID = $currency->ID;
-		$this->ExchangeRate = $currency->ExchangeRate();
-		$this->write();
+		if($this->IsSubmitted()) {
+			user_error("Can not set the exchange rate after the order has been submitted", E_USER_NOTICE);
+		}
+		else {
+			$this->CurrencyUsedID = $currency->ID;
+			$this->ExchangeRate = $currency->ExchangeRate();
+			$this->write();
+		}
 	}
 
 
@@ -1136,7 +1141,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', "ERROR: ".$subject, $message, $resend = true, $adminOnly = true);
+		return $this->prepareEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
 	}
 
 	/**
@@ -1163,7 +1168,7 @@ class Order extends DataObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
-		$replacementArray = $this->createReplacementArrayForEmail($message);
+		$arrayData = $this->createReplacementArrayForEmail($message, $subject);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
@@ -1180,8 +1185,9 @@ class Order extends DataObject {
 			}
 			$email->setFrom($from);
 			$email->setTo($to);
-			$email->setSubject($subject);
-			$email->populateTemplate($replacementArray);
+			//we take the subject from the Array Data, just in case it has been adjusted.
+			$email->setSubject($arrayData->getField("Subject"));
+			$email->populateTemplate($arrayData);
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
 			// templates within the theme exist
@@ -1196,14 +1202,30 @@ class Order extends DataObject {
 
 	/**
 	 * returns the Data that can be used in the bodry of an order Email
+	 * we add the subject here so that the subject, for example, can be added to the <title>
+	 * of the email template.
 	 * @param String $message - the additional message
-	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
+	 * @param String $subject - subject for email -
+	 * @return ArrayData
+	 * - Subject - EmailSubject
+	 * - Message - specific message for this order
+	 * - OrderStepMessage - generic message for step
+	 * - Order
+	 * - EmailLogo
+	 * - ShopPhysicalAddress
+	 * - CurrentDateAndTime
+	 * - BaseURL
 	 */
-	public function createReplacementArrayForEmail($message = ""){
+	public function createReplacementArrayForEmail($message = "", $subject = ""){
 		$step = $this->MyStep();
 		$config = $this->EcomConfig();
 		$replacementArray = array();
- 		$replacementArray["Subject"] = $step->EmailSubject;
+		if($subject) {
+			$replacementArray["Subject"] = $subject;
+		}
+		else {
+			$replacementArray["Subject"] = $step->EmailSubject;
+		}
  		$replacementArray["Message"] = $message;
  		$replacementArray["OrderStepMessage"] = $step->CustomerMessage;
 		$replacementArray["Order"] = $this;
@@ -1211,8 +1233,9 @@ class Order extends DataObject {
 		$replacementArray["ShopPhysicalAddress"] = $config->ShopPhysicalAddress;
 		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
 		$replacementArray["BaseURL"] = Director::baseURL();
-		$this->extend('updateReplacementArrayForEmail', $replacementArray);
-		return $replacementArray;
+		$arrayData = new ArrayData($replacementArray);
+		$this->extend('updateReplacementArrayForEmail', $arrayData);
+		return $arrayData;
 	}
 
 	/**
@@ -1222,8 +1245,7 @@ class Order extends DataObject {
 	 * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
 	 */
 	public function renderOrderInEmailFormat($message = "", $emailClassName) {
-		$replacementArrayForEmail = $this->createReplacementArrayForEmail($message);
-		$arrayData = new ArrayData($replacementArrayForEmail);
+		$arrayData = $this->createReplacementArrayForEmail($message);
 		$html = $arrayData->renderWith($emailClassName);
 		return Order_Email::emogrify_html($html);
 	}
@@ -2089,11 +2111,18 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if(count($countryCodes)) {
-			if(EcommerceConfig::get("OrderAddress", "use_shipping_address_for_main_region_and_country") && $countryCodes["Shipping"]) {
-				return $countryCodes["Shipping"];
-			}
+		if(
+			(EcommerceConfig::get("OrderAddress", "use_shipping_address_for_main_region_and_country") && $countryCodes["Shipping"])
+			||
+			(!$countryCodes["Billing"] && $countryCodes["Shipping"])
+		) {
+			return $countryCodes["Shipping"];
+		}
+		elseif($countryCodes["Billing"]) {
 			return $countryCodes["Billing"];
+		}
+		else {
+			return EcommerceCountry::get_country_from_ip();
 		}
 	}
 
@@ -2178,10 +2207,11 @@ class Order extends DataObject {
 	function HasAlternativeCurrency(){return $this->getHasAlternativeCurrency();}
 	function getHasAlternativeCurrency() {
 		if($currency = $this->CurrencyUsed()) {
-			if($currency->exists()) {
-				if(!$currency->IsDefault()) {
-					return true;
+			if(!$currency->IsDefault()) {
+				if(!$this->ExchangeRate) {
+					user_error("Order is using alternative currency without exchange rate record.", E_USER_NOTICE);
 				}
+				return true;
 			}
 		}
 		return false;

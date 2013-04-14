@@ -28,7 +28,7 @@
 
 		<tr class="gap summary hideOnZeroItems">
 			<th colspan="3"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotal.Nice</td>
+			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
 			<td>&nbsp;</td>
 		</tr>
 <% end_if %>

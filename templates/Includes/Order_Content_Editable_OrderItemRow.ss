@@ -13,8 +13,8 @@
 	<td class="center quantity">
 		$QuantityField
 	</td>
-	<td class="right unitprice">$UnitPrice.Nice</td>
-	<td class="right total" id="$AJAXDefinitions.TableTotalID">$Total.Nice</td>
+	<td class="right unitprice">$UnitPriceAsMoney.NiceDefaultFormat</td>
+	<td class="right total" id="$AJAXDefinitions.TableTotalID">$TotalAsMoney.NiceDefaultFormat</td>
 	<td class="right remove">
 		<% if RemoveAllLink %>
 		<strong>

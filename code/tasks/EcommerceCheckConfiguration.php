@@ -364,15 +364,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	protected function addOtherValuesToConfigs(){
-		if(class_exists("Geoip")) {
-			$this->configs["Geoip"]["default_country_code"] = Geoip::get_default_country_code();
-		}
-		else {
-			user_error("Make sure to include the Geoip module for e-commerce.", E_USER_NOTICE);
-			$this->configs["Geoip"]["default_country_code"] = "ERROR, GEOIP NOT INSTALLED";
-		}
-		$this->definitions["Geoip"]["default_country_code"] = "Default currency for the site. <br />SET USING Geoip::get_default_country_code() in the _config.php FILES";
-		$this->defaults["Geoip"]["default_country_code"] = "[no default set]";
+
+		$this->definitions["Payment"]["site_currency"] = "Default currency for the site. <br />SET USING Payment::set_site_currency(\"NZD\") in the _config.php FILES";
+		$this->configs["Payment"]["site_currency"] = Payment::site_currency()." ";
+		$this->defaults["Payment"]["site_currency"] = "[no default set]";
 
 		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. <br />SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
 		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
