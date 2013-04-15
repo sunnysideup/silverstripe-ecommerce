@@ -1461,7 +1461,7 @@ class EcommerceMigration extends BuildTask {
 		$fileArray = EcommerceConfig::get_folder_and_file_locations();
 		if($fileArray && count($fileArray)) {
 			foreach($fileArray as $folderAndFileLocationWithoutBase) {
-				if($folderAndFileLocationWithoutBase != "ecommerce/_config/ecommerce.yaml") {
+				if($folderAndFileLocationWithoutBase != "ecommerce/ecommerce_config/ecommerce.yaml") {
 					$folderAndFileLocationWithBase = Director::baseFolder().'/'. $folderAndFileLocationWithoutBase;
 					if(file_exists($folderAndFileLocationWithBase)) {
 						$fp = @fopen($folderAndFileLocationWithBase, 'r');
@@ -1492,12 +1492,12 @@ class EcommerceMigration extends BuildTask {
 					}
 				}
 				else {
-					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/_config/ecommerce.yaml", "created");
+					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/ecommerce_config/ecommerce.yaml", "created");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("Could not find any config files (most usual place: mysite/_config/ecommerce.yaml)", "deleted");
+			DB::alteration_message("Could not find any config files (most usual place: mysite/ecommerce_config/ecommerce.yaml)", "deleted");
 		}
 		return 0;
 	}

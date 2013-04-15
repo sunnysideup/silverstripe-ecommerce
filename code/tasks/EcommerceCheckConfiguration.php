@@ -22,7 +22,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 * Default Location for Configuration File
 	 * @var String
 	 */
-	protected $defaultLocation = "ecommerce/_config/ecommerce.yaml";
+	protected $defaultLocation = "ecommerce/ecommerce_config/ecommerce.yaml";
 
 	/**
 	 * Standard (required) SS variable for BuildTasks
