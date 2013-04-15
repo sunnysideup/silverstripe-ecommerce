@@ -82,7 +82,7 @@ class EcommerceConfig extends Object {
 	 *
 	 * @var Array
 	 */
-	protected static $folder_and_file_locations = array("ecommerce/_config/ecommerce.yaml");
+	protected static $folder_and_file_locations = array("ecommerce/ecommerce_config/ecommerce.yaml");
 		static function set_folder_and_file_locations($a) {self::$folder_and_file_locations = $a;}
 		static function get_folder_and_file_locations() {return self::$folder_and_file_locations;}
 
