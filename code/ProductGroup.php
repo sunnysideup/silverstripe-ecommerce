@@ -256,7 +256,7 @@ class ProductGroup extends Page {
 	/**
 	 * Returns the sql associated with a filter option.
 	 * @param String $key - the option selected
-	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0))
+	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0)) OR STRING!!!!
 	 */
 	protected function getFilterOptionSQL($key = ""){
 		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
@@ -516,7 +516,7 @@ class ProductGroup extends Page {
 		$this->allProducts = $className::get();
 
 		// STANDARD FILTER
-		$this->getStandardFilter();
+		$this->allProducts = $this->getStandardFilter();
 
 		// EXTRA FILTER
 		if(is_array($extraFilter) && count($extraFilter)) {
@@ -534,24 +534,8 @@ class ProductGroup extends Page {
 
 		//EXLUDES ONE THAT ARE NOT FOR SALE
 		//we just add a little safety measure here...
-		if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
-			self::$negative_can_purchase_array[$buyable->ID] = array();
-			$rawCount = $this->allProducts->count();
-			if($rawCount && $rawCount < 500) {
-				if(empty(self::$negative_can_purchase_array)) {
-					foreach($this->allProducts as $buyable) {
-						if(!$buyable->canPurchase()) {
-							//NOTE: the ->remove we had here would have removed
-							//the product from the DB.
-							self::$negative_can_purchase_array[$buyable->ID] = $buyable->ID;
-						}
-					}
-				}
-			}
-			if(count(self::$negative_can_purchase_array[$buyable->ID])) {
-				$this->allProducts = $this->allProducts->Exclude(array("ID" => self::$negative_can_purchase_array));
-			}
-		}
+		$this->allProducts = $this->getExcludedProducts();
+
 		return $this->allProducts;
 	}
 
@@ -606,7 +590,12 @@ class ProductGroup extends Page {
 			$filterKey = $this->MyDefaultFilter();
 		}
 		$filter = $this->getFilterOptionSQL($filterKey);
-		$this->allProducts = $this->allProducts->Filter($filter);
+		if(is_array($filter)) {
+			$this->allProducts = $this->allProducts->Filter($filter);
+		}
+		elseif(is_string($filter) && strlen($filter) > 2) {
+			$this->allProducts = $this->allProducts->Where($filter);
+		}
 		return $this->allProducts;
 	}
 
@@ -635,7 +624,7 @@ class ProductGroup extends Page {
 			}
 			$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ".$groupFilter;
 		}
-		$this->allProducts = $this->allProducts->Where($groupFilter);
+		$this->allProducts = $this->allProducts->where($groupFilter);
 		return $this->allProducts;
 	}
 
@@ -675,6 +664,33 @@ class ProductGroup extends Page {
 
 
 	/**
+	 * Excluded products that can not be purchased
+	 * IMPORTANT: Adjusts allProducts and returns it...
+	 * @return DataList
+	 */
+	protected function getExcludedProducts() {
+		if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
+			self::$negative_can_purchase_array[$buyable->ID] = array();
+			$rawCount = $this->allProducts->count();
+			if($rawCount && $rawCount < 500) {
+				if(empty(self::$negative_can_purchase_array)) {
+					foreach($this->allProducts as $buyable) {
+						if(!$buyable->canPurchase()) {
+							//NOTE: the ->remove we had here would have removed
+							//the product from the DB.
+							self::$negative_can_purchase_array[$buyable->ID] = $buyable->ID;
+						}
+					}
+				}
+			}
+			if(count(self::$negative_can_purchase_array[$buyable->ID])) {
+				$this->allProducts = $this->allProducts->Exclude(array("ID" => self::$negative_can_purchase_array));
+			}
+		}
+		return $this->allProducts;
+	}
+
+	/**
 	 * returns the CLASSNAME part of the final selection of products.
 	 * @return String
 	 */
@@ -688,10 +704,10 @@ class ProductGroup extends Page {
 	 */
 	protected function currentWhereSQL() {
 		if($this->allProducts instanceOf DataList) {
-			$buyablesIDArray = $buyables->map("ID", "ID")->toArray();
+			$buyablesIDArray = $this->allProducts->map("ID", "ID")->toArray();
 		}
-		elseif(is_array($buyables)) {
-			$buyablesIDArray = $buyables;
+		elseif(is_array($this->allProducts)) {
+			$buyablesIDArray = $this->allProducts;
 		}
 		$className = $this->currentClassNameSQL();
 		$stage = '';
@@ -699,9 +715,14 @@ class ProductGroup extends Page {
 		if(Versioned::current_stage() == "Live") {
 			$stage = "_Live";
 		}
-		$listOfIDs = implode(",", $buyablesIDArray);
+		if(isset($buyablesIDArray)) {
+			$listOfIDs = implode(",", $buyablesIDArray);
+		}
+		else {
+			$listOfIDs = "0";
+		}
 		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $listOfIDs);
-		return array("ID"  => $listOfIDs);
+		return array("ID" => $listOfIDs);
 	}
 
 	/**
@@ -907,7 +928,7 @@ class ProductGroup extends Page {
 				}
 			}
 		}
-		return DataObject::get("ProductGroup", "ProductGroup$stage.ID IN (".implode(",", $ids).")".$filterWithAND);
+		return ProductGroup::get()->where("\"ProductGroup$stage\".\"ID\" IN (".implode(",", $ids).")".$filterWithAND);
 	}
 
 	/**
@@ -960,8 +981,47 @@ class ProductGroup extends Page {
 	 * tells us if the current page is part of e-commerce.
 	 * @return Boolean
 	 */
-	function IsEcommercePage() {
+	public function IsEcommercePage() {
 		return true;
+	}
+
+
+	/**
+	 * Debug helper method.
+	 * Can be called from /shoppingcart/debug/
+	 * @return String
+	 */
+	public function debug() {
+		$this->ProductsShowable();
+		$html = EcommerceTaskDebugCart::debug_object($this);
+		$html .= "<ul>";
+		$html .= "<li><hr />Selection Settings<hr /></li>";
+		$html .= "<li><b>MyDefaultFilter:</b> ".$this->MyDefaultFilter()." </li>";
+		$html .= "<li><b>MyDefaultSortOrder:</b> ".$this->MyDefaultSortOrder()." </li>";
+		$html .= "<li><b>MyNumberOfProductsPerPage:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
+		$html .= "<li><hr />Filters<hr /></li>";
+		$html .= "<li><b>currentClassNameSQL:</b> ".$this->currentClassNameSQL()." </li>";
+		$html .= "<li><b>getFilterOptionSQL:</b> ".print_r($this->getFilterOptionSQL(), 1)." </li>";
+		$html .= "<li><b>getGroupFilter:</b> ".$this->getGroupFilter()." </li>";
+		$html .= "<li><b>currentJoinSQL:</b> ".$this->currentJoinSQL()." </li>";
+		$html .= "<li><b>currentLimitOffsetSQL:</b> ".$this->currentLimitOffsetSQL()." </li>";
+		$html .= "<li><b>currentLimitSQL:</b> ".$this->currentLimitSQL()." </li>";
+		$html .= "<li><hr />SQL Factors<hr /></li>";
+		$html .= "<li><b>currentClassNameSQL:</b> ".$this->currentClassNameSQL()." </li>";
+		$html .= "<li><b>currentWhereSQL:</b> ".print_r($this->currentWhereSQL(), 1)." </li>";
+		$html .= "<li><b>currentSortSQL:</b> ".$this->currentSortSQL()." </li>";
+		$html .= "<li><b>currentJoinSQL:</b> ".$this->currentJoinSQL()." </li>";
+		$html .= "<li><b>currentLimitOffsetSQL:</b> ".$this->currentLimitOffsetSQL()." </li>";
+		$html .= "<li><b>currentLimitSQL:</b> ".$this->currentLimitSQL()." </li>";
+
+		$html .= "<li><hr />Outcome<hr /></li>";
+		$html .= "<li><b>TotalCount:</b> ".$this->TotalCount()." </li>";
+		$html .= "<li><b>allProducts:</b> ".print_r($this->allProducts->sql(), 1)." </li>";
+		$html .= "<li><hr />Other<hr /></li>";
+		$html .= "<li><b>BestAvailableImage:</b> ".$this->BestAvailableImage()." </li>";
+
+		$html .= "</ul>";
+		return $html;
 	}
 
 }
@@ -1049,6 +1109,17 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	function SidebarProducts(){
 		return null;
+	}
+
+	function debug(){
+		$member = Member::currentUser();
+		if(!$member || !$member->IsShopAdmin()) {
+			$messages = array(
+				'default' => 'You must login as an admin'
+			);
+			Security::permissionFailure($this, $messages);
+		}
+		return $this->dataRecord->debug();
 	}
 
 }

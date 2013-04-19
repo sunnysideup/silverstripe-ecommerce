@@ -61,6 +61,7 @@ class EcommerceMigration extends BuildTask {
 		"addConfirmationPage_250",
 		"cleanupImages_260",
 		"addNewPopUpManager_280",
+		"addCurrencyCodeIDToOrders_290",
 		"theEnd_9999"
 	);
 
@@ -1459,6 +1460,7 @@ class EcommerceMigration extends BuildTask {
 		return 0;
 	}
 
+
 	function addNewPopUpManager_280(){
 		$explanation = "
 			<h1>280. Add new pop-up manager</h1>
@@ -1506,12 +1508,27 @@ class EcommerceMigration extends BuildTask {
 					}
 				}
 				else {
-					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/_config/ecommerce.yaml", "created");
+					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/ecommerce_config/ecommerce.yaml", "created");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("Could not find any config files (most usual place: mysite/_config/ecommerce.yaml)", "deleted");
+			DB::alteration_message("Could not find any config files (most usual place: mysite/ecommerce_config/ecommerce.yaml)", "deleted");
+		}
+		return 0;
+	}
+
+
+	function addCurrencyCodeIDToOrders_290(){
+		$explanation = "
+			<h1>290. Add Curenccy to Orders</h1>
+			<p>Sets all currencies to the default currency for all orders without a currency.</p>
+		";
+		$ordersWithoutCurrencyCount = Order::get()->filter(array('CurrencyUsedID' => 0))->count();
+		if($ordersWithoutCurrency) {
+			$currencyID = EcommerceCurrency::default_currency_id();
+			DB::query("UPDATE \"Order\" SET \"CurrencyUsedID\" = $currencyID WHERE \"CurrencyUsedID\" = 0");
+			DB::alteration_message('All orders ($ordersWithoutCurrencyCount) have been set a currency value.', 'changed');
 		}
 		return 0;
 	}

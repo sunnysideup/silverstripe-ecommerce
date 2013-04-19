@@ -258,6 +258,8 @@ class OrderAddress extends DataObject {
 		}
 		$prefix = EcommerceConfig::get("OrderAddress", "field_class_and_id_prefix");
 		$countryField->addExtraClass($prefix.'ajaxCountryField');
+		//important, otherwise loadData will override the default value....
+		$this->$name = EcommerceCountry::get_country();
 		return $countryField;
 	}
 
@@ -552,7 +554,7 @@ class OrderAddress extends DataObject {
 		$fieldPrefix = $this->fieldPrefix();
 		$idField = $fieldPrefix . "RegionID";
 		if($this->$idField) {
-			$region = DataObject::get_by_id("EcommerceRegion", $this->$idField);
+			$region = EcommerceRegion::get()->byID($this->$idField);
 			if($region) {
 				$codeField = $fieldPrefix."RegionCode";
 				$this->$codeField = $region->Code;

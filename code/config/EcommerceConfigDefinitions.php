@@ -194,6 +194,9 @@ class EcommerceConfigDefinitions extends Object {
 			"EcommerceMoney" => array(
 				"default_format" => "Here you specify which function you want to be called as the default format for a Money object on the all site."
 			),
+			"EcommercePayment" => array(
+				"supported_methods" => "Associative array of payment methods, e.g. ChequePayment: pay by cheque, CreditCardPayment: pay by credit card, etc...."
+			),
 			"ExpiryDateField" => array(
 				"short_months" => "Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?",
 			),

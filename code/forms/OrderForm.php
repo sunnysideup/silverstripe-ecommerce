@@ -33,49 +33,22 @@ class OrderForm extends Form {
 		//  ________________  3) Payment fields - BOTTOM FIELDS
 
 
+
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
-<<<<<<< .working
-		//$totalAsCurrencyObject = $order->TotalAsCurrencyObject(); //should instead be $totalobj = $order->dbObject('Total');
-		$totalOutstandingAsMoneyObject = $order->TotalAsMoneyObject();
-		//payment Field Collection
-		$paymentFieldsCollection = new CompositeField();
-		$paymentFieldsRequiredCollection = Array();
-		//loop through each payment gateway
-		$supportedPaymentGateways = PaymentProcessor::get_supported_methods();
-		if(count($supportedPaymentGateways)) {
-			//header for payment options
-			$paymentFieldsCollection->push(new HeaderField("ChoosePayment", _t("OrderForm.CHOOSE_PAYMENT", "Choose Payment")));
-			foreach($supportedPaymentGateways as $paymentClassName) {
-				$processor = PaymentFactory::factory($paymentClassName);
-				if($processor) {
-					$paymentFields = $processor->getFormFields();
-					if($paymentFields) {
-						foreach($paymentFields as $paymentField) {
-							$paymentFieldsCollection->push($paymentField);
-						}
-					}
-					$paymentFieldsRequired = $processor->getFormRequirements();
-					if($paymentFieldsRequired) {
-						foreach($paymentFieldsRequired as $paymentFieldRequired) {
-							$paymentFieldsRequiredCollection[] = $paymentFieldRequired;
-						}
-					}
-=======
 		if($order->Total() > 0) {
-			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
+			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
 			foreach($paymentFields as $paymentField) {
-				if($paymentField->class == "HeaderField") {
-					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
->>>>>>> .merge-right.r4179
-				}
+				$bottomFields->push($paymentField);
+			}
+			if($paymentRequiredFields = EcommercePayment::combined_form_requirements()) {
+				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 			}
 		}
-
-		if($paymentFieldsCollection) {
-			$bottomFields->push($paymentFieldsCollection);
-			$requiredFields = array_merge($requiredFields, $paymentFieldsRequiredCollection);
+		else {
+			$bottomFields->push(new HiddenField("PaymentMethod", "", ""));
 		}
+
 
 		//  ________________  4) FINAL FIELDS
 
@@ -135,7 +108,7 @@ class OrderForm extends Form {
 	 * Process final confirmation and payment
 	 *
 	 * {@link Payment} instance is created, linked to the order,
-	 * and payment is processed {@link Payment::processPayment()}
+	 * and payment is processed {@link EcommercePayment::processPayment()}
 	 *
 	 * @param array $data Form request data submitted from OrderForm
 	 * @param Form $form Form object for this action
@@ -338,40 +311,23 @@ class OrderForm_Payment extends Form {
 		if($returnToLink) {
 			$fields->push(new HiddenField("returntolink", "", convert::raw2att($returnToLink)));
 		}
-<<<<<<< .working
-		$totalAsCurrencyObject = $order->TotalAsCurrencyObject();
-		$totalOutstandingAsMoneyObject = $order->TotalOutstandingAsMoneyObject();
-		//$paymentFields = Payment::combined_form_fields($totalOutstandingAsMoneyObject->Nice());
-		$paymentFields = null;
-		if($paymentFields) {
+
+		$bottomFields = new CompositeField();
+		$bottomFields->setID('BottomOrder');
+		if($order->Total() > 0) {
+			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
 			foreach($paymentFields as $paymentField) {
-				if($paymentField->class == "HeaderField") {
-					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
-=======
-		$paymentFields = Payment::combined_form_fields($order->getTotalOutstandingAsMoney()->NiceDefaultFormat(false));
-		foreach($paymentFields as $paymentField) {
-			if($paymentField->class == "HeaderField") {
-				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
+				$bottomFields->push($paymentField);
 			}
-			if($paymentField->Name() == "PaymentMethod") {
-				$source = $paymentField->getSource();
-				if($source && is_array($source) && count($source) == 1) {
-					$paymentField->performReadonlyTransformation();
->>>>>>> .merge-right.r4179
-				}
-				if($paymentField->Name() == "PaymentMethod") {
-					$source = $paymentField->getSource();
-					if($source && is_array($source) && count($source) == 1) {
-						$paymentField->performReadonlyTransformation();
-					}
-				}
-				$fields->push($paymentField);
-			}
-			$requiredFields = array();
-			if($paymentRequiredFields = Payment::combined_form_requirements()) {
+			if($paymentRequiredFields = EcommercePayment::combined_form_requirements()) {
 				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 			}
 		}
+		else {
+			$bottomFields->push(new HiddenField("PaymentMethod", "", ""));
+		}
+		$fields->push($bottomFields);
+
 		$actions = new FieldList(
 			new FormAction('dopayment', _t('OrderForm.PAYORDER','Pay balance'))
 		);
@@ -475,3 +431,39 @@ class OrderForm_Cancel extends Form {
 }
 
 
+/*
+
+
+	if(count($supportedPaymentGateways)) {
+			//header for payment options
+			$paymentFieldsCollection->push(new HeaderField("ChoosePayment", _t("OrderForm.CHOOSE_PAYMENT", "Choose Payment")));
+			foreach($supportedPaymentGateways as $paymentClassName) {
+				$processor = PaymentFactory::factory($paymentClassName);
+				if($processor) {
+					$paymentFields = $processor->getFormFields();
+					if($paymentFields) {
+						foreach($paymentFields as $paymentField) {
+							$paymentFieldsCollection->push($paymentField);
+						}
+					}
+					$paymentFieldsRequired = $processor->getFormRequirements();
+					if($paymentFieldsRequired) {
+						foreach($paymentFieldsRequired as $paymentFieldRequired) {
+							$paymentFieldsRequiredCollection[] = $paymentFieldRequired;
+						}
+					}
+		if($order->Total() > 0) {
+			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
+			foreach($paymentFields as $paymentField) {
+				if($paymentField->class == "HeaderField") {
+					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+				}
+			}
+		}
+
+		if($paymentFieldsCollection) {
+			$bottomFields->push($paymentFieldsCollection);
+			$requiredFields = array_merge($requiredFields, $paymentFieldsRequiredCollection);
+		}
+
+*/

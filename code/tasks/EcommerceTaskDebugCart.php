@@ -28,8 +28,19 @@ class EcommerceTaskDebugCart extends BuildTask {
 		$fields = Config::inst()->get($obj->ClassName, "casting", Config::FIRST_SET);
 		if(count($fields)) {
 			foreach($fields as  $key => $type) {
-				$method = "get".$key;
-				$html .= "<li><b>$key ($type):</b> ".$obj->$method()." </li>";
+				$method = $key;
+				if(method_exists($obj, $method)) {
+					$html .= "<li><b>$key ($type):</b> ".$obj->$method()." </li>";
+				}
+				else {
+					$method = "get".$key;
+					if(method_exists($obj, $method)) {
+						$html .= "<li><b>$key ($type):</b> ".$obj->$method()." </li>";
+					}
+					else{
+						$html .= "<li><b>$key ($type):</b> ".$obj->$key." </li>";
+					}
+				}
 			}
 		}
 
@@ -39,12 +50,12 @@ class EcommerceTaskDebugCart extends BuildTask {
 			foreach($fields as  $key => $type) {
 				$value = "";
 				$field = $key."ID";
-				if($object = $this->$key()){
+				if($object = $obj->$key()){
 					if($object && $object->exists()) {
 						$value = ", ".$object->Title;
 					}
 				}
-				$html .= "<li><b>$key ($type):</b> ".$this->$field.$value." </li>";
+				$html .= "<li><b>$key ($type):</b> ".$obj->$field.$value." </li>";
 			}
 		}
 		//to do: has_many and many_many
