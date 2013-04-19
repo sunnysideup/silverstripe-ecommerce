@@ -361,10 +361,6 @@ class OrderAttribute extends DataObject {
 	 */
 	public function debug() {
 		$html =  EcommerceTaskDebugCart::debug_object($this);
-		if($this instanceOf OrderItem) {
-			$html .= "<p><b>Buyable Price:</b> ".$this->Buyable()->Price." </p>";
-			$html .= "<p><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </p>";
-		}
 		return $html;
 	}
 }

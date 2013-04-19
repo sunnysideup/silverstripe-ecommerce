@@ -751,6 +751,14 @@ class OrderModifier extends OrderAttribute {
 
 // ######################################## ***  12. debug functions
 
+	/**
+	 * Debug helper method.
+	 * Access through : /shoppingcart/debug/
+	 */
+	public function debug() {
+		$html =  EcommerceTaskDebugCart::debug_object($this);
+		return $html;
+	}
 
 
 }
