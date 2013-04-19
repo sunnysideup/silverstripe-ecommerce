@@ -216,7 +216,9 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	protected $debugActions = array(
 		"ecommercetemplatetesttask",
 		"cartmanipulation_current",
-		"cartmanipulation_debug"
+		"cartmanipulation_debug",
+		"ecommercetaskbuilding_model",
+		"ecommercetaskbuilding_extending",
 	);
 
 	/**

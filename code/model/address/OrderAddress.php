@@ -562,5 +562,9 @@ class OrderAddress extends DataObject {
 		}
 	}
 
+	public function debug(){
+		return EcommerceTaskDebugCart::debug_object($this);
+	}
+
 }
 

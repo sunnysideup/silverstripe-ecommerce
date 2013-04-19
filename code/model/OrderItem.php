@@ -714,4 +714,13 @@ class OrderItem extends OrderAttribute {
 		return $array;
 	}
 
+	public function debug() {
+		$html =  EcommerceTaskDebugCart::debug_object($this);
+		$html .= "<ul>";
+		$html .= "<li><b>Buyable Price:</b> ".$this->Buyable()->Price." </li>";
+		$html .= "<li><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </li>";
+		$html .= "</ul>";
+		return $html;
+	}
+
 }

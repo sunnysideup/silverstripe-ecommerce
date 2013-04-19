@@ -127,7 +127,7 @@
 <h2>Product</h2>
 <p>The following product has been randomly selected product for this exercise: <strong><a href="$RandomProduct.Link">$RandomProduct.MenuTitle</a></strong></p>
 <p>You can <a href="$Link">reload</a> this page to view another product.</p>
-<% control RandomProduct %>
+<% with RandomProduct %>
 
 <h4>Image Controllers</h4>
 <table style="width: 95%;">
