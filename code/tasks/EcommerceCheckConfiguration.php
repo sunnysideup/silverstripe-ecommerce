@@ -223,7 +223,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					echo "<br /><pre>$className:";
 					$classConfigs = $this->definitions[$className];
 					foreach($classConfigs as $key => $classConfig) {
-						echo 
+						echo
 						"$key: ".$this->defaults[$className][$key];
 					}
 					echo "</pre>";
@@ -377,32 +377,38 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 	protected function addPages(){
 
-		$checkoutPage = CheckoutPage::get()->First();
-		$this->getPageDefinitions($checkoutPage);
-		$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.<br />".($checkoutPage ? "<a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "view: <a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a><br />".$checkoutPage->configArray : " NOT CREATED!";
-		$this->defaults["Pages"]["CheckoutPage"] = $checkoutPage ? $checkoutPage->defaultsArray : "[add page first to see defaults]";
 
-		$orderConfirmationPage = OrderConfirmationPage::get()->First();
-		$this->getPageDefinitions($orderConfirmationPage);
-		$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.<br />".($orderConfirmationPage ? "<a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "view: <a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a><br />".$orderConfirmationPage->configArray: " NOT CREATED!";
-		$this->defaults["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : "[add page first to see defaults]";
+		if($checkoutPage = CheckoutPage::get()->First()) {
+			$this->getPageDefinitions($checkoutPage);
+			$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.<br />".($checkoutPage ? "<a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "view: <a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a><br />".$checkoutPage->configArray : " NOT CREATED!";
+			$this->defaults["Pages"]["CheckoutPage"] = $checkoutPage ? $checkoutPage->defaultsArray : "[add page first to see defaults]";
+		}
 
-		$accountPage = AccountPage::get()->First();
-		$this->getPageDefinitions($accountPage);
-		$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.<br />".($accountPage ? "<a href=\"/admin/show/".$accountPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a><br />".$accountPage->configArray : " NOT CREATED!";
-		$this->defaults["Pages"]["AccountPage"] = $accountPage ? $accountPage->defaultsArray : "[add page first to see defaults]";
+		if($orderConfirmationPage = OrderConfirmationPage::get()->First()) {
+			$this->getPageDefinitions($orderConfirmationPage);
+			$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.<br />".($orderConfirmationPage ? "<a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "view: <a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a><br />".$orderConfirmationPage->configArray: " NOT CREATED!";
+			$this->defaults["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : "[add page first to see defaults]";
+		}
 
-		$cartPage = CartPage::get()
-			->Filter(array("ClassName" => "CartPage"))
-			->First();
-		$this->getPageDefinitions($cartPage);
-		$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
-		$this->defaults["Pages"]["CartPage"] = $cartPage ? $cartPage->defaultsArray : "[add page first to see defaults]";
+		if($accountPage = AccountPage::get()->First()) {
+			$this->getPageDefinitions($accountPage);
+			$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.<br />".($accountPage ? "<a href=\"/admin/show/".$accountPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a><br />".$accountPage->configArray : " NOT CREATED!";
+			$this->defaults["Pages"]["AccountPage"] = $accountPage ? $accountPage->defaultsArray : "[add page first to see defaults]";
+		}
 
+		if(
+			$cartPage = CartPage::get()
+				->Filter(array("ClassName" => "CartPage"))
+				->First()
+		) {
+			$this->getPageDefinitions($cartPage);
+			$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
+			$this->defaults["Pages"]["CartPage"] = $cartPage ? $cartPage->defaultsArray : "[add page first to see defaults]";
+		}
 	}
 
 	private function getPageDefinitions(SiteTree $page){
@@ -416,7 +422,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					if(!isset($defaultsArray[$fieldKey])) {
 						$defaultsArray[$fieldKey] = "[default not set]";
 					}
-				} 
+				}
 			}
 			$page->defaultsArray = $defaultsArray;
 			$page->configArray = print_r($configArray, 1);

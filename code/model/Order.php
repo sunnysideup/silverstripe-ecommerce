@@ -95,7 +95,7 @@ class Order extends DataObject {
 	public static $has_many = array(
 		'Attributes' => 'OrderAttribute',
 		'OrderStatusLogs' => 'OrderStatusLog',
-		'Payments' => 'Payment',
+		'Payments' => 'EcommercePayment',
 		'Emails' => 'OrderEmailRecord'
 	);
 
@@ -1231,7 +1231,7 @@ class Order extends DataObject {
 		$replacementArray["Order"] = $this;
 		$replacementArray["EmailLogo"] = $config->EmailLogo();
 		$replacementArray["ShopPhysicalAddress"] = $config->ShopPhysicalAddress;
-		$replacementArray["CurrentDateAndTime"] = DBField::create('SS_Datetime', "Now");
+		$replacementArray["CurrentDateAndTime"] = DBField::create_field('SS_Datetime', "Now");
 		$replacementArray["BaseURL"] = Director::baseURL();
 		$arrayData = new ArrayData($replacementArray);
 		$this->extend('updateReplacementArrayForEmail', $arrayData);
@@ -2626,14 +2626,6 @@ class Order extends DataObject {
 		return EcommerceTaskDebugCart::debug_object($this);
 	}
 
-	function requireDefaultRecords() {
-		$order = DataObject::get_one('Order', 'CurrencyUsedID = 0');
-		if($order) {
-			$currencyID = EcommerceCurrency::default_currency_id();
-			DB::query("UPDATE \"Order\" SET \"CurrencyUsedID\" = $currencyID WHERE \"CurrencyUsedID\" = 0");
-			DB::alteration_message('All orders have been set a currency value.', 'changed');
-		}
-	}
 }
 
 

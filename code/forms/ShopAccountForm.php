@@ -21,8 +21,7 @@ class ShopAccountForm extends Form {
 		$requiredFields = null;
 		if($member && $member->exists()) {
 			$fields = $member->getEcommerceFields(true);
-			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
-			$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
+			$clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
 			$loginField = new ReadonlyField(
 				'LoggedInAsNote',
 				_t("Account.LOGGEDIN", "You are currently logged in as "),
@@ -44,7 +43,15 @@ class ShopAccountForm extends Form {
 		else {
 			$member = new Member();
 			$fields = new FieldList();
-			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
+			$urlParams = $controller->getURLParams();
+			$backURLLink = "";
+			if($urlParams) foreach($urlParams as $urlParam) {
+				if($urlParam) {
+					$backURLLink .= "/".$urlParam;
+				}
+			}
+			$backURLLink = urlencode($backURLLink);
+			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . $backURLLink . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
 			$memberFields = $member->getEcommerceFields();
 			if($memberFields) {
 				foreach($memberFields as $memberField) {
@@ -53,7 +60,6 @@ class ShopAccountForm extends Form {
 			}
 			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
 			$passwordFieldCheck = new PasswordField('PasswordCheck', _t('Account.PASSWORDCHECK','Password (repeat)'));
-			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
 			$fields->push($passwordField);
 			$fields->push($passwordFieldCheck);
 			$actions = new FieldList(
@@ -173,12 +179,8 @@ class ShopAccountForm_Validator extends RequiredFields{
 				$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
 				//can't be taken
 				$otherMembersWithSameEmail = Member::get()
-					->filter(
-						array(
-							$uniqueFieldName => $uniqueFieldValue,
-							"ID" => $loggedInMember->ID
-						)
-					);
+					->filter(array($uniqueFieldName => $uniqueFieldValue))
+					->exclude(array("ID" => $loggedInMember->ID));
 				if($otherMembersWithSameEmail->count()){
 					$message = _t(
 						"Account.ALREADYTAKEN",

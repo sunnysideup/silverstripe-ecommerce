@@ -29,15 +29,14 @@ class EcommerceTaskExportAllOrderItems extends BuildTask{
 		$offset = 0;
 		$count = 50;
 		while(
-			$orders = DataObject::get(
-				"Order",
-				"",
-				"\"Order\".\"ID\" ASC",
-				"	INNER JOIN \"OrderStatusLog\" ON \"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"
-					INNER JOIN \"$orderStatusSubmissionLog\" ON \"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"
-					LEFT JOIN \"Member\" ON \"Member\".\"ID\" = \"Order\".\"MemberID\"
-				",
-				"$offset, $count"
+			$orders = Order::get()
+				->sort("\"Order\".\"ID\" ASC"),
+				->innerJoin("OrderStatusLog", ""\"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"")
+				->innerJoin($orderStatusSubmissionLog, "\"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+				->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"")
+				->limit($count, $offset) &&
+			$ordersCount = $orders->count();
+
 		)) {
 			$offset = $offset + $count;
 			foreach($orders as $order) {
@@ -56,7 +55,8 @@ class EcommerceTaskExportAllOrderItems extends BuildTask{
 						}
 					}
 					if($memberIsOK) {
-						if($items = DataObject::get("OrderItem", "OrderID = ".$order->ID)) {
+						$items = OrderItem::get()->filter(array("OrderID" => $order->ID));
+						if($items && $items->count()) {
 							$fileData .= $this->generateExportFileData($order->getOrderEmail(), $order->SubmissionLog()->Created, $items);
 						}
 					}

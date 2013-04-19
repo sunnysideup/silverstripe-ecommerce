@@ -586,11 +586,11 @@ class OrderStep extends DataObject {
 	/**
 	 * returns the OrderStatusLog that is relevant to this step.
 	 * @param Order $order
-	 * @return OrderStatusLog
+	 * @return OrderStatusLog | Null
 	 */
 	public function RelevantLogEntry(Order $order){
 		if($className = $this->getRelevantLogEntryClassName()) {
-			return DataObject::get_one($className, "\"OrderID\" = ".$order->ID);
+			return $className::get()->filter(array("OrderID" => $order->ID))->First();
 		}
 	}
 

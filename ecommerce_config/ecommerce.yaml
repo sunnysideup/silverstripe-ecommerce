@@ -43,13 +43,18 @@ ProductGroup:
   filter_options:
     default:
       Title: 'All Searchable Products (default)'
-      SQL: "\"ShowInSearch\"  = 1"
+      SQL:
+        ShowInSearch: 1
     featuredonly:
       Title: 'Featured Only'
-      SQL: "\"ShowInSearch\"  = 1 AND \"FeaturedProduct\" = 1"
+      SQL:
+        ShowInSearch: 1
+        FeaturedProduct: 1
     nonfeaturedonly:
       Title: 'Non Featured Only'
-      SQL: "\"ShowInSearch\"  = 1 AND \"FeaturedProduct\" = 0"
+      SQL:
+        ShowInSearch: 1
+        FeaturedProduct: 0
   allow_short_display_style: false
   allow_more_detail_display_style: false
   session_name_for_product_array: ProductGroupProductIDs
@@ -183,6 +188,14 @@ EcommerceCurrency:
 EcommerceMoney:
   default_format: NiceShortSymbol
 
+EcommercePayment:
+  supported_methods:
+    EcommercePayment_TestSuccess : Success
+    EcommercePayment_TestPending : Pending
+    EcommercePayment_TestFailure : Failure
+    PayPalExpressCheckoutPayment : "Paypal Credit Card"
+
+
 ################### CONTROL #####################
 
 CartPage_Controller:
@@ -203,7 +216,7 @@ EcommercePaymentController:
 EcommerceConfigAjax:
   definitions_class_name: EcommerceConfigAjaxDefinitions
   cart_js_file_location: ecommerce/javascript/EcomCart.js
-  dialogue_js_file_location: ecommerce/thirdparty/colorbox/jquery.colorbox-min.js
+  dialogue_js_file_location: ecommerce/thirdparty/colorbox/colorbox/jquery.colorbox.js
 
 ################### MODIFIERS #####################
 

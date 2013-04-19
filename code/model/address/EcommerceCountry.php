@@ -159,7 +159,7 @@ class EcommerceCountry extends DataObject {
 	 * this is some sort of IP recogniser system (e.g. Geoip Class)
 	 * @return String (country code)
 	 **/
-	public function get_country_from_ip(){
+	public static function get_country_from_ip(){
 		$visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
 		$visitorCountryProvider = new $visitorCountryProviderClassName();
 		return $visitorCountryProvider->getCountry();
@@ -181,8 +181,8 @@ class EcommerceCountry extends DataObject {
 		else {
 			$where = "\"DoNotAllowSales\" = 0";
 		}
-		$objects = DataObject::get("EcommerceCountry", $where);
-		if($objects) {
+		$objects = EcommerceCountry::get()->where($where);
+		if($objects && $objects->count()) {
 			return $objects->map("ID", "Name");
 		}
 		return array();

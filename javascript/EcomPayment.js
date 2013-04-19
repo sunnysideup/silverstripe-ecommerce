@@ -14,7 +14,7 @@ var EcomPayment = {
 
 	paymentFieldSelector: 'div.paymentfields',
 
-	paymentMethodPrefix: '#MethodFields_',
+	paymentMethodPrefix: '.methodFields_',
 
 	init: function () {
 		var paymentInputs = jQuery(EcomPayment.paymentInputsSelector);
