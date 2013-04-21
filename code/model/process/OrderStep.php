@@ -701,20 +701,20 @@ class OrderStep extends DataObject {
 			if($codesToInclude && count($codesToInclude)) {
 				foreach($codesToInclude as $className => $code) {
 					$indexNumber +=10;
-					if($className::get()->Count()) {
-						$itemCount = OrderStep::get()
-							->filter(array("Code" => strtoupper($code)))
-							->count();
-						if($itemCount) {
-							//do nothing
-						}
-						else {
-							$obj = new $className();
-							$obj->Code = strtoupper($obj->Code);
-							$obj->Description = $obj->myDescription();
+					$itemCount = $className::get()->Count();
+					if($itemCount) {
+						$obj = $className::get()->First();
+						if($obj->Code != $code) {
+							$obj->Code = $code;
 							$obj->write();
-							DB::alteration_message("Created \"$code\" as $className.", "created");
 						}
+					}
+					else {
+						$obj = new $className();
+						$obj->Code = strtoupper($obj->Code);
+						$obj->Description = $obj->myDescription();
+						$obj->write();
+						DB::alteration_message("Created \"$code\" as $className.", "created");
 					}
 					$obj = OrderStep::get()
 						->filter(array("Code" => strtoupper($code)))
@@ -724,6 +724,9 @@ class OrderStep extends DataObject {
 							$obj->Sort = $indexNumber;
 							$obj->write();
 						}
+					}
+					else {
+						user_error("There was an error in creating the $code OrderStep");
 					}
 				}
 			}
