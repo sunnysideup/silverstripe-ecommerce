@@ -17,8 +17,7 @@
 		"php": ">=5.3.2",
 		"silverstripe/framework": "3.*",
 		"silverstripe/silverstripe-restfulserver": "*",
-		"silverstripe/silverstripe-geoip": "*",
-		"silverstripe/silverstripe-payment": "0.4.*"
+		"silverstripe/silverstripe-geoip": "*"
 	},
 	"extra":{
 		"snapshot" : "http://silverstripe-ecommerce.com/_help/screenshot.png"
