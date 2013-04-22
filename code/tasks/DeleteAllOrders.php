@@ -35,7 +35,7 @@ class DeleteAllOrders extends BuildTask {
 		"ShippingAddress" => "OrderAddress",
 		"OrderStatusLog" =>"OrderStatusLog",
 		"OrderEmailRecord" =>"OrderEmailRecord",
-		"Payment" =>"Payment"
+		"EcommercePayment" => "EcommercePayment"
 	);
 		static function set_linked_objects_array($a) {self::$linked_objects_array = $a;}
 		static function get_linked_objects_array() {return self::$linked_objects_array;}
@@ -120,9 +120,15 @@ class DeleteAllOrders extends BuildTask {
 				$join = " LEFT JOIN \"Order\" ON ";
 				//the code below is a bit of a hack, but because of the one-to-one relationship we
 				//want to check both sides....
-				$unlinkedObjects = $classWithLastEdited::get()
+				$unlinkedObjects = $classWithLastEdited::get();
+				if($classWithLastEdited != $classWithOrderID) {
+					$unlinkedObjects = $unlinkedObjects
+						->leftJoin($classWithOrderID, "\"OrderAddress\".\"ID\" = \"$classWithOrderID\".\"ID\"");
+				}
+				$unlinkedObjects = $unlinkedObjects
 					->where($where)
 					->leftJoin("Order", "\"Order\".\"ID\" = \"$classWithOrderID\".\"OrderID\"");
+
 				if($unlinkedObjects->count()){
 					foreach($unlinkedObjects as $unlinkedObject){
 						if($this->verbose) {
