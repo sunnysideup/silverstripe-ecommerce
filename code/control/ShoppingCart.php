@@ -540,7 +540,6 @@ class ShoppingCart extends Object{
 	 * @return DataObject(Order)
 	 **/
 	public function copyOrder($oldOrder) {
-
 		if(is_numeric($oldOrder)) {
 			 $oldOrder = Order::get()->byID(intval($oldOrder));
 		}

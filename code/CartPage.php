@@ -164,6 +164,15 @@ class CartPage extends Page{
 	}
 
 	/**
+	 * Returns the "copy order" link
+	 * @param Int | String $orderID - not used in CartPage
+	 * @return String (URLSegment)
+	 */
+	public static function copy_order_link($orderID) {
+		return self::find_link()."copyorder/".$orderID."/";
+	}
+
+	/**
 	 * Return a link to view the order on this page.
 	 * @param int|string $orderID ID of the order
 	 * @return Int | String (URLSegment)
@@ -302,9 +311,13 @@ class CartPage_Controller extends Page_Controller{
 				$this->currentOrder = $retrievedOrder;
 				$overrideCanView = true;
 			}
+			if($action == "copyorder" && intval($id)) {
+				$this->currentOrder = Order::get()->byID(intval($id));
+				$this::copyorder($this->request);
+			}
 			elseif(intval($id) && in_array($action, $this->stat("allowed_actions"))){
 				$this->currentOrder = Order::get()->byID(intval($id));
-			}
+			}	
 		}
 		if(!$this->currentOrder) {
 			$this->currentOrder = ShoppingCart::current_order();
@@ -400,6 +413,7 @@ class CartPage_Controller extends Page_Controller{
 	 * @param SS_HTTPRequest
 	 * @return Array
 	 */
+
 	function copyorder(SS_HTTPRequest $request) {
 		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
 		ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
@@ -700,7 +714,7 @@ class CartPage_Controller extends Page_Controller{
 				if($this->isOrderConfirmationPage() && $this->currentOrder->ID) {
 					$this->actionLinks->push(new ArrayData(array (
 						"Title" => $this->CopyOrderLinkLabel,
-						"Link" => OrderConfirmationPage::new_order_link($this->currentOrder->ID)
+						"Link" => OrderConfirmationPage::copy_order_link($this->currentOrder->ID)
 					)));
 				}
 			}
