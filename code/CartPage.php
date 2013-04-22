@@ -169,7 +169,7 @@ class CartPage extends Page{
 	 * @return String (URLSegment)
 	 */
 	public static function copy_order_link($orderID) {
-		return self::find_link()."copyorder/".$orderID."/";
+		return OrderConfirmationPage::find_link()."copyorder/".$orderID."/";
 	}
 
 	/**
@@ -238,12 +238,8 @@ class CartPage_Controller extends Page_Controller{
 		'CreateAccountForm',
 		'retrieveorder',
 		'loadorder',
-		'copyorder',
 		'startneworder',
 		'showorder',
-		'sendemail',
-		'CancelForm',
-		'PaymentForm',
 	);
 
 
@@ -398,22 +394,6 @@ class CartPage_Controller extends Page_Controller{
 		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
 		ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
 		$this->redirect($this->Link());
-		return array();
-	}
-
-	/**
-	 * copies either the current order into the shopping cart
-	 *
-	 * TO DO: untested
-	 * TO DO: what to do with old order
-	 * @param SS_HTTPRequest
-	 * @return Array
-	 */
-
-	function copyorder(SS_HTTPRequest $request) {
-		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
-		ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
-		$this->redirect(CheckoutPage::find_last_step_link());
 		return array();
 	}
 
