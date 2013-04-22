@@ -208,6 +208,26 @@ class OrderConfirmationPage extends CartPage{
 
 class OrderConfirmationPage_Controller extends CartPage_Controller{
 
+
+	/**
+	 * @static array
+	 * standard SS variable
+	 * it is important that we list all the options here
+	 */
+	static $allowed_actions = array(
+		'saveorder',
+		'CreateAccountForm',
+		'retrieveorder',
+		'loadorder',
+		'startneworder',
+		'showorder',
+		'copyorder',
+		'sendemail',
+		'CancelForm',
+		'PaymentForm',
+	);
+
+
 	/**
 	 * standard controller function
 	 **/
@@ -223,6 +243,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		//you go straight to the last step.
 		Session::clear("CheckoutPageCurrentOrderID");
 	}
+
 
 	/**
 	 * This method exists just so that template
@@ -256,6 +277,21 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 * @return Array
 	 **/
 	function retrieveorder(SS_HTTPRequest $request){
+		return array();
+	}
+
+	/**
+	 * copies either the current order into the shopping cart
+	 *
+	 * TO DO: untested
+	 * TO DO: what to do with old order
+	 * @param SS_HTTPRequest
+	 * @return Array
+	 */
+	function copyorder(SS_HTTPRequest $request) {
+		self::set_message(_t("CartPage.ORDERLOADED", "Order has been loaded."));
+		ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
+		$this->redirect(CheckoutPage::find_last_step_link());
 		return array();
 	}
 
