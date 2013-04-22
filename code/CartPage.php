@@ -311,13 +311,9 @@ class CartPage_Controller extends Page_Controller{
 				$this->currentOrder = $retrievedOrder;
 				$overrideCanView = true;
 			}
-			if($action == "copyorder" && intval($id)) {
-				$this->currentOrder = Order::get()->byID(intval($id));
-				$this::copyorder($this->request);
-			}
 			elseif(intval($id) && in_array($action, $this->stat("allowed_actions"))){
 				$this->currentOrder = Order::get()->byID(intval($id));
-			}	
+			}
 		}
 		if(!$this->currentOrder) {
 			$this->currentOrder = ShoppingCart::current_order();
