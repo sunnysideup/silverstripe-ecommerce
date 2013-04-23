@@ -625,6 +625,7 @@ class Order extends DataObject {
 	/**
 	 *
 	 * @return GridField
+	 * @deprecated
 	 */
 	function OrderStatusLogsTable($sourceClass = "OrderStatusLog", $title = "", FieldList $fieldList = null, FieldList $detailedFormFields = null){
 		Deprecation::notice('3.0', 'Use order::getOrderStatusLogsTableField instead.');
