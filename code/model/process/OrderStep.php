@@ -1008,8 +1008,8 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
-		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
-		$fields->addFieldToTab("Root.Next", $order->title("OrderStatusLog", $msg),"ActionNextStepManually");
+		$title = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
+		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog", $title),"ActionNextStepManually");
 		return $fields;
 	}
 
