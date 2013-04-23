@@ -1525,7 +1525,7 @@ class EcommerceMigration extends BuildTask {
 			<p>Sets all currencies to the default currency for all orders without a currency.</p>
 		";
 		$ordersWithoutCurrencyCount = Order::get()->filter(array('CurrencyUsedID' => 0))->count();
-		if($ordersWithoutCurrency) {
+		if($ordersWithoutCurrencyCount) {
 			$currencyID = EcommerceCurrency::default_currency_id();
 			DB::query("UPDATE \"Order\" SET \"CurrencyUsedID\" = $currencyID WHERE \"CurrencyUsedID\" = 0");
 			DB::alteration_message('All orders ($ordersWithoutCurrencyCount) have been set a currency value.', 'changed');
