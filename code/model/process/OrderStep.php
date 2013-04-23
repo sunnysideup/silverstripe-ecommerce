@@ -1009,7 +1009,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
-		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
+		$fields->addFieldToTab("Root.Next", $order->title("OrderStatusLog", $msg),"ActionNextStepManually");
 		return $fields;
 	}
 
@@ -1118,8 +1118,8 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
-		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
-		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog", $msg),"ActionNextStepManually");
+		$title = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...");
+		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog", $title),"ActionNextStepManually");
 		return $fields;
 	}
 
@@ -1410,8 +1410,8 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
-		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...)");
-		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog", $msg),"ActionNextStepManually");
+		$title = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this step then do this here...)");
+		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog", $title),"ActionNextStepManually");
 		return $fields;
 	}
 
@@ -1538,7 +1538,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
 		$title = _t("OrderStep.MUSTENTERDISPATCHRECORD", " ... To move this order to the next step you enter the dispatch details in the logs.");
-		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_DispatchPhysicalOrder", $title),"ActionNextStepManually");
+		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog_DispatchPhysicalOrder", $title),"ActionNextStepManually");
 		return $fields;
 	}
 
