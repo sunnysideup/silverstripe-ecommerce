@@ -515,7 +515,7 @@ class Order extends DataObject {
 				}
 				//MEMBER FIELD!!!!!!!
 				$memberArray = $specialOptionsArray + EcommerceRole::list_of_customers();
-				$fields->addFieldToTab("Root.Main", new DropdownField("MemberID", _t("Order.SELECTCUSTOMER", "Select Cutomer"), $memberArray),"CustomerOrderNote");
+				$fields->addFieldToTab("Root.Main", new DropdownField("MemberID", _t("Order.SELECTCUSTOMER", "Select Customer"), $memberArray),"CustomerOrderNote");
 				$memberArray = null;
 			}
 			$fields->addFieldToTab('Root.Addresses',new HeaderField("BillingAddressHeader", _t("Order.BILLINGADDRESS", "Billing Address")));
@@ -1203,7 +1203,9 @@ class Order extends DataObject {
 			// templates within the theme exist
 			$oldTheme = SSViewer::current_theme();
 			SSViewer::set_theme(SSViewer::current_custom_theme());
-			$result = $email->send(null, $this, $resend);
+			$email->setOrder($this);
+			$email->setResend($resend);
+			$result = $email->send(null);
 			SSViewer::current_theme($oldTheme);
 			return $result;
 		}
