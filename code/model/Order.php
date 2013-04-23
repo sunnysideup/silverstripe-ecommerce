@@ -623,6 +623,15 @@ class Order extends DataObject {
 	}
 
 	/**
+	 *
+	 * @return GridField
+	 */
+	function OrderStatusLogsTable($sourceClass = "OrderStatusLog", $title = "", FieldList $fieldList = null, FieldList $detailedFormFields = null){
+		Deprecation::notice('3.0', 'Use order::getOrderStatusLogsTableField instead.');
+		return $this->getOrderStatusLogsTableField($sourceClass, $title, $fieldList, $detailedFormFields);
+	}
+
+	/**
 	 * Needs to be public because the OrderStep::getCMSFIelds accesses it.
 	 * @param String $sourceClass
 	 * @param String $title
