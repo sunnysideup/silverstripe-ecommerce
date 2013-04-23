@@ -1537,8 +1537,8 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
-		$msg = _t("OrderStep.MUSTENTERDISPATCHRECORD", " ... To move this order to the next step you enter the dispatch details in the logs.");
-		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_DispatchPhysicalOrder", $msg),"ActionNextStepManually");
+		$title = _t("OrderStep.MUSTENTERDISPATCHRECORD", " ... To move this order to the next step you enter the dispatch details in the logs.");
+		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_DispatchPhysicalOrder", $title),"ActionNextStepManually");
 		return $fields;
 	}
 
@@ -1627,8 +1627,8 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface  {
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
-		$msg = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this order then do this here ...");
-		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_Archived", $msg),"ActionNextStepManually");
+		$title = _t("OrderStep.CANADDGENERALLOG", " ... if you want to make some notes about this order then do this here ...");
+		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog_Archived", $title),"ActionNextStepManually");
 		return $fields;
 	}
 
