@@ -1299,8 +1299,8 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);
-		$msg = _t("OrderStep.MUSTDOPAYMENTCHECK", " ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)");
-		$fields->addFieldToTab("Root.Next", $order->OrderStatusLogsTable("OrderStatusLog_PaymentCheck", $msg),"ActionNextStepManually");
+		$title = _t("OrderStep.MUSTDOPAYMENTCHECK", " ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)");
+		$fields->addFieldToTab("Root.Next", $order->getOrderStatusLogsTableField("OrderStatusLog_PaymentCheck", $title),"ActionNextStepManually");
 		$fields->addFieldToTab("Root.Next", new LiteralField("ExampleOfThingsToCheck", EcommerceConfig::get("OrderStep_Confirmed", "list_of_things_to_check")));
 		return $fields;
 	}
