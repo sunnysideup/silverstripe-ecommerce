@@ -1213,7 +1213,7 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * returns the Data that can be used in the bodry of an order Email
+	 * returns the Data that can be used in the body of an order Email
 	 * we add the subject here so that the subject, for example, can be added to the <title>
 	 * of the email template.
 	 * @param String $message - the additional message
