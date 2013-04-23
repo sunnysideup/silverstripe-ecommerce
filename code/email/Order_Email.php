@@ -95,11 +95,10 @@ Abstract class Order_Email extends Email {
 	/**
 	 *
 	 * @param Null|String $messageID - ID for the message, you can leave this blank
-	 *
 	 * @param Boolean $returnBodyOnly - rather than sending the email, only return the HTML BODY
 	 * @return Boolean - TRUE for success and FALSE for failure.
 	 */
-	public function send($messageID = null) {
+	public function send($messageID = null, $returnBodyOnly = false) {
 		if(!$this->order) {
 			user_error("Must set the order (Order_Email::setOrder()) before the message is sent (Order_Email::send()).", E_USER_NOTICE);
 		}
