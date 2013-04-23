@@ -88,7 +88,7 @@ Abstract class Order_Email extends Email {
 	 * sets resend to true, which means that the email
 	 * is sent even if it has already been sent.
 	 */
-	public function resend($resend = true) {
+	public function setResend($resend = true) {
 		$this->resend = $resend;
 	}
 
