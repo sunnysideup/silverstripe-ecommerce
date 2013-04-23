@@ -161,6 +161,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
+		$loggedInMemberID = 0;
 		if(isset($data[$uniqueFieldName]) && $data[$uniqueFieldName]){
 			$isShopAdmin = false;
 			if($loggedInMember) {
@@ -168,9 +169,6 @@ class ShopAccountForm_Validator extends RequiredFields{
 				if($loggedInMember->IsShopAdmin()) {
 					$isShopAdmin = true;
 				}
-			}
-			else {
-				$loggedInMemberID = 0;
 			}
 			if($isShopAdmin) {
 				//do nothing
@@ -180,7 +178,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 				//can't be taken
 				$otherMembersWithSameEmail = Member::get()
 					->filter(array($uniqueFieldName => $uniqueFieldValue))
-					->exclude(array("ID" => $loggedInMember->ID));
+					->exclude(array("ID" => $loggedInMemberID));
 				if($otherMembersWithSameEmail->count()){
 					$message = _t(
 						"Account.ALREADYTAKEN",
