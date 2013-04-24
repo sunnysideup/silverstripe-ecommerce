@@ -461,11 +461,10 @@ class ProductGroup extends Page {
 
 	/**
 	 * This is the dataList that
-	 * contains all the products, but is limited
-	 * and sorted
-	 * @var DataList $limitedSortedProducts
+	 * contains all the products: sorted
+	 * @var DataList $sortedProducts
 	 */
-	protected $limitedSortedProducts = null;
+	protected $sortedProducts = null;
 
 
 	/**
@@ -491,8 +490,8 @@ class ProductGroup extends Page {
 	 */
 	public function ProductsShowable($extraFilter = ''){
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
-		$this->limitedSortedProducts = $this->currentFinalProducts();
-		return $this->limitedSortedProducts;
+		$this->sortedProducts = $this->currentFinalProducts();
+		return $this->sortedProducts;
 	}
 
 	/**
@@ -502,9 +501,9 @@ class ProductGroup extends Page {
 	 * This is THE pivotal method that probably changes for classes that
 	 * extend ProductGroup as here you can determine what products or other buyables are shown.
 	 *
-	 * The return from this method will then be sorted and limited to produce the final product list.
+	 * The return from this method will then be sorted to produce the final product list.
 	 *
-	 * NOTE: there is no sort and limit for the initial retrieval
+	 * NOTE: there is no sort for the initial retrieval
 	 *
 	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList
@@ -551,10 +550,8 @@ class ProductGroup extends Page {
 	protected function currentFinalProducts(){
 		if($this->totalCount = $this->allProducts->count()) {
 			if($this->totalCount) {
-				$this->limitedSortedProducts = $this->allProducts
-					->Sort($this->currentSortSQL())
-					->Limit($this->currentLimitSQL(), $this->currentLimitOffsetSQL());
-				return $this->limitedSortedProducts;
+				$this->sortedProducts = $this->allProducts->Sort($this->currentSortSQL());
+				return $this->sortedProducts;
 			}
 		}
 	}
@@ -747,25 +744,6 @@ class ProductGroup extends Page {
 	protected function currentJoinSQL() {
 		return null;
 	}
-
-	/**
-	 * returns the LIMIT part (OFFSET ONLY) of the final selection of products.
-	 * @see: ProductGroup::MyNumberOfProductsPerPage method as well
-	 * @return Int
-	 */
-	protected function currentLimitSQL() {
-		return $this->MyNumberOfProductsPerPage();
-	}
-
-	/**
-	 * returns the LIMIT part (OFFSET ONLY) of the final selection of products.
-	 * @return Int
-	 */
-	protected function currentLimitOffsetSQL() {
-		$limit = (isset($_GET['start']) && (int)$_GET['start'] > 0) ? (int)$_GET['start'] : "0";
-		return $limit;
-	}
-
 
 
 	/**
@@ -1004,15 +982,11 @@ class ProductGroup extends Page {
 		$html .= "<li><b>getFilterOptionSQL:</b> ".print_r($this->getFilterOptionSQL(), 1)." </li>";
 		$html .= "<li><b>getGroupFilter:</b> ".$this->getGroupFilter()." </li>";
 		$html .= "<li><b>currentJoinSQL:</b> ".$this->currentJoinSQL()." </li>";
-		$html .= "<li><b>currentLimitOffsetSQL:</b> ".$this->currentLimitOffsetSQL()." </li>";
-		$html .= "<li><b>currentLimitSQL:</b> ".$this->currentLimitSQL()." </li>";
 		$html .= "<li><hr />SQL Factors<hr /></li>";
 		$html .= "<li><b>currentClassNameSQL:</b> ".$this->currentClassNameSQL()." </li>";
 		$html .= "<li><b>currentWhereSQL:</b> ".print_r($this->currentWhereSQL(), 1)." </li>";
 		$html .= "<li><b>currentSortSQL:</b> ".$this->currentSortSQL()." </li>";
 		$html .= "<li><b>currentJoinSQL:</b> ".$this->currentJoinSQL()." </li>";
-		$html .= "<li><b>currentLimitOffsetSQL:</b> ".$this->currentLimitOffsetSQL()." </li>";
-		$html .= "<li><b>currentLimitSQL:</b> ".$this->currentLimitSQL()." </li>";
 
 		$html .= "<li><hr />Outcome<hr /></li>";
 		$html .= "<li><b>TotalCount:</b> ".$this->TotalCount()." </li>";
@@ -1025,6 +999,9 @@ class ProductGroup extends Page {
 	}
 
 }
+
+
+
 class ProductGroup_Controller extends Page_Controller {
 
 	/**
@@ -1042,28 +1019,28 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * Return the products for this group.
 	 *
-	 * @return DataList
+	 * @return PaginatedList
 	 **/
 	public function Products(){
-		return $this->ProductsShowable('');
+		return $this->paginateList($this->ProductsShowable(""));
 	}
 
 	/**
 	 * Return products that are featured, that is products that have "FeaturedProduct = 1"
 	 *
-	 * @return DataList
+	 * @return PaginatedList
 	 */
 	function FeaturedProducts() {
-		return $this->ProductsShowable("\"FeaturedProduct\" = 1");
+		return $this->paginateList($this->ProductsShowable("\"FeaturedProduct\" = 1"));
 	}
 
 	/**
 	 * Return products that are not featured, that is products that have "FeaturedProduct = 0"
 	 *
-	 *@return DataList
+	 *@return PaginatedList
 	 */
 	function NonFeaturedProducts() {
-		return $this->ProductsShowable("\"FeaturedProduct\" = 0");
+		return $this->paginateList($this->ProductsShowable("\"FeaturedProduct\" = 0"));
 	}
 
 	/**
@@ -1100,6 +1077,16 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	function MenuChildGroups() {
 		return $this->ChildGroups(2, "\"ShowInMenus\" = 1");
+	}
+
+	/**
+	 * turns full list into paginated list
+	 * @return PaginatedList
+	 */
+	protected function paginateList($list){
+		$obj = new PaginatedList($list);
+		$obj->setPageLength($this->MyNumberOfProductsPerPage());
+		return $obj;
 	}
 
 	/**
