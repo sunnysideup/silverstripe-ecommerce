@@ -334,7 +334,7 @@ class EcommerceCurrency extends DataObject {
 	}
 
 	function canDelete() {
-		return ! $this->InUse || self::get_list()->Count() > 1;
+		return ! $this->InUse && self::get_list()->Count() > 1;
 	}
 
 	/**
