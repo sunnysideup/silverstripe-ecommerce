@@ -3,7 +3,7 @@
 /**
  * @description (see $this->description)
  *
- * @authors: Andrew Pett [astuart.pett@gmail.com], Nicolaas [at] Sunny Side Up .co.nz
+ * @authors: Andrew Pett [at] sunny side up .co.nz, Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  **/
@@ -13,12 +13,6 @@ class CheckAllURLs extends BuildTask {
 	protected $title = 'Check URLs for HTTP errors';
 
 	protected $description = "Will go through main URLs on the website, checking for HTTP errors (e.g. 404)";
-
-	/**
-	  * Prefix for all URLs.
-	  * @default "http://localhost"
-	  */
-	private $prefix = "http://localhost";
 
 	/**
 	  * List of URLs to be checked. Excludes front end pages (Cart pages etc).
@@ -121,71 +115,63 @@ class CheckAllURLs extends BuildTask {
 	public function run($request) {
 		set_time_limit(0);
 
-		$prefix = $this->getPrefix();
-
-		$this->prepareURLs();
-
+		$classURLs = $this->prepareClasses();
 		$username = "ECOMMERCE_URLCHECKER___";
 		$password = rand(1000000000,9999999999);
 
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+
+		//Test Class pages
+		echo "<h4>Testing class pages (i.e. CartPage) before logging in</h4><br /><ul>";
+		$errors = $this->testURLs($classURLs, $ch); // Test the class pages i.e. CartPage before logging in.
+		echo "</ul>";
+		echo "<strong><span" . ( $errors > 0 ? " style='color:red'" : " style='color:green'").">".$errors." errors.</span></strong><br /><br />";
+
+		//Make temporary admin member
+		echo "<strong>Making admin member (".$username.") on the fly...</strong><br />";
+		$adminMember = Member::get()->filter(array("Email" => $username))->first();
+		if($adminMember != NULL) { 
+			echo "<strong>Member alread exists... deleting</strong><br />";
+			$adminMember->delete();
+		}
 		$Member = new Member();
 		$Member->Email = $username;
 		$Member->Password = $password;
 		$Member->write();
-
 		$Member->Groups()->add(Group::get()->filter(array("code" => "administrators"))->first());
-		echo "Made member: ".$Member->Email."<br />";;
+		
+		echo "Made admin<br />";;
 		echo "Logging in..<br />";
 
 		$username = $Member->Email;
-		$loginUrl = $prefix.'/Security/LoginForm';
-		 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $loginUrl);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, 'Email='.$username.'&Password='.$password);
-		curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-		 
-		//execute the request (the login)
-		$loginContent = curl_exec($ch);
-		$loginCurlInfo = curl_getinfo($ch);
-		if($loginCurlInfo['http_code'] != 200) {
-			echo "<span style='color:red'>There was an error!</span><br />";
+		$loginUrl = Director::absoluteURL('/Security/LoginForm');
+		$ch = $this->login($ch, $loginUrl, $username, $password); // Will return 'false' if we failed to log in.
+		if(!$ch) {
+			echo "<span style='color:red'>There was an error logging in!</span><br />";
 			
 		} else {
 			echo "<span style='color:green'>Successfully made contact with login form.</span><br />";
-						
+			echo "<h4>Retrying class pages after login.</h4><ul>";
+			$errors = $this->testURLs($classURLs, $ch);
+			echo "</ul>";
+			echo "<strong><span" . ( $errors > 0 ? " style='color:red'" : " style='color:green'").">".$errors." errors.</span></strong><br /><br />";
 
-			$content = curl_exec($ch);
-			$info = curl_getinfo($ch);		 
+
+			// Will add /admin/edit/show/$ID for each of the {@link #classnames} to {@link #urls}
+			$this->array_push_array($this->urls, $this->prepareClasses(1));
+
+			echo "<h4>Testing admin URLs</h4><ul>";
+			$errors = $this->testURLs($this->urls, $ch); 
+			echo "</ul>";
+			echo "<strong><span" . ( $errors > 0 ? " style='color:red'" : " style='color:green'").">".$errors." errors.</span></strong><br /><br />";
 
 			
-			echo "Processing URLs..\n";
-			$urls = $this->urls;
-			$errors = 0;
-			echo "<ul>";
-			foreach($urls as $url) {
-				if(strlen(trim($url)) < 1) continue; //Checks for empty strings.
-
-				$url = $prefix.$url;
-
-				curl_setopt($ch, CURLOPT_URL, $url);
-				$response = curl_exec($ch);
-				$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-				echo "<li ".($httpCode == 200 ? "style='color:green'" : ""). ">HTTPCODE [".$httpCode."]: ".$url. "</li>"	;
-				if($httpCode != 200 ) {
-					echo "<li style='color:red'>* Problem at [".$url."] : http code [".$httpCode."]</li>";
-					$errors++;
-				}				
-			}
 			curl_close($ch);
-			echo "</ul>";
-			if(!$errors) echo "<strong>No problems found.</strong><br /><br />";
-			else echo "<strong>$errors errors found!";
-			$Member->delete();
+			
 		}
+		$Member->delete();
 	}
 	public function getDescription() {
 		return $this->description;
@@ -194,20 +180,25 @@ class CheckAllURLs extends BuildTask {
 	public function getTitle() {
 		return $this->title;
 	}
+
 	/**
 	  * Takes {@link #$classnames}, gets the URL of the first instance of it (will exclude extensions of the class) and
 	  * appends to the {@link #$urls} list to be checked
 	  */
-	private function prepareURLs() {
+	private function prepareClasses($publicOrAdmin = 0) {
 		//first() will return null or the object
+		$return = array();
 		foreach($this->classnames as $class) {
 			$page = $class::get()->exclude(array("ClassName" => $this->arrayExcept($this->classnames, $class)))->first();
 			if($page) {
-				$url = $page->link();
-				$this->urls[] = $url;
+				if(!$publicOrAdmin) $url = $page->link();
+				else $url = "/admin/pages/edit/show/".$page->ID;
+				$return[] = $url;
 			}
-		}	
+		}
+		return $return;
 	}
+
 	/**
 	  * Takes an array, takes one item out, and returns new array
 	  * @param Array $array Array which will have an item taken out of it.
@@ -222,8 +213,62 @@ class CheckAllURLs extends BuildTask {
 		return $newArray;
 	}
 
-	private function getPrefix() {
-		if(!$this->prefix || strlen($this->prefix < 1)) return "http://localhost";
-		else return $this->prefix;
+	/**
+	  * Will try log in to SS with given username and password.
+	  * @param Curl Handle $ch A curl handle to use (will be returned later if successful).
+	  * @param String $loginUrl URL of the form to post to
+	  * @param String $username Username
+	  * @param String $password Password
+	  * @return Curl Handle|Boolean Returns the curl handle if successfully contacted log in form, else 'false'
+	  */
+	private function login($ch, $loginUrl, $username, $password) {
+		curl_setopt($ch, CURLOPT_URL, $loginUrl);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, 'Email='.$username.'&Password='.$password);
+		curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
+		
+		 
+		//execute the request (the login)
+		$loginContent = curl_exec($ch);
+		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if($httpCode == 200) return $ch;
+		return false;
+	}
+
+	/**
+	  * Tests the URLs for a 200 HTTP code.
+	  * @param Array(String) $urls an array of urls (relative to base site e.g. /admin) to test
+	  * @param Curl Handle Curl handle to use
+	  * @return Int number of errors
+	  */
+	private function testURLs($urls, $ch) {
+		$errors = 0;
+		foreach($urls as $url) {
+			if(strlen(trim($url)) < 1) continue; //Checks for empty strings.
+
+			$url = Director::absoluteURL($url);
+
+			curl_setopt($ch, CURLOPT_URL, $url);
+			$response = curl_exec($ch);
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+			echo "<li ".($httpCode == 200 ? "style='color:green'" : ""). ">HTTPCODE [".$httpCode."]: ".$url. "</li>"	;
+			if($httpCode != 200 ) {
+				echo "<li style='color:red'>* Problem at [".$url."] : http code [".$httpCode."]</li>";
+				$errors++;
+			}				
+		}
+		return $errors;
+	}
+
+	/**
+	  * Pushes an array of items to an array
+	  * @param Array $array Array to push items to (will overwrite)
+	  * @param Array $pushArray Array of items to push to $array.
+	  */
+	private function array_push_array(&$array, $pushArray) {
+		foreach($pushArray as $pushItem) {
+			array_push($array, $pushItem);
+		}
 	}
 }
