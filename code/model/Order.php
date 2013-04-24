@@ -533,8 +533,8 @@ class Order extends DataObject {
 			$this->MyStep()->addOrderStepFields($fields, $this);
 			$fields->addFieldToTab("Root.Next", new LiteralField("StatusIDExplanation", _t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.")));
 			$currencies = EcommerceCurrency::get_list();
-			if($currencies) {
-				$currencies = $currencies->map();
+			if($currencies && $currencies->count()) {
+				$currencies = $currencies->map()->toArray();
 				$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
 				$fields->addFieldToTab("Root.Currency", new LookupField("CurrencyUsedID", _t("Order.CurrencyUsed", "Currency Used"), $currencies));
 			}
