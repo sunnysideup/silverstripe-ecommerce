@@ -215,6 +215,7 @@ class CartPage_Controller extends Page_Controller{
 		'sendemail',
 		'CancelForm',
 		'PaymentForm',
+		'LoginForm'
 	);
 
 
