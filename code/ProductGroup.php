@@ -1081,10 +1081,11 @@ class ProductGroup_Controller extends Page_Controller {
 
 	/**
 	 * turns full list into paginated list
+	 * @param SS_List
 	 * @return PaginatedList
 	 */
-	protected function paginateList($list){
-		$obj = new PaginatedList($list);
+	protected function paginateList(SS_List $list){
+		$obj = new PaginatedList($list, $this->request);
 		$obj->setPageLength($this->MyNumberOfProductsPerPage());
 		return $obj;
 	}
