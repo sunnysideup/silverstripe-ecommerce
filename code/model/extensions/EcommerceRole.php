@@ -105,7 +105,7 @@ class EcommerceRole extends DataExtension {
 	public static function get_admin_group() {
 		$adminCode = EcommerceConfig::get("EcommerceRole", "admin_group_code");
 		$adminName = EcommerceConfig::get("EcommerceRole", "admin_group_name");
-		return Group::get()->FilterAny(array("Code" => $adminCode))->First();
+		return Group::get()->Filter(array("Code" => $adminCode))->First();
 	}
 
 	/**

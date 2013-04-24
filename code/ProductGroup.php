@@ -640,7 +640,7 @@ class ProductGroup extends Page {
 		//Product.ID = IN ARRAY(bla bla)
 		$array = array();
 		if($this->getProductsAlsoInOtherGroups()) {
-			$array = $this->AlsoShowProducts()->map("ID", "ID");
+			$array = $this->AlsoShowProducts()->map("ID", "ID")->toArray();
 		}
 		if(count($array)) {
 			$stage = '';
