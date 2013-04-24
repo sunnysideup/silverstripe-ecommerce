@@ -60,7 +60,7 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 **/
 	public function isEmpty() {
 		$val = $this->getValue();
-		return $val == null || $val == '' || $val == 0 || $val === array();
+		return $val == null || $val === '' || $val === 0 || $val === array();
 	}
 
 }
@@ -97,8 +97,9 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"MobilePhone\" LIKE '%$value%'
 
 		");
+
 		if($billingAddresses->count()) {
-			$billingAddressesIDs = $billingAddresses->map("ID", "ID");
+			$billingAddressesIDs = $billingAddresses->map("ID", "ID")->toArray();
 		}
 		$where[] = "\"BillingAddressID\" IN (".implode(",", $billingAddressesIDs).")";
 		$shippingAddressesIDs = array(-1 => -1);
@@ -114,7 +115,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 
 		");
 		if($shippingAddresses->count()) {
-			$shippingAddressesIDs = $shippingAddresses->map("ID", "ID");
+			$shippingAddressesIDs = $shippingAddresses->map("ID", "ID")->toArray();
 		}
 		$where[] = "\"ShippingAddressID\" IN (".implode(",", $shippingAddressesIDs).")";
 		$memberIDs = array(-1 => -1);
@@ -124,10 +125,10 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"Email\" LIKE '%$value%'
 		");
 		if($members->count()) {
-			$memberIDs = $members->map("ID", "ID");
+			$memberIDs = $members->map("ID", "ID")->toArray();
 		}
 		$where[] = "\"MemberID\" IN (".implode(",", $memberIDs).")";
-		$query->where("(".implode(") OR (", $where).")");
+		$query = $query->where("(".implode(") OR (", $where).")");
 		return $query;
 
 	}
@@ -138,7 +139,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 	 **/
 	public function isEmpty() {
 		$val = $this->getValue();
-		return $val == null || $val == '' || $val == 0 || $val === array();
+		return $val == null || $val === '' || $val === 0 || $val === array();
 	}
 
 }

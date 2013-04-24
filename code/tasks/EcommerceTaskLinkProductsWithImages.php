@@ -51,9 +51,11 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	 *
 	 * @var Boolean
 	 */
-	protected $verbose = true;
+	public $verbose = true;
 
 	function run($request){
+		if(isset($_REQUEST['start']) && intval($_REQUEST['start']))
+			$this->start = intval($_REQUEST['start']);
 		if($this->productManyManyField) {
 			$products = Product::get()->limit($this->limit, $this->start);
 			if($products) {
@@ -87,10 +89,11 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 						if($this->verbose) {DB::alteration_message("No InternalItemID set for <i>".$product->Title."</i>: no images could be added.");}
 					}
 				}
-				$productCount = DB::query("SELECT COUNT(\"ID\") FROM \"Product\";")->val();
+				$productCount = Product::get()->count();
 
-				if($this->start < $productCount) {
-					$this->redirect($this->nextBatchLink());
+				if($this->limit < $productCount) {
+					$controller = Controller::curr();
+					$controller->redirect($this->nextBatchLink());
 				}
 			}
 		}
@@ -100,7 +103,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	}
 
 	protected function nextBatchLink(){
-		return "error-not-completed";
+		return "dev/ecommerce/ecommercetasklinkproductwithimages/?start=". ($this->start + $this->limit);
 	}
 
 }

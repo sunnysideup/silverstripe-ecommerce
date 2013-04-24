@@ -296,7 +296,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $tests = array(
-		'ShoppingCartTest' => 'Shopping Cart'
+		//'ShoppingCartTest' => 'Shopping Cart'
 	);
 
 	function Tests(){
