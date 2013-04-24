@@ -297,11 +297,19 @@ class OrderItem extends OrderAttribute {
 	 **/
 	function runUpdate($recalculate = false){
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderItem::runUpdate-for-'.$this->ClassName);
-		$oldValue = $this->CalculatedTotal - 0;
-		$newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
-		if((round($newValue, 5) != round($oldValue, 5) ) || $recalculate) {
-			$this->CalculatedTotal = $newValue;
-			$this->write();
+		$buyable = $this->Buyable(true);
+		if($buyable && $buyable->canPurchase()) {
+			$oldValue = $this->CalculatedTotal - 0;
+			$newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
+			if((round($newValue, 5) != round($oldValue, 5) ) || $recalculate) {
+				$this->CalculatedTotal = $newValue;
+				$this->write();
+			}
+		}
+		else {
+			//if it can not be purchased or it does not exist
+			//then we do not accept it!!!!
+			$this->delete();
 		}
 		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderItem::runUpdate-for-'.$this->ClassName);
 	}

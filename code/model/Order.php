@@ -1392,8 +1392,8 @@ class Order extends DataObject {
 	 */
 	public function calculateOrderAttributes($recalculate = false) {
 		if($this->IsSubmitted()) {
-			//submitted order are NEVER recalculated.
-			//they are set in stone
+			//submitted orders are NEVER recalculated.
+			//they are set in stone.
 		}
 		elseif(Order::get_needs_recalculating() || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
