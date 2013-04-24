@@ -183,7 +183,7 @@ class EcommerceCountry extends DataObject {
 		}
 		$objects = EcommerceCountry::get()->where($where);
 		if($objects && $objects->count()) {
-			return $objects->map("ID", "Name");
+			return $objects->map("ID", "Name")->toArray();
 		}
 		return array();
 	}

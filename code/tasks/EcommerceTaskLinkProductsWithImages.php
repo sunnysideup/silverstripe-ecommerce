@@ -72,10 +72,10 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 							$images = File::get()
 								->filter(array("Name" => $whereStringArray));
 							if($images->count()) {
-								$imageMap = $images->map("ID", "ID");
+								$imageMap = $images->map("ID", "ID")->toArray();
 								$method = $this->productManyManyField;
 								$collection = $product->$method();
-								$collection->addFromArray($imageMap);
+								$collection->add($imageMap);
 							}
 							else {
 								if($this->verbose) {DB::alteration_message("No images where found for product with Title <i>".$product->Title."</i>: no images could be added.");}

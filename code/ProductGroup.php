@@ -712,7 +712,7 @@ class ProductGroup extends Page {
 		if(Versioned::current_stage() == "Live") {
 			$stage = "_Live";
 		}
-		if(isset($buyablesIDArray)) {
+		if(isset($buyablesIDArray) && is_array($buyablesIDArray) && count($buyablesIDArray)) {
 			$listOfIDs = implode(",", $buyablesIDArray);
 		}
 		else {
@@ -1111,3 +1111,5 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 }
+
+
