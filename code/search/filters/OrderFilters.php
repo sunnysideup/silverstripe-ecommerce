@@ -174,7 +174,7 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter {
 	 **/
 	public function isEmpty() {
 		$val = $this->getValue();
-		return $val == null || $val == '' || $val == 0 || $val === array();
+		return $val == null || $val == '' || $val === 0 || $val === array();
 	}
 }
 
@@ -209,7 +209,7 @@ class OrderFilters_HasBeenCancelled extends ExactMatchFilter {
 	 **/
 	public function isEmpty() {
 		$val = $this->getValue();
-		return $val == null || $val == '' || $val == 0 || $val === array();
+		return $val == null || $val == '' || $val === 0 || $val === array();
 	}
 }
 
@@ -248,6 +248,6 @@ class OrderFilters_MustHaveAtLeastOnePayment extends ExactMatchFilter {
 	 **/
 	public function isEmpty() {
 		$val = $this->getValue();
-		return $val == null || $val == '' || $val == 0 || $val === array();
+		return $val == null || $val == '' || $val === 0 || $val === array();
 	}
 }
