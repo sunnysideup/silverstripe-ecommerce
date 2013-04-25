@@ -29,7 +29,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	 *
 	 * @var String
 	 */
-	protected $productManyManyField = "AdditionalImages";
+	protected $productManyManyField = "AdditionalFiles";
 
 	/**
 	 * Starting point for selecting products
@@ -62,20 +62,23 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 				foreach($products as $product) {
 					if($product->InternalItemID) {
 						if($product->hasMethod($this->productManyManyField)) {
-							$whereStringArray[] = $product->InteralItemID;
+							$whereStringArray[] = $product->InternalItemID;
 							for($i = 0; $i < 10; $i++) {
 								for($j = 0; $j < 10; $j++) {
-									$number = strval($i).$strval($j);
-									$whereStringArray[] = $product->InteralItemID."_".$number;
+									$number = strval($i).strval($j);
+									$whereStringArray[] = $product->InternalItemID."_".$number;
 								}
 							}
 							$images = File::get()
-								->filter(array("Name" => $whereStringArray));
+								->filter(array("Name:PartialMatch" => $whereStringArray));
+
 							if($images->count()) {
-								$imageMap = $images->map("ID", "ID")->toArray();
 								$method = $this->productManyManyField;
 								$collection = $product->$method();
-								$collection->add($imageMap);
+								foreach($images as $image) {
+									$collection->add($image);
+									if($this->verbose) { DB::alteration_message("Adding image ".$image->Name." to ".$product->Title, "created"); }
+								}
 							}
 							else {
 								if($this->verbose) {DB::alteration_message("No images where found for product with Title <i>".$product->Title."</i>: no images could be added.");}
