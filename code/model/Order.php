@@ -432,7 +432,7 @@ class Order extends DataObject {
 			foreach($this->fieldsAndTabsToBeRemoved as $field) {
 				$fields->removeByName($field);
 			}
-			//$fields->insertBefore(new LiteralField('Title',"<h2>".$this->Title()."</h2>"),'Root');
+			$fields->insertBefore(new LiteralField('Title',"<h2>".$this->Title()."</h2>"),'Root');
 			$fields->insertAfter(
 				new Tab(
 					"Next",
@@ -476,7 +476,7 @@ class Order extends DataObject {
 				$cancelledField = $fields->dataFieldByName("CancelledByID");
 				$fields->removeByName("CancelledByID");
 				$fields->addFieldToTab("Root.Cancellation", $cancelledField);
-				$fields->addFieldToTab('Root.Log', $this->getOldOrderStatusLogsField());
+				$fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField());
 				$submissionLog = $this->SubmissionLog();
 				if($submissionLog) {
 					$fields->addFieldToTab('Root.Log',
@@ -563,7 +563,6 @@ class Order extends DataObject {
 		$source = $this->OrderItems();
 		return new GridField("OrderItems", _t("OrderItems.PLURALNAME", "Order Items"), $source , $gridFieldConfig);
 	}
-
 
 	/**
 	 * Field to add and edit Modifiers
@@ -2241,7 +2240,7 @@ class Order extends DataObject {
 	 * @param Boolean $recalculate
 	 * @return Boolean
 	 **/
-	function IsSubmitted($recalculate = false){return $this->getIsSubmitted();}
+	function IsSubmitted($recalculate = false){return $this->getIsSubmitted($recalculate);}
 	function getIsSubmitted($recalculate = false) {
 		if($this->isSubmittedTempVar == -1 || $recalculate) {
 			if($this->SubmissionLog()) {
@@ -2550,7 +2549,7 @@ class Order extends DataObject {
 		parent::onAfterWrite();
 		//crucial!
 		self::set_needs_recalculating();
-		if($this->IsSubmitted()) {
+		if($this->IsSubmitted($recalculate = true)) {
 			//do nothing
 		}
 		else {

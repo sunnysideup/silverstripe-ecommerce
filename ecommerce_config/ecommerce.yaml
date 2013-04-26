@@ -100,21 +100,19 @@ OrderStep:
   number_of_days_to_send_update_email: 10
 
 OrderStep_Confirmed:
-  list_of_things_to_check: "<div id=\"ExamplesOfThingsToConfirm\">
-      <h4>Examples of things to confirm</h4>
-      <ul>
-        <li>Postal code is correct</li>
-        <li>Address exists (use google maps)</li>
-        <li>Payment has arrived in Bank Account</li>
-        <li>Products are available</li>
-        <li>Credit Card details match delivery address</li>
-        <li>Tax, delivery fees, etc... are correct</li>
-      </ul>
-    </div>"
+  list_of_things_to_check: [
+    "Postal code is correct",
+    "Address exists (use google maps)",
+    "Payment has arrived in Bank Account",
+    "Products are available",
+    "Credit Card details match delivery address",
+    "Tax, delivery fees, etc... are correct"
+  ]
 
 OrderStatusLog:
   available_log_classes_array: [
-    OrderStatusLog_PaymentCheck
+    OrderStatusLog_PaymentCheck,
+    OrderStatusLog_DispatchPhysicalOrder
   ]
   order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
 

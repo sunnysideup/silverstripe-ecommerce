@@ -186,6 +186,8 @@ class Product extends Page implements BuyableModel {
 		$htmlEditorField->setRows(3);
 		$fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), "Content");
 		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Image')));
+		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
+		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
 		$fields->addFieldToTab('Root.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
 		$fields->addFieldToTab('Root.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
 		$fields->addFieldToTab('Root.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
@@ -221,6 +223,12 @@ class Product extends Page implements BuyableModel {
 	 * @return TreeMultiselectField
 	 **/
 	protected function getProductGroupsTableField() {
+
+		$task = new EcommerceTaskLinkProductWithImages();
+		$task->verbose = false;
+		$task->setProductID($this->ID);
+		$task->run(null);
+
 		$field = new TreeMultiselectField(
 			$name = "ProductGroups",
 			$title = _t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
@@ -233,6 +241,48 @@ class Product extends Page implements BuyableModel {
 			$field->setFilterFunction($filter);
 		}
 		return $field;
+	}
+
+	/**
+	 * Used in getCSMFields
+	 * @return GridField
+	 **/
+	protected function getAdditionalImagesMessage() {
+		$msg = "";
+		if($this->InternalItemID) {
+			$msg .= "<p>To upload additional images and files, please go to the <a href=\"/admin/assets\">Files section</a>, and upload them there. Files need to be named in a standard fashion; ";
+			$msg .= "An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image: ";
+			$msg .= "<strong>".$this->InternalItemID."_08.jpg</strong>.";
+		}
+		else {
+			$msg .= "<p>For additional images and files, you must first specify a product code!</p>";
+		}
+		$field = new LiteralField("ImageFileNote", $msg);
+		return $field;
+
+	}
+
+	/**
+	 * Used in getCSMFields
+	 * @return GridField
+	 **/
+	protected function getAdditionalImagesField() {
+		$gridField = new GridField(
+			'AdditionalFiles',
+			_t('Product.ADDITIONALIMAGES', 'Additional images'),
+			$this->AdditionalFiles(),
+			GridFieldConfig_RelationEditor::create()
+		);
+		$config = $gridField->getConfig();
+		$components = $gridField->getComponents();
+		$config->removeComponentsByType("GridFieldAddNewButton");
+		$config->removeComponentsByType("GridFieldAddExistingAutocompleter");
+		$gridField->setConfig($config);
+		//var_dump($components->items);
+
+		$gridField->setModelClass("Product_Image");
+		return $gridField;
+
 	}
 
 	/**
@@ -1069,8 +1119,19 @@ class Product_Controller extends Page_Controller {
 class Product_Image extends Image {
 
 	static $casting = array(
-		"CMSThumb" => "HTMLText"
+		"CMSThumbnail" => "HTMLText"
 	);
+
+	/**
+	 * Fields
+	 * @return Array
+	 */
+	function summaryFields(){
+		return array(
+			"CMSThumbnail" => "Preview",
+			"Title" => "Title"
+		);
+	}
 
 	/**
 	 *
@@ -1180,24 +1241,12 @@ class Product_Image extends Image {
 		}
 	}
 
-
-	/**
-	 * Fields
-	 * @return Array
-	 */
-	function summaryFields(){
-		return array(
-			"CMSThumb" => "CMSThumb",
-			"Title" => "Title"
-		);
-	}
-
 	/**
 	 *
 	 * @return String HTML
 	 */
-	function CMSThumb(){
-		return $this->getCMSThumb();
+	function CMSThumbnail(){
+		return $this->getCMSThumbnail();
 	}
 
 
@@ -1205,7 +1254,7 @@ class Product_Image extends Image {
 	 *
 	 * @return String HTML
 	 */
-	function getCMSThumb(){
+	function getCMSThumbnail(){
 		$smallImage = $this->SmallImage();
 		if($smallImage) {
 			$icon = "<img src=\"".$smallImage->FileName."\" style=\"border: 1px solid black; height: 100px; \" />";
@@ -1213,7 +1262,7 @@ class Product_Image extends Image {
 		else {
 			$icon = "[MISSING IMAGE]";
 		}
-		return DBField::create("HTMLText", $icon);
+		return DBField::create_field("HTMLText", $icon);
 	}
 
 
