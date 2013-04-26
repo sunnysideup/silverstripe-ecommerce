@@ -82,21 +82,7 @@ class CheckAllURLs extends BuildTask {
 
 
 	"/admin/settings/",
-
-
-	"/",
-	"/about-us/",
-	"/contact-us/",
-	"/product-category/",
-	"/product-category/?sortby=title",
-	"/product-category/?sortby=price",
-
-
-	"/cart/",
-	"/checkout/",
-	"/checkout/checkoutstep/orderformaddress/",
-	"/checkout/checkoutstep/orderconfirmationandpayment/",
-	"/product-category-2/");
+	"/");
 
 	/**
 	  * Pages to check by class name. For example, for "ClassPage", will check the first instance of the cart page.
