@@ -1143,6 +1143,14 @@ class Order extends DataObject {
 			$email->setTo($to);
 			//we take the subject from the Array Data, just in case it has been adjusted.
 			$email->setSubject($arrayData->getField("Subject"));
+			//we also see if a CC and a BCC have been added
+			;
+			if($cc = $arrayData->getField("CC")) {
+				$email->setCc($cc);
+			}
+			if($bcc = $arrayData->getField("BBC")) {
+				$email->setBcc($bcc);
+			}
 			$email->populateTemplate($arrayData);
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
