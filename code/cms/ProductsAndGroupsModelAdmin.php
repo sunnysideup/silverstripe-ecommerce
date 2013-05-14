@@ -3,7 +3,7 @@
 
 /**
  * @description: Manages everything you sell.
- * Products and Product Groups are included by default - can also include ProductVariations, etc..
+ * Can include ProductVariations, etc..
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
