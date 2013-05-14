@@ -856,7 +856,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 **/
 	function canEdit($member = null) {
 		if(!$member) {
-			$member = Member::currentMember();
+			$member = Member::currentUser();
 		}
 		return $member->IsShopAdmin();
 	}
@@ -920,7 +920,7 @@ class OrderModifier_Descriptor extends DataObject {
 		}
 		if(count($arrayOfModifiers)) {
 			foreach($arrayOfModifiers as $className) {
-				$obj = $this->getOrderModifier_Descriptor();
+				$obj = OrderModifier_Descriptor::get()->Filter(Array("ModifierClassName" => $className))->First();
 				if(!$obj) {
 					$modifier = singleton($className);
 					$obj = new OrderModifier_Descriptor();
