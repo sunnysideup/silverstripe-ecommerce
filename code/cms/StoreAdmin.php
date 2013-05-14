@@ -38,14 +38,6 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 	public static $menu_icon = "";
 
 
-	public static $managed_models = array(
-		'EcommerceDBConfig',
-		'OrderStep',
-		'EcommerceCountry',
-		'OrderModifier_Descriptor',
-		'EcommerceCurrency'
-	);
-
 	function init() {
 		parent::init();
 	}
