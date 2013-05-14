@@ -2,29 +2,28 @@
 # 1. copy this file to another location (e.g. mysite/_config)
 # 2. reference the new file location in /ecommerce/_config/
 # 3. choose your settings in the new file
-#    - note:
-#      - no commas after values
-#      - indents are important
-#      - make sure to have a space after :
+#      - note:
+#        - no commas after values
+#        - indents are important
+#        - make sure to have a space after :
 #
 #
 
 ################### CONFIG #####################
 EcommerceDBConfig:
   ecommerce_db_config_class_name: EcommerceDBConfig
-  array_of_buyables: [
-    Product
-  ]
+  array_of_buyables: 
+    - Product
+  
 
 
 ################### PAGES #####################
 
 CheckoutPage_Controller:
-  checkout_steps: [
-    orderitems,
-    orderformaddress,
-    orderconfirmationandpayment
-  ]
+  checkout_steps: 
+    - orderitems
+    - orderformaddress
+    - orderconfirmationandpayment
 
 OrderConfirmationPage_Controller:
   include_as_checkout_step: true
@@ -77,43 +76,48 @@ Order:
   maximum_ignorable_sales_payments_difference: 0.01
   order_id_start_number: 0
   template_id_prefix: ""
-  ajax_subtotal_format: [SubTotalAsMoney, NiceDefaultFormat]
-  ajax_total_format: [TotalAsMoney, NiceDefaultFormat]
+  ajax_subtotal_format: 
+    - SubTotalAsMoney
+    - NiceDefaultFormat
+  ajax_total_format: 
+    - TotalAsMoney
+    - NiceDefaultFormat
 
 OrderItem:
-  ajax_total_format: [CalculatedTotalAsMoney, NiceDefaultFormat]
+  ajax_total_format: 
+    - CalculatedTotalAsMoney
+    - NiceDefaultFormat
 
 OrderModifier:
-  ajax_total_format: [TableValueAsMoney, NiceDefaultFormat]
+  ajax_total_format: 
+    - TableValueAsMoney
+    - NiceDefaultFormat
 
 OrderStep:
-  order_steps_to_include: [
-    OrderStep_Created,
-    OrderStep_Submitted,
-    OrderStep_SentInvoice,
-    OrderStep_Paid,
-    OrderStep_Confirmed,
-    OrderStep_SentReceipt,
-    OrderStep_Sent,
-    OrderStep_Archived
-  ]
+  order_steps_to_include: 
+    - OrderStep_Created
+    - OrderStep_Submitted
+    - OrderStep_SentInvoice
+    - OrderStep_Paid
+    - OrderStep_Confirmed
+    - OrderStep_SentReceipt
+    - OrderStep_Sent
+    - OrderStep_Archived
   number_of_days_to_send_update_email: 10
 
 OrderStep_Confirmed:
-  list_of_things_to_check: [
-    "Postal code is correct",
-    "Address exists (use google maps)",
-    "Payment has arrived in Bank Account",
-    "Products are available",
-    "Credit Card details match delivery address",
-    "Tax, delivery fees, etc... are correct"
-  ]
+  list_of_things_to_check: 
+    - "Postal code is correct"
+    - "Address exists (use google maps)"
+    - "Payment has arrived in Bank Account"
+    - "Products are available"
+    - "Credit Card details match delivery address"
+    - "Tax, delivery fees, etc... are correct"
 
 OrderStatusLog:
-  available_log_classes_array: [
-    OrderStatusLog_PaymentCheck,
-    OrderStatusLog_DispatchPhysicalOrder
-  ]
+  available_log_classes_array: 
+    - OrderStatusLog_PaymentCheck
+    - OrderStatusLog_DispatchPhysicalOrder
   order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
 
 EcommerceCountry:
@@ -144,11 +148,10 @@ EcommerceRole:
   admin_group_name: 'shop administrators'
   admin_permission_code: "SHOPADMIN"
   admin_role_title: "managing store"
-  admin_role_permission_codes: [
-    CMS_ACCESS_ProductsAndGroupsModelAdmin,
-    CMS_ACCESS_SalesAdmin,
-    CMS_ACCESS_StoreAdmin
-  ]
+  admin_role_permission_codes: 
+    - CMS_ACCESS_ProductsAndGroupsModelAdmin
+    - CMS_ACCESS_SalesAdmin
+    - CMS_ACCESS_StoreAdmin
 
 
 
@@ -236,32 +239,29 @@ SimpleShippingModifier:
 ################### CMS #####################
 
 StoreAdmin:
-  managed_models: [
-    EcommerceDBConfig,
-    OrderStep,
-    EcommerceCountry,
-    OrderModifier_Descriptor,
-    EcommerceCurrency,
-    CheckoutPage_StepDescription
-  ]
+  managed_models: 
+    - EcommerceDBConfig
+    - OrderStep
+    - EcommerceCountry
+    - OrderModifier_Descriptor
+    - EcommerceCurrency
+    - CheckoutPage_StepDescription
 
 ProductsAndGroupsModelAdmin:
-  managed_models: [
-    Product,
-    ProductGroup
-  ]
+  managed_models: 
+    - Product
+    - ProductGroup
 
 SalesAdmin:
-  managed_models: [
-    Order,
-    OrderStatusLog,
-    OrderItem,
-    OrderModifier,
-    OrderEmailRecord,
-    BillingAddress,
-    ShippingAddress,
-    Payment
-  ]
+  managed_models: 
+    - Order
+    - OrderStatusLog
+    - OrderItem
+    - OrderModifier
+    - OrderEmailRecord
+    - BillingAddress
+    - ShippingAddress
+    - Payment
 
 
 
