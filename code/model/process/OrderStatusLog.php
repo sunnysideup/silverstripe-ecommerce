@@ -582,8 +582,10 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 	function populateDefaults() {
 		parent::populateDefaults();
 		$this->Title = _t("OrderStatusLog.ORDERDISPATCHED", "Order Dispatched");
-		$this->DispatchedOn =  date('Y-m-d');
-		$this->DispatchedBy =  Member::currentUser()->getTitle();
+		$this->DispatchedOn = date('Y-m-d');
+		if(Member::currentUser()) {
+			$this->DispatchedBy = Member::currentUser()->getTitle();
+		}
 	}
 
 	/**
