@@ -1148,7 +1148,7 @@ class Order extends DataObject {
 			if($cc = $arrayData->getField("CC")) {
 				$email->setCc($cc);
 			}
-			if($bcc = $arrayData->getField("BBC")) {
+			if($bcc = $arrayData->getField("BCC")) {
 				$email->setBcc($bcc);
 			}
 			$email->populateTemplate($arrayData);
