@@ -1179,6 +1179,8 @@ class Order extends DataObject {
 	 * - ShopPhysicalAddress
 	 * - CurrentDateAndTime
 	 * - BaseURL
+	 * - CC
+	 * - BCC
 	 */
 	public function createReplacementArrayForEmail($message = "", $subject = ""){
 		$step = $this->MyStep();
@@ -1190,6 +1192,9 @@ class Order extends DataObject {
 		else {
 			$replacementArray["Subject"] = $step->EmailSubject;
 		}
+ 		$replacementArray["To"] = "";
+ 		$replacementArray["CC"] = "";
+ 		$replacementArray["BCC"] = "";
  		$replacementArray["Message"] = $message;
  		$replacementArray["OrderStepMessage"] = $step->CustomerMessage;
 		$replacementArray["Order"] = $this;
