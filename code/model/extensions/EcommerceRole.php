@@ -201,6 +201,12 @@ class EcommerceRole extends DataExtension {
 				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\" class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
 			}
 			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3);
+			$loginDetailsDescription = new LiteralField(
+				'AccountInfo',
+				'<p>'.
+				_t('OrderForm.PLEASE_REVIEW','Please review your log in details below.')
+				.'</p>'
+			);
 		}
 		else {
 			//login invite right on the top
