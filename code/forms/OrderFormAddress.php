@@ -127,32 +127,7 @@ class OrderFormAddress extends Form {
 						new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login/?BackURL=/" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
 					);
 				}
-				//login invite right on the top
-				if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
-					$rightFields->push(new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3));
-					//allow people to purchase without creating a password
-					$rightFields->push(
-						new LiteralField(
-							'AccountInfo',
-							'<p>'.
-							_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.')
-							.'</p>'
-						)
-					);
-					//close by default
-				}
-				else {
-					$rightFields->push(new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT','Create an account'), 3));
-					//dont allow people to purchase without creating a password
-					$rightFields->push(
-						new LiteralField(
-							'AccountInfo',
-							'<p>'.
-							_t('OrderForm.MUSTCREATEPASSWORD','Please choose a password to create your account.')
-							.'</p>'
-						)
-					);
-				}
+
 			}
 			else {
 				if($this->loggedInMember) {
@@ -162,7 +137,11 @@ class OrderFormAddress extends Form {
 							"<p class=\"message good\">" . _t("Account.LOGGEDIN","You are logged in as ") .
 							Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
 							Convert::raw2xml($this->loggedInMember->Surname) .
-							' ('.Convert::raw2xml($this->loggedInMember->Email).').</p>'
+							' ('.Convert::raw2xml($this->loggedInMember->Email).').'.
+							' <a href="/Security/logout/">'.
+							_t("Account.LOGOUTNOW","Log out?").
+							'</a>'.
+							'</p>'
 						)
 					);
 				}

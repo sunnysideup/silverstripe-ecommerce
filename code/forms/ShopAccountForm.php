@@ -204,7 +204,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 				);
 				$valid = false;
 			}
-			if(!$loggedInMember && !$data["Password"]) {
+			if(!$loggedInMember && !$data["Password"] && !EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
 				$this->validationError(
 					"Password",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
