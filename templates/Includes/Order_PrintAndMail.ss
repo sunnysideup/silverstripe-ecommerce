@@ -26,6 +26,5 @@
 	</li>
 	<% end_if %>
 </ul>
-<% require javascript(ecommerce/javascript/EcomPrintAndMail.js) %>
 </div>
 <% end_if %>
