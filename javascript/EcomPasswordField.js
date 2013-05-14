@@ -21,17 +21,13 @@ var EcomPasswordField = {
 
 	passwordFieldInputSelectors: "#Password, #PasswordDoubleCheck",
 
-	choosePasswordLinkSelector: ".updatePasswordLink",
+	choosePasswordLinkSelector: ".choosePassword, .updatePasswordLink",
 
 	stringLength : 7,
 
-	init: function() {
-		this.passwordInitalisation();
-	},
-
 	//toggles password selection and enters random password so that users still end up with a password
 	//even if they do not choose one.
-	passwordInitalisation: function() {
+	init: function() {
 		if(jQuery(EcomPasswordField.passwordFieldInputSelectors).length) {
 			jQuery(EcomPasswordField.choosePasswordLinkSelector).click(
 				function() {
