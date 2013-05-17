@@ -76,6 +76,7 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Gets or creates the current order.
+	 * Based on the session ONLY!
 	 * IMPORTANT FUNCTION!
 	 * @todo - does this need to be public????
 	 * @return void

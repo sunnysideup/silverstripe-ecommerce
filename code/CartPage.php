@@ -284,9 +284,15 @@ class CartPage_Controller extends Page_Controller{
 		}
 		if(!$this->currentOrder) {
 			$this->currentOrder = ShoppingCart::current_order();
+			if($this->currentOrder) {
+				if($this->currentOrder->IsSubmitted()) {
+					$overrideCanView = true;
+				}
+			}
 		}
 		//redirect if we are viewing the order with the wrong page!
 		if($this->currentOrder) {
+
 			//IMPORTANT SECURITY QUESTION!
 			if($this->currentOrder->canView() || $overrideCanView) {
 				if(!$this->currentOrder->IsSubmitted() && $this->ClassName == "CartPage") {

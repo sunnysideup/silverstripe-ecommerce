@@ -156,7 +156,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 	 * @param $data = array Form Field Data
 	 * @return Boolean
 	 **/
-	function php($data){
+	function php($data, $allowExistingEmail = false){
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
@@ -175,20 +175,25 @@ class ShopAccountForm_Validator extends RequiredFields{
 				//do nothing
 			}
 			else {
-				$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
-				//can't be taken
-				if(DataObject::get_one('Member',"\"$uniqueFieldName\" = '$uniqueFieldValue' AND \"Member\".\"ID\" <> ".$loggedInMemberID)){
-					$message = sprintf(
-						_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
-						$uniqueFieldValue,
-						$uniqueFieldName
-					);
-					$this->validationError(
-						$uniqueFieldName,
-						$message,
-						"required"
-					);
-					$valid = false;
+				if($allowExistingEmail) {
+
+				}
+				else {
+					$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
+					//can't be taken
+					if(DataObject::get_one('Member',"\"$uniqueFieldName\" = '$uniqueFieldValue' AND \"Member\".\"ID\" <> ".$loggedInMemberID)){
+						$message = sprintf(
+							_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
+							$uniqueFieldValue,
+							$uniqueFieldName
+						);
+						$this->validationError(
+							$uniqueFieldName,
+							$message,
+							"required"
+						);
+						$valid = false;
+					}
 				}
 			}
 		}
