@@ -45,3 +45,30 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 	}
 
 }
+/**
+ * update country.DoNotAllowSales to 1 so that you can not sell to any country
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: tasks
+ * @inspiration: Silverstripe Ltd, Jeremy
+ **/
+
+class EcommerceCountryAndRegionTasks_DisallowAllCountries extends BuildTask{
+
+	protected $title = "Disallows sale to all countries";
+
+	protected $description = "We add this task to reset all countries from Allow Sales to Disallow Sales - as a good starting point when selling to just a few countries";
+
+	function run($request){
+		$count = 0;
+		$array = EcommerceCountry::get_country_dropdown();
+		$allowedArray = DataObject::get("EcommerceCountry", "\"DoNotAllowSales\" = 0");
+		foreach($allowedArray as $obj) {
+			$obj->DoNotAllowSales = 1; 
+			$obj->write();
+			DB::alteration_message("Disallowing sales to ".$obj->Name);
+		}
+	}
+
+}
