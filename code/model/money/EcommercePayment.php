@@ -284,7 +284,7 @@ class EcommercePayment extends DataObject {
 	 * payment methods for this site, given the .
 	 * is used to define which methods are available.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	static function combined_form_fields($amount) {
 
@@ -354,7 +354,7 @@ class EcommercePayment extends DataObject {
 	 * this would be a set of fields to enter your
 	 * credit card details.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getPaymentFormFields(){user_error("Please implement getPaymentFormFields() on $this->class", E_USER_ERROR);}
 

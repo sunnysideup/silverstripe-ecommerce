@@ -211,7 +211,7 @@ class Order extends DataObject {
 	 * @param Validator $optionalValidator
 	 * @return ArrayList (ModifierForms) | Null
 	 **/
-	public function getModifierForms($optionalController = null, $optionalValidator = null) {
+	public function getModifierForms(Controller $optionalController = null, Validator $optionalValidator = null) {
 		$arrayList = new ArrayList();
 		if (isset($_GET['debug_profile'])) Profiler::mark('Order::getModifierForms');
 		$modifiers = $this->Modifiers();
