@@ -850,6 +850,9 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
+		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+			return false;
+		}
 		if(!$member) {
 			$member = Member::currentUser();
 		}
@@ -1297,6 +1300,9 @@ class Product_OrderItem extends OrderItem {
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
+		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+			return false;
+		}
 		return true;
 	}
 
@@ -1423,4 +1429,6 @@ HTML;
 
 
 }
+
+
 
