@@ -131,6 +131,9 @@ class EcommerceCountry extends DataObject {
 	 **/
 	public static function get_country_from_ip(){
 		$visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
+		if(!$visitorCountryProviderClassName) {
+			$visitorCountryProviderClassNam = "EcommerceCountry_VisitorCountryProvider";
+		}
 		$visitorCountryProvider = new $visitorCountryProviderClassName();
 		return $visitorCountryProvider->getCountry();
 	}
