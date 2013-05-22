@@ -339,7 +339,7 @@ class EcommerceCountry extends DataObject {
 		$countries = EcommerceCountry::get()->exclude(array("DoNotAllowSales" => 1));
 		if($countries && $countries->count()) {
 			foreach($countries as $country) {
-				$defaultArray[$country->Code] = $country->Name;
+				$defaultArray[$country->Code] = $country->getName();
 			}
 		}
 		return $defaultArray;
@@ -429,6 +429,13 @@ class EcommerceCountry extends DataObject {
 		return self::$list_of_allowed_entries_for_dropdown_array;
 	}
 
+	/**
+	 * @return String
+	 */ 
+	public function getName() {
+		return $this->Name;
+	}
+	
 	/**
 	 * checks if a code is allowed
 	 * @param String $code - e.g. NZ, NSW, or CO

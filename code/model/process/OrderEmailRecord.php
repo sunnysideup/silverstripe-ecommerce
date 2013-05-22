@@ -174,7 +174,7 @@ class OrderEmailRecord extends DataObject{
 		if($this->OrderStepID) {
 			$orderStep = OrderStep::get()->byID($this->OrderStepID);
 			if($orderStep) {
-				return $orderStep->Name;
+				return $orderStep->getName();
 			}
 		}
 	}

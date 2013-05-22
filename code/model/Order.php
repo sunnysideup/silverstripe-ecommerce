@@ -2312,15 +2312,15 @@ class Order extends DataObject {
 	/**
 	 * Casted variable - has the order been submitted?
 	 * @param Boolean $withDetail
-	 * @return Text
+	 * @return String
 	 **/
 	function CustomerStatus($withDetail = true){return $this->getCustomerStatus($withDetail);}
 	function getCustomerStatus($withDetail = true) {
-		if($this->MyStep()->ShowAsUncompletedOrder) { $v =  "Uncompleted";}
-		elseif($this->MyStep()->ShowAsInProcessOrder) { $v = "In Process";}
-		elseif($this->MyStep()->ShowAsCompletedOrder) { $v = "Completed";}
+		if($this->MyStep()->ShowAsUncompletedOrder) { $v =  _t("Order.UNCOMPLETED", "Uncompleted");}
+		elseif($this->MyStep()->ShowAsInProcessOrder) { $v = _t("Order.IN_PROCESS", "In Process");}
+		elseif($this->MyStep()->ShowAsCompletedOrder) { $v = _t("Order.UNCOMPLETED", "Uncompleted");}
 		if(!$this->HideStepFromCustomer && $withDetail) {
-			$v .= ' ('.$this->MyStep()->Name.')';
+			$v .= ' ('.$this->MyStep()->getName().')';
 		}
 		return $v;
 	}

@@ -178,7 +178,7 @@ class EcommerceRegion extends DataObject {
 		}
 		if($regions && $regions->count()) {
 			foreach($regions as $region) {
-				$defaultArray[$region->ID] = $region->Name;
+				$defaultArray[$region->ID] = $region->getName();
 			}
 		}
 		return $defaultArray;
@@ -274,6 +274,13 @@ class EcommerceRegion extends DataObject {
 		return self::get_region_id();
 	}
 
+
+	/**
+	 * @return String
+	 */ 
+	public function getName() {
+		return $this->Name;
+	}
 
 }
 
