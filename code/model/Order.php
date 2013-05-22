@@ -419,7 +419,6 @@ class Order extends DataObject {
 			$link = $link . "/".$action;
 		}
 		return $link;
-		
 	}
 
 	/**
@@ -440,7 +439,7 @@ class Order extends DataObject {
 				//why not check if the URL == $this->CMSEditLink()
 				//and only tryToFinaliseOrder if this is true....
 				if($_SERVER['REQUEST_URI'] == $this->CMSEditLink() || $_SERVER['REQUEST_URI'] == $this->CMSEditLink("edit")) {
-					$this->tryToFinaliseOrder();		
+					$this->tryToFinaliseOrder();
 				}
 			}
 			else {
@@ -490,11 +489,15 @@ class Order extends DataObject {
 					$fields->addFieldToTab("Root.Payments", new LiteralField("MakeAdditionalPayment", $linkHTML));
 				}
 				//member
-				if($member = $this->Member()) {
-					$fields->addFieldToTab('Root.Customer', new LiteralField("MemberDetails", $member->getEcommerceFieldsForCMS()));
+				$member = $this->Member();
+				if($member && $member->exists()) {
+					$fields->addFieldToTab('Root.Account', new LiteralField("MemberDetails", $member->getEcommerceFieldsForCMS()));
 				}
-
-
+				else {
+					$fields->addFieldToTab('Root.Customer', new LiteralField("MemberDetails",
+						"<p>"._t("Order.NO_ACCOUNT","There is no account associated with this order")."</p>"
+					));
+				}
 				$cancelledField = $fields->dataFieldByName("CancelledByID");
 				$fields->removeByName("CancelledByID");
 				$fields->addFieldToTab("Root.Cancellation", $cancelledField);
@@ -554,9 +557,9 @@ class Order extends DataObject {
 			}
 			$this->MyStep()->addOrderStepFields($fields, $this);
 			$fields->addFieldToTab(
-				"Root.Next", 
+				"Root.Next",
 				new LiteralField(
-					"StatusIDExplanation", 
+					"StatusIDExplanation",
 					_t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.").
 					"<br /><br /><a href=\"".$this->CMSEditLink()."\">"._t("Order.REFRESH", "refresh order status")."</a>"
 				)
@@ -1239,6 +1242,14 @@ class Order extends DataObject {
 			$email->setTo($to);
 			//we take the subject from the Array Data, just in case it has been adjusted.
 			$email->setSubject($arrayData->getField("Subject"));
+			//we also see if a CC and a BCC have been added
+			;
+			if($cc = $arrayData->getField("CC")) {
+				$email->setCc($cc);
+			}
+			if($bcc = $arrayData->getField("BCC")) {
+				$email->setBcc($bcc);
+			}
 			$email->populateTemplate($arrayData);
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
@@ -1269,6 +1280,8 @@ class Order extends DataObject {
 	 * - ShopPhysicalAddress
 	 * - CurrentDateAndTime
 	 * - BaseURL
+	 * - CC
+	 * - BCC
 	 */
 	public function createReplacementArrayForEmail($message = "", $subject = ""){
 		$step = $this->MyStep();
@@ -1280,6 +1293,9 @@ class Order extends DataObject {
 		else {
 			$replacementArray["Subject"] = $step->EmailSubject;
 		}
+ 		$replacementArray["To"] = "";
+ 		$replacementArray["CC"] = "";
+ 		$replacementArray["BCC"] = "";
  		$replacementArray["Message"] = $message;
  		$replacementArray["OrderStepMessage"] = $step->CustomerMessage;
 		$replacementArray["Order"] = $this;
@@ -2320,7 +2336,7 @@ class Order extends DataObject {
 		elseif($this->MyStep()->ShowAsInProcessOrder) { $v = _t("Order.IN_PROCESS", "In Process");}
 		elseif($this->MyStep()->ShowAsCompletedOrder) { $v = _t("Order.UNCOMPLETED", "Uncompleted");}
 		if(!$this->HideStepFromCustomer && $withDetail) {
-			$v .= ' ('.$this->MyStep()->getName().')';
+			$v .= ' ('.$this->MyStep()->Name.')';
 		}
 		return $v;
 	}

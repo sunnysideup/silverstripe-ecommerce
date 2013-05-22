@@ -274,13 +274,5 @@ class EcommerceRegion extends DataObject {
 		return self::get_region_id();
 	}
 
-
-	/**
-	 * @return String
-	 */ 
-	public function getName() {
-		return $this->Name;
-	}
-
 }
 

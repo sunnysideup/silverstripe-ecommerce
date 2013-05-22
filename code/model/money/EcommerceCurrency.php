@@ -146,7 +146,7 @@ class EcommerceCurrency extends DataObject {
 	 * @return Boolean
 	 */
 	function canDelete($member = null){
-		return $this->getIsDefault() ? false : true;
+		return ! $this->InUse && self::get_list()->Count() > 1;
 	}
 
 	/**
@@ -193,12 +193,24 @@ class EcommerceCurrency extends DataObject {
 		return self::get_money_object_from_order_currency($price, $order);
 	}
 
-
+	/**
+	 * @param Float $price
+	 * @param Order
+	 * @return
+	 */
 	public static function get_money_object_from_order_currency($price, Order $order = null) {
 		if(! $order) {
 			$order = ShoppingCart::current_order();
 		}
 		$currency = $order->CurrencyUsed();
+		if($order) {
+			if($order->HasAlternativeCurrency()) {
+				$exchangeRate = $order->ExchangeRate;
+				if($exchangeRate && $exchangeRate != 1) {
+					$price = $exchangeRate * $price;
+				}
+			}
+		}
 		return DBField::create_field('Money', array('Amount' => $price, 'Currency' => $currency->Code));
 	}
 
@@ -274,15 +286,6 @@ class EcommerceCurrency extends DataObject {
 	function LongSymbol() {return $this->getLongSymbol();}
 	function getLongSymbol() {return EcommerceMoney::get_long_symbol($this->Code);}
 
-
-	/**
-	 * We may want to add the code here... -e.g. United States Dollar (USD).
-	 * @return String
-	 */ 
-	public function getName(){
-		return $this->Name;
-	}
-	
 	/**
 	 * casted variable method
 	 * @return Boolean
@@ -398,7 +401,7 @@ class EcommerceCurrency extends DataObject {
 		if(! $this->Code || mb_strlen($this->Code) != 3) {
 			$errors[] = 'The code must be 3 characters long.';
 		}
-		if(! $this->getName()) {
+		if(! $this->Name) {
 			$errors[] = 'The name is required.';
 		}
 		if(! count($errors)) {
@@ -436,6 +439,7 @@ class EcommerceCurrency extends DataObject {
 			}
 		}
 	}
+
 
 	/**
 	 * Standard SS Method

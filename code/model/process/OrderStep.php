@@ -109,14 +109,6 @@ class OrderStep extends DataObject {
 		)
 	);
 
-	/**
-	 * use this->getName() rather than this->Name
-	 * so that you can change the name in extended classes
-	 * in an easier way.
-	 * @return String
-	 */
-	function getName() {return $this->Name;}
-
 
 	/**
 	 * casted variable
