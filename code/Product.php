@@ -509,6 +509,7 @@ class Product extends Page implements BuyableModel {
 	 * @return DataList (CHECK!)
 	 */
 	public function getVersionedComponents($component = "ProductVariations") {
+		return;
 		$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
 		$query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
 		$result = singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
