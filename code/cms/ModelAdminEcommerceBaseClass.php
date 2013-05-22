@@ -23,35 +23,12 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin {
 		return parent::getManagedModels();
 	}
 
-	public function getSearchContext() {
-		$context = parent::getSearchContext();
-		/*
-		if($this->modelClass::getM == 'Product') {
-				$context->getFields()->push(new CheckboxField('q[ExpensiveOnly]', 'Only expensive stuff'));
-		}
-		*/
-		return $context;
-	}
-	public function getList() {
-		$list = parent::getList();
-		/*
-		$params = $this->request->requestVar('q'); // use this to access search parameters
-		if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
-				$list->exclude('Price:LessThan', '100');
-		}
-		*/
-		return $list;
-	}
-	public function getExportFields() {
-		return array();
-		/*
-		return array(
-			'Name' => 'Name',
-			'ProductCode' => 'Product Code',
-			'Category.Title' => 'Category'
-		);
-		*/
-	}
+	/**
+	 * Change this variable if you don't want the Import from CSV form to appear.
+	 * This variable can be a boolean or an array.
+	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')
+	 */
+	public $showImportForm = false;
 
 }
 /**

@@ -118,6 +118,18 @@ class ProductGroup extends Page {
 		return parent::canEdit($member);
 	}
 
+	/**
+	 * Shop Admins can edit
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canView($member = null) {
+		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+			return true;
+		}
+		return parent::canView($member);
+	}
+
 
 	/**
 	 * Standard SS method

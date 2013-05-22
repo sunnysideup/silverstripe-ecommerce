@@ -583,7 +583,13 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator{
 	 * @return Boolean
 	 */
 	function php($data){
-		$valid = parent::php($data);
+		if(Member::currentUserID()) {
+			$allowExistingEmail = false;
+		}
+		else {
+			$allowExistingEmail = true;
+		}
+		$valid = parent::php($data, $allowExistingEmail);
 		//Note the exclamation Mark - only applies if it return FALSE.
 		if($this->form->uniqueMemberFieldCanBeUsed($data)) {
 			//do nothing

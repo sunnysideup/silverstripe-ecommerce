@@ -20,7 +20,8 @@
 		"silverstripe/silverstripe-geoip": "*"
 	},
 	"extra":{
-		"snapshot" : "http://silverstripe-ecommerce.com/_help/screenshot.png"
+		"snapshot" : "http://silverstripe-ecommerce.com/_help/screenshot.png",
+		"installer-name": "ecommerce",
 	},
 	"support":{
 		"issues" : "http://code.google.com/p/silverstripe-ecommerce/issues/list"

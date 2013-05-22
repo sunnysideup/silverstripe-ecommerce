@@ -309,10 +309,17 @@ class OrderAttribute extends DataObject {
 	 * @return String
 	  **/
 	function TableSubTitle() {return $this->getTableSubTitle();}
-	function getTableSubTitleNOHTML() {return str_replace("\n", '', strip_tags($this->getTableSubTitle()));}
 	function getTableSubTitle() {
 		return "";
 	}
+
+
+	/**
+	 * the sub title for the order item or order modifier
+	 * @return String
+	  **/
+	function TableSubTitleNOHTML() {return $this->getTableSubTitleNOHTML();}
+		function getTableSubTitleNOHTML() {return str_replace("\n", '', strip_tags($this->getTableSubTitle()));}
 
 	/**
 	 * the sub title for the order item or order modifier.
