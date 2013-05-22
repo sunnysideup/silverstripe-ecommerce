@@ -401,7 +401,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		$dos = CheckoutPage_StepDescription::get()
 			->Sort("ID", "ASC");
 		if($number) {
-			$dos->Filter(array("ID" => $number));
+			$dos = $dos->Filter(array("ID" => $number));
 		}
 		if($number) {
 			if($dos->count()) {
