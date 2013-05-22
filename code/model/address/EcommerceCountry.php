@@ -161,6 +161,9 @@ class EcommerceCountry extends DataObject {
 	 **/
 	public static function get_country_from_ip(){
 		$visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
+		if(!$visitorCountryProviderClassName) {
+			$visitorCountryProviderClassName = "EcommerceCountry_VisitorCountryProvider";
+		}
 		$visitorCountryProvider = new $visitorCountryProviderClassName();
 		return $visitorCountryProvider->getCountry();
 	}
@@ -339,7 +342,7 @@ class EcommerceCountry extends DataObject {
 		$countries = EcommerceCountry::get()->exclude(array("DoNotAllowSales" => 1));
 		if($countries && $countries->count()) {
 			foreach($countries as $country) {
-				$defaultArray[$country->Code] = $country->getName();
+				$defaultArray[$country->Code] = $country->Name;
 			}
 		}
 		return $defaultArray;
@@ -429,13 +432,6 @@ class EcommerceCountry extends DataObject {
 		return self::$list_of_allowed_entries_for_dropdown_array;
 	}
 
-	/**
-	 * @return String
-	 */ 
-	public function getName() {
-		return $this->Name;
-	}
-	
 	/**
 	 * checks if a code is allowed
 	 * @param String $code - e.g. NZ, NSW, or CO
