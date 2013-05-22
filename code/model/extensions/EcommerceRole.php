@@ -357,7 +357,7 @@ class EcommerceRole extends DataExtension {
 		$returnArrayList = new ArrayList();
 		if($this->owner->exists()) {
 			$fieldName = $type."ID";
-			$limit = 99999;
+			$limit = 999;
 			if($onlyLastRecord) {
 				$limit = 1;
 			}
@@ -368,14 +368,14 @@ class EcommerceRole extends DataExtension {
 				->sort("LastEdited", "DESC")
 				->exclude(array("ID" => $excludeID))
 				//->limit($limit)
-				->innerJoin("Order", "\"Order\".\"".$fieldName."\" = \"".$type."\".\"ID\"");
-			if($keepDoubles) {
-				foreach($addresses as $address) {
-					$returnArrayList->push($address);
+				->innerJoin("Order", "\"Order\".\"".$fieldName."\" = \"OrderAddress\".\"ID\"");
+			if($addresses->count()){
+				if($keepDoubles) {
+					foreach($addresses as $address) {
+						$returnArrayList->push($address);
+					}
 				}
-			}
-			else {
-				if($addresses->count()) {
+				else {
 					$addressCompare = array();
 					foreach($addresses as $address) {
 						$comparisonString = $address->comparisonString();

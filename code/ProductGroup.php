@@ -669,21 +669,19 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	protected function getExcludedProducts() {
-		if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
-			self::$negative_can_purchase_array[$buyable->ID] = array();
+		if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased && empty(self::$negative_can_purchase_array)) {
+			self::$negative_can_purchase_array = array();
 			$rawCount = $this->allProducts->count();
-			if($rawCount && $rawCount < 500) {
-				if(empty(self::$negative_can_purchase_array)) {
-					foreach($this->allProducts as $buyable) {
-						if(!$buyable->canPurchase()) {
-							//NOTE: the ->remove we had here would have removed
-							//the product from the DB.
-							self::$negative_can_purchase_array[$buyable->ID] = $buyable->ID;
-						}
+			if($rawCount && $rawCount < 9999) {
+				foreach($this->allProducts as $buyable) {
+					if(!$buyable->canPurchase()) {
+						//NOTE: the ->remove we had here would have removed
+						//the product from the DB.
+						self::$negative_can_purchase_array[$buyable->ID] = $buyable->ID;
 					}
 				}
 			}
-			if(count(self::$negative_can_purchase_array[$buyable->ID])) {
+			if(count(self::$negative_can_purchase_array)) {
 				$this->allProducts = $this->allProducts->Exclude(array("ID" => self::$negative_can_purchase_array));
 			}
 		}
@@ -862,8 +860,8 @@ class ProductGroup extends Page {
 			$children = ProductGroup::get()->where($where);
 			if($children->count()){
 				foreach($children as $child){
-					$arrayList = $arrayList->push($child);
-					$arrayList = $arrayList->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions));
+					$arrayList->push($child);
+					$arrayList->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions));
 				}
 			}
 		}

@@ -274,11 +274,19 @@ class EcommerceCurrency extends DataObject {
 	function LongSymbol() {return $this->getLongSymbol();}
 	function getLongSymbol() {return EcommerceMoney::get_long_symbol($this->Code);}
 
+
+	/**
+	 * We may want to add the code here... -e.g. United States Dollar (USD).
+	 * @return String
+	 */ 
+	public function getName(){
+		return $this->Name;
+	}
+	
 	/**
 	 * casted variable method
 	 * @return Boolean
 	 */
-
 	public function IsDefault() {return $this->getIsDefault();}
 	public function getIsDefault() {
 		$outcome = false;
@@ -390,7 +398,7 @@ class EcommerceCurrency extends DataObject {
 		if(! $this->Code || mb_strlen($this->Code) != 3) {
 			$errors[] = 'The code must be 3 characters long.';
 		}
-		if(! $this->Name) {
+		if(! $this->getName()) {
 			$errors[] = 'The name is required.';
 		}
 		if(! count($errors)) {

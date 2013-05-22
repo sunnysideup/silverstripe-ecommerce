@@ -72,10 +72,10 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 			$this->setBuyableID($value->getBuyableID(), $markChanged);
 			if($markChanged) $this->isChanged = true;
 		}
-		else if($record && isset($record[$this->name . 'BuyableClassName']) && isset($record[$this->name . 'BuyableID'])) {
-			if($record[$this->name . 'BuyableClassName'] && $record[$this->name . 'BuyableID']) {
-				$this->setBuyableClassName($record[$this->name . 'BuyableClassName'], $markChanged);
-				$this->setBuyableID($record[$this->name . 'BuyableID'], $markChanged);
+		else if($record && isset($record[$this->getName() . 'BuyableClassName']) && isset($record[$this->getName() . 'BuyableID'])) {
+			if($record[$this->getName() . 'BuyableClassName'] && $record[$this->getName() . 'BuyableID']) {
+				$this->setBuyableClassName($record[$this->getName() . 'BuyableClassName'], $markChanged);
+				$this->setBuyableID($record[$this->getName() . 'BuyableID'], $markChanged);
 			} else {
 				$this->value = $this->nullValue();
 			}
@@ -213,7 +213,6 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 	function getName($buyableClassName = null, $locale = null) {
 		if($locale === null) $locale = $this->getLocale();
 		if($buyableClassName === null) $buyableClassName = $this->getBuyableClassName();
-
 		return $this->buyableClassNameLib->getName($buyableClassName, $locale);
 	}
 
@@ -241,7 +240,7 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 	 * @return FormField
 	 */
 	public function scaffoldFormField($title = null) {
-		$field = new MoneyField($this->name);
+		$field = new MoneyField($this->getName());
 		$field->setAllowedCurrencies($this->getAllowedCurrencies());
 		$field->setLocale($this->getLocale());
 
