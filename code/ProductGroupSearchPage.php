@@ -30,7 +30,11 @@ class ProductGroupSearchPage extends ProductGroup {
 	public static $plural_name = "Product Search Pages";
 		function i18n_plural_name() { return _t("ProductGroupSearchPage.PLURALNAME", "Product Search Pages");}
 
-	function canCreate(){
+	/**
+	 * This temporarily hides the page while we
+	 * it is being completed.
+	 */
+	function canCreate($member = null){
 		return false;
 	}
 
