@@ -1,6 +1,6 @@
 <% include Order_ConfirmCountry %>
 
-<table id="InformationTable" class="editable">
+<table id="InformationTable" class="editable infotable">
 	<thead>
 		<tr>
 			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>

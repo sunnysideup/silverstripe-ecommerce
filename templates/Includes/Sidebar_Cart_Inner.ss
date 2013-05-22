@@ -6,7 +6,7 @@ If you are not using this snippet then theme it and remove its content to speed 
 -->
 <div class="sidebarCartInner">
 <% if Items %>
-	<table id="InformationTable" class="editable">
+	<table id="InformationTable" class="editable infotable">
 		<thead></thead>
 		<tfoot>
 			<tr class="gap summary hideOnZeroItems">

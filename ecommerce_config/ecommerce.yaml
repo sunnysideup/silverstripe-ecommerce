@@ -12,15 +12,15 @@
 ################### CONFIG #####################
 EcommerceDBConfig:
   ecommerce_db_config_class_name: EcommerceDBConfig
-  array_of_buyables: 
+  array_of_buyables:
     - Product
-  
+
 
 
 ################### PAGES #####################
 
 CheckoutPage_Controller:
-  checkout_steps: 
+  checkout_steps:
     - orderitems
     - orderformaddress
     - orderconfirmationandpayment
@@ -76,25 +76,25 @@ Order:
   maximum_ignorable_sales_payments_difference: 0.01
   order_id_start_number: 0
   template_id_prefix: ""
-  ajax_subtotal_format: 
+  ajax_subtotal_format:
     - SubTotalAsMoney
     - NiceDefaultFormat
-  ajax_total_format: 
+  ajax_total_format:
     - TotalAsMoney
     - NiceDefaultFormat
 
 OrderItem:
-  ajax_total_format: 
+  ajax_total_format:
     - CalculatedTotalAsMoney
     - NiceDefaultFormat
 
 OrderModifier:
-  ajax_total_format: 
+  ajax_total_format:
     - TableValueAsMoney
     - NiceDefaultFormat
 
 OrderStep:
-  order_steps_to_include: 
+  order_steps_to_include:
     - OrderStep_Created
     - OrderStep_Submitted
     - OrderStep_SentInvoice
@@ -106,7 +106,7 @@ OrderStep:
   number_of_days_to_send_update_email: 10
 
 OrderStep_Confirmed:
-  list_of_things_to_check: 
+  list_of_things_to_check:
     - "Postal code is correct"
     - "Address exists (use google maps)"
     - "Payment has arrived in Bank Account"
@@ -115,7 +115,7 @@ OrderStep_Confirmed:
     - "Tax, delivery fees, etc... are correct"
 
 OrderStatusLog:
-  available_log_classes_array: 
+  available_log_classes_array:
     - OrderStatusLog_PaymentCheck
     - OrderStatusLog_DispatchPhysicalOrder
   order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
@@ -148,7 +148,7 @@ EcommerceRole:
   admin_group_name: 'shop administrators'
   admin_permission_code: "SHOPADMIN"
   admin_role_title: "managing store"
-  admin_role_permission_codes: 
+  admin_role_permission_codes:
     - CMS_ACCESS_ProductsAndGroupsModelAdmin
     - CMS_ACCESS_SalesAdmin
     - CMS_ACCESS_StoreAdmin
@@ -239,21 +239,19 @@ SimpleShippingModifier:
 ################### CMS #####################
 
 StoreAdmin:
-  managed_models: 
+  managed_models:
     - EcommerceDBConfig
     - OrderStep
     - EcommerceCountry
-    - OrderModifier_Descriptor
     - EcommerceCurrency
-    - CheckoutPage_StepDescription
 
 ProductsAndGroupsModelAdmin:
-  managed_models: 
+  managed_models:
     - Product
     - ProductGroup
 
 SalesAdmin:
-  managed_models: 
+  managed_models:
     - Order
     - OrderStatusLog
     - OrderItem

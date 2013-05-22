@@ -157,7 +157,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 	 * @param $data = array Form Field Data
 	 * @return Boolean
 	 **/
-	function php($data){
+	function php($data, $allowExistingEmail = false){
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
@@ -180,17 +180,22 @@ class ShopAccountForm_Validator extends RequiredFields{
 					->filter(array($uniqueFieldName => $uniqueFieldValue))
 					->exclude(array("ID" => $loggedInMemberID));
 				if($otherMembersWithSameEmail->count()){
-					$message = _t(
-						"Account.ALREADYTAKEN",
-						"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}",
-						array("uniqueFieldValue" => $uniqueFieldValue, "uniqueFieldName" => $uniqueFieldName)
-					);
-					$this->validationError(
-						$uniqueFieldName,
-						$message,
-						"required"
-					);
-					$valid = false;
+					if($allowExistingEmail) {
+
+					}
+					else {
+						$message = _t(
+							"Account.ALREADYTAKEN",
+							"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}",
+							array("uniqueFieldValue" => $uniqueFieldValue, "uniqueFieldName" => $uniqueFieldName)
+						);
+						$this->validationError(
+							$uniqueFieldName,
+							$message,
+							"required"
+						);
+						$valid = false;
+					}
 				}
 			}
 		}
