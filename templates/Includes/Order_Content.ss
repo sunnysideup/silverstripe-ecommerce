@@ -20,7 +20,7 @@
 	<tbody>
 	<% if Items %>
 		<% loop Items %>
-		<tr  class="itemRow $EvenOdd $FirstLast">
+		<tr  class="itemRow $EvenOdd $FirstLast orderItem $ClassName orderattribute">
 			<td class="product title">
 				<% if Link %>
 					<a href="$Link" target="_blank">$TableTitle</a>

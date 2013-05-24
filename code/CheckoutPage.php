@@ -616,7 +616,6 @@ class CheckoutPage_StepDescription extends DataObject{
 	 */
 	public static $summary_fields = array(
 		"ID" => "Step Number",
-		"Code" => "Code",
 		"Heading" => "Heading"
 	);
 
