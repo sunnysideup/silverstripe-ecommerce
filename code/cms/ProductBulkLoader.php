@@ -152,7 +152,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 	 **/
 	function imageByFilename(&$obj, $val, $record){
 		$filename = strtolower(Convert::raw2sql($val));
-		$image = Image::get()->where("LOWER(\"Filename\") LIKE '%$filename%'")
+		$image = Image::get()->where("LOWER(\"Filename\") LIKE '%$filename%'");
 		if($filename && $image){ //ignore case
 			if($image->exists()){
 				$image->ClassName = self::get_product_class_name().'_Image'; //must be this type of image
@@ -167,7 +167,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 	function setParent(&$obj, $val, $record){
 		$title = strtolower(Convert::raw2sql($val));
 		if($title){
-			$className = self::get_product_group_class_name()
+			$className = self::get_product_group_class_name();
 			$parentpage = $className::get()->where("LOWER(\"Title\") = '$title'")->sort("Created", "DESC")->First();
 			if($parentpage){
 				$obj->ParentID = $parentpage->ID;
