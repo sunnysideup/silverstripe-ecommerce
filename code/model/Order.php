@@ -241,7 +241,7 @@ class Order extends DataObject {
 	/**
 	 * This function returns the OrderSteps
 	 *
-	 * @returns: DataObjectSet (OrderSteps)
+	 * @return ArrayList (OrderSteps)
 	 **/
 	public static function get_order_status_options() {
 		return OrderStep::get();
