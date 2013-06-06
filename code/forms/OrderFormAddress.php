@@ -277,7 +277,7 @@ class OrderFormAddress extends Form {
 		//PASSWORD HACK ... TO DO: test that you can actually update a password as the method below
 		//does NOT change the FORM only DATA, but we save to the new details using $form->saveInto($member)
 		//and NOT $data->saveInto($member)
-		$password = $this->validPassword($data);
+		$password = $this->validPasswordHasBeenEntered($data);
 
 		//----------- START BY SAVING INTO ORDER
 		$form->saveInto($this->order);
@@ -429,9 +429,8 @@ class OrderFormAddress extends Form {
 			return false;
 		}
 		else {
-			$automaticMembership = EcommerceConfig::get("EcommerceRole", "automatic_membership");
-			$validPassword = $this->validPassword($data);
-			if( $automaticMembership || $validPassword) {
+			$validPassword = $this->validPasswordHasBeenEntered($data);
+			if($validPassword) {
 				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){
 				 return true;
 				}
@@ -451,7 +450,7 @@ class OrderFormAddress extends Form {
 	 **/
 	protected function memberShouldBeLoggedIn(Array $data) {
 		if(!$this->loggedInMember) {
-			if($this->newlyCreatedMemberID && $this->validPassword($data)) {
+			if($this->newlyCreatedMemberID && $this->validPasswordHasBeenEntered($data)) {
 				return true;
 			}
 		}
@@ -551,7 +550,7 @@ class OrderFormAddress extends Form {
 	 * @param data (from form)
 	 * @return String
 	 */
-	protected function validPassword($data){
+	protected function validPasswordHasBeenEntered($data){
 		if(isset($data['Password']) && isset($data['PasswordDoubleCheck'])) {
 			if(isset($data['Password']) && isset($data['PasswordDoubleCheck'])) {
 				if($data['Password'] == $data['PasswordDoubleCheck']) {
