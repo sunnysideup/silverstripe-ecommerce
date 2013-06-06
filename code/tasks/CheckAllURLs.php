@@ -24,7 +24,6 @@ class CheckAllURLs extends BuildTask {
 	"/admin/shop/OrderStep/EditForm/field/OrderStep/item/new",
 	"/admin/shop/EcommerceCountry",
 	"/admin/shop/EcommerceCountry/EditForm/field/EcommerceCountry/item/new",
-	"/admin/shop/OrderModifier_Descriptor",
 	"/admin/shop/OrderModifier_Descriptor/EditForm/field/OrderModifier_Descriptor/item/new",
 	"/admin/shop/EcommerceCurrency",
 	"/admin/shop/EcommerceCurrency/EditForm/field/EcommerceCurrency/item/new",
@@ -118,7 +117,7 @@ class CheckAllURLs extends BuildTask {
 		//Make temporary admin member
 		echo "<strong>Making admin member (".$username.") on the fly...</strong><br />";
 		$adminMember = Member::get()->filter(array("Email" => $username))->first();
-		if($adminMember != NULL) { 
+		if($adminMember != NULL) {
 			echo "<strong>Member alread exists... deleting</strong><br />";
 			$adminMember->delete();
 		}
@@ -127,7 +126,7 @@ class CheckAllURLs extends BuildTask {
 		$Member->Password = $password;
 		$Member->write();
 		$Member->Groups()->add(Group::get()->filter(array("code" => "administrators"))->first());
-		
+
 		echo "Made admin<br />";;
 		echo "Logging in..<br />";
 
@@ -136,7 +135,7 @@ class CheckAllURLs extends BuildTask {
 		$ch = $this->login($ch, $loginUrl, $username, $password); // Will return 'false' if we failed to log in.
 		if(!$ch) {
 			echo "<span style='color:red'>There was an error logging in!</span><br />";
-			
+
 		} else {
 			echo "<span style='color:green'>Successfully made contact with login form.</span><br />";
 			echo "<h4>Retrying class pages after login.</h4><ul>";
@@ -149,13 +148,13 @@ class CheckAllURLs extends BuildTask {
 			$this->array_push_array($this->urls, $this->prepareClasses(1));
 
 			echo "<h4>Testing admin URLs</h4><ul>";
-			$errors = $this->testURLs($this->urls, $ch); 
+			$errors = $this->testURLs($this->urls, $ch);
 			echo "</ul>";
 			echo "<strong><span" . ( $errors > 0 ? " style='color:red'" : " style='color:green'").">".$errors." errors.</span></strong><br /><br />";
 
-			
+
 			curl_close($ch);
-			
+
 		}
 		$Member->delete();
 	}
@@ -212,8 +211,8 @@ class CheckAllURLs extends BuildTask {
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'Email='.$username.'&Password='.$password);
 		curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
-		
-		 
+
+
 		//execute the request (the login)
 		$loginContent = curl_exec($ch);
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -242,7 +241,7 @@ class CheckAllURLs extends BuildTask {
 			if($httpCode != 200 ) {
 				echo "<li style='color:red'>* Problem at [".$url."] : http code [".$httpCode."]</li>";
 				$errors++;
-			}				
+			}
 		}
 		return $errors;
 	}

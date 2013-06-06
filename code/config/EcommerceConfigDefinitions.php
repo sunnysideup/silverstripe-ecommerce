@@ -155,7 +155,7 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"EcommerceRole" => array(
 				"allow_customers_to_setup_accounts" => "Allow customers to become 'members' when they purchase items. If this is false then customers can never setup an account.",
-				"automatic_membership" => "When this is set to TRUE, any purchasers are automatically added as members even if they do not enter a password. When set to false, customers are only added as members if they enter a password.",
+				"must_have_account_to_purchase" => "When this is set to TRUE, any purchasers must log in or create an account. When set to false, customers still get added as a member, but they can purchase without logging in or choosing a password.",
 				"automatically_update_member_details" => "When set to true, the member fields (e.g. email, surname, first name) will be automatically updated from the billing address.  That is, if the customers enters a different email or surname in the billing field then the member record will be updated based on these new values.",
 				"customer_group_code" => "Code for the customer member group.",
 				"customer_group_name" => "Title (name) for the customer member group.",
