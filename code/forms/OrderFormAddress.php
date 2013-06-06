@@ -429,6 +429,7 @@ class OrderFormAddress extends Form {
 			return false;
 		}
 		else {
+			$mustHavePassword = EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase");
 			$validPassword = $this->validPasswordHasBeenEntered($data);
 			if($validPassword) {
 				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){

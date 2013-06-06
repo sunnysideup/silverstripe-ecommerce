@@ -210,7 +210,17 @@ class EcommerceRole extends DataExtension {
 		}
 		else {
 			//login invite right on the top
-			if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
+			if(EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase")) {
+				$loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT','Create an account'), 3);
+				//dont allow people to purchase without creating a password
+				$loginDetailsDescription = new LiteralField(
+					'AccountInfo',
+					'<p>'.
+					_t('OrderForm.MUSTCREATEPASSWORD','Please choose a password to create your account.')
+					.'</p>'
+				);
+			}
+			else {
 				$loginDetailsHeader = new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3);
 				//allow people to purchase without creating a password
 				$loginDetailsDescription = new LiteralField(
@@ -221,18 +231,8 @@ class EcommerceRole extends DataExtension {
 				);
 				//close by default
 			}
-			else {
-				$loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT','Create an account'), 3);
-				//dont allow people to purchase without creating a password
-				$loginDetailsDescription = new LiteralField(
-					'AccountInfo',
-					'<p>'.
-					_t('OrderForm.MUSTCREATEPASSWORD','Please choose a password to create your account.')
-					.'</p>'
-				);
-			}	
 		}
-	
+
 		if(empty($passwordField)) {
 			$passwordField = new PasswordField('Password', _t('Account.CREATE_PASSWORD','Create Account (enter password)'));
 			$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.CONFIRM_PASSWORD','Confirm Password'));
@@ -267,16 +267,16 @@ class EcommerceRole extends DataExtension {
 			'Surname',
 			'Email',
 		);
-		if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
-			$passwordFieldIsRequired = false;
-		}
-		else {
+		if(EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase")) {
 			$passwordFieldIsRequired = true;
 			if($this->owner->exists()) {
 				if($this->owner->Password) {
 					$passwordFieldIsRequired = false;
 				}
-			}			
+			}
+		}
+		else {
+			$passwordFieldIsRequired = false;
 		}
 		if($passwordFieldIsRequired) {
 			$fields[] = "Password";

@@ -209,21 +209,12 @@ class ShopAccountForm_Validator extends RequiredFields{
 				);
 				$valid = false;
 			}
-			if(!$loggedInMember && !$data["Password"] && !EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
+			//if you are not logged in, you hvae not provided a password and the settings require you to be logged in then
+			//we have a problem
+			if( !$loggedInMember && !$data["Password"] && EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase") ) {
 				$this->validationError(
 					"Password",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
-					"required"
-				);
-				$valid = false;
-			}
-		}
-		//password for new user
-		if(isset($data["Password"]) && isset($data["PasswordDoubleCheck"])) {
-			if($data["Password"] != $data["PasswordDoubleCheck"]) {
-				$this->validationError(
-					"PasswordDoubleCheck",
-					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
 					"required"
 				);
 				$valid = false;
