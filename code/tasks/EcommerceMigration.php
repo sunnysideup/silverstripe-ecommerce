@@ -1074,7 +1074,7 @@ class EcommerceMigration extends BuildTask {
 			"ProductsHaveModelNames",
 			"ProductsHaveQuantifiers",
 			"ProductsAlsoInOtherGroups",
-			"ProductsHaveVariations",
+			//"ProductsHaveVariations",
 			"EmailLogoID",
 			"DefaultProductImageID"
 		);
