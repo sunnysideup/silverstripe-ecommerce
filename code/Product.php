@@ -842,9 +842,7 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
-		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
-			return false;
-		}
+		//if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
