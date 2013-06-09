@@ -1,0 +1,12 @@
+/**
+  * IMPORTANT NOTE:
+  * The default e-commerce css only includes the basics and it is recommended that you theme these files.
+  * Also make sure you have the site's general layout and typography styled before you do this.
+  *
+  * This file contains a 'stand-alone' formatting of a full order for email and for printing.
+  *
+  **/
+
+#Icons {display: none;}
+#OrderPrintAndMail {display: none; border: 1px solid red!important;}
+
