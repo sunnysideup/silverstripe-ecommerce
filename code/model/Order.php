@@ -1143,6 +1143,14 @@ class Order extends DataObject {
 			$email->setTo($to);
 			//we take the subject from the Array Data, just in case it has been adjusted.
 			$email->setSubject($arrayData->getField("Subject"));
+			//we also see if a CC and a BCC have been added
+			;
+			if($cc = $arrayData->getField("CC")) {
+				$email->setCc($cc);
+			}
+			if($bcc = $arrayData->getField("BCC")) {
+				$email->setBcc($bcc);
+			}
 			$email->populateTemplate($arrayData);
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
@@ -1171,6 +1179,8 @@ class Order extends DataObject {
 	 * - ShopPhysicalAddress
 	 * - CurrentDateAndTime
 	 * - BaseURL
+	 * - CC
+	 * - BCC
 	 */
 	public function createReplacementArrayForEmail($message = "", $subject = ""){
 		$step = $this->MyStep();
@@ -1182,6 +1192,9 @@ class Order extends DataObject {
 		else {
 			$replacementArray["Subject"] = $step->EmailSubject;
 		}
+ 		$replacementArray["To"] = "";
+ 		$replacementArray["CC"] = "";
+ 		$replacementArray["BCC"] = "";
  		$replacementArray["Message"] = $message;
  		$replacementArray["OrderStepMessage"] = $step->CustomerMessage;
 		$replacementArray["Order"] = $this;
