@@ -378,7 +378,7 @@ class Order extends DataObject {
 			if($createdOrderStatus) {
 				$createdOrderStatusID = $createdOrderStatus->ID;
 			}
-			$arrayOfStatusOptions = clone $statusOptions->map("ID", "Title");
+			$arrayOfStatusOptions = clone $statusOptions->map("ID", "Title")->toArray();
 			$arrayOfStatusOptionsFinal = array();
 			if(count($arrayOfStatusOptions)) {
 				foreach($arrayOfStatusOptions as $key => $value) {
