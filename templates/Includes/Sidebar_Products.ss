@@ -2,7 +2,7 @@
 <div class="sidebarBox products">
 	<h3><% _t("SideBar.ALSOSEE","Also see ...") %></h3>
 	<ul>
-		<% control SidebarProducts %><li><a href="$Link" class="$LinkingMode">$MenuTitle</a></li><% end_control %>
+		<% loop SidebarProducts %><li><a href="$Link" class="$LinkingMode">$MenuTitle</a></li><% end_loop %>
 	</ul>
 </div>
 <% end_if %>

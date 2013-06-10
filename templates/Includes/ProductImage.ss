@@ -1,5 +1,5 @@
 		<div class="productImage">
 <% if Image %>
-			<a href="$Image.LargeImage.Link" class="colorboxImagePopup"><img class="realImage" src="$Image.ContentImage.URL" alt="<% sprintf(_t("Product.IMAGE","%s image"),$Title) %>" /></a>
+			<a href="$Image.LargeImage.Link" class="colorboxImagePopup"><img class="realImage" src="$Image.ContentImage.URL" alt="<%t Product.IMAGE '{name} image' name=$Title.ATT %>" /></a>
 <% end_if %>
 		</div>

@@ -35,7 +35,7 @@ class DeleteAllOrders extends BuildTask {
 		"ShippingAddress" => "OrderAddress",
 		"OrderStatusLog" =>"OrderStatusLog",
 		"OrderEmailRecord" =>"OrderEmailRecord",
-		"Payment" =>"Payment"
+		"EcommercePayment" => "EcommercePayment"
 	);
 		static function set_linked_objects_array($a) {self::$linked_objects_array = $a;}
 		static function get_linked_objects_array() {return self::$linked_objects_array;}
@@ -73,9 +73,9 @@ class DeleteAllOrders extends BuildTask {
 			if("yes" != $_REQUEST["i-am-sure"]) {
 				die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/deleteallorders/?i-am-sure=yes");
 			}
-			$oldCarts = DataObject::get('Order');
+			$oldCarts = Order::get();
 			$count = 0;
-			if($oldCarts){
+			if($oldCarts->count()){
 				if($this->verbose) {
 					$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\"");
 					$totalToDelete = $totalToDeleteSQLObject->value();
@@ -117,12 +117,19 @@ class DeleteAllOrders extends BuildTask {
 					DB::alteration_message("looking for $classWithOrderID objects without link to order.", "deleted");
 				}
 				$where = "\"Order\".\"ID\" IS NULL ";
-				$sort = '';
-				$join = " LEFT JOIN \"Order\" ON \"Order\".\"ID\" = \"$classWithOrderID\".\"OrderID\"";
+				$join = " LEFT JOIN \"Order\" ON ";
 				//the code below is a bit of a hack, but because of the one-to-one relationship we
 				//want to check both sides....
-				$unlinkedObjects = DataObject::get($classWithLastEdited, $where, $sort, $join);
-				if($unlinkedObjects){
+				$unlinkedObjects = $classWithLastEdited::get();
+				if($classWithLastEdited != $classWithOrderID) {
+					$unlinkedObjects = $unlinkedObjects
+						->leftJoin($classWithOrderID, "\"OrderAddress\".\"ID\" = \"$classWithOrderID\".\"ID\"");
+				}
+				$unlinkedObjects = $unlinkedObjects
+					->where($where)
+					->leftJoin("Order", "\"Order\".\"ID\" = \"$classWithOrderID\".\"OrderID\"");
+
+				if($unlinkedObjects->count()){
 					foreach($unlinkedObjects as $unlinkedObject){
 						if($this->verbose) {
 							DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
@@ -159,7 +166,8 @@ class DeleteAllOrders extends BuildTask {
 		if($unlinkedObject) {
 			if($unlinkedObject->ClassName) {
 				if(class_exists($unlinkedObject->ClassName) && $unlinkedObject instanceOf DataObject) {
-					$objectToDelete = DataObject::get_by_id($unlinkedObject->ClassName,$unlinkedObject->ID);
+					$unlinkedObjectClassName = $unlinkedObject->ClassName;
+					$objectToDelete = $unlinkedObjectClassName::get()->byID($unlinkedObject->ID);
 					if($objectToDelete) {
 						$objectToDelete->delete();
 						$objectToDelete->destroy();

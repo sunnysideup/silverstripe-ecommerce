@@ -12,13 +12,13 @@
 
 	<% if StepsContentHeading(1) %><h2 class="orderStepHeading">$StepsContentHeading(1)</h2><% end_if %>
 	<% if StepsContentAbove(1) %><p class="above headerFooterDescription">$StepsContentAbove(1)</p><% end_if %>
-	<% control Order %><% include Order_Content_Editable %><% end_control %>
+	<% with Order %><% include Order_Content_Editable %><% end_with %>
 	<% include Order_Content_Editable_ModifierForms %>
 	<% if StepsContentBelow(1) %><p class="below headerFooterDescription">$StepsContentBelow(1)</p><% end_if %>
 
 	<% if HasCheckoutSteps %>
-	<div class="checkoutStepPrevNextHolder next Actions">
-		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action"><% _t("NEXT","next") %></a>
+	<div class="checkoutStepPrevNextHolder next">
+		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("NEXT","next") %></a>
 	</div>
 	<% end_if %>
 
@@ -32,7 +32,7 @@
 
 	<% if HasCheckoutSteps %>
 	<div class="checkoutStepPrevNextHolder prev">
-		<a href="{$Link}checkoutstep/orderitems/#OrderItemsOuter" class="action"><% _t("GOBACK","go back") %></a>
+		<a href="{$Link}checkoutstep/orderitems/#OrderItemsOuter" class="action btn"><% _t("GOBACK","go back") %></a>
 	</div>
 	<% end_if %>
 
@@ -60,21 +60,21 @@
 
 	<% if HasCheckoutSteps %>
 	<div class="checkoutStepPrevNextHolder prev">
-		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action"><% _t("GOBACK","go back") %></a>
+		<a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("GOBACK","go back") %></a>
 	</div>
 	<% else %>
 	<div class="checkoutStepPrevNextHolder prev">
-		<a href="{$Link}" class="action"><% _t("GOBACK","go back") %></a>
+		<a href="{$Link}" class="action btn"><% _t("GOBACK","go back") %></a>
 	</div>
 	<% end_if %>
 
 
 	<% if StepsContentHeading(3) %><h2 class="orderStepHeading">$StepsContentHeading(3)</h2><% end_if %>
 	<% if StepsContentAbove(3) %><p class="above headerFooterDescription">$StepsContentAbove(3)</p><% end_if %>
-	<% control Order %>
+	<% with Order %>
 		<% include Order_Addresses %>
 		<% include Order_Content %>
-	<% end_control %>
+	<% end_with %>
 	<div id="OrderFormHolder">$OrderForm</div>
 	<% if StepsContentBelow(3) %><p class="below headerFooterDescription">$StepsContentBelow(3)</p><% end_if %>
 

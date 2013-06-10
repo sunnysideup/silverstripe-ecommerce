@@ -31,12 +31,12 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 		if($submittedOrderStatusLogClassName) {
-			$submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
+			$submittedStatusLog = $submittedOrderStatusLogClassName::get()->First();
 			if($submittedStatusLog) {
-				$orderSteps = DataObject::get("OrderStep", "", "\"Sort\" DESC", "", 1);
+				$orderSteps = OrderStep::get()->sort("Sort", "DESC")->limit(1);
 				$lastOrderStep = $orderSteps->First();
 				if($lastOrderStep) {
-					$joinSQL = "INNER JOIN \"$orderStatusLogClassName\" ON \"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"";
+					$joinSQL = "INNER JOIN \"\" ON ";
 					$whereSQL = "\"StatusID\" <> ".$lastOrderStep->ID."";
 					$count = null;
 					if(isset($_GET["count"])) {
@@ -53,20 +53,24 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 						$last = intval(Session::get("EcommerceTryToFinaliseOrdersTask"));
 						if(!$last) {$last = 0;}
 					}
-					$orders = DataObject::get("Order", $whereSQL, "\"Order\".\"ID\" ASC", $joinSQL, "$last, $count");
-					if($orders) {
+					$orders = Order::get()
+						->where($whereSQL)
+						->sort("ID", "ASC")
+						->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
+						->limit($count, $last);
+					if($orders->count()) {
 						DB::alteration_message("<h1>Moving $count Orders (starting from $last)</h1>");
 						foreach($orders as $order) {
 							$last++;
 							Session::set("EcommerceTryToFinaliseOrdersTask", $last);
-							$stepBefore = DataObject::get_by_id("OrderStep", $order->StatusID);
+							$stepBefore = OrderStep::get()->byID($order->StatusID);
 							try{
 								$order->tryToFinaliseOrder();
 							}
 							catch(Exception $e) {
 								DB::alteration_message($e, "deleted");
 							}
-							$stepAfter = DataObject::get_by_id("OrderStep", $order->StatusID);
+							$stepAfter = OrderStep::get()->byID($order->StatusID);
 							if($stepBefore) {
 								if($stepBefore->ID == $stepAfter->ID) {
 									DB::alteration_message("could not move Order ".$order->getTitle().", remains at <strong>".$stepBefore->Name."</strong>");

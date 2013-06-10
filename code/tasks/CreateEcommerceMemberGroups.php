@@ -34,7 +34,7 @@ class CreateEcommerceMemberGroups extends BuildTask{
 		}
 		$customerGroup = EcommerceRole::get_customer_group();
 		if(!$customerGroup) {
-			user_error("could not create user group");
+			user_error("could not create user group", "deleted");
 		}
 		else {
 			DB::alteration_message(EcommerceConfig::get("EcommerceRole", "customer_group_name").' is ready for use',"created");
@@ -56,19 +56,34 @@ class CreateEcommerceMemberGroups extends BuildTask{
 			Permission::grant($adminGroup->ID, $adminPermissionCode);
 			DB::alteration_message($adminName.' permissions granted',"created");
 		}
-		$permissionRole = DataObject::get_one("PermissionRole", "\"Title\" = '".$adminRoleTitle."'");
-		if(!$permissionRole) {
+		else {
+			DB::alteration_message($adminName." permissions already granted","created");
+		}
+		$permissionRole = PermissionRole::get()
+			->Filter(array("Title" => $adminRoleTitle))
+			->First();
+		if($permissionRole) {
+			//do nothing
+			DB::alteration_message($adminName.' role in place',"created");
+		}
+		else {
 			$permissionRole = new PermissionRole();
 			$permissionRole->Title = $adminRoleTitle;
 			$permissionRole->OnlyAdminCanApply = true;
 			$permissionRole->write();
+			DB::alteration_message($adminName.' role created',"created");
 		}
 		if($permissionRole) {
 			$permissionArray = EcommerceConfig::get("EcommerceRole", "admin_role_permission_codes");
 			if(is_array($permissionArray) && count($permissionArray) && $permissionRole) {
 				foreach($permissionArray as $permissionCode) {
-					$permissionRoleCode = DataObject::get_one("PermissionRoleCode", "\"Code\" = '$permissionCode'");
-					if(!$permissionRoleCode) {
+					$permissionRoleCode = PermissionRoleCode::get()
+						->Filter(array("Code" => $permissionCode))
+						->First();
+					if($permissionRoleCode) {
+						//do nothing
+					}
+					else {
 						$permissionRoleCode = new PermissionRoleCode();
 						$permissionRoleCode->Code = $permissionCode;
 						$permissionRoleCode->RoleID = $permissionRole->ID;

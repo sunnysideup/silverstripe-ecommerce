@@ -46,7 +46,7 @@
 	clear: both;
 }
 
-.next .action {display: inline-block!important; }
+.next .action {display: inline-block!important; float: right; }
 
 #action_useDifferentShippingAddress { display: none; }
 

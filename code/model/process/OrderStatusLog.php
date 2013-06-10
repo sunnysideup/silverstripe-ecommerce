@@ -66,15 +66,17 @@ class OrderStatusLog extends DataObject {
 	function InternalUseOnlyNice() {return $this->getInternalUseOnlyNice();}
 	function getInternalUseOnlyNice() {if($this->InternalUseOnly) { return _t("OrderStatusLog.YES", "Yes");} return _t("OrderStatusLog.No", "No");}
 
+
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canView($member = null) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
-		if(EcommerceRole::current_member_is_shop_admin($member)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		if(!$this->InternalUseOnly) {
@@ -88,28 +90,31 @@ class OrderStatusLog extends DataObject {
 	}
 
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return true;
 	}
 
 	/**
-	* @param Member $member
-	* @return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
-		if($o = $this->Order()) {
-			return $o->canEdit($member);
+		if($order = $this->Order()) {
+			return $order->canEdit($member);
 		}
 		return false;
 	}
@@ -146,6 +151,12 @@ class OrderStatusLog extends DataObject {
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGENTRIES", "Order Log Entries");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A record of anything that happened with an order.";
+
+	/**
 	 * standard SS variable
 	 * @var String
 	 */
@@ -161,20 +172,31 @@ class OrderStatusLog extends DataObject {
 
 	/**
 	*
-	*@return FieldSet
+	*@return FieldList
 	**/
 	function getCMSFields() {
+
 		$fields = parent::getCMSFields();
 		$fields->dataFieldByName("Note")->setRows(3);
 		$fields->dataFieldByName("Title")->setTitle("Subject");
 		$fields->replaceField("AuthorID", $fields->dataFieldByName("AuthorID")->performReadonlyTransformation());
-		if($this->OrderID) {
-			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
+
+		//OrderID Field
+		$fields->removeByName("OrderID");
+		if($this->exists() && $this->OrderID && $this->Order()->exists()) {
+			$fields->addFieldToTab("Root.Main", new ReadOnlyField("OrderTitle", _t("OrderStatusLog.ORDER_TITLE", "Order Title"), $this->Order()->Title()));
 		}
-		//get dropdown for ClassNames
-		$fields->addFieldToTab("Root.Main", new OrderStatusLog_ClassNameOrTypeDropdownField("ClassName", "Type", false), "Title");
-		$classNameField = $fields->dataFieldByName("ClassName");
-		$fields->replaceField("ClassName", $classNameField->performReadonlyTransformation());
+
+		//ClassName Field
+		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
+		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
+		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", _t("OrderStatusLog.TYPE", "Type"), "OrderStatusLog", $availableLogs);
+		$ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
+		$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Title");
+		if($this->exists()) {
+			$classNameField = $fields->dataFieldByName("ClassName");
+			$fields->replaceField("ClassName", $classNameField->performReadonlyTransformation());
+		}
 		return $fields;
 	}
 
@@ -189,13 +211,28 @@ class OrderStatusLog extends DataObject {
 	}
 
 	/**
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
 	 *
-	 *@return Fieldset
-	 **/
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
+	 */
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
-		$fields->replaceField("ClassName", new OrderStatusLog_ClassNameOrTypeDropdownField("ClassName", "Type", true));
+		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
+		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
+		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", "Type", "OrderStatusLog", $availableLogs);
+		$ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
+		$fields->replaceField("ClassName", $ecommerceClassNameOrTypeDropdownField);
 		return $fields;
 	}
 
@@ -248,19 +285,7 @@ class OrderStatusLog extends DataObject {
 	 * @return String
 	 */
 	public function debug() {
-		$html =  "
-			<h2>".$this->ClassName."</h2><ul>";
-		$fields = Object::get_static($this->ClassName, "db");
-		foreach($fields as  $key => $type) {
-			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
-		}
-		$fields = Object::get_static($this->ClassName, "casting");
-		foreach($fields as  $key => $type) {
-			$method = "get".$key;
-			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
-		}
-		$html .= "</ul>";
-		return $html;
+		return EcommerceTaskDebugCart::debug_object($this);
 	}
 
 }
@@ -303,26 +328,34 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 		function i18n_plural_name() { return _t("OrderStatusLog.SUBMITTEDORDERS", "Submitted Orders - Fulltext Backup");}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "The record that the order has been submitted by the customer.  This is important in e-commerce, because from here, nothing can change to the order.";
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
 		return false;
 	}
 
-
 	/**
-	* can only be created when the order is submitted
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return true;
 	}
@@ -364,19 +397,14 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 			else {
 				$id = 0;
 			}
-			$lastOneAsDos = DataObject::get(
-				"OrderStatusLog_Submitted",
-				"\"OrderStatusLog_Submitted\".\"ID\" <> $id",
-				"\"SequentialOrderNumber\" DESC",
-				null,
-				1 //make sure limit is 1.
-			);
-			if($lastOneAsDos) {
-				foreach($lastOneAsDos as $lastOne) {
-					$this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
-					if($this->SequentialOrderNumber < $min) {
-						$this->SequentialOrderNumber = $min;
-					}
+			$lastOne = OrderStatusLog_Submitted::get()
+				->Filter(array("ID" => $id))
+				->Sort("SequentialOrderNumber", "DESC")
+				->First();
+			if($lastOne) {
+				$this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
+				if($this->SequentialOrderNumber < $min) {
+					$this->SequentialOrderNumber = $min;
 				}
 			}
 			else {
@@ -413,26 +441,34 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
 		function i18n_plural_name() { return _t("OrderStatusLog.SUBMITTEDORDERS", "Cancelled Orders");}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A record noting the cancellation of an order.  ";
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
 		return false;
 	}
 
-
 	/**
-	* can only be created when the order is submitted
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return false;
 	}
@@ -460,9 +496,10 @@ class OrderStatusLog_Dispatch extends OrderStatusLog {
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGDISPATCHENTRIES", "Order Log Dispatch Entries");}
 
 	/**
-	 * Only shop admin can delete this
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return EcommerceRole::current_member_is_shop_admin($member);
 	}
@@ -545,13 +582,17 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 	function populateDefaults() {
 		parent::populateDefaults();
 		$this->Title = _t("OrderStatusLog.ORDERDISPATCHED", "Order Dispatched");
-		$this->DispatchedOn =  date('Y-m-d');
-		$this->DispatchedBy =  Member::currentUser()->getTitle();
+		$this->DispatchedOn = date('Y-m-d');
+		if(Security::database_is_ready()) {
+			if(Member::currentUser()) {
+				$this->DispatchedBy = Member::currentUser()->getTitle();
+			}
+		}
 	}
 
 	/**
 	*
-	*@return FieldSet
+	*@return FieldList
 	**/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -603,9 +644,10 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 	);
 
 	/**
-	*
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
@@ -693,65 +735,31 @@ class OrderStatusLog_Archived extends OrderStatusLog {
 		function i18n_plural_name() { return _t("OrderStatusLog.ARCHIVEDORDERS", "Archived Order - Additional Notes");}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canDelete($member = null) {
 		return false;
 	}
 
 	/**
-	 * This record is not editable
-	 *@return Boolean
-	 **/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {
 		return true;
 	}
 
-
 	/**
-	* can only be created when the order is submitted
-	*@return Boolean
-	**/
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canCreate($member = null) {
 		return true;
 	}
 
 }
 
-/**
- * this is a dropdown field just for selecting the right
- * classname for an order status log
- *
- *
- */
-class OrderStatusLog_ClassNameOrTypeDropdownField extends DropdownField{
-
-	/**
-	 * returns a dropdown field with the available types
-	 * @return DropdownField
-	 */
-	public function __construct($name = "ClassName", $title = "Type", $canBeEmpty = false){
-		$classes = ClassInfo::subclassesFor("OrderStatusLog");
-		$dropdownArray = array();
-		if($canBeEmpty) {
-			$dropdownArray[""] = "-- Select --";
-		}
-		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
-		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
-		if($classes) {
-			foreach($classes as $className) {
-				$obj = singleton($className);
-				if($obj) {
-					if(in_array($className, $availableLogs )) {
-						$dropdownArray[$className] = $obj->i18n_singular_name();
-					}
-				}
-			}
-		}
-		if(!$dropdownArray || !count($dropdownArray)) {
-			$dropdownArray= array("OrderStatusLog" => "--- error ---");
-		}
-		parent::__construct($name, $title, $dropdownArray);
-	}
-}

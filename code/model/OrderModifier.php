@@ -111,18 +111,24 @@ class OrderModifier extends OrderAttribute {
 	 * @var String
 	 */
 	public static $singular_name = "Order Modifier";
-		function i18n_singular_name() { return _t("OrderModifier.ORDERMODIFIER", "Order Modifier");}
+		function i18n_singular_name() { return _t("OrderModifier.SINGULARNAME", "Order Modifier");}
 
 	/**
 	 * stardard SS variable
 	 * @var String
 	 */
 	public static $plural_name = "Order Modifiers";
-		function i18n_plural_name() { return _t("OrderModifier.ORDERMODIFIERS", "Order Modifiers");}
+		function i18n_plural_name() { return _t("OrderModifier.PLURALNAME", "Order Modifiers");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "An addition to the order that sits between the sub-total and the total (e.g. tax, delivery, etc...).";
 
 	/**
 	 * stardard SS metbod
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
@@ -143,17 +149,49 @@ class OrderModifier extends OrderAttribute {
 				new ReadonlyField("CalculatedTotal", "Raw Value", $this->CalculatedTotal)
 			)
 		);
-		$fields->addFieldToTab("Root.Status", new CheckboxField("HasBeenRemoved", "Has been removed"));
+
+		$fields->addFieldToTab("Root.Main", new CheckboxField("HasBeenRemoved", "Has been removed"));
 		$fields->removeByName("OrderAttribute_GroupID");
+
+
+		//OrderID Field
+		if($this->OrderID && $this->exists()) {
+			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
+		}
+		else {
+			$fields->replaceField("OrderID", new NumericField("OrderID"));
+		}
+
+		//ClassName Field
+		$availableModifiers = EcommerceConfig::get("Order", "modifiers");
+		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", "Type", "OrderModifier", $availableModifiers);
+		$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Name");
+		if($this->exists()) {
+			$classNameField = $fields->dataFieldByName("ClassName");
+			$fields->replaceField("ClassName", $classNameField->performReadonlyTransformation());
+		}
 		return $fields;
+
 	}
 
+
 	/**
-	 * standard SS method, update search fields for ModelAdmin
-	 * @return FieldSet
-	 **/
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
+	 */
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		return $fields;
 	}
@@ -205,7 +243,9 @@ class OrderModifier extends OrderAttribute {
 
 // ########################################  *** 5. init and update functions
 
-
+	/**
+	 *
+	 */
 	public static function init_for_order($className) {
 		user_error("the init_for_order method has been depreciated, instead, use \$myModifier->init()", E_USER_ERROR);
 		return false;
@@ -224,9 +264,9 @@ class OrderModifier extends OrderAttribute {
 
 	/**
 	* all classes extending OrderModifier must have this method if it has more fields
-	 * @param Bool $force - run it, even if it has run already
+	 * @param Bool $recalculate - run it, even if it has run already
 	**/
-	public function runUpdate($force = false) {
+	public function runUpdate($recalculate = false) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::runUpdate-for-'.$this->ClassName);
 		if(!$this->IsRemoved()) {
 			$this->checkField("Name");
@@ -238,7 +278,7 @@ class OrderModifier extends OrderAttribute {
 			$this->runningTotal += $this->CalculatedTotal;
 		}
 		$this->baseInitCalled = true;
-		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::runUpdate-for-'.$this->ClassName);
+		//if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::runUpdate-for-'.$this->ClassName);
 	}
 
 	/**
@@ -250,8 +290,24 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
-	 * @param String $fieldName
+	* standard SS Method
+	* @return Boolean
+	**/
+	public function canCreate($member = null) {
+		return false;
+	}
+
+	/**
+	* standard SS Method
+	* @return Boolean
+	**/
+	public function canDelete($member = null) {
+		return false;
+	}
+
+	/**
 	 * This method simply checks if a fields has changed and if it has changed it updates the field.
+	 * @param String $fieldName
 	 **/
 	protected function checkField($fieldName) {
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::checkField_'.$fieldName.'_'.$this->ClassName);
@@ -322,12 +378,12 @@ class OrderModifier extends OrderAttribute {
 	 * @param Validator $optionalValidator  - optional custom validator class
 	 * @return OrderModifierForm or subclass
 	 */
-	public function getModifierForm($optionalController = null, $optionalValidator = null) {
+	public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null) {
 		if($this->ShowForm()) {
-			$fields = new FieldSet();
+			$fields = new FieldList();
 			$fields->push($this->headingField());
 			$fields->push($this->descriptionField());
-			return new OrderModifierForm($optionalController, "ModifierForm", $fields, $actions = new FieldSet(), $optionalValidator);
+			return new OrderModifierForm($optionalController, "ModifierForm", $fields, $actions = new FieldList(), $optionalValidator);
 		}
 	}
 
@@ -368,11 +424,30 @@ class OrderModifier extends OrderAttribute {
 	}
 
 	/**
+	 * caching of relevant OrderModifier_Descriptor
+	 * @var OrderModifier_Descriptor
+	 */
+	private $orderModifier_Descriptor = null;
+
+	/**
+	 * returns the relevant orderModifier_Descriptor
+	 * @return OrderModifier_Descriptor | Null
+	 */
+	protected function getOrderModifier_Descriptor(){
+		if($this->orderModifier_Descriptor === null) {
+			$this->orderModifier_Descriptor = OrderModifier_Descriptor::get()
+				->Filter(array("ModifierClassName" => $this->ClassName))
+				->First();
+		}
+		return $this->orderModifier_Descriptor;
+	}
+
+	/**
 	 * returns a heading if there is one.
 	 * @return String
 	 **/
 	public function Heading(){
-		if($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
+		if($obj = $this->getOrderModifier_Descriptor()) {
 			return $obj->Heading;
 		}
 		return "";
@@ -383,7 +458,7 @@ class OrderModifier extends OrderAttribute {
 	 * @return String (html)
 	 **/
 	public function Description(){
-		if($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
+		if($obj = $this->getOrderModifier_Descriptor()) {
 			return $obj->Description;
 		}
 		return "";
@@ -394,7 +469,7 @@ class OrderModifier extends OrderAttribute {
 	 * @return Object (SiteTree)
 	 **/
 	public function MoreInfoPage(){
-		if($obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$this->ClassName."'")) {
+		if($obj = $this->getOrderModifier_Descriptor()) {
 			return $obj->Link();
 		}
 		return null;
@@ -612,7 +687,7 @@ class OrderModifier extends OrderAttribute {
 	 * @param Array $js javascript array
 	 * @return Array for AJAX JSON
 	 **/
-	function updateForAjax(array &$js) {
+	function updateForAjax(array $js) {
 		$function = EcommerceConfig::get('OrderModifier', 'ajax_total_format');
 		if(is_array($function)) {
 			list($function, $format) = $function;
@@ -622,6 +697,8 @@ class OrderModifier extends OrderAttribute {
 			$total = $total->$format();
 		}
 		$ajaxObject = $this->AJAXDefinitions();
+		//TableValue is a database value
+		$tableValue = DBField::create_field('Currency',$this->TableValue)->Nice();
 		if($this->HideInAjaxUpdate()) {
 			$js[] = array(
 				't' => 'id',
@@ -668,11 +745,20 @@ class OrderModifier extends OrderAttribute {
 				'v' => $total
 			);
 		}
+		return $js;
 	}
 
 
 // ######################################## ***  12. debug functions
 
+	/**
+	 * Debug helper method.
+	 * Access through : /shoppingcart/debug/
+	 */
+	public function debug() {
+		$html =  EcommerceTaskDebugCart::debug_object($this);
+		return $html;
+	}
 
 
 }
@@ -755,42 +841,38 @@ class OrderModifier_Descriptor extends DataObject {
 		function i18n_plural_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTIONS", "Order Modifier Descriptions");}
 
 	/**
-	 * standard SS variable
-	 * @var Boolean
-	 */
-	static $can_create = false;
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 **/
+	function canCreate($member = null) {
+		return false;
+	}
 
 	/**
 	 * standard SS method
 	 * @param Member $member
 	 * @return Boolean
-	 */
-	public function canCreate($member = null) {return false;}
+	 **/
+	function canEdit($member = null) {
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+		return $member->IsShopAdmin();
+	}
 
 	/**
 	 * standard SS method
 	 * @param Member $member
 	 * @return Boolean
-	 */
-	public function canView($member = null) {return true;}
+	 **/
+	function canDelete($member = null) {
+		return false;
+	}
 
 	/**
 	 * standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canEdit($member = null) {return true;}
-
-	/**
-	 * standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDelete($member = null) {return false;}
-
-	/**
-	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
@@ -799,10 +881,9 @@ class OrderModifier_Descriptor extends DataObject {
 		if($this->LinkID) {
 			$fields->addFieldToTab("Root", new CheckboxField("NoLinkForOrderModifier_Descriptor", "Remove Link"), "LinkID");
 		}
-		$fields->replaceField("Description", new TextareaField("Description", "Description", 3));
+		$fields->replaceField("Description", new TextareaField("Description", "Description"));
 		return $fields;
 	}
-
 
 	/**
 	 * casted Variable
@@ -828,6 +909,7 @@ class OrderModifier_Descriptor extends DataObject {
 	}
 
 	/**
+	 * Adds OrderModifier_Descriptors and deletes the irrelevant ones
 	 * stardard SS method
 	 */
 	function requireDefaultRecords(){
@@ -838,7 +920,7 @@ class OrderModifier_Descriptor extends DataObject {
 		}
 		if(count($arrayOfModifiers)) {
 			foreach($arrayOfModifiers as $className) {
-				$obj = DataObject::get_one("OrderModifier_Descriptor", "\"ModifierClassName\" = '".$className."'");
+				$obj = OrderModifier_Descriptor::get()->Filter(Array("ModifierClassName" => $className))->First();
 				if(!$obj) {
 					$modifier = singleton($className);
 					$obj = new OrderModifier_Descriptor();
@@ -849,8 +931,9 @@ class OrderModifier_Descriptor extends DataObject {
 				}
 			}
 		}
-		$orderModifierDescriptors = DataObject::get("OrderModifier_Descriptor");
-		if($orderModifierDescriptors) {
+		//delete the ones that are not relevant
+		$orderModifierDescriptors = OrderModifier_Descriptor::get();
+		if($orderModifierDescriptors && $orderModifierDescriptors->count()) {
 			foreach($orderModifierDescriptors as $orderModifierDescriptor) {
 				if(!in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers)) {
 					$orderModifierDescriptor->delete();

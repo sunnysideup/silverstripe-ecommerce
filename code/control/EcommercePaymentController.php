@@ -12,24 +12,39 @@
 
 class EcommercePaymentController extends Controller {
 
-	protected static $url_segment = "ecommercepayment";
-		static function set_url_segment($s) {self::$url_segment = $s;}
-		static function get_url_segment() {return self::$url_segment;}
-
+	/**
+	 *
+	 * @var Order
+	 */
 	protected $currentOrder = null;
 
+	/**
+	 *
+	 * @var String
+	 */
 	protected $errorMessage = "";
 
+
+	/**
+	 *
+	 * @var String
+	 */
 	protected $goodMessage = "";
 
+	/**
+	 * @param String | Int $orderID
+	 * @return String (Link)
+	 */
 	static function make_payment_link($orderID){
-		$s = "/".self::get_url_segment()."/pay/".$orderID."/";
+		$urlSegment = EcommerceConfig::get("EcommercePaymentController", "url_segment");
+		$s = "/".$urlSegment."/pay/".$orderID."/";
 		return $s;
 	}
 
 	function init(){
 		parent::init();
-		Requirements::themedCSS("typography");
+		isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = "mysite";
+		Requirements::themedCSS("typography", $themeBaseFolder);
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
@@ -54,22 +69,31 @@ class EcommercePaymentController extends Controller {
 		return array();
 	}
 
+	/**
+	 * TO DO: TEST!!!
+	 *
+	 */
 	function thankyou() {
-		return $this->goodMessage = _t("EcommercePaymentController.THANKYOU", "Thank you for your payment.");
+		$this->goodMessage = _t("EcommercePaymentController.THANKYOU", "Thank you for your payment.");
 		$this->currentOrder = null;
 		return array();
 	}
 
+	/**
+	 * @param String $action
+	 * @return String (Link)
+	 */
 	function Link($action = ''){
-		$s = "/".self::get_url_segment()."/";
+		$urlSegment = EcommerceConfig::get("EcommercePaymentController", "url_segment");
+		$urlSegmentWithSlashes = "/".$urlSegment."/";
 		if($action) {
-			$s .= $action."/";
+			$urlSegmentWithSlashes .= $action."/";
 		}
-		return $s;
+		return $urlSegmentWithSlashes;
 	}
 
 	/**
-	 *@return Form (OrderForm_Payment) or Null
+	 * @return Form (OrderForm_Payment) | Array
 	 **/
 	function PaymentForm(){
 		if($this->currentOrder){

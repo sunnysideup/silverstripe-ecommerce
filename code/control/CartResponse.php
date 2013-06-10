@@ -26,10 +26,12 @@ class CartResponse extends EcommerceResponse {
 
 	/**
 	 * Builds json object to be returned via ajax.
-	 *
-	 *@return JSON
+	 * @param Array $message (Type, Message)
+	 * @param Array $additionalData
+	 * @param String $status
+	 * @return HEADER + JSON
 	 **/
-	public function ReturnCartData($messages = array(), $data = null, $status = "success") {
+	public function ReturnCartData(Array $messages = array(), Array $additionalData = null, $status = "success") {
 		//add header
 		$this->addHeader('Content-Type', 'application/json');
 
@@ -69,10 +71,10 @@ class CartResponse extends EcommerceResponse {
 		//order items
 
 		$inCartArray = array();
-
-		if ($items = $currentOrder->Items()) {
+		$items = $currentOrder->Items();
+		if ($items->count()) {
 			foreach ($items as $item) {
-				$item->updateForAjax($js);
+				$js = $item->updateForAjax($js);
 				$buyable = $item->Buyable(true);
 				if($buyable) {
 					//products in cart
@@ -95,14 +97,15 @@ class CartResponse extends EcommerceResponse {
 		);
 
 		//order modifiers
-		if ($modifiers = $currentOrder->Modifiers()) {
+		$modifiers = $currentOrder->Modifiers();
+		if ($modifiers->count()) {
 			foreach ($modifiers as $modifier) {
-				$modifier->updateForAjax($js);
+				$js = $modifier->updateForAjax($js);
 			}
 		}
 
 		//order
-		$currentOrder->updateForAjax($js);
+		$js = $currentOrder->updateForAjax($js);
 
 		//messages
 		if(is_array($messages)) {
@@ -166,8 +169,8 @@ class CartResponse extends EcommerceResponse {
 		}
 
 		//merge and return
-		if(is_array($data)) {
-			$js = array_merge($js, $data);
+		if(is_array($additionalData) && count($additionalData)) {
+			$js = array_merge($js, $additionalData);
 		}
 		//TODO: remove doubles?
 		$json = json_encode($js);

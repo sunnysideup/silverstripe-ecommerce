@@ -20,7 +20,10 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 		$array = EcommerceCountry::get_country_dropdown();
 		$allowedArray = EcommerceConfig::get("EcommerceCountry", "allowed_country_codes");
 		foreach($array as $code => $name) {
-			if($obj = DataObject::get_one("EcommerceCountry", "\"Code\" = '".Convert::raw2sql($code)."'")) {
+			$obj = EcommerceCountry::get()
+				->Filter(array("Code" => Convert::raw2sql($code)))
+				->First();
+			if($obj) {
 				//do nothing
 				$count++;
 			}
@@ -46,7 +49,7 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 
 }
 /**
- * update country.DoNotAllowSales to 1 so that you can not sell to any country
+ * update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

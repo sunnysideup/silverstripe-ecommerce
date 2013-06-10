@@ -2,65 +2,69 @@
 # 1. copy this file to another location (e.g. mysite/_config)
 # 2. reference the new file location in /ecommerce/_config/
 # 3. choose your settings in the new file
-#    - note:
-#      - no commas after values
-#      - indents are important
-#      - make sure to have a space after :
+#      - note:
+#        - no commas after values
+#        - indents are important
+#        - make sure to have a space after :
 #
 #
 
 ################### CONFIG #####################
 EcommerceDBConfig:
-	ecommerce_db_config_class_name: EcommerceDBConfig
-	array_of_buyables: [
-		Product
-	]
+  ecommerce_db_config_class_name: EcommerceDBConfig
+  array_of_buyables:
+    - Product
+
 
 
 ################### PAGES #####################
 
 CheckoutPage_Controller:
-	checkout_steps: [
-		orderitems,
-		orderformaddress,
-		orderconfirmationandpayment
-	]
+  checkout_steps:
+    - orderitems
+    - orderformaddress
+    - orderconfirmationandpayment
 
 OrderConfirmationPage_Controller:
-	include_as_checkout_step: true
+  include_as_checkout_step: true
 
 ProductGroup:
-	sort_options:
-		default:
-			Title: 'Default Order'
-			SQL: "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"Title\" ASC"
-		title:
-			Title: 'Alphabetical'
-			SQL: "\"Title\" ASC"
-		price:
-			Title: 'Lowest Price'
-			SQL: "\"Price\" ASC, \"Title\" ASC"
-	filter_options:
-		default:
-			Title: 'All Searchable Products (default)'
-			SQL: "\"ShowInSearch\"  = 1"
-		featuredonly:
-			Title: 'Featured Only'
-			SQL: "\"ShowInSearch\"  = 1 AND \"FeaturedProduct\" = 1"
-		nonfeaturedonly:
-			Title: 'Non Featured Only'
-			SQL: "\"ShowInSearch\"  = 1 AND \"FeaturedProduct\" = 0"
-	allow_short_display_style: false
-	allow_more_detail_display_style: false
-	session_name_for_product_array: ProductGroupProductIDs
+  sort_options:
+    default:
+      Title: 'Default Order'
+      SQL: "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"Title\" ASC"
+    title:
+      Title: 'Alphabetical'
+      SQL: "\"Title\" ASC"
+    price:
+      Title: 'Lowest Price'
+      SQL: "\"Price\" ASC, \"Title\" ASC"
+  filter_options:
+    default:
+      Title: 'All Searchable Products (default)'
+      SQL:
+        ShowInSearch: 1
+    featuredonly:
+      Title: 'Featured Only'
+      SQL:
+        ShowInSearch: 1
+        FeaturedProduct: 1
+    nonfeaturedonly:
+      Title: 'Non Featured Only'
+      SQL:
+        ShowInSearch: 1
+        FeaturedProduct: 0
+  allow_short_display_style: false
+  allow_more_detail_display_style: false
+  session_name_for_product_array: ProductGroupProductIDs
 
 Product_Image:
-	thumbnail_width: 75
-	thumbnail_height: 75
-	small_image_width: 200
-	small_image_height: 200
-	content_image_width: 400
-	large_image_width: 600
+  thumbnail_width: 75
+  thumbnail_height: 75
+  small_image_width: 200
+  small_image_height: 200
+  content_image_width: 400
+  large_image_width: 600
 
 
 
@@ -68,59 +72,63 @@ Product_Image:
 ################### MODEL, PROCESS, ADDRESS #####################
 
 Order:
-	modifiers: []
-	maximum_ignorable_sales_payments_difference: 0.01
-	order_id_start_number: 0
-	template_id_prefix: ""
-	ajax_subtotal_format: [SubTotalAsMoney, NiceDefaultFormat]
-	ajax_total_format: [TotalAsMoney, NiceDefaultFormat]
+  modifiers: []
+  maximum_ignorable_sales_payments_difference: 0.01
+  order_id_start_number: 0
+  template_id_prefix: ""
+  ajax_subtotal_format:
+    - SubTotalAsMoney
+    - NiceDefaultFormat
+  ajax_total_format:
+    - TotalAsMoney
+    - NiceDefaultFormat
 
 OrderItem:
-	ajax_total_format: [CalculatedTotalAsMoney, NiceDefaultFormat]
+  ajax_total_format:
+    - CalculatedTotalAsMoney
+    - NiceDefaultFormat
 
 OrderModifier:
-	ajax_total_format: [TableValueAsMoney, NiceDefaultFormat]
+  ajax_total_format:
+    - TableValueAsMoney
+    - NiceDefaultFormat
 
 OrderStep:
-	order_steps_to_include: [
-		OrderStep_Created,
-		OrderStep_Submitted,
-		OrderStep_SentInvoice,
-		OrderStep_Paid,
-		OrderStep_Confirmed,
-		OrderStep_SentReceipt,
-		OrderStep_Sent,
-		OrderStep_Archived
-	]
+  order_steps_to_include:
+    - OrderStep_Created
+    - OrderStep_Submitted
+    - OrderStep_SentInvoice
+    - OrderStep_Paid
+    - OrderStep_Confirmed
+    - OrderStep_SentReceipt
+    - OrderStep_Sent
+    - OrderStep_Archived
+  number_of_days_to_send_update_email: 10
 
 OrderStep_Confirmed:
-	list_of_things_to_check: "<div id=\"ExamplesOfThingsToConfirm\">
-			<h4>Examples of things to confirm</h4>
-			<ul>
-				<li>Postal code is correct</li>
-				<li>Address exists (use google maps)</li>
-				<li>Payment has arrived in Bank Account</li>
-				<li>Products are available</li>
-				<li>Credit Card details match delivery address</li>
-				<li>Tax, delivery fees, etc... are correct</li>
-			</ul>
-		</div>"
+  list_of_things_to_check:
+    - "Postal code is correct"
+    - "Address exists (use google maps)"
+    - "Payment has arrived in Bank Account"
+    - "Products are available"
+    - "Credit Card details match delivery address"
+    - "Tax, delivery fees, etc... are correct"
 
 OrderStatusLog:
-	available_log_classes_array: [
-		OrderStatusLog_PaymentCheck
-	]
-	order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
+  available_log_classes_array:
+    - OrderStatusLog_PaymentCheck
+    - OrderStatusLog_DispatchPhysicalOrder
+  order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
 
 EcommerceCountry:
-	allowed_country_codes: []
-	visitor_country_provider: "EcommerceCountry_VisitorCountryProvider"
-	default_country_code: "NZ"
+  allowed_country_codes: []
+  visitor_country_provider: "EcommerceCountry_VisitorCountryProvider"
+  default_country_code: "NZ"
 
 OrderAddress:
-	use_separate_shipping_address: false
-	use_shipping_address_for_main_region_and_country: false
-	field_class_and_id_prefix: ""
+  use_separate_shipping_address: false
+  use_shipping_address_for_main_region_and_country: false
+  field_class_and_id_prefix: ""
 
 
 
@@ -130,21 +138,20 @@ OrderAddress:
 
 
 EcommerceRole:
-	allow_customers_to_setup_accounts: true
-	automatic_membership: true
-	automatically_update_member_details: true
-	customer_group_code: 'shopcustomers'
-	customer_group_name: 'shop customers'
-	customer_permission_code: "SHOPCUSTOMER"
-	admin_group_code: 'shopadministrators'
-	admin_group_name: 'shop administrators'
-	admin_permission_code: "SHOPADMIN"
-	admin_role_title: "managing store"
-	admin_role_permission_codes: [
-		CMS_ACCESS_ProductsAndGroupsModelAdmin,
-		CMS_ACCESS_SalesAdmin,
-		CMS_ACCESS_StoreAdmin
-	]
+  allow_customers_to_setup_accounts: true
+  must_have_account_to_purchase: true
+  automatically_update_member_details: true
+  customer_group_code: 'shopcustomers'
+  customer_group_name: 'shop customers'
+  customer_permission_code: "SHOPCUSTOMER"
+  admin_group_code: 'shopadministrators'
+  admin_group_name: 'shop administrators'
+  admin_permission_code: "SHOPADMIN"
+  admin_role_title: "managing store"
+  admin_role_permission_codes:
+    - CMS_ACCESS_ProductsAndGroupsModelAdmin
+    - CMS_ACCESS_SalesAdmin
+    - CMS_ACCESS_StoreAdmin
 
 
 
@@ -152,68 +159,77 @@ EcommerceRole:
 ################### FORMS AND FIELDS #####################
 
 OrderModifierForm:
-	controller_class: "OrderModifierForm_Controller"
-	validator_class: "OrderModifierForm_Validator"
+  controller_class: "OrderModifierForm_Controller"
+  validator_class: "OrderModifierForm_Validator"
 
 OrderStatusLogForm:
-	controller_class: "OrderStatusLogForm_Controller"
-	validator_class: "OrderStatusLogForm_Validator"
+  controller_class: "OrderStatusLogForm_Controller"
+  validator_class: "OrderStatusLogForm_Validator"
 
 ExpiryDateField:
-	short_months: true
+  short_months: true
 
 
 
 ################### EMAIL ################################
 
 Order_Email:
-	send_all_emails_plain: false
-	css_file_location: "ecommerce/css/OrderReport.css"
-	copy_to_admin_for_all_emails: true
+  send_all_emails_plain: false
+  css_file_location: "ecommerce/css/OrderReport.css"
+  copy_to_admin_for_all_emails: true
 
 
 
 ################### MONEY #####################
 
 EcommerceCurrency:
-	exchange_provider_class: ExchangeRateProvider
+  exchange_provider_class: ExchangeRateProvider
+  default_currency: NZD
 
 EcommerceMoney:
-	default_format: NiceShortSymbol
+  default_format: NiceShortSymbol
+
+EcommercePayment:
+  supported_methods:
+    EcommercePayment_TestSuccess : Success
+    EcommercePayment_TestPending : Pending
+    EcommercePayment_TestFailure : Failure
+    PayPalExpressCheckoutPayment : "Paypal Credit Card"
+
 
 ################### CONTROL #####################
 
 CartPage_Controller:
-	session_code: "EcommerceCartPageMessage"
+  session_code: "EcommerceCartPageMessage"
 
 ShoppingCart:
-	session_code: "EcommerceShoppingCart"
-	cleanup_every_time: true
-	default_param_filters: []
-	response_class: "CartResponse"
+  session_code: "EcommerceShoppingCart"
+  cleanup_every_time: true
+  default_param_filters: []
+  response_class: "CartResponse"
 
 ShoppingCart_Controller:
-	url_segment: shoppingcart
+  url_segment: shoppingcart
 
 EcommercePaymentController:
-	url_segment: ecommercepayment
+  url_segment: ecommercepayment
 
 EcommerceConfigAjax:
-	definitions_class_name: EcommerceConfigAjaxDefinitions
-	cart_js_file_location: ecommerce/javascript/EcomCart.js
-	dialogue_js_file_location: ecommerce/thirdparty/colorbox/jquery.colorbox-min.js
+  definitions_class_name: EcommerceConfigAjaxDefinitions
+  cart_js_file_location: ecommerce/javascript/EcomCart.js
+  dialogue_js_file_location: ecommerce/thirdparty/jquery.colorbox-min.js
 
 ################### MODIFIERS #####################
 
 FlatTaxModifier:
-	name: Tax
-	rate: 0.15
-	exclusive: true
+  name: Tax
+  rate: 0.15
+  exclusive: true
 
 SimpleShippingModifier:
-	default_charge: 20
-	charges_by_country:
-		AU: 30
+  default_charge: 20
+  charges_by_country:
+    AU: 30
 
 
 
@@ -223,54 +239,43 @@ SimpleShippingModifier:
 ################### CMS #####################
 
 StoreAdmin:
-	managed_models: [
-		EcommerceDBConfig,
-		OrderStep,
-		EcommerceCountry,
-		OrderModifier_Descriptor,
-		EcommerceCurrency,
-		CheckoutPage_StepDescription
-	]
+  managed_models:
+    - EcommerceDBConfig
+    - OrderStep
+    - EcommerceCountry
+    - EcommerceCurrency
 
 ProductsAndGroupsModelAdmin:
-	managed_models: [
-		Product,
-		ProductGroup
-	]
+  managed_models:
+    - Product
+    - ProductGroup
 
 SalesAdmin:
-	managed_models: [
-		Order,
-		OrderStatusLog,
-		OrderItem,
-		OrderModifier,
-		OrderEmailRecord,
-		BillingAddress,
-		ShippingAddress,
-		Payment
-	]
+  managed_models:
+    - Order
+    - OrderStatusLog
+    - OrderItem
+    - OrderModifier
+    - OrderEmailRecord
+    - BillingAddress
+    - ShippingAddress
+    - Payment
 
 
 
 ################### TASKS #####################
 
-RecalculateTheNumberOfProductsSold:
-	number_sold_calculation_type: "SUM"
 
 CartCleanupTask:
-	clear_minutes_empty_carts: 60
-	clear_minutes: 10080
-	maximum_number_of_objects_deleted: 10
-	never_delete_if_linked_to_member: true
-	one_to_one_classes:
-		BillingAddressID: BillingAddress
-		ShippingAddressID: ShippingAddress
-	one_to_many_classes:
-		OrderAttribute: OrderAttribute
-		OrderStatusLog: OrderStatusLog
-		OrderEmailRecord: OrderEmailRecord
-	many_to_many_classes: []
-
-
-
-
+  clear_minutes_empty_carts: 60
+  clear_minutes: 10080
+  maximum_number_of_objects_deleted: 10
+  never_delete_if_linked_to_member: true
+  one_to_one_classes:
+    BillingAddressID: BillingAddress
+    ShippingAddressID: ShippingAddress
+  one_to_many_classes:
+    OrderAttribute: OrderAttribute
+    OrderStatusLog: OrderStatusLog
+    OrderEmailRecord: OrderEmailRecord
+  many_to_many_classes: []

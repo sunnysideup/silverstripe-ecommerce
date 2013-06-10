@@ -183,7 +183,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 * id that is used in templates and in the JSON return @see CartResponse
 	 * @return String
 	 **/
-	function QuantityFieldName() {return $this->TableID() . '_Quantity';}
+	function QuantityFieldName() {return $this->TableID() . '_Quantity_SetQuantityLink';}
 
 
 	/*___________________

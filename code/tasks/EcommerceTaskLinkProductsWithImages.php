@@ -17,7 +17,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 
 	protected $description = "
 		Finds product images (or other files) based on their name.
-		That is, any image name [InteralItemID]_[two digits].[png/gif/jpg] will automatically be linked to the product.
+		That is, any image name [InteralItemID]_[two digits].[png/gif/jpg/pdf/(etc)] will automatically be linked to the product.
 		For example SKUAAFF_1 or SKU_02.
 		All files ending in a number from 00 to 99 will be added (e.g. 02, 5 or 55)
 		Also SKUAAFF.jpg (without the standard ending with underscore and number) will be added to the product where InternalItemID equals SKUAAFF.
@@ -29,7 +29,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	 *
 	 * @var String
 	 */
-	protected $productManyManyField = "AdditionalImages";
+	protected $productManyManyField = "AdditionalFiles";
 
 	/**
 	 * Starting point for selecting products
@@ -51,28 +51,43 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	 *
 	 * @var Boolean
 	 */
-	protected $verbose = true;
+	public $verbose = true;
+
+	protected $productID = 0;
 
 	function run($request){
+		if(isset($_REQUEST['start']) && intval($_REQUEST['start']))
+			$this->start = intval($_REQUEST['start']);
 		if($this->productManyManyField) {
-			$products = DataObject::get("Product", "", "", "", "$this->start, $this->limit");
-			if($products) {
+			$products = Product::get()->limit($this->limit, $this->start);
+			if($this->productID) {
+				$products = $products->filter(array("ID" => $this->productID));
+			}
+			if($products->count()) {
 				foreach($products as $product) {
 					if($product->InternalItemID) {
 						if($product->hasMethod($this->productManyManyField)) {
-							$whereStringArray[] = $product->InteralItemID;
+							$whereStringArray[] = $product->InternalItemID;
 							for($i = 0; $i < 10; $i++) {
 								for($j = 0; $j < 10; $j++) {
-									$number = strval($i).$strval($j);
-									$whereStringArray[] = $product->InteralItemID."_".$number;
+									$number = strval($i).strval($j);
+									$whereStringArray[] = $product->InternalItemID."_".$number;
 								}
 							}
-							$images = DataObject::get("File", "\"Name\" IN ('".implode("', '", $whereStringArray)."')");
-							if($images) {
-								$imageMap = $images->map("ID", "ID");
+							$images = File::get()
+								->filter(array("Name:PartialMatch" => $whereStringArray));
+
+							if($images->count()) {
 								$method = $this->productManyManyField;
 								$collection = $product->$method();
-								$collection->addFromArray($imageMap);
+								foreach($images as $image) {
+									if($image instanceOf Image && $image->ClassName != "Product_Image") {
+										$image->ClassName = "Product_Image";
+										$image->write();
+									}
+									$collection->add($image);
+									if($this->verbose) { DB::alteration_message("Adding image ".$image->Name." to ".$product->Title, "created"); }
+								}
 							}
 							else {
 								if($this->verbose) {DB::alteration_message("No images where found for product with Title <i>".$product->Title."</i>: no images could be added.");}
@@ -86,10 +101,11 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 						if($this->verbose) {DB::alteration_message("No InternalItemID set for <i>".$product->Title."</i>: no images could be added.");}
 					}
 				}
-				$productCount = DB::query("SELECT COUNT(\"ID\") FROM \"Product\";")->val();
+				$productCount = Product::get()->count();
 
-				if($this->start < $productCount) {
-					Director::redirect($this->nextBatchLink());
+				if($this->limit < $productCount) {
+					$controller = Controller::curr();
+					$controller->redirect($this->nextBatchLink());
 				}
 			}
 		}
@@ -99,7 +115,11 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	}
 
 	protected function nextBatchLink(){
-		return "error-not-completed";
+		return "dev/ecommerce/ecommercetasklinkproductwithimages/?start=". ($this->start + $this->limit);
+	}
+
+	public function setProductID($id) {
+		$this->productID = $id;
 	}
 
 }

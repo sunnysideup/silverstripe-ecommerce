@@ -32,7 +32,7 @@ class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 		$date = new Date();

@@ -32,7 +32,7 @@ interface BuyableModel {
 
 	/**
 	 * Returns Buybales in the same group
-	 * @return Null | DataObjectSet
+	 * @return DataList (Products)
 	 **/
 	function Siblings();
 
@@ -139,8 +139,6 @@ interface BuyableModel {
 
 	//LINKS
 
-	function Link($action = null);
-
 	/**
 	 * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
 	 * @return String
@@ -235,18 +233,17 @@ interface BuyableModel {
 	/**
 	 * Products have a standard price, but for specific situations they have a calculated price.
 	 * The Price can be changed for specific member discounts, a different currency, etc...
+	 * @todo: return as Money
 	 * @return Currency (casted variable)
 	 */
 	function CalculatedPrice();
 
 	/**
-	 * Products have a standard price, but for specific situations they have a calculated price.
-	 * The Price can be changed for specific member discounts, a different currency, etc...
+	 * How do we display the price?
 	 * @return Money
 	 */
 	function CalculatedPriceAsMoney();
-
-
+	function getCalculatedPriceAsMoney();
 
 	//CRUD SETTINGS
 
@@ -254,7 +251,7 @@ interface BuyableModel {
 	 * Is the product for sale?
 	 * @return Boolean
 	 */
-	function canPurchase($member = null);
+	function canPurchase(Member $member = null);
 
 
 

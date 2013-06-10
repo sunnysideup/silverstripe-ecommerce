@@ -37,6 +37,11 @@ class SimpleShippingModifier extends OrderModifier {
 	public static $plural_name = "Simple Shipping Charges";
 		function i18n_plural_name() { return _t("SimpleShippingModifier.SIMPLESHIPPINGMODIFIER", "Simple Shipping Charges");}
 
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "Adds shipping costs to the order.";
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
 

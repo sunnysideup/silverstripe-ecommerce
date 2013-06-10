@@ -1,4 +1,4 @@
-<table id="InformationTable" class="infotable" cellspacing="0" cellpadding="0" summary="<% _t("Order.TABLESUMMARYNOPRICES","The contents of your order are displayed in this list.") %>">
+<table id="InformationTable" class="infotable readonly">
 	<thead>
 		<tr>
 			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
@@ -7,20 +7,20 @@
 	</thead>
 	<tfoot>
 		<tr class="cartMessage">
-			<td colspan="2" scope="row" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
+			<td colspan="2" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
 		</tr>
 		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
-			<td colspan="2" scope="row" class="center">
+			<td colspan="2" class="center">
 				<% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
 			</td>
 		</tr>
 	</tfoot>
 	<tbody>
 <% if Items %>
-	<% control Items %>
+	<% loop Items %>
 		<% if ShowInTable %>
 		<tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
-			<td class="product title" scope="row">
+			<td class="product title">
 				<div class="itemTitleAndSubTitle">
 					<span id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 					<div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div>
@@ -31,7 +31,7 @@
 			</td>
 		</tr>
 		<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 <% end_if %>
 	</tbody>
 </table>

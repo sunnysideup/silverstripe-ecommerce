@@ -32,15 +32,15 @@ class AddCustomersToCustomerGroups extends BuildTask {
 					$alreadyAdded[$combo["MemberID"]] = $combo["MemberID"];
 				}
 			}
-			$unlistedMembers = DataObject::get(
-				"Member",
-				$where = "\"Member\".\"ID\" NOT IN (".implode(",",$alreadyAdded).")",
-				$sort = "",
-				$join = "INNER JOIN \"Order\" ON \"Order\".\"MemberID\" = \"Member\".\"ID\""
-			);
-
+			$unlistedMembers = Member::get()
+				->exclude(
+					array(
+						"ID" => $alreadyAdded
+					)
+				)
+				->innerJoin("Order", "\"Order\".\"MemberID\" = \"Member\".\"ID\"");
 			//add combos
-			if($unlistedMembers) {
+			if($unlistedMembers->count()) {
 				$existingMembers = $customerGroup->Members();
 				foreach($unlistedMembers as $member) {
 					$existingMembers->add($member);

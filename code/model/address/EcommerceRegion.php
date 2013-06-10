@@ -95,25 +95,32 @@ class EcommerceRegion extends DataObject {
 	 */
 	public static $summary_fields = array(
 		"Name" => "Name",
-		"Country.Title"
+		"Country.Title" => "Country"
 	);
 
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A region within a country.  This can be a state or a province or the equivalent.";
 
 	/**
 	 * do we use regions at all in this ecommerce application?
 	 * @return Bool
 	 **/
 	public static function show() {
-		return DataObject::get_one("EcommerceRegion") ? true : false;
+		return EcommerceRegion::get()->First() ? true : false;
 	}
 
 	/**
-	 * Standard SS method
-	 * @return FieldSet
+	 * Standard SS FieldList
+	 * @return FieldList
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		//$fields->replaceField("CountryID", new DropdownField("CountryID", EcommerceCountry::i18n_singular_name(), "EcommerceCountry"));
+		$title = singleton("EcommerceRegion")->i18n_singular_name();
+		$fields->removeByName("CountryID");
 		return $fields;
 	}
 
@@ -136,6 +143,7 @@ class EcommerceRegion extends DataObject {
 	 * @param String $code - e.g. NZ, NSW, or CO
 	 * @return Boolean
 	 */
+
 	public static function regionid_allowed($regionID) {
 		return array_key_exists($regionID, self::list_of_allowed_entries_for_dropdown());
 	}
@@ -162,14 +170,15 @@ class EcommerceRegion extends DataObject {
 	 **/
 	protected static function get_default_array() {
 		$defaultArray = array();
+		$regions = EcommerceRegion::get()
+			->Exclude(array("DoNotAllowSales" => 1));
 		$defaultRegion = EcommerceCountry::get_country_id();
 		if($defaultRegion) {
-			$defaultRegionWhere = "AND \"CountryID\"  = '".$defaultRegion."'";
+			$regions = $regions->Filter(array("CountryID" => EcommerceCountry::get_country_id()));
 		}
-		$regions = DataObject::get("EcommerceRegion", "\"DoNotAllowSales\" <> 1 ".$defaultRegionWhere);
-		if($regions) {
+		if($regions && $regions->count()) {
 			foreach($regions as $region) {
-				$defaultArray[$region->ID] = $region->Name;
+				$defaultArray[$region->ID] = $region->getName();
 			}
 		}
 		return $defaultArray;
@@ -210,7 +219,7 @@ class EcommerceRegion extends DataObject {
 	 * @var Array of regions codes, e.g. ("NSW", "WA", "VIC");
 	**/
 	protected static $for_current_order_only_show_regions = array();
-		static function set_for_current_order_only_show_regions($a) {
+		static function set_for_current_order_only_show_regions(Array $a) {
 			if(count(self::$for_current_order_only_show_regions)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
 				self::$for_current_order_only_show_regions = array_intersect($a, self::$for_current_order_only_show_regions);
@@ -223,8 +232,12 @@ class EcommerceRegion extends DataObject {
 		//so that it can be used by a method that is shared between EcommerceCountry and EcommerceRegion
 		static function get_for_current_order_only_show_regions() {return self::$for_current_order_only_show_regions;}
 
+	/**
+	 *
+	 * @var Array
+	 */
 	protected static $for_current_order_do_not_show_regions = array();
-		static function set_for_current_order_do_not_show_regions($a) {
+		static function set_for_current_order_do_not_show_regions(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_regions = array_merge($a, self::$for_current_order_do_not_show_regions);
 		}
@@ -260,7 +273,6 @@ class EcommerceRegion extends DataObject {
 	public static function get_region() {
 		return self::get_region_id();
 	}
-
 
 }
 

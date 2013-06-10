@@ -24,7 +24,7 @@ class OptionalTreeDropdownField extends TreeDropdownField {
 	 * Helper function to return the header (rather than defining same line twice).
 	 */
 	function preTree() {
-			return '<ul class="tree"><li id="" class="l"><a>' . _t('OptionalTreeDropdownField.NONE', "(None)", PR_MEDIUM, 'Non selected value of a dropdown') . '</a>';
+			return '<ul class="tree"><li id="" class="l"><a>' . _t('OptionalTreeDropdownField.NONE', "(None)") . '</a>';
 	}
 
 	public function getField($field) {

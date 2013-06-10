@@ -61,7 +61,7 @@ class EcomQuantityField extends NumericField {
 	 **/
 	function __construct($object, $parameters = null){
 		Requirements::javascript("ecommerce/javascript/EcomQuantityField.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		if($object instanceof DataObject && $object instanceof BuyableModel){
+		if($object instanceof BuyableModel){
 			$this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object,$parameters);
 			 //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
 			if(!$this->orderItem) {
@@ -78,38 +78,48 @@ class EcomQuantityField extends NumericField {
 		$this->parameters = $parameters;
 	}
 
-	function setClasses($newclasses, $overwrite = false){
+	/**
+	 * set classes for field.  you can add or "overwrite"
+	 * @param Array $newClasses
+	 * @param Boolean $overwrite
+	 */
+	function setClasses(Array $newClasses, $overwrite = false){
 		if($overwrite) {
-			$this->classes = array_merge($this->classes,$newclasses);
+			$this->classes = array_merge($this->classes,$newClasses);
 		}
 		else {
 			$this->classes = $newclasses;
 		}
 	}
 
+	/**
+	 *
+	 * @param String
+	 */
 	function setTemplate($template){
 		$this->template = $template;
 	}
 
 	/**
 	 * alias of OrderItem
-	 *@return OrderItem
+	 * @return OrderItem
 	 **/
 	function Item(){
 		return $this->OrderItem();
 	}
 
 	/**
-	 *@return OrderItem
+	 * @return OrderItem
 	 **/
 	function OrderItem(){
 		return $this->orderItem;
 	}
 
 	/**
-	 *@return String (HTML)
+	 * @param properties
+	 * @return String (HTML)
 	 **/
-	function Field() {
+	public function Field($properties = array()) {
 		$name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
 		if(!isset(self::$tabindex[$name])) {
 			self::$tabindex[$name] = count(self::$tabindex) + 1;
@@ -148,21 +158,21 @@ class EcomQuantityField extends NumericField {
 	}
 
 	/**
-	 *@return String (URLSegment)
+	 * @return String (URLSegment)
 	 **/
 	function IncrementLink(){
 		return ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
 	}
 
 	/**
-	 *@return String (URLSegment)
+	 * @return String (URLSegment)
 	 **/
 	function DecrementLink(){
 		return ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
 	}
 
 	/**
-	 *@return HTML
+	 * @return String (HTML)
 	 **/
 	function forTemplate(){
 		return $this->renderWith($this->template);
@@ -172,7 +182,6 @@ class EcomQuantityField extends NumericField {
 	 *
 	 * @return String
 	 */
-
 	protected function getQuantityLink(){
 		return ShoppingCart_Controller::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
 	}

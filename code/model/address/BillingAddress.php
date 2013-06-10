@@ -83,11 +83,6 @@ class BillingAddress extends OrderAddress {
 	 * @return Array
 	 */
 	static $indexes = array(
-		array(
-			'name' => 'SearchFields',
-			'type' => 'fulltext',
-			'value' => 'FirstName, Surname, Address, Address2, City, PostalCode, Email'
-		),
 		"Obsolete" => true,
 		"OrderID" => true
 	);
@@ -130,6 +125,14 @@ class BillingAddress extends OrderAddress {
 
 	/**
 	 * standard SS variable
+	 * @return Array
+	 */
+	public static $field_labels = array(
+		"Order.Title" => "Order"
+	);
+
+	/**
+	 * standard SS variable
 	 * @return String
 	 */
 	public static $singular_name = "Billing Address";
@@ -143,6 +146,12 @@ class BillingAddress extends OrderAddress {
 		function i18n_plural_name() { return _t("OrderAddress.BILLINGADDRESSES", "Billing Addresses");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "The details of the person buying the order.";
+
+	/**
 	 * method for casted variable
 	 *@return String
 	 **/
@@ -153,7 +162,7 @@ class BillingAddress extends OrderAddress {
 
 	/**
 	 *
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -165,33 +174,25 @@ class BillingAddress extends OrderAddress {
 	}
 
 	/**
-	 *@return Fieldset
+	 * @param Member $member
+	 * @return FieldList
 	 **/
-	public function getFields($member = null) {
+	public function getFields(Member $member = null) {
 		$fields = parent::getEcommerceFields();
 		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Details'), 3));
 		if($member) {
 			if($member->exists()) {
 				$this->FillWithLastAddressFromMember($member, true);
-				$addresses = $this->previousAddressesFromMember($member);
-				if($addresses) {
-					if($addresses->count() > 1) {
-						$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
-					}
+				$addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+				//we want MORE than one here not just one.
+				if($addresses->count() > 1) {
+					$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
 				}
 			}
-			$billingFields = new CompositeField(
-				new EmailField('Email', _t('OrderAddress.EMAIL','Email')),
-				new TextField('FirstName', _t('OrderAddress.FIRSTNAME','First Name')),
-				new TextField('Surname', _t('OrderAddress.SURNAME','Surname'))
-			);
+			$billingFields = new CompositeField();
 		}
 		else {
-			$billingFields = new CompositeField(
-				new EmailField('Email', _t('OrderAddress.EMAIL','Email')),
-				new TextField('FirstName', _t('OrderAddress.FIRSTNAME','First Name')),
-				new TextField('Surname', _t('OrderAddress.SURNAME','Surname'))
-			);
+			$billingFields = new CompositeField();
 		}
 		//$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));
@@ -232,10 +233,10 @@ class BillingAddress extends OrderAddress {
 	 * standard SS method
 	 * sets the country to the best known country {@link EcommerceCountry}
 	 **/
-	function populateDefaults() {
-		parent::populateDefaults();
-		$this->Country = EcommerceCountry::get_country();
-	}
+	//function populateDefaults() {
+		//parent::populateDefaults();
+		//$this->Country = EcommerceCountry::get_country();
+	//}
 
 
 

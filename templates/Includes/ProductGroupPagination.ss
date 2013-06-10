@@ -6,9 +6,9 @@
 			<a class="prev" href="$Products.PrevLink" title="<% _t('ProductGroup.SHOWPREVIOUSPAGE','View the previous page') %>"><% _t('ProductGroup.PREVIOUS','previous') %></a>
 	<% end_if %>
 		<span>
-	<% control Products.PaginationSummary(4) %>
-		<% if CurrentBool %>$PageNum<% else %><% if Link %><a href="$Link" title="<% sprintf(_t("ProductGroup.GOTOPAGE","View page number %s"),$PageNum) %>">$PageNum</a><% else %>&hellip;<% end_if %><% end_if %>
-	<% end_control %>
+	<% loop Products.PaginationSummary(4) %>
+		<% if CurrentBool %>$PageNum<% else %><% if Link %><a href="$Link" title="<%t ProductGroup.GOTOPAGE 'View page number {number}.' number=$PageNum %>">$PageNum</a><% else %>&hellip;<% end_if %><% end_if %>
+	<% end_loop %>
 		</span>
 	<% if Products.NotLastPage %>
 		<a class="next" href="$Products.NextLink" title="<% _t('ProductGroup.SHOWNEXTPAGE','View the next page') %>"><% _t('ProductGroup.NEXT','next') %></a>

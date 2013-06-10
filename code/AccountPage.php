@@ -13,7 +13,6 @@
 
 class AccountPage extends Page {
 
-
 	/**
 	 * standard SS variable
 	 *@var Array
@@ -40,7 +39,7 @@ class AccountPage extends Page {
 	protected $calculatedOutstanding = 0;
 
 	/**
-	 *@var Null | DataObjectSet
+	 *@var DataList
 	 */
 	protected $pastOrders = null;
 
@@ -51,26 +50,51 @@ class AccountPage extends Page {
 	public static $icon = 'ecommerce/images/icons/AccountPage';
 
 	/**
-	 * standard SS method
+	 * Standard SS function, we only allow for one AccountPage to exist
+	 * but we do allow for extensions to exist at the same time.
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return !DataObject::get_one("AccountPage", "\"ClassName\" = 'AccountPage'");
+		return AccountPage::get()->filter(array("ClassName" => "AccountPage"))->Count() ? false : true;
 	}
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $singular_name = "Account Page";
+		function i18n_singular_name() { return _t("AccountPage.SINGULARNAME", "Account Page");}
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $plural_name = "Account Pages";
+		function i18n_plural_name() { return _t("AccountPage.PLURALNAME", "Account Pages");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A page where the customer can view all their orders and update their details.";
 
 	/**
 	 * Returns the link to the AccountPage on this site
 	 * @return String (URLSegment)
 	 */
 	public static function find_link() {
-		if($page = DataObject::get_one('AccountPage', "\"ClassName\" = 'AccountPage'")) {
+		$page = AccountPage::get()
+			->filter(array("ClassName" => "AccountPage"))
+			->First();
+		if($page) {
 			return $page->Link();
 		}
 	}
 
 	/**
 	 * Returns a list of all previous orders for the member / account
-	 * @return Null | DataObjectSet
+	 * @return DataList
 	 */
 	function PastOrders(){
 		$this->calculatePastOrders();
@@ -110,7 +134,7 @@ class AccountPage extends Page {
 
 	/**
 	 * retrieves previous orders and adds totals to it...
-	 * return NULL | DataObjectSet
+	 * return DataList
 	 **/
 	protected function calculatePastOrders(){
 		if(!$this->pastOrders) {
@@ -120,7 +144,7 @@ class AccountPage extends Page {
 			$this->calculatedOutstanding = 0;
 			$member = Member::currentUser();
 			$canDelete = false;
-			if($this->pastOrders) {
+			if($this->pastOrders->count()) {
 				foreach($this->pastOrders as $order) {
 					$this->calculatedTotal += $order->Total();
 					$this->calculatedPaid += $order->TotalPaid();
@@ -133,17 +157,22 @@ class AccountPage extends Page {
 
 	/**
 	 *
-	 * @return DataObjectSet | NULL
+	 * @return DataList (Orders)
 	 */
 	protected function pastOrdersSelection(){
-		return DataObject::get(
-			"Order",
-			"\"Order\".\"MemberID\" = ".Member::CurrentMember()->ID."
-				AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)
-				AND \"OrderStep\".\"ShowAsUncompletedOrder\" = 0 ",
-			"\"Created\" DESC",
-			"INNER JOIN \"OrderStep\" ON \"Order\".\"StatusID\" = \"OrderStep\".\"ID\" "
-		);
+		$memberID = intval(Member::currentUserID());
+		if(!$memberID) {
+			//set t
+			$memberID = RAND(0, 1000000) * -1;
+		}
+		if($memberID) {
+			return Order::get()
+				->where(
+					"\"Order\".\"MemberID\" = ".$memberID."
+					AND (\"CancelledByID\" = 0 OR \"CancelledByID\" IS NULL)")
+				->innerJoin("OrderStep", "\"Order\".\"StatusID\" = \"OrderStep\".\"ID\"");
+		}
+		return 0;
 	}
 
 	/**
@@ -168,7 +197,7 @@ class AccountPage_Controller extends Page_Controller {
 	 **/
 	function init() {
 		parent::init();
-		if(!$this->AccountMember()) {
+		if(!$this->AccountMember() && 1 == 2) {
 			$messages = array(
 				'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
 				'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.')
@@ -176,7 +205,7 @@ class AccountPage_Controller extends Page_Controller {
 			Security::permissionFailure($this, $messages);
 			return false;
 		}
-		Requirements::themedCSS("AccountPage");
+		Requirements::themedCSS("AccountPage", 'ecommerce');
 	}
 
 	/**
@@ -194,7 +223,7 @@ class AccountPage_Controller extends Page_Controller {
 	 * @return NULL | Member
 	 */
 	function AccountMember(){
-		return Member::CurrentMember();
+		return Member::currentUser();
 	}
 
 }

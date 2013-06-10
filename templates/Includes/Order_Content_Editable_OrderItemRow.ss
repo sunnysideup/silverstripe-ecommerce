@@ -1,9 +1,9 @@
 <tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
-	<td class="product title" scope="row">
-		<% if Buyable %><% control Buyable %><% include ProductGroupItemImageThumb %><% end_control %><% end_if %>
+	<td class="product title">
+		<% if Buyable %><% loop Buyable %><% include ProductGroupItemImageThumb %><% end_loop %><% end_if %>
 		<div class="itemTitleAndSubTitle">
 			<% if Link %>
-				<a id="$AJAXDefinitions.TableTitleID" href="$Link" title="<% sprintf(_t("Order.READMORE","Click here to read more on &quot;%s&quot;"),$TableTitle) %>">$TableTitle</a>
+				<a id="$AJAXDefinitions.TableTitleID" href="$Link" title="<%t Order.READMORE 'Click here to read more on {name}' name=$TableTitle %>">$TableTitle</a>
 			<% else %>
 				<span id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
 			<% end_if %>
@@ -18,7 +18,7 @@
 	<td class="right remove">
 		<% if RemoveAllLink %>
 		<strong>
-			<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveAllLink" title="<% sprintf(_t("Order.REMOVEALL","Remove &quot;%s&quot; from your cart"),$TableTitle) %>">
+			<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveAllLink" title="<%t Order.REMOVEALL 'Remove &quot;{name}&quot; from your cart' name=$TableTitle %>">
 				<img src="ecommerce/images/remove.gif" alt="x"/>
 			</a>
 		</strong>

@@ -25,7 +25,7 @@ class SetDefaultProductGroupValues extends BuildTask {
 	);
 
 	function run($request) {
-		$productGroup = DataObject::get_one("ProductGroup");
+		$productGroup = ProductGroup::get()->First();
 		if($productGroup) {
 			foreach($this->fieldsToCheck as $method => $fieldName) {
 				$acceptableValuesArray = array_flip($productGroup->$method());
@@ -38,8 +38,9 @@ class SetDefaultProductGroupValues extends BuildTask {
 	}
 
 	protected function checkField($fieldName, $acceptableValuesArray, $resetValue) {
-		$faultyProductGroups = DataObject::get("ProductGroup", "\"$fieldName\" NOT IN ('".implode("', '", $acceptableValuesArray)."')");
-		if($faultyProductGroups) {
+		$faultyProductGroups = ProductGroup::get()
+			->exclude(array($fieldName =>  $acceptableValuesArray));
+		if($faultyProductGroups->count()) {
 			foreach($faultyProductGroups as $faultyProductGroup) {
 				$faultyProductGroup->$fieldName = $resetValue;
 				$faultyProductGroup->writeToStage('Stage');

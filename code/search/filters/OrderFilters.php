@@ -32,8 +32,8 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		$date = new Date();
 		$date->setValue($value);
@@ -59,7 +59,8 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '';
+		$val = $this->getValue();
+		return $val == null || $val === '' || $val === 0 || $val === array();
 	}
 
 }
@@ -80,11 +81,11 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		$billingAddressesIDs = array(-1 => -1);
-		$billingAddresses = DataObject::get("BillingAddress", "
+		$billingAddresses = BillingAddress::get()->where("
 			\"FirstName\" LIKE '%$value%' OR
 			\"Surname\" LIKE '%$value%' OR
 			\"Email\" LIKE '%$value%' OR
@@ -96,12 +97,13 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"MobilePhone\" LIKE '%$value%'
 
 		");
-		if($billingAddresses) {
-			$billingAddressesIDs = $billingAddresses->map("ID", "ID");
+
+		if($billingAddresses->count()) {
+			$billingAddressesIDs = $billingAddresses->map("ID", "ID")->toArray();
 		}
 		$where[] = "\"BillingAddressID\" IN (".implode(",", $billingAddressesIDs).")";
 		$shippingAddressesIDs = array(-1 => -1);
-		$shippingAddresses = DataObject::get("ShippingAddress", "
+		$shippingAddresses = ShippingAddress::get()->where("
 			\"ShippingFirstName\" LIKE '%$value%' OR
 			\"ShippingSurname\" LIKE '%$value%' OR
 			\"ShippingAddress\" LIKE '%$value%' OR
@@ -112,21 +114,21 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"ShippingMobilePhone\" LIKE '%$value%'
 
 		");
-		if($shippingAddresses) {
-			$shippingAddressesIDs = $shippingAddresses->map("ID", "ID");
+		if($shippingAddresses->count()) {
+			$shippingAddressesIDs = $shippingAddresses->map("ID", "ID")->toArray();
 		}
 		$where[] = "\"ShippingAddressID\" IN (".implode(",", $shippingAddressesIDs).")";
 		$memberIDs = array(-1 => -1);
-		$members = DataObject::get("Member", "
+		$members = Member::get()->where("
 			\"FirstName\" LIKE '%$value%' OR
 			\"Surname\" LIKE '%$value%' OR
 			\"Email\" LIKE '%$value%'
 		");
-		if($members) {
-			$memberIDs = $members->map("ID", "ID");
+		if($members->count()) {
+			$memberIDs = $members->map("ID", "ID")->toArray();
 		}
 		$where[] = "\"MemberID\" IN (".implode(",", $memberIDs).")";
-		$query->where("(".implode(") OR (", $where).")");
+		$query = $query->where("(".implode(") OR (", $where).")");
 		return $query;
 
 	}
@@ -136,7 +138,8 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '';
+		$val = $this->getValue();
+		return $val == null || $val === '' || $val === 0 || $val === array();
 	}
 
 }
@@ -150,21 +153,17 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
  * @sub-package: search
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-
-class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
+class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter {
 
 	/**
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$values = $this->getValue();
-		if(count($values) && is_array($values)) {
-			foreach($values as $value) {
-				$matches[] = "\"StatusID\" = ".intval($value);
-			}
-			$query->where(implode(" OR ", $matches));
+		if(is_array($values) && count($values)) {
+			$query->where("\"StatusID\" IN (".implode(", ", $values).")");
 		}
 		return $query;
 	}
@@ -174,12 +173,8 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		if(is_array($this->getValue())) {
-			return count($this->getValue()) == 0;
-		}
-		else {
-			return $this->getValue() == null || $this->getValue() == '';
-		}
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val === 0 || $val === array();
 	}
 }
 
@@ -193,14 +188,14 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends SearchFilter {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderFilters_HasBeenCancelled extends SearchFilter {
+class OrderFilters_HasBeenCancelled extends ExactMatchFilter {
 
 	/**
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		if($value == 1) {
 			$query->where("\"CancelledByID\" IS NOT NULL AND \"CancelledByID\" > 0");
@@ -213,7 +208,8 @@ class OrderFilters_HasBeenCancelled extends SearchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val === 0 || $val === array();
 	}
 }
 
@@ -227,14 +223,14 @@ class OrderFilters_HasBeenCancelled extends SearchFilter {
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderFilters_MustHaveAtLeastOnePayment extends SearchFilter {
+class OrderFilters_MustHaveAtLeastOnePayment extends ExactMatchFilter {
 
 	/**
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		if($value && in_array($value, array(0,1))) {
 			$query->innerJoin(
@@ -251,6 +247,7 @@ class OrderFilters_MustHaveAtLeastOnePayment extends SearchFilter {
 	 *@return Boolean
 	 **/
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '' || $this->getValue() == 0;
+		$val = $this->getValue();
+		return $val == null || $val == '' || $val === 0 || $val === array();
 	}
 }

@@ -52,7 +52,8 @@ class Product extends Page implements BuyableModel {
 		'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
 		'NumberSold' => 'Int', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
 		'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
-		'FullName' => 'Varchar(255)' //Name for look-up lists
+		'FullName' => 'Varchar(255)', //Name for look-up lists
+		'ShortDescription' => 'Varchar(255)' //For use in lists.
 	);
 
 	/**
@@ -145,6 +146,12 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A product that is for sale in the shop.";
+
+	/**
+	 * Standard SS variable.
 	 */
 	public static $default_parent = 'ProductGroup';
 
@@ -168,67 +175,46 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	function getCMSFields() {
-		//prevent calling updateCMSFields extend function too early
-		$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
-		$this->disableCMSFieldsExtensions();
+		//prevent calling updateSettingsFields extend function too early
+		//$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
+		//$this->disableCMSFieldsExtensions();
 		$fields = parent::getCMSFields();
-		if($siteTreeFieldExtensions) {
-			$this->enableCMSFieldsExtensions();
-		}
-		$fields->replaceField('Root.Content.Main', new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description'), 3));
-		//NOTE: IMAGE FIELD WAS GIVING ERRORS IN ModelAdmin
-		//$fields->addFieldToTab('Root.Content.Images', new TreeDropdownField('ImageID', _t('Product.IMAGE', 'Product Image'), "Image"));
-		$fields->addFieldToTab('Root.Content.Images', new ImageField('Image', _t('Product.IMAGE', 'Product Image')));
-		$fields->addFieldToTab('Root.Content.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
-		$fields->addFieldToTab('Root.Content.Details',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
-		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
-		$fields->addFieldToTab('Root.Content.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
-		$fields->addFieldToTab('Root.Content.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
-		$fields->addFieldToTab('Root.Content.Details',new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
+		//if($siteTreeFieldExtensions) {
+			//$this->enableCMSFieldsExtensions();
+		//}
+		$fields->replaceField('Root.Main', $htmlEditorField = new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description')));
+		$htmlEditorField->setRows(3);
+		$fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), "Content");
+		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Image')));
+		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
+		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
+		$fields->addFieldToTab('Root.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
+		$fields->addFieldToTab('Root.Details',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
+		$fields->addFieldToTab('Root.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
+		$fields->addFieldToTab('Root.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
+		$fields->addFieldToTab('Root.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
+		$fields->addFieldToTab('Root.Details',new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
 		if($this->EcomConfig()->ProductsHaveWeight) {
-			$fields->addFieldToTab('Root.Content.Details',new NumericField('Weight', _t('Product.WEIGHT', 'Weight')));
+			$fields->addFieldToTab('Root.Details',new NumericField('Weight', _t('Product.WEIGHT', 'Weight')));
 		}
 		if($this->EcomConfig()->ProductsHaveModelNames) {
-			$fields->addFieldToTab('Root.Content.Details',new TextField('Model', _t('Product.MODEL', 'Model')));
+			$fields->addFieldToTab('Root.Details',new TextField('Model', _t('Product.MODEL', 'Model')));
 		}
 		if($this->EcomConfig()->ProductsHaveQuantifiers) {
-			$fields->addFieldToTab('Root.Content.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
+			$fields->addFieldToTab('Root.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
 		}
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
 			$fields->addFieldsToTab(
-				'Root.Content.AlsoShowHere',
+				'Root.AlsoShowHere',
 				array(
 					new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
-					$this->getProductGroupsTable()
+					$this->getProductGroupsTableField()
 				)
 			);
 		}
-		$orderTableField = new ComplexTableField(
-			$this,
-			'OrderItems',
-			'OrderItem',
-			array(
-				'Order.ID' => '#',
-				'Order.Created' => 'When',
-				'Quantity' => 'Quantity'
-			),
-			new FieldSet(),
-			"\"BuyableID\" = '".$this->ID."' AND \"BuyableClassName\" = '".$this->ClassName."'",
-			"\"Created\" DESC"
-		);
-		$orderTableField->setPermissions(array("show"));
-		$orderTableField->setShowPagination(true);
-		$orderTableField->setRelationAutoSetting(true);
-		/*
-		$orderTableField->addSummary(
-			_t("Product.TOTALCOUNT", "Total Count"),
-			array("TotalCount" => array("sum","Quantity->Nice"))
-		);
-		*/
-		$fields->addFieldToTab('Root.Content.Orders', $orderTableField);
-		if($siteTreeFieldExtensions) {
-			$this->extend('updateCMSFields', $fields);
-		}
+		//if($siteTreeFieldExtensions) {
+			//$this->extend('updateSettingsFields', $fields);
+		//}
 		return $fields;
 	}
 
@@ -236,7 +222,13 @@ class Product extends Page implements BuyableModel {
 	 * Used in getCSMFields
 	 * @return TreeMultiselectField
 	 **/
-	protected function getProductGroupsTable() {
+	protected function getProductGroupsTableField() {
+
+		$task = new EcommerceTaskLinkProductWithImages();
+		$task->verbose = false;
+		$task->setProductID($this->ID);
+		$task->run(null);
+
 		$field = new TreeMultiselectField(
 			$name = "ProductGroups",
 			$title = _t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
@@ -249,6 +241,48 @@ class Product extends Page implements BuyableModel {
 			$field->setFilterFunction($filter);
 		}
 		return $field;
+	}
+
+	/**
+	 * Used in getCSMFields
+	 * @return GridField
+	 **/
+	protected function getAdditionalImagesMessage() {
+		$msg = "";
+		if($this->InternalItemID) {
+			$msg .= "<p>To upload additional images and files, please go to the <a href=\"/admin/assets\">Files section</a>, and upload them there. Files need to be named in a standard fashion; ";
+			$msg .= "An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image: ";
+			$msg .= "<strong>".$this->InternalItemID."_08.jpg</strong>.";
+		}
+		else {
+			$msg .= "<p>For additional images and files, you must first specify a product code!</p>";
+		}
+		$field = new LiteralField("ImageFileNote", $msg);
+		return $field;
+
+	}
+
+	/**
+	 * Used in getCSMFields
+	 * @return GridField
+	 **/
+	protected function getAdditionalImagesField() {
+		$gridField = new GridField(
+			'AdditionalFiles',
+			_t('Product.ADDITIONALIMAGES', 'Additional images'),
+			$this->AdditionalFiles(),
+			GridFieldConfig_RelationEditor::create()
+		);
+		$config = $gridField->getConfig();
+		$components = $gridField->getComponents();
+		$config->removeComponentsByType("GridFieldAddNewButton");
+		$config->removeComponentsByType("GridFieldAddExistingAutocompleter");
+		$gridField->setConfig($config);
+		//var_dump($components->items);
+
+		$gridField->setModelClass("Product_Image");
+		return $gridField;
+
 	}
 
 	/**
@@ -296,8 +330,8 @@ class Product extends Page implements BuyableModel {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		if($this->ImageID) {
-			if($productImage = DataObject::get_by_id("Product_Image", $this->ImageID)) {
-				if($normalImage = DataObject::get_by_id("Image", $this->ImageID)) {
+			if($productImage = Product_Image::get()->byID($this->ImageID)) {
+				if($normalImage = Image::get()->byID($this->ImageID)) {
 					$normalImage->ClassName = "Product_Image";
 					$normalImage->write();
 				}
@@ -323,7 +357,7 @@ class Product extends Page implements BuyableModel {
 		$obj = $this;
 		$parentTitleArray = array();
 		while($obj && $obj->ParentID) {
-			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
+			$obj = SiteTree::get()->byID(intval($obj->ParentID)-0);
 			if($obj) {
 				$parentSortArray[] = sprintf("%03d", $obj->Sort);
 				if($obj instanceOf ProductGroup) {
@@ -332,7 +366,10 @@ class Product extends Page implements BuyableModel {
 			}
 		}
 		$reverseArray = array_reverse($parentSortArray);
-		$parentTitle = " (".implode(" / ", $parentTitleArray).")";
+		$parentTitle = "";
+		if(count($parentTitleArray)) {
+			$parentTitle = " ("._t("product.IN", "in")." ".implode(" / ", $parentTitleArray).")";
+		}
 		//setting fields with new values!
 		$this->FullName = $fullName.$parentTitle;
 		$this->FullSiteTreeSort = implode("", array_map($this->numberPad, $reverseArray));
@@ -348,7 +385,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Returns all the parent groups for the product.
 	 * This function has been added her to contrast it with MainParentGroup (see below).
-	  *@return DataObjectSet(ProductGroup) or NULL
+	  *@return DataList (ProductGroups)
 	 **/
 	function AllParentGroups() {
 		return $this->ProductGroups();
@@ -360,20 +397,25 @@ class Product extends Page implements BuyableModel {
 	 * @return DataObject(ProductGroup) or NULL
 	 **/
 	function MainParentGroup() {
-		return DataObject::get_by_id("ProductGroup", $this->ParentID);
+		return ProductGroup::get()->byID($this->ParentID);
 	}
 
 	/**
 	 * Returns products in the same group
-	 * @return DataObjectSet
+	 * @return DataList (Products)
 	 **/
-	function Siblings() {
+	public function Siblings() {
 		if($this->ParentID) {
 			$extension = "";
 			if(Versioned::current_stage() == "Live") {
 				$extension = "_Live";
 			}
-			return DataObject::get("Product", "\"ShowInMenus\" = 1 AND \"ParentID\" = ".$this->ParentID." AND \"SiteTree{$extension}\".\"ID\" <> ".$this->ID);
+			return Product::get()
+				->filter(array(
+					"ShowInMenus" => 1,
+					"ParentID" => $this->ParentID
+				))
+				->exclude(array("ID" => $this->ID));
 		}
 	}
 
@@ -464,9 +506,10 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * @TODO: complete
 	 * @param String $compontent - the has many relationship you are looking at, e.g. OrderAttribute
-	 * @return DataObjectSet
+	 * @return DataList (CHECK!)
 	 */
 	public function getVersionedComponents($component = "ProductVariations") {
+		return;
 		$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
 		$query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
 		$result = singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
@@ -746,13 +789,16 @@ class Product extends Page implements BuyableModel {
 	}
 
 
+
 	//CRUD SETTINGS
 
 	/**
 	 * Is the product for sale?
+	 * @param Member $member
+	 * @param Boolean $checkPrice
 	 * @return Boolean
 	 */
-	function canPurchase($member = null, $checkPrice = true) {
+	function canPurchase(Member $member = null, $checkPrice = true) {
 		$config = $this->EcomConfig();
 		//shop closed
 		if($config->ShopClosed) {
@@ -792,14 +838,15 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Shop Admins can edit
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
+		//if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
-		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
-		if($member && Permission::checkMember($member, $shopAdminCode)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		return parent::canEdit($member);
@@ -808,6 +855,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {
@@ -817,6 +865,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canPublish($member = null) {
@@ -826,6 +875,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS method
 	 * //check if it is in a current cart?
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDeleteFromLive($member = null) {
@@ -834,11 +884,14 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {
 		return $this->canEdit($member);
 	}
+
+
 
 }
 
@@ -857,20 +910,24 @@ class Product_Controller extends Page_Controller {
 	 */
 	function init() {
 		parent::init();
-		Requirements::themedCSS('Products');
+		Requirements::themedCSS('Products', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
 	}
 
 	/**
 	 * view earlier version of a product
+	 * returns error or changes datarecord to earlier version
+	 * if the ID does not match the Page then we look for the variation
+	 * @param SS_HTTPRequest
 	 */
-	function viewversion($request) {
+	function viewversion(SS_HTTPRequest $request) {
 		$id = intval($request->param("ID"))-0;
 		$version = intval($request->param("OtherID"))-0;
 		$currentVersion = $this->Version;
 		if($id != $this->ID) {
-			if($productVariation = DataObject::get_by_id("ProductVariation", $id)) {
+			//TO DO: CHECK VERSION!!! IS THIS CODE RIGHT
+			if($productVariation = ProductVariation::get()->byID($id)) {
 				if($productVariation->Version != $version) {
 					$productVariation = $productVariation->getVersionOfBuyable($id, $version);
 				}
@@ -902,7 +959,7 @@ class Product_Controller extends Page_Controller {
 	 * Standard SS method
 	 * Returns a snippet when requested by ajax.
 	 */
-	function ajaxview(){
+	function ajaxview(SS_HTTPRequest $request){
 		return $this->renderWith("ProductGroupItemMoreDetail");
 	}
 
@@ -914,9 +971,9 @@ class Product_Controller extends Page_Controller {
 		if($this->canPurchase()) {
 			$farray = array();
 			$requiredFields = array();
-			$fields = new FieldSet($farray);
+			$fields = new FieldList($farray);
 			$fields->push(new NumericField('Quantity','Quantity',1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('addproductfromform', _t("Product.ADDLINK","Add this item to cart"))
 			);
 			$requiredfields[] = 'Quantity';
@@ -931,23 +988,25 @@ class Product_Controller extends Page_Controller {
 
 	/**
 	 * executes the AddProductForm
+	 * @param Array $data
+	 * @param Form $form
 	 */
-	function addproductfromform($data,$form){
+	function addproductfromform(Array $data, Form $form){
 		if(!$this->IsInCart()) {
 			$quantity = round($data['Quantity'], $this->QuantityDecimals());
 			if(!$quantity) {
 				$quantity = 1;
 			}
-			$product = DataObject::get_by_id("Product", $this->ID);
+			$product = Product::get()->byID($this->ID);
 			if($product) {
 				ShoppingCart::singleton()->addBuyable($product,$quantity);
 			}
 			if($this->IsInCart()) {
-				$msg = _t("Product.SUCCESSFULLYADDED","Added to cart.");
+				$msg = _t("Order.SUCCESSFULLYADDED","Added to cart.");
 				$status = "good";
 			}
 			else {
-				$msg = _t("Product.NOTADDEDTOCART","Not added to cart.");
+				$msg = _t("Order.NOTADDEDTOCART","Not added to cart.");
 				$status = "bad";
 			}
 			if(Director::is_ajax()){
@@ -955,7 +1014,7 @@ class Product_Controller extends Page_Controller {
 			}
 			else {
 				$form->sessionMessage($msg,$status);
-				Director::redirectBack();
+				$this->redirectBack();
 			}
 		}
 		else {
@@ -975,7 +1034,7 @@ class Product_Controller extends Page_Controller {
 	 *
 	 * This method can be extended to show products in the side bar.
 	 *
-	 * @return Object DataObjectSet
+	 * @return DataList (Products)
 	 */
 	function SidebarProducts(){
 		return null;
@@ -994,7 +1053,7 @@ class Product_Controller extends Page_Controller {
 			$id = intval($id);
 			if($id == $this->ID) {
 				if(isset($array[$key + 1])) {
-					return DataObject::get_by_id("Product", intval($array[$key + 1]));
+					return Product::get()->byID(intval($array[$key + 1]));
 				}
 			}
 		}
@@ -1008,13 +1067,13 @@ class Product_Controller extends Page_Controller {
 	 */
 	function PreviousProduct(){
 		$array = $this->getListOfIDs();
-		$prev = 0;
+		$previousID = 0;
 		foreach($array as $key => $id) {
 			$id = intval($id);
 			if($id == $this->ID) {
-				return DataObject::get_by_id("Product", $prev);
+				return Product::get()->byID($previousID);
 			}
-			$prev = $id;
+			$previousID = $id;
 		}
 		return null;
 	}
@@ -1053,8 +1112,19 @@ class Product_Controller extends Page_Controller {
 class Product_Image extends Image {
 
 	static $casting = array(
-		"CMSThumb" => "HTMLText"
+		"CMSThumbnail" => "HTMLText"
 	);
+
+	/**
+	 * Fields
+	 * @return Array
+	 */
+	function summaryFields(){
+		return array(
+			"CMSThumbnail" => "Preview",
+			"Title" => "Title"
+		);
+	}
 
 	/**
 	 *
@@ -1106,9 +1176,10 @@ class Product_Image extends Image {
 
 	/**
 	 * @usage can be used in a template like this $Image.Thumbnail.Link
+	 * @param GD $gd
 	 * @return GD
 	 **/
-	function generateThumbnail($gd) {
+	function generateThumbnail(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
 	}
@@ -1121,7 +1192,7 @@ class Product_Image extends Image {
 	 * @usage can be used in a template like this $Image.SmallImage.Link
 	 * @return GD
 	 **/
-	function generateSmallImage($gd) {
+	function generateSmallImage(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
 	}
@@ -1134,7 +1205,7 @@ class Product_Image extends Image {
 	 * @usage can be used in a template like this $Image.ContentImage.Link
 	 * @return GD
 	 **/
-	function generateContentImage($gd) {
+	function generateContentImage(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->resizeByWidth($this->ContentWidth());
 	}
@@ -1147,7 +1218,7 @@ class Product_Image extends Image {
 	 * @usage can be used in a template like this $Image.LargeImage.Link
 	 * @return GD
 	 **/
-	function generateLargeImage($gd) {
+	function generateLargeImage(GD $gd) {
 		$gd->setQuality(90);
 		return $gd->resizeByWidth($this->LargeWidth());
 	}
@@ -1163,24 +1234,12 @@ class Product_Image extends Image {
 		}
 	}
 
-
-	/**
-	 * Fields
-	 * @return Array
-	 */
-	function summaryFields(){
-		return array(
-			"CMSThumb" => "CMSThumb",
-			"Title" => "Title"
-		);
-	}
-
 	/**
 	 *
 	 * @return String HTML
 	 */
-	function CMSThumb(){
-		return $this->getCMSThumb();
+	function CMSThumbnail(){
+		return $this->getCMSThumbnail();
 	}
 
 
@@ -1188,7 +1247,7 @@ class Product_Image extends Image {
 	 *
 	 * @return String HTML
 	 */
-	function getCMSThumb(){
+	function getCMSThumbnail(){
 		$smallImage = $this->SmallImage();
 		if($smallImage) {
 			$icon = "<img src=\"".$smallImage->FileName."\" style=\"border: 1px solid black; height: 100px; \" />";
@@ -1196,7 +1255,7 @@ class Product_Image extends Image {
 		else {
 			$icon = "[MISSING IMAGE]";
 		}
-		return DBField::create("HTMLText", $icon);
+		return DBField::create_field("HTMLText", $icon);
 	}
 
 
@@ -1231,6 +1290,9 @@ class Product_OrderItem extends OrderItem {
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
+		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+			return false;
+		}
 		return true;
 	}
 
@@ -1254,15 +1316,17 @@ class Product_OrderItem extends OrderItem {
 	}
 
 	/**
-	 *@return Boolean
+	 * @param OrderItem $orderItem
+	 * @return Boolean
 	 **/
-	function hasSameContent($orderItem) {
+	function hasSameContent(OrderItem $orderItem) {
 		$parentIsTheSame = parent::hasSameContent($orderItem);
 		return $parentIsTheSame && $orderItem instanceOf $this->class;
 	}
 
 	/**
-	 *@return Float
+	 * @param Boolean $recalculate
+	 * @return Float
 	 **/
 	function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}
 	function getUnitPrice($recalculate = false) {
@@ -1330,6 +1394,8 @@ class Product_OrderItem extends OrderItem {
 		return $tableSubTitle;
 	}
 
+
+
 	/**
 	 * method for developers only
 	 * you can access it like this: /shoppingcart/debug/
@@ -1353,3 +1419,6 @@ HTML;
 
 
 }
+
+
+

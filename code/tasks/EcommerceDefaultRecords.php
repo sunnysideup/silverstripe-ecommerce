@@ -14,15 +14,22 @@
 
 class EcommerceDefaultRecords extends BuildTask {
 
-
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	protected $title = "Create e-commerce default records";
 
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
 	protected $description = "These default records are basic stuff like an account page, a few products, a product group.";
 
 	function run($request) {
 		$update = array();
 		// ACCOUNT PAGE
-		$accountPage = DataObject::get_one('AccountPage');
+		$accountPage = AccountPage::get()->First();
 		if(!$accountPage) {
 			$accountPage = new AccountPage();
 			$accountPage->Title = 'Account';
@@ -43,7 +50,7 @@ class EcommerceDefaultRecords extends BuildTask {
 
 		//CHECKOUT PAGE
 
-		$checkoutPage = DataObject::get_one('CheckoutPage');
+		$checkoutPage = CheckoutPage::get()->First();
 		if(!$checkoutPage) {
 			$checkoutPage = new CheckoutPage();
 			$checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
@@ -60,7 +67,12 @@ class EcommerceDefaultRecords extends BuildTask {
 			DB::alteration_message('No need to create an checkout page, it already exists.');
 		}
 		if($checkoutPage) {
-			if($checkoutPage->TermsPageID == 0 && $termsPage = DataObject::get_one('Page', "\"URLSegment\" = 'terms-and-conditions'")) {
+			if(
+				$checkoutPage->TermsPageID == 0 &&
+				$termsPage = Page::get()
+					->Filter(array("URLSegment" => "terms-and-conditions"))
+					->First()
+			) {
 				$checkoutPage->TermsPageID = $termsPage->ID;
 				DB::alteration_message('terms and conditions page linked.', "created");
 			}
@@ -70,7 +82,11 @@ class EcommerceDefaultRecords extends BuildTask {
 			$checkoutPage->writeToStage('Stage');
 			$checkoutPage->publish('Stage', 'Live');
 			DB::alteration_message('Checkout page saved');
-			if(!DataObject::get_one('OrderConfirmationPage')) {
+			$orderConfirmationPage = OrderConfirmationPage::get()->First();
+			if( $orderConfirmationPage) {
+				DB::alteration_message('No need to create an Order Confirmation Page. It already exists.');
+			}
+			else {
 				$orderConfirmationPage = new OrderConfirmationPage();
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
 				$orderConfirmationPage->Title = 'Order confirmation';
@@ -82,9 +98,6 @@ class EcommerceDefaultRecords extends BuildTask {
 				$orderConfirmationPage->writeToStage('Stage');
 				$orderConfirmationPage->publish('Stage', 'Live');
 				DB::alteration_message('Order Confirmation created', 'created');
-			}
-			else {
-				DB::alteration_message('No need to create an Order Confirmation Page. It already exists.');
 			}
 		}
 

@@ -10,18 +10,18 @@
 <p>The Cart can be accessed from anywhere using:</p>
 <pre>
 &lt;% if Cart %&gt;
-	&lt;% control Cart %&gt;
+	&lt;% with Cart %&gt;
 		//do cart stuff here
-	&lt;% end_control %&gt;
+	&lt;% end_with %&gt;
 &lt;% else %&gt;
 	&lt;p&gt;No cart was found!&lt;/p&gt;
 &lt;% end_if %&gt;
 </pre>
 
 <% if Cart %>
-	<% control Cart %>
+	<% with Cart %>
 
-	<% end_control %>
+	<% end_with %>
 <% else %>
 <p>No cart was found!</p>
 <% end_if %>
@@ -127,7 +127,7 @@
 <h2>Product</h2>
 <p>The following product has been randomly selected product for this exercise: <strong><a href="$RandomProduct.Link">$RandomProduct.MenuTitle</a></strong></p>
 <p>You can <a href="$Link">reload</a> this page to view another product.</p>
-<% control RandomProduct %>
+<% with RandomProduct %>
 
 <h4>Image Controllers</h4>
 <table style="width: 95%;">
@@ -171,7 +171,7 @@
 	<tr><th scope="row" style="width: 60%;">&#36;NextProduct</th><td>$NextProduct</td></tr>
 </table>
 
-<% end_control %>
+<% end_with %>
 
 </div>
 

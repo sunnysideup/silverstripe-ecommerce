@@ -14,7 +14,12 @@
 
 class OrderForm extends Form {
 
-	function __construct($controller, $name) {
+	/**
+	 *
+	 * @param Controller $controller
+	 * @param String
+	 */
+	function __construct(Controller $controller, $name) {
 
 		//requirements
 		Requirements::javascript('ecommerce/javascript/EcomOrderForm.js');
@@ -28,17 +33,17 @@ class OrderForm extends Form {
 		//  ________________  3) Payment fields - BOTTOM FIELDS
 
 
+
 		$bottomFields = new CompositeField();
+
 		$bottomFields->setID('BottomOrder');
 		if($order->Total() > 0) {
-			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
+			$bottomFields->push(new HeaderField("PaymentHeader", _t("OrderForm.PAYMENT", "Payment"), 3));
+			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
 			foreach($paymentFields as $paymentField) {
-				if($paymentField->class == "HeaderField") {
-					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
-				}
 				$bottomFields->push($paymentField);
 			}
-			if($paymentRequiredFields = Payment::combined_form_requirements()) {
+			if($paymentRequiredFields = EcommercePayment::combined_form_requirements()) {
 				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 			}
 		}
@@ -55,7 +60,7 @@ class OrderForm extends Form {
 		$finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER','Complete Order'), 3));
 		// If a terms and conditions page exists, we need to create a field to confirm the user has read it
 		if($termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page()) {
-			$checkoutPage = DataObject::get_one("CheckoutPage");
+			$checkoutPage = CheckoutPage::get()->First();
 			if($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
 				$alreadyTicked = false;
 				$requiredFields[] = 'ReadTermsAndConditions';
@@ -65,25 +70,26 @@ class OrderForm extends Form {
 			}
 			$finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1','I have read and agree with the ').' <a href="'.$termsAndConditionsPage->Link().'">'.Convert::raw2xml($termsAndConditionsPage->Title).'</a>'._t('OrderForm.AGREEWITHTERMS2','.'), $alreadyTicked));
 		}
-		$finalFields->push(new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE','Note / Question'), 7, 30));
+		$textAreaField = new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE','Note / Question'));
+		$finalFields->push($textAreaField);
 
 
-		//  ________________  5) Put all the fields in one FieldSet
+		//  ________________  5) Put all the fields in one FieldList
 
 
-		$fields = new FieldSet($bottomFields, $finalFields);
+		$fields = new FieldList($bottomFields, $finalFields);
 
 
 
 		//  ________________  6) Actions and required fields creation + Final Form construction
 
 
-		$actions = new FieldSet(new FormAction('processOrder', _t('OrderForm.PROCESSORDER','Place order and make payment')));
+		$actions = new FieldList(new FormAction('processOrder', _t('OrderForm.PROCESSORDER','Place order and make payment')));
 		$validator = new OrderForm_Validator($requiredFields);
 		//we stick with standard validation here, because of the complexity and
 		//hard-coded payment validation that is required
-		//$validator->setJavascriptValidationHandler("prototype"));
 		parent::__construct($controller, $name, $fields, $actions, $validator);
+		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
 		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
@@ -104,31 +110,31 @@ class OrderForm extends Form {
 	 * Process final confirmation and payment
 	 *
 	 * {@link Payment} instance is created, linked to the order,
-	 * and payment is processed {@link Payment::processPayment()}
+	 * and payment is processed {@link EcommercePayment::processPayment()}
 	 *
 	 * @param array $data Form request data submitted from OrderForm
 	 * @param Form $form Form object for this action
 	 * @param HTTPRequest $request Request object for this action
 	 */
-	function processOrder($data, $form, $request) {
+	function processOrder(Array $data, Form $form, SS_HTTPRequest $request) {
 		$this->saveDataToSession($data); //save for later if necessary
 		$order = ShoppingCart::current_order();
 		//check for cart items
 		if(!$order) {
 			$form->sessionMessage(_t('OrderForm.ORDERNOTFOUND','Your order could not be found.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 		if($order && $order->TotalItems($recalculate = true) < 1) {
 			// WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
-			$form->sessionMessage(_t('OrderForm.NOITEMSINCART','Please add some items to your cart.'), 'bad');
-			Director::redirectBack();
+			$form->sessionMessage(_t('Order.NOITEMSINCART','Please add some items to your cart.'), 'bad');
+			$this->controller->redirectBack();
 			return false;
 		}
 
 		if($this->extend("OrderFormBeforeFinalCalculation", $data, $form, $request)) {
-			$form->sessionMessage(_t('OrderForm.ERRORWITHFORM','There was an error with your order, please review and submit again.'), 'bad');
-			Director::redirectBack();
+			$form->sessionMessage(_t('Order.ERRORWITHFORM','There was an error with your order, please review and submit again.'), 'bad');
+			$this->controller->redirectBack();
 			return false;
 		}
 
@@ -140,7 +146,7 @@ class OrderForm extends Form {
 		$newTotal = $order->Total();
 		if(floatval($newTotal) != floatval($oldTotal)) {
 			$form->sessionMessage(_t('OrderForm.PRICEUPDATED','The order price has been updated, please review the order and submit again.'), 'warning');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return false;
 		}
 
@@ -178,7 +184,7 @@ class OrderForm extends Form {
 		else {
 			//there is an error with payment
 			if(!Controller::curr()->redirectedTo()) {
-				Director::redirect($order->Link());
+				$this->controller->redirect($order->Link());
 			}
 			return false;
 		}
@@ -189,7 +195,7 @@ class OrderForm extends Form {
 	 * saves the form into session
 	 * @param Array $data - data from form.
 	 */
-	function saveDataToSession($data){
+	function saveDataToSession(Array $data){
 		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
 
@@ -244,8 +250,8 @@ class OrderForm_Validator extends RequiredFields{
 	 */
 	function php($data){
 		$valid = parent::php($data);
-		$checkoutPage = DataObject::get_one("CheckoutPage");
-		if($checkoutPage->TermsAndConditionsMessage) {
+		$checkoutPage = CheckoutPage::get()->First();
+		if($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
 			if(isset($data["ReadTermsAndConditions"])) {
 				if(!$data["ReadTermsAndConditions"]) {
 					$this->validationError(
@@ -266,7 +272,7 @@ class OrderForm_Validator extends RequiredFields{
 			);
 			$valid = false;
 		}
-		$billingAddress = DataObject::get_by_id("BillingAddress", intval($order->BillingAddressID)-0);
+		$billingAddress = BillingAddress::get()->byID($order->BillingAddressID);
 		if(!$billingAddress) {
 			$this->validationError(
 				"BillingAddress",
@@ -293,31 +299,38 @@ class OrderForm_Validator extends RequiredFields{
 
 class OrderForm_Payment extends Form {
 
-	function __construct($controller, $name, $order, $returnToLink = '') {
-		$fields = new FieldSet(
+	/**
+	 * @param Controller $controller
+	 * @param String $name
+	 * @param Order $order
+	 * @param String
+	 */
+	function __construct(Controller $controller, $name, Order $order, $returnToLink = '') {
+		$requiredFields = null;
+		$fields = new FieldList(
 			new HiddenField('OrderID', '', $order->ID)
 		);
 		if($returnToLink) {
 			$fields->push(new HiddenField("returntolink", "", convert::raw2att($returnToLink)));
 		}
-		$paymentFields = Payment::combined_form_fields($order->getTotalOutstandingAsMoney()->NiceDefaultFormat(false));
-		foreach($paymentFields as $paymentField) {
-			if($paymentField->class == "HeaderField") {
-				$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Make Payment"));
+
+		$bottomFields = new CompositeField();
+		$bottomFields->setID('BottomOrder');
+		if($order->Total() > 0) {
+			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
+			foreach($paymentFields as $paymentField) {
+				$bottomFields->push($paymentField);
 			}
-			if($paymentField->Name() == "PaymentMethod") {
-				$source = $paymentField->getSource();
-				if($source && is_array($source) && count($source) == 1) {
-					$paymentField->performReadonlyTransformation();
-				}
+			if($paymentRequiredFields = EcommercePayment::combined_form_requirements()) {
+				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 			}
-			$fields->push($paymentField);
 		}
-		$requiredFields = array();
-		if($paymentRequiredFields = Payment::combined_form_requirements()) {
-			$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
+		else {
+			$bottomFields->push(new HiddenField("PaymentMethod", "", ""));
 		}
-		$actions = new FieldSet(
+		$fields->push($bottomFields);
+
+		$actions = new FieldList(
 			new FormAction('dopayment', _t('OrderForm.PAYORDER','Pay balance'))
 		);
 		$form = parent::__construct($controller, $name, $fields, $actions, $requiredFields);
@@ -339,7 +352,7 @@ class OrderForm_Payment extends Form {
 			}
 		}
 		$form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT','Sorry, we could not process your payment.'),'bad');
-		Director::redirectBack();
+		$this->controller->redirectBack();
 		return false;
 	}
 
@@ -358,15 +371,15 @@ class OrderForm_Payment extends Form {
 
 class OrderForm_Cancel extends Form {
 
-	function __construct($controller, $name, $order) {
-		$fields = new FieldSet(
+	function __construct(Controller $controller, $name, Order $order) {
+		$fields = new FieldList(
 			array(
 				new HeaderField('CancelOrderHeading', _t("OrderForm.CANCELORDER", "Changed your mind?"), 3),
 				new TextField('CancellationReason', _t("OrderForm.CANCELLATIONREASON", "Reason for cancellation")),
 				new HiddenField('OrderID', '', $order->ID)
 			)
 		);
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('docancel', _t('OrderForm.CANCELORDER','Cancel this order'))
 		);
 		$requiredFields = array();
@@ -386,12 +399,12 @@ class OrderForm_Cancel extends Form {
 	 * @param array $data The form request data submitted
 	 * @param Form $form The {@link Form} this was submitted on
 	 */
-	function docancel($data, $form) {
+	function docancel(Array $data, Form $form, SS_HTTPRequest $request) {
 		$SQLData = Convert::raw2sql($data);
 		$member = Member::currentUser();
 		if($member) {
 			if(isset($SQLData['OrderID'])){
-				$order = Order::get_by_id(intval($SQLData['OrderID']));
+				$order = Order::get()->byID(intval($SQLData['OrderID']));
 				if($order) {
 					if($order->canCancel()) {
 						$reason = "";
@@ -399,8 +412,11 @@ class OrderForm_Cancel extends Form {
 							$reason = $SQLData["CancellationReason"];
 						}
 						$order->Cancel($member, $reason);
-						return Director::redirectBack();
+						return $this->controller->redirectBack();
 					}
+					$order->Cancel($member, $reason);
+					$this->controller->redirectBack();
+					return false;
 				}
 			}
 		}
@@ -411,8 +427,45 @@ class OrderForm_Cancel extends Form {
 			),
 			'bad'
 		);
-		return Director::redirectBack();
+		$this->controller->redirectBack();
+		return false;
 	}
 }
 
 
+/*
+
+
+	if(count($supportedPaymentGateways)) {
+			//header for payment options
+			$paymentFieldsCollection->push(new HeaderField("ChoosePayment", _t("OrderForm.CHOOSE_PAYMENT", "Choose Payment")));
+			foreach($supportedPaymentGateways as $paymentClassName) {
+				$processor = PaymentFactory::factory($paymentClassName);
+				if($processor) {
+					$paymentFields = $processor->getFormFields();
+					if($paymentFields) {
+						foreach($paymentFields as $paymentField) {
+							$paymentFieldsCollection->push($paymentField);
+						}
+					}
+					$paymentFieldsRequired = $processor->getFormRequirements();
+					if($paymentFieldsRequired) {
+						foreach($paymentFieldsRequired as $paymentFieldRequired) {
+							$paymentFieldsRequiredCollection[] = $paymentFieldRequired;
+						}
+					}
+		if($order->Total() > 0) {
+			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
+			foreach($paymentFields as $paymentField) {
+				if($paymentField->class == "HeaderField") {
+					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
+				}
+			}
+		}
+
+		if($paymentFieldsCollection) {
+			$bottomFields->push($paymentFieldsCollection);
+			$requiredFields = array_merge($requiredFields, $paymentFieldsRequiredCollection);
+		}
+
+*/

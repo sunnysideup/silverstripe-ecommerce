@@ -58,7 +58,7 @@ class EcommerceRestfulServer extends RestfulServer {
 
 		// fix
 		if($id) {
-			$obj = DataObject::get_by_id($className, $id);
+			$obj = $className::get()->byID($id);
 			if($obj) {
 				$className = $this->urlParams['ClassName'] = $obj->ClassName;
 			}

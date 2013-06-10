@@ -5,7 +5,7 @@
 	<% if EmailLink %>
 	<li id="SendCopyOfReceipt">
 		<a href="$EmailLink" target="_blank">
-			<% sprintf(_t("Order.SENDCOPYRECEIPT","send a copy of receipt to %s"),$OrderEmail) %>
+			<%t Order.SENDCOPYRECEIPT 'send a copy of receipt to {name}' name=$OrderEmail %>
 		</a>
 	</li>
 	<% end_if %>
@@ -26,6 +26,5 @@
 	</li>
 	<% end_if %>
 </ul>
-<% require javascript(ecommerce/javascript/EcomPrintAndMail.js) %>
 </div>
 <% end_if %>

@@ -1,7 +1,7 @@
 <% if Currencies %>
 <div class="ecommerceWidget currencyWidget">
-	<% control Currencies %>
+	<% loop Currencies %>
 		<% include Sidebar_Currency_Inner %>
-	<% end_control %>
+	<% end_loop %>
 </div>
 <% end_if %>

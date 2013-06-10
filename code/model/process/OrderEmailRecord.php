@@ -13,7 +13,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderEmailRecord extends DataObject {
+class OrderEmailRecord extends DataObject{
 
 	/**
 	 * standard SS variable
@@ -100,6 +100,12 @@ class OrderEmailRecord extends DataObject {
 		function i18n_plural_name() { return _t("OrderEmailRecord.CUSTOMEREMAILS", "Customer Emails");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A record of any email that has been sent in relation to an order.";
+
+	/**
 	 * standard SS method
 	 * @param Member $member
 	 * @return Boolean
@@ -129,7 +135,7 @@ class OrderEmailRecord extends DataObject {
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -139,11 +145,22 @@ class OrderEmailRecord extends DataObject {
 	}
 
 	/**
-	 * standard SS method
-	 * @return FieldSet
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
 	 */
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		return $fields;
 	}
@@ -155,7 +172,7 @@ class OrderEmailRecord extends DataObject {
 	function OrderStepNice() {return $this->getOrderStepNice();}
 	function getOrderStepNice() {
 		if($this->OrderStepID) {
-			$orderStep = DataObject::get_by_id("OrderStep", $this->OrderStepID);
+			$orderStep = OrderStep::get()->byID($this->OrderStepID);
 			if($orderStep) {
 				return $orderStep->Name;
 			}
@@ -169,24 +186,7 @@ class OrderEmailRecord extends DataObject {
 	 * @return String
 	 */
 	public function debug() {
-		$html =  "
-			<h2>".$this->ClassName."</h2><ul>";
-		$fields = Object::get_static($this->ClassName, "db");
-		foreach($fields as  $key => $type) {
-			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
-		}
-		$fields = Object::get_static($this->ClassName, "casting");
-		foreach($fields as  $key => $type) {
-			$method = "get".$key;
-			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
-		}
-		$fields = Object::get_static($this->ClassName, "has_one");
-		foreach($fields as  $key => $type) {
-			$field = $type."ID";
-			$html .= "<li><b>$key ($type):</b> ".$this->$field." </li>";
-		}
-		$html .= "</ul>";
-		return $html;
+		return EcommerceTaskDebugCart::debug_object($this);
 	}
 
 }

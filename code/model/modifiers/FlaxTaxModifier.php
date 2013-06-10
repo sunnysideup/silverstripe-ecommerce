@@ -35,6 +35,13 @@ class FlatTaxModifier extends OrderModifier {
 	public static $plural_name = "Flat Taxes";
 		function i18n_plural_name() { return _t("FlatTaxModifier.FLATTAXMODIFIER", "Flat Taxes");}
 
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "Adds tax to the order.";
+
+
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
 // ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)

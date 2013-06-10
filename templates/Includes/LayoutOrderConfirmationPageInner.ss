@@ -6,9 +6,9 @@
 
 
 <% if Order %>
-<% control Order %>
+<% with Order %>
 	<% include Order %>
-<% end_control %>
+<% end_with %>
 <div id="PaymentForm">$PaymentForm</div>
 <div id="CancelForm">$CancelForm</div>
 <% else %>

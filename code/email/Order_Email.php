@@ -14,6 +14,17 @@
 Abstract class Order_Email extends Email {
 
 	/**
+	 * @var Order
+	 */
+	protected $order = null;
+
+
+	/**
+	 * @var Boolean
+	 */
+	protected $resend = false;
+
+	/**
 	 * turns an html document into a formatted html document
 	 * using the emogrify method.
 	 * @param $html
@@ -65,19 +76,37 @@ Abstract class Order_Email extends Email {
 	}
 
 	/**
+	 * set the order associated with the email
+	 * @param Order $order - the order to which the email relates
+	 *
+	 */
+	public function setOrder(Order $order) {
+		$this->order = $order;
+	}
+
+	/**
+	 * sets resend to true, which means that the email
+	 * is sent even if it has already been sent.
+	 */
+	public function setResend($resend = true) {
+		$this->resend = $resend;
+	}
+
+	/**
 	 *
 	 * @param Null|String $messageID - ID for the message, you can leave this blank
-	 * @param Order $order - the order to which the email relates
-	 * @param Boolean $resend - should the email be resent even if it has been sent already?
 	 * @param Boolean $returnBodyOnly - rather than sending the email, only return the HTML BODY
 	 * @return Boolean - TRUE for success and FALSE for failure.
 	 */
-	public function send($messageID = null, $order, $resend = false, $returnBodyOnly = false) {
-		if((!$this->hasBeenSent($order)) || $resend || $returnBodyOnly) {
-			if(!$this->subject) {
-				$this->subject = self::get_subject();
-			}
-			$this->subject = str_replace("[OrderNumber]", $order->ID, $this->subject);
+	public function send($messageID = null, $returnBodyOnly = false) {
+		if(!$this->order) {
+			user_error("Must set the order (Order_Email::setOrder()) before the message is sent (Order_Email::send()).", E_USER_NOTICE);
+		}
+		if(!$this->subject) {
+			$this->subject = self::get_subject();
+		}
+		$this->subject = str_replace("[OrderNumber]", $this->order->ID, $this->subject);
+		if((!$this->hasBeenSent()) || ($this->resend)) {
 			if(EcommerceConfig::get("Order_Email", "copy_to_admin_for_all_emails") && ($this->to != Email::getAdminEmail())) {
 				$this->setBcc(Email::getAdminEmail());
 			}
@@ -92,17 +121,16 @@ Abstract class Order_Email extends Email {
 			else {
 				$result = parent::send($messageID);
 			}
-			$this->createRecord($result, $order);
+			$this->createRecord($result);
 			return $result;
 		}
 	}
 
 	/**
 	 * @param Boolean $result: how did the email go? 1 = sent, 0 = not sent
-	 * @param Order $order: the order to which the email is associated.
 	 * @return DataObject (OrderEmailRecord)
 	 **/
-	protected function createRecord($result, $order) {
+	protected function createRecord($result) {
 		$obj = new OrderEmailRecord();
 		$obj->From = $this->emailToVarchar($this->from);
 		$obj->To = $this->emailToVarchar($this->to);
@@ -115,8 +143,8 @@ Abstract class Order_Email extends Email {
 		$obj->Subject = $this->subject;
 		$obj->Content = $this->body;
 		$obj->Result = $result ? 1 : 0;
-		$obj->OrderID = $order->ID;
-		$obj->OrderStepID = $order->StatusID;
+		$obj->OrderID = $this->order->ID;
+		$obj->OrderStepID = $this->order->StatusID;
 		if(Email::$send_all_emails_to) {
 			$obj->To = Email::$send_all_emails_to." - (Email::send_all_emails_to setting)";
 		}
@@ -136,13 +164,12 @@ Abstract class Order_Email extends Email {
 
 	/**
 	 * Checks if an email has been sent for this Order for this status (order step)
-	 * @param Order $order
 	 * @return boolean
 	 **/
-	function hasBeenSent($order) {
-		$orderStep = $order->Status();
+	function hasBeenSent() {
+		$orderStep = $this->order->Status();
 		if($orderStep instanceOf OrderStep)  {
-			return $orderStep->hasBeenSent($order);
+			return $orderStep->hasBeenSent($this->order);
 		}
 		return false;
 	}

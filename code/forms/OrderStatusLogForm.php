@@ -15,7 +15,10 @@
 
 class OrderStatusLogForm extends Form {
 
-
+	/**
+	 *
+	 * @var Order
+	 */
 	protected $order;
 
 
@@ -26,12 +29,17 @@ class OrderStatusLogForm extends Form {
 	 *
 	 *@param $optionalController Controller
 	 *@param $name String
-	 *@param $fields FieldSet
-	 *@param $actions FieldSet
-	 *@param $validator SS_Validator
+	 *@param $fields FieldList
+	 *@param $actions FieldList
+	 *@param $validator Validator
 	 **/
 
-	function __construct($optionalController = null, $name, FieldSet $fields, FieldSet $actions,$optionalValidator = null){
+	function __construct(
+		Controller $optionalController = null,
+		$name, FieldList $fields,
+		FieldList $actions,
+		Validator $optionalValidator = null
+	){
 		if(!$optionalController) {
 			$controllerClassName = EcommerceConfig::get("OrderStatusLogForm", "controller_class");
 			$optionalController = new $controllerClassName();
@@ -41,7 +49,8 @@ class OrderStatusLogForm extends Form {
 			$optionalValidator = new $validatorClassName();
 		}
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
-		Requirements::themedCSS($this->ClassName);
+		$this->setAttribute("autocomplete", "off");
+		Requirements::themedCSS($this->ClassName, 'ecommerce');
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
 		//add JS for the Log - added in Log
 	}
@@ -55,12 +64,23 @@ class OrderStatusLogForm extends Form {
  */
 class OrderStatusLogForm_Controller extends Controller{
 
+	/**
+	 * @var Order
+	 */
 	protected $currentOrder = null;
 
+	/**
+	 * @var Array
+	 */
 	static $allowed_actions = array(
 		'removeLog'
 	);
 
+	/**
+	 * init Class
+	 * sets order
+	 * creates virtual methods
+	 */
 	public function init() {
 		parent::init();
 		$this->currentOrder = ShoppingCart::current_order();
@@ -75,8 +95,8 @@ class OrderStatusLogForm_Controller extends Controller{
 		if($this->currentOrder) {
 			if($forms = $this->currentOrder->getLogForms($this)) {
 				foreach($forms as $form) {
-					$this->addWrapperMethod($form->Name(), 'getOrderStatusLogForm');
-					self::$allowed_actions[] = $form->Name(); // add all these forms to the list of allowed actions also
+					$this->addWrapperMethod($form->getName(), 'getOrderStatusLogForm');
+					self::$allowed_actions[] = $form->getName(); // add all these forms to the list of allowed actions also
 				}
 			}
 		}
@@ -92,12 +112,17 @@ class OrderStatusLogForm_Controller extends Controller{
 		if($this->currentOrder) {
 			if($forms = $this->currentOrder->getLogForms($this)) {
 				foreach($forms as $form) {
-					if($form->Name() == $name) return $form;
+					if($form->getName() == $name) return $form;
 				}
 			}
 		}
 	}
 
+	/**
+	 *
+	 * @param String $action
+	 * @return String
+	 */
 	function Link($action = null){
 		$action = ($action)? "/$action/" : "";
 		return $this->class.$action;
