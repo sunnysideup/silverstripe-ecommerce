@@ -13,7 +13,7 @@
  **/
 
 
-class EcommerceSiteTreeExtension extends DataObjectDecorator {
+class EcommerceSiteTreeExtension extends SiteTreeExtension {
 
 	/**
 	 * returns the instance of EcommerceConfigAjax for use in templates.
@@ -85,8 +85,8 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	function onAfterInit(){
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "cart_js_file_location"));
 		Requirements::javascript(EcommerceConfig::get("EcommerceConfigAjax", "dialogue_js_file_location"));
-		Requirements::themedCSS("Cart");
-		Requirements::themedCSS("jquery.colorbox");
+		Requirements::themedCSS("Cart", 'ecommerce');
+		Requirements::themedCSS("jquery.colorbox", 'ecommerce');
 	}
 
 	/**
@@ -107,6 +107,10 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		return ShoppingCart::current_order();
 	}
 
+	/**
+	 *
+	 * @return String (Link)
+	 */
 	function ContinueShoppingLink(){
 		$link = Session::get("ContinueShoppingLink");
 		if(!$link) {

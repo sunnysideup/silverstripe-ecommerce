@@ -143,6 +143,7 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"OrderStep" => array(
 				"order_steps_to_include" => "Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.",
+				"number_of_days_to_send_update_email" => "The maximum number of days available to send an status update for the customer for the specific order step",
 			),
 			"OrderStep_Confirmed" => array(
 				"list_of_things_to_check"   => "One of the steps in the order steps sequence is the Order Confirmation.  This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.  Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock, is there a delivery address, etc....)",
@@ -154,7 +155,7 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"EcommerceRole" => array(
 				"allow_customers_to_setup_accounts" => "Allow customers to become 'members' when they purchase items. If this is false then customers can never setup an account.",
-				"automatic_membership" => "When this is set to TRUE, any purchasers are automatically added as members even if they do not enter a password. When set to false, customers are only added as members if they enter a password.",
+				"must_have_account_to_purchase" => "When this is set to TRUE, any purchasers must log in or create an account. When set to false, customers still get added as a member, but they can purchase without logging in or choosing a password.",
 				"automatically_update_member_details" => "When set to true, the member fields (e.g. email, surname, first name) will be automatically updated from the billing address.  That is, if the customers enters a different email or surname in the billing field then the member record will be updated based on these new values.",
 				"customer_group_code" => "Code for the customer member group.",
 				"customer_group_name" => "Title (name) for the customer member group.",
@@ -164,6 +165,9 @@ class EcommerceConfigDefinitions extends Object {
 				"admin_permission_code" => "Permission code for the shop administrator member group.",
 				"admin_role_title" => "Role title for the shop administrator member group.",
 				"admin_role_permission_codes" => "Permission codes for the shop administrator member group.",
+			),
+			"EcommercePaymentController" => array(
+				"url_segment" => "URL used for EcommercePaymentController.",
 			),
 			"OrderModifierForm" => array(
 				"controller_class" => "The controller class is used for Order Modifier Forms.",
@@ -184,10 +188,14 @@ class EcommerceConfigDefinitions extends Object {
 				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?",
 			),
 			"EcommerceCurrency" => array(
+				"default_currency" => "The default currency used on the site.",
 				"exchange_provider_class" => "The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.",
 			),
 			"EcommerceMoney" => array(
 				"default_format" => "Here you specify which function you want to be called as the default format for a Money object on the all site."
+			),
+			"EcommercePayment" => array(
+				"supported_methods" => "Associative array of payment methods, e.g. ChequePayment: pay by cheque, CreditCardPayment: pay by credit card, etc...."
 			),
 			"ExpiryDateField" => array(
 				"short_months" => "Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?",
@@ -236,9 +244,6 @@ class EcommerceConfigDefinitions extends Object {
 				//"collection_controller_class" => "The controller for the collection.  ",
 				//"record_controller_class" => "The controller for the record. ",
 			),
-			"RecalculateTheNumberOfProductsSold" => array(
-				"number_sold_calculation_type" => "Method for calculating the total number of items sold.  We either COUNT the number of orders or we make a SUM of the number of items sold. ",
-			),
 			"CartCleanupTask" => array(
 				"clear_minutes" => "The number of minutes after which carts are considered abandonned. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
 				"clear_minutes_empty_carts" => "The number of minutes after which empty carts should be deleted (to reduce the amount of empty (meaningless) carts in the database. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
@@ -252,7 +257,7 @@ class EcommerceConfigDefinitions extends Object {
 		//add more stuff through extensions
 		$this->extend("moreDefinitions", $array);
 		//add more stuff through child classes
-		$childClasses = ClassInfo::subclassesFor($this);
+		$childClasses = ClassInfo::subclassesFor($this->class);
 		if(is_array($childClasses) && count($childClasses)) {
 			foreach($childClasses as $class) {
 				if($class != $this->class) {

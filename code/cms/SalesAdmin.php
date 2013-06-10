@@ -10,33 +10,46 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class SalesAdmin extends ModelAdmin{
-
-	public static $url_segment = 'sales';
-
-	public static $menu_title = 'Sales';
-
-	public static $menu_priority = 1;
-
-	public static $collection_controller_class = 'SalesAdmin_CollectionController';
-
-	public static $record_controller_class = 'SalesAdmin_RecordController';
+class SalesAdmin extends ModelAdminEcommerceBaseClass{
 
 	/**
-	 * Standard SS Method
-	 * @return Array
+	 * standard SS variable
+	 * @var String
 	 */
-	function getManagedModels() {
-		return EcommerceConfig::get("SalesAdmin", "managed_models");
-	}
+	public static $url_segment = 'sales';
+
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
+	public static $menu_title = 'Sales';
+
+	/**
+	 * standard SS variable
+	 * @var Int
+	 */
+	public static $menu_priority = 1;
+
+	/**
+	 * Change this variable if you don't want the Import from CSV form to appear.
+	 * This variable can be a boolean or an array.
+	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')
+	 */
+	public $showImportForm = false;
+
+	/**
+	 * standard SS variable
+	 * @var String
+	 */
+	public static $menu_icon = "";
 
 	function init() {
 		parent::init();
-		Requirements::themedCSS("OrderReport"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("Order_Invoice", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("Order_PackingSlip", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		Requirements::themedCSS("OrderStepField"); // LEAVE HERE
-		Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+		//Requirements::themedCSS("OrderStepField",'ecommerce'); // LEAVE HERE
+		//Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 	}
 
 
@@ -45,7 +58,8 @@ class SalesAdmin extends ModelAdmin{
 	}
 }
 
-class SalesAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
+/*
+SalesAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
 
 	//public function CreateForm() {return false;}
 
@@ -66,3 +80,4 @@ class SalesAdmin_RecordController extends ModelAdminEcommerceClass_RecordControl
 	}
 
 }
+*/

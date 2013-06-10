@@ -33,6 +33,10 @@ class ShippingAddress extends OrderAddress {
 		)
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $db = array(
 		'ShippingPrefix' => 'Varchar(10)',
 		'ShippingFirstName' => 'Varchar(100)',
@@ -69,21 +73,27 @@ class ShippingAddress extends OrderAddress {
 	 */
 	public static $default_sort = "\"ShippingAddress\".\"ID\" DESC";
 
-
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	static $indexes = array(
-		 array(
-			'name' => 'SearchFields',
-			'type' => 'fulltext',
-			'value' => 'ShippingAddress, ShippingAddress2, ShippingCity, ShippingPostalCode, ShippingPhone'
-		),
 		"Obsolete" => true,
 		"OrderID" => true
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $casting = array(
 		"ShippingFullCountryName" => "Varchar(200)"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $searchable_fields = array(
 		"OrderID" => array(
 			"field" => "NumericField",
@@ -96,22 +106,47 @@ class ShippingAddress extends OrderAddress {
 		"Obsolete"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
 	public static $summary_fields = array(
 		"Order.Title",
 		"Surname",
 		"City"
 	);
 
+	/**
+	 * standard SS variable
+	 * @return Array
+	 */
+	public static $field_labels = array(
+		"Order.Title" => "Order"
+	);
+
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $singular_name = "Shipping Address";
 		function i18n_singular_name() { return _t("OrderAddress.SHIPPINGADDRESS", "Shipping Address");}
 
+	/**
+	 * standard SS variable
+	 * @return String
+	 */
 	public static $plural_name = "Shipping Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.SHIPPINGADDRESSES", "Shipping Addresses");}
 
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "The address for delivery of the order.";
 
 	/**
 	 *
-	 *@return FieldSet
+	 *@return FieldList
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -132,9 +167,10 @@ class ShippingAddress extends OrderAddress {
 
 	/**
 	 * Puts together the fields for the Order Form (and other front-end purposes).
-	 * @return Fieldset
+	 * @param Member $member
+	 * @return FieldList
 	 **/
-	public function getFields($member = null) {
+	public function getFields(Member $member = null) {
 		$fields = parent::getEcommerceFields();
 		if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
 			$shippingFieldsHeader = new CompositeField(
@@ -146,11 +182,10 @@ class ShippingAddress extends OrderAddress {
 			if($member) {
 				if($member->exists()) {
 					$this->FillWithLastAddressFromMember($member, true);
-					$addresses = $this->previousAddressesFromMember($member);
-					if($addresses) {
-						if($addresses->count() > 1) {
-							$shippingFieldsHeader->push(new SelectOrderAddressField('SelectShippingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Shipping Address'), $addresses));
-						}
+					$addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+					//we want MORE than one here not just one.
+					if($addresses->count() > 1) {
+						$shippingFieldsHeader->push(new SelectOrderAddressField('SelectShippingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Shipping Address'), $addresses));
 					}
 				}
 				$shippingFields = new CompositeField(
@@ -204,10 +239,10 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS method
 	 * sets the country to the best known country {@link EcommerceCountry}
 	 **/
-	function populateDefaults() {
-		parent::populateDefaults();
-		$this->ShippingCountry = EcommerceCountry::get_country();
-	}
+	//function populateDefaults() {
+		//parent::populateDefaults();
+		//$this->ShippingCountry = EcommerceCountry::get_country();
+	//}
 
 
 

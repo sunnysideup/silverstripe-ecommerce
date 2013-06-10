@@ -21,35 +21,38 @@ class ShopAccountForm extends Form {
 		$requiredFields = null;
 		if($member && $member->exists()) {
 			$fields = $member->getEcommerceFields(true);
-			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
-			$logoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
+			$clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
 			$loginField = new ReadonlyField(
 				'LoggedInAsNote',
 				_t("Account.LOGGEDIN", "You are currently logged in as "),
 				Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname) .', '
-					.'<a href="'.$logoutLink.'">'._t('Account.LOGOUT','Log out now?').
+					.'<a href="'.$clearCartAndLogoutLink.'">'._t('Account.LOGOUT','Log out now?').
 					"</a>"
 			);
 			$loginField->dontEscape = true;
 			$fields->push($loginField);
-			// PASSWORD KEPT CHANGING - SO I REMOVED IT FOR NOW - Nicolaas
-			$passwordField = new ConfirmedPasswordField('Password', _t('Account.PASSWORD','Password'), "", null, true);
-			$fields->push($passwordField);
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('submit', _t('Account.SAVE','Save Changes'))
 			);
 			if($order = ShoppingCart::current_order()) {
-				if($order->Items()) {
-					$actions->push(new FormAction('proceed', _t('Account.SAVEANDPROCEED','Save changes and proceed to checkout')));
+				if($order->getTotalItems()) {
+					$actions->push(new FormAction('proceed', _t('Account.SAVE_AND_PROCEED','Save changes and proceed to checkout')));
 				}
 			}
 		}
 		else {
 			$member = new Member();
-			$fields = new FieldSet();
-			$fields->push(new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account')));
-			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
-			$memberFields = $member->getEcommerceFields(true);
+			$fields = new FieldList();
+			$urlParams = $controller->getURLParams();
+			$backURLLink = "";
+			if($urlParams) foreach($urlParams as $urlParam) {
+				if($urlParam) {
+					$backURLLink .= "/".$urlParam;
+				}
+			}
+			$backURLLink = urlencode($backURLLink);
+			$fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login?BackURL=" . $backURLLink . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>'));
+			$memberFields = $member->getEcommerceFields();
 			if($memberFields) {
 				foreach($memberFields as $memberField) {
 					$fields->push($memberField);
@@ -57,27 +60,25 @@ class ShopAccountForm extends Form {
 			}
 			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
 			$passwordFieldCheck = new PasswordField('PasswordCheck', _t('Account.PASSWORDCHECK','Password (repeat)'));
-			$fields->insertBefore(new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3), "Email");
 			$fields->push($passwordField);
 			$fields->push($passwordFieldCheck);
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('creatememberandaddtoorder', _t('Account.SAVE','Create Account'))
 			);
 		}
 
+
 		$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
+		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
 		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
 		if($this->extend('updateActions',$actions) !== null) {$this->setActions($actions);}
 		if($this->extend('updateValidator',$requiredFields) !== null) {$this->setValidator($requiredFields);}
-		if($member && $member->Password ){
+		if($member){
 			$this->loadDataFrom($member);
-			if(!isset($_REQUEST["Password"])) {
-				$this->fields()->fieldByName("Password")->SetValue("");
-			}
-			$this->fields()->fieldByName("Password")->setCanBeEmpty(true);
 		}
+		$member->afterLoadDataFrom($this->Fields());
 		$this->extend('updateShopAccountForm',$this);
 	}
 
@@ -120,7 +121,7 @@ class ShopAccountForm extends Form {
 		else {
 			$this->sessionMessage(_t("ShopAccountForm.COULDNOTFINDORDER", "Could not find order."), "bad");
 		}
-		Director::redirectBack();
+		$this->controller->redirectBack();
 	}
 
 
@@ -132,16 +133,16 @@ class ShopAccountForm extends Form {
 		$member = Member::currentUser();
 		if(!$member) {
 			$form->sessionMessage(_t('Account.DETAILSNOTSAVED','Your details could not be saved.'), 'bad');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 		}
 		$form->saveInto($member);
 		$member->write();
 		if($link) {
-			Director::redirect($link);
+			$this->controller->redirect($link);
 		}
 		else {
 			$form->sessionMessage(_t('Account.DETAILSSAVED','Your details have been saved.'), 'good');
-			Director::redirectBack();
+			$this->controller->redirectBack();
 		}
 		return true;
 	}
@@ -160,6 +161,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
+		$loggedInMemberID = 0;
 		if(isset($data[$uniqueFieldName]) && $data[$uniqueFieldName]){
 			$isShopAdmin = false;
 			if($loggedInMember) {
@@ -168,24 +170,24 @@ class ShopAccountForm_Validator extends RequiredFields{
 					$isShopAdmin = true;
 				}
 			}
-			else {
-				$loggedInMemberID = 0;
-			}
 			if($isShopAdmin) {
 				//do nothing
 			}
 			else {
-				if($allowExistingEmail) {
+				$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
+				//can't be taken
+				$otherMembersWithSameEmail = Member::get()
+					->filter(array($uniqueFieldName => $uniqueFieldValue))
+					->exclude(array("ID" => $loggedInMemberID));
+				if($otherMembersWithSameEmail->count()){
+					if($allowExistingEmail) {
 
-				}
-				else {
-					$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
-					//can't be taken
-					if(DataObject::get_one('Member',"\"$uniqueFieldName\" = '$uniqueFieldValue' AND \"Member\".\"ID\" <> ".$loggedInMemberID)){
-						$message = sprintf(
-							_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
-							$uniqueFieldValue,
-							$uniqueFieldName
+					}
+					else {
+						$message = _t(
+							"Account.ALREADYTAKEN",
+							"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}",
+							array("uniqueFieldValue" => $uniqueFieldValue, "uniqueFieldName" => $uniqueFieldName)
 						);
 						$this->validationError(
 							$uniqueFieldName,
@@ -198,16 +200,18 @@ class ShopAccountForm_Validator extends RequiredFields{
 			}
 		}
 		// check password fields are the same before saving
-		if(isset($data["Password"]["_Password"]) && isset($data["Password"]["_ConfirmPassword"])) {
-			if($data["Password"]["_Password"] != $data["Password"]["_ConfirmPassword"]) {
+		if(isset($data["Password"]) && isset($data["PasswordDoubleCheck"])) {
+			if($data["Password"] != $data["PasswordDoubleCheck"]) {
 				$this->validationError(
-					"Password",
+					"PasswordDoubleCheck",
 					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
 					"required"
 				);
 				$valid = false;
 			}
-			if(!$loggedInMember && !$data["Password"]["_Password"]) {
+			//if you are not logged in, you hvae not provided a password and the settings require you to be logged in then
+			//we have a problem
+			if( !$loggedInMember && !$data["Password"] && EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase") ) {
 				$this->validationError(
 					"Password",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
@@ -215,18 +219,8 @@ class ShopAccountForm_Validator extends RequiredFields{
 				);
 				$valid = false;
 			}
-		}
-		//password for new user
-		if(isset($data["PasswordCheck"]) && isset($data["Password"])) {
-			if($data["PasswordCheck"] != $data["Password"]) {
-				$this->validationError(
-					"Password",
-					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
-					"required"
-				);
-				$valid = false;
-			}
-			if(strlen($data["Password"]) < 7 ) {
+			$letterCount = strlen($data["Password"]);
+			if($letterCount > 0 && $letterCount < 7) {
 				$this->validationError(
 					"Password",
 					_t('Account.PASSWORDMINIMUMLENGTH', 'Please enter a password of at least seven characters.'),

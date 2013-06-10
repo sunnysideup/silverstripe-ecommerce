@@ -10,7 +10,7 @@
 	<% _t("SideBar.YOU_ARE_NOT","Your are not") %> <a href="$EcommerceLogInLink"><% _t("SideBar.LOGGED_IN","logged in") %></a>.
 	<% if EcomConfig.AccountPageLink %>
 	<% _t("SideBar.YOU_CAN","You can") %>
-	<a href="{$EcomConfig.CartPageLink}#CreateAccountForm"><% _t("SideBar.CREATE_AN_ACCOUNT","create an account") %></a>
+	<a href="{$EcomConfig.AccountPageLink}"><% _t("SideBar.CREATE_AN_ACCOUNT","create an account") %></a>
 	<% _t("SideBar.SAVE_YOUR_ORDER_DETAILS","to save your order details.") %>
 	<% end_if %>
 <% end_if %>

@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-	<% control Payments %>
+	<% loop Payments %>
 		<tr>
 			<td class="center">$LastEdited.Nice24</td>
 			<td class="center">$Status</td>
@@ -21,7 +21,7 @@
 			<td class="left">$Message.NoHTML.XML</td>
 			<td class="right">$Amount.NiceDefaultFormat</td>
 		</tr>
-	<% end_control %>
+	<% end_loop %>
 	</tbody>
 </table>
 <% else %>

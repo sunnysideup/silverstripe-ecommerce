@@ -21,7 +21,7 @@ class MyMigration extends BuildTask {
 
 	protected $description = "General DB fixes";
 
-	function run($request) {
+	function run(SS_HTTPRequest $request) {
 		DB::query("TRUNCATE TABLE MyUselessTable;");
 	}
 
@@ -40,7 +40,7 @@ class MyMigration_EXT extends Extension {
 		return $buildTasks;
 	}
 
-	function mymigration($request){
+	function mymigration(SS_HTTPRequest $request){
 		$this->owner->runTask("MyMigration", $request);
 	}
 
@@ -71,46 +71,35 @@ Object::add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceDatabaseAdmin extends Controller{
+class EcommerceDatabaseAdmin extends TaskRunner{
 
 	//##############################
 	// BASIC FUNCTIONS
 	//##############################
 
-	static $url_handlers = array(
-		//'' => 'browse',
-	);
+	function index(){
+		if(Director::is_cli()) {
+			echo "SILVERSTRIPE ECOMMERCE TOOLS: Tasks\n--------------------------\n\n";
+			foreach($tasks as $task) {
+				echo " * $task[title]: sake dev/tasks/" . $task['class'] . "\n";
+			}
+		}
+		else {
+			$renderer = new DebugView_EcommerceDatabaseAdmin();
+			$renderer->writeHeader();
+			$renderer->writeInfo("SilverStripe Ecommerce Tools", Director::absoluteBaseURL());
+			$renderer->writeContent($this);
+			$renderer->writeFooter();
 
-	/**
-	 * standard Silverstripe method - required
-	 *
-	 */
-	function init() {
-		parent::init();
-		// We allow access to this controller regardless of live-status or ADMIN permission only
-		// or if on CLI.
-		// Access to this controller is always allowed in "dev-mode", or if the user is ADMIN.
-		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
-		$canAccess = (
-			Director::isDev()
-			// We need to ensure that DevelopmentAdminTest can simulate permission failures when running
-			// "dev/tests" from CLI.
-			|| (Director::is_cli() && !$isRunningTests)
-			|| Permission::check("ADMIN")
-			|| Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))
-		);
-		if(!$canAccess) {
-			return Security::permissionFailure($this,
-				"The e-commerce development control panel is secured and you need administrator rights to access it. " .
-				"Enter your credentials below and we will send you right along.");
 		}
 	}
 
 	/**
 	 * standard, required method
+	 * @param String $action
 	 * @return String link for the "Controller"
 	 */
-	public function Link($action = null) {
+	public function Link($action = "") {
 		$action = ($action) ? $action : "";
 		return Controller::join_links(Director::absoluteBaseURL(), 'dev/ecommerce/'.$action);
 	}
@@ -123,19 +112,27 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 0. OVERALL CONFIG
 	//##############################
 
+	/**
+	 * List of overall configuration BuildTasks
+	 * @var Array
+	 */
 	protected $overallconfig = array(
 		"ecommercecheckconfiguration"
 	);
 
 	/**
-	 * @return DataObjectSet list of migration tasks
-	 *
+	 * list of config tasks
+	 * @return ArrayList
 	 */
 	function OverallConfig() {
 		return $this->createMenuDOSFromArray($this->overallconfig, $type = "Config");
 	}
 
-	function ecommercecheckconfiguration($request){
+	/**
+	 * execute the task
+	 * @param HTTPRequest $request
+	 */
+	function ecommercecheckconfiguration(SS_HTTPRequest $request){
 		$this->runTask("EcommerceCheckConfiguration", $request);
 	}
 
@@ -150,6 +147,10 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 1. ECOMMERCE SETUP (DEFAULT RECORDS)
 	//##############################
 
+	/**
+	 * List of setup BuildTasks
+	 * @var Array
+	 */
 	protected $ecommerceSetup = array(
 		"setorderidstartingnumber",
 		"createecommercemembergroups",
@@ -160,39 +161,12 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of data cleanup tasks
-	 *
+	 * list of data setup tasks
+	 * @return ArrayList
 	 */
 	function EcommerceSetup() {
 		return $this->createMenuDOSFromArray($this->ecommerceSetup, $type = "EcommerceSetup");
 	}
-
-	function setorderidstartingnumber($request){
-		$this->runTask("SetOrderIDStartingNumber", $request);
-	}
-
-	function createecommercemembergroups($request){
-		$this->runTask("CreateEcommerceMemberGroups", $request);
-	}
-
-	function ecommercedefaultrecords($request){
-		$this->runTask("EcommerceDefaultRecords", $request);
-	}
-
-	function adddefaultecommerceproducts($request){
-		$this->runTask("AddDefaultEcommerceProducts", $request);
-	}
-
-	function ecommercecountryandregiontasks($request){
-		$this->runTask("EcommerceCountryAndRegionTasks", $request);
-	}
-
-	function ecommercetasklinkproductwithimages($request){
-		$this->runTask("EcommerceTaskLinkProductWithImages", $request);
-	}
-
-
-
 
 
 
@@ -201,9 +175,12 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 2. REGULAR MAINTENANCE
 	//##############################
 
+	/**
+	 * List of regular maintenance BuildTasks
+	 * @var Array
+	 */
 	protected $regularMaintenance = array(
 		"cartcleanuptask",
-		"recalculatethenumberofproductssold",
 		"addcustomerstocustomergroups",
 		"fixbrokenordersubmissiondata",
 		"cleanupproductfullsitetreesorting",
@@ -214,84 +191,13 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of data cleanup tasks
+	 * regular data cleanup tasks
+	 * @return ArrayList
 	 *
 	 */
 	function RegularMaintenance() {
 		return $this->createMenuDOSFromArray($this->regularMaintenance, $type = "RegularMaintenance");
 	}
-
-	/**
-	 * executes build task
-	 *
-	 */
-	function cartcleanuptask($request) {
-		$this->runTask("CartCleanupTask", $request);
-	}
-
-	/**
-	 * executes build task
-	 *
-	 */
-	function recalculatethenumberofproductssold($request) {
-		$this->runTask("RecalculateTheNumberOfProductsSold", $request);
-	}
-	/**
-	 * executes build task: AddCustomersToCustomerGroups
-	 *
-	 */
-	function addcustomerstocustomergroups($request) {
-		$this->runTask("AddCustomersToCustomerGroups", $request);
-	}
-
-	/**
-	 * executes build task: FixBrokenOrderSubmissionData
-	 *
-	 */
-	function fixbrokenordersubmissiondata($request) {
-		$this->runTask("FixBrokenOrderSubmissionData", $request);
-	}
-
-	/**
-	 * executes build task: CleanupProductFullSiteTreeSorting
-	 *
-	 */
-	function cleanupproductfullsitetreesorting($request) {
-		$this->runTask("CleanupProductFullSiteTreeSorting", $request);
-	}
-
-	/**
-	 * executes build task: EcommerceProductVariationsFixesTask
-	 *
-	 */
-	function ecommerceproductvariationsfixestask($request) {
-		$this->runTask("EcommerceProductVariationsFixesTask", $request);
-	}
-
-	/**
-	 * executes build task: EcommerceProductImageReset
-	 *
-	 */
-	function ecommerceproductimagereset($request) {
-		$this->runTask("EcommerceProductImageReset", $request);
-	}
-
-	/**
-	 * executes build task: EcommerceTryToFinaliseOrdersTask
-	 *
-	 */
-	function ecommercetrytofinaliseorderstask($request) {
-		$this->runTask("EcommerceTryToFinaliseOrdersTask", $request);
-	}
-
-	/**
-	 * executes build task: EcommerceTaskArchiveAllSubmittedOrders
-	 *
-	 */
-	function ecommercetaskarchiveallsubmittedorders($request) {
-		$this->runTask("EcommerceTaskArchiveAllSubmittedOrders", $request);
-	}
-
 
 
 
@@ -303,32 +209,27 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 3. DEBUG ACTIONS
 	//##############################
 
+	/**
+	 * List of debug actions BuildTasks
+	 * @var Array
+	 */
 	protected $debugActions = array(
 		"ecommercetemplatetesttask",
 		"cartmanipulation_current",
-		"cartmanipulation_debug"
+		"cartmanipulation_debug",
+		"ecommercetaskbuilding_model",
+		"ecommercetaskbuilding_extending",
+		"checkallurls",
 	);
 
 	/**
-	 * @return DataObjectSet list of data debug actions
-	 *
+	 * list of data debug actions
+	 * @return ArrayList
 	 */
 	function DebugActions() {
 		return $this->createMenuDOSFromArray($this->debugActions, $type = "DebugActions");
 	}
 
-
-	function ecommercetemplatetesttask($request){
-		$this->runTask("EcommerceTemplateTestTask", $request);
-	}
-
-	function cartmanipulation_current($request){
-		$this->runTask("CartManipulation_Current", $request);
-	}
-
-	function CartManipulation_Debug($request){
-		$this->runTask("CartManipulation_Debug", $request);
-	}
 
 
 
@@ -339,6 +240,10 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 4. MIGRATIONS
 	//##############################
 
+	/**
+	 * List of migration BuildTasks
+	 * @var Array
+	 */
 	protected $migrations = array(
 		"ecommercemigration",
 		"ecommercecheckconfiguration",
@@ -346,33 +251,12 @@ class EcommerceDatabaseAdmin extends Controller{
 	);
 
 	/**
-	 * @return DataObjectSet list of migration tasks
-	 *
+	 * list of migration tasks
+	 * @return ArrayList
 	 */
 	function Migrations() {
 		return $this->createMenuDOSFromArray($this->migrations, $type = "Migrations");
 	}
-
-
-	/**
-	 * executes build task: EcommerceMigration
-	 *
-	 */
-	function ecommercemigration($request) {
-		$this->runTask("EcommerceMigration", $request);
-	}
-
-
-
-	/**
-	 * executes build task: SetDefaultProductGroupValues
-	 *
-	 */
-	function setdefaultproductgroupvalues($request) {
-		$this->runTask("SetDefaultProductGroupValues", $request);
-	}
-
-
 
 
 
@@ -380,26 +264,22 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 5. CRAZY SHIT
 	//##############################
 
+
+	/**
+	 * List of crazy shit BuildTasks
+	 * @var Array
+	 */
 	protected $crazyshit = array(
 		"deleteallorders",
 		"deleteecommerceproductstask"
 	);
 
 	/**
-	 * @return DataObjectSet list of migration tasks
-	 *
+	 * list of crazy actions tasks
+	 * @return ArrayList
 	 */
 	function CrazyShit() {
 		return $this->createMenuDOSFromArray($this->crazyshit, $type = "CrazyShit");
-	}
-
-
-	function deleteallorders($request){
-		$this->runTask("DeleteAllOrders", $request);
-	}
-
-	function deleteecommerceproductstask($request){
-		$this->runTask("DeleteEcommerceProductsTask", $request);
 	}
 
 
@@ -411,21 +291,33 @@ class EcommerceDatabaseAdmin extends Controller{
 	// 6. TESTS
 	//##############################
 
+	/**
+	 * List of tests
+	 * @var Array
+	 */
 	protected $tests = array(
-		'ShoppingCartTest' => 'Shopping Cart'
+		//'ShoppingCartTest' => 'Shopping Cart'
 	);
 
 	function Tests(){
-		$dos = new DataObjectSet();
+		$arrayList = new ArrayList();
 		foreach($this->tests as $class => $name){
-			$dos->push(new ArrayData(array(
-				'Name' => $name,
-				'Class' => $class
-			)));
+			$arrayList->push(
+				new ArrayData(
+					array(
+						'Name' => $name,
+						'Class' => $class
+					)
+				)
+			);
 		}
-		return $dos;
+		return $arrayList;
 	}
 
+	/**
+	 *
+	 * @return Array ????
+	 */
 	function AllTests(){
 		return implode(',',array_keys($this->tests));
 	}
@@ -435,33 +327,22 @@ class EcommerceDatabaseAdmin extends Controller{
 	// INTERNAL FUNCTIONS
 	//##############################
 
-	/**
-	 * shows a "Task Completed Message" on the screen.
-	 */
-	public function displayCompletionMessage($buildTask, $extraMessage = '') {
-		DB::alteration_message("
-			------------------------------------------------------- <br />
-			<strong>".$buildTask->getTitle()."</strong><br />
-			".$buildTask->getDescription()." <br />
-			TASK COMPLETED.<br />
-			------------------------------------------------------- <br />
-			$extraMessage
-		");
-	}
 
 	/**
 	 *
-	 *@param Array $buildTasks array of build tasks
+	 * @param Array $buildTasksArray array of build tasks
+	 * @param String $type
+	 * @return ArrayList(ArrayData(Link, Title, Description))
 	 */
-	protected function createMenuDOSFromArray($buildTasks, $type = "") {
-		$extendedBuildTasksArray = $this->extend("updateEcommerceDevMenu".$type, $buildTasks);
+	protected function createMenuDOSFromArray(Array $buildTasksArray, $type = "") {
+		$extendedBuildTasksArray = $this->extend("updateEcommerceDevMenu".$type, $buildTasksArray);
 		if(is_array($extendedBuildTasksArray)) {
 			foreach($extendedBuildTasksArray as $extendedBuildTasks) {
-				$buildTasks += $extendedBuildTasks;
+				$buildTasksArray += $extendedBuildTasks;
 			}
 		}
-		$dos = new DataObjectSet();
-		foreach($buildTasks as $buildTask) {
+		$arrayList = new ArrayList();
+		foreach($buildTasksArray as $buildTask) {
 			$obj = new $buildTask();
 			$do = new ArrayData(
 				array(
@@ -470,18 +351,74 @@ class EcommerceDatabaseAdmin extends Controller{
 					"Description" => $obj->getDescription()
 				)
 			);
-			$dos->push($do);
+			$arrayList->push($do);
 		}
-		return $dos;
+		return $arrayList;
 	}
 
-	public function runTask($className, $request) {
-		$buildTask = new $className();
-		$buildTask->verbose = true;
-		$buildTask->run($request);
-		$this->displayCompletionMessage($buildTask);
+	public function runTask($request) {
+		$taskName = $request->param('TaskName');
+		$renderer = new DebugView_EcommerceDatabaseAdmin();
+		$renderer->writeHeader();
+		$renderer->writeInfo("SilverStripe Ecommerce Tools", Director::absoluteBaseURL());
+		$renderer->writePreOutcome();
+		if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
+			$title = singleton($taskName)->getTitle();
+			if(Director::is_cli()) echo "Running task '$title'...\n\n";
+			elseif(!Director::is_ajax()) echo "<h1>Running task '$title'...</h1>\n";
+
+			$task = new $taskName();
+			if ($task->isEnabled()) {
+				$task->verbose = true;
+				$task->run($request);
+			}
+			else {
+				echo "<p>{$title} is disabled</p>";
+			}
+		}
+		else {
+			echo "Build task '$taskName' not found.";
+			if(class_exists($taskName)) echo "  It isn't a subclass of BuildTask.";
+			echo "\n";
+		}
+		$this->displayCompletionMessage($task);
+		$renderer->writePostOutcome();
+		$renderer->writeContent($this);
+		$renderer->writeFooter();
 	}
 
+	/**
+	 * shows a "Task Completed Message" on the screen.
+	 * @param BuildTask $buildTask
+	 * @param String $extraMessage
+	 */
+	protected function displayCompletionMessage(BuildTask $buildTask, $extraMessage = '') {
+		DB::alteration_message("
+			------------------------------------------------------- <br />
+			COMPLETED THE FOLLOWING TASK:<br />
+			<strong>".$buildTask->getTitle()."</strong><br />
+			".$buildTask->getDescription()." <br />
+			------------------------------------------------------- <br />
+			$extraMessage
+		");
+	}
 
 }
 
+
+class DebugView_EcommerceDatabaseAdmin extends DebugView{
+
+
+	function writePreOutcome(){
+		echo "<div style=\"border: 5px solid green; background-color: GoldenRod; border-radius: 15px; margin: 20px; padding: 20px\">";
+	}
+
+	function writePostOutcome(){
+		echo "</div>";
+	}
+
+	function writeContent(Controller $controller){
+		echo $controller->RenderWith($controller->class);
+	}
+
+}

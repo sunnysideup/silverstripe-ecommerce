@@ -12,6 +12,9 @@
 
 class OrderModifierForm extends Form {
 
+	/**
+	 * @var Order
+	 */
 	protected $order;
 
 	/**
@@ -21,12 +24,18 @@ class OrderModifierForm extends Form {
 	 *
 	 *@param $optionalController Controller
 	 *@param $name String
-	 *@param $fields FieldSet
-	 *@param $actions FieldSet
+	 *@param $fields FieldList
+	 *@param $actions FieldList
 	 *@param $validator SS_Validator
 	 **/
 
-	function __construct($optionalController = null, $name, FieldSet $fields, FieldSet $actions,$optionalValidator = null){
+	function __construct(
+		Controller $optionalController = null,
+		$name,
+		FieldList $fields,
+		FieldList $actions,
+		Validator $optionalValidator = null
+	){
 		if(!$optionalController) {
 			$controllerClassName = EcommerceConfig::get("OrderModifierForm", "controller_class");
 			$optionalController = new $controllerClassName();
@@ -36,17 +45,30 @@ class OrderModifierForm extends Form {
 			$optionalValidator = new $validatorClassName();
 		}
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
-		Requirements::themedCSS($this->ClassName);
+		$this->setAttribute("autocomplete", "off");
+		Requirements::themedCSS($this->ClassName, 'ecommerce');
 		$this->addExtraClass(lcfirst(ucwords($name)));
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
 		//add JS for the modifier - added in modifier
 	}
 
+	/**
+	 *
+	 * @param String $status
+	 * @param String $message
+	 */
 	function redirect($status = "success", $message = ""){
 		//return ShoppingCart::singleton()->addmessage($status, $message);
 	}
 
-	function submit($data, $form, $message = "order updated", $status = "good") {
+	/**
+	 * @param Array $data
+	 * @param Form $form
+	 * @param String $status
+	 * @param String $message
+	 * @return ShoppingCart Response (JSON / Redirect Back)
+	 */
+	function submit(Array $data, Form $form, $message = "order updated", $status = "good") {
 		//to do - add other checks here...
 		 return ShoppingCart::singleton()->setMessageAndReturn($message, $status);
 	}
@@ -61,12 +83,24 @@ class OrderModifierForm extends Form {
  */
 class OrderModifierForm_Controller extends Controller{
 
+	/**
+	 *
+	 * @var Order
+	 */
 	protected $currentOrder = null;
 
+	/**
+	 *
+	 * @var Array
+	 */
 	static $allowed_actions = array(
 		'removemodifier'
 	);
 
+
+	/**
+	 * sets virtual methods and order
+	 */
 	public function init() {
 		parent::init();
 		$this->currentOrder = ShoppingCart::current_order();
@@ -81,8 +115,8 @@ class OrderModifierForm_Controller extends Controller{
 		if($this->currentOrder) {
 			if($forms = $this->currentOrder->getModifierForms($this)) {
 				foreach($forms as $form) {
-					$this->addWrapperMethod($form->Name(), 'getOrderModifierForm');
-					self::$allowed_actions[] = $form->Name(); // add all these forms to the list of allowed actions also
+					$this->addWrapperMethod($form->getName(), 'getOrderModifierForm');
+					self::$allowed_actions[] = $form->getName(); // add all these forms to the list of allowed actions also
 				}
 			}
 		}
@@ -98,7 +132,7 @@ class OrderModifierForm_Controller extends Controller{
 		if($this->currentOrder) {
 			if($forms = $this->currentOrder->getModifierForms($this)) {
 				foreach($forms as $form) {
-					if($form->Name() == $name) return $form;
+					if($form->getName() == $name) return $form;
 				}
 			}
 		}

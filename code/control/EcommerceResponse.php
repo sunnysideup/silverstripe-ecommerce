@@ -18,8 +18,8 @@ abstract class EcommerceResponse extends SS_HTTPResponse {
 	 * @param String $message the message to return with the retur
 	 * @param Null | Array $data, that should be included
 	 */
-	public function ReturnCartData($status, $message = "", $data = null) {
-		user_error("Make sure to extend the EcommerceResponse class for your own purposes", E_USER_NOTICE);
+	public function ReturnCartData(Array $messages = array(), Array $additionalData = null, $status = "success") {
+		user_error("Make sure to extend the EcommerceResponse::ReturnCartData class for your own purposes.", E_USER_NOTICE);
 	}
 
 

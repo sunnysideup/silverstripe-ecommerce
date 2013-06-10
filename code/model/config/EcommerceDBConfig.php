@@ -91,7 +91,6 @@ class EcommerceDBConfig extends DataObject {
 		"UseThisOneNice" => "Use this configuration set"
 	); //note no => for relational fields
 
-
 	/**
 	 * Standard SS Method
 	 * @param Member $member
@@ -119,8 +118,7 @@ class EcommerceDBConfig extends DataObject {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
-		$shopAdminCode = EcommerceConfig::get("EcommerceRole", "admin_permission_code");
-		if($member && Permission::checkMember($member, $shopAdminCode)) {
+		if($member && $member->IsShopAdmin()) {
 			return true;
 		}
 		return parent::canEdit($member);
@@ -166,7 +164,7 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveModelNames" => false,
 		"ProductsHaveQuantifiers" => false,
 		"ProductsAlsoInOtherGroups" => false,
-		"ProductsHaveVariations" => false,
+		//"ProductsHaveVariations" => false,
 		"CurrenciesExplanation" => "<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>",
 		'AllowFreeProductPurchase' => true
 	);
@@ -195,8 +193,14 @@ class EcommerceDBConfig extends DataObject {
 		function i18n_plural_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATIONS", "Ecommerce Configurations");}
 
 	/**
-	 * static holder for its own (or other EcommerceDBConfig) class.
+	 * Standard SS variable.
 	 * @var String
+	 */
+	public static $description = "A set of configurations for the online shop. Each shop needs to have one or more sets.";
+
+	/**
+	 * static holder for its own (or other EcommerceDBConfig) class.
+	 * @var String | NULL
 	 */
 	protected static $my_current_one = null;
 		public static function reset_my_current_one() {self::$my_current_one = null;}
@@ -208,15 +212,21 @@ class EcommerceDBConfig extends DataObject {
 	public static function current_ecommerce_db_config(){
 		if(!self::$my_current_one) {
 			$className =  EcommerceConfig::get("EcommerceDBConfig", "ecommerce_db_config_class_name");
-			self::$my_current_one = DataObject::get_one($className);
+			$query = $className::get();
+			if($query->count()) {
+				self::$my_current_one = $query->First();
+			}
+			else {
+				self::$my_current_one = new $className();
+			}
 		}
 		return self::$my_current_one;
 	}
 
 	/**
 	 * standard SS method for decorators.
-	 * @param Array - $fields: array of fields to start with
-	 * @return null ($fields variable is automatically updated)
+	 * @param Boolean $includerelations
+	 * @return Array
 	 */
 	function fieldLabels($includerelations = true) {
 		$defaultLabels = parent::fieldLabels();
@@ -237,7 +247,7 @@ class EcommerceDBConfig extends DataObject {
 			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch between configurations)."),
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
-			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Invoice title (e.g. Tax Invoice or Update from ...)"),
+			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Email title (e.g. Tax Invoice or Update from ...)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),
 			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address (e.g. sales@mysite.com, you can also use something like: \"Our Shop Name Goes Here\" &lt;sales@mysite.com&gt;)"),
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
@@ -249,7 +259,7 @@ class EcommerceDBConfig extends DataObject {
 			"ProductsHaveModelNames" =>  _t("EcommerceDBConfig.PRODUCTSHAVEMODELNAMES", "Products have model names / numbers -  untick to hide model field"),
 			"ProductsHaveQuantifiers" => _t("EcommerceDBConfig.PRODUCTSHAVEQUANTIFIERS", "Products have quantifiers (e.g. per year, each, per dozen, etc...) - untick to hide model field"),
 			"ProductsAlsoInOtherGroups" => _t("EcommerceDBConfig.PRODUCTSALSOINOTHERGROUPS", "Allow products to show in multiple product groups."),
-			"ProductsHaveVariations" => _t("EcommerceDBConfig.PRODUCTSHAVEVARIATIONS", "Products have variations (e.g. size, colour, etc...)."),
+			//"ProductsHaveVariations" => _t("EcommerceDBConfig.PRODUCTSHAVEVARIATIONS", "Products have variations (e.g. size, colour, etc...)."),
 			"CurrenciesExplanation" => _t("EcommerceDBConfig.CURRENCIESEXPLANATION", "Explanation on how the currency options work (if any)."),
 			"EmailLogo" => _t("EcommerceDBConfig.EMAILLOGO", "Email Logo"),
 			"DefaultProductImage" => _t("EcommerceDBConfig.DEFAULTPRODUCTIMAGE", "Default Product Image"),
@@ -257,14 +267,14 @@ class EcommerceDBConfig extends DataObject {
 			"DefaultSmallImageSize" => _t("EcommerceDBConfig.DEFAULTSMALLIMAGESIZE", "Product Small Image Optimised Size"),
 			"DefaultContentImageSize" => _t("EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE", "Product Content Image Optimised Size"),
 			"DefaultLargeImageSize" => _t("EcommerceDBConfig.DEFAULTLARGEIMAGESIZE", "Product Large Image Optimised Size"),
-			'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE', 'Allow free products to be purchased')
+			"AllowFreeProductPurchase" => _t("EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE", "Allow free products to be purchased")
 		);
 		return $newLabels;
 	}
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -279,40 +289,38 @@ class EcommerceDBConfig extends DataObject {
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
 				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
-				new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"], 2, 2)
+				$htmlEditorField1 = new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"]),
+				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase'])
 			),
-			new Tab('ProductDisplay',
+			new Tab('Products',
 				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
 				new CheckboxField("OnlyShowProductsThatCanBePurchased", $fieldLabels["OnlyShowProductsThatCanBePurchased"]),
-				new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"], 2, 2),
+				$htmlEditorField2 = new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
 				new CheckboxField("ProductsHaveWeight", $fieldLabels["ProductsHaveWeight"]),
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
-				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
-				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"]),
-				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase'])
+				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"])
+				//new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
 			),
 			new Tab('ProductImages',
-				new ImageField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
+				new UploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
 				new ReadonlyField("DefaultThumbnailImageSize", $fieldLabels["DefaultThumbnailImageSize"], $productImage->ThumbWidth()."px x ".$productImage->ThumbHeight()."px "),
 				new ReadonlyField("DefaultSmallImageSize", $fieldLabels["DefaultSmallImageSize"], $productImage->SmallWidth()."px x ".$productImage->SmallHeight()."px "),
 				new ReadonlyField("DefaultContentImageSize", $fieldLabels["DefaultContentImageSize"], $productImage->ContentWidth()."px wide"),
 				new ReadonlyField("DefaultLargeImageSize", $fieldLabels["DefaultLargeImageSize"], $productImage->LargeWidth()."px wide")
 			),
-			new Tab('Checkout',
+			new Tab('Address',
 				new TextField("PostalCodeURL", $fieldLabels["PostalCodeURL"]),
-				new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"])
+				new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"]),
+				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
 			),
 			new Tab('Emails',
 				new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),
-				new ImageField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos")
-			),
-			new Tab('Invoice',
-				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"]),
-				new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"] , 5,5)
+				new UploadField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos"),
+				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"])
 			),
 			new Tab('Process',
-				new ComplexTableField($this, "OrderSteps", "OrderStep")
+				$this->getOrderStepsField()
 			),
 			new Tab('Advanced',
 				new HeaderField("EcommerceVersionHeading", "Version"),
@@ -334,6 +342,9 @@ class EcommerceDBConfig extends DataObject {
 				new LiteralField('op','Include a drag-and-drop interface for customising order steps (Like WidgetArea)')
 			)*/
 		));
+		$htmlEditorField1->setRows(3);
+		$htmlEditorField2->setRows(3);
+		$htmlEditorField3->setRows(3);
 		$fields->addFieldsToTab(
 			"Root.Main",
 			array(
@@ -341,16 +352,33 @@ class EcommerceDBConfig extends DataObject {
 				new CheckboxField("ShopClosed", $fieldLabels["ShopClosed"])
 			)
 		);
+		//set cols
+		$fields->dataFieldByName("CurrenciesExplanation")->setRows(2);
+		$fields->dataFieldByName("NotForSaleMessage")->setRows(2);
+		$fields->dataFieldByName("ShopPhysicalAddress")->setRows(2);
 		return $fields;
 	}
 
+	protected function getOrderStepsField(){
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(10),
+			new GridFieldPaginator(10),
+			new GridFieldEditButton(),
+			new GridFieldDeleteAction(),
+			new GridFieldDetailForm()
+		);
+		return new GridField("OrderSteps", _t("OrderStep.PLURALNAME", "Order Steps"), OrderStep::get(), $gridFieldConfig);
+	}
 
 	/**
 	 * tells us if a Class Name is a buyable
 	 * @todo: consider using Ecomerce Configuration instead?
 	 * In EcomConfig we only list base classes.
-	 *@param String $className - name of the class to be tested
-	 *@return Boolean
+	 *
+	 * @param String $className - name of the class to be tested
+	 * @return Boolean
 	 */
 	static function is_buyable($className) {
 		$implementorsArray = class_implements($className);
@@ -373,14 +401,13 @@ class EcommerceDBConfig extends DataObject {
 	 * @return String
 	 */
 	public function Currency() {
-		if(class_exists('Payment')) {
-			return Payment::site_currency();
-		}
+		return EcommerceConfig::get("EcommerceCurrency", "default_currency");
 	}
 
 	/**
-	 *
-	 * return DataObjectSet (list of EcommerceCurrencies)
+	 * return null if there is less than two currencies in use
+	 * on the site.
+	 * @return DataList | Null
 	 */
 	function Currencies() {
 		return EcommerceCurrency::get_list();
@@ -413,7 +440,6 @@ class EcommerceDBConfig extends DataObject {
 	public function OrderConfirmationPageLink() {
 		return OrderConfirmationPage::find_link();
 	}
-
 
 	/**
 	 * Returns a link to a default image.
@@ -454,16 +480,20 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	function onAfterWrite(){
 		if($this->UseThisOne) {
-			$configs = DataObject::get("EcommerceDBConfig", "\"UseThisOne\" = 1 AND \"ID\" <>".$this->ID);
-			if($configs){
+			$configs = EcommerceDBConfig::get()
+				->Filter(array("UseThisOne" => 1))
+				->Exclude(array("ID" => $this->ID));
+			if($configs->count()){
 				foreach($configs as $config) {
 					$config->UseThisOne = 0;
 					$config->write();
 				}
 			}
 		}
-		$configs = DataObject::get("EcommerceDBConfig", "\"Title\" = '".$this->Title."' AND \"ID\" <>".$this->ID);
-		if($configs){
+		$configs = EcommerceDBConfig::get()
+			->Filter(array("Title" => $this->Title))
+			->Exclude(array("ID" => $this->ID));
+		if($configs->count()){
 			foreach($configs as $key => $config) {
 				$config->Title = $config->Title."_".$config->ID;
 				$config->write();
@@ -504,8 +534,6 @@ class EcommerceDBConfig extends DataObject {
 	public function UseThisOneNice(){
 		return $this->UseThisOne ? "YES" : "NO";
 	}
-
-
 
 }
 

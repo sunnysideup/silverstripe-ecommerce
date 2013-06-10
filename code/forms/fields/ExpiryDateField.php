@@ -15,7 +15,7 @@ class ExpiryDateField extends TextField {
 	/**
 	 *@return HTML
 	 **/
-	function Field() {
+	function Field($properties = array()) {
 		$monthValue = '';
 		$yearValue = '';
 		if(strlen($this->value) == 4) {
@@ -23,11 +23,11 @@ class ExpiryDateField extends TextField {
 			$yearValue = "20".substr($this->value, 2, 2);
 		}
 		$field = "
-			<span id=\"{$this->name}_Holder\" class=\"expiryDateField\">
-				<select class=\"expiryDate expiryDateMonth\" name=\"{$this->name}[0]\" >
+			<span id=\"".$this->getName()."_Holder\" class=\"expiryDateField\">
+				<select class=\"expiryDate expiryDateMonth\" name=\"".$this->getName()."[0]\" >
 					<option value=\"\" selected=\"selected\">Month</option>".$this->makeSelectList($this->monthArray(), $monthValue)."
 				</select>
-				<select class=\"expiryDate expiryDateYear\" name=\"{$this->name}[1]\" >
+				<select class=\"expiryDate expiryDateYear\" name=\"".$this->getName()."[1]\" >
 					<option value=\"\" selected=\"selected\">Year</option>".$this->makeSelectList($this->yearArray(), $yearValue)."
 				</select>
 			</span>";
@@ -78,17 +78,18 @@ Behaviour.register({
 });
 JS;
 		Requirements::customScript($jsFunc, 'func_validateExpiryDate');
-		return "\$('$formID').validateExpiryDate('$this->name');";
+		return "\$('$formID').validateExpiryDate('".$this->getName()."');";
 	}
 
 	/**
-	 *@return boolean
+	 * @param $validator Validator
+	 * @return boolean
 	 **/
 	function validate($validator){
 		// If the field is empty then don't return an invalidation message'
 		if(!isset($this->value[0])) {
 			$validator->validationError(
-				$this->name,
+				$this->getName(),
 				"Please ensure you have entered the expiry date month correctly.",
 				"validation",
 				false
@@ -97,7 +98,7 @@ JS;
 		}
 		if(!isset($this->value[1])) {
 			$validator->validationError(
-				$this->name,
+				$this->getName(),
 				"Please ensure you have entered the expiry date year correctly.",
 				"validation",
 				false
@@ -114,7 +115,7 @@ JS;
 		$expiryTs = strtotime("20".$yearValue."-".$monthValue."-01");
 		if($ts > $expiryTs) {
 			$validator->validationError(
-				$this->name,
+				$this->getName(),
 				"Please ensure you have entered the expiry date correctly.",
 				"validation",
 				false
@@ -125,7 +126,7 @@ JS;
 	}
 
 	/**
-	 *@return array(2000 => 2000, 2001 => 2001, etc...)
+	 * @return array(2000 => 2000, 2001 => 2001, etc...)
 	 **/
 	protected function yearArray() {
 		$list = array();
@@ -139,9 +140,11 @@ JS;
 
 
 	/**
-	 *@return string (html)
+	 * @param $array - list of options...
+	 * @param String $currentValue
+	 * @return string (html)
 	 **/
-	protected function makeSelectList($array, $currentValue) {
+	protected function makeSelectList(Array $array, $currentValue) {
 		$string = '';
 		foreach($array as $key => $value) {
 			$select = '';
@@ -154,7 +157,7 @@ JS;
 	}
 
 	/**
-	 *@return array(1 => "Jan", etc...)
+	 * @return array(1 => "Jan", etc...)
 	 **/
 	protected function monthArray() {
 		$shortMonths = EcommerceConfig::get("ExpiryDateField", "short_months");

@@ -67,22 +67,28 @@ class CartCleanupTask extends BuildTask {
 		$time = strtotime("-".$clearMinutes." minutes");
 		$where = "\"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
-		$join = "";
 		$limit = "0, ".$maximumNumberOfObjectsDeleted;
 		$neverDeleteIfLinkedToMember = EcommerceConfig::get("CartCleanupTask", "never_delete_if_linked_to_member");
 		if($neverDeleteIfLinkedToMember) {
 			$where .= " AND \"Member\".\"ID\" IS NULL";
-			$join .= "LEFT JOIN \"Member\" ON \"Member\".\"ID\" = \"Order\".\"MemberID\" ";
 			$memberDeleteNote = "(Carts linked to a member will NEVER be deleted)";
 		}
 		else {
 			$memberDeleteNote = "(We will also delete carts in this category that are linked to a member)";
 		}
-		$oldCarts = DataObject::get('Order',$where, $sort, $join, $limit);
-		if($oldCarts){
+		$oldCarts = Order::get()
+			->where($where)
+			->sort($sort)
+			->limit($maximumNumberOfObjectsDeleted);
+		$leftMemberJoin = "";
+		if($neverDeleteIfLinkedToMember) {
+			$oldCarts = $oldCarts->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"");
+			$leftMemberJoin = "LEFT JOIN Member ON \"Member\".\"ID\" = \"Order\".\"MemberID\"";
+		}
+		if($oldCarts->count()){
 			$count = 0;
 			if($this->verbose) {
-				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
+				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $leftMemberJoin WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("
 					<h2>Total number of abandonned carts: ".$totalToDelete."</h2>
@@ -109,22 +115,28 @@ class CartCleanupTask extends BuildTask {
 		$time = strtotime("-".$clearMinutes." minutes");
 		$where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
-		$join = "";
 		$limit = "0, ".$maximumNumberOfObjectsDeleted;
 		$neverDeleteIfLinkedToMember = EcommerceConfig::get("CartCleanupTask", "never_delete_if_linked_to_member");
 		if($neverDeleteIfLinkedToMember) {
 			$where .= " AND \"Member\".\"ID\" IS NULL";
-			$join .= "LEFT JOIN \"Member\" ON \"Member\".\"ID\" = \"Order\".\"MemberID\" ";
 			$memberDeleteNote = "(Carts linked to a member will NEVER be deleted)";
 		}
 		else {
 			$memberDeleteNote = "(We will also delete carts in this category that are linked to a member)";
 		}
-		$oldCarts = DataObject::get('Order',$where, $sort, $join, $limit);
-		if($oldCarts){
+		$oldCarts = Order::get()
+			->where($where)
+			->sort($sort)
+			->limit($maximumNumberOfObjectsDeleted);
+		$leftMemberJoin = "";
+		if($neverDeleteIfLinkedToMember) {
+			$oldCarts = $oldCarts->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"");
+			$leftMemberJoin = "LEFT JOIN Member ON \"Member\".\"ID\" = \"Order\".\"MemberID\"";
+		}
+		if($oldCarts->count()){
 			$count = 0;
 			if($this->verbose) {
-				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $join WHERE $where");
+				$totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $leftMemberJoin WHERE $where");
 				$totalToDelete = $totalToDeleteSQLObject->value();
 				DB::alteration_message("
 					<h2>Total number of empty carts: ".$totalToDelete."</h2>
@@ -178,8 +190,9 @@ class CartCleanupTask extends BuildTask {
 						}
 					}
 					if(count($oneToOneIDArray)) {
-						$unlinkedObjects = DataObject::get($className, "\"$className\".\"ID\" IN (".implode(",", $oneToOneIDArray).")");
-						if($unlinkedObjects){
+						$unlinkedObjects = $className::get()
+							->filter(array("ID" => $oneToOneIDArray));
+						if($unlinkedObjects->count()){
 							foreach($unlinkedObjects as $unlinkedObject){
 								if($this->verbose) {
 									DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");
@@ -234,8 +247,9 @@ class CartCleanupTask extends BuildTask {
 						}
 					}
 					if(count($oneToManyIDArray)) {
-						$unlinkedObjects = DataObject::get($classWithLastEdited, "\"$classWithLastEdited\".\"ID\" IN (".implode(",", $oneToManyIDArray).")");
-						if($unlinkedObjects){
+						$unlinkedObjects = $classWithLastEdited::get()
+							->filter(array("ID" => $oneToManyIDArray));
+						if($unlinkedObjects->count()){
 							foreach($unlinkedObjects as $unlinkedObject){
 								if($this->verbose) {
 									DB::alteration_message("Deleting ".$unlinkedObject->ClassName." with ID #".$unlinkedObject->ID." because it does not appear to link to an order.", "deleted");

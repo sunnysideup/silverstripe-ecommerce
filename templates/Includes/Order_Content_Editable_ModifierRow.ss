@@ -1,5 +1,5 @@
 <tr  class="$Classes hideOnZeroItems<% if HideInAjaxUpdate %> hideForNow<% end_if %>"  id="$AJAXDefinitions.TableID">
-	<td colspan="3" scope="row">
+	<td colspan="3">
 			<% if ShowFormInEditableOrderTable %>
 				<div class="modifierForm">$ModifierForm</div>
 			<% else %>
@@ -14,7 +14,7 @@
 	<td class="right remove">
 		<% if CanBeRemoved %>
 			<strong>
-				<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveLink" title="<% sprintf(_t("Order.REMOVE","Remove &quot;%s&quot; from your order"),$TableTitle) %>">
+				<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveLink" title="<%t Order.REMOVE 'Remove &quot;{name}&quot; from your order' name=$TableTitle.ATT %>">
 					<img src="ecommerce/images/remove.gif" alt="x" />
 				</a>
 			</strong>

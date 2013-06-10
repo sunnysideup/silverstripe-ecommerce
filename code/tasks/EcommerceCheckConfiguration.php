@@ -90,7 +90,6 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->orderSteps();
 					$this->checkoutAndModifierDetails();
 					$this->getAjaxDefinitions();
-					$this->AllEcommerceClasses();
 					$this->definedConfigs();
 				}
 				else {
@@ -116,7 +115,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$files = implode(", ", $configsObject->fileLocations());
 		global $project;
 		$baseFolder = Director::baseFolder();
-		$projectFolder = $project."/_config";
+		$projectFolder = $project."/ecommerce_config";
 		$baseAndProjectFolder = $baseFolder."/".$projectFolder;
 		$file = "ecommerce.yaml";
 		$projectFolderAndFile = $projectFolder."/".$file;
@@ -224,8 +223,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 					echo "<br /><pre>$className:";
 					$classConfigs = $this->definitions[$className];
 					foreach($classConfigs as $key => $classConfig) {
-						echo "
-	$key: ".$this->defaults[$className][$key];
+						echo
+						"$key: ".$this->defaults[$className][$key];
 					}
 					echo "</pre>";
 				}
@@ -241,8 +240,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 		<style>
 			th[scope='col'] {text-align: left; border-bottom: 3px solid blue;padding-top: 40px;}
 			td {vertical-align: top; border-left: 1px solid blue; border-bottom: 1px solid blue;}
-			td span {color: grey; font-size: 0.8em;}
-			td span {color: grey; font-size: 0.8em; display: block}
+			td span {color: #333; font-size: 0.8em;}
+			td span {color: #333; font-size: 0.8em; display: block}
 			.sameConfig {color: #333;}
 			.newConfig{color: green; font-weight: bold; font-size: 1.2em;}
 			#TOC {
@@ -254,6 +253,8 @@ class EcommerceCheckConfiguration extends BuildTask{
 				column-gap: 20px;
 			}
 			a.backToTop {display: block; font-size: 0.8em; }
+			td.newConfig {width: 70%;}
+			pre {white-space:pre-wrap; font-size: 9px!important; font-weight: bold;}
 		</style>
 		<h2>Configuration Report</h2>";
 		$htmlTable = "
@@ -363,13 +364,6 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	protected function addOtherValuesToConfigs(){
-		$this->definitions["Payment"]["site_currency"] = "Default currency for the site. <br />SET USING Payment::set_site_currency(\"NZD\") in the _config.php FILES";
-		$this->configs["Payment"]["site_currency"] = Payment::site_currency()." ";
-		$this->defaults["Payment"]["site_currency"] = "[no default set]";
-
-		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. <br />SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
-		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
-		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
 
 		$siteConfig = SiteConfig::current_site_config();
 		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. <br />This is set in the <a href=\"/admin/show/root\">site configuration</a>.";
@@ -383,35 +377,43 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 	protected function addPages(){
 
-		$checkoutPage = DataObject::get_one("CheckoutPage");
-		$this->getPageDefinitions($checkoutPage);
-		$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.<br />".($checkoutPage ? "<a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "view: <a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a><br />".$checkoutPage->configArray : " NOT CREATED!";
-		$this->defaults["Pages"]["CheckoutPage"] = $checkoutPage ? $checkoutPage->defaultsArray : "[add page first to see defaults]";
 
-		$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
-		$this->getPageDefinitions($orderConfirmationPage);
-		$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.<br />".($orderConfirmationPage ? "<a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "view: <a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a><br />".$orderConfirmationPage->configArray: " NOT CREATED!";
-		$this->defaults["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : "[add page first to see defaults]";
+		if($checkoutPage = CheckoutPage::get()->First()) {
+			$this->getPageDefinitions($checkoutPage);
+			$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.<br />".($checkoutPage ? "<a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "view: <a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a><br />".$checkoutPage->configArray : " NOT CREATED!";
+			$this->defaults["Pages"]["CheckoutPage"] = $checkoutPage ? $checkoutPage->defaultsArray : "[add page first to see defaults]";
+		}
 
-		$accountPage = DataObject::get_one("AccountPage");
-		$this->getPageDefinitions($accountPage);
-		$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.<br />".($accountPage ? "<a href=\"/admin/show/".$accountPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a><br />".$accountPage->configArray : " NOT CREATED!";
-		$this->defaults["Pages"]["AccountPage"] = $accountPage ? $accountPage->defaultsArray : "[add page first to see defaults]";
+		if($orderConfirmationPage = OrderConfirmationPage::get()->First()) {
+			$this->getPageDefinitions($orderConfirmationPage);
+			$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.<br />".($orderConfirmationPage ? "<a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "view: <a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a><br />".$orderConfirmationPage->configArray: " NOT CREATED!";
+			$this->defaults["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : "[add page first to see defaults]";
+		}
 
-		$cartPage = DataObject::get_one("CartPage", "ClassName = 'CartPage'");
-		$this->getPageDefinitions($cartPage);
-		$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-		$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
-		$this->defaults["Pages"]["CartPage"] = $cartPage ? $cartPage->defaultsArray : "[add page first to see defaults]";
+		if($accountPage = AccountPage::get()->First()) {
+			$this->getPageDefinitions($accountPage);
+			$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.<br />".($accountPage ? "<a href=\"/admin/show/".$accountPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a><br />".$accountPage->configArray : " NOT CREATED!";
+			$this->defaults["Pages"]["AccountPage"] = $accountPage ? $accountPage->defaultsArray : "[add page first to see defaults]";
+		}
 
+		if(
+			$cartPage = CartPage::get()
+				->Filter(array("ClassName" => "CartPage"))
+				->First()
+		) {
+			$this->getPageDefinitions($cartPage);
+			$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
+			$this->defaults["Pages"]["CartPage"] = $cartPage ? $cartPage->defaultsArray : "[add page first to see defaults]";
+		}
 	}
 
-	private function getPageDefinitions($page){
+	private function getPageDefinitions(SiteTree $page){
 		if($page) {
-			$fields = $page->combined_static($page->ClassName, "db", "Page");
+			$fields = Config::inst()->get($page->ClassName, "db");
 			$defaultsArray = $page->stat("defaults", true);
 			$configArray = array();
 			if($fields) {
@@ -429,40 +431,42 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 
 	function orderSteps(){
-		$steps = DataObject::get("OrderStep");
-		foreach($steps as $step) {
-			$fields = $step->combined_static($step->ClassName, "db");
-			$defaultsArray = $step->stat("defaults", true);
-			$configArray = array();
-			foreach($fields as $fieldKey => $fieldType) {
-				if($fields) {
-					$configArray[$fieldKey] = $step->$fieldKey;
-					if(!isset($defaultsArray[$fieldKey])) {
-						$defaultsArray[$fieldKey] = "[default not set]";
+		$steps = OrderStep::get();
+		if($steps->count()) {
+			foreach($steps as $step) {
+				$fields = Config::inst()->get($step->ClassName, "db");
+				$defaultsArray = $step->stat("defaults", true);
+				$configArray = array();
+				foreach($fields as $fieldKey => $fieldType) {
+					if($fields) {
+						$configArray[$fieldKey] = $step->$fieldKey;
+						if(!isset($defaultsArray[$fieldKey])) {
+							$defaultsArray[$fieldKey] = "[default not set]";
+						}
 					}
 				}
+				$this->definitions["OrderStep"][$step->Code] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/shop/\">Ecommerce Configuration</a>.";
+				$this->configs["OrderStep"][$step->Code] = $configArray;
+				$this->defaults["OrderStep"][$step->Code] = $defaultsArray;
 			}
-			$this->definitions["OrderStep"][$step->Code] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/shop/\">Ecommerce Configuration</a>.";
-			$this->configs["OrderStep"][$step->Code] = $configArray;
-			$this->defaults["OrderStep"][$step->Code] = $defaultsArray;
 		}
 	}
 
 	function checkoutAndModifierDetails(){
-		$checkoutPage = DataObject::get_one("CheckoutPage");
+		$checkoutPage = CheckoutPage::get()->First();
 		if(!$checkoutPage) {
 			$task = new EcommerceDefaultRecords();
 			$task->run(null);
-			$checkoutPage = DataObject::get_one("CheckoutPage");
+			$checkoutPage = CheckoutPage::get()->First();
 			if(!$checkoutPage) {
 				user_error("There is no checkout page available and it seems impossible to create one.");
 			}
 		}
-		$steps = DataObject::get("CheckoutPage_StepDescription");
-		if($steps) {
+		$steps = CheckoutPage_StepDescription::get();
+		if($steps->count()) {
 			foreach($steps as $key => $step) {
 				$stepNumber = $key + 1;
-				$fields = $step->combined_static($step->ClassName, "db");
+				$fields = Config::inst()->get($step->ClassName, "db");
 				$defaultsArray = $step->stat("defaults", true);
 				$configArray = array();
 				foreach($fields as $fieldKey => $fieldType) {
@@ -478,10 +482,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 				$this->defaults["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $defaultsArray;
 			}
 		}
-		$steps = DataObject::get("OrderModifier_Descriptor");
-		if($steps) {
+		$steps = OrderModifier_Descriptor::get();
+		if($steps->count()) {
 			foreach($steps as $step) {
-				$fields = $step->combined_static($step->ClassName, "db");
+				$fields = Config::inst()->get($step->ClassName, "db");
 				$defaultsArray = $step->stat("defaults", true);
 				$configArray = array();
 				foreach($fields as $fieldKey => $fieldType) {
@@ -550,17 +554,5 @@ class EcommerceCheckConfiguration extends BuildTask{
 		}
 	}
 
-	/**
-	 * extracts other E-commerce Classes
-	 * @todo: retrieve description
-	 */
-	protected function AllEcommerceClasses(){
-		$otherClasses = ClassInfo::classes_for_folder("ecommerce");
-		foreach($otherClasses as $otherClass) {
-			$this->definitions["AllEcommerceClasses"][$otherClass] = "";
-			$this->defaults["AllEcommerceClasses"][$otherClass] = "";
-			$this->configs["AllEcommerceClasses"][$otherClass] = "<a href=\"/dev/viewcode/".$otherClass."\" target=\"_blank\">view</a>";
-		}
-	}
 }
 

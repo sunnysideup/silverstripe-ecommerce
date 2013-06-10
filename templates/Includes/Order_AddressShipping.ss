@@ -1,10 +1,10 @@
 <% if UseShippingAddress %>
 	<% if ShippingAddress %>
-		<% control ShippingAddress %>
+		<% with ShippingAddress %>
 <address class="addressSection" id="ShippingAddressSection">
 	<% include Order_AddressShippingInner %>
 </address>
-		<% end_control %>
+		<% end_with %>
 	<% else  %>
 		<p>
 			<% _t("NOSHIPPINGADDRESSAVAILABLE", "No shipping address available.") %>
@@ -12,10 +12,10 @@
 	<% end_if %>
 <% else %>
 	<% if BillingAddressID %>
-		<% control BillingAddress %>
+		<% with BillingAddress %>
 <address class="addressSection" id="ShippingAddressSection">
 <% include Order_AddressBillingInner %>
 </address>
-		<% end_control %>
+		<% end_with %>
 	<% end_if %>
 <% end_if %>

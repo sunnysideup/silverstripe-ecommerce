@@ -1,19 +1,19 @@
 ###############################################
-Silverstripe E-commerce 
+Silverstripe E-commerce
 ###############################################
 
 
 Developers
 -----------------------------------------------
 Nicolaas Francken [at] sunnysideup.co.nz
-Silverstripe Ltd and Jeremy and many others 
+Silverstripe Ltd and Jeremy and many others
 also contributed to this project. THANK YOU!
 
 
 Requirements
 -----------------------------------------------
-Payment
-SilverStripe 2.4+
+Geoip
+SilverStripe FrameWork + CMS 3+
 
 Project Home
 -----------------------------------------------

@@ -16,6 +16,7 @@ EcomProducts = {
 
 	selectVariationSelector: 'a.selectVariation',
 
+	//see: http://www.jacklmoore.com/colorbox/
 	colorboxDialogOptions_addVariations: {
 		maxHeight: "90%",
 		maxWidth: "90%",

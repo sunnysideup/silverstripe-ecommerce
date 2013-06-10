@@ -15,11 +15,12 @@
 	],
 	"require":{
 		"php": ">=5.3.2",
-		"silverstripe/framework": "2.4.*",
-		"silverstripe/payment": "0.3.*"
+		"silverstripe/framework": "~3.0",
+		"silverstripe/cms": "~3.0"
+		"silverstripe/geoip": "*"
 	},
-	"extra":{
-		"snapshot" : "http://silverstripe-ecommerce.com/_help/screenshot.png"
+	"suggest": {
+		"silverstripe/restfulserver": "adds resful server functionality to your e-commerce site (ability to access the data from third-party sites)"
 	},
 	"support":{
 		"issues" : "http://code.google.com/p/silverstripe-ecommerce/issues/list"

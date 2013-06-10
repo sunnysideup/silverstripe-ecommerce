@@ -19,8 +19,8 @@
 	<% end_if %>
 	<tbody>
 	<% if Items %>
-		<% control Items %>
-		<tr  class="itemRow $EvenOdd $FirstLast">
+		<% loop Items %>
+		<tr  class="itemRow $EvenOdd $FirstLast orderItem $ClassName orderattribute">
 			<td class="product title">
 				<% if Link %>
 					<a href="$Link" target="_blank">$TableTitle</a>
@@ -33,24 +33,24 @@
 			<td class="right unitprice">$UnitPriceAsMoney.NiceDefaultFormat</td>
 			<td class="right total">$CalculatedTotalAsMoney.NiceDefaultFormat</td>
 		</tr>
-		<% end_control %>
+		<% end_loop %>
 
 		<tr class="gap summary" id="SubTotal">
 			<th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
 			<td class="right subTotal">$SubTotalAsMoney.NiceDefaultFormat</td>
 		</tr>
 
-		<% control Modifiers %>
+		<% loop Modifiers %>
 			<% if ShowInTable %>
 		<tr class="modifierRow $EvenOdd $FirstLast $Classes <% if HideInAjaxUpdate %> hideForNow<% end_if %>">
 			<td colspan="3" scope="row">$TableTitle.XML</td>
 			<td class="right total">$TableValueAsMoney.NiceDefaultFormat</td>
 		</tr>
 			<% end_if %>
-		<% end_control %>
+		<% end_loop %>
 	<% else %>
 		<tr class="showOnZeroItems">
-			<td colspan="4" scope="row" class="center">
+			<td colspan="4" class="center">
 				<% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
 			</td>
 		</tr>

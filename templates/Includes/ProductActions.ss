@@ -9,7 +9,7 @@
 	<% else %>
 		<% if IsOlderVersion %>
 		<p class="message warning">
-			<% sprintf(_t("ProductGroup.VIEWINGOLDERVERSION","You are viewing an older version of %s."),$Title) %>
+			<%t ProductGroup.VIEWINGOLDERVERSION 'You are viewing an older version of {name}' name=$Title %>
 			<% _t("ProductGroup.YOUMAYALSOVIEW","You may also view") %>
 			<a href="$Link"><% _t("ProductGroup.CURRENTVERSION","the current version") %></a>.
 		</p>

@@ -67,22 +67,44 @@ class CheckoutPage extends CartPage {
 	);
 
 	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $singular_name = "Checkout Page";
+		function i18n_singular_name() { return _t("CheckoutPage.SINGULARNAME", "Checkout Page");}
+
+	/**
+	 * standard SS variable
+	 * @Var String
+	 */
+	public static $plural_name = "Checkout Pages";
+		function i18n_plural_name() { return _t("CheckoutPage.PLURALNAME", "Checkout Pages");}
+
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.";
+
+	/**
 	 * Returns the Terms and Conditions Page (if there is one).
-	 * @return DataObject (Page)
+	 * @return Page | NULL
 	 */
 	public static function find_terms_and_conditions_page() {
-		$checkoutPage = DataObject::get_one('CheckoutPage');
-		if($checkoutPage) {
-			return DataObject::get_by_id('Page', $checkoutPage->TermsPageID);
+		$checkoutPage = CheckoutPage::get()->First();
+		if($checkoutPage && $checkoutPage->TermsPageID) {
+			return Page::get()->byID($checkoutPage->TermsPageID);
 		}
 	}
 
 	/**
 	 * Returns the link or the Link to the Checkout page on this site
+	 * @param String $action
 	 * @return String (URLSegment)
 	 */
 	public static function find_link($action = "") {
-		if ($page = DataObject::get_one("CheckoutPage")) {
+		$page = CheckoutPage::get()->First();
+		if ($page) {
 			return $page->Link($action);
 		}
 		user_error("No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.", E_USER_NOTICE);
@@ -91,7 +113,8 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * Returns the link or the Link to the Checkout page on this site
-	 * For the last step
+	 * for the last step
+	 * @param String $step
 	 * @return String (URLSegment)
 	 */
 	public static function find_last_step_link($step = "") {
@@ -110,6 +133,7 @@ class CheckoutPage extends CartPage {
 	/**
 	 * Returns the link to the next step
 	 * @param String - $currentStep is the step that has just been actioned....
+	 * @param Boolean - $doPreviousInstead - return previous rather than next step
 	 * @return String (URLSegment)
 	 */
 	public static function find_next_step_link($currentStep, $doPreviousInstead = false) {
@@ -154,7 +178,6 @@ class CheckoutPage extends CartPage {
 	 * a specific Order ID that already exists in the database.
 	 *
 	 * @param int $orderID ID of the {@link Order}
-	 * @param boolean $urlSegment If set to TRUE, only returns the URLSegment field
 	 * @return string Link to checkout page
 	 */
 	public static function get_checkout_order_link($orderID) {
@@ -166,46 +189,75 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * Standard SS function, we only allow for one checkout page to exist
-	 *@return Boolean
+	 * but we do allow for extensions to exist at the same time.
+	 * @param Member $member
+	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return !DataObject :: get_one("CheckoutPage", "\"ClassName\" = 'CheckoutPage'");
+		return CheckoutPage::get()->Filter(array("ClassName" => "CheckoutPage"))->Count() ? false : true;
 	}
 
 	/**
 	 * Standard SS function
-	 * @return FieldSet
+	 * @return FieldList
 	 **/
 	function getCMSFields() {
 		$fields = parent :: getCMSFields();
-		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'ProceedToCheckoutLabel');
-		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'ContinueShoppingLabel');
-		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'ContinuePageID');
-		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'LoadOrderLinkLabel');
-		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'CurrentOrderLinkLabel');
-		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'SaveOrderLinkLabel');
-		$fields->removeFieldFromTab('Root.Content.Messages.Actions', 'DeleteOrderLinkLabel');
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"ProceedToCheckoutLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"ContinueShoppingLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"ContinuePageID");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"LoadOrderLinkLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"CurrentOrderLinkLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"SaveOrderLinkLabel");
+		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"DeleteOrderLinkLabel");
 		$termsPageIDField = new OptionalTreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
-		$fields->addFieldToTab('Root.Content.Process', $termsPageIDField);
-		$fields->addFieldToTab('Root.Content.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
+		$fields->addFieldToTab('Root.Process', $termsPageIDField);
+		$fields->addFieldToTab('Root.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
 		//The Content field has a slightly different meaning for the Checkout Page.
-		$fields->removeFieldFromTab('Root.Content.Main', "Content");
-		$fields->addFieldToTab('Root.Content.Messages.AlwaysVisible', new HtmlEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page'), 7, 7));
-		if(DataObject::get_one("OrderModifier_Descriptor")) {
-			$orderModifierDescriptionField = new ComplexTableField($this, _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"), "OrderModifier_Descriptor");
-			$orderModifierDescriptionField->setRelationAutoSetting(false);
-			$orderModifierDescriptionField->setTitle(_t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)"));
-			$orderModifierDescriptionField->setPermissions(array("show", "edit"));
-			$fields->addFieldToTab('Root.Content.Messages.OrderExtras',$orderModifierDescriptionField);
+		$fields->removeFieldFromTab('Root.Main', "Content");
+		$fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page')));
+		$htmlEditorField->setRows(3);
+		if(OrderModifier_Descriptor::get()->count()) {
+			$fields->addFieldToTab('Root.Messages.Messages.OrderExtras',$this->getOrderModifierDescriptionField());
 		}
-		if(DataObject::get_one("CheckoutPage_StepDescription")) {
-			$checkoutStepDescriptionField = new ComplexTableField($this, _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"), "CheckoutPage_StepDescription");
-			$checkoutStepDescriptionField->setRelationAutoSetting(false);
-			$checkoutStepDescriptionField->setTitle(_t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions"));
-			$checkoutStepDescriptionField->setPermissions(array("show", "edit"));
-			$fields->addFieldToTab('Root.Content.Messages.CheckoutSteps',$checkoutStepDescriptionField);
+		if(CheckoutPage_StepDescription::get()->count()) {
+			$fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps',$this->getCheckoutStepDescriptionField());
 		}
 		return $fields;
+	}
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	protected function getOrderModifierDescriptionField(){
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldEditButton(),
+			new GridFieldDetailForm()
+		);
+		$title = _t("CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES", "Messages relating to order form extras (e.g. tax or shipping)");
+		$source = OrderModifier_Descriptor::get();
+		return new GridField("OrderModifier_Descriptor", $title, $source , $gridFieldConfig);
+	}
+
+	/**
+	 *
+	 * @return GridField
+	 */
+	protected function getCheckoutStepDescriptionField(){
+		$gridFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldToolbarHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldEditButton(),
+			new GridFieldDetailForm()
+		);
+		$title =  _t("CheckoutPage.CHECKOUTSTEPESCRIPTIONS", "Checkout Step Descriptions");
+		$source = CheckoutPage_StepDescription::get();
+		return new GridField("CheckoutPage_StepDescription", $title, $source , $gridFieldConfig);
 	}
 
 }
@@ -222,7 +274,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 **/
 	public function init() {
 		parent::init();
-		Requirements::themedCSS('CheckoutPage');
+		Requirements::themedCSS('CheckoutPage', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
@@ -248,7 +300,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		if($checkoutPageCurrentOrderID = Session::get("CheckoutPageCurrentOrderID")) {
 			if((!$this->currentOrder) || ($this->currentOrder->ID != $checkoutPageCurrentOrderID)) {
 				if($order = Order::get_by_id_if_can_view(intval($checkoutPageCurrentOrderID))) {
-					return Director::redirect($order->Link());
+					return $this->redirect($order->Link());
 				}
 			}
 		}
@@ -261,11 +313,11 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 
 	/**
-	 * Returns a DataObjectSet of {@link OrderModifierForm} objects. These
+	 * Returns a ArrayList of {@link OrderModifierForm} objects. These
 	 * forms are used in the OrderInformation HTML table for the user to fill
 	 * in as needed for each modifier applied on the site.
 	 *
-	 * @return DataObjectSet
+	 * @return ArrayList (ModifierForms) | Null
 	 */
 	function ModifierForms() {
 		if ($this->currentOrder) {
@@ -312,7 +364,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * @return boolean
 	 */
 	function CanCheckout() {
-		return $this->currentOrder->Items()  && !$this->currentOrder->IsSubmitted();
+		return $this->currentOrder->getTotalItems() && !$this->currentOrder->IsSubmitted();
 	}
 
 	/**
@@ -329,7 +381,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 
 	/**
-	 *@var $currentStep Integer
+	 *@var $currentStep String
 	 **/
 	protected $currentStep = "";
 
@@ -342,17 +394,21 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * returns a dataobject set of the steps.
 	 * Or just one step if that is more relevant.
 	 * @param Int $number - if set, it returns that one step.
-	 * @return Null | DataObject (CheckoutPage_Description) | DataObjectSet (CheckoutPage_Description)
+	 * @return Null | DataObject (CheckoutPage_Description) | ArrayList (CheckoutPage_Description)
 	 */
 	function CheckoutSteps($number = 0) {
 		$where = '';
+		$dos = CheckoutPage_StepDescription::get()
+			->Sort("ID", "ASC");
 		if($number) {
-			$where = "\"CheckoutPage_StepDescription\".\"ID\" = $number";
+			$dos = $dos->Filter(array("ID" => $number));
 		}
-		$dos = DataObject::get("CheckoutPage_StepDescription", $where, "\"ID\" ASC");
 		if($number) {
-			return $dos->First();
+			if($dos->count()) {
+				return $dos->First();
+			}
 		}
+		$returnData = new ArrayList(array());
 		$completed = 1;
 		$completedClass = "completed";
 		foreach($dos as $do) {
@@ -368,17 +424,18 @@ class CheckoutPage_Controller extends CartPage_Controller {
 				$do->LinkingMode = "link $completedClass";
 			}
 			$do->Completed = $completed;
+			$returnData->push($do);
 		}
 		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
-			$orderConfirmationPage = DataObject::get_one("OrderConfirmationPage");
+			$orderConfirmationPage = OrderConfirmationPage::get()->First();
 			if($orderConfirmationPage) {
 				$do = $orderConfirmationPage->CurrentCheckoutStep(false);
 				if($do) {
-					$dos->push($do);
+					$returnData->push($do);
 				}
 			}
 		}
-		return $dos;
+		return $returnData;
 	}
 
 	/**
@@ -423,9 +480,10 @@ class CheckoutPage_Controller extends CartPage_Controller {
 
 	/**
 	 * sets a checkout step
-	 * @param HTTP_Request $request
+	 * @param SS_HTTPRequest $request
+	 * @return Array
 	 */
-	function checkoutstep($request) {
+	function checkoutstep(SS_HTTPRequest $request) {
 		return array ();
 	}
 
@@ -439,7 +497,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	}
 
 	/**
-	 * @param String $part (OrderItems, OrderModifiers, OrderForm, OrderPayment)
+	 * @param String $step
 	 * @return Boolean
 	 **/
 	public function CanShowStep($step) {
@@ -558,7 +616,6 @@ class CheckoutPage_StepDescription extends DataObject{
 	 */
 	public static $summary_fields = array(
 		"ID" => "Step Number",
-		"Code" => "Code",
 		"Heading" => "Heading"
 	);
 
@@ -586,6 +643,12 @@ class CheckoutPage_StepDescription extends DataObject{
 		function i18n_plural_name() { return _t("CheckoutPage.CHECKOUTSTEPDESCRIPTIONS", "Checkout Step Descriptions");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "A step within the checkout process (e.g. confirm details).";
+
+	/**
 	 * standard SS variable
 	 * @return Boolean
 	 */
@@ -593,24 +656,28 @@ class CheckoutPage_StepDescription extends DataObject{
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {return false;}
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canView($member = null) {return true;}
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canEdit($member = null) {return true;}
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {
@@ -620,13 +687,13 @@ class CheckoutPage_StepDescription extends DataObject{
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
-		$fields->replaceField("Description", new TextareaField("Description", _t("Checkout.DESCRIPTION", "Description"), 3));
-		$fields->replaceField("Above", new TextareaField("Above", _t("Checkout.ABOVE", "Top of section note"), 3));
-		$fields->replaceField("Below", new TextareaField("Below", _t("Checkout.BELOW", "Bottom of section note"), 3));
+		$fields->replaceField("Description", new TextareaField("Description", _t("Checkout.DESCRIPTION", "Description")));
+		$fields->replaceField("Above", new TextareaField("Above", _t("Checkout.ABOVE", "Top of section note")));
+		$fields->replaceField("Below", new TextareaField("Below", _t("Checkout.BELOW", "Bottom of section note")));
 		return $fields;
 	}
 
@@ -663,7 +730,7 @@ class CheckoutPage_StepDescription extends DataObject{
 		if(is_array($steps) && count($steps)) {
 			foreach($steps as $id => $code) {
 				$newID = $id + 1;
-				if($obj = DataObject::get_by_id("CheckoutPage_StepDescription", $newID)) {
+				if($obj = CheckoutPage_StepDescription::get()->byID($newID)) {
 					//do nothing
 				}
 				else {

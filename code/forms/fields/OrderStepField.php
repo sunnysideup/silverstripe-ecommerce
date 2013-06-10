@@ -17,38 +17,58 @@ class OrderStepField extends DatalessField {
 	 */
 	protected $content;
 
-	function __construct($name, $order, $member = null) {
+	/**
+	 * @param String $name
+	 * @param Order $order
+	 * @param Member $member
+	 */
+	function __construct($name, Order $order, Member $member = null) {
+		if(!$member) {
+			$member = $order->Member();
+		}
+		if(!$member) {
+			$member = new Member();
+		}
+		$orderSteps = OrderStep::get();
 		$where = "\"HideStepFromCustomer\" = 0";
 		$currentStep = $order->CurrentStepVisibleToCustomer();
 		if($member->IsShopAdmin()) {
 			$where = "";
 			$currentStep = $order->MyStep();
 		}
-		$orderSteps = DataObject::get("OrderStep", $where);
-		if($member)
+		else {
+			$currentStep = $order->CurrentStepVisibleToCustomer();
+			$orderSteps
+				->filter(array("HideStepFromCustomer" => 0));
+		}
 		$future = false;
 		$html = "
 		<div class=\"orderStepField\">
 			<ol>";
-		foreach($orderSteps as $orderStep) {
-			$description = "";
-			if($member->IsShopAdmin()) {
-				if($orderStep->Description) {
-					$description =  " title=\"".Convert::raw2att($orderStep->Description)."\" " ;
+		if($orderSteps->count()) {
+			foreach($orderSteps as $orderStep) {
+				$description = "";
+				if($member->IsShopAdmin()) {
+					if($orderStep->Description) {
+						$description =  " title=\"".Convert::raw2att($orderStep->Description)."\" " ;
+					}
 				}
+				$class = "";
+				if($orderStep->ID == $currentStep->ID) {
+					$future = true;
+					$class .= " current";
+				}
+				elseif($future) {
+					$class .= " todo";
+				}
+				else {
+					$class .= " done";
+				}
+				$html .= '<li class="'.$class.'" '.$description.'>'.$orderStep->Title.'</li>';
 			}
-			$class = "";
-			if($orderStep->ID == $currentStep->ID) {
-				$future = true;
-				$class .= " current";
-			}
-			elseif($future) {
-				$class .= " todo";
-			}
-			else {
-				$class .= " done";
-			}
-			$html .= '<li class="'.$class.'" '.$description.'>'.$orderStep->Title.'</li>';
+		}
+		else {
+			$html .= "no steps";
 		}
 		$html .= "</ol><div class=\"clear\"></div></div>";
 		if($currentStep->Description) {
@@ -61,15 +81,26 @@ class OrderStepField extends DatalessField {
 				"</p>";
 		}
 		$this->content = $html;
-		Requirements::themedCSS("OrderStepField");
+		Requirements::themedCSS("OrderStepField", 'ecommerce');
 		parent::__construct($name);
 	}
 
-	function FieldHolder() {
+	/**
+	 * standard SS method
+	 * @param Array $properties
+	 * @return HTML
+	 */
+	function FieldHolder($properties = array()) {
 		return is_object($this->content) ? $this->content->forTemplate() : $this->content;
 	}
 
-	function Field() {
+
+	/**
+	 * standard SS method
+	 * @param Array $properties
+	 * @return HTML
+	 */
+	function Field($properties = array()) {
 		return $this->FieldHolder();
 	}
 

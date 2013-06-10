@@ -103,35 +103,34 @@ class ProductBulkLoader extends CsvBulkLoader{
 		$results = parent::processAll($filepath, $preview);
 
 		//After results have been processed, publish all created & updated products
-		$objects = new DataObjectSet();
+		$objects = new DataList();
 		$objects->merge($results->Created());
 		$objects->merge($results->Updated());
 		foreach($objects as $object){
 			if(!$object->ParentID){
 				 //set parent page
 				 //cached option
-				if(is_numeric(self::$parent_page_id) &&  DataObject::get_by_id(self::get_product_group_class_name(),self::$parent_page_id)) {
+				$productGroupClassName = self::get_product_group_class_name();
+				if(is_numeric(self::$parent_page_id) &&  $productGroupClassName::get()->byID(self::$parent_page_id)) {
 					$object->ParentID = self::$parent_page_id;
 				}
 				//page called 'Products'
-				elseif($parentpage = DataObject::get_one(self::get_product_group_class_name(),"\"Title\" = 'Products'",'"Created" DESC')){
+				elseif($parentpage = $productGroupClassName::get()->Filter(array("Title" => "Products"))->sort("Created", "DESC")->First()){
 					$object->ParentID = self::$parent_page_id = $parentpage->ID;
 				}
 				//root page
-				elseif($parentpage = DataObject::get_one(self::get_product_group_class_name(),"\"ParentID\" = 0",'"Created" DESC')){
+				elseif($parentpage = $productGroupClassName::get()->Filter(array("ParentID" => 0))->sort("Created", "DESC")->First()){
 					$object->ParentID = self::$parent_page_id = $parentpage->ID;
 				}
 				//any product page
-				elseif($parentpage = DataObject::get_one(self::get_product_group_class_name(),"",'"Created" DESC')){
+				elseif($parentpage = $productGroupClassName::get()->sort("Created", "DESC")->First()){
 					$object->ParentID = self::$parent_page_id = $parentpage->ID;
 				}
 				else {
 					$object->ParentID = self::$parent_page_id = 0;
 				}
 			}
-
 			$object->extend('updateImport'); //could be used for setting other attributes, such as stock level
-
 			$object->writeToStage('Stage');
 			$object->publish('Stage', 'Live');
 		}
@@ -153,7 +152,8 @@ class ProductBulkLoader extends CsvBulkLoader{
 	 **/
 	function imageByFilename(&$obj, $val, $record){
 		$filename = strtolower(Convert::raw2sql($val));
-		if($filename && $image = DataObject::get_one('Image',"LOWER(\"Filename\") LIKE '%$filename%'")){ //ignore case
+		$image = Image::get()->where("LOWER(\"Filename\") LIKE '%$filename%'");
+		if($filename && $image){ //ignore case
 			if($image->exists()){
 				$image->ClassName = self::get_product_class_name().'_Image'; //must be this type of image
 				$image->write();
@@ -167,7 +167,9 @@ class ProductBulkLoader extends CsvBulkLoader{
 	function setParent(&$obj, $val, $record){
 		$title = strtolower(Convert::raw2sql($val));
 		if($title){
-			if($parentpage = DataObject::get_one(self::get_product_group_class_name(),"LOWER(\"Title\") = '$title'",'"Created" DESC')){ // find or create parent category, if provided
+			$className = self::get_product_group_class_name();
+			$parentpage = $className::get()->where("LOWER(\"Title\") = '$title'")->sort("Created", "DESC")->First();
+			if($parentpage){
 				$obj->ParentID = $parentpage->ID;
 				$obj->write();
 				$obj->writeToStage('Stage');

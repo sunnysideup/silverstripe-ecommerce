@@ -127,6 +127,11 @@ class OrderItem extends OrderAttribute {
 	public static $plural_name = "Order Items";
 		function i18n_plural_name() { return _t("OrderItem.ORDERITEMS", "Order Items");}
 
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "Any item that is added to an order and sits before the sub-total. ";
 
 	/**
 	 * HACK: Versioned is BROKEN this method helps in fixing it.
@@ -144,15 +149,9 @@ class OrderItem extends OrderAttribute {
 	public static function get_version($class, $id, $version) {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::set_reading_mode('');
-		$baseTable = ClassInfo::baseDataClass($class);
-		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id AND \"{$baseTable}\".\"Version\" = $version");
-		$record = $query->execute()->record();
-		$className = $record['ClassName'];
-		if(!$className) {
-			return null;
-		}
+		$versionedObject = Versioned::get_version($class, $id, $version);
 		Versioned::set_reading_mode($oldMode);
-		return new $className($record);
+		return $versionedObject;
 	}
 
 	/**
@@ -164,37 +163,74 @@ class OrderItem extends OrderAttribute {
 		$fields->replaceField("BuyableID", new HiddenField("BuyableID"));
 		$fields->replaceField("BuyableClassName", new HiddenField("BuyableClassName"));
 		$fields->replaceField("Version", new HiddenField("Version"));
+		if($this->OrderID && $this->exists()) {
+			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
+		}
+		else {
+			$fields->replaceField("OrderID", new NumericField("OrderID", _t("Order.SINGULARNAME", "Order")));
+		}
 		$fields->removeByName("Sort");
 		$fields->removeByName("CalculatedTotal");
 		$fields->removeByName("GroupSort");
 		$fields->removeByName("OrderAttribute_GroupID");
-		$fields->addFieldToTab("Root.Main", new BuyableSelectField("FindBuyable", _t("OrderItem.SELECITEM", "Select Item"), $this->Buyable()));
+		if($order = $this->Order()) {
+			if(!$order->IsSubmitted()) {
+				$fields->addFieldToTab("Root.Main", new BuyableSelectField("FindBuyable", _t("OrderItem.SELECITEM", "Select Item"), $this->Buyable()));
+			}
+			else {
+				$fields->addFieldToTab(
+					"Root.Main",
+					new ReadonlyField("TableTitle", _t("OrderItem.TITLE", "Title"), $this->TableSubTitle()),
+					"Quantity"
+				);
+				$fields->addFieldToTab(
+					"Root.Main",
+					new ReadonlyField("TableSubTitleNOHTML", _t("OrderItem.SUB_TITLE", "Sub Title"), $this->TableSubTitleNOHTML()),
+					"Quantity"
+				);
+			}
+		}
 		return $fields;
 	}
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canDelete($member = null) {
 		return $this->canEdit($member);
 	}
 
+
 	/**
-	 * standard SS method
-	 * @return FieldSet
-	 **/
-	function scaffoldSearchFields(){
-		$fields = parent::scaffoldSearchFields();
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * Some additional logic is included for switching field labels, based on
+	 * how generic or specific the field type is.
+	 *
+	 * Used by {@link SearchContext}.
+	 *
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
+	 * @return FieldList
+	 */
+	public function scaffoldSearchFields($_params = null) {
+		$fields = parent::scaffoldSearchFields($_params);
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		return $fields;
 	}
 
 	/**
 	 * standard SS method
-	 * @return FieldSet
+	 * @param BuyableModel $buyable
+	 * @param Double $quantity
+	 * @return FieldList
 	 **/
-	public function addBuyableToOrderItem($buyable, $quantity = 1) {
+	public function addBuyableToOrderItem(BuyableModel $buyable, $quantity = 1) {
 		$this->Version = $buyable->Version;
 		$this->BuyableID = $buyable->ID;
 		$this->BuyableClassName = $buyable->ClassName;
@@ -203,9 +239,10 @@ class OrderItem extends OrderAttribute {
 
 	/**
 	 * used to return data for ajax
+	 * @param Array
 	 * @return Array used to create JSON for AJAX
 	  **/
-	function updateForAjax(array &$js) {
+	function updateForAjax(array $js) {
 		$function = EcommerceConfig::get('OrderItem', 'ajax_total_format');
 		if(is_array($function)) {
 			list($function, $format) = $function;
@@ -221,13 +258,6 @@ class OrderItem extends OrderAttribute {
 				's' => $ajaxObject->TableID(),
 				'p' => 'hide',
 				'v' => 0
-			);
-			//@TODO: is this correct, seems strange to replce the field with a number!
-			$js[] = array(
-				't' => 'id',
-				's' => $ajaxObject->QuantityFieldName(),
-				'p' => 'innerHTML',
-				'v' => $this->Quantity
 			);
 			$js[] = array(
 				't' => 'name',
@@ -274,19 +304,28 @@ class OrderItem extends OrderAttribute {
 				'v' => 1
 			);
 		}
+		return $js;
 	}
 
 	/**
 	 * saves details about the Order Item before the order is submittted
-	 * @param Bool $force - run it, even if it has run already
+	 * @param Bool $recalculate - run it, even if it has run already
 	 **/
-	function runUpdate($force = false){
+	function runUpdate($recalculate = false){
 		if (isset($_GET['debug_profile'])) Profiler::mark('OrderItem::runUpdate-for-'.$this->ClassName);
-		$oldValue = $this->CalculatedTotal - 0;
-		$newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
-		if((round($newValue, 5) != round($oldValue, 5) ) || $force) {
-			$this->CalculatedTotal = $newValue;
-			$this->write();
+		$buyable = $this->Buyable(true);
+		if($buyable && $buyable->canPurchase()) {
+			$oldValue = $this->CalculatedTotal - 0;
+			$newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
+			if((round($newValue, 5) != round($oldValue, 5) ) || $recalculate) {
+				$this->CalculatedTotal = $newValue;
+				$this->write();
+			}
+		}
+		else {
+			//if it can not be purchased or it does not exist
+			//then we do not accept it!!!!
+			$this->delete();
 		}
 		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderItem::runUpdate-for-'.$this->ClassName);
 	}
@@ -335,9 +374,11 @@ class OrderItem extends OrderAttribute {
 	/**
 	 * Check if two Order Items are the same.
 	 * Useful when adding two items to cart.
+	 *
+	 * @param OrderItem $orderItem
 	 * @return Boolean
 	  **/
-	function hasSameContent($orderItem) {
+	function hasSameContent(OrderItem $orderItem) {
 		return
 			$orderItem instanceof OrderItem &&
 			$this->BuyableID == $orderItem->BuyableID &&
@@ -447,7 +488,7 @@ class OrderItem extends OrderAttribute {
 	 * @return Currency (DB Object)
 	  **/
 	function TotalAsCurrencyObject() {
-		return DBField::create('Currency',$this->Total());
+		return DBField::create_field('Currency',$this->Total());
 	}
 
 
@@ -505,8 +546,8 @@ class OrderItem extends OrderAttribute {
 
 	/**
 	 *
-	 * @return DataObject (Any type of Data Object that is buyable)
 	 * @param Boolean $current - is this a current one, or an older VERSION ?
+	 * @return DataObject (Any type of Data Object that is buyable)
 	  **/
 	function Buyable($current = false) {
 		$tempBuyableStoreType = $current ? 1 : 0;
@@ -519,17 +560,19 @@ class OrderItem extends OrderAttribute {
 				$this->BuyableClassName = str_replace("_OrderItem", "", $this->ClassName);
 			}
 			$turnTranslatableBackOn = false;
-			if (Object::has_extension($this->BuyableClassName,'Translatable')) {
+			$className = $this->BuyableClassName;
+			if ($className::has_extension($this->class, 'Translatable')) {
 				Translatable::disable_locale_filter();
 				$turnTranslatableBackOn = true;
 			}
 			//end hack!
 			$obj = null;
 			if($current) {
-				$obj = DataObject::get_by_id($this->BuyableClassName, $this->BuyableID);
+				$obj = $className::get()->byID($this->BuyableID);
 			}
 			//run if current not available or current = false
-			if(!$obj && $this->Version) {
+
+			if(((!$obj) || ($obj->exists())) && $this->Version) {
 				/* @TODO: check if the version exists?? - see sample below
 				$versionTable = $this->BuyableClassName."_versions";
 				$dbConnection = DB::getConn();
@@ -546,7 +589,7 @@ class OrderItem extends OrderAttribute {
 				$obj = OrderItem::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
 			}
 			//our last resort
-			if(!$obj) {
+			if((!$obj) || ($obj->exists())) {
 				$obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
 			}
 			if ($turnTranslatableBackOn) {
@@ -693,6 +736,15 @@ class OrderItem extends OrderAttribute {
 		$array = array();
 		$this->extend('updateLinkParameters',$array);
 		return $array;
+	}
+
+	public function debug() {
+		$html =  EcommerceTaskDebugCart::debug_object($this);
+		$html .= "<ul>";
+		$html .= "<li><b>Buyable Price:</b> ".$this->Buyable()->Price." </li>";
+		$html .= "<li><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </li>";
+		$html .= "</ul>";
+		return $html;
 	}
 
 }

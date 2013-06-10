@@ -11,23 +11,23 @@
 class SelectOrderAddressField extends OptionsetField {
 
 	/**
-	 * @var Null | DataObjectSet
+	 * @var DataList
 	 */
 	protected $addresses = null;
 
 	/**
 	 * Creates a new optionset field.
-	 * @param name The field name
-	 * @param title The field title
-	 * @param source DataObjectSet
-	 * @param value The current value
-	 * @param form The parent form
+	 * @param String $name The field name
+	 * @param String $title The field title
+	 * @param DataList $addresses
+	 * @param String $value The current value
+	 * @param Form $form - The parent form
 	 */
-	function __construct($name, $title = "", $addresses = null, $value = "", $form = null) {
+	function __construct($name, $title = "", $addresses = null, $value = "", Form $form = null) {
 		$this->addresses = $addresses;
 		$source = array();
-		if($this->addresses) {
-			$source = $this->addresses->map("ID", "FullString");
+		if($this->addresses && $this->addresses instanceOf DataList) {
+			$source = $this->addresses->map("ID", "FullString")->toArray();
 		}
 		parent::__construct($name, $title, $source, $value, $form);
 	}
@@ -37,7 +37,7 @@ class SelectOrderAddressField extends OptionsetField {
 	 * Note that we include JS from this method.
 	 * @return HTML
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		$jsArray = array();
 		$js = '';
 		$jsonCompare = array();
@@ -47,7 +47,7 @@ class SelectOrderAddressField extends OptionsetField {
 			}
 		}
 		Requirements::javascript("ecommerce/javascript/EcomSelectOrderAddressField.js");
-		Requirements::customScript($js, "Update_".$this->Name());
+		Requirements::customScript($js, "Update_".$this->getName());
 		return parent::Field();
 	}
 

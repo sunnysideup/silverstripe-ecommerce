@@ -25,6 +25,7 @@ class EcommerceCountry extends DataObject {
 				"Name"
 			)
 	 );
+
 	/**
 	 * Standard SS Variable
 	 * @var Array
@@ -106,19 +107,48 @@ class EcommerceCountry extends DataObject {
 		function i18n_plural_name() { return _t("EcommerceCountry.COUNTRIES", "Countries");}
 
 	/**
-	 * return false or true
-	 * @ return Boolean
+	 * Standard SS variable.
+	 * @var String
 	 */
-	function canCreate($member = null){
-		if(!$member) {
-			$member = Member::currentMember();
-			return $member->IsShopAdmin ? true : false;
-		}
+	public static $description = "A country.";
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canCreate($member = null) {
+		return $this->canEdit($member);
 	}
 
 	/**
-	 * return false or true
-	 * @ return Boolean
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canView($member = null) {
+		return true;
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canEdit($member = null) {
+		if(!$member) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->IsShopAdmin()) {
+			return true;
+		}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
 	 */
 	function canDelete($member = null){
 		return false;
@@ -154,9 +184,9 @@ class EcommerceCountry extends DataObject {
 		else {
 			$where = "\"DoNotAllowSales\" = 0";
 		}
-		$objects = DataObject::get("EcommerceCountry", $where);
-		if($objects) {
-			return $objects->map("ID", "Name");
+		$objects = EcommerceCountry::get()->where($where);
+		if($objects && $objects->count()) {
+			return $objects->map("ID", "Name")->toArray();
 		}
 		return array();
 	}
@@ -188,8 +218,7 @@ class EcommerceCountry extends DataObject {
 
 	/**
 	 * returns the country name from a code
-	 * @paramString $code  (Code)
-	 * @return String ( name)
+	 * @return String
 	 **/
 	public static function find_title($code) {
 		$options = EcommerceCountry::get_country_dropdown();
@@ -211,10 +240,12 @@ class EcommerceCountry extends DataObject {
 
 	/**
 	 * This function works out the most likely country for the current order.
+	 *
+	 * @param Boolean $recalculate
 	 * @return String - Country Code - e.g. NZ
 	 **/
-	public static function get_country() {
-		if(self::$get_country_cache === null) {
+	public static function get_country($recalculate = false) {
+		if(self::$get_country_cache === null || $recalculate) {
 			$countryCode = '';
 			//1. fixed country is first
 			$countryCode = self::get_fixed_country_code();
@@ -264,7 +295,12 @@ class EcommerceCountry extends DataObject {
 			self::$allow_sales_cache = true;
 			$countryCode = EcommerceCountry::get_country();
 			if($countryCode) {
-				if(DataObject::get_one("EcommerceCountry", "\"DoNotAllowSales\" = 1 AND \"Code\" = '$countryCode'")) {
+				$countries = EcommerceCountry::get()
+					->filter(array(
+						"DoNotAllowSales" => 1,
+						"Code" => $countryCode
+					));
+				if($countries->count()) {
 					self::$allow_sales_cache = false;
 				}
 			}
@@ -274,14 +310,17 @@ class EcommerceCountry extends DataObject {
 
 	/**
 	 * returns the ID of the country.
-	 * @param String
+	 *
+	 * @param String $countryCode
 	 * @return Int
 	 **/
 	public static function get_country_id($countryCode = "") {
 		if(!$countryCode) {
 			$countryCode = self::get_country();
 		}
-		$country = DataObject::get_one("EcommerceCountry", "\"Code\" = '$countryCode'");
+		$country = EcommerceCountry::get()
+			->filter(array("Code" => $countryCode))
+			->first();
 		if($country) {
 			return $country->ID;
 		}
@@ -300,8 +339,8 @@ class EcommerceCountry extends DataObject {
 			$defaultArray[$code] = self::find_title($code);
 			return $defaultArray;
 		}
-		$countries = DataObject::get("EcommerceCountry", "DoNotAllowSales <> 1");
-		if($countries) {
+		$countries = EcommerceCountry::get()->exclude(array("DoNotAllowSales" => 1));
+		if($countries && $countries->count()) {
 			foreach($countries as $country) {
 				$defaultArray[$country->Code] = $country->Name;
 			}
@@ -310,21 +349,12 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
-	 * Standar SS method
-	 * @return FieldSet
-	 **/
-	function getCMSFields() {
-		$fields = parent::getCMSFields();
-		return $fields;
-	}
-
-	/**
 	 *
 	 * standard SS method
 	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-		if(!DataObject::get("EcommerceCountry") || isset($_REQUEST["resetecommercecountries"])) {
+		if((!EcommerceCountry::get()->count()) || isset($_REQUEST["resetecommercecountries"])) {
 			$task = new EcommerceCountryAndRegionTasks();
 			$task->run(null);
 		}
@@ -345,7 +375,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Array
 	 */
 	protected static $for_current_order_only_show_countries = array();
-		static function set_for_current_order_only_show_countries($a) {
+		static function set_for_current_order_only_show_countries(Array $a) {
 			if(count(self::$for_current_order_only_show_countries)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
 				self::$for_current_order_only_show_countries = array_intersect($a, self::$for_current_order_only_show_countries);
@@ -362,7 +392,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Array
 	 */
 	protected static $for_current_order_do_not_show_countries = array();
-		static function set_for_current_order_do_not_show_countries($a) {
+		static function set_for_current_order_do_not_show_countries(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);
 		}
@@ -403,9 +433,9 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
-	 *checks if a code is allowed
-	 *@param String $code - e.g. NZ, NSW, or CO
-	 *@return Boolean
+	 * checks if a code is allowed
+	 * @param String $code - e.g. NZ, NSW, or CO
+	 * @return Boolean
 	 **/
 	public static function code_allowed($code) {
 		return array_key_exists($code, self::list_of_allowed_entries_for_dropdown());

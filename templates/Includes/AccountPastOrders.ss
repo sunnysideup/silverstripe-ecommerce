@@ -1,5 +1,5 @@
 <% if PastOrders %>
-	<table summary="<% _t("Account.PreviousOrders","Previous Orders") %>">
+	<table>
 		<thead>
 			<tr>
 				<th scope="col" class="left"><% _t("Account.ORDER","Order") %></th>
@@ -19,7 +19,7 @@
 			</tr>
 		</tfoot>
 		<tbody>
-		<% control PastOrders %>
+		<% loop PastOrders %>
 			<tr>
 				<td class="left">
 					<a href="$Link" class="view">$Title</a>
@@ -32,7 +32,7 @@
 				<td class="right">$TotalPaid.Nice</td>
 				<td class="right">$TotalOutstanding.Nice</td>
 			</tr>
-		<% end_control %>
+		<% end_loop %>
 		</tbody>
 	</table>
 <% else %>

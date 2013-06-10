@@ -9,11 +9,11 @@
 	<!-- todo: allow printing multiple invoices at once -->
 	<div style="page-break-after: always;">
 		<% include Order_ShopInfo %>
-		<% control Order %>
+		<% with Order %>
 			<% include Order %>
-		<% end_control %>
+		<% end_with %>
 	</div>
-	<script type="text/javascript">window.setTimeout(function(){window.print();}, 1000)</script>
+	<script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 </body>
 </html>
 

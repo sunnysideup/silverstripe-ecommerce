@@ -1,6 +1,6 @@
-<% control Cart %>
+<% with Cart %>
 	<% if Items %>
-		<% control Items %>
+		<% loop Items %>
 			<% if ShowInCart %>
 <li id="$CartID" class="$Classes $FirstLast orderItemHolder">
 	<a class="ajaxQuantityLink removeFromCart" href="$removeallLink" title="remove"><img src="ecommerce/images/remove.gif" alt="x" /></a>
@@ -11,9 +11,9 @@
 	<% end_if %>
 </li>
 			<% end_if %>
-		<% end_control %>
-<li><a href="$EcomConfig.CheckoutLink" class="shoppingCartLink"><% _t("Cart.GOTOCHECKOUTLINK","Go to the checkout") %></a></li>
+		<% end_loop %>
+<li><a href="$EcomConfig.CheckoutLink" class="shoppingCartLink"><% _t("Order.GOTOCHECKOUTLINK","Go to the checkout") %></a></li>
 	<% else %>
 <li><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></li>
 	<% end_if %>
-<% end_control %>
+<% end_with %>

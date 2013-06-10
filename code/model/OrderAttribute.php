@@ -101,6 +101,12 @@ class OrderAttribute extends DataObject {
 		function i18n_plural_name() { return _t("OrderAttribute.ORDERENTRIES", "Order Entries");}
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	public static $description = "Any item that is added to the order - be it before (e.g. product) or after the subtotal (e.g. tax).";
+
+	/**
 	 * save edit status for speed's sake
 	 * @var Boolean
 	 */
@@ -124,6 +130,7 @@ class OrderAttribute extends DataObject {
 
 	/**
 	 * standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
@@ -133,10 +140,13 @@ class OrderAttribute extends DataObject {
 	/**
 	 * Standard SS method
 	 * This is an important method.
-	 *
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canView($member = null) {
+		if(!$this->exists()) {
+			return true;
+		}
 		if($this->_canView === null) {
 			$this->_canView = false;
 			if($this->OrderID) {
@@ -153,10 +163,13 @@ class OrderAttribute extends DataObject {
 	/**
 	 * Standard SS method
 	 * This is an important method.
-	 *
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
+		if(!$this->exists()) {
+			return true;
+		}
 		if($this->_canEdit === null) {
 			$this->_canEdit = false;
 			if($this->OrderID) {
@@ -172,6 +185,7 @@ class OrderAttribute extends DataObject {
 
 	/**
 	 * Standard SS method
+	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canDelete($member = null) {
@@ -204,7 +218,7 @@ class OrderAttribute extends DataObject {
 	 * @return Order | null
 	 */
 	public function Order(){
-		return DataObject::get_one("Order", "\"Order\".\"ID\" = ".intval($this->OrderID));
+		return Order::get()->byID($this->OrderID);
 	}
 
 	/**
@@ -295,10 +309,17 @@ class OrderAttribute extends DataObject {
 	 * @return String
 	  **/
 	function TableSubTitle() {return $this->getTableSubTitle();}
-	function getTableSubTitleNOHTML() {return str_replace("\n", '', strip_tags($this->getTableSubTitle()));}
 	function getTableSubTitle() {
 		return "";
 	}
+
+
+	/**
+	 * the sub title for the order item or order modifier
+	 * @return String
+	  **/
+	function TableSubTitleNOHTML() {return $this->getTableSubTitleNOHTML();}
+		function getTableSubTitleNOHTML() {return str_replace("\n", '', strip_tags($this->getTableSubTitle()));}
 
 	/**
 	 * the sub title for the order item or order modifier.
@@ -346,25 +367,9 @@ class OrderAttribute extends DataObject {
 	 * Access through : /shoppingcart/debug/
 	 */
 	public function debug() {
-		$html =  "
-			<h2>".$this->ClassName."</h2><ul>";
-		$fields = Object::get_static($this->ClassName, "db");
-		foreach($fields as  $key => $type) {
-			$html .= "<li><b>$key ($type):</b> ".$this->$key."</li>";
-		}
-		$fields = Object::get_static($this->ClassName, "casting");
-		foreach($fields as  $key => $type) {
-			$method = "get".$key;
-			$html .= "<li><b>$key ($type):</b> ".$this->$method()." </li>";
-		}
-		if($this instanceOf OrderItem) {
-			$html .= "<li><b>Buyable Price:</b> ".$this->Buyable()->Price." </li>";
-			$html .= "<li><b>Buyable Calculated Price:</b> ".$this->Buyable()->CalculatedPrice()." </li>";
-		}
-		$html .= "</ul>";
+		$html =  EcommerceTaskDebugCart::debug_object($this);
 		return $html;
 	}
-
 }
 
 
