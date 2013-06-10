@@ -164,7 +164,7 @@ $className:
 		if($refresh) {
 			$this->loadData();
 		}
-		if(!count($this->fixtureDictionary)) {
+		elseif(!count($this->fixtureDictionary)) {
 			$this->loadData();
 		}
 		return $this->fixtureDictionary;

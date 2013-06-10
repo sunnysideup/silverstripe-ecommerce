@@ -239,14 +239,11 @@ interface BuyableModel {
 	function CalculatedPrice();
 
 	/**
-	 * Products have a standard price, but for specific situations they have a calculated price.
-	 * The Price can be changed for specific member discounts, a different currency, etc...
-	 * @todo: return as Money
-	 * @return Currency (casted variable)
+	 * How do we display the price?
+	 * @return Money
 	 */
-	function DisplayPrice();
-
-
+	function CalculatedPriceAsMoney();
+	function getCalculatedPriceAsMoney();
 
 	//CRUD SETTINGS
 

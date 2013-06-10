@@ -127,32 +127,7 @@ class OrderFormAddress extends Form {
 						new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO','If you already have an account then please')." <a href=\"Security/login/?BackURL=/" . urlencode(implode("/", $controller->getURLParams())) . "\">"._t('OrderForm.LOGIN','log in').'</a>.</p>')
 					);
 				}
-				//login invite right on the top
-				if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
-					$rightFields->push(new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3));
-					//allow people to purchase without creating a password
-					$rightFields->push(
-						new LiteralField(
-							'AccountInfo',
-							'<p>'.
-							_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.')
-							.'</p>'
-						)
-					);
-					//close by default
-				}
-				else {
-					$rightFields->push(new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT','Create an account'), 3));
-					//dont allow people to purchase without creating a password
-					$rightFields->push(
-						new LiteralField(
-							'AccountInfo',
-							'<p>'.
-							_t('OrderForm.MUSTCREATEPASSWORD','Please choose a password to create your account.')
-							.'</p>'
-						)
-					);
-				}
+
 			}
 			else {
 				if($this->loggedInMember) {
@@ -162,7 +137,11 @@ class OrderFormAddress extends Form {
 							"<p class=\"message good\">" . _t("Account.LOGGEDIN","You are logged in as ") .
 							Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
 							Convert::raw2xml($this->loggedInMember->Surname) .
-							' ('.Convert::raw2xml($this->loggedInMember->Email).').</p>'
+							' ('.Convert::raw2xml($this->loggedInMember->Email).').'.
+							' <a href="/Security/logout/">'.
+							_t("Account.LOGOUTNOW","Log out?").
+							'</a>'.
+							'</p>'
 						)
 					);
 				}
@@ -298,7 +277,7 @@ class OrderFormAddress extends Form {
 		//PASSWORD HACK ... TO DO: test that you can actually update a password as the method below
 		//does NOT change the FORM only DATA, but we save to the new details using $form->saveInto($member)
 		//and NOT $data->saveInto($member)
-		$password = $this->validPassword($data);
+		$password = $this->validPasswordHasBeenEntered($data);
 
 		//----------- START BY SAVING INTO ORDER
 		$form->saveInto($this->order);
@@ -450,9 +429,9 @@ class OrderFormAddress extends Form {
 			return false;
 		}
 		else {
-			$automaticMembership = EcommerceConfig::get("EcommerceRole", "automatic_membership");
-			$validPassword = $this->validPassword($data);
-			if( $automaticMembership || $validPassword) {
+			$mustHavePassword = EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase");
+			$validPassword = $this->validPasswordHasBeenEntered($data);
+			if($validPassword) {
 				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){
 				 return true;
 				}
@@ -472,7 +451,7 @@ class OrderFormAddress extends Form {
 	 **/
 	protected function memberShouldBeLoggedIn(Array $data) {
 		if(!$this->loggedInMember) {
-			if($this->newlyCreatedMemberID && $this->validPassword($data)) {
+			if($this->newlyCreatedMemberID && $this->validPasswordHasBeenEntered($data)) {
 				return true;
 			}
 		}
@@ -572,7 +551,7 @@ class OrderFormAddress extends Form {
 	 * @param data (from form)
 	 * @return String
 	 */
-	protected function validPassword($data){
+	protected function validPasswordHasBeenEntered($data){
 		if(isset($data['Password']) && isset($data['PasswordDoubleCheck'])) {
 			if(isset($data['Password']) && isset($data['PasswordDoubleCheck'])) {
 				if($data['Password'] == $data['PasswordDoubleCheck']) {
@@ -604,7 +583,13 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator{
 	 * @return Boolean
 	 */
 	function php($data){
-		$valid = parent::php($data);
+		if(Member::currentUserID()) {
+			$allowExistingEmail = false;
+		}
+		else {
+			$allowExistingEmail = true;
+		}
+		$valid = parent::php($data, $allowExistingEmail);
 		//Note the exclamation Mark - only applies if it return FALSE.
 		if($this->form->uniqueMemberFieldCanBeUsed($data)) {
 			//do nothing

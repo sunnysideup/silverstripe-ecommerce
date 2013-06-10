@@ -146,7 +146,7 @@ class EcommerceCurrency extends DataObject {
 	 * @return Boolean
 	 */
 	function canDelete($member = null){
-		return $this->getIsDefault() ? false : true;
+		return ! $this->InUse && self::get_list()->Count() > 1;
 	}
 
 	/**
@@ -193,12 +193,24 @@ class EcommerceCurrency extends DataObject {
 		return self::get_money_object_from_order_currency($price, $order);
 	}
 
-
+	/**
+	 * @param Float $price
+	 * @param Order
+	 * @return
+	 */
 	public static function get_money_object_from_order_currency($price, Order $order = null) {
 		if(! $order) {
 			$order = ShoppingCart::current_order();
 		}
 		$currency = $order->CurrencyUsed();
+		if($order) {
+			if($order->HasAlternativeCurrency()) {
+				$exchangeRate = $order->ExchangeRate;
+				if($exchangeRate && $exchangeRate != 1) {
+					$price = $exchangeRate * $price;
+				}
+			}
+		}
 		return DBField::create_field('Money', array('Amount' => $price, 'Currency' => $currency->Code));
 	}
 
@@ -278,7 +290,6 @@ class EcommerceCurrency extends DataObject {
 	 * casted variable method
 	 * @return Boolean
 	 */
-
 	public function IsDefault() {return $this->getIsDefault();}
 	public function getIsDefault() {
 		$outcome = false;
@@ -428,6 +439,7 @@ class EcommerceCurrency extends DataObject {
 			}
 		}
 	}
+
 
 	/**
 	 * Standard SS Method

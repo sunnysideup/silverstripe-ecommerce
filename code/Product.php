@@ -176,12 +176,12 @@ class Product extends Page implements BuyableModel {
 	 */
 	function getCMSFields() {
 		//prevent calling updateSettingsFields extend function too early
-		$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
-		$this->disableCMSFieldsExtensions();
+		//$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
+		//$this->disableCMSFieldsExtensions();
 		$fields = parent::getCMSFields();
-		if($siteTreeFieldExtensions) {
-			$this->enableCMSFieldsExtensions();
-		}
+		//if($siteTreeFieldExtensions) {
+			//$this->enableCMSFieldsExtensions();
+		//}
 		$fields->replaceField('Root.Main', $htmlEditorField = new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description')));
 		$htmlEditorField->setRows(3);
 		$fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), "Content");
@@ -189,6 +189,7 @@ class Product extends Page implements BuyableModel {
 		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
 		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
 		$fields->addFieldToTab('Root.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
+		$fields->addFieldToTab('Root.Details',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 		$fields->addFieldToTab('Root.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
 		$fields->addFieldToTab('Root.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
 		$fields->addFieldToTab('Root.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
@@ -202,7 +203,6 @@ class Product extends Page implements BuyableModel {
 		if($this->EcomConfig()->ProductsHaveQuantifiers) {
 			$fields->addFieldToTab('Root.Details',new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
 		}
-		$fields->addFieldToTab('Root.Sorting',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
 			$fields->addFieldsToTab(
 				'Root.AlsoShowHere',
@@ -212,9 +212,9 @@ class Product extends Page implements BuyableModel {
 				)
 			);
 		}
-		if($siteTreeFieldExtensions) {
-			$this->extend('updateSettingsFields', $fields);
-		}
+		//if($siteTreeFieldExtensions) {
+			//$this->extend('updateSettingsFields', $fields);
+		//}
 		return $fields;
 	}
 
@@ -509,6 +509,7 @@ class Product extends Page implements BuyableModel {
 	 * @return DataList (CHECK!)
 	 */
 	public function getVersionedComponents($component = "ProductVariations") {
+		return;
 		$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
 		$query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
 		$result = singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
@@ -788,15 +789,6 @@ class Product extends Page implements BuyableModel {
 	}
 
 
-	/**
-	 * Products have a standard price, but for specific situations they have a calculated price.
-	 * The Price can be changed for specific member discounts, a different currency, etc...
-	 * @todo: return as Money
-	 * @return Currency (casted variable)
-	 */
-	function DisplayPrice() {
-		return 0;
-	}
 
 	//CRUD SETTINGS
 
@@ -850,6 +842,7 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
+		//if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
@@ -1297,6 +1290,9 @@ class Product_OrderItem extends OrderItem {
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
+		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+			return false;
+		}
 		return true;
 	}
 
@@ -1423,4 +1419,6 @@ HTML;
 
 
 }
+
+
 

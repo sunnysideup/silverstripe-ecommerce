@@ -184,19 +184,55 @@ class EcommerceRole extends DataExtension {
 	 * @return FieldList
 	 */
 	function getEcommerceFields() {
+		if(!EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
+			$fields = new FieldList(
+				new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
+				new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
+				new TextField('Surname', _t('EcommerceRole.SURNAME','Surname'))
+			);
+			$this->owner->extend('augmentEcommerceFields', $fields);
+			return $fields;
+		}
 		Requirements::javascript('ecommerce/javascript/EcomPasswordField.js');
 		if($this->owner->exists()) {
 			if($this->owner->Password) {
-				$new =
 				$passwordField = new PasswordField('Password', _t('Account.NEW_PASSWORD','New Password'));
 				$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
 				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\" class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
 			}
 			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3);
+			$loginDetailsDescription = new LiteralField(
+				'AccountInfo',
+				'<p>'.
+				_t('OrderForm.PLEASE_REVIEW','Please review your log in details below.')
+				.'</p>'
+			);
 		}
 		else {
-			$loginDetailsHeader = new HeaderField('SignUp', _t('ShopAccountForm.CREATEACCOUNT','Create Account'), 3);
+			//login invite right on the top
+			if(EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase")) {
+				$loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT','Create an account'), 3);
+				//dont allow people to purchase without creating a password
+				$loginDetailsDescription = new LiteralField(
+					'AccountInfo',
+					'<p>'.
+					_t('OrderForm.MUSTCREATEPASSWORD','Please choose a password to create your account.')
+					.'</p>'
+				);
+			}
+			else {
+				$loginDetailsHeader = new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3);
+				//allow people to purchase without creating a password
+				$loginDetailsDescription = new LiteralField(
+					'AccountInfo',
+					'<p>'.
+					_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.')
+					.'</p>'
+				);
+				//close by default
+			}
 		}
+
 		if(empty($passwordField)) {
 			$passwordField = new PasswordField('Password', _t('Account.CREATE_PASSWORD','Create Account (enter password)'));
 			$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.CONFIRM_PASSWORD','Confirm Password'));
@@ -209,6 +245,7 @@ class EcommerceRole extends DataExtension {
 			new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
 			new TextField('Surname', _t('EcommerceRole.SURNAME','Surname')),
 			$loginDetailsHeader,
+			$loginDetailsDescription,
 			new EmailField('Email', _t('EcommerceRole.EMAIL','Email')),
 			$updatePasswordLinkField,
 			$passwordField,
@@ -230,16 +267,16 @@ class EcommerceRole extends DataExtension {
 			'Surname',
 			'Email',
 		);
-		$passwordFieldIsRequired = true;
-		if($this->owner->exists()) {
-			if($this->owner->password) {
-				$passwordFieldIsRequired = false;
-			}
-			else {
-				if(EcommerceConfig::get("EcommerceRole", "automatic_membership")) {
+		if(EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase")) {
+			$passwordFieldIsRequired = true;
+			if($this->owner->exists()) {
+				if($this->owner->Password) {
 					$passwordFieldIsRequired = false;
 				}
 			}
+		}
+		else {
+			$passwordFieldIsRequired = false;
 		}
 		if($passwordFieldIsRequired) {
 			$fields[] = "Password";
@@ -320,7 +357,7 @@ class EcommerceRole extends DataExtension {
 		$returnArrayList = new ArrayList();
 		if($this->owner->exists()) {
 			$fieldName = $type."ID";
-			$limit = 99999;
+			$limit = 999;
 			if($onlyLastRecord) {
 				$limit = 1;
 			}
@@ -331,14 +368,14 @@ class EcommerceRole extends DataExtension {
 				->sort("LastEdited", "DESC")
 				->exclude(array("ID" => $excludeID))
 				//->limit($limit)
-				->innerJoin("Order", "\"Order\".\"".$fieldName."\" = \"".$type."\".\"ID\"");
-			if($keepDoubles) {
-				foreach($addresses as $address) {
-					$returnArrayList->push($address);
+				->innerJoin("Order", "\"Order\".\"".$fieldName."\" = \"OrderAddress\".\"ID\"");
+			if($addresses->count()){
+				if($keepDoubles) {
+					foreach($addresses as $address) {
+						$returnArrayList->push($address);
+					}
 				}
-			}
-			else {
-				if($addresses->count()) {
+				else {
 					$addressCompare = array();
 					foreach($addresses as $address) {
 						$comparisonString = $address->comparisonString();

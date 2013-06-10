@@ -115,8 +115,8 @@ class OrderModifierForm_Controller extends Controller{
 		if($this->currentOrder) {
 			if($forms = $this->currentOrder->getModifierForms($this)) {
 				foreach($forms as $form) {
-					$this->addWrapperMethod($form->Name(), 'getOrderModifierForm');
-					self::$allowed_actions[] = $form->Name(); // add all these forms to the list of allowed actions also
+					$this->addWrapperMethod($form->getName(), 'getOrderModifierForm');
+					self::$allowed_actions[] = $form->getName(); // add all these forms to the list of allowed actions also
 				}
 			}
 		}
@@ -132,7 +132,7 @@ class OrderModifierForm_Controller extends Controller{
 		if($this->currentOrder) {
 			if($forms = $this->currentOrder->getModifierForms($this)) {
 				foreach($forms as $form) {
-					if($form->Name() == $name) return $form;
+					if($form->getName() == $name) return $form;
 				}
 			}
 		}

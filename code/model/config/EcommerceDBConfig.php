@@ -164,7 +164,7 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveModelNames" => false,
 		"ProductsHaveQuantifiers" => false,
 		"ProductsAlsoInOtherGroups" => false,
-		"ProductsHaveVariations" => false,
+		//"ProductsHaveVariations" => false,
 		"CurrenciesExplanation" => "<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>",
 		'AllowFreeProductPurchase' => true
 	);
@@ -212,7 +212,13 @@ class EcommerceDBConfig extends DataObject {
 	public static function current_ecommerce_db_config(){
 		if(!self::$my_current_one) {
 			$className =  EcommerceConfig::get("EcommerceDBConfig", "ecommerce_db_config_class_name");
-			self::$my_current_one = $className::get()->First();
+			$query = $className::get();
+			if($query->count()) {
+				self::$my_current_one = $query->First();
+			}
+			else {
+				self::$my_current_one = new $className();
+			}
 		}
 		return self::$my_current_one;
 	}
@@ -253,7 +259,7 @@ class EcommerceDBConfig extends DataObject {
 			"ProductsHaveModelNames" =>  _t("EcommerceDBConfig.PRODUCTSHAVEMODELNAMES", "Products have model names / numbers -  untick to hide model field"),
 			"ProductsHaveQuantifiers" => _t("EcommerceDBConfig.PRODUCTSHAVEQUANTIFIERS", "Products have quantifiers (e.g. per year, each, per dozen, etc...) - untick to hide model field"),
 			"ProductsAlsoInOtherGroups" => _t("EcommerceDBConfig.PRODUCTSALSOINOTHERGROUPS", "Allow products to show in multiple product groups."),
-			"ProductsHaveVariations" => _t("EcommerceDBConfig.PRODUCTSHAVEVARIATIONS", "Products have variations (e.g. size, colour, etc...)."),
+			//"ProductsHaveVariations" => _t("EcommerceDBConfig.PRODUCTSHAVEVARIATIONS", "Products have variations (e.g. size, colour, etc...)."),
 			"CurrenciesExplanation" => _t("EcommerceDBConfig.CURRENCIESEXPLANATION", "Explanation on how the currency options work (if any)."),
 			"EmailLogo" => _t("EcommerceDBConfig.EMAILLOGO", "Email Logo"),
 			"DefaultProductImage" => _t("EcommerceDBConfig.DEFAULTPRODUCTIMAGE", "Default Product Image"),
@@ -261,7 +267,7 @@ class EcommerceDBConfig extends DataObject {
 			"DefaultSmallImageSize" => _t("EcommerceDBConfig.DEFAULTSMALLIMAGESIZE", "Product Small Image Optimised Size"),
 			"DefaultContentImageSize" => _t("EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE", "Product Content Image Optimised Size"),
 			"DefaultLargeImageSize" => _t("EcommerceDBConfig.DEFAULTLARGEIMAGESIZE", "Product Large Image Optimised Size"),
-			'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE', 'Allow free products to be purchased')
+			"AllowFreeProductPurchase" => _t("EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE", "Allow free products to be purchased")
 		);
 		return $newLabels;
 	}
@@ -286,15 +292,15 @@ class EcommerceDBConfig extends DataObject {
 				$htmlEditorField1 = new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"]),
 				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase'])
 			),
-			new Tab('ProductDisplay',
+			new Tab('Products',
 				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
 				new CheckboxField("OnlyShowProductsThatCanBePurchased", $fieldLabels["OnlyShowProductsThatCanBePurchased"]),
 				$htmlEditorField2 = new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
 				new CheckboxField("ProductsHaveWeight", $fieldLabels["ProductsHaveWeight"]),
 				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
 				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"]),
-				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
-				new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
+				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"])
+				//new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
 			),
 			new Tab('ProductImages',
 				new UploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),

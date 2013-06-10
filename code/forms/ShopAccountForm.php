@@ -157,7 +157,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 	 * @param $data = array Form Field Data
 	 * @return Boolean
 	 **/
-	function php($data){
+	function php($data, $allowExistingEmail = false){
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
@@ -180,17 +180,22 @@ class ShopAccountForm_Validator extends RequiredFields{
 					->filter(array($uniqueFieldName => $uniqueFieldValue))
 					->exclude(array("ID" => $loggedInMemberID));
 				if($otherMembersWithSameEmail->count()){
-					$message = _t(
-						"Account.ALREADYTAKEN",
-						"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}",
-						array("uniqueFieldValue" => $uniqueFieldValue, "uniqueFieldName" => $uniqueFieldName)
-					);
-					$this->validationError(
-						$uniqueFieldName,
-						$message,
-						"required"
-					);
-					$valid = false;
+					if($allowExistingEmail) {
+
+					}
+					else {
+						$message = _t(
+							"Account.ALREADYTAKEN",
+							"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}",
+							array("uniqueFieldValue" => $uniqueFieldValue, "uniqueFieldName" => $uniqueFieldName)
+						);
+						$this->validationError(
+							$uniqueFieldName,
+							$message,
+							"required"
+						);
+						$valid = false;
+					}
 				}
 			}
 		}
@@ -204,21 +209,12 @@ class ShopAccountForm_Validator extends RequiredFields{
 				);
 				$valid = false;
 			}
-			if(!$loggedInMember && !$data["Password"]) {
+			//if you are not logged in, you hvae not provided a password and the settings require you to be logged in then
+			//we have a problem
+			if( !$loggedInMember && !$data["Password"] && EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase") ) {
 				$this->validationError(
 					"Password",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
-					"required"
-				);
-				$valid = false;
-			}
-		}
-		//password for new user
-		if(isset($data["Password"]) && isset($data["PasswordDoubleCheck"])) {
-			if($data["Password"] != $data["PasswordDoubleCheck"]) {
-				$this->validationError(
-					"PasswordDoubleCheck",
-					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
 					"required"
 				);
 				$valid = false;

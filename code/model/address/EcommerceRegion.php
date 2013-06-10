@@ -95,7 +95,7 @@ class EcommerceRegion extends DataObject {
 	 */
 	public static $summary_fields = array(
 		"Name" => "Name",
-		"Country.Title"
+		"Country.Title" => "Country"
 	);
 
 
@@ -119,8 +119,8 @@ class EcommerceRegion extends DataObject {
 	 **/
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		//$title = singleton("EcommerceRegion")->i18n_singular_name();
-		//$fields->replaceField("CountryID", new DropdownField("CountryID", $title, "EcommerceCountry"));
+		$title = singleton("EcommerceRegion")->i18n_singular_name();
+		$fields->removeByName("CountryID");
 		return $fields;
 	}
 
@@ -178,7 +178,7 @@ class EcommerceRegion extends DataObject {
 		}
 		if($regions && $regions->count()) {
 			foreach($regions as $region) {
-				$defaultArray[$region->ID] = $region->Name;
+				$defaultArray[$region->ID] = $region->getName();
 			}
 		}
 		return $defaultArray;
@@ -273,7 +273,6 @@ class EcommerceRegion extends DataObject {
 	public static function get_region() {
 		return self::get_region_id();
 	}
-
 
 }
 

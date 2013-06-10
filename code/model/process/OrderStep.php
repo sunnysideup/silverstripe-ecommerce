@@ -70,13 +70,7 @@ class OrderStep extends DataObject {
 	 */
 	public static $summary_fields = array(
 		"Name" => "Name",
-		"Description" => "Description",
-		"CustomerCanEditNice" => "customer can edit",
-		"ShowAsUncompletedOrderNice" => "uncomplete",
-		"ShowAsInProcessOrderNice" => "in process",
-		"ShowAsCompletedOrderNice" => "complete",
-		"HideStepFromCustomerNice" => "hide step from customer",
-		"HasCustomerMessageNice" => "includes message to customer"
+		"ShowAsSummary" => "Phase"
 	);
 
 	/**
@@ -91,7 +85,8 @@ class OrderStep extends DataObject {
 		"ShowAsInProcessOrderNice" => "Varchar",
 		"ShowAsCompletedOrderNice" => "Varchar",
 		"HideStepFromCustomerNice" => "Varchar",
-		"HasCustomerMessageNice" => "Varchar"
+		"HasCustomerMessageNice" => "Varchar",
+		"ShowAsSummary" => "HTMLText"
 	);
 
 	/**
@@ -108,6 +103,7 @@ class OrderStep extends DataObject {
 			'filter' => 'PartialMatchFilter'
 		)
 	);
+
 
 	/**
 	 * casted variable
@@ -552,6 +548,43 @@ class OrderStep extends DataObject {
 	public function HasCustomerMessageNice() {return $this->getHasCustomerMessageNice();}
 	public function getHasCustomerMessageNice() {
 		return $this->hasCustomerMessage() ?  _t("OrderStep.YES", "Yes") :  _t("OrderStep.NO", "No");
+	}
+
+
+	/**
+	 * Formatted answer for "hasCustomerMessage"
+	 * @return String
+	 */
+	public function ShowAsSummary() {return $this->getShowAsSummary();}
+	public function getShowAsSummary() {
+		$v = "<strong>";
+		if($this->ShowAsUncompletedOrder) {
+			$v .= _t("OrderStep.UNCOMPLETED", "Uncompleted");
+		}
+		elseif($this->ShowAsInProcessOrder) {
+			$v .= _t("OrderStep.INPROCESS", "In process");
+		}
+		elseif($this->ShowAsCompletedOrder) {
+			$v .= _t("OrderStep.COMPLETED", "Completed");
+		}
+		$v .= "</strong>";
+		$canArray = array();
+		if($this->CustomerCanEdit) {
+			$canArray[] = _t("OrderStep.EDITABLE", "edit");
+		}
+		if($this->CustomerCanPay) {
+			$canArray[] = _t("OrderStep.PAY", "pay");
+		}
+		if($this->CustomerCanCancel) {
+			$canArray[] = _t("OrderStep.CANCEL", "cancel");
+		}
+		if(count($canArray)){
+			$v .=  "<br />"._t("OrderStep.CUSTOMER_CAN", "Customer Can").": ".implode(", ", $canArray)."";
+		}
+		if($this->HasCustomerMessageNice) {
+			$v .= "<br />"._t("OrderStep.CUSTOMER_MESSAGES", "Includes message to customer");
+		}
+		return DBField::create_field("HTMLText", $v);
 	}
 
 

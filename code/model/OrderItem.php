@@ -173,7 +173,23 @@ class OrderItem extends OrderAttribute {
 		$fields->removeByName("CalculatedTotal");
 		$fields->removeByName("GroupSort");
 		$fields->removeByName("OrderAttribute_GroupID");
-		$fields->addFieldToTab("Root.Main", new BuyableSelectField("FindBuyable", _t("OrderItem.SELECITEM", "Select Item"), $this->Buyable()));
+		if($order = $this->Order()) {
+			if(!$order->IsSubmitted()) {
+				$fields->addFieldToTab("Root.Main", new BuyableSelectField("FindBuyable", _t("OrderItem.SELECITEM", "Select Item"), $this->Buyable()));
+			}
+			else {
+				$fields->addFieldToTab(
+					"Root.Main",
+					new ReadonlyField("TableTitle", _t("OrderItem.TITLE", "Title"), $this->TableSubTitle()),
+					"Quantity"
+				);
+				$fields->addFieldToTab(
+					"Root.Main",
+					new ReadonlyField("TableSubTitleNOHTML", _t("OrderItem.SUB_TITLE", "Sub Title"), $this->TableSubTitleNOHTML()),
+					"Quantity"
+				);
+			}
+		}
 		return $fields;
 	}
 

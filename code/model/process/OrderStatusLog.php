@@ -182,17 +182,15 @@ class OrderStatusLog extends DataObject {
 		$fields->replaceField("AuthorID", $fields->dataFieldByName("AuthorID")->performReadonlyTransformation());
 
 		//OrderID Field
-		if($this->OrderID && $this->exists()) {
-			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
-		}
-		else {
-			$fields->replaceField("OrderID", new NumericField("OrderID"));
+		$fields->removeByName("OrderID");
+		if($this->exists() && $this->OrderID && $this->Order()->exists()) {
+			$fields->addFieldToTab("Root.Main", new ReadOnlyField("OrderTitle", _t("OrderStatusLog.ORDER_TITLE", "Order Title"), $this->Order()->Title()));
 		}
 
 		//ClassName Field
 		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
 		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
-		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", "Type", "OrderStatusLog", $availableLogs);
+		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", _t("OrderStatusLog.TYPE", "Type"), "OrderStatusLog", $availableLogs);
 		$ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
 		$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Title");
 		if($this->exists()) {
@@ -581,12 +579,16 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 
 	public static $default_sort = "\"DispatchedOn\" DESC, \"Created\" DESC";
 
-	//function populateDefaults() {
-		//parent::populateDefaults();
-		//$this->Title = _t("OrderStatusLog.ORDERDISPATCHED", "Order Dispatched");
-		//$this->DispatchedOn =  date('Y-m-d');
-		//$this->DispatchedBy =  Member::currentUser()->getTitle();
-	//}
+	function populateDefaults() {
+		parent::populateDefaults();
+		$this->Title = _t("OrderStatusLog.ORDERDISPATCHED", "Order Dispatched");
+		$this->DispatchedOn = date('Y-m-d');
+		if(Security::database_is_ready()) {
+			if(Member::currentUser()) {
+				$this->DispatchedBy = Member::currentUser()->getTitle();
+			}
+		}
+	}
 
 	/**
 	*
