@@ -146,7 +146,11 @@ class EcommerceCountry extends DataObject {
 	 */
 	public static function get_country_dropdown($showAllCountries = true){
 		if(class_exists("Geoip") && $showAllCountries) {
-			return Geoip::getCountryDropDown();
+			$countries = Geoip::getCountryDropDown();
+			foreach(array('AP', 'EU', 'FX') as $code) {
+				unset($countries[$code]);
+			}
+			return $countries;
 		}
 		if($showAllCountries) {
 			$where = "";
