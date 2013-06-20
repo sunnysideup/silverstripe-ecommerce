@@ -373,7 +373,8 @@ class ProductGroup extends Page {
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Group Image')));
+		//dirty hack to show images!
+		$fields->addFieldToTab('Root.Images', new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
 		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
 		$fields->addFieldToTab(
@@ -974,6 +975,16 @@ class ProductGroup extends Page {
 		return true;
 	}
 
+
+	function onAfterWrite() {
+		parent::onAfterWrite();
+		if($this->ImageID) {
+			if($normalImage = Image::get()->exclude(array("ClassName" => "Product_Image"))->byID($this->ImageID)) {
+				$normalImage->ClassName = "Product_Image";
+				$normalImage->write();
+			}
+		}
+	}
 
 	/**
 	 * Debug helper method.
