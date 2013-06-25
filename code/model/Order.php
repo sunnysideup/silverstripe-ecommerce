@@ -417,7 +417,10 @@ class Order extends DataObject {
 				"Main"
 			);
 			if($submitted) {
+				$oldTheme = SSViewer::current_theme();
+				SSViewer::set_theme(SSViewer::current_custom_theme());
 				$htmlSummary = $this->renderWith("Order");
+				SSViewer::current_theme($oldTheme);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', $htmlSummary));
 				$paymentsTable = new HasManyComplexTableField(
 					$this,
