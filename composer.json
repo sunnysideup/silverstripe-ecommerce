@@ -4,13 +4,16 @@
 	"description": "Silverstripe E-commerce Application",
 	"homepage": "http://www.silverstripe-ecommerce.com/",
 	"keywords": ["e-commerce", "ecommerce", "payment", "shop", "sales", "silverstripe"],
-	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
+	"license": "BSD-3-Clause",
 	"authors":[
 		{
 			"name": "Nicolaas Francken",
 			"homepage": "https://github.com/sunnysideup",
 			"email" : "modules@sunnysideup.co.nz",
 			"role" : "lead developer"
+		},
+		{
+			"name": "The SilverStripe Community"
 		}
 	],
 	"require":{
