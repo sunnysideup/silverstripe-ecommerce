@@ -43,7 +43,7 @@ SS_Report::register("SideReport", "EcommerceSideReport_NotForSale");
 //of valuable processing where in many cases the default value is fine.
 
 // * * * DEFINITELY MUST SET
-//EcommerceConfig::set_folder_and_file_locations(array("ecommerce/_config/ecommerce.yaml"));
+//EcommerceConfig::set_folder_and_file_locations(array("ecommerce/ecommerce_config/ecommerce.yaml"));
 
 
 // * * * ECOMMERCE I18N SETTINGS NOTES

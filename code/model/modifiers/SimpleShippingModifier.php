@@ -75,7 +75,7 @@ class SimpleShippingModifier extends OrderModifier {
 	public function TableTitle() {return $this->getTableTitle();}
 	public function getTableTitle() {
 		if($this->Country) {
-			$countryList = Geoip::getCountryDropDown();
+			$countryList = EcommerceCountry::get_country_dropdown();
 			return _t("SimpleShippingModifier.SHIPPINGTO", "Shipping to")." ".$countryList[$this->Country];
 		}
 		else {

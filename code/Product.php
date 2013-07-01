@@ -51,7 +51,7 @@ class Product extends Page implements BuyableModel {
 		'AllowPurchase' => 'Boolean',
 		'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
 		'NumberSold' => 'Int', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
-		'FullSiteTreeSort' => 'Varchar(100)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
+		'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
 		'FullName' => 'Varchar(255)' //Name for look-up lists
 	);
 
@@ -319,13 +319,13 @@ class Product extends Page implements BuyableModel {
 		}
 		$fullName .= $this->Title;
 		//FullSiteTreeSort
-		$parentSortArray = array($this->Sort);
+		$parentSortArray = array(sprintf("%03d", $this->Sort));
 		$obj = $this;
 		$parentTitleArray = array();
 		while($obj && $obj->ParentID) {
 			$obj = DataObject::get_by_id("SiteTree", intval($obj->ParentID)-0);
 			if($obj) {
-				$parentSortArray[] = $obj->Sort;
+				$parentSortArray[] = sprintf("%03d", $obj->Sort);
 				if($obj instanceOf ProductGroup) {
 					$parentTitleArray[] = $obj->Title;
 				}
@@ -335,12 +335,13 @@ class Product extends Page implements BuyableModel {
 		$parentTitle = " (".implode(" / ", $parentTitleArray).")";
 		//setting fields with new values!
 		$this->FullName = $fullName.$parentTitle;
-		$this->FullSiteTreeSort = implode(",", $reverseArray);
+		$this->FullSiteTreeSort = implode("", array_map($this->numberPad, $reverseArray));
 		if(($this->dbObject("FullName") != $this->FullName) || ($this->dbObject("FullSiteTreeSort") != $this->FullSiteTreeSort)) {
 			return true;
 		}
 		return false;
 	}
+
 
 	//GROUPS AND SIBLINGS
 
