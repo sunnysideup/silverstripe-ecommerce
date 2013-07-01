@@ -11,7 +11,7 @@
  *
  * # HOW TO USE IT
  *
- * 1. Copy ecommerce/_config/ecommerce.yaml and move it your project folder, e.g. mysite/_config/ecommerce.yaml
+ * 1. Copy ecommerce/ecommerce_config/ecommerce.yaml and move it your project folder, e.g. mysite/_config/ecommerce.yaml
  * In the copied file, set your configs as you see fit, using the YAML format.  E.g.
  *
  * Order:
@@ -19,7 +19,7 @@
  *
  * Next, include in _config.php:
  * <code>
- * EcommerceConfig::set_folder_and_file_locations(array("mysite/_config/ecommerce.yaml", "myotherconfig.yaml"));
+ * EcommerceConfig::set_folder_and_file_locations(array("mysite/ecommerce_config/ecommerce.yaml", "myotherconfig.yaml"));
  * </code>
  *
  * Then, in individual classes, you can access configs like this:
@@ -82,7 +82,7 @@ class EcommerceConfig extends Object {
 	 *
 	 * @var Array
 	 */
-	protected static $folder_and_file_locations = array("ecommerce/_config/ecommerce.yaml");
+	protected static $folder_and_file_locations = array("ecommerce/ecommerce_config/ecommerce.yaml");
 		static function set_folder_and_file_locations($a) {self::$folder_and_file_locations = $a;}
 		static function get_folder_and_file_locations() {return self::$folder_and_file_locations;}
 
@@ -120,7 +120,7 @@ class EcommerceConfig extends Object {
 			".implode(", ", self::$folder_and_file_locations)."<br />
 			<pre>
 $className:
-	 $identifier: [check default configuration (ecommerce/_config/ecommerce.yaml) for example value]
+	 $identifier: [check default configuration (ecommerce/ecommerce_config/ecommerce.yaml) for example value]
 			</pre><br />
 			Please also make sure to visit <a href=\"/dev/ecommerce/\">/dev/ecommerce/</a> to check all your configurations and run any migration scripts!";
 			user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
@@ -128,7 +128,7 @@ $className:
 		//when in live mode, try to keep the boat floating.
 		if(Director::isLive()) {
 			$realFiles = self::$folder_and_file_locations;
-			$backupFiles = "ecommerce/_config/ecommerce.yaml";
+			$backupFiles = "ecommerce/ecommerce_config/ecommerce.yaml";
 			if($realFiles != $backupFiles) {
 				self::$folder_and_file_locations = $backupFiles;
 				$outcome = self::getStaticValue($className, $identifier, $subIdentifier);

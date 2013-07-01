@@ -76,6 +76,7 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Gets or creates the current order.
+	 * Based on the session ONLY!
 	 * IMPORTANT FUNCTION!
 	 * @todo - does this need to be public????
 	 * @return void
@@ -641,8 +642,8 @@ class ShoppingCart extends Object{
 			debug::show($this->currentOrder());
 
 			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>";
-			$countryCode = @Geoip::visitor_country();
-			echo "GEOIP Country: ".$countryCode;
+			echo "GEOIP Country: ".EcommerceCountry::get_country_from_ip()."<br />";
+			echo "Calculated Country Country: ".EcommerceCountry::get_country()."<br />";
 
 			echo "<blockquote><blockquote><blockquote><blockquote>";
 
