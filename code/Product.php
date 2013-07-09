@@ -15,6 +15,7 @@
  * @package: ecommerce
  * @sub-package: buyables
  * @inspiration: Silverstripe Ltd, Jeremy
+ * @todo: Ask the silverstripe gods why $default_sort won't work with FullSiteTreeSort
  **/
 
 
@@ -98,7 +99,8 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
+	//public static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
+	//public static $default_sort = "\"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
 
 	/**
 	 * Standard SS variable.
