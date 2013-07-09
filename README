@@ -2,6 +2,13 @@
 Silverstripe E-commerce
 ###############################################
 
+Todo!
+-----------------------------------------------
+Payment replaced by EcommercePayment class
+References to
+	Payment::set_site_currency
+	Payment::set_supported_methods
+should now be in the Ecommerce config.
 
 Developers
 -----------------------------------------------

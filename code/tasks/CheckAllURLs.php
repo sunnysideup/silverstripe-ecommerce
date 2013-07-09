@@ -94,7 +94,7 @@ class CheckAllURLs extends BuildTask {
 		"Product",
 		"ProductGroup",
 		"ProductGroupSearchPage"
-		);
+	);
 
 
 	public function run($request) {
