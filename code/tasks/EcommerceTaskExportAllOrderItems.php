@@ -30,14 +30,14 @@ class EcommerceTaskExportAllOrderItems extends BuildTask{
 		$count = 50;
 		while(
 			$orders = Order::get()
-				->sort("\"Order\".\"ID\" ASC"),
-				->innerJoin("OrderStatusLog", ""\"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"")
+				->sort("\"Order\".\"ID\" ASC")
+				->innerJoin("OrderStatusLog", "\"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"")
 				->innerJoin($orderStatusSubmissionLog, "\"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"")
 				->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"")
 				->limit($count, $offset) &&
-			$ordersCount = $orders->count();
+			$ordersCount = $orders->count()
 
-		)) {
+		) {
 			$offset = $offset + $count;
 			foreach($orders as $order) {
 				if($order->IsSubmitted()) {
