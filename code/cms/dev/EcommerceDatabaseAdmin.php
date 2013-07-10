@@ -219,7 +219,6 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 		"cartmanipulation_debug",
 		"ecommercetaskbuilding_model",
 		"ecommercetaskbuilding_extending",
-		"checkallurls",
 	);
 
 	/**
