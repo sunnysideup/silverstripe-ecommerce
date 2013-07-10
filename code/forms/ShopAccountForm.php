@@ -197,6 +197,23 @@ class ShopAccountForm_Validator extends RequiredFields{
 						$valid = false;
 					}
 				}
+				else {
+					$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
+					//can't be taken
+					if(DataObject::get_one('Member',"\"$uniqueFieldName\" = '$uniqueFieldValue' AND \"Member\".\"ID\" <> ".$loggedInMemberID)){
+						$message = sprintf(
+							_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
+							$uniqueFieldValue,
+							$uniqueFieldName
+						);
+						$this->validationError(
+							$uniqueFieldName,
+							$message,
+							"required"
+						);
+						$valid = false;
+					}
+				}
 			}
 		}
 		// check password fields are the same before saving

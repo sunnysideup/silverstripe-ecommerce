@@ -1169,6 +1169,13 @@ class Order extends DataObject {
 		}
 	}
 
+	/**
+	 * alias for UpdateCurrency
+	 */
+	public function SetCurrency($currency) {
+		$this->UpdateCurrency($currency);
+	}
+
 
 
 
@@ -1270,6 +1277,8 @@ class Order extends DataObject {
 
 	/**
 	 * returns the Data that can be used in the body of an order Email
+	 * we add the subject here so that the subject, for example, can be added to the <title>
+	 * of the email template.
 	 * we add the subject here so that the subject, for example, can be added to the <title>
 	 * of the email template.
 	 * @param String $message - the additional message

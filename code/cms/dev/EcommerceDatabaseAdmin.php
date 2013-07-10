@@ -156,6 +156,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 		"createecommercemembergroups",
 		"ecommercedefaultrecords",
 		"ecommercecountryandregiontasks",
+		"ecommercecountryandregiontasks_disallowallcountries",
 		"adddefaultecommerceproducts",
 		"ecommercetasklinkproductwithimages"
 	);
@@ -167,6 +168,28 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	function EcommerceSetup() {
 		return $this->createMenuDOSFromArray($this->ecommerceSetup, $type = "EcommerceSetup");
 	}
+
+
+
+
+	function adddefaultecommerceproducts($request){
+		$this->runTask("AddDefaultEcommerceProducts", $request);
+	}
+
+	function ecommercecountryandregiontasks($request){
+		$this->runTask("EcommerceCountryAndRegionTasks", $request);
+	}
+
+	function ecommercecountryandregiontasks_disallowallcountries($request){
+		$this->runTask("EcommerceCountryAndRegionTasks_DisallowAllCountries", $request);
+	}
+
+	function ecommercetasklinkproductwithimages($request){
+		$this->runTask("EcommerceTaskLinkProductWithImages", $request);
+	}
+
+
+
 
 
 
