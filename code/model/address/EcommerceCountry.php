@@ -192,6 +192,7 @@ class EcommerceCountry extends DataObject {
 	}
 
 	/**
+
 	 * This function exists as a shortcut.
 	 * If there is only ONE allowed country code
 	 * then a lot of checking of countries can be avoided.
