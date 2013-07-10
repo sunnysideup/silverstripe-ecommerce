@@ -440,11 +440,6 @@ class EcommerceCurrency extends DataObject {
 		}
 	}
 
-
-	function canDelete() {
-		return ! $this->InUse && self::get_list()->Count() > 1;
-	}
-
 	/**
 	 * Standard SS Method
 	 * Adds the default currency
