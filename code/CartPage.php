@@ -241,7 +241,6 @@ class CartPage_Controller extends Page_Controller{
 		'startneworder',
 		'showorder',
 		'LoginForm'
-		'LoginForm'
 	);
 
 
