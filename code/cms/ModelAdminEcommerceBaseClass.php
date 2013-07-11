@@ -19,7 +19,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin {
 				unset($models[$key]);
 			}
 		}
-		self::$managed_models = $models;
+		Config::inst()->update('ModelAdminEcommerceBaseClass', 'managed_models', $models);
 		return parent::getManagedModels();
 	}
 

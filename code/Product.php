@@ -1425,7 +1425,7 @@ HTML;
 
 class Product_ProductImageUploadField extends UploadField {
 
-	function getRelationAutosetClass(){
+	function getRelationAutosetClass($default ='File'){
 		return "Image";
 	}
 

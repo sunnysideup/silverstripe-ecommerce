@@ -1,0 +1,39 @@
+DevelopmentAdmin:
+  extensions:
+    - EcommerceDevelopmentAdminDecorator
+  allowed_actions:
+    - 'ecommerce'
+
+Member:
+  extensions:
+    - EcommerceRole
+
+#SiteTree:
+#  extensions:
+#    - EcommerceSiteTreeExtension
+
+Payment:
+  extensions:
+    - EcommercePayment
+
+
+Page_Controller:
+  extensions:
+    - EcommerceSiteTreeExtension_Controller
+
+Money:
+  extensions:
+    - EcommerceMoney
+
+
+##########################
+# START ECOMMERCE CONFIG
+##########################
+
+EcommerceConfig:
+  folder_and_file_locations:
+    - "ecommerce/ecommerce_config/ecommerce.yaml"
+
+##########################
+# END ECOMMERCE CONFIG
+##########################
