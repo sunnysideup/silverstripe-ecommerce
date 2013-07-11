@@ -366,7 +366,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected function addOtherValuesToConfigs(){
 
 		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. <br />SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
-		$this->configs["Email"]["admin_email_address"] = Email::$admin_email_address;
+		$this->configs["Email"]["admin_email_address"] = Config::inst()->get("Email", "admin_email_address");
 		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
 
 		$siteConfig = SiteConfig::current_site_config();
