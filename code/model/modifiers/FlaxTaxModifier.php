@@ -21,7 +21,7 @@ class FlatTaxModifier extends OrderModifier {
 
 // ######################################## *** model defining static variables (e.g. $db, $has_one)
 
-	public static $db = array(
+	private static $db = array(
 		'Country' => 'Text',
 		'Rate' => 'Double',
 		'TaxType' => "Enum('Exclusive,Inclusive')",
@@ -29,22 +29,22 @@ class FlatTaxModifier extends OrderModifier {
 	);
 
 
-	public static $singular_name = "Flat Tax";
+	private static $singular_name = "Flat Tax";
 		function i18n_singular_name() { return _t("FlatTaxModifier.FLATTAXMODIFIER", "Flat Tax");}
 
-	public static $plural_name = "Flat Taxes";
+	private static $plural_name = "Flat Taxes";
 		function i18n_plural_name() { return _t("FlatTaxModifier.FLATTAXMODIFIER", "Flat Taxes");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "Adds tax to the order.";
+	private static $description = "Adds tax to the order.";
 
 
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
-// ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
+// ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
 
 	protected $includedmessage = "%.1f%% %s (inclusive)";

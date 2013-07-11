@@ -17,7 +17,7 @@ class ShippingAddress extends OrderAddress {
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/ShippingAddress/
 	 * @var array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'ShippingPrefix',
 			'ShippingFirstName',
@@ -37,7 +37,7 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'ShippingPrefix' => 'Varchar(10)',
 		'ShippingFirstName' => 'Varchar(100)',
 		'ShippingSurname' => 'Varchar(100)',
@@ -57,21 +57,21 @@ class ShippingAddress extends OrderAddress {
 	/**
 	 * standard SS static definition
 	 **/
-	public static $has_one = array(
+	private static $has_one = array(
 		"ShippingRegion" => "EcommerceRegion"
 	);
 
 	/**
 	 * standard SS static definition
 	 **/
-	public static $belongs_to = array(
+	private static $belongs_to = array(
 		"Order" => "Order"
 	);
 
 	/**
 	 * standard SS static definition
 	 */
-	public static $default_sort = "\"ShippingAddress\".\"ID\" DESC";
+	private static $default_sort = "\"ShippingAddress\".\"ID\" DESC";
 
 	/**
 	 * standard SS variable
@@ -86,7 +86,7 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"ShippingFullCountryName" => "Varchar(200)"
 	);
 
@@ -94,7 +94,7 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"OrderID" => array(
 			"field" => "NumericField",
 			"title" => "Order Number"
@@ -110,7 +110,7 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Order.Title",
 		"Surname",
 		"City"
@@ -120,7 +120,7 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"Order.Title" => "Order"
 	);
 
@@ -128,21 +128,21 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $singular_name = "Shipping Address";
+	private static $singular_name = "Shipping Address";
 		function i18n_singular_name() { return _t("OrderAddress.SHIPPINGADDRESS", "Shipping Address");}
 
 	/**
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $plural_name = "Shipping Addresses";
+	private static $plural_name = "Shipping Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.SHIPPINGADDRESSES", "Shipping Addresses");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "The address for delivery of the order.";
+	private static $description = "The address for delivery of the order.";
 
 	/**
 	 *

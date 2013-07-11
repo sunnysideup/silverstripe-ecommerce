@@ -17,7 +17,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		"Title" => "Varchar(30)",
 		"UseThisOne" => "Boolean",
 		"ShopClosed" => "Boolean",
@@ -43,7 +43,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		"EmailLogo" => "Image",
 		"DefaultProductImage" => "Product_Image"
 	);
@@ -52,7 +52,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"UseThisOne" => true,
 		"ShopClosed" => true,
 		"ShopPricesAreTaxExclusive" => true,
@@ -64,7 +64,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"UseThisOneNice" => "Varchar"
 	); //adds computed fields that can also have a type (e.g.
 
@@ -72,7 +72,7 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Title" => "PartialMatchFilter"
 	);
 
@@ -80,13 +80,13 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	public static $field_labels = array();
+	private static $field_labels = array();
 
 	/**
 	 * Standard SS Variable
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Title" => "Title",
 		"UseThisOneNice" => "Use this configuration set"
 	); //note no => for relational fields
@@ -142,13 +142,13 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS variable
 	 * @var String
 	 */
-	public static $default_sort = "\"UseThisOne\" DESC, \"Created\" ASC";
+	private static $default_sort = "\"UseThisOne\" DESC, \"Created\" ASC";
 
 	/**
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		"Title" => "Ecommerce Site Config",
 		"UseThisOne" => true,
 		"ShopClosed" => false,
@@ -182,27 +182,27 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Ecommerce Configuration";
+	private static $singular_name = "Ecommerce Configuration";
 		function i18n_singular_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATION", "Ecommerce Configuration");}
 
 	/**
 	 * Standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Ecommerce Configuration";
+	private static $plural_name = "Ecommerce Configuration";
 		function i18n_plural_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATIONS", "Ecommerce Configurations");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A set of configurations for the online shop. Each shop needs to have one or more sets.";
+	private static $description = "A set of configurations for the online shop. Each shop needs to have one or more sets.";
 
 	/**
 	 * static holder for its own (or other EcommerceDBConfig) class.
 	 * @var String | NULL
 	 */
-	protected static $my_current_one = null;
+	private static $my_current_one = null;
 		public static function reset_my_current_one() {self::$my_current_one = null;}
 
 	/**

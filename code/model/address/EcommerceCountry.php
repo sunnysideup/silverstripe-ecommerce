@@ -19,7 +19,7 @@ class EcommerceCountry extends DataObject {
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceCountry/
 	 * @var array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 				"Code",
 				"Name"
@@ -57,7 +57,7 @@ class EcommerceCountry extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Code" => "Code",
 		"Name" => "Name",
 		"AllowSalesNice" => "Allow Sales"
@@ -67,7 +67,7 @@ class EcommerceCountry extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"AllowSales" => "Boolean",
 		"AllowSalesNice" => "Varchar"
 	);
@@ -76,7 +76,7 @@ class EcommerceCountry extends DataObject {
 	 * STANDARD SILVERSTRIPE STUFF
 	 * @todo: how to translate this?
 	 **/
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Code' => "PartialMatchFilter",
 		'Name' => "PartialMatchFilter",
 		'DoNotAllowSales' => array(
@@ -96,21 +96,21 @@ class EcommerceCountry extends DataObject {
 	 * Standard SS Variable
 	 * @var String
 	 **/
-	public static $singular_name = "Country";
+	private static $singular_name = "Country";
 		function i18n_singular_name() { return _t("EcommerceCountry.COUNTRY", "Country");}
 
 	/**
 	 * Standard SS Variable
 	 * @var String
 	 **/
-	public static $plural_name = "Countries";
+	private static $plural_name = "Countries";
 		function i18n_plural_name() { return _t("EcommerceCountry.COUNTRIES", "Countries");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A country.";
+	private static $description = "A country.";
 
 	/**
 	 * Standard SS Method
@@ -236,7 +236,7 @@ class EcommerceCountry extends DataObject {
 	 * Memory for the customer's country.
 	 * @var Null | String
 	 */
-	protected static $get_country_cache = null;
+	private static $get_country_cache = null;
 		public static function reset_get_country_cache() {self::$get_country_cache = null;}
 
 	/**
@@ -283,7 +283,7 @@ class EcommerceCountry extends DataObject {
 	 * Memory for allow country to check
 	 * @var Null | Boolean
 	 */
-	protected static $allow_sales_cache = null;
+	private static $allow_sales_cache = null;
 		public static function reset_allow_sales_cache() {self::$allow_sales_cache = null;}
 
 
@@ -375,7 +375,7 @@ class EcommerceCountry extends DataObject {
 	 * @param Array $a: should be country codes e.g. array("NZ", "NP", "AU");
 	 * @var Array
 	 */
-	protected static $for_current_order_only_show_countries = array();
+	private static $for_current_order_only_show_countries = array();
 		static function set_for_current_order_only_show_countries(Array $a) {
 			if(count(self::$for_current_order_only_show_countries)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
@@ -392,7 +392,7 @@ class EcommerceCountry extends DataObject {
 	 * @param Array $a: should be country codes e.g. array("NZ", "NP", "AU");
 	 * @var Array
 	 */
-	protected static $for_current_order_do_not_show_countries = array();
+	private static $for_current_order_do_not_show_countries = array();
 		static function set_for_current_order_do_not_show_countries(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);

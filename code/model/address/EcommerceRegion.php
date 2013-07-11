@@ -19,7 +19,7 @@ class EcommerceRegion extends DataObject {
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceRegion/
 	 * @var array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 				"Code",
 				"Name"
@@ -62,21 +62,21 @@ class EcommerceRegion extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Region";
+	private static $singular_name = "Region";
 		function i18n_singular_name() { return _t("EcommerceRegion.REGION", "Region");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Regions";
+	private static $plural_name = "Regions";
 		function i18n_plural_name() { return _t("EcommerceRegion.REGIONS", "Regions");}
 
 	/**
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
 		"Code" => "PartialMatchFilter"
 	);
@@ -85,7 +85,7 @@ class EcommerceRegion extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"Name" => "Region"
 	);
 
@@ -93,7 +93,7 @@ class EcommerceRegion extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Name" => "Name",
 		"Country.Title" => "Country"
 	);
@@ -103,7 +103,7 @@ class EcommerceRegion extends DataObject {
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A region within a country.  This can be a state or a province or the equivalent.";
+	private static $description = "A region within a country.  This can be a state or a province or the equivalent.";
 
 	/**
 	 * do we use regions at all in this ecommerce application?
@@ -218,7 +218,7 @@ class EcommerceRegion extends DataObject {
 	 * NOTE: these methods / variables below are IMPORTANT, because they allow the dropdown for the region to be limited for just that order
 	 * @var Array of regions codes, e.g. ("NSW", "WA", "VIC");
 	**/
-	protected static $for_current_order_only_show_regions = array();
+	private static $for_current_order_only_show_regions = array();
 		static function set_for_current_order_only_show_regions(Array $a) {
 			if(count(self::$for_current_order_only_show_regions)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
@@ -236,7 +236,7 @@ class EcommerceRegion extends DataObject {
 	 *
 	 * @var Array
 	 */
-	protected static $for_current_order_do_not_show_regions = array();
+	private static $for_current_order_do_not_show_regions = array();
 		static function set_for_current_order_do_not_show_regions(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_regions = array_merge($a, self::$for_current_order_do_not_show_regions);

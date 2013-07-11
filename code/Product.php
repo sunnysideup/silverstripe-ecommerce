@@ -25,7 +25,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			"Title",
 			"Price",
@@ -43,7 +43,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Price' => 'Currency',
 		'Weight' => 'Decimal(9,4)',
 		'Model' => 'Varchar(30)',
@@ -60,14 +60,14 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Image' => 'Product_Image'
 	);
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $many_many = array(
+	private static $many_many = array(
 		'ProductGroups' => 'ProductGroup',
 		'AdditionalFiles' => 'File' //this may include images, pdfs, videos, etc...
 	);
@@ -75,7 +75,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"CalculatedPrice" => "Currency",
 		"CalculatedPriceAsMoney" => "Money",
 		"AllowPurchaseNice" => "Varchar"
@@ -84,7 +84,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"FullSiteTreeSort" => true,
 		"FullName" => true
 	);
@@ -92,20 +92,20 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		'AllowPurchase' => 1
 	);
 
 	/**
 	 * Standard SS variable.
 	 */
-	//public static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
-	//public static $default_sort = "\"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
+	//private static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
+	//private static $default_sort = "\"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'CMSThumbnail' => 'Image',
 		'FullName' => 'Description',
 		'Price' => 'Price',
@@ -115,7 +115,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"FullName" => array(
 			'title' => 'Keyword',
 			'field' => 'TextField'
@@ -137,30 +137,30 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $singular_name = "Product";
+	private static $singular_name = "Product";
 		function i18n_singular_name() { return _t("Order.PRODUCT", "Product");}
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $plural_name = "Products";
+	private static $plural_name = "Products";
 		function i18n_plural_name() { return _t("Order.PRODUCTS", "Products");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A product that is for sale in the shop.";
+	private static $description = "A product that is for sale in the shop.";
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $default_parent = 'ProductGroup';
+	private static $default_parent = 'ProductGroup';
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $icon = 'ecommerce/images/icons/product';
+	private static $icon = 'ecommerce/images/icons/product';
 
 	/**
 	 * We add all $db fields to MetaKeywords to allow searching products
@@ -1268,7 +1268,7 @@ class Product_OrderItem extends OrderItem {
 	 * standard SS method
 	 * @var Array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'CalculatedTotal',
 			'TableTitle',

@@ -11,11 +11,11 @@
 
 class CartWidget extends Widget{
 
-	public static $title = "Shopping Cart";
+	private static $title = "Shopping Cart";
 
-	public static $cmsTitle = "Shopping Cart";
+	private static $cmsTitle = "Shopping Cart";
 
-	public static $description = "Displays the current contents of the user's cart.";
+	private static $description = "Displays the current contents of the user's cart.";
 
 	function Cart(){
 		return ShoppingCart::current_order();

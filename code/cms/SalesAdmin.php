@@ -16,19 +16,19 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $url_segment = 'sales';
+	private static $url_segment = 'sales';
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $menu_title = 'Sales';
+	private static $menu_title = 'Sales';
 
 	/**
 	 * standard SS variable
 	 * @var Int
 	 */
-	public static $menu_priority = 1;
+	private static $menu_priority = 1;
 
 	/**
 	 * Change this variable if you don't want the Import from CSV form to appear.
@@ -41,7 +41,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $menu_icon = "";
+	private static $menu_icon = "";
 
 	function init() {
 		parent::init();

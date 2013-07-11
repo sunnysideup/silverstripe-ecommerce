@@ -5,7 +5,7 @@
  * SEQUENCE - USE FOR ALL MODIFIERS!!!
  * *** 1. model defining static variables (e.g. $db, $has_one)
  * *** 2. cms variables + functions (e.g. getCMSFields, $searchableFields)
- * *** 3. other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
+ * *** 3. other (non) static variables (e.g. private static $special_name_for_something, protected $order)
  * *** 4. CRUD functions (e.g. canEdit)
  * *** 5. init and update functions
  * *** 6. form functions (e. g. Showform and getform)
@@ -35,7 +35,7 @@ class OrderModifier extends OrderAttribute {
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderModifier/
 	 * @var array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'CalculatedTotal',
 			'Sort',
@@ -57,7 +57,7 @@ class OrderModifier extends OrderAttribute {
 	 * @var array
 	 * stardard SS definition
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
 		'TableValue' => 'Currency', //the $$ shown in the checkout table
 		'HasBeenRemoved' => 'Boolean' // we add this so that we can see what modifiers have been removed
@@ -68,7 +68,7 @@ class OrderModifier extends OrderAttribute {
 	 * stardard SS variable
 	 * @var Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		'Name' => 'Modifier' //making sure that you choose a different name for any class extensions.
 	);
 
@@ -78,7 +78,7 @@ class OrderModifier extends OrderAttribute {
 	 * stardard SS variable
 	 * @var array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -92,7 +92,7 @@ class OrderModifier extends OrderAttribute {
 	 * stardard SS definition
 	 * @var array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Order.ID" => "Order ID",
 		"TableTitle" => "Table Title",
 		"TableValue" => "Value Shown"
@@ -102,7 +102,7 @@ class OrderModifier extends OrderAttribute {
 	 * stardard SS definition
 	 * @var array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"TableValueAsMoney" => "Money"
 	);
 
@@ -110,21 +110,21 @@ class OrderModifier extends OrderAttribute {
 	 * stardard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Order Modifier";
+	private static $singular_name = "Order Modifier";
 		function i18n_singular_name() { return _t("OrderModifier.SINGULARNAME", "Order Modifier");}
 
 	/**
 	 * stardard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Order Modifiers";
+	private static $plural_name = "Order Modifiers";
 		function i18n_plural_name() { return _t("OrderModifier.PLURALNAME", "Order Modifiers");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "An addition to the order that sits between the sub-total and the total (e.g. tax, delivery, etc...).";
+	private static $description = "An addition to the order that sits between the sub-total and the total (e.g. tax, delivery, etc...).";
 
 	/**
 	 * stardard SS metbod
@@ -267,7 +267,6 @@ class OrderModifier extends OrderAttribute {
 	 * @param Bool $recalculate - run it, even if it has run already
 	**/
 	public function runUpdate($recalculate = false) {
-		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::runUpdate-for-'.$this->ClassName);
 		if(!$this->IsRemoved()) {
 			$this->checkField("Name");
 			$this->checkField("CalculatedTotal");
@@ -278,7 +277,6 @@ class OrderModifier extends OrderAttribute {
 			$this->runningTotal += $this->CalculatedTotal;
 		}
 		$this->baseInitCalled = true;
-		//if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::runUpdate-for-'.$this->ClassName);
 	}
 
 	/**
@@ -310,7 +308,6 @@ class OrderModifier extends OrderAttribute {
 	 * @param String $fieldName
 	 **/
 	protected function checkField($fieldName) {
-		if (isset($_GET['debug_profile'])) Profiler::mark('OrderModifier::checkField_'.$fieldName.'_'.$this->ClassName);
 		if($this->canBeUpdated()) {
 			$functionName = "Live".$fieldName;
 			$oldValue = $this->$fieldName;
@@ -320,7 +317,6 @@ class OrderModifier extends OrderAttribute {
 				$this->mustUpdate = true;
 			}
 		}
-		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderModifier::checkField_'.$fieldName.'_'.$this->ClassName);
 	}
 
 	/**
@@ -795,7 +791,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Heading" => "PartialMatchFilter",
 		"Description" => "PartialMatchFilter"
 	);
@@ -804,7 +800,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"ModifierClassName" => "Code"
 	);
 
@@ -812,7 +808,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"RealName" => "Code",
 		"Heading" => "Heading",
 		"Description" => "Description"
@@ -822,7 +818,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"RealName" => "Varchar"
 	);
 
@@ -830,14 +826,14 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Order Modifier Description";
+	private static $singular_name = "Order Modifier Description";
 		function i18n_singular_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTION", "Order Modifier Description");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Order Modifier Descriptions";
+	private static $plural_name = "Order Modifier Descriptions";
 		function i18n_plural_name() { return _t("OrderModifier.ORDEREXTRADESCRIPTIONS", "Order Modifier Descriptions");}
 
 	/**
