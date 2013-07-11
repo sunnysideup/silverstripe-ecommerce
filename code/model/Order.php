@@ -466,7 +466,7 @@ class Order extends DataObject {
 			);
 			if($submitted) {
 				$oldTheme = Config::inst()->get('SSViewer', 'theme');
-				Config::inst()->set('SSViewer', 'theme')
+				Config::inst()->set('SSViewer', 'theme');
 				Config::inst()->set('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
 				$htmlSummary = $this->renderWith("Order");
 				SSViewer::current_theme($oldTheme);
