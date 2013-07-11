@@ -171,7 +171,7 @@ class Product extends Page implements BuyableModel {
 	 * AND products that are not relevant in search (e.g. Created)
 	 * @var Array
 	 */
-	protected $fieldsToExcludeFromSearch = array("Title","MenuTitle","Content","MetaTitle","MetaDescription","MetaKeywords", "Status", "ReportClass", "CanViewType", "CanEditType", "ToDo");
+	protected $fieldsToExcludeFromSearch = array("Title","MenuTitle","Content","MetaDescription", "Status", "ReportClass", "CanViewType", "CanEditType", "ToDo");
 
 	/**
 	 * Standard SS variable.
