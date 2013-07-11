@@ -8,9 +8,9 @@
  **/
 
 
-/*Member::add_extension("Member", "EcommerceRole");
-SiteTree::add_extension("SiteTree", "EcommerceSiteTreeExtension");
-Page_Controller::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller");
+//Member::add_extension("Member", "EcommerceRole");
+//SiteTree::add_extension("SiteTree", "EcommerceSiteTreeExtension");
+/*Page_Controller::add_extension("Page_Controller", "EcommerceSiteTreeExtension_Controller");
 DevelopmentAdmin::add_extension("DevelopmentAdmin", "EcommerceDevelopmentAdminDecorator");
 Money::add_extension("Money", 'EcommerceMoney');
 DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
