@@ -1,0 +1,12 @@
+---
+Name: ecommerceroutes
+After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'shoppingcart/$Action/$ID/$OtherID/$Version' : 'ShoppingCart_Controller'
+    'ecommercepayment//$Action/$ID/$OtherID' : 'EcommercePaymentController'
+    'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTemplateTest'
+    'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
+    'dev/ecommerce//$Action/$ID/$OtherID' : 'EcommerceDatabaseAdmin'
+
