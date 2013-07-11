@@ -8,9 +8,9 @@ Member:
   extensions:
     - EcommerceRole
 
-#SiteTree:
-#  extensions:
-#    - EcommerceSiteTreeExtension
+SiteTree:
+  extensions:
+    - EcommerceSiteTreeExtension
 
 Payment:
   extensions:
@@ -24,6 +24,10 @@ Page_Controller:
 Money:
   extensions:
     - EcommerceMoney
+
+EcommerceDatabaseAdmin:
+  allowed_actions:
+    - runTask
 
 
 ##########################

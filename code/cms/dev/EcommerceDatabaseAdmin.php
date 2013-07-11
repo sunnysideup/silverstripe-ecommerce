@@ -73,6 +73,10 @@ Object::add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
 
 class EcommerceDatabaseAdmin extends TaskRunner{
 
+	private static $allowed_actions = array(
+		"runTask" => true
+	);
+
 	//##############################
 	// BASIC FUNCTIONS
 	//##############################
