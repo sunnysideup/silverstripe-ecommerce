@@ -21,13 +21,13 @@ class OrderConfirmationPage extends CartPage{
 	 * Standard SS variable
 	 * @var String
 	 */
-	public static $icon = 'ecommerce/images/icons/OrderConfirmationPage';
+	private static $icon = 'ecommerce/images/icons/OrderConfirmationPage';
 
 	/**
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'StartNewOrderLinkLabel' => 'Varchar(100)',
 		'CopyOrderLinkLabel' => 'Varchar(100)',
 		'PaymentSuccessfulHeader' => 'Varchar(255)',
@@ -40,7 +40,7 @@ class OrderConfirmationPage extends CartPage{
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		"ShowInMenus" => false,
 		"ShowInSearch" => false,
 		"StartNewOrderLinkLabel" => "start new order",
@@ -52,21 +52,21 @@ class OrderConfirmationPage extends CartPage{
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $singular_name = "Order Confirmation Page";
+	private static $singular_name = "Order Confirmation Page";
 		function i18n_singular_name() { return _t("OrderConfirmationpage.SINGULARNAME", "Order Confirmation Page");}
 
 	/**
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $plural_name = "Order Confirmation Pages";
+	private static $plural_name = "Order Confirmation Pages";
 		function i18n_plural_name() { return _t("OrderConfirmationpage.PLURALNAME", "Order Confirmation Pages");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.";
+	private static $description = "A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.";
 
 
 	/**

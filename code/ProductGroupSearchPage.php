@@ -16,18 +16,18 @@ class ProductGroupSearchPage extends ProductGroup {
 	 * @static String | Array
 	 *
 	 */
-	public static $icon = 'ecommerce/images/icons/productsearch';
+	private static $icon = 'ecommerce/images/icons/productsearch';
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $singular_name = "Product Search Page";
+	private static $singular_name = "Product Search Page";
 		function i18n_singular_name() { return _t("ProductGroupSearchPage.SINGULARNAME", "Product Search Page");}
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $plural_name = "Product Search Pages";
+	private static $plural_name = "Product Search Pages";
 		function i18n_plural_name() { return _t("ProductGroupSearchPage.PLURALNAME", "Product Search Pages");}
 
 	/**

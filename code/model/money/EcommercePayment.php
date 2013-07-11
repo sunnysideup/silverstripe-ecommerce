@@ -20,7 +20,7 @@ class EcommercePayment extends DataObject {
 	 * Failure: Payment failed during process
 	 * Pending: Payment awaiting receipt/bank transfer etc
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
 		'Amount' => 'Money',
 		'Message' => 'Text',
@@ -30,12 +30,12 @@ class EcommercePayment extends DataObject {
 		'ExceptionError' => 'Text'
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'PaidBy' => 'Member',
 		'Order' => 'Order'
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Order.Title",
 		"ClassName" => "Type",
 		"AmountValue" => "Amount",
@@ -68,7 +68,7 @@ class EcommercePayment extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $default_sort = '"Created" DESC';
+	private static $default_sort = '"Created" DESC';
 
 
 	/**

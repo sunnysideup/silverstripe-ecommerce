@@ -19,7 +19,7 @@ class OrderEmailRecord extends DataObject{
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		"From" => "Varchar(255)",
 		"To" => "Varchar(255)",
 		"Subject" => "Varchar(255)",
@@ -31,7 +31,7 @@ class OrderEmailRecord extends DataObject{
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		"Order" => "Order",
 		"OrderStep" => "OrderStep"
 	);
@@ -40,7 +40,7 @@ class OrderEmailRecord extends DataObject{
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"OrderStepNice" => "Varchar",
 		"ResultNice" => "Varchar"
 	);
@@ -49,7 +49,7 @@ class OrderEmailRecord extends DataObject{
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Created" => "Send",
 		"OrderStepNice" => "What",
 		"From" => "From",
@@ -62,7 +62,7 @@ class OrderEmailRecord extends DataObject{
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -89,21 +89,21 @@ class OrderEmailRecord extends DataObject{
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Customer Email";
+	private static $singular_name = "Customer Email";
 		function i18n_singular_name() { return _t("OrderEmailRecord.CUSTOMEREMAIL", "Customer Email");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Customer Emails";
+	private static $plural_name = "Customer Emails";
 		function i18n_plural_name() { return _t("OrderEmailRecord.CUSTOMEREMAILS", "Customer Emails");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A record of any email that has been sent in relation to an order.";
+	private static $description = "A record of any email that has been sent in relation to an order.";
 
 	/**
 	 * standard SS method
@@ -131,7 +131,7 @@ class OrderEmailRecord extends DataObject{
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $default_sort = "\"Created\" DESC";
+	private static $default_sort = "\"Created\" DESC";
 
 	/**
 	 * standard SS method

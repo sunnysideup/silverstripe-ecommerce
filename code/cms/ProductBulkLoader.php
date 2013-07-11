@@ -14,19 +14,19 @@
 
 class ProductBulkLoader extends CsvBulkLoader{
 
-	protected static $product_class_name = "Product";
+	private static $product_class_name = "Product";
 		static function set_product_class_name($s) {self::$product_class_name = $s;}
 		static function get_product_class_name() {return self::$product_class_name;}
 
-	protected static $product_group_class_name = "ProductGroup";
+	private static $product_group_class_name = "ProductGroup";
 		static function set_product_group_class_name($s) {self::$product_group_class_name = $s;}
 		static function get_product_group_class_name() {return self::$product_group_class_name;}
 
-	protected static $parent_page_id = null;
+	private static $parent_page_id = null;
 		static function set_parent_page_id($i) {self::$parent_page_id = intval($i);}
 		static function get_parent_page_id() {return self::$parent_page_id;}
 
-	protected static $create_new_product_groups = false;
+	private static $create_new_product_groups = false;
 		static function set_create_new_product_groups($b = true) {self::$create_new_product_groups = $b;}
 		static function get_create_new_product_groups() {return self::$create_new_product_groups;}
 

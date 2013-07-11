@@ -18,7 +18,7 @@ class OrderAttribute extends DataObject {
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/ShippingAddress/
 	 * @var array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'CalculatedTotal',
 			'Sort',
@@ -35,7 +35,7 @@ class OrderAttribute extends DataObject {
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'CalculatedTotal' => 'Currency',
 		'Sort' => 'Int',
 		'GroupSort' => 'Int'
@@ -45,7 +45,7 @@ class OrderAttribute extends DataObject {
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Order' => 'Order'
 	);
 
@@ -53,7 +53,7 @@ class OrderAttribute extends DataObject {
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		'TableTitle' => 'HTMLText',
 		'TableSubTitle' => 'HTMLText',
 		'TableSubTitleNOHTML' => 'Text',
@@ -66,7 +66,7 @@ class OrderAttribute extends DataObject {
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $create_table_options = array(
+	private static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 
@@ -75,13 +75,13 @@ class OrderAttribute extends DataObject {
 	 * Standard SS variable
 	 * @var String
 	 **/
-	public static $default_sort = "\"OrderAttribute\".\"GroupSort\" ASC, \"OrderAttribute\".\"Sort\" ASC, \"OrderAttribute\".\"Created\" ASC";
+	private static $default_sort = "\"OrderAttribute\".\"GroupSort\" ASC, \"OrderAttribute\".\"Sort\" ASC, \"OrderAttribute\".\"Created\" ASC";
 
 	/**
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"Sort" => true,
 		"GroupSort" => true
 	);
@@ -90,21 +90,21 @@ class OrderAttribute extends DataObject {
 	 * Standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Order Entry";
+	private static $singular_name = "Order Entry";
 		function i18n_singular_name() { return _t("OrderAttribute.ORDERENTRY", "Order Entry");}
 
 	/**
 	 * Standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Order Extra Descriptions";
+	private static $plural_name = "Order Extra Descriptions";
 		function i18n_plural_name() { return _t("OrderAttribute.ORDERENTRIES", "Order Entries");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "Any item that is added to the order - be it before (e.g. product) or after the subtotal (e.g. tax).";
+	private static $description = "Any item that is added to the order - be it before (e.g. product) or after the subtotal (e.g. tax).";
 
 	/**
 	 * save edit status for speed's sake
@@ -389,7 +389,7 @@ class OrderAttribute_Group extends DataObject {
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"Sort" => true
 	);
 

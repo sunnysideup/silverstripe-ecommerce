@@ -18,7 +18,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 * prefix used for all classes and IDs
 	 * @var Null | String $prefix
 	 */
-	protected static $prefix = null;
+	private static $prefix = null;
 
 
 	/**

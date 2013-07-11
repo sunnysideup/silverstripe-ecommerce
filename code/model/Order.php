@@ -35,7 +35,7 @@ class Order extends DataObject {
 	 * API Control
 	 * @var Array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'OrderEmail',
 			'EmailLink',
@@ -72,14 +72,14 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'SessionID' => "Varchar(32)", //so that in the future we can link sessions with Orders.... One session can have several orders, but an order can onnly have one session
 		'UseShippingAddress' => 'Boolean',
 		'CustomerOrderNote' => 'Text',
 		'ExchangeRate' => 'Double'
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'Member' => 'Member',
 		'BillingAddress' => 'BillingAddress',
 		'ShippingAddress' => 'ShippingAddress',
@@ -92,7 +92,7 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $has_many = array(
+	private static $has_many = array(
 		'Attributes' => 'OrderAttribute',
 		'OrderStatusLogs' => 'OrderStatusLog',
 		'Payments' => 'EcommercePayment',
@@ -103,7 +103,7 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"SessionID" => true
 	);
 
@@ -111,13 +111,13 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $default_sort = "\"LastEdited\" DESC";
+	private static $default_sort = "\"LastEdited\" DESC";
 
 	/**
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		'OrderEmail' => 'Text',
 		'EmailLink' => 'Text',
 		'PrintLink' => 'Text',
@@ -146,7 +146,7 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $create_table_options = array(
+	private static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 
@@ -154,28 +154,28 @@ class Order extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Order";
+	private static $singular_name = "Order";
 		function i18n_singular_name() { return _t("Order.ORDER", "Order");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Orders";
+	private static $plural_name = "Orders";
 		function i18n_plural_name() { return _t("Order.ORDERS", "Orders");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A collection of items that together make up the 'Order'.  An order can be placed.";
+	private static $description = "A collection of items that together make up the 'Order'.  An order can be placed.";
 		public static function reset_modifiers() {self::$modifiers = array();}
 
 	/**
 	 * Tells us if an order needs to be recalculated
 	 * @var Boolean
 	 */
-	protected static $needs_recalculating = false;
+	private static $needs_recalculating = false;
 		public static function set_needs_recalculating(){ self::$needs_recalculating = true;}
 		public static function get_needs_recalculating(){ return self::$needs_recalculating;}
 
@@ -213,7 +213,6 @@ class Order extends DataObject {
 	 **/
 	public function getModifierForms(Controller $optionalController = null, Validator $optionalValidator = null) {
 		$arrayList = new ArrayList();
-		if (isset($_GET['debug_profile'])) Profiler::mark('Order::getModifierForms');
 		$modifiers = $this->Modifiers();
 		if($modifiers->count()) {
 			foreach($modifiers as $modifier) {
@@ -227,7 +226,6 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::getModifierForms');
 		if( $arrayList->count() ) {
 			return $arrayList;
 		}
@@ -317,7 +315,7 @@ class Order extends DataObject {
 	/**
 	 * STANDARD SILVERSTRIPE STUFF
 	 **/
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Title" => "Title",
 		"Status.Title" => "Next Step"
 	);
@@ -327,7 +325,7 @@ class Order extends DataObject {
 	 * STANDARD SILVERSTRIPE STUFF
 	 * @todo: how to translate this?
 	 **/
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'ID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -467,8 +465,9 @@ class Order extends DataObject {
 				"Main"
 			);
 			if($submitted) {
-				$oldTheme = SSViewer::current_theme();
-				SSViewer::set_theme(SSViewer::current_custom_theme());
+				$oldTheme = Config::inst()->get('SSViewer', 'theme');
+				Config::inst()->set('SSViewer', 'theme')
+				Config::inst()->set('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
 				$htmlSummary = $this->renderWith("Order");
 				SSViewer::current_theme($oldTheme);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<iframe src="'.$this->PrintLink().'" width="100%" height="500"></iframe>'));
@@ -1264,8 +1263,8 @@ class Order extends DataObject {
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
 			// templates within the theme exist
-			$oldTheme = SSViewer::current_theme();
-			SSViewer::set_theme(SSViewer::current_custom_theme());
+			$oldTheme = Config::inst()->get('SSViewer', 'theme');
+			Config::inst()->set('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
 			$email->setOrder($this);
 			$email->setResend($resend);
 			$result = $email->send(null);
@@ -1524,7 +1523,6 @@ class Order extends DataObject {
 	 * @return Float
 	 */
 	function ModifiersSubTotal($excluded = null, $stopAtExcludedModifier = false) {
-		if (isset($_GET['debug_profile'])) Profiler::mark('Order::ModifiersSubTotal');
 		$total = 0;
 		$modifiers = $this->Modifiers();
 		if($modifiers->count()) {
@@ -1548,7 +1546,6 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::ModifiersSubTotal');
 		return $total;
 	}
 
@@ -1979,7 +1976,6 @@ class Order extends DataObject {
 	 */
 	function SubTotal(){return $this->getSubTotal();}
 	function getSubTotal() {
-		if (isset($_GET['debug_profile'])) Profiler::mark('Order::SubTotal');
 		$result = 0;
 		$items = $this->Items();
 		if($items->count()) {
@@ -1989,7 +1985,6 @@ class Order extends DataObject {
 				}
 			}
 		}
-		if (isset($_GET['debug_profile'])) Profiler::unmark('Order::SubTotal');
 		return $result;
 	}
 

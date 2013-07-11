@@ -31,21 +31,21 @@ class SimpleShippingModifier extends OrderModifier {
 	);
 
 
-	public static $singular_name = "Simple Shipping Charge";
+	private static $singular_name = "Simple Shipping Charge";
 		function i18n_singular_name() { return _t("SimpleShippingModifier.SIMPLESHIPPINGMODIFIER", "Simple Shipping Charge");}
 
-	public static $plural_name = "Simple Shipping Charges";
+	private static $plural_name = "Simple Shipping Charges";
 		function i18n_plural_name() { return _t("SimpleShippingModifier.SIMPLESHIPPINGMODIFIER", "Simple Shipping Charges");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "Adds shipping costs to the order.";
+	private static $description = "Adds shipping costs to the order.";
 // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
 
-// ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
+// ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
 
 

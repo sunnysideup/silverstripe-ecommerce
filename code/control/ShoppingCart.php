@@ -27,14 +27,14 @@ class ShoppingCart extends Object{
 	 * Also @see ShoppingCart::sessionVariableName
 	 * @var Array
 	 */
-	protected static $session_variable_names = array("OrderID", "Messages");
+	private static $session_variable_names = array("OrderID", "Messages");
 
 	/**
 	 *
 	 * This is where we hold the (singleton) Shoppingcart
 	 * @var Object (ShoppingCart)
 	 */
-	protected static $singletoncart = null;
+	private static $singletoncart = null;
 
 	/**
 	 * Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).
@@ -82,7 +82,6 @@ class ShoppingCart extends Object{
 	 * @return void
 	 */
 	public function currentOrder(){
-		if (isset($_GET['debug_profile'])) Profiler::mark('ShoppingCart::currentOrder');
 		if(!$this->order) {
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
@@ -188,7 +187,6 @@ class ShoppingCart extends Object{
 				$this->order->calculateOrderAttributes($force = false);
 			}
 		}
-		if (isset($_GET['debug_profile'])) Profiler::unmark('ShoppingCart::currentOrder');
 		return $this->order;
 	}
 
@@ -956,7 +954,7 @@ class ShoppingCart_Controller extends Controller{
 	 * URLSegment used for the Shopping Cart controller
 	 *@var string
 	 **/
-	protected static $url_segment = 'shoppingcart';
+	private static $url_segment = 'shoppingcart';
 		static function get_url_segment() {return self::$url_segment;}
 
 	/**
@@ -1003,7 +1001,7 @@ class ShoppingCart_Controller extends Controller{
 		$this->cart = ShoppingCart::singleton();
 	}
 
-	public static $allowed_actions = array (
+	private static $allowed_actions = array (
 		'index',
 		'additem',
 		'removeitem',

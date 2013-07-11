@@ -65,7 +65,7 @@ class ModelAdminBaseClass_CollectionController extends ModelAdmin_CollectionCont
 class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordController {
 
 
-	protected static $actions_to_keep = array(
+	private static $actions_to_keep = array(
 		"Back",
 		"doDelete",
 		"doSave"

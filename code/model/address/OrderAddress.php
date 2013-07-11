@@ -17,19 +17,19 @@ class OrderAddress extends DataObject {
 	/**
 	 * standard SS static definition
 	 */
-	public static $singular_name = "Order Address";
+	private static $singular_name = "Order Address";
 		function i18n_singular_name() { return _t("OrderAddress.ORDERADDRESS", "Order Address");}
 
 	/**
 	 * standard SS static definition
 	 */
-	public static $plural_name = "Order Addresses";
+	private static $plural_name = "Order Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.ORDERADDRESSES", "Order Addresses");}
 
 	/**
 	 * standard SS static definition
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"FullName" => "Text",
 		"FullString" => "Text",
 		"JSONData" => "Text"

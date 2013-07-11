@@ -17,7 +17,7 @@ class OrderItem extends OrderAttribute {
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderItem/
 	 * @var array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'InternalItemID',
 			'CalculatedTotal',
@@ -39,7 +39,7 @@ class OrderItem extends OrderAttribute {
 	 * stardard SS variable
 	 * @var array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Quantity' => 'Double',
 		'BuyableID' => 'Int',
 		'BuyableClassName' => 'Varchar(60)',
@@ -50,7 +50,7 @@ class OrderItem extends OrderAttribute {
 	 * @var array
 	 * stardard SS definition
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"Quantity" => true,
 		"BuyableID" => true,
 		"BuyableClassName" => true
@@ -60,7 +60,7 @@ class OrderItem extends OrderAttribute {
 	 * @var array
 	 * stardard SS definition
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		'UnitPrice' => 'Currency',
 		'UnitPriceAsMoney' => 'Money',
 		'Total' => 'Currency',
@@ -79,7 +79,7 @@ class OrderItem extends OrderAttribute {
 	 * @var array
 	 * stardard SS definition
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -94,7 +94,7 @@ class OrderItem extends OrderAttribute {
 	 * @var array
 	 * stardard SS definition
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		//@todo - complete
 	);
 
@@ -102,7 +102,7 @@ class OrderItem extends OrderAttribute {
 	 * @var array
 	 * stardard SS definition
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Order.ID" => "Order ID",
 		"TableTitle" => "Title",
 		"TableSubTitle" => "Sub Title",
@@ -116,7 +116,7 @@ class OrderItem extends OrderAttribute {
 	 * in any extensions of this class.
 	 * @var String
 	 */
-	public static $singular_name = "Order Item";
+	private static $singular_name = "Order Item";
 		function i18n_singular_name() { return _t("OrderItem.ORDERITEM", "Order Item");}
 
 	/**
@@ -124,14 +124,14 @@ class OrderItem extends OrderAttribute {
 	 * in any extensions of this class.
 	 * @var String
 	 */
-	public static $plural_name = "Order Items";
+	private static $plural_name = "Order Items";
 		function i18n_plural_name() { return _t("OrderItem.ORDERITEMS", "Order Items");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "Any item that is added to an order and sits before the sub-total. ";
+	private static $description = "Any item that is added to an order and sits before the sub-total. ";
 
 	/**
 	 * HACK: Versioned is BROKEN this method helps in fixing it.
@@ -312,7 +312,6 @@ class OrderItem extends OrderAttribute {
 	 * @param Bool $recalculate - run it, even if it has run already
 	 **/
 	function runUpdate($recalculate = false){
-		if (isset($_GET['debug_profile'])) Profiler::mark('OrderItem::runUpdate-for-'.$this->ClassName);
 		$buyable = $this->Buyable(true);
 		if($buyable && $buyable->canPurchase()) {
 			$oldValue = $this->CalculatedTotal - 0;
@@ -327,7 +326,6 @@ class OrderItem extends OrderAttribute {
 			//then we do not accept it!!!!
 			$this->delete();
 		}
-		if (isset($_GET['debug_profile'])) Profiler::unmark('OrderItem::runUpdate-for-'.$this->ClassName);
 	}
 
 	/**
@@ -393,7 +391,7 @@ class OrderItem extends OrderAttribute {
 	## TEMPLATE METHODS ##
 	######################
 
-	protected static $calculated_buyable_price = array();
+	private static $calculated_buyable_price = array();
 		public static function reset_calculated_buyable_price(){self::$calculated_buyable_price = array(); }
 
 	public function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}
@@ -503,7 +501,7 @@ class OrderItem extends OrderAttribute {
 	 * This can be a static variable as it is the same for all OrderItems for an Order.
 	 * @var Boolean
 	 */
-	protected static $price_has_been_fixed = array();
+	private static $price_has_been_fixed = array();
 		public static function reset_price_has_been_fixed() {self::$price_has_been_fixed = array(); }
 
 	/**
