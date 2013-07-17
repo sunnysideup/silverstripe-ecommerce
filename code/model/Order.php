@@ -466,8 +466,7 @@ class Order extends DataObject {
 			);
 			if($submitted) {
 				$oldTheme = Config::inst()->get('SSViewer', 'theme');
-				Config::inst()->set('SSViewer', 'theme');
-				Config::inst()->set('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
+				Config::inst()->update('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
 				$htmlSummary = $this->renderWith("Order");
 				SSViewer::current_theme($oldTheme);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<iframe src="'.$this->PrintLink().'" width="100%" height="500"></iframe>'));
@@ -1264,7 +1263,7 @@ class Order extends DataObject {
 			// so we need to restore the theme, just in case
 			// templates within the theme exist
 			$oldTheme = Config::inst()->get('SSViewer', 'theme');
-			Config::inst()->set('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
+			Config::inst()->update('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
 			$email->setOrder($this);
 			$email->setResend($resend);
 			$result = $email->send(null);
