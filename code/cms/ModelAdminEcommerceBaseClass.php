@@ -19,7 +19,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin {
 				unset($models[$key]);
 			}
 		}
-		self::$managed_models = $models;
+		Config::inst()->update('ModelAdminEcommerceBaseClass', 'managed_models', $models);
 		return parent::getManagedModels();
 	}
 
@@ -65,7 +65,7 @@ class ModelAdminBaseClass_CollectionController extends ModelAdmin_CollectionCont
 class ModelAdminEcommerceClass_RecordController extends ModelAdmin_RecordController {
 
 
-	protected static $actions_to_keep = array(
+	private static $actions_to_keep = array(
 		"Back",
 		"doDelete",
 		"doSave"

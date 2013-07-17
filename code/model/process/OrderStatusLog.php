@@ -15,7 +15,7 @@ class OrderStatusLog extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar(100)',
 		'Note' => 'HTMLText',
 		'InternalUseOnly' => 'Boolean'
@@ -25,7 +25,7 @@ class OrderStatusLog extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		"Author" => "Member",
 		"Order" => "Order"
 	);
@@ -34,7 +34,7 @@ class OrderStatusLog extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"CustomerNote" => "HTMLText",
 		"Type" => "Varchar",
 		"InternalUseOnlyNice" => "Varchar"
@@ -44,7 +44,7 @@ class OrderStatusLog extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Created" => "Date",
 		"Type" => "Type",
 		"Title" => "Title",
@@ -55,7 +55,7 @@ class OrderStatusLog extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		"InternalUseOnly" => true
 	);
 
@@ -123,7 +123,7 @@ class OrderStatusLog extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -140,27 +140,27 @@ class OrderStatusLog extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Order Log Entry";
+	private static $singular_name = "Order Log Entry";
 		function i18n_singular_name() { return _t("OrderStatusLog.ORDERLOGENTRY", "Order Log Entry");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Order Log Entries";
+	private static $plural_name = "Order Log Entries";
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGENTRIES", "Order Log Entries");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A record of anything that happened with an order.";
+	private static $description = "A record of anything that happened with an order.";
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $default_sort = "\"Created\" DESC";
+	private static $default_sort = "\"Created\" DESC";
 
 	/**
 	 * standard SS method
@@ -304,7 +304,7 @@ class OrderStatusLog extends DataObject {
 
 class OrderStatusLog_Submitted extends OrderStatusLog {
 
-	public static $db = array(
+	private static $db = array(
 		"OrderAsHTML" => "HTMLText",
 		"OrderAsString" => "Text",
 		"OrderAsJSON" => "Text",
@@ -313,25 +313,25 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 		"SubTotal" => "Currency"
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"InternalUseOnly" => true
 	);
 
-	public static $casting = array(
+	private static $casting = array(
 		"HTMLRepresentation" => "HTMLText"
 	);
 
-	public static $singular_name = "Submitted Order";
+	private static $singular_name = "Submitted Order";
 		function i18n_singular_name() { return _t("OrderStatusLog.SUBMITTEDORDER", "Submitted Order - Fulltext Backup");}
 
-	public static $plural_name = "Submitted Orders";
+	private static $plural_name = "Submitted Orders";
 		function i18n_plural_name() { return _t("OrderStatusLog.SUBMITTEDORDERS", "Submitted Orders - Fulltext Backup");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "The record that the order has been submitted by the customer.  This is important in e-commerce, because from here, nothing can change to the order.";
+	private static $description = "The record that the order has been submitted by the customer.  This is important in e-commerce, because from here, nothing can change to the order.";
 
 	/**
 	 * Standard SS method
@@ -429,22 +429,22 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
  **/
 class OrderStatusLog_Cancel extends OrderStatusLog {
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"Title" => "Order Cancelled",
 		"InternalUseOnly" => false
 	);
 
-	public static $singular_name = "Cancelled Order";
+	private static $singular_name = "Cancelled Order";
 		function i18n_singular_name() { return _t("OrderStatusLog.SUBMITTEDORDER", "Cancelled Order");}
 
-	public static $plural_name = "Cancelled Orders";
+	private static $plural_name = "Cancelled Orders";
 		function i18n_plural_name() { return _t("OrderStatusLog.SUBMITTEDORDERS", "Cancelled Orders");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A record noting the cancellation of an order.  ";
+	private static $description = "A record noting the cancellation of an order.  ";
 
 	/**
 	 * Standard SS method
@@ -485,14 +485,14 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
  **/
 class OrderStatusLog_Dispatch extends OrderStatusLog {
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"InternalUseOnly" => true
 	);
 
-	public static $singular_name = "Order Log Dispatch Entry";
+	private static $singular_name = "Order Log Dispatch Entry";
 		function i18n_singular_name() { return _t("OrderStatusLog.ORDERLOGDISPATCHENTRY", "Order Log Dispatch Entry");}
 
-	public static $plural_name = "Order Log Dispatch Entries";
+	private static $plural_name = "Order Log Dispatch Entries";
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGDISPATCHENTRIES", "Order Log Dispatch Entries");}
 
 	/**
@@ -516,14 +516,14 @@ class OrderStatusLog_Dispatch extends OrderStatusLog {
  **/
 class OrderStatusLog_DispatchElectronicOrder extends OrderStatusLog_Dispatch {
 
-	public static $db = array(
+	private static $db = array(
 		'Link' => 'Text',
 	);
 
-	public static $singular_name = "Order Log Electronic Dispatch Entry";
+	private static $singular_name = "Order Log Electronic Dispatch Entry";
 		function i18n_singular_name() { return _t("OrderStatusLog.ORDERLOGELECTRONICDISPATCHENTRY", "Order Log Electronic Dispatch Entry");}
 
-	public static $plural_name = "Order Log Electronic Dispatch Entries";
+	private static $plural_name = "Order Log Electronic Dispatch Entries";
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGELECTRONICDISPATCHENTRIES", "Order Log Electronic Dispatch Entries");}
 
 }
@@ -537,18 +537,18 @@ class OrderStatusLog_DispatchElectronicOrder extends OrderStatusLog_Dispatch {
  **/
 class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 
-	public static $db = array(
+	private static $db = array(
 		'DispatchedBy' => 'Varchar(100)',
 		'DispatchedOn' => 'Date',
 		'DispatchTicket' => 'Varchar(100)',
 	);
 
-	public static $indexes = array(
+	private static $indexes = array(
 		"DispatchedOn" => true,
 		"DispatchTicket" => true
 	);
 
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -559,25 +559,25 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 		'DispatchTicket' => 'PartialMatchFilter'
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"DispatchedOn" => "Date",
 		"DispatchedBy" => "Dispatched By",
 		"OrderID" => "Order ID",
 	);
 
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"InternalUseOnly" => false
 	);
 
-	public static $singular_name = "Order Log Physical Dispatch Entry";
+	private static $singular_name = "Order Log Physical Dispatch Entry";
 		function i18n_singular_name() { return _t("OrderStatusLog.ORDERLOGPHYSICALDISPATCHENTRY", "Order Log Physical Dispatch Entry");}
 
-	public static $plural_name = "Order Log Physical Dispatch Entries";
+	private static $plural_name = "Order Log Physical Dispatch Entries";
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGPHYSICALDISPATCHENTRIES", "Order Log Physical Dispatch Entries");}
 
 
-	public static $default_sort = "\"DispatchedOn\" DESC, \"Created\" DESC";
+	private static $default_sort = "\"DispatchedOn\" DESC, \"Created\" DESC";
 
 	function populateDefaults() {
 		parent::populateDefaults();
@@ -635,11 +635,11 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
  **/
 class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"InternalUseOnly" => true
 	);
 
-	public static $db = array(
+	private static $db = array(
 		'PaymentConfirmed' => "Boolean",
 	);
 
@@ -652,7 +652,7 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 		return false;
 	}
 
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -660,23 +660,23 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 		"PaymentConfirmed" => true
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Created" => "Date",
 		"Author.Title" => "Checked by",
 		"PaymentConfirmedNice" => "Payment Confirmed"
 	);
 
-	public static $casting = array(
+	private static $casting = array(
 		"PaymentConfirmedNice" => "Varchar"
 	);
 
 	function PaymentConfirmedNice() {return $this->getPaymentConfirmedNice();}
 	function getPaymentConfirmedNice() {if($this->PaymentConfirmed) {return _t("OrderStatusLog.YES", "yes");}return _t("OrderStatusLog.No", "no");}
 
-	public static $singular_name = "Payment Confirmation";
+	private static $singular_name = "Payment Confirmation";
 		function i18n_singular_name() { return _t("OrderStatusLog.PAYMENTCONFIRMATION", "Payment Confirmation");}
 
-	public static $plural_name = "Payment Confirmations";
+	private static $plural_name = "Payment Confirmations";
 		function i18n_plural_name() { return _t("OrderStatusLog.PAYMENTCONFIRMATIONS", "Payment Confirmations");}
 
 	public function getCMSFields() {
@@ -723,15 +723,15 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 class OrderStatusLog_Archived extends OrderStatusLog {
 
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"InternalUseOnly" => false
 	);
 
 
-	public static $singular_name = "Archived Order - Additional Note";
+	private static $singular_name = "Archived Order - Additional Note";
 		function i18n_singular_name() { return _t("OrderStatusLog.ARCHIVEDORDERS", "Archived Order - Additional Note");}
 
-	public static $plural_name = "Archived Order - Additional Notes";
+	private static $plural_name = "Archived Order - Additional Notes";
 		function i18n_plural_name() { return _t("OrderStatusLog.ARCHIVEDORDERS", "Archived Order - Additional Notes");}
 
 	/**

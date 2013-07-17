@@ -47,7 +47,7 @@ class AccountPage extends Page {
 	 * Standard SS variable
 	 * @Var String
 	 */
-	public static $icon = 'ecommerce/images/icons/AccountPage';
+	private static $icon = 'ecommerce/images/icons/AccountPage';
 
 	/**
 	 * Standard SS function, we only allow for one AccountPage to exist
@@ -63,21 +63,21 @@ class AccountPage extends Page {
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $singular_name = "Account Page";
+	private static $singular_name = "Account Page";
 		function i18n_singular_name() { return _t("AccountPage.SINGULARNAME", "Account Page");}
 
 	/**
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $plural_name = "Account Pages";
+	private static $plural_name = "Account Pages";
 		function i18n_plural_name() { return _t("AccountPage.PLURALNAME", "Account Pages");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A page where the customer can view all their orders and update their details.";
+	private static $description = "A page where the customer can view all their orders and update their details.";
 
 	/**
 	 * Returns the link to the AccountPage on this site

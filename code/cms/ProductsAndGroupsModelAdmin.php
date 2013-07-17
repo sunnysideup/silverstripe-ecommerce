@@ -13,18 +13,18 @@
 
 class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 
-	public static $menu_priority = 2;
+	private static $menu_priority = 2;
 
-	public static $url_segment = 'products';
+	private static $url_segment = 'products';
 
-	public static $menu_title = 'Products';
+	private static $menu_title = 'Products';
 
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $menu_icon = "";
+	private static $menu_icon = "";
 
 
 	function init() {

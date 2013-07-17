@@ -14,7 +14,7 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		"Code" => "Varchar(3)",
 		"Name" => "Varchar(100)",
 		"InUse" => "Boolean"
@@ -24,7 +24,7 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"Code" => true,
 	);
 
@@ -32,7 +32,7 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"IsDefault" => "Boolean",
 		"IsDefaultNice" => "Varchar",
 		"InUseNice" => "Varchar",
@@ -46,7 +46,7 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Code" => "PartialMatchFilter",
 		"Name" => "PartialMatchFilter"
 	);
@@ -55,7 +55,7 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"Code" => "Short Code (e.g. NZD)",
 		"Name" => "Name (e.g. New Zealand Dollar)",
 		"InUse" => "It is available for use?",
@@ -71,7 +71,7 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Code" => "Code",
 		"Name" => "Name",
 		"InUseNice" => "Available",
@@ -83,27 +83,27 @@ class EcommerceCurrency extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $singular_name = "Currency";
+	private static $singular_name = "Currency";
 		function i18n_singular_name() { return _t("EcommerceCurrency.CURRENCY", "Currency");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $plural_name = "Currencies";
+	private static $plural_name = "Currencies";
 		function i18n_plural_name() { return _t("EcommerceCurrency.CURRENCIES", "Currencies");}
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $default_sort = "\"InUse\" DESC, \"Name\" ASC, \"Code\" ASC";
+	private static $default_sort = "\"InUse\" DESC, \"Name\" ASC, \"Code\" ASC";
 
 	/**
 	 * standard SS variable
 	 * @var Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		"InUse" => true
 	);
 
@@ -439,7 +439,6 @@ class EcommerceCurrency extends DataObject {
 			}
 		}
 	}
-
 
 	/**
 	 * Standard SS Method

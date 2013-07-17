@@ -16,26 +16,26 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $url_segment = 'shop';
+	private static $url_segment = 'shop';
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $menu_title = "Shop Settings";
+	private static $menu_title = "Shop Settings";
 
 
 	/**
 	 * standard SS variable
 	 * @var Int
 	 */
-	public static $menu_priority = 23;
+	private static $menu_priority = 23;
 
 	/**
 	 * standard SS variable
 	 * @var String
 	 */
-	public static $menu_icon = "";
+	private static $menu_icon = "";
 
 
 	function init() {

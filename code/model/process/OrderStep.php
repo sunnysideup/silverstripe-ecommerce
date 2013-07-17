@@ -16,7 +16,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		"Name" => "Varchar(50)",
 		"Code" => "Varchar(50)",
 		"Description" => "Text",
@@ -39,7 +39,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"Code" => true,
 		"Sort" => true
 	);
@@ -48,7 +48,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $has_many = array(
+	private static $has_many = array(
 		"Orders" => "Order",
 		"OrderEmailRecords" => "OrderEmailRecord"
 	);
@@ -57,7 +57,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"Sort" => "Sorting Index",
 		"CustomerCanEdit" => "Customer can edit order",
 		"CustomerCanPay" => "Customer can pay order",
@@ -68,7 +68,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Name" => "Name",
 		"ShowAsSummary" => "Phase"
 	);
@@ -77,7 +77,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"CustomerCanEditNice" => "Varchar",
 		"CustomerCanPayNice" => "Varchar",
 		"CustomerCanCancelNice" => "Varchar",
@@ -93,7 +93,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Name' => array(
 			'title' => 'Name',
 			'filter' => 'PartialMatchFilter'
@@ -156,21 +156,21 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $singular_name = "Order Step";
+	private static $singular_name = "Order Step";
 		function i18n_singular_name() { return _t("OrderStep.ORDERSTEP", "Order Step");}
 
 	/**
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $plural_name = "Order Steps";
+	private static $plural_name = "Order Steps";
 		function i18n_plural_name() { return _t("OrderStep.ORDERSTEPS", "Order Steps");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A step that any order goes through.";
+	private static $description = "A step that any order goes through.";
 
 
 	/**
@@ -178,7 +178,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $default_sort = "\"Sort\" ASC";
+	private static $default_sort = "\"Sort\" ASC";
 
 	/**
 	 * turns code into ID
@@ -241,7 +241,7 @@ class OrderStep extends DataObject {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
 		"CustomerCanPay" => 1,
@@ -802,7 +802,7 @@ class OrderStep extends DataObject {
 
 class OrderStep_Created extends OrderStep implements OrderStepInterface  {
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 1,
 		"CustomerCanPay" => 1,
 		"CustomerCanCancel" => 1,
@@ -1075,7 +1075,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 		"SendInvoiceToCustomer" => "Boolean"
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
 		"CustomerCanPay" => 1,
@@ -1184,7 +1184,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 
 class OrderStep_Paid extends OrderStep implements OrderStepInterface  {
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
 		//the one below may seem a bit paradoxical, but the thing is that the customer can pay up to and inclusive of this step
@@ -1270,7 +1270,7 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface  {
 
 class OrderStep_Confirmed extends OrderStep implements OrderStepInterface  {
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
 		"CustomerCanPay" => 0,
@@ -1367,7 +1367,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 		"SendReceiptToCustomer" => "Boolean"
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
 		"CustomerCanPay" => 0,
@@ -1485,7 +1485,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 		"SendDetailsToCustomer" => "Boolean"
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
 		"CustomerCanPay" => 0,
@@ -1603,7 +1603,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 
 class OrderStep_Archived extends OrderStep implements OrderStepInterface  {
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanCancel" => 0,
 		"CustomerCanPay" => 0,

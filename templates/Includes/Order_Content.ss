@@ -43,7 +43,10 @@
 		<% loop Modifiers %>
 			<% if ShowInTable %>
 		<tr class="modifierRow $EvenOdd $FirstLast $Classes <% if HideInAjaxUpdate %> hideForNow<% end_if %>">
-			<td colspan="3" scope="row">$TableTitle.XML</td>
+			<td colspan="3">
+				<div class="tableTitle">$TableTitle</div>
+				<div class="tableSubTitle">$TableSubTitle</div>
+			</td>
 			<td class="right total">$TableValueAsMoney.NiceDefaultFormat</td>
 		</tr>
 			<% end_if %>
