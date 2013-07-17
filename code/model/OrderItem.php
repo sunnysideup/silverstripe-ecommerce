@@ -391,7 +391,7 @@ class OrderItem extends OrderAttribute {
 	## TEMPLATE METHODS ##
 	######################
 
-	private static $calculated_buyable_price = array();
+	protected static $calculated_buyable_price = array();
 		public static function reset_calculated_buyable_price(){self::$calculated_buyable_price = array(); }
 
 	public function UnitPrice($recalculate = false) {return $this->getUnitPrice($recalculate);}

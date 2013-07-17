@@ -264,6 +264,20 @@ class CheckoutPage extends CartPage {
 
 class CheckoutPage_Controller extends CartPage_Controller {
 
+
+	private static $allowed_actions = array(
+		"checkoutstep",
+		"OrderFormAddress",
+		'saveorder',
+		'CreateAccountForm',
+		'retrieveorder',
+		'loadorder',
+		'startneworder',
+		'showorder',
+		'LoginForm'
+	);
+
+
 	/**
 	 * FOR STEP STUFF SEE BELOW
 	 **/
