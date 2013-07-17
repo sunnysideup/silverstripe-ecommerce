@@ -40,13 +40,13 @@ class CheckoutPage extends CartPage {
 	 * standard SS variable
 	 * @Var string
 	 */
-	public static $icon = 'ecommerce/images/icons/CheckoutPage';
+	private static $icon = 'ecommerce/images/icons/CheckoutPage';
 
 	/**
 	 * standard SS variable
 	 * @Var Array
 	 */
-	public static $db = array (
+	private static $db = array (
 		'TermsAndConditionsMessage' => 'Varchar(200)'
 	);
 
@@ -54,7 +54,7 @@ class CheckoutPage extends CartPage {
 	 * standard SS variable
 	 * @Var Array
 	 */
-	public static $has_one = array (
+	private static $has_one = array (
 		'TermsPage' => 'Page'
 	);
 
@@ -62,7 +62,7 @@ class CheckoutPage extends CartPage {
 	 * standard SS variable
 	 * @Var Array
 	 */
-	public static $defaults = array (
+	private static $defaults = array (
 		'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.'
 	);
 
@@ -70,21 +70,21 @@ class CheckoutPage extends CartPage {
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $singular_name = "Checkout Page";
+	private static $singular_name = "Checkout Page";
 		function i18n_singular_name() { return _t("CheckoutPage.SINGULARNAME", "Checkout Page");}
 
 	/**
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $plural_name = "Checkout Pages";
+	private static $plural_name = "Checkout Pages";
 		function i18n_plural_name() { return _t("CheckoutPage.PLURALNAME", "Checkout Pages");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.";
+	private static $description = "A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.";
 
 	/**
 	 * Returns the Terms and Conditions Page (if there is one).
@@ -595,7 +595,7 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS variable
 	 * @Var Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Heading" => "PartialMatchFilter",
 		"Above" => "PartialMatchFilter",
 		"Below" => "PartialMatchFilter"
@@ -605,7 +605,7 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS variable
 	 * @Var Array
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"Above" => "Above Checkout Step",
 		"Below" => "Below Checkout Step"
 	);
@@ -614,7 +614,7 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS variable
 	 * @Var Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"ID" => "Step Number",
 		"Heading" => "Heading"
 	);
@@ -623,7 +623,7 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS variable
 	 * @Var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"Code" => "Varchar",
 		"Title" => "Varchar"
 	);
@@ -632,21 +632,21 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $singular_name = "Checkout Step Description";
+	private static $singular_name = "Checkout Step Description";
 		function i18n_singular_name() { return _t("CheckoutPage.CHECKOUTSTEPDESCRIPTION", "Checkout Step Description");}
 
 	/**
 	 * standard SS variable
 	 * @Var String
 	 */
-	public static $plural_name = "Checkout Step Descriptions";
+	private static $plural_name = "Checkout Step Descriptions";
 		function i18n_plural_name() { return _t("CheckoutPage.CHECKOUTSTEPDESCRIPTIONS", "Checkout Step Descriptions");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A step within the checkout process (e.g. confirm details).";
+	private static $description = "A step within the checkout process (e.g. confirm details).";
 
 	/**
 	 * standard SS variable

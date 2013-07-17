@@ -15,6 +15,7 @@
  * @package: ecommerce
  * @sub-package: buyables
  * @inspiration: Silverstripe Ltd, Jeremy
+ * @todo: Ask the silverstripe gods why $default_sort won't work with FullSiteTreeSort
  **/
 
 
@@ -24,7 +25,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			"Title",
 			"Price",
@@ -42,7 +43,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $db = array(
+	private static $db = array(
 		'Price' => 'Currency',
 		'Weight' => 'Decimal(9,4)',
 		'Model' => 'Varchar(30)',
@@ -59,14 +60,14 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Image' => 'Product_Image'
 	);
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $many_many = array(
+	private static $many_many = array(
 		'ProductGroups' => 'ProductGroup',
 		'AdditionalFiles' => 'File' //this may include images, pdfs, videos, etc...
 	);
@@ -74,7 +75,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"CalculatedPrice" => "Currency",
 		"CalculatedPriceAsMoney" => "Money",
 		"AllowPurchaseNice" => "Varchar"
@@ -83,7 +84,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"FullSiteTreeSort" => true,
 		"FullName" => true
 	);
@@ -91,19 +92,20 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		'AllowPurchase' => 1
 	);
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
+	//private static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
+	//private static $default_sort = "\"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'CMSThumbnail' => 'Image',
 		'FullName' => 'Description',
 		'Price' => 'Price',
@@ -113,7 +115,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"FullName" => array(
 			'title' => 'Keyword',
 			'field' => 'TextField'
@@ -135,30 +137,30 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Standard SS variable.
 	 */
-	public static $singular_name = "Product";
+	private static $singular_name = "Product";
 		function i18n_singular_name() { return _t("Order.PRODUCT", "Product");}
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $plural_name = "Products";
+	private static $plural_name = "Products";
 		function i18n_plural_name() { return _t("Order.PRODUCTS", "Products");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A product that is for sale in the shop.";
+	private static $description = "A product that is for sale in the shop.";
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $default_parent = 'ProductGroup';
+	private static $default_parent = 'ProductGroup';
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $icon = 'ecommerce/images/icons/product';
+	private static $icon = 'ecommerce/images/icons/product';
 
 	/**
 	 * We add all $db fields to MetaKeywords to allow searching products
@@ -169,7 +171,7 @@ class Product extends Page implements BuyableModel {
 	 * AND products that are not relevant in search (e.g. Created)
 	 * @var Array
 	 */
-	protected $fieldsToExcludeFromSearch = array("Title","MenuTitle","Content","MetaTitle","MetaDescription","MetaKeywords", "Status", "ReportClass", "CanViewType", "CanEditType", "ToDo");
+	protected $fieldsToExcludeFromSearch = array("Title","MenuTitle","Content","MetaDescription", "Status", "ReportClass", "CanViewType", "CanEditType", "ToDo");
 
 	/**
 	 * Standard SS variable.
@@ -185,7 +187,8 @@ class Product extends Page implements BuyableModel {
 		$fields->replaceField('Root.Main', $htmlEditorField = new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description')));
 		$htmlEditorField->setRows(3);
 		$fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), "Content");
-		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Image')));
+		//dirty hack to show images!
+		$fields->addFieldToTab('Root.Images', new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
 		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
 		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
 		$fields->addFieldToTab('Root.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
@@ -255,7 +258,7 @@ class Product extends Page implements BuyableModel {
 			$msg .= "<strong>".$this->InternalItemID."_08.jpg</strong>.";
 		}
 		else {
-			$msg .= "<p>For additional images and files, you must first specify a product code!</p>";
+			$msg .= "<p>For additional images and files, you must first specify a product code.</p>";
 		}
 		$field = new LiteralField("ImageFileNote", $msg);
 		return $field;
@@ -269,7 +272,7 @@ class Product extends Page implements BuyableModel {
 	protected function getAdditionalImagesField() {
 		$gridField = new GridField(
 			'AdditionalFiles',
-			_t('Product.ADDITIONALIMAGES', 'Additional images'),
+			_t('Product.ADDITIONALIMAGES', 'Additional files and images'),
 			$this->AdditionalFiles(),
 			GridFieldConfig_RelationEditor::create()
 		);
@@ -330,11 +333,9 @@ class Product extends Page implements BuyableModel {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		if($this->ImageID) {
-			if($productImage = Product_Image::get()->byID($this->ImageID)) {
-				if($normalImage = Image::get()->byID($this->ImageID)) {
-					$normalImage->ClassName = "Product_Image";
-					$normalImage->write();
-				}
+			if($normalImage = Image::get()->exclude(array("ClassName" => "Product_Image"))->byID($this->ImageID)) {
+				$normalImage->ClassName = "Product_Image";
+				$normalImage->write();
 			}
 		}
 	}
@@ -1267,7 +1268,7 @@ class Product_OrderItem extends OrderItem {
 	 * standard SS method
 	 * @var Array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'CalculatedTotal',
 			'TableTitle',
@@ -1422,3 +1423,83 @@ HTML;
 
 
 
+class Product_ProductImageUploadField extends UploadField {
+
+	function getRelationAutosetClass($default ='File'){
+		return "Image";
+	}
+
+
+	/**
+	 * @var array Config for this field used in both, php and javascript
+	 * (will be merged into the config of the javascript file upload plugin).
+	 * See framework/_config/uploadfield.yml for configuration defaults and documentation.
+	 */
+	protected $ufConfig = array(
+		/**
+		 * @var boolean
+		 */
+		'autoUpload' => true,
+		/**
+		 * php validation of allowedMaxFileNumber only works when a db relation is available, set to null to allow
+		 * unlimited if record has a has_one and allowedMaxFileNumber is null, it will be set to 1
+		 * @var int
+		 */
+		'allowedMaxFileNumber' => 1,
+		/**
+		 * @var boolean|string Can the user upload new files, or just select from existing files.
+		 * String values are interpreted as permission codes.
+		 */
+		'canUpload' => true,
+		/**
+		 * @var boolean|string Can the user attach files from the assets archive on the site?
+		 * String values are interpreted as permission codes.
+		 */
+		'canAttachExisting' => "CMS_ACCESS_AssetAdmin",
+		/**
+		 * @var boolean If a second file is uploaded, should it replace the existing one rather than throwing an errror?
+		 * This only applies for has_one relationships, and only replaces the association
+		 * rather than the actual file database record or filesystem entry.
+		 */
+		'replaceExistingFile' => true,
+		/**
+		 * @var int
+		 */
+		'previewMaxWidth' => 80,
+		/**
+		 * @var int
+		 */
+		'previewMaxHeight' => 60,
+		/**
+		 * javascript template used to display uploading files
+		 * @see javascript/UploadField_uploadtemplate.js
+		 * @var string
+		 */
+		'uploadTemplateName' => 'ss-uploadfield-uploadtemplate',
+		/**
+		 * javascript template used to display already uploaded files
+		 * @see javascript/UploadField_downloadtemplate.js
+		 * @var string
+		 */
+		'downloadTemplateName' => 'ss-uploadfield-downloadtemplate',
+		/**
+		 * FieldList $fields or string $name (of a method on File to provide a fields) for the EditForm
+		 * @example 'getCMSFields'
+		 * @var FieldList|string
+		 */
+		'fileEditFields' => null,
+		/**
+		 * FieldList $actions or string $name (of a method on File to provide a actions) for the EditForm
+		 * @example 'getCMSActions'
+		 * @var FieldList|string
+		 */
+		'fileEditActions' => null,
+		/**
+		 * Validator (eg RequiredFields) or string $name (of a method on File to provide a Validator) for the EditForm
+		 * @example 'getCMSValidator'
+		 * @var string
+		 */
+		'fileEditValidator' => null
+	);
+
+}

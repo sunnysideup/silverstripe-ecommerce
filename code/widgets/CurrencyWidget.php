@@ -12,11 +12,11 @@
 
 class CurrencyWidget extends Widget{
 
-	public static $title = "Select Currency";
+	private static $title = "Select Currency";
 
-	public static $cmsTitle = "Select Currency";
+	private static $cmsTitle = "Select Currency";
 
-	public static $description = "Displays the current contents of the user's cart.";
+	private static $description = "Displays the current contents of the user's cart.";
 
 	function Currencies(){
 		return EcommerceCurrency::get_list();

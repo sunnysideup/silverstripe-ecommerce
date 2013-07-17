@@ -20,7 +20,7 @@ class EcomQuantityField extends NumericField {
 	 * It is saved like this: "FieldName (String)" => tabposition (int)
 	 * @var Array
 	 **/
-	protected static $tabindex = array();
+	private static $tabindex = array();
 
 	/**
 	 *@var order OrderItem DataObject

@@ -20,13 +20,13 @@ class CartPage extends Page{
 	 * Standard SS variable
 	 * @var String
 	 */
-	public static $icon = 'ecommerce/images/icons/CartPage';
+	private static $icon = 'ecommerce/images/icons/CartPage';
 
 	/**
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $db = array(
+	private static $db = array(
 		'ContinueShoppingLabel' => 'Varchar(100)',
 		'ProceedToCheckoutLabel' => 'Varchar(100)',
 		'ShowAccountLabel' => 'Varchar(100)',
@@ -43,7 +43,7 @@ class CartPage extends Page{
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		'ContinueShoppingLabel' => 'continue shopping',
 		'ProceedToCheckoutLabel' => 'proceed to checkout',
 		'ShowAccountLabel' => 'view account details',
@@ -60,27 +60,27 @@ class CartPage extends Page{
 	 * Standard SS variable
 	 * @var Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		'MenuTitle' => 'HTMLVarchar'
 	);
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $singular_name = "Cart Page";
+	private static $singular_name = "Cart Page";
 		function i18n_singular_name() { return _t("CartPage.SINGULARNAME", "Cart Page");}
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $plural_name = "Cart Pages";
+	private static $plural_name = "Cart Pages";
 		function i18n_plural_name() { return _t("CartPage.PLURALNAME", "Cart Pages");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A page where the customer can view the current order (cart) without finalising the order.";
+	private static $description = "A page where the customer can view the current order (cart) without finalising the order.";
 
 	/***
 	 * override core function to turn "checkout" into "Checkout (1)"

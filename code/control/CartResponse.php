@@ -15,7 +15,7 @@ class CartResponse extends EcommerceResponse {
 	 * Should the page be reloaded rather than using AJAX?
 	 * @var Boolean $force_reload
 	 */
-	protected static $force_reload = false;
+	private static $force_reload = false;
 
 	/**
 	 * Sets the $force_reload to true;

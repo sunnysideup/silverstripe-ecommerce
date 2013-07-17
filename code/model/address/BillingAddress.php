@@ -17,7 +17,7 @@ class BillingAddress extends OrderAddress {
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/BillingAddress/
 	 * @var array
 	 */
-	public static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'Prefix',
 			'FirstName',
@@ -69,14 +69,14 @@ class BillingAddress extends OrderAddress {
 	/**
 	 * standard SS static definition
 	 **/
-	public static $belongs_to = array(
+	private static $belongs_to = array(
 		"Order" => "Order"
 	);
 
 	/**
 	 * standard SS static definition
 	 */
-	public static $default_sort = "\"BillingAddress\".\"ID\" DESC";
+	private static $default_sort = "\"BillingAddress\".\"ID\" DESC";
 
 	/**
 	 * standard SS variable
@@ -91,7 +91,7 @@ class BillingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"FullCountryName" => "Varchar"
 	);
 
@@ -99,7 +99,7 @@ class BillingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"OrderID" => array(
 			"field" => "NumericField",
 			"title" => "Order Number"
@@ -117,7 +117,7 @@ class BillingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		"Order.Title",
 		"Surname",
 		"City"
@@ -127,7 +127,7 @@ class BillingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	public static $field_labels = array(
+	private static $field_labels = array(
 		"Order.Title" => "Order"
 	);
 
@@ -135,21 +135,21 @@ class BillingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $singular_name = "Billing Address";
+	private static $singular_name = "Billing Address";
 		function i18n_singular_name() { return _t("OrderAddress.BILLINGADDRESS", "Billing Address");}
 
 	/**
 	 * standard SS variable
 	 * @return String
 	 */
-	public static $plural_name = "Billing Addresses";
+	private static $plural_name = "Billing Addresses";
 		function i18n_plural_name() { return _t("OrderAddress.BILLINGADDRESSES", "Billing Addresses");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "The details of the person buying the order.";
+	private static $description = "The details of the person buying the order.";
 
 	/**
 	 * method for casted variable

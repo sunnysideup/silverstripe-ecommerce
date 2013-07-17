@@ -29,7 +29,7 @@ class DeleteAllOrders extends BuildTask {
 	 *key = table where OrderID is saved
 	 *value = table where LastEdited is saved
 	 **/
-	protected static $linked_objects_array = array(
+	private static $linked_objects_array = array(
 		"OrderAttribute" =>"OrderAttribute",
 		"BillingAddress" => "OrderAddress",
 		"ShippingAddress" => "OrderAddress",
@@ -46,7 +46,7 @@ class DeleteAllOrders extends BuildTask {
 	 *key = table where OrderID is saved
 	 *value = table where LastEdited is saved
 	 **/
-	protected static $double_check_objects = array(
+	private static $double_check_objects = array(
 		"Order",
 		"OrderItem",
 		"OrderModifier",

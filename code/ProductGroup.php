@@ -19,7 +19,7 @@ class ProductGroup extends Page {
 	 * @static Array
 	 *
 	 */
-	public static $db = array(
+	private static $db = array(
 		"NumberOfProductsPerPage" => "Int",
 		"LevelOfProductsToShow" => "Int",
 		"DefaultSortOrder" => "Varchar(50)",
@@ -32,7 +32,7 @@ class ProductGroup extends Page {
 	 * @static Array
 	 *
 	 */
-	public static $has_one = array(
+	private static $has_one = array(
 		'Image' => 'Product_Image'
 	);
 
@@ -41,7 +41,7 @@ class ProductGroup extends Page {
 	 * @static Array
 	 *
 	 */
-	public static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'AlsoShowProducts' => 'Product'
 	);
 
@@ -50,7 +50,7 @@ class ProductGroup extends Page {
 	 * @static Array
 	 *
 	 */
-	public static $defaults = array(
+	private static $defaults = array(
 		"DefaultSortOrder" => "default",
 		"DefaultFilter" => "default",
 		"DisplayStyle" => "default",
@@ -62,7 +62,7 @@ class ProductGroup extends Page {
 	 * @static Array
 	 *
 	 */
-	public static $indexes = array(
+	private static $indexes = array(
 		"LevelOfProductsToShow" => true,
 		"DefaultSortOrder" => true,
 		"DefaultFilter" => true,
@@ -73,32 +73,32 @@ class ProductGroup extends Page {
 	 * standard SS variable
 	 * @static String
 	 */
-	public static $default_child = 'Product';
+	private static $default_child = 'Product';
 
 	/**
 	 * standard SS variable
 	 * @static String | Array
 	 *
 	 */
-	public static $icon = 'ecommerce/images/icons/productgroup';
+	private static $icon = 'ecommerce/images/icons/productgroup';
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $singular_name = "Product Category";
+	private static $singular_name = "Product Category";
 		function i18n_singular_name() { return _t("ProductGroup.SINGULARNAME", "Product Category");}
 
 	/**
 	 * Standard SS variable.
 	 */
-	public static $plural_name = "Product Categories";
+	private static $plural_name = "Product Categories";
 		function i18n_plural_name() { return _t("ProductGroup.PLURALNAME", "Product Categories");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	public static $description = "A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)";
+	private static $description = "A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)";
 
 	/**
 	 * Shop Admins can edit
@@ -373,7 +373,8 @@ class ProductGroup extends Page {
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Images', new UploadField('Image', _t('Product.IMAGE', 'Product Group Image')));
+		//dirty hack to show images!
+		$fields->addFieldToTab('Root.Images', new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
 		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
 		$fields->addFieldToTab(
@@ -485,7 +486,7 @@ class ProductGroup extends Page {
 	 * not be purchased and therefore should be excluded.
 	 * @var Array (like so: array(1,2,4,5,99))
 	 */
-	protected static $negative_can_purchase_array = null;
+	private static $negative_can_purchase_array = null;
 
 
 	/**
@@ -974,6 +975,16 @@ class ProductGroup extends Page {
 		return true;
 	}
 
+
+	function onAfterWrite() {
+		parent::onAfterWrite();
+		if($this->ImageID) {
+			if($normalImage = Image::get()->exclude(array("ClassName" => "Product_Image"))->byID($this->ImageID)) {
+				$normalImage->ClassName = "Product_Image";
+				$normalImage->write();
+			}
+		}
+	}
 
 	/**
 	 * Debug helper method.

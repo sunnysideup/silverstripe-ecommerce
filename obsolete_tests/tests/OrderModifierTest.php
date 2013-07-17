@@ -27,7 +27,7 @@ class OrderModifierTest extends FunctionalTest {
 		$this->assertTrue(class_exists('Payment'), 'Payment module is installed.');
 		
 		// Set the site currency to NZD - this updates all the pricing labels from USD to NZD 
-		Payment::set_site_currency('NZD');
+		EcommercePayment::set_site_currency('NZD');
 		
 		// Set up the simple shipping calculator to test
 		SimpleShippingModifier::set_default_charge(10);

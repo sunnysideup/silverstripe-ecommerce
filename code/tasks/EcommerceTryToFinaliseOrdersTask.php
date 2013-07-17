@@ -127,7 +127,7 @@ class EcommerceTryToFinaliseOrdersTask_Mailer extends mailer {
 	 *
 	 * @return bool
 	 */
-	function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
+	function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false) {
 		return true;
 	}
 }
