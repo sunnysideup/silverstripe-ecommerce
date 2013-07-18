@@ -274,7 +274,8 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		'loadorder',
 		'startneworder',
 		'showorder',
-		'LoginForm'
+		'LoginForm',
+		'OrderForm'
 	);
 
 
