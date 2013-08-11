@@ -62,19 +62,10 @@ class EcommerceConfig extends Object {
 
 	/**
 	 * Returns a configuration.  This is the main static method for this Object.
-	 *
-	 * @return Mixed
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
-	 * @param $subIdentifier A secondary identifier string, as provided in your fixture file
-	 * @TODO: implement subIdentfier
+	 * @see Config::get()
 	 */
-	static function get($className, $identifier, $subIdentifier = null) {
-		if(!self::$singleton) {
-			self::$singleton = new EcommerceConfig();
-		}
-		//SS_Backtrace::backtrace();
-		return self::$singleton->getStaticValue($className, $identifier, $subIdentifier);
+	static function get($className, $identifier, $sourceOptions = 0, $result = null, $suppress = null ) {
+		return Config::inst()->get($className, $identifier, $sourceOptions, $result, $suppress);
 	}
 
 	/**
@@ -82,66 +73,18 @@ class EcommerceConfig extends Object {
 	 *
 	 * @var Array
 	 */
-	private static $folder_and_file_locations = array("ecommerce/ecommerce_config/ecommerce.yaml");
-		static function set_folder_and_file_locations($a) {self::$folder_and_file_locations = $a;}
-		static function get_folder_and_file_locations() {return self::$folder_and_file_locations;}
+	private static $folder_and_file_locations = array("ecommerce/_config/ecommerce.yml");
 
 	/**
 	 * Array of fixture items
 	 *
 	 * @var array
 	 */
-	protected $fixtureDictionary = array();
-
-
-	/**
-	 * Get the value for a static variable.
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
-	 * @param $subIdentifier A secondary identifier string, as provided in your fixture file
-	 * @return Mixed
-	 * @TODO: implement subIdentfier
-	 */
-	public function getStaticValue($className, $identifier, $subIdentifier = null) {
-		//this only runs once
-		if(!count($this->fixtureDictionary)) {
-			$this->loadData();
-		}
-		if($subIdentifier) {
-			if(isset($this->fixtureDictionary[$className][$identifier][$subIdentifier])) {
-				return $this->fixtureDictionary[$className][$identifier][$subIdentifier];
-			}
-		}
-		elseif(isset($this->fixtureDictionary[$className][$identifier])) {
-			return $this->fixtureDictionary[$className][$identifier];
-		}
-		if(Director::isDev()) {
-			echo "Please add the following line to one of these files : <br />
-			".implode(", ", self::$folder_and_file_locations)."<br />
-			<pre>
-$className:
-	 $identifier: [check default configuration (ecommerce/ecommerce_config/ecommerce.yaml) for example value]
-			</pre><br />
-			Please also make sure to visit <a href=\"/dev/ecommerce/\">/dev/ecommerce/</a> to check all your configurations and run any migration scripts!";
-			user_error("Could not find definition for: {$className}.{$identifier}.{$subIdentifier} in ".implode(", ", self::$folder_and_file_locations), E_USER_NOTICE);
-		}
-		//when in live mode, try to keep the boat floating.
-		if(Director::isLive()) {
-			$realFiles = self::$folder_and_file_locations;
-			$backupFiles = "ecommerce/ecommerce_config/ecommerce.yaml";
-			if($realFiles != $backupFiles) {
-				self::$folder_and_file_locations = $backupFiles;
-				$outcome = self::getStaticValue($className, $identifier, $subIdentifier);
-				self::$folder_and_file_locations = $realFiles;
-				return $outcome;
-			}
-		}
-		return null;
-	}
+	private $fixtureDictionary = array();
 
 	/**
 	 * loads data from file.
-	 * This is only actioned once the first request is made.
+	 * We have this method to create a complete list of configs
 	 */
 	private function loadData(){
 		require_once 'thirdparty/spyc/spyc.php';
