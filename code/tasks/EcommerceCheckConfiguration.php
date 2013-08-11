@@ -84,6 +84,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->classesThatDoNotExist();
 					$this->definitionsNotSet();
 					$this->configsNotSet();
+					$this->configValueMisMatch();
 					$this->addEcommerceDBConfigToConfigs();
 					$this->addOtherValuesToConfigs();
 					$this->addPages();
@@ -229,6 +230,29 @@ class EcommerceCheckConfiguration extends BuildTask{
 					echo "</pre>";
 				}
 			}
+		}
+	}
+
+
+
+	/**
+	 * Work out items set in the configuration but not set in the config file.
+	 */
+	protected function configValueMisMatch(){
+		DB::alteration_message("<h2>Comparing e-commerce values with framework values</h2>");
+		$allOK = true;
+		foreach($this->configs as $className => $setting) {
+			$classConfigs = $this->configs[$className];
+			foreach($classConfigs as $key => $classConfig) {
+				if(isset($this->definitions[$className][$key])) {
+					if($this->definitions[$className][$key] != EcommerceConfig::get($className, $key)) {
+						DB::alteration_message("$className.$key", "deleted");
+					}
+				}
+			}
+		}
+		if(!$allOK) {
+			DB::alteration_message("Recommended course of action: remove from your config file and review if any other action needs to be taken.", "edited");
 		}
 	}
 
