@@ -741,6 +741,11 @@ class OrderStep extends DataObject {
 							$obj->Code = $code;
 							$obj->write();
 						}
+						$parentObj = singleton("OrderStep");
+						if($obj->Description == $parentObj->myDescription()) {
+							$obj->Description = $obj->myDescription();
+							$obj->write();
+						}
 					}
 					else {
 						$obj = new $className();

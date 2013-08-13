@@ -27,7 +27,6 @@ DevelopmentAdmin::$allowed_actions[] = 'ecommerce';
 //of valuable processing where in many cases the default value is fine.
 
 // * * * DEFINITELY MUST SET
-//EcommerceConfig::set_folder_and_file_locations(array("ecommerce/ecommerce_config/ecommerce.yaml"));
 
 //customising the CMS
 //LeftAndMain::require_css("ecommerce/css/ecommercecmsfixes.css");

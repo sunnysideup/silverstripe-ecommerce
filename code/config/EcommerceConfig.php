@@ -11,15 +11,18 @@
  *
  * # HOW TO USE IT
  *
- * 1. Copy ecommerce/ecommerce_config/ecommerce.yaml and move it your project folder, e.g. mysite/_config/ecommerce.yaml
+ * 1. Copy ecommerce/_config/ecommerce.yml and move it your project folder, e.g. mysite/_config/ecommerce.yml
  * In the copied file, set your configs as you see fit, using the YAML format.  E.g.
  *
  * Order:
  * 	Test: 1
  *
- * Next, include in _config.php:
- * <code>
- * EcommerceConfig::set_folder_and_file_locations(array("mysite/ecommerce_config/ecommerce.yaml", "myotherconfig.yaml"));
+ * Next, include in ecommerce.yml file:
+ * <code yml>
+ * EcommerceConfig:
+ *   folder_and_file_locations:
+ *     - "mysite/_config/ecommerce.yml"
+ *     - "myotherconfig.yaml"
  * </code>
  *
  * Then, in individual classes, you can access configs like this:
@@ -88,7 +91,8 @@ class EcommerceConfig extends Object {
 	 */
 	private function loadData(){
 		require_once 'thirdparty/spyc/spyc.php';
-		foreach(self::$folder_and_file_locations as $folderAndFileLocation){
+		$filesArray = $this->fileLocations();
+		foreach($filesArray as $folderAndFileLocation){
 			$fixtureFolderAndFile = Director::baseFolder().'/'. $folderAndFileLocation;
 			if(!file_exists($fixtureFolderAndFile)) {
 				user_error('No custom configuration has been setup for Ecommerce - I was looking for: "' . $fixtureFolderAndFile . '"', E_USER_NOTICE);
@@ -118,7 +122,9 @@ class EcommerceConfig extends Object {
 	 * @return Array
 	 */
 	public function fileLocations() {
-		return self::$folder_and_file_locations;
+		$array = $this->config()->get('folder_and_file_locations');
+		//we reverse it so the default comes last
+		return array_reverse($array);
 	}
 
 

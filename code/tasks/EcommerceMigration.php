@@ -1474,10 +1474,10 @@ class EcommerceMigration extends BuildTask {
 		}
 		$oldJSLibrary = "ecommerce/thirdparty/simpledialogue_fixed/jquery.simpledialog.0.1.js";
 		$newJSLibrary = "ecommerce/thirdparty/colorbox/jquery.colorbox-min.js";
-		$fileArray = EcommerceConfig::get_folder_and_file_locations();
+		$fileArray = Config::inst()->get("EcommerceConfig", "folder_and_file_locations");
 		if($fileArray && count($fileArray)) {
 			foreach($fileArray as $folderAndFileLocationWithoutBase) {
-				if($folderAndFileLocationWithoutBase != "ecommerce/ecommerce_config/ecommerce.yaml") {
+				if($folderAndFileLocationWithoutBase != "ecommerce/_config/ecommerce.yml") {
 					$folderAndFileLocationWithBase = Director::baseFolder().'/'. $folderAndFileLocationWithoutBase;
 					if(file_exists($folderAndFileLocationWithBase)) {
 						$fp = @fopen($folderAndFileLocationWithBase, 'r');
@@ -1508,12 +1508,12 @@ class EcommerceMigration extends BuildTask {
 					}
 				}
 				else {
-					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/ecommerce_config/ecommerce.yaml", "created");
+					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/_config/ecommerce.yml", "created");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("Could not find any config files (most usual place: mysite/ecommerce_config/ecommerce.yaml)", "deleted");
+			DB::alteration_message("Could not find any config files (most usual place: mysite/_config/ecommerce.yml)", "deleted");
 		}
 		return 0;
 	}
