@@ -478,7 +478,7 @@ class EcommerceCountry extends DataObject {
  * the country of the customer.
  * By default we are using the GEOIP class
  * but you can switch it to your own system by changing
- * the classname in the ecommerce.yaml config file.
+ * the classname in the ecommerce.yml config file.
  *
  *
  */

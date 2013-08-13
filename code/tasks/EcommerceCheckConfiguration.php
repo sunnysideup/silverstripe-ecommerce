@@ -22,7 +22,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 * Default Location for Configuration File
 	 * @var String
 	 */
-	protected $defaultLocation = "ecommerce/ecommerce_config/ecommerce.yaml";
+	protected $defaultLocation = "ecommerce/_config/ecommerce.yml";
 
 	/**
 	 * Standard (required) SS variable for BuildTasks
@@ -37,6 +37,23 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected $description = "Runs through all static configuration for review.";
 
 	/**
+	 * Array of definitions - set like this:
+	 * ClassName
+	 * 		VariableName: Description
+	 * @var Array
+	 */
+	protected $definitions = array();
+
+	/**
+	 * Array of defaults - set like this:
+	 * ClassName
+	 * 		VariableName: Default Variable Value
+	 * @var Array
+	 */
+	protected $defaults = array();
+
+
+	/**
 	 * Array of configs - set like this:
 	 * ClassName
 	 * 		VariableName: VariableValue
@@ -45,24 +62,33 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected $configs = array();
 
 	/**
-	 * Array of definitions - set like this:
+	 * which values are derived from DB
 	 * ClassName
-	 * 		VariableName: VariableValue
+	 * 		VariableName: TRUE | FALSE
 	 * @var Array
 	 */
-	protected $definitions = array();
+	protected $databaseValues = array();
 
 	/**
-	 * Array of defaults - set like this:
+	 * set in default yml, but not customised.
 	 * ClassName
-	 * 		VariableName: VariableValue
+	 * 		VariableName: TRUE | FALSE
 	 * @var Array
 	 */
-	protected $defaults = array();
+	protected $customisedValues = array();
+
+	/**
+	 * Other configs
+	 * ClassName
+	 * 		VariableName: TRUE | FLASE
+	 * @var Array
+	 */
+	protected $otherConfigs = array();
 
 	/**
 	 * Array of classes (partially) missing in configs.
-	 * @var Array
+	 * VariableName: VariableName
+	 *  @var Array
 	 */
 	protected $missingClasses = array();
 
@@ -84,7 +110,6 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$this->classesThatDoNotExist();
 					$this->definitionsNotSet();
 					$this->configsNotSet();
-					$this->configValueMisMatch();
 					$this->addEcommerceDBConfigToConfigs();
 					$this->addOtherValuesToConfigs();
 					$this->addPages();
@@ -116,13 +141,17 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$files = implode(", ", $configsObject->fileLocations());
 		global $project;
 		$baseFolder = Director::baseFolder();
-		$projectFolder = $project."/ecommerce_config";
+		$projectFolder = $project."/_config";
 		$baseAndProjectFolder = $baseFolder."/".$projectFolder;
-		$file = "ecommerce.yaml";
+		$file = "ecommerce.yml";
 		$projectFolderAndFile = $projectFolder."/".$file;
 		$fullFilePath = $baseFolder."/".$projectFolderAndFile;
 		$defaultFileFullPath = Director::baseFolder()."/".$this->defaultLocation;
-		DB::alteration_message("Current files used: <strong style=\"color: darkRed\">".$files."</strong>, unless stated otherwise, all settings can be edited in these files (or file).", "created");
+		DB::alteration_message("
+			Current files used: <strong style=\"color: darkRed\">".$files."</strong>,
+			unless stated otherwise, all settings can be edited in these file(s).",
+			"created"
+		);
 		if(!file_exists($baseAndProjectFolder)) {
 			mkdir($baseAndProjectFolder);
 		}
@@ -132,9 +161,12 @@ class EcommerceCheckConfiguration extends BuildTask{
 		}
 		if($files == $this->defaultLocation) {
 			if(file_exists($fullFilePath)) {
-				DB::alteration_message("A customisable configuration file exists here: $projectFolderAndFile, you should add the following to your _config.php file:
-				<pre>EcommerceConfig::set_folder_and_file_locations(array(\"$projectFolderAndFile\"));</pre>
-				 ", "created");
+				DB::alteration_message("A customisable configuration file exists here: $projectFolderAndFile, you should add the following to your config.yml file:
+<pre>
+EcommerceConfig:
+  folder_and_file_locations:
+    - \"$projectFolderAndFile\"
+</pre>", "created");
 			}
 		}
 	}
@@ -148,6 +180,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 		foreach($this->configs as $className => $setting) {
 			if(!isset($this->definitions[$className])) {
 				$allOK = false;
+				$this->missingClasses[$className] = $className;
 				DB::alteration_message("$className", "deleted");
 			}
 			else {
@@ -196,65 +229,27 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 */
 	protected function configsNotSet(){
 		$allOK = true;
-		DB::alteration_message("<h2>Defined but not set in configs</h2>");
 		foreach($this->definitions as $className => $setting) {
 			if(!isset($this->configs[$className])) {
-				DB::alteration_message("$className", "deleted");
-				$this->missingClasses[$className] = $className;
-				$allOK = false;
+				$this->configs[$className] = array();
 			}
 			else {
 				$classConfigs = $this->definitions[$className];
 				foreach($classConfigs as $key => $classConfig) {
 					if(!isset($this->configs[$className][$key])) {
-						DB::alteration_message("$className.$key", "deleted");
-						$this->missingClasses[$className] = $className;
-						$allOK = false;
+						$this->customisedValues[$className][$key] = false;
+						//fallback to Configs...
+						$this->configs[$className][$key] = Config::inst()->get($className, $key);
+					}
+					else {
+						$this->customisedValues[$className][$key] = false;
 					}
 				}
 			}
 		}
-		if($allOK) {
-			DB::alteration_message("Perfect match, nothing to report", "created");
-		}
-		else {
-			DB::alteration_message("Recommended course of action: add to your config file :", "edited");
-			if(is_array($this->missingClasses) && count($this->missingClasses)) {
-				foreach($this->missingClasses as $className) {
-					echo "<br /><pre>$className:";
-					$classConfigs = $this->definitions[$className];
-					foreach($classConfigs as $key => $classConfig) {
-						echo
-						"$key: ".$this->defaults[$className][$key];
-					}
-					echo "</pre>";
-				}
-			}
-		}
+
 	}
 
-
-
-	/**
-	 * Work out items set in the configuration but not set in the config file.
-	 */
-	protected function configValueMisMatch(){
-		DB::alteration_message("<h2>Comparing e-commerce values with framework values</h2>");
-		$allOK = true;
-		foreach($this->configs as $className => $setting) {
-			$classConfigs = $this->configs[$className];
-			foreach($classConfigs as $key => $classConfig) {
-				if(isset($this->definitions[$className][$key])) {
-					if($this->definitions[$className][$key] != EcommerceConfig::get($className, $key)) {
-						DB::alteration_message("$className.$key", "deleted");
-					}
-				}
-			}
-		}
-		if(!$allOK) {
-			DB::alteration_message("Recommended course of action: remove from your config file and review if any other action needs to be taken.", "edited");
-		}
-	}
 
 	/**
 	 * Work out items set in the definitions but not set in the config file.
@@ -263,11 +258,11 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$htmlHeader = "
 		<style>
 			th[scope='col'] {text-align: left; border-bottom: 3px solid blue;padding-top: 40px;}
-			td {vertical-align: top; border-left: 1px solid blue; border-bottom: 1px solid blue;}
+			td {vertical-align: top; border-left: 1px solid grey; border-bottom: 1px solid grey;}
 			td span {color: #333; font-size: 0.8em;}
 			td span {color: #333; font-size: 0.8em; display: block}
 			.sameConfig {color: #333;}
-			.newConfig{color: green; font-weight: bold; font-size: 1.2em;}
+			.newConfig{background-color: green!important; color: #fff; }
 			#TOC {
 				-moz-column-count: 3;
 				-moz-column-gap: 20px;
@@ -278,7 +273,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 			}
 			a.backToTop {display: block; font-size: 0.8em; }
 			td.newConfig {width: 70%;}
-			pre {white-space:pre-wrap; font-size: 9px!important; font-weight: bold;}
+			table td pre, table td sub {white-space:pre-wrap; font-size: 9px!important; font-weight: bold;margin: 5px; padding: 5px;}
 		</style>
 		<h2>Configuration Report</h2>";
 		$htmlTable = "
@@ -299,29 +294,43 @@ class EcommerceCheckConfiguration extends BuildTask{
 			}
 
 			foreach($settings as $key => $classConfig) {
+				$configError = "";
+				$class = "";
+				$hasDefaultvalue = false;
+				$isDatabaseValues = isset($this->databaseValues[$className][$key]) ? $this->databaseValues[$className][$key] : false;
+				$isOtherConfigs = isset($this->otherConfigs[$className][$key]) ? $this->otherConfigs[$className][$key] : false;
+				$isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
 				if(!isset($this->defaults[$className][$key])) {
-					echo "Could not retrieve default value for: $className $key <hr />";
+					//DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
 				}
 				else {
 					$defaultValue = print_r($this->defaults[$className][$key], 1);
+					$hasDefaultvalue = true;
 				}
-				$actualValue = print_r($this->configs[$className][$key], 1);
-				if($actualValue == $defaultValue) {
-					$class = "sameConfig";
+				$manuallyAddedValue = print_r($this->configs[$className][$key], 1);
+				$actualValueRaw = EcommerceConfig::get($className, $key);
+				if(!$actualValueRaw && $manuallyAddedValue) {
+					$actualValueRaw = $manuallyAddedValue;
+				}
+
+				$actualValue = print_r($actualValueRaw, 1);
+				if($defaultValue === $manuallyAddedValue && $isCustomisedValues) {
+					$configError .= "This is a superfluous entry in your custom config as the default value is the same.";
+				}
+				$hasDefaultvalue = true;
+				if($defaultValue === $actualValue) {
+					$class .= "sameConfig";
 					$defaultValue = "";
+					$hasDefaultvalue = false;
 				}
 				else {
-					$class = "newConfig";
+					$class .= " newConfig";
 				}
-				if($actualValue === false || $actualValue === "") {
-					$actualValue = "[FALSE] / [EMPTY STRING]";
+				$actualValue = $this->turnValueIntoHumanReadableValue($actualValue);
+				if($hasDefaultvalue) {
+					$defaultValue = $this->turnValueIntoHumanReadableValue($defaultValue);
 				}
-				if($actualValue === null) {
-					$actualValue = "[NULL]";
-				}
-				if($actualValue === "1") {
-					$actualValue = "[TRUE]";
-				}
+
 				if(!isset($this->definitions[$className][$key])) {
 					$description = "<span style=\"color: red; font-weight: bold\">ERROR: no longer required in configs!</span>";
 				}
@@ -329,18 +338,27 @@ class EcommerceCheckConfiguration extends BuildTask{
 					$description = $this->definitions[$className][$key];
 					$description .= $this->specialCases($className, $key, $actualValue);
 				}
-				$defaultValueHMTL = "";
-				if($defaultValue) {
-					$defaultValueHMTL = "<span><sub>e-commerce defaults:</sub><pre>$defaultValue</span></span>";
+				$defaultValueHTML = "";
+				if($defaultValue && !$isOtherConfigs) {
+					$defaultValueHTML = "<sub>e-commerce defaults:</sub><pre>$defaultValue</pre>";
+				}
+				if($configError) {
+					$configError = "<span style=\"color: red; font-size: 10px;\">$configError</span>";
+				}
+				$sourceNote = "";
+				if($isDatabaseValues) {
+					$sourceNote = "<span>Values are set in the database using the CMS.</span>";
 				}
 				$htmlTable .= "<tr>
 			<td>
 				$key
 				<span>$description</span>
+				$sourceNote
 			</td>
 			<td class=\"$class\">
 				<pre>$actualValue</pre>
-				$defaultValueHMTL
+				$defaultValueHTML
+				$configError
 			</td>
 		</tr>";
 			}
@@ -364,20 +382,22 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 * Adding EcommerceDBConfig values
 	 */
 	protected function addEcommerceDBConfigToConfigs(){
-		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
-		$fields = $ecommerceConfig->fieldLabels();
+		$ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
+		$fields = $ecommerceDBConfig->fieldLabels();
 		if($fields) {
 			foreach($fields as $field => $description) {
-				if($field != "Title") {
-					$defaultsDefaults = $ecommerceConfig->stat("defaults");
-					$this->definitions["EcommerceDBConfig"][$field] = "$description. <br />THIS IS SET IN THE <a href=\"/admin/shop\">Ecommerce Configuration</a>";
-					$this->configs["EcommerceDBConfig"][$field] = $ecommerceConfig->$field;
+				if($field != "Title" && $field != "UseThisOne") {
+					$defaultsDefaults = $ecommerceDBConfig->stat("defaults");
+					$this->definitions["EcommerceDBConfig"][$field] = "$description. <br />see: <a href=\"/admin/shop/EcommerceDBConfig/EditForm/field/EcommerceDBConfig/item/".$ecommerceDBConfig->ID."/edit\">Ecommerce Configuration</a>";
+					$this->configs["EcommerceDBConfig"][$field] = $ecommerceDBConfig->$field;
+					$this->databaseValues["EcommerceDBConfig"][$field] = true;
 					$this->defaults["EcommerceDBConfig"][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : "no default set";
 					$imageField = $field."ID";
-					if(isset($ecommerceConfig->$imageField)) {
-						if($image = $ecommerceConfig->$field()) {
+					if(isset($ecommerceDBConfig->$imageField)) {
+						if($image = $ecommerceDBConfig->$field()) {
 							if($image->exists() && $image instanceOf Image) {
 								$this->configs["EcommerceDBConfig"][$field] = "[Image]  --- <img src=\"".$image->Link()."\" />";
+								$this->databaseValues["EcommerceDBConfig"][$field] = true;
 							}
 						}
 					}
@@ -392,14 +412,18 @@ class EcommerceCheckConfiguration extends BuildTask{
 		$this->definitions["Email"]["admin_email_address"] = "Default administrator email. <br />SET USING Email::\$admin_email_address = \"bla@ta.com\" in the _config.php FILES";
 		$this->configs["Email"]["admin_email_address"] = Config::inst()->get("Email", "admin_email_address");
 		$this->defaults["Email"]["admin_email_address"] = "[no default set]";
+		$this->otherConfigs["Email"]["admin_email_address"] = true;
 
 		$siteConfig = SiteConfig::current_site_config();
-		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. <br />This is set in the <a href=\"/admin/show/root\">site configuration</a>.";
+		$this->definitions["SiteConfig"]["website_title"] = "The name of the website. <br />see: <a href=\"/admin/settings/\">site configuration</a>.";
 		$this->configs["SiteConfig"]["website_title"] = $siteConfig->Title;
 		$this->defaults["SiteConfig"]["website_title"] = "[no default set]";
-		$this->definitions["SiteConfig"]["website_tagline"] = "The subtitle or tagline of the website. <br />This is set in the <a href=\"/admin/show/root\">site configuration</a>.";
+		$this->otherConfigs["SiteConfig"]["website_title"] = true;
+
+		$this->definitions["SiteConfig"]["website_tagline"] = "The subtitle or tagline of the website. <br />see: <a href=\"/admin/settings/\">site configuration</a>.";
 		$this->configs["SiteConfig"]["website_tagline"] = $siteConfig->Tagline;
 		$this->defaults["SiteConfig"]["website_tagline"] = "[no default set]";
+		$this->otherConfigs["SiteConfig"]["website_tagline"] = true;
 
 	}
 
@@ -408,23 +432,26 @@ class EcommerceCheckConfiguration extends BuildTask{
 
 		if($checkoutPage = CheckoutPage::get()->First()) {
 			$this->getPageDefinitions($checkoutPage);
-			$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.<br />".($checkoutPage ? "<a href=\"/admin/show/".$checkoutPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->definitions["Pages"]["CheckoutPage"] = "Page where customers finalise (checkout) their order. This page is required.<br />".($checkoutPage ? "<a href=\"/admin/pages/edit/show/".$checkoutPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/pages/add/\">CMS</a>");
 			$this->configs["Pages"]["CheckoutPage"] = $checkoutPage ? "view: <a href=\"".$checkoutPage->Link()."\">".$checkoutPage->Title."</a><br />".$checkoutPage->configArray : " NOT CREATED!";
 			$this->defaults["Pages"]["CheckoutPage"] = $checkoutPage ? $checkoutPage->defaultsArray : "[add page first to see defaults]";
+			$this->databaseValues["Pages"]["CheckoutPage"] = true;
 		}
 
 		if($orderConfirmationPage = OrderConfirmationPage::get()->First()) {
 			$this->getPageDefinitions($orderConfirmationPage);
-			$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.<br />".($orderConfirmationPage ? "<a href=\"/admin/show/".$orderConfirmationPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->definitions["Pages"]["OrderConfirmationPage"] = "Page where customers review their order after it has been placed. This page is required.<br />".($orderConfirmationPage ? "<a href=\"/admin/pages/edit/show/".$orderConfirmationPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/pages/add/\">CMS</a>");
 			$this->configs["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? "view: <a href=\"".$orderConfirmationPage->Link()."\">".$orderConfirmationPage->Title."</a><br />".$orderConfirmationPage->configArray: " NOT CREATED!";
 			$this->defaults["Pages"]["OrderConfirmationPage"] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : "[add page first to see defaults]";
+			$this->databaseValues["Pages"]["OrderConfirmationPage"] = true;
 		}
 
 		if($accountPage = AccountPage::get()->First()) {
 			$this->getPageDefinitions($accountPage);
-			$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.<br />".($accountPage ? "<a href=\"/admin/show/".$accountPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
+			$this->definitions["Pages"]["AccountPage"] = "Page where customers can review their account. This page is required.<br />".($accountPage ? "<a href=\"/admin/pages/edit/show/".$accountPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/pages/add/\">CMS</a>");
 			$this->configs["Pages"]["AccountPage"] = $accountPage ? "view: <a href=\"".$accountPage->Link()."\">".$accountPage->Title."</a><br />".$accountPage->configArray : " NOT CREATED!";
 			$this->defaults["Pages"]["AccountPage"] = $accountPage ? $accountPage->defaultsArray : "[add page first to see defaults]";
+			$this->databaseValues["Pages"]["AccountPage"] = true;
 		}
 
 		if(
@@ -433,9 +460,11 @@ class EcommerceCheckConfiguration extends BuildTask{
 				->First()
 		) {
 			$this->getPageDefinitions($cartPage);
-			$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/\">CMS</a>");
-			$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
+			$this->definitions["Pages"]["CartPage"] = "Page where customers review their cart while shopping. This page is optional.<br />".($cartPage ? "<a href=\"/admin/pages/edit/show/".$cartPage->ID."/\">edit</a>" : "Create one in the <a href=\"/admin/pages/add/\">CMS</a>");
+			$this->configs["Pages"]["CartPage"] = $cartPage ? "view: <a href=\"".$cartPage->Link()."\">".$cartPage->Title."</a>, <a href=\"/admin/pages/edit/show/".$cartPage->ID."/\">edit</a><br />".$cartPage->configArray : " NOT CREATED!";
 			$this->defaults["Pages"]["CartPage"] = $cartPage ? $cartPage->defaultsArray : "[add page first to see defaults]";
+			$this->defaults["Pages"]["CartPage"] = $cartPage ? $cartPage->defaultsArray : "[add page first to see defaults]";
+			$this->databaseValues["Pages"]["CartPage"] = true;
 		}
 	}
 
@@ -473,9 +502,11 @@ class EcommerceCheckConfiguration extends BuildTask{
 						}
 					}
 				}
-				$this->definitions["OrderStep"][$step->Code] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/shop/\">Ecommerce Configuration</a>.";
+				$ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
+				$this->definitions["OrderStep"][$step->Code] = $step->Description."<br />see: <a href=\"/admin/shop/OrderStep/EditForm/field/OrderStep/item/".$step->ID."/edit\">Ecommerce Configuration</a>.";
 				$this->configs["OrderStep"][$step->Code] = $configArray;
 				$this->defaults["OrderStep"][$step->Code] = $defaultsArray;
+				$this->databaseValues["OrderStep"][$step->Code] = true;
 			}
 		}
 	}
@@ -505,9 +536,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 						}
 					}
 				}
-				$this->definitions["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/show/".$checkoutPage->ID."/\">checkout page</a>.";
+				$this->definitions["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $step->Description."<br />see: <a href=\"/admin/pages/edit/show/".$checkoutPage->ID."/\">checkout page</a>.";
 				$this->configs["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $configArray;
 				$this->defaults["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = $defaultsArray;
+				$this->databaseValues["CheckoutPage_Controller"]["STEP_$stepNumber"."_".$step->getCode()] = true;
 			}
 		}
 		$steps = OrderModifier_Descriptor::get();
@@ -524,9 +556,10 @@ class EcommerceCheckConfiguration extends BuildTask{
 						}
 					}
 				}
-				$this->definitions["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = $step->Description."<br />TO EDIT THESE VALUES: go to the <a href=\"/admin/show/".$checkoutPage->ID."/\">checkout page</a>.";
+				$this->definitions["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = $step->Description."<br />see: <a href=\"/admin/pages/edit/show/".$checkoutPage->ID."/\">checkout page</a>.";
 				$this->configs["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = $configArray;
 				$this->defaults["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = $defaultsArray;
+				$this->databaseValues["CheckoutPage_Controller"]["OrderModifier_Descriptor_".$step->ModifierClassName] = true;
 			}
 		}
 	}
@@ -551,10 +584,11 @@ class EcommerceCheckConfiguration extends BuildTask{
 				}
 				$note = "
 					This variable can be used like this: <pre>&lt;div $selector=\"\$AJAXDefinitions.".$method."\"&gt;&lt;/div&gt;</pre>
-					<a href=\"/shoppingcart/test/\">AJAX</a> will then use this selector to put the following content: ";
+					<a href=\"/shoppingcart/ajaxtest/?ajax=1\">AJAX</a> will then use this selector to put the following content: ";
 				$this->definitions["Templates"]["AJAXDefinitions_$method"] = $note."<br />".$description;
 				$this->configs["Templates"]["AJAXDefinitions_$method"] = $obj->$method();
 				$this->defaults["Templates"]["AJAXDefinitions_$method"] = "";
+				$this->otherConfigs["Templates"]["AJAXDefinitions_$method"] = true;
 			}
 		}
 	}
@@ -579,7 +613,29 @@ class EcommerceCheckConfiguration extends BuildTask{
 				$classesAsString = implode(", <br />", $classes);
 				return "<br /><h4>Available Modifiers</h4>$classesAsString";
 				break;
+			case "OrderStatusLog.available_log_classes_array":
+				$classes = ClassInfo::subclassesFor("OrderStatusLog");
+				unset($classes[0]);
+				$classesAsString = implode(", <br />", $classes);
+				return "<br /><h4>Available Modifiers</h4>$classesAsString";
+				break;
 		}
+	}
+
+	private function turnValueIntoHumanReadableValue($actualValue){
+		if($actualValue === "") {
+			$actualValue = "[FALSE] / [EMPTY STRING] ";
+		}
+		if($actualValue === null) {
+			$actualValue = "[NULL]";
+		}
+		if($actualValue === "1" || $actualValue === 1) {
+			$actualValue = "[TRUE] / 1";
+		}
+		if($actualValue === "0" || $actualValue === false) {
+			$actualValue = "[FALSE] / 0";
+		}
+		return $actualValue;
 	}
 
 }

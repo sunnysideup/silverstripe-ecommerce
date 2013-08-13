@@ -30,14 +30,3 @@ EcommerceDatabaseAdmin:
     - runTask
 
 
-##########################
-# START ECOMMERCE CONFIG
-##########################
-
-#EcommerceConfig:
-  #folder_and_file_locations:
-    #- "ecommerce/_config/ecommerce.yaml"
-
-##########################
-# END ECOMMERCE CONFIG
-##########################
