@@ -211,7 +211,7 @@ CartPage_Controller:
 ShoppingCart:
   session_code: "EcommerceShoppingCart"
   cleanup_every_time: true
-  default_param_filters: ""
+  default_param_filters: []
   response_class: "CartResponse"
 
 ShoppingCart_Controller:
