@@ -124,6 +124,7 @@ class ShoppingCart extends Object{
 						//TODO: what sort order?
 						$count = 0;
 						while(
+							$firstStep &&
 							$previousOrderFromMember = Order::get()
 								->where("
 									\"MemberID\" = ".$member->ID."

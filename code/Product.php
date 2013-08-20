@@ -1086,7 +1086,7 @@ class Product_Controller extends Page_Controller {
 	 * @return Boolean
 	 */
 	function HasPreviousOrNextProduct(){
-		return $this->PreviousProduct() || $this->NextProduct();
+		return $this->PreviousProduct() || $this->NextProduct() ? true : false;
 	}
 
 	/**

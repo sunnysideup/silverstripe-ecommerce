@@ -138,7 +138,8 @@ class CartResponse extends EcommerceResponse {
 			"t" => "class",
 			"s" => $ajaxObject->TinyCartClassName(),
 			"p" => "innerHTML",
-			"v" => $currentOrder->renderWith("CartTinyInner")
+			//note the space is a hack to return something!
+			"v" => " ".$currentOrder->renderWith("CartTinyInner")
 		);
 
 		//add basic cart
@@ -146,7 +147,8 @@ class CartResponse extends EcommerceResponse {
 			"t" => "id",
 			"s" => $ajaxObject->SmallCartID(),
 			"p" => "innerHTML",
-			"v" => $currentOrder->renderWith("CartShortInner")
+			//note the space is a hack to return something!
+			"v" => " ".$currentOrder->renderWith("CartShortInner")
 		);
 
 		//side bar cart
@@ -154,7 +156,8 @@ class CartResponse extends EcommerceResponse {
 			"t" => "id",
 			"s" => $ajaxObject->SideBarCartID(),
 			"p" => "innerHTML",
-			"v" => $currentOrder->renderWith("Sidebar_Cart_Inner")
+			//note the space is a hack to return something!
+			"v" => " ".$currentOrder->renderWith("Sidebar_Cart_Inner")
 		);
 		//now can check if it needs to be reloaded
 		if(self::$force_reload) {

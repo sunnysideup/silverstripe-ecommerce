@@ -505,6 +505,14 @@ class ProductGroup extends Page {
 	public function ProductsShowable($extraFilter = ''){
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
 		$this->sortedProducts = $this->currentFinalProducts();
+		$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
+		if(isset($buyablesIDArray) && is_array($buyablesIDArray) && count($buyablesIDArray)) {
+			$listOfIDs = implode(",", $buyablesIDArray);
+		}
+		else {
+			$listOfIDs = "0";
+		}
+		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $listOfIDs);
 		return $this->sortedProducts;
 	}
 
@@ -703,35 +711,16 @@ class ProductGroup extends Page {
 	 * returns the CLASSNAME part of the final selection of products.
 	 * @return String
 	 */
-	protected function currentClassNameSQL() {
-		return "Product";
+	protected function currentWhereSQL() {
+		Deprecation::notice('3.1', "No longer in use");
 	}
 
 	/**
-	 * returns the WHERE part of the final selection of products.
-	 * @return Array (Array("ID" => array(1,2,3,4))
+	 * returns the CLASSNAME part of the final selection of products.
+	 * @return String
 	 */
-	protected function currentWhereSQL() {
-		if($this->allProducts instanceOf DataList) {
-			$buyablesIDArray = $this->allProducts->map("ID", "ID")->toArray();
-		}
-		elseif(is_array($this->allProducts)) {
-			$buyablesIDArray = $this->allProducts;
-		}
-		$className = $this->currentClassNameSQL();
-		$stage = '';
-		//@to do - make sure products are versioned!
-		if(Versioned::current_stage() == "Live") {
-			$stage = "_Live";
-		}
-		if(isset($buyablesIDArray) && is_array($buyablesIDArray) && count($buyablesIDArray)) {
-			$listOfIDs = implode(",", $buyablesIDArray);
-		}
-		else {
-			$listOfIDs = "0";
-		}
-		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $listOfIDs);
-		return array("ID" => $listOfIDs);
+	protected function currentClassNameSQL() {
+		Deprecation::notice('3.1', 'Use the "ProductGroup.getClassNameSQL" instead');
 	}
 
 	/**
@@ -754,7 +743,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function currentJoinSQL() {
-		return null;
+		Deprecation::notice('3.1', "No longer in use");
 	}
 
 

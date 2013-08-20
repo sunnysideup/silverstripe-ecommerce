@@ -432,6 +432,7 @@ class EcommerceCurrency extends DataObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		// Check that there is always at least one currency in use
+		$this->Code = strtoupper($this->Code);
 		if(! $this->InUse) {
 			$list = self::get_list();
 			if($list->count() == 0 || ($list->Count() == 1 && $list->First()->ID == $this->ID)) {
