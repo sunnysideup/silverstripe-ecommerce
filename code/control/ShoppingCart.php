@@ -554,7 +554,8 @@ class ShoppingCart extends Object{
 				$newOrder = new Order();
 				//copying fields.
 				$newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
-				$newOrder->CurrencyUsedID = $oldOrder->CurrencyUsedID;
+				//important to set it this way...
+				$newOrder->setCurrency($oldOrder->CurrencyUsedID);
 				$newOrder->MemberID = $oldOrder->MemberID;
 				//load the order
 				$newOrder->write();
