@@ -150,9 +150,11 @@ class OrderAttribute extends DataObject {
 		if($this->_canView === null) {
 			$this->_canView = false;
 			if($this->OrderID) {
-				if($this->Order()->exists()) {
-					if($this->Order()->canView($member)) {
-						$this->_canView = true;
+				if($o = $this->Order()) {
+					if($o->exists()) {
+						if($o->canView($member)) {
+							$this->_canView = true;
+						}
 					}
 				}
 			}
@@ -173,9 +175,11 @@ class OrderAttribute extends DataObject {
 		if($this->_canEdit === null) {
 			$this->_canEdit = false;
 			if($this->OrderID) {
-				if($this->Order()->exists()) {
-					if($this->Order()->canEdit($member)) {
-						$this->_canEdit = true;
+				if($o = $this->Order()) {
+					if($o->exists()) {
+						if($o->canEdit($member)) {
+							$this->_canEdit = true;
+						}
 					}
 				}
 			}

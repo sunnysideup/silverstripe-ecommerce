@@ -84,10 +84,10 @@ class OrderItem extends OrderAttribute {
 			'field' => 'NumericField',
 			'title' => 'Order Number'
 		),
-		"TableTitle" => "PartialMatchFilter",
-		"UnitPrice",
+		//"TableTitle" => "PartialMatchFilter",
+		//"UnitPrice",
 		"Quantity",
-		"Total"
+		//"Total"
 	);
 
 	/**

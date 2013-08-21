@@ -48,6 +48,18 @@ class EcommerceMoney extends Extension {
 		return $this->owner->Nice(array('symbol' => $symbol));
 	}
 
-	function NiceDefaultFormat($html = true) {$function = EcommerceConfig::get('EcommerceMoney', 'default_format'); return $this->owner->$function($html);}
+	function NiceDefaultFormat($html = true) {
+		$function = EcommerceConfig::get('EcommerceMoney', 'default_format');
+		return $this->owner->$function($html);
+	}
+
+	function NiceWithCurrencyCode($html = true) {
+		$symbol = $this->owner->currency;
+		if($html) {
+			$symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">$symbol</span></span>";
+		}
+		return strtoupper($this->owner->currency).$this->owner->Nice();
+	}
+
 
 }

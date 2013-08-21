@@ -198,9 +198,9 @@ EcommerceMoney:
 
 EcommercePayment:
   supported_methods:
-    - EcommercePayment_TestSuccess : Success
-    - EcommercePayment_TestPending : Pending
-    - EcommercePayment_TestFailure : Failure
+    EcommercePayment_TestSuccess : Success
+    EcommercePayment_TestPending : Pending
+    EcommercePayment_TestFailure : Failure
     #PayPalExpressCheckoutPayment : "Paypal Credit Card"
 
 
@@ -227,16 +227,6 @@ EcommerceConfigAjax:
   dialogue_js_file_location: ecommerce/javascript/jquery.colorbox-min.js
 
 ################### MODIFIERS #####################
-
-FlatTaxModifier:
-  name: Tax
-  rate: 0.15
-  exclusive: true
-
-SimpleShippingModifier:
-  default_charge: 20
-  charges_by_country:
-    AU: 30
 
 
 

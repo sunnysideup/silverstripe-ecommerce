@@ -287,7 +287,7 @@ EcommerceConfig:
 			$htmlTOC .= "<li><a href=\"#$className\">$className</a></li>";
 			if($className != $oldClassName) {
 				$htmlTable .= "<tr id=\"$className\"><th colspan=\"2\" scope=\"col\">
-					<a href=\"/dev/viewcode/$className\" target=\"_blank\">$count. $className</a>
+					$count. $className
 					<a class=\"backToTop\" href=\"#TOC\">top</a>
 					</th></tr>";
 				$oldClassName = $className;

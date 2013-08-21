@@ -70,6 +70,8 @@ class EcommercePayment extends DataObject {
 	 */
 	private static $default_sort = '"Created" DESC';
 
+	private static $supported_methods = array();
+
 
 	/**
 	 * Process payment form and return next step in the payment process.
@@ -150,7 +152,7 @@ class EcommercePayment extends DataObject {
 	 */
 	function canCreate($member = null) {
 		if(!$member) {
-			$member = Member::currenUser();
+			$member = Member::currentUser();
 		}
 		return EcommerceRole::current_member_is_shop_admin($member);
 	}
@@ -273,7 +275,7 @@ class EcommercePayment extends DataObject {
 	 * @return string
 	 */
 	function PaymentMethod() {
-		$supportedMethods = $this->SupportedMethods();
+		$supportedMethods = self::get_supported_methods();
 		if(isset($supportedMethods[$this->ClassName])) {
 			return $supportedMethods[$this->ClassName];
 		}
@@ -291,7 +293,7 @@ class EcommercePayment extends DataObject {
 
 		// Create the initial form fields, which defines an OptionsetField
 		// allowing the user to choose which payment method to use.
-		$supportedMethods = $this->SupportedMethods();
+		$supportedMethods = self::get_supported_methods();
 		$fields = new FieldList(
 			new OptionsetField(
 				'PaymentMethod',
@@ -309,9 +311,6 @@ class EcommercePayment extends DataObject {
 			// Add those fields to the initial FieldSet we first created
 			$fields->push($methodFields);
 		}
-		if(!$currency) {
-			$currency = self::site_currency();
-		}
 
 		// Add the amount and subtotal fields for the payment amount
 		$fields->push(new ReadonlyField('Amount', _t('Payment.AMOUNT', 'Amount'),$amount));
@@ -324,7 +323,7 @@ class EcommercePayment extends DataObject {
 	 * the current user is a ShopAdmin.
 	 * @return Array
 	 */
-	public function SupportedMethods(){
+	public static function get_supported_methods(){
 		$isLive = true;
 		if(Director::isDev()) {
 			$isLive = false;
@@ -347,7 +346,7 @@ class EcommercePayment extends DataObject {
 			}
 		}
 		else {
-			user_error('EcommercePayment::$supported_methods() requires an associative array.', E_USER_ERROR);
+			user_error('EcommercePayment::$supported_methods() requires an associative array.'.print_r($supportedMethods, 1), E_USER_ERROR);
 		}
 		return $supportedMethods;
 	}
@@ -360,7 +359,7 @@ class EcommercePayment extends DataObject {
 	static function combined_form_requirements() {
 		$requirements = array();
 		// Loop on available methods
-		$supportedMethods = $this->SupportedMethods();
+		$supportedMethods = self::get_supported_methods();
 		if($supportedMethods) {
 			foreach($supportedMethods as $method => $methodTitle) {
 				$methodRequirements = singleton($method)->getPaymentFormRequirements();
@@ -481,7 +480,7 @@ class EcommercePayment extends DataObject {
  * @package ecommerce
  * @subpackage payment
  */
-abstract class EcommercePayment_Test extends EcommercePayment {
+class EcommercePayment_Test extends EcommercePayment {
 
 	function getPaymentFormRequirements() {
 		return null;

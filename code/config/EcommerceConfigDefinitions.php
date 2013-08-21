@@ -220,15 +220,6 @@ class EcommerceConfigDefinitions extends Object {
 				"cart_js_file_location" => "The location for the EcomCart.js (javascipt that runs the cart) file.  The default one is ecommerce/javascript/EcomCart.js",
 				"dialogue_js_file_location" => "The location for the dialogue (pop-up) javascript.  E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue, but you can also use your own (e.g. prettyPhoto or Greybox)."
 			),
-			"FlatTaxModifier" => array(
-				"name" => "Name of the tax - e.g. VAT",
-				"rate" => "Rate of the tax - e.g. 0.1",
-				"exclusive" => "Are the prices on the site inclusive or exclusive of GST?",
-			),
-			"SimpleShippingModifier" => array(
-				"default_charge" => "default charge for shipping",
-				"charges_by_country" => "charges by country",
-			),
 			"StoreAdmin" => array(
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
 				//"collection_controller_class" => "The controller for the collection.  ",
