@@ -730,7 +730,7 @@ class Order extends DataObject {
 	 * @return OrderStepField
 	 */
 	function OrderStepField() {
-		return new OrderStepField($name = "MyOrderStep", $this, Member::currentUser());
+		return OrderStepField::create($name = "MyOrderStep", $this, Member::currentUser());
 	}
 
 
@@ -849,7 +849,7 @@ class Order extends DataObject {
 	public function Cancel(Member $member, $reason = "") {
 		$this->CancelledByID = $member->ID;
 		$this->write();
-		$log = new OrderStatusLog_Cancel();
+		$log = OrderStatusLog_Cancel::create();
 		$log->AuthorID = $member->ID;
 		$log->OrderID = $this->ID;
 		$log->Note = $reason;
@@ -873,17 +873,17 @@ class Order extends DataObject {
 	 * @return DataObject (current OrderStep)
 	 */
 	public function MyStep() {
-		$obj = null;
+		$step = null;
 		if($this->StatusID) {
-			$obj = OrderStep::get()->byID($this->StatusID);
+			$step = OrderStep::get()->byID($this->StatusID);
 		}
-		if(!$obj) {
-			$obj = OrderStep::get()->First(); //TODO: this could produce strange results
+		if(!$step) {
+			$step = OrderStep::get()->First(); //TODO: this could produce strange results
 		}
-		if(!$obj) {
-			$obj = new OrderStep_Created();
+		if(!$step) {
+			$step = OrderStep_Created::create();
 		}
-		return $obj;
+		return $step;
 	}
 
 	/**

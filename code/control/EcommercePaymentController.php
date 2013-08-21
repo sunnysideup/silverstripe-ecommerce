@@ -105,7 +105,7 @@ class EcommercePaymentController extends Controller {
 		if($this->currentOrder){
 			if($this->currentOrder->canPay()) {
 				Requirements::javascript("ecommerce/javascript/EcomPayment.js");
-				return new OrderForm_Payment($this, 'PaymentForm', $this->currentOrder, $this->Link("thankyou"));
+				return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder, $this->Link("thankyou"));
 			}
 			else {
 				$this->errorMessage = _t("EcommercePaymentController.CANNOTMAKEPAYMENT", "You can not make a payment for this order.");

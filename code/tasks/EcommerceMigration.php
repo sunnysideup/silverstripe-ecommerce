@@ -518,7 +518,7 @@ class EcommerceMigration extends BuildTask {
 				if($orders->count()) {
 					foreach($orders as $order) {
 						if(!$order->ShippingAddressID) {
-							$obj = new ShippingAddress();
+							$obj = ShippingAddress::create();
 							if(isset($order->ShippingName)) {$obj->ShippingName = $order->ShippingName;}
 							if(isset($order->ShippingAddress)) {$obj->ShippingAddress = $order->ShippingAddress;}
 							if(isset($order->ShippingAddress2)) {$obj->ShippingAddress2 = $order->ShippingAddress2;}
@@ -585,7 +585,7 @@ class EcommerceMigration extends BuildTask {
 				if($orders->count()) {
 					foreach($orders as $order) {
 						if(!$order->BillingAddressID) {
-							$obj = new BillingAddress();
+							$obj = BillingAddress::create();
 							if(isset($order->Email)) {$obj->BillingEmail = $order->Email;}
 							if(isset($order->Surname)) {$obj->BillingSurname = $order->Surname;}
 							if(isset($order->FirstName)) {$obj->BillingFirstName = $order->FirstName;}
@@ -658,7 +658,7 @@ class EcommerceMigration extends BuildTask {
 						if(!$order->BillingAddressID) {
 							$member = Member::get()->byID($order->MemberID);
 							if($member) {
-								$obj = new BillingAddress();
+								$obj = BillingAddress::create();
 								if(isset($member->Email)) {$obj->BillingEmail = $member->Email;}
 								if(isset($member->FirstName)) {$obj->BillingFirstName = $member->FirstName;}
 								if(isset($member->Surname)) {$obj->BillingSurname = $member->Surname;}
@@ -1080,7 +1080,7 @@ class EcommerceMigration extends BuildTask {
 		);
 		$ecomConfig = EcommerceDBConfig::get()->First();
 		if(!$ecomConfig) {
-			$ecomConfig = new EcommerceDBConfig();
+			$ecomConfig = EcommerceDBConfig::create();
 			$ecomConfig->write();
 		}
 		$sc = SiteConfig::current_site_config();

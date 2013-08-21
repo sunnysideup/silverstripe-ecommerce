@@ -190,7 +190,7 @@ class OrderStatusLog extends DataObject {
 		//ClassName Field
 		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
 		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
-		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", _t("OrderStatusLog.TYPE", "Type"), "OrderStatusLog", $availableLogs);
+		$ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create("ClassName", _t("OrderStatusLog.TYPE", "Type"), "OrderStatusLog", $availableLogs);
 		$ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
 		$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Title");
 		if($this->exists()) {
@@ -230,7 +230,7 @@ class OrderStatusLog extends DataObject {
 		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
 		$availableLogs = EcommerceConfig::get("OrderStatusLog", "available_log_classes_array");
 		$availableLogs = array_merge($availableLogs, array(EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")));
-		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", "Type", "OrderStatusLog", $availableLogs);
+		$ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create("ClassName", "Type", "OrderStatusLog", $availableLogs);
 		$ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
 		$fields->replaceField("ClassName", $ecommerceClassNameOrTypeDropdownField);
 		return $fields;

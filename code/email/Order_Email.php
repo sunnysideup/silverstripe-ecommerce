@@ -131,25 +131,25 @@ Abstract class Order_Email extends Email {
 	 * @return DataObject (OrderEmailRecord)
 	 **/
 	protected function createRecord($result) {
-		$obj = new OrderEmailRecord();
-		$obj->From = $this->emailToVarchar($this->from);
-		$obj->To = $this->emailToVarchar($this->to);
+		$orderEmailRecord = OrderEmailRecord::create();
+		$orderEmailRecord->From = $this->emailToVarchar($this->from);
+		$orderEmailRecord->To = $this->emailToVarchar($this->to);
 		if($this->cc) {
-			$obj->To .= ", CC: ".$this->emailToVarchar($this->cc);
+			$orderEmailRecord->To .= ", CC: ".$this->emailToVarchar($this->cc);
 		}
 		if($this->bcc) {
-			$obj->To .= ", BCC: ".$this->emailToVarchar($this->bcc);
+			$orderEmailRecord->To .= ", BCC: ".$this->emailToVarchar($this->bcc);
 		}
-		$obj->Subject = $this->subject;
-		$obj->Content = $this->body;
-		$obj->Result = $result ? 1 : 0;
-		$obj->OrderID = $this->order->ID;
-		$obj->OrderStepID = $this->order->StatusID;
+		$orderEmailRecord->Subject = $this->subject;
+		$orderEmailRecord->Content = $this->body;
+		$orderEmailRecord->Result = $result ? 1 : 0;
+		$orderEmailRecord->OrderID = $this->order->ID;
+		$orderEmailRecord->OrderStepID = $this->order->StatusID;
 		if(Email::$send_all_emails_to) {
-			$obj->To = Email::$send_all_emails_to." - (Email::send_all_emails_to setting)";
+			$orderEmailRecord->To = Email::$send_all_emails_to." - (Email::send_all_emails_to setting)";
 		}
-		$obj->write();
-		return $obj;
+		$orderEmailRecord->write();
+		return $orderEmailRecord;
 	}
 
 	/**

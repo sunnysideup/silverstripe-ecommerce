@@ -3,7 +3,7 @@
 class EcommerceMoney extends Extension {
 
 	static function get_default_symbol($currency) {
-		$money = new Money();
+		$money = Money::create();
 		return $money->getSymbol($currency);
 	}
 

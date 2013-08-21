@@ -287,7 +287,7 @@ class EcommerceDBConfig extends DataObject {
 		//new section
 		$fieldLabels = $this->fieldLabels();
 		$productImage = new Product_Image();
-		$versionInfo = new EcommerceConfigDefinitions();
+		$versionInfo = EcommerceConfigDefinitions::create();
 		$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
 		$fields->addFieldsToTab("Root",array(
 			new Tab('Pricing',
@@ -472,7 +472,7 @@ class EcommerceDBConfig extends DataObject {
 				}
 			}
 		}
-		$obj = new Product_Image();
+		$obj = Product_Image::create();
 		$obj->Link = $this->DefaultImageLink();
 		$obj->URL = $this->DefaultImageLink();
 		return $obj;
@@ -510,7 +510,7 @@ class EcommerceDBConfig extends DataObject {
 	public function requireDefaultRecords(){
 		parent::requireDefaultRecords();
 		if(!self::current_ecommerce_db_config()) {
-			$obj = new EcommerceDBConfig();
+			$obj = EcommerceDBConfig::create();
 			$obj->write();
 		}
 		DB::alteration_message("

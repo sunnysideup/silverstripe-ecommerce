@@ -240,7 +240,7 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 	 * @return FormField
 	 */
 	public function scaffoldFormField($title = null) {
-		$field = new BuyableFieldType($this->Name);
+		$field = BuyableFieldType::create($this->Name);
 		return $field;
 	}
 

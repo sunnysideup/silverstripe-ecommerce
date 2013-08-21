@@ -210,7 +210,7 @@ class CheckoutPage extends CartPage {
 		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"CurrentOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"SaveOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"DeleteOrderLinkLabel");
-		$termsPageIDField = new OptionalTreeDropdownField('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
+		$termsPageIDField = OptionalTreeDropdownField::create('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
 		$fields->addFieldToTab('Root.Process', $termsPageIDField);
 		$fields->addFieldToTab('Root.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
 		//The Content field has a slightly different meaning for the Checkout Page.
@@ -347,7 +347,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * @return OrderForm object
 	 */
 	function OrderFormAddress() {
-		$form = new OrderFormAddress($this, 'OrderFormAddress');
+		$form = OrderFormAddress::create($this, 'OrderFormAddress');
 		$this->data()->extend('updateOrderFormAddress', $form);
 		//load session data
 		if ($data = Session::get("FormInfo.{$form->FormName()}.data")) {
@@ -363,7 +363,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	 * @return OrderForm object
 	 */
 	function OrderForm() {
-		$form = new OrderForm($this, 'OrderForm');
+		$form = OrderForm::create($this, 'OrderForm');
 		$this->data()->extend('updateOrderForm', $form);
 		//load session data
 		if ($data = Session :: get("FormInfo.{$form->FormName()}.data")) {
@@ -749,7 +749,7 @@ class CheckoutPage_StepDescription extends DataObject{
 					//do nothing
 				}
 				else {
-					$obj = new CheckoutPage_StepDescription();
+					$obj = CheckoutPage_StepDescription::create();
 					$obj->ID = $newID;
 					$obj->Heading = $this->getDefaultTitle($code);
 					$obj->write();

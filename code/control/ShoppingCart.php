@@ -60,7 +60,7 @@ class ShoppingCart extends Object{
 	 */
 	public static function singleton(){
 		if(!self::$singletoncart){
-			self::$singletoncart = new ShoppingCart();
+			self::$singletoncart = new ShoppingCart::create();
 		}
 		return self::$singletoncart;
 	}
@@ -165,11 +165,11 @@ class ShoppingCart extends Object{
 					//here we cleanup old orders, because they should be
 					//cleaned at the same rate that they are created...
 					if(EcommerceConfig::get("ShoppingCart", "cleanup_every_time")) {
-						$obj = new CartCleanupTask();
-						$obj->runSilently();
+						$cartCleanupTask = CartCleanupTask::create();
+						$cartCleanupTask->runSilently();
 					}
 					//create new order
-					$this->order = new Order();
+					$this->order = Order::create();
 					if($member) {
 						$this->order->MemberID = $member->ID;
 					}
@@ -551,7 +551,7 @@ class ShoppingCart extends Object{
 		}
 		if($oldOrder){
 			if($oldOrder->canView()) {
-				$newOrder = new Order();
+				$newOrder = Order::create();
 				//copying fields.
 				$newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
 				//important to set it this way...

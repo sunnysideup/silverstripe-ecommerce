@@ -68,7 +68,7 @@ class ShopAccountForm extends Form {
 		}
 
 
-		$requiredFields = new ShopAccountForm_Validator($member->getEcommerceRequiredFields());
+		$requiredFields = ShopAccountForm_Validator::create($member->getEcommerceRequiredFields());
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
 		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
