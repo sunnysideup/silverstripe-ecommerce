@@ -60,7 +60,7 @@ class ShoppingCart extends Object{
 	 */
 	public static function singleton(){
 		if(!self::$singletoncart){
-			self::$singletoncart = new ShoppingCart::create();
+			self::$singletoncart = ShoppingCart::create();
 		}
 		return self::$singletoncart;
 	}
