@@ -383,10 +383,10 @@ class OrderAddress extends DataObject {
 	 * @return String
 	 **/
 	protected function baseClassLinkingToOrder() {
-		if($this instanceOf BillingAddress) {
+		if(is_a($this, Object::getCustomClass("BillingAddress"))) {
 			return "BillingAddress";
 		}
-		elseif($this instanceOf ShippingAddress) {
+		elseif(is_a($this, Object::getCustomClass("ShippingAddress"))) {
 			return "ShippingAddress";
 		}
 	}
@@ -396,7 +396,7 @@ class OrderAddress extends DataObject {
 	 * @return String
 	 **/
 	protected function fieldPrefix() {
-		if($this->baseClassLinkingToOrder() == "BillingAddress") {
+		if($this->baseClassLinkingToOrder() == Object::getCustomClass("BillingAddress")) {
 			return "";
 		}
 		else {
@@ -432,13 +432,13 @@ class OrderAddress extends DataObject {
 				}
 			}
 			//copy data from  member
-			if($this instanceOf BillingAddress) {
+			if(is_a($this, Object::getCustomClass("BillingAddress"))) {
 				$this->Email = $member->Email;
 			}
 			$fieldNameArray = array("FirstName" => $fieldPrefix."FirstName", "Surname" => $fieldPrefix."Surname");
 			foreach($fieldNameArray as $memberField => $fieldName) {
 				//NOTE, we always override the Billing Address (which does not have a fieldPrefix)
-				if(!$this->$fieldName || ($this instanceOf BillingAddress)) {
+				if(!$this->$fieldName || (is_a($this, Object::getCustomClass("BillingAddress")))) {
 					$this->$fieldName = $member->$memberField;
 				}
 			}

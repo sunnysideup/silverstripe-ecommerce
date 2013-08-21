@@ -1,7 +1,7 @@
 <% if HasVariations %>
 <ul class="productActions <% if VariationIsInCart %>inCart<% else %>notInCart<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
 	<li class="variationsLink">
-		<a class="selectVariation btn action ajaxAddToCartLink" href="{$AddVariationsLink}"rel="VariationsTable{$ID}" title="<% _t("Product.UPDATECART","update cart for") %> $Title.ATT">
+		<a class="selectVariation btn action ajaxAddToCartLink" href="{$AddVariationsLink}" rel="VariationsTable{$ID}" title="<% _t("Product.UPDATECART","update cart for") %> $Title.ATT">
 			<span class="removeLink"><% _t("Product.INCART","In Cart") %></span>
 			<span class="addLink"><% _t("Product.ADDLINK","Add to cart") %></span>
 		</a>

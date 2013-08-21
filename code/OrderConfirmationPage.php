@@ -442,7 +442,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		if($this->currentOrder) {
 			$emailClassName = "Order_ReceiptEmail";
 			if(class_exists($request->param("OtherID"))) {
-				if(singleton($request->param("OtherID")) instanceOf Order_Email) {
+				if(is_a(singleton($request->param("OtherID")), Object::getCustomClass("Order_Email"))) {
 					$emailClassName = $request->param("OtherID");
 				}
 			}

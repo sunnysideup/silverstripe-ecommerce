@@ -26,7 +26,7 @@ class DeleteEcommerceProductsTask extends BuildTask{
 			if($allproducts->count()){
 				foreach($allproducts as $product){
 					DB::alteration_message("Deleting ".$product->ClassName." ID = ".$product->ID, "deleted");
-					if($product instanceOf SiteTree) {
+					if(is_a($product, Object::getCustomClass("SiteTree"))) {
 						$product->deleteFromStage('Live');
 						$product->deleteFromStage('Stage');
 					}

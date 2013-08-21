@@ -67,7 +67,7 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 
 	function setValue($value, $record = null, $markChanged = true) {
 		// @todo Allow resetting value to NULL through Money $value field
-		if ($value instanceof Money && $value->hasValue()) {
+		if (is_a($value, Object::getCustomClass("Money")) && $value->hasValue()) {
 			$this->setBuyableClassName($value->getBuyableClassName(), $markChanged);
 			$this->setBuyableID($value->getBuyableID(), $markChanged);
 			if($markChanged) $this->isChanged = true;

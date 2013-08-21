@@ -985,13 +985,13 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 			$className = $this->getRelevantLogEntryClassName();
 			if(class_exists($className)) {
 				$obj = new $className();
-				if($obj instanceOf OrderStatusLog) {
+				if(is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
 					//save versions
 					//@todo: test and implement
 					/*
 					if($this->Attributes()->exists()){
 						foreach($this->Attributes() as $attribute){
-							if($attribute instanceof OrderItem){
+							if(is_a($attribute, Object::getCustomClass("OrderItem"))){
 								$buyable = $attribute->Buyable();
 								if(isset($buyable->Version)) {
 									$attribute->Version = $buyable->Version;

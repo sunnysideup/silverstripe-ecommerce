@@ -72,7 +72,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 		//todo: check if we even need this (via ShoppingCartsRequirements.ss)
 		if($this->owner->dataRecord) {
-			if($this->owner->dataRecord instanceOf Product || $this->owner->dataRecord instanceOf ProductGroup) {
+			if(is_a($this->owner->dataRecord, Object::getCustomClass("Product")) || is_a($this->owner->dataRecord, Object::getCustomClass("ProductGroup"))) {
 				Session::set("ContinueShoppingLink", substr($_SERVER['REQUEST_URI'], strlen(Director::baseURL())));
 			}
 		}

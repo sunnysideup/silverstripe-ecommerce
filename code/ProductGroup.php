@@ -106,7 +106,7 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
-		//if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+		//if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
@@ -122,7 +122,7 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	function canView($member = null) {
-		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 			return true;
 		}
 		return parent::canView($member);
@@ -449,7 +449,7 @@ class ProductGroup extends Page {
 			$keyField = "ID",
 			$labelField = "MenuTitle"
 		);
-		$filter = create_function('$obj', 'return ( ( $obj InstanceOf ProductGroup || $obj InstanceOf Product) && ($obj->ParentID != '.$this->ID.'));');
+		$filter = create_function('$obj', 'return ( ( is_a($obj, "'.Object::getCustomClass("ProductGroup").'") || is_a($obj, "'.Object::getCustomClass("Product").'")) && ($obj->ParentID != '.$this->ID.'));');
 		$field->setFilterFunction($filter);
 		return $field;
 	}
@@ -927,7 +927,7 @@ class ProductGroup extends Page {
 	 */
 	function GroupsMenu($filter = "ShowInMenus = 1") {
 		if($parent = $this->ParentGroup()) {
-			return $parent instanceof ProductGroup ? $parent->GroupsMenu() : $this->ChildGroups($filter);
+			return is_a($parent, Object::getCustomClass("ProductGroup")) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
 		}
 		else {
 			return $this->ChildGroups($filter);

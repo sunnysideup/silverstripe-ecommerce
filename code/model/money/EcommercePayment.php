@@ -109,7 +109,7 @@ class EcommercePayment extends DataObject {
 		$payment->write();
 		// Process payment, get the result back
 		$result = $payment->processPayment($data, $form);
-		if(!($result instanceof Payment_Result)) {
+		if(!(is_a($result, Object::getCustomClass("Payment_Result")))) {
 			return false;
 		}
 		else {
@@ -214,7 +214,7 @@ class EcommercePayment extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		$order = $this->Order();
-		if($order && $order instanceof Order && $order->IsSubmitted()) {
+		if($order && is_a($order, Object::getCustomClass("Order")) && $order->IsSubmitted()) {
 			$order->tryToFinaliseOrder();
 		}
 	}
@@ -273,7 +273,7 @@ class EcommercePayment extends DataObject {
 	 * @return string
 	 */
 	function PaymentMethod() {
-		$supportedMethods = EcommerceConfig::get("EcommercePayment", "supported_methods");
+		$supportedMethods = $this->SupportedMethods();
 		if(isset($supportedMethods[$this->ClassName])) {
 			return $supportedMethods[$this->ClassName];
 		}
@@ -283,6 +283,7 @@ class EcommercePayment extends DataObject {
 	 * Return a set of payment fields from all enabled
 	 * payment methods for this site, given the .
 	 * is used to define which methods are available.
+	 * @param String $amount formatted amount (e.g. 12.30) without the currency
 	 *
 	 * @return FieldList
 	 */
@@ -290,7 +291,7 @@ class EcommercePayment extends DataObject {
 
 		// Create the initial form fields, which defines an OptionsetField
 		// allowing the user to choose which payment method to use.
-		$supportedMethods = EcommerceConfig::get("EcommercePayment", "supported_methods");
+		$supportedMethods = $this->SupportedMethods();
 		$fields = new FieldList(
 			new OptionsetField(
 				'PaymentMethod',
@@ -298,27 +299,57 @@ class EcommercePayment extends DataObject {
 				$supportedMethods
 			)
 		);
+		foreach($supportedMethods as $methodClass => $methodName) {
+			// Create a new CompositeField with method specific fields,
+			// as defined on each payment method class using getPaymentFormFields()
+			$methodFields = new CompositeField(singleton($methodClass)->getPaymentFormFields());
+			$methodFields->setID("MethodFields_$methodClass");
+			$methodFields->addExtraClass("methodFields_$methodClass");
+			$methodFields->addExtraClass('paymentfields');
+			// Add those fields to the initial FieldSet we first created
+			$fields->push($methodFields);
+		}
+		if(!$currency) {
+			$currency = self::site_currency();
+		}
 
-		// If the user defined an numerically indexed array, throw an error
+		// Add the amount and subtotal fields for the payment amount
+		$fields->push(new ReadonlyField('Amount', _t('Payment.AMOUNT', 'Amount'),$amount));
+		return $fields;
+	}
+
+	/**
+	 * returns the list of supported methods
+	 * test methods are included if the site is in DEV mode OR
+	 * the current user is a ShopAdmin.
+	 * @return Array
+	 */
+	public function SupportedMethods(){
+		$isLive = true;
+		if(Director::isDev()) {
+			$isLive = false;
+		}
+		if($member = Member::currentUser()) {
+			if($member->IsShopAdmin()) {
+				$isLive = false;
+			}
+		}
+		$supportedMethods = EcommerceConfig::get("EcommercePayment", "supported_methods");
 		if(ArrayLib::is_associative($supportedMethods)) {
-			foreach($supportedMethods as $methodClass => $methodTitle) {
-				// Create a new CompositeField with method specific fields,
-				// as defined on each payment method class using getPaymentFormFields()
-				$methodFields = new CompositeField(singleton($methodClass)->getPaymentFormFields());
-				$methodFields->setID("MethodFields_$methodClass");
-				$methodFields->addExtraClass("methodFields_$methodClass");
-				$methodFields->addExtraClass('paymentfields');
-
-				// Add those fields to the initial FieldSet we first created
-				$fields->push($methodFields);
+			if(count($supportedMethods)) {
+				foreach($supportedMethods as $methodClass => $methodTitle) {
+					if($isLive) {
+						if(is_subclass_of($methodClass, "EcommercePayment_Test")) {
+							unset($supportedMethods[$methodClass]);
+						}
+					}
+				}
 			}
 		}
 		else {
-			user_error('EcommercePayment::set_supported_methods() requires an associative array.', E_USER_ERROR);
+			user_error('EcommercePayment::$supported_methods() requires an associative array.', E_USER_ERROR);
 		}
-		// Add the amount and subtotal fields for the payment amount
-		$fields->push(new ReadonlyField('Amount', _t('Payment.AMOUNT', 'Amount'), $amount));
-		return $fields;
+		return $supportedMethods;
 	}
 
 	/**
@@ -329,7 +360,7 @@ class EcommercePayment extends DataObject {
 	static function combined_form_requirements() {
 		$requirements = array();
 		// Loop on available methods
-		$supportedMethods = EcommerceConfig::get("EcommercePayment", "supported_methods");
+		$supportedMethods = $this->SupportedMethods();
 		if($supportedMethods) {
 			foreach($supportedMethods as $method => $methodTitle) {
 				$methodRequirements = singleton($method)->getPaymentFormRequirements();
@@ -444,6 +475,18 @@ class EcommercePayment extends DataObject {
 
 }
 
+/**
+ * Payment object representing a generic test payment
+ *
+ * @package ecommerce
+ * @subpackage payment
+ */
+abstract class EcommercePayment_Test extends EcommercePayment {
+
+	function getPaymentFormRequirements() {
+		return null;
+	}
+}
 
 /**
  * Payment object representing a TEST = SUCCESS
@@ -451,7 +494,7 @@ class EcommercePayment extends DataObject {
  * @package ecommerce
  * @subpackage payment
  */
-class EcommercePayment_TestSuccess extends EcommercePayment {
+class EcommercePayment_TestSuccess extends EcommercePayment_Test {
 
 	function processPayment($data, $form) {
 		$this->Status = 'Success';
@@ -471,19 +514,20 @@ class EcommercePayment_TestSuccess extends EcommercePayment {
 	}
 }
 
+
 /**
  * Payment object representing a TEST = PENDING
  *
  * @package ecommerce
  * @subpackage payment
  */
-class EcommercePayment_TestPending extends EcommercePayment {
+class EcommercePayment_TestPending extends EcommercePayment_Test {
 
 	function processPayment($data, $form) {
 		$this->Status = 'Pending';
 		$this->Message = '<div>PAYMENT TEST: PENDING</div>';
 		$this->write();
-		return new Payment_Success();
+		return new Payment_Processing();
 	}
 
 	function getPaymentFormFields() {
@@ -492,9 +536,6 @@ class EcommercePayment_TestPending extends EcommercePayment {
 		);
 	}
 
-	function getPaymentFormRequirements() {
-		return null;
-	}
 }
 
 /**
@@ -503,13 +544,13 @@ class EcommercePayment_TestPending extends EcommercePayment {
  * @package ecommerce
  * @subpackage payment
  */
-class EcommercePayment_TestFailure extends EcommercePayment {
+class EcommercePayment_TestFailure extends EcommercePayment_Test {
 
 	function processPayment($data, $form) {
 		$this->Status = 'Failure';
 		$this->Message = '<div>PAYMENT TEST: FAILURE</div>';
 		$this->write();
-		return new Payment_Success();
+		return new Payment_Failure();
 	}
 
 	function getPaymentFormFields() {
@@ -518,9 +559,6 @@ class EcommercePayment_TestFailure extends EcommercePayment {
 		);
 	}
 
-	function getPaymentFormRequirements() {
-		return null;
-	}
 }
 
 abstract class Payment_Result {

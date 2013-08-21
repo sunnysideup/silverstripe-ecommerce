@@ -240,7 +240,7 @@ class Product extends Page implements BuyableModel {
 			$labelField = "MenuTitle"
 		);
 		if($this->ParentID) {
-			$filter = create_function('$obj', 'return ( ( $obj InstanceOf ProductGroup) && ($obj->ID != '.$this->ParentID.'));');
+			$filter = create_function('$obj', 'return ( ( is_a($obj, "'.Object::getCustomClass("ProductGroup").'")) && ($obj->ID != '.$this->ParentID.'));');
 			$field->setFilterFunction($filter);
 		}
 		return $field;
@@ -361,7 +361,7 @@ class Product extends Page implements BuyableModel {
 			$obj = SiteTree::get()->byID(intval($obj->ParentID)-0);
 			if($obj) {
 				$parentSortArray[] = sprintf("%03d", $obj->Sort);
-				if($obj instanceOf ProductGroup) {
+				if(is_a($obj, Object::getCustomClass("ProductGroup"))) {
 					$parentTitleArray[] = $obj->Title;
 				}
 			}
@@ -843,7 +843,7 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
-		//if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+		//if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 		if(!$member) {
 			$member = Member::currentUser();
 		}
@@ -1291,7 +1291,7 @@ class Product_OrderItem extends OrderItem {
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
-		if(Controller::curr() instanceOf ProductsAndGroupsModelAdmin) {
+		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 			return false;
 		}
 		return true;
@@ -1322,7 +1322,7 @@ class Product_OrderItem extends OrderItem {
 	 **/
 	function hasSameContent(OrderItem $orderItem) {
 		$parentIsTheSame = parent::hasSameContent($orderItem);
-		return $parentIsTheSame && $orderItem instanceOf $this->class;
+		return $parentIsTheSame && is_a($orderItem, $this->class);
 	}
 
 	/**
