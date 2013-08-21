@@ -83,7 +83,7 @@ class OrderModifier extends OrderAttribute {
 			'field' => 'NumericField',
 			'title' => 'Order Number'
 		),
-		"TableTitle" => "PartialMatchFilter",
+		//"TableTitle" => "PartialMatchFilter",
 		"TableValue",
 		"HasBeenRemoved"
 	);

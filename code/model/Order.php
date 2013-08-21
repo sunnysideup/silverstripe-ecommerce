@@ -577,7 +577,7 @@ class Order extends DataObject {
 		else {
 			$fields->removeByName("Main");
 			$firstStep = OrderStep::get()->First();
-			$msg = _t("Order.VERYFIRSTSTEP", "The first step in creating an order is to save (<i>add</i>) it.");
+			$msg = _t("Order.VERYFIRSTSTEP", "Start by creating an order - click on the create button ...");
 			$fields->addFieldToTab("Root.Next", new LiteralField("VeryFirstStep", "<p>".$msg."</p>"));
 			if($firstStep) {
 				$fields->addFieldToTab("Root.Next", new HiddenField("StatusID", $firstStep->ID, $firstStep->ID));
