@@ -193,7 +193,7 @@ class BuyableSelectField_DataList extends Controller {
 			$buyables[$key]["Singleton"] = $singleton;
 			$buyables[$key]["ClassName"] = $buyableClassName;
 			$buyables[$key]["TableName"] = $buyableClassName;
-			if($singleton instanceOf SiteTree) {
+			if(is_a($singleton, Object::getCustomClass("SiteTree"))) {
 				if(Versioned::current_stage() == "Live") {
 					$buyables[$key]["TableName"] .= "_Live";
 				}

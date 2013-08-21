@@ -168,7 +168,7 @@ Abstract class Order_Email extends Email {
 	 **/
 	function hasBeenSent() {
 		$orderStep = $this->order->Status();
-		if($orderStep instanceOf OrderStep)  {
+		if(is_a($orderStep,  Object::getCustomClass("OrderStep")))  {
 			return $orderStep->hasBeenSent($this->order);
 		}
 		return false;

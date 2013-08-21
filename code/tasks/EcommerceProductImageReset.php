@@ -64,7 +64,7 @@ class EcommerceProductImageReset extends BuildTask{
 						$removeCount++;
 						DB::query("UPDATE \"$tableName\" SET \"ImageID\" = 0 WHERE \"$tableName\".\"ID\" = ".$row["ID"]." AND \"$tableName\".\"ImageID\" = ".$row["ImageID"].";");
 					}
-					elseif(!($image instanceOf Product_Image)) {
+					elseif( ! is_a($image, Object::getCustomClass("Product_Image"))) {
 						$updateClassCount++;
 						$image->ClassName = "Product_Image";
 						$image-write();

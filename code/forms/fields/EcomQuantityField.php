@@ -69,7 +69,7 @@ class EcomQuantityField extends NumericField {
 				$this->orderItem = new $className($object->dataRecord,0);
 			}
 		}
-		elseif($object instanceof OrderItem && $object->BuyableID){
+		elseif(is_a($object, Object::getCustomClass("OrderItem")) && $object->BuyableID){
 			$this->orderItem = $object;
 		}
 		else{

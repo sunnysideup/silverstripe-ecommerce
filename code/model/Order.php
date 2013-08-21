@@ -780,7 +780,7 @@ class Order extends DataObject {
 							$modifier = new $className();
 							//only add the ones that should be added automatically
 							if(!$modifier->DoNotAddAutomatically()) {
-								if($modifier instanceof OrderModifier) {
+								if(is_a($modifier, "OrderModifier")) {
 									$modifier->OrderID = $this->ID;
 									$modifier->Sort = $numericKey;
 									//init method includes a WRITE
@@ -1161,6 +1161,9 @@ class Order extends DataObject {
 			user_error("Can not set the exchange rate after the order has been submitted", E_USER_NOTICE);
 		}
 		else {
+			if(is_object($currency)) {
+				$currency = EcommerceCurrency::default_currency();
+			}
 			$this->CurrencyUsedID = $currency->ID;
 			$this->ExchangeRate = $currency->ExchangeRate();
 			$this->write();
@@ -1243,7 +1246,7 @@ class Order extends DataObject {
 		}
  		if($from && $to) {
 			$email = new $emailClassName();
-			if(!($email instanceOf Email)) {
+			if(!(is_a($email, Object::getCustomClass("Email")))) {
 				user_error("No correct email class provided.", E_USER_ERROR);
 			}
 			$email->setFrom($from);
@@ -1568,7 +1571,7 @@ class Order extends DataObject {
 		$modifiers = $this->Modifiers();
 		if($modifers->count()) {
 			foreach($modifiers as $modifier) {
-				if($modifier instanceof $className) {
+				if(is_a($modifier, Object::getCustomClass($className))) {
 					return $modifier;
 				}
 			}
@@ -1979,7 +1982,7 @@ class Order extends DataObject {
 		$items = $this->Items();
 		if($items->count()) {
 			foreach($items as $item) {
-				if($item instanceOf OrderAttribute) {
+				if(is_a($item, Object::getCustomClass("OrderAttribute"))) {
 					$result += $item->Total();
 				}
 			}

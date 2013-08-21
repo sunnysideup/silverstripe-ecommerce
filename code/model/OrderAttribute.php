@@ -240,7 +240,7 @@ class OrderAttribute extends DataObject {
 		while(get_parent_class($class) != 'DataObject' && $class = get_parent_class($class)) {
 			$classes[] = strtolower($class);
 		}
-		if($this instanceOf OrderItem) {
+		if(is_a($this, Object::getCustomClass("OrderItem"))) {
 			$classes[] = strtolower($this->BuyableClassName);
 		}
 		return implode(' ', $classes);

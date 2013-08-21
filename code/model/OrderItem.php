@@ -378,7 +378,7 @@ class OrderItem extends OrderAttribute {
 	  **/
 	function hasSameContent(OrderItem $orderItem) {
 		return
-			$orderItem instanceof OrderItem &&
+			is_a($orderItem, Object::getCustomClass("OrderItem")) &&
 			$this->BuyableID == $orderItem->BuyableID &&
 			$this->BuyableClassName == $orderItem->BuyableClassName &&
 			$this->Version == $orderItem->Version;

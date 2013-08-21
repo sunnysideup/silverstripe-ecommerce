@@ -196,11 +196,11 @@ EcommerceCurrency:
 EcommerceMoney:
   default_format: NiceShortSymbol
 
-#EcommercePayment:
-  #supported_methods: []
-    #EcommercePayment_TestSuccess : Success
-    #EcommercePayment_TestPending : Pending
-    #EcommercePayment_TestFailure : Failure
+EcommercePayment:
+  supported_methods:
+    - EcommercePayment_TestSuccess : Success
+    - EcommercePayment_TestPending : Pending
+    - EcommercePayment_TestFailure : Failure
     #PayPalExpressCheckoutPayment : "Paypal Credit Card"
 
 

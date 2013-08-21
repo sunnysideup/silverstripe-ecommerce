@@ -395,7 +395,7 @@ EcommerceConfig:
 					$imageField = $field."ID";
 					if(isset($ecommerceDBConfig->$imageField)) {
 						if($image = $ecommerceDBConfig->$field()) {
-							if($image->exists() && $image instanceOf Image) {
+							if($image->exists() && is_a($image, Object::getCustomClass("Image")) ) {
 								$this->configs["EcommerceDBConfig"][$field] = "[Image]  --- <img src=\"".$image->Link()."\" />";
 								$this->databaseValues["EcommerceDBConfig"][$field] = true;
 							}

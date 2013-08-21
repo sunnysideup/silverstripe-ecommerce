@@ -2,12 +2,12 @@
 
 class EcommerceMoney extends Extension {
 
-	static function get_default_symbol($currency) {
+	public static function get_default_symbol($currency) {
 		$money = Money::create();
 		return $money->getSymbol($currency);
 	}
 
-	static function get_short_symbol($currency) {
+	public static function get_short_symbol($currency) {
 		$symbol = self::get_default_symbol($currency);
 		if($symbol) {
 			$i = 0;
@@ -18,7 +18,7 @@ class EcommerceMoney extends Extension {
 		}
 	}
 
-	static function get_long_symbol($currency) {
+	public static function get_long_symbol($currency) {
 		$symbol = self::get_default_symbol($currency);
 		if($symbol && mb_strlen($symbol) < 3) {
 			$symbol = substr($currency, 0, 3 - mb_strlen($symbol)) . $symbol;

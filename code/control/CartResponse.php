@@ -80,7 +80,7 @@ class CartResponse extends EcommerceResponse {
 					//products in cart
 					$inCartArray[] = $buyable->AJAXDefinitions()->UniqueIdentifier();
 					//HACK TO INCLUDE PRODUCT IN PRODUCT VARIATION
-					if($buyable instanceOf ProductVariation){
+					if(is_a($buyable, "ProductVariation")){
 						$inCartArray[] = $buyable->Product()->AJAXDefinitions()->UniqueIdentifier();
 					}
 				}

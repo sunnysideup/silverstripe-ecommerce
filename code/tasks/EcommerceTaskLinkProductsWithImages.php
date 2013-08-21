@@ -81,7 +81,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 								$method = $this->productManyManyField;
 								$collection = $product->$method();
 								foreach($images as $image) {
-									if($image instanceOf Image && $image->ClassName != "Product_Image") {
+									if(is_a($image, Object::getCustomClass("Image")) && $image->ClassName != Object::getCustomClass("Product_Image")) {
 										$image->ClassName = "Product_Image";
 										$image->write();
 									}

@@ -485,7 +485,7 @@ class ShoppingCart extends Object{
 		if(is_numeric($modifier)) {
 			$modifier = OrderModifier::get()->byID($modifier);
 		}
-		elseif(!($modifier InstanceOf OrderModifier)) {
+		elseif(!(is_a($modifier, Object::getCustomClass("OrderModifier")))) {
 			user_error("Bad parameter provided to ShoppingCart::addModifier", E_USER_WARNING);
 		}
 		if(!$modifier){
@@ -509,7 +509,7 @@ class ShoppingCart extends Object{
 		if(is_numeric($order)) {
 			 $this->order = Order::get()->byID($order);
 		}
-		elseif($order instanceof Order) {
+		elseif(is_a($order, Object::getCustomClass("Order"))) {
 			$this->order = $order;
 		}
 		else {
@@ -543,7 +543,7 @@ class ShoppingCart extends Object{
 		if(is_numeric($oldOrder)) {
 			 $oldOrder = Order::get()->byID(intval($oldOrder));
 		}
-		elseif($oldOrder instanceof Order) {
+		elseif(is_a($oldOrder, Object::getCustomClass("Order"))) {
 			//$oldOrder = $oldOrder;
 		}
 		else {
@@ -555,7 +555,7 @@ class ShoppingCart extends Object{
 				//copying fields.
 				$newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
 				//important to set it this way...
-				$newOrder->setCurrency($oldOrder->CurrencyUsedID);
+				$newOrder->setCurrency($oldOrder->CurrencyUsed());
 				$newOrder->MemberID = $oldOrder->MemberID;
 				//load the order
 				$newOrder->write();
