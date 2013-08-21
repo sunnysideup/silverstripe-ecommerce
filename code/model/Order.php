@@ -1156,16 +1156,16 @@ class Order extends DataObject {
 	 * IMPORTANTLY we store the exchange rate for future reference...
 	 * @param EcommerceCurrency $currency
 	 */
-	public function UpdateCurrency($currency) {
+	public function UpdateCurrency($newCurrency) {
 		if($this->IsSubmitted()) {
 			user_error("Can not set the exchange rate after the order has been submitted", E_USER_NOTICE);
 		}
 		else {
-			if(is_object($currency)) {
+			if(!is_a($newCurrency, Object::getCustomClass("EcommerceCurrency"))) {
 				$currency = EcommerceCurrency::default_currency();
 			}
-			$this->CurrencyUsedID = $currency->ID;
-			$this->ExchangeRate = $currency->ExchangeRate();
+			$this->CurrencyUsedID = $newCurrency->ID;
+			$this->ExchangeRate = $newCurrency->ExchangeRate();
 			$this->write();
 		}
 	}
