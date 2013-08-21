@@ -1,4 +1,3 @@
-___________________________________________________
 <% if HasPreviousOrNextProduct %>
 <div class="sidebarBox previousNext">
 	<h3><% _t("SideBar.BROWSEPRODUCTS","Browse Products") %></h3>

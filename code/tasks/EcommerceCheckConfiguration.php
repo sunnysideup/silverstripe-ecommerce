@@ -100,7 +100,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	function run($request){
 		$definitionsObject = new EcommerceConfigDefinitions();
 		$this->definitions = $definitionsObject->Definitions();
-		$configsObject = new EcommerceConfig();
+		$configsObject = EcommerceConfig::create();
 		$this->configs = $configsObject->getCompleteDataSet();
 		$this->defaults = $this->getDefaultValues();
 		if($this->definitions) {
@@ -136,7 +136,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 * Check what files is being used
 	 */
 	protected function checkFiles(){
-		$configsObject = new EcommerceConfig();
+		$configsObject = EcommerceConfig::create();
 		DB::alteration_message("<h2>Files Used</h2>");
 		$files = implode(", ", $configsObject->fileLocations());
 		global $project;
