@@ -568,7 +568,7 @@ class CartPage_Controller extends Page_Controller{
 	 * @return ShopAccountForm
 	 */
 	function CreateAccountForm() {
-		return new ShopAccountForm($this, "CreateAccountForm");
+		return ShopAccountForm::create($this, "CreateAccountForm");
 	}
 
 	/**

@@ -186,7 +186,7 @@ class BillingAddress extends OrderAddress {
 				$addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
 				//we want MORE than one here not just one.
 				if($addresses->count() > 1) {
-					$fields->push(new SelectOrderAddressField('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
+					$fields->push(SelectOrderAddressField::create('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
 				}
 			}
 			$billingFields = new CompositeField();

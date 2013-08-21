@@ -164,7 +164,7 @@ class OrderModifier extends OrderAttribute {
 
 		//ClassName Field
 		$availableModifiers = EcommerceConfig::get("Order", "modifiers");
-		$ecommerceClassNameOrTypeDropdownField = new EcommerceClassNameOrTypeDropdownField("ClassName", "Type", "OrderModifier", $availableModifiers);
+		$ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create("ClassName", "Type", "OrderModifier", $availableModifiers);
 		$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Name");
 		if($this->exists()) {
 			$classNameField = $fields->dataFieldByName("ClassName");
@@ -379,7 +379,7 @@ class OrderModifier extends OrderAttribute {
 			$fields = new FieldList();
 			$fields->push($this->headingField());
 			$fields->push($this->descriptionField());
-			return new OrderModifierForm($optionalController, "ModifierForm", $fields, $actions = new FieldList(), $optionalValidator);
+			return OrderModifierForm::create($optionalController, "ModifierForm", $fields, $actions = new FieldList(), $optionalValidator);
 		}
 	}
 
@@ -916,13 +916,13 @@ class OrderModifier_Descriptor extends DataObject {
 		}
 		if(count($arrayOfModifiers)) {
 			foreach($arrayOfModifiers as $className) {
-				$obj = OrderModifier_Descriptor::get()->Filter(Array("ModifierClassName" => $className))->First();
-				if(!$obj) {
+				$orderModifier_Descriptor = OrderModifier_Descriptor::get()->Filter(Array("ModifierClassName" => $className))->First();
+				if(!$orderModifier_Descriptor) {
 					$modifier = singleton($className);
-					$obj = new OrderModifier_Descriptor();
-					$obj->ModifierClassName = $className;
-					$obj->Heading = $modifier->i18n_singular_name();
-					$obj->write();
+					$orderModifier_Descriptor = OrderModifier_Descriptor::create();
+					$orderModifier_Descriptor->ModifierClassName = $className;
+					$orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
+					$orderModifier_Descriptor->write();
 					DB::alteration_message("Creating description for ".$className, "created");
 				}
 			}

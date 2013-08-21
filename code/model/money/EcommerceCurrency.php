@@ -461,7 +461,7 @@ class EcommerceCurrency extends DataObject {
 			$name = self::$currencies[$code];
 		}
 		$name = ucwords($name);
-		$currency = new EcommerceCurrency(array(
+		$currency = EcommerceCurrency::create(array(
 			'Code' => $code,
 			'Name' => $name,
 			'InUse' => true

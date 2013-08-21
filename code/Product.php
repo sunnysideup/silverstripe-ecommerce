@@ -227,7 +227,7 @@ class Product extends Page implements BuyableModel {
 	 **/
 	protected function getProductGroupsTableField() {
 
-		$task = new EcommerceTaskLinkProductWithImages();
+		$task = EcommerceTaskLinkProductWithImages::create();
 		$task->verbose = false;
 		$task->setProductID($this->ID);
 		$task->run(null);
@@ -722,7 +722,7 @@ class Product extends Page implements BuyableModel {
 	 * @return EcomQuantityField
 	 */
 	public function EcomQuantityField() {
-		return new EcomQuantityField($this);
+		return EcomQuantityField::create($this);
 	}
 
 	/**
@@ -1019,7 +1019,7 @@ class Product_Controller extends Page_Controller {
 			}
 		}
 		else {
-			return new EcomQuantityField($this);
+			return EcomQuantityField::create($this);
 		}
 	}
 

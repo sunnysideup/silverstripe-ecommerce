@@ -178,7 +178,7 @@ class OrderFormAddress extends Form {
 		$nextButton = new FormAction('saveAddress', _t('OrderForm.NEXT','Next'));
 		$nextButton->addExtraClass("next");
 		$actions = new FieldList($nextButton);
-		$validator = new OrderFormAddress_Validator($requiredFields);
+		$validator = OrderFormAddress_Validator::create($requiredFields);
 		foreach($requiredFields as $requiredField) {
 			$field = $fields->dataFieldByName($requiredField);
 			if($field) {

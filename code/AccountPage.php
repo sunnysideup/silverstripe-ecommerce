@@ -215,7 +215,7 @@ class AccountPage_Controller extends Page_Controller {
 	 * @return ShopAccountForm
 	 */
 	function MemberForm() {
-		return new ShopAccountForm($this, 'MemberForm');
+		return ShopAccountForm::create($this, 'MemberForm');
 	}
 
 	/**

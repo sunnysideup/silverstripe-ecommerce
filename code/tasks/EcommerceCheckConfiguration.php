@@ -98,7 +98,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	 * Standard (required) SS method, runs buildtask
 	 */
 	function run($request){
-		$definitionsObject = new EcommerceConfigDefinitions();
+		$definitionsObject = EcommerceConfigDefinitions::create();
 		$this->definitions = $definitionsObject->Definitions();
 		$configsObject = EcommerceConfig::create();
 		$this->configs = $configsObject->getCompleteDataSet();
@@ -565,7 +565,7 @@ EcommerceConfig:
 	}
 
 	private function getAjaxDefinitions(){
-		$definitionsObject = new EcommerceConfigDefinitions();
+		$definitionsObject = EcommerceConfigDefinitions::create();
 		$methodArray = $definitionsObject->getAjaxMethods();
 		$requestor = new ArrayData(
 			array(

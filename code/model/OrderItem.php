@@ -175,7 +175,7 @@ class OrderItem extends OrderAttribute {
 		$fields->removeByName("OrderAttribute_GroupID");
 		if($order = $this->Order()) {
 			if(!$order->IsSubmitted()) {
-				$fields->addFieldToTab("Root.Main", new BuyableSelectField("FindBuyable", _t("OrderItem.SELECITEM", "Select Item"), $this->Buyable()));
+				$fields->addFieldToTab("Root.Main", BuyableSelectField::create("FindBuyable", _t("OrderItem.SELECITEM", "Select Item"), $this->Buyable()));
 			}
 			else {
 				$fields->addFieldToTab(
@@ -478,7 +478,7 @@ class OrderItem extends OrderAttribute {
 	 * @return Field (EcomQuantityField)
 	  **/
 	function QuantityField(){
-		return new EcomQuantityField($this);
+		return EcomQuantityField::create($this);
 	}
 
 	/**

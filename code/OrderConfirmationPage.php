@@ -395,7 +395,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	function CancelForm() {
 		if($this->Order()) {
 			if($this->currentOrder->canCancel()) {
-				return new OrderForm_Cancel($this, 'CancelForm', $this->currentOrder);
+				return OrderForm_Cancel::create($this, 'CancelForm', $this->currentOrder);
 			}
 		}
 		//once cancelled, you will be redirected to main page - hence we need this...
@@ -413,7 +413,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		if($this->Order()){
 			if($this->currentOrder->canPay()) {
 				Requirements::javascript("ecommerce/javascript/EcomPayment.js");
-				return new OrderForm_Payment($this, 'PaymentForm', $this->currentOrder);
+				return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder);
 			}
 		}
 	}
