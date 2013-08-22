@@ -24,5 +24,8 @@
 	},
 	"support":{
 		"issues" : "http://code.google.com/p/silverstripe-ecommerce/issues/list"
+	},
+	"extra": {
+		"installer-name": "ecommerce"
 	}
 }

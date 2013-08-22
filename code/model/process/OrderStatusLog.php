@@ -614,7 +614,15 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 	**/
 	function CustomerNote() {return $this->getCustomerNote();}
 	function getCustomerNote() {
-		return $this->renderWith("LogDispatchPhysicalOrderCustomerNote");
+		$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
+		if(!$isThemeEnabled) {
+			Config::inst()->update('SSViewer', 'theme_enabled', true);
+		}
+		$html = $this->renderWith("LogDispatchPhysicalOrderCustomerNote");
+		if(!$isThemeEnabled) {
+			Config::inst()->update('SSViewer', 'theme_enabled', false);
+		}
+		return $html;
 	}
 
 

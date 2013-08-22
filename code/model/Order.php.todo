@@ -2758,7 +2758,8 @@ class Order_Unsubmitted extends DataObject {
 	 * @var String
 	 */
 	private static $description = "A collection of items that together make up the 'Order'.  An order can be placed.";
-		public static function reset_modifiers() {self::$modifiers = array();}
+
+	public static function reset_modifiers() {self::$modifiers = array();}
 
 	/**
 	 * Tells us if an order needs to be recalculated

@@ -258,14 +258,30 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("Order_Invoice", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			return $this->renderWith("Invoice");
+			$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
+			if(!$isThemeEnabled) {
+				Config::inst()->update('SSViewer', 'theme_enabled', true);
+			}
+			$html = $this->renderWith("Invoice");
+			if(!$isThemeEnabled) {
+				Config::inst()->update('SSViewer', 'theme_enabled', false);
+			}
+			return $html;
 		}
 		elseif(isset($_REQUEST["packingslip"])) {
 			Requirements::clear();
 			Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("Order_PackingSlip", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			return $this->renderWith("PackingSlip");
+			$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
+			if(!$isThemeEnabled) {
+				Config::inst()->update('SSViewer', 'theme_enabled', true);
+			}
+			$html = $this->renderWith("PackingSlip");
+			if(!$isThemeEnabled) {
+				Config::inst()->update('SSViewer', 'theme_enabled', false);
+			}
+			return $html;
 		}
 		return array();
 	}
@@ -328,7 +344,14 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		Requirements::themedCSS("Order_Invoice", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		$html =  $this->renderWith("Order_ReceiptEmail");
+		$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
+		if(!$isThemeEnabled) {
+			Config::inst()->update('SSViewer', 'theme_enabled', true);
+		}
+		$html = $this->renderWith("Order_ReceiptEmail");
+		if(!$isThemeEnabled) {
+			Config::inst()->update('SSViewer', 'theme_enabled', false);
+		}
 		// if it's an html email, filter it through emogrifier
 		$cssFileLocation = $baseFolder . "/". EcommerceConfig::get("Order_Email", "css_file_location");;
 		$html .= "\r\n\r\n<!-- CSS can be found here: $cssFileLocation -->";
