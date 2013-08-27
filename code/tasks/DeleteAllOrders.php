@@ -37,9 +37,6 @@ class DeleteAllOrders extends BuildTask {
 		"OrderEmailRecord" =>"OrderEmailRecord",
 		"EcommercePayment" => "EcommercePayment"
 	);
-		static function set_linked_objects_array($a) {self::$linked_objects_array = $a;}
-		static function get_linked_objects_array() {return self::$linked_objects_array;}
-		static function add_linked_object($s) {self::$linked_objects_array[] = $s;}
 
 	/**
 	 *
@@ -52,9 +49,7 @@ class DeleteAllOrders extends BuildTask {
 		"OrderModifier",
 		"Payment"
 	);
-		static function set_double_check_objects($a) {self::$double_check_objects = $a;}
-		static function get_double_check_objects() {return self::$double_check_objects;}
-		static function add_double_check_objects($s) {self::$double_check_objects[] = $s;}
+
 /*******************************************************
 	 * DELETE OLD SHOPPING CARTS
 *******************************************************/

@@ -119,7 +119,7 @@ class EcommerceRole extends DataExtension {
 		//$orderField = $fields->dataFieldByName("Orders");
 		$preferredCurrencyField = $fields->dataFieldByName("PreferredCurrencyID");
 		$notesFields = $fields->dataFieldByName("Notes");
-		$link = Shoppingcart_Controller::get_url_segment()."/loginas/".$this->owner->ID."/";
+		$link = Config::inst()->get("ShoppingCart_Controller", "get_url_segment")."/loginas/".$this->owner->ID."/";
 		$loginAsField = new LiteralField("LoginAsThisCustomer", "<a href=\"$link\" target=\"_blank\">Login as this customer</a>");
 		$fields->addFieldsToTab(
 			"Root.Orders",

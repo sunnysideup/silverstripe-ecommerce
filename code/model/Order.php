@@ -176,8 +176,6 @@ class Order extends DataObject {
 	 * @var Boolean
 	 */
 	private static $needs_recalculating = false;
-		public static function set_needs_recalculating(){ self::$needs_recalculating = true;}
-		public static function get_needs_recalculating(){ return self::$needs_recalculating;}
 
 	/**
 	 * Total Items : total items in cart
@@ -193,11 +191,6 @@ class Order extends DataObject {
 	 * @var Double
 	 */
 	protected $totalItemsTimesQuantity = null;
-
-
-	public static function get_modifier_forms($controller) {
-		user_error("this method has been changed to getModifierForms, the current function has been depreciated", E_USER_ERROR);
-	}
 
 	/**
 	 * Returns a set of modifier forms for use in the checkout order form,
@@ -319,7 +312,6 @@ class Order extends DataObject {
 		"Title" => "Title",
 		"Status.Title" => "Next Step"
 	);
-		public static function get_summary_fields() {return self::$summary_fields;}
 
 	/**
 	 * STANDARD SILVERSTRIPE STUFF
@@ -2783,11 +2775,6 @@ class Order_Unsubmitted extends DataObject {
 	 */
 	protected $totalItemsTimesQuantity = null;
 
-
-	public static function get_modifier_forms($controller) {
-		user_error("this method has been changed to getModifierForms, the current function has been depreciated", E_USER_ERROR);
-	}
-
 	/**
 	 * Returns a set of modifier forms for use in the checkout order form,
 	 * Controller is optional, because the orderForm has its own default controller.
@@ -2908,7 +2895,6 @@ class Order_Unsubmitted extends DataObject {
 		"Title" => "Title",
 		"Status.Title" => "Next Step"
 	);
-		public static function get_summary_fields() {return self::$summary_fields;}
 
 	/**
 	 * STANDARD SILVERSTRIPE STUFF

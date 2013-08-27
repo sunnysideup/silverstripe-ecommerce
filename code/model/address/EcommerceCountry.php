@@ -385,7 +385,6 @@ class EcommerceCountry extends DataObject {
 				self::$for_current_order_only_show_countries = $a;
 			}
 		}
-		static function get_for_current_order_only_show_countries() {return self::$for_current_order_only_show_countries;}
 
 	/**
 	 * List of countries that should NOT be shown
@@ -397,7 +396,6 @@ class EcommerceCountry extends DataObject {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);
 		}
-		static function get_for_current_order_do_not_show_countries() {return self::$for_current_order_do_not_show_countries;}
 
 	/**
 	 *
