@@ -67,11 +67,17 @@ class EcommerceCountryAndRegionTasks_DisallowAllCountries extends BuildTask{
 	function run($request){
 		$count = 0;
 		$array = EcommerceCountry::get_country_dropdown();
-		$allowedArray = DataObject::get("EcommerceCountry", "\"DoNotAllowSales\" = 0");
-		foreach($allowedArray as $obj) {
-			$obj->DoNotAllowSales = 1;
-			$obj->write();
-			DB::alteration_message("Disallowing sales to ".$obj->Name);
+		$allowedArray = EcommerceCountry::get()
+			->filter(array("DoNotAllowSales", 0));
+		if($allowedArray->count()) {
+			foreach($allowedArray as $obj) {
+				$obj->DoNotAllowSales = 1;
+				$obj->write();
+				DB::alteration_message("Disallowing sales to ".$obj->Name);
+			}
+		}
+		else {
+			DB::alteration_message("Could not find any countries that are allowed", "created");
 		}
 	}
 

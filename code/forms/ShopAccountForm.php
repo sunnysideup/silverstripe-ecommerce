@@ -200,7 +200,18 @@ class ShopAccountForm_Validator extends RequiredFields{
 				else {
 					$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
 					//can't be taken
-					if(DataObject::get_one('Member',"\"$uniqueFieldName\" = '$uniqueFieldValue' AND \"Member\".\"ID\" <> ".$loggedInMemberID)){
+					$memberExistsCheck = Member::get()
+						->filter(
+							array(
+								$uniqueFieldName => $uniqueFieldValue,
+								"ID" => $loggedInMemberID
+							)
+						)->exclude(
+							array(
+								"ID" => $loggedInMemberID
+							)
+						)->count();
+					if($memberExistsCheck){
 						$message = sprintf(
 							_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
 							$uniqueFieldValue,
