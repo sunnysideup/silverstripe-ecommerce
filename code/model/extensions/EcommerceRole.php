@@ -406,6 +406,15 @@ class EcommerceRole extends DataExtension {
 		}
 	}
 
+	/**
+	 *
+	 *
+	 */
+	function requireDefaultRecords(){
+		$task = CreateEcommerceMemberGroups::create();
+		$task->run(null);
+	}
+
 
 }
 

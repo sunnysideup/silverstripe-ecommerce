@@ -363,7 +363,7 @@ class OrderAttribute extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		//crucial!
-		Order::set_needs_recalculating();
+		Config::inst()->update("Order", "needs_recalculating", true);
 	}
 
 	/**

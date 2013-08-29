@@ -268,7 +268,7 @@ class CartPage_Controller extends Page_Controller{
 	  *@var $message String
 	 * @todo: check if we need this....!
 	 **/
-	protected $message = "";
+	private $message = "";
 	public static function set_message($s) {
 		$sessionCode = EcommerceConfig::get("CartPage_Controller", "session_code");
 		Session::set($sessionCode, $s);

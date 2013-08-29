@@ -8,42 +8,41 @@
 #
 # Classes are listed here in alphabetical
 # order.
-#
-#
-#
-#
 ##############################################
-Object:
-  strong_classes:
-    - BillingAddress: BillingAddress
-    - BuyableFieldType: BuyableFieldType
-    - CartCleanupTask: CartCleanupTask
-    - EcommerceClassNameOrTypeDropdownField: EcommerceClassNameOrTypeDropdownField
-    - EcommerceConfig: EcommerceConfig
-    - EcommerceConfigDefinitions: EcommerceConfigDefinitions
-    - EcommerceCountry: EcommerceCountry
-    - EcommerceCurrency: EcommerceCurrency
-    - EcommerceDatabaseAdmin: EcommerceDatabaseAdmin
-    - EcommerceDBConfig: EcommerceDBConfig
-    - EcommerceTaskLinkProductWithImages: EcommerceTaskLinkProductWithImages
-    - EcomQuantityField: EcomQuantityField
-    - Money: Money
-    - Order: Order
-    - OrderEmailRecord: OrderEmailRecord
-    - OrderForm: OrderForm
-    - OrderForm_Cancel: OrderForm_Cancel
-    - OrderForm_Payment: OrderForm_Payment
-    - OrderForm_Validator: OrderForm_Validator
-    - OrderFormAddress: OrderFormAddress
-    - OrderFormAddress_Validator: OrderFormAddress_Validator
-    - OrderModifier_Descriptor: OrderModifier_Descriptor
-    - OrderModifierForm: OrderModifierForm
-    - OrderStatusLog_Cancel: OrderStatusLog_Cancel
-    - OrderStepField: OrderStepField
-    - OrderStep_Created: OrderStep_Created
-    - Product_Image: Product_Image
-    - SelectOrderAddressField: SelectOrderAddressField
-    - ShopAccountForm: ShopAccountForm_Validator
-    - ShopAccountForm_Validator: ShopAccountForm_Validator
-    - ShippingAddress: ShippingAddress
-    - ShoppingCart: ShoppingCart
+#Object:
+#  strong_classes:
+#    - BillingAddress: BillingAddress
+#    - BuyableFieldType: BuyableFieldType
+#    - CartCleanupTask: CartCleanupTask
+#    - Currency: Currency
+#    - EcommerceClassNameOrTypeDropdownField: EcommerceClassNameOrTypeDropdownField
+#    - EcommerceConfig: EcommerceConfig
+#    - EcommerceConfigDefinitions: EcommerceConfigDefinitions
+#    - EcommerceCountry: EcommerceCountry
+#    - EcommerceCurrency: EcommerceCurrency
+#    - EcommerceDatabaseAdmin: EcommerceDatabaseAdmin
+#    - EcommerceDBConfig: EcommerceDBConfig
+#    - EcommerceTaskLinkProductWithImages: EcommerceTaskLinkProductWithImages
+#    - EcomQuantityField: EcomQuantityField
+#    - Money: Money
+#    - Order: Order
+#    - OrderEmailRecord: OrderEmailRecord
+#    - OrderForm: OrderForm
+#    - OrderForm_Cancel: OrderForm_Cancel
+#    - OrderForm_Payment: OrderForm_Payment
+#    - OrderForm_Validator: OrderForm_Validator
+#    - OrderFormAddress: OrderFormAddress
+#    - OrderFormAddress_Validator: OrderFormAddress_Validator
+#    - OrderModifier_Descriptor: OrderModifier_Descriptor
+#    - OrderModifierForm: OrderModifierForm
+#    - OrderStatusLog_Cancel: OrderStatusLog_Cancel
+#    - OrderStepField: OrderStepField
+#    - OrderStep_Created: OrderStep_Created
+#    - Product_Image: Product_Image
+#    - SelectOrderAddressField: SelectOrderAddressField
+#    - ShopAccountForm: ShopAccountForm_Validator
+#    - ShopAccountForm_Validator: ShopAccountForm_Validator
+#    - ShippingAddress: ShippingAddress
+#    - ShoppingCart: ShoppingCart
+#    - SS_Datetime: I18nDatetime
+

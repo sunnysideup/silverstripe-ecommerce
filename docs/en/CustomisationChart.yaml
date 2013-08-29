@@ -28,7 +28,7 @@ Can it be fixed with CSS / JS
 
 Can it be fixed by adjusting the HTML?
 	Theme appropriate template file (.ss) and change as needed.
-		(1) Check the source to see what HTML files are used (add SSViewer::set_source_file_comments(true); to your _config.php file.
+		(1) Check the source to see what HTML files are used (add Config::inst()->update("SSViewer", "source_file_comments", true); to your _config.php file.
 		(2) "Theme" the most appropriate HTML template (.ss) file - use 'unthemed" file as starting point and check the relevant Controllers for available "Controls". Only theme what is needed.
 		For more information on theme-ing, visit: http://doc.silverstripe.org/framework/en/topics/theme-development.
 
@@ -80,7 +80,7 @@ Do you want to customise the emails that are sent to customers after placing an 
 Do you want a different payment method?
 	Create your own payment class.
 		Strictly speaking, the Payment module is outside of the scope of e-commerce, but it is a requirement of course.
-		There are plenty of Payment Class examples out there... Create your own class and add a reference to it in your Payment::set_supported_methods(...); call /mysite/_config.php.
+		There are plenty of Payment Class examples out there... Create your own class and add a reference to it in your Payment:set_supported_methods:[]; call /mysite/_config/config.yml.
 
 Can you extend a class to achieve your result?
 	Use the standard MyClass extends CoreClass and override any methods and variables you want changed.

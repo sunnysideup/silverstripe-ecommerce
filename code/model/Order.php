@@ -1470,7 +1470,7 @@ class Order extends DataObject {
 			//submitted orders are NEVER recalculated.
 			//they are set in stone.
 		}
-		elseif(Order::get_needs_recalculating() || $recalculate) {
+		elseif(Config::inst()->get("Order", "needs_recalculating") || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
 				$this->calculateOrderItems($recalculate);
 				$this->calculateModifiers($recalculate);
@@ -2633,7 +2633,7 @@ class Order extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		//crucial!
-		self::set_needs_recalculating();
+		Config::inst()->update("Order", "needs_recalculating", true);
 		if($this->IsSubmitted($recalculate = true)) {
 			//do nothing
 		}
@@ -4053,7 +4053,7 @@ class Order_Unsubmitted extends DataObject {
 			//submitted orders are NEVER recalculated.
 			//they are set in stone.
 		}
-		elseif(Order::get_needs_recalculating() || $recalculate) {
+		elseif(Config::inst()->get("Order", "needs_recalculating") || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
 				$this->calculateOrderItems($recalculate);
 				$this->calculateModifiers($recalculate);
@@ -5216,7 +5216,7 @@ class Order_Unsubmitted extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		//crucial!
-		self::set_needs_recalculating();
+		Config::inst()->update("Order", "needs_recalculating", true);
 		if($this->StatusID) {
 			$this->calculateOrderAttributes($recalculate = false);
 			if(EcommerceRole::current_member_is_shop_admin()){
