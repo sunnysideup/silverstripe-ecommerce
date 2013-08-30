@@ -375,8 +375,8 @@ class EcommerceCountry extends DataObject {
 	 * @param Array $a: should be country codes e.g. array("NZ", "NP", "AU");
 	 * @var Array
 	 */
-	private static $for_current_order_only_show_countries = array();
-		static function set_for_current_order_only_show_countries(Array $a) {
+	protected static $for_current_order_only_show_countries = array();
+		public static function set_for_current_order_only_show_countries(Array $a) {
 			if(count(self::$for_current_order_only_show_countries)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
 				self::$for_current_order_only_show_countries = array_intersect($a, self::$for_current_order_only_show_countries);
@@ -391,8 +391,8 @@ class EcommerceCountry extends DataObject {
 	 * @param Array $a: should be country codes e.g. array("NZ", "NP", "AU");
 	 * @var Array
 	 */
-	private static $for_current_order_do_not_show_countries = array();
-		static function set_for_current_order_do_not_show_countries(Array $a) {
+	protected static $for_current_order_do_not_show_countries = array();
+		public static function set_for_current_order_do_not_show_countries(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);
 		}
@@ -410,8 +410,8 @@ class EcommerceCountry extends DataObject {
 	public static function list_of_allowed_entries_for_dropdown() {
 		if(!self::$list_of_allowed_entries_for_dropdown_array){
 			$defaultArray = self::get_default_array();
-			$onlyShow = self::get_for_current_order_only_show_countries();
-			$doNotShow = self::get_for_current_order_do_not_show_countries();
+			$onlyShow = self::$for_current_order_only_show_countries;
+			$doNotShow = self::$for_current_order_do_not_show_countries;
 			if(is_array($onlyShow) && count($onlyShow)) {
 				foreach($defaultArray as $key => $value) {
 					if(!in_array($key, $onlyShow)) {

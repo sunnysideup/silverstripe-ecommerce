@@ -192,8 +192,8 @@ class EcommerceRegion extends DataObject {
 	 **/
 	public static function list_of_allowed_entries_for_dropdown() {
 		$defaultArray = self::get_default_array();
-		$onlyShow = self::get_for_current_order_only_show_regions();
-		$doNotShow = self::get_for_current_order_do_not_show();
+		$onlyShow = self::$for_current_order_only_show_regions;
+		$doNotShow = self::$for_current_order_do_not_show_regions;
 		if(is_array($onlyShow) && count($onlyShow)) {
 			foreach($defaultArray as $id => $value) {
 				if(!in_array($id, $onlyShow)) {
@@ -218,7 +218,7 @@ class EcommerceRegion extends DataObject {
 	 * NOTE: these methods / variables below are IMPORTANT, because they allow the dropdown for the region to be limited for just that order
 	 * @var Array of regions codes, e.g. ("NSW", "WA", "VIC");
 	**/
-	private static $for_current_order_only_show_regions = array();
+	protected static $for_current_order_only_show_regions = array();
 		static function set_for_current_order_only_show_regions(Array $a) {
 			if(count(self::$for_current_order_only_show_regions)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
