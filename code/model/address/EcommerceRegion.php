@@ -219,6 +219,7 @@ class EcommerceRegion extends DataObject {
 	 * @var Array of regions codes, e.g. ("NSW", "WA", "VIC");
 	**/
 	protected static $for_current_order_only_show_regions = array();
+		static function get_for_current_order_only_show_regions(){return self::$for_current_order_only_show_regions;}
 		static function set_for_current_order_only_show_regions(Array $a) {
 			if(count(self::$for_current_order_only_show_regions)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
@@ -234,7 +235,11 @@ class EcommerceRegion extends DataObject {
 	 * @var Array
 	 */
 	private static $for_current_order_do_not_show_regions = array();
-
+		public static function get_for_current_order_do_not_show_regions(}{return self::$for_current_order_do_not_show_regions;}
+		public static function set_for_current_order_do_not_show_regions(Array $a) {
+			//We MERGE here because several modifiers may limit the countries
+			self::$for_current_order_do_not_show_regions = array_merge($a, self::$for_current_order_do_not_show_regions);
+		}
 
 	/**
 	 * This function works out the most likely region for the current order

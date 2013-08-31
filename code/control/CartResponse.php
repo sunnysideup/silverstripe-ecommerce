@@ -176,6 +176,14 @@ class CartResponse extends EcommerceResponse {
 			$js = array_merge($js, $additionalData);
 		}
 		//TODO: remove doubles?
+		//turn HTMLText (et al.) objects into text
+		foreach($js as $key => $node) {
+			if(isset($node["v"])) {
+				if($node["v"] instanceOF DBField) {
+					$js[$key]["v"] = $node["v"]->forTemplate();
+				}
+			}
+		}
 		$json = json_encode($js);
 		$json = str_replace('\t', " ", $json);
 		$json = str_replace('\r', " ", $json);

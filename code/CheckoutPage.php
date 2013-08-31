@@ -291,6 +291,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		parent::init();
 		Requirements::themedCSS('CheckoutPage', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
+		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
 				EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
@@ -298,7 +299,7 @@ class CheckoutPage_Controller extends CartPage_Controller {
 			"TermsAndConditionsMessage"
 		);
 		Requirements::customScript('
-			jQuery(".orderattribute a").attr("target", "_blank");',
+			jQuery(".orderattribute a").attr("data-popup", "true");',
 			"OpenProductLinksInNewTab"
 		);
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");

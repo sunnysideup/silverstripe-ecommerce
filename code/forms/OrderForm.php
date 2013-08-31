@@ -152,12 +152,25 @@ class OrderForm extends Form {
 
 		//saving into order
 		$form->saveInto($order);
+		$order->write();
 		//saving into member, in case we add additional fields for the member
 		//e.g. newslettersignup
 		if($member = Member::currentUser()) {
 			$form->saveInto($member);
+			$password = ShopAccountForm_Validator::clean_password($data);
+			if($password) {
+				$member->changePassword($password);
+			}
+			if($member->validate()) {
+				$member->write();
+			}
+			else {
+				$form->sessionMessage(_t('OrderForm.ACCOUNTERROR','There was an error saving your account details.'), 'warning');
+				$this->controller->redirectBack();
+				return false;
+			}
 		}
-		$order->write();
+
 
 		//----------------- CLEAR OLD DATA ------------------------------
 		$this->clearSessionData(); //clears the stored session form data that might have been needed if validation failed

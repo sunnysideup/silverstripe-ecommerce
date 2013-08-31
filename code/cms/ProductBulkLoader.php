@@ -102,7 +102,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 			if(!$object->ParentID){
 				 //set parent page
 				 //cached option
-				$productGroupClassName = self::get_product_group_class_name();
+				$productGroupClassName = $this->config()->get("product_group_class_name");
 				if(is_numeric(self::$parent_page_id) &&  $productGroupClassName::get()->byID(self::$parent_page_id)) {
 					$object->ParentID = self::$parent_page_id;
 				}
@@ -147,7 +147,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 		$image = Image::get()->where("LOWER(\"Filename\") LIKE '%$filename%'");
 		if($filename && $image){ //ignore case
 			if($image->exists()){
-				$image->ClassName = self::get_product_class_name().'_Image'; //must be this type of image
+				$image->ClassName = $this->config()->get("product_class_name").'_Image'; //must be this type of image
 				$image->write();
 				return $image;
 			}

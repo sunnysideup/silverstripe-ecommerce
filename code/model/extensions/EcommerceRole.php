@@ -153,6 +153,7 @@ class EcommerceRole extends DataExtension {
 	 * @return CompositeField
 	 **/
 	public function getEcommerceFieldsForCMS() {
+		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		$fields = new CompositeField();
 		$memberTitle = new ReadonlyField("MemberTitle", _t("Member.TITLE", "Name"), "<p>"._t("Member.TITLE", "Name").": ".$this->owner->getTitle()."</p>");
 		$memberTitle->dontEscape = true;
@@ -170,11 +171,12 @@ class EcommerceRole extends DataExtension {
 			"
 			<h3>"._t("Member.EDIT_CUSTOMER", "Edit Customer")."</h3>
 			<ul>
-				<li><a href=\"/admin/security/EditForm/field/Members/item/".$this->owner->ID."/edit\" target=\"_blank\">"._t("Member.EDIT", "Edit")." <i>".$this->owner->getTitle()."</i></a></li>
-				<li><a href=\"/admin/security/show/".$group->ID."/\" target=\"_blank\">"._t("Member.EDIT_ALL_CUSTOMERS", "Edit All Customers")."</a></li>
+				<li><a href=\"/admin/security/EditForm/field/Members/item/".$this->owner->ID."/edit\"  data-popup=\"true\">"._t("Member.EDIT", "Edit")." <i>".$this->owner->getTitle()."</i></a></li>
+				<li><a href=\"/admin/security/show/".$group->ID."/\"  data-popup=\"true\">"._t("Member.EDIT_ALL_CUSTOMERS", "Edit All Customers")."</a></li>
 			</ul>
 			"
 		);
+
 		$fields->push($linkField);
 		return $fields;
 	}

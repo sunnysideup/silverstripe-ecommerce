@@ -176,7 +176,8 @@ class Order extends DataObject {
 	 * @var Boolean
 	 */
 	private static $needs_recalculating = false;
-
+		public static function set_needs_recalculating($b = true){ self::$needs_recalculating = $b;}
+		public static function get_needs_recalculating(){ return self::$needs_recalculating;}
 	/**
 	 * Total Items : total items in cart
 	 * We start with -1 to easily identify if it has been run before.
@@ -417,6 +418,7 @@ class Order extends DataObject {
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
+		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		if($this->exists()) {
 			$submitted = $this->IsSubmitted() ? true : false;
 			if($submitted) {
@@ -519,7 +521,7 @@ class Order extends DataObject {
 				$message = _t(
 					"Order.NOSUBMITTEDYET",
 					"No details are shown here as this order has not been submitted yet. You can {link} to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .",
-					array("link" => '<a href="'.$this->RetrieveLink().'" target="_blank">'.$linkText.'</a>')
+					array("link" => '<a href="'.$this->RetrieveLink().'" data-popup="true">'.$linkText.'</a>')
 				);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
 				$fields->addFieldToTab('Root.Items',$this->getOrderItemsField());
@@ -1470,7 +1472,7 @@ class Order extends DataObject {
 			//submitted orders are NEVER recalculated.
 			//they are set in stone.
 		}
-		elseif(Config::inst()->get("Order", "needs_recalculating") || $recalculate) {
+		elseif(Order::get_needs_recalculating() || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
 				$this->calculateOrderItems($recalculate);
 				$this->calculateModifiers($recalculate);
@@ -2633,7 +2635,7 @@ class Order extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		//crucial!
-		Config::inst()->update("Order", "needs_recalculating", true);
+		Order::set_needs_recalculating(true);
 		if($this->IsSubmitted($recalculate = true)) {
 			//do nothing
 		}
@@ -2757,7 +2759,7 @@ class Order_Unsubmitted extends DataObject {
 	 * @var Boolean
 	 */
 	private static $needs_recalculating = false;
-		public static function set_needs_recalculating(){ self::$needs_recalculating = true;}
+		public static function set_needs_recalculating($b = true){ self::$needs_recalculating = $b;}
 		public static function get_needs_recalculating(){ return self::$needs_recalculating;}
 
 	/**
@@ -3000,6 +3002,7 @@ class Order_Unsubmitted extends DataObject {
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
+		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		if($this->exists()) {
 			$submitted = $this->IsSubmitted() ? true : false;
 			if($submitted) {
@@ -3102,7 +3105,7 @@ class Order_Unsubmitted extends DataObject {
 				$message = _t(
 					"Order.NOSUBMITTEDYET",
 					"No details are shown here as this order has not been submitted yet. You can {link} to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .",
-					array("link" => '<a href="'.$this->RetrieveLink().'" target="_blank">'.$linkText.'</a>')
+					array("link" => '<a href="'.$this->RetrieveLink().'" data-popup="true">'.$linkText.'</a>')
 				);
 				$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
 				$fields->addFieldToTab('Root.Items',$this->getOrderItemsField());
@@ -4053,7 +4056,7 @@ class Order_Unsubmitted extends DataObject {
 			//submitted orders are NEVER recalculated.
 			//they are set in stone.
 		}
-		elseif(Config::inst()->get("Order", "needs_recalculating") || $recalculate) {
+		elseif(Order::get_needs_recalculating() || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
 				$this->calculateOrderItems($recalculate);
 				$this->calculateModifiers($recalculate);
@@ -5216,7 +5219,7 @@ class Order_Unsubmitted extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		//crucial!
-		Config::inst()->update("Order", "needs_recalculating", true);
+		Order::set_needs_recalculating(true);
 		if($this->StatusID) {
 			$this->calculateOrderAttributes($recalculate = false);
 			if(EcommerceRole::current_member_is_shop_admin()){

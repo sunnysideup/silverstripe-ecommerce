@@ -376,6 +376,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Array
 	 */
 	protected static $for_current_order_only_show_countries = array();
+		public static function get_for_current_order_only_show_countries(){return self::$for_current_order_only_show_countries;}
 		public static function set_for_current_order_only_show_countries(Array $a) {
 			if(count(self::$for_current_order_only_show_countries)) {
 				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
@@ -392,6 +393,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Array
 	 */
 	protected static $for_current_order_do_not_show_countries = array();
+		public static function get_for_current_order_do_not_show_countries(){return self::$for_current_order_do_not_show_countries;}
 		public static function set_for_current_order_do_not_show_countries(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);

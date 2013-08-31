@@ -58,8 +58,8 @@ class ShopAccountForm extends Form {
 					$fields->push($memberField);
 				}
 			}
-			$passwordField = new PasswordField('Password', _t('Account.PASSWORD','Password'));
-			$passwordFieldCheck = new PasswordField('PasswordCheck', _t('Account.PASSWORDCHECK','Password (repeat)'));
+			$passwordField = new PasswordField('PasswordCheck1', _t('Account.PASSWORD','Password'));
+			$passwordFieldCheck = new PasswordField('PasswordCheck2', _t('Account.PASSWORDCHECK','Password (repeat)'));
 			$fields->push($passwordField);
 			$fields->push($passwordFieldCheck);
 			$actions = new FieldList(
@@ -105,14 +105,23 @@ class ShopAccountForm extends Form {
 		$order =  ShoppingCart::current_order();
 		if($order && $order->exists()) {
 			$form->saveInto($member);
-			$member->write();
-			if($member->exists()) {
-				if(!$order->MemberID) {
-					$order->MemberID = $member->ID;
-					$order->write();
+			$password = ShopAccountForm_Validator::clean_password($data);
+			if($password) {
+				$member->changePassword($password);
+			}
+			if($member->validate()){
+				$member->write();
+				if($member->exists()) {
+					if(!$order->MemberID) {
+						$order->MemberID = $member->ID;
+						$order->write();
+					}
+					$member->login();
+					$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "good");
 				}
-				$member->login();
-				$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "good");
+				else {
+					$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
+				}
 			}
 			else {
 				$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
@@ -228,29 +237,29 @@ class ShopAccountForm_Validator extends RequiredFields{
 			}
 		}
 		// check password fields are the same before saving
-		if(isset($data["Password"]) && isset($data["PasswordDoubleCheck"])) {
-			if($data["Password"] != $data["PasswordDoubleCheck"]) {
+		if(isset($data["PasswordCheck1"]) && isset($data["PasswordCheck2"])) {
+			if($data["PasswordCheck1"] != $data["PasswordCheck2"]) {
 				$this->validationError(
-					"PasswordDoubleCheck",
+					"PasswordCheck1",
 					_t('Account.PASSWORDSERROR', 'Passwords do not match.'),
 					"required"
 				);
 				$valid = false;
 			}
-			//if you are not logged in, you hvae not provided a password and the settings require you to be logged in then
+			//if you are not logged in, you have not provided a password and the settings require you to be logged in then
 			//we have a problem
-			if( !$loggedInMember && !$data["Password"] && EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase") ) {
+			if( !$loggedInMember && !$data["PasswordCheck1"] && EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase") ) {
 				$this->validationError(
-					"Password",
+					"PasswordCheck1",
 					_t('Account.SELECTPASSWORD', 'Please select a password.'),
 					"required"
 				);
 				$valid = false;
 			}
-			$letterCount = strlen($data["Password"]);
+			$letterCount = strlen($data["PasswordCheck1"]);
 			if($letterCount > 0 && $letterCount < 7) {
 				$this->validationError(
-					"Password",
+					"PasswordCheck1",
 					_t('Account.PASSWORDMINIMUMLENGTH', 'Please enter a password of at least seven characters.'),
 					"required"
 				);
@@ -283,5 +292,21 @@ class ShopAccountForm_Validator extends RequiredFields{
 		}
 		return $valid;
 	}
+
+
+	/**
+	 * returns a valid, mysql safe password OR an empty string
+	 * @param data (from form)
+	 * @return String
+	 */
+	public static function clean_password($data) {
+		if(isset($data['PasswordCheck1']) && isset($data['PasswordCheck2'])) {
+			if($data['PasswordCheck1'] == $data['PasswordCheck2']) {
+				return Convert::raw2sql($data['PasswordCheck1']);
+			}
+		}
+		return '';
+	}
+
 
 }

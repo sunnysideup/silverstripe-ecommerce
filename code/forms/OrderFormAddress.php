@@ -552,16 +552,7 @@ class OrderFormAddress extends Form {
 	 * @return String
 	 */
 	protected function validPasswordHasBeenEntered($data){
-		if(isset($data['Password']) && isset($data['PasswordDoubleCheck'])) {
-			if(isset($data['Password']) && isset($data['PasswordDoubleCheck'])) {
-				if($data['Password'] == $data['PasswordDoubleCheck']) {
-					if(strlen($data["Password"]) >= 7) {
-						return Convert::raw2sql($data["Password"]);
-					}
-				}
-			}
-		}
-		return "";
+		return ShopAccountForm_Validator::clean_password($data);
 	}
 
 }

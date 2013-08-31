@@ -206,11 +206,11 @@ class CartPage extends Page{
 		$order = ShoppingCart::current_order();
 		if($order) {
 			$count = $order->TotalItems();
-			$oldSSViewer = SSViewer::get_source_file_comments();
-			SSViewer::set_source_file_comments(false);
+			$oldSSViewer = Config::inst()->get("SSViewer", "source_file_comments");
+			Config::inst()->update("SSViewer", "source_file_comments", false);
 			$this->customise(array("Count"=> $count, "OriginalMenuTitle" => $this->MenuTitle) );
 			$s = $this->renderWith("AjaxNumItemsInCart");
-			SSViewer::set_source_file_comments($oldSSViewer);
+			Config::inst()->update("SSViewer", "source_file_comments", $oldSSViewer);
 			return $s;
 		}
 		return $this->OriginalMenuTitle();

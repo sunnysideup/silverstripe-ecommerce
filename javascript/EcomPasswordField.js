@@ -19,7 +19,7 @@ var EcomPasswordField = {
 
 	chars : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
 
-	passwordFieldInputSelectors: "#Password, #PasswordDoubleCheck",
+	passwordFieldInputSelectors: "#PasswordCheck1, #PasswordCheck2",
 
 	choosePasswordLinkSelector: ".choosePassword, .updatePasswordLink",
 
