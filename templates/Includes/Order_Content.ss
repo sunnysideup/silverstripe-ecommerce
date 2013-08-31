@@ -23,7 +23,7 @@
 		<tr  class="itemRow $EvenOdd $FirstLast orderItem $ClassName orderattribute">
 			<td class="product title">
 				<% if Link %>
-					<a href="$Link" target="_blank">$TableTitle</a>
+					<a href="$Link" data-popup="true">$TableTitle</a>
 				<% else %>
 					<span class="tableTitle">$TableTitle</span>
 				<% end_if %>
