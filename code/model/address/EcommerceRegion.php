@@ -235,7 +235,7 @@ class EcommerceRegion extends DataObject {
 	 * @var Array
 	 */
 	private static $for_current_order_do_not_show_regions = array();
-		public static function get_for_current_order_do_not_show_regions(}{return self::$for_current_order_do_not_show_regions;}
+		public static function get_for_current_order_do_not_show_regions(){return self::$for_current_order_do_not_show_regions;}
 		public static function set_for_current_order_do_not_show_regions(Array $a) {
 			//We MERGE here because several modifiers may limit the countries
 			self::$for_current_order_do_not_show_regions = array_merge($a, self::$for_current_order_do_not_show_regions);
