@@ -762,7 +762,6 @@ class Order extends DataObject {
 
 				}
 				$modifiersToAdd = EcommerceConfig::get("Order", "modifiers");
-				print_r($modifiersToAdd);
 				if(is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
 					foreach($modifiersToAdd as $numericKey => $className) {
 						if(!in_array($className, $createdModifiersClassNames)) {
