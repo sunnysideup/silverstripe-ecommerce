@@ -1,5 +1,6 @@
 <div class="productActionsHolder">
 <% if HasVariations %>
+		<% include ProductGroupItemPrice %>
 		<% include ProductActionsInner %>
 <% else %>
 	<% if canPurchase %>
