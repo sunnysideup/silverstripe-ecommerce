@@ -52,6 +52,20 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 	}
 
 
+
+	/**
+	 * @return array Map of class name to an array of 'title' (see {@link $managed_models})
+	 */
+	function getManagedModels() {
+		$models = parent::getManagedModels();
+		$ecommerceDBConfig = isset($models["EcommerceDBConfig"]) ? $models["EcommerceDBConfig"] : null;
+		if($ecommerceDBConfig) {
+			unset($models["EcommerceDBConfig"]);
+			return array("EcommerceDBConfig" => $ecommerceDBConfig) + $models;
+		}
+		return $models;
+	}
+
 }
 
 
