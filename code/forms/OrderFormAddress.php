@@ -274,11 +274,6 @@ class OrderFormAddress extends Form {
 			return false;
 		}
 
-		//PASSWORD HACK ... TO DO: test that you can actually update a password as the method below
-		//does NOT change the FORM only DATA, but we save to the new details using $form->saveInto($member)
-		//and NOT $data->saveInto($member)
-		$password = $this->validPasswordHasBeenEntered($data);
-
 		//----------- START BY SAVING INTO ORDER
 		$form->saveInto($this->order);
 		//----------- --------------------------------
@@ -289,6 +284,7 @@ class OrderFormAddress extends Form {
 		if($this->orderMember && is_object($this->orderMember)) {
 			if($this->memberShouldBeSaved($data)) {
 				$form->saveInto($this->orderMember);
+				$password = $this->validPasswordHasBeenEntered($data);
 				if($password) {
 					$this->orderMember->changePassword($password);
 				}
@@ -552,7 +548,7 @@ class OrderFormAddress extends Form {
 	 * @return String
 	 */
 	protected function validPasswordHasBeenEntered($data){
-		return ShopAccountForm_Validator::clean_password($data);
+		return ShopAccountForm_PasswordValidator::clean_password($data);
 	}
 
 }

@@ -198,8 +198,8 @@ class EcommerceRole extends DataExtension {
 		Requirements::javascript('ecommerce/javascript/EcomPasswordField.js');
 		if($this->owner->exists()) {
 			if($this->owner->Password) {
-				$passwordField = new PasswordField('Password', _t('Account.NEW_PASSWORD','New Password'));
-				$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
+				$passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD','New Password'));
+				$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
 				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\" class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
 			}
 			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3);
@@ -236,8 +236,8 @@ class EcommerceRole extends DataExtension {
 		}
 
 		if(empty($passwordField)) {
-			$passwordField = new PasswordField('Password', _t('Account.CREATE_PASSWORD','Create Account (enter password)'));
-			$passwordDoubleCheckField = new PasswordField('PasswordDoubleCheck', _t('Account.CONFIRM_PASSWORD','Confirm Password'));
+			$passwordField = new PasswordField('PasswordCheck1', _t('Account.CREATE_PASSWORD','Create Account (enter password)'));
+			$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_PASSWORD','Confirm Password'));
 		}
 		if(empty($updatePasswordLinkField)) {
 			$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "");

@@ -36,5 +36,5 @@
 		</tbody>
 	</table>
 <% else %>
-	<p class="message good noPreviousOrders"><% _t("Account.NOHISTORY","You do not have any previous orders.") %></p>
+	<% if AccountMember %><p class="message good noPreviousOrders"><% _t("Account.NOHISTORY","You do not have any previous orders.") %></p><% end_if %>
 <% end_if %>

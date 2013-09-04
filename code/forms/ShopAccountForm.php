@@ -41,7 +41,9 @@ class ShopAccountForm extends Form {
 			}
 		}
 		else {
-			$member = new Member();
+			if(!$member) {
+				$member = new Member();
+			}
 			$fields = new FieldList();
 			$urlParams = $controller->getURLParams();
 			$backURLLink = "";
@@ -105,26 +107,26 @@ class ShopAccountForm extends Form {
 		$order =  ShoppingCart::current_order();
 		if($order && $order->exists()) {
 			$form->saveInto($member);
-			$password = ShopAccountForm_Validator::clean_password($data);
+			$password = ShopAccountForm_PasswordValidator::clean_password($data);
 			if($password) {
 				$member->changePassword($password);
-			}
-			if($member->validate()){
-				$member->write();
-				if($member->exists()) {
-					if(!$order->MemberID) {
-						$order->MemberID = $member->ID;
-						$order->write();
+				if($member->validate()){
+					$member->write();
+					if($member->exists()) {
+						if(!$order->MemberID) {
+							$order->MemberID = $member->ID;
+							$order->write();
+						}
+						$member->login();
+						$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "good");
 					}
-					$member->login();
-					$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "good");
+					else {
+						$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
+					}
 				}
 				else {
 					$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
 				}
-			}
-			else {
-				$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
 			}
 		}
 		else {
@@ -145,12 +147,25 @@ class ShopAccountForm extends Form {
 			$this->controller->redirectBack();
 		}
 		$form->saveInto($member);
-		$member->write();
-		if($link) {
-			$this->controller->redirect($link);
+		$password = ShopAccountForm_PasswordValidator::clean_password($data);
+		if($password) {
+			$member->changePassword($password);
+			if($member->validate()){
+				if($link) {
+					return $this->controller->redirect($link);
+				}
+				else {
+					$form->sessionMessage(_t('Account.DETAILSSAVED','Your details have been saved.'), 'good');
+					return $this->controller->redirectBack();
+				}
+			}
+			else {
+				$form->sessionMessage(_t('Account.NO_VALID_DATA','Your details can not be updated.'), 'bad');
+				$this->controller->redirectBack();
+			}
 		}
 		else {
-			$form->sessionMessage(_t('Account.DETAILSSAVED','Your details have been saved.'), 'good');
+			$form->sessionMessage(_t('Account.NO_VALID_PASSWORD','You need to enter a valid password.'), 'bad');
 			$this->controller->redirectBack();
 		}
 		return true;
@@ -160,6 +175,8 @@ class ShopAccountForm extends Form {
 
 
 class ShopAccountForm_Validator extends RequiredFields{
+
+
 
 	/**
 	 * Ensures member unique id stays unique and other basic stuff...
@@ -294,9 +311,22 @@ class ShopAccountForm_Validator extends RequiredFields{
 	}
 
 
+
+}
+
+/***
+ * extra checks to make sure the password is valid....
+ *
+ *
+ *
+ *
+ */
+
+class ShopAccountForm_PasswordValidator extends Object {
+
 	/**
 	 * returns a valid, mysql safe password OR an empty string
-	 * @param data (from form)
+	 * @param data (data from form)
 	 * @return String
 	 */
 	public static function clean_password($data) {
@@ -307,6 +337,5 @@ class ShopAccountForm_Validator extends RequiredFields{
 		}
 		return '';
 	}
-
 
 }
