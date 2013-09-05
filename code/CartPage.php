@@ -343,13 +343,16 @@ class CartPage_Controller extends Page_Controller{
 				Security::permissionFailure($this, $messages);
 				return false;
 			}
+			if(!$this->currentOrder->IsSubmitted()) {
+				//we always want to make sure the order is up-to-date.
+				$this->currentOrder->init($force = false);
+				$this->currentOrder->calculateOrderAttributes($force = true);
+				$this->currentOrder->calculateOrderAttributes($force = true);
+			}
 		}
 		else {
 			$this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
 		}
-		//we always want to make sure the order is up-to-date.
-		$this->currentOrder->calculateOrderAttributes($force = true);
-		$this->currentOrder->calculateOrderAttributes($force = true);
 	}
 
 
