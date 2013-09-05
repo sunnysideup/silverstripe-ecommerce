@@ -440,6 +440,17 @@ class ShoppingCart extends Object{
 			Session::clear($sessionVariableName);
 			Session::save();
 		}
+		$memberID = Intval(Member::currentUserID());
+		if($memberID) {
+			$orders = Order::get()->filter(array("MemberID" => $memberID));
+			if($orders && $orders->count()) {
+				foreach($orders as $order) {
+					if(! $order->IsSubmitted()) {
+						$order->delete();
+					}
+				}
+			}
+		}
 		return true;
 	}
 
