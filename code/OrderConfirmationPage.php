@@ -242,6 +242,9 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		//clear steps from checkout page otherwise in the next order
 		//you go straight to the last step.
 		Session::clear("CheckoutPageCurrentOrderID");
+		Session::clear("CheckoutPageCurrentOrderID");
+		Session::set("CheckoutPageCurrentOrderID", 0);
+		Session::save();
 	}
 
 
