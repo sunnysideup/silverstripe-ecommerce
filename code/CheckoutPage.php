@@ -316,15 +316,19 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		if($checkoutPageCurrentOrderID = Session::get("CheckoutPageCurrentOrderID")) {
 			if((!$this->currentOrder) || ($this->currentOrder->ID != $checkoutPageCurrentOrderID)) {
 				if($order = Order::get_by_id_if_can_view(intval($checkoutPageCurrentOrderID))) {
+					Session::clear("CheckoutPageCurrentOrderID");
+					Session::set("CheckoutPageCurrentOrderID", 0);
+					Session::save();
 					return $this->redirect($order->Link());
 				}
 			}
 		}
 		if($this->currentOrder) {
 			//we make sure all the OrderModifiers are up to date....
-			$this->currentOrder->init($force = false);
+
 			Session::set("CheckoutPageCurrentOrderID", $this->currentOrder->ID);
 		}
+
 	}
 
 
