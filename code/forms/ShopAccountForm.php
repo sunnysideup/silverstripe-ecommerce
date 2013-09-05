@@ -22,15 +22,19 @@ class ShopAccountForm extends Form {
 		if($member && $member->exists()) {
 			$fields = $member->getEcommerceFields(true);
 			$clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
-			$loginField = new ReadonlyField(
-				'LoggedInAsNote',
-				_t("Account.LOGGEDIN", "You are currently logged in as "),
+			$loginMessage =
 				Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname) .', '
-					.'<a href="'.$clearCartAndLogoutLink.'">'._t('Account.LOGOUT','Log out now?').
-					"</a>"
-			);
-			$loginField->dontEscape = true;
-			$fields->push($loginField);
+				.'<a href="'.$clearCartAndLogoutLink.'">'._t('Account.LOGOUT','Log out now?').
+				'</a>';
+			if($loginMessage){
+				$loginField = new ReadonlyField(
+					'LoggedInAsNote',
+					_t("Account.LOGGEDIN", "You are currently logged in as "),
+					$loginMessage
+				);
+				$loginField->dontEscape = true;
+				$fields->push($loginField);
+			}
 			$actions = new FieldList(
 				new FormAction('submit', _t('Account.SAVE','Save Changes'))
 			);
@@ -80,7 +84,10 @@ class ShopAccountForm extends Form {
 		if($member){
 			$this->loadDataFrom($member);
 		}
-		$member->afterLoadDataFrom($this->Fields());
+		$oldData = Session::get("FormInfo.{$this->FormName()}.data");
+		if($oldData && (is_array($oldData) || is_object($oldData))) {
+			$this->loadDataFrom($oldData);
+		}
 		$this->extend('updateShopAccountForm',$this);
 	}
 
@@ -118,7 +125,7 @@ class ShopAccountForm extends Form {
 							$order->write();
 						}
 						$member->login();
-						$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your order has been saved."), "good");
+						$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your details has been saved."), "good");
 					}
 					else {
 						$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
@@ -150,25 +157,37 @@ class ShopAccountForm extends Form {
 		$password = ShopAccountForm_PasswordValidator::clean_password($data);
 		if($password) {
 			$member->changePassword($password);
-			if($member->validate()){
-				if($link) {
-					return $this->controller->redirect($link);
-				}
-				else {
-					$form->sessionMessage(_t('Account.DETAILSSAVED','Your details have been saved.'), 'good');
-					return $this->controller->redirectBack();
-				}
+		}
+		elseif($data["PasswordCheck1"]) {
+			$form->sessionMessage(_t('Account.NO_VALID_PASSWORD','You need to enter a valid password.'), 'bad');
+			$this->controller->redirectBack();
+		}
+		if($member->validate()){
+			if($link) {
+				return $this->controller->redirect($link);
 			}
 			else {
-				$form->sessionMessage(_t('Account.NO_VALID_DATA','Your details can not be updated.'), 'bad');
+				$form->sessionMessage(_t('Account.DETAILSSAVED','Your details have been saved.'), 'good');
 				$this->controller->redirectBack();
 			}
 		}
 		else {
-			$form->sessionMessage(_t('Account.NO_VALID_PASSWORD','You need to enter a valid password.'), 'bad');
+			$form->sessionMessage(_t('Account.NO_VALID_DATA','Your details can not be updated.'), 'bad');
 			$this->controller->redirectBack();
 		}
-		return true;
+	}
+
+
+	/**
+	 * saves the form into session
+	 * @param Array $data - data from form.
+	 */
+	function saveDataToSession(){
+		$data = $this->getData();
+		unset($data["LoggedInAsNote"]);
+		unset($data["PasswordCheck1"]);
+		unset($data["PasswordCheck2"]);
+		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
 
 }
@@ -176,14 +195,14 @@ class ShopAccountForm extends Form {
 
 class ShopAccountForm_Validator extends RequiredFields{
 
-
-
 	/**
 	 * Ensures member unique id stays unique and other basic stuff...
-	 * @param $data = array Form Field Data
+	 * @param array $data = array Form Field Data
+	 * @param Boolean $allowExistingEmail - see comment below
 	 * @return Boolean
 	 **/
 	function php($data, $allowExistingEmail = false){
+		$this->form->saveDataToSession();
 		$valid = parent::php($data);
 		$uniqueFieldName = Member::get_unique_identifier_field();
 		$loggedInMember = Member::currentUser();
@@ -206,6 +225,9 @@ class ShopAccountForm_Validator extends RequiredFields{
 					->filter(array($uniqueFieldName => $uniqueFieldValue))
 					->exclude(array("ID" => $loggedInMemberID));
 				if($otherMembersWithSameEmail->count()){
+					//we allow existing email
+					// if we are currently NOT logged in
+					// in case we place an order!
 					if($allowExistingEmail) {
 
 					}

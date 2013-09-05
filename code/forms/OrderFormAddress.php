@@ -198,7 +198,6 @@ class OrderFormAddress extends Form {
 		if ($this->orderMember) {
 			$this->loadDataFrom($this->orderMember);
 		}
-		$this->orderMember->afterLoadDataFrom($this->Fields());
 
 		if($this->order) {
 			$this->loadDataFrom($this->order);
@@ -214,6 +213,11 @@ class OrderFormAddress extends Form {
 
 
 		//allow updating via decoration
+		$oldData = Session::get("FormInfo.{$this->FormName()}.data");
+		if($oldData && (is_array($oldData) || is_object($oldData))) {
+			$this->loadDataFrom($oldData);
+		}
+
 		$this->extend('updateOrderFormAddress',$this);
 
 
@@ -260,7 +264,6 @@ class OrderFormAddress extends Form {
 	 */
 	function saveAddress(Array $data, Form $form, SS_HTTPRequest $request) {
 		$data = Convert::raw2sql($data);
-		$this->saveDataToSession($data); //save for later if necessary
 		//check for cart items
 		if(!$this->order) {
 			$form->sessionMessage(_t('OrderForm.ORDERNOTFOUND','Your order could not be found.'), 'bad');
@@ -293,6 +296,9 @@ class OrderFormAddress extends Form {
 			if($this->memberShouldBeLoggedIn($data)) {
 				$this->orderMember->LogIn();
 			}
+			//this causes ERRORS ....
+			Session::set("Ecommerce_Member_For_Order", $this->orderMember->ID);
+			//$this->order->MemberID = $this->orderMember->ID;
 		}
 
 		//BILLING ADDRESS
@@ -329,20 +335,13 @@ class OrderFormAddress extends Form {
 	 * saves the form into session
 	 * @param Array $data - data from form.
 	 */
-	function saveDataToSession(Array $data){
+	function saveDataToSession(){
+		$data = $this->getData();
+		unset($data["LoggedInAsNote"]);
+		unset($data["PasswordCheck1"]);
+		unset($data["PasswordCheck2"]);
 		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
-
-	/**
-	 * loads the form data from the session
-	 * @return Array
-	 */
-	function loadDataFromSession(){
-		if($data = Session::get("FormInfo.{$this->FormName()}.data")){
-			$this->loadDataFrom($data);
-		}
-	}
-
 
 	/**
 	 * clear the form data (after the form has been submitted and processed)
@@ -351,7 +350,6 @@ class OrderFormAddress extends Form {
 		$this->clearMessage();
 		Session::set("FormInfo.{$this->FormName()}.data", null);
 	}
-
 
 	/**
 	 * works out the most likely member for the order after submission of the form.
@@ -370,34 +368,42 @@ class OrderFormAddress extends Form {
 	protected function createOrFindMember(Array $data) {
 		$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
 
-		// 1. does the order already have a member
+		//1. does the order already have a member
 		if($this->orderMember->exists()) {
 			//do nothing
+			if(!$this->debug) {$this->debugString .= "does the order already have a member";}
 		}
 
 		// 2. shop allows creation of member
 		elseif(EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
+
+			if(!$this->debug) {$this->debug .= "2. shop allows creation of member";}
 			$this->orderMember = null;
 
 			//3. can the entered data be used?
 			//member that will be added does not exist somewhere else.
 			if($this->uniqueMemberFieldCanBeUsed($data)) {
 
+				if(!$this->debug) {$this->debug .= "3. can the entered data be used?";}
 				// 4. is there no member logged in yet?
 				//no logged in member
 				if(!$this->loggedInMember) {
 
+					if(!$this->debug) {$this->debug .= "4. is there no member logged in yet?";}
 					//5. find member from data entered (even if not logged in)
 					//another member with the same email?
+
+					if(!$this->debug) {$this->debug .= "5. find member from data entered (even if not logged in)";}
 					$this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
 
 					//6. At this stage, if we dont have a member, we will create one!
 					//in case we still dont have a member AND we should create a member for every customer, then we do this below...
 					if(!$this->orderMember) {
-
+						if(!$this->debug) {$this->debug .= "6. No other member found";}
 						// 7. We do one last check to see if we are allowed to create one
 						//are we allowed to create a member?
 						if($this->memberShouldBeCreated($data)) {
+							if(!$this->debug) {$this->debug .= "7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER";}
 							$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
 							$this->orderMember->write($forceCreation = true);
 							$this->newlyCreatedMemberID = $this->orderMember->ID;
@@ -570,6 +576,7 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator{
 	 * @return Boolean
 	 */
 	function php($data){
+		$this->form->saveDataToSession();
 		if(Member::currentUserID()) {
 			$allowExistingEmail = false;
 		}

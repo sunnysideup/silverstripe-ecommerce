@@ -47,9 +47,26 @@ class OrderModifierForm extends Form {
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
 		$this->setAttribute("autocomplete", "off");
 		Requirements::themedCSS($this->ClassName, 'ecommerce');
-		$this->addExtraClass(lcfirst(ucwords($name)));
+		$this->addExtraClass($this->myLcFirst(ucwords($name)));
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
 		//add JS for the modifier - added in modifier
+		$oldData = Session::get("FormInfo.{$this->FormName()}.data");
+		if($oldData && (is_array($oldData) || is_object($oldData))) {
+			$this->loadDataFrom($oldData);
+		}
+		$this->extend('updateOrderModifierForm',$this);
+	}
+
+	protected function myLcFirst($str){
+		if(function_exists('lcfirst') === false) {
+			function lcfirst($str) {
+				$str[0] = strtolower($str[0]);
+				return $str;
+			}
+		}
+		else {
+			return lcfirst($str);
+		}
 	}
 
 	/**
@@ -72,6 +89,16 @@ class OrderModifierForm extends Form {
 		//to do - add other checks here...
 		 return ShoppingCart::singleton()->setMessageAndReturn($message, $status);
 	}
+
+	/**
+	 * saves the form into session
+	 * @param Array $data - data from form.
+	 */
+	public function saveDataToSession(){
+		$data = $this->getData();
+		Session::set("FormInfo.{$this->FormName()}.data", $data);
+	}
+
 
 }
 
@@ -155,19 +182,12 @@ class OrderModifierForm_Controller extends Controller{
 }
 
 
+
 class OrderModifierForm_Validator extends RequiredFields{
 
-
-}
-
-
-/**
- * HACK for PHP versions that do not include the lcfirst method
- *
- */
-if(function_exists('lcfirst') === false) {
-	function lcfirst($str) {
-		$str[0] = strtolower($str[0]);
-		return $str;
+	function php($data){
+		$this->form->saveDataToSession();
+		return parent::validate($php);
 	}
+
 }

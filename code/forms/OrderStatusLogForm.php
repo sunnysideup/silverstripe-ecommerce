@@ -53,6 +53,20 @@ class OrderStatusLogForm extends Form {
 		Requirements::themedCSS($this->ClassName, 'ecommerce');
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
 		//add JS for the Log - added in Log
+		$oldData = Session::get("FormInfo.{$this->FormName()}.data");
+		if($oldData && (is_array($oldData) || is_object($oldData))) {
+			$this->loadDataFrom($oldData);
+		}
+		$this->extend('updateOrderStatusLogForm',$this);
+	}
+
+	/**
+	 * saves the form into session
+	 * @param Array $data - data from form.
+	 */
+	public function saveDataToSession(){
+		$data = $this->getData();
+		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
 
 }
@@ -137,5 +151,9 @@ class OrderStatusLogForm_Controller extends Controller{
 
 class OrderStatusLogForm_Validator extends RequiredFields{
 
+	function php($data){
+		$this->form->saveDataToSession();
+		return parent::validate($php);
+	}
 
 }

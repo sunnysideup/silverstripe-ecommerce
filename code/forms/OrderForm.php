@@ -204,24 +204,18 @@ class OrderForm extends Form {
 		//------------------------------
 	}
 
+
 	/**
 	 * saves the form into session
 	 * @param Array $data - data from form.
 	 */
-	function saveDataToSession(Array $data){
+	function saveDataToSession(){
+		$data = $this->getData();
+		unset($data["LoggedInAsNote"]);
+		unset($data["PasswordCheck1"]);
+		unset($data["PasswordCheck2"]);
 		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
-
-	/**
-	 * loads the form data from the session
-	 * @return Array
-	 */
-	function loadDataFromSession(){
-		if($data = Session::get("FormInfo.{$this->FormName()}.data")){
-			$this->loadDataFrom($data);
-		}
-	}
-
 
 	/**
 	 * clear the form data (after the form has been submitted and processed)
@@ -300,185 +294,3 @@ class OrderForm_Validator extends RequiredFields{
 
 }
 
-
-/**
- * @Description: allows customer to make additional payments for their order
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: forms
- * @inspiration: Silverstripe Ltd, Jeremy
- **/
-
-class OrderForm_Payment extends Form {
-
-	/**
-	 * @param Controller $controller
-	 * @param String $name
-	 * @param Order $order
-	 * @param String
-	 */
-	function __construct(Controller $controller, $name, Order $order, $returnToLink = '') {
-		$requiredFields = null;
-		$fields = new FieldList(
-			new HiddenField('OrderID', '', $order->ID)
-		);
-		if($returnToLink) {
-			$fields->push(new HiddenField("returntolink", "", convert::raw2att($returnToLink)));
-		}
-
-		$bottomFields = new CompositeField();
-		$bottomFields->setID('BottomOrder');
-		if($order->Total() > 0) {
-			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceWithCurrencyCode(false));
-			foreach($paymentFields as $paymentField) {
-				$bottomFields->push($paymentField);
-			}
-			if($paymentRequiredFields = EcommercePayment::combined_form_requirements()) {
-				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
-			}
-		}
-		else {
-			$bottomFields->push(new HiddenField("PaymentMethod", "", ""));
-		}
-		$fields->push($bottomFields);
-
-		$actions = new FieldList(
-			new FormAction('dopayment', _t('OrderForm.PAYORDER','Pay balance'))
-		);
-		$form = parent::__construct($controller, $name, $fields, $actions, $requiredFields);
-		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
-		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
-		if($this->extend('updateValidator', $validator) !== null) {$this->setValidator($validator);}
-		$this->setFormAction($controller->Link($name));
-		$this->extend('updateOrderFormPayment', $this);
-	}
-
-	function dopayment($data, $form) {
-		$SQLData = Convert::raw2sql($data);
-		if(isset($SQLData['OrderID'])) {
-			if($orderID = intval($SQLData['OrderID'])) {
-				$order = Order::get_by_id_if_can_view($orderID);
-				if($order && $order->canPay()) {
-					return EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
-				}
-			}
-		}
-		$form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT','Sorry, we could not process your payment.'),'bad');
-		$this->controller->redirectBack();
-		return false;
-	}
-
-}
-
-
-
-/**
- * @Description: allows customer to cancel their order.
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: forms
- * @inspiration: Silverstripe Ltd, Jeremy
- **/
-
-class OrderForm_Cancel extends Form {
-
-	function __construct(Controller $controller, $name, Order $order) {
-		$fields = new FieldList(
-			array(
-				new HeaderField('CancelOrderHeading', _t("OrderForm.CANCELORDER", "Changed your mind?"), 3),
-				new TextField('CancellationReason', _t("OrderForm.CANCELLATIONREASON", "Reason for cancellation")),
-				new HiddenField('OrderID', '', $order->ID)
-			)
-		);
-		$actions = new FieldList(
-			new FormAction('docancel', _t('OrderForm.CANCELORDER','Cancel this order'))
-		);
-		$requiredFields = array();
-		parent::__construct($controller, $name, $fields, $actions);
-		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
-		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
-		if($this->extend('updateValidator', $requiredFields) !== null) {$this->setValidator($requiredFields);}
-	}
-
-	/**
-	 * Form action handler for OrderForm_Cancel.
-	 *
-	 * Take the order that this was to be change on,
-	 * and set the status that was requested from
-	 * the form request data.
-	 *
-	 * @param array $data The form request data submitted
-	 * @param Form $form The {@link Form} this was submitted on
-	 */
-	function docancel(Array $data, Form $form, SS_HTTPRequest $request) {
-		$SQLData = Convert::raw2sql($data);
-		$member = Member::currentUser();
-		if($member) {
-			if(isset($SQLData['OrderID'])){
-				$order = Order::get()->byID(intval($SQLData['OrderID']));
-				if($order) {
-					if($order->canCancel()) {
-						$reason = "";
-						if(isset($SQLData["CancellationReason"])) {
-							$reason = $SQLData["CancellationReason"];
-						}
-						$order->Cancel($member, $reason);
-						return $this->controller->redirectBack();
-					}
-					$order->Cancel($member, $reason);
-					$this->controller->redirectBack();
-					return false;
-				}
-			}
-		}
-		$form->sessionMessage(
-			_t(
-				'OrderForm.COULDNOTCANCELORDER',
-				'Sorry, order could not be cancelled.'
-			),
-			'bad'
-		);
-		$this->controller->redirectBack();
-		return false;
-	}
-}
-
-
-/*
-
-
-	if(count($supportedPaymentGateways)) {
-			//header for payment options
-			$paymentFieldsCollection->push(new HeaderField("ChoosePayment", _t("OrderForm.CHOOSE_PAYMENT", "Choose Payment")));
-			foreach($supportedPaymentGateways as $paymentClassName) {
-				$processor = PaymentFactory::factory($paymentClassName);
-				if($processor) {
-					$paymentFields = $processor->getFormFields();
-					if($paymentFields) {
-						foreach($paymentFields as $paymentField) {
-							$paymentFieldsCollection->push($paymentField);
-						}
-					}
-					$paymentFieldsRequired = $processor->getFormRequirements();
-					if($paymentFieldsRequired) {
-						foreach($paymentFieldsRequired as $paymentFieldRequired) {
-							$paymentFieldsRequiredCollection[] = $paymentFieldRequired;
-						}
-					}
-		if($order->Total() > 0) {
-			$paymentFields = Payment::combined_form_fields($order->getTotalAsMoney()->NiceDefaultFormat(false));
-			foreach($paymentFields as $paymentField) {
-				if($paymentField->class == "HeaderField") {
-					$paymentField->setTitle(_t("OrderForm.MAKEPAYMENT", "Choose Payment"));
-				}
-			}
-		}
-
-		if($paymentFieldsCollection) {
-			$bottomFields->push($paymentFieldsCollection);
-			$requiredFields = array_merge($requiredFields, $paymentFieldsRequiredCollection);
-		}
-
-*/
