@@ -200,7 +200,7 @@ class EcommerceRole extends DataExtension {
 			if($this->owner->Password) {
 				$passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD','New Password'));
 				$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
-				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\" class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
+				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\"  datano=\"".Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD','Do not update password'))."\"  class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
 			}
 			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3);
 			$loginDetailsDescription = new LiteralField(
@@ -225,10 +225,11 @@ class EcommerceRole extends DataExtension {
 			else {
 				$loginDetailsHeader = new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3);
 				//allow people to purchase without creating a password
+				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password" datano="'.Convert::raw2att(_t('Account.DO_NOT_CREATE_ACCOUNT','Do not create account')).'" class="choosePassword">choose a password</a>');
 				$loginDetailsDescription = new LiteralField(
 					'AccountInfo',
 					'<p>'.
-					_t('OrderForm.ACCOUNTINFO','Please <a href="#Password" class="choosePassword">choose a password</a>; this will allow you to check your order history in the future.')
+					_t('OrderForm.ACCOUNTINFO','Please ; this will allow you to check your order history in the future.')
 					.'</p>'
 				);
 				//close by default
@@ -240,7 +241,7 @@ class EcommerceRole extends DataExtension {
 			$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_PASSWORD','Confirm Password'));
 		}
 		if(empty($updatePasswordLinkField)) {
-			$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "");
+			$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '');
 		}
 		$fields = new FieldList(
 			new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
@@ -281,23 +282,11 @@ class EcommerceRole extends DataExtension {
 			$passwordFieldIsRequired = false;
 		}
 		if($passwordFieldIsRequired) {
-			$fields[] = "Password";
-			$fields[] = "PasswordDoubleCheck";
+			$fields[] = "PasswordCheck1";
+			$fields[] = "PasswordCheck2";
 		}
 		$this->owner->extend('augmentEcommerceRequiredFields', $fields);
 		return $fields;
-	}
-
-	/**
-	 *
-	 * can be run $form->loadDataFrom($member);
-	 * @param Fieldlist
-	 * @return FieldList
-	 */
-	function afterLoadDataFrom(FieldList $fieldList) {
-		if($passwordField = $fieldList->dataFieldByName("Password")) {
-			$passwordField->setValue("");
-		}
 	}
 
 	/**
