@@ -1658,8 +1658,16 @@ class Order extends DataObject {
 			}
 			else{
 				//order belongs to someone, but current user is NOT logged in...
+				//this is allowed!
+				//the reason it is allowed is because we want to be able to
+				//add order to non-existing member
 				if($this->MemberID) {
-					return false;
+					if($this->SessionID && $this->SessionID == session_id()) {
+						return true;
+					}
+					else {
+						return false;
+					}
 				}
 				//no-one is logged in and order does not belong to anyone
 				else {
@@ -1879,9 +1887,9 @@ class Order extends DataObject {
 	function RetrieveLink(){return $this->getRetrieveLink();}
 	function getRetrieveLink() {
 		if($this->IsSubmitted()) {
+			//add session if not added yet...
 			if(!$this->SessionID) {
-				$this->SessionID = session_id();
-				$this->write();
+				user_error("There is not session ID for this Order: ".$this->ID);
 			}
 			return Director::AbsoluteURL(OrderConfirmationPage::find_link())."retrieveorder/".$this->SessionID."/".$this->ID."/";
 		}
