@@ -361,6 +361,17 @@ class EcommerceCountry extends DataObject {
 		}
 	}
 
+	/**
+	 *
+	 * standard SS method
+	 * cleans up codes
+	 */
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		$filter = EcommerceCodeFilter::create();
+		$filter->checkCode($this);
+	}
+
 	//DYNAMIC LIMITATIONS
 
 	/**

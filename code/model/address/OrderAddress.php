@@ -219,12 +219,14 @@ class OrderAddress extends DataObject {
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
 			$count = count($regionsForDropdown);
 			if($count< 1) {
-					$regionField = new HiddenField($name, '', 0);
+				$regionField = new HiddenField($name, '', 0);
 			}
 			else {
-				$regionField = new DropdownField($name,EcommerceRegion::i18n_singular_name(), $regionsForDropdown);
+				$title = singleton("EcommerceRegion")->i18n_singular_name();
+				$regionField = new DropdownField($name, $title, $regionsForDropdown);
 				if($count < 2) {
-					$regionField = $regionField->performReadonlyTransformation();
+					//readonly shows as number (ID), rather than title
+					//$regionField = $regionField->performReadonlyTransformation();
 				}
 				else {
 					$regionField->setEmptyString(_t("OrderAdress.PLEASE_SELECT_REGION", "--- Select Region ---"));

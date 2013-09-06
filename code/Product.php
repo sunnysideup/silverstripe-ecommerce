@@ -305,6 +305,8 @@ class Product extends Page implements BuyableModel {
 	 */
 	function onBeforeWrite(){
 		parent::onBeforeWrite();
+		$filter = EcommerceCodeFilter::create();
+		$filter->checkCode($this, "InternalItemID");
 		$this->prepareFullFields();
 		//we are adding all the fields to the keyword fields here for searching purposes.
 		//because the MetaKeywords Field is being searched.

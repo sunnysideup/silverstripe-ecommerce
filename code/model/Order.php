@@ -1889,7 +1889,7 @@ class Order extends DataObject {
 		if($this->IsSubmitted()) {
 			//add session if not added yet...
 			if(!$this->SessionID) {
-				user_error("There is not session ID for this Order: ".$this->ID);
+				user_error("There is not session ID for this Order: ".$this->ID, E_USER_NOTICE);
 			}
 			return Director::AbsoluteURL(OrderConfirmationPage::find_link())."retrieveorder/".$this->SessionID."/".$this->ID."/";
 		}
@@ -2296,6 +2296,9 @@ class Order extends DataObject {
 				return EcommerceRegion::get()->byID($regionIDs["Billing"]);
 			}
 		}
+		else {
+			return EcommerceRegion::get()->byID(EcommerceRegion::get_region_from_ip());
+		}
 	}
 
 	/**
@@ -2630,9 +2633,7 @@ class Order extends DataObject {
 	 **/
 	function populateDefaults() {
 		parent::populateDefaults();
-		if(!$this->SessionID) {
-			$this->SessionID = session_id();
-		}
+		$this->SessionID = session_id();
 	}
 
 	function onBeforeWrite() {

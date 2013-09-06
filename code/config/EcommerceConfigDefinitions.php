@@ -182,6 +182,9 @@ class EcommerceConfigDefinitions extends Object {
 				"visitor_country_provider" => "The class that is being used to provide the country of the customer. Usually this is GEOIP, but you can also setup your own one. This class just needs one public method: getCountry.",
 				"default_country_code" => "The default country code (e.g. NZ or CA or UK). "
 			),
+			"EcommerceRegion" => array(
+				"visitor_region_provider" => "The class that is being used to provide the region of the customer. It is sort of like a GEOIP for regions."
+			),
 			"Order_Email" => array(
 				"send_all_emails_plain" => "Should all the emails be send as plain text?  Not recommended.",
 				"css_file_location" => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",

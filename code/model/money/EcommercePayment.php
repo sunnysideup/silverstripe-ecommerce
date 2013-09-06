@@ -346,7 +346,7 @@ class EcommercePayment extends DataObject {
 			}
 		}
 		else {
-			user_error('EcommercePayment::$supported_methods() requires an associative array.'.print_r($supportedMethods, 1), E_USER_ERROR);
+			user_error('EcommercePayment::$supported_methods() requires an associative array. Right now the supported payments methods are: '.print_r($supportedMethods, 1), E_USER_NOTICE);
 		}
 		return $supportedMethods;
 	}

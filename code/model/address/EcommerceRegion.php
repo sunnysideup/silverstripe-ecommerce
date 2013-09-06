@@ -33,7 +33,8 @@ class EcommerceRegion extends DataObject {
 	static $db = array(
 		"Code" => "Varchar(20)",
 		"Name" => "Varchar(200)",
-		"DoNotAllowSales" => "Boolean"
+		"DoNotAllowSales" => "Boolean",
+		"IsDefault" => "Boolean"
 	);
 
 	/**
@@ -49,7 +50,8 @@ class EcommerceRegion extends DataObject {
 	 * @var String
 	 */
 	static $indexes = array(
-		"Code" => true
+		"Code" => true,
+		"DoNotAllowSales" => true
 	);
 
 	/**
@@ -178,7 +180,7 @@ class EcommerceRegion extends DataObject {
 		}
 		if($regions && $regions->count()) {
 			foreach($regions as $region) {
-				$defaultArray[$region->ID] = $region->getName();
+				$defaultArray[$region->ID] = $region->Name;
 			}
 		}
 		return $defaultArray;
@@ -254,7 +256,15 @@ class EcommerceRegion extends DataObject {
 		}
 		//3. check GEOIP information
 		if(!$regionID) {
-			$regionArray = self::list_of_allowed_entries_for_dropdown();
+			$regions = EcommerceRegion::get()->filter(array("IsDefault" => 1));
+			if($regions) {
+				$regionArray = self::list_of_allowed_entries_for_dropdown();
+				foreach($regions as $region) {
+					if(in_array($region->ID, $regionArray)) {
+						return $region->ID;
+					}
+				}
+			}
 			if(is_array($regionArray) && count($regionArray)) {
 				foreach($regionArray as $regionID => $regionName) {
 					break;
@@ -264,6 +274,21 @@ class EcommerceRegion extends DataObject {
 		return $regionID;
 	}
 
+
+	/**
+	 * returns the country based on the Visitor Country Provider.
+	 * this is some sort of IP recogniser system (e.g. Geoip Class)
+	 * @return Int
+	 **/
+	public static function get_region_from_ip(){
+		$visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_region_provider');
+		if(!$visitorCountryProviderClassName) {
+			$visitorCountryProviderClassName = "EcommerceRegion_VisitorRegionProvider";
+		}
+		$visitorCountryProvider = new $visitorCountryProviderClassName();
+		return $visitorCountryProvider->getRegion();
+	}
+
 	/**
 	 * @alias for get_region_id
 	 */
@@ -271,5 +296,31 @@ class EcommerceRegion extends DataObject {
 		return self::get_region_id();
 	}
 
+	/**
+	 *
+	 * standard SS method
+	 * cleans up codes
+	 */
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		$filter = EcommerceCodeFilter::create();
+		$filter->checkCode($this);
+	}
+
 }
 
+
+class EcommerceRegion_VisitorRegionProvider extends Object {
+
+	/**
+	 *
+	 * @return Int - region ID
+	 */
+	function getRegion(){
+		$region = EcommerceRegion::get()->First();
+		if($region) {
+			return $region->ID;
+		}
+	}
+
+}

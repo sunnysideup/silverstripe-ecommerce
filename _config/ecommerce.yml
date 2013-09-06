@@ -132,6 +132,9 @@ EcommerceCountry:
   visitor_country_provider: "EcommerceCountry_VisitorCountryProvider"
   default_country_code: "NZ"
 
+EcommerceRegion:
+  visitor_region_provider: "EcommerceRegion_VisitorRegionProvider"
+
 OrderAddress:
   use_separate_shipping_address: false
   use_shipping_address_for_main_region_and_country: false
@@ -195,13 +198,6 @@ EcommerceCurrency:
 
 EcommerceMoney:
   default_format: NiceShortSymbol
-
-EcommercePayment:
-  supported_methods:
-    EcommercePayment_TestSuccess : Success
-    EcommercePayment_TestPending : Pending
-    EcommercePayment_TestFailure : Failure
-    #PayPalExpressCheckoutPayment : "Paypal Credit Card"
 
 
 ################### CONTROL #####################
