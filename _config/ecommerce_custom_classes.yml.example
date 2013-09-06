@@ -8,6 +8,16 @@
 #
 # Classes are listed here in alphabetical
 # order.
+#
+#
+#
+# NICE THEORY
+# it does not wor in practice,
+# use:
+#
+# Object::useCustomClass('OriginalClass',   'MyClass', true);
+# and put in _config.php file.
+#
 ##############################################
 #Object:
 #  strong_classes:
