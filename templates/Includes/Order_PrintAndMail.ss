@@ -28,4 +28,3 @@
 </ul>
 </div>
 <% end_if %>
-<% require javascript("ecommerce/javascript/EcomPrintAndMail.js") %>

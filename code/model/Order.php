@@ -423,7 +423,6 @@ class Order extends DataObject {
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
-		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		if($this->exists()) {
 			$submitted = $this->IsSubmitted() ? true : false;
 			if($submitted) {

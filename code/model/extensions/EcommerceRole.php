@@ -153,7 +153,6 @@ class EcommerceRole extends DataExtension {
 	 * @return CompositeField
 	 **/
 	public function getEcommerceFieldsForCMS() {
-		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		$fields = new CompositeField();
 		$memberTitle = new ReadonlyField("MemberTitle", _t("Member.TITLE", "Name"), "<p>"._t("Member.TITLE", "Name").": ".$this->owner->getTitle()."</p>");
 		$memberTitle->dontEscape = true;

@@ -281,7 +281,7 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
+
 		foreach($this->fieldLabels() as $name => $label) {
 			$fields->removeByName($name);
 		}
@@ -360,6 +360,7 @@ class EcommerceDBConfig extends DataObject {
 		$fields->dataFieldByName("CurrenciesExplanation")->setRows(2);
 		$fields->dataFieldByName("NotForSaleMessage")->setRows(2);
 		$fields->dataFieldByName("ShopPhysicalAddress")->setRows(2);
+		Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
 		return $fields;
 	}
 

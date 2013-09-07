@@ -874,9 +874,6 @@ class OrderModifier_Descriptor extends DataObject {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("ModifierClassName", new ReadonlyField("RealName", "Name"));
 		$fields->replaceField("LinkID", new TreeDropdownField("LinkID", "More info link (optional)", "SiteTree"));
-		if($this->LinkID) {
-			$fields->addFieldToTab("Root", new CheckboxField("NoLinkForOrderModifier_Descriptor", "Remove Link"), "LinkID");
-		}
 		$fields->replaceField("Description", new TextareaField("Description", "Description"));
 		return $fields;
 	}
