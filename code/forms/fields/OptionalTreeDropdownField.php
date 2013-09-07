@@ -15,6 +15,10 @@
 
 class OptionalTreeDropdownField extends TreeDropdownField {
 
+	private static $allowed_actions = array(
+		'tree'
+	);
+
 	/**
 	 * Define once rather than defining same line twice.
 	 */
@@ -24,7 +28,7 @@ class OptionalTreeDropdownField extends TreeDropdownField {
 	 * Helper function to return the header (rather than defining same line twice).
 	 */
 	function preTree() {
-			return '<ul class="tree"><li id="" class="l"><a>' . _t('OptionalTreeDropdownField.NONE', "(None)") . '</a>';
+		return '<ul class="tree"><li id="" class="l"><a>' . _t('OptionalTreeDropdownField.NONE', "(None)") . '</a>';
 	}
 
 	public function getField($field) {
