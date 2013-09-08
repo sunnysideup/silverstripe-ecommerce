@@ -19,14 +19,14 @@ class SelectOrderAddressField extends OptionsetField {
 	 * Creates a new optionset field.
 	 * @param String $name The field name
 	 * @param String $title The field title
-	 * @param DataList $addresses
+	 * @param ArrayList $addresses
 	 * @param String $value The current value
 	 * @param Form $form - The parent form
 	 */
 	function __construct($name, $title = "", $addresses = null, $value = "", Form $form = null) {
 		$this->addresses = $addresses;
 		$source = array();
-		if($this->addresses && $this->addresses instanceOf DataList) {
+		if($this->addresses && $this->addresses instanceOf ArrayList) {
 			$source = $this->addresses->map("ID", "FullString")->toArray();
 		}
 		parent::__construct($name, $title, $source, $value, $form);
