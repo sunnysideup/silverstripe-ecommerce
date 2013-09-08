@@ -14,9 +14,8 @@
 		}
 	],
 	"require":{
-		"php": ">=5.3.2",
-		"silverstripe/framework": "~3.0",
-		"silverstripe/cms": "~3.0",
+		"silverstripe/framework": "3.1.x-dev",
+		"silverstripe/cms": "3.1.x-dev",
 		"silverstripe/geoip": "*"
 	},
 	"suggest": {
