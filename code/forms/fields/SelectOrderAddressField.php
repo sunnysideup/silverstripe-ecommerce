@@ -27,7 +27,10 @@ class SelectOrderAddressField extends OptionsetField {
 		$this->addresses = $addresses;
 		$source = array();
 		if($this->addresses && $this->addresses instanceOf ArrayList) {
-			$source = $this->addresses->map("ID", "FullString")->toArray();
+			$source = array();
+			foreach($this->addresses as $address) {
+				$source[$address->ID] = $address->FullString();
+			}
 		}
 		parent::__construct($name, $title, $source, $value, $form);
 	}

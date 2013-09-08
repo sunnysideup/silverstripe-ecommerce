@@ -19,7 +19,7 @@
 		"silverstripe/geoip": "*"
 	},
 	"suggest": {
-		"silverstripe/restfulserver": "adds restful server functionality to your e-commerce site (ability to access the data from third-party sites)"
+		"silverstripe/restfulserver": "adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)"
 	},
 	"support":{
 		"issues" : "http://code.google.com/p/silverstripe-ecommerce/issues/list"
