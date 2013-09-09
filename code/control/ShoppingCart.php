@@ -1064,7 +1064,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String (Link)
 	 */
 	public function Link($action = null) {
-		return Controller::join_links(Director::baseURL(), $this->RelativeLink($action));
+		return Controller::join_links(Director::baseURL(), $this->Config()->get("url_segment")."/".$action."/");
 	}
 
 	/**
