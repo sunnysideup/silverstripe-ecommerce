@@ -2,7 +2,7 @@
 
 class EcommerceCodeFilter extends Object {
 
-	function checkCode($obj, $fieldName) {
+	function checkCode($obj, $fieldName = "Code") {
 
 	}
 
