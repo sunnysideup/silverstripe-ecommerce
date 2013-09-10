@@ -154,10 +154,17 @@ class ShoppingCart extends Object{
 			if(!$this->order) {
 				if($member) {
 					$firstStep = OrderStep::get()->First();
-					$previousOrderFromMember = Order::get()->where("\"MemberID\" = ".$member->ID." AND (\"StatusID\" = ".$firstStep->ID." OR \"StatusID\" = 0)")->First();
-					if($previousOrderFromMember) {
-						if($previousOrderFromMember->canView()) {
-							$this->order = $previousOrderFromMember;
+					if($firstStep) {
+						$previousOrderFromMember = Order::get()
+							->filter(array(
+								"MemberID" => $member->ID,
+								"StatusID" => array($firstStep->ID, 0)
+							))
+							->First();
+						if($previousOrderFromMember) {
+							if($previousOrderFromMember->canView()) {
+								$this->order = $previousOrderFromMember;
+							}
 						}
 					}
 				}

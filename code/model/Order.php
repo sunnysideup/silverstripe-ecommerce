@@ -2312,6 +2312,7 @@ class Order extends DataObject {
 				if(!$this->ExchangeRate) {
 					if(!$this->IsSubmitted()) {
 						$this->ExchangeRate = $currency->getExchangeRate();
+						$this->write();
 					}
 					else {
 						user_error("Order is using alternative currency without exchange rate record.", E_USER_NOTICE);

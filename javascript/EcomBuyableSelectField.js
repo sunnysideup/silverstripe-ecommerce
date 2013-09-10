@@ -15,7 +15,8 @@
 
 EcomBuyableSelectField = {
 
-
+	url_segment: "ecommercebuyabledatalist",
+	  set_url_segment: function(s) {this.url_segment = s;},
 	/**
 	 * the class that is being added when we are searching...
 	 * @var String
@@ -144,7 +145,7 @@ EcomBuyableSelectField = {
 						jQuery.ajax(
 							{
 								type: "POST",
-								url: "/ecommercebuyabledatalist/json/",
+								url: "/"+EcomBuyableSelectField.url_segment+"/json/",
 								dataType: "json",
 								data: {
 									term: request.term,

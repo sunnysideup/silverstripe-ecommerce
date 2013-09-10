@@ -984,6 +984,11 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 		if(!$order->IsSubmitted()) {
 			$className = $this->getRelevantLogEntryClassName();
 			if(class_exists($className)) {
+
+
+				//add currency if needed.
+				$order->getHasAlternativeCurrency();
+
 				$obj = new $className();
 				if(is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
 					//save versions
@@ -1020,6 +1025,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 				user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
 			}
 			$order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
+
 			//add member if needed...
 			if(!$order->MemberID) {
 				//lets see if we can find a member
@@ -1032,6 +1038,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 				}
 			}
 			$order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
+
 		}
 		return true;
 	}

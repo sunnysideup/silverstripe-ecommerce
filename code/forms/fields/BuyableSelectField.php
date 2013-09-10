@@ -164,6 +164,16 @@ class BuyableSelectField_DataList extends Controller {
 		"MetaKeywords"
 	);
 
+	private static $url_segment = "ecommercebuyabledatalist";
+
+	public function Link($action = null) {
+		$link = $this->Config()->get("url_segment")."/";
+		if($action) {
+			$link .= "$action/";
+		}
+		return $link;
+	}
+
 	/**
 	 * returns JSON in this format:
 	 * Array(

@@ -172,6 +172,10 @@ class OrderModifierForm_Controller extends Controller{
 	 */
 	function Link($action = null){
 		$action = ($action)? "/$action/" : "";
+		$urlSegment = Config::inst()->get($this->class, "url_segment");
+		if(!$urlSegment) {
+			$urlSegment = $this->class;
+		}
 		return $this->class.$action;
 	}
 
