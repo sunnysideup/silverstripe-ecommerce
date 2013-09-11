@@ -1275,7 +1275,7 @@ class Order extends DataObject {
 			$email->setOrder($this);
 			$email->setResend($resend);
 			$result = $email->send(null);
-			SSViewer::current_theme($oldTheme);
+			Config::inst()->update('SSViewer', 'theme', $oldTheme);
 			return $result;
 		}
 		return false;
