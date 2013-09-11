@@ -28,6 +28,8 @@ class EcommerceDefaultRecords extends BuildTask {
 
 	function run($request) {
 		$update = array();
+		$orderStep = singleton("OrderStep");
+		$orderStep->requireDefaultRecords();
 		// ACCOUNT PAGE
 		$accountPage = AccountPage::get()->First();
 		if(!$accountPage) {
