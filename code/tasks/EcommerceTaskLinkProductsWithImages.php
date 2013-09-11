@@ -56,8 +56,12 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	protected $productID = 0;
 
 	function run($request){
-		if(isset($_REQUEST['start']) && intval($_REQUEST['start']))
+		if(isset($_REQUEST['start']) && intval($_REQUEST['start'])) {
 			$this->start = intval($_REQUEST['start']);
+		}
+		if(isset($_REQUEST['productid']) && intval($_REQUEST['productid'])) {
+			$this->productID = intval($_REQUEST['productid']);
+		}
 		if($this->productManyManyField) {
 			$products = Product::get()->limit($this->limit, $this->start);
 			if($this->productID) {
@@ -76,7 +80,6 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 							}
 							$images = File::get()
 								->filter(array("Name:PartialMatch" => $whereStringArray));
-
 							if($images->count()) {
 								$method = $this->productManyManyField;
 								$collection = $product->$method();
@@ -102,7 +105,6 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 					}
 				}
 				$productCount = Product::get()->count();
-
 				if($this->limit < $productCount) {
 					$controller = Controller::curr();
 					$controller->redirect($this->nextBatchLink());
@@ -115,11 +117,19 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 	}
 
 	protected function nextBatchLink(){
-		return "dev/ecommerce/ecommercetasklinkproductwithimages/?start=". ($this->start + $this->limit);
+		$link = "dev/ecommerce/ecommercetasklinkproductwithimages/?start=". ($this->start + $this->limit);
+		if($this->productID) {
+			$link .= "&productid=".$this->productID;
+		}
+		return $link;
 	}
 
 	public function setProductID($id) {
 		$this->productID = $id;
+	}
+
+	public function Link($action = null){
+		return "dev/ecommerce/ecommercetasklinkproductwithimages/";
 	}
 
 }

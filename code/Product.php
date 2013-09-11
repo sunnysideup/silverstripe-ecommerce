@@ -227,11 +227,6 @@ class Product extends Page implements BuyableModel {
 	 **/
 	protected function getProductGroupsTableField() {
 
-		$task = EcommerceTaskLinkProductWithImages::create();
-		$task->verbose = false;
-		$task->setProductID($this->ID);
-		$task->run(null);
-
 		$field = new TreeMultiselectField(
 			$name = "ProductGroups",
 			$title = _t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
@@ -253,9 +248,17 @@ class Product extends Page implements BuyableModel {
 	protected function getAdditionalImagesMessage() {
 		$msg = "";
 		if($this->InternalItemID) {
-			$msg .= "<p>To upload additional images and files, please go to the <a href=\"/admin/assets\">Files section</a>, and upload them there. Files need to be named in a standard fashion; ";
-			$msg .= "An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image: ";
-			$msg .= "<strong>".$this->InternalItemID."_08.jpg</strong>.";
+			$findImagesTask = EcommerceTaskLinkProductWithImages::create();
+			$findImagesLink = $findImagesTask->Link();
+			$findImagesLinkOne = $findImagesLink."?productid=".$this->ID;
+			$msg .= "<p>
+				To upload additional images and files, please go to the <a href=\"/admin/assets\">Files section</a>, and upload them there.
+				Files need to be named in the following way:
+				An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image:
+				<strong>".$this->InternalItemID."_08.jpg</strong>.
+				<br /><br />You can <a href=\"$findImagesLinkOne\" target='_blank'>find images for <i>".$this->Title."</i></a> or
+				<a href=\"$findImagesLink\" target='_blank'>images for all products</a> ...
+			</p>";
 		}
 		else {
 			$msg .= "<p>For additional images and files, you must first specify a product code.</p>";
