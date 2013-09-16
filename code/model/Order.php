@@ -1899,7 +1899,8 @@ class Order extends DataObject {
 		if($this->IsSubmitted()) {
 			//add session if not added yet...
 			if(!$this->SessionID) {
-				user_error("There is no session ID for this Order: ".$this->ID, E_USER_NOTICE);
+				$this->SessionID = substr(md5(microtime()),0,32);
+				$this->write();
 			}
 			return Director::AbsoluteURL(OrderConfirmationPage::find_link())."retrieveorder/".$this->SessionID."/".$this->ID."/";
 		}

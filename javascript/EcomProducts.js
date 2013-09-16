@@ -18,8 +18,10 @@ EcomProducts = {
 
 	//see: http://www.jacklmoore.com/colorbox/
 	colorboxDialogOptions_addVariations: {
-		maxHeight: "90%",
-		maxWidth: "90%",
+		height: "95%",
+		width: "95%",
+		maxHeight: "95%",
+		maxWidth: "95%",
 		loadingClass: "loading",
 		iframe: false,
 		model: true,

@@ -272,10 +272,10 @@ EcomCart = {
 	 * @var Int
 	 */
 	colorboxDialogOptions: {
-		width: "500",
-		height: "500",
-		maxHeight: "90%",
-		maxWidth: "90%",
+		height: "95%",
+		width: "95%",
+		maxHeight: "95%",
+		maxWidth: "95%",
 		loadingClass: "loading",
 		iframe: true,
 		onOpen: function (event) {
