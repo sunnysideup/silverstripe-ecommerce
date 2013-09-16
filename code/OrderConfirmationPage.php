@@ -380,7 +380,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			$where = "\"CheckoutPage_StepDescription\".\"ID\" = $number";
 		}
 		if(EcommerceConfig::get("OrderConfirmationPage_Controller", "include_as_checkout_step")) {
-			if($this->currentOrder->SessionID && $this->currentOrder->SessionID == session_id()) {
+			if($this->currentOrder->IsInSession()) {
 				$dos = CheckoutPage_StepDescription::get()->where($where)->sort("ID", "ASC");
 				if($number) {
 					if($dos && $dos->count()) {

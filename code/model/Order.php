@@ -742,6 +742,9 @@ class Order extends DataObject {
 			if($this->StatusID || $recalculate) {
 				if(!$this->StatusID) {
 					$createdOrderStatus = OrderStep::get()->First();
+					if(!$createdOrderStatus) {
+						user_error("No ordersteps have been created", E_USER_WARNING);
+					}
 					$this->StatusID = $createdOrderStatus->ID;
 				}
 				$createdModifiersClassNames = array();
@@ -1661,7 +1664,7 @@ class Order extends DataObject {
 				//the reason it is allowed is because we want to be able to
 				//add order to non-existing member
 				if($this->MemberID) {
-					if($this->SessionID && $this->SessionID == session_id()) {
+					if($this->IsInSession()) {
 						return true;
 					}
 					else {
@@ -1683,12 +1686,20 @@ class Order extends DataObject {
 		//NB: this MUST be the last resort! If all other methods fail.
 		//That is, if we are working with the current order then it is a good idea
 		//to deny non-matching members.
-		if( $this->SessionID && $this->SessionID == session_id()) {
+		if( $this->IsInSession()) {
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 *
+	 *
+	 * @return Boolean
+	 */
+	public function IsInSession(){
+		return ($this->SessionID && $this->SessionID == session_id()) ? true : false;
+	}
 
 	/**
 	 * @param Member $member
@@ -1888,7 +1899,7 @@ class Order extends DataObject {
 		if($this->IsSubmitted()) {
 			//add session if not added yet...
 			if(!$this->SessionID) {
-				user_error("There is not session ID for this Order: ".$this->ID, E_USER_NOTICE);
+				user_error("There is no session ID for this Order: ".$this->ID, E_USER_NOTICE);
 			}
 			return Director::AbsoluteURL(OrderConfirmationPage::find_link())."retrieveorder/".$this->SessionID."/".$this->ID."/";
 		}
@@ -2633,7 +2644,6 @@ class Order extends DataObject {
 	 **/
 	function populateDefaults() {
 		parent::populateDefaults();
-		$this->SessionID = session_id();
 	}
 
 	function onBeforeWrite() {

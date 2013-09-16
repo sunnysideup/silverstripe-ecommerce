@@ -228,7 +228,7 @@ class EcommerceRole extends DataExtension {
 				$loginDetailsDescription = new LiteralField(
 					'AccountInfo',
 					'<p>'.
-					_t('OrderForm.ACCOUNTINFO','Please ; this will allow you to check your order history in the future.')
+					_t('OrderForm.SELECTPASSWORD','Please enter a password; this will allow you to check your order history in the future.')
 					.'</p>'
 				);
 				//close by default
