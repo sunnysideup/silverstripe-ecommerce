@@ -1039,6 +1039,7 @@ class ShoppingCart_Controller extends Controller{
 		'setquantityitem',
 		'clear',
 		'clearandlogout',
+		'save',
 		'deleteorder',
 		'numberofitemsincart',
 		'showcart',
