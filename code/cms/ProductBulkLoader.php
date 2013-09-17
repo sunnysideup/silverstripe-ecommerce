@@ -159,7 +159,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 	function setParent(&$obj, $val, $record){
 		$title = strtolower(Convert::raw2sql($val));
 		if($title){
-			$className = self::get_product_group_class_name();
+			$className = $this->Config()->get("product_group_class_name");
 			$parentpage = $className::get()->where("LOWER(\"Title\") = '$title'")->sort("Created", "DESC")->First();
 			if($parentpage){
 				$obj->ParentID = $parentpage->ID;
@@ -168,7 +168,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 				$obj->publish('Stage', 'Live');
 			}
 			elseif(self::$create_new_product_groups){
-				$className = self::get_product_group_class_name();
+				$className = $this->Config()->get("product_group_class_name");
 				//create parent product group
 				$pg = new $className();
 				$pg->setTitle($title);

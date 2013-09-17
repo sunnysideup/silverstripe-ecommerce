@@ -105,7 +105,7 @@ class DeleteAllOrders extends BuildTask {
 	}
 
 	function cleanupUnlinkedOrderObjects() {
-		$classNames = self::get_linked_objects_array();
+		$classNames = $this->Config()->get("linked_objects_array");
 		if(is_array($classNames) && count($classNames)) {
 			foreach($classNames as $classWithOrderID => $classWithLastEdited) {
 				if($this->verbose) {
