@@ -1015,6 +1015,10 @@ class ProductGroup extends Page {
 
 class ProductGroup_Controller extends Page_Controller {
 
+	private static $allowed_actions = array(
+		"debug" => "ADMIN"
+	);
+
 	/**
 	 * standard SS method
 	 */

@@ -904,6 +904,12 @@ class Product extends Page implements BuyableModel {
 
 class Product_Controller extends Page_Controller {
 
+	private static $allowed_actions = array(
+		"viewversion",
+		"ajaxview",
+		"addproductfromform"
+	);
+
 	/**
 	 * is this the current version?
 	 * @var Boolean

@@ -157,6 +157,10 @@ class BuyableSelectField extends FormField {
 
 class BuyableSelectField_DataList extends Controller {
 
+	private static $allowed_actions = array(
+		"json"
+	);
+
 	protected $fieldsToSearch = array(
 		"InternalItemID",
 		"Title",
