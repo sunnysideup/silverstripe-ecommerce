@@ -216,6 +216,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 */
 	static $allowed_actions = array(
 		'saveorder',
+		'sendreceipt',
 		'CreateAccountForm',
 		'retrieveorder',
 		'loadorder',

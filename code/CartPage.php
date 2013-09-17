@@ -238,6 +238,7 @@ class CartPage_Controller extends Page_Controller{
 		'CreateAccountForm',
 		'retrieveorder',
 		'loadorder',
+		'deleteorder',
 		'startneworder',
 		'showorder',
 		'LoginForm'
