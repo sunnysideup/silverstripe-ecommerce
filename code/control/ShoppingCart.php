@@ -993,7 +993,8 @@ class ShoppingCart_Controller extends Controller{
 		'removemodifier',
 		'addmodifier',
 		'copyorder',
-		'deleteorder'
+		'deleteorder',
+		'save'
 	);
 
 	/**
