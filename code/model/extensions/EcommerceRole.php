@@ -13,6 +13,7 @@
 
 class EcommerceRole extends DataExtension {
 
+	private static $max_count_of_members_in_array = 1500;
 
 	static $api_access = array(
 		'view' => array(
@@ -69,12 +70,16 @@ class EcommerceRole extends DataExtension {
 		//fill array
 		if($group) {
 			$members = $group->Members();
-			if($members) {
+			$memberCount = $members->count();
+			if($membersCount > 0 && $membersCount < self::$max_count_of_members_in_array) {
 				foreach($members as $member) {
 					if($member->Email) {
 						$array[$member->ID] = $member->Email." (".$member->getTitle().")";
 					}
 				}
+			}
+			else {
+				return $array;
 			}
 		}
 		//sort in a natural order
