@@ -134,7 +134,8 @@ class OrderModifier extends OrderAttribute {
 		$fields = parent::getCMSFields();
 		$fields->removeByName("Sort");
 		$fields->removeByName("GroupSort");
-		$fields->replaceField("Name", new ReadonlyField("Name"));
+		$fields->replaceField("Name", $nameField = new ReadonlyField("Name"));
+		$nameField->dontEscape = true;
 		$fields->removeByName("TableValue");
 		$fields->removeByName("CalculatedTotal");
 		$fields->removeByName("HasBeenRemoved");
@@ -142,7 +143,6 @@ class OrderModifier extends OrderAttribute {
 			"Root",
 			new Tab(
 				"Debug",
-				new ReadonlyField("ClassName", "Type", $this->ClassName),
 				new ReadonlyField("CreatedShown", "Created", $this->Created),
 				new ReadonlyField("LastEditedShown", "Last Edited", $this->LastEdited),
 				new ReadonlyField("TableValueShown", "Table Value", $this->TableValue),
@@ -164,11 +164,13 @@ class OrderModifier extends OrderAttribute {
 
 		//ClassName Field
 		$availableModifiers = EcommerceConfig::get("Order", "modifiers");
-		$ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create("ClassName", "Type", "OrderModifier", $availableModifiers);
-		$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Name");
+
 		if($this->exists()) {
-			$classNameField = $fields->dataFieldByName("ClassName");
-			$fields->replaceField("ClassName", $classNameField->performReadonlyTransformation());
+			$fields->addFieldToTab("Root.Main", new LiteralField("MyClassName", "<h2>".$this->singular_name()."</h2>"), "Name");
+		}
+		else {
+			$ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create("ClassName", "Type", "OrderModifier", $availableModifiers);
+			$fields->addFieldToTab("Root.Main", $ecommerceClassNameOrTypeDropdownField, "Name");
 		}
 		return $fields;
 
