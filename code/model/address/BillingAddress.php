@@ -38,7 +38,7 @@ class BillingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	static $db = array(
+	private static $db = array(
 		'Prefix' => 'Varchar(10)',
 		'FirstName' => 'Varchar(100)',
 		'Surname' => 'Varchar(100)',
@@ -62,7 +62,7 @@ class BillingAddress extends OrderAddress {
 	 * because that makes for a cleaner relationship
 	 * (otherwise we ended up with a "has two" relationship in Order)
 	 **/
-	static $has_one = array(
+	private static $has_one = array(
 		"Region" => "EcommerceRegion"
 	);
 
@@ -82,7 +82,7 @@ class BillingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	static $indexes = array(
+	private static $indexes = array(
 		"Obsolete" => true,
 		"OrderID" => true
 	);

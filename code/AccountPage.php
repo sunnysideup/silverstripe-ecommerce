@@ -17,7 +17,7 @@ class AccountPage extends Page {
 	 * standard SS variable
 	 *@var Array
 	 */
-	static $casting = array(
+	private static $casting = array(
 		"RunningTotal" => "Currency",
 		"RunningPaid" => "Currency",
 		"RunningOutstanding" => "Currency"
@@ -188,7 +188,7 @@ class AccountPage extends Page {
 class AccountPage_Controller extends Page_Controller {
 
 	//TODO: why do we need this?
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'MemberForm'
 	);
 

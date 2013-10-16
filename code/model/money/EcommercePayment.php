@@ -42,12 +42,12 @@ class EcommercePayment extends DataObject {
 		"Status" => "Status"
 	);
 
-	static $casting = array(
+	private static $casting = array(
 		'AmountValue' => 'Currency',
 		'AmountCurrency' => 'Varchar'
 	);
 
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'OrderID' => array(
 			'field' => 'NumericField',
 			'title' => 'Order Number'
@@ -289,7 +289,7 @@ class EcommercePayment extends DataObject {
 	 *
 	 * @return FieldList
 	 */
-	static function combined_form_fields($amount) {
+	public static function combined_form_fields($amount) {
 
 		// Create the initial form fields, which defines an OptionsetField
 		// allowing the user to choose which payment method to use.
@@ -356,7 +356,7 @@ class EcommercePayment extends DataObject {
 	 *
 	 * @return An array suitable for passing to CustomRequiredFields
 	 */
-	static function combined_form_requirements() {
+	public static function combined_form_requirements() {
 		$requirements = array();
 		// Loop on available methods
 		$supportedMethods = self::get_supported_methods();

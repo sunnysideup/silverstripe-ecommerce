@@ -15,7 +15,7 @@ class EcommerceRole extends DataExtension {
 
 	private static $max_count_of_members_in_array = 1500;
 
-	static $api_access = array(
+	private static $api_access = array(
 		'view' => array(
 			'ID',
 			'Orders',
@@ -26,15 +26,15 @@ class EcommerceRole extends DataExtension {
 	/**
 	 * standard SS method
 	 */
-	static $db = array(
+	private static $db = array(
 		'Notes' => 'Text'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'PreferredCurrency' => 'EcommerceCurrency'
 	);
 
-	static $has_many = array(
+	private static $has_many = array(
 		'Orders' => 'Order'
 	);
 

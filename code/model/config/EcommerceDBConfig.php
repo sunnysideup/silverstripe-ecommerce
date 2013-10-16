@@ -385,7 +385,7 @@ class EcommerceDBConfig extends DataObject {
 	 * @param String $className - name of the class to be tested
 	 * @return Boolean
 	 */
-	static function is_buyable($className) {
+	public static function is_buyable($className) {
 		$implementorsArray = class_implements($className);
 		if(is_array($implementorsArray) && in_array("BuyableModel", $implementorsArray)) {
 			return true;

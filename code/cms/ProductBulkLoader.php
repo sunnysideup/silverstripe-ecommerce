@@ -10,7 +10,7 @@
  * @package: ecommerce
  * @sub-package: cms
  * @inspiration: Silverstripe Ltd, Jeremy
- **/
+
 
 class ProductBulkLoader extends CsvBulkLoader{
 
@@ -49,7 +49,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 	 	TO
 	 		$SQL_fieldValue = Convert::raw2sql($record[$fieldName]);
 	 	until patch gets applied by SS team
-	*/
+
 
 	public $duplicateChecks = array(
 		'InternalItemID' => 'InternalItemID',
@@ -70,20 +70,20 @@ class ProductBulkLoader extends CsvBulkLoader{
 		)
 	);
 
-	static function import_content(&$obj, $val, $record ){
+	public static function import_content(&$obj, $val, $record ){
 		$obj->Content = Convert::raw2sql($val);
 	}
-	static function import_meta_description(&$obj, $val, $record ){
+	public static function import_meta_description(&$obj, $val, $record ){
 		$obj->MetaDescription = Convert::raw2sql($val);
 	}
-	static function import_menu_title(&$obj, $val, $record ){
+	public static function import_menu_title(&$obj, $val, $record ){
 		$obj->MenuTitle = Convert::raw2sql($val);
 	}
-	static function import_title(&$obj, $val, $record ){
+	public static function import_title(&$obj, $val, $record ){
 		$obj->Title = Convert::raw2sql($val);
 	}
 
-	static function importInternalItemID(&$obj, $val, $record ){
+	public static function importInternalItemID(&$obj, $val, $record ){
 		$obj->InternalItemID = Convert::raw2sql($val);
 	}
 
@@ -138,10 +138,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 		return parent::processRecord($record, $columnMap, $results, $preview);
 	}
 
-	/**
-	 *set image, based on filename
-	 *@return Image Object
-	 **/
+
 	function imageByFilename(&$obj, $val, $record){
 		$filename = strtolower(Convert::raw2sql($val));
 		$image = Image::get()->where("LOWER(\"Filename\") LIKE '%$filename%'");
@@ -183,9 +180,7 @@ class ProductBulkLoader extends CsvBulkLoader{
 		}
 	}
 
-	/**
-	 * Adds paragraphs to content.
-	 */
+
 	function setContent(&$obj, $val, $record){
 		$val = trim($val);
 		if($val){
@@ -195,4 +190,6 @@ class ProductBulkLoader extends CsvBulkLoader{
 	}
 
 }
+
+*/
 

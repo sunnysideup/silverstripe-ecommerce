@@ -86,7 +86,7 @@ class OrderStatusLogForm_Controller extends Controller{
 	/**
 	 * @var Array
 	 */
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'removeLog'
 	);
 

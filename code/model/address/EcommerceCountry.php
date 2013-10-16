@@ -30,7 +30,7 @@ class EcommerceCountry extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 **/
-	static $db = array(
+	private static $db = array(
 		"Code" => "Varchar(20)",
 		"Name" => "Varchar(200)",
 		"DoNotAllowSales" => "Boolean"
@@ -40,7 +40,7 @@ class EcommerceCountry extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 **/
-	static $has_many = array(
+	private static $has_many = array(
 		"Regions" => "EcommerceRegion"
 	);
 
@@ -48,7 +48,7 @@ class EcommerceCountry extends DataObject {
 	 * Standard SS Variable
 	 * @var Array
 	 **/
-	static $indexes = array(
+	private static $indexes = array(
 		"Code" => true,
 		"DoNotAllowSales" => true
 	);
@@ -90,7 +90,7 @@ class EcommerceCountry extends DataObject {
 	 * Standard SS Variable
 	 * @var String
 	 **/
-	static $default_sort = "\"DoNotAllowSales\" ASC, \"Name\" ASC";
+	private static $default_sort = "\"DoNotAllowSales\" ASC, \"Name\" ASC";
 
 	/**
 	 * Standard SS Variable

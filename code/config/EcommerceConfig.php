@@ -67,7 +67,7 @@ class EcommerceConfig extends Object {
 	 * Returns a configuration.  This is the main static method for this Object.
 	 * @see Config::get()
 	 */
-	static function get($className, $identifier, $sourceOptions = 0, $result = null, $suppress = null ) {
+	public static function get($className, $identifier, $sourceOptions = 0, $result = null, $suppress = null ) {
 		return Config::inst()->get($className, $identifier, $sourceOptions, $result, $suppress);
 	}
 

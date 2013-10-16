@@ -29,7 +29,7 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 	/**
 	 * @param array
 	 */
-	static $composite_db = array(
+	private static $composite_db = array(
 		"BuyableID" => "Int",
 		"BuyableClassName" => "Varchar(60)"
 	);

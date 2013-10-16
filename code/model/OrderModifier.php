@@ -767,7 +767,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	static $db = array(
+	private static $db = array(
 		"ModifierClassName" => "Varchar(100)",
 		"Heading" => "Varchar",
 		"Description" => "Text"
@@ -777,7 +777,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	static $has_one = array(
+	private static $has_one = array(
 		"Link" => "SiteTree"
 	);
 
@@ -785,7 +785,7 @@ class OrderModifier_Descriptor extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	static $indexes = array(
+	private static $indexes = array(
 		"ModifierClassName" => true
 	);
 

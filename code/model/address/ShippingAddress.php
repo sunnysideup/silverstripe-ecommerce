@@ -77,7 +77,7 @@ class ShippingAddress extends OrderAddress {
 	 * standard SS variable
 	 * @return Array
 	 */
-	static $indexes = array(
+	private static $indexes = array(
 		"Obsolete" => true,
 		"OrderID" => true
 	);

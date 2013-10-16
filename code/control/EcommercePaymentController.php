@@ -41,7 +41,7 @@ class EcommercePaymentController extends Controller {
 	 * @param String | Int $orderID
 	 * @return String (Link)
 	 */
-	static function make_payment_link($orderID){
+	public static function make_payment_link($orderID){
 		$urlSegment = EcommerceConfig::get("EcommercePaymentController", "url_segment");
 		$s = "/".$urlSegment."/pay/".$orderID."/";
 		return $s;

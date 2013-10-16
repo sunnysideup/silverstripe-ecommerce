@@ -384,7 +384,7 @@ class OrderAttribute extends DataObject {
  */
 class OrderAttribute_Group extends DataObject {
 
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"Sort" => "Int"
 	);

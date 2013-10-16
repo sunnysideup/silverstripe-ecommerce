@@ -197,7 +197,7 @@ class OrderStep extends DataObject {
 	 *
 	 *@return Array
 	 **/
-	static function get_codes_for_order_steps_to_include() {
+	public static function get_codes_for_order_steps_to_include() {
 		$newArray = array();
 		$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 		if(is_array($array) && count($array)) {
@@ -213,7 +213,7 @@ class OrderStep extends DataObject {
 	 * returns a list of ordersteps that have not been created yet.
 	 * @return Array
 	 **/
-	static function get_not_created_codes_for_order_steps_to_include() {
+	public static function get_not_created_codes_for_order_steps_to_include() {
 		$array = EcommerceConfig::get("OrderStep", "order_steps_to_include");
 		if(is_array($array) && count($array)) {
 			foreach($array as $className) {
@@ -925,13 +925,13 @@ class OrderStep_Created extends OrderStep implements OrderStepInterface  {
  **/
 class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
-	static $db = array(
+	private static $db = array(
 		"SaveOrderAsHTML" => "Boolean",
 		"SaveOrderAsSerializedObject" => "Boolean",
 		"SaveOrderAsJSON" => "Boolean"
 	);
 
-	static $defaults = array(
+	private static $defaults = array(
 		"CustomerCanEdit" => 0,
 		"CustomerCanPay" => 1,
 		"CustomerCanCancel" => 0,
@@ -1094,7 +1094,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 */
 	protected $emailClassName = "Order_InvoiceEmail";
 
-	static $db = array(
+	private static $db = array(
 		"SendInvoiceToCustomer" => "Boolean"
 	);
 
@@ -1386,7 +1386,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface  {
 	 */
 	protected $emailClassName = "Order_ReceiptEmail";
 
-	static $db = array(
+	private static $db = array(
 		"SendReceiptToCustomer" => "Boolean"
 	);
 
@@ -1504,7 +1504,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 */
 	protected $emailClassName = "Order_StatusEmail";
 
-	static $db = array(
+	private static $db = array(
 		"SendDetailsToCustomer" => "Boolean"
 	);
 

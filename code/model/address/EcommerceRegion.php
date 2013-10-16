@@ -30,7 +30,7 @@ class EcommerceRegion extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	static $db = array(
+	private static $db = array(
 		"Code" => "Varchar(20)",
 		"Name" => "Varchar(200)",
 		"DoNotAllowSales" => "Boolean",
@@ -41,7 +41,7 @@ class EcommerceRegion extends DataObject {
 	 * standard SS variable
 	 * @var Array
 	 */
-	static $has_one = array(
+	private static $has_one = array(
 		"Country" => "EcommerceCountry"
 	);
 
@@ -49,7 +49,7 @@ class EcommerceRegion extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	static $indexes = array(
+	private static $indexes = array(
 		"Code" => true,
 		"DoNotAllowSales" => true
 	);
@@ -58,7 +58,7 @@ class EcommerceRegion extends DataObject {
 	 * standard SS variable
 	 * @var String
 	 */
-	static $default_sort = "\"Name\" ASC";
+	private static $default_sort = "\"Name\" ASC";
 
 	/**
 	 * standard SS variable

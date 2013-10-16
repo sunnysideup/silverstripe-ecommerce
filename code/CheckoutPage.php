@@ -605,7 +605,7 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS variable
 	 * @Var Array
 	 */
-	static $db = array(
+	private static $db = array(
 		"Heading" => "Varchar",
 		"Above" => "Text",
 		"Below" => "Text"
@@ -672,7 +672,7 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * standard SS variable
 	 * @return Boolean
 	 */
-	static $can_create = false;
+	private static $can_create = false;
 
 	/**
 	 * standard SS method

@@ -17,7 +17,7 @@ class CartCleanupTask extends BuildTask {
 	 * Standard SS Variable
 	 * TODO: either remove or add to all tasks
 	 */
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'*' => 'ADMIN',
 		'*' => 'SHOPADMIN'
 	);

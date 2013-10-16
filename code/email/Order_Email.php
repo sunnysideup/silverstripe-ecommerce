@@ -65,7 +65,7 @@ Abstract class Order_Email extends Email {
 	 * returns the subject for the email (doh!).
 	 * @return String
 	 */
-	static function get_subject() {
+	public static function get_subject() {
 		$siteConfig = SiteConfig::current_site_config();
 		if($siteConfig && $siteConfig->Title) {
 			return _t("Order_Email.SALEUPDATE", "Sale Update [OrderNumber] from ").$siteConfig->Title;

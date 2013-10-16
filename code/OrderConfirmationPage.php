@@ -214,7 +214,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 * standard SS variable
 	 * it is important that we list all the options here
 	 */
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'saveorder',
 		'sendreceipt',
 		'CreateAccountForm',

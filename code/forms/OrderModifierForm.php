@@ -120,7 +120,7 @@ class OrderModifierForm_Controller extends Controller{
 	 *
 	 * @var Array
 	 */
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'removemodifier'
 	);
 

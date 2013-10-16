@@ -454,7 +454,7 @@ class EcommerceCurrency extends DataObject {
 		}
 	}
 
-	static function create_new($code) {
+	public static function create_new($code) {
 		$code = strtolower($code);
 		$name = $code;
 		if(isset(self::$currencies[$code])) {
@@ -481,7 +481,7 @@ class EcommerceCurrency extends DataObject {
 		return EcommerceTaskDebugCart::debug_object($this);
 	}
 
-	static $currencies = array(
+	private static $currencies = array(
 		'afa' => 'afghanistan afghanis',
 		'all' => 'albania leke',
 		'dzd' => 'algeria dinars',

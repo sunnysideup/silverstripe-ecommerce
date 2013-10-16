@@ -29,7 +29,7 @@ class MyMigration extends BuildTask {
 
 class MyMigration_EXT extends Extension {
 
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		"mymigration" => true
 	);
 
