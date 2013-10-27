@@ -468,11 +468,20 @@ class CartPage_Controller extends Page_Controller{
 
 	/***********************
 	 * For use in templates
-	 ***********************
+	 ***********************/
 
 
+	function LinkingMode(){
+		return parent::LinkingMode() . " cartlink cartlinkID_".$this->ID;
+	}
 
+	function LinkOrSection(){
+		return parent::LinkOrSection() . " cartlink";
+	}
 
+	function LinkOrCurrent(){
+		return parent::LinkOrCurrent() . " cartlink";
+	}
 
 
 	/**

@@ -39,5 +39,12 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 		return self::$url_segment;
 	}
 
-
+	function getEditForm($id = null, $fields = null) {
+		$form = parent::getEditForm($id, $fields);
+		$model = $this->sanitiseClassName($this->modelClass);
+		if(singleton($model) instanceOf SiteTree) {
+			$form->fields()->push(new LiteralField("CanNotEdit", "<p>please edit this information in the <a href=\"/admin/pages/\">pages section</a></p>"));
+		}
+		return $form;
+	}
 }

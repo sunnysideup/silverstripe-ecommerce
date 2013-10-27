@@ -848,7 +848,9 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
-		//if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
+		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
+			return false;
+		}
 		if(!$member) {
 			$member = Member::currentUser();
 		}
@@ -938,15 +940,17 @@ class Product_Controller extends Page_Controller {
 		$version = intval($request->param("OtherID"))-0;
 		$currentVersion = $this->Version;
 		if($id != $this->ID) {
-			//TO DO: CHECK VERSION!!! IS THIS CODE RIGHT
-			if($productVariation = ProductVariation::get()->byID($id)) {
-				if($productVariation->Version != $version) {
-					$productVariation = $productVariation->getVersionOfBuyable($id, $version);
+			if(class_exists("ProductVariation")) {
+				//TO DO: CHECK VERSION!!! IS THIS CODE RIGHT
+				if($productVariation = ProductVariation::get()->byID($id)) {
+					if($productVariation->Version != $version) {
+						$productVariation = $productVariation->getVersionOfBuyable($id, $version);
+					}
+					///to do: how to add this to product page???
 				}
-				///to do: how to add this to product page???
-			}
-			if(!$productVariation) {
-				return $this->httpError(404);
+				if(!$productVariation) {
+					return $this->httpError(404);
+				}
 			}
 		}
 		elseif($currentVersion != $version) {

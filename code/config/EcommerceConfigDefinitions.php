@@ -188,7 +188,7 @@ class EcommerceConfigDefinitions extends Object {
 			"Order_Email" => array(
 				"send_all_emails_plain" => "Should all the emails be send as plain text?  Not recommended.",
 				"css_file_location" => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
-				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?",
+				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?"
 			),
 			"EcommerceCurrency" => array(
 				"default_currency" => "The default currency used on the site.",

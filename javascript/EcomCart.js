@@ -252,6 +252,12 @@ EcomCart = {
 	orderItemHolderSelector: ".orderItemHolder",
 		set_orderItemHolderSelector: function(s) {this.removeLinkSelector = s;},
 
+	/**
+	 * the selector used to identify the cart related menu items (e.g. cart / checkout)
+	 */
+	cartMenuLinksSelector: ".cartlink",
+		set_cartMenuLinksSelector: function(s) {this.cartMenuLinksSelector = s;},
+
 
 
 	//#################################
@@ -539,6 +545,22 @@ EcomCart = {
 						else{
 							jQuery(selector).attr(parameter, value);
 						}
+						console.log(selector);
+						if(selector == ".number_of_items") {
+							//update cart menu items
+							jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(
+								function(i, el) {
+									var myElement = el;
+									if( ! jQuery(el).is("a")) {
+										myElement = jQuery(el).find("a");
+									}
+									innerText = jQuery(myElement).html();
+									var numbersOnlyRE = new RegExp('(\\d+)', "g");
+									var newInnerText = innerText.replace(numbersOnlyRE, value);
+									jQuery(myElement).html(newInnerText);
+								}
+							);
+						}
 					}
 					//name: used for form fields...
 					else if(type == "name") {
@@ -621,6 +643,7 @@ EcomCart = {
 					EcomCart.onAfterUpdate.call(changes, status);
 				}
 			}
+
 			EcomCart.reinit();
 			jQuery("body").removeClass(EcomCart.classToShowPageIsUpdating);
 			for(var i = 0; i < EcomCart.loadingSelectors.length; i++) {

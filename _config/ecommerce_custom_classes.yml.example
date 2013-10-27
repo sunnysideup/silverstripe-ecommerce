@@ -12,7 +12,7 @@
 #
 #
 # NICE THEORY
-# it does not wor in practice,
+# it does not work in practice,
 # use:
 #
 # Object::useCustomClass('OriginalClass',   'MyClass', true);

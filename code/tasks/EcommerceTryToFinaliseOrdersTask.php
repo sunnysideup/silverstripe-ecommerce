@@ -25,7 +25,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 	public function run($request){
 		//IMPORTANT!
 		if($this->doNotSendEmails) {
-			Email::send_all_emails_to("no-one@localhost");
+			Config::inst()->update("Email","send_all_emails_to", "no-one@localhost");
 			Email::set_mailer( new EcommerceTryToFinaliseOrdersTask_Mailer() );
 		}
 		$orderStatusLogClassName = "OrderStatusLog";

@@ -56,7 +56,6 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension {
 		return "/Security/login?BackURL=".urlencode($link);
 	}
 
-
 }
 
 class EcommerceSiteTreeExtension_Controller extends Extension {

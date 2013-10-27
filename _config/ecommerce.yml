@@ -238,11 +238,11 @@ StoreAdmin:
     - EcommerceCountry
     - EcommerceCurrency
 
+
 ProductsAndGroupsModelAdmin:
   managed_models:
-    - ProductVariation
-    - ProductAttributeType
-    - ProductAttributeValue
+    - Product
+    - ProductGroup
 
 SalesAdmin:
   managed_models:

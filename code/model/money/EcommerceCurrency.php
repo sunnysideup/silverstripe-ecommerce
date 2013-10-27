@@ -187,16 +187,7 @@ class EcommerceCurrency extends DataObject {
 	/**
 	 * @param Float $price
 	 * @param Order $order
-	 * @return EcommerceMoney | Null
-	 */
-	public static function display_price($price, Order $order = null){
-		return self::get_money_object_from_order_currency($price, $order);
-	}
-
-	/**
-	 * @param Float $price
-	 * @param Order
-	 * @return
+	 * @return Money
 	 */
 	public static function get_money_object_from_order_currency($price, Order $order = null) {
 		if(! $order) {

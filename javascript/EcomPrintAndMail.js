@@ -18,15 +18,7 @@ EcomPrintAndMail = {
 	selectors: "#OrderPrintAndMail",
 
 	init: function() {
-		jQuery(function() {
-			jQuery("a[data-popup]").live('click', function(e) {
-					window.open(jQuery(this)[0].href);
-					// Prevent the link from actually being followed
-					e.preventDefault();
-			});
-		});
-		jQuery(EcomPrintAndMail.selectors).delegate(
-			"a",
+		jQuery(EcomPrintAndMail.selectors + " a, a[data-popup]").on(
 			"click",
 			function(e) {
 				e.preventDefault();

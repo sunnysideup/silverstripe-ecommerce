@@ -106,7 +106,9 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
-		//if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
+		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
+			return false;
+		}
 		if(!$member) {
 			$member = Member::currentUser();
 		}
