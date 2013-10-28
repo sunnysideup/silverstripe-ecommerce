@@ -70,7 +70,7 @@ class EcommerceRole extends DataExtension {
 		//fill array
 		if($group) {
 			$members = $group->Members();
-			$memberCount = $members->count();
+			$membersCount = $members->count();
 			if($membersCount > 0 && $membersCount < self::$max_count_of_members_in_array) {
 				foreach($members as $member) {
 					if($member->Email) {

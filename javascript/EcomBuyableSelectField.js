@@ -4,6 +4,23 @@
  *
  */
 
+(function($) {
+	$.entwine('ecommerce', function($) {
+		/**
+		 */
+		$('#FindBuyable .text').entwine({
+
+			onmatch : function() {
+				EcomBuyableSelectField.init();
+				this._super();
+			}
+		});
+
+	});
+
+}(jQuery));
+
+/*
 (function($){
 	jQuery(document).ready(
 		function() {
@@ -11,7 +28,7 @@
 		}
 	);
 })(jQuery);
-
+*/
 
 EcomBuyableSelectField = {
 
@@ -99,8 +116,17 @@ EcomBuyableSelectField = {
 		set_selectedBuyableFieldID: function(s) {this.selectedBuyableFieldID = s;},
 
 	init: function() {
+		var selector = "#FindBuyable .text";
+		jQuery(document).on(
+			"focus",
+			selector,
+			EcomBuyableSelectField.attach()
+		);
+	},
+
+	attach: function(){
 		EcomBuyableSelectField.fieldName += "-FindBuyable" ;
-		jQuery("#"+EcomBuyableSelectField.fieldName)
+		jQuery("#FindBuyable .text")
 			.focus(
 				function() {
 					var labelSelector = "label[for='" + jQuery(this).attr("id") + "']";

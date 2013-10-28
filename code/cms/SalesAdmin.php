@@ -45,6 +45,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 
 	function init() {
 		parent::init();
+		Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
 		//Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		//Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		//Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE

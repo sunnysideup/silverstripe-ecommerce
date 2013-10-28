@@ -373,6 +373,21 @@ class ProductGroup extends Page {
 	 * standard SS method
 	 * @return FieldList
 	 */
+	public function getCMSActions() {
+		$fields = parent::getCMSActions();
+		if(!$this->canEdit()) {
+			$editButton = FormAction::create('editinsitetree');
+			$editButton->setTitle(_t("Product.EDIT", "Edit"));
+			$editButton->setDescription(_t("Product.EDIT_IN_SITETREE", "Edit this record in the site tree"));
+			$fields->push($editButton);
+		}
+		return $fields;
+	}
+
+	/**
+	 * standard SS method
+	 * @return FieldList
+	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		//dirty hack to show images!
