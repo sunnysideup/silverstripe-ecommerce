@@ -875,20 +875,20 @@ class OrderStep_Created extends OrderStep implements OrderStepInterface  {
 			$msg = _t("OrderStep.MUSTDOSUBMITRECORD", "<p>Tick the box below to submit this order.</p>");
 			$problems = array();
 			if(!$order->getTotalItems()) {
-				$problems[] = "There are no items associated with this order.";
+				$problems[] = "There are no --- Order Items (products) --- associated with this order.";
 			}
 			if(!$order->MemberID) {
-				$problems[] = "There is no customer associated with this order.";
+				$problems[] = "There is no --- Customer --- associated with this order.";
 			}
 			if(!$order->BillingAddressID) {
-				$problems[] = "There is no billing address associated with this order.";
+				$problems[] = "There is no --- Billing Address --- associated with this order.";
 			}
 			elseif($billingAddress = $order->BillingAddress()) {
 				$requiredBillingFields = $billingAddress->getRequiredFields();
 				if($requiredBillingFields && is_array($requiredBillingFields) && count($requiredBillingFields)) {
 					foreach($requiredBillingFields as $requiredBillingField) {
 						if(!$billingAddress->$requiredBillingField) {
-							$problems[] = "There is no -- $requiredBillingField -- recorded in the billing address.";
+							$problems[] = "There is no --- $requiredBillingField --- recorded in the billing address.";
 						}
 					}
 				}

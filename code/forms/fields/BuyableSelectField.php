@@ -73,15 +73,6 @@ class BuyableSelectField extends FormField {
 	 * @return string
 	 */
 	function Field($properties = array()) {
-		if(!$this->form->Fields()->fieldByName("Version")) {
-			//user_error("You must have a Version field in your form");
-		}
-		if(!$this->form->Fields()->fieldByName("BuyableClassName")) {
-			//user_error("You must have a BuyableClassName field in your form");
-		}
-		if(!$this->form->Fields()->fieldByName("BuyableID")) {
-			//user_error("You must have a BuyableID field in your form.");
-		}
 		//Requirements::javascript($this->jquery_UI_JS_location);
 		//Requirements::css($this->jquery_UI_CSS_location);
 		Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
@@ -112,7 +103,7 @@ class BuyableSelectField extends FormField {
 		if($this->buyable) {
 			$value = $this->buyable->FullName ? $this->buyable->FullName : $this->buyable->getTitle();
 			//to TEST!!!
-			$this->fieldSelectedBuyable->setValue($value);
+			$this->fieldSelectedBuyable->setValue("Once you have selected a new value, it will appear here...");
 		}
 	}
 

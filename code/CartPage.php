@@ -470,15 +470,26 @@ class CartPage_Controller extends Page_Controller{
 	 * For use in templates
 	 ***********************/
 
-
+	/**
+	 * standard SS method for use in templates
+	 * @return String
+	 */
 	function LinkingMode(){
 		return parent::LinkingMode() . " cartlink cartlinkID_".$this->ID;
 	}
 
+	/**
+	 * standard SS method for use in templates
+	 * @return String
+	 */
 	function LinkOrSection(){
 		return parent::LinkOrSection() . " cartlink";
 	}
 
+	/**
+	 * standard SS method for use in templates
+	 * @return String
+	 */
 	function LinkOrCurrent(){
 		return parent::LinkOrCurrent() . " cartlink";
 	}

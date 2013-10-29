@@ -165,6 +165,33 @@ class OrderItem extends OrderAttribute {
 		$fields->replaceField("Version", new HiddenField("Version"));
 		if($this->OrderID && $this->exists()) {
 			$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
+
+			$fields->addFieldToTab("Root.Debug", new HeaderField("BuyableHeading", "Buyable"));
+
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("BuyableIDCheck", "BuyableID", $this->BuyableID));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("BuyableClassNameCheck", "BuyableClassName", $this->BuyableClassName));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("VersionCheck", "Version", $this->Version));
+
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("Link", "Link", $this->Link()));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("AbsoluteLink", "AbsoluteLink", $this->AbsoluteLink()));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("TableTitle", "TableTitle", $this->TableTitle));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("InternalItemID", "InternalItemID", $this->InternalItemID()));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("Name", "Name", $this->Name));
+
+			$fields->addFieldToTab("Root.Debug", new HeaderField("OrderItemHeading", "Order Item"));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("ClassName"));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("Created"));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("LastEdited"));
+
+
+			$fields->addFieldToTab("Root.Debug", new HeaderField("PricingHeading", "Pricing"));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("QuantityCheck", "Quantity", $this->Quantity));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("UnitPrice", "UnitPrice", $this->UnitPrice));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("CalculatedTotal", "Total", $this->CalculatedTotal));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("TableValue", "TableValue", $this->TableValue));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("Total", "Total", $this->Total));
+			$fields->addFieldToTab("Root.Debug", new ReadonlyField("TotalAsMoney", "TotalAsMoney", $this->TotalAsMoney()->Nice()));
+
 		}
 		else {
 			$fields->replaceField("OrderID", new NumericField("OrderID", _t("Order.SINGULARNAME", "Order")));
@@ -337,6 +364,9 @@ class OrderItem extends OrderAttribute {
 	 * TODO: evaluate this rule.
 	 */
 	function onBeforeWrite() {
+		if(Session::get("EcommerceOrderGETCMSHack") && !$this->OrderID) {
+			$this->OrderID = intval(Session::get("EcommerceOrderGETCMSHack"));
+		}
 		if(!$this->exists()) {
 			if($buyable = $this->Buyable(true)) {
 				if($this->ClassName == "OrderItem" && $this->BuyableClassName != "OrderItem") {

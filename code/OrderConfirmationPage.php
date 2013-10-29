@@ -204,6 +204,34 @@ class OrderConfirmationPage extends CartPage{
 		return $do;
 	}
 
+
+	/**
+	 * standard SS method for use in templates
+	 * we are overriding the code from the Cart Page here.
+	 * @return String
+	 */
+	function LinkingMode(){
+		return parent::LinkingMode();
+	}
+
+	/**
+	 * standard SS method for use in templates
+	 * we are overriding the code from the Cart Page here.
+	 * @return String
+	 */
+	function LinkOrSection(){
+		return parent::LinkOrSection();
+	}
+
+	/**
+	 * standard SS method for use in templates
+	 * we are overriding the code from the Cart Page here.
+	 * @return String
+	 */
+	function LinkOrCurrent(){
+		return parent::LinkOrCurrent();
+	}
+
 }
 
 class OrderConfirmationPage_Controller extends CartPage_Controller{

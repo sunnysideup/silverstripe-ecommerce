@@ -8,7 +8,7 @@
 	$.entwine('ecommerce', function($) {
 		/**
 		 */
-		$('#FindBuyable .text').entwine({
+		$('#FindBuyable input.text').entwine({
 
 			onmatch : function() {
 				EcomBuyableSelectField.init();
@@ -116,7 +116,7 @@ EcomBuyableSelectField = {
 		set_selectedBuyableFieldID: function(s) {this.selectedBuyableFieldID = s;},
 
 	init: function() {
-		var selector = "#FindBuyable .text";
+		var selector = "#FindBuyable input.text";
 		jQuery(document).on(
 			"focus",
 			selector,
@@ -126,7 +126,7 @@ EcomBuyableSelectField = {
 
 	attach: function(){
 		EcomBuyableSelectField.fieldName += "-FindBuyable" ;
-		jQuery("#FindBuyable .text")
+		jQuery("#FindBuyable input.text")
 			.focus(
 				function() {
 					var labelSelector = "label[for='" + jQuery(this).attr("id") + "']";
@@ -207,17 +207,21 @@ EcomBuyableSelectField = {
 
 					//after we finish the search (what happens when the data comes back...
 					select: function(event, ui) {
+						var formSelector = "#" + jQuery("#FindBuyable").parents("form").attr("id");
+						if(EcomBuyableSelectField.formName) {
+							formSelector = "#"+EcomBuyableSelectField.formName;
+						}
 						if(
-							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableID']").length == 0 ||
-							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableClassName']").length  == 0 ||
-							jQuery("#"+EcomBuyableSelectField.formName+" input[name='Version']").length  == 0
+							jQuery(formSelector+ " input[name='BuyableID']").length == 0 ||
+							jQuery(formSelector+ " input[name='BuyableClassName']").length  == 0 ||
+							jQuery(formSelector+ " input[name='Version']").length  == 0
 						) {
 							EcomBuyableSelectField.showCurrentSituation("Error: can not find BuyableID or BuyableClassName or Version field");
 						}
 						else {
-							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableID']").val(ui.item.id);
-							jQuery("#"+EcomBuyableSelectField.formName+" input[name='BuyableClassName']").val(ui.item.className);
-							jQuery("#"+EcomBuyableSelectField.formName+" input[name='Version']").val(ui.item.version);
+							jQuery(formSelector+ " input[name='BuyableID']").val(ui.item.id);
+							jQuery(formSelector+ " input[name='BuyableClassName']").val(ui.item.className);
+							jQuery(formSelector+ " input[name='Version']").val(ui.item.version);
 							EcomBuyableSelectField.showCurrentSituation(ui.item.title);
 						}
 					}
@@ -227,7 +231,7 @@ EcomBuyableSelectField = {
 
 	showCurrentSituation: function(situation) {
 		jQuery("input[name=\'"+EcomBuyableSelectField.selectedBuyableFieldName+"\']").val(situation);
-		jQuery("span#"+EcomBuyableSelectField.selectedBuyableFieldID+"").text(situation);
+		jQuery("#FindBuyable span#FindBuyable-SelectedBuyable").text(situation);
 	}
 
 }

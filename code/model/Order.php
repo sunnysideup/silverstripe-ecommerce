@@ -423,7 +423,7 @@ class Order extends DataObject {
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
-		if(!$this->exists()) {
+		if(!$this->exists() || !$this->StatusID) {
 			$firstStep = OrderStep::get()->First();
 			$this->StatusID = $firstStep->ID;
 			$this->write();
@@ -444,6 +444,8 @@ class Order extends DataObject {
 		}
 		else {
 			$this->init(true);
+			$this->calculateOrderAttributes(true);
+			Session::set("EcommerceOrderGETCMSHack", $this->ID);
 		}
 		if($submitted) {
 			$this->fieldsAndTabsToBeRemoved[] = "CustomerOrderNote";
@@ -503,7 +505,7 @@ class Order extends DataObject {
 			}
 			else {
 				$fields->addFieldToTab('Root.Customer', new LiteralField("MemberDetails",
-					"<p>"._t("Order.NO_ACCOUNT","There is no account associated with this order")."</p>"
+					"<p>"._t("Order.NO_ACCOUNT","There is no --- account --- associated with this order")."</p>"
 				));
 			}
 			$cancelledField = $fields->dataFieldByName("CancelledByID");
@@ -575,8 +577,12 @@ class Order extends DataObject {
 		$currencies = EcommerceCurrency::get_list();
 		if($currencies && $currencies->count()) {
 			$currencies = $currencies->map()->toArray();
-			$fields->addFieldToTab("Root.Currency", new NumericField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate")));
-			$fields->addFieldToTab("Root.Currency", new LookupField("CurrencyUsedID", _t("Order.CurrencyUsed", "Currency Used"), $currencies));
+			$fields->addFieldToTab("Root.Currency", new ReadOnlyField("ExchangeRate ", _t("Order.EXCHANGERATE", "Exchange Rate"), $this->ExchangeRate));
+			$fields->addFieldToTab("Root.Currency", new DropdownField("CurrencyUsedID", _t("Order.CurrencyUsed", "Currency Used"), $currencies));
+		}
+		else {
+			$fields->addFieldToTab("Root.Currency", new LiteralField("CurrencyInfo", "<p>You can not change currencies, because no currencies have been created.</p>"));
+			$fields->replaceField("CurrencyUsedID", $fields->dataFieldByName("CurrencyUsedID")->performReadonlyTransformation());
 		}
 		$fields->addFieldToTab("Root.Log", new ReadonlyField("Created", _t("Root.CREATED", "Created")));
 		$fields->addFieldToTab("Root.Log", new ReadonlyField("LastEdited", _t("Root.LASTEDITED", "Last saved")));
@@ -589,7 +595,7 @@ class Order extends DataObject {
 	 * @return GridField
 	 */
 	protected function getOrderItemsField(){
-		$gridFieldConfig = GridFieldConfig_RecordEditor::create();
+		$gridFieldConfig = GridFieldConfigForOrderItems::create();
 		$source = $this->OrderItems();
 		return new GridField("OrderItems", _t("OrderItems.PLURALNAME", "Order Items"), $source , $gridFieldConfig);
 	}
@@ -599,7 +605,7 @@ class Order extends DataObject {
 	 * @return GridField
 	 */
 	function getModifierTableField(){
-		$gridFieldConfig = GridFieldConfig_RecordEditor::create();
+		$gridFieldConfig = GridFieldConfigForOrderItems::create();
 		$source = $this->Modifiers();
 		return new GridField("OrderModifiers", _t("OrderItems.PLURALNAME", "Order Items"), $source , $gridFieldConfig);
 	}
@@ -1164,7 +1170,7 @@ class Order extends DataObject {
 		}
 		else {
 			if(!is_a($newCurrency, Object::getCustomClass("EcommerceCurrency"))) {
-				$currency = EcommerceCurrency::default_currency();
+				$newCurrency = EcommerceCurrency::default_currency();
 			}
 			$this->CurrencyUsedID = $newCurrency->ID;
 			$this->ExchangeRate = $newCurrency->ExchangeRate();
@@ -1477,6 +1483,7 @@ class Order extends DataObject {
 		}
 		elseif(Order::get_needs_recalculating() || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
+				$this->ensureCorrectExchangeRate();
 				$this->calculateOrderItems($recalculate);
 				$this->calculateModifiers($recalculate);
 				$this->extend("onCalculateOrder");
@@ -2307,27 +2314,46 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * Casted variable - has the order been submitted?
+	 * Casted variable
 	 * Currency is not the same as the standard one.
 	 * @return Boolean
 	 **/
 	function HasAlternativeCurrency(){return $this->getHasAlternativeCurrency();}
 	function getHasAlternativeCurrency() {
 		if($currency = $this->CurrencyUsed()) {
-			if(!$currency->IsDefault()) {
-				if(!$this->ExchangeRate) {
-					if(!$this->IsSubmitted()) {
-						$this->ExchangeRate = $currency->getExchangeRate();
-						$this->write();
-					}
-					else {
-						user_error("Order is using alternative currency without exchange rate record.", E_USER_NOTICE);
-					}
-				}
+			if($currency->IsDefault()) {
+				return false;
+			}
+			else{
 				return true;
 			}
 		}
-		return false;
+		else {
+			return false;
+		}
+	}
+
+	/**
+	 * Makes sure exchange rate is updated and maintained before order is submitted
+	 **/
+	function ensureCorrectExchangeRate() {
+		if(!$this->IsSubmitted()) {
+			$oldExchangeRate = $this->ExchangeRate;
+			if($currency = $this->CurrencyUsed()) {
+				if($currency->IsDefault()) {
+					$this->ExchangeRate = 0;
+				}
+				else{
+					$this->ExchangeRate = $currency->getExchangeRate();
+				}
+			}
+			else {
+				$this->ExchangeRate = 0;
+			}
+			if($this->ExchangeRate != $oldExchangeRate) {
+				$this->write();
+			}
+		}
 	}
 
 	/**
