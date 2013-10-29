@@ -47,7 +47,7 @@ class DeleteAllOrders extends BuildTask {
 		"Order",
 		"OrderItem",
 		"OrderModifier",
-		"Payment"
+		"EcommercePayment"
 	);
 
 /*******************************************************
