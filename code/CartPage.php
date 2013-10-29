@@ -87,7 +87,7 @@ class CartPage extends Page{
 	 * @return DBField
 	 */
 	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
-		if($fieldName == "MenuTitle") {
+		if($fieldName == "MenuTitle" && !($this instanceOf OrderConfirmationPage) ) {
 			return DBField::create_field('HTMLVarchar', strip_tags($this->EcommerceMenuTitle()), "MenuTitle", $this);
 		}
 		else {
@@ -222,6 +222,37 @@ class CartPage extends Page{
 	 */
 	function OriginalMenuTitle(){
 		return $this->MenuTite;
+	}
+
+
+
+
+	/***********************
+	 * For use in templates
+	 ***********************/
+
+	/**
+	 * standard SS method for use in templates
+	 * @return String
+	 */
+	function LinkingMode(){
+		return parent::LinkingMode() . " cartlink cartlinkID_".$this->ID;
+	}
+
+	/**
+	 * standard SS method for use in templates
+	 * @return String
+	 */
+	function LinkOrSection(){
+		return parent::LinkOrSection() . " cartlink";
+	}
+
+	/**
+	 * standard SS method for use in templates
+	 * @return String
+	 */
+	function LinkOrCurrent(){
+		return parent::LinkOrCurrent() . " cartlink";
 	}
 
 }
@@ -462,38 +493,6 @@ class CartPage_Controller extends Page_Controller{
 		$this->redirect($this->Link());
 		return array();
 	}
-
-
-
-
-	/***********************
-	 * For use in templates
-	 ***********************/
-
-	/**
-	 * standard SS method for use in templates
-	 * @return String
-	 */
-	function LinkingMode(){
-		return parent::LinkingMode() . " cartlink cartlinkID_".$this->ID;
-	}
-
-	/**
-	 * standard SS method for use in templates
-	 * @return String
-	 */
-	function LinkOrSection(){
-		return parent::LinkOrSection() . " cartlink";
-	}
-
-	/**
-	 * standard SS method for use in templates
-	 * @return String
-	 */
-	function LinkOrCurrent(){
-		return parent::LinkOrCurrent() . " cartlink";
-	}
-
 
 	/**
 	 * This returns a ArraList, each dataobject has two vars: Title and Link
