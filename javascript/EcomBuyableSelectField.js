@@ -9,10 +9,8 @@
 		/**
 		 */
 		$('#FindBuyable input.text').entwine({
-
 			onmatch : function() {
 				EcomBuyableSelectField.init();
-				this._super();
 			}
 		});
 

@@ -15,10 +15,10 @@
 
 EcomPrintAndMail = {
 
-	selectors: "#OrderPrintAndMail",
+	selectors: "#OrderPrintAndMail a",
 
 	init: function() {
-		jQuery(EcomPrintAndMail.selectors + " a, a[data-popup]").on(
+		jQuery(EcomPrintAndMail.selectors).on(
 			"click",
 			function(e) {
 				e.preventDefault();

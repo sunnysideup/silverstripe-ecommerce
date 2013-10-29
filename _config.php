@@ -11,4 +11,8 @@
 ////date_default_timezone_set("NZ");
 
 
-//LeftAndMain::require_javascript("ecommerce/javascript/EcomPrintAndMail.js");
+/*
+LeftAndMain:
+  extra_requirements_javascript:
+    - ecommerce/javascript/EcomPrintAndMail.js
+*/

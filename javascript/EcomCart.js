@@ -402,11 +402,11 @@ EcomCart = {
 	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
 	 */
 	addCartRemove: function (withinSelector) {
-		jQuery(withinSelector).delegate(
-			EcomCart.removeCartSelector,
+		jQuery(withinSelector + " " +EcomCart.removeCartSelector).on(
 			"click",
-			function(){
-				if(!EcomCart.ConfirmDeleteText || confirm(EcomCart.ConfirmDeleteText)) {
+			function(event){
+				event.preventDefault();
+				if(!EcomCart.confirmDeleteText || confirm(EcomCart.confirmDeleteText)) {
 					var url = jQuery(this).attr("href");
 					var el = jQuery(this).parents(EcomCart.orderItemHolderSelector);
 					jQuery(el).slideUp(
@@ -545,7 +545,6 @@ EcomCart = {
 						else{
 							jQuery(selector).attr(parameter, value);
 						}
-						console.log(selector);
 						if(selector == ".number_of_items") {
 							//update cart menu items
 							jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(
