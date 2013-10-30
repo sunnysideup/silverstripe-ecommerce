@@ -36,7 +36,8 @@ EcommerceDatabaseAdmin:
     - runTask
 
 LeftAndMain:
-  extra_requirements_css: ecommerce/css/ecommercecmsfixes.css
+  extra_requirements_css:
+    - ecommerce/css/ecommercecmsfixes.css
 
 ---
 Only:
