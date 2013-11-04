@@ -26,7 +26,6 @@ class EcommercePayment extends DataObject {
 		'Message' => 'Text',
 		'IP' => 'Varchar',
 		'ProxyIP' => 'Varchar',
-		'PaymentDate' => "Date",
 		'ExceptionError' => 'Text'
 	);
 
@@ -91,10 +90,7 @@ class EcommercePayment extends DataObject {
 			$form->controller->redirectBack();
 			return false;
 		}
-		$paidBy = $order->Member();
-		if(!$paidBy) {
-			$paidBy = Member::currentUser();
-		}
+
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 
 		$payment = class_exists($paymentClass) ? new $paymentClass() : null;

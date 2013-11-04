@@ -8,5 +8,6 @@ Director:
     'ecommercepayment//$Action/$ID/$OtherID' : 'EcommercePaymentController'
     'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTemplateTest'
     'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
-    'dev/ecommerce//$Action/$ID/$OtherID' : 'EcommerceDatabaseAdmin'
+    'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
+    'ecommerce-email-preview//$Action/$ID/$OtherID' : 'OrderEmailRecord_Review'
 

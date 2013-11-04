@@ -31,6 +31,9 @@ Money:
   extensions:
     - EcommerceMoney
 
+OrderEmailRecord_Review:
+  url_segment: "ecommerce-email-preview"
+
 EcommerceDatabaseAdmin:
   allowed_actions:
     - runTask

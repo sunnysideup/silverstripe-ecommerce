@@ -139,6 +139,8 @@ class OrderEmailRecord extends DataObject{
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
+		$emailLink = OrderEmailRecord_Review::review_link($this);
+		$fields->replaceField("Content", new LiteralField("Content", "<iframe src=\"$emailLink\" width=\"100%\" height=\"300\"></iframe>"));
 		$fields->replaceField("OrderID", $fields->dataFieldByName("OrderID")->performReadonlyTransformation());
 		$fields->replaceField("OrderStep", new ReadonlyField("OrderStepNice", "Order Step", $this->OrderStepNice()));
 		return $fields;
@@ -189,4 +191,21 @@ class OrderEmailRecord extends DataObject{
 		return EcommerceTaskDebugCart::debug_object($this);
 	}
 
+}
+
+class OrderEmailRecord_Review extends Controller {
+
+	private static $allowed_actions = array(
+		"read" => "ShopAdmin"
+	);
+
+	public static function review_link($email) {
+		return Config::inst()->get("OrderEmailRecord_Review", "url_segment")."/read/".$email->ID;
+	}
+
+	function read($request) {
+		$id = intval($request->param("ID"));
+		$email = OrderEmailRecord::get()->byID($id);
+		return $email->Content;
+	}
 }
