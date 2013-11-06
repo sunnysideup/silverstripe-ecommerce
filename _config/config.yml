@@ -7,8 +7,6 @@ After: 'framework/*','cms/*'
 DevelopmentAdmin:
   extensions:
     - EcommerceDevelopmentAdminDecorator
-  allowed_actions:
-    - 'ecommerce'
 
 Member:
   extensions:

@@ -1465,6 +1465,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return REDIRECT
 	 */
 	function submittedbuyable(SS_HTTPRequest $request){
+
 		$buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
 		$buyableID = intval($this->getRequest()->param('OtherID'));
 		$version = intval($this->getRequest()->param('Version'));
@@ -1473,7 +1474,11 @@ class ShoppingCart_Controller extends Controller{
 				$bestBuyable = $buyableClassName::get()->byID($buyableID);
 				if($bestBuyable) {
 					//show singleton with old version
-					return $this->redirect($bestBuyable->Link("viewversion/".$buyableID."/".$version."/"));
+					$link = $bestBuyable->Link("viewversion/".$buyableID."/".$version."/");
+					header("location: $link");
+					$this->redirect($link);
+					die("AASDSASDAS".$link);
+					return array();
 				}
 			}
 		}
