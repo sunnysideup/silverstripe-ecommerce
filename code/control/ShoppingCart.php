@@ -194,10 +194,10 @@ class ShoppingCart extends Object{
 			if($this->order && $this->order->exists()) {
 				$this->order->calculateOrderAttributes($force = false);
 			}
-		}
-		if(!$this->order->SessionID) {
-			$this->order->SessionID = session_id();
-			$this->order->write();
+			if(!$this->order->SessionID) {
+				$this->order->SessionID = session_id();
+				$this->order->write();
+			}
 		}
 		return $this->order;
 	}
