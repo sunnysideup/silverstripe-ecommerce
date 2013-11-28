@@ -344,7 +344,7 @@ class Order extends DataObject {
 		),
 		'CancelledByID' => array(
 			'filter' => 'OrderFilters_HasBeenCancelled',
-			'title' => "Cancelled"
+			'title' => "Cancelled by ..."
 		)
 	);
 
