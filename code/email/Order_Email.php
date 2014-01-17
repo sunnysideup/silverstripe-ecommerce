@@ -107,8 +107,8 @@ Abstract class Order_Email extends Email {
 		}
 		$this->subject = str_replace("[OrderNumber]", $this->order->ID, $this->subject);
 		if((!$this->hasBeenSent()) || ($this->resend)) {
-			if(EcommerceConfig::get("Order_Email", "copy_to_admin_for_all_emails") && ($this->to != Email::getAdminEmail())) {
-				$this->setBcc(Email::getAdminEmail());
+			if(EcommerceConfig::get("Order_Email", "copy_to_admin_for_all_emails") && ($this->to != Order_Email::get_from_email())) {
+				$this->setBcc(Order_Email::get_from_email());
 			}
 			//last chance to adjust
 			$this->extend("adjustOrderEmailSending", $this, $order);
