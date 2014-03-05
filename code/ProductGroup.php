@@ -517,17 +517,17 @@ class ProductGroup extends Page {
 	 * can setup all sorts of filters, while still using the ProductsShowable method.
 	 *
 	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
-	 * @return DataList
+	 * @return DataList | Null
 	 */
 	public function ProductsShowable($extraFilter = ''){
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
-		$this->sortedProducts = $this->currentFinalProducts();
-		$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
-		if(isset($buyablesIDArray) && is_array($buyablesIDArray) && count($buyablesIDArray)) {
-			$listOfIDs = implode(",", $buyablesIDArray);
-		}
-		else {
-			$listOfIDs = "0";
+		$this->currentFinalProducts();
+		$listOfIDs = "0";
+		if($this->sortedProducts && $this->sortedProducts->count()) {
+			$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
+			if(isset($buyablesIDArray) && is_array($buyablesIDArray) && count($buyablesIDArray)) {
+				$listOfIDs = implode(",", $buyablesIDArray);
+			}
 		}
 		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $listOfIDs);
 		return $this->sortedProducts;
