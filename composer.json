@@ -3,7 +3,7 @@
 	"type": "silverstripe-module",
 	"description": "Silverstripe E-commerce Application",
 	"homepage": "http://www.silverstripe-ecommerce.com/",
-	"keywords": ["e-commerce", "ecommerce", "payment", "shop", "sales", "silverstripe", "webshop", "cart", "sales", "products", "selling stuff", "online payment"],
+	"keywords": ["e-commerce", "ecommerce", "payment", "shop", "sales", "silverstripe", "webshop", "cart", "sales", "products", "selling stuff", "online payment", "services"],
 	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
 	"authors":[
 		{
