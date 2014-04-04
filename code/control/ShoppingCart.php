@@ -1477,7 +1477,6 @@ class ShoppingCart_Controller extends Controller{
 					$link = $bestBuyable->Link("viewversion/".$buyableID."/".$version."/");
 					header("location: $link");
 					$this->redirect($link);
-					die("AASDSASDAS".$link);
 					return array();
 				}
 			}

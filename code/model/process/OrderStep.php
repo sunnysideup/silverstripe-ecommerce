@@ -78,6 +78,7 @@ class OrderStep extends DataObject {
 	 * @return Array
 	 */
 	private static $casting = array(
+		"Title" => "Varchar",
 		"CustomerCanEditNice" => "Varchar",
 		"CustomerCanPayNice" => "Varchar",
 		"CustomerCanCancelNice" => "Varchar",
@@ -103,6 +104,14 @@ class OrderStep extends DataObject {
 			'filter' => 'PartialMatchFilter'
 		)
 	);
+
+
+	/**
+	 * casted variable
+	 * @return String
+	 */
+	function Title() {return $this->getTitle();}
+		function getTitle() {return $this->Name;}
 
 
 	/**

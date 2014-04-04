@@ -103,7 +103,7 @@ class OrderItem extends OrderAttribute {
 	 * stardard SS definition
 	 */
 	private static $summary_fields = array(
-		"Order.ID" => "Order ID",
+		"OrderID" => "Order ID",
 		"TableTitle" => "Title",
 		"TableSubTitle" => "Sub Title",
 		"UnitPrice" => "Unit Price" ,
