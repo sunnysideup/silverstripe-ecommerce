@@ -251,7 +251,7 @@ interface BuyableModel {
 	 * Is the product for sale?
 	 * @return Boolean
 	 */
-	function canPurchase(Member $member = null);
+	function canPurchase(Member $member = null, $checkPrice = true);
 
 
 
