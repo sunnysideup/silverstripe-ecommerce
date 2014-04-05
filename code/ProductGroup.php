@@ -3,13 +3,40 @@
   * Product Group is a 'holder' for Products within the CMS
   * It contains functions for versioning child products
   *
- *
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: Pages
- * @inspiration: Silverstripe Ltd, Jeremy
- **/
+  * The way the products are selected:
+  *
+  * Controller calls:
+  * ProductGroup::ProductsShowable($extraFilter = "")
+  *
+  * ProductsShowable runs currentInitialProducts.  This selects ALL the applicable products
+  * but it does NOT PAGINATE (limit) or SORT them.
+  * After that, it calls currentFinalProducts, this sorts the products and notes the total
+  * count of products.
+  *
+  *
+  *
+  * For each product page, there is a default:
+  *  - filter
+  *  - sort
+  *  - number of levels to show (e.g. children, grand-children, etc...)
+  * and these settings can be changed in the CMS, depending on what the
+  * developer makes available to the content editor.
+  *
+  * In extending the ProductGroup class, it is recommended
+  * that you override the following methods:
+  * - getClassNameSQL
+  * - getStandardFilter
+  * - getGroupFilter
+  * - getGroupJoin
+  * - getExcludedProducts
+  *
+  *
+  *
+  * @authors: Nicolaas [at] Sunny Side Up .co.nz
+  * @package: ecommerce
+  * @sub-package: Pages
+  * @inspiration: Silverstripe Ltd, Jeremy
+  **/
 
 
 class ProductGroup extends Page {
@@ -169,6 +196,15 @@ class ProductGroup extends Page {
 	}
 
 
+
+
+
+
+
+	/*********************
+	 * SETTINGS: Default Key
+	 *********************/
+
 	/**
 	 * returns the default Sort key.
 	 * @return String
@@ -181,6 +217,34 @@ class ProductGroup extends Page {
 		$keys = array_keys($sortOptions);
 		return $keys[0];
 	}
+
+
+	/**
+	 * Returns the default filter key. Carefully making sure it exists
+	 * @return String
+	 */
+	protected function getDefaultFilterKey(){
+		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
+		if(isset($filterOptions["default"])) {
+			return "default";
+		}
+		$keys = array_keys($filterOptions);
+		return $keys[0];
+	}
+
+	/**
+	 * Returns the default Display style: Default....
+	 * @return String
+	 */
+	protected function getDefaultDisplayStyle(){
+		return "default";
+	}
+
+
+	/*********************
+	 * SETTINGS: Dropdowns
+	 *********************/
+
 
 	/**
 	 * returns an array of Key => Title for sort options
@@ -197,57 +261,6 @@ class ProductGroup extends Page {
 			}
 		}
 		return $array;
-	}
-
-	/**
-	 * Returns the sort sql for a particular sorting key.
-	 * If no key is provided then the default key will be returned.
-	 * @param String $key
-	 * @return Array (e.g. Array(MyField => "ASC", "MyOtherField" => "DESC")
-	 */
-	protected function getSortOptionSQL($key = ""){
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(!$key || (!isset($sortOptions[$key]))) {
-			$key = $this->getDefaultSortKey();
-		}
-		if($key) {
-			return $sortOptions[$key]["SQL"];
-		}
-		else {
-			return array("Sort" => "ASC");
-		}
-	}
-
-	/**
-	 * Returns the Title for a sorting key.
-	 * If no key is provided then the default key is used.
-	 * @param String $key
-	 * @return String
-	 */
-	protected function getSortOptionTitle($key = ""){ // NOT STATIC
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(!$key || (!isset($sortOptions[$key]))) {
-			$key = $this->getDefaultSortKey();
-		}
-		if($key) {
-			return $sortOptions[$key]["Title"];
-		}
-		else {
-			return _t("ProductGroup.UNKNOWN", "UNKNOWN");
-		}
-	}
-
-	/**
-	 * Returns the default filter key. Carefully making sure it exists
-	 * @return String
-	 */
-	protected function getDefaultFilterKey(){
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
-		if(isset($filterOptions["default"])) {
-			return "default";
-		}
-		$keys = array_keys($filterOptions);
-		return $keys[0];
 	}
 
 	/**
@@ -268,41 +281,6 @@ class ProductGroup extends Page {
 		return $array;
 	}
 
-	/**
-	 * Returns the sql associated with a filter option.
-	 * @param String $key - the option selected
-	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0)) OR STRING!!!!
-	 */
-	protected function getFilterOptionSQL($key = ""){
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
-		if(!$key || (!isset($filterOptions[$key]))){
-			$key = $this->getDefaultFilterKey();
-		}
-		if($key) {
-			return $filterOptions[$key]["SQL"];
-		}
-		else {
-			return array("ShowInSearch" => 1);
-		}
-	}
-
-	/**
-	 * The title for the selected filter option.
-	 * @param String $key - the key for the selected filter option
-	 * @return String
-	 */
-	protected function getFilterOptionTitle($key = ""){ // NOT STATIC
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
-		if(!$key || (!isset($filterOptions[$key]))){
-			$key = $this->getDefaultFilterKey();
-		}
-		if($key) {
-			return $filterOptions[$key]["Title"];
-		}
-		else {
-			return _t("ProductGroup.UNKNOWN", "UNKNOWN");
-		}
-	}
 
 	/**
 	 * Returns the options for product display styles.
@@ -329,13 +307,160 @@ class ProductGroup extends Page {
 		return $array;
 	}
 
+
+
+	/*********************
+	 * SETTINGS: SQL
+	 *********************/
+
 	/**
-	 * Returns the default Display style: Default....
+	 * Returns the sort sql for a particular sorting key.
+	 * If no key is provided then the default key will be returned.
+	 * @param String $key
+	 * @return Array (e.g. Array(MyField => "ASC", "MyOtherField" => "DESC")
+	 */
+	protected function getSortOptionSQL($key = ""){
+		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
+		if(!$key || (!isset($sortOptions[$key]))) {
+			$key = $this->getDefaultSortKey();
+		}
+		if($key) {
+			return $sortOptions[$key]["SQL"];
+		}
+		else {
+			return array("Sort" => "ASC");
+		}
+	}
+
+	/**
+	 * Returns the sql associated with a filter option.
+	 * @param String $key - the option selected
+	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0)) OR STRING!!!!
+	 */
+	protected function getFilterOptionSQL($key = ""){
+		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
+		if(!$key || (!isset($filterOptions[$key]))){
+			$key = $this->getDefaultFilterKey();
+		}
+		if($key) {
+			return $filterOptions[$key]["SQL"];
+		}
+		else {
+			return array("ShowInSearch" => 1);
+		}
+	}
+
+
+	/*********************
+	 * SETTINGS: Title
+	 *********************/
+
+	/**
+	 * Returns the Title for a sorting key.
+	 * If no key is provided then the default key is used.
+	 * @param String $key
 	 * @return String
 	 */
-	protected function getDefaultDisplayStyle(){
-		return "default";
+	protected function getSortOptionTitle($key = ""){ // NOT STATIC
+		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
+		if(!$key || (!isset($sortOptions[$key]))) {
+			$key = $this->getDefaultSortKey();
+		}
+		if($key) {
+			return $sortOptions[$key]["Title"];
+		}
+		else {
+			return _t("ProductGroup.UNKNOWN", "UNKNOWN");
+		}
 	}
+
+
+
+	/**
+	 * The title for the selected filter option.
+	 * @param String $key - the key for the selected filter option
+	 * @return String
+	 */
+	protected function getFilterOptionTitle($key = ""){ // NOT STATIC
+		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
+		if(!$key || (!isset($filterOptions[$key]))){
+			$key = $this->getDefaultFilterKey();
+		}
+		if($key) {
+			return $filterOptions[$key]["Title"];
+		}
+		else {
+			return _t("ProductGroup.UNKNOWN", "UNKNOWN");
+		}
+	}
+
+
+
+	/*********************
+	 * SETTINGS: default codes
+	 *********************/
+
+
+	/**
+	 * returns the CODE of the default sort order.
+	 * @return String
+	 **/
+	public function MyDefaultSortOrder() {
+		$defaultSortOrder = "";
+		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
+		if($this->DefaultSortOrder && array_key_exists($this->DefaultSortOrder, $sortOptions)) {
+			$defaultSortOrder = $this->DefaultSortOrder;
+		}
+		if(!$defaultSortOrder && $parent = $this->ParentGroup()) {
+			$defaultSortOrder = $parent->MyDefaultSortOrder();
+		}
+		elseif(!$defaultSortOrder) {
+			$defaultSortOrder = $this->getDefaultSortKey();
+		}
+		return $defaultSortOrder;
+	}
+
+	/**
+	 * returns the CODE of the default filter.
+	 * @return String
+	 **/
+	function MyDefaultFilter() {
+		$defaultFilter = "";
+		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
+		if($this->DefaultFilter && array_key_exists($this->DefaultFilter, $filterOptions)) {
+			$defaultFilter = $this->DefaultFilter;
+		}
+		if(!$defaultFilter && $parent = $this->ParentGroup()) {
+			$defaultFilter = $parent->MyDefaultFilter();
+		}
+		elseif(!$defaultFilter) {
+			$defaultFilter = $this->getDefaultFilterKey();
+		}
+		return $defaultFilter;
+	}
+
+	/**
+	 * returns the CODE of the default style for template.
+	 * @return String
+	 **/
+	function MyDefaultDisplayStyle() {
+		$displayStyle = "";
+		if($this->DisplayStyle != "inherit") {
+			$displayStyle = $this->DisplayStyle;
+		}
+		if($displayStyle == "inherit" && $parent = $this->ParentGroup()) {
+			$displayStyle = $parent->MyDefaultDisplayStyle();
+		}
+		if(!$displayStyle) {
+			$displayStyle = $this->getDefaultDisplayStyle();
+		}
+		return $displayStyle;
+	}
+
+
+	/*********************
+	 * SETTINGS: product levels
+	 *********************/
 
 	/**
 	 * @var Array
@@ -368,6 +493,13 @@ class ProductGroup extends Page {
 	 * @param Mixed $value
 	 */
 	public function AddShowProductLevel($key, $value) {$this->showProductLevels[$key] = $value; ksort($this->showProductLevels);}
+
+
+
+	/*********************
+	 * CMS Fields
+	 *********************/
+
 
 	/**
 	 * standard SS method
@@ -429,7 +561,7 @@ class ProductGroup extends Page {
 				new DropdownField("DefaultFilter", _t("ProductGroup.DEFAULTFILTER", "Default Filter"), $filterDropdownList)
 			);
 		}
-		//displa style
+		//display style
 		$displayStyleDropdownList = $this->getDisplayStyleForDropdown();
 		if(count($displayStyleDropdownList) > 1) {
 			$displayStyleKey = $this->MyDefaultDisplayStyle();
@@ -471,16 +603,11 @@ class ProductGroup extends Page {
 		return $field;
 	}
 
+
 	/*****************************************************
 	 *
-	 * START OF THE DATA LIST SYSTEM
-	 * The way this works is basically that any product group
-	 * page basically collects information to come to a
-	 * list of products, including
-	 * - PRESELECT: default level of child products (set in CMS)
-	 * - SORT: default sort (set in CMS)
-	 * - FILTER: default filter (set in CMS)
-	 * -
+	 * START OF THE DATA LIST SYSTEM: select the products to show
+	 * (see top of this file for more information)
 	 *
 	 *****************************************************/
 
@@ -522,14 +649,14 @@ class ProductGroup extends Page {
 	public function ProductsShowable($extraFilter = ''){
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
 		$this->currentFinalProducts();
-		$listOfIDs = "0";
+		$stringOfIDs = "0";
 		if($this->sortedProducts && $this->sortedProducts->count()) {
 			$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
-			if(isset($buyablesIDArray) && is_array($buyablesIDArray) && count($buyablesIDArray)) {
-				$listOfIDs = implode(",", $buyablesIDArray);
+			if(is_array($buyablesIDArray) && count($buyablesIDArray)) {
+				$stringOfIDs = implode(",", $buyablesIDArray);
 			}
 		}
-		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $listOfIDs);
+		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $stringOfIDs);
 		return $this->sortedProducts;
 	}
 
@@ -554,7 +681,8 @@ class ProductGroup extends Page {
 		$this->allProducts = $className::get();
 
 		// STANDARD FILTER
-		$this->allProducts = $this->getStandardFilter();
+		$this->getStandardFilter();
+
 
 		// EXTRA FILTER
 		if(is_array($extraFilter) && count($extraFilter)) {
@@ -587,12 +715,27 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 **/
 	protected function currentFinalProducts(){
-		if($this->totalCount = $this->allProducts->count()) {
-			if($this->totalCount) {
-				$this->sortedProducts = $this->allProducts->Sort($this->currentSortSQL());
-				return $this->sortedProducts;
+		if($this->allProducts) {
+			if($this->totalCount = $this->allProducts->count()) {
+				if($this->totalCount) {
+					$this->sortedProducts = $this->allProducts->Sort($this->currentSortSQL());
+					return $this->sortedProducts;
+				}
 			}
 		}
+	}
+
+	/*****************************************************
+	 * DATALIST: adjusters
+	 * these are the methods you want to override in
+	 * any clases that extend ProductGroup
+	 *****************************************************/
+	/**
+	 * Do products occur in more than one group
+	 * @return Boolean
+	 */
+	protected function getProductsAlsoInOtherGroups(){
+		return $this->EcomConfig()->ProductsAlsoInOtherGroups;
 	}
 
 	/**
@@ -603,13 +746,6 @@ class ProductGroup extends Page {
 		return "Product";
 	}
 
-	/**
-	 * Do products occur in more than one group
-	 * @return Boolean
-	 */
-	protected function getProductsAlsoInOtherGroups(){
-		return $this->EcomConfig()->ProductsAlsoInOtherGroups;
-	}
 
 	/**
 	 * adjust the allProducts, based on the $_GET or default entry.
@@ -652,7 +788,7 @@ class ProductGroup extends Page {
 			$groupIDs = array($this->ID => $this->ID);
 			$groupFilter .= $this->getProductsToBeIncludedFromOtherGroups();
 			$childGroups = $this->ChildGroups($this->LevelOfProductsToShow);
-			if($childGroups->count()) {
+			if($childGroups && $childGroups->count()) {
 				foreach($childGroups as $childGroup) {
 					$groupIDs[$childGroup->ID] = $childGroup->ID;
 					$groupFilter .= $childGroup->getProductsToBeIncludedFromOtherGroups();
@@ -700,6 +836,21 @@ class ProductGroup extends Page {
 
 
 	/**
+	 * returns the SORT part of the final selection of products.
+	 * @return String
+	 */
+	protected function currentSortSQL() {
+		if(isset($_GET['sortby'])) {
+			$sortKey = Convert::raw2sqL($_GET['sortby']);
+		}
+		else {
+			$sortKey = $this->MyDefaultSortOrder();
+		}
+		$sort = $this->getSortOptionSQL($sortKey);
+		return $sort;
+	}
+
+	/**
 	 * Excluded products that can not be purchased
 	 * IMPORTANT: Adjusts allProducts and returns it...
 	 * @return DataList
@@ -741,21 +892,6 @@ class ProductGroup extends Page {
 	}
 
 	/**
-	 * returns the SORT part of the final selection of products.
-	 * @return String
-	 */
-	protected function currentSortSQL() {
-		if(isset($_GET['sortby'])) {
-			$sortKey = Convert::raw2sqL($_GET['sortby']);
-		}
-		else {
-			$sortKey = $this->MyDefaultSortOrder();
-		}
-		$sort = $this->getSortOptionSQL($sortKey);
-		return $sort;
-	}
-
-	/**
 	 * returns the JOIN part of the final selection of products.
 	 * @return String
 	 */
@@ -763,6 +899,9 @@ class ProductGroup extends Page {
 		Deprecation::notice('3.1', "No longer in use");
 	}
 
+	/*****************************************************
+	 * DATALIST: totals, number per page, etc..
+	 *****************************************************/
 
 	/**
 	 * returns the total numer of products (before pagination)
@@ -783,8 +922,8 @@ class ProductGroup extends Page {
 	/**
 	 *@return Integer
 	 **/
-	function ProductsPerPage() {return $this->MyNumberOfProductsPerPage();}
-	function MyNumberOfProductsPerPage() {
+	public function ProductsPerPage() {return $this->MyNumberOfProductsPerPage();}
+	public function MyNumberOfProductsPerPage() {
 		$productsPagePage = 0;
 		if($this->NumberOfProductsPerPage) {
 			$productsPagePage = $this->NumberOfProductsPerPage;
@@ -800,62 +939,11 @@ class ProductGroup extends Page {
 		return $productsPagePage;
 	}
 
-	/**
-	 * returns the code of the default sort order.
-	 * @param $field "", "Title", "SQL"
-	 * @return String
-	 **/
-	function MyDefaultSortOrder() {
-		$defaultSortOrder = "";
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if($this->DefaultSortOrder && array_key_exists($this->DefaultSortOrder, $sortOptions)) {
-			$defaultSortOrder = $this->DefaultSortOrder;
-		}
-		if(!$defaultSortOrder && $parent = $this->ParentGroup()) {
-			$defaultSortOrder = $parent->MyDefaultSortOrder();
-		}
-		elseif(!$defaultSortOrder) {
-			$defaultSortOrder = $this->getDefaultSortKey();
-		}
-		return $defaultSortOrder;
-	}
 
-	/**
-	 * returns the code of the default sort order.
-	 * @return String
-	 **/
-	function MyDefaultFilter() {
-		$defaultFilter = "";
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
-		if($this->DefaultFilter && array_key_exists($this->DefaultFilter, $filterOptions)) {
-			$defaultFilter = $this->DefaultFilter;
-		}
-		if(!$defaultFilter && $parent = $this->ParentGroup()) {
-			$defaultFilter = $parent->MyDefaultFilter();
-		}
-		elseif(!$defaultFilter) {
-			$defaultFilter = $this->getDefaultFilterKey();
-		}
-		return $defaultFilter;
-	}
 
-	/**
-	 * returns the code of the default style for template.
-	 * @return String
-	 **/
-	function MyDefaultDisplayStyle() {
-		$displayStyle = "";
-		if($this->DisplayStyle != "inherit") {
-			$displayStyle = $this->DisplayStyle;
-		}
-		if($displayStyle == "inherit" && $parent = $this->ParentGroup()) {
-			$displayStyle = $parent->MyDefaultDisplayStyle();
-		}
-		if(!$displayStyle) {
-			$displayStyle = $this->getDefaultDisplayStyle();
-		}
-		return $displayStyle;
-	}
+	/*****************************************************
+	 * Children and Parents
+	 *****************************************************/
 
 	/**
 	 * Returns children ProductGroup pages of this group.
@@ -892,6 +980,7 @@ class ProductGroup extends Page {
 	 * Deprecated method
 	 */
 	function ChildGroupsBackup($maxRecursiveLevel, $filter = "") {
+		Deprecation::notice('3.1', "No longer in use");
 		if($maxRecursiveLevel > 24) {
 			$maxRecursiveLevel = 24;
 		}
@@ -936,6 +1025,12 @@ class ProductGroup extends Page {
 			return ProductGroup::get()->byID($this->ParentID);
 		}
 	}
+
+
+
+	/*****************************************************
+	 * Other Stuff
+	 *****************************************************/
 
 	/**
 	 * Recursively generate a product menu.
