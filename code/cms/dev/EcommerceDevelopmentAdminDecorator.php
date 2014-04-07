@@ -15,7 +15,7 @@
 class EcommerceDevelopmentAdminDecorator extends Extension{
 
 
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		"ecommerce"
 	);
 
