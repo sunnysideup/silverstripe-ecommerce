@@ -1,12 +1,11 @@
-###############################################
-Silverstripe E-commerce 
-###############################################
+Silverstripe E-commerce
+================================================================================
 
 
 Developers
 -----------------------------------------------
 Nicolaas Francken [at] sunnysideup.co.nz
-Silverstripe Ltd and Jeremy and many others 
+Silverstripe Ltd and Jeremy and many others
 also contributed to this project. THANK YOU!
 
 
