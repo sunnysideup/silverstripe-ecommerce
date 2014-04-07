@@ -37,9 +37,7 @@ Installation Instructions
 In the _config/ folder of this module
 you should to find some examples of config options (if any).
 
-If you just want one or two things from this module
-then of course you are free to copy them to your
-mysite folder and delete the rest of this module.
+
 
 
 
