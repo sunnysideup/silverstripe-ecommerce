@@ -223,6 +223,9 @@ class EcommerceConfigDefinitions extends Object {
 				"cart_js_file_location" => "The location for the EcomCart.js (javascipt that runs the cart) file.  The default one is ecommerce/javascript/EcomCart.js",
 				"dialogue_js_file_location" => "The location for the dialogue (pop-up) javascript.  E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue, but you can also use your own (e.g. prettyPhoto or Greybox)."
 			),
+			"CartResponse" => array(
+				"cart_responses_required" => "An array of the cart responses required for AJAX.  This array also identifies the unique IDs used in the html that will be updated by the ajax response."
+			)
 			"StoreAdmin" => array(
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
 				//"collection_controller_class" => "The controller for the collection.  ",

@@ -17,6 +17,21 @@ class CartResponse extends EcommerceResponse {
 	 */
 	private static $force_reload = false;
 
+
+	/**
+	 * list of cart response required
+	 * Array is like this:
+	 * METHOD_THAT_RETURNS_ID_FOR_HTML_TO_REPLACE => NAME_OF_TEMPLATE
+	 *
+	 * @var Array
+	 */
+	private static $cart_responses_required = array(
+		//"TinyCartClassName" "CartTinyInner",
+		//"SmallCartID" => "CartShortInner",
+		"SideBarCartID" => "Sidebar_Cart_Inner"
+	);
+
+
 	/**
 	 * Sets the $force_reload to true;
 	 */
@@ -134,31 +149,16 @@ class CartResponse extends EcommerceResponse {
 
 		//TO DO: set it up in such a way that it specifically requests one of these
 		//tiny cart
-		$js[] = array(
-			"t" => "class",
-			"s" => $ajaxObject->TinyCartClassName(),
-			"p" => "innerHTML",
-			//note the space is a hack to return something!
-			"v" => " ".$currentOrder->renderWith("CartTinyInner")
-		);
-
-		//add basic cart
-		$js[] = array(
-			"t" => "id",
-			"s" => $ajaxObject->SmallCartID(),
-			"p" => "innerHTML",
-			//note the space is a hack to return something!
-			"v" => " ".$currentOrder->renderWith("CartShortInner")
-		);
-
-		//side bar cart
-		$js[] = array(
-			"t" => "id",
-			"s" => $ajaxObject->SideBarCartID(),
-			"p" => "innerHTML",
-			//note the space is a hack to return something!
-			"v" => " ".$currentOrder->renderWith("Sidebar_Cart_Inner")
-		);
+		$templates = EcommerceConfig::get("CartResponse", "cart_responses_required");
+		foreach($templates as $idMethod => $template) {
+			$js[] = array(
+				"t" => "class",
+				"s" => $ajaxObject->$idMethod(),
+				"p" => "innerHTML",
+				//note the space is a hack to return something!
+				"v" => " ".$currentOrder->renderWith($template)
+			);
+		}
 		//now can check if it needs to be reloaded
 		if(self::$force_reload) {
 			$js = array(
