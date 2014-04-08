@@ -222,6 +222,12 @@ EcommerceConfigAjax:
   cart_js_file_location: ecommerce/javascript/EcomCart.js
   dialogue_js_file_location: ecommerce/javascript/jquery.colorbox-min.js
 
+CartResponse:
+  cart_responses_required:
+#    TinyCartClassName: CartTinyInner
+#    SmallCartID: CartShortInner
+    SideBarCartID: Sidebar_Cart_Inner
+
 ################### MODIFIERS #####################
 
 
