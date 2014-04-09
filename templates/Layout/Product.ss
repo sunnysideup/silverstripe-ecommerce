@@ -9,9 +9,10 @@
 		<% include Sidebar_Cart %>
 		<% include Sidebar_Currency %>
 		<% include Sidebar_UserAccount %>
+		<% include Sidebar %>
 		<div class="sidebarBottom"></div>
 	</div>
 </aside>
-<% include Sidebar %>
+
 
 
