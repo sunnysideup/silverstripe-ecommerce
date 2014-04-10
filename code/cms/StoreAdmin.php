@@ -48,7 +48,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 	 *@return String (URLSegment)
 	 **/
 	function urlSegmenter() {
-		return self::$url_segment;
+		return $this->config()->get("url_segment");
 	}
 
 

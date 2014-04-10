@@ -146,7 +146,7 @@ class DeleteAllOrders extends BuildTask {
 
 	private function doubleCheckModifiersAndItems() {
 		DB::alteration_message("<hr />double-check:</hr />");
-		foreach(self::$double_check_objects as $table) {
+		foreach($this->config()->get("double_check_objects") as $table) {
 			$countCheck = DB::query("Select COUNT(ID) FROM \"$table\"")->value();
 			if($countCheck) {
 				DB::alteration_message("ERROR: in testing <i>".$table."</i> it appears there are ".$countCheck." records left.", "deleted");

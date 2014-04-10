@@ -40,7 +40,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 	 *@return String (URL Segment)
 	 **/
 	function urlSegmenter() {
-		return self::$url_segment;
+		return $this->config()->get("url_segment");
 	}
 
 	function getEditForm($id = null, $fields = null) {

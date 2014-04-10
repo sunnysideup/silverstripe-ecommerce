@@ -589,7 +589,8 @@ class OrderModifier extends OrderAttribute {
 
 	protected function LiveName() {
 		user_error("The \"LiveName\" method has be defined in ...".$this->ClassName, E_USER_NOTICE);
-		return self::$defaults["Name"];
+		$defaults = $this->config()->get("defaults");
+		return $defaults["Name"];
 	}
 
 	protected function LiveTableValue() {

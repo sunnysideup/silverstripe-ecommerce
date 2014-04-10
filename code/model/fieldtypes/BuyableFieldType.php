@@ -39,7 +39,7 @@ class BuyableFieldType extends DBField implements CompositeDBField {
 	}
 
 	function compositeDatabaseFields() {
-		return self::$composite_db;
+		return $this->config()->get("composite_db")
 	}
 
 	function requireField() {

@@ -71,7 +71,7 @@ class EcommerceRole extends DataExtension {
 		if($group) {
 			$members = $group->Members();
 			$membersCount = $members->count();
-			if($membersCount > 0 && $membersCount < self::$max_count_of_members_in_array) {
+			if($membersCount > 0 && $membersCount < Config::inst()->get("EcommerceRole", "max_count_of_members_in_array")) {
 				foreach($members as $member) {
 					if($member->Email) {
 						$array[$member->ID] = $member->Email." (".$member->getTitle().")";
