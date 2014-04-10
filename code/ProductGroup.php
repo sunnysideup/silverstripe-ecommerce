@@ -647,9 +647,12 @@ class ProductGroup extends Page {
 	 * @return DataList | Null
 	 */
 	public function ProductsShowable($extraFilter = ''){
+		//get original products without sort / limit
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
+		//sort products
 		$this->currentFinalProducts();
 		$stringOfIDs = "0";
+		//save products to session for later use
 		if($this->sortedProducts && $this->sortedProducts->count()) {
 			$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
 			if(is_array($buyablesIDArray) && count($buyablesIDArray)) {
