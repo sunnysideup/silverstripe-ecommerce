@@ -1,0 +1,96 @@
+inherit: true
+tools:
+  external_code_coverage:
+    timeout: 2500
+  php_analyzer:
+    enabled: true
+    config:
+      phpunit_checks:
+        enabled: true
+
+filter:
+    excluded_paths:
+        - 'thirdparty/*'
+    paths: {  }
+tools:
+    php_mess_detector:
+        enabled: true
+        extensions:
+            - php
+        filter:
+            excluded_paths:
+                - 'thirdparty/*'
+            paths: {  }
+        config:
+            ruleset: null
+            code_size_rules:
+                cyclomatic_complexity: true
+                npath_complexity:     true
+                excessive_method_length:  true
+                excessive_class_length:  true
+                excessive_parameter_list:  true
+                excessive_public_count:  true
+                too_many_fields:      true
+                too_many_methods:     true
+                excessive_class_complexity:  true
+
+            design_rules:
+                exit_expression: true
+                eval_expression: true
+                goto_statement: true
+                number_of_class_children: false
+                depth_of_inheritance: false
+                coupling_between_objects: false
+            unused_code_rules:
+                unused_private_field: false
+                unused_local_variable: true
+                unused_private_method: true
+                unused_formal_parameter: true
+            naming_rules:
+                short_variable: false
+                long_variable: false
+                short_method: false
+                constructor_conflict: true
+                constant_naming: true
+                boolean_method_name: false
+            controversial_rules:
+                superglobals: true
+                camel_case_class_name: false
+                camel_case_property_name: false
+                camel_case_method_name: false
+                camel_case_parameter_name: false
+                camel_case_variable_name: false
+
+        path_configs: {  }
+    php_cpd:
+        enabled: true
+        excluded_dirs: {  }
+        names:
+            - '*.php'
+        min_lines: 5
+        min_tokens: 70
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+            paths: {  }
+    php_pdepend:
+        excluded_dirs:
+            - vendor
+        enabled: true
+        configuration_file: null
+        suffixes:
+            - php
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+            paths: {  }
+changetracking:
+    bug_patterns:
+        - '\bfix(?:es|ed)?\b'
+    feature_patterns:
+        - '\badd(?:s|ed)?\b'
+        - '\bimplement(?:s|ed)?\b'
+before_commands: {  }
+after_commands: {  }
+artifacts: {  }
+build_failure_conditions: {  }
