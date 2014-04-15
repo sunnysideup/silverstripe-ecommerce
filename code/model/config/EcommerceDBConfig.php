@@ -175,7 +175,7 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
-		$this->ReceiptEmail = Email::getAdminEmail();
+		$this->ReceiptEmail = Email::config()->admin_email;
 	}
 
 	/**

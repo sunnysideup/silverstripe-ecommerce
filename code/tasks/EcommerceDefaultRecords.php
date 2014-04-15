@@ -108,7 +108,7 @@ class EcommerceDefaultRecords extends BuildTask {
 		$ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
 		if($ecommerceConfig) {
 			if(!$ecommerceConfig->ReceiptEmail) {
-				$ecommerceConfig->ReceiptEmail = Email::getAdminEmail();
+				$ecommerceConfig->ReceiptEmail = Email::config()->admin_email;
 				if(!$ecommerceConfig->ReceiptEmail) {
 					user_error("you must set an AdminEmail (Email::setAdminEmail)", E_USER_NOTICE);
 				}

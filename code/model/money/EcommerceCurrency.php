@@ -384,7 +384,7 @@ class EcommerceCurrency extends DataObject {
 		return $linkingMode;
 	}
 
-	protected function validate() {
+	public function validate() {
 		$result = parent::validate();
 		//TO DO - FIX!!!!
 		return $result;

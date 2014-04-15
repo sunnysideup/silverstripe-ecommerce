@@ -57,7 +57,7 @@ Abstract class Order_Email extends Email {
 			return $ecommerceConfig->ReceiptEmail;
 		}
 		else {
-			return Email::getAdminEmail();
+			return Email::config()->admin_email;
 		}
 	}
 
