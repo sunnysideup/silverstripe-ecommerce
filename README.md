@@ -1,5 +1,6 @@
 ## Silverstripe E-commerce ##
 
+[![Build Status](https://travis-ci.org/sunnysideup/silverstripe-ecommerce.svg?branch=master)](https://travis-ci.org/sunnysideup/silverstripe-ecommerce)
 
 ## Developers ##
 
