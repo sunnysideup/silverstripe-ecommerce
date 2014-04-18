@@ -4,13 +4,20 @@
  *
  * This can be used in other code by calling $cart = ShoppingCart::singleton();
  *
+ * The shopping cart can be accessed as an order handler from the back-end
+ * (e.g. when creating an order programmatically), while the accompagnying controller
+ * is used by web-users to manipulate their order.
  *
- * This version of shopping cart has been rewritten to:
- * - Seperate controller from the cart functions, abstracts out and encapsulates specific functionality.
- * - Reduce the excessive use of static variables.
- * - Clearly define an API for editing the cart, trying to keep the number of functions to a minimum.
- * - Allow easier testing of cart functionality.
- * - Message handling done in one place.
+ * A bunch of core functions are also stored in the order itself.
+ * Methods and variables are in the shopping cart if they are relevant
+ * only before (and while) the order is placed (e.g. latest update message),
+ * and others are in the order because they are relevant even after the
+ * order has been submitted (e.g. Total Cost).
+ *
+ * Key methods:
+ *
+ * $myCart = ShoppingCart::singleton();
+ * $myOrder = ShoppingCart::current_order();
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz

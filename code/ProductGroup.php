@@ -49,9 +49,9 @@ class ProductGroup extends Page {
 	private static $db = array(
 		"NumberOfProductsPerPage" => "Int",
 		"LevelOfProductsToShow" => "Int",
-		"DefaultSortOrder" => "Varchar(50)",
-		"DefaultFilter" => "Varchar(50)",
-		"DisplayStyle" => "Varchar(50)"
+		"DefaultSortOrder" => "Varchar(20)",
+		"DefaultFilter" => "Varchar(20)",
+		"DisplayStyle" => "Varchar(20)"
 	);
 
 	/**
@@ -210,12 +210,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function getDefaultSortKey(){
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(isset($sortOptions["default"])) {
-			return "default";
-		}
-		$keys = array_keys($sortOptions);
-		return $keys[0];
+		return $this->getUserPreferencesDefault("sort_options");
 	}
 
 
@@ -224,22 +219,30 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function getDefaultFilterKey(){
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
-		if(isset($filterOptions["default"])) {
-			return "default";
-		}
-		$keys = array_keys($filterOptions);
-		return $keys[0];
+		return $this->getUserPreferencesDefault("filter_options");
 	}
 
 	/**
-	 * Returns the default Display style: Default....
+	 * Returns the default Display style:
 	 * @return String
 	 */
-	protected function getDefaultDisplayStyle(){
-		return "default";
+	protected function getDefaultDisplayStyleKey(){
+		return $this->getUserPreferencesDefault("display_styles");
 	}
 
+	/**
+	 * returns the default value
+	 *
+	 * @return String
+	 */
+	private function getUserPreferencesDefault($configName) {
+		$options = EcommerceConfig::get("ProductGroup", $configName);
+		if(isset($options["default"])) {
+			return "default";
+		}
+		$keys = array_keys($options);
+		return $keys[0];
+	}
 
 	/*********************
 	 * SETTINGS: Dropdowns
@@ -248,65 +251,62 @@ class ProductGroup extends Page {
 
 	/**
 	 * returns an array of Key => Title for sort options
-	 * @todo: why is this public?
+	 *
+	 * This list is also used in the controller so it must be public.
+	 *
 	 * @return Array
 	 */
-	public function getSortOptionsForDropdown(){
-		$inheritTitle = _t("ProductGroup.INHERIT", "Inherit");
-		$array = array("inherit" => $inheritTitle);
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(is_array($sortOptions) && count($sortOptions)) {
-			foreach($sortOptions as $key => $sortOption) {
-				$array[$key] = $sortOption["Title"];
-			}
-		}
-		return $array;
+	protected function getSortOptionsForDropdown(){
+		return $this->getUserPreferencesOptionsForDropdown("sort_options");
 	}
 
 	/**
 	 * Returns options for the dropdown of filter options.
-	 * This is public because it can be used in a template???
-	 * @todo: check if this needs to be public
-	 * @return String
+	 *
+	 * This list is also used in the controller so it must be public.
+	 *
+	 * @return Array
 	 */
-	public function getFilterOptionsForDropdown(){
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
+	protected function getFilterOptionsForDropdown(){
+		return $this->getUserPreferencesOptionsForDropdown("filter_options");
+	}
+
+	/**
+	 * Returns the options for product display styles.
+	 * In the configuration you can set which ones are available.
+	 * If one is available then you must make sure that the corresponding template is available.
+	 * For example, if the display style is
+	 * MyTempalte => "All Details"
+	 * Then you must make sure MyTemplate.ss exists.
+	 *
+	 * This list is also used in the controller so it must be public.
+	 *
+	 * @return Array
+	 */
+	public function getDisplayStylesForDropdown(){
+		return $this->getUserPreferencesOptionsForDropdown("display_styles");
+	}
+
+	/**
+	 *
+	 * @return Array
+	 */
+	protected function getUserPreferencesOptionsForDropdown($configName){
+		$options = EcommerceConfig::get("ProductGroup", $configName);
 		$inheritTitle = _t("ProductGroup.INHERIT", "Inherit");
 		$array = array("inherit" => $inheritTitle);
-		if(is_array($filterOptions) && count($filterOptions)) {
-			foreach($filterOptions as $key => $filter_option) {
-				$array[$key] = $filter_option["Title"];
+		if(is_array($options) && count($options)) {
+			foreach($options as $key => $option) {
+				if(is_array($option)) {
+					$array[$key] = $options["Title"];
+				}
+				else {
+					$array[$key] = $option;
+				}
 			}
 		}
 		return $array;
 	}
-
-
-	/**
-	 * Returns the options for product display styles.
-	 * These can include: Default, Short and MoreDetail
-	 * In the configuration you can set which ones are available.
-	 * This is important because if one is available then you must make sure that the template is available.
-	 * @return Array
-	 */
-	public function getDisplayStyleForDropdown(){
-		//inherit
-		$array = array(
-			"inherit" => _t("ProductGroup.INHERIT", "Inherit"),
-		);
-		//short
-		if(EcommerceConfig::get("ProductGroup", "allow_short_display_style")) {
-			$array["Short"] = _t("ProductGroup.SHORT", "Short (compact)");
-		}
-		//standard / default
-		$array["default"] = _t("ProductGroup.DEFAULT", "Standard");
-		//more details
-		if(EcommerceConfig::get("ProductGroup", "allow_more_detail_display_style")) {
-			$array["MoreDetail"] = _t("ProductGroup.MOREDETAIL", "More Detail (extended)");
-		}
-		return $array;
-	}
-
 
 
 	/*********************
@@ -361,19 +361,9 @@ class ProductGroup extends Page {
 	 * @param String $key
 	 * @return String
 	 */
-	protected function getSortOptionTitle($key = ""){ // NOT STATIC
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(!$key || (!isset($sortOptions[$key]))) {
-			$key = $this->getDefaultSortKey();
-		}
-		if($key) {
-			return $sortOptions[$key]["Title"];
-		}
-		else {
-			return _t("ProductGroup.UNKNOWN", "UNKNOWN");
-		}
+	protected function getSortOptionTitle($key = ""){
+		return $this->getUserPreferencesTitle("sort_options", $key);
 	}
-
 
 
 	/**
@@ -381,8 +371,27 @@ class ProductGroup extends Page {
 	 * @param String $key - the key for the selected filter option
 	 * @return String
 	 */
-	protected function getFilterOptionTitle($key = ""){ // NOT STATIC
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
+	protected function getFilterOptionTitle($key = ""){
+		return $this->getUserPreferencesTitle("filter_options", $key);
+	}
+
+
+	/**
+	 * The title for the selected display style option.
+	 * @param String $key - the key for the selected filter option
+	 * @return String
+	 */
+	protected function getDisplayStyleTitle($key = ""){
+		return $this->getUserPreferencesTitle("filter_options", $key);
+	}
+
+
+	/**
+	 *
+	 * @return String
+	 */
+	private function getUserPreferencesTitle($configName, $key = "") {
+		$filterOptions = EcommerceConfig::get("ProductGroup", $configName);
 		if(!$key || (!isset($filterOptions[$key]))){
 			$key = $this->getDefaultFilterKey();
 		}
@@ -394,8 +403,6 @@ class ProductGroup extends Page {
 		}
 	}
 
-
-
 	/*********************
 	 * SETTINGS: default codes
 	 *********************/
@@ -406,18 +413,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 **/
 	public function MyDefaultSortOrder() {
-		$defaultSortOrder = "";
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if($this->DefaultSortOrder && array_key_exists($this->DefaultSortOrder, $sortOptions)) {
-			$defaultSortOrder = $this->DefaultSortOrder;
-		}
-		if(!$defaultSortOrder && $parent = $this->ParentGroup()) {
-			$defaultSortOrder = $parent->MyDefaultSortOrder();
-		}
-		elseif(!$defaultSortOrder) {
-			$defaultSortOrder = $this->getDefaultSortKey();
-		}
-		return $defaultSortOrder;
+		return $this->getMyUserPreferencesDefault("sort_options", "DefaultSort", "getDefaultSortKey");
 	}
 
 	/**
@@ -425,38 +421,39 @@ class ProductGroup extends Page {
 	 * @return String
 	 **/
 	function MyDefaultFilter() {
-		$defaultFilter = "";
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
-		if($this->DefaultFilter && array_key_exists($this->DefaultFilter, $filterOptions)) {
-			$defaultFilter = $this->DefaultFilter;
-		}
-		if(!$defaultFilter && $parent = $this->ParentGroup()) {
-			$defaultFilter = $parent->MyDefaultFilter();
-		}
-		elseif(!$defaultFilter) {
-			$defaultFilter = $this->getDefaultFilterKey();
-		}
-		return $defaultFilter;
+		return $this->getMyUserPreferencesDefault("filter_options", "DefaultFilter", "getDefaultFilterKey");
 	}
 
 	/**
-	 * returns the CODE of the default style for template.
+	 * returns the CODE of the style for the display template for this page
 	 * @return String
 	 **/
 	function MyDefaultDisplayStyle() {
-		$displayStyle = "";
-		if($this->DisplayStyle != "inherit") {
-			$displayStyle = $this->DisplayStyle;
-		}
-		if($displayStyle == "inherit" && $parent = $this->ParentGroup()) {
-			$displayStyle = $parent->MyDefaultDisplayStyle();
-		}
-		if(!$displayStyle) {
-			$displayStyle = $this->getDefaultDisplayStyle();
-		}
-		return $displayStyle;
+		return $this->getMyUserPreferencesDefault("display_styles", "DisplayStyle", "getDefaultDisplayStyleKey");
 	}
 
+	/**
+	 * Checks for the most applicable user preferences for this page:
+	 * 1. what is saved in Database for this page.
+	 * 2. what the parent product group has saved in the database
+	 * 3. what the standard default is
+	 *
+	 * @return String
+	 */
+	protected function getMyUserPreferencesDefault($configName, $dbVariableName, $methodName){
+		$default = "";
+		$options = EcommerceConfig::get("ProductGroup", $configName);
+		if($this->$dbVariableName && array_key_exists($this->$dbVariableName, $filterOptions)) {
+			$defaultFilter = $this->$dbVariableName;
+		}
+		if(!$defaultFilter && $parent = $this->ParentGroup()) {
+			$defaultFilter = $parent->getMyUserPreferencesDefault($configName, $dbVariableName, $methodName);
+		}
+		if(!$defaultFilter || $defaultFilter == "inherit") {
+			$defaultFilter = $this->$methodName();
+		}
+		return $defaultFilter;
+	}
 
 	/*********************
 	 * SETTINGS: product levels
@@ -467,32 +464,17 @@ class ProductGroup extends Page {
 	 * List of options to show products.
 	 * With it, we provide a bunch of methods to access and edit the options.
 	 * NOTE: we can not have an option that has a zero key ( 0 => "none"), as this does not work
-	 * (as it is equal to not completed yet).
+	 * (as it is equal to not completed yet - not yet entered in the Database).
 	 */
 	protected $showProductLevels = array(
+		99 => "All Child Products (default)",
 	 -2 => "None",
 	 -1 => "All products",
 		1 => "Direct Child Products",
 		2 => "Direct Child Products + Grand Child Products",
 		3 => "Direct Child Products + Grand Child Products + Great Grand Child Products",
 		4 => "Direct Child Products + Grand Child Products + Great Grand Child Products + Great Great Grand Child Products",
-		99 => "All Child Products (default)"
 	);
-	/**
-	 * @param Array $a
-	 */
-	public function SetShowProductLevels(Array $a) {$this->showProductLevels = $a;}
-
-	/**
-	 * @param Int $i
-	 */
-	public function RemoveShowProductLevel($i) {unset($this->showProductLevels[$i]);}
-
-	/**
-	 * @param String $key
-	 * @param Mixed $value
-	 */
-	public function AddShowProductLevel($key, $value) {$this->showProductLevels[$key] = $value; ksort($this->showProductLevels);}
 
 
 
@@ -562,7 +544,7 @@ class ProductGroup extends Page {
 			);
 		}
 		//display style
-		$displayStyleDropdownList = $this->getDisplayStyleForDropdown();
+		$displayStyleDropdownList = $this->getDisplayStylesForDropdown();
 		if(count($displayStyleDropdownList) > 1) {
 			$displayStyleKey = $this->MyDefaultDisplayStyle();
 			if($this->DisplayStyle == "inherit") {
@@ -758,8 +740,8 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	protected function getStandardFilter(){
-		if(isset($_GET['filterfor'])) {
-			$filterKey = Convert::raw2sqL($_GET['filterfor']);
+		if($sessionFilters = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", "session_name_for_filter_preference"))) {
+			$filterKey = Convert::raw2sqL($sessionFilters);
 		}
 		else {
 			$filterKey = $this->MyDefaultFilter();
@@ -843,8 +825,8 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function currentSortSQL() {
-		if(isset($_GET['sortby'])) {
-			$sortKey = Convert::raw2sqL($_GET['sortby']);
+		if($sessionSort = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", "session_name_for_sort_preference"))) {
+			$sortKey = Convert::raw2sqL($sessionSort);
 		}
 		else {
 			$sortKey = $this->MyDefaultSortOrder();
@@ -1072,6 +1054,48 @@ class ProductGroup extends Page {
 	}
 
 	/**
+	 * returns a list of Product Groups that have the products for
+	 * the CURRENT product group listed as part of their AlsoShowProducts list.
+	 *
+	 * EXAMPLE:
+	 * You can use the AlsoShowProducts to list products by Brand.
+	 * In general, they are listed under type product groups (e.g. socks, sweaters, t-shirts),
+	 * and you create a list of separate ProductGroups (brands) that do not have ANY products as children,
+	 * but link to products using the AlsoShowProducts many_many relation.
+	 *
+	 * With the method below you can work out a list of brands that apply to the
+	 * current product group (e.g. socks come in three brands - namely A, B and C)
+	 *
+	 * @return DataList
+	 */
+	public function ProductGroupsFromAlsoShowProducts() {
+		$myProductsArray = $this->currentInitialProducts()->exclude()->map("ID", "ID")->toArray();
+		$rows = DB::query("
+			SELECT \"ProductGroupID\" FROM \"Product_ProductGroups\" WHERE \"ProductID\" IN (".implode(",", $myProductsArray)." GROUP BY \"ProductGroupID\");
+		");
+		$selectArray = array(0);
+		foreach($rows as $row) {
+			$selectArray[$row["ProductGroupID"]] = $row["ProductGroupID"];
+		}
+		//just in case
+		unset($selectArray[$this->ID]);
+		return ProductGroup::get()->filter(array("ID" => $selectArray));
+	}
+
+	/**
+	 * This is the inverse of ProductGroupsFromAlsoShowProducts
+	 * That is, it list the product groups that a product is usually listed under (exact parents only)
+	 * from a "AlsoShow" product List.
+	 *
+	 * @return DataList
+	 */
+	public function ProductGroupsFromAlsoShowProductsInverse() {
+		$alsoShowProductsArray = array(0 => 0) + $this->AlsoShowProducts()->map("ID", "ID")->toArray();
+		$parentIDs = Product::get()->filter(array("ID" => $alsoShowProductsArray))->map("ID", "ID")->toArray();
+		return ProductGroup::get()->filter(array("ID" => $parentIDs));
+	}
+
+	/**
 	 * tells us if the current page is part of e-commerce.
 	 * @return Boolean
 	 */
@@ -1102,6 +1126,7 @@ class ProductGroup extends Page {
 		$html .= "<li><hr />Selection Settings<hr /></li>";
 		$html .= "<li><b>MyDefaultFilter:</b> ".$this->MyDefaultFilter()." </li>";
 		$html .= "<li><b>MyDefaultSortOrder:</b> ".$this->MyDefaultSortOrder()." </li>";
+		$html .= "<li><b>MyDefaultDisplayStyle:</b> ".$this->MyDefaultDisplayStyle()." </li>";
 		$html .= "<li><b>MyNumberOfProductsPerPage:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
 		$html .= "<li><hr />Filters<hr /></li>";
 		$html .= "<li><b>currentClassNameSQL:</b> ".$this->currentClassNameSQL()." </li>";
@@ -1144,6 +1169,29 @@ class ProductGroup_Controller extends Page_Controller {
 		Requirements::themedCSS('ProductGroupPopUp', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
+		if(isset($_GET_) && is_array($_GET) && count($_GET)) {
+			$this->saveUserPreferences();
+		}
+	}
+
+	protected function saveUserPreferences(){
+		$preferencesArray = array(
+			"sort_options" => "session_name_for_sort_preference",
+			"filter_options" => "session_name_for_filter_preference",
+			"display_options" => "session_name_for_display_style_preference"
+		);
+		foreach($preferencesArray as $optionsVariableName => $preferenceVariableName) {
+			$myPreferenceVariableName = EcommerceConfig::get("ProductGroup", $preferenceVariableName);
+			if(isset($_GET[$myPreferenceVariableName])) {
+				$newPreference = $_GET[$myPreferenceVariableName];
+				if($newPreference) {
+					$options = EcommerceConfig::get("ProductGroup", $optionsVariableName);
+					if(isset($sortOptions[$newSortOption])) {
+						Session::set("ProductGroup_".$myPreferenceVariableName, $newPreference);
+					}
+				}
+			}
+		}
 	}
 
 	/**

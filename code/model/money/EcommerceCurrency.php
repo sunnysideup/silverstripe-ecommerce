@@ -386,8 +386,6 @@ class EcommerceCurrency extends DataObject {
 
 	public function validate() {
 		$result = parent::validate();
-		//TO DO - FIX!!!!
-		return $result;
 		$errors = array();
 		if(! $this->Code || mb_strlen($this->Code) != 3) {
 			$errors[] = 'The code must be 3 characters long.';
@@ -399,8 +397,7 @@ class EcommerceCurrency extends DataObject {
 			$this->Code = strtoupper($this->Code);
 			// Check that there are no 2 same code currencies in use
 			if($this->isChanged('Code')) {
-				$currencies = EcommerceCurrency::get()->where("UPPER(\"Code\") = '$this->Code' AND \"InUse\" = 1");
-				if($currencies && $currencies->count()) {
+				if(EcommerceCurrency::get()->where("UPPER(\"Code\") = '".$this->Code."'")->exclude("ID", intval($this->ID) - 0)->count()) {
 					$errors[] = "There is alreay another currency in use which code is '$this->Code'.";
 				}
 			}
@@ -438,7 +435,6 @@ class EcommerceCurrency extends DataObject {
 	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-
 		$currency = self::default_currency();
 		if(! $currency) {
 			self::create_new(EcommerceConfig::get('EcommerceCurrency', 'default_currency'));
@@ -498,19 +494,14 @@ class EcommerceCurrency extends DataObject {
 		'cyp' => 'cyprus pounds',
 		'czk' => 'czech republic koruny',
 		'dkk' => 'denmark kroner',
-		'dem' => 'deutsche (germany) marks*',
 		'dop' => 'dominican republic pesos',
-		'nlg' => 'dutch (netherlands) guilders*',
 		'xcd' => 'eastern caribbean dollars',
 		'egp' => 'egypt pounds',
 		'eek' => 'estonia krooni',
 		'eur' => 'euro',
 		'fjd' => 'fiji dollars',
-		'fim' => 'finland markkaa*',
-		'frf' => 'france francs*',
 		'dem' => 'germany deutsche marks*',
 		'xau' => 'gold ounces',
-		'grd' => 'greece drachmae*',
 		'nlg' => 'holland (netherlands) guilders*',
 		'hkd' => 'hong kong dollars',
 		'huf' => 'hungary forint',
@@ -520,9 +511,7 @@ class EcommerceCurrency extends DataObject {
 		'idr' => 'indonesia rupiahs',
 		'irr' => 'iran rials',
 		'iqd' => 'iraq dinars',
-		'iep' => 'ireland pounds*',
 		'ils' => 'israel new shekels',
-		'itl' => 'italy lire*',
 		'jmd' => 'jamaica dollars',
 		'jpy' => 'japan yen',
 		'jod' => 'jordan dinars',
@@ -530,13 +519,11 @@ class EcommerceCurrency extends DataObject {
 		'krw' => 'korea (south) won',
 		'kwd' => 'kuwait dinars',
 		'lbp' => 'lebanon pounds',
-		'luf' => 'luxembourg francs*',
 		'myr' => 'malaysia ringgits',
 		'mtl' => 'malta liri',
 		'mur' => 'mauritius rupees',
 		'mxn' => 'mexico pesos',
 		'mad' => 'morocco dirhams',
-		'nlg' => 'netherlands guilders*',
 		'nzd' => 'new zealand dollars',
 		'nok' => 'norway kroner',
 		'omr' => 'oman rials',
@@ -546,7 +533,6 @@ class EcommerceCurrency extends DataObject {
 		'php' => 'philippines pesos',
 		'xpt' => 'platinum ounces',
 		'pln' => 'poland zlotych',
-		'pte' => 'portugal escudos*',
 		'qar' => 'qatar riyals',
 		'rol' => 'romania lei',
 		'rub' => 'russia rubles',
@@ -557,7 +543,6 @@ class EcommerceCurrency extends DataObject {
 		'sit' => 'slovenia tolars',
 		'zar' => 'south africa rand',
 		'krw' => 'south korea won',
-		'esp' => 'spain pesetas*',
 		'xdr' => 'special drawing rights (imf)',
 		'lkr' => 'sri lanka rupees',
 		'sdd' => 'sudan dinars',
@@ -568,7 +553,6 @@ class EcommerceCurrency extends DataObject {
 		'ttd' => 'trinidad and tobago dollars',
 		'tnd' => 'tunisia dinars',
 		'try' => 'turkey new lira',
-		'trl' => 'turkey lira*',
 		'aed' => 'united arab emirates dirhams',
 		'gbp' => 'united kingdom pounds',
 		'usd' => 'united states dollars',

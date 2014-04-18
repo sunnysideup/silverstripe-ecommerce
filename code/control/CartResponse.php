@@ -19,20 +19,6 @@ class CartResponse extends EcommerceResponse {
 
 
 	/**
-	 * list of cart response required
-	 * Array is like this:
-	 * METHOD_THAT_RETURNS_ID_FOR_HTML_TO_REPLACE => NAME_OF_TEMPLATE
-	 *
-	 * @var Array
-	 */
-	private static $cart_responses_required = array(
-		//"TinyCartClassName" "CartTinyInner",
-		//"SmallCartID" => "CartShortInner",
-		"SideBarCartID" => "Sidebar_Cart_Inner"
-	);
-
-
-	/**
 	 * Sets the $force_reload to true;
 	 */
 	public static function set_force_reload() {
@@ -148,7 +134,6 @@ class CartResponse extends EcommerceResponse {
 		}
 
 		//TO DO: set it up in such a way that it specifically requests one of these
-		//tiny cart
 		$templates = EcommerceConfig::get("CartResponse", "cart_responses_required");
 		foreach($templates as $idMethod => $template) {
 			$js[] = array(

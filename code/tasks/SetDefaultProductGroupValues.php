@@ -21,7 +21,7 @@ class SetDefaultProductGroupValues extends BuildTask {
 	protected $fieldsToCheck = array(
 		"getSortOptionsForDropdown" => "DefaultSortOrder",
 		"getFilterOptionsForDropdown" => "DefaultFilter",
-		"getDisplayStyleForDropdown" => "DisplayStyle"
+		"getDisplayStylesForDropdown" => "DisplayStyle"
 	);
 
 	function run($request) {

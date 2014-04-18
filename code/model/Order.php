@@ -2315,7 +2315,7 @@ class Order extends DataObject {
 
 	/**
 	 * Casted variable
-	 * Currency is not the same as the standard one.
+	 * Currency is not the same as the standard one?
 	 * @return Boolean
 	 **/
 	function HasAlternativeCurrency(){return $this->getHasAlternativeCurrency();}
@@ -2335,8 +2335,9 @@ class Order extends DataObject {
 
 	/**
 	 * Makes sure exchange rate is updated and maintained before order is submitted
+	 * This method is public because it could be called from a shopping Cart Object.
 	 **/
-	function ensureCorrectExchangeRate() {
+	public function ensureCorrectExchangeRate() {
 		if(!$this->IsSubmitted()) {
 			$oldExchangeRate = $this->ExchangeRate;
 			if($currency = $this->CurrencyUsed()) {

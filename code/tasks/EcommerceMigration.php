@@ -939,40 +939,41 @@ class EcommerceMigration extends BuildTask {
 			echo $explanation;
 		}
 		$checkIfAnyLevelsAreSetAtAll = DB::query("SELECT COUNT(ID) FROM \"ProductGroup\" WHERE \"LevelOfProductsToShow\" <> 0 AND \"LevelOfProductsToShow\" IS NOT NULL")->value();
-		if($checkIfAnyLevelsAreSetAtAll == 0 && ProductGroup::$defaults["LevelOfProductsToShow"] != 0) {
+		$productGroupDefaults = Config::inst()->get("ProductGroup", "defaults");
+		if($checkIfAnyLevelsAreSetAtAll == 0 && $productGroupDefaults["LevelOfProductsToShow"] != 0) {
 			//level of products to show
 			DB::query("
 				UPDATE \"ProductGroup\"
-				SET \"LevelOfProductsToShow\" = ".ProductGroup::$defaults["LevelOfProductsToShow"]."
+				SET \"LevelOfProductsToShow\" = ".$productGroupDefaults["LevelOfProductsToShow"]."
 				WHERE \"LevelOfProductsToShow\" = 0 OR \"LevelOfProductsToShow\" IS NULL "
 			);
 			DB::query("
 				UPDATE \"ProductGroup_Live\"
-				SET \"LevelOfProductsToShow\" = ".ProductGroup::$defaults["LevelOfProductsToShow"]."
+				SET \"LevelOfProductsToShow\" = ".$productGroupDefaults["LevelOfProductsToShow"]."
 				WHERE \"LevelOfProductsToShow\" = 0 OR \"LevelOfProductsToShow\"  IS NULL "
 			);
 			DB::alteration_message("resetting product 'show' levels", "created");
 			//default sort order
 			DB::query("
 				UPDATE \"ProductGroup\"
-				SET \"DefaultSortOrder\" = ".ProductGroup::$defaults["DefaultSortOrder"]."
+				SET \"DefaultSortOrder\" = ".$productGroupDefaults["DefaultSortOrder"]."
 				WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
 			);
 			DB::query("
 				UPDATE \"ProductGroup_Live\"
-				SET \"DefaultSortOrder\" = ".ProductGroup::$defaults["DefaultSortOrder"]."
+				SET \"DefaultSortOrder\" = ".$productGroupDefaults["DefaultSortOrder"]."
 				WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
 			);
 			DB::alteration_message("resetting product default sort order", "created");
 			//default filter
 			DB::query("
 				UPDATE \"ProductGroup\"
-				SET \"DefaultFilter\" = ".ProductGroup::$defaults["DefaultFilter"]."
+				SET \"DefaultFilter\" = ".$productGroupDefaults["DefaultFilter"]."
 				WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
 			);
 			DB::query("
 				UPDATE \"ProductGroup_Live\"
-				SET \"DefaultFilter\" = ".ProductGroup::$defaults["DefaultFilter"]."
+				SET \"DefaultFilter\" = ".$productGroupDefaults["DefaultFilter"]."
 				WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
 			);
 			DB::alteration_message("resetting product default filter", "created");
@@ -1164,7 +1165,8 @@ class EcommerceMigration extends BuildTask {
 		if($checkoutPage) {
 			if($checkoutPage->TermsPageID) {
 				if(!$checkoutPage->TermsAndConditionsMessage) {
-					$checkoutPage->TermsAndConditionsMessage = CheckoutPage::$defaults["TermsAndConditionsMessage"];
+					$checkoutPageDefaults = Config::inst()->get("CheckoutPage", "defaults");
+					$checkoutPage->TermsAndConditionsMessage = $checkoutPageDefaults["TermsAndConditionsMessage"];
 					$checkoutPage->writeToStage('Stage');
 					$checkoutPage->publish('Stage', 'Live');
 					DB::alteration_message("Added TermsAndConditionsMessage", "created");

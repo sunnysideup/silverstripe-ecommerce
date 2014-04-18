@@ -110,10 +110,12 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"ProductGroup" => array(
 				"sort_options" => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
-				"filter_options" => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Featured' => 'default', 'SQL' => 'Featured = 1')",
-				"allow_short_display_style" => "Does the shop admin have the option to show products as a condensed list (little detail per product) in the product group page? Note that a template may need to be themed for this so you want to be careful to make this available. You can consider using this for product groups with lots of products.",
-				"allow_more_detail_display_style" => "Does the shop admin have the option to show products as a expanded list (lots of details per product) in the product group page? Note that a template may need to be themed for this so you want to be careful to make this available. You can consider using this for product groups with only a few products. ",
-				"session_name_for_product_array" => "This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. "
+				"filter_options" => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
+				"display_styles" => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
+				"session_name_for_product_array" => "This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. ",
+				"session_name_for_sort_preference" => "This is the name of the (http request) GET variable and the session variable name (prepended by ProductGroup_) for the user prefererence for sorting products. We store this so that the user can navigate between pages without loosing the preferred sort order.",
+				"session_name_for_filter_preference" => "This is the name of the (http request) GET variable and the session variable (prepended by ProductGroup_) name for the user prefererence for filtering products. We store this so that the user can navigate between pages without loosing the preferred filter.",
+				"session_name_for_display_style_preference" => "This is the name of the (http request) GET variable and the session variable (prepended by ProductGroup_) name for the user prefererence for display style of products. We store this so that the user can navigate between pages without loosing the preferred display style."
 			),
 			"Product_Image" =>  array(
 				"thumbnail_width" => "Thumbnail width in pixels. For thumbnails, we use paddedResize.",
