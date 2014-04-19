@@ -227,7 +227,7 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"CartResponse" => array(
 				"cart_responses_required" => "An array of the cart responses required for AJAX.  This array also identifies the unique IDs used in the html that will be updated by the ajax response."
-			)
+			),
 			"StoreAdmin" => array(
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
 				//"collection_controller_class" => "The controller for the collection.  ",

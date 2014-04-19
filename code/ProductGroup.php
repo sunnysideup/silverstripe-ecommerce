@@ -295,7 +295,7 @@ class ProductGroup extends Page {
 		if(is_array($options) && count($options)) {
 			foreach($options as $key => $option) {
 				if(is_array($option)) {
-					$array[$key] = $options["Title"];
+					$array[$key] = $option["Title"];
 				}
 				else {
 					$array[$key] = $option;
@@ -438,18 +438,18 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function getMyUserPreferencesDefault($configName, $dbVariableName, $methodName){
-		$default = "";
+		$defaultOption = "";
 		$options = EcommerceConfig::get("ProductGroup", $configName);
-		if($this->$dbVariableName && array_key_exists($this->$dbVariableName, $filterOptions)) {
-			$defaultFilter = $this->$dbVariableName;
+		if($this->$dbVariableName && array_key_exists($this->$dbVariableName, $options)) {
+			$defaultOption = $this->$dbVariableName;
 		}
-		if(!$defaultFilter && $parent = $this->ParentGroup()) {
-			$defaultFilter = $parent->getMyUserPreferencesDefault($configName, $dbVariableName, $methodName);
+		if(!$defaultOption && $parent = $this->ParentGroup()) {
+			$defaultOption = $parent->getMyUserPreferencesDefault($configName, $dbVariableName, $methodName);
 		}
-		if(!$defaultFilter || $defaultFilter == "inherit") {
-			$defaultFilter = $this->$methodName();
+		if(!$defaultOption || $defaultOption == "inherit") {
+			$defaultOption = $this->$methodName();
 		}
-		return $defaultFilter;
+		return $defaultOption;
 	}
 
 	/*********************
@@ -570,16 +570,18 @@ class ProductGroup extends Page {
 	 * @return TreeMultiselectField
 	 **/
 	protected function getProductGroupsTable() {
-		$field = new TreeMultiselectField(
-			$name = "AlsoShowProducts",
-			$title = _t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),
-			$sourceObject = "SiteTree",
-			$keyField = "ID",
-			$labelField = "MenuTitle"
+		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
+		return new GridField(
+			"AlsoShowProducts",
+			_t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),
+			$this->AlsoShowProducts(),
+			$gridFieldConfig
 		);
-		$filter = create_function('$obj', 'return ( ( is_a($obj, "'.Object::getCustomClass("ProductGroup").'") || is_a($obj, "'.Object::getCustomClass("Product").'")) && ($obj->ParentID != '.$this->ID.'));');
-		$field->setFilterFunction($filter);
-		return $field;
+		return new CheckboxSetField(
+			"AlsoShowProducts",
+			_t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),
+			Product::get()->map()->toArray()
+		);
 	}
 
 
@@ -1220,7 +1222,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$otherGroupURLSegment = Convert::raw2sql($request->param("ID"));
 		$arrayOfIDs = array();
 		if($otherGroupURLSegment) {
-			$otherProductGroup = ProductGroup::get()->filter(array("URLSegment" => $otherGroupURLSegment))->first()
+			$otherProductGroup = ProductGroup::get()->filter(array("URLSegment" => $otherGroupURLSegment))->first();
 			if($otherProductGroup) {
 				$this->filterForGroupID = $otherProductGroup->ID;
 				$arrayOfIDs = $otherProductGroup->ProductsShowable()->map("ID", "ID")->toArray();
@@ -1282,11 +1284,10 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return DataList
 	 */
 	public function ProductGroupsFromAlsoShowProductsLinks() {
-		$items = $this->ProductGroupsFromAlsoShowProducts():
+		$items = $this->ProductGroupsFromAlsoShowProducts();
 		if($items->count()) {
 			foreach($items as $item){
 				$isCurrent = $item->ID == $this->filterForGroupID;
-				$isCurrent = ($key == ) ? true : false;
 				$item->SelectKey = $item->URLSegment;
 				$item->Current = $isCurrent ? true : false;
 				$item->LinkingMode = $isCurrent ? "current" : "link";
