@@ -3,9 +3,20 @@
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 <% include ProductGroupChildGroups %>
 
-<% if FilterLinks %><span class="filterOptions filterSortOptions"><% _t('ProductGroup.FILTERFOR','Filter for') %>: <% loop FilterLinks %><a href="$Link" class="sortlink $LinkingMode">$Name</a> <% end_loop %></span><% end_if %>
-<% if DisplayLinks %><span class="sortOptions"><% _t('ProductGroup.DISPLAYSTYLE','Display Style') %>: <% loop DisplayLinks %><a href="$Link" class="sortlink $LinkingMode">$Name</a> <% end_loop %></span><% end_if %>
-<p><a href="$ListAllLink">List All on One Page</a></p>
+<div class="filterAndSortLinksHolder">
+<% if ProductGroupsFromAlsoShowProductsLinks %>
+	<p class="filterOptions filterSortOptions"><% _t('ProductGroup.SUBGROUPS','By Group') %>: <% loop ProductGroupsFromAlsoShowProductsLinks %><a href="$FilterLink" class="$LinkingMode">$Title</a> <% end_loop %></p>
+<% end_if %>
+<% if FilterLinks %>
+	<p class="filterOptions filterSortOptions"><% _t('ProductGroup.FILTERFOR','Filter for') %>: <% loop FilterLinks %><a href="$Link" class="$LinkingMode">$Name</a> <% end_loop %></p>
+<% end_if %>
+<% if DisplayLinks %>
+	<p class="displayOptions displayStyleOptions"><% _t('ProductGroup.DISPLAYSTYLE','Display Style') %>: <% loop DisplayLinks %><a href="$Link" class="$LinkingMode">$Name</a> <% end_loop %></p>
+<% end_if %>
+<p class="listAllLink filterSortOptions"><a href="$ListAllLink">List All on One Page</a></p>
+</div>
+
+
 <% if Products %>
 <div id="Products" class="category">
 	<div class="resultsBar">

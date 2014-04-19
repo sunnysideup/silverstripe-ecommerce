@@ -1067,9 +1067,9 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	public function ProductGroupsFromAlsoShowProducts() {
-		$myProductsArray = $this->currentInitialProducts()->exclude()->map("ID", "ID")->toArray();
+		$myProductsArray = $this->currentInitialProducts()->map("ID", "ID")->toArray();
 		$rows = DB::query("
-			SELECT \"ProductGroupID\" FROM \"Product_ProductGroups\" WHERE \"ProductID\" IN (".implode(",", $myProductsArray)." GROUP BY \"ProductGroupID\");
+			SELECT \"ProductGroupID\" FROM \"Product_ProductGroups\" WHERE \"ProductID\" IN (".implode(",", $myProductsArray).") GROUP BY \"ProductGroupID\";
 		");
 		$selectArray = array(0);
 		foreach($rows as $row) {
@@ -1223,7 +1223,7 @@ class ProductGroup_Controller extends Page_Controller {
 				$arrayOfIDs = $otherProductGroup->ProductsShowable()->map("ID", "ID")->toArray();
 			}
 		}
-		$this->products = $this->paginateList($this->ProductsShowable(array("ID", $arrayOfIDs)));
+		$this->products = $this->paginateList($this->ProductsShowable(array("ID" => $arrayOfIDs)));
 		$this->Title .= " | ".$otherProductGroup->Title;
 		return array();
 	}
@@ -1276,20 +1276,23 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 *
 	 * returns a list of items (with links)
-	 * @return DataList
+	 * @return ArrayList( ArrayData(Name, FilterLink,  SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function ProductGroupsFromAlsoShowProductsLinks() {
+		$dos = new ArrayList();
 		$items = $this->ProductGroupsFromAlsoShowProducts();
 		if($items->count()) {
 			foreach($items as $item){
 				$isCurrent = $item->ID == $this->filterForGroupID;
+				$item->Name = $item->Title;
 				$item->SelectKey = $item->URLSegment;
 				$item->Current = $isCurrent ? true : false;
 				$item->LinkingMode = $isCurrent ? "current" : "link";
-				$item->Link = $this->Link("filterforgroup/".$item->URLSegment);
+				$item->FilterLink = $this->Link("filterforgroup/".$item->URLSegment);
+				$dos->push(clone $item);
 			}
 		}
-		return $items;
+		return $dos;
 	}
 
 	/**
@@ -1342,7 +1345,7 @@ class ProductGroup_Controller extends Page_Controller {
 	protected function userPreferencesLinks($configName, $method, $configTranslationCode, $sessionVariableName){
 		$options = EcommerceConfig::get("ProductGroup", $configName);
 		if(count($options) < 2) return null;
-		$selectedItem = $this->$method();
+		$selectedItem = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", $sessionVariableName));
 		$dos = new ArrayList();
 		if(count($options)) {
 			foreach($options as $key => $array){
