@@ -567,7 +567,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Used in getCSMFields
-	 * @return TreeMultiselectField
+	 * @return GridField
 	 **/
 	protected function getProductGroupsTable() {
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
@@ -576,11 +576,6 @@ class ProductGroup extends Page {
 			_t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),
 			$this->AlsoShowProducts(),
 			$gridFieldConfig
-		);
-		return new CheckboxSetField(
-			"AlsoShowProducts",
-			_t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),
-			Product::get()->map()->toArray()
 		);
 	}
 
@@ -1191,7 +1186,7 @@ class ProductGroup_Controller extends Page_Controller {
 		Requirements::themedCSS('ProductGroupPopUp', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
-		if(isset($_GET_) && is_array($_GET) && count($_GET)) {
+		if(isset($_GET) && is_array($_GET) && count($_GET)) {
 			$this->saveUserPreferences();
 		}
 	}
@@ -1303,7 +1298,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function SortLinks(){
-		$this->userPreferencesLinks("sort_options", "MyDefaultSortOrder", "SORTBY", "session_name_for_sort_preference");
+		return $this->userPreferencesLinks("sort_options", "MyDefaultSortOrder", "SORTBY", "session_name_for_sort_preference");
 	}
 
 	/**
@@ -1312,7 +1307,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function FilterLinks(){
-		$this->userPreferencesLinks("filter_options", "MyDefaultFilter", "FILTERFOR", "session_name_for_filter_preference");
+		return $this->userPreferencesLinks("filter_options", "MyDefaultFilter", "FILTERFOR", "session_name_for_filter_preference");
 	}
 
 	/**
@@ -1321,7 +1316,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function DisplayLinks(){
-		$this->userPreferencesLinks("display_styles", "MyDefaultDisplayStyle", "DISPLAYBY", "session_name_for_display_style_preference");
+		return $this->userPreferencesLinks("display_styles", "MyDefaultDisplayStyle", "DISPLAYBY", "session_name_for_display_style_preference");
 	}
 
 	/**
@@ -1331,7 +1326,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return String
 	 */
 	public function ListAllLink() {
-		return $this->Link("showfulllist");
+		return $this->Link()."?showfulllist=1";
 	}
 
 	/****************************************************
@@ -1345,7 +1340,6 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
 	 */
 	protected function userPreferencesLinks($configName, $method, $configTranslationCode, $sessionVariableName){
-		if($this->TotalCountGreaterThanOne(3)) return null;
 		$options = EcommerceConfig::get("ProductGroup", $configName);
 		if(count($options) < 2) return null;
 		$selectedItem = $this->$method();
@@ -1353,9 +1347,10 @@ class ProductGroup_Controller extends Page_Controller {
 		if(count($options)) {
 			foreach($options as $key => $array){
 				$isCurrent = ($key == $selectedItem) ? true : false;
+				$linkGetVariable = "?".EcommerceConfig::get("ProductGroup", $sessionVariableName)."=$key";
 				$dos->push(new ArrayData(array(
 					'Name' => _t('ProductGroup.'.$configTranslationCode.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
-					'Link' => $this->Link()."?".$sessionVariableName."=$key",
+					'Link' => $this->Link().$linkGetVariable,
 					'SelectKey' => $key,
 					'Current' => $isCurrent,
 					'LinkingMode' => $isCurrent ? "current" : "link"
@@ -1371,15 +1366,17 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return PaginatedList
 	 */
 	protected function paginateList(SS_List $list){
-		if($this->showFullList) {
-			$obj = new PaginatedList($list, $this->request);
-			$obj->setPageLength(3000);
-			return $obj;
-		}
 		if($list && $list->count()) {
-			$obj = new PaginatedList($list, $this->request);
-			$obj->setPageLength($this->MyNumberOfProductsPerPage());
-			return $obj;
+			if($this->showFullList) {
+				$obj = new PaginatedList($list, $this->request);
+				$obj->setPageLength(3000);
+				return $obj;
+			}
+			else {
+				$obj = new PaginatedList($list, $this->request);
+				$obj->setPageLength($this->MyNumberOfProductsPerPage());
+				return $obj;
+			}
 		}
 	}
 
@@ -1401,7 +1398,7 @@ class ProductGroup_Controller extends Page_Controller {
 				$newPreference = $_GET[$myPreferenceVariableName];
 				if($newPreference) {
 					$options = EcommerceConfig::get("ProductGroup", $optionsVariableName);
-					if(isset($sortOptions[$newSortOption])) {
+					if(isset($options[$newPreference])) {
 						Session::set("ProductGroup_".$myPreferenceVariableName, $newPreference);
 					}
 				}
