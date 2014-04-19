@@ -198,9 +198,6 @@ class ProductGroup extends Page {
 
 
 
-
-
-
 	/*********************
 	 * SETTINGS: Default Key
 	 *********************/
@@ -625,6 +622,10 @@ class ProductGroup extends Page {
 	 * This is basically setup like this so that in ProductGroup extensions you
 	 * can setup all sorts of filters, while still using the ProductsShowable method.
 	 *
+	 * The extra filter can be supplied as array (e.g. array("ID" => 12) or array("ID" => array(12,13,45)))
+	 * or as string. Arrays are used like this $productDataList->filter($array) and
+	 * strings are used with the where commands $productDataList->where($string).
+	 *
 	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList | Null
 	 */
@@ -900,8 +901,8 @@ class ProductGroup extends Page {
 	 * returns the total numer of products (before pagination)
 	 * @return Boolean
 	 **/
-	public function TotalCountGreaterThanOne() {
-		return $this->totalCount > 1;
+	public function TotalCountGreaterThanOne($greaterThan = 1) {
+		return $this->totalCount > $greaterThan;
 	}
 
 	/**
@@ -1156,8 +1157,27 @@ class ProductGroup extends Page {
 class ProductGroup_Controller extends Page_Controller {
 
 	private static $allowed_actions = array(
-		"debug" => "ADMIN"
+		"debug" => "ADMIN",
+		"filterforgroup" => true
 	);
+
+	/**
+	 *
+	 * @var DataList
+	 */
+	protected $products = null;
+
+	/**
+	 * Show all products on one page?
+	 * @var Boolean
+	 */
+	protected $showFullList = false;
+
+	/**
+	 * The group filter that is applied to this page
+	 * @var Int
+	 */
+	protected $filterForGroupID = null;
 
 	/**
 	 * standard SS method
@@ -1174,6 +1194,200 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 	}
 
+
+
+	/****************************************************
+	 *  ACTIONS
+	/****************************************************/
+
+	/**
+	 *
+	 * standard selection of products
+	 */
+	public function index($request){
+		$this->products = $this->paginateList($this->ProductsShowable(""));
+		return array();
+	}
+
+	/**
+	 *
+	 * cross filter with another product group..
+	 *
+	 * e.g. socks (current product group) for brand A or B (the secondary product group)
+	 * @param HTTPRequest
+	 */
+	public function filterforgroup($request){
+		$otherGroupURLSegment = Convert::raw2sql($request->param("ID"));
+		$arrayOfIDs = array();
+		if($otherGroupURLSegment) {
+			$otherProductGroup = ProductGroup::get()->filter(array("URLSegment" => $otherGroupURLSegment))->first()
+			if($otherProductGroup) {
+				$this->filterForGroupID = $otherProductGroup->ID;
+				$arrayOfIDs = $otherProductGroup->ProductsShowable()->map("ID", "ID")->toArray();
+			}
+		}
+		$this->products = $this->paginateList($this->ProductsShowable(array("ID", $arrayOfIDs)));
+		$this->Title .= " | ".$otherProductGroup->Title;
+		return array();
+	}
+
+
+
+	/****************************************************
+	 *  TEMPLATE METHODS PRODUCTS
+	/****************************************************/
+
+
+	/**
+	 * Return the products for this group.
+	 *
+	 * @return PaginatedList
+	 **/
+	public function Products(){
+		return $this->products;
+	}
+
+
+	/****************************************************
+	 *  TEMPLATE METHODS MENUS AND SIDEBARS
+	/****************************************************/
+
+	/**
+	 *
+	 * This method can be extended to show products in the side bar.
+	 * @return Null | DataList
+	 */
+	public function SidebarProducts(){
+		return null;
+	}
+
+	/**
+	 * returns child product groups for use in
+	 * 'in this section'
+	 * @return ArrayList (ProductGroups)
+	 */
+	public function MenuChildGroups() {
+		return $this->ChildGroups(2, "\"ShowInMenus\" = 1");
+	}
+
+
+
+	/****************************************************
+	 *  TEMPLATE METHODS LINKS
+	/****************************************************/
+
+	/**
+	 *
+	 * returns a list of items (with links)
+	 * @return DataList
+	 */
+	public function ProductGroupsFromAlsoShowProductsLinks() {
+		$items = $this->ProductGroupsFromAlsoShowProducts():
+		if($items->count()) {
+			foreach($items as $item){
+				$isCurrent = $item->ID == $this->filterForGroupID;
+				$isCurrent = ($key == ) ? true : false;
+				$item->SelectKey = $item->URLSegment;
+				$item->Current = $isCurrent ? true : false;
+				$item->LinkingMode = $isCurrent ? "current" : "link";
+				$item->Link = $this->Link("filterforgroup/".$item->URLSegment);
+			}
+		}
+		return $items;
+	}
+
+	/**
+	 * Provides a dataset of links for sorting products.
+	 *
+	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+	 */
+	public function SortLinks(){
+		$this->userPreferencesLinks("sort_options", "MyDefaultSortOrder", "SORTBY", "session_name_for_sort_preference");
+	}
+
+	/**
+	 * Provides a dataset of links for filters products.
+	 *
+	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+	 */
+	public function FilterLinks(){
+		$this->userPreferencesLinks("filter_options", "MyDefaultFilter", "FILTERFOR", "session_name_for_filter_preference");
+	}
+
+	/**
+	 * Provides a dataset of links for displaying prodicts products.
+	 *
+	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+	 */
+	public function DisplayLinks(){
+		$this->userPreferencesLinks("display_styles", "MyDefaultDisplayStyle", "DISPLAYBY", "session_name_for_display_style_preference");
+	}
+
+	/**
+	 * Link that returns a list of all the products
+	 * for this product group as a simple list.
+	 *
+	 * @return String
+	 */
+	public function ListAllLink() {
+		return $this->Link("showfulllist");
+	}
+
+	/****************************************************
+	 *  INTERNAL PROCESSING
+	/****************************************************/
+
+
+	/**
+	 * Provides a dataset of links for a particular user preference
+	 *
+	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+	 */
+	protected function userPreferencesLinks($configName, $method, $configTranslationCode, $sessionVariableName){
+		if($this->TotalCountGreaterThanOne(3)) return null;
+		$options = EcommerceConfig::get("ProductGroup", $configName);
+		if(count($options) < 2) return null;
+		$selectedItem = $this->$method();
+		$dos = new ArrayList();
+		if(count($options)) {
+			foreach($options as $key => $array){
+				$isCurrent = ($key == $selectedItem) ? true : false;
+				$dos->push(new ArrayData(array(
+					'Name' => _t('ProductGroup.'.$configTranslationCode.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
+					'Link' => $this->Link()."?".$sessionVariableName."=$key",
+					'SelectKey' => $key,
+					'Current' => $isCurrent,
+					'LinkingMode' => $isCurrent ? "current" : "link"
+				)));
+			}
+		}
+		return $dos;
+	}
+
+	/**
+	 * turns full list into paginated list
+	 * @param SS_List
+	 * @return PaginatedList
+	 */
+	protected function paginateList(SS_List $list){
+		if($this->showFullList) {
+			$obj = new PaginatedList($list, $this->request);
+			$obj->setPageLength(3000);
+			return $obj;
+		}
+		if($list && $list->count()) {
+			$obj = new PaginatedList($list, $this->request);
+			$obj->setPageLength($this->MyNumberOfProductsPerPage());
+			return $obj;
+		}
+	}
+
+	/**
+	 * Checks out a bunch of $_GET variables
+	 * that are used to work out user preferences
+	 * Some of these are saved to session.
+	 *
+	 */
 	protected function saveUserPreferences(){
 		$preferencesArray = array(
 			"sort_options" => "session_name_for_sort_preference",
@@ -1192,94 +1406,17 @@ class ProductGroup_Controller extends Page_Controller {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Return the products for this group.
-	 *
-	 * @return PaginatedList
-	 **/
-	public function Products(){
-		return $this->paginateList($this->ProductsShowable(""));
-	}
-
-	/**
-	 * Return products that are featured, that is products that have "FeaturedProduct = 1"
-	 *
-	 * @return PaginatedList
-	 */
-	function FeaturedProducts() {
-		return $this->paginateList($this->ProductsShowable("\"FeaturedProduct\" = 1"));
-	}
-
-	/**
-	 * Return products that are not featured, that is products that have "FeaturedProduct = 0"
-	 *
-	 *@return PaginatedList
-	 */
-	function NonFeaturedProducts() {
-		return $this->paginateList($this->ProductsShowable("\"FeaturedProduct\" = 0"));
-	}
-
-	/**
-	 * Provides a dataset of links for sorting products.
-	 *
-	 * @return ArrayList( ArrayData(Name, Link, Current (boolean), LinkingMode))
-	 */
-	function SortLinks(){
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(count($sortOptions) <= 0) return null;
-		if($this->totalCount < 3) return null;
-		$sort = (isset($_GET['sortby'])) ? Convert::raw2sql($_GET['sortby']) : $this->MyDefaultSortOrder();
-		$dos = new ArrayList();
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(count($sortOptions)) {
-			foreach($sortOptions as $key => $array){
-				$current = ($key == $sort) ? 'current' : false;
-				$dos->push(new ArrayData(array(
-					'Name' => _t('ProductGroup.SORTBY'.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
-					'Link' => $this->Link()."?sortby=$key",
-					'SelectKey' => $key,
-					'Current' => $current,
-					'LinkingMode' => $current ? "current" : "link"
-				)));
-			}
-		}
-		return $dos;
-	}
-
-	/**
-	 * returns child product groups for use in
-	 * 'in this section'
-	 * @return ArrayList (ProductGroups)
-	 */
-	function MenuChildGroups() {
-		return $this->ChildGroups(2, "\"ShowInMenus\" = 1");
-	}
-
-	/**
-	 * turns full list into paginated list
-	 * @param SS_List
-	 * @return PaginatedList
-	 */
-	protected function paginateList(SS_List $list){
-		if($list && $list->count()) {
-			$obj = new PaginatedList($list, $this->request);
-			$obj->setPageLength($this->MyNumberOfProductsPerPage());
-			return $obj;
+		if(isset($_GET["showfulllist"])) {
+			$this->showFullList = true;
 		}
 	}
 
-	/**
-	 *
-	 * This method can be extended to show products in the side bar.
-	 * @return Null | DataList
-	 */
-	function SidebarProducts(){
-		return null;
-	}
 
-	function debug(){
+	/****************************************************
+	 *  DEBUG
+	/****************************************************/
+
+	public function debug(){
 		$member = Member::currentUser();
 		if(!$member || !$member->IsShopAdmin()) {
 			$messages = array(
