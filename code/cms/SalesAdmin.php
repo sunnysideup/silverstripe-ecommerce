@@ -19,6 +19,13 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	private static $url_segment = 'sales';
 
 	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	private static $description = "CMS management for everything you have sold and all related data.";
+
+
+	/**
 	 * standard SS variable
 	 * @var String
 	 */

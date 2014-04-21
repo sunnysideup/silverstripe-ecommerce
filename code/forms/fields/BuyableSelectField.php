@@ -11,6 +11,11 @@
  **/
 
 class BuyableSelectField extends FormField {
+	/**
+	 * Standard SS variable.
+	 * @var String
+	 */
+	private static $description = "A text input field that allows the user to select a Buyable, a product, a product variation or any other buyable";
 
 
 	/**

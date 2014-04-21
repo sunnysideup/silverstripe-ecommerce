@@ -20,6 +20,12 @@ class ProductGroupSearchPage extends ProductGroup {
 
 	/**
 	 * Standard SS variable.
+	 * @var String
+	 */
+	private static $description = "This page manages searching for products.";
+
+	/**
+	 * Standard SS variable.
 	 */
 	private static $singular_name = "Product Search Page";
 		function i18n_singular_name() { return _t("ProductGroupSearchPage.SINGULARNAME", "Product Search Page");}
