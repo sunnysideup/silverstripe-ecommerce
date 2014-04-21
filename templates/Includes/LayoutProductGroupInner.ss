@@ -3,17 +3,21 @@
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 <% include ProductGroupChildGroups %>
 
-<div class="filterAndSortLinksHolder">
-<% if ProductGroupsFromAlsoShowProductsLinks %>
-	<p class="filterOptions filterSortOptions"><% _t('ProductGroup.SUBGROUPS','By Group') %>: <% loop ProductGroupsFromAlsoShowProductsLinks %><a href="$FilterLink" class="$LinkingMode">$Title</a> <% end_loop %></p>
+<div class="filterAndDisplayLinksHolder">
+<% if HasFilters %>
+	<h3><% _t('ProductGroup.FILTERFOR','Filter for') %></h3>
+	<ul class="filterOptions filterSortOptions">
+		<% if FilterLinks %><% loop FilterLinks %><li class="$FirstLast standardFilters"><a href="$Link" class="$LinkingMode">$Name</a></li><% end_loop %><% end_if %>
+		<% if ProductGroupsFromAlsoShowProductsLinks %><% loop ProductGroupsFromAlsoShowProductsLinks %><li class="$FirstLast alsoShowFilters"><a href="$FilterLink" class="$MyLinkingMode">$Title</a></li><% end_loop %><% end_if %>
+	</ul>
 <% end_if %>
-<% if FilterLinks %>
-	<p class="filterOptions filterSortOptions"><% _t('ProductGroup.FILTERFOR','Filter for') %>: <% loop FilterLinks %><a href="$Link" class="$LinkingMode">$Name</a> <% end_loop %></p>
-<% end_if %>
+<h3><% _t('ProductGroup.DISPLAYSTYLE','Views') %></h3>
+	<ul class="displayOptions displayStyleOptions">
 <% if DisplayLinks %>
-	<p class="displayOptions displayStyleOptions"><% _t('ProductGroup.DISPLAYSTYLE','Display Style') %>: <% loop DisplayLinks %><a href="$Link" class="$LinkingMode">$Name</a> <% end_loop %></p>
+		<% loop DisplayLinks %><li class="$FirstLast displayStyles"><a href="$Link" class="$LinkingMode">$Name</a></li><% end_loop %>
 <% end_if %>
-<p class="listAllLink filterSortOptions"><a href="$ListAllLink">List All on One Page</a></p>
+		<li class="last listAllLink"><a href="$ListAllLink"><% _t('ProductGroup.LIST_ALL','List All') %></a></li>
+	</ul>
 </div>
 
 
@@ -26,10 +30,13 @@
 		</small>
 	</div>
 	<ul class="productList displayStyle$MyDefaultDisplayStyle">
-	<% if MyDefaultDisplayStyle = Short %><% loop Products %><% include ProductGroupItemShort %><% end_loop %>
-	<% else %><% if MyDefaultDisplayStyle = MoreDetail %><% loop Products %><% include ProductGroupItemMoreDetail %><% end_loop %>
+	<% if IsShowFullList %>
+		<% loop Products %><li><a href="$Link">$Title</a></li><% end_loop %>
+	<% else_if MyDefaultDisplayStyle = Short %><% loop Products %><% include ProductGroupItemShort %><% end_loop %>
+	<% else_if MyDefaultDisplayStyle = MoreDetail %><% loop Products %><% include ProductGroupItemMoreDetail %><% end_loop %>
 	<% else %><% loop Products %><% include ProductGroupItem %><% end_loop %>
-	<% end_if %><% end_if %>
+	<% end_if %>
+<% end_if %>
 	</ul>
 </div>
 <% include ProductGroupPagination %>
