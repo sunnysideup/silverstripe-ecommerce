@@ -1174,7 +1174,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * The group filter that is applied to this page
 	 * @var Int
 	 */
-	protected $filterForGroupID = null;
+	protected $filterForGroupObject = null;
 
 	/**
 	 * standard SS method
@@ -1219,12 +1219,11 @@ class ProductGroup_Controller extends Page_Controller {
 		if($otherGroupURLSegment) {
 			$otherProductGroup = ProductGroup::get()->filter(array("URLSegment" => $otherGroupURLSegment))->first();
 			if($otherProductGroup) {
-				$this->filterForGroupID = $otherProductGroup->ID;
+				$this->filterForGroupObject = $otherProductGroup;
 				$arrayOfIDs = $otherProductGroup->ProductsShowable()->map("ID", "ID")->toArray();
 			}
 		}
 		$this->products = $this->paginateList($this->ProductsShowable(array("ID" => $arrayOfIDs)));
-		$this->Title .= " | ".$otherProductGroup->Title;
 		return array();
 	}
 
@@ -1241,6 +1240,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return PaginatedList
 	 **/
 	public function Products(){
+		$this->addSecondaryTitle();
 		return $this->products;
 	}
 
@@ -1260,7 +1260,8 @@ class ProductGroup_Controller extends Page_Controller {
 
 	/**
 	 * returns child product groups for use in
-	 * 'in this section'
+	 * 'in this section'. For example the vegetable Product Group
+	 * May have listed here: Carrot, Cabbage, etc...
 	 * @return ArrayList (ProductGroups)
 	 */
 	public function MenuChildGroups() {
@@ -1270,9 +1271,30 @@ class ProductGroup_Controller extends Page_Controller {
 
 
 	/****************************************************
+	 *  TEMPLATE METHODS DISPLAY
+	/****************************************************/
+
+	/**
+	 * Do we show all products on one page?
+	 *
+	 * @return Boolean
+	 */
+	public function IsShowFullList(){
+		return $this->showFullList;
+	}
+
+	/****************************************************
 	 *  TEMPLATE METHODS LINKS
 	/****************************************************/
 
+	/**
+	 *
+	 *
+	 * @return Boolean
+	 */
+	public function HasFilters(){
+		return $this->FilterLinks()->count() || $this->ProductGroupsFromAlsoShowProductsLinks()->count();
+	}
 	/**
 	 *
 	 * returns a list of items (with links)
@@ -1281,13 +1303,14 @@ class ProductGroup_Controller extends Page_Controller {
 	public function ProductGroupsFromAlsoShowProductsLinks() {
 		$dos = new ArrayList();
 		$items = $this->ProductGroupsFromAlsoShowProducts();
+		$filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
 		if($items->count()) {
 			foreach($items as $item){
-				$isCurrent = $item->ID == $this->filterForGroupID;
+				$isCurrent = $item->ID == $filterForGroupObjectID;
 				$item->Name = $item->Title;
 				$item->SelectKey = $item->URLSegment;
 				$item->Current = $isCurrent ? true : false;
-				$item->LinkingMode = $isCurrent ? "current" : "link";
+				$item->MyLinkingMode = $isCurrent ? "current" : "link";
 				$item->FilterLink = $this->Link("filterforgroup/".$item->URLSegment);
 				$dos->push(clone $item);
 			}
@@ -1350,7 +1373,10 @@ class ProductGroup_Controller extends Page_Controller {
 		if(count($options)) {
 			foreach($options as $key => $array){
 				$isCurrent = ($key == $selectedItem) ? true : false;
-				$linkGetVariable = "?".EcommerceConfig::get("ProductGroup", $sessionVariableName)."=$key";
+				$linkGetVariable =  "?".EcommerceConfig::get("ProductGroup", $sessionVariableName)."=$key";
+				if($key == "default") {
+					$linkGetVariable .= "&amp;reload=1";
+				}
 				$dos->push(new ArrayData(array(
 					'Name' => _t('ProductGroup.'.$configTranslationCode.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
 					'Link' => $this->Link().$linkGetVariable,
@@ -1407,11 +1433,43 @@ class ProductGroup_Controller extends Page_Controller {
 				}
 			}
 		}
+		//make sure to save the new settings first!
+		if(isset($_GET["reload"])) {
+			return $this->redirect($this->Link());
+		}
 		if(isset($_GET["showfulllist"])) {
 			$this->showFullList = true;
 		}
 	}
 
+	/**
+	 * add a secondary title to the main title
+	 * in case there is, for example, a filter applied
+	 * e.g. Socks | MyBrand
+	 *
+	 *
+	 */
+	private $secondaryTitleHasBeenAdded = false;
+
+	protected function addSecondaryTitle($secondaryTitle = "") {
+		$pipe = _t("ProductGroup.TITLE_SEPERATOR", " | ");
+		if(!$this->secondaryTitleHasBeenAdded) {
+			if($this->showFullList) {
+				$secondaryTitle .= $pipe._t("ProductGroup.LIST_VIEW", "List View");
+			}
+			if($secondaryTitle) {
+				$this->Title .= $pipe.$secondaryTitle;
+				if(isset($this->MetaTitle)) {
+					$this->MetaTitle .= $pipe.$secondaryTitle;
+				}
+			}
+			//dont update menu title, because the entry in the menu
+			//should stay the same as it links back to the unfiltered
+			//page (in some cases).
+			//$this->MenuTitle .= " | ".$otherProductGroup->MenuTitle;
+			$this->secondaryTitleHasBeenAdded = true;
+		}
+	}
 
 	/****************************************************
 	 *  DEBUG
