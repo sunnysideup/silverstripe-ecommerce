@@ -1201,7 +1201,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 * standard selection of products
 	 */
-	public function index($request){
+	public function index(){
 		$this->products = $this->paginateList($this->ProductsShowable(""));
 		return array();
 	}

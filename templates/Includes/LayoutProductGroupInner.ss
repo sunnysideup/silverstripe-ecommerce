@@ -2,23 +2,7 @@
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 <% include ProductGroupChildGroups %>
-
-<div class="filterAndDisplayLinksHolder">
-<% if HasFilters %>
-	<h3><% _t('ProductGroup.FILTERFOR','Filter for') %></h3>
-	<ul class="filterOptions filterSortOptions">
-		<% if FilterLinks %><% loop FilterLinks %><li class="$FirstLast standardFilters"><a href="$Link" class="$LinkingMode">$Name</a></li><% end_loop %><% end_if %>
-		<% if ProductGroupsFromAlsoShowProductsLinks %><% loop ProductGroupsFromAlsoShowProductsLinks %><li class="$FirstLast alsoShowFilters"><a href="$FilterLink" class="$MyLinkingMode">$Title</a></li><% end_loop %><% end_if %>
-	</ul>
-<% end_if %>
-<h3><% _t('ProductGroup.DISPLAYSTYLE','Views') %></h3>
-	<ul class="displayOptions displayStyleOptions">
-<% if DisplayLinks %>
-		<% loop DisplayLinks %><li class="$FirstLast displayStyles"><a href="$Link" class="$LinkingMode">$Name</a></li><% end_loop %>
-<% end_if %>
-		<li class="last listAllLink"><a href="$ListAllLink"><% _t('ProductGroup.LIST_ALL','List All') %></a></li>
-	</ul>
-</div>
+<% include ProductGroupSortAndFilter %>
 
 
 <% if Products %>
@@ -31,7 +15,7 @@
 	</div>
 	<ul class="productList displayStyle$MyDefaultDisplayStyle">
 	<% if IsShowFullList %>
-		<% loop Products %><li><a href="$Link">$Title</a></li><% end_loop %>
+		<% loop Products %><li><a href="$Link">$Title</a><span class="line"></span><span class="price">$CalculatedPriceAsMoney.NiceDefaultFormat</span></li><% end_loop %>
 	<% else_if MyDefaultDisplayStyle = Short %><% loop Products %><% include ProductGroupItemShort %><% end_loop %>
 	<% else_if MyDefaultDisplayStyle = MoreDetail %><% loop Products %><% include ProductGroupItemMoreDetail %><% end_loop %>
 	<% else %><% loop Products %><% include ProductGroupItem %><% end_loop %>
