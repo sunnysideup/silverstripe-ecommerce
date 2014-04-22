@@ -404,6 +404,23 @@ class ProductGroup extends Page {
 	 * SETTINGS: default codes
 	 *********************/
 
+	 /**
+	  *
+	  *
+	  * @return Int
+	  */
+	public function MyLevelOfProductsToShow(){
+		if($this->LevelOfProductsToShow == 0) {
+			if($parent = $this->ParentGroup()) {
+				$this->LevelOfProductsToShow = $parent->MyLevelOfProductsToShow();
+			}
+		}
+		//reset to default
+		if($this->LevelOfProductsToShow	 == 0) {
+			$defaults = Config::inst()->get("ProductGroup", "defaults");
+			return isset($defaults["LevelOfProductsToShow"]) ? $defaults["LevelOfProductsToShow"] : 99;
+		}
+	}
 
 	/**
 	 * returns the CODE of the default sort order.
@@ -763,14 +780,16 @@ class ProductGroup extends Page {
 	 */
 	protected function getGroupFilter(){
 		$groupFilter = "";
-		if($this->LevelOfProductsToShow < 0) {
+		$levelToShow = $this->MyLevelOfProductsToShow();
+		//special cases
+		if($levelToShow < 0) {
 			//no produts but if LevelOfProductsToShow = -1 then show all
-			$groupFilter = " (".$this->LevelOfProductsToShow." = -1) " ;
+			$groupFilter = " (".$levelToShow." = -1) " ;
 		}
-		elseif($this->LevelOfProductsToShow > 0) {
+		elseif($levelToShow > 0) {
 			$groupIDs = array($this->ID => $this->ID);
 			$groupFilter .= $this->getProductsToBeIncludedFromOtherGroups();
-			$childGroups = $this->ChildGroups($this->LevelOfProductsToShow);
+			$childGroups = $this->ChildGroups($levelToShow);
 			if($childGroups && $childGroups->count()) {
 				foreach($childGroups as $childGroup) {
 					$groupIDs[$childGroup->ID] = $childGroup->ID;
@@ -778,6 +797,10 @@ class ProductGroup extends Page {
 				}
 			}
 			$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ".$groupFilter;
+		}
+		else {
+			//fall-back
+			$groupFilter = "ParentID < 0";
 		}
 		$this->allProducts = $this->allProducts->where($groupFilter);
 		return $this->allProducts;
