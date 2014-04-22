@@ -39,13 +39,3 @@ EcommerceDatabaseAdmin:
 LeftAndMain:
   extra_requirements_css:
     - ecommerce/css/ecommercecmsfixes.css
-
----
-Only:
-  environment: 'dev'
----
-EcommercePayment:
-  supported_methods:
-    EcommercePayment_TestSuccess : Success
-    EcommercePayment_TestPending : Pending
-    EcommercePayment_TestFailure : Failure
