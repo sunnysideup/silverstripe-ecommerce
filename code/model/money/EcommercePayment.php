@@ -297,8 +297,6 @@ class EcommercePayment extends DataObject {
 				$supportedMethods
 			)
 		);
-		print_r($supportedMethods);
-		die("AA");
 		foreach($supportedMethods as $methodClass => $methodName) {
 			// Create a new CompositeField with method specific fields,
 			// as defined on each payment method class using getPaymentFormFields()
