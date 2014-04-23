@@ -3,21 +3,21 @@
 <table id="InformationTable" class="editable infotable">
 	<thead>
 		<tr>
-			<th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
-			<th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
+			<th scope="col" class="left titleCol"><% _t("Order.PRODUCT","Product") %></th>
+			<th scope="col" class="center quantityCol"><% _t("Order.QUANTITY", "Quantity") %></th>
 			<th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
 			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %></th>
-			<th scope="col" class="right"></th>
+			<th scope="col" class="right emptyCell"></th>
 		</tr>
 	</thead>
 	<tfoot>
 <% if Items %>
 		<tr class="gap total summary hideOnZeroItems">
-			<th colspan="3" scope="row"><% _t("Order.TOTAL","Total") %> ($CurrencyUsed.Code)</th>
-			<td class="right total" id="$AJAXDefinitions.TableTotalID">
+			<th colspan="3" scope="row" class="firstThreeCols"><% _t("Order.TOTAL","Total") %> ($CurrencyUsed.Code)</th>
+			<td class="right total totalCol" id="$AJAXDefinitions.TableTotalID">
 				<span class="value">$TotalAsMoney.NiceDefaultFormat</span>
 			</td>
-			<td>&nbsp;</td>
+			<td class="emptyCell deleteCol">&nbsp;</td>
 		</tr>
 <% end_if %>
 <% if CustomerViewableOrderStatusLogs %>
@@ -54,7 +54,7 @@
 	<% if Modifiers %>
 		<% loop Modifiers %>
 			<% if ShowInTable %>
-			<% include Order_Content_Editable_ModifierRow %>
+			<% include Order_Content_Editable_ModifierRow.ss %>
 			<% end_if %>
 		<% end_loop %>
 	<% end_if %>
@@ -63,4 +63,4 @@
 </table>
 
 
-<% include ShoppingCartRequirements %>
+<% include ShoppingCartRequirements.ss %>
