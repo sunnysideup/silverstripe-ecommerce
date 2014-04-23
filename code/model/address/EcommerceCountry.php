@@ -349,6 +349,21 @@ class EcommerceCountry extends DataObject {
 		return $defaultArray;
 	}
 
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->addFieldToTab("Root.Main", new LiteralField(
+			"Add Add Countries",
+			"
+				<h3>Short-Cuts</h3>
+				<h6>
+					<a href=\"/dev/tasks/EcommerceCountryAndRegionTasks_DisallowAllCountries\" target=\"_blank\">"._t("EcommerceCountry.DISALLOW_ALL", "disallow sales to all countries")."</a>,
+					<a href=\"/dev/tasks/EcommerceCountryAndRegionTasks_AllowAllCountries\" target=\"_blank\">"._t("EcommerceCountry.ALLOW_ALL", "allow sales to all countries")."</a>
+				</h6>
+			")
+		);
+		return $fields;
+	}
+
 	/**
 	 *
 	 * standard SS method
