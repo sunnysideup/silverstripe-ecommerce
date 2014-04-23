@@ -47,14 +47,15 @@
 
 		<tr class="gap summary hideOnZeroItems">
 			<th colspan="3" scope="row" class="firstThreeCols"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right totalCol" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
+			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
 			<td class="emptyCell deleteCol">&nbsp;</td>
 		</tr>
 
 	<% if Modifiers %>
 		<% loop Modifiers %>
 			<% if ShowInTable %>
-			<% include Order_Content_Editable_ModifierRow.ss %>
+			<% include Order_Content_Editable_ModifierRo %>
+			<% include Order_Content_Editable_ModifierRow %>
 			<% end_if %>
 		<% end_loop %>
 	<% end_if %>
