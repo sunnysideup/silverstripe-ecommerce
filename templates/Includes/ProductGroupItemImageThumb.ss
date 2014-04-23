@@ -1,4 +1,4 @@
-<div class="productImage">
+<div class="productImage cartImage">
 <% if BestAvailableImage %>
 	<a href="$Link"><img src="$BestAvailableImage.Thumbnail.URL" alt="<%t Product.IMAGE '{name} image' name=$Title.ATT %>" width="$BestAvailableImage.Thumbnail.Width" height="$BestAvailableImage.Thumbnail.Height" /></a>
 <% else %>
