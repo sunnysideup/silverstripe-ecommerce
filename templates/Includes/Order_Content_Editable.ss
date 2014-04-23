@@ -5,9 +5,9 @@
 		<tr>
 			<th scope="col" class="left titleCol"><% _t("Order.PRODUCT","Product") %></th>
 			<th scope="col" class="center quantityCol"><% _t("Order.QUANTITY", "Quantity") %></th>
-			<th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
-			<th scope="col" class="right"><% _t("Order.TOTALPRICE","Total Price") %></th>
-			<th scope="col" class="right emptyCell"></th>
+			<th scope="col" class="right priceCol"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
+			<th scope="col" class="right totalCol"><% _t("Order.TOTALPRICE","Total Price") %></th>
+			<th scope="col" class="right emptyCell deleteCol"></th>
 		</tr>
 	</thead>
 	<tfoot>
@@ -23,16 +23,16 @@
 <% if CustomerViewableOrderStatusLogs %>
 	<% loop CustomerViewableOrderStatusLogs %>
 		<tr>
-			<th class="left" scope="row">$Title</th>
-			<td class="left" colspan="4"><% if CustomerNote %>$CustomerNote<% else %>no further information<% end_if %></td>
+			<th class="left titleCol" scope="row">$Title</th>
+			<td class="left fourCols" colspan="4"><% if CustomerNote %>$CustomerNote<% else %>no further information<% end_if %></td>
 		</tr>
 	<% end_loop %>
 <% end_if %>
 		<tr class="cartMessage">
-			<td colspan="5" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
+			<td colspan="5" class="center $CartStatusClass fiveCols" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
 		</tr>
 		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
-			<td colspan="5" class="center">
+			<td colspan="5" class="center fiveCols">
 				$DisplayPage.NoItemsInOrderMessage
 			</td>
 		</tr>
@@ -46,9 +46,9 @@
 	<% end_loop %>
 
 		<tr class="gap summary hideOnZeroItems">
-			<th colspan="3" scope="row"><% _t("Order.SUBTOTAL","Sub-total") %></th>
-			<td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
-			<td>&nbsp;</td>
+			<th colspan="3" scope="row" class="firstThreeCols"><% _t("Order.SUBTOTAL","Sub-total") %></th>
+			<td class="right totalCol" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
+			<td class="emptyCell deleteCol">&nbsp;</td>
 		</tr>
 
 	<% if Modifiers %>

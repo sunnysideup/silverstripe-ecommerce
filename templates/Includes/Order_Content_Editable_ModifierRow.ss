@@ -1,5 +1,5 @@
 <tr  class="$Classes hideOnZeroItems<% if HideInAjaxUpdate %> hideForNow<% end_if %>"  id="$AJAXDefinitions.TableID">
-	<td colspan="3">
+	<td colspan="3" class="firstThreeCols">
 			<% if ShowFormInEditableOrderTable %>
 				<div class="modifierForm">$ModifierForm</div>
 			<% else %>
