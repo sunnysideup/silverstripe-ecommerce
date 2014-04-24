@@ -1145,18 +1145,44 @@ class ProductGroup extends Page {
 		$html = EcommerceTaskDebugCart::debug_object($this);
 		$html .= "<ul>";
 
+		$html .= "<li><hr />Default Keys<hr /></li>";
+		$html .= "<li><b>Default Sort Key:</b> ".$this->getDefaultSortKey()." </li>";
+		$html .= "<li><b>Default Filter Key:</b> ".$this->getDefaultFilterKey()." </li>";
+		$html .= "<li><b>Default Display Style Key:</b> ".$this->getDefaultDisplayStyleKey()." </li>";
+
+		$html .= "<li><hr />Dropdowns<hr /></li>";
+		$html .= "<li><b>Sort Options for Dropdown:</b> ".$this->getSortOptionsForDropdown()." </li>";
+		$html .= "<li><b>Filter Options for Dropdown:</b> ".$this->getFilterOptionsForDropdown()." </li>";
+		$html .= "<li><b>Display Styles for Dropdown:</b> ".$this->getDisplayStylesForDropdown()." </li>";
+
+
 		$html .= "<li><hr />Selection Settings<hr /></li>";
 		$html .= "<li><b>MyDefaultFilter:</b> ".$this->MyDefaultFilter()." </li>";
 		$html .= "<li><b>MyDefaultSortOrder:</b> ".$this->MyDefaultSortOrder()." </li>";
 		$html .= "<li><b>MyDefaultDisplayStyle:</b> ".$this->MyDefaultDisplayStyle()." </li>";
 		$html .= "<li><b>MyNumberOfProductsPerPage:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
+		$html .= "<li><b>MyLevelOfProductsToshow:</b> ".$this->MyLevelOfProductsToShow()." </li>";
 
 		$html .= "<li><hr />Filters<hr /></li>";
 		$html .= "<li><b>currentClassNameSQL:</b> ".$this->getClassNameSQL()." </li>";
 		$html .= "<li><b>getFilterOptionSQL:</b> ".print_r($this->getFilterOptionSQL(), 1)." </li>";
 		$html .= "<li><b>getGroupFilter:</b> ".$this->getGroupFilter()." </li>";
+		$html .= "<li><b>getStandardFilter:</b> ".$this->getStandardFilter()." </li>";
+
+		$html .= "<li><hr />DATALIST: adjusters<hr /></li>";
+	$html .= "<li><b>Join statement for product groups:</b> ".$this->getGroupJoin()." </li>";
+		$html .= "<li><b>Excluded products that can not be searched:</b> ".$this->getExcludedProducts()." </li>";
+
+		$html .= "<li><hr />DATALIST: totals, numbers per page etc<hr /></li>";
+		$html .= "<li><b>Total number of products:</b> ".$this->TotalCount()." </li>";
+		$html .= "<li><b>Is there more than one product:</b> ".$this->TotalCountGreaterThanOne()." </li>";
+		$html .= "<li><b>Number of products per page:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
+		$html .= "<li><b>Parent page if it is an instance of product group:</b> ".$this->ParentGroup()." </li>";
+
 
 		$html .= "<li><hr />SQL Factors<hr /></li>";
+		$html .= "<li><b>Sort options for SQL:</b> ".$this->getSortOptionSQL()." </li>";
+		$html .= "<li><b>Filter options for SQL:</b> ".$this->getFilterOptionSQL()." </li>";
 		$html .= "<li><b>currentClassNameSQL:</b> ".$this->getClassNameSQL()." </li>";
 		$html .= "<li><b>currentSortSQL:</b> ".$this->currentSortSQL()." </li>";
 
@@ -1166,6 +1192,14 @@ class ProductGroup extends Page {
 
 		$html .= "<li><hr />Other<hr /></li>";
 		$html .= "<li><b>BestAvailableImage:</b> ".$this->BestAvailableImage()." </li>";
+		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b> ".$this->ProductGroupsFromAlsoShowProducts()." </li>";
+		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b> ".$this->ProductGroupsFromAlsoShowProductsInverse()." </li>";
+		$html .= "<li><b>Is this an ecommerce page:</b> ".$this->IsEcommercePage()." </li>";
+
+		$html .= "<li><hr />Final Products<hr /></li>";
+		$html .= "<li><b>currentFinalProducts:</b> ".$this->currentFinalProducts()." </li>";
+
+
 
 		$html .= "</ul>";
 		return $html;
