@@ -418,8 +418,9 @@ class ProductGroup extends Page {
 		//reset to default
 		if($this->LevelOfProductsToShow	 == 0) {
 			$defaults = Config::inst()->get("ProductGroup", "defaults");
-			return isset($defaults["LevelOfProductsToShow"]) ? $defaults["LevelOfProductsToShow"] : 99;
+			return isset($defaults["LevelOfProductsToShow"]) && $defaults["LevelOfProductsToShow"] ? $defaults["LevelOfProductsToShow"] : 99;
 		}
+		return $this->LevelOfProductsToShow;
 	}
 
 	/**
@@ -1260,7 +1261,6 @@ class ProductGroup_Controller extends Page_Controller {
 	 * standard selection of products
 	 */
 	public function index(){
-		print_r($this->paginateList($this->ProductsShowable("")));
 		$this->products = $this->paginateList($this->ProductsShowable(""));
 		return array();
 	}
