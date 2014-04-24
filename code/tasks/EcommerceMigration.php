@@ -1293,7 +1293,7 @@ class EcommerceMigration extends BuildTask {
 			echo $explanation;
 		}
 		//level 10
-		$task = new CleanupProductFullSiteTreeSorting();
+		$task = new EcommerceTaskCleanupProducts();
 		$task->setDeleteFirst(false);
 		$task->run(null);
 		return 0;

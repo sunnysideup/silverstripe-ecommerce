@@ -1144,25 +1144,26 @@ class ProductGroup extends Page {
 		$this->ProductsShowable();
 		$html = EcommerceTaskDebugCart::debug_object($this);
 		$html .= "<ul>";
+
 		$html .= "<li><hr />Selection Settings<hr /></li>";
 		$html .= "<li><b>MyDefaultFilter:</b> ".$this->MyDefaultFilter()." </li>";
 		$html .= "<li><b>MyDefaultSortOrder:</b> ".$this->MyDefaultSortOrder()." </li>";
 		$html .= "<li><b>MyDefaultDisplayStyle:</b> ".$this->MyDefaultDisplayStyle()." </li>";
 		$html .= "<li><b>MyNumberOfProductsPerPage:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
+
 		$html .= "<li><hr />Filters<hr /></li>";
-		$html .= "<li><b>currentClassNameSQL:</b> ".$this->currentClassNameSQL()." </li>";
+		$html .= "<li><b>currentClassNameSQL:</b> ".$this->getClassNameSQL()." </li>";
 		$html .= "<li><b>getFilterOptionSQL:</b> ".print_r($this->getFilterOptionSQL(), 1)." </li>";
 		$html .= "<li><b>getGroupFilter:</b> ".$this->getGroupFilter()." </li>";
-		$html .= "<li><b>currentJoinSQL:</b> ".$this->currentJoinSQL()." </li>";
+
 		$html .= "<li><hr />SQL Factors<hr /></li>";
-		$html .= "<li><b>currentClassNameSQL:</b> ".$this->currentClassNameSQL()." </li>";
-		$html .= "<li><b>currentWhereSQL:</b> ".print_r($this->currentWhereSQL(), 1)." </li>";
+		$html .= "<li><b>currentClassNameSQL:</b> ".$this->getClassNameSQL()." </li>";
 		$html .= "<li><b>currentSortSQL:</b> ".$this->currentSortSQL()." </li>";
-		$html .= "<li><b>currentJoinSQL:</b> ".$this->currentJoinSQL()." </li>";
 
 		$html .= "<li><hr />Outcome<hr /></li>";
 		$html .= "<li><b>TotalCount:</b> ".$this->TotalCount()." </li>";
 		$html .= "<li><b>allProducts:</b> ".print_r($this->allProducts->sql(), 1)." </li>";
+
 		$html .= "<li><hr />Other<hr /></li>";
 		$html .= "<li><b>BestAvailableImage:</b> ".$this->BestAvailableImage()." </li>";
 
@@ -1225,6 +1226,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * standard selection of products
 	 */
 	public function index(){
+		print_r($this->paginateList($this->ProductsShowable("")));
 		$this->products = $this->paginateList($this->ProductsShowable(""));
 		return array();
 	}
