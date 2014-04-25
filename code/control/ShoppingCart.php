@@ -69,6 +69,7 @@ class ShoppingCart extends Object{
 		if(!self::$singletoncart){
 			self::$singletoncart = ShoppingCart::create();
 		}
+
 		return self::$singletoncart;
 	}
 
@@ -251,7 +252,6 @@ class ShoppingCart extends Object{
 				$msg = _t("Order.ITEMADDED", "Item added.");
 			}
 			$this->addMessage($msg,'good');
-			return $item;
 		}
 		elseif(!$item) {
 			$this->addMessage(_t("Order.ITEMNOTFOUND", "Item could not be found.") ,'bad');
@@ -911,6 +911,7 @@ class ShoppingCart extends Object{
 			$this->addMessage($message,$status);
 		}
 		//TODO: handle passing back multiple messages
+
 		if(Director::is_ajax()){
 			$responseClass = EcommerceConfig::get("ShoppingCart", "response_class");
 			$obj = new $responseClass();

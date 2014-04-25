@@ -35,7 +35,6 @@ class CartResponse extends EcommerceResponse {
 	public function ReturnCartData(Array $messages = array(), Array $additionalData = null, $status = "success") {
 		//add header
 		$this->addHeader('Content-Type', 'application/json');
-
 		SSViewer::set_source_file_comments(false);
 
 		//merge messages
@@ -56,7 +55,6 @@ class CartResponse extends EcommerceResponse {
 
 		//THIS LINE TAKES UP MOST OF THE TIME OF THE RESPONSE!!!
 		$currentOrder->calculateOrderAttributes($force = false);
-
 		$ajaxObject = $currentOrder->AJAXDefinitions();
 		// populate Javascript
 		$js = array ();
