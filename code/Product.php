@@ -163,18 +163,6 @@ class Product extends Page implements BuyableModel {
 	 */
 	private static $icon = 'ecommerce/images/icons/product';
 
-	/**
-	 * We add all $db fields to MetaKeywords to allow searching products
-	 * on more fields than just the standard ones.
-	 * This variables tells us what fields to exclude
-	 * (either they are being searched already OR they are not relevant)
-	 * So basically this is a list of products that have either already been included in search (e.g. Title)
-	 * AND products that are not relevant in search (e.g. Created)
-	 * @var Array
-	 */
-	protected $fieldsToExcludeFromSearch = array("Title","MenuTitle","Content","MetaDescription", "Status", "ReportClass", "CanViewType", "CanEditType", "ToDo");
-
-
 	public function getCMSActions() {
 		$fields = parent::getCMSActions();
 		if(!$this->canEdit()) {
@@ -194,6 +182,7 @@ class Product extends Page implements BuyableModel {
 		//$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
 		//$this->disableCMSFieldsExtensions();
 		$fields = parent::getCMSFields();
+		$fields->removeByName("MetaDescription");
 		//if($siteTreeFieldExtensions) {
 			//$this->enableCMSFieldsExtensions();
 		//}
@@ -326,13 +315,12 @@ class Product extends Page implements BuyableModel {
 		$this->prepareFullFields();
 		//we are adding all the fields to the keyword fields here for searching purposes.
 		//because the MetaKeywords Field is being searched.
-		$this->MetaKeywords = "";
+		$this->MetaDescription = "";
+		$fieldsToExclude = Config::inst()->get("SiteTree", "db");
 		foreach($this->db() as $fieldName => $fieldType) {
 			if(is_string($this->$fieldName) && strlen($this->$fieldName) > 2) {
-				//HACK!!
-				if(!in_array($fieldName, $this->fieldsToExcludeFromSearch)) {
-				//END HACK
-					$this->MetaKeywords .= strip_tags($this->$fieldName);
+				if(!in_array($fieldName, $fieldsToExclude)) {
+					$this->MetaDescription .= strip_tags($this->$fieldName);
 				}
 			}
 		}
@@ -341,7 +329,7 @@ class Product extends Page implements BuyableModel {
 			if($variations) {
 				if($variations->count()) {
 					foreach($variations as $variation) {
-						$this->MetaKeywords .= " - ".$variation->FullName;
+						$this->MetaDescription .= " - ".$variation->FullName;
 					}
 				}
 			}
@@ -404,7 +392,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Returns all the parent groups for the product.
 	 * This function has been added her to contrast it with MainParentGroup (see below).
-	  *@return DataList (ProductGroups)
+	  *@return ManyManyList (ProductGroups)
 	 **/
 	function AllParentGroups() {
 		return $this->ProductGroups();
@@ -912,7 +900,47 @@ class Product extends Page implements BuyableModel {
 		return $this->canEdit($member);
 	}
 
+	public function debug(){
+		$html = EcommerceTaskDebugCart::debug_object($this);
+		$html .= "<ul>";
+		$html .= "<li><hr />Links<hr /></li>";
+		$html .= "<li><b>Link:</b> <a href=\"".$this->Link()."\">".$this->Link()."</a></li>";
+		$html .= "<li><b>Ajax Link:</b> <a href=\"".$this->AjaxLink()."\">".$this->AjaxLink()."</a></li>";
+		$html .= "<li><b>AddVariations Link:</b> <a href=\"".$this->AddVariationsLink()."\">".$this->AddVariationsLink()."</a></li>";
+		$html .= "<li><b>Add to Cart Link:</b> <a href=\"".$this->AddLink()."\">".$this->AddLink()."</a></li>";
+		$html .= "<li><b>Increment Link:</b> <a href=\"".$this->IncrementLink()."\">".$this->IncrementLink()."</a></li>";
+		$html .= "<li><b>Decrement Link:</b> <a href=\"".$this->DecrementLink()."\">".$this->DecrementLink()."</a></li>";
+		$html .= "<li><b>Remove Link:</b> <a href=\"".$this->RemoveAllLink()."\">".$this->RemoveLink()."</a></li>";
+		$html .= "<li><b>Remove All Link:</b> <a href=\"".$this->RemoveAllLink()."\">".$this->RemoveAllLink()."</a></li>";
+		$html .= "<li><b>Remove All and Edit Link:</b> <a href=\"".$this->RemoveAllAndEditLink()."\">".$this->RemoveAllAndEditLink()."</a></li>";
+		$html .= "<li><b>Set Specific Quantity Item Link (e.g. 77):</b> <a href=\"".$this->SetSpecificQuantityItemLink(77)."\">".$this->SetSpecificQuantityItemLink(77)."</a></li>";
 
+		$html .= "<li><hr />Cart<hr /></li>";
+		$html .= "<li><b>Allow Purchase (DB Value):</b> ".$this->AllowPurchaseNice()." </li>";
+		$html .= "<li><b>Can Purchase (overal calculation):</b> ".($this->canPurchase() ? "YES" : "NO")." </li>";
+		$html .= "<li><b>Shop Open:</b> ".( $this->EcomConfig() ?  ($this->EcomConfig()->ShopClosed ? "NO" : "YES") : "NO CONFIG")." </li>";
+		$html .= "<li><b>Extended Country Can Purchase:</b> ".($this->extendedCan('canPurchaseByCountry', null) === null ? "no applicable" : ($this->extendedCan('canPurchaseByCountry', null) ? "CAN PURCHASE" : "CAN NOT PURCHASE"))." </li>";
+		$html .= "<li><b>Allow sales to this country ".EcommerceCountry::get_country().":</b> ".(EcommerceCountry::allow_sales() ? "YES" : "NO")." </li>";
+		$html .= "<li><b>Class Name for OrderItem:</b> ".$this->classNameForOrderItem()." </li>";
+		$html .= "<li><b>Quantity Decimals:</b> ".$this->QuantityDecimals()." </li>";
+		$html .= "<li><b>Is In Cart:</b> ".($this->IsInCart() ? "YES" : "NO")." </li>";
+		$html .= "<li><b>Has Been Sold:</b> ".($this->HasBeenSold() ?  "YES" : "NO")." </li>";
+		$html .= "<li><b>Calculated Price:</b> ".$this->CalculatedPrice()." </li>";
+		$html .= "<li><b>Calculated Price as Money:</b> ".$this->getCalculatedPriceAsMoney()->Nice()." </li>";
+
+		$html .= "<li><hr />Location<hr /></li>";
+		$html .= "<li><b>Main Parent Group:</b> ".$this->MainParentGroup()->Title."</li>";
+		$html .= "<li><b>All Others Parent Groups:</b> ".($this->AllParentGroups()->count() ? "<pre>".print_r($this->AllParentGroups()->map()->toArray(), 1)."</pre>" : "none")."</li>";
+
+		$html .= "<li><hr />Image<hr /></li>";
+		$html .= "<li><b>Image:</b> ".($this->BestAvailableImage() ? "<img src=".$this->BestAvailableImage()->Link()." />" : "no image")." </li>";
+		$html .= "<li><b>Small Image:</b> ".($this->CMSThumbnail() ? "<img src=".$this->CMSThumbnail()->Link()." />" : "no image")." </li>";
+
+
+
+		$html .= "</ul>";
+		return $html;
+	}
 
 }
 
@@ -922,7 +950,8 @@ class Product_Controller extends Page_Controller {
 	private static $allowed_actions = array(
 		"viewversion",
 		"ajaxview",
-		"addproductfromform"
+		"addproductfromform",
+		"debug" => "ADMIN"
 	);
 
 	/**
@@ -1141,6 +1170,17 @@ class Product_Controller extends Page_Controller {
 		return array();
 	}
 
+
+	public function debug(){
+		$member = Member::currentUser();
+		if(!$member || !$member->IsShopAdmin()) {
+			$messages = array(
+				'default' => 'You must login as an admin to access debug functions.'
+			);
+			Security::permissionFailure($this, $messages);
+		}
+		return $this->dataRecord->debug();
+	}
 
 }
 
@@ -1460,7 +1500,6 @@ HTML;
 		$this->extend('updateDebug',$html);
 		return $html;
 	}
-
 
 }
 

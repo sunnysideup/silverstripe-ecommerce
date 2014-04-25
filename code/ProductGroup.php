@@ -1342,6 +1342,16 @@ class ProductGroup_Controller extends Page_Controller {
 		return $this->showFullList;
 	}
 
+	/**
+	 * Number of entries per page limited by total number of pages available...
+	 *
+	 * @return Int
+	 */
+	public function MaxNumberOfProductsPerPage(){
+		return $this->MyNumberOfProductsPerPage() > $this->TotalCount() ? $this->TotalCount() : $this->MyNumberOfProductsPerPage();
+	}
+
+
 	/****************************************************
 	 *  TEMPLATE METHODS LINKS
 	/****************************************************/
@@ -1428,6 +1438,9 @@ class ProductGroup_Controller extends Page_Controller {
 		$options = EcommerceConfig::get("ProductGroup", $configName);
 		if(count($options) < 2) return null;
 		$selectedItem = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", $sessionVariableName));
+		if($this->filterForGroupObject && $configName == "filter_options") {
+			$selectedItem = "";
+		}
 		$dos = new ArrayList();
 		if(count($options)) {
 			foreach($options as $key => $array){
@@ -1538,7 +1551,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$member = Member::currentUser();
 		if(!$member || !$member->IsShopAdmin()) {
 			$messages = array(
-				'default' => 'You must login as an admin'
+				'default' => 'You must login as an admin to use debug functions.'
 			);
 			Security::permissionFailure($this, $messages);
 		}

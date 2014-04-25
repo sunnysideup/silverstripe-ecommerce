@@ -34,12 +34,28 @@ class CartManipulation_Current extends BuildTask{
  **/
 class CartManipulation_Debug extends BuildTask{
 
-	protected $title = "Show the values of the current cart";
+	protected $title = "Show debug links";
 
-	protected $description = "Iterates through all the values related to the current cart and displays them.";
+	protected $description = "Use a bunch of debug links to work with various objects such as the cart, the product group and the product page.";
 
 	function run($request){
-		DB::alteration_message("<br /><br /><br /><br /><br /><br /><a href=\"/shoppingcart/debug/\" target=\"_debug\">click here to view the debug values in a new window</a>.<br /><br /><br /><br /><br /><br />");
+		$myProductGroup = ProductGroup::get()->first();
+		$myProduct = Product::get()->first();
+		$html = "
+		Please use the links below:
+		<ul>
+			<li><a href=\"/shoppingcart/debug/\" target=\"_debug\">debug cart</a></li>";
+		if($myProductGroup) {
+			$html .= "
+			<li><a href=\"/".$myProductGroup->Link("debug")."\" target=\"_debug\">debug product group</a></li>";
+		}
+		if($myProduct) {
+			$html .= "
+			<li><a href=\"/".$myProduct->Link("debug")."\" target=\"_debug\">debug product</a></li>";
+		}
+		$html .="
+		</ul>";
+		DB::alteration_message("$html");
 	}
 
 }

@@ -155,7 +155,7 @@ class BuyableSelectField_DataList extends Controller {
 		"InternalItemID",
 		"Title",
 		"FullName",
-		"MetaKeywords"
+		"MetaDescription"
 	);
 
 	private static $url_segment = "ecommercebuyabledatalist";

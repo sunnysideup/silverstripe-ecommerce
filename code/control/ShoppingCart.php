@@ -1095,7 +1095,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function add_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/additem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/additem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1106,7 +1106,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1117,7 +1117,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_all_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeallitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeallitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1128,7 +1128,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeallitemandedit/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeallitemandedit/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1139,7 +1139,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function set_quantity_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/setquantityitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/setquantityitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1149,7 +1149,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_modifier_link($modifierID, Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removemodifier/'.$modifierID."/".self::params_to_get_string($parameters);
+		return  "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removemodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1159,7 +1159,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function add_modifier_link($modifierID, Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/addmodifier/'.$modifierID."/".self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/addmodifier/'.$modifierID."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1170,7 +1170,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_address_link($addressID, $addressClassName, Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeaddress/'.$addressID."/".$addressClassName."/".self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeaddress/'.$addressID."/".$addressClassName."/".self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1178,7 +1178,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function clear_cart_link($parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/clear/'.self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/clear/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1186,7 +1186,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function save_cart_link(Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/save/'.self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/save/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1194,7 +1194,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function clear_cart_and_logout_link(Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/clearandlogout/'.self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/clearandlogout/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1202,11 +1202,11 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function delete_order_link($orderID, Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
 	}
 
 	public static function copy_order_link($orderID, $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/copyorder/'.$orderID.'/'.self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/copyorder/'.$orderID.'/'.self::params_to_get_string($parameters);
 	}
 
 	/**
@@ -1214,7 +1214,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function set_currency_link($code, Array $parameters = array()) {
-		return Config::inst()->get("ShoppingCart_Controller", "url_segment").'/setcurrency/'.$code.'/'.self::params_to_get_string($parameters);
+		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/setcurrency/'.$code.'/'.self::params_to_get_string($parameters);
 	}
 
 	/**

@@ -60,11 +60,6 @@ ProductGroup:
       SQL:
         ShowInSearch: 1
         FeaturedProduct: 1
-    nonfeaturedonly:
-      Title: 'Non Featured Only'
-      SQL:
-        ShowInSearch: 1
-        FeaturedProduct: 0
   display_styles:
     default:
       Title: default
