@@ -2,7 +2,7 @@
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 <% include ProductGroupChildGroups %>
-<% include ProductGroupSortAndFilter %>
+<% include ProductGroupFilterAndDisplay %>
 
 
 <% if Products %>
