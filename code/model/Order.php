@@ -1428,7 +1428,7 @@ class Order extends DataObject {
 				$extrafilter = " AND $filterOrClassName";
 			}
 		}
-		return $className::get()->where("\"OrderAttribute\".\"OrderID\" = ".$this->ID." $extrafilter");
+		return $className::get()->filter(array("OrderID" => $this->ID))->where($extrafilter);
 	}
 
 	/**

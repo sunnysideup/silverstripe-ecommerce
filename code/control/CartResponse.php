@@ -55,6 +55,7 @@ class CartResponse extends EcommerceResponse {
 
 		//THIS LINE TAKES UP MOST OF THE TIME OF THE RESPONSE!!!
 		$currentOrder->calculateOrderAttributes($force = false);
+
 		$ajaxObject = $currentOrder->AJAXDefinitions();
 		// populate Javascript
 		$js = array ();
@@ -68,6 +69,8 @@ class CartResponse extends EcommerceResponse {
 		}
 
 		//order items
+
+
 
 		$inCartArray = array();
 		$items = $currentOrder->Items();
@@ -162,7 +165,7 @@ class CartResponse extends EcommerceResponse {
 		//turn HTMLText (et al.) objects into text
 		foreach($js as $key => $node) {
 			if(isset($node["v"])) {
-				if($node["v"] instanceOF DBField) {
+				if($node["v"] instanceof DBField) {
 					$js[$key]["v"] = $node["v"]->forTemplate();
 				}
 			}

@@ -420,6 +420,7 @@ class ProductGroup extends Page {
 			$defaults = Config::inst()->get("ProductGroup", "defaults");
 			return isset($defaults["LevelOfProductsToShow"]) ? $defaults["LevelOfProductsToShow"] : 99;
 		}
+		return $this->LevelOfProductsToShow ;
 	}
 
 	/**
@@ -674,34 +675,36 @@ class ProductGroup extends Page {
 	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList
 	 **/
+
 	protected function currentInitialProducts($extraFilter = ''){
-		$className = $this->getClassNameSQL();
+		if(!$this->allProducts) {
+			$className = $this->getClassNameSQL();
 
-		//init allProducts
-		$this->allProducts = $className::get();
+			//init allProducts
+			$this->allProducts = $className::get();
 
-		// STANDARD FILTER
-		$this->getStandardFilter();
+			// STANDARD FILTER
+			$this->getStandardFilter();
 
 
-		// EXTRA FILTER
-		if(is_array($extraFilter) && count($extraFilter)) {
-			$this->allProducts = $this->allProducts->filter($extraFilter);
+			// EXTRA FILTER
+			if(is_array($extraFilter) && count($extraFilter)) {
+				$this->allProducts = $this->allProducts->filter($extraFilter);
+			}
+			elseif(is_string($extraFilter) && strlen($extraFilter) > 2) {
+				$this->allProducts = $this->allProducts->where($extraFilter);
+			}
+
+			// GROUP FILTER
+			$this->allProducts = $this->getGroupFilter();
+
+			//JOINS
+			$this->allProducts = $this->getGroupJoin();
+
+			//EXLUDES ONE THAT ARE NOT FOR SALE
+			//we just add a little safety measure here...
+			$this->allProducts = $this->getExcludedProducts();
 		}
-		elseif(is_string($extraFilter) && strlen($extraFilter) > 2) {
-			$this->allProducts = $this->allProducts->where($extraFilter);
-		}
-
-		// GROUP FILTER
-		$this->allProducts = $this->getGroupFilter();
-
-		//JOINS
-		$this->allProducts = $this->getGroupJoin();
-
-		//EXLUDES ONE THAT ARE NOT FOR SALE
-		//we just add a little safety measure here...
-		$this->allProducts = $this->getExcludedProducts();
-
 		return $this->allProducts;
 	}
 
@@ -1090,7 +1093,7 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	public function ProductGroupsFromAlsoShowProducts() {
-		$myProductsArray = $this->currentInitialProducts()->map("ID", "ID")->toArray();
+		$myProductsArray = $this->currentInitialProducts()->map("ID", "ID")->toArray()+array(0);
 		$rows = DB::query("
 			SELECT \"ProductGroupID\" FROM \"Product_ProductGroups\" WHERE \"ProductID\" IN (".implode(",", $myProductsArray).") GROUP BY \"ProductGroupID\";
 		");
@@ -1157,6 +1160,10 @@ class ProductGroup extends Page {
 		$html .= "<li><b>Default Filter Key:</b> ".$this->getDefaultFilterKey()." </li>";
 		$html .= "<li><b>Default Display Style Key:</b> ".$this->getDefaultDisplayStyleKey()." </li>";
 
+		$html .= "<li><hr />Dropdowns<hr /></li>";
+		$html .= "<li><b>Sort Options for Dropdown:</b> <pre>".print_r($this->getSortOptionsForDropdown(), 1)."</pre> </li>";
+		$html .= "<li><b>Filter Options for Dropdown:</b> <pre>".print_r($this->getFilterOptionsForDropdown(), 1)."</pre> </li>";
+		$html .= "<li><b>Display Styles for Dropdown:</b> <pre>".print_r($this->getDisplayStylesForDropdown(), 1)."</pre> </li>";
 
 		$html .= "<li><hr />Selection Setting (what is set as default for this page)<hr /></li>";
 		$html .= "<li><b>MyDefaultFilter:</b> ".$this->MyDefaultFilter()." </li>";
@@ -1179,14 +1186,21 @@ class ProductGroup extends Page {
 		$html .= "<li><b>allProducts:</b> ".print_r($this->allProducts->sql(), 1)." </li>";
 
 		$html .= "<li><hr />Other<hr /></li>";
+		if($image = $this->BestAvailableImage()) {
+			$html .= "<li><b>Best Available Image:</b> <img src=\"".$image->Link."\" /> </li>";
+		}
+		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b> ".$this->ProductGroupsFromAlsoShowProducts()." </li>";
+		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b> ".$this->ProductGroupsFromAlsoShowProductsInverse()." </li>";
 		$html .= "<li><b>BestAvailableImage:</b> ".($this->BestAvailableImage() ? $this->BestAvailableImage()->Link : "no image available")." </li>";
 		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b><pre>".print_r($this->ProductGroupsFromAlsoShowProducts()->map()->toArray(), 1)." </pre></li>";
 		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b><pre> ".print_r($this->ProductGroupsFromAlsoShowProductsInverse()->map()->toArray(), 1)." </pre></li>";
 		$html .= "<li><b>Is this an ecommerce page:</b> ".($this->IsEcommercePage() ? "YES" : "NO")." </li>";
-
-
-
-
+		$product = Product::get()->filter(array("ParentID" => $this->ID))->first();
+		if($product) {
+			$html .= "<li><hr />Product Example<hr /></li>";
+			$html .= "<li><b>Product View:</b> <a href=\"".$product->Link()."\">".$product->Title."</a> </li>";
+			$html .= "<li><b>Product Debug:</b> <a href=\"".$product->Link("debug")."\">".$product->Title."</a> </li>";
+		}
 		$html .= "</ul>";
 		return $html;
 	}
@@ -1323,6 +1337,16 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 * @return Boolean
 	 */
+	public function HasFilter(){
+		$myPreferenceVariableName = EcommerceConfig::get("ProductGroup", "session_name_for_filter_preference");
+		return $this->filterForGroupObject || Session::get("ProductGroup_".$myPreferenceVariableName);
+	}
+
+	/**
+	 * Do we show all products on one page?
+	 *
+	 * @return Boolean
+	 */
 	public function IsShowFullList(){
 		return $this->showFullList;
 	}
@@ -1349,6 +1373,7 @@ class ProductGroup_Controller extends Page_Controller {
 	public function HasFilters(){
 		return $this->FilterLinks()->count() || $this->ProductGroupsFromAlsoShowProductsLinks()->count();
 	}
+
 	/**
 	 *
 	 * returns a list of items (with links)
@@ -1407,6 +1432,17 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	public function ListAllLink() {
 		return $this->Link()."?showfulllist=1";
+	}
+
+	/**
+	 * Link that returns a list of all the products
+	 * for this product group as a simple list.
+	 *
+	 * @return String
+	 */
+	public function ResetFilterLink() {
+		$myPreferenceVariableName = EcommerceConfig::get("ProductGroup", "session_name_for_filter_preference");
+		return $this->Link()."?".$myPreferenceVariableName."=default&reload=1";
 	}
 
 	/****************************************************

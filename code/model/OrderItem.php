@@ -355,6 +355,7 @@ class OrderItem extends OrderAttribute {
 			//if it can not be purchased or it does not exist
 			//then we do not accept it!!!!
 			$this->delete();
+			user_error("Product added to cart can not be purchased. It has been deleted.");
 		}
 	}
 
@@ -581,9 +582,10 @@ class OrderItem extends OrderAttribute {
 	 * @return DataObject (Any type of Data Object that is buyable)
 	  **/
 	function Buyable($current = false) {
-		$tempBuyableStoreType = $current ? 1 : 0;
+		$tempBuyableStoreType = $current ? "current" : "version";
 		if(!isset($this->tempBuyableStore[$tempBuyableStoreType])) {
 			if(!$this->BuyableID) {
+				user_error("There was an error retrieving the product");
 				return null;
 			}
 			//start hack
@@ -602,26 +604,31 @@ class OrderItem extends OrderAttribute {
 				$obj = $className::get()->byID($this->BuyableID);
 			}
 			//run if current not available or current = false
-
-			if(((!$obj) || ($obj->exists())) && $this->Version) {
-				/* @TODO: check if the version exists?? - see sample below
-				$versionTable = $this->BuyableClassName."_versions";
-				$dbConnection = DB::getConn();
-				if($dbConnection && $dbConnection instanceOf MySQLDatabase && $dbConnection->hasTable($versionTable)) {
-					$result = DB::query("
-						SELECT COUNT(\"ID\")
-						FROM \"$versionTable\"
-						WHERE
-							\"RecordID\" = ".intval($this->BuyableID)."
-							AND \"Version\" = ".intval($this->Version)."
-					");
-					if($result->value()) {
-				 */
-				$obj = OrderItem::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
+			if(!$obj || !$current) {
+				if(((!$obj) || (!$obj->exists())) && $this->Version) {
+					/* @TODO: check if the version exists?? - see sample below
+					$versionTable = $this->BuyableClassName."_versions";
+					$dbConnection = DB::getConn();
+					if($dbConnection && $dbConnection instanceOf MySQLDatabase && $dbConnection->hasTable($versionTable)) {
+						$result = DB::query("
+							SELECT COUNT(\"ID\")
+							FROM \"$versionTable\"
+							WHERE
+								\"RecordID\" = ".intval($this->BuyableID)."
+								AND \"Version\" = ".intval($this->Version)."
+						");
+						if($result->value()) {
+					 */
+					$obj = OrderItem::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
+				}
+				//our second to last resort
+				if((!$obj) || (!$obj->exists())) {
+					$obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
+				}
 			}
-			//our last resort
-			if((!$obj) || ($obj->exists())) {
-				$obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
+			//our final backup
+			if((!$obj) || (!$obj->exists())) {
+				$obj = $className::get()->byID($this->BuyableID);
 			}
 			if ($turnTranslatableBackOn) {
 				Translatable::enable_locale_filter();

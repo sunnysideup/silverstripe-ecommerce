@@ -920,7 +920,7 @@ class Product extends Page implements BuyableModel {
 		$html .= "<li><b>Can Purchase (overal calculation):</b> ".($this->canPurchase() ? "YES" : "NO")." </li>";
 		$html .= "<li><b>Shop Open:</b> ".( $this->EcomConfig() ?  ($this->EcomConfig()->ShopClosed ? "NO" : "YES") : "NO CONFIG")." </li>";
 		$html .= "<li><b>Extended Country Can Purchase:</b> ".($this->extendedCan('canPurchaseByCountry', null) === null ? "no applicable" : ($this->extendedCan('canPurchaseByCountry', null) ? "CAN PURCHASE" : "CAN NOT PURCHASE"))." </li>";
-		$html .= "<li><b>Allow sales to this country ".EcommerceCountry::get_country().":</b> ".(EcommerceCountry::allow_sales() ? "YES" : "NO")." </li>";
+		$html .= "<li><b>Allow sales to this country (".EcommerceCountry::get_country()."):</b> ".(EcommerceCountry::allow_sales() ? "YES" : "NO")." </li>";
 		$html .= "<li><b>Class Name for OrderItem:</b> ".$this->classNameForOrderItem()." </li>";
 		$html .= "<li><b>Quantity Decimals:</b> ".$this->QuantityDecimals()." </li>";
 		$html .= "<li><b>Is In Cart:</b> ".($this->IsInCart() ? "YES" : "NO")." </li>";
@@ -934,10 +934,14 @@ class Product extends Page implements BuyableModel {
 
 		$html .= "<li><hr />Image<hr /></li>";
 		$html .= "<li><b>Image:</b> ".($this->BestAvailableImage() ? "<img src=".$this->BestAvailableImage()->Link()." />" : "no image")." </li>";
-		$html .= "<li><b>Small Image:</b> ".($this->CMSThumbnail() ? "<img src=".$this->CMSThumbnail()->Link()." />" : "no image")." </li>";
-
-
-
+		$productGroup = ProductGroup::get()->byID($this->ParentID);
+		if($productGroup) {
+			$html .= "<li><hr />Product Example<hr /></li>";
+			$html .= "<li><b>Product Group View:</b> <a href=\"".$productGroup->Link()."\">".$productGroup->Title."</a> </li>";
+			$html .= "<li><b>Product Group Debug:</b> <a href=\"".$productGroup->Link("debug")."\">".$productGroup->Title."</a> </li>";
+		}
+		$html .= "</ul>";
+		return $html;
 		$html .= "</ul>";
 		return $html;
 	}

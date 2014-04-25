@@ -229,7 +229,9 @@ class ShoppingCart extends Object{
 	 * @return false | DataObject (OrderItem)
 	 */
 	public function addBuyable(BuyableModel $buyable, $quantity = 1, Array $parameters = array()){
+
 		if(!$buyable) {
+
 			$this->addMessage(_t("Order.ITEMCOULDNOTBEFOUND", "This item could not be found."),'bad');
 			return false;
 		}
@@ -691,6 +693,8 @@ class ShoppingCart extends Object{
 
 			echo "<hr /><hr /><hr /><hr /><hr /><hr /><h1>Items</h1>";
 			$items = $this->currentOrder()->Items();
+			echo $items->sql();
+			echo "<hr />";
 			if($items->count()) {
 				foreach($items as $item) {
 					Debug::show($item);

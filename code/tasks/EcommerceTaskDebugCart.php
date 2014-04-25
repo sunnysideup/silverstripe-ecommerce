@@ -15,12 +15,13 @@ class EcommerceTaskDebugCart extends BuildTask {
 	public static function debug_object($obj){
 		$html =  "
 			<h2>".$obj->ClassName."</h2><ul>";
-		$fields = Config::inst()->get($obj->ClassName, "db", Config::FIRST_SET);
+		$fields = Config::inst()->get($obj->ClassName, "db", Config::INHERITED);
 
 		//db
 		if(count($fields)) {
 			foreach($fields as  $key => $type) {
-				$html .= "<li><b>$key ($type):</b> ".$obj->$key."</li>";
+				$value = self::cleanup_value($type, $obj->$key);
+				$html .= "<li><b>$key ($type):</b> ".$value."</li>";
 			}
 		}
 
@@ -30,17 +31,19 @@ class EcommerceTaskDebugCart extends BuildTask {
 			foreach($fields as  $key => $type) {
 				$method = $key;
 				if(method_exists($obj, $method)) {
-					$html .= "<li><b>$key ($type):</b> ".$obj->$method()." </li>";
+					$value = $obj->$method();
 				}
 				else {
 					$method = "get".$key;
 					if(method_exists($obj, $method)) {
-						$html .= "<li><b>$key ($type):</b> ".$obj->$method()." </li>";
+						$value = $obj->$method();
 					}
 					else{
-						$html .= "<li><b>$key ($type):</b> ".$obj->$key." </li>";
+						$value = $obj->$key;
 					}
 				}
+				$value = self::cleanup_value($type, $value);
+				$html .= "<li><b>$key ($type):</b> ".$value."</li>";
 			}
 		}
 
@@ -52,7 +55,7 @@ class EcommerceTaskDebugCart extends BuildTask {
 				$field = $key."ID";
 				if($object = $obj->$key()){
 					if($object && $object->exists()) {
-						$value = ", ".$object->Title;
+						$value = ", ".$object->getTitle();
 					}
 				}
 				$html .= "<li><b>$key ($type):</b> ".$obj->$field.$value." </li>";
@@ -61,6 +64,21 @@ class EcommerceTaskDebugCart extends BuildTask {
 		//to do: has_many and many_many
 		$html .= "</ul>";
 		return $html;
+	}
+
+	private static function cleanup_value($type, $value) {
+		switch ($type) {
+			case "HTMLText":
+				$value = (substr(strip_tags($value), 0, 100));
+				break;
+			case "Boolean":
+				$value = $value ? "YES" : "NO";
+				break;
+			default:
+				$value = $value;
+				break;
+		}
+		return $value;
 	}
 
 }
