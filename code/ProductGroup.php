@@ -746,7 +746,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function getClassNameSQL(){
-		return "Product";
+		return EcommerceConfig::get("ProductGroup", "base_buyable_class");
 	}
 
 

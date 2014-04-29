@@ -40,6 +40,7 @@ OrderConfirmationPage_Controller:
   include_as_checkout_step: true
 
 ProductGroup:
+  base_buyable_class: Product
   sort_options:
     default:
       Title: 'Default Order'

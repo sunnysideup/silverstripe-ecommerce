@@ -109,6 +109,7 @@ class EcommerceConfigDefinitions extends Object {
 				"include_as_checkout_step" => "Include the order confirmation as one of the checkout steps, visually, in the list of steps shown."
 			),
 			"ProductGroup" => array(
+				"base_buyable_class" => "The base class for the products being retrieved.  Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.",
 				"sort_options" => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
 				"filter_options" => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
 				"display_styles" => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
