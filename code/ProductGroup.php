@@ -1200,6 +1200,7 @@ class ProductGroup extends Page {
 			$html .= "<li><hr />Product Example<hr /></li>";
 			$html .= "<li><b>Product View:</b> <a href=\"".$product->Link()."\">".$product->Title."</a> </li>";
 			$html .= "<li><b>Product Debug:</b> <a href=\"".$product->Link("debug")."\">".$product->Title."</a> </li>";
+			$html .= "<li><b>Product Admin Page:</b> <a href=\""."/admin/pages/edit/show/".$product->ID."\">".$product->Title."</a> </li>";
 		}
 		$html .= "</ul>";
 		return $html;
