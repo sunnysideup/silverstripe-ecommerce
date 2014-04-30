@@ -644,17 +644,28 @@ class ProductGroup extends Page {
 	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList | Null
 	 */
-	public function ProductsShowable($extraFilter = ''){
+	public function ProductsShowable($extraFilter = '', $alternativeSort = ''){
 		//get original products without sort / limit
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
 		//sort products
-		$this->currentFinalProducts();
+		$this->currentFinalProducts($alternativeSort);
 		$stringOfIDs = "0";
 		//save products to session for later use
-		if($this->sortedProducts && $this->sortedProducts->count()) {
-			$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
-			if(is_array($buyablesIDArray) && count($buyablesIDArray)) {
-				$stringOfIDs = implode(",", $buyablesIDArray);
+		$productCount = $this->sortedProducts->count();
+		if($productCount) {
+			if($productCount > 500) {
+				//use DB query for saver retrieval...
+				$sql = $this->allProducts->sql();
+				$rows = DB::query($sql);
+				foreach($rows as  $row) {
+
+				}
+			}
+			else {
+				$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
+				if(is_array($buyablesIDArray) && count($buyablesIDArray)) {
+					$stringOfIDs = implode(",", $buyablesIDArray);
+				}
 			}
 		}
 		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $stringOfIDs);
@@ -670,13 +681,15 @@ class ProductGroup extends Page {
 	 *
 	 * The return from this method will then be sorted to produce the final product list.
 	 *
-	 * NOTE: there is no sort for the initial retrieval
+	 * There is no sort for the initial retrieval
+	 *
+	 * This method is public so that you can retrieve a list of products for a product group page.
 	 *
 	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList
 	 **/
 
-	protected function currentInitialProducts($extraFilter = ''){
+	public function currentInitialProducts($extraFilter = ''){
 		if(!$this->allProducts) {
 			$className = $this->getClassNameSQL();
 
@@ -715,16 +728,20 @@ class ProductGroup extends Page {
 	 *
 	 * All of the 'current' methods are to support the currentFinalProducts Method.
 	 *
+	 * @param String $alternativeSort = Alternative Sort String
 	 * @return DataList
 	 **/
-	protected function currentFinalProducts(){
+	protected function currentFinalProducts($alternativeSort = ""){
 		if($this->allProducts) {
-			if($this->totalCount = $this->allProducts->count()) {
-				if($this->totalCount) {
-					$this->sortedProducts = $this->allProducts->Sort($this->currentSortSQL());
-					return $this->sortedProducts;
-				}
+			$this->totalCount = $this->allProducts->count();
+			if($alternativeSort) {
+				$sort = $alternativeSort;
 			}
+			else {
+				$sort = $this->currentSortSQL();
+			}
+			$this->sortedProducts = $this->allProducts->Sort($sort);
+			return $this->sortedProducts;
 		}
 	}
 
@@ -1148,12 +1165,10 @@ class ProductGroup extends Page {
 		$html = EcommerceTaskDebugCart::debug_object($this);
 		$html .= "<ul>";
 
-
 		$html .= "<li><hr />Available options<hr /></li>";
 		$html .= "<li><b>Sort Options for Dropdown:</b><pre> ".print_r($this->getSortOptionsForDropdown(), 1)."</pre> </li>";
 		$html .= "<li><b>Filter Options for Dropdown:</b><pre> ".print_r($this->getFilterOptionsForDropdown(), 1)."</pre></li>";
 		$html .= "<li><b>Display Styles for Dropdown:</b><pre> ".print_r($this->getDisplayStylesForDropdown(), 1)."</pre> </li>";
-
 
 		$html .= "<li><hr />Default Keys (what is the default for the site)<hr /></li>";
 		$html .= "<li><b>Default Sort Key:</b> ".$this->getDefaultSortKey()." </li>";
@@ -1215,7 +1230,9 @@ class ProductGroup_Controller extends Page_Controller {
 
 	private static $allowed_actions = array(
 		"debug" => "ADMIN",
-		"filterforgroup" => true
+		"filterforgroup" => true,
+		"ProductSearchForm" => true,
+		"searchresults" => true
 	);
 
 	/**
@@ -1287,7 +1304,36 @@ class ProductGroup_Controller extends Page_Controller {
 		return array();
 	}
 
-
+	public function searchresults($request){
+		if($results = $request->getVar("results")){
+			$results = explode(",", $request->param("results"));
+			$ifStatement = '';
+			$ifStamentClosingBrackets = "9999)";
+			$arrayOfIDs = array();
+			$count = 0;
+			$stage = '';
+			if(Versioned::current_stage() == "Live") {
+				$stage = "_Live";
+			}
+			foreach($results as $productID) {
+				$productID = intval($productID);
+				if($productID) {
+					$arrayOfIDs[] = $productID;
+					$ifStatement = 'IF("Product$tage.ID" = $productID, $count';
+					$ifStamentClosingBrackets .= ")";
+					$count++;
+				}
+			}
+			$this->products = $this->paginateList(
+				$this->ProductsShowable(
+					array("ID" => $arrayOfIDs),
+					$ifStatement.$ifStamentClosingBrackets
+				)
+			);
+			return Array();
+		}
+		user_error("no result get parameters provided.");
+	}
 
 	/****************************************************
 	 *  TEMPLATE METHODS PRODUCTS
@@ -1333,6 +1379,25 @@ class ProductGroup_Controller extends Page_Controller {
 	/****************************************************
 	 *  TEMPLATE METHODS DISPLAY
 	/****************************************************/
+
+
+
+	/**
+	 * returns a search form to search current products
+	 *
+	 * @return ProductSearchForm object
+	 */
+	function ProductSearchForm() {
+		$form = ProductSearchForm::create($this, 'ProductSearchForm', $this->Title, $this->ProductsShowable());
+		$this->data()->extend('updateProductSearchForm', $form);
+		//load session data
+		if ($data = Session::get("FormInfo.{$form->FormName()}.data")) {
+			$form->loadDataFrom($data);
+		}
+
+		return $form;
+	}
+
 
 	/**
 	 * Do we show all products on one page?
@@ -1580,6 +1645,7 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 		return $this->dataRecord->debug();
 	}
+
 
 }
 
