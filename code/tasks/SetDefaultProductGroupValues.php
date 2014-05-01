@@ -19,16 +19,16 @@ class SetDefaultProductGroupValues extends BuildTask {
 	protected $description = "Set default product group values such as DefaultSortOrder.";
 
 	protected $fieldsToCheck = array(
-		"getSortOptionsForDropdown" => "DefaultSortOrder",
-		"getFilterOptionsForDropdown" => "DefaultFilter",
-		"getDisplayStylesForDropdown" => "DisplayStyle"
+		"SORT" => "DefaultSortOrder",
+		"FILTER" => "DefaultFilter",
+		"DISPLAY" => "DisplayStyle"
 	);
 
 	function run($request) {
 		$productGroup = ProductGroup::get()->First();
 		if($productGroup) {
 			foreach($this->fieldsToCheck as $method => $fieldName) {
-				$acceptableValuesArray = array_flip($productGroup->$method());
+				$acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));
 				$this->checkField($fieldName, $acceptableValuesArray, "inherit");
 			}
 		}

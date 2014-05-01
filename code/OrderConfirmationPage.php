@@ -501,7 +501,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 					$emailClassName = $request->param("OtherID");
 				}
 			}
-			if(isset($_GET["send"]) && $_GET["send"]) {
+			if($request->getVar("send")) {
 				if($email = $this->currentOrder->getOrderEmail()) {
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
 					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
@@ -516,9 +516,9 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 					$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
 				}
 			}
-			elseif(isset($_GET["use"]) && $_GET["use"]) {
+			elseif($use = $request->getVar("use")) {
 				//WE MUST MAKE SURE THAT WE DO NOT SAVE ORDER AS
-				$this->currentOrder->StatusID = intval($_GET["use"]);
+				$this->currentOrder->StatusID = intval($use);
 			}
 			//display same data...
 			Requirements::clear();

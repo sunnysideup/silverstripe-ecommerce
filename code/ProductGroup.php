@@ -24,7 +24,7 @@
   *
   * In extending the ProductGroup class, it is recommended
   * that you override the following methods:
-  * - getClassNameSQL
+  * - getBuyableClassName
   * - getStandardFilter
   * - getGroupFilter
   * - getGroupJoin
@@ -195,7 +195,81 @@ class ProductGroup extends Page {
 		return $this->canEdit($member);
 	}
 
+	/**
+	 * list of sort / filter / display variables
+	 *
+	 * @var Array
+	 */
+	protected $sortFilterDisplayNames = array(
+		"SORT" => array(
+			"value" => "default",
+			"configName" => "sort_options",
+			"sessionName" => "session_name_for_sort_preference",
+			"dbFieldName" => "DefaultSortOrder",
+			"translationCode" => "SORT_BY"
+		),
+		"FILTER" => array(
+			"value" => "default",
+			"configName" => "filter_options",
+			"sessionName" => "session_name_for_filter_preference",
+			"dbFieldName" => "DefaultFilter",
+			"translationCode" => "FILTER_FOR"
+		),
+		"DISPLAY" => array(
+			"value" => "default",
+			"configName" => "display_styles",
+			"sessionName" => "session_name_for_display_style_preference",
+			"dbFieldName" => "DisplayStyle",
+			"translationCode" => "DISPLAY_STYLE"
+		)
+	);
 
+	/**
+	 * returns the full sortFilterDisplayNames set or a subset
+	 * by either type (e.g. FILER) or variable (e.g dbFieldName)
+	 *
+	 * @param String $typeOfVariableName
+	 *
+	 * @return Array
+	 */
+	public function getSortFilterDisplayNames($typeOrVariable = "") {
+		$data = array();
+		if(isset($this->sortFilterDisplayNames[$typeOrVariable])) {
+			$data = $this->sortFilterDisplayNames[$typeOrVariable];
+		}
+		elseif($typeOrVariable) {
+			foreach($this->sortFilterDisplayNames as $group) {
+				$data[] = $group[$typeOrVariable];
+			}
+		}
+		else {
+			$data = $this->sortFilterDisplayNames;
+		}
+		return $data;
+	}
+
+	/**
+	 * sets a user preference.  This is typically used by the controller
+	 * to set filter and sort.
+	 *
+	 * @param String $type SORT | FILTER | DISPLAY
+	 * @param String $value
+	 *
+	 */
+	public function setCurrentUserPreference($type, $value) {
+		$this->sortFilterDisplayNames[$type]["value"] = $value;
+	}
+
+	/**
+	 * get a user preference.
+	 *
+	 * @param String $type SORT | FILTER | DISPLAY
+	 *
+	 * @return String
+	 */
+	protected function getCurrentUserPreferences($type) {
+		return $this->sortFilterDisplayNames[$type]["value"];
+	}
 
 
 	/*********************
@@ -203,40 +277,19 @@ class ProductGroup extends Page {
 	 *********************/
 
 	/**
-	 * returns the default Sort key.
-	 * @return String
-	 */
-	protected function getDefaultSortKey(){
-		return $this->getUserPreferencesDefault("sort_options");
-	}
-
-
-	/**
-	 * Returns the default filter key. Carefully making sure it exists
-	 * @return String
-	 */
-	protected function getDefaultFilterKey(){
-		return $this->getUserPreferencesDefault("filter_options");
-	}
-
-	/**
-	 * Returns the default Display style:
-	 * @return String
-	 */
-	protected function getDefaultDisplayStyleKey(){
-		return $this->getUserPreferencesDefault("display_styles");
-	}
-
-	/**
 	 * returns the default value
+	 *
+	 * @param String $type - FILTER | SORT | DISPLAY
 	 *
 	 * @return String
 	 */
-	private function getUserPreferencesDefault($configName) {
+	public function getUserPreferencesDefault($type) {
+		$configName = $this->sortFilterDisplayNames[$type]["configName"];
 		$options = EcommerceConfig::get("ProductGroup", $configName);
 		if(isset($options["default"])) {
 			return "default";
 		}
+		user_error("It is recommended that you have a default (key) option for $type", E_USER_NOTICE);
 		$keys = array_keys($options);
 		return $keys[0];
 	}
@@ -247,48 +300,26 @@ class ProductGroup extends Page {
 
 
 	/**
+	 * SORT:
 	 * returns an array of Key => Title for sort options
 	 *
-	 * This list is also used in the controller so it must be public.
-	 *
-	 * @return Array
-	 */
-	protected function getSortOptionsForDropdown(){
-		return $this->getUserPreferencesOptionsForDropdown("sort_options");
-	}
-
-	/**
+	 * FILTER:
 	 * Returns options for the dropdown of filter options.
 	 *
-	 * This list is also used in the controller so it must be public.
-	 *
-	 * @return Array
-	 */
-	protected function getFilterOptionsForDropdown(){
-		return $this->getUserPreferencesOptionsForDropdown("filter_options");
-	}
-
-	/**
+	 * DISPLAY:
 	 * Returns the options for product display styles.
 	 * In the configuration you can set which ones are available.
 	 * If one is available then you must make sure that the corresponding template is available.
 	 * For example, if the display style is
-	 * MyTempalte => "All Details"
+	 * MyTemplate => "All Details"
 	 * Then you must make sure MyTemplate.ss exists.
 	 *
-	 * This list is also used in the controller so it must be public.
+	 * @param String $type - FILTER | SORT | DISPLAY
 	 *
 	 * @return Array
 	 */
-	public function getDisplayStylesForDropdown(){
-		return $this->getUserPreferencesOptionsForDropdown("display_styles");
-	}
-
-	/**
-	 *
-	 * @return Array
-	 */
-	protected function getUserPreferencesOptionsForDropdown($configName){
+	public function getUserPreferencesOptionsForDropdown($type){
+		$configName = $this->sortFilterDisplayNames[$type]["configName"];
 		$options = EcommerceConfig::get("ProductGroup", $configName);
 		$inheritTitle = _t("ProductGroup.INHERIT", "Inherit");
 		$array = array("inherit" => $inheritTitle);
@@ -311,92 +342,66 @@ class ProductGroup extends Page {
 	 *********************/
 
 	/**
+	 * SORT:
 	 * Returns the sort sql for a particular sorting key.
 	 * If no key is provided then the default key will be returned.
 	 * @param String $key
 	 * @return Array (e.g. Array(MyField => "ASC", "MyOtherField" => "DESC")
+	 *
+	 * FILTER:
+	 * Returns the sql associated with a filter option.
+	 *
+	 * @param String $type - FILTER | SORT | DISPLAY
+	 * @param String $key - the options selected
+	 *
+	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0)) OR STRING!!!!
 	 */
-	protected function getSortOptionSQL($key = ""){
-		$sortOptions = EcommerceConfig::get("ProductGroup", "sort_options");
-		if(!$key || (!isset($sortOptions[$key]))) {
-			$key = $this->getDefaultSortKey();
+	protected function getUserSettingsOptionSQL($type, $key = ""){
+		$configName = $this->sortFilterDisplayNames[$type]["configName"];
+		$options = EcommerceConfig::get("ProductGroup", $configName);
+		//if we cant find the current one, use the default
+		if(!$key || (!isset($options[$key]))) {
+			$key = $this->getUserPreferencesDefault($type);
 		}
 		if($key) {
-			return $sortOptions[$key]["SQL"];
+			return $options[$key]["SQL"];
 		}
 		else {
-			return array("Sort" => "ASC");
+			if($type == "FILTER") {
+				return array("Sort" => "ASC");
+			}
+			elseif($type == "SORT") {
+				return array("ShowInSearch" => 1);
+			}
 		}
 	}
 
-	/**
-	 * Returns the sql associated with a filter option.
-	 * @param String $key - the option selected
-	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0)) OR STRING!!!!
-	 */
-	protected function getFilterOptionSQL($key = ""){
-		$filterOptions = EcommerceConfig::get("ProductGroup", "filter_options");
-		if(!$key || (!isset($filterOptions[$key]))){
-			$key = $this->getDefaultFilterKey();
-		}
-		if($key) {
-			return $filterOptions[$key]["SQL"];
-		}
-		else {
-			return array("ShowInSearch" => 1);
-		}
-	}
 
 
 	/*********************
 	 * SETTINGS: Title
 	 *********************/
 
+
 	/**
-	 * Returns the Title for a sorting key.
+	 * Returns the Title for a type key.
 	 * If no key is provided then the default key is used.
+	 * @param String $type - FILTER | SORT | DISPLAY
 	 * @param String $key
-	 * @return String
-	 */
-	protected function getSortOptionTitle($key = ""){
-		return $this->getUserPreferencesTitle("sort_options", $key);
-	}
-
-
-	/**
-	 * The title for the selected filter option.
-	 * @param String $key - the key for the selected filter option
-	 * @return String
-	 */
-	protected function getFilterOptionTitle($key = ""){
-		return $this->getUserPreferencesTitle("filter_options", $key);
-	}
-
-
-	/**
-	 * The title for the selected display style option.
-	 * @param String $key - the key for the selected filter option
-	 * @return String
-	 */
-	protected function getDisplayStyleTitle($key = ""){
-		return $this->getUserPreferencesTitle("filter_options", $key);
-	}
-
-
-	/**
 	 *
 	 * @return String
 	 */
-	private function getUserPreferencesTitle($configName, $key = "") {
-		$filterOptions = EcommerceConfig::get("ProductGroup", $configName);
+	public function getUserPreferencesTitle($type, $key = "") {
+		$configName = $this->sortFilterDisplayNames[$type]["configName"];
+		$options = EcommerceConfig::get("ProductGroup", $configName);
 		if(!$key || (!isset($filterOptions[$key]))){
-			$key = $this->getDefaultFilterKey();
+			$key = $this->getUserPreferencesDefault($type);
 		}
-		if($key) {
-			return $filterOptions[$key]["Title"];
+		if($key && isset($options[$key]["Title"])) {
+			return $options[$key]["Title"];
 		}
 		else {
-			return _t("ProductGroup.UNKNOWN", "UNKNOWN");
+			return _t("ProductGroup.UNKNOWN", "UNKNOWN USER SETTING");
 		}
 	}
 
@@ -424,38 +429,18 @@ class ProductGroup extends Page {
 	}
 
 	/**
-	 * returns the CODE of the default sort order.
-	 * @return String
-	 **/
-	public function MyDefaultSortOrder() {
-		return $this->getMyUserPreferencesDefault("sort_options", "DefaultSort", "getDefaultSortKey");
-	}
-
-	/**
-	 * returns the CODE of the default filter.
-	 * @return String
-	 **/
-	function MyDefaultFilter() {
-		return $this->getMyUserPreferencesDefault("filter_options", "DefaultFilter", "getDefaultFilterKey");
-	}
-
-	/**
-	 * returns the CODE of the style for the display template for this page
-	 * @return String
-	 **/
-	function MyDefaultDisplayStyle() {
-		return $this->getMyUserPreferencesDefault("display_styles", "DisplayStyle", "getDefaultDisplayStyleKey");
-	}
-
-	/**
 	 * Checks for the most applicable user preferences for this page:
 	 * 1. what is saved in Database for this page.
 	 * 2. what the parent product group has saved in the database
 	 * 3. what the standard default is
 	 *
+	 * @param String $type - FILTER | SORT | DISPLAY
+	 *
 	 * @return String
 	 */
-	protected function getMyUserPreferencesDefault($configName, $dbVariableName, $methodName){
+	public function getMyUserPreferencesDefault($type){
+		$configName = $this->sortFilterDisplayNames[$type]["configName"];
+		$dbVariableName = $this->sortFilterDisplayNames[$type]["dbFieldName"];
 		$defaultOption = "";
 		$options = EcommerceConfig::get("ProductGroup", $configName);
 		if($this->$dbVariableName && array_key_exists($this->$dbVariableName, $options)) {
@@ -465,10 +450,11 @@ class ProductGroup extends Page {
 			$defaultOption = $parent->getMyUserPreferencesDefault($configName, $dbVariableName, $methodName);
 		}
 		if(!$defaultOption || $defaultOption == "inherit") {
-			$defaultOption = $this->$methodName();
+			$defaultOption = $this->getUserPreferencesDefault($type);
 		}
 		return $defaultOption;
 	}
+
 
 	/*********************
 	 * SETTINGS: product levels
@@ -533,9 +519,9 @@ class ProductGroup extends Page {
 			)
 		);
 		//sort
-		$sortDropdownList = $this->getSortOptionsForDropdown();
+		$sortDropdownList = $this->getUserPreferencesOptionsForDropdown("SORT");
 		if(count($sortDropdownList) > 1) {
-			$sortOrderKey = $this->MyDefaultSortOrder();
+			$sortOrderKey = $this->getMyUserPreferencesDefault("SORT");
 			if($this->DefaultSortOrder == "inherit") {
 				$actualValue = " (".(isset($sortDropdownList[$sortOrderKey]) ? $sortDropdownList[$sortOrderKey] : _t("ProductGroup.ERROR", "ERROR")).")";
 				$sortDropdownList["inherit"] = _t("ProductGroup.INHERIT", "Inherit").$actualValue;
@@ -546,9 +532,9 @@ class ProductGroup extends Page {
 			);
 		}
 		//filter
-		$filterDropdownList = $this->getFilterOptionsForDropdown();
+		$filterDropdownList = $this->getUserPreferencesOptionsForDropdown("FILTER");
 		if(count($filterDropdownList) > 1) {
-			$filterKey = $this->MyDefaultFilter();
+			$filterKey = $this->getMyUserPreferencesDefault("FILTER");
 			if($this->DefaultFilter == "inherit") {
 				$actualValue = " (".(isset($filterDropdownList[$filterKey]) ? $filterDropdownList[$filterKey] : _t("ProductGroup.ERROR", "ERROR")).")";
 				$filterDropdownList["inherit"] = _t("ProductGroup.INHERIT", "Inherit").$actualValue;
@@ -559,9 +545,9 @@ class ProductGroup extends Page {
 			);
 		}
 		//display style
-		$displayStyleDropdownList = $this->getDisplayStylesForDropdown();
+		$displayStyleDropdownList = $this->getUserPreferencesOptionsForDropdown("DISPLAY");
 		if(count($displayStyleDropdownList) > 1) {
-			$displayStyleKey = $this->MyDefaultDisplayStyle();
+			$displayStyleKey = $this->getMyUserPreferencesDefault("DISPLAY");
 			if($this->DisplayStyle == "inherit") {
 				$actualValue = " (".(isset($displayStyleDropdownList[$displayStyleKey]) ? $displayStyleDropdownList[$displayStyleKey] : _t("ProductGroup.ERROR", "ERROR")).")";
 				$displayStyleDropdownList["inherit"] = _t("ProductGroup.INHERIT", "Inherit").$actualValue;
@@ -691,7 +677,7 @@ class ProductGroup extends Page {
 
 	public function currentInitialProducts($extraFilter = ''){
 		if(!$this->allProducts) {
-			$className = $this->getClassNameSQL();
+			$className = $this->getBuyableClassName();
 
 			//init allProducts
 			$this->allProducts = $className::get();
@@ -750,6 +736,7 @@ class ProductGroup extends Page {
 	 * these are the methods you want to override in
 	 * any clases that extend ProductGroup
 	 *****************************************************/
+
 	/**
 	 * Do products occur in more than one group
 	 * @return Boolean
@@ -762,7 +749,7 @@ class ProductGroup extends Page {
 	 * Returns the class we are working with
 	 * @return String
 	 */
-	protected function getClassNameSQL(){
+	protected function getBuyableClassName(){
 		return EcommerceConfig::get("ProductGroup", "base_buyable_class");
 	}
 
@@ -775,13 +762,8 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	protected function getStandardFilter(){
-		if($sessionFilters = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", "session_name_for_filter_preference"))) {
-			$filterKey = Convert::raw2sqL($sessionFilters);
-		}
-		else {
-			$filterKey = $this->MyDefaultFilter();
-		}
-		$filter = $this->getFilterOptionSQL($filterKey);
+		$filterKey = $this->getCurrentUserPreferences("FILTER");
+		$filter = $this->getUserSettingsOptionSQL("FILTER", $filterKey);
 		if(is_array($filter)) {
 			$this->allProducts = $this->allProducts->Filter($filter);
 		}
@@ -866,14 +848,8 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function currentSortSQL() {
-		if($sessionSort = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", "session_name_for_sort_preference"))) {
-			$sortKey = Convert::raw2sqL($sessionSort);
-		}
-		else {
-			$sortKey = $this->MyDefaultSortOrder();
-		}
-		$sort = $this->getSortOptionSQL($sortKey);
-		return $sort;
+		$sortKey = $this->getCurrentUserPreferences("SORT");
+		return $this->getUserSettingsOptionSQL("SORT", $sortKey);
 	}
 
 	/**
@@ -914,7 +890,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function currentClassNameSQL() {
-		Deprecation::notice('3.1', 'Use the "ProductGroup.getClassNameSQL" instead');
+		Deprecation::notice('3.1', 'Use the "ProductGroup.getBuyableClassName" instead');
 	}
 
 	/**
@@ -1120,7 +1096,8 @@ class ProductGroup extends Page {
 		}
 		//just in case
 		unset($selectArray[$this->ID]);
-		return ProductGroup::get()->filter(array("ID" => $selectArray));
+		//HACK - we put SiteTree here because it did not seem to work to put ProductGroup
+		return SiteTree::get()->filter(array("ID" => $selectArray));
 	}
 
 	/**
@@ -1132,8 +1109,9 @@ class ProductGroup extends Page {
 	 */
 	public function ProductGroupsFromAlsoShowProductsInverse() {
 		$alsoShowProductsArray = array(0 => 0) + $this->AlsoShowProducts()->map("ID", "ID")->toArray();
-		$parentIDs = Product::get()->filter(array("ID" => $alsoShowProductsArray))->map("ID", "ID")->toArray();
-		return ProductGroup::get()->filter(array("ID" => $parentIDs));
+		$parentIDs = Product::get()->filter(array("ID" => $alsoShowProductsArray))->map("ParentID", "ParentID")->toArray();
+		//HACK - we put SiteTree here because it did not seem to work to put ProductGroup
+		return SiteTree::get()->filter(array("ID" => $parentIDs));
 	}
 
 	/**
@@ -1153,73 +1131,6 @@ class ProductGroup extends Page {
 				$normalImage->write();
 			}
 		}
-	}
-
-	/**
-	 * Debug helper method.
-	 * Can be called from /shoppingcart/debug/
-	 * @return String
-	 */
-	public function debug() {
-		$this->ProductsShowable();
-		$html = EcommerceTaskDebugCart::debug_object($this);
-		$html .= "<ul>";
-
-		$html .= "<li><hr />Available options<hr /></li>";
-		$html .= "<li><b>Sort Options for Dropdown:</b><pre> ".print_r($this->getSortOptionsForDropdown(), 1)."</pre> </li>";
-		$html .= "<li><b>Filter Options for Dropdown:</b><pre> ".print_r($this->getFilterOptionsForDropdown(), 1)."</pre></li>";
-		$html .= "<li><b>Display Styles for Dropdown:</b><pre> ".print_r($this->getDisplayStylesForDropdown(), 1)."</pre> </li>";
-
-		$html .= "<li><hr />Default Keys (what is the default for the site)<hr /></li>";
-		$html .= "<li><b>Default Sort Key:</b> ".$this->getDefaultSortKey()." </li>";
-		$html .= "<li><b>Default Filter Key:</b> ".$this->getDefaultFilterKey()." </li>";
-		$html .= "<li><b>Default Display Style Key:</b> ".$this->getDefaultDisplayStyleKey()." </li>";
-
-		$html .= "<li><hr />Dropdowns<hr /></li>";
-		$html .= "<li><b>Sort Options for Dropdown:</b> <pre>".print_r($this->getSortOptionsForDropdown(), 1)."</pre> </li>";
-		$html .= "<li><b>Filter Options for Dropdown:</b> <pre>".print_r($this->getFilterOptionsForDropdown(), 1)."</pre> </li>";
-		$html .= "<li><b>Display Styles for Dropdown:</b> <pre>".print_r($this->getDisplayStylesForDropdown(), 1)."</pre> </li>";
-
-		$html .= "<li><hr />Selection Setting (what is set as default for this page)<hr /></li>";
-		$html .= "<li><b>MyDefaultFilter:</b> ".$this->MyDefaultFilter()." </li>";
-		$html .= "<li><b>MyDefaultSortOrder:</b> ".$this->MyDefaultSortOrder()." </li>";
-		$html .= "<li><b>MyDefaultDisplayStyle:</b> ".$this->MyDefaultDisplayStyle()." </li>";
-		$html .= "<li><b>MyNumberOfProductsPerPage:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
-		$html .= "<li><b>MyLevelOfProductsToshow:</b> ".$this->MyLevelOfProductsToShow()." </li>";
-
-		$html .= "<li><hr />DATALIST: totals, numbers per page etc<hr /></li>";
-		$html .= "<li><b>Total number of products:</b> ".$this->TotalCount()." </li>";
-		$html .= "<li><b>Is there more than one product:</b> ".($this->TotalCountGreaterThanOne() ? "YES" : "NO")." </li>";
-		$html .= "<li><b>Number of products per page:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
-		$html .= "<li><b>Parent page if it is an instance of product group:</b> ".$this->ParentGroup()->Title." </li>";
-
-
-		$html .= "<li><hr />SQL Factors<hr /></li>";
-		$html .= "<li><b>Sort options for SQL:</b> ".$this->getSortOptionSQL()." </li>";
-		$html .= "<li><b>Filter options for SQL:</b> <pre>".print_r($this->getFilterOptionSQL(), 1)."</pre> </li>";
-		$html .= "<li><b>currentClassNameSQL:</b> ".$this->getClassNameSQL()." </li>";
-		$html .= "<li><b>allProducts:</b> ".print_r($this->allProducts->sql(), 1)." </li>";
-
-		$html .= "<li><hr />Other<hr /></li>";
-		if($image = $this->BestAvailableImage()) {
-			$html .= "<li><b>Best Available Image:</b> <img src=\"".$image->Link."\" /> </li>";
-		}
-		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b> ".$this->ProductGroupsFromAlsoShowProducts()." </li>";
-		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b> ".$this->ProductGroupsFromAlsoShowProductsInverse()." </li>";
-		$html .= "<li><b>BestAvailableImage:</b> ".($this->BestAvailableImage() ? $this->BestAvailableImage()->Link : "no image available")." </li>";
-		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b><pre>".print_r($this->ProductGroupsFromAlsoShowProducts()->map()->toArray(), 1)." </pre></li>";
-		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b><pre> ".print_r($this->ProductGroupsFromAlsoShowProductsInverse()->map()->toArray(), 1)." </pre></li>";
-		$html .= "<li><b>Is this an ecommerce page:</b> ".($this->IsEcommercePage() ? "YES" : "NO")." </li>";
-		$product = Product::get()->filter(array("ParentID" => $this->ID))->first();
-		if($product) {
-			$html .= "<li><hr />Product Example<hr /></li>";
-			$html .= "<li><b>Product View:</b> <a href=\"".$product->Link()."\">".$product->Title."</a> </li>";
-			$html .= "<li><b>Product Debug:</b> <a href=\"".$product->Link("debug")."\">".$product->Title."</a> </li>";
-			$html .= "<li><b>Product Admin Page:</b> <a href=\""."/admin/pages/edit/show/".$product->ID."\">".$product->Title."</a> </li>";
-			$html .= "<li><b>ProductGroup Admin Page:</b> <a href=\""."/admin/pages/edit/show/".$this->ID."\">".$this->Title."</a> </li>";
-		}
-		$html .= "</ul>";
-		return $html;
 	}
 
 }
@@ -1249,7 +1160,7 @@ class ProductGroup_Controller extends Page_Controller {
 
 	/**
 	 * The group filter that is applied to this page
-	 * @var Int
+	 * @var ProductGroup
 	 */
 	protected $filterForGroupObject = null;
 
@@ -1266,6 +1177,9 @@ class ProductGroup_Controller extends Page_Controller {
 		if(isset($_GET) && is_array($_GET) && count($_GET)) {
 			$this->saveUserPreferences();
 		}
+		$this->setCurrentUserPreference("FILTER", $this->getCurrentUserPreferences("FILTER"));
+		$this->setCurrentUserPreference("SORT", $this->getCurrentUserPreferences("SORT"));
+		//$this->setCurrentUserPreference("DISPLAY", $this->getCurrentUserPreferences("DISPLAY"));
 	}
 
 
@@ -1306,29 +1220,27 @@ class ProductGroup_Controller extends Page_Controller {
 
 	public function searchresults($request){
 		if($results = $request->getVar("results")){
-			$results = explode(",", $request->param("results"));
-			$ifStatement = '';
-			$ifStamentClosingBrackets = "9999)";
+			$resultsArray = explode(",", $results);
+			$ifStatement = 'CASE ';
 			$arrayOfIDs = array();
 			$count = 0;
 			$stage = '';
 			if(Versioned::current_stage() == "Live") {
 				$stage = "_Live";
 			}
-			foreach($results as $productID) {
+			foreach($resultsArray as $productID) {
 				$productID = intval($productID);
 				if($productID) {
 					$arrayOfIDs[] = $productID;
-					$ifStatement = 'IF("Product$tage.ID" = $productID, $count';
-					$ifStamentClosingBrackets .= ")";
+					$ifStatement .= " WHEN \"Product".$stage."\".\"ID\" = $productID THEN $count";
 					$count++;
 				}
 			}
+			$className = $this->getBuyableClassName();
+			$sortStatement = $ifStatement." END";
+			$products = $className::get()->filter(array("ID" => $arrayOfIDs))->sort($sortStatement);
 			$this->products = $this->paginateList(
-				$this->ProductsShowable(
-					array("ID" => $arrayOfIDs),
-					$ifStatement.$ifStamentClosingBrackets
-				)
+				$products
 			);
 			return Array();
 		}
@@ -1389,15 +1301,13 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	function ProductSearchForm() {
 		$form = ProductSearchForm::create($this, 'ProductSearchForm', $this->Title, $this->ProductsShowable());
-		$this->data()->extend('updateProductSearchForm', $form);
-		//load session data
-		if ($data = Session::get("FormInfo.{$form->FormName()}.data")) {
-			$form->loadDataFrom($data);
-		}
-
 		return $form;
 	}
 
+
+	function ShowSearchFormImmediately(){
+		return !$this->products->count() || $this->request->param("Action") == "searchresults";
+	}
 
 	/**
 	 * Do we show all products on one page?
@@ -1405,8 +1315,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return Boolean
 	 */
 	public function HasFilter(){
-		$myPreferenceVariableName = EcommerceConfig::get("ProductGroup", "session_name_for_filter_preference");
-		return $this->filterForGroupObject || Session::get("ProductGroup_".$myPreferenceVariableName);
+		return $this->getCurrentUserPreferences("FILTER") != "default";
 	}
 
 	/**
@@ -1461,34 +1370,47 @@ class ProductGroup_Controller extends Page_Controller {
 				$dos->push(clone $item);
 			}
 		}
+		$items = $this->ProductGroupsFromAlsoShowProductsInverse();
+		$filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
+		if($items->count()) {
+			foreach($items as $item){
+				$isCurrent = $item->ID == $filterForGroupObjectID;
+				$item->Name = $item->Title;
+				$item->SelectKey = $item->URLSegment;
+				$item->Current = $isCurrent ? true : false;
+				$item->MyLinkingMode = $isCurrent ? "current" : "link";
+				$item->FilterLink = $this->Link("filterforgroup/".$item->URLSegment);
+				$dos->push(clone $item);
+			}
+		}
 		return $dos;
 	}
 
 	/**
-	 * Provides a dataset of links for sorting products.
+	 * Provides a ArrayList of links for sorting products.
 	 *
 	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function SortLinks(){
-		return $this->userPreferencesLinks("sort_options", "MyDefaultSortOrder", "SORTBY", "session_name_for_sort_preference");
+		return $this->userPreferencesLinks("SORT");
 	}
 
 	/**
-	 * Provides a dataset of links for filters products.
+	 * Provides a ArrayList of links for filters products.
 	 *
 	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function FilterLinks(){
-		return $this->userPreferencesLinks("filter_options", "MyDefaultFilter", "FILTERFOR", "session_name_for_filter_preference");
+		return $this->userPreferencesLinks("FILTER");
 	}
 
 	/**
-	 * Provides a dataset of links for displaying prodicts products.
+	 * Provides a ArrayList for displaying display links
 	 *
 	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function DisplayLinks(){
-		return $this->userPreferencesLinks("display_styles", "MyDefaultDisplayStyle", "DISPLAYBY", "session_name_for_display_style_preference");
+		return $this->userPreferencesLinks("DISPLAY");
 	}
 
 	/**
@@ -1513,41 +1435,8 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/****************************************************
-	 *  INTERNAL PROCESSING
+	 *  INTERNAL PROCESSING: PRODUCT LIST
 	/****************************************************/
-
-
-	/**
-	 * Provides a dataset of links for a particular user preference
-	 *
-	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
-	 */
-	protected function userPreferencesLinks($configName, $method, $configTranslationCode, $sessionVariableName){
-		$options = EcommerceConfig::get("ProductGroup", $configName);
-		if(count($options) < 2) return null;
-		$selectedItem = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", $sessionVariableName));
-		if($this->filterForGroupObject && $configName == "filter_options") {
-			$selectedItem = "";
-		}
-		$dos = new ArrayList();
-		if(count($options)) {
-			foreach($options as $key => $array){
-				$isCurrent = ($key == $selectedItem) ? true : false;
-				$linkGetVariable =  "?".EcommerceConfig::get("ProductGroup", $sessionVariableName)."=$key";
-				if($key == "default") {
-					$linkGetVariable .= "&amp;reload=1";
-				}
-				$dos->push(new ArrayData(array(
-					'Name' => _t('ProductGroup.'.$configTranslationCode.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
-					'Link' => $this->Link().$linkGetVariable,
-					'SelectKey' => $key,
-					'Current' => $isCurrent,
-					'LinkingMode' => $isCurrent ? "current" : "link"
-				)));
-			}
-		}
-		return $dos;
-	}
 
 	/**
 	 * turns full list into paginated list
@@ -1556,7 +1445,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	protected function paginateList(SS_List $list){
 		if($list && $list->count()) {
-			if($this->showFullList) {
+			if($this->IsShowFullList()) {
 				$obj = new PaginatedList($list, $this->request);
 				$obj->setPageLength(3000);
 				return $obj;
@@ -1569,6 +1458,11 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 	}
 
+	/****************************************************
+	 *  INTERNAL PROCESSING: USER PREFERENCES
+	/****************************************************/
+
+
 	/**
 	 * Checks out a bunch of $_GET variables
 	 * that are used to work out user preferences
@@ -1576,60 +1470,153 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 */
 	protected function saveUserPreferences(){
+		$sortFilterDisplayNames = $this->getSortFilterDisplayNames();
 		$preferencesArray = array(
 			"sort_options" => "session_name_for_sort_preference",
 			"filter_options" => "session_name_for_filter_preference",
 			"display_options" => "session_name_for_display_style_preference"
 		);
-		foreach($preferencesArray as $optionsVariableName => $preferenceVariableName) {
+		foreach($sortFilterDisplayNames as $type) {
+			$optionsVariableName = $type["configName"];
+			$preferenceVariableName = $type["sessionName"];
 			$myPreferenceVariableName = EcommerceConfig::get("ProductGroup", $preferenceVariableName);
-			if(isset($_GET[$myPreferenceVariableName])) {
-				$newPreference = $_GET[$myPreferenceVariableName];
-				if($newPreference) {
-					$options = EcommerceConfig::get("ProductGroup", $optionsVariableName);
-					if(isset($options[$newPreference])) {
-						Session::set("ProductGroup_".$myPreferenceVariableName, $newPreference);
-					}
+			if($newPreference = $this->request->getVar($myPreferenceVariableName)) {
+				$options = EcommerceConfig::get("ProductGroup", $optionsVariableName);
+				if(isset($options[$newPreference])) {
+					Session::set("ProductGroup_".$myPreferenceVariableName, $newPreference);
 				}
 			}
 		}
 		//make sure to save the new settings first!
-		if(isset($_GET["reload"])) {
+		if($this->request->getVar("reload")) {
 			return $this->redirect($this->Link());
 		}
-		if(isset($_GET["showfulllist"])) {
+		if($this->request->getVar("showfulllist")) {
 			$this->showFullList = true;
 		}
 	}
+	/**
+	 * Checks for the most applicable user preferences for this user:
+	 * 1. session value
+	 * 2. getMyUserPreferencesDefault
+	 *
+	 * @param String $type - FILTER | SORT | DISPLAY
+	 *
+	 * @return String
+	 *
+	 * @todo: move to controller?
+	 */
+	protected function getCurrentUserPreferences($type){
+		$sessionName = $this->sortFilterDisplayNames[$type]["sessionName"];
+		if($sessionValue = Session::get("ProductGroup_".EcommerceConfig::get("ProductGroup", $sessionName))) {
+			$key = Convert::raw2sql($sessionValue);
+		}
+		else {
+			$key = $this->getMyUserPreferencesDefault($type);
+		}
+		return $key;
+	}
+
+	/**
+	 * Provides a dataset of links for a particular user preference
+	 *
+	 * @param String $configName - e.g. sort_options
+	 * @param String $method - e.g. getMyUserPreferencesDefault
+	 * @param String $configTranslationCode - e.g. SORTBY
+	 *
+	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+	 */
+	protected function userPreferencesLinks($type){
+		//get basics
+		$sortFilterDisplayNames = $this->getSortFilterDisplayNames();
+		$configName = $sortFilterDisplayNames[$type]["configName"];
+		$options = EcommerceConfig::get("ProductGroup", $configName);
+
+		//if there is only one option then do not bother
+		if(count($options) < 2) return null;
+
+		//get more config names
+		$translationCode = $sortFilterDisplayNames[$type]["translationCode"];
+		$selectedItem =  $this->getCurrentUserPreferences($type);
+		if($this->filterForGroupObject && $configName == "filter_options") {
+			$selectedItem = "";
+		}
+		$dos = new ArrayList();
+		if(count($options)) {
+			foreach($options as $key => $array){
+				$isCurrent = ($key == $selectedItem) ? true : false;
+				$linkGetVariable =  "?".EcommerceConfig::get("ProductGroup", $sessionVariableName)."=$key";
+				if($key == "default") {
+					$linkGetVariable .= "&amp;reload=1";
+				}
+				$dos->push(new ArrayData(array(
+					'Name' => _t('ProductGroup.'.$translationCode.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
+					'Link' => $this->Link().$linkGetVariable,
+					'SelectKey' => $key,
+					'Current' => $isCurrent,
+					'LinkingMode' => $isCurrent ? "current" : "link"
+				)));
+			}
+		}
+		return $dos;
+	}
+
+
+
+	/****************************************************
+	 *  INTERNAL PROCESSING: TITLES
+	/****************************************************/
+
+
+
+	/**
+	 *
+	 * @var Boolean
+	 */
+	private $secondaryTitleHasBeenAdded = false;
 
 	/**
 	 * add a secondary title to the main title
 	 * in case there is, for example, a filter applied
 	 * e.g. Socks | MyBrand
 	 *
+	 * @param String
 	 *
 	 */
-	private $secondaryTitleHasBeenAdded = false;
-
 	protected function addSecondaryTitle($secondaryTitle = "") {
-		$pipe = _t("ProductGroup.TITLE_SEPERATOR", " | ");
+		$pipe = _t("ProductGroup.TITLE_SEPARATOR", " | ");
 		if(!$this->secondaryTitleHasBeenAdded) {
-			if($this->showFullList) {
+			if($secondaryTitle) {
+				$secondaryTitle = $pipe.$secondaryTitle;
+			}
+			if(is_object($this->filterForGroupObject)) {
+				$secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
+			}
+			if($this->IsShowFullList()) {
 				$secondaryTitle .= $pipe._t("ProductGroup.LIST_VIEW", "List View");
 			}
+			$filter = $this->getCurrentUserPreferences("FILTER");
+			if($filter != "default") {
+				$secondaryTitle .= $pipe.$this->getUserPreferencesTitle("FILTER", $this->getCurrentUserPreferences("FILTER"));
+			}
+			$sort = $this->getCurrentUserPreferences("SORT");
+			if($sort != "default") {
+				$secondaryTitle .= $pipe.$this->getUserPreferencesTitle("SORT", $this->getCurrentUserPreferences("SORT"));
+			}
 			if($secondaryTitle) {
-				$this->Title .= $pipe.$secondaryTitle;
+				$this->Title .= $secondaryTitle;
 				if(isset($this->MetaTitle)) {
-					$this->MetaTitle .= $pipe.$secondaryTitle;
+					$this->MetaTitle .= $secondaryTitle;
 				}
 			}
 			//dont update menu title, because the entry in the menu
 			//should stay the same as it links back to the unfiltered
 			//page (in some cases).
-			//$this->MenuTitle .= " | ".$otherProductGroup->MenuTitle;
 			$this->secondaryTitleHasBeenAdded = true;
 		}
 	}
+
+
 
 	/****************************************************
 	 *  DEBUG
@@ -1643,7 +1630,65 @@ class ProductGroup_Controller extends Page_Controller {
 			);
 			Security::permissionFailure($this, $messages);
 		}
-		return $this->dataRecord->debug();
+		$this->ProductsShowable();
+		$html = EcommerceTaskDebugCart::debug_object($this->dataRecord);
+		$html .= "<ul>";
+
+		$html .= "<li><hr />Available options<hr /></li>";
+		$html .= "<li><b>Sort Options for Dropdown:</b><pre> ".print_r($this->getUserPreferencesOptionsForDropdown("SORT"), 1)."</pre> </li>";
+		$html .= "<li><b>Filter Options for Dropdown:</b><pre> ".print_r($this->getUserPreferencesOptionsForDropdown("FILTER"), 1)."</pre></li>";
+		$html .= "<li><b>Display Styles for Dropdown:</b><pre> ".print_r($this->getUserPreferencesOptionsForDropdown("DISPLAY"), 1)."</pre> </li>";
+
+		$html .= "<li><hr />Default Keys (what is the default for the site)<hr /></li>";
+		$html .= "<li><b>Default Sort Key:</b> ".$this->getUserPreferencesDefault("SORT")." </li>";
+		$html .= "<li><b>Default Filter Key:</b> ".$this->getUserPreferencesDefault("FILTER")." </li>";
+		$html .= "<li><b>Default Display Style Key:</b> ".$this->getUserPreferencesDefault("DISPLAY")." </li>";
+
+		$html .= "<li><hr />Selection Setting (what is set as default for this page)<hr /></li>";
+		$html .= "<li><b>MyDefaultFilter:</b> ".$this->getMyUserPreferencesDefault("FILTER")." </li>";
+		$html .= "<li><b>MyDefaultSortOrder:</b> ".$this->getMyUserPreferencesDefault("SORT")." </li>";
+		$html .= "<li><b>MyDefaultDisplayStyle:</b> ".$this->getMyUserPreferencesDefault("DISPLAY")." </li>";
+		$html .= "<li><b>MyNumberOfProductsPerPage:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
+		$html .= "<li><b>MyLevelOfProductsToshow:</b> ".$this->MyLevelOfProductsToShow()." = ".(isset($this->showProductLevels[$this->MyLevelOfProductsToShow()]) ? $this->showProductLevels[$this->MyLevelOfProductsToShow()] : "ERROR!!!! \$this->showProductLevels not set for ".$this->MyLevelOfProductsToShow())." </li>";
+
+		$html .= "<li><hr />Current Settings<hr /></li>";
+		$html .= "<li><b>Current Sort Order:</b> ".$this->getCurrentUserPreferences("SORT")." </li>";
+		$html .= "<li><b>Current Filter:</b> ".$this->getCurrentUserPreferences("FILTER")." </li>";
+		$html .= "<li><b>Current display style:</b> ".$this->getCurrentUserPreferences("DISPLAY")." </li>";
+
+		$html .= "<li><hr />DATALIST: totals, numbers per page etc<hr /></li>";
+		$html .= "<li><b>Total number of products:</b> ".$this->TotalCount()." </li>";
+		$html .= "<li><b>Is there more than one product:</b> ".($this->TotalCountGreaterThanOne() ? "YES" : "NO")." </li>";
+		$html .= "<li><b>Number of products per page:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
+		$html .= "<li><b>Parent product group:</b> ".($parentGroup = $this->ParentGroup() ? $parentGroup->Title : "[NO PARENT GROUP]")."</li>";
+
+
+		$html .= "<li><hr />SQL Factors<hr /></li>";
+		$html .= "<li><b>Sort options for SQL:</b> ".$this->getUserSettingsOptionSQL("SORT")." </li>";
+		$html .= "<li><b>Filter options for SQL:</b> <pre>".print_r($this->getUserSettingsOptionSQL("FILTER"), 1)."</pre> </li>";
+		$html .= "<li><b>Buyable Class name:</b> ".$this->getBuyableClassName()." </li>";
+		$html .= "<li><b>allProducts:</b> ".print_r($this->allProducts->sql(), 1)." </li>";
+
+		$html .= "<li><hr />Other<hr /></li>";
+		if($image = $this->BestAvailableImage()) {
+			$html .= "<li><b>Best Available Image:</b> <img src=\"".$image->Link."\" /> </li>";
+		}
+		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b> ".$this->ProductGroupsFromAlsoShowProducts()." </li>";
+		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b> ".$this->ProductGroupsFromAlsoShowProductsInverse()." </li>";
+		$html .= "<li><b>BestAvailableImage:</b> ".($this->BestAvailableImage() ? $this->BestAvailableImage()->Link : "no image available")." </li>";
+		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b><pre>".print_r($this->ProductGroupsFromAlsoShowProducts()->map()->toArray(), 1)." </pre></li>";
+		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b><pre> ".print_r($this->ProductGroupsFromAlsoShowProductsInverse()->map()->toArray(), 1)." </pre></li>";
+		$html .= "<li><b>Is this an ecommerce page:</b> ".($this->IsEcommercePage() ? "YES" : "NO")." </li>";
+		$product = Product::get()->filter(array("ParentID" => $this->ID))->first();
+		if($product) {
+			$html .= "<li><hr />Product Example<hr /></li>";
+			$html .= "<li><b>Product View:</b> <a href=\"".$product->Link()."\">".$product->Title."</a> </li>";
+			$html .= "<li><b>Product Debug:</b> <a href=\"".$product->Link("debug")."\">".$product->Title."</a> </li>";
+			$html .= "<li><b>Product Admin Page:</b> <a href=\""."/admin/pages/edit/show/".$product->ID."\">".$product->Title."</a> </li>";
+			$html .= "<li><b>ProductGroup Admin Page:</b> <a href=\""."/admin/pages/edit/show/".$this->ID."\">".$this->Title."</a> </li>";
+		}
+		$html .= "</ul>";
+		return $html;
 	}
 
 

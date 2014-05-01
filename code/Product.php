@@ -940,6 +940,7 @@ class Product extends Page implements BuyableModel {
 			$html .= "<li><b>Product Group View:</b> <a href=\"".$productGroup->Link()."\">".$productGroup->Title."</a> </li>";
 			$html .= "<li><b>Product Group Debug:</b> <a href=\"".$productGroup->Link("debug")."\">".$productGroup->Title."</a> </li>";
 			$html .= "<li><b>Product Group Admin:</b> <a href=\""."/admin/pages/edit/show/".$productGroup->ID."\">".$productGroup->Title." Admin</a> </li>";
+			$html .= "<li><b>Edit this Product:</b> <a href=\""."/admin/pages/edit/show/".$this->ID."\">".$this->Title." Admin</a> </li>";
 		}
 		$html .= "</ul>";
 		return $html;
