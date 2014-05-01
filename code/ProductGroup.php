@@ -447,7 +447,7 @@ class ProductGroup extends Page {
 			$defaultOption = $this->$dbVariableName;
 		}
 		if(!$defaultOption && $parent = $this->ParentGroup()) {
-			$defaultOption = $parent->getMyUserPreferencesDefault($configName, $dbVariableName, $methodName);
+			$defaultOption = $parent->getMyUserPreferencesDefault($type);
 		}
 		if(!$defaultOption || $defaultOption == "inherit") {
 			$defaultOption = $this->getUserPreferencesDefault($type);
@@ -1520,9 +1520,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * Provides a dataset of links for a particular user preference
 	 *
-	 * @param String $configName - e.g. sort_options
-	 * @param String $method - e.g. getMyUserPreferencesDefault
-	 * @param String $configTranslationCode - e.g. SORTBY
+	 * @param String $type SORT | FILTER | DISPLAY - e.g. sort_options
 	 *
 	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
 	 */
@@ -1537,6 +1535,7 @@ class ProductGroup_Controller extends Page_Controller {
 
 		//get more config names
 		$translationCode = $sortFilterDisplayNames[$type]["translationCode"];
+		$sessionVariableName = $sortFilterDisplayNames[$type]["sessionName"];
 		$selectedItem =  $this->getCurrentUserPreferences($type);
 		if($this->filterForGroupObject && $configName == "filter_options") {
 			$selectedItem = "";
@@ -1664,8 +1663,10 @@ class ProductGroup_Controller extends Page_Controller {
 
 
 		$html .= "<li><hr />SQL Factors<hr /></li>";
-		$html .= "<li><b>Sort options for SQL:</b> ".$this->getUserSettingsOptionSQL("SORT")." </li>";
-		$html .= "<li><b>Filter options for SQL:</b> <pre>".print_r($this->getUserSettingsOptionSQL("FILTER"), 1)."</pre> </li>";
+		$html .= "<li><b>Default sort SQL:</b> ".print_r($this->getUserSettingsOptionSQL("SORT"), 1)." </li>";
+		$html .= "<li><b>User sort SQL:</b> ".print_r($this->getUserSettingsOptionSQL("SORT",  $this->getCurrentUserPreferences("SORT")), 1)." </li>";
+		$html .= "<li><b>Default Filter SQL:</b> <pre>".print_r($this->getUserSettingsOptionSQL("FILTER"), 1)."</pre> </li>";
+		$html .= "<li><b>User Filter SQL:</b> <pre>".print_r($this->getUserSettingsOptionSQL("FILTER",  $this->getCurrentUserPreferences("FILTER")), 1)."</pre> </li>";
 		$html .= "<li><b>Buyable Class name:</b> ".$this->getBuyableClassName()." </li>";
 		$html .= "<li><b>allProducts:</b> ".print_r($this->allProducts->sql(), 1)." </li>";
 
