@@ -645,9 +645,9 @@ class ProductGroup extends Page {
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
 
 		//sort products
-		$this->currentFinalProducts($alternativeSort);
+		$this->allProducts = $this->currentFinalProducts($alternativeSort);
 
-		return $this->sortedProducts;
+		return $this->allProducts;
 	}
 
 	/**
@@ -720,30 +720,6 @@ class ProductGroup extends Page {
 			$this->totalCount = $this->allProducts->count();
 			return $this->allProducts;
 		}
-	}
-
-	/**
-	 * turn a datalist into an array of product IDs so that they can be saved.
-	 * @param DataList $list
-	 * @return Array
-	 */
-	protected function turnProductsIntoArray($list){
-		$buyablesIDArray = array(0);
-		$productCount = $list->count();
-		if($productCount) {
-			if($productCount > 500) {
-				//use DB query for saver retrieval...
-				$sql = $this->allProducts->sql();
-				$rows = DB::query($sql);
-				foreach($rows as  $row) {
-					$buyablesIDArray[$row["ID"]] = $row["ID"];
-				}
-			}
-			else {
-				$buyablesIDArray += $this->sortedProducts->map("ID", "ID")->toArray();
-			}
-		}
-		return $buyablesIDArray;
 	}
 
 	/*****************************************************
@@ -876,25 +852,36 @@ class ProductGroup extends Page {
 	 */
 	protected function removeExcludedProductsAndSaveIncludedProducts() {
 		$onlyShowProductsThatCanBePurchased = $this->EcomConfig()->OnlyShowProductsThatCanBePurchased;
-		if( ! is_array($this->canBePurchasedArray)) {
+		if( is_array($this->canBePurchasedArray) && is_array($this->canNOTbePurchasedArray)) {
+			//already done!
+		}
+		else {
 			$this->canNOTbePurchasedArray = array();
 			$this->canBePurchasedArray = array();
 			$rawCount = $this->allProducts->count();
-			if($rawCount && $rawCount < 9999) {
+			if($onlyShowProductsThatCanBePurchased && $rawCount < 500) {
 				foreach($this->allProducts as $buyable) {
-					if($onlyShowProductsThatCanBePurchased) {
-						if(!$buyable->canPurchase()) {
-							//NOTE: the ->remove we had here would have removed
-							//the product from the DB.
-							$this->canNOTbePurchasedArray[$buyable->ID] = $buyable->ID;
-						}
-						else {
-							$this->canBePurchasedArray[$buyable->ID] = $buyable->ID;
-						}
+					if(!$buyable->canPurchase()) {
+						//NOTE: the ->remove we had here would have removed
+						//the product from the DB.
+						$this->canNOTbePurchasedArray[$buyable->ID] = $buyable->ID;
 					}
 					else {
 						$this->canBePurchasedArray[$buyable->ID] = $buyable->ID;
 					}
+				}
+			}
+			else {
+				if($rawCount > 500) {
+					//use DB query for saver retrieval...
+					$sql = $this->allProducts->sql();
+					$rows = DB::query($sql);
+					foreach($rows as  $row) {
+						$this->canBePurchasedArray[$row["ID"]] = $row["ID"];
+					}
+				}
+				else {
+					$this->canBePurchasedArray = $this->allProducts->map("ID", "ID")->toArray();
 				}
 			}
 			if(count($this->canNOTbePurchasedArray)) {
