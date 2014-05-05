@@ -597,22 +597,31 @@ class ProductGroup extends Page {
 	 */
 	protected $allProducts = null;
 
-	/**
-	 * This is the dataList that
-	 * contains all the products: sorted
-	 * @var DataList $sortedProducts
-	 */
-	protected $sortedProducts = null;
-
 
 	/**
 	 * a list of relevant buyables that can
 	 * not be purchased and therefore should be excluded.
-	 * @var Array (like so: array(1,2,4,5,99))
+	 * Should be set to NULL to start with so we know if it has been
+	 * set yet.
+	 * @var NULL | Array (like so: array(1,2,4,5,99))
 	 */
-	private static $negative_can_purchase_array = null;
+	private $canNOTbePurchasedArray = null;
 
 
+	/**
+	 * a list of relevant buyables that can
+	 * be purchased.  We keep this so that
+	 * that we can save to session, etc... for future use.
+	 * Should be set to NULL to start with so we know if it has been
+	 * set yet.
+	 * @var NULL | Array (like so: array(1,2,4,5,99))
+	 */
+	private static $canBePurchasedArray = null;
+
+
+	public function getProductsThatCanBePurchasedArray(){
+		return $this->canBePurchasedArray;
+	}
 	/**
 	 * Retrieve a set of products, based on the given parameters.
 	 * This method is usually called by the various controller methods.
@@ -631,30 +640,13 @@ class ProductGroup extends Page {
 	 * @return DataList | Null
 	 */
 	public function ProductsShowable($extraFilter = '', $alternativeSort = ''){
-		//get original products without sort / limit
+
+		//get original products without sort
 		$this->allProducts = $this->currentInitialProducts($extraFilter);
+
 		//sort products
 		$this->currentFinalProducts($alternativeSort);
-		$stringOfIDs = "0";
-		//save products to session for later use
-		$productCount = $this->sortedProducts->count();
-		if($productCount) {
-			if($productCount > 500) {
-				//use DB query for saver retrieval...
-				$sql = $this->allProducts->sql();
-				$rows = DB::query($sql);
-				foreach($rows as  $row) {
 
-				}
-			}
-			else {
-				$buyablesIDArray = $this->sortedProducts->map("ID", "ID")->toArray();
-				if(is_array($buyablesIDArray) && count($buyablesIDArray)) {
-					$stringOfIDs = implode(",", $buyablesIDArray);
-				}
-			}
-		}
-		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $stringOfIDs);
 		return $this->sortedProducts;
 	}
 
@@ -674,12 +666,11 @@ class ProductGroup extends Page {
 	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
 	 * @return DataList
 	 **/
-
 	public function currentInitialProducts($extraFilter = ''){
 		if(!$this->allProducts) {
 			$className = $this->getBuyableClassName();
 
-			//init allProducts
+			//INIT ALLPRODUCTS
 			$this->allProducts = $className::get();
 
 			// STANDARD FILTER
@@ -702,11 +693,10 @@ class ProductGroup extends Page {
 
 			//EXLUDES ONE THAT ARE NOT FOR SALE
 			//we just add a little safety measure here...
-			$this->allProducts = $this->getExcludedProducts();
+			//$this->allProducts = $this->getExcludedProducts();
 		}
 		return $this->allProducts;
 	}
-
 
 	/**
 	 * returns the final products, based on the all the eligile products
@@ -719,16 +709,41 @@ class ProductGroup extends Page {
 	 **/
 	protected function currentFinalProducts($alternativeSort = ""){
 		if($this->allProducts) {
-			$this->totalCount = $this->allProducts->count();
 			if($alternativeSort) {
 				$sort = $alternativeSort;
 			}
 			else {
 				$sort = $this->currentSortSQL();
 			}
-			$this->sortedProducts = $this->allProducts->Sort($sort);
-			return $this->sortedProducts;
+			$this->allProducts = $this->allProducts->Sort($sort);
+			$this->allProducts = $this->removeExcludedProductsAndSaveIncludedProducts($this->allProducts);
+			$this->totalCount = $this->allProducts->count();
+			return $this->allProducts;
 		}
+	}
+
+	/**
+	 * turn a datalist into an array of product IDs so that they can be saved.
+	 * @param DataList $list
+	 * @return Array
+	 */
+	protected function turnProductsIntoArray($list){
+		$buyablesIDArray = array(0);
+		$productCount = $list->count();
+		if($productCount) {
+			if($productCount > 500) {
+				//use DB query for saver retrieval...
+				$sql = $this->allProducts->sql();
+				$rows = DB::query($sql);
+				foreach($rows as  $row) {
+					$buyablesIDArray[$row["ID"]] = $row["ID"];
+				}
+			}
+			else {
+				$buyablesIDArray += $this->sortedProducts->map("ID", "ID")->toArray();
+			}
+		}
+		return $buyablesIDArray;
 	}
 
 	/*****************************************************
@@ -845,7 +860,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * returns the SORT part of the final selection of products.
-	 * @return String
+	 * @return String | Array
 	 */
 	protected function currentSortSQL() {
 		$sortKey = $this->getCurrentUserPreferences("SORT");
@@ -854,24 +869,36 @@ class ProductGroup extends Page {
 
 	/**
 	 * Excluded products that can not be purchased
+	 * We all make a record of all the products that are in the current list
+	 * For efficiency sake, we do both these things at the same time.
 	 * IMPORTANT: Adjusts allProducts and returns it...
 	 * @return DataList
 	 */
-	protected function getExcludedProducts() {
-		if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased && empty(self::$negative_can_purchase_array)) {
-			self::$negative_can_purchase_array = array();
+	protected function removeExcludedProductsAndSaveIncludedProducts() {
+		$onlyShowProductsThatCanBePurchased = $this->EcomConfig()->OnlyShowProductsThatCanBePurchased;
+		if( ! is_array($this->canBePurchasedArray)) {
+			$this->canNOTbePurchasedArray = array();
+			$this->canBePurchasedArray = array();
 			$rawCount = $this->allProducts->count();
 			if($rawCount && $rawCount < 9999) {
 				foreach($this->allProducts as $buyable) {
-					if(!$buyable->canPurchase()) {
-						//NOTE: the ->remove we had here would have removed
-						//the product from the DB.
-						self::$negative_can_purchase_array[$buyable->ID] = $buyable->ID;
+					if($onlyShowProductsThatCanBePurchased) {
+						if(!$buyable->canPurchase()) {
+							//NOTE: the ->remove we had here would have removed
+							//the product from the DB.
+							$this->canNOTbePurchasedArray[$buyable->ID] = $buyable->ID;
+						}
+						else {
+							$this->canBePurchasedArray[$buyable->ID] = $buyable->ID;
+						}
+					}
+					else {
+						$this->canBePurchasedArray[$buyable->ID] = $buyable->ID;
 					}
 				}
 			}
-			if(count(self::$negative_can_purchase_array)) {
-				$this->allProducts = $this->allProducts->Exclude(array("ID" => self::$negative_can_purchase_array));
+			if(count($this->canNOTbePurchasedArray)) {
+				$this->allProducts = $this->allProducts->Exclude(array("ID" => $this->canNOTbePurchasedArray));
 			}
 		}
 		return $this->allProducts;
@@ -1259,6 +1286,15 @@ class ProductGroup_Controller extends Page_Controller {
 	 **/
 	public function Products(){
 		$this->addSecondaryTitle();
+		//save products to session for later use
+		$stringOfIDs = "";
+		$array = $this->getProductsThatCanBePurchasedArray();
+		if(is_array($array)) {
+			$stringOfIDs = implode(",", $array);
+		}
+		//save list for future use
+		Session::set(EcommerceConfig::get("ProductGroup", "session_name_for_product_array"), $stringOfIDs);
+
 		return $this->products;
 	}
 

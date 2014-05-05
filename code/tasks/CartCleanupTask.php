@@ -61,7 +61,7 @@ class CartCleanupTask extends BuildTask {
 		//ABANDONNED CARTS
 		$clearMinutes = EcommerceConfig::get("CartCleanupTask", "clear_minutes");
 		$maximumNumberOfObjectsDeleted = EcommerceConfig::get("CartCleanupTask", "maximum_number_of_objects_deleted");
-		if($limit = $request->getVar("limit") && $this->verbose) {
+		if($this->verbose && $request && $limit = $request->getVar("limit") ) {
 			$maximumNumberOfObjectsDeleted = intval($limit);
 		}
 		$time = strtotime("-".$clearMinutes." minutes");
