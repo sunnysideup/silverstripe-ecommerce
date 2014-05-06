@@ -18,6 +18,10 @@
 
 class EcommerceTaskReviewSearches extends BuildTask{
 
+	private $defaultDays = 100;
+
+	private $defaultMinimum = 5;
+
 	/**
 	 * Standard (required) SS variable for BuildTasks
 	 * @var String
@@ -29,23 +33,25 @@ class EcommerceTaskReviewSearches extends BuildTask{
 	 * @var String
 	 */
 	protected $description = "
-		Basic search statistics over the last XXX days.
-		You can set XXX by using the get variable days.
-		You can set the minimum number of treshold with the get variable min.
-		For example: /dev/tasks/EcommerceTaskReviewSearches/?days=100&min=30";
+		What did people search for on the website over the last XXX days...";
 
 	function run($request){
-		$days = intval($this->getRequest()->getVar("days")-0);
+		$days = intval($request->getVar("days")-0);
 		if(!$days) {
-			$days = 100;
+			$days = $this->defaultDays;
 		}
-		$countMin = intval($this->getRequest()->getVar("min")-0);
-		$data = DB::query("SELECT COUNT(ID) count, Title FROM \"SearchHistory\" WHERE Created > ( NOW() - INTERVAL $days DAY ) GROUP BY \"Title\"  HAVING COUNT(ID) >= $countMin ORDER BY count DESC ");
-		//we can not divide by zero! Minimum is 1.
+		$countMin = intval($request->getVar("min")-0);
 		if(!$countMin) {
-			$countMin++;
+			$countMin = $this->defaultMinimum;
 		}
-		$v = "<h1>Search Phrases entered at least $countMin times during the last $days days</h1><table>";
+		$data = DB::query("SELECT COUNT(ID) count, Title FROM \"SearchHistory\" WHERE Created > ( NOW() - INTERVAL $days DAY ) GROUP BY \"Title\"  HAVING COUNT(ID) >= $countMin ORDER BY count DESC ");
+		$v = "
+		<h3>Settings</h3>
+		<p>You can set the number of days by using the get variable <i>days</i>.</p>
+		<p>You can set the minimum number of treshold with the get variable <i>min</i>.</p>
+		<p>For example: ".Director::absoluteBaseURL()."/dev/tasks/EcommerceTaskReviewSearches/?<strong>days</strong>=100&<strong>min</strong>=30</p>
+		<h3>Search Phrases entered at least $countMin times during the last $days days</h3>
+		<table>";
 		$list = array();
 		foreach($data as $key => $row) {
 			if(!$key) {
@@ -57,7 +63,9 @@ class EcommerceTaskReviewSearches extends BuildTask{
 		}
 		$v .= '</table>';
 		asort($list);
-		$v .= "<h1>A - Z</h1><table>";
+		$v .= "
+			<h3>A - Z</h3>
+			<table>";
 		foreach($list as $key => $title) {
 			$array = explode("-", $key);
 			$multipliedWidth = $array[0] * $multiplier;

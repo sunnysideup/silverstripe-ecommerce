@@ -28,6 +28,16 @@
 	</ul>
 	<% end_if %>
 
+	<% if DataReview %>
+	<h3>Review Data</h3>
+	<p>Here are some quick links to review things like sales data, product searches, etc....</p>
+	<ul>
+	<% loop DataReview %>
+		<li><a href="$Link">$Title</a>: $Description</li>
+	<% end_loop %>
+	</ul>
+	<% end_if %>
+
 	<% if RegularMaintenance %>
 	<h3>Regular Maintenance</h3>
 	<p>These actions should be run as cron job or you should configure e-commerce in such a way that they run regularly.</p>
@@ -49,7 +59,6 @@
 	<% end_if %>
 
 
-
 	<% if DataCleanups %>
 	<h3>Data Cleaning</h3>
 	<ul>
@@ -58,7 +67,6 @@
 	<% end_loop %>
 	</ul>
 	<% end_if %>
-
 
 
 	<% if Migrations %>

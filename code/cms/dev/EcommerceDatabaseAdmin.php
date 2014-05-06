@@ -57,11 +57,15 @@ Object::add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
  *
  * SECTIONS
  *
+ * 0. check settings
  * 1. ecommerce setup (default records)
- * 2. maintance
- * 3. debug
- * 4. migration
- * 5. tests
+ * 2. data review
+ * 3. regular maintance
+ * 4. debug
+ * 5. migration
+ * 6. reset
+ * 7. tests
+ *
  * @todo: work out a standard "silent" option and a display option the "display" options shows all output when running it from ecommerce/dev/
  * We also have to work out an easy way to extend this.
  *
@@ -199,7 +203,29 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 
 
 	//##############################
-	// 2. REGULAR MAINTENANCE
+	// 2. DATA REVIEW MAINTENANCE
+	//##############################
+
+	/**
+	 * List of regular maintenance BuildTasks
+	 * @var Array
+	 */
+	protected $dataReview = array(
+		"EcommerceTaskReviewSearches"
+	);
+
+	/**
+	 * regular data cleanup tasks
+	 * @return ArrayList
+	 *
+	 */
+	function DataReview() {
+		return $this->createMenuDOSFromArray($this->dataReview, $type = "DataReview");
+	}
+
+
+	//##############################
+	// 3. REGULAR MAINTENANCE
 	//##############################
 
 	/**
@@ -233,7 +259,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 
 
 	//##############################
-	// 3. DEBUG ACTIONS
+	// 4. DEBUG ACTIONS
 	//##############################
 
 	/**
@@ -263,7 +289,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 
 
 	//##############################
-	// 4. MIGRATIONS
+	// 5. MIGRATIONS
 	//##############################
 
 	/**
@@ -287,7 +313,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 
 
 	//##############################
-	// 5. CRAZY SHIT
+	// 6. CRAZY SHIT
 	//##############################
 
 
@@ -314,7 +340,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 
 
 	//##############################
-	// 6. TESTS
+	// 7. TESTS
 	//##############################
 
 	/**
