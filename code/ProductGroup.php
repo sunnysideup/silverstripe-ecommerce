@@ -1231,32 +1231,33 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	public function searchresults($request){
-		if($results = $request->getVar("results")){
-			$resultsArray = explode(",", $results);
-			$ifStatement = 'CASE ';
-			$arrayOfIDs = array();
-			$count = 0;
-			$stage = '';
-			if(Versioned::current_stage() == "Live") {
-				$stage = "_Live";
-			}
-			foreach($resultsArray as $productID) {
-				$productID = intval($productID);
-				if($productID) {
-					$arrayOfIDs[] = $productID;
-					$ifStatement .= " WHEN \"Product".$stage."\".\"ID\" = $productID THEN $count";
-					$count++;
-				}
-			}
-			$className = $this->getBuyableClassName();
-			$sortStatement = $ifStatement." END";
-			$products = $className::get()->filter(array("ID" => $arrayOfIDs))->sort($sortStatement);
-			$this->products = $this->paginateList(
-				$products
-			);
-			return Array();
+		$results = $request->getVar("results");
+		if(!$results) {
+			$results = "0";
 		}
-		user_error("no result get parameters provided.");
+		$resultsArray = explode(",", $results);
+		$ifStatement = 'CASE ';
+		$arrayOfIDs = array();
+		$count = 0;
+		$stage = '';
+		if(Versioned::current_stage() == "Live") {
+			$stage = "_Live";
+		}
+		foreach($resultsArray as $productID) {
+			$productID = intval($productID);
+			if($productID) {
+				$arrayOfIDs[] = $productID;
+				$ifStatement .= " WHEN \"Product".$stage."\".\"ID\" = $productID THEN $count";
+				$count++;
+			}
+		}
+		$className = $this->getBuyableClassName();
+		$sortStatement = $ifStatement." END";
+		$products = $className::get()->filter(array("ID" => $arrayOfIDs))->sort($sortStatement);
+		$this->products = $this->paginateList(
+			$products
+		);
+		return Array();
 	}
 
 	/****************************************************
