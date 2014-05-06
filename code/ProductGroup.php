@@ -455,6 +455,9 @@ class ProductGroup extends Page {
 		return $defaultOption;
 	}
 
+	public function MyDefaultDisplayStyle() {
+		return $this->getMyUserPreferencesDefault("DISPLAY");
+	}
 
 	/*********************
 	 * SETTINGS: product levels
@@ -616,7 +619,7 @@ class ProductGroup extends Page {
 	 * set yet.
 	 * @var NULL | Array (like so: array(1,2,4,5,99))
 	 */
-	private static $canBePurchasedArray = null;
+	private $canBePurchasedArray = null;
 
 
 	public function getProductsThatCanBePurchasedArray(){

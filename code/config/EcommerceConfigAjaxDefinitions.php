@@ -62,13 +62,13 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 **/
 	function SideBarCartID() {return self::$prefix.'Side_Bar_Cart';}
 
-
 	/**
 	 * Small representation of cart
 	 * @see CartShort.ss
 	 * @return String
 	 **/
 	function SmallCartID() {return self::$prefix.'small_cart_id';}
+
 	/**
 	 * class that is used in templates and in the JSON return @see CartResponse
 	 * The Menu Cart class is used for populating a tiny cart on your site

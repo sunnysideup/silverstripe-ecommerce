@@ -137,8 +137,13 @@ class CartResponse extends EcommerceResponse {
 		//TO DO: set it up in such a way that it specifically requests one of these
 		$templates = EcommerceConfig::get("CartResponse", "cart_responses_required");
 		foreach($templates as $idMethod => $template) {
+			$selector = $ajaxObject->$idMethod();
+			$classOrID = "id";
+			if(strpos($selector, "ID") === null || strpos($selector, "ClassName") !== null) {
+				$selector = "class";
+			}
 			$js[] = array(
-				"t" => "class",
+				"t" => $classOrID,
 				"s" => $ajaxObject->$idMethod(),
 				"p" => "innerHTML",
 				//note the space is a hack to return something!
