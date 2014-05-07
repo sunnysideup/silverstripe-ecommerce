@@ -300,6 +300,7 @@ EcommerceConfig:
 				text-decoration: none;
 				font-size: 90%;
 				font-weight: 900;
+				margin-left: -10px;
 			}
 			#TOC a:hover {
 				color: red;
