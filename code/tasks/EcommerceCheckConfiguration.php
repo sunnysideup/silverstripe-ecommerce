@@ -267,9 +267,9 @@ EcommerceConfig:
 		$htmlHeader = "
 		<style>
 			th[scope='col'] {text-align: left; border-bottom: 3px solid green;padding-top: 40px;}
-			td {vertical-align: top; border-left: 1px solid grey; border-bottom: 1px solid grey; font-weight: bold;}
+			td {vertical-align: top; border-left: 1px solid #d7d7d7; border-bottom: 1px solid #d7d7d7; font-weight: bold; padding: 10px;}
 			td span.spanTitle {color: #000; font-size: 1.3em; font-weight: 900; display: block; padding-left: 10px; padding-bottom: 5px;}
-			td span {color: #000; font-size: 0.8em; display: block; padding-left: 10px; padding-bottom: 15px;}
+			td span {color: #000; font-size: 0.8em; display: block; padding-left: 10px; }
 			.sameConfig {color: #000;}
 			.newConfig pre:first-of-type {background-color: #fff !important; color: #000; border: 5px solid green; }
 			.newConfig pre:nth-of-type(2) {background-color: #fff !important; color: #000;  }
