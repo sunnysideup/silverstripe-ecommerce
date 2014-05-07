@@ -417,7 +417,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 		if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
 			$title = singleton($taskName)->getTitle();
 			if(Director::is_cli()) echo "Running task '$title'...\n\n";
-			elseif(!Director::is_ajax()) echo "<div id='TaskHolder'><h1>Running task '$title'...</h1>\n";
+			elseif(!Director::is_ajax()) echo "<h1>Running task '$title'...</h1>\n";
 
 			$task = new $taskName();
 			if ($task->isEnabled()) {
@@ -446,6 +446,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 */
 	protected function displayCompletionMessage(BuildTask $buildTask, $extraMessage = '') {
 		DB::alteration_message("
+
 			------------------------------------------------------- <br />
 			COMPLETED THE FOLLOWING TASK:<br />
 			<strong>".$buildTask->getTitle()."</strong><br />
@@ -462,7 +463,7 @@ class DebugView_EcommerceDatabaseAdmin extends DebugView{
 
 
 	function writePreOutcome(){
-		echo "<div style=\"border: 5px solid green; background-color: #e8e8e8; border-radius: 15px; margin: 20px; padding: 20px\">";
+		echo "<div id='TaskHolder' style=\"border: 5px solid green; background-color: #e8e8e8; border-radius: 15px; margin: 20px; padding: 20px\">";
 	}
 
 	function writePostOutcome(){

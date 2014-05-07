@@ -257,22 +257,24 @@ EcommerceConfig:
 	protected function definedConfigs(){
 		$htmlHeader = "
 		<style>
-			th[scope='col'] {text-align: left; border-bottom: 3px solid blue;padding-top: 40px;}
-			td {vertical-align: top; border-left: 1px solid grey; border-bottom: 1px solid grey;}
-			td span {color: #333; font-size: 0.8em;}
-			td span {color: #333; font-size: 0.8em; display: block}
+			th[scope='col'] {text-align: left; border-bottom: 3px solid green;padding-top: 40px;}
+			td {vertical-align: top; border-left: 1px solid grey; border-bottom: 1px solid grey; font-weight: bold;}
+			td span.spanTitle {color: #333; font-size: 1.4em; font-weight: 900; display: block}
+			td span {color: #333; font-size: 0.9em; display: block}
 			.sameConfig {color: #333;}
-			.newConfig{background-color: green!important; color: #fff; }
+			.newConfig pre:first-of-type {background-color: #fff !important; color: #000; border: 5px solid green; }
+			.newConfig pre:nth-of-type(2) {background-color: #fff !important; color: #000; border: 5px solid blue; }
 			#TOC {
 				position: fixed;
 				top: -15px;
-				bottom: 0;
+				bottom: -20px;
 				color: #fff;
 				background-color: #000;
 				width: 260px;
 				left: 0px;
 				padding-top: 15px;
 				z-index: 10000;
+				overflow: auto;
 			}
 			#TOC li {
 				line-height: 1.3;
@@ -288,15 +290,15 @@ EcommerceConfig:
 			#TOC a:hover {
 				color: red;
 			}
-			#TaskHolder, .info h1, .info h3, .info a:first-of-type  {
-				margin-left: 300px;
+			#TaskHolder, #EcommerceDatabaseAdmin, .info h1, .info h3, .info a:first-of-type  {
+				margin-left: 320px !important;
 			}
 			.info h1, .info h3, .info a {
 				padding-left: 30px;
 			}
-			a.backToTop {display: block; font-size: 0.8em; }
+			a.backToTop {display: block; font-size: 0.8em; float: right;}
 			td.newConfig {width: 70%;}
-			table td pre, table td sub {white-space:pre-wrap; font-size: 9px!important; font-weight: bold;margin: 5px; padding: 5px;}
+			table td pre, table td sub {white-space:pre-wrap; font-size: 1.2em!important; font-weight: bold;margin: 5px; padding: 5px;}
 		</style>
 		<h2>Configuration Report</h2>";
 		$htmlTable = "
@@ -374,7 +376,7 @@ EcommerceConfig:
 				}
 				$htmlTable .= "<tr>
 			<td>
-				$key
+				<span class='spanTitle'>$key</span>
 				<span>$description</span>
 				$sourceNote
 			</td>
@@ -388,7 +390,7 @@ EcommerceConfig:
 		}
 		$htmlEnd = "
 		</table>
-		<h2>--- THE END ---</h2></div>
+		<h2>--- THE END ---</h2>
 		";
 		$htmlTOC .= "</ol>";
 		echo $htmlHeader.$htmlTOC.$htmlTable.$htmlEnd;
