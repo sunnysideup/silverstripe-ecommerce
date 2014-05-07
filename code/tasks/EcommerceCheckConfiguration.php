@@ -45,6 +45,14 @@ class EcommerceCheckConfiguration extends BuildTask{
 	protected $definitions = array();
 
 	/**
+	 * Array of definitions Header - set like this:
+	 * HEADER TITLE
+	 * 		ClassName
+	 * @var Array
+	 */
+	protected $definitionsHeaders = array();
+
+	/**
 	 * Array of defaults - set like this:
 	 * ClassName
 	 * 		VariableName: Default Variable Value
@@ -100,6 +108,7 @@ class EcommerceCheckConfiguration extends BuildTask{
 	function run($request){
 		$definitionsObject = EcommerceConfigDefinitions::create();
 		$this->definitions = $definitionsObject->Definitions();
+		$this->definitionsHeaders = $definitionsObject->GroupDefinitions();
 		$configsObject = EcommerceConfig::create();
 		$this->configs = $configsObject->getCompleteDataSet();
 		$this->defaults = $this->getDefaultValues();
@@ -305,11 +314,24 @@ EcommerceConfig:
 		<table summary=\"list of configs\">
 		";
 		$oldClassName = "";
-		$htmlTOC = "<ol id=\"TOC\">";
+		$htmlTOC = "<div id=\"TOC\"><ol>";
 		$count = 0;
+		$oldHeaderOfGroup = "";
+		$newHeader = "";
 		foreach($this->configs as $className => $settings) {
 			$count++;
-			$htmlTOC .= "<li><a href=\"#$className\">$className</a></li>";
+			foreach($this->definitionsHeaders as $headerOfGroup => $classesArray) {
+				if(in_array($className, $classesArray)) {
+					$newHeader = $headerOfGroup;
+					break;
+				}
+			}
+			if($oldHeaderOfGroup != $newHeader) {
+				$oldHeaderOfGroup = $newHeader;
+				$htmlTOC .= "</ol><li class=\"header\">$newHeader</li><ol>";
+			}
+
+			$htmlTOC .= "<li><a href=\"#$className\">$count $className</a></li>";
 			if($className != $oldClassName) {
 				$htmlTable .= "<tr id=\"$className\"><th colspan=\"2\" scope=\"col\">
 					$count. $className
@@ -392,7 +414,7 @@ EcommerceConfig:
 		</table>
 		<h2>--- THE END ---</h2>
 		";
-		$htmlTOC .= "</ol>";
+		$htmlTOC .= "</ol></div>";
 		echo $htmlHeader.$htmlTOC.$htmlTable.$htmlEnd;
 	}
 

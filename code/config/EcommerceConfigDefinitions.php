@@ -83,6 +83,21 @@ class EcommerceConfigDefinitions extends Object {
 		return $svnrev;
 	}
 
+	private $definitionGrouping = array(
+		"GENERAL AND CMS CONFIG" => array(
+			"EcommerceDBConfig",
+		),
+		"PRODUCT DISPLAY" => array(
+			"ProductGroup"
+		)
+	);
+
+	/**
+	 * @return Array
+	 */
+	public function GroupDefinitions() {
+		return $this->definitionGrouping;
+	}
 
 	/**
 	 * Get a list of all definitions required for e-commerce.
@@ -97,17 +112,28 @@ class EcommerceConfigDefinitions extends Object {
 	 */
 	public function Definitions($className = "", $variable = "") {
 		$array = array(
-		################### PAGES #####################
+
+		################### GENERAL AND CMS CONFIG #####################
 			"EcommerceDBConfig" => array(
 				"ecommerce_db_config_class_name" => "Class Name for the DataObject that contains the settings for the e-commerce application",
 				"array_of_buyables" => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable.  You do not need to include a class that extends a buyable.  For example, if you create a class called 'MyProduct' extending Product then you do not need to list it here."
 			),
-			"CheckoutPage_Controller" => array(
-				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."
+			"EcommerceConfigAjax" => array(
+				"definitions_class_name" => "Class Name (string) for the class used to define and name all the ajax IDs and Classes.",
+				"cart_js_file_location" => "The location for the EcomCart.js (javascipt that runs the cart) file.  The default one is ecommerce/javascript/EcomCart.js",
+				"dialogue_js_file_location" => "The location for the dialogue (pop-up) javascript.  E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue, but you can also use your own (e.g. prettyPhoto or Greybox)."
 			),
-			"OrderConfirmationPage_Controller" => array(
-				"include_as_checkout_step" => "Include the order confirmation as one of the checkout steps, visually, in the list of steps shown."
+			"StoreAdmin" => array(
+				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
 			),
+			"ProductsAndGroupsModelAdmin" => array(
+				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
+			),
+			"SalesAdmin" => array(
+				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
+			),
+
+		################### PRODUCT DISPLAY #####################
 			"ProductGroup" => array(
 				"base_buyable_class" => "The base class for the products being retrieved.  Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.",
 				"sort_options" => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
@@ -126,6 +152,60 @@ class EcommerceConfigDefinitions extends Object {
 				"content_image_width" => "Width for the content image. We use these settings to improve image quality and to set strict standard sizes. For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.",
 				"large_image_width" => "Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method."
 			),
+
+		################### CART AND CHECKOUT PROCESS #####################
+			"ShoppingCart" => array(
+				"session_code" => "The code use for the session variable that stores the Order ID.",
+				"cleanup_every_time" => "Are carts are cleaned up all the time (if this is set to FALSE then we recommend you setup a cron job to clean old carts)?",
+				"default_param_filters" => "Advanced filtering in the shopping cart.  Not currently being used. ",
+				"response_class" => "Class used for ajax responses.",
+			),
+			"ShoppingCart_Controller" => array(
+				"url_segment" => "URL Segment used for the shopping cart."
+			),
+			"CartResponse" => array(
+				"cart_responses_required" => "An array of the cart responses required for AJAX.  This array also identifies the unique IDs used in the html that will be updated by the ajax response."
+			),
+			"CartPage_Controller" => array(
+				"session_code" => "Code name for session variable used in Cart Page.  This session variable is used to retain a message.",
+			),
+			"CheckoutPage_Controller" => array(
+				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."
+			),
+			"OrderModifierForm" => array(
+				"controller_class" => "The controller class is used for Order Modifier Forms.",
+				"validator_class" => "The validator class is used for Order Modifier Forms.",
+			),
+			"EcommercePaymentController" => array(
+				"url_segment" => "URL Segment used for the payment process."
+			),
+
+		################### POST SALE PROCESSING #####################
+			"OrderConfirmationPage_Controller" => array(
+				"include_as_checkout_step" => "Include the order confirmation as one of the checkout steps, visually, in the list of steps shown."
+			),
+			"OrderStep" => array(
+				"order_steps_to_include" => "Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.",
+				"number_of_days_to_send_update_email" => "The maximum number of days available to send an status update for the customer for the specific order step",
+			),
+			"OrderStep_Confirmed" => array(
+				"list_of_things_to_check"   => "One of the steps in the order steps sequence is the Order Confirmation.  This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.  Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock, is there a delivery address, etc....)",
+			),
+			"OrderStatusLog" => array(
+				"available_log_classes_array" => "Tells us what order log classes are to be used. OrderStatusLog_Submitted should always be used and does not need to be listed here.",
+				"order_status_log_class_used_for_submitting_order" => "This is the log class used to record the submission of the order.  It is crucial to set this to the right log class, as a lot of the functionality in e-commerce depends on it: ",
+			),
+			"OrderStatusLogForm" => array(
+				"controller_class" => "The controller class is used for OrderStatusLogForm forms.",
+				"validator_class" => "The validator class is used for OrderStatusLogForm forms.",
+			),
+			"Order_Email" => array(
+				"send_all_emails_plain" => "Should all the emails be send as plain text?  Not recommended.",
+				"css_file_location" => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
+				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?"
+			),
+
+		################### ORDER DETAILS #####################
 			"Order" =>  array(
 				"modifiers" => "This is the single most important setting.  here you determine what modifiers are being added to every order.  You can just add them as a non-associative array.  However, their order is important!",
 				"maximum_ignorable_sales_payments_difference" => "The maximum allowable difference between the Order Total and the Payment Total. 	If this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered 'paid'",
@@ -140,17 +220,8 @@ class EcommerceConfigDefinitions extends Object {
 			"OrderModifier" => array(
 				"ajax_total_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function."
 			),
-			"OrderStatusLog" => array(
-				"available_log_classes_array" => "Tells us what order log classes are to be used. OrderStatusLog_Submitted should always be used and does not need to be listed here.",
-				"order_status_log_class_used_for_submitting_order" => "This is the log class used to record the submission of the order.  It is crucial to set this to the right log class, as a lot of the functionality in e-commerce depends on it: ",
-			),
-			"OrderStep" => array(
-				"order_steps_to_include" => "Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.",
-				"number_of_days_to_send_update_email" => "The maximum number of days available to send an status update for the customer for the specific order step",
-			),
-			"OrderStep_Confirmed" => array(
-				"list_of_things_to_check"   => "One of the steps in the order steps sequence is the Order Confirmation.  This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.  Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock, is there a delivery address, etc....)",
-			),
+
+		################### CUSTOMERS #####################
 			"OrderAddress" => array(
 				"use_separate_shipping_address" => "Do the goods need to get shipped and if so, do we allow these goods to be shipped to a different address than the billing address?",
 				"use_shipping_address_for_main_region_and_country" => "In determing the country/region from which the order originated. For, for example, tax purposes - we use the Billing Address (@see Order::Country). However, we can also choose the Shipping Address by setting this variable to TRUE.",
@@ -169,17 +240,6 @@ class EcommerceConfigDefinitions extends Object {
 				"admin_role_title" => "Role title for the shop administrator member group.",
 				"admin_role_permission_codes" => "Permission codes for the shop administrator member group.",
 			),
-			"EcommercePaymentController" => array(
-				"url_segment" => "URL used for EcommercePaymentController.",
-			),
-			"OrderModifierForm" => array(
-				"controller_class" => "The controller class is used for Order Modifier Forms.",
-				"validator_class" => "The validator class is used for Order Modifier Forms.",
-			),
-			"OrderStatusLogForm" => array(
-				"controller_class" => "The controller class is used for OrderStatusLogForm forms.",
-				"validator_class" => "The validator class is used for OrderStatusLogForm forms.",
-			),
 			"EcommerceCountry" => array(
 				"allowed_country_codes" => "To what countries are you selling?  You can leave this as an empty array, in case you are selling to all countries or you can restrict it to just one country or a handful.  Once set, you can adjust this list in EcommerceCountry using the CMS. ",
 				"visitor_country_provider" => "The class that is being used to provide the country of the customer. Usually this is GEOIP, but you can also setup your own one. This class just needs one public method: getCountry.",
@@ -188,11 +248,8 @@ class EcommerceConfigDefinitions extends Object {
 			"EcommerceRegion" => array(
 				"visitor_region_provider" => "The class that is being used to provide the region of the customer. It is sort of like a GEOIP for regions."
 			),
-			"Order_Email" => array(
-				"send_all_emails_plain" => "Should all the emails be send as plain text?  Not recommended.",
-				"css_file_location" => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
-				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?"
-			),
+
+		################### PAYMENT AND MONEY #####################
 			"EcommerceCurrency" => array(
 				"default_currency" => "The default currency used on the site.",
 				"exchange_provider_class" => "The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.",
@@ -206,44 +263,8 @@ class EcommerceConfigDefinitions extends Object {
 			"ExpiryDateField" => array(
 				"short_months" => "Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?",
 			),
-			"CartPage_Controller" => array(
-				"session_code" => "Code name for session variable used in Cart Page.  This session variable is used to retain a message.",
-			),
-			"ShoppingCart" => array(
-				"session_code" => "The code use for the session variable that stores the Order ID.",
-				"cleanup_every_time" => "Are carts are cleaned up all the time (if this is set to FALSE then we recommend you setup a cron job to clean old carts)?",
-				"default_param_filters" => "Advanced filtering in the shopping cart.  Not currently being used. ",
-				"response_class" => "Class used for ajax responses.",
-			),
-			"ShoppingCart_Controller" => array(
-				"url_segment" => "URL Segment used for the shopping cart."
-			),
-			"EcommercePaymentController" => array(
-				"url_segment" => "URL Segment used for the payment process."
-			),
-			"EcommerceConfigAjax" => array(
-				"definitions_class_name" => "Class Name (string) for the class used to define and name all the ajax IDs and Classes.",
-				"cart_js_file_location" => "The location for the EcomCart.js (javascipt that runs the cart) file.  The default one is ecommerce/javascript/EcomCart.js",
-				"dialogue_js_file_location" => "The location for the dialogue (pop-up) javascript.  E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue, but you can also use your own (e.g. prettyPhoto or Greybox)."
-			),
-			"CartResponse" => array(
-				"cart_responses_required" => "An array of the cart responses required for AJAX.  This array also identifies the unique IDs used in the html that will be updated by the ajax response."
-			),
-			"StoreAdmin" => array(
-				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
-				//"collection_controller_class" => "The controller for the collection.  ",
-				//"record_controller_class" => "The controller for the record. ",
-			),
-			"ProductsAndGroupsModelAdmin" => array(
-				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
-				//"collection_controller_class" => "The controller for the collection.  ",
-				//"record_controller_class" => "The controller for the record. ",
-			),
-			"SalesAdmin" => array(
-				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
-				//"collection_controller_class" => "The controller for the collection.  ",
-				//"record_controller_class" => "The controller for the record. ",
-			),
+
+		################### CLEANUP AND OTHER TASKS #####################
 			"CartCleanupTask" => array(
 				"clear_minutes" => "The number of minutes after which carts are considered abandonned. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
 				"clear_minutes_empty_carts" => "The number of minutes after which empty carts should be deleted (to reduce the amount of empty (meaningless) carts in the database. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
