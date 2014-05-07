@@ -39,7 +39,6 @@ UPDATES
 define('CACHE_CSS', 0);
 define('CACHE_SELECTOR', 1);
 define('CACHE_XPATH', 2);
-
 class Emogrifier {
 
     // for calculating nth-of-type and nth-child selectors

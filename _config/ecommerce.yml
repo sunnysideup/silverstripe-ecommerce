@@ -45,9 +45,6 @@ ProductGroup:
     default:
       Title: 'Default Order'
       SQL: "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"Title\" ASC"
-    title:
-      Title: 'Alphabetical'
-      SQL: "\"Title\" ASC"
     price:
       Title: 'Lowest Price'
       SQL: "\"Price\" ASC, \"Title\" ASC"
@@ -222,6 +219,7 @@ EcommerceConfigAjax:
   cart_js_file_location: ecommerce/javascript/EcomCart.js
   dialogue_js_file_location: ecommerce/javascript/jquery.colorbox-min.js
 
+#cart responses are set as NameOfJavascriptVariable: NameOfTemplate
 CartResponse:
   cart_responses_required:
 #    TinyCartClassName: CartTinyInner

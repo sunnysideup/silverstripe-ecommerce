@@ -875,7 +875,8 @@ class ProductGroup extends Page {
 						$this->canNOTbePurchasedArray[$buyable->ID] = $buyable->ID;
 					}
 					else {
-						$this->canBePurchasedArray[$buyable->ID] = $buyable->ID;
+						//print_r($buyable);
+						//$this->canBePurchasedArray[$buyable->ID] = $buyable->ID;
 					}
 				}
 			}

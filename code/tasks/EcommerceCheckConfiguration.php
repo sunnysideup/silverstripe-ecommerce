@@ -264,12 +264,35 @@ EcommerceConfig:
 			.sameConfig {color: #333;}
 			.newConfig{background-color: green!important; color: #fff; }
 			#TOC {
-				-moz-column-count: 3;
-				-moz-column-gap: 20px;
-				-webkit-column-count: 3;
-				-webkit-column-gap: 20px;
-				column-count: 3;
-				column-gap: 20px;
+				position: fixed;
+				top: -15px;
+				bottom: 0;
+				color: #fff;
+				background-color: #000;
+				width: 260px;
+				left: 0px;
+				padding-top: 15px;
+				z-index: 10000;
+			}
+			#TOC li {
+				line-height: 1.3;
+				font-size: 90%;
+				font-weight: 900;
+			}
+			#TOC a {
+				color: #fff;
+				text-decoration: none;
+				font-size: 90%;
+				font-weight: 900;
+			}
+			#TOC a:hover {
+				color: red;
+			}
+			#TaskHolder, .info h1, .info h3, .info a:first-of-type  {
+				margin-left: 300px;
+			}
+			.info h1, .info h3, .info a {
+				padding-left: 30px;
 			}
 			a.backToTop {display: block; font-size: 0.8em; }
 			td.newConfig {width: 70%;}
@@ -288,7 +311,7 @@ EcommerceConfig:
 			if($className != $oldClassName) {
 				$htmlTable .= "<tr id=\"$className\"><th colspan=\"2\" scope=\"col\">
 					$count. $className
-					<a class=\"backToTop\" href=\"#TOC\">top</a>
+					<a class=\"backToTop\" href=\"#TaskHolder\">top</a>
 					</th></tr>";
 				$oldClassName = $className;
 			}
@@ -365,7 +388,7 @@ EcommerceConfig:
 		}
 		$htmlEnd = "
 		</table>
-		<h2>--- THE END ---</h2>
+		<h2>--- THE END ---</h2></div>
 		";
 		$htmlTOC .= "</ol>";
 		echo $htmlHeader.$htmlTOC.$htmlTable.$htmlEnd;

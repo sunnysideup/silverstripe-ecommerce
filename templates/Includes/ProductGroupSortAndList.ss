@@ -2,7 +2,7 @@
 <small class="sortAndListLinks">
 
 	<% if SortLinks %>
-	<span class="sortOptions filterSortOptions"><% _t('ProductGroup.SORTBY','Sort by') %> <% loop SortLinks %><a href="$Link" class="sortlink $LinkingMode">$Name</a> <% end_loop %></span>
+	<span class="sortOptions filterSortOptions"><% _t('ProductGroup.SORTBY','Sort by') %><% loop SortLinks %><a href="$Link" class="sortlink $LinkingMode">$Name</a> <% end_loop %></span>
 	<% end_if %>
 |
 	<span class="viewLinks">
