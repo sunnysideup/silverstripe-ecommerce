@@ -279,7 +279,7 @@ EcommerceConfig:
 				bottom: -20px;
 				color: #fff;
 				background-color: #000;
-				width: 260px;
+				width: 270px;
 				left: 0px;
 				padding-top: 15px;
 				z-index: 10000;
@@ -290,7 +290,7 @@ EcommerceConfig:
 			}
 			#TOC li {
 				line-height: 1.3;
-				font-size: 90%;
+				font-size: 80%;
 				font-weight: 900;
 				height: auto;
 				list-style-type: none;
@@ -298,7 +298,7 @@ EcommerceConfig:
 			#TOC a {
 				color: #fff;
 				text-decoration: none;
-				font-size: 90%;
+				font-size: 85%;
 				font-weight: 900;
 				margin-left: -10px;
 			}
