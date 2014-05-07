@@ -86,9 +86,51 @@ class EcommerceConfigDefinitions extends Object {
 	private $definitionGrouping = array(
 		"GENERAL AND CMS CONFIG" => array(
 			"EcommerceDBConfig",
+			"EcommerceConfigAjax",
+			"StoreAdmin",
+			"ProductsAndGroupsModelAdmin",
+			"SalesAdmin"
 		),
 		"PRODUCT DISPLAY" => array(
-			"ProductGroup"
+			"ProductGroup",
+			"Product_Image"
+		),
+		"CART AND CHECKOUT PROCESS" => array(
+			"ShoppingCart",
+			"ShoppingCart_Controller",
+			"CartResponse",
+			"CartPage_Controller",
+			"CheckoutPage_Controller",
+			"OrderModifierForm",
+			"EcommercePaymentController"
+		),
+		"POST SALE PROCESSING" => array(
+			"OrderConfirmationPage_Controller",
+			"OrderStep",
+			"OrderStep_Confirmed",
+			"OrderStatusLog",
+			"OrderStatusLogForm",
+			"Order_Email"
+		),
+		"ORDER DETAILS" => array(
+			"Order",
+			"OrderItem",
+			"OrderModifier"
+		),
+		"CUSTOMERS" => array(
+			"OrderAddress",
+			"EcommerceRole",
+			"EcommerceCountry",
+			"EcommerceRegion"
+		),
+		"PAYMENT AND MONEY" => array(
+			"EcommerceCurrency",
+			"EcommerceMoney",
+			"EcommercePayment",
+			"ExpiryDateField"
+		),
+		"CLEANUP AND OTHER TASKS" => array(
+			"CartCleanupTask"
 		)
 	);
 

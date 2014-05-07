@@ -268,11 +268,11 @@ EcommerceConfig:
 		<style>
 			th[scope='col'] {text-align: left; border-bottom: 3px solid green;padding-top: 40px;}
 			td {vertical-align: top; border-left: 1px solid grey; border-bottom: 1px solid grey; font-weight: bold;}
-			td span.spanTitle {color: #333; font-size: 1.4em; font-weight: 900; display: block}
-			td span {color: #333; font-size: 0.9em; display: block}
-			.sameConfig {color: #333;}
+			td span.spanTitle {color: #000; font-size: 1.4em; font-weight: 900; display: block; padding-left: 10px; padding-bottom: 5px;}
+			td span {color: #000; font-size: 0.9em; display: block; padding-left: 10px; }
+			.sameConfig {color: #000;}
 			.newConfig pre:first-of-type {background-color: #fff !important; color: #000; border: 5px solid green; }
-			.newConfig pre:nth-of-type(2) {background-color: #fff !important; color: #000; border: 5px solid blue; }
+			.newConfig pre:nth-of-type(2) {background-color: #fff !important; color: #000;  }
 			#TOC {
 				position: fixed;
 				top: -15px;
@@ -285,10 +285,15 @@ EcommerceConfig:
 				z-index: 10000;
 				overflow: auto;
 			}
+			#TOC ul {
+				list-style-type: none;
+			}
 			#TOC li {
 				line-height: 1.3;
 				font-size: 90%;
 				font-weight: 900;
+				height: auto;
+				list-style-type: none;
 			}
 			#TOC a {
 				color: #fff;
@@ -300,21 +305,25 @@ EcommerceConfig:
 				color: red;
 			}
 			#TaskHolder, #EcommerceDatabaseAdmin, .info h1, .info h3, .info a:first-of-type  {
-				margin-left: 320px !important;
+				margin-left: 280px !important;
+			}
+			.ecommerceConfigHeadings th {
+				font-size: 1.5em;
+				padding-bottom: 5px;
 			}
 			.info h1, .info h3, .info a {
 				padding-left: 30px;
 			}
 			a.backToTop {display: block; font-size: 0.8em; float: right;}
 			td.newConfig {width: 70%;}
-			table td pre, table td sub {white-space:pre-wrap; font-size: 1.2em!important; font-weight: bold;margin: 5px; padding: 5px;}
+			table td pre, table td sub {white-space:pre-wrap; font-size: 1.1em!important; font-weight: bold;margin: 5px; padding: 5px;}
 		</style>
 		<h2>Configuration Report</h2>";
 		$htmlTable = "
 		<table summary=\"list of configs\">
 		";
 		$oldClassName = "";
-		$htmlTOC = "<div id=\"TOC\"><ol>";
+		$htmlTOC = "<div id=\"TOC\"><ul>";
 		$count = 0;
 		$oldHeaderOfGroup = "";
 		$newHeader = "";
@@ -328,12 +337,12 @@ EcommerceConfig:
 			}
 			if($oldHeaderOfGroup != $newHeader) {
 				$oldHeaderOfGroup = $newHeader;
-				$htmlTOC .= "</ol><li class=\"header\">$newHeader</li><ol>";
+				$htmlTOC .= "</ul><li class=\"header\">$newHeader</li><ul>";
 			}
 
 			$htmlTOC .= "<li><a href=\"#$className\">$count $className</a></li>";
 			if($className != $oldClassName) {
-				$htmlTable .= "<tr id=\"$className\"><th colspan=\"2\" scope=\"col\">
+				$htmlTable .= "<tr class='ecommerceConfigHeadings' id=\"$className\"><th colspan=\"2\" scope=\"col\">
 					$count. $className
 					<a class=\"backToTop\" href=\"#TaskHolder\">top</a>
 					</th></tr>";
@@ -414,7 +423,7 @@ EcommerceConfig:
 		</table>
 		<h2>--- THE END ---</h2>
 		";
-		$htmlTOC .= "</ol></div>";
+		$htmlTOC .= "</ul></div>";
 		echo $htmlHeader.$htmlTOC.$htmlTable.$htmlEnd;
 	}
 
