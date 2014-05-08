@@ -329,85 +329,89 @@ EcommerceConfig:
 		$count = 0;
 		$oldHeaderOfGroup = "";
 		$newHeader = "";
-		foreach($this->configs as $className => $settings) {
-			$count++;
-			foreach($this->definitionsHeaders as $headerOfGroup => $classesArray) {
+		$completedListOfClasses = array();
+		foreach($this->definitionsHeaders as $headerOfGroup => $classesArray) {
+			if($headerOfGroup == "OTHER") {
+				$classesArray = array_keys(array_diff_key($this->configs, $completedListOfClasses));
+			}
+			foreach($classesArray as $className) {
+				$completedListOfClasses[$className] = $className;
+				$settings = $this->configs[$className];
+				$count++;
 				if(in_array($className, $classesArray)) {
 					$newHeader = $headerOfGroup;
-					break;
 				}
-			}
-			if($oldHeaderOfGroup != $newHeader) {
-				$oldHeaderOfGroup = $newHeader;
-				$htmlTOC .= "</ul><li class=\"header\">$newHeader</li><ul>";
-			}
+				if($oldHeaderOfGroup != $newHeader) {
+					$oldHeaderOfGroup = $headerOfGroup;
+					$htmlTOC .= "</ul><li class=\"header\">$headerOfGroup</li><ul>";
+				}
 
-			$htmlTOC .= "<li><a href=\"#$className\">$count $className</a></li>";
-			if($className != $oldClassName) {
-				$htmlTable .= "<tr class='ecommerceConfigHeadings' id=\"$className\"><th colspan=\"2\" scope=\"col\">
-					$count. $className
+				$htmlTOC .= "<li><a href=\"#$className\">$count. $className</a></li>";
+				if($className != $oldClassName) {
+					$htmlTable .= "<tr  class='ecommerceConfigHeadings' id=\"$className\"><th colspan=\"2\" scope=\"col\">
+					$count. $className ($newHeader)
 					<a class=\"backToTop\" href=\"#TaskHolder\">top</a>
 					</th></tr>";
-				$oldClassName = $className;
-			}
-
-			foreach($settings as $key => $classConfig) {
-				$configError = "";
-				$class = "";
-				$hasDefaultvalue = false;
-				$isDatabaseValues = isset($this->databaseValues[$className][$key]) ? $this->databaseValues[$className][$key] : false;
-				$isOtherConfigs = isset($this->otherConfigs[$className][$key]) ? $this->otherConfigs[$className][$key] : false;
-				$isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
-				if(!isset($this->defaults[$className][$key])) {
-					//DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
-				}
-				else {
-					$defaultValue = print_r($this->defaults[$className][$key], 1);
-					$hasDefaultvalue = true;
-				}
-				$manuallyAddedValue = print_r($this->configs[$className][$key], 1);
-				$actualValueRaw = EcommerceConfig::get($className, $key);
-				if(!$actualValueRaw && $manuallyAddedValue) {
-					$actualValueRaw = $manuallyAddedValue;
+					$oldClassName = $className;
 				}
 
-				$actualValue = print_r($actualValueRaw, 1);
-				if($defaultValue === $manuallyAddedValue && $isCustomisedValues) {
-					$configError .= "This is a superfluous entry in your custom config as the default value is the same.";
-				}
-				$hasDefaultvalue = true;
-				if($defaultValue === $actualValue) {
-					$class .= "sameConfig";
-					$defaultValue = "";
+				foreach($settings as $key => $classConfig) {
+					$configError = "";
+					$class = "";
 					$hasDefaultvalue = false;
-				}
-				else {
-					$class .= " newConfig";
-				}
-				$actualValue = $this->turnValueIntoHumanReadableValue($actualValue);
-				if($hasDefaultvalue) {
-					$defaultValue = $this->turnValueIntoHumanReadableValue($defaultValue);
-				}
+					$isDatabaseValues = isset($this->databaseValues[$className][$key]) ? $this->databaseValues[$className][$key] : false;
+					$isOtherConfigs = isset($this->otherConfigs[$className][$key]) ? $this->otherConfigs[$className][$key] : false;
+					$isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
+					if(!isset($this->defaults[$className][$key])) {
+						//DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
+					}
+					else {
+						$defaultValue = print_r($this->defaults[$className][$key], 1);
+						$hasDefaultvalue = true;
+					}
+					$manuallyAddedValue = print_r($this->configs[$className][$key], 1);
+					$actualValueRaw = EcommerceConfig::get($className, $key);
+					if(!$actualValueRaw && $manuallyAddedValue) {
+						$actualValueRaw = $manuallyAddedValue;
+					}
 
-				if(!isset($this->definitions[$className][$key])) {
-					$description = "<span style=\"color: red; font-weight: bold\">ERROR: no longer required in configs!</span>";
-				}
-				else {
-					$description = $this->definitions[$className][$key];
-					$description .= $this->specialCases($className, $key, $actualValue);
-				}
-				$defaultValueHTML = "";
-				if($defaultValue && !$isOtherConfigs) {
-					$defaultValueHTML = "<sub>e-commerce defaults:</sub><pre>$defaultValue</pre>";
-				}
-				if($configError) {
-					$configError = "<span style=\"color: red; font-size: 10px;\">$configError</span>";
-				}
-				$sourceNote = "";
-				if($isDatabaseValues) {
-					$sourceNote = "<span>Values are set in the database using the CMS.</span>";
-				}
-				$htmlTable .= "<tr>
+					$actualValue = print_r($actualValueRaw, 1);
+					if($defaultValue === $manuallyAddedValue && $isCustomisedValues) {
+						$configError .= "This is a superfluous entry in your custom config as the default value is the same.";
+					}
+					$hasDefaultvalue = true;
+					if($defaultValue === $actualValue) {
+						$class .= "sameConfig";
+						$defaultValue = "";
+						$hasDefaultvalue = false;
+					}
+					else {
+						$class .= " newConfig";
+					}
+					$actualValue = $this->turnValueIntoHumanReadableValue($actualValue);
+					if($hasDefaultvalue) {
+						$defaultValue = $this->turnValueIntoHumanReadableValue($defaultValue);
+					}
+
+					if(!isset($this->definitions[$className][$key])) {
+						$description = "<span style=\"color: red; font-weight: bold\">ERROR: no longer required in configs!</span>";
+					}
+					else {
+						$description = $this->definitions[$className][$key];
+						$description .= $this->specialCases($className, $key, $actualValue);
+					}
+					$defaultValueHTML = "";
+					if($defaultValue && !$isOtherConfigs) {
+						$defaultValueHTML = "<sub>e-commerce defaults:</sub><pre>$defaultValue</pre>";
+					}
+					if($configError) {
+						$configError = "<span style=\"color: red; font-size: 10px;\">$configError</span>";
+					}
+					$sourceNote = "";
+					if($isDatabaseValues) {
+						$sourceNote = "<span>Values are set in the database using the CMS.</span>";
+					}
+					$htmlTable .= "<tr>
 			<td>
 				<span class='spanTitle'>$key</span>
 				<span>$description</span>
@@ -419,6 +423,7 @@ EcommerceConfig:
 				$configError
 			</td>
 		</tr>";
+				}
 			}
 		}
 		$htmlEnd = "

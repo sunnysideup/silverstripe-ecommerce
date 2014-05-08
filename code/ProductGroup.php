@@ -23,14 +23,35 @@
   * developer makes available to the content editor.
   *
   * In extending the ProductGroup class, it is recommended
-  * that you override the following methods:
+  * that you override the following methods (as required ONLY!):
   * - getBuyableClassName
-  * - getStandardFilter
   * - getGroupFilter
+  * - getStandardFilter
   * - getGroupJoin
-  * - getExcludedProducts
+  * - currentSortSQL
+  * - removeExcludedProductsAndSaveIncludedProducts
   *
+  * To filter products, you have three options:
   *
+  * (1) getGroupFilter
+  * - the standard product groups from which the products are selected
+  * - if you extend Product Group this is the one you most likely want to change
+  * - for example, rather than children, you set it to "yellow" products
+  * - goes hand in hand with changes to showProductLevels / LevelOfProductsToShow
+  * - works out the group filter based on the LevelOfProductsToShow value
+  * - it also considers the other group many-many relationship
+  * - this filter ALWAYS returns something: 1 = 1 if nothing else.
+  *
+  * (2) getStandardFilter
+  * - these are the standard (user selectable) filters
+  * - available options set via config
+  * - the standard filter is updated by controller
+  * - options can show above / below product lists to let user select alternative filter.
+  *
+  * (3) the extraWhere in ProductsShowable
+  * - provided by the controller for specific ('on the fly') sub-sets
+  * - this is for example for search results
+  * - set in ProductShowable($extraWhere)
   *
   * @authors: Nicolaas [at] Sunny Side Up .co.nz
   * @package: ecommerce
@@ -261,7 +282,9 @@ class ProductGroup extends Page {
 	}
 
 	/**
-	 * get a user preference.
+	 * Get a user preference.
+	 * This value can be updated by the controller
+	 * For example, the filter can be changed, based on a session value.
 	 *
 	 * @param String $type SORT | FILTER | DISPLAY
 	 *
@@ -676,11 +699,13 @@ class ProductGroup extends Page {
 			//INIT ALLPRODUCTS
 			$this->allProducts = $className::get();
 
-			// STANDARD FILTER
-			$this->getStandardFilter();
+			// GROUP FILTER (PRODUCTS FOR THIS GROUP)
+			$this->allProducts = $this->getGroupFilter();
 
+			// STANDARD FILTER (INCLUDES USER PREFERENCE)
+			$this->allProducts = $this->getStandardFilter();
 
-			// EXTRA FILTER
+			// EXTRA FILTER (ON THE FLY FROM CONTROLLER)
 			if(is_array($extraFilter) && count($extraFilter)) {
 				$this->allProducts = $this->allProducts->filter($extraFilter);
 			}
@@ -688,15 +713,9 @@ class ProductGroup extends Page {
 				$this->allProducts = $this->allProducts->where($extraFilter);
 			}
 
-			// GROUP FILTER
-			$this->allProducts = $this->getGroupFilter();
-
 			//JOINS
 			$this->allProducts = $this->getGroupJoin();
 
-			//EXLUDES ONE THAT ARE NOT FOR SALE
-			//we just add a little safety measure here...
-			//$this->allProducts = $this->getExcludedProducts();
 		}
 		return $this->allProducts;
 	}
@@ -705,7 +724,12 @@ class ProductGroup extends Page {
 	 * returns the final products, based on the all the eligile products
 	 * for the page.
 	 *
+	 * In the process we also save a list of included products
+	 * and we sort them.  We also keep a record of the total count.
+	 *
 	 * All of the 'current' methods are to support the currentFinalProducts Method.
+	 *
+	 * @TODO: cache data for faster access.
 	 *
 	 * @param String $alternativeSort = Alternative Sort String
 	 * @return DataList
@@ -747,30 +771,9 @@ class ProductGroup extends Page {
 		return EcommerceConfig::get("ProductGroup", "base_buyable_class");
 	}
 
-
 	/**
-	 * adjust the allProducts, based on the $_GET or default entry.
-	 * The standard filter excludes the product group filter.
-	 * The default would be something like "ShowInSearch = 1"
-	 * IMPORTANT: Adjusts allProducts and returns it...
-	 * @return DataList
-	 */
-	protected function getStandardFilter(){
-		$filterKey = $this->getCurrentUserPreferences("FILTER");
-		$filter = $this->getUserSettingsOptionSQL("FILTER", $filterKey);
-		if(is_array($filter)) {
-			$this->allProducts = $this->allProducts->Filter($filter);
-		}
-		elseif(is_string($filter) && strlen($filter) > 2) {
-			$this->allProducts = $this->allProducts->Where($filter);
-		}
-		return $this->allProducts;
-	}
-
-	/**
-	 * works out the group filter based on the LevelOfProductsToShow value
-	 * it also considers the other group many-many relationship
-	 * this filter ALWAYS returns something: 1 = 1 if nothing else.
+	 * @SEE: important notes at the top of this file / class
+	 *
 	 * IMPORTANT: Adjusts allProducts and returns it...
 	 * @return DataList
 	 */
@@ -796,7 +799,7 @@ class ProductGroup extends Page {
 		}
 		else {
 			//fall-back
-			$groupFilter = "ParentID < 0";
+			$groupFilter = "\"ParentID\" < 0";
 		}
 		$this->allProducts = $this->allProducts->where($groupFilter);
 		return $this->allProducts;
@@ -826,6 +829,26 @@ class ProductGroup extends Page {
 		}
 		return "";
 	}
+
+
+	/**
+	 * @SEE: important notes at the top of this class / file for more information!
+	 *
+	 * IMPORTANT: Adjusts allProducts and returns it...
+	 * @return DataList
+	 */
+	protected function getStandardFilter(){
+		$filterKey = $this->getCurrentUserPreferences("FILTER");
+		$filter = $this->getUserSettingsOptionSQL("FILTER", $filterKey);
+		if(is_array($filter)) {
+			$this->allProducts = $this->allProducts->Filter($filter);
+		}
+		elseif(is_string($filter) && strlen($filter) > 2) {
+			$this->allProducts = $this->allProducts->Where($filter);
+		}
+		return $this->allProducts;
+	}
+
 
 	/**
 	 * Join statement for the product groups.
@@ -895,7 +918,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function currentWhereSQL() {
-		Deprecation::notice('3.1', "No longer in use");
+		Deprecation::notice('3.1', "No longer in use. Use getStandardFilter / getGroupFilter instead. See comments at the top of the class");
 	}
 
 	/**
@@ -911,7 +934,7 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function currentJoinSQL() {
-		Deprecation::notice('3.1', "No longer in use");
+		Deprecation::notice('3.1', "No longer in use. Use getGroupJoin insetead");
 	}
 
 	/*****************************************************
@@ -1329,7 +1352,13 @@ class ProductGroup_Controller extends Page_Controller {
 
 
 	function ShowSearchFormImmediately(){
-		return !$this->products->count() || $this->request->param("Action") == "searchresults";
+		if($this->products && $this->products->count() && $this->request->param("Action") != "searchresults") {
+			return false;
+		}
+		if(!$this->products) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

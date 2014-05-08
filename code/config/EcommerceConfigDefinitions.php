@@ -86,19 +86,31 @@ class EcommerceConfigDefinitions extends Object {
 	private $definitionGrouping = array(
 		"GENERAL AND CMS CONFIG" => array(
 			"EcommerceDBConfig",
-			"EcommerceConfigAjax",
+			"SiteConfig",
 			"StoreAdmin",
 			"ProductsAndGroupsModelAdmin",
 			"SalesAdmin"
 		),
-		"PRODUCT DISPLAY" => array(
+		"TEMPLATES" => array(
+			"Templates",
+			"EcommerceConfigAjax"
+		),
+		"PRODUCTS" => array(
 			"ProductGroup",
 			"Product_Image"
 		),
-		"CART AND CHECKOUT PROCESS" => array(
+		"ORDER OBJECTS" => array(
+			"Order",
+			"OrderItem",
+			"OrderModifier"
+		),
+		"CART" => array(
 			"ShoppingCart",
 			"ShoppingCart_Controller",
-			"CartResponse",
+			"CartResponse"
+		),
+		"CHECKOUT" => array(
+			"Pages",
 			"CartPage_Controller",
 			"CheckoutPage_Controller",
 			"OrderModifierForm",
@@ -110,12 +122,8 @@ class EcommerceConfigDefinitions extends Object {
 			"OrderStep_Confirmed",
 			"OrderStatusLog",
 			"OrderStatusLogForm",
+			"Email",
 			"Order_Email"
-		),
-		"ORDER DETAILS" => array(
-			"Order",
-			"OrderItem",
-			"OrderModifier"
 		),
 		"CUSTOMERS" => array(
 			"OrderAddress",
@@ -138,7 +146,7 @@ class EcommerceConfigDefinitions extends Object {
 	 * @return Array
 	 */
 	public function GroupDefinitions() {
-		return $this->definitionGrouping;
+		return $this->definitionGrouping + array("OTHER" => array());
 	}
 
 	/**
