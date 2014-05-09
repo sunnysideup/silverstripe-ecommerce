@@ -748,8 +748,10 @@ class CheckoutPage_StepDescription extends DataObject{
 		parent::requireDefaultRecords();
 		$steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		if(is_array($steps) && count($steps)) {
+			$idArray = array();
 			foreach($steps as $id => $code) {
 				$newID = $id + 1;
+				$idArray[$newID] = $newID;
 				if($obj = CheckoutPage_StepDescription::get()->byID($newID)) {
 					//do nothing
 				}
@@ -758,6 +760,14 @@ class CheckoutPage_StepDescription extends DataObject{
 					$obj->ID = $newID;
 					$obj->Heading = $this->getDefaultTitle($code);
 					$obj->write();
+					DB::alteration_message("Creating CheckoutPage_StepDescription $code", "created");
+				}
+			}
+			$toDeleteObjects = CheckoutPage_StepDescription::get()->exclude(array("ID" => $idArray));
+			if($toDeleteObjects->count()) {
+				foreach($toDeleteObjects as $toDeleteObject) {
+					DB::alteration_message("Deleting CheckoutPage_StepDescription ".$toDeleteObject->ID, "deleted");
+					$toDeleteObject->delete();
 				}
 			}
 		}

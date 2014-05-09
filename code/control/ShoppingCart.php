@@ -16,9 +16,14 @@
  *
  * Key methods:
  *
+ * //get Cart
  * $myCart = ShoppingCart::singleton();
+ *
+ * //get order
  * $myOrder = ShoppingCart::current_order();
  *
+ * //add item to cart
+ * ShoppingCart::singleton()->addBuyable($myProduct);
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

@@ -1275,8 +1275,8 @@ class ProductGroup_Controller extends Page_Controller {
 				$count++;
 			}
 		}
-		$className = $this->getBuyableClassName();
 		$sortStatement = $ifStatement." END";
+		$className = $this->getBuyableClassName();
 		$products = $className::get()->filter(array("ID" => $arrayOfIDs))->sort($sortStatement);
 		$this->products = $this->paginateList(
 			$products
