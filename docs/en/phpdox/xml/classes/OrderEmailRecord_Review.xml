@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderEmailRecord_Review" namespace="" name="OrderEmailRecord_Review" abstract="false" final="false" start="196" end="211">
+  <file path="./../../../code/model/process" file="OrderEmailRecord.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/process/OrderEmailRecord.php" size="5156" time="2013-11-04T19:02:43+13:00" unixtime="1383544963" sha1="e62dfd15d76f27a2c2ab96058e306638b851932b"/>
+  <extends full="Controller" namespace="" name="Controller"/>
+  <member name="allowed_actions" type="array" visibility="private" line="198"/>
+  <method name="review_link" start="202" end="204" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="email" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="read" start="206" end="210" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+</class>

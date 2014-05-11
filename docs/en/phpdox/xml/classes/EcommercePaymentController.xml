@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommercePaymentController" namespace="" name="EcommercePaymentController" abstract="false" final="false" start="13" end="129">
+  <file path="./../../../code/control" file="EcommercePaymentController.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/control/EcommercePaymentController.php" size="2805" time="2013-10-27T22:08:28+13:00" unixtime="1382864908" sha1="b848f46448d7c2043e4dc794124c2980c1d7439a"/>
+  <docblock>
+    <description/>
+    <description/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: control"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Controller" namespace="" name="Controller"/>
+  <member name="allowed_actions" type="array" visibility="private" line="15"/>
+  <member name="currentOrder" type="{unknown}" default="null" visibility="protected" line="25">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Order" namespace="" name="Order"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="errorMessage" type="string" default="&quot;&quot;" visibility="protected" line="31">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="goodMessage" type="string" default="&quot;&quot;" visibility="protected" line="38">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="make_payment_link" start="44" end="48" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param description="| Int $orderID" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="(Link)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="orderID" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="init" start="50" end="67" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="Requirements::block(THIRDPARTY_DIR.&quot;/jquery/jquery.js&quot;);" line="55"/>
+      <comment value="Requirements::javascript(Director::protocol().&quot;ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;);" line="56"/>
+    </inline>
+  </method>
+  <method name="index" start="69" end="71" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="pay" start="74" end="76" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="thankyou" start="82" end="86" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="TO DO: TEST!!!"/>
+    </docblock>
+  </method>
+  <method name="Link" start="92" end="99" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$action">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="(Link)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="string" default="''"/>
+  </method>
+  <method name="PaymentForm" start="104" end="118" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(OrderForm_Payment) | Array" type="object">
+        <type full="Form" namespace="" name="Form"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ErrorMessage" start="120" end="122" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="GoodMessage" start="124" end="126" abstract="false" final="false" static="false" visibility="public"/>
+</class>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="CheckoutPage" namespace="" name="CheckoutPage" abstract="false" final="false" start="37" end="263">
+  <file path="./../../../code" file="CheckoutPage.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/CheckoutPage.php" size="21340" time="2014-05-11T15:45:02+12:00" unixtime="1399779902" sha1="99497ab43822006bcf8dd8cd029eab79371c9a8c"/>
+  <docblock>
+    <description compact="CheckoutPage is a CMS page-type that shows the order details to the customer for their current shopping cart on the site. It also lets the customer review the items in their cart, and manipulate them (add more, deduct or remove items completely). The most important thing is that the {@link CheckoutPage_Controller} handles the {@link OrderForm} form instance, allowing the customer to fill out their shipping details, confirming their order and making a payment."/>
+    <see value="CheckoutPage_Controller-&gt;Order()"/>
+    <see value="OrderForm"/>
+    <see value="CheckoutPage_Controller-&gt;OrderForm()">The CheckoutPage_Controller is also responsible for setting
+up the modifier forms for each of the OrderModifiers that are
+enabled on the site (if applicable - some don't require a form
+for user input). A usual implementation of a modifier form would
+be something like allowing the customer to enter a discount code
+so they can receive a discount on their order.</see>
+    <see value="OrderModifier"/>
+    <see value="CheckoutPage_Controller-&gt;ModifierForms()">TO DO: get rid of all the messages...</see>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: Pages"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="CartPage" namespace="" name="CartPage"/>
+  <member name="icon" type="string" default="'ecommerce/images/icons/CheckoutPage'" visibility="private" line="43">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="string"/>
+    </docblock>
+  </member>
+  <member name="db" type="array" visibility="private" line="49">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="has_one" type="array" visibility="private" line="57">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="defaults" type="array" visibility="private" line="65">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="singular_name" type="string" default="&quot;Checkout Page&quot;" visibility="private" line="73">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="String"/>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="74" end="74" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Checkout Pages&quot;" visibility="private" line="80">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="String"/>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="81" end="81" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.&quot;" visibility="private" line="87">
+    <docblock>
+      <description compact="Standard SS variable."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="find_terms_and_conditions_page" start="93" end="98" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Returns the Terms and Conditions Page (if there is one)."/>
+      <return description="| NULL" type="object">
+        <type full="Page" namespace="" name="Page"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="find_link" start="105" end="112" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Returns the link or the Link to the Checkout page on this site"/>
+      <param type="object" variable="$action">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="string" default="&quot;&quot;"/>
+  </method>
+  <method name="find_last_step_link" start="120" end="131" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Returns the link or the Link to the Checkout page on this site for the last step"/>
+      <param type="object" variable="$step">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="step" byreference="false" type="string" default="&quot;&quot;"/>
+  </method>
+  <method name="find_next_step_link" start="139" end="174" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Returns the link to the next step"/>
+      <param description="- $currentStep is the step that has just been actioned...." type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="- $doPreviousInstead - return previous rather than next step" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="currentStep" byreference="false" type="{unknown}"/>
+    <parameter name="doPreviousInstead" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="get_checkout_order_link" start="183" end="188" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Returns the link to the checkout page on this site, using a specific Order ID that already exists in the database."/>
+      <param description="ID of the {@link Order}" type="int" variable="$orderID"/>
+      <return description="Link to checkout page" type="string"/>
+    </docblock>
+    <parameter name="orderID" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="canCreate" start="196" end="198" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS function, we only allow for one checkout page to exist but we do allow for extensions to exist at the same time."/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="getCMSFields" start="204" end="227" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS function"/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+    <inline>
+      <comment value="The Content field has a slightly different meaning for the Checkout Page." line="216"/>
+    </inline>
+  </method>
+  <method name="getOrderModifierDescriptionField" start="233" end="244" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="GridField" namespace="" name="GridField"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getCheckoutStepDescriptionField" start="250" end="261" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="GridField" namespace="" name="GridField"/>
+      </return>
+    </docblock>
+  </method>
+  <parent full="CartPage" namespace="" name="CartPage">
+    <extends full="Page" namespace="" name="Page"/>
+    <method name="i18n_singular_name" start="71" end="71" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="77" end="77" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="obj" start="89" end="96" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="fieldName" byreference="false" type="{unknown}"/>
+      <parameter name="arguments" byreference="false" type="{unknown}" default="null"/>
+      <parameter name="forceReturnedObject" byreference="false" type="{unknown}" default="true"/>
+      <parameter name="cache" byreference="false" type="{unknown}" default="false"/>
+      <parameter name="cacheName" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canCreate" start="105" end="107" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS function, we only allow for one CartPage page to exist but we do allow for extensions to exist at the same time."/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="getCMSFields" start="112" end="141" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="return FieldList"/>
+      </docblock>
+    </method>
+    <method name="find_link" start="147" end="155" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description compact="Returns the Link to the CartPage on this site"/>
+        <return description="(URLSegment)" type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="new_order_link" start="162" end="164" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description compact="Returns the &quot;new order&quot; link"/>
+        <param description="| String $orderID - not used in CartPage" type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </param>
+        <return description="(URLSegment)" type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="orderID" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="copy_order_link" start="171" end="173" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description compact="Returns the &quot;copy order&quot; link"/>
+        <param description="| String $orderID - not used in CartPage" type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </param>
+        <return description="(URLSegment)" type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="orderID" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="get_order_link" start="180" end="182" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description compact="Return a link to view the order on this page."/>
+        <param description="ID of the order" type="object" variable="$orderID">
+          <type full="int|string" namespace="" name="int|string"/>
+        </param>
+        <return description="| String (URLSegment)" type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </return>
+      </docblock>
+      <parameter name="orderID" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="getOrderLink" start="189" end="191" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Return a link to view the order on this page."/>
+        <param description="ID of the order" type="object" variable="$orderID">
+          <type full="int|string" namespace="" name="int|string"/>
+        </param>
+        <return description="(URLSegment)" type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="orderID" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="IsEcommercePage" start="197" end="199" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="tells us if the current page is part of e-commerce."/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="EcommerceMenuTitle" start="204" end="217" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="return String (HTML Snippet)"/>
+      </docblock>
+    </method>
+    <method name="OriginalMenuTitle" start="223" end="225" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="The original menu title of the page"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LinkingMode" start="238" end="240" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method for use in templates"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LinkOrSection" start="246" end="248" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method for use in templates"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="LinkOrCurrent" start="254" end="256" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method for use in templates"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+  </parent>
+</class>

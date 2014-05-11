@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceSiteTreeExtension" namespace="" name="EcommerceSiteTreeExtension" abstract="false" final="false" start="16" end="59">
+  <file path="./../../../code/model/extensions" file="EcommerceSiteTreeExtension.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/extensions/EcommerceSiteTreeExtension.php" size="3133" time="2013-10-27T10:14:32+13:00" unixtime="1382822072" sha1="fef6bd64fd6d40ce659092b00720dbc54db2c9f4"/>
+  <docblock>
+    <description/>
+    <description compact="some e-commerce related functionality."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: extensions"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="SiteTreeExtension" namespace="" name="SiteTreeExtension"/>
+  <method name="AJAXDefinitions" start="25" end="27" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the instance of EcommerceConfigAjax for use in templates.">In templates, it is used like this:
+$AJAXDefinitions.TableID</description>
+      <return type="object">
+        <type full="EcommerceConfigAjax" namespace="" name="EcommerceConfigAjax"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="EcomConfig" start="32" end="34" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="IsEcommercePage" start="40" end="42" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="tells us if the current page is part of e-commerce."/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="EcommerceLogInLink" start="49" end="57" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Log in link"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+</class>

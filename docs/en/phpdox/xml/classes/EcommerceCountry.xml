@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCountry" namespace="" name="EcommerceCountry" abstract="false" final="false" start="16" end="500">
+  <file path="./../../../code/model/address" file="EcommerceCountry.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/address/EcommerceCountry.php" size="14235" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="9c810811fc4ab04e5d514165fcad0453650a8945"/>
+  <docblock>
+    <description/>
+    <description compact="For example: To what countries can be sold.">/dev/build/?resetecommercecountries=1 will reset the list of countries...</description>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: address"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="api_access" type="array" visibility="private" line="22">
+    <docblock>
+      <description compact="what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceCountry/"/>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <member name="db" type="array" visibility="private" line="33">
+    <docblock>
+      <description compact="Standard SS Variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="has_many" type="array" visibility="private" line="43">
+    <docblock>
+      <description compact="Standard SS Variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="indexes" type="array" visibility="private" line="51">
+    <docblock>
+      <description compact="Standard SS Variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="summary_fields" type="array" visibility="private" line="60">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="casting" type="array" visibility="private" line="70">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="searchable_fields" type="array" visibility="private" line="79">
+    <docblock>
+      <description compact="STANDARD SILVERSTRIPE STUFF"/>
+      <todo value=": how to translate this?"/>
+    </docblock>
+  </member>
+  <member name="default_sort" type="string" default="&quot;\&quot;DoNotAllowSales\&quot; ASC, \&quot;Name\&quot; ASC&quot;" visibility="private" line="93">
+    <docblock>
+      <description compact="Standard SS Variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="singular_name" type="string" default="&quot;Country&quot;" visibility="private" line="99">
+    <docblock>
+      <description compact="Standard SS Variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="100" end="100" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Countries&quot;" visibility="private" line="106">
+    <docblock>
+      <description compact="Standard SS Variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="107" end="107" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;A country.&quot;" visibility="private" line="113">
+    <docblock>
+      <description compact="Standard SS variable."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="canCreate" start="120" end="122" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canView" start="129" end="131" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canEdit" start="138" end="146" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canDelete" start="153" end="155" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="get_country_from_ip" start="162" end="169" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the country based on the Visitor Country Provider.">this is some sort of IP recogniser system (e.g. Geoip Class)</description>
+      <return description="(country code)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="get_country_dropdown" start="177" end="192" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">e.g.
+"NZ" =&gt; "New Zealand"<type full="Array" namespace="" name="Array"/></return>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="showAllCountries" byreference="false" type="{unknown}" default="true"/>
+  </method>
+  <method name="get_fixed_country_code" start="201" end="207" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="This function exists as a shortcut.">If there is only ONE allowed country code
+then a lot of checking of countries can be avoided.</description>
+      <return description="- countrycode" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="countryCode2name" start="216" end="218" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <alias value="for EcommerceCountry::find_title"/>
+      <param type="object" variable="$code">We have this as this is the same as Geoip<type full="String" namespace="" name="String"/></param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="code" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="find_title" start="224" end="233" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the country name from a code"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="code" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="check if code was provided, and is found in the country array" line="226"/>
+    </inline>
+  </method>
+  <member name="get_country_cache" type="{unknown}" default="null" visibility="private" line="239">
+    <docblock>
+      <description compact="Memory for the customer's country."/>
+      <var description="| String" type="object">
+        <type full="Null" namespace="" name="Null"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="reset_get_country_cache" start="240" end="240" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="get_country" start="248" end="280" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="This function works out the most likely country for the current order."/>
+      <param type="object" variable="$recalculate">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return description="- Country Code - e.g. NZ" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="1. fixed country is first" line="251"/>
+      <comment value="2. check shipping address" line="254"/>
+      <comment value="3. check GEOIP information" line="258"/>
+      <comment value="4 check default country set in GEO IP...." line="261"/>
+      <comment value="5. take the FIRST country from the get_allowed_country_codes" line="264"/>
+      <comment value="we stop at the first one... as we have no idea which one is the best." line="269"/>
+    </inline>
+  </method>
+  <member name="allow_sales_cache" type="{unknown}" default="null" visibility="private" line="286">
+    <docblock>
+      <description compact="Memory for allow country to check"/>
+      <var description="| Boolean" type="object">
+        <type full="Null" namespace="" name="Null"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="reset_allow_sales_cache" start="287" end="287" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="allow_sales" start="294" end="310" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Checks if we are allowed to sell to the current country."/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="get_country_id" start="318" end="329" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the ID of the country."/>
+      <param type="object" variable="$countryCode">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+    <parameter name="countryCode" byreference="false" type="string" default="&quot;&quot;"/>
+  </method>
+  <method name="get_default_array" start="336" end="350" abstract="false" final="false" static="true" visibility="protected">
+    <docblock>
+      <description compact="returns an array of Codes =&gt; Names of all countries that can be used.">Use "list_of_allowed_entries_for_dropdown" to get the list.</description>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getCMSFields" start="352" end="365" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="requireDefaultRecords" start="371" end="377" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+    </docblock>
+  </method>
+  <method name="onBeforeWrite" start="384" end="388" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method cleans up codes"/>
+    </docblock>
+  </method>
+  <member name="for_current_order_only_show_countries" type="array" visibility="private" line="404">
+    <docblock>
+      <description compact="List of countries that should be shown"/>
+      <param description="should be country codes e.g. array(&quot;NZ&quot;, &quot;NP&quot;, &quot;AU&quot;);" type="object" variable="$a:">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="get_for_current_order_only_show_countries" start="405" end="405" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="set_for_current_order_only_show_countries" start="406" end="414" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="a" byreference="false" type="array"/>
+    <inline>
+      <comment value="we INTERSECT here so that only countries allowed by all forces (modifiers) are added." line="408"/>
+    </inline>
+  </method>
+  <member name="for_current_order_do_not_show_countries" type="array" visibility="private" line="421">
+    <docblock>
+      <description compact="List of countries that should NOT be shown"/>
+      <param description="should be country codes e.g. array(&quot;NZ&quot;, &quot;NP&quot;, &quot;AU&quot;);" type="object" variable="$a:">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="get_for_current_order_do_not_show_countries" start="422" end="422" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="set_for_current_order_do_not_show_countries" start="423" end="426" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="a" byreference="false" type="array"/>
+    <inline>
+      <comment value="We MERGE here because several modifiers may limit the countries" line="424"/>
+    </inline>
+  </method>
+  <member name="list_of_allowed_entries_for_dropdown_array" type="array" visibility="private" line="432">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="list_of_allowed_entries_for_dropdown" start="438" end="460" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="takes the defaultArray and limits it with &quot;only show&quot; and &quot;do not show&quot; value, relevant for the current order."/>
+      <return description="(Code, Title)" type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="code_allowed" start="467" end="469" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="checks if a code is allowed"/>
+      <param description="- e.g. NZ, NSW, or CO" type="object" variable="$code">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="code" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="AllowSales" start="475" end="475" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Casted variable to show if sales are allowed to this country."/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getAllowSales" start="476" end="483" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="AllowSalesNice" start="489" end="489" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Casted variable to show if sales are allowed to this country."/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getAllowSalesNice" start="490" end="497" abstract="false" final="false" static="false" visibility="public"/>
+</class>

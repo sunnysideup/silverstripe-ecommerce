@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="Payment_Processing" namespace="" name="Payment_Processing" abstract="false" final="false" start="589" end="598">
+  <file path="./../../../code/model/money" file="EcommercePayment.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/money/EcommercePayment.php" size="15211" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="b5379c4bd3b234e00a2b66a558c8b8844eddf6bf"/>
+  <extends full="Payment_Result" namespace="" name="Payment_Result"/>
+  <method name="isSuccess" start="591" end="593" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="isProcessing" start="595" end="597" abstract="false" final="false" static="false" visibility="public"/>
+  <parent full="Payment_Result" namespace="" name="Payment_Result">
+    <member name="value" type="{unknown}" visibility="protected" line="561"/>
+    <constructor name="__construct" start="563" end="565" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="value" byreference="false" type="{unknown}" default="null"/>
+    </constructor>
+    <method name="getValue" start="567" end="569" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="isSuccess" start="571" end="571" abstract="true" final="false" static="false" visibility="public"/>
+    <method name="isProcessing" start="573" end="573" abstract="true" final="false" static="false" visibility="public"/>
+  </parent>
+</class>

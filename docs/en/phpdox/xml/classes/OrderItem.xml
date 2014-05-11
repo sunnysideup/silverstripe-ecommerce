@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderItem" namespace="" name="OrderItem" abstract="false" final="false" start="14" end="788">
+  <file path="./../../../code/model" file="OrderItem.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/OrderItem.php" size="22171" time="2014-04-28T13:36:53+12:00" unixtime="1398649013" sha1="a8055fb52ddf4259d8367404df61b6c7fc0fc981"/>
+  <docblock>
+    <description/>
+    <description compact="An order item links to a Buyable (product) by class name That is, we only store the BuyableID and the ClassName"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: model"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="OrderAttribute" namespace="" name="OrderAttribute"/>
+  <member name="api_access" type="array" visibility="private" line="20">
+    <docblock>
+      <description compact="what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderItem/"/>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <member name="db" type="array" visibility="private" line="42">
+    <docblock>
+      <description compact="stardard SS variable"/>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <member name="indexes" type="array" visibility="private" line="53">
+    <docblock>
+      <description/>
+      <var type="array">stardard SS definition</var>
+    </docblock>
+  </member>
+  <member name="casting" type="array" visibility="private" line="63">
+    <docblock>
+      <description/>
+      <var type="array">stardard SS definition</var>
+    </docblock>
+  </member>
+  <member name="searchable_fields" type="array" visibility="private" line="82">
+    <docblock>
+      <description/>
+      <var type="array">stardard SS definition</var>
+    </docblock>
+  </member>
+  <member name="field_labels" type="array" visibility="private" line="97">
+    <docblock>
+      <description/>
+      <var type="array">stardard SS definition</var>
+    </docblock>
+  </member>
+  <member name="summary_fields" type="array" visibility="private" line="105">
+    <docblock>
+      <description/>
+      <var type="array">stardard SS definition</var>
+    </docblock>
+  </member>
+  <member name="singular_name" type="string" default="&quot;Order Item&quot;" visibility="private" line="119">
+    <docblock>
+      <description compact="singular name of the object. it is recommended to override this in any extensions of this class."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="120" end="120" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Order Items&quot;" visibility="private" line="127">
+    <docblock>
+      <description compact="plural name of the object. it is recommended to override this in any extensions of this class."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="128" end="128" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;Any item that is added to an order and sits before the sub-total. &quot;" visibility="private" line="134">
+    <docblock>
+      <description compact="Standard SS variable."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="get_version" start="149" end="155" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="HACK: Versioned is BROKEN this method helps in fixing it.">Basically, in Versioned, you get a hard-coded error
+when you retrieve an older version of a DataObject.
+This method returns null if it does not exist.
+
+Idea is from Jeremy: https://github.com/burnbright/silverstripe-shop/blob/master/code/products/FixVersioned.php</description>
+      <param type="object" variable="$class">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$id">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <param type="object" variable="$version">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return description="| Null" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </return>
+    </docblock>
+    <parameter name="class" byreference="false" type="{unknown}"/>
+    <parameter name="id" byreference="false" type="{unknown}"/>
+    <parameter name="version" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="getCMSFields" start="161" end="224" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </method>
+  <method name="canDelete" start="231" end="233" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="scaffoldSearchFields" start="251" end="255" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.">Some additional logic is included for switching field labels, based on
+how generic or specific the field type is.
+Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
+</description>
+      <param type="array" variable="$_params">'fieldClasses': Associative array of field names as keys and FormField classes as values
+	'restrictFields': Numeric array of a field name whitelist</param>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+    <parameter name="_params" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="addBuyableToOrderItem" start="263" end="268" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$buyable">
+        <type full="BuyableModel" namespace="" name="BuyableModel"/>
+      </param>
+      <param type="object" variable="$quantity">
+        <type full="Double" namespace="" name="Double"/>
+      </param>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="quantity" byreference="false" type="integer" default="1"/>
+  </method>
+  <method name="updateForAjax" start="275" end="338" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="used to return data for ajax"/>
+      <param type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="used to create JSON for AJAX" type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="js" byreference="false" type="array"/>
+  </method>
+  <method name="runUpdate" start="344" end="360" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="saves details about the Order Item before the order is submittted"/>
+      <param description="- run it, even if it has run already" type="object" variable="$recalculate">
+        <type full="Bool" namespace="" name="Bool"/>
+      </param>
+    </docblock>
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="onBeforeWrite" start="367" end="387" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method.">If the quantity is zero then we set it to 1.
+TODO: evaluate this rule.</description>
+    </docblock>
+    <inline>
+      <comment value="now we can do the parent thing" line="378"/>
+      <comment value="always keep quantity above 0" line="380"/>
+    </inline>
+  </method>
+  <method name="onAfterWrite" start="394" end="403" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method the method below is very important...">We initialise the order once it has an OrderItem</description>
+    </docblock>
+    <inline>
+      <comment value="this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!" line="399"/>
+    </inline>
+  </method>
+  <method name="hasSameContent" start="413" end="419" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Check if two Order Items are the same.">Useful when adding two items to cart.</description>
+      <param type="object" variable="$orderItem">
+        <type full="OrderItem" namespace="" name="OrderItem"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="orderItem" byreference="false" type="object">
+      <type full="\\OrderItem" namespace="\" name="OrderItem"/>
+    </parameter>
+  </method>
+  <member name="calculated_buyable_price" type="array" visibility="protected" line="428"/>
+  <method name="reset_calculated_buyable_price" start="429" end="429" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="UnitPrice" start="431" end="431" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="getUnitPrice" start="432" end="456" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="to do: what is the logic here???" line="433"/>
+    </inline>
+  </method>
+  <method name="UnitPriceAsMoney" start="458" end="458" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="getUnitPriceAsMoney" start="459" end="461" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="Total" start="469" end="469" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="- forces recalculation of price" type="object" variable="$recalculate">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="Float" namespace="" name="Float"/>
+      </return>
+    </docblock>
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="getTotal" start="470" end="485" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="get from database" line="472"/>
+    </inline>
+  </method>
+  <method name="TotalAsMoney" start="492" end="492" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="- forces recalculation of price" type="object" variable="$recalculate">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="Money" namespace="" name="Money"/>
+      </return>
+    </docblock>
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="getTotalAsMoney" start="493" end="495" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="InternalItemID" start="503" end="503" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Casted variable returns InternalItemID from Buyable"/>
+      <return description="| String" type="object">
+        <type full="NULL" namespace="" name="NULL"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getInternalItemID" start="504" end="508" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="QuantityField" start="514" end="516" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(EcomQuantityField)" type="object">
+        <type full="Field" namespace="" name="Field"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="TotalAsCurrencyObject" start="522" end="524" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(DB Object)" type="object">
+        <type full="Currency" namespace="" name="Currency"/>
+      </return>
+    </docblock>
+  </method>
+  <member name="price_has_been_fixed" type="array" visibility="private" line="538">
+    <docblock>
+      <description compact="Helps in speeding up code.">This can be a static variable as it is the same for all OrderItems for an Order.</description>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="reset_price_has_been_fixed" start="539" end="539" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="priceHasBeenFixed" start="551" end="564" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <description compact="meaning that is has been saved in the CalculatedTotal field so that it can not be altered.">Default returns false; this is good for uncompleted orders
+but not so good for completed ones.</description>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <member name="tempBuyableStore" type="array" visibility="protected" line="577">
+    <docblock>
+      <description compact="Store for buyables.">We store this here to speed up things a little
+Format is like this
+Array(
+ 0 =&gt; Buyable (versioned)
+ 1 =&gt; Buyable (current)
+);</description>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="Buyable" start="584" end="639" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="- is this a current one, or an older VERSION ?" type="object" variable="$current">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return description="(Any type of Data Object that is buyable)" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </return>
+    </docblock>
+    <parameter name="current" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="start hack" line="591"/>
+      <comment value="end hack!" line="601"/>
+      <comment value="run if current not available or current = false" line="606"/>
+      <todo value="check if the version exists?? - see sample below" line="609"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="$versionTable = $this-&gt;BuyableClassName.&quot;_versions&quot;;" line="610"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="$dbConnection = DB::getConn();" line="611"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="if($dbConnection &amp;&amp; $dbConnection instanceOf MySQLDatabase &amp;&amp; $dbConnection-&gt;hasTable($versionTable)) {" line="612"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="$result = DB::query(&quot;" line="613"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="SELECT COUNT(\&quot;ID\&quot;)" line="614"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="FROM \&quot;$versionTable\&quot;" line="615"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="WHERE" line="616"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="\&quot;RecordID\&quot; = &quot;.intval($this-&gt;BuyableID).&quot;" line="617"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="AND \&quot;Version\&quot; = &quot;.intval($this-&gt;Version).&quot;" line="618"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="&quot;);" line="619"/>
+      <comment xmlns="http://xml.phpdox.net/src#" value="if($result-&gt;value()) {" line="620"/>
+      <comment value="our second to last resort" line="624"/>
+      <comment value="our final backup" line="629"/>
+    </inline>
+  </method>
+  <method name="BuyableTitle" start="645" end="654" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <inline>
+      <comment value="This should work in all cases, because ultimately, it will return #ID - see DataObject" line="650"/>
+    </inline>
+  </method>
+  <method name="ProductTitle" start="660" end="663" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="Link" start="675" end="675" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getLink" start="676" end="692" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="AbsoluteLink" start="698" end="698" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getAbsoluteLink" start="699" end="701" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CheckoutLink" start="707" end="709" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="AddLink" start="717" end="719" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="IncrementLink" start="725" end="727" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="DecrementLink" start="733" end="735" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="RemoveLink" start="741" end="743" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="RemoveAllLink" start="749" end="751" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="RemoveAllAndEditLink" start="757" end="759" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="SetSpecificQuantityItemLink" start="765" end="767" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="quantity" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="linkParameters" start="773" end="777" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <todo value=": do we still need this?"/>
+      <return description="for use as get variables in link" type="array"/>
+    </docblock>
+  </method>
+  <method name="debug" start="779" end="786" abstract="false" final="false" static="false" visibility="public"/>
+  <parent full="OrderAttribute" namespace="" name="OrderAttribute">
+    <extends full="DataObject" namespace="" name="DataObject"/>
+    <member name="_canEdit" type="{unknown}" default="null" visibility="protected" line="113">
+      <docblock>
+        <description compact="save edit status for speed's sake"/>
+        <var type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="_canView" type="{unknown}" default="null" visibility="protected" line="119">
+      <docblock>
+        <description compact="save view status for speed's sake"/>
+        <var type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </var>
+      </docblock>
+    </member>
+    <method name="i18n_singular_name" start="94" end="94" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="101" end="101" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="init" start="127" end="129" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="extended in OrderModifier and OrderItem Starts up the order Atribute TODO: introduce system like we have for Controller which makes sure that all parent init methods are called."/>
+      </docblock>
+    </method>
+    <method name="canCreate" start="136" end="138" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method"/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canView" start="146" end="163" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method This is an important method."/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canEdit" start="171" end="188" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method This is an important method."/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canDelete" start="195" end="197" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method"/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="OrderAttributeType" start="216" end="218" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="This is a key function that returns the type of the object.  In principle anything can be returned but the intention is to only return a few options e.g. OrderItem, Tax, Delivery, etc... so that computations can be carried out based on the type of OrderAttribute we are looking at.">It also allows to get a group of Order Attributes that
+contains both modifiers and orderItems.</description>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="Order" start="224" end="226" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the order - for some unknown reason it seems we need this."/>
+        <return description="| null" type="object">
+          <type full="Order" namespace="" name="Order"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="Classes" start="240" end="251" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Return a string of class names, in order of hierarchy from OrderAttribute for the current attribute.">e.g.: "product_orderitem orderitem
+orderattribute".
+
+Used by the templates and for ajax updating functionality.</description>
+        <return type="string"/>
+      </docblock>
+    </method>
+    <method name="AJAXDefinitions" start="260" end="262" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the instance of EcommerceConfigAjax for use in templates.">In templates, it is used like this:
+$EcommerceConfigAjax.TableID</description>
+        <return type="object">
+          <type full="EcommerceConfigAjax" namespace="" name="EcommerceConfigAjax"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="EcomConfig" start="269" end="271" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the instance of EcommerceDBConfig"/>
+        <return type="object">
+          <type full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ShowInTable" start="277" end="279" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="hould this item be shown on check out page table? return Boolean"/>
+      </docblock>
+    </method>
+    <method name="ShowInCart" start="285" end="287" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="hould this item be shown on in the cart (which is on other pages than the checkout page) return Boolean"/>
+      </docblock>
+    </method>
+    <method name="TableTitle" start="295" end="295" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Return a name of what this attribute is called e.g. &quot;Product 21&quot; or &quot;Discount&quot;"/>
+        <return type="string"/>
+      </docblock>
+    </method>
+    <method name="getTableTitle" start="296" end="298" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="CartTitle" start="306" end="306" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Return a name of what this attribute is called e.g. &quot;Product 21&quot; or &quot;Discount&quot; Cart is a short version of table"/>
+        <return type="string"/>
+      </docblock>
+    </method>
+    <method name="getCartTitle" start="307" end="309" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="TableSubTitle" start="315" end="315" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="the sub title for the order item or order modifier"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getTableSubTitle" start="316" end="318" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="TableSubTitleNOHTML" start="325" end="325" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="the sub title for the order item or order modifier"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getTableSubTitleNOHTML" start="326" end="326" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="CartSubTitle" start="333" end="333" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="the sub title for the order item or order modifier.">Cart is a short version of table</description>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getCartSubTitle" start="334" end="336" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="CalculatedTotalAsMoney" start="342" end="342" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Returns the Money object of the CalculatedTotal"/>
+        <return type="object">
+          <type full="Money" namespace="" name="Money"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getCalculatedTotalAsMoney" start="343" end="345" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="onBeforeWrite" start="351" end="358" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method We add the Sort value from the OrderAttribute_Group to the OrderAttribute."/>
+      </docblock>
+    </method>
+    <method name="onAfterWrite" start="363" end="367" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method"/>
+      </docblock>
+      <inline>
+        <comment value="crucial!" line="365"/>
+      </inline>
+    </method>
+    <method name="debug" start="373" end="376" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Debug helper method.">Access through : /shoppingcart/debug/</description>
+      </docblock>
+    </method>
+  </parent>
+  <extender full="Product_OrderItem" namespace="" name="Product_OrderItem"/>
+</class>

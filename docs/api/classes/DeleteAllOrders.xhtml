@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - DeleteAllOrders</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">DeleteAllOrders</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>DeleteAllOrders</h1>
+        <h4/>
+        <p/>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class DeleteAllOrders
+                extends <a title="BuildTask" href="../classes/BuildTask.xhtml">BuildTask</a>
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$allowed_actions</a>;
+                    </li><li>protected string <a href="#members">$title</a>;
+                    </li><li>protected string <a href="#members">$description</a>;
+                    </li><li>public <a href="#members">$verbose</a>;
+                    </li><li>private array <a href="#members">$linked_objects_array</a>;
+                    </li><li>private array <a href="#members">$double_check_objects</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="DeleteAllOrders" href="../classes/DeleteAllOrders/run.xhtml">run</a>()
+                    </li><li>public void <a title="DeleteAllOrders" href="../classes/DeleteAllOrders/cleanupUnlinkedOrderObjects.xhtml">cleanupUnlinkedOrderObjects</a>()
+                    </li><li>private void <a title="DeleteAllOrders" href="../classes/DeleteAllOrders/doubleCheckModifiersAndItems.xhtml">doubleCheckModifiersAndItems</a>()
+                    </li><li>private void <a title="DeleteAllOrders" href="../classes/DeleteAllOrders/deleteObject.xhtml">deleteObject</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/BuildTask.xhtml">BuildTask</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="allowed_actions">
+              <strong>$allowed_actions</strong>
+            </li>
+            <li id="double_check_objects">
+              <strong>$double_check_objects</strong>
+              <br/>
+              <span class="indent">ey = table where OrderID is saved alue = table where LastEdited is saved</span>
+            </li>
+            <li id="linked_objects_array">
+              <strong>$linked_objects_array</strong>
+              <br/>
+              <span class="indent">ey = table where OrderID is saved alue = table where LastEdited is saved</span>
+            </li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="description">
+              <strong>$description</strong>
+            </li>
+            <li id="title">
+              <strong>$title</strong>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul class="members">
+            <li id="verbose">
+              <strong>$verbose</strong>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="deleteObject">
+              <a title="DeleteAllOrders" href="../classes/DeleteAllOrders/deleteObject.xhtml">deleteObject()</a>
+            </li>
+            <li id="doubleCheckModifiersAndItems">
+              <a title="DeleteAllOrders" href="../classes/DeleteAllOrders/doubleCheckModifiersAndItems.xhtml">doubleCheckModifiersAndItems()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="cleanupUnlinkedOrderObjects">
+              <a title="DeleteAllOrders" href="../classes/DeleteAllOrders/cleanupUnlinkedOrderObjects.xhtml">cleanupUnlinkedOrderObjects()</a>
+            </li>
+            <li id="run"><a title="DeleteAllOrders" href="../classes/DeleteAllOrders/run.xhtml">run()</a>
+                — return Integer - number of carts destroyed</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

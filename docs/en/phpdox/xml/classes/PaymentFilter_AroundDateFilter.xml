@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="PaymentFilter_AroundDateFilter" namespace="" name="PaymentFilter_AroundDateFilter" abstract="false" final="false" start="13" end="66">
+  <file path="./../../../code/search/filters" file="PaymentFilters.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/search/filters/PaymentFilters.php" size="2234" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="388b714517ebfd4a856a223f622935ae7262b37c"/>
+  <docblock>
+    <description/>
+    <description/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: search"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="ExactMatchFilter" namespace="" name="ExactMatchFilter"/>
+  <member name="divider" type="integer" default="12" visibility="private" line="29">
+    <docblock>
+      <description compact="The divider is used to work out the maximum number of days we should be from the date.">The Further back in time we go, the greater the margin of error.
+
+For example, if you search for a date that is one year ago,
+then the margin of error is 360/12 = 30 days.
+if we search for yesterdaty then the margin of error is one.
+
+The calculation works as follow: [today] - [searched day] / [divider].
+All variables are in days.</description>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="apply" start="35" end="56" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return SQLQuery"/>
+    </docblock>
+    <parameter name="query" byreference="false" type="object">
+      <type full="\\DataQuery" namespace="\" name="DataQuery"/>
+    </parameter>
+    <inline>
+      <comment value="changed for PostgreSQL compatability" line="44"/>
+      <comment value="NOTE - we may wish to add DATEDIFF function to PostgreSQL schema, it's just that this would be the FIRST function added for SilverStripe" line="45"/>
+      <comment value="don't know whether functions should be used, hence the following code using an interval cast to an integer" line="48"/>
+    </inline>
+  </method>
+  <method name="isEmpty" start="62" end="64" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return Boolean"/>
+    </docblock>
+  </method>
+</class>

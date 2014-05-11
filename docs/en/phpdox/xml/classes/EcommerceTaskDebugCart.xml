@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskDebugCart" namespace="" name="EcommerceTaskDebugCart" abstract="false" final="false" start="4" end="84">
+  <file path="./../../../code/tasks" file="EcommerceTaskDebugCart.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/tasks/EcommerceTaskDebugCart.php" size="1968" time="2014-04-28T13:36:53+12:00" unixtime="1398649013" sha1="feafbd18b17982a4d7ee72846e81201fcd8ce20e"/>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <member name="title" type="string" default="&quot;Debug your cart&quot;" visibility="protected" line="6"/>
+  <member name="description" type="string" default="&quot;Check all the values in your cart to find any potential errors.&quot;" visibility="protected" line="8"/>
+  <method name="run" start="10" end="13" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="debug_object" start="15" end="67" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="obj" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="db" line="20"/>
+      <comment value="casted variables" line="28"/>
+      <comment value="has_one" line="50"/>
+      <comment value="to do: has_many and many_many" line="64"/>
+    </inline>
+  </method>
+  <method name="cleanup_value" start="69" end="82" abstract="false" final="false" static="true" visibility="private">
+    <parameter name="type" byreference="false" type="{unknown}"/>
+    <parameter name="value" byreference="false" type="{unknown}"/>
+  </method>
+</class>

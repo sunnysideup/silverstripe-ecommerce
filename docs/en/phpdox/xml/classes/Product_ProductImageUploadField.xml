@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="Product_ProductImageUploadField" namespace="" name="Product_ProductImageUploadField" abstract="false" final="false" start="1514" end="1593">
+  <file path="./../../../code" file="Product.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/Product.php" size="44466" time="2014-05-06T12:04:38+12:00" unixtime="1399334678" sha1="18072e09e0d720bac422dee8c4c6cf3ebf1be45e"/>
+  <extends full="UploadField" namespace="" name="UploadField"/>
+  <method name="getRelationAutosetClass" start="1516" end="1518" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="default" byreference="false" type="string" default="'File'"/>
+  </method>
+  <member name="ufConfig" type="array" visibility="protected" line="1526">
+    <docblock>
+      <description/>
+      <var description="Config for this field used in both, php and javascript" type="array">(will be merged into the config of the javascript file upload plugin).
+See framework/_config/uploadfield.yml for configuration defaults and documentation.</var>
+    </docblock>
+  </member>
+</class>

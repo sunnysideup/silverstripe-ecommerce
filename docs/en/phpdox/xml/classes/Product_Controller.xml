@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="Product_Controller" namespace="" name="Product_Controller" abstract="false" final="false" start="954" end="1191">
+  <file path="./../../../code" file="Product.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/Product.php" size="44466" time="2014-05-06T12:04:38+12:00" unixtime="1399334678" sha1="18072e09e0d720bac422dee8c4c6cf3ebf1be45e"/>
+  <extends full="Page_Controller" namespace="" name="Page_Controller"/>
+  <member name="allowed_actions" type="array" visibility="private" line="956"/>
+  <member name="isCurrentVersion" type="{unknown}" default="true" visibility="protected" line="967">
+    <docblock>
+      <description compact="is this the current version?"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="init" start="973" end="978" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method."/>
+    </docblock>
+  </method>
+  <method name="viewversion" start="986" end="1018" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="view earlier version of a product returns error or changes datarecord to earlier version if the ID does not match the Page then we look for the variation"/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
+    </parameter>
+    <inline>
+      <comment value="TO DO: CHECK VERSION!!! IS THIS CODE RIGHT" line="992"/>
+    </inline>
+  </method>
+  <method name="ajaxview" start="1026" end="1036" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method Returns a snippet when requested by ajax."/>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="AddProductForm" start="1042" end="1059" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns a form for adding products to cart"/>
+      <return type="object">
+        <type full="Form" namespace="" name="Form"/>
+      </return>
+    </docblock>
+    <inline>
+      <todo value="perhaps use a dropdown instead (elimiates need to use keyboard)" line="1047"/>
+    </inline>
+  </method>
+  <method name="addproductfromform" start="1066" end="1095" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="executes the AddProductForm"/>
+      <param type="object" variable="$data">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+    </docblock>
+    <parameter name="data" byreference="false" type="array"/>
+    <parameter name="form" byreference="false" type="object">
+      <type full="\\Form" namespace="\" name="Form"/>
+    </parameter>
+  </method>
+  <method name="IsOlderVersion" start="1101" end="1103" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Is this an older version?"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="SidebarProducts" start="1111" end="1113" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This method can be extended to show products in the side bar."/>
+      <return description="(Products)" type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="NextProduct" start="1121" end="1132" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This method can be extended to show products in the side bar."/>
+      <return description="| Null" type="object">
+        <type full="Product" namespace="" name="Product"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="PreviousProduct" start="1140" end="1151" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This method can be extended to show products in the side bar."/>
+      <return description="| Null" type="object">
+        <type full="Product" namespace="" name="Product"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="HasPreviousOrNextProduct" start="1159" end="1161" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This method can be extended to show products in the side bar."/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getListOfIDs" start="1168" end="1177" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="returns an array of product IDs, as saved in the last ProductGroup view (saved using session)"/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="debug" start="1180" end="1189" abstract="false" final="false" static="false" visibility="public"/>
+</class>

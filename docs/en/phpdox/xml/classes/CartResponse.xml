@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="CartResponse" namespace="" name="CartResponse" abstract="false" final="false" start="12" end="190">
+  <file path="./../../../code/control" file="CartResponse.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/control/CartResponse.php" size="4735" time="2014-05-06T12:26:00+12:00" unixtime="1399335960" sha1="91da33139b9f2d67c955fc1131986b0c7c092586"/>
+  <docblock>
+    <description/>
+    <description/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: control"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="EcommerceResponse" namespace="" name="EcommerceResponse"/>
+  <member name="force_reload" type="{unknown}" default="false" visibility="private" line="18">
+    <docblock>
+      <description compact="Should the page be reloaded rather than using AJAX?"/>
+      <var description="$force_reload" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="set_force_reload" start="24" end="26" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Sets the $force_reload to true;"/>
+    </docblock>
+  </method>
+  <method name="ReturnCartData" start="35" end="187" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Builds json object to be returned via ajax."/>
+      <param description="(Type, Message)" type="object" variable="$message">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param type="object" variable="$additionalData">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param type="object" variable="$status">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="+ JSON" type="object">
+        <type full="HEADER" namespace="" name="HEADER"/>
+      </return>
+    </docblock>
+    <parameter name="messages" byreference="false" type="array"/>
+    <parameter name="additionalData" byreference="false" type="array" default="null"/>
+    <parameter name="status" byreference="false" type="string" default="&quot;success&quot;"/>
+    <inline>
+      <comment value="add header" line="36"/>
+      <comment value="merge messages" line="40"/>
+      <comment value="bad status" line="48"/>
+      <comment value="init Order - IMPORTANT" line="53"/>
+      <comment value="THIS LINE TAKES UP MOST OF THE TIME OF THE RESPONSE!!!" line="56"/>
+      <comment value="populate Javascript" line="60"/>
+      <comment value="must be first" line="63"/>
+      <comment value="order items" line="71"/>
+      <comment value="products in cart" line="82"/>
+      <comment value="HACK TO INCLUDE PRODUCT IN PRODUCT VARIATION" line="84"/>
+      <comment value="in cart items" line="92"/>
+      <comment value="order modifiers" line="101"/>
+      <comment value="order" line="109"/>
+      <comment value="messages" line="112"/>
+      <comment value="TO DO: set it up in such a way that it specifically requests one of these" line="137"/>
+      <comment value="now can check if it needs to be reloaded" line="153"/>
+      <comment value="merge and return" line="165"/>
+      <todo value="remove doubles?" line="169"/>
+      <comment value="turn HTMLText (et al.) objects into text" line="170"/>
+    </inline>
+  </method>
+  <parent full="EcommerceResponse" namespace="" name="EcommerceResponse">
+    <extends full="SS_HTTPResponse" namespace="" name="SS_HTTPResponse"/>
+    <method name="ReturnCartData" start="21" end="23" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param description="the status to return" type="object" variable="$status">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="the message to return with the retur" type="object" variable="$message">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="| Array $data, that should be included" type="object">
+          <type full="Null" namespace="" name="Null"/>
+        </param>
+      </docblock>
+      <parameter name="messages" byreference="false" type="array"/>
+      <parameter name="additionalData" byreference="false" type="array" default="null"/>
+      <parameter name="status" byreference="false" type="string" default="&quot;success&quot;"/>
+    </method>
+  </parent>
+</class>

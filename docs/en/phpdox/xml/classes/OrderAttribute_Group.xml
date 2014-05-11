@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderAttribute_Group" namespace="" name="OrderAttribute_Group" abstract="false" final="false" start="385" end="400">
+  <file path="./../../../code/model" file="OrderAttribute.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/OrderAttribute.php" size="8548" time="2013-10-27T22:08:29+13:00" unixtime="1382864909" sha1="4e00bcd557e2230559c82f71ace7a5bc58bae92a"/>
+  <docblock>
+    <description compact="Allows you to group OrderAttributes"/>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="db" type="array" visibility="private" line="387"/>
+  <member name="indexes" type="array" visibility="private" line="396">
+    <docblock>
+      <description compact="Standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+</class>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="Order_Email" namespace="" name="Order_Email" abstract="true" final="false" start="14" end="198">
+  <file path="./../../../code/email" file="Order_Email.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/email/Order_Email.php" size="5837" time="2014-04-19T23:19:18+12:00" unixtime="1397906358" sha1="f4818c61c6f40ddd7a8621038d93fb0a8127ff62"/>
+  <docblock>
+    <description/>
+    <description value=": Email specifically for communicating with customer about order."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: email"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Email" namespace="" name="Email"/>
+  <member name="order" type="{unknown}" default="null" visibility="protected" line="19">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Order" namespace="" name="Order"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="resend" type="{unknown}" default="false" visibility="protected" line="25">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="emogrify_html" start="33" end="48" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="turns an html document into a formatted html document using the emogrify method."/>
+      <param variable="$html"/>
+      <return description="HTML" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="html" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="get required files" line="34"/>
+      <comment value="make links absolute!" line="45"/>
+    </inline>
+  </method>
+  <method name="get_from_email" start="54" end="62" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the standard from email address (e.g. the shop admin email address)"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="get_subject" start="68" end="76" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the subject for the email (doh!)."/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="setOrder" start="83" end="85" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="set the order associated with the email"/>
+      <param description="- the order to which the email relates" type="object" variable="$order">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+    </docblock>
+    <parameter name="order" byreference="false" type="object">
+      <type full="\\Order" namespace="\" name="Order"/>
+    </parameter>
+  </method>
+  <method name="setResend" start="91" end="93" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="sets resend to true, which means that the email is sent even if it has already been sent."/>
+    </docblock>
+    <parameter name="resend" byreference="false" type="{unknown}" default="true"/>
+  </method>
+  <method name="send" start="101" end="127" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="- ID for the message, you can leave this blank" type="object" variable="$messageID">
+        <type full="Null|String" namespace="" name="Null|String"/>
+      </param>
+      <param description="- rather than sending the email, only return the HTML BODY" type="object" variable="$returnBodyOnly">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return description="- TRUE for success and FALSE for failure." type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="messageID" byreference="false" type="{unknown}" default="null"/>
+    <parameter name="returnBodyOnly" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="last chance to adjust" line="113"/>
+    </inline>
+  </method>
+  <method name="createRecord" start="133" end="153" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <param description="how did the email go? 1 = sent, 0 = not sent" type="object" variable="$result:">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return description="(OrderEmailRecord)" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </return>
+    </docblock>
+    <parameter name="result" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="emailToVarchar" start="160" end="163" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="converts an Email to A Varchar"/>
+      <param description="- email address" type="object" variable="$email">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="- returns email address without &amp;gt; and &amp;lt;" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="email" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="hasBeenSent" start="169" end="175" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Checks if an email has been sent for this Order for this status (order step)"/>
+      <return type="boolean"/>
+    </docblock>
+  </method>
+  <method name="parseVariables" start="181" end="187" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="moves CSS to inline CSS in email"/>
+      <param description="- should we send the email as HTML or as TEXT" type="object" variable="$isPlain">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+    </docblock>
+    <parameter name="isPlain" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="start parsing" line="182"/>
+    </inline>
+  </method>
+  <method name="EcomConfig" start="194" end="196" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the instance of EcommerceDBConfig"/>
+      <return type="object">
+        <type full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+      </return>
+    </docblock>
+  </method>
+  <extender full="Order_ReceiptEmail" namespace="" name="Order_ReceiptEmail"/>
+  <extender full="Order_StatusEmail" namespace="" name="Order_StatusEmail"/>
+  <extender full="Order_ErrorEmail" namespace="" name="Order_ErrorEmail"/>
+  <extender full="Order_InvoiceEmail" namespace="" name="Order_InvoiceEmail"/>
+</class>

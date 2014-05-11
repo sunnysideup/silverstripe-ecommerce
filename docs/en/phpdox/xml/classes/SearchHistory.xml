@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="SearchHistory" namespace="" name="SearchHistory" abstract="false" final="false" start="3" end="21">
+  <file path="./../../../code/search" file="SearchHistory.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/search/SearchHistory.php" size="387" time="2014-05-06T13:23:20+12:00" unixtime="1399339400" sha1="8070e145186dbe81e5c7be074d54e2d59d656bb1"/>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="db" type="array" visibility="private" line="5"/>
+  <method name="add_entry" start="9" end="13" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="KeywordString" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="onBeforeWrite" start="16" end="19" abstract="false" final="false" static="false" visibility="public"/>
+</class>

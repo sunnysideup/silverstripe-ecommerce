@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="ProductGroupSearchPage_Controller" namespace="" name="ProductGroupSearchPage_Controller" abstract="false" final="false" start="48" end="51">
+  <file path="./../../../code" file="ProductGroupSearchPage.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/ProductGroupSearchPage.php" size="1091" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="649e5743f641926f9faa0d7f1d6cc6b9473120ed"/>
+  <extends full="ProductGroup_Controller" namespace="" name="ProductGroup_Controller"/>
+  <parent full="ProductGroup_Controller" namespace="" name="ProductGroup_Controller">
+    <extends full="Page_Controller" namespace="" name="Page_Controller"/>
+    <member name="products" type="{unknown}" default="null" visibility="protected" line="1189">
+      <docblock>
+        <description/>
+        <var type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="showFullList" type="{unknown}" default="false" visibility="protected" line="1195">
+      <docblock>
+        <description compact="Show all products on one page?"/>
+        <var type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="filterForGroupObject" type="{unknown}" default="null" visibility="protected" line="1201">
+      <docblock>
+        <description compact="The group filter that is applied to this page"/>
+        <var type="object">
+          <type full="ProductGroup" namespace="" name="ProductGroup"/>
+        </var>
+      </docblock>
+    </member>
+    <method name="init" start="1206" end="1219" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method"/>
+      </docblock>
+    </method>
+    <method name="index" start="1231" end="1234" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard selection of products"/>
+      </docblock>
+    </method>
+    <method name="filterforgroup" start="1243" end="1255" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="cross filter with another product group..">e.g. socks (current product group) for brand A or B (the secondary product group)</description>
+        <param type="object">
+          <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+        </param>
+      </docblock>
+      <parameter name="request" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="searchresults" start="1257" end="1285" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="request" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="Products" start="1297" end="1309" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Return the products for this group."/>
+        <return type="object">
+          <type full="PaginatedList" namespace="" name="PaginatedList"/>
+        </return>
+      </docblock>
+      <inline>
+        <comment value="save products to session for later use" line="1299"/>
+        <comment value="save list for future use" line="1305"/>
+      </inline>
+    </method>
+    <method name="SidebarProducts" start="1321" end="1323" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="This method can be extended to show products in the side bar."/>
+        <return description="| DataList" type="object">
+          <type full="Null" namespace="" name="Null"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="MenuChildGroups" start="1331" end="1333" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns child product groups for use in 'in this section'. For example the vegetable Product Group May have listed here: Carrot, Cabbage, etc..."/>
+        <return description="(ProductGroups)" type="object">
+          <type full="ArrayList" namespace="" name="ArrayList"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ProductSearchForm" start="1348" end="1351" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns a search form to search current products"/>
+        <return description="object" type="object">
+          <type full="ProductSearchForm" namespace="" name="ProductSearchForm"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ShowSearchFormImmediately" start="1354" end="1362" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="HasFilter" start="1369" end="1371" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Do we show all products on one page?"/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="IsShowFullList" start="1378" end="1380" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Do we show all products on one page?"/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="MaxNumberOfProductsPerPage" start="1387" end="1389" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Number of entries per page limited by total number of pages available..."/>
+        <return type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="HasFilters" start="1401" end="1403" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ProductGroupsFromAlsoShowProductsLinks" start="1410" end="1439" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns a list of items (with links)"/>
+        <return description="ArrayData(Name, FilterLink,  SelectKey, Current (boolean), LinkingMode))" type="object">
+          <type full="ArrayList(" namespace="" name="ArrayList("/>
+        </return>
+      </docblock>
+    </method>
+    <method name="SortLinks" start="1446" end="1448" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Provides a ArrayList of links for sorting products."/>
+        <return description="ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))" type="object">
+          <type full="ArrayList(" namespace="" name="ArrayList("/>
+        </return>
+      </docblock>
+    </method>
+    <method name="FilterLinks" start="1455" end="1457" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Provides a ArrayList of links for filters products."/>
+        <return description="ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))" type="object">
+          <type full="ArrayList(" namespace="" name="ArrayList("/>
+        </return>
+      </docblock>
+    </method>
+    <method name="DisplayLinks" start="1464" end="1466" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Provides a ArrayList for displaying display links"/>
+        <return description="ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))" type="object">
+          <type full="ArrayList(" namespace="" name="ArrayList("/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ListAllLink" start="1474" end="1476" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Link that returns a list of all the products for this product group as a simple list."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ResetFilterLink" start="1484" end="1487" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Link that returns a list of all the products for this product group as a simple list."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="paginateList" start="1498" end="1511" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="turns full list into paginated list"/>
+        <param type="object">
+          <type full="SS_List" namespace="" name="SS_List"/>
+        </param>
+        <return type="object">
+          <type full="PaginatedList" namespace="" name="PaginatedList"/>
+        </return>
+      </docblock>
+      <parameter name="list" byreference="false" type="object">
+        <type full="\\SS_List" namespace="\" name="SS_List"/>
+      </parameter>
+    </method>
+    <method name="saveUserPreferences" start="1524" end="1549" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Checks out a bunch of $_GET variables that are used to work out user preferences Some of these are saved to session."/>
+      </docblock>
+      <inline>
+        <comment value="make sure to save the new settings first!" line="1542"/>
+      </inline>
+    </method>
+    <method name="getCurrentUserPreferences" start="1561" end="1570" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Checks for the most applicable user preferences for this user: 1. session value 2. getMyUserPreferencesDefault"/>
+        <param description="- FILTER | SORT | DISPLAY" type="object" variable="$type">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+        <todo value=": move to controller?"/>
+      </docblock>
+      <parameter name="type" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="userPreferencesLinks" start="1579" end="1613" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Provides a dataset of links for a particular user preference"/>
+        <param description="SORT | FILTER | DISPLAY - e.g. sort_options" type="object" variable="$type">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return description="ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))" type="object">
+          <type full="ArrayList(" namespace="" name="ArrayList("/>
+        </return>
+      </docblock>
+      <parameter name="type" byreference="false" type="{unknown}"/>
+      <inline>
+        <comment value="get basics" line="1580"/>
+        <comment value="if there is only one option then do not bother" line="1585"/>
+        <comment value="get more config names" line="1588"/>
+      </inline>
+    </method>
+    <method name="addSecondaryTitle" start="1637" end="1668" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="add a secondary title to the main title in case there is, for example, a filter applied e.g. Socks | MyBrand"/>
+        <param type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+      </docblock>
+      <parameter name="secondaryTitle" byreference="false" type="string" default="&quot;&quot;"/>
+      <inline>
+        <comment value="dont update menu title, because the entry in the menu" line="1663"/>
+        <comment value="should stay the same as it links back to the unfiltered" line="1664"/>
+        <comment value="page (in some cases)." line="1665"/>
+      </inline>
+    </method>
+    <method name="debug" start="1676" end="1745" abstract="false" final="false" static="false" visibility="public"/>
+  </parent>
+</class>

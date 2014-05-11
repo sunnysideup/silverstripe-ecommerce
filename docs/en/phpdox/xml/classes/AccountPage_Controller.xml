@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="AccountPage_Controller" namespace="" name="AccountPage_Controller" abstract="false" final="false" start="188" end="229">
+  <file path="./../../../code" file="AccountPage.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/AccountPage.php" size="5304" time="2013-10-27T22:08:29+13:00" unixtime="1382864909" sha1="7a0d5258632c41ab3463e57ea2b3e791039f81f5"/>
+  <extends full="Page_Controller" namespace="" name="Page_Controller"/>
+  <member name="allowed_actions" type="array" visibility="private" line="191"/>
+  <method name="init" start="198" end="209" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard controller function"/>
+    </docblock>
+  </method>
+  <method name="MemberForm" start="217" end="219" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Return a form allowing the user to edit their details with the shop."/>
+      <return type="object">
+        <type full="ShopAccountForm" namespace="" name="ShopAccountForm"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="AccountMember" start="225" end="227" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Returns the current member"/>
+      <return description="| Member" type="object">
+        <type full="NULL" namespace="" name="NULL"/>
+      </return>
+    </docblock>
+  </method>
+</class>

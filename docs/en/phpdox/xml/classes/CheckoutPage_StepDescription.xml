@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="CheckoutPage_StepDescription" namespace="" name="CheckoutPage_StepDescription" abstract="false" final="false" start="602" end="796">
+  <file path="./../../../code" file="CheckoutPage.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/CheckoutPage.php" size="21340" time="2014-05-11T15:45:02+12:00" unixtime="1399779902" sha1="99497ab43822006bcf8dd8cd029eab79371c9a8c"/>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="db" type="array" visibility="private" line="608">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="searchable_fields" type="array" visibility="private" line="618">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="field_labels" type="array" visibility="private" line="628">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="summary_fields" type="array" visibility="private" line="637">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="casting" type="array" visibility="private" line="646">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="Array"/>
+    </docblock>
+  </member>
+  <member name="singular_name" type="string" default="&quot;Checkout Step Description&quot;" visibility="private" line="655">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="String"/>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="656" end="656" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Checkout Step Descriptions&quot;" visibility="private" line="662">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="String"/>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="663" end="663" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;A step within the checkout process (e.g. confirm details).&quot;" visibility="private" line="669">
+    <docblock>
+      <description compact="Standard SS variable."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="can_create" type="{unknown}" default="false" visibility="private" line="675">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </member>
+  <method name="canCreate" start="682" end="682" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canView" start="689" end="689" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canEdit" start="696" end="696" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canDelete" start="703" end="706" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="getCMSFields" start="712" end="718" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="Code" start="724" end="724" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getCode" start="725" end="732" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="Title" start="738" end="738" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getTitle" start="739" end="741" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="requireDefaultRecords" start="747" end="774" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+    </docblock>
+  </method>
+  <method name="getDefaultTitle" start="781" end="794" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description compact="turns code into title (default values)"/>
+      <param description="- code" type="object" variable="$code">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="code" byreference="false" type="{unknown}"/>
+  </method>
+</class>
