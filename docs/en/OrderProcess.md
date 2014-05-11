@@ -86,7 +86,7 @@ ORDER STEP:
 ---------------------
 
 
-Defines the Order Status Options.	Basically OrderSteps guide the Order from inception to archiving.
+Defines the Order Status Options. Basically OrderSteps guide the Order from inception to archiving.
 Each project can have its own unique order steps - to match the requirements of the shop at hand.
 The Order Step typically has (some) of the following functions:
 a. a method move the order along
