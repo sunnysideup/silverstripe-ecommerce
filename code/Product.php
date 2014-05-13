@@ -796,7 +796,6 @@ class Product extends Page implements BuyableModel {
 	}
 
 
-
 	//CRUD SETTINGS
 
 	/**
