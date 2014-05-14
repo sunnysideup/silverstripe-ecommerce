@@ -1720,7 +1720,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$html .= "<li><b>Default Filter SQL:</b> <pre>".print_r($this->getUserSettingsOptionSQL("FILTER"), 1)."</pre> </li>";
 		$html .= "<li><b>User Filter SQL:</b> <pre>".print_r($this->getUserSettingsOptionSQL("FILTER",  $this->getCurrentUserPreferences("FILTER")), 1)."</pre> </li>";
 		$html .= "<li><b>Buyable Class name:</b> ".$this->getBuyableClassName()." </li>";
-		$html .= "<li><b>allProducts:</b> ".print_r($this->allProducts->sql(), 1)." </li>";
+		$html .= "<li><b>allProducts:</b> ".print_r(str_replace("\"", "`", $this->allProducts->sql()), 1)." </li>";
 
 		$html .= "<li><hr />Other<hr /></li>";
 		if($image = $this->BestAvailableImage()) {

@@ -7,6 +7,12 @@
 class ProductSearchForm extends Form {
 
 	/**
+	 * set to TRUE to show the search logic
+	 * @var Boolean
+	 */
+	protected $debug = false;
+
+	/**
 	 * list of additional fields to add to search
 	 *
 	 * Additional fields array is formatted as follows:
@@ -51,9 +57,13 @@ class ProductSearchForm extends Form {
 
 	/**
 	 * List of additional fields that should be searched full text.
+	 * We are matching this against the buyable class name.
 	 * @var Array
 	 */
-	protected $extraBuyableFieldsToSearchFullText = array();
+	protected $extraBuyableFieldsToSearchFullText = array(
+		"Product" => array("Title","MenuTitle","Content","MetaDescription"),
+		"ProductVariation" => array("FullTitle", "Description")
+	);
 
 	/**
 	 * Maximum number of results to return
@@ -137,6 +147,9 @@ class ProductSearchForm extends Form {
 			new NumericField("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price")),
 			new NumericField("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"))
 		);
+		if(Director::isDev() || Permission::check("ADMIN")) {
+			$fields->push(new CheckboxField("DebugSearch", "Debug Search"));
+		}
 		$actions = new FieldList(
 			new FormAction('doProductSearchForm', 'Search')
 		);
@@ -161,6 +174,10 @@ class ProductSearchForm extends Form {
 	}
 
 	function doProductSearchForm($data, $form){
+		if(isset($data["DebugSearch"])) {
+			$this->debug = $data["DebugSearch"] ? true : false;
+		}
+		if($this->debug) { $this->debugOutput("<hr /><hr /><hr /><h2>Debugging Search Results</h2>");}
 
 		//what is the baseclass?
 		$baseClassName = $this->baseClassForBuyables;
@@ -171,6 +188,7 @@ class ProductSearchForm extends Form {
 			user_error("Can not find $baseClassName (baseClassName)");
 		}
 		//basic get
+		$searchableFields = ($baseClassName::create()->stat('searchable_fields'));
 		$baseList = $baseClassName::get()->filter(array("ShowInSearch" => 1));
 		$limitToCurrentSection = false;
 		if(isset($data["SearchOnlyFieldsInThisSection"]) && $data["SearchOnlyFieldsInThisSection"]) {
@@ -199,12 +217,15 @@ class ProductSearchForm extends Form {
 					SearchHistory::add_entry($keyword);
 
 					// 1) Exact search by code
-
+					$count = 0;
+					if($this->debug) { $this->debugOutput("<hr /><h2>SEARCH BY CODE</h2>");}
 					if($code = intval($keyword)) {
 						$list1 = $baseList->filter(array("InternalItemID" => $code));
 						$count = $list1->count ;
 						if($count == 1) {
-							return $this->controller->redirect($list1->First()->Link());
+							if(!$this->debug) {
+								return $this->controller->redirect($list1->First()->Link());
+							}
 						}
 						elseif($count > 1) {
 							if($this->addToResults($list1)) {
@@ -212,9 +233,12 @@ class ProductSearchForm extends Form {
 							}
 						}
 					}
+					if($this->debug) { $this->debugOutput("<h3>SEARCH BY CODE: $count</h3>");}
+
 
 					// 2) Search of the entire keyword phrase and its replacements
-
+					$count = 0;
+					if($this->debug) { $this->debugOutput("<hr /><h3>FULL KEYWORD SEARCH</h3>");}
 					if($this->resultArrayPos <= $this->maximumNumberOfResults) {
 
 						//find all keywords ...
@@ -233,16 +257,28 @@ class ProductSearchForm extends Form {
 							}
 						}
 						$wordArray = array_unique($wordArray);
-
+						if($this->debug) { $this->debugOutput("<pre>WORD ARRAY: ".print_r($wordArray, 1)."</pre>");}
 						//work out searches
-						$fieldArray = array("Title", "MenuTitle") + $this->extraBuyableFieldsToSearchFullText;
+						$singleton = $baseClassName::create();
+						foreach($this->extraBuyableFieldsToSearchFullText as $tempClassName => $fieldArrayTemp) {
+							if($singleton instanceof $tempClassName) {
+								$fieldArray = $fieldArrayTemp;
+								break;
+							}
+						}
+						if($this->debug) { $this->debugOutput("<pre>FIELD ARRAY: ".print_r($fieldArray, 1)."</pre>");}
+
 						$searches = $this->getSearchArrays($wordArray, $fieldArray);
+						if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
+
 						//we search exact matches first then other matches ...
 						foreach($searches as $search) {
 							$list2 = $baseList->where($search);
 							$count = $list2->count();
 							if($count == 1) {
-								return $this->controller->redirect($list2->First()->Link());
+								if(!$this->debug) {
+									return $this->controller->redirect($list2->First()->Link());
+								}
 							}
 							elseif($count > 1) {
 								if($this->addToResults($list2)) {
@@ -254,27 +290,35 @@ class ProductSearchForm extends Form {
 							}
 						}
 					}
+					if($this->debug) { $this->debugOutput("<h3>FULL KEYWORD SEARCH: $count</h3>");}
 
+					if($this->debug) { $this->debugOutput("<hr /><h3>PRODUCT GROUP SEARCH</h3>");}
 					// 3) Do the same search for Product Group names
-
+					$count = 0;
 					if($this->resultArrayPos <= $this->maximumNumberOfResults) {
 						$searches = $this->getSearchArrays($wordArray);
+						if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
+
 						foreach($searches as $search) {
 							$productGroups = ProductGroup::get()->where($search);
 							$count = $productGroups->count();
 							if($count == 1) {
-								return $this->controller->redirect($productGroups->First()->Link());
+								if(!$this->debug) {
+									return $this->controller->redirect($productGroups->First()->Link());
+								}
 							}
 							elseif($count > 1) {
 								$productIDArray = array();
 								foreach($productGroups as $productGroup) {
-									$productIDArray += $productGroup->currentInitialProducts()->map("ID", "ID")->toArray();
+									$productIDArray += Product::get()->filter(array("ParentID" => $productGroup->ID))->limit(100)->map("ID", "ID")->toArray();
 								}
 								$productIDArray = array_unique($productIDArray);
 								$list3 = $baseList->filter(array("ID" => $productIDArray));
 								$count = $list3->count();
 								if($count == 1) {
-									return $this->controller->redirect($list3->First()->Link());
+									if(!$this->debug) {
+										return $this->controller->redirect($list3->First()->Link());
+									}
 								}
 								elseif($count > 1) {
 									if($this->addToResults($list3)) {
@@ -287,15 +331,18 @@ class ProductSearchForm extends Form {
 							}
 						}
 					}
+					if($this->debug) { $this->debugOutput("<h3>PRODUCT GROUP SEARCH: $count</h3>");}
 				}
 			}
 		}
 		if(!$keywordResults) {
 			$this->addToResults($baseList);
 		}
-		$this->controller->redirect(
-			$this->controller->Link($this->controllerSearchResultDisplayMethod)."?results=".implode(",", $this->resultArray)
-		);
+		$link = $this->controller->Link($this->controllerSearchResultDisplayMethod)."?results=".implode(",", $this->resultArray);
+		if($this->debug) {
+			die($link);
+		}
+		$this->controller->redirect($link);
 	}
 
 	/**
@@ -351,7 +398,17 @@ class ProductSearchForm extends Form {
 	 */
 	public function saveDataToSession(){
 		$data = $this->getData();
+		if(isset($data["MinimumPrice"]) && !$data["MinimumPrice"]) {
+			unset($data["MinimumPrice"]);
+		}
+		if(isset($data["MaximumPrice"]) && !$data["MaximumPrice"]) {
+			unset($data["MaximumPrice"]);
+		}
 		Session::set("FormInfo.".$this->FormName().".data", $data);
+	}
+
+	private function debugOutput($string) {
+		echo "<br />$string";
 	}
 
 }
