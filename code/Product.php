@@ -444,7 +444,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	public function BestAvailableImage() {
 		$image = $this->Image();
-		if($image && $image->exists()) {
+		if($image && $image->exists() && file_exists($image->getFullPath())) {
 			return $image;
 		}
 		elseif($parent = $this->MainParentGroup()) {

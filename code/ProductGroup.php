@@ -1098,7 +1098,7 @@ class ProductGroup extends Page {
 	 */
 	public function BestAvailableImage() {
 		$image = $this->Image();
-		if($image && $image->exists()) {
+		if($image && $image->exists() && file_exists($image->getFullPath())) {
 			return $image;
 		}
 		elseif($parent = $this->ParentGroup()) {
@@ -1711,7 +1711,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$html .= "<li><b>Total number of products:</b> ".$this->TotalCount()." </li>";
 		$html .= "<li><b>Is there more than one product:</b> ".($this->TotalCountGreaterThanOne() ? "YES" : "NO")." </li>";
 		$html .= "<li><b>Number of products per page:</b> ".$this->MyNumberOfProductsPerPage()." </li>";
-		$html .= "<li><b>Parent product group:</b> ".($parentGroup = $this->ParentGroup() ? $parentGroup->Title : "[NO PARENT GROUP]")."</li>";
+		$html .= "<li><b>Parent product group:</b> ".($this->ParentGroup() ? $this->ParentGroup()->Title : "[NO PARENT GROUP]")."</li>";
 
 
 		$html .= "<li><hr />SQL Factors<hr /></li>";
