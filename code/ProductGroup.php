@@ -1674,7 +1674,6 @@ class ProductGroup_Controller extends Page_Controller {
 	/****************************************************/
 
 	public function debug(){
-		print_r(Config::inst()->get("PhotographicProductGroup", "filter_options"));
 		$member = Member::currentUser();
 		if(!$member || !$member->IsShopAdmin()) {
 			$messages = array(
