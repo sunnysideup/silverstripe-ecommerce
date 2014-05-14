@@ -1499,7 +1499,7 @@ class ProductGroup_Controller extends Page_Controller {
 		if($list && $list->count()) {
 			if($this->IsShowFullList()) {
 				$obj = new PaginatedList($list, $this->request);
-				$obj->setPageLength(1000);
+				$obj->setPageLength(500);
 				return $obj;
 			}
 			else {
