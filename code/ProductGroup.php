@@ -308,7 +308,7 @@ class ProductGroup extends Page {
 	 */
 	public function getUserPreferencesDefault($type) {
 		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get("ProductGroup", $configName);
+		$options = EcommerceConfig::get($this->ClassName, $configName);
 		if(isset($options["default"])) {
 			return "default";
 		}
@@ -343,7 +343,7 @@ class ProductGroup extends Page {
 	 */
 	public function getUserPreferencesOptionsForDropdown($type){
 		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get("ProductGroup", $configName);
+		$options = EcommerceConfig::get($this->ClassName, $configName);
 		$inheritTitle = _t("ProductGroup.INHERIT", "Inherit");
 		$array = array("inherit" => $inheritTitle);
 		if(is_array($options) && count($options)) {
@@ -381,7 +381,7 @@ class ProductGroup extends Page {
 	 */
 	protected function getUserSettingsOptionSQL($type, $key = ""){
 		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get("ProductGroup", $configName);
+		$options = EcommerceConfig::get($this->ClassName, $configName);
 		//if we cant find the current one, use the default
 		if(!$key || (!isset($options[$key]))) {
 			$key = $this->getUserPreferencesDefault($type);
@@ -416,7 +416,7 @@ class ProductGroup extends Page {
 	 */
 	public function getUserPreferencesTitle($type, $key = "") {
 		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get("ProductGroup", $configName);
+		$options = EcommerceConfig::get($this->ClassName, $configName);
 		if(!$key || (!isset($filterOptions[$key]))){
 			$key = $this->getUserPreferencesDefault($type);
 		}
@@ -465,7 +465,7 @@ class ProductGroup extends Page {
 		$configName = $this->sortFilterDisplayNames[$type]["configName"];
 		$dbVariableName = $this->sortFilterDisplayNames[$type]["dbFieldName"];
 		$defaultOption = "";
-		$options = EcommerceConfig::get("ProductGroup", $configName);
+		$options = EcommerceConfig::get($this->ClassName, $configName);
 		if($this->$dbVariableName && array_key_exists($this->$dbVariableName, $options)) {
 			$defaultOption = $this->$dbVariableName;
 		}
@@ -1533,7 +1533,7 @@ class ProductGroup_Controller extends Page_Controller {
 			$preferenceVariableName = $type["sessionName"];
 			$myPreferenceVariableName = EcommerceConfig::get("ProductGroup", $preferenceVariableName);
 			if($newPreference = $this->request->getVar($myPreferenceVariableName)) {
-				$options = EcommerceConfig::get("ProductGroup", $optionsVariableName);
+				$options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
 				if(isset($options[$newPreference])) {
 					Session::set("ProductGroup_".$myPreferenceVariableName, $newPreference);
 				}
@@ -1580,7 +1580,7 @@ class ProductGroup_Controller extends Page_Controller {
 		//get basics
 		$sortFilterDisplayNames = $this->getSortFilterDisplayNames();
 		$configName = $sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get("ProductGroup", $configName);
+		$options = EcommerceConfig::get($this->dataRecord->ClassName, $configName);
 
 		//if there is only one option then do not bother
 		if(count($options) < 2) return null;
@@ -1674,6 +1674,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/****************************************************/
 
 	public function debug(){
+		print_r(Config::inst()->get("PhotographicProductGroup", "filter_options"));
 		$member = Member::currentUser();
 		if(!$member || !$member->IsShopAdmin()) {
 			$messages = array(
