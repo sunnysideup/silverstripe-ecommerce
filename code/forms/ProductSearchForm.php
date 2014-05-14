@@ -147,9 +147,6 @@ class ProductSearchForm extends Form {
 			new NumericField("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price")),
 			new NumericField("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"))
 		);
-		if(Director::isDev() || Permission::check("ADMIN")) {
-			$fields->push(new CheckboxField("DebugSearch", "Debug Search"));
-		}
 		$actions = new FieldList(
 			new FormAction('doProductSearchForm', 'Search')
 		);
@@ -160,6 +157,9 @@ class ProductSearchForm extends Form {
 		}
 		$requiredFields = array();
 		$validator = ProductSearchForm_Validator::create($requiredFields);
+		if(Director::isDev() || Permission::check("ADMIN")) {
+			$fields->push(new CheckboxField("DebugSearch", "Debug Search"));
+		}
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
