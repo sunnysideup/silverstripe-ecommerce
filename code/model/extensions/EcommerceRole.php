@@ -206,7 +206,7 @@ class EcommerceRole extends DataExtension {
 				$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
 				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\"  datano=\"".Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD','Do not update password'))."\"  class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
 			}
-			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 3);
+			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 5);
 			$loginDetailsDescription = new LiteralField(
 				'AccountInfo',
 				'<p>'.
