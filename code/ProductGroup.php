@@ -382,7 +382,7 @@ class ProductGroup extends Page {
 	protected function getUserSettingsOptionSQL($type, $key = ""){
 		$configName = $this->sortFilterDisplayNames[$type]["configName"];
 		$options = EcommerceConfig::get($this->ClassName, $configName);
-		//if we cant find the current one, use the default
+			//if we cant find the current one, use the default
 		if(!$key || (!isset($options[$key]))) {
 			$key = $this->getUserPreferencesDefault($type);
 		}
@@ -417,7 +417,7 @@ class ProductGroup extends Page {
 	public function getUserPreferencesTitle($type, $key = "") {
 		$configName = $this->sortFilterDisplayNames[$type]["configName"];
 		$options = EcommerceConfig::get($this->ClassName, $configName);
-		if(!$key || (!isset($filterOptions[$key]))){
+		if(!$key || (!isset($options[$key]))){
 			$key = $this->getUserPreferencesDefault($type);
 		}
 		if($key && isset($options[$key]["Title"])) {
@@ -1255,6 +1255,12 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	public function searchresults($request){
+		$this->saveUserPreferences(
+			array(
+				"filterfor" => "default",
+				"sortby" => "default"
+			)
+		);
 		$results = $request->getVar("results");
 		if(!$results) {
 			$results = "0";
@@ -1388,6 +1394,27 @@ class ProductGroup_Controller extends Page_Controller {
 		return $this->MyNumberOfProductsPerPage() > $this->TotalCount() ? $this->TotalCount() : $this->MyNumberOfProductsPerPage();
 	}
 
+	/**
+	 *
+	 * @return String
+	 */
+	function CurrentFilterTitle(){
+		$key = $this->getCurrentUserPreferences("FILTER");
+		if($key != "default") {
+			return $this->getUserPreferencesTitle("FILTER", $key);
+		}
+	}
+
+	/**
+	 *
+	 * @return String
+	 */
+	function CurrentSortTitle(){
+		$key = $this->getCurrentUserPreferences("SORT");
+		if($key != "default") {
+			return $this->getUserPreferencesTitle("SORT", $key);
+		}
+	}
 
 	/****************************************************
 	 *  TEMPLATE METHODS LINKS
@@ -1519,20 +1546,22 @@ class ProductGroup_Controller extends Page_Controller {
 	 * Checks out a bunch of $_GET variables
 	 * that are used to work out user preferences
 	 * Some of these are saved to session.
+	 * @param Array $overrideArray - override $_GET variable settings
 	 *
 	 */
-	protected function saveUserPreferences(){
+	protected function saveUserPreferences($overrideArray = array()){
 		$sortFilterDisplayNames = $this->getSortFilterDisplayNames();
-		$preferencesArray = array(
-			"sort_options" => "session_name_for_sort_preference",
-			"filter_options" => "session_name_for_filter_preference",
-			"display_options" => "session_name_for_display_style_preference"
-		);
 		foreach($sortFilterDisplayNames as $type) {
 			$optionsVariableName = $type["configName"];
 			$preferenceVariableName = $type["sessionName"];
 			$myPreferenceVariableName = EcommerceConfig::get("ProductGroup", $preferenceVariableName);
-			if($newPreference = $this->request->getVar($myPreferenceVariableName)) {
+			if(isset($overrideArray[$myPreferenceVariableName])) {
+				$newPreference = $overrideArray[$myPreferenceVariableName];
+			}
+			else {
+				$newPreference = $this->request->getVar($myPreferenceVariableName);
+			}
+			if($newPreference) {
 				$options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
 				if(isset($options[$newPreference])) {
 					Session::set("ProductGroup_".$myPreferenceVariableName, $newPreference);
@@ -1547,6 +1576,7 @@ class ProductGroup_Controller extends Page_Controller {
 			$this->showFullList = true;
 		}
 	}
+
 	/**
 	 * Checks for the most applicable user preferences for this user:
 	 * 1. session value

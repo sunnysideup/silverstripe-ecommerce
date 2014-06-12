@@ -219,7 +219,7 @@ class ProductSearchForm extends Form {
 					// 1) Exact search by code
 					$count = 0;
 					if($this->debug) { $this->debugOutput("<hr /><h2>SEARCH BY CODE</h2>");}
-					if($code = intval($keyword)) {
+					if($code = intval($keyword) ) {
 						$list1 = $baseList->filter(array("InternalItemID" => $code));
 						$count = $list1->count ;
 						if($count == 1) {
@@ -295,50 +295,64 @@ class ProductSearchForm extends Form {
 					if($this->debug) { $this->debugOutput("<hr /><h3>PRODUCT GROUP SEARCH</h3>");}
 					// 3) Do the same search for Product Group names
 					$count = 0;
-					if($this->resultArrayPos <= $this->maximumNumberOfResults) {
-						$searches = $this->getSearchArrays($wordArray);
-						if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
+					if($limitToCurrentSection) {
+						//cant search other sections in this case...
+					}
+					else {
+						if($this->resultArrayPos <= $this->maximumNumberOfResults) {
+							$searches = $this->getSearchArrays($wordArray);
+							if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
 
-						foreach($searches as $search) {
-							$productGroups = ProductGroup::get()->where($search);
-							$count = $productGroups->count();
-							if($count == 1) {
-								if(!$this->debug) {
-									return $this->controller->redirect($productGroups->First()->Link());
-								}
-							}
-							elseif($count > 1) {
-								$productIDArray = array();
-								foreach($productGroups as $productGroup) {
-									$productIDArray += Product::get()->filter(array("ParentID" => $productGroup->ID))->limit(100)->map("ID", "ID")->toArray();
-								}
-								$productIDArray = array_unique($productIDArray);
-								$list3 = $baseList->filter(array("ID" => $productIDArray));
-								$count = $list3->count();
+							foreach($searches as $search) {
+								$productGroups = ProductGroup::get()->where($search);
+								$count = $productGroups->count();
 								if($count == 1) {
 									if(!$this->debug) {
-										return $this->controller->redirect($list3->First()->Link());
+										return $this->controller->redirect($productGroups->First()->Link());
 									}
 								}
 								elseif($count > 1) {
-									if($this->addToResults($list3)) {
-										break;
+									$productIDArray = array();
+									foreach($productGroups as $productGroup) {
+										$productIDArray += Product::get()->filter(array("ParentID" => $productGroup->ID))->limit(100)->map("ID", "ID")->toArray();
+									}
+									$productIDArray = array_unique($productIDArray);
+									$list3 = $baseList->filter(array("ID" => $productIDArray));
+									$count = $list3->count();
+									if($count == 1) {
+										if(!$this->debug) {
+											return $this->controller->redirect($list3->First()->Link());
+										}
+									}
+									elseif($count > 1) {
+										if($this->addToResults($list3)) {
+											break;
+										}
 									}
 								}
-							}
-							if($this->resultArrayPos > $this->maximumNumberOfResults) {
-								break;
+								if($this->resultArrayPos > $this->maximumNumberOfResults) {
+									break;
+								}
 							}
 						}
+						if($this->debug) { $this->debugOutput("<h3>PRODUCT GROUP SEARCH: $count</h3>");}
 					}
-					if($this->debug) { $this->debugOutput("<h3>PRODUCT GROUP SEARCH: $count</h3>");}
 				}
 			}
 		}
 		if(!$keywordResults) {
 			$this->addToResults($baseList);
 		}
-		$link = $this->controller->Link($this->controllerSearchResultDisplayMethod)."?results=".implode(",", $this->resultArray);
+		$redirectToPage = null;
+		//if no specific section is being searched then we redirect to search page:
+		if(!$limitToCurrentSection) {
+			$redirectToPage = ProductGroupSearchPage::get()->first();
+		}
+		if(!$redirectToPage) {
+			//for section specific stuff, we redirect to the specific section (basically where we came from
+			$redirectToPage = $this->controller;
+		}
+		$link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod)."?results=".implode(",", $this->resultArray);
 		if($this->debug) {
 			die($link);
 		}
