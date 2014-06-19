@@ -143,9 +143,9 @@ class ProductSearchForm extends Form {
 		$this->productsToSearch = $productsToSearch;
 
 		$fields = new FieldList(
-			new TextField("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords")),
-			new NumericField("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price")),
-			new NumericField("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"))
+			new TextField("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords"), Session::get("Ecommerce_ProductSearchForm_Keyword")),
+			new NumericField("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price"),  Session::get("Ecommerce_ProductSearchForm_MinimumPrice")),
+			new NumericField("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"), Session::get("Ecommerce_ProductSearchForm_MaximumPrice"))
 		);
 		$actions = new FieldList(
 			new FormAction('doProductSearchForm', 'Search')
@@ -174,6 +174,9 @@ class ProductSearchForm extends Form {
 	}
 
 	function doProductSearchForm($data, $form){
+		foreach($data as $field => $value) {
+			Session::set("Ecommerce_ProductSearchForm_$field", $value);
+		}
 		if(isset($data["DebugSearch"])) {
 			$this->debug = $data["DebugSearch"] ? true : false;
 		}
@@ -202,7 +205,7 @@ class ProductSearchForm extends Form {
 			$baseList = $baseList->filter(array("Price:LessThanOrEqual" => floatval($data["MaximumPrice"])));
 		}
 		$keywordResults = false;
-
+		if($this->debug) { $this->debugOutput("<hr /><h3>BASE LIST</h3><pre>".str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql())."</pre>");}
 		//KEYWORD SEARCH - only bother if we have any keywords and results at all ...
 		if(isset($data["Keyword"]) && $keyword = $data["Keyword"]) {
 			if($baseList->count()) {
@@ -221,7 +224,7 @@ class ProductSearchForm extends Form {
 					if($this->debug) { $this->debugOutput("<hr /><h2>SEARCH BY CODE</h2>");}
 					if($code = intval($keyword) ) {
 						$list1 = $baseList->filter(array("InternalItemID" => $code));
-						$count = $list1->count ;
+						$count = $list1->count();
 						if($count == 1) {
 							if(!$this->debug) {
 								return $this->controller->redirect($list1->First()->Link());
@@ -233,7 +236,7 @@ class ProductSearchForm extends Form {
 							}
 						}
 					}
-					if($this->debug) { $this->debugOutput("<h3>SEARCH BY CODE: $count</h3>");}
+					if($this->debug) { $this->debugOutput("<h3>SEARCH BY CODE RESULT: $count</h3>");}
 
 
 					// 2) Search of the entire keyword phrase and its replacements
@@ -258,6 +261,7 @@ class ProductSearchForm extends Form {
 						}
 						$wordArray = array_unique($wordArray);
 						if($this->debug) { $this->debugOutput("<pre>WORD ARRAY: ".print_r($wordArray, 1)."</pre>");}
+
 						//work out searches
 						$singleton = $baseClassName::create();
 						foreach($this->extraBuyableFieldsToSearchFullText as $tempClassName => $fieldArrayTemp) {
@@ -269,12 +273,13 @@ class ProductSearchForm extends Form {
 						if($this->debug) { $this->debugOutput("<pre>FIELD ARRAY: ".print_r($fieldArray, 1)."</pre>");}
 
 						$searches = $this->getSearchArrays($wordArray, $fieldArray);
-						if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
+						//if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
 
 						//we search exact matches first then other matches ...
 						foreach($searches as $search) {
 							$list2 = $baseList->where($search);
 							$count = $list2->count();
+							if($this->debug) { $this->debugOutput("<p>$search: $count</p>");}
 							if($count == 1) {
 								if(!$this->debug) {
 									return $this->controller->redirect($list2->First()->Link());
@@ -393,12 +398,28 @@ class ProductSearchForm extends Form {
 	protected function getSearchArrays($words, $fields = array("Title", "MenuTitle")){
 		//make three levels of search
 		$searches = array();
-		$wordsAsString = trim(implode(" ", preg_replace('!\s+!', ' ', $words)));
-		foreach($fields as $field) {
-			$searches[0][] = "LOWER(\"$field\") = '$wordsAsString'"; // a) Exact match
-			$searches[1][] = "LOWER(\"$field\") = '%$wordsAsString%'"; // a) Full match with extra fluff
+		$words = preg_replace('!\s+!', ' ', $words);
+		$wordsAsString = trim(implode(" ", $words));
+		$wordArray = explode(" ", $wordsAsString);
+		$wordsAsLikeString = trim(implode("%",$wordArray));
+		if(in_array("Title", $fields)) {
+			$searches[0][] = "LOWER(\"Title\") = '$wordsAsString'"; // a) Exact match
+			$searches[1][] = "LOWER(\"Title\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
+			$searches[2][] = "LOWER(\"Title\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
 		}
-		$searches[2][] = DB::getconn()->fullTextSearchSQL($fields, $wordsAsString, $this->useBooleanSearch);
+		foreach($fields as $field) {
+			$searches[3][] = "LOWER(\"$field\") = '$wordsAsString'"; // a) Exact match
+			$searches[4][] = "LOWER(\"$field\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
+			$searches[5][] = "LOWER(\"$field\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+			/*
+			 * OR WORD SEARCH
+			 * OFTEN leads to too many results, so we keep it simple...
+			foreach($wordArray as $word) {
+				$searches[6][] = "LOWER(\"$field\") LIKE '%$word%'"; // d) One word match within a bigger string
+			}
+			*/
+		}
+		//$searches[3][] = DB::getconn()->fullTextSearchSQL($fields, $wordsAsString, true);
 		$returnArray = array();
 		foreach($searches as $key => $search) {
 			$returnArray[$key] = implode(" OR ", $search);
@@ -425,6 +446,21 @@ class ProductSearchForm extends Form {
 		echo "<br />$string";
 	}
 
+	/**
+	 * @var array
+	 * List of words to be replaced.
+	 */
+	private $sqlWords = array(
+		"\r\n SELECT" => "SELECT",
+		"\r\n FROM" => "FROM",
+		"\r\n WHERE" => "WHERE",
+		"\r\n HAVING" => "HAVING",
+		"\r\n GROUP" => "GROUP",
+		"\r\n ORDER BY" => "ORDER BY",
+		"\r\n INNER JOIN" => "INNER JOIN",
+		"\r\n LEFT JOIN" => "LEFT JOIN",
+	);
+
 }
 
 class ProductSearchForm_Short extends ProductSearchForm {
@@ -432,7 +468,7 @@ class ProductSearchForm_Short extends ProductSearchForm {
 	function __construct($controller, $name, $nameOfProductsBeingSearched = "", $productsToSearch = null) {
 		parent::__construct($controller, $name, $nameOfProductsBeingSearched, $productsToSearch);
 		$this->fields = new FieldList(
-			new TextField("Keyword", "")
+			new TextField("Keyword", "", Session::get("Ecommerce_ProductSearchForm_Keyword"))
 		);
 		$this->actions = new FieldList(
 			new FormAction('doProductSearchForm', 'Go')
