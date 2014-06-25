@@ -23,6 +23,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 	";
 
 	function run($request){
+		set_time_limit(0);
 		//IMPORTANT!
 		$lastOrderStep = OrderStep::get()->sort("Sort", "DESC")->First();
 		if($lastOrderStep) {
@@ -57,6 +58,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 	}
 
 	protected function createSubmissionLogForArchivedOrders(){
+
 		$lastOrderStep = OrderStep::get()->sort("Sort", "DESC")->First();
 		$submissionLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
 		$orderStatusLogClassName = "OrderStatusLog";
