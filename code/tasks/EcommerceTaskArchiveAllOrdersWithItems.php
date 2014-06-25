@@ -17,9 +17,9 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 	protected $title = "Archive all orders with order items and adding a submit record.";
 
 	protected $description = "
-	This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.
-	NB: It also adds a submit record.
-	This task is basically for orders that never got archived.
+		This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.
+		NB: It also adds a submit record.
+		This task is basically for orders that never got archived.
 	";
 
 	function run($request){
@@ -65,8 +65,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 		$orders = Order::get()
 			->filter(array("StatusID" => $lastOrderStep->ID))
 			->leftJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
-			->leftJoin($submissionLogClassName, "\"$orderStatusLogClassName\".\"ID\" = \"$submissionLogClassName\".\"ID\"")
-			->where("\"$submissionLogClassName\".\"ID\" IS NULL")
+			->where("\"$orderStatusLogClassName\".\"ID\" IS NULL")
 			->limit(100, $offSet);
 		while($orders->count()) {
 			foreach($orders as $order) {
@@ -83,6 +82,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 						$obj->write();
 						$obj->OrderAsHTML = $order->ConvertToHTML();
 						$obj->write();
+						DB::alteration_message("creating submission log for Order #".$obj->OrderID, "created");
 					}
 					else {
 						user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
