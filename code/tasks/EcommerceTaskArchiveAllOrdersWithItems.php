@@ -19,6 +19,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 	protected $description = "
 	This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.
 	NB: It also adds a submit record.
+	This task is basically for orders that never got archived.
 	";
 
 	function run($request){
@@ -58,10 +59,15 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 	protected function createSubmissionLogForArchivedOrders(){
 		$lastOrderStep = OrderStep::get()->sort("Sort", "DESC")->First();
 		$submissionLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
+		$orderStatusLogClassName = "OrderStatusLog";
 
 		$offSet = 0;
-		$orders = Order::get()->filter(array("StatusID" => $lastOrderStep->ID))->limit(100, $offSet);
-
+		$orders = Order::get()
+			->filter(array("StatusID" => $lastOrderStep->ID))
+			->leftJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
+			->leftJoin($submissionLogClassName, "\"$orderStatusLogClassName\".\"ID\" = \"$submissionLogClassName\".\"ID\"")
+			->where("\"$submissionLogClassName\".\"ID\" IS NULL")
+			->limit(100, $offSet);
 		while($orders->count()) {
 			foreach($orders as $order) {
 
@@ -71,21 +77,6 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 				if(!$isSubmitted) {
 					$obj = $submissionLogClassName::create();
 					if(is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
-						//save versions
-						//@todo: test and implement
-						/*
-						if($this->Attributes()->exists()){
-							foreach($this->Attributes() as $attribute){
-								if(is_a($attribute, Object::getCustomClass("OrderItem"))){
-									$buyable = $attribute->Buyable();
-									if(isset($buyable->Version)) {
-										$attribute->Version = $buyable->Version;
-										$attribute->write();
-									}
-								}
-							}
-						}
-						*/
 						$obj->OrderID = $order->ID;
 						//it is important we add this here so that we can save the 'submitted' version.
 						//this is particular important for the Order Item Links.
