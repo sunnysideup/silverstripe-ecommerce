@@ -69,7 +69,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 					->Filter(array("OrderID" => $order->ID))
 					->count();
 				if(!$isSubmitted) {
-					$obj = $className::create();
+					$obj = $submissionLogClassName::create();
 					if(is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
 						//save versions
 						//@todo: test and implement
