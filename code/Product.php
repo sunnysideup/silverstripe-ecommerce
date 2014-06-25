@@ -1023,14 +1023,10 @@ class Product_Controller extends Page_Controller {
 	 * Returns a snippet when requested by ajax.
 	 */
 	function ajaxview(SS_HTTPRequest $request){
-		$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', true);
-		}
+		Config::nest();
+		Config::inst()->update('SSViewer', 'theme_enabled', true);
 		$html = $this->renderWith("ProductGroupItemMoreDetail");
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', false);
-		}
+		Config::unnest();
 		return $html;
 	}
 
@@ -1441,14 +1437,10 @@ class Product_OrderItem extends OrderItem {
 	function getTableTitle() {
 		$tableTitle = _t("Product.UNKNOWN", "Unknown Product");
 		if($product = $this->Product()) {
-			$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
-			if(!$isThemeEnabled) {
-				Config::inst()->update('SSViewer', 'theme_enabled', true);
-			}
+			Config::nest();
+			Config::inst()->update('SSViewer', 'theme_enabled', true);
 			$tableTitle = strip_tags($product->renderWith("ProductTableTitle"));
-			if(!$isThemeEnabled) {
-				Config::inst()->update('SSViewer', 'theme_enabled', false);
-			}
+			Config::unnest();
 		}
 		$updatedTableTitle = $this->extend('updateTableTitle',$tableTitle);
 		if($updatedTableTitle) {

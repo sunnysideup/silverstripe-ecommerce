@@ -330,14 +330,10 @@ class OrderAddress extends DataObject {
 	 */
 	public function FullString(){ return $this->getFullString();}
 	public function getFullString() {
-		$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', true);
-		}
+		Config::nest();
+		Config::inst()->update('SSViewer', 'theme_enabled', true);
 		$html = $this->renderWith("Order_Address".str_replace("Address", "", $this->ClassName)."FullString");
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', false);
-		}
+		Config::unnest();
 		return $html;
 	}
 

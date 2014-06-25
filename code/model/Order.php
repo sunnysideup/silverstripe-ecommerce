@@ -469,14 +469,10 @@ class Order extends DataObject {
 			"Main"
 		);
 		if($submitted) {
-			$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
-			if(!$isThemeEnabled) {
-				Config::inst()->update('SSViewer', 'theme_enabled', true);
-			}
-			$htmlSummary = $this->renderWith("Order");
-			if(!$isThemeEnabled) {
-				Config::inst()->update('SSViewer', 'theme_enabled', false);
-			}
+			//Config::nest();
+			//Config::inst()->update('SSViewer', 'theme_enabled', true);
+			//$htmlSummary = $this->renderWith("Order");
+			//Config::unnest();
 
 			$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<iframe src="'.$this->PrintLink().'" width="100%" height="500"></iframe>'));
 			$fields->insertAfter(
@@ -1273,12 +1269,12 @@ class Order extends DataObject {
 			// This might be called from within the CMS,
 			// so we need to restore the theme, just in case
 			// templates within the theme exist
-			$oldTheme = Config::inst()->get('SSViewer', 'theme');
-			Config::inst()->update('SSViewer', 'theme', Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null);
+			Config::nest();
+			Config::inst()->update('SSViewer', 'theme_enabled', true);
 			$email->setOrder($this);
 			$email->setResend($resend);
 			$result = $email->send(null);
-			Config::inst()->update('SSViewer', 'theme', $oldTheme);
+			Config::unnest();
 			return $result;
 		}
 		return false;
@@ -1338,13 +1334,10 @@ class Order extends DataObject {
 	public function renderOrderInEmailFormat($message = "", $emailClassName) {
 		$arrayData = $this->createReplacementArrayForEmail($message);
 		$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', true);
-		}
+		Config::nest();
+		Config::inst()->update('SSViewer', 'theme_enabled', true);
 		$html = $arrayData->renderWith($emailClassName);
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', false);
-		}
+		Config::unnest();
 		return Order_Email::emogrify_html($html);
 	}
 
@@ -2505,14 +2498,10 @@ class Order extends DataObject {
 	 * @return String - HTML
 	 **/
 	public function ConvertToHTML() {
-		$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', true);
-		}
+		Config::nest();
+		Config::inst()->update('SSViewer', 'theme_enabled', true);
 		$html = $this->renderWith("Order");
-		if(!$isThemeEnabled) {
-			Config::inst()->update('SSViewer', 'theme_enabled', false);
-		}
+		Config::unnest();
 		return $html;
 	}
 
