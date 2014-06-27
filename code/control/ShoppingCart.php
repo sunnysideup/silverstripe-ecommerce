@@ -990,13 +990,6 @@ class ShoppingCart extends Object{
  */
 class ShoppingCart_Controller extends Controller{
 
-
-	/**
-	 * URLSegment used for the Shopping Cart controller
-	 *@var string
-	 **/
-	private static $url_segment = 'shoppingcart';
-
 	/**
 	 * We need to only use the Security ID on a few
 	 * actions, these are listed here.

@@ -16,11 +16,6 @@ SiteTree:
   extensions:
     - EcommerceSiteTreeExtension
 
-Payment:
-  extensions:
-    - EcommercePayment
-
-
 Page_Controller:
   extensions:
     - EcommerceSiteTreeExtension_Controller
