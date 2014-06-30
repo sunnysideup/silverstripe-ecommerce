@@ -43,7 +43,6 @@ class EcommerceRole extends DataExtension {
 	 **/
 	public static function get_customer_group() {
 		$customerCode = EcommerceConfig::get("EcommerceRole", "customer_group_code");
-		//$customerName = EcommerceConfig::get("EcommerceRole", "customer_group_name");
 		return Group::get()
 			->Filter(array("Code" => $customerCode))->First();
 	}

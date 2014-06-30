@@ -260,6 +260,21 @@ class CheckoutPage extends CartPage {
 		return new GridField("CheckoutPage_StepDescription", $title, $source , $gridFieldConfig);
 	}
 
+	public function requireDefaultRecords(){
+		parent::requireDefaultRecords();
+		$checkoutPage = CheckoutPage::get()->first();
+		$defaults = $this->Config()->get("defaults");
+		foreach($defaults as $field => $value) {
+			if($value != 1 && $value != "Inherit") {
+				if(!$this->$field) {
+					$this->$field = $value;
+					DB::alteration_message("Creating value for checkout page: ".$field." = ".$value, "created");
+				}
+			}
+		}
+
+	}
+
 }
 
 class CheckoutPage_Controller extends CartPage_Controller {

@@ -132,12 +132,13 @@ class ProductSearchForm extends Form {
 	function __construct($controller, $name, $nameOfProductsBeingSearched = "", $productsToSearch = null) {
 
 		//set basics
+		$productsToSearchCount = 0;
 		if($productsToSearch) {
 			if(is_array($productsToSearch)) {
-				//do nothing
+				$productsToSearchCount = count($productsToSearch);
 			}
-			if($productsToSearch instanceof DataList) {
-				$productsToSearch = $productsToSearch->map("ID", "ID")->toArray();
+			elseif($productsToSearch instanceof DataList) {
+				$productsToSearchCount = $productsToSearch->count();
 			}
 		}
 		$this->productsToSearch = $productsToSearch;
@@ -150,7 +151,7 @@ class ProductSearchForm extends Form {
 		$actions = new FieldList(
 			new FormAction('doProductSearchForm', 'Search')
 		);
-		if($productsToSearch && count($productsToSearch)) {
+		if($productsToSearchCount) {
 			$fields->push(
 				new CheckboxField("SearchOnlyFieldsInThisSection", _t("ProductSearchForm.ONLY_SHOW", "Only Show Results from")." <i>".$nameOfProductsBeingSearched."</i> "._t("ProductSearchForm.SECTION", "section"), true)
 			);

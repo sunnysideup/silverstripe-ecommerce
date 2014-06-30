@@ -20,7 +20,7 @@ class CreateEcommerceMemberGroups extends BuildTask{
 	function run($request){
 		$customerGroup = EcommerceRole::get_customer_group();
 		$customerPermissionCode = EcommerceConfig::get("EcommerceRole", "customer_permission_code");
-		if(!$customerGroup) {
+		if(!$customerGroup->exists()) {
 			$customerGroup = new Group();
 			$customerGroup->Code = EcommerceConfig::get("EcommerceRole", "customer_group_code");
 			$customerGroup->Title = EcommerceConfig::get("EcommerceRole", "customer_group_name");
@@ -28,7 +28,7 @@ class CreateEcommerceMemberGroups extends BuildTask{
 			Permission::grant( $customerGroup->ID, $customerPermissionCode);
 			DB::alteration_message(EcommerceConfig::get("EcommerceRole", "customer_group_name").' Group created',"created");
 		}
-		elseif(DB::query("SELECT * FROM \"Permission\" WHERE \"GroupID\" = '".$customerGroup->ID."' AND \"Code\" LIKE '".$customerPermissionCode."'")->numRecords() == 0 ) {
+		elseif(DB::query("SELECT COUNT(ID) FROM \"Permission\" WHERE \"GroupID\" = '".$customerGroup->ID."' AND \"Code\" LIKE '".$customerPermissionCode."'")->value() == 0 ) {
 			Permission::grant($customerGroup->ID, $customerPermissionCode);
 			DB::alteration_message(EcommerceConfig::get("EcommerceRole", "customer_group_name").' permissions granted',"created");
 		}
@@ -94,6 +94,50 @@ class CreateEcommerceMemberGroups extends BuildTask{
 			if($adminGroup) {
 				$existingGroups = $permissionRole->Groups();
 				$existingGroups->add($adminGroup);
+			}
+		}
+		$this->DeleteDoubleUpCustomers();
+		$this->DeleteDoubleUpAdmins();
+	}
+
+	public function DeleteDoubleUpCustomers(){
+		$code = EcommerceConfig::get("EcommerceRole", "customer_group_code");
+		$title = EcommerceConfig::get("EcommerceRole", "customer_group_name");
+		$defaultGroup = EcommerceRole::get_customer_group();
+		$groups = Group::get()->filter(array("Title" => $title));
+		if($defaultGroup) {
+			$realMembers = $defaultGroup->Members();
+			foreach($groups as $group) {
+				if($group->ID != $defaultGroup->ID) {
+					$fakeMembers = $group->Members();
+					foreach($fakeMembers as $fakeMember) {
+						DB::alteration_message("adding customers: ".$fakeMember->Email, "created");
+						$realMembers->add($fakeMember);
+					}
+					$group->delete();
+					DB::alteration_message("deleting double group", "deleted");
+				}
+			}
+		}
+	}
+
+	public function DeleteDoubleUpAdmins(){
+		$code = EcommerceConfig::get("EcommerceRole", "admin_group_code");
+		$title = EcommerceConfig::get("EcommerceRole", "admin_group_name");
+		$defaultGroup = EcommerceRole::get_admin_group();
+		$groups = Group::get()->filter(array("Title" => $title));
+		if($defaultGroup) {
+			$realMembers = $defaultGroup->Members();
+			foreach($groups as $group) {
+				if($group->ID != $defaultGroup->ID) {
+					$fakeMembers = $group->Members();
+					foreach($fakeMembers as $fakeMember) {
+						DB::alteration_message("adding admin: ".$fakeMember->Email, "created");
+						$realMembers->add($fakeMember);
+					}
+					$group->delete();
+					DB::alteration_message("deleting double group", "deleted");
+				}
 			}
 		}
 	}

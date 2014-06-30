@@ -66,27 +66,27 @@ class EcommerceMigration extends BuildTask {
 	);
 
 	function run($request) {
+		$nextGetStatement = "";
 		if(isset($_REQUEST["limit"])) {
 			$this->limit = intval($_REQUEST["limit"]);
 		}
-		if(isset($_REQUEST["limit"])) {
+		if(isset($_REQUEST["start"])) {
 			$this->start = intval($_REQUEST["start"]);
 		}
 		$canDoNext = true;
-		$step = ($request->Param("ID"));
-		$this->start = intval($request->Param("OtherID"))-0;
+		$step = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "";
 		if(in_array($step, $this->listOfMigrationTasks)) {
 			$method = $step;
 			$nextLimit = $this->$method();
 			if($canDoNext && $nextLimit) {
 				$canDoNext = false;
-				$next = "".$method."/".$nextLimit;
+				$nextGetStatement = "?action=".$method."&start=".$nextLimit;
 				$nextDescription = "run next batch ...";
 			}
 		}
 
 		if($canDoNext) {
-			$next = $this->listOfMigrationTasks[0];
+			$nextGetStatement = "?action=".$this->listOfMigrationTasks[0];
 			$nextDescription = "Start Migration by clicking on <i>'Next'</i> (this link) until all tasks have been completed.";
 		}
 		$this->retrieveInfoOnly = true;
@@ -103,21 +103,22 @@ class EcommerceMigration extends BuildTask {
 				if($canDoNext) {
 					$keyPlusOne = $key + 1;
 					if(isset($this->listOfMigrationTasks[$keyPlusOne])) {
-						$next = $this->listOfMigrationTasks[$keyPlusOne];
-						$nextDescription = $this->$next();
+						$action = $this->listOfMigrationTasks[$keyPlusOne];
+						$nextGetStatement = "?action=".$action;
+						$nextDescription = $this->$action();
 						$nextDescription = str_replace(array("<h1>","</h1>", "<p>", "</p>"), array("<strong>","</strong>: ", "<span style=\"color: grey;\">", "</span>"), $nextDescription);
 					}
 					else {
-						$next = "";
+						$nextGetStatement = "";
 						$nextDescription = "";
 					}
 				}
 			}
-			if(!$step) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercemigration/".$task."/\">$explanation </a></li>";}
+			if(!$step) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercemigration/?action=".$task."\">$explanation </a></li>";}
 		}
 		if(!$step) {$html .= "</ul>";}
-		$nextLink = "/dev/ecommerce/ecommercemigration/".$next."/";
-		if($next) {
+		$nextLink = "/dev/ecommerce/ecommercemigration/".$nextGetStatement;
+		if($nextGetStatement) {
 			echo "
 				<hr style=\"margin-top: 50px;\"/>
 				<h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>";
@@ -684,7 +685,7 @@ class EcommerceMigration extends BuildTask {
 							DB::alteration_message("Strange contraduction occurred!", "deleted");
 						}
 					}
-					$this->start+$this->limit;
+					return $this->start+$this->limit;
 				}
 				else {
 					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
@@ -1273,7 +1274,7 @@ class EcommerceMigration extends BuildTask {
 				}
 			}
 			DB::alteration_message("Ignored $count Orders that have already been submitted.");
-			$this->start+$this->limit;
+			return $this->start+$this->limit;
 		}
 		else {
 			DB::alteration_message("There were no orders at all to work through.");
@@ -1526,6 +1527,12 @@ class EcommerceMigration extends BuildTask {
 			<h1>290. Add Curenccy to Orders</h1>
 			<p>Sets all currencies to the default currency for all orders without a currency.</p>
 		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
 		$ordersWithoutCurrencyCount = Order::get()->filter(array('CurrencyUsedID' => 0))->count();
 		if($ordersWithoutCurrencyCount) {
 			$currencyID = EcommerceCurrency::default_currency_id();
