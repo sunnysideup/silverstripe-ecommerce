@@ -1542,6 +1542,59 @@ class EcommerceMigration extends BuildTask {
 		return 0;
 	}
 
+	function MovePaymentToEcommercePayment_300(){
+		$explanation = "
+			<h1>300. Migrating Payment to EcommercePayment</h1>
+			<p>We move the data from Payment to EcommercePayment.</p>
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
+		$db = DB::getConn();
+		$table = "Payment";
+		if($db->hasTable("_obsolete_Payment") && !$db->hasTable("Payment")) {
+			$table = "_obsolete_Payment";
+			DB::alteration_message("The table Payment has been moved to _obsolete_Payment. We are using the latter to fix things...", "deleted");
+		}
+		DB::query('
+			INSERT IGNORE INTO EcommercePayment(
+				`ID`,
+				`ClassName`,
+				`Created`,
+				`LastEdited`,
+				`Status`,
+				`AmountAmount`,
+				`AmountCurrency`,
+				`Message`,
+				`IP`,
+				`ProxyIP`,
+				`OrderID`,
+				`ExceptionError`,
+				`PaidByID`
+			)
+			SELECT
+					`ID`,
+					`ClassName`,
+					`Created`,
+					`LastEdited`,
+					`Status`,
+					IF(`AmountAmount` > 0, `AmountAmount`, `Amount`),
+					IF(`AmountCurrency` <> \'\', `AmountCurrency`, `Currency`),
+					`Message`,
+					`IP`,
+					`ProxyIP`,
+					`OrderID`,
+					`ExceptionError`,
+					`PaidByID`
+				FROM '.$table.''
+		);
+		DB::alteration_message("Moving Payment to Ecommerce Payment", "created");
+		return 0;
+	}
+
 	function theEnd_9999(){
 		$explanation = "
 			<h1>9999. Migration Completed</h1>
