@@ -2,7 +2,7 @@
 
 
 /**
- * @description: see AddDefaultEcommerceProducts::$description
+ * @description: see EcommerceTaskAddDefaultProducts::$description
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class AddDefaultEcommerceProducts extends BuildTask {
+class EcommerceTaskAddDefaultProducts extends BuildTask {
 
 
 	protected $title = "Add default Products";

@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class CleanupProductFullSiteTreeSorting extends BuildTask{
+class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask{
 
 	protected $title = "Cleanup Product Full SiteTree Sorting";
 

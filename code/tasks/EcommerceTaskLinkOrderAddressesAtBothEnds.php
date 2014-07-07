@@ -13,7 +13,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class LinkOrderAddressesAtBothEnds extends BuildTask{
+class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask{
 
 	protected $title = "Links the Order Addresses at the Order And Address side";
 

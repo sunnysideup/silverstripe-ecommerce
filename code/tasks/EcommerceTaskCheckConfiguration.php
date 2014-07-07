@@ -16,7 +16,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceCheckConfiguration extends BuildTask{
+class EcommerceTaskCheckConfiguration extends BuildTask{
 
 	/**
 	 * Default Location for Configuration File
@@ -577,7 +577,7 @@ EcommerceConfig:
 	function checkoutAndModifierDetails(){
 		$checkoutPage = CheckoutPage::get()->First();
 		if(!$checkoutPage) {
-			$task = new EcommerceDefaultRecords();
+			$task = new EcommerceTaskDefaultRecords();
 			$task->run(null);
 			$checkoutPage = CheckoutPage::get()->First();
 			if(!$checkoutPage) {

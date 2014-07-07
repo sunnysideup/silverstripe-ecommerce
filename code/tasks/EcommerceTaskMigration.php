@@ -19,7 +19,7 @@
 
 
 
-class EcommerceMigration extends BuildTask {
+class EcommerceTaskMigration extends BuildTask {
 
 	protected $limit = 100;
 
@@ -114,10 +114,10 @@ class EcommerceMigration extends BuildTask {
 					}
 				}
 			}
-			if(!$step) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercemigration/?action=".$task."\">$explanation </a></li>";}
+			if(!$step) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercetaskmigration/?action=".$task."\">$explanation </a></li>";}
 		}
 		if(!$step) {$html .= "</ul>";}
-		$nextLink = "/dev/ecommerce/ecommercemigration/".$nextGetStatement;
+		$nextLink = "/dev/ecommerce/ecommercetaskmigration/".$nextGetStatement;
 		if($nextGetStatement) {
 			echo "
 				<hr style=\"margin-top: 50px;\"/>
@@ -1458,7 +1458,7 @@ class EcommerceMigration extends BuildTask {
 		else {
 			echo $explanation;
 		}
-		$task = new EcommerceProductImageReset();
+		$task = new EcommerceTaskProductImageReset();
 		$task->run(null);
 		return 0;
 	}

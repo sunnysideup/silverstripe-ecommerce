@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceProductVariationsFixesTask extends BuildTask{
+class EcommerceTaskProductVariationsFixes extends BuildTask{
 
 	protected $title = "Fix Product Variations";
 

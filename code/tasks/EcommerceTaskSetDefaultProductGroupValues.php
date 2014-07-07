@@ -11,7 +11,7 @@
  **/
 
 
-class SetDefaultProductGroupValues extends BuildTask {
+class EcommerceTaskSetDefaultProductGroupValues extends BuildTask {
 
 
 	protected $title = "Set Default Product Group Values";

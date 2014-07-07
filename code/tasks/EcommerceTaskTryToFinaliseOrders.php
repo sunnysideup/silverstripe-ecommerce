@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceTryToFinaliseOrdersTask extends BuildTask {
+class EcommerceTaskTryToFinaliseOrders extends BuildTask {
 
 	protected $doNotSendEmails = true;
 
@@ -26,7 +26,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 		//IMPORTANT!
 		if($this->doNotSendEmails) {
 			Config::inst()->update("Email","send_all_emails_to", "no-one@localhost");
-			Email::set_mailer( new EcommerceTryToFinaliseOrdersTask_Mailer() );
+			Email::set_mailer( new EcommerceTaskTryToFinaliseOrders_Mailer() );
 		}
 		$orderStatusLogClassName = "OrderStatusLog";
 		$submittedOrderStatusLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
@@ -50,7 +50,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 						$last = intval($_GET["last"]);
 					}
 					if(!intval($last)) {
-						$last = intval(Session::get("EcommerceTryToFinaliseOrdersTask"));
+						$last = intval(Session::get("EcommerceTaskTryToFinaliseOrders"));
 						if(!$last) {$last = 0;}
 					}
 					$orders = Order::get()
@@ -62,7 +62,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 						DB::alteration_message("<h1>Moving $count Orders (starting from $last)</h1>");
 						foreach($orders as $order) {
 							$last++;
-							Session::set("EcommerceTryToFinaliseOrdersTask", $last);
+							Session::set("EcommerceTaskTryToFinaliseOrders", $last);
 							$stepBefore = OrderStep::get()->byID($order->StatusID);
 							try{
 								$order->tryToFinaliseOrder();
@@ -85,7 +85,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 						}
 					}
 					else {
-						Session::clear("EcommerceTryToFinaliseOrdersTask");
+						Session::clear("EcommerceTaskTryToFinaliseOrders");
 						DB::alteration_message("<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.", "created");
 					}
 				}
@@ -100,7 +100,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 		else {
 			DB::alteration_message("NO EcommerceConfig::get(\"OrderStatusLog\", \"order_status_log_class_used_for_submitting_order\")", "deleted");
 		}
-		if(Session::get("EcommerceTryToFinaliseOrdersTask")) {
+		if(Session::get("EcommerceTaskTryToFinaliseOrders")) {
 			DB::alteration_message("WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.", "deleted");
 			echo "<script type=\"text/javascript\">window.setTimeout(function() {location.reload();}, 5000);</script>";
 		}
@@ -112,7 +112,7 @@ class EcommerceTryToFinaliseOrdersTask extends BuildTask {
 
 }
 
-class EcommerceTryToFinaliseOrdersTask_Mailer extends mailer {
+class EcommerceTaskTryToFinaliseOrders_Mailer extends mailer {
 	/**
 	 * FAKE Send a plain-text email.
 	 *

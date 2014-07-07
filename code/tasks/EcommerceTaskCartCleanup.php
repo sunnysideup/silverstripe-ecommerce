@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class CartCleanupTask extends BuildTask {
+class EcommerceTaskCartCleanup extends BuildTask {
 
 	/**
 	 * Standard SS Variable
@@ -37,7 +37,7 @@ class CartCleanupTask extends BuildTask {
 	 * run in verbose mode
 	 */
 	public static function run_on_demand() {
-		$obj = new CartCleanupTask();
+		$obj = new EcommerceTaskCartCleanup();
 		$obj->verbose = true;
 		$obj->run(null);
 	}
@@ -59,8 +59,8 @@ class CartCleanupTask extends BuildTask {
 		}
 
 		//ABANDONNED CARTS
-		$clearMinutes = EcommerceConfig::get("CartCleanupTask", "clear_minutes");
-		$maximumNumberOfObjectsDeleted = EcommerceConfig::get("CartCleanupTask", "maximum_number_of_objects_deleted");
+		$clearMinutes = EcommerceConfig::get("EcommerceTaskCartCleanup", "clear_minutes");
+		$maximumNumberOfObjectsDeleted = EcommerceConfig::get("EcommerceTaskCartCleanup", "maximum_number_of_objects_deleted");
 		if($this->verbose && $request && $limit = $request->getVar("limit") ) {
 			$maximumNumberOfObjectsDeleted = intval($limit);
 		}
@@ -68,7 +68,7 @@ class CartCleanupTask extends BuildTask {
 		$where = "\"StatusID\" = ".OrderStep::get_status_id_from_code("CREATED")." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
 		$limit = "0, ".$maximumNumberOfObjectsDeleted;
-		$neverDeleteIfLinkedToMember = EcommerceConfig::get("CartCleanupTask", "never_delete_if_linked_to_member");
+		$neverDeleteIfLinkedToMember = EcommerceConfig::get("EcommerceTaskCartCleanup", "never_delete_if_linked_to_member");
 		if($neverDeleteIfLinkedToMember) {
 			$where .= " AND \"Member\".\"ID\" IS NULL";
 			$memberDeleteNote = "(Carts linked to a member will NEVER be deleted)";
@@ -111,12 +111,12 @@ class CartCleanupTask extends BuildTask {
 		}
 
 		//EMPTY ORDERS
-		$clearMinutes = EcommerceConfig::get("CartCleanupTask", "clear_minutes_empty_carts");
+		$clearMinutes = EcommerceConfig::get("EcommerceTaskCartCleanup", "clear_minutes_empty_carts");
 		$time = strtotime("-".$clearMinutes." minutes");
 		$where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
 		$sort = "\"Order\".\"Created\" ASC";
 		$limit = "0, ".$maximumNumberOfObjectsDeleted;
-		$neverDeleteIfLinkedToMember = EcommerceConfig::get("CartCleanupTask", "never_delete_if_linked_to_member");
+		$neverDeleteIfLinkedToMember = EcommerceConfig::get("EcommerceTaskCartCleanup", "never_delete_if_linked_to_member");
 		if($neverDeleteIfLinkedToMember) {
 			$where .= " AND \"Member\".\"ID\" IS NULL";
 			$memberDeleteNote = "(Carts linked to a member will NEVER be deleted)";
@@ -158,9 +158,9 @@ class CartCleanupTask extends BuildTask {
 			DB::alteration_message("$countCart Orders are empty, $countCartWithinTimeLimit are within the time limit (last edited after $timeLegible) so they are not deleted yet.", "created");
 		}
 
-		$oneToMany = EcommerceConfig::get("CartCleanupTask", "one_to_many_classes");
-		$oneToOne = EcommerceConfig::get("CartCleanupTask", "one_to_one_classes");
-		$manyToMany = EcommerceConfig::get("CartCleanupTask", "many_to_many_classes");
+		$oneToMany = EcommerceConfig::get("EcommerceTaskCartCleanup", "one_to_many_classes");
+		$oneToOne = EcommerceConfig::get("EcommerceTaskCartCleanup", "one_to_one_classes");
+		$manyToMany = EcommerceConfig::get("EcommerceTaskCartCleanup", "many_to_many_classes");
 
 		/***********************************************
 		//CLEANING ONE-TO-ONES

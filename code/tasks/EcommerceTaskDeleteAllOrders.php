@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class DeleteAllOrders extends BuildTask {
+class EcommerceTaskDeleteAllOrders extends BuildTask {
 
 
 	private static $allowed_actions = array(
@@ -66,7 +66,7 @@ class DeleteAllOrders extends BuildTask {
 				$_REQUEST["i-am-sure"] = "";
 			}
 			if("yes" != $_REQUEST["i-am-sure"]) {
-				die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/deleteallorders/?i-am-sure=yes");
+				die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/ecommercetaskdeleteallorders/?i-am-sure=yes");
 			}
 			$oldCarts = Order::get();
 			$count = 0;

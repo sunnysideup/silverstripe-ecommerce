@@ -11,7 +11,7 @@
  **/
 
 
-class CreateEcommerceMemberGroups extends BuildTask{
+class EcommerceTaskCartCreateEcommerceMemberGroups extends BuildTask{
 
 	protected $title = "Create E-commerce Member Groups";
 

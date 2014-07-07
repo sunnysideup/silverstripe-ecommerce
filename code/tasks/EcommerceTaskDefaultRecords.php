@@ -12,7 +12,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceDefaultRecords extends BuildTask {
+class EcommerceTaskDefaultRecords extends BuildTask {
 
 	/**
 	 * standard SS variable

@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceProductImageReset extends BuildTask{
+class EcommerceTaskProductImageReset extends BuildTask{
 
 	protected $title = "Reset all product (variation) images";
 

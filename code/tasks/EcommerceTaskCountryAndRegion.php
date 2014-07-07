@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceCountryAndRegionTasks extends BuildTask{
+class EcommerceTaskCountryAndRegion extends BuildTask{
 
 	protected $title = "Create standard countries and regions";
 
@@ -58,7 +58,7 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceCountryAndRegionTasks_DisallowAllCountries extends BuildTask{
+class EcommerceTaskCountryAndRegion_DisallowAllCountries extends BuildTask{
 
 	protected $title = "Disallows sale to all countries";
 
@@ -91,7 +91,7 @@ class EcommerceCountryAndRegionTasks_DisallowAllCountries extends BuildTask{
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceCountryAndRegionTasks_AllowAllCountries extends BuildTask{
+class EcommerceTaskCountryAndRegion_AllowAllCountries extends BuildTask{
 
 	protected $title = "Allows sale to all countries";
 

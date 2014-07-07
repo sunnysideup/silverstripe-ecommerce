@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class DeleteEcommerceProductsTask extends BuildTask{
+class EcommerceTaskDeleteProducts extends BuildTask{
 
 	private static $allowed_actions = array(
 		'*' => 'ADMIN'

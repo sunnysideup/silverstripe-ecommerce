@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class CartManipulation_Current extends BuildTask{
+class EcommerceTaskCartManipulation_Current extends BuildTask{
 
 	protected $title = "Clear the current Cart";
 
@@ -32,7 +32,7 @@ class CartManipulation_Current extends BuildTask{
  * @sub-package: tasks
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class CartManipulation_Debug extends BuildTask{
+class EcommerceTaskCartManipulation_Debug extends BuildTask{
 
 	protected $title = "Show debug links";
 

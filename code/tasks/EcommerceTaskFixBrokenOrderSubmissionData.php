@@ -12,7 +12,7 @@
  **/
 
 
-class FixBrokenOrderSubmissionData extends BuildTask{
+class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask{
 
 	protected $title = "Fixes broken order submission links";
 

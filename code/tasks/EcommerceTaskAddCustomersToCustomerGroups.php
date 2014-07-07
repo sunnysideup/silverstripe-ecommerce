@@ -10,7 +10,7 @@
  **/
 
 
-class AddCustomersToCustomerGroups extends BuildTask {
+class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask {
 
 	protected $title = "Add Customers to Customer Group";
 
