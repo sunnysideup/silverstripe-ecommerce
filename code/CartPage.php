@@ -52,8 +52,8 @@ class CartPage extends Page{
 		'SaveOrderLinkLabel' => 'save current order',
 		'DeleteOrderLinkLabel' => 'delete this order',
 		'LoadOrderLinkLabel' => 'finalise this order',
-		'NoItemsInOrderMessage' => '<p>You do not have any items in your current order</p>',
-		'NonExistingOrderMessage' => '<p>Sorry, the order you are trying to open does not exist</p>'
+		'NoItemsInOrderMessage' => '<p>You do not have any items in your current order.</p>',
+		'NonExistingOrderMessage' => '<p>Sorry, the order you are trying to open does not exist.</p>'
 	);
 
 	/**

@@ -44,11 +44,11 @@ class EcommerceTaskCreateMemberGroups extends BuildTask{
 	 * set up a group with permissions, roles, etc...
 	 * @param String $code code for the group
 	 * @param String $name title for the group
-	 * @param Group $parentGroup group object that is the parent of the group
+	 * @param Group | String $parentGroup group object that is the parent of the group. You can also provide a string (name / title of group)
 	 * @param String $permissionCode Permission Code for the group (e.g. CMS_DO_THIS_OR_THAT)
 	 * @param String $roleTitle Role Title - e.g. Store Manager
 	 * @param Array $permissionArray Permission Array - list of permission codes applied to the group
-	 * @param Member $member Default Member added to the group (e.g. sales@mysite.co.nz)
+	 * @param Member | String $member Default Member added to the group (e.g. sales@mysite.co.nz). You can also provide an email address
 	 *
 	 */
 	public function CreateGroup($code, $name, $parentGroup = null, $permissionCode = "", $roleTitle = "", $permissionArray = array(), $member = null) {
@@ -59,7 +59,18 @@ class EcommerceTaskCreateMemberGroups extends BuildTask{
 		}
 		$group->Title = $name;
 		if($parentGroup) {
-			$group->ParentID = $parentGroup->ID;
+			if(is_string($parentGroup)) {
+				$parentGroupName = $parentGroup;
+				$parentGroup = Group::get()->filter(array("Title" => $parentGroupName));
+				if(!$parentGroup) {
+					$parentGroup = Group::create();
+					$parentGroup->Title = $parentGroupName;
+					$parentGroup->write();
+				}
+			}
+			if($parentGroup) {
+				$group->ParentID = $parentGroup->ID;
+			}
 		}
 		$group->write();
 		$doubleGroups = Group::get()->filter(array("Title" => $name))->exclude(array("ID" => $group->ID));
@@ -123,8 +134,21 @@ class EcommerceTaskCreateMemberGroups extends BuildTask{
 			}
 		}
 		if($member) {
-			$member->groups()->add($group);
-			DB::alteration_message(" adding member ".$member->Email." to group ".$group->Title,"created");
+			if(is_string($member)) {
+				$email = $member;
+				$member = Member::get()->filter(array("Email" => $email))->first();
+				if(!$member) {
+					$member = Member::create();
+					$member->FirstName = $code;
+					$member->Surname = $name;
+					$member->Email = $email;
+					$member->write();
+				}
+			}
+			if($member) {
+				$member->groups()->add($group);
+				DB::alteration_message(" adding member ".$member->Email." to group ".$group->Title,"created");
+			}
 		}
 	}
 

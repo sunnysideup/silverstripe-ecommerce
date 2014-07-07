@@ -584,13 +584,15 @@ class ProductGroup extends Page {
 			);
 		}
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
-			$fields->addFieldsToTab(
-				'Root.OtherProductsShown',
-				array(
-					new HeaderField('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
-					$this->getProductGroupsTable()
-				)
-			);
+			if(!$this instanceof ProductGroupSearchPage) {
+				$fields->addFieldsToTab(
+					'Root.OtherProductsShown',
+					array(
+						new HeaderField('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
+						$this->getProductGroupsTable()
+					)
+				);
+			}
 		}
 		return $fields;
 	}

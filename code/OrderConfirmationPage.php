@@ -32,8 +32,10 @@ class OrderConfirmationPage extends CartPage{
 		'CopyOrderLinkLabel' => 'Varchar(100)',
 		'PaymentSuccessfulHeader' => 'Varchar(255)',
 		'PaymentNotSuccessfulHeader' => 'Varchar(255)',
+		'PaymentPendingHeader' => 'Varchar(255)',
 		'PaymentSuccessfulMessage' => 'HTMLText',
-		'PaymentNotSuccessfulMessage' => 'HTMLText'
+		'PaymentNotSuccessfulMessage' => 'HTMLText',
+		'PaymentPendingMessage' => 'HTMLText'
 	);
 
 	/**
@@ -44,7 +46,13 @@ class OrderConfirmationPage extends CartPage{
 		"ShowInMenus" => false,
 		"ShowInSearch" => false,
 		"StartNewOrderLinkLabel" => "start new order",
-		"CopyOrderLinkLabel" => "copy order items into a new order"
+		"CopyOrderLinkLabel" => "copy order items into a new order",
+		'PaymentSuccessfulHeader' => 'Payment Successful',
+		'PaymentNotSuccessfulHeader' => 'Payment not Completed',
+		'PaymentPendingHeader' => 'Payment Pending',
+		'PaymentSuccessfulMessage' => '<p>Your order will be processed.</p>',
+		'PaymentNotSuccessfulMessage' => '<p>Your order will not be processed until your payment has been completed.</p>',
+		'PaymentPendingMessage' => '<p>Please complete your payment before the order can be processed.</p>'
 	);
 
 
@@ -85,8 +93,10 @@ class OrderConfirmationPage extends CartPage{
 			"CopyOrderLinkLabel" => _t("EcommerceDBConfig.COPYORDERLINKLABEL", 'Label for copying order items into a new one  - e.g. click here start a new order with the current order items'),
 			"PaymentSuccessfulHeader" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULHEADER", "Message showing when order has been paid in full (usually at the top of the page)"),
 			"PaymentNotSuccessfulHeader" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULHEADER", "Message showing when the order has not been paid in full (usually at the top of the page)"),
+			"PaymentPendingHeader" => _t("EcommerceDBConfig.PAYMENTPENDINGHEADER", "Message showing when the order has not been paid in full - but the payment is pending"),
 			"PaymentSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULMESSAGE", "Message showing when order has been paid in full"),
-			"PaymentNotSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULMESSAGE", "Message showing when the order has not been paid in full")
+			"PaymentNotSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULMESSAGE", "Message showing when the order has not been paid in full"),
+			"PaymentPendingMessage" => _t("EcommerceDBConfig.PAYMENTPENDINGMESSAGE", "Message showing when the order has not been paid in full - but the payment is pending")
 		);
 		return $newLabels;
 	}
@@ -123,10 +133,14 @@ class OrderConfirmationPage extends CartPage{
 			$htmlEditorField1 = new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage']),
 			new HeaderField('Unsuccessful'),
 			new TextField('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
-			$htmlEditorField2 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"], 5)
+			$htmlEditorField2 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"]),
+			new HeaderField('Pending'),
+			new TextField('PaymentPendingHeader', $fieldLabels['PaymentPendingHeader']),
+			$htmlEditorField3 = new HTMLEditorField('PaymentPendingMessage', $fieldLabels["PaymentPendingMessage"])
 		));
 		$htmlEditorField1->setRows(3);
 		$htmlEditorField2->setRows(3);
+		$htmlEditorField3->setRows(3);
 		return $fields;
 	}
 
