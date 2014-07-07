@@ -8,7 +8,7 @@
  * @sub-package: tasks
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class SetOrderIDStartingNumber extends BuildTask{
+class EcommerceTaskSetOrderIDStartingNumber extends BuildTask{
 
 	protected $title = "Set Order ID starting number";
 
