@@ -1923,7 +1923,7 @@ class Order extends DataObject {
 	 */
 	function CopyOrderLink(){return $this->getCopyOrderLink();}
 	function getCopyOrderLink() {
-		if($this->canView()) {
+		if($this->canView() && $this->IsSubmitted()) {
 			return ShoppingCart_Controller::copy_order_link($this->ID);
 		}
 		else {

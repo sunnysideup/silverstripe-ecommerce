@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceTemplateTest extends Page_Controller {
+class EcommerceTaskTemplateTest extends Page_Controller {
 
 
 	/**

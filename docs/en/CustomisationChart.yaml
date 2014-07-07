@@ -14,7 +14,7 @@ Is it a wording change?:
 
 Can it be fixed by changing the config files?:
   Create and update mysite/_config/ecommerce.yml:
-    - Go to http://www.mysite.com/dev/ecommerce/ecommercecheckconfiguration and carefully review options.
+    - Go to http://www.mysite.com/dev/ecommerce/ecommercetaskcheckconfiguration and carefully review options.
     - Check ecommerce/_config.php and the ecommerce/config/ folder for further ideas.
     - Update mysite/_config/ecommerce.yml with the required settings.  Bear in mind, that by default, arrays settings are added to any existing array elements.  To replace an array outright, use Config::inst()->update("MyClassName", "my_variable_as_array", $newArray);.
 

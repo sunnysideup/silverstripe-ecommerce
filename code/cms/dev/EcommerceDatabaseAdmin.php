@@ -125,7 +125,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $overallconfig = array(
-		"ecommercecheckconfiguration"
+		"ecommercetaskcheckconfiguration"
 	);
 
 	/**
@@ -135,15 +135,6 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	function OverallConfig() {
 		return $this->createMenuDOSFromArray($this->overallconfig, $type = "Config");
 	}
-
-	/**
-	 * execute the task
-	 * @param HTTPRequest $request
-	 */
-	function ecommercecheckconfiguration(SS_HTTPRequest $request){
-		$this->runTask("EcommerceCheckConfiguration", $request);
-	}
-
 
 
 
@@ -160,12 +151,13 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $ecommerceSetup = array(
-		"setorderidstartingnumber",
-		"createecommercemembergroups",
-		"ecommercedefaultrecords",
-		"ecommercecountryandregiontasks",
-		"ecommercecountryandregiontasks_disallowallcountries",
-		"adddefaultecommerceproducts",
+		"ecommercetasksetorderidstartingnumber",
+		"ecommercetaskcreatemembergroups",
+		"ecommercetaskdefaultrecords",
+		"ecommercetaskcountryandregion",
+		"ecommercetaskcountryandregion_disallowallcountries",
+		"ecommercetaskcountryandregion_allowallcountries",
+		"ecommercetaskadddefaultproducts",
 		"ecommercetasklinkproductwithimages"
 	);
 
@@ -180,28 +172,6 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 
 
 
-	function adddefaultecommerceproducts($request){
-		$this->runTask("AddDefaultEcommerceProducts", $request);
-	}
-
-	function ecommercecountryandregiontasks($request){
-		$this->runTask("EcommerceCountryAndRegionTasks", $request);
-	}
-
-	function ecommercecountryandregiontasks_disallowallcountries($request){
-		$this->runTask("EcommerceCountryAndRegionTasks_DisallowAllCountries", $request);
-	}
-
-	function ecommercetasklinkproductwithimages($request){
-		$this->runTask("EcommerceTaskLinkProductWithImages", $request);
-	}
-
-
-
-
-
-
-
 	//##############################
 	// 2. DATA REVIEW MAINTENANCE
 	//##############################
@@ -211,7 +181,9 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $dataReview = array(
-		"EcommerceTaskReviewSearches"
+		"ecommercetaskreviewsearches",
+		"ecommercetaskorderitemspercustomer",
+		"ecommercetaskexportallorderitems",
 	);
 
 	/**
@@ -233,14 +205,16 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $regularMaintenance = array(
-		"cartcleanuptask",
-		"addcustomerstocustomergroups",
-		"fixbrokenordersubmissiondata",
-		"cleanupproductfullsitetreesorting",
-		"ecommerceproductvariationsfixestask",
-		"ecommerceproductimagereset",
-		"ecommercetrytofinaliseorderstask",
-		"ecommercetaskarchiveallsubmittedorders"
+		"ecommercetaskcartcleanup",
+		"ecommercetaskaddcustomerstocustomergroups",
+		"ecommercetaskfixbrokenordersubmissiondata",
+		"ecommercetaskcleanupproductfullsitetreesorting",
+		"ecommercetaskproductvariationsfixes",
+		"ecommercetaskproductimagereset",
+		"ecommercetasktrytofinaliseorders",
+		"ecommercetaskarchiveallsubmittedorders",
+		"ecommercetasklinkorderaddressesatbothends",
+		"EcommerceTaskCleanupProducts"
 	);
 
 	/**
@@ -267,9 +241,9 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $debugActions = array(
-		"ecommercetemplatetesttask",
-		"cartmanipulation_current",
-		"cartmanipulation_debug",
+		"ecommercetasktemplatetest",
+		"ecommercetaskcartmanipulation_current",
+		"ecommercetaskcartmanipulation_debug",
 		"ecommercetaskbuilding_model",
 		"ecommercetaskbuilding_extending",
 	);
@@ -297,9 +271,9 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $migrations = array(
-		"ecommercemigration",
-		"ecommercecheckconfiguration",
-		"setdefaultproductgroupvalues",
+		"ecommercetaskmigration",
+		"ecommercetaskcheckconfiguration",
+		"ecommercetasksetdefaultproductgroupvalues",
 	);
 
 	/**
@@ -322,8 +296,9 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $crazyshit = array(
-		"deleteallorders",
-		"deleteecommerceproductstask"
+		"ecommercetaskdeleteallorders",
+		"ecommercetaskdeleteproducts",
+		"ecommercetaskarchiveallorderswithitems",
 	);
 
 	/**

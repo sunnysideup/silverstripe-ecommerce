@@ -264,7 +264,7 @@ SalesAdmin:
 ################### TASKS #####################
 
 
-CartCleanupTask:
+EcommerceTaskCartCleanup:
   clear_minutes_empty_carts: 60
   clear_minutes: 10080
   maximum_number_of_objects_deleted: 10

@@ -336,7 +336,7 @@ class EcommerceDBConfig extends DataObject {
 					"ReviewHardcodedSettings",
 					"<p>
 						Your developer has pre-set some configurations for you.  You can
-						<a href=\"/dev/ecommerce/ecommercecheckconfiguration\" data-popup=\"true\">review these settings</a>
+						<a href=\"/dev/ecommerce/ecommercetaskcheckconfiguration\" data-popup=\"true\">review these settings</a>
 						but you will need to ask your developer to change them if they are not right.
 						The reason they can not be set is that changing them can potentially break your application.
 					</p>"

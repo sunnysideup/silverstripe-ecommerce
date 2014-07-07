@@ -1175,6 +1175,10 @@ class ProductGroup extends Page {
 
 class ProductGroup_Controller extends Page_Controller {
 
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
 	private static $allowed_actions = array(
 		"debug" => "ADMIN",
 		"filterforgroup" => true,
@@ -1254,6 +1258,10 @@ class ProductGroup_Controller extends Page_Controller {
 		return array();
 	}
 
+	/**
+	 * get the search results
+	 * @param HTTPRequest
+	 */
 	public function searchresults($request){
 		$this->saveUserPreferences(
 			array(
@@ -1357,6 +1365,10 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 
+	/**
+	 * Should the product search form be shown immediately?
+	 * @return Boolean
+	 */
 	function ShowSearchFormImmediately(){
 		if($this->products && $this->products->count() && $this->request->param("Action") != "searchresults") {
 			return false;
@@ -1395,18 +1407,27 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/**
-	 *
+	 * returns the current filter applied to the list
+	 * in a human readable string
 	 * @return String
 	 */
 	function CurrentFilterTitle(){
 		$key = $this->getCurrentUserPreferences("FILTER");
+		$filters = array();
 		if($key != "default") {
-			return $this->getUserPreferencesTitle("FILTER", $key);
+			$filters[] = $this->getUserPreferencesTitle("FILTER", $key);
+		}
+		if($this->filterForGroupObject) {
+			$filters[] = $this->filterForGroupObject->MenuTitle;
+		}
+		if(count($filters)) {
+			return implode(", ", $filters);
 		}
 	}
 
 	/**
-	 *
+	 * returns the current sort applied to the list
+	 * in a human readable string
 	 * @return String
 	 */
 	function CurrentSortTitle(){
