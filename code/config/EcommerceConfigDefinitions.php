@@ -202,6 +202,9 @@ class EcommerceConfigDefinitions extends Object {
 				"content_image_width" => "Width for the content image. We use these settings to improve image quality and to set strict standard sizes. For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.",
 				"large_image_width" => "Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method."
 			),
+			"ProductSearchForm" => array(
+				"include_price_filters" => "For the product search form, make sure that there are no filter fields for minimum and maximum price"
+			),
 
 		################### CART AND CHECKOUT PROCESS #####################
 			"ShoppingCart" => array(

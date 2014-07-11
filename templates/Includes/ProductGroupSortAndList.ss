@@ -1,4 +1,4 @@
-<% if TotalCountGreaterThanOne %>
+<% if ShowSortLinks %>
 <small class="sortAndListLinks">
 
 	<% if SortLinks %>

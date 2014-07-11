@@ -822,16 +822,11 @@ class ProductGroup extends Page {
 			$array = $this->AlsoShowProducts()->map("ID", "ID")->toArray();
 		}
 		if(count($array)) {
-			$stage = '';
-			//@to do - make sure products are versioned!
-			if(Versioned::current_stage() == "Live") {
-				$stage = "_Live";
-			}
+			$stage = $this->getStage();
 			return " OR (\"Product$stage\".\"ID\" IN (".implode(",", $array).")) ";
 		}
 		return "";
 	}
-
 
 	/**
 	 * @SEE: important notes at the top of this class / file for more information!
@@ -980,7 +975,6 @@ class ProductGroup extends Page {
 	}
 
 
-
 	/*****************************************************
 	 * Children and Parents
 	 *****************************************************/
@@ -1025,11 +1019,7 @@ class ProductGroup extends Page {
 			$maxRecursiveLevel = 24;
 		}
 
-		$stage = '';
-		//@to do - make sure products are versioned!
-		if(Versioned::current_stage() == "Live") {
-			$stage = "_Live";
-		}
+		$stage = $this->getStage();
 		$select = "P1.ID as ID1 ";
 		$from = "ProductGroup$stage as P1 ";
 		$join = " INNER JOIN SiteTree$stage AS S1 ON P1.ID = S1.ID";
@@ -1126,7 +1116,10 @@ class ProductGroup extends Page {
 	public function ProductGroupsFromAlsoShowProducts() {
 		$myProductsArray = $this->currentInitialProducts()->map("ID", "ID")->toArray()+array(0);
 		$rows = DB::query("
-			SELECT \"ProductGroupID\" FROM \"Product_ProductGroups\" WHERE \"ProductID\" IN (".implode(",", $myProductsArray).") GROUP BY \"ProductGroupID\";
+			SELECT \"ProductGroupID\"
+			FROM \"Product_ProductGroups\"
+			WHERE \"ProductID\" IN (".implode(",", $myProductsArray).")
+			GROUP BY \"ProductGroupID\";
 		");
 		$selectArray = array(0);
 		foreach($rows as $row) {
@@ -1135,7 +1128,12 @@ class ProductGroup extends Page {
 		//just in case
 		unset($selectArray[$this->ID]);
 		//HACK - we put SiteTree here because it did not seem to work to put ProductGroup
-		return SiteTree::get()->filter(array("ID" => $selectArray));
+		$stage = $this->getStage();
+		return SiteTree::get()
+			->filter(array("ID" => $selectArray))
+			->where("\"ChildProducts\".\"AllowPurchase\" = 1")
+			->innerJoin("\"SiteTree".$stage"\"", "\"ChildSiteTree\".\"ParentID\" = \"SiteTree_Live\".\"ID\"", "ChildSiteTree")
+			->innerJoin("\"Product".$stage"\"", "\"ChildProducts\".\"ID\" = \"ChildSiteTree\".\"ID\"", "ChildProducts");
 	}
 
 	/**
@@ -1149,7 +1147,12 @@ class ProductGroup extends Page {
 		$alsoShowProductsArray = array(0 => 0) + $this->AlsoShowProducts()->map("ID", "ID")->toArray();
 		$parentIDs = Product::get()->filter(array("ID" => $alsoShowProductsArray))->map("ParentID", "ParentID")->toArray();
 		//HACK - we put SiteTree here because it did not seem to work to put ProductGroup
-		return SiteTree::get()->filter(array("ID" => $parentIDs));
+		$stage = $this->getStage();
+		return SiteTree::get()
+			->filter(array("ID" => $parentIDs))
+			->where("\"ChildProducts\".\"AllowPurchase\" = 1")
+			->innerJoin("\"SiteTree".$stage."\"", "\"ChildSiteTree\".\"ParentID\" = \"SiteTree_Live\".\"ID\"", "ChildSiteTree")
+			->innerJoin("\"Product".$stage."\"", "\"ChildProducts\".\"ID\" = \"ChildSiteTree\".\"ID\"", "ChildProducts");
 	}
 
 	/**
@@ -1170,6 +1173,19 @@ class ProductGroup extends Page {
 			}
 		}
 	}
+
+	/**
+	 * returns stage as "" or "_Live"
+	 * @return String
+	 */
+	public function getStage() {
+		$stage = '';
+		//@to do - make sure products are versioned!
+		if(Versioned::current_stage() == "Live") {
+			$stage = "_Live";
+		}
+	}
+
 
 }
 
@@ -1279,10 +1295,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$ifStatement = 'CASE ';
 		$arrayOfIDs = array();
 		$count = 0;
-		$stage = '';
-		if(Versioned::current_stage() == "Live") {
-			$stage = "_Live";
-		}
+		$stage = $this->getStage();
 		foreach($resultsArray as $productID) {
 			$productID = intval($productID);
 			if($productID) {
@@ -1382,6 +1395,45 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/**
+	 * Show a search form on this page?
+	 *
+	 * @return Boolean
+	 */
+	public function ShowSearchFormAtAll(){
+		return true;
+	}
+
+	/**
+	 * Do we show all products on one page?
+	 *
+	 * @return Boolean
+	 */
+	public function ShowFiltersAndDisplayLinks(){
+		if($this->TotalCountGreaterThanOne()) {
+			return true;
+		}
+		if($this->HasFilters()) {
+			return true;
+		}
+		if($this->DisplayLinks()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Do we show the sort links
+	 *
+	 * @return Boolean
+	 */
+	public function ShowSortLinks(){
+		if($this->TotalCountGreaterThanOne()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Do we show all products on one page?
 	 *
 	 * @return Boolean
@@ -1459,33 +1511,44 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	public function ProductGroupsFromAlsoShowProductsLinks() {
 		$dos = new ArrayList();
+		$array = array();
 		$items = $this->ProductGroupsFromAlsoShowProducts();
 		$filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
 		if($items->count()) {
 			foreach($items as $item){
-				$isCurrent = $item->ID == $filterForGroupObjectID;
-				$item->Name = $item->Title;
-				$item->SelectKey = $item->URLSegment;
-				$item->Current = $isCurrent ? true : false;
-				$item->MyLinkingMode = $isCurrent ? "current" : "link";
-				$item->FilterLink = $this->Link("filterforgroup/".$item->URLSegment);
-				$dos->push(clone $item);
+				$array[$item->Title] = $this->makeArrayItem($item, $filterForGroupObjectID);
 			}
 		}
 		$items = $this->ProductGroupsFromAlsoShowProductsInverse();
 		$filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
 		if($items->count()) {
 			foreach($items as $item){
-				$isCurrent = $item->ID == $filterForGroupObjectID;
-				$item->Name = $item->Title;
-				$item->SelectKey = $item->URLSegment;
-				$item->Current = $isCurrent ? true : false;
-				$item->MyLinkingMode = $isCurrent ? "current" : "link";
-				$item->FilterLink = $this->Link("filterforgroup/".$item->URLSegment);
-				$dos->push(clone $item);
+				$array[$item->Title] = $this->makeArrayItem($item, $filterForGroupObjectID);
 			}
 		}
+		ksort($array);
+		foreach($array as $item) {
+			$dos->push($item);
+		}
 		return $dos;
+	}
+
+	/**
+	 * @param Object $item - product group page
+	 * @param Int $filterForGroupObjectID - number for group object id
+	 * @return ArrayData
+	 */
+	private function makeArrayItem($item, $filterForGroupObjectID) {
+		$isCurrent = $item->ID == $filterForGroupObjectID;
+		return new ArrayData(
+			array(
+				"Title" => $item->Title,
+				"SelectKey" => $item->URLSegment,
+				"Current" => $isCurrent ? true : false,
+				"MyLinkingMode" => $isCurrent ? "current" : "link",
+				"FilterLink" => $this->Link("filterforgroup/".$item->URLSegment)
+			)
+		);
 	}
 
 	/**

@@ -164,6 +164,8 @@ EcommerceRole:
 
 
 ################### FORMS AND FIELDS #####################
+ProductSearchForm:
+  include_price_filters: false
 
 OrderModifierForm:
   controller_class: "OrderModifierForm_Controller"

@@ -1,4 +1,4 @@
-<% if TotalCountGreaterThanOne %>
+<% if ShowFiltersAndDisplayLinks %>
 <div class="filterAndDisplayLinksHolder">
 
 <% if HasFilters %>

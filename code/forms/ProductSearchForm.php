@@ -143,11 +143,18 @@ class ProductSearchForm extends Form {
 		}
 		$this->productsToSearch = $productsToSearch;
 
-		$fields = new FieldList(
-			new TextField("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords"), Session::get("Ecommerce_ProductSearchForm_Keyword")),
-			new NumericField("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price"),  Session::get("Ecommerce_ProductSearchForm_MinimumPrice")),
-			new NumericField("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"), Session::get("Ecommerce_ProductSearchForm_MaximumPrice"))
-		);
+		if(Config::inst()->get("ProductSearchForm", "include_price_filters")) {
+			$fields = new FieldList(
+				new TextField("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords"), Session::get("Ecommerce_ProductSearchForm_Keyword")),
+				new NumericField("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price"),  Session::get("Ecommerce_ProductSearchForm_MinimumPrice")),
+				new NumericField("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"), Session::get("Ecommerce_ProductSearchForm_MaximumPrice"))
+			);
+		}
+		else {
+			$fields = new FieldList(
+				new TextField("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords"), Session::get("Ecommerce_ProductSearchForm_Keyword"))
+			);
+		}
 		$actions = new FieldList(
 			new FormAction('doProductSearchForm', 'Search')
 		);
@@ -310,7 +317,7 @@ class ProductSearchForm extends Form {
 							if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
 
 							foreach($searches as $search) {
-								$productGroups = ProductGroup::get()->where($search);
+								$productGroups = ProductGroup::get()->where($search)->filter(array("ShowInSearch" => 1));
 								$count = $productGroups->count();
 								if($count == 1) {
 									if(!$this->debug) {
