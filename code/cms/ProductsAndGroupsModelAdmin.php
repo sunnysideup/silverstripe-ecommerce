@@ -36,52 +36,16 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 		//Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 	}
 
-	/**
-	 *@return String (URL Segment)
-	 **/
-	function urlSegmenter() {
-		return $this->config()->get("url_segment");
-	}
-
-	function getEditForm($id = null, $fields = null) {
-		$form = parent::getEditForm($id, $fields);
-		if(singleton($this->modelClass) instanceOf SiteTree) {
-			$listfield = $form->Fields()->fieldByName($this->modelClass);
-			if($gridField = $listfield->getConfig()->getComponentByType('GridFieldDetailForm')) {
-				$gridField->setItemRequestClass('ProductsAndGroupsModelAdmin_FieldDetailForm_ItemRequest');
+	function getEditForm($id = null, $fields = null){
+		$form = parent::getEditForm();
+		//This check is simply to ensure you are on the managed model you want adjust accordingly
+		if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+			if($gridField instanceof GridField) {
+				$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
+				$gridField->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
 			}
 		}
 		return $form;
 	}
-
-}
-
-class ProductsAndGroupsModelAdmin_FieldDetailForm_ItemRequest extends GridFieldDetailForm_ItemRequest {
-
-	private static $allowed_actions = array(
-		"editinsitetree",
-		"ItemEditForm"
-	);
-
-	function ItemEditForm() {
-		$form = parent::ItemEditForm();
-		$formActions = $form->Actions();
-		if($actions = $this->record->getCMSActions()) {
-			foreach($actions as $action) {
-				$formActions->push($action);
-			}
-		}
-		$form->setActions($formActions);
-		return $form;
-	}
-
-	function editinsitetree($data, $form) {
-		$controller = Controller::curr();
-		$controller->response->addHeader('X-Reload', true);
-		$controller->response->addHeader('X-ControllerURL', $this->Link());
-		$CMSEditLink = $this->record->CMSEditLink();
-		return $controller->redirect($CMSEditLink, 302);
-	}
-
 
 }
