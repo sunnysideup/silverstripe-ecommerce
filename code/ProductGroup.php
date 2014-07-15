@@ -1151,8 +1151,8 @@ class ProductGroup extends Page {
 		return SiteTree::get()
 			->filter(array("ID" => $parentIDs))
 			->where("\"ChildProducts\".\"AllowPurchase\" = 1")
-			->innerJoin("\"SiteTree".$stage."\"", "\"ChildSiteTree\".\"ParentID\" = \"SiteTree_Live\".\"ID\"", "ChildSiteTree")
-			->innerJoin("\"Product".$stage."\"", "\"ChildProducts\".\"ID\" = \"ChildSiteTree\".\"ID\"", "ChildProducts");
+			->innerJoin("SiteTree".$stage, "\"ChildSiteTree\".\"ParentID\" = \"SiteTree_Live\".\"ID\"", "ChildSiteTree")
+			->innerJoin("Product".$stage, "\"ChildProducts\".\"ID\" = \"ChildSiteTree\".\"ID\"", "ChildProducts");
 	}
 
 	/**
