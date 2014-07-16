@@ -154,6 +154,8 @@ class EcommerceDBConfig extends DataObject {
 		"UseThisOne" => true,
 		"ShopClosed" => false,
 		"ShopPricesAreTaxExclusive" => false,
+		"InvoiceTitle" => "Invoice",
+		"PackingSlipTitle" => "Package Contents",
 		"ShopPhysicalAddress" => "<p>Enter your shop address here.</p>",
 		//"ReceiptEmail" => "Varchar(255)", - see populate defaults
 		"PostalCodeURL" => "",
