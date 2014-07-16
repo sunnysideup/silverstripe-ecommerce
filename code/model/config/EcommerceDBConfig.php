@@ -23,6 +23,7 @@ class EcommerceDBConfig extends DataObject {
 		"ShopClosed" => "Boolean",
 		"ShopPricesAreTaxExclusive" => "Boolean",
 		"InvoiceTitle" => "Varchar(200)",
+		"PackingSlipTitle" => "Varchar(200)",
 		"ShopPhysicalAddress" => "HTMLText",
 		"ReceiptEmail" => "Varchar(255)",
 		"PostalCodeURL" => "Varchar(255)",
@@ -251,6 +252,7 @@ class EcommerceDBConfig extends DataObject {
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
 			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Email title (e.g. Tax Invoice or Update from ...)"),
+			"PackingSlipTitle" => _t("EcommerceDBConfig.PACKINGSLIPTITLE", "Packing slip title (e.g. What is in this Parcel)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),
 			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address (e.g. sales@mysite.com, you can also use something like: \"Our Shop Name Goes Here\" &lt;sales@mysite.com&gt;)"),
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
@@ -313,10 +315,11 @@ class EcommerceDBConfig extends DataObject {
 				new ReadonlyField("DefaultContentImageSize", $fieldLabels["DefaultContentImageSize"], $productImage->ContentWidth()."px wide"),
 				new ReadonlyField("DefaultLargeImageSize", $fieldLabels["DefaultLargeImageSize"], $productImage->LargeWidth()."px wide")
 			),
-			new Tab('Address',
+			new Tab('AddressAndDelivery',
 				new TextField("PostalCodeURL", $fieldLabels["PostalCodeURL"]),
 				new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"]),
-				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"])
+				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"]),
+				new TextField("PackingSlipTitle",$fieldLabels["PackingSlipTitle"])
 			),
 			new Tab('Emails',
 				new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),

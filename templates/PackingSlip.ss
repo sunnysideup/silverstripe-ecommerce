@@ -11,7 +11,7 @@
 		<div id="AddressesHolder">
 			<div id="Sender" class="section">
 				<h3><% _t("Order.SENDER", "Sender:") %></h3>
-				<% include Order_ShopInfo %>
+				<% include Order_ShopInfo_PackingSlip %>
 			</div>
 		<% with Order %>
 			<div id="Recipient" class="section">

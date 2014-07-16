@@ -8,7 +8,7 @@
 <body>
 	<!-- todo: allow printing multiple invoices at once -->
 	<div style="page-break-after: always;">
-		<% include Order_ShopInfo %>
+		<% include Order_ShopInfo_Invoice %>
 		<% with Order %>
 			<% include Order %>
 		<% end_with %>
