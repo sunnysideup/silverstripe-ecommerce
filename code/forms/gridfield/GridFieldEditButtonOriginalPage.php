@@ -26,12 +26,16 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
 	public function getColumnContent($gridField, $record, $columnName) {
 		// No permission checks, handled through GridFieldDetailForm,
 		// which can make the form readonly if no edit permissions are available.
+		if(method_exists($record, "CMSEditLink")) {
+			$data = new ArrayData(array(
+				'Link' => Controller::join_links($record->CMSEditLink())
+			));
 
-		$data = new ArrayData(array(
-			'Link' => Controller::join_links($record->CMSEditLink())
-		));
-
-		return $data->renderWith('GridFieldEditButtonInSiteTree');
+			return $data->renderWith('GridFieldEditButtonInSiteTree');
+		}
+		else {
+			return parent::getColumnContent($gridField, $record, $columnName);
+		}
 	}
 
 }
