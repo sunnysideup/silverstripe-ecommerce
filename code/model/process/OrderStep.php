@@ -644,6 +644,37 @@ class OrderStep extends DataObject {
 * Silverstripe Standard Data Object Methods
 **************************************************/
 
+
+	/**
+	 * Standard SS method
+	 * These are only created programmatically.
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canCreate($member = null) {
+		return false;
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member | NULL
+	 * @return Boolean
+	 */
+	public function canEdit($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
 	/**
 	 * Standard SS method
 	 * @param Member $member
@@ -671,17 +702,8 @@ class OrderStep extends DataObject {
 		if(in_array($this->Code, self::get_codes_for_order_steps_to_include())) {
 			return false;
 		}
-		return true;
-	}
-
-
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canCreate($member = null) {
-		return false;
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**

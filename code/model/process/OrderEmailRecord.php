@@ -117,6 +117,16 @@ class OrderEmailRecord extends DataObject{
 	 * @param Member $member
 	 * @return Boolean
 	 */
+	public function canView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
 	public function canEdit($member = null) {return false;}
 
 	/**
@@ -125,6 +135,7 @@ class OrderEmailRecord extends DataObject{
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {return false;}
+
 	//defaults
 
 	/**

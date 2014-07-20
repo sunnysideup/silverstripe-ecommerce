@@ -118,8 +118,8 @@ OrderStep_Confirmed:
 OrderStatusLog:
   available_log_classes_array: []
     #- OrderStatusLog_Cancel
-    #- OrderStatusLog_Dispatch
     #- OrderStatusLog_DispatchElectronicOrder
+    #- OrderStatusLog_DispatchPhysicalOrder
     #- OrderStatusLog_PaymentCheck
     #- OrderStatusLog_Archived
   order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
@@ -153,12 +153,17 @@ EcommerceRole:
   customer_permission_code: "SHOPCUSTOMER"
   admin_group_code: "shopadministrators"
   admin_group_name: "shop administrators"
+  admin_group_user_first_name: ""
+  admin_group_user_surname: ""
+  admin_group_user_email: ""
   admin_permission_code: "SHOPADMIN"
-  admin_role_title: "managing store"
+  admin_role_title: "Managing Store"
   admin_role_permission_codes:
     - CMS_ACCESS_ProductsAndGroupsModelAdmin
     - CMS_ACCESS_SalesAdmin
     - CMS_ACCESS_StoreAdmin
+    - CMS_ACCESS_AssetAdmin
+    - CMS_ACCESS_CMSMain
 
 
 
@@ -249,6 +254,7 @@ ProductsAndGroupsModelAdmin:
   managed_models:
     - Product
     - ProductGroup
+    - SearchReplacement
 
 SalesAdmin:
   managed_models:

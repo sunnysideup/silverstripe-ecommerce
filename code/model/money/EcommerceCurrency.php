@@ -113,7 +113,8 @@ class EcommerceCurrency extends DataObject {
 	 * @var Boolean
 	 */
 	public function canCreate($member = null) {
-		return $this->canEdit($member);
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**
@@ -122,7 +123,8 @@ class EcommerceCurrency extends DataObject {
 	 * @var Boolean
 	 */
 	public function canView($member = null) {
-		return true;
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**
@@ -131,12 +133,7 @@ class EcommerceCurrency extends DataObject {
 	 * @var Boolean
 	 */
 	public function canEdit($member = null) {
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
 
@@ -146,7 +143,11 @@ class EcommerceCurrency extends DataObject {
 	 * @return Boolean
 	 */
 	function canDelete($member = null){
-		return ! $this->InUse && self::get_list()->Count() > 1;
+		if( ! $this->InUse && self::get_list()->Count() > 1) {
+			if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+			return parent::canEdit($member);
+		}
+		return false;
 	}
 
 	/**

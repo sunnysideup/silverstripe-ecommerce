@@ -66,6 +66,15 @@ class OrderStatusLog extends DataObject {
 	function InternalUseOnlyNice() {return $this->getInternalUseOnlyNice();}
 	function getInternalUseOnlyNice() {if($this->InternalUseOnly) { return _t("OrderStatusLog.YES", "Yes");} return _t("OrderStatusLog.No", "No");}
 
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canCreate($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
 
 	/**
 	 * Standard SS method
@@ -73,12 +82,7 @@ class OrderStatusLog extends DataObject {
 	 * @return Boolean
 	 */
 	public function canView($member = null) {
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		if(!$this->InternalUseOnly) {
 			if($this->Order()) {
 				if($this->Order()->MemberID == $member->ID) {
@@ -86,26 +90,9 @@ class OrderStatusLog extends DataObject {
 				}
 			}
 		}
-		return false;
+		return parent::canView($member);
 	}
 
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDelete($member = null) {
-		return false;
-	}
-
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canCreate($member = null) {
-		return true;
-	}
 
 	/**
 	 * Standard SS method
@@ -116,6 +103,16 @@ class OrderStatusLog extends DataObject {
 		if($order = $this->Order()) {
 			return $order->canEdit($member);
 		}
+		return false;
+	}
+
+	/**
+	 * Standard SS method
+	 * logs can never be deleted...
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDelete($member = null) {
 		return false;
 	}
 
@@ -494,16 +491,6 @@ class OrderStatusLog_Dispatch extends OrderStatusLog {
 
 	private static $plural_name = "Order Log Dispatch Entries";
 		function i18n_plural_name() { return _t("OrderStatusLog.ORDERLOGDISPATCHENTRIES", "Order Log Dispatch Entries");}
-
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDelete($member = null) {
-		return EcommerceRole::current_member_is_shop_admin($member);
-	}
-
 
 }
 

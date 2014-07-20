@@ -134,7 +134,8 @@ class OrderAttribute extends DataObject {
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return true;
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**
@@ -396,5 +397,47 @@ class OrderAttribute_Group extends DataObject {
 	private static $indexes = array(
 		"Sort" => true
 	);
+
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canCreate($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canEdit($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS Method
+	 * @param Member $member
+	 * @var Boolean
+	 */
+	public function canDelete($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
 
 }

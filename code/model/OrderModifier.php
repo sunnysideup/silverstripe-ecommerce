@@ -854,10 +854,8 @@ class OrderModifier_Descriptor extends DataObject {
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		return $member->IsShopAdmin();
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**

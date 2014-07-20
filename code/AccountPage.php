@@ -56,7 +56,55 @@ class AccountPage extends Page {
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return AccountPage::get()->filter(array("ClassName" => "AccountPage"))->Count() ? false : true;
+		return AccountPage::get()->filter(array("ClassName" => "AccountPage"))->Count() ? false : $this->canEdit($member);
+	}
+
+	/**
+	 * Shop Admins can view
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function caView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Shop Admins can edit
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canEdit($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDelete($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canPublish($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * //check if it is in a current cart?
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDeleteFromLive($member = null) {
+		return $this->canEdit($member);
 	}
 
 	/**

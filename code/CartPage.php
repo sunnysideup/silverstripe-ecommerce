@@ -95,7 +95,6 @@ class CartPage extends Page{
 		}
 	}
 
-
 	/**
 	 * Standard SS function, we only allow for one CartPage page to exist
 	 * but we do allow for extensions to exist at the same time.
@@ -103,7 +102,50 @@ class CartPage extends Page{
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
-		return CartPage::get()->Filter(array("ClassName" => "CartPage"))->Count() ? false : true;
+		return CartPage::get()->Filter(array("ClassName" => "CartPage"))->Count() ? false : $this->canEdit($member);
+	}
+
+	function caView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Shop Admins can edit
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canEdit($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDelete($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canPublish($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * //check if it is in a current cart?
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDeleteFromLive($member = null) {
+		return $this->canEdit($member);
 	}
 
 	/**

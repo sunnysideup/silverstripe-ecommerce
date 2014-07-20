@@ -127,7 +127,8 @@ class EcommerceCountry extends DataObject {
 	 * @var Boolean
 	 */
 	public function canView($member = null) {
-		return true;
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**
@@ -136,12 +137,7 @@ class EcommerceCountry extends DataObject {
 	 * @var Boolean
 	 */
 	public function canEdit($member = null) {
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
 
@@ -151,7 +147,10 @@ class EcommerceCountry extends DataObject {
 	 * @return Boolean
 	 */
 	function canDelete($member = null){
-		return false;
+		if( ShippingAddress::get()->filter(array("ShippingCountry", $this->Code))->count() ) {return false;}
+		if( BillingAddress::get()->filter(array("Country", $this->Code))->count() ) {return false;}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**

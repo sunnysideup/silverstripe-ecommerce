@@ -194,8 +194,52 @@ class CheckoutPage extends CartPage {
 	 * @return Boolean
 	 **/
 	function canCreate($member = null) {
-		return CheckoutPage::get()->Filter(array("ClassName" => "CheckoutPage"))->Count() ? false : true;
+		return CheckoutPage::get()->Filter(array("ClassName" => "CheckoutPage"))->Count() ? false : $this->canEdit($member);
 	}
+
+	function caView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Shop Admins can edit
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canEdit($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDelete($member = null) {
+		return false;
+	}
+
+	/**
+	 * Standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canPublish($member = null) {
+		return $this->canEdit($member);
+	}
+
+	/**
+	 * Standard SS method
+	 * //check if it is in a current cart?
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDeleteFromLive($member = null) {
+		return false;
+	}
+
 
 	/**
 	 * Standard SS function
@@ -690,6 +734,7 @@ class CheckoutPage_StepDescription extends DataObject{
 	private static $can_create = false;
 
 	/**
+	 * these are only created programmatically
 	 * standard SS method
 	 * @param Member $member
 	 * @return Boolean
@@ -701,14 +746,20 @@ class CheckoutPage_StepDescription extends DataObject{
 	 * @param Member $member
 	 * @return Boolean
 	 */
-	public function canView($member = null) {return true;}
+	public function canView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
 
 	/**
 	 * standard SS method
 	 * @param Member $member
 	 * @return Boolean
 	 */
-	public function canEdit($member = null) {return true;}
+	public function canEdit($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
 
 	/**
 	 * standard SS method
@@ -717,7 +768,11 @@ class CheckoutPage_StepDescription extends DataObject{
 	 */
 	public function canDelete($member = null) {
 		$array = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
-		return !in_array($this->getCode, $array);
+		if(in_array($this->getCode, $array)) {
+			return false;
+		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**

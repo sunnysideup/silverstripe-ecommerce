@@ -116,12 +116,7 @@ class EcommerceDBConfig extends DataObject {
 	 * @var Boolean
 	 */
 	public function canEdit($member = null) {
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
 
@@ -135,7 +130,8 @@ class EcommerceDBConfig extends DataObject {
 			return false;
 		}
 		else {
-			return parent::canDelete($member);
+			if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+			return parent::canEdit($member);
 		}
 	}
 

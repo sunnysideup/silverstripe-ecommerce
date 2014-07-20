@@ -1707,15 +1707,12 @@ class Order extends DataObject {
 		$extended = $this->extendedCan('canEdit', $member->ID);
 		if($extended !== null) {return $extended;}
 
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 
 		if(!$this->canView($member) || $this->IsCancelled()) {
 			return false;
 		}
-
-		return $this->MyStep()->CustomerCanEdit;
+		return $this->MyStep()->CustomerCanEdit && $this->canView($member);
 	}
 
 	/**
@@ -1746,10 +1743,8 @@ class Order extends DataObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canCancel', $member->ID);
 		if($extended !== null) {return $extended;}
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
-		return $this->MyStep()->CustomerCanCancel;
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return $this->MyStep()->CustomerCanCancel && $this->canView($member);
 	}
 
 
@@ -1764,9 +1759,7 @@ class Order extends DataObject {
 		if($this->IsSubmitted()){
 			return false;
 		}
-		elseif($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return false;
 	}
 
@@ -1874,8 +1867,7 @@ class Order extends DataObject {
 	 */
 	function PackingSlipLink(){return $this->getPackingSlipLink();}
 	function getPackingSlipLink() {
-		$member = Member::currentUser();
-		if($member && $member->IsShopAdmin()) {
+		if(Permission::check(Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
 			if($this->IsSubmitted() ) {
 				return Director::AbsoluteURL(OrderConfirmationPage::get_order_link($this->ID))."?packingslip=1";
 			}

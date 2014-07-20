@@ -25,13 +25,44 @@ class SearchReplacement extends DataObject {
 		$this->Search = strtolower($this->Search);
 	}
 
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canCreate($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
 
-}
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
 
-class SearchReplacement_Admin extends ModelAdmin {
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canEdit($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
 
-	private static $url_segment = 'search';
-	private static $menu_title = 'Search';
-	private static $managed_models = array('SearchReplacement');
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDelete($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
 
 }

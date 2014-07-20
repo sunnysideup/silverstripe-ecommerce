@@ -147,19 +147,14 @@ class EcommercePayment extends DataObject {
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		return EcommerceRole::current_member_is_shop_admin($member);
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canCreate($member);
 	}
 
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	function canDelete($member = null) {
-		return false;
+
+	function canView($member = null){
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canCreate($member);
 	}
 
 	/**
@@ -169,8 +164,19 @@ class EcommercePayment extends DataObject {
 	 */
 	function canEdit($member = null) {
 		if($this->Status == "Pending" || $this->Status == "Incomplete") {
-			return parent::canEdit($member);
+			if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+			return parent::canCreate($member);
 		}
+		return false;
+	}
+
+	/**
+	 * Standard SS method
+	 * set to false as a security measure...
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canDelete($member = null) {
 		return false;
 	}
 

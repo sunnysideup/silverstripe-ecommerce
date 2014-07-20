@@ -163,6 +163,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	private static $icon = 'ecommerce/images/icons/product';
 
+	/*
 	public function getCMSActions() {
 		$fields = parent::getCMSActions();
 		if(!$this->canEdit()) {
@@ -173,6 +174,7 @@ class Product extends Page implements BuyableModel {
 		}
 		return $fields;
 	}
+	*/
 
 	/**
 	 * Standard SS variable.
@@ -842,24 +844,33 @@ class Product extends Page implements BuyableModel {
 		return $allowpurchase;
 	}
 
+	function canCreate($member = null) {
+		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
+			return false;
+		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Shop Admins can edit
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
 	/**
 	 * Shop Admins can edit
 	 * @param Member $member
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
-		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
-			return false;
-		}
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
-
 
 	/**
 	 * Standard SS method
@@ -869,7 +880,6 @@ class Product extends Page implements BuyableModel {
 	public function canDelete($member = null) {
 		return $this->canEdit($member);
 	}
-
 
 	/**
 	 * Standard SS method
@@ -890,14 +900,6 @@ class Product extends Page implements BuyableModel {
 		return $this->canEdit($member);
 	}
 
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canCreate($member = null) {
-		return $this->canEdit($member);
-	}
 
 	public function debug(){
 		$html = EcommerceTaskDebugCart::debug_object($this);
@@ -1363,16 +1365,6 @@ class Product_OrderItem extends OrderItem {
 		)
 	);
 
-	/**
-	 *
-	 * @return Boolean
-	 */
-	function canCreate($member = null) {
-		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
-			return false;
-		}
-		return true;
-	}
 
 	/**
 	 * Overloaded Product accessor method.

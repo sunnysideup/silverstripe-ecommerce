@@ -148,21 +148,11 @@ class ProductGroup extends Page {
 	 */
 	private static $description = "A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)";
 
-	/**
-	 * Shop Admins can edit
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	function canEdit($member = null) {
+	function canCreate($member = null) {
 		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 			return false;
 		}
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->IsShopAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
 
@@ -172,10 +162,18 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	function canView($member = null) {
-		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
-			return true;
-		}
-		return parent::canView($member);
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * Shop Admins can edit
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	function canEdit($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 
@@ -185,7 +183,8 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {
-		return $this->canEdit($member);
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**
@@ -194,7 +193,8 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	public function canPublish($member = null) {
-		return $this->canEdit($member);
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**
@@ -204,16 +204,7 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	public function canDeleteFromLive($member = null) {
-		return $this->canEdit($member);
-	}
-
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canCreate($member = null) {
-		return $this->canEdit($member);
+		return false;
 	}
 
 	/**
@@ -513,7 +504,6 @@ class ProductGroup extends Page {
 	/**
 	 * standard SS method
 	 * @return FieldList
-	 */
 	public function getCMSActions() {
 		$fields = parent::getCMSActions();
 		if(!$this->canEdit()) {
@@ -524,6 +514,7 @@ class ProductGroup extends Page {
 		}
 		return $fields;
 	}
+	*/
 
 	/**
 	 * standard SS method

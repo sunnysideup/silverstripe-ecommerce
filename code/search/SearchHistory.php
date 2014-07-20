@@ -18,4 +18,36 @@ class SearchHistory Extends DataObject {
 		parent::onBeforeWrite();
 	}
 
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canCreate($member = null) {return false;}
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canView($member = null) {
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
+	}
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canEdit($member = null) {return false;}
+
+	/**
+	 * standard SS method
+	 * @param Member $member
+	 * @return Boolean
+	 */
+	public function canDelete($member = null) {return false;}
+
 }

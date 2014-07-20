@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceRole extends DataExtension {
+class EcommerceRole extends DataExtension implements PermissionProvider{
 
 	private static $max_count_of_members_in_array = 1500;
 
@@ -110,6 +110,37 @@ class EcommerceRole extends DataExtension {
 		$adminCode = EcommerceConfig::get("EcommerceRole", "admin_group_code");
 		$adminName = EcommerceConfig::get("EcommerceRole", "admin_group_name");
 		return Group::get()->Filter(array("Code" => $adminCode))->First();
+	}
+
+	/**
+	 * @return DataObject (Member) | NULL
+	 **/
+	public static function get_default_shop_admin_user() {
+		$group = self::get_admin_group();
+		if($group) {
+			return $group->Members()->First();
+		}
+	}
+
+	/**
+	 * creates two permission roles.
+	 * standard SS Method
+	 * @return Array
+	 */
+	public function providePermissions() {
+		$perms[EcommerceConfig::get("EcommerceRole", "customer_permission_code")] = array(
+			'name' => "Customers",
+			'category' => "E-commerce",
+			'help' => 'Customers - usually dont have CMS access.',
+			'sort' => 98
+		);
+		$perms[EcommerceConfig::get("EcommerceRole", "admin_permission_code")] = array(
+			'name' => EcommerceConfig::get("EcommerceRole", "admin_role_title"),
+			'category' => "E-commerce",
+			'help' => 'Shop Manager - can edit everything to do with the e-commerce application.',
+			'sort' => 99
+		);
+		return $perms;
 	}
 
 	/**
@@ -398,15 +429,6 @@ class EcommerceRole extends DataExtension {
 		if($addresses->count()) {
 			return $addresses->First();
 		}
-	}
-
-	/**
-	 *
-	 *
-	 */
-	function requireDefaultRecords(){
-		$task = EcommerceTaskCreateMemberGroups::create();
-		$task->run(null);
 	}
 
 

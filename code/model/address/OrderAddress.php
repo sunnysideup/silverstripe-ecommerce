@@ -105,13 +105,9 @@ class OrderAddress extends DataObject {
 	protected $_canView = null;
 
 
-	/**
-	 * standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 **/
 	function canCreate($member = null) {
-		return true;
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		return parent::canEdit($member);
 	}
 
 	/**
@@ -158,6 +154,10 @@ class OrderAddress extends DataObject {
 			}
 		}
 		return $this->_canEdit;
+	}
+
+	function canDelete($member = null){
+		return false;
 	}
 
 	/**
