@@ -36,7 +36,6 @@ class ProductGroupSearchPage extends ProductGroup {
 	private static $plural_name = "Product Search Pages";
 		function i18n_plural_name() { return _t("ProductGroupSearchPage.PLURALNAME", "Product Search Pages");}
 
-
 	/**
 	 * Standard SS function, we only allow for one Product Search Page to exist
 	 * but we do allow for extensions to exist at the same time.
@@ -87,9 +86,28 @@ class ProductGroupSearchPage extends ProductGroup {
 		return false;
 	}
 
+	function getGroupFilter(){
+		$productList = Session::get(Config::inst()->get("ProductSearchForm", "product_session_variable"));
+		if(count($productList)) {
+			$this->allProducts = $this->allProducts->filter(array("ID" => $productList));
+
+		}
+		return $this->allProducts;
+	}
+
 }
 
 class ProductGroupSearchPage_Controller extends ProductGroup_Controller {
 
+	function init(){
+		parent::init();
+		$this->searchResultsArrayProductGroups = (array) Session::get(Config::inst()->get("ProductSearchForm", "product_group_session_variable"));
+		$this->searchResultsArrayProducts = (array) Session::get(Config::inst()->get("ProductSearchForm", "product_session_variable"));
+	}
 
+	/**
+	 * Is this a product search?
+	 * @var Boolean
+	 */
+	protected $isSearchResults = true;
 }

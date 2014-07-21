@@ -59,26 +59,3 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	}
 }
 
-/*
-SalesAdmin_CollectionController extends ModelAdminEcommerceClass_CollectionController {
-
-	//public function CreateForm() {return false;}
-
-	public function ImportForm() {return false;}
-}
-
-//remove delete action
-class SalesAdmin_RecordController extends ModelAdminEcommerceClass_RecordController {
-
-	public function EditForm() {
-		$form = parent::EditForm();
-		if($this->parentController) {
-			$currRecordURL = $this->parentController->Link(Controller::join_links($this->currentRecord->ID, "edit"));
-			$form->Actions()->insertFirst(new FormAction("goCurr", "Refresh Record"));
-			$form->Fields()->push(new HiddenField("currRecordURL", null, $currRecordURL));
-		}
-		return $form;
-	}
-
-}
-*/

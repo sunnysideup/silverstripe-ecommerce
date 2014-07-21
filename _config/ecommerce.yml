@@ -170,7 +170,12 @@ EcommerceRole:
 
 ################### FORMS AND FIELDS #####################
 ProductSearchForm:
+  form_data_session_variable: "ProductGroup_SearchResults_FormData"
   include_price_filters: false
+  product_get_variable: "results"
+  product_group_get_variable: "resultproductgroups"
+  product_session_variable: "ProductGroup_SearchResults_Products"
+  product_group_session_variable: "ProductGroup_SearchResults_ProductGroups"
 
 OrderModifierForm:
   controller_class: "OrderModifierForm_Controller"
@@ -255,6 +260,7 @@ ProductsAndGroupsModelAdmin:
     - Product
     - ProductGroup
     - SearchReplacement
+    - SearchHistory
 
 SalesAdmin:
   managed_models:

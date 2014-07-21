@@ -30,7 +30,6 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
 			$data = new ArrayData(array(
 				'Link' => Controller::join_links($record->CMSEditLink())
 			));
-
 			return $data->renderWith('GridFieldEditButtonInSiteTree');
 		}
 		else {

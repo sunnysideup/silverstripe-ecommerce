@@ -38,8 +38,12 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 
 	function getEditForm($id = null, $fields = null){
 		$form = parent::getEditForm();
-		//This check is simply to ensure you are on the managed model you want adjust accordingly
-		if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+		if($this->modelClass = "SearchHistory") {
+			if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+				$form->Fields()->replaceField($gridField->getName(), EcommerceSearchHistoryFormField::create("SearchHistoryTable"));
+			}
+		}
+		elseif($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
 			if($gridField instanceof GridField) {
 				$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
 				$gridField->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
