@@ -186,13 +186,11 @@ class EcommerceConfigDefinitions extends Object {
 		################### PRODUCT DISPLAY #####################
 			"ProductGroup" => array(
 				"base_buyable_class" => "The base class for the products being retrieved.  Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.",
+				"maximum_number_of_products_to_list" => "the maximum number of products to be shown in a list.  For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers",
 				"sort_options" => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
 				"filter_options" => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
 				"display_styles" => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
 				"session_name_for_product_array" => "This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. ",
-				"session_name_for_sort_preference" => "This is the name of the (http request) GET variable and the session variable name (prepended by ProductGroup_) for the user prefererence for sorting products. We store this so that the user can navigate between pages without loosing the preferred sort order.",
-				"session_name_for_filter_preference" => "This is the name of the (http request) GET variable and the session variable (prepended by ProductGroup_) name for the user prefererence for filtering products. We store this so that the user can navigate between pages without loosing the preferred filter.",
-				"session_name_for_display_style_preference" => "This is the name of the (http request) GET variable and the session variable (prepended by ProductGroup_) name for the user prefererence for display style of products. We store this so that the user can navigate between pages without loosing the preferred display style."
 			),
 			"Product_Image" =>  array(
 				"thumbnail_width" => "Thumbnail width in pixels. For thumbnails, we use paddedResize.",

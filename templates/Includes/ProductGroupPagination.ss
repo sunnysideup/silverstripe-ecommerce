@@ -16,4 +16,5 @@
 	</small>
 </div>
  <% end_if %>
+ <% if TotalCountGreaterThanMax %><p class="message warning"><%t ProductGroup.TOTALCOUNTGREATERTHANMAX 'This list has been limited to {TotalCount} products.' TotalCount=$TotalCount %></p><% end_if %>
 

@@ -41,6 +41,7 @@ OrderConfirmationPage_Controller:
 
 ProductGroup:
   base_buyable_class: Product
+  maximum_number_of_products_to_list: 300
   sort_options:
     default:
       Title: 'Default Order'
@@ -50,7 +51,7 @@ ProductGroup:
       SQL: "\"Price\" ASC, \"Title\" ASC"
   filter_options:
     default:
-      Title: 'All Searchable Products (default)'
+      Title: 'All Products (default)'
       SQL:
         ShowInSearch: 1
     featuredonly:
@@ -62,9 +63,7 @@ ProductGroup:
     default:
       Title: default
   session_name_for_product_array: ProductGroupProductIDs
-  session_name_for_sort_preference: sortby
-  session_name_for_filter_preference: filterfor
-  session_name_for_display_style_preference: displaystyle
+
 
 Product_Image:
   thumbnail_width: 75

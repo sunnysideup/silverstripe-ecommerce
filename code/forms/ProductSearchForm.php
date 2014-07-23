@@ -56,6 +56,16 @@ class ProductSearchForm extends Form {
 	protected $useBooleanSearch = true;
 
 	/**
+	 * get parameters added to the link
+	 * you dont need to start them with & or ?
+	 * e.g.
+	 * a=23&b=234
+	 *
+	 * @var String
+	 */
+	protected $additionalGetParameters = "";
+
+	/**
 	 * List of additional fields that should be searched full text.
 	 * We are matching this against the buyable class name.
 	 * @var Array
@@ -69,10 +79,11 @@ class ProductSearchForm extends Form {
 	 * Maximum number of results to return
 	 * we limit this because otherwise the system will choke
 	 * the assumption is that no user is really interested in looking at
-	 * tons of results
+	 * tons of results.
+	 * It defaults to: EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list")
 	 * @var Int
 	 */
-	protected $maximumNumberOfResults = 100;
+	protected $maximumNumberOfResults = 0;
 
 	/**
 	 * The method on the parent controller that can display the results of the
@@ -114,6 +125,14 @@ class ProductSearchForm extends Form {
 
 	public function setUseBooleanSearch($b) {
 		$this->useBooleanSearch = $b;
+	}
+
+	public function setMaximumNumberOfResults($i) {
+		$this->maximumNumberOfResults = $i;
+	}
+
+	public function setAdditionalGetParameters($s) {
+		$this->additionalGetParameters = $s;
 	}
 
 	public function addAdditionalField($formField, $dbField, $filterUsed) {
@@ -190,6 +209,9 @@ class ProductSearchForm extends Form {
 	}
 
 	function doProductSearchForm($data, $form){
+		if(!$this->maximumNumberOfResults) {
+			$this->maximumNumberOfResults = EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list");
+		}
 		if(isset($data["DebugSearch"])) {
 			$this->debug = $data["DebugSearch"] ? true : false;
 		}
@@ -320,6 +342,7 @@ class ProductSearchForm extends Form {
 					// 3) Do the same search for Product Group names
 					$count = 0;
 					if($limitToCurrentSection) {
+						die("sdf");
 						//cant search other sections in this case...
 					}
 					else {
@@ -362,8 +385,11 @@ class ProductSearchForm extends Form {
 			$redirectToPage = $this->controller;
 		}
 		$link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod).
-			"?".$this->Config()->get("product_get_variable")."=".implode(",", array(0=> 0) + $this->resultArray).
-			"&".$this->Config()->get("product_group_get_variable")."=".implode(",", array(0=> 0) + $this->productGroupIDs);
+			"?".$this->Config()->get("product_get_variable")."=".implode(",", array(-1=> 0) + $this->resultArray).
+			"&".$this->Config()->get("product_group_get_variable")."=".implode(",", array(-1=> 0) + $this->productGroupIDs);
+		if($this->additionalGetParameters) {
+			$link .= "&".$this->additionalGetParameters;
+		}
 		if($this->debug) {
 			die($link);
 		}
