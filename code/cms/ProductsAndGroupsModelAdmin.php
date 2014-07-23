@@ -38,15 +38,18 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 
 	function getEditForm($id = null, $fields = null){
 		$form = parent::getEditForm();
-		if($this->modelClass = "SearchHistory") {
+		if(singleton($this->modelClass) instanceof SiteTree) {
 			if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
-				$form->Fields()->replaceField($gridField->getName(), EcommerceSearchHistoryFormField::create("SearchHistoryTable"));
+				if($gridField instanceof GridField) {
+					$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
+					$gridField->getConfig()->removeComponentsByType("GridFieldDeleteAction");
+					$gridField->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
+				}
 			}
 		}
-		elseif($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
-			if($gridField instanceof GridField) {
-				$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
-				$gridField->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
+		elseif($this->modelClass == "SearchHistory") {
+			if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+				$form->Fields()->replaceField($gridField->getName(), EcommerceSearchHistoryFormField::create("SearchHistoryTable"));
 			}
 		}
 		return $form;

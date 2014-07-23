@@ -230,19 +230,17 @@ class Product extends Page implements BuyableModel {
 	 * @return TreeMultiselectField
 	 **/
 	protected function getProductGroupsTableField() {
-
-		$field = new TreeMultiselectField(
-			$name = "ProductGroups",
-			$title = _t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
-			$sourceObject = "SiteTree",
-			$keyField = "ID",
-			$labelField = "MenuTitle"
+		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
+		$gridField = new GridField(
+			"ProductGroups",
+			_t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
+			$this->ProductGroups(),
+			$gridFieldConfig
 		);
-		if($this->ParentID) {
-			$filter = create_function('$obj', 'return ( ( is_a($obj, "'.Object::getCustomClass("ProductGroup").'")) && ($obj->ID != '.$this->ParentID.'));');
-			$field->setFilterFunction($filter);
-		}
-		return $field;
+		$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
+		$gridField->getConfig()->removeComponentsByType("GridFieldAddNewButton");
+		$gridField->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
+		return $gridField;
 	}
 
 	/**
