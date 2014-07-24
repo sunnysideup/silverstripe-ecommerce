@@ -1940,7 +1940,8 @@ class ProductGroup_Controller extends Page_Controller {
 		else {
 			//we dont have to do this twice...
 			if(!count($this->searchResultsArrayProducts)) {
-				if($productIDs = $this->request->getVar(Config::inst()->get("ProductSearchForm", "product_get_variable"))) {
+				$productIDs = $this->request->getVar(Config::inst()->get("ProductSearchForm", "product_get_variable"));
+				if($productIDs || $productIDs == 0) {
 					$productIDsFinal = array();
 					$productIDs = explode(",", $productIDs);
 					foreach($productIDs as $productID) {
@@ -1954,7 +1955,8 @@ class ProductGroup_Controller extends Page_Controller {
 			}
 			//we dont have to do this twice...
 			if(!count($this->searchResultsArrayProductGroups)) {
-				if($productGroupIDs = $this->request->getVar(Config::inst()->get("ProductSearchForm", "product_group_get_variable"))) {
+				$productGroupIDs = $this->request->getVar(Config::inst()->get("ProductSearchForm", "product_group_get_variable"));
+				if($productGroupIDs || $productGroupIDs == 0) {
 					$productGroupIDsFinal = array();
 					$productGroupIDs = explode(",", $productGroupIDs);
 					foreach($productGroupIDs as $productGroupID) {
