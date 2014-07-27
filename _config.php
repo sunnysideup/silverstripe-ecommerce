@@ -13,4 +13,4 @@
 
 // CACHING RECOMMENDATION
 
-//SS_Cache::set_cache_lifetime(86000);
+//SS_Cache::set_cache_lifetime('any', 86000);
