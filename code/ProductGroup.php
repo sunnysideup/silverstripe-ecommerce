@@ -2190,7 +2190,7 @@ class ProductGroup_Controller extends Page_Controller {
 				$secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
 			}
 			if($this->IsSearchResults()) {
-				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results ("..")");
+				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results (".$this->HasSearchResults().")");
 			}
 			if($this->IsShowFullList()) {
 				$secondaryTitle .= $pipe._t("ProductGroup.LIST_VIEW", "List View");
