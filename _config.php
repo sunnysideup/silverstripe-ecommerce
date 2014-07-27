@@ -11,6 +11,5 @@
 
 
 
-// CACHING RECOMMENDATION
-
-//SS_Cache::set_cache_lifetime('any', 86000);
+// CACHING RECOMMENDATION - you can overrule that in the mysite _config.php file...
+SS_Cache::set_cache_lifetime('any', 86000, 10);

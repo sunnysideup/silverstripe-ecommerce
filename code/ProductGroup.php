@@ -1639,14 +1639,14 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/**
-	 * Does this page have meaningful search results?
+	 * Does this page have any search results?
 	 * If search was carried out without returns
-	 * then it returns false.
-	 * @return Boolean
+	 * then it returns zero (false)
+	 * @return Int
 	 */
 	public function HasSearchResults(){
 		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
-		return $resultArray && count($resultArray) ? true: false;
+		return $resultArray && count($resultArray) ? count($resultArray): false;
 	}
 
 
@@ -2190,7 +2190,7 @@ class ProductGroup_Controller extends Page_Controller {
 				$secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
 			}
 			if($this->IsSearchResults()) {
-				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results");
+				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results ("..")");
 			}
 			if($this->IsShowFullList()) {
 				$secondaryTitle .= $pipe._t("ProductGroup.LIST_VIEW", "List View");
