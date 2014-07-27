@@ -98,16 +98,6 @@ class AccountPage extends Page {
 	}
 
 	/**
-	 * Standard SS method
-	 * //check if it is in a current cart?
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDeleteFromLive($member = null) {
-		return $this->canEdit($member);
-	}
-
-	/**
 	 * standard SS variable
 	 * @Var String
 	 */

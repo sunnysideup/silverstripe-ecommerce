@@ -56,12 +56,6 @@
 
 class EcommerceConfig extends Object {
 
-	/**
-	 * Singleton
-	 *
-	 * @var EcommerceConfig
-	 */
-	private static $singleton = null;
 
 	/**
 	 * Returns a configuration.  This is the main static method for this Object.

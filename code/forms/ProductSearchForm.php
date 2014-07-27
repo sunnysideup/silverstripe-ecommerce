@@ -170,14 +170,14 @@ class ProductSearchForm extends Form {
 
 		if(Config::inst()->get("ProductSearchForm", "include_price_filters")) {
 			$fields = FieldList::create(
-				TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords")), //, Session::get($this->Config()->get("keyword_session_variable")
+				TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords")),
 				NumericField::create("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price")),
 				NumericField::create("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"))
 			);
 		}
 		else {
 			$fields = FieldList::create(
-				TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords")) //, Session::get($this->Config()->get("keyword_session_variable")
+				TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords"))
 			);
 		}
 		$actions = FieldList::create(
@@ -228,6 +228,10 @@ class ProductSearchForm extends Form {
 		//basic get
 		$searchableFields = ($baseClassName::create()->stat('searchable_fields'));
 		$baseList = $baseClassName::get()->filter(array("ShowInSearch" => 1));
+		$ecomConfig = EcommerceDBConfig::current_ecommerce_db_config();
+		if($ecomConfig->OnlyShowProductsThatCanBePurchased) {
+			$baseList->filter(array("AllowPurchase" => 1));
+		}
 		$limitToCurrentSection = false;
 		if(isset($data["SearchOnlyFieldsInThisSection"]) && $data["SearchOnlyFieldsInThisSection"]) {
 			$limitToCurrentSection = true;
@@ -342,7 +346,6 @@ class ProductSearchForm extends Form {
 					// 3) Do the same search for Product Group names
 					$count = 0;
 					if($limitToCurrentSection) {
-						die("sdf");
 						//cant search other sections in this case...
 					}
 					else {
@@ -381,14 +384,28 @@ class ProductSearchForm extends Form {
 			$redirectToPage = ProductGroupSearchPage::get()->first();
 		}
 		if(!$redirectToPage) {
-			//for section specific stuff, we redirect to the specific section (basically where we came from
-			$redirectToPage = $this->controller;
+			// for section specific search,
+			// redirect to the specific section (basically where we came from)
+			$redirectToPage = $this->controller->dataRecord;
 		}
-		$link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod).
-			"?".$this->Config()->get("product_get_variable")."=".implode(",", array(-1=> 0) + $this->resultArray).
-			"&".$this->Config()->get("product_group_get_variable")."=".implode(",", array(-1=> 0) + $this->productGroupIDs);
+		if($this->debug) {
+			$this->debugOutput("<hr />".
+				"<h3>Previous Search Products: ".$redirectToPage->SearchResultsSessionVariable(false)."</h3><p>".print_r(Session::get($redirectToPage->SearchResultsSessionVariable(false)), 1)."</p>".
+				"<h3>Previous Search Groups: ".$redirectToPage->SearchResultsSessionVariable(true)."</h3><p>".print_r(Session::get($redirectToPage->SearchResultsSessionVariable(true)), 1)."</p>"
+			);
+		}
+		Session::set($redirectToPage->SearchResultsSessionVariable(false), implode(",", $this->resultArray));
+		Session::set($redirectToPage->SearchResultsSessionVariable(true), implode(",", $this->productGroupIDs));
+		Session::save();
+		if($this->debug) {
+			$this->debugOutput("<hr />".
+				"<h3>SAVING Products to session: ".$redirectToPage->SearchResultsSessionVariable(false)."</h3><p>".print_r(explode(",", Session::get($redirectToPage->SearchResultsSessionVariable(false))), 1)."</p>".
+				"<h3>SAVING Groups to session: ".$redirectToPage->SearchResultsSessionVariable(true)."</h3><p>".print_r(explode(",", Session::get($redirectToPage->SearchResultsSessionVariable(true))), 1)."</p>"
+			);
+		}
+		$link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod);
 		if($this->additionalGetParameters) {
-			$link .= "&".$this->additionalGetParameters;
+			$link .= "?".$this->additionalGetParameters;
 		}
 		if($this->debug) {
 			die($link);
@@ -499,7 +516,7 @@ class ProductSearchForm_Short extends ProductSearchForm {
 	function __construct($controller, $name, $nameOfProductsBeingSearched = "", $productsToSearch = null) {
 		parent::__construct($controller, $name, $nameOfProductsBeingSearched, $productsToSearch);
 		$this->fields = FieldList::create(
-			TextField::create("Keyword", "") //, Session::get($this->Config()->get("keyword_session_variable")
+			TextField::create("Keyword", "")
 		);
 		$this->actions = FieldList::create(
 			FormAction::create('doProductSearchForm', 'Go')

@@ -119,16 +119,6 @@ class OrderConfirmationPage extends CartPage{
 		return $this->canEdit($member);
 	}
 
-	/**
-	 * Standard SS method
-	 * //check if it is in a current cart?
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDeleteFromLive($member = null) {
-		return false;
-	}
-
 	function customFieldLabels(){
 		$newLabels = array(
 			"StartNewOrderLinkLabel" => _t("EcommerceDBConfig.STARTNEWORDERLINKLABEL", 'Label for starting new order - e.g. click here to start new order'),

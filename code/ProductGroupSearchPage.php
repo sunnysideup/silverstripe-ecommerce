@@ -22,7 +22,7 @@ class ProductGroupSearchPage extends ProductGroup {
 	 * Standard SS variable.
 	 * @var String
 	 */
-	private static $description = "This page manages searching for products.";
+	private static $description = "This page allowing the user to search for products.";
 
 	/**
 	 * Standard SS variable.
@@ -46,68 +46,89 @@ class ProductGroupSearchPage extends ProductGroup {
 		return ProductSearchPage::get()->filter(array("ClassName" => "ProductSearchPage"))->Count() ? false : $this->canEdit($member);
 	}
 
-	/**
-	 * Shop Admins can edit
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	function canEdit($member = null) {
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canEdit($member);
-	}
 
 	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
+	 * Can product list (and related) be cached at all?
+	 * @var Boolean
 	 */
-	public function canDelete($member = null) {
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canEdit($member);
-	}
-
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canPublish($member = null) {
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canEdit($member);
-	}
-
-	/**
-	 * Standard SS method
-	 * //check if it is in a current cart?
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDeleteFromLive($member = null) {
-		return false;
-	}
+	protected $allowCaching = false;
 
 	function getGroupFilter(){
-		$productList = Session::get(Config::inst()->get("ProductSearchForm", "product_session_variable"));
-		if(count($productList)) {
-			$this->allProducts = $this->allProducts->filter(array("ID" => $productList));
-
+		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
+		if(!is_array($resultArray) || !count($resultArray)) {
+			$resultArray = array(0 => 0);
 		}
+		$this->allProducts = $this->allProducts->filter(array("ID" => $resultArray));
 		return $this->allProducts;
 	}
+
+	/**
+	 * returns the SORT part of the final selection of products.
+	 * @return String | Array
+	 */
+	protected function currentSortSQL() {
+		$sortKey = $this->getCurrentUserPreferences("SORT");
+		$defaultSortKey = $this->getMyUserPreferencesDefault("FILTER");
+		if($sortKey == $defaultSortKey) {
+			$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
+			if(!$resultArray || !count($resultArray)) {
+				$resultArray = array(0 => 0);
+			}
+			return $this->createSortStatementFromIDArray($resultArray);
+		}
+		return $this->getUserSettingsOptionSQL("SORT", $sortKey);
+	}
+
+	function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0){
+		return ArrayList::create();
+	}
+
+
+
 
 }
 
 class ProductGroupSearchPage_Controller extends ProductGroup_Controller {
 
-	function init(){
-		parent::init();
-		$this->searchResultsArrayProductGroups = (array) Session::get(Config::inst()->get("ProductSearchForm", "product_group_session_variable"));
-		$this->searchResultsArrayProducts = (array) Session::get(Config::inst()->get("ProductSearchForm", "product_session_variable"));
-	}
+	/**
+	 * standard SS variable
+	 * @var Array
+	 */
+	private static $allowed_actions = array(
+		"debug" => "ADMIN",
+		"filterforgroup" => true,
+		"ProductSearchForm" => true,
+		"searchresults" => true,
+		"resetfilter" => true
+	);
 
 	/**
 	 * Is this a product search?
 	 * @var Boolean
 	 */
 	protected $isSearchResults = true;
+
+
+	/**
+	 * get the search results
+	 * @param HTTPRequest
+	 */
+	public function searchresults($request){
+		//set the filter and the sort...
+		$this->addSecondaryTitle();
+		$this->products = $this->paginateList($this->ProductsShowable(null));
+		return array();
+	}
+
+	/**
+	 * returns child product groups for use in
+	 * 'in this section'. For example the vegetable Product Group
+	 * May have listed here: Carrot, Cabbage, etc...
+	 * @return ArrayList (ProductGroups)
+	 */
+	public function MenuChildGroups() {
+		return null;
+	}
+
+
 }

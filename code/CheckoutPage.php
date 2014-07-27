@@ -231,17 +231,6 @@ class CheckoutPage extends CartPage {
 	}
 
 	/**
-	 * Standard SS method
-	 * //check if it is in a current cart?
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDeleteFromLive($member = null) {
-		return false;
-	}
-
-
-	/**
 	 * Standard SS function
 	 * @return FieldList
 	 **/

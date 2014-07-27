@@ -3,7 +3,7 @@
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 <% include ProductGroupChildGroups %>
 <% include ProductGroupFilterAndDisplay %>
-<% include SearchResultsChildGroups %>
+<% include ProductGroupSearchForm %>
 
 
 <% if Products %>

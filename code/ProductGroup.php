@@ -192,16 +192,6 @@ class ProductGroup extends Page {
 	}
 
 	/**
-	 * Standard SS method
-	 * //check if it is in a current cart?
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDeleteFromLive($member = null) {
-		return false;
-	}
-
-	/**
 	 * list of sort / filter / display variables
 	 *
 	 * @var Array
@@ -234,6 +224,36 @@ class ProductGroup extends Page {
 	);
 
 	/**
+	 * @var Array
+	 * List of options to show products.
+	 * With it, we provide a bunch of methods to access and edit the options.
+	 * NOTE: we can not have an option that has a zero key ( 0 => "none"), as this does not work
+	 * (as it is equal to not completed yet - not yet entered in the Database).
+	 */
+	protected $showProductLevels = array(
+		99 => "All Child Products (default)",
+	 -2 => "None",
+	 -1 => "All products",
+		1 => "Direct Child Products",
+		2 => "Direct Child Products + Grand Child Products",
+		3 => "Direct Child Products + Grand Child Products + Great Grand Child Products",
+		4 => "Direct Child Products + Grand Child Products + Great Grand Child Products + Great Great Grand Child Products",
+	);
+
+	/**
+	 * variable to speed up methods in this class
+	 * @var Array
+	 */
+	protected $configOptionsCache = Array();
+
+	/**
+	 * cache variable for default preference key
+	 * @var Array
+	 */
+	protected $myUserPreferencesDefaultCache = array();
+
+
+	/**
 	 * count before limit
 	 * @var Int
 	 */
@@ -246,15 +266,36 @@ class ProductGroup extends Page {
 	protected $totalCount = 0;
 
 	/**
-	 * returns the full sortFilterDisplayNames set or a subset
+	 * Can product list (and related) be cached at all?
+	 * @var Boolean
+	 */
+	 protected $allowCaching = true;
+
+	/**
+	 * return the options for one type.
+	 * This method solely exists to speed up processing.
+	 * @param String $type - options are FILTER | SORT | DISPLAY
+	 * @return Array
+	 */
+	protected function getConfigOptions($type){
+		if(!isset($this->configOptionsCache[$type])) {
+			$configName = $this->sortFilterDisplayNames[$type]["configName"];
+			$this->configOptionsCache[$type] = EcommerceConfig::get($this->ClassName, $configName);
+		}
+		return $this->configOptionsCache[$type];
+	}
+
+	/**
+	 * returns the full sortFilterDisplayNames set, a subset, or one value
 	 * by either type (e.g. FILER) or variable (e.g dbFieldName)
+	 * or both.
 	 *
 	 * @param String $typeOfVariableName FILTER | SORT | DISPLAY or sessionName, getVariable, etc...
 	 * @param String $variable: sessionName, getVariable, etc...
 	 *
 	 * @return Array | String
 	 */
-	public function getSortFilterDisplayNames($typeOrVariable = "", $variable = "") {
+	protected function getSortFilterDisplayNames($typeOrVariable = "", $variable = "") {
 		//return a string ...
 		if($variable) {
 			return $this->sortFilterDisplayNames[$typeOrVariable][$variable];
@@ -283,7 +324,7 @@ class ProductGroup extends Page {
 	 * @param String $value
 	 *
 	 */
-	public function setCurrentUserPreference($type, $value) {
+	protected function setCurrentUserPreference($type, $value) {
 		$this->sortFilterDisplayNames[$type]["value"] = $value;
 	}
 
@@ -306,28 +347,44 @@ class ProductGroup extends Page {
 	 *********************/
 
 	/**
-	 * returns the default value
+	 * Checks for the most applicable user preferences for this page:
+	 * 1. what is saved in Database for this page.
+	 * 2. what the parent product group has saved in the database
+	 * 3. what the standard default is
 	 *
 	 * @param String $type - FILTER | SORT | DISPLAY
-	 *
-	 * @return String
+	 * @return String - returns the key
 	 */
-	public function getUserPreferencesDefault($type) {
-		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get($this->ClassName, $configName);
-		if(isset($options["default"])) {
-			return "default";
+	protected function getMyUserPreferencesDefault($type){
+		if(!isset($this->myUserPreferencesDefaultCache[$type]) || !$this->myUserPreferencesDefaultCache[$type]) {
+			$options = $this->getConfigOptions($type);
+			$dbVariableName = $this->sortFilterDisplayNames[$type]["dbFieldName"];
+			$defaultOption = "";
+			if($defaultOption == "inherit" && $parent = $this->ParentGroup()) {
+				$defaultOption = $parent->getMyUserPreferencesDefault($type);
+			}
+			elseif($this->$dbVariableName && array_key_exists($this->$dbVariableName, $options)) {
+				$defaultOption = $this->$dbVariableName;
+			}
+			if(!$defaultOption) {
+				if(isset($options["default"])) {
+					$defaultOption = "default";
+				}
+				else {
+					user_error("It is recommended that you have a default (key) option for $type", E_USER_NOTICE);
+					$keys = array_keys($options);
+					$defaultOption = $keys[0];
+				}
+			}
+			$this->myUserPreferencesDefaultCache[$type] = $defaultOption;
 		}
-		user_error("It is recommended that you have a default (key) option for $type", E_USER_NOTICE);
-		$keys = array_keys($options);
-		return $keys[0];
+		return $this->myUserPreferencesDefaultCache[$type];
 	}
+
 
 	/*********************
 	 * SETTINGS: Dropdowns
 	 *********************/
-
-
 	/**
 	 * SORT:
 	 * returns an array of Key => Title for sort options
@@ -347,9 +404,8 @@ class ProductGroup extends Page {
 	 *
 	 * @return Array
 	 */
-	public function getUserPreferencesOptionsForDropdown($type){
-		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get($this->ClassName, $configName);
+	protected function getUserPreferencesOptionsForDropdown($type){
+		$options = $this->getConfigOptions($type);
 		$inheritTitle = _t("ProductGroup.INHERIT", "Inherit");
 		$array = array("inherit" => $inheritTitle);
 		if(is_array($options) && count($options)) {
@@ -383,14 +439,13 @@ class ProductGroup extends Page {
 	 * @param String $type - FILTER | SORT | DISPLAY
 	 * @param String $key - the options selected
 	 *
-	 * @return Array (e.g. array("MyField" => 1, "MyOtherField" => 0)) OR STRING!!!!
+	 * @return Array | String (e.g. array("MyField" => 1, "MyOtherField" => 0)) OR STRING
 	 */
 	protected function getUserSettingsOptionSQL($type, $key = ""){
-		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get($this->ClassName, $configName);
+		$options = $this->getConfigOptions($type);
 			//if we cant find the current one, use the default
 		if(!$key || (!isset($options[$key]))) {
-			$key = $this->getUserPreferencesDefault($type);
+			$key = $this->getMyUserPreferencesDefault($type);
 		}
 		if($key) {
 			return $options[$key]["SQL"];
@@ -421,10 +476,9 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	public function getUserPreferencesTitle($type, $key = "") {
-		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get($this->ClassName, $configName);
+		$options = $this->getConfigOptions($type);
 		if(!$key || (!isset($options[$key]))){
-			$key = $this->getUserPreferencesDefault($type);
+			$key = $this->getMyUserPreferencesDefault($type);
 		}
 		if($key && isset($options[$key]["Title"])) {
 			return $options[$key]["Title"];
@@ -435,11 +489,39 @@ class ProductGroup extends Page {
 	}
 
 	/*********************
-	 * SETTINGS: default codes
+	 * SETTINGS: products per page
+	 *********************/
+
+
+	/**
+	 *@return Integer
+	 **/
+	public function ProductsPerPage() {return $this->MyNumberOfProductsPerPage();}
+	public function MyNumberOfProductsPerPage() {
+		$productsPagePage = 0;
+		if($this->NumberOfProductsPerPage) {
+			$productsPagePage = $this->NumberOfProductsPerPage;
+		}
+		else {
+			if($parent = $this->ParentGroup()) {
+				$productsPagePage = $parent->MyNumberOfProductsPerPage();
+			}
+			else {
+				$productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
+			}
+		}
+		return $productsPagePage;
+	}
+
+
+	/*********************
+	 * SETTINGS: level of products to show
 	 *********************/
 
 	 /**
-	  *
+	  * returns the number of product groups (children)
+	  * to show in the current product list
+	  * based on the user setting for this page.
 	  *
 	  * @return Int
 	  */
@@ -457,58 +539,6 @@ class ProductGroup extends Page {
 		return $this->LevelOfProductsToShow ;
 	}
 
-	/**
-	 * Checks for the most applicable user preferences for this page:
-	 * 1. what is saved in Database for this page.
-	 * 2. what the parent product group has saved in the database
-	 * 3. what the standard default is
-	 *
-	 * @param String $type - FILTER | SORT | DISPLAY
-	 *
-	 * @return String
-	 */
-	public function getMyUserPreferencesDefault($type){
-		$configName = $this->sortFilterDisplayNames[$type]["configName"];
-		$dbVariableName = $this->sortFilterDisplayNames[$type]["dbFieldName"];
-		$defaultOption = "";
-		$options = EcommerceConfig::get($this->ClassName, $configName);
-		if($this->$dbVariableName && array_key_exists($this->$dbVariableName, $options)) {
-			$defaultOption = $this->$dbVariableName;
-		}
-		if(!$defaultOption && $parent = $this->ParentGroup()) {
-			$defaultOption = $parent->getMyUserPreferencesDefault($type);
-		}
-		if(!$defaultOption || $defaultOption == "inherit") {
-			$defaultOption = $this->getUserPreferencesDefault($type);
-		}
-		return $defaultOption;
-	}
-
-	public function MyDefaultDisplayStyle() {
-		return $this->getMyUserPreferencesDefault("DISPLAY");
-	}
-
-	/*********************
-	 * SETTINGS: product levels
-	 *********************/
-
-	/**
-	 * @var Array
-	 * List of options to show products.
-	 * With it, we provide a bunch of methods to access and edit the options.
-	 * NOTE: we can not have an option that has a zero key ( 0 => "none"), as this does not work
-	 * (as it is equal to not completed yet - not yet entered in the Database).
-	 */
-	protected $showProductLevels = array(
-		99 => "All Child Products (default)",
-	 -2 => "None",
-	 -1 => "All products",
-		1 => "Direct Child Products",
-		2 => "Direct Child Products + Grand Child Products",
-		3 => "Direct Child Products + Grand Child Products + Great Grand Child Products",
-		4 => "Direct Child Products + Grand Child Products + Great Grand Child Products + Great Great Grand Child Products",
-	);
-
 
 
 	/*********************
@@ -519,35 +549,20 @@ class ProductGroup extends Page {
 	/**
 	 * standard SS method
 	 * @return FieldList
-	public function getCMSActions() {
-		$fields = parent::getCMSActions();
-		if(!$this->canEdit()) {
-			$editButton = FormAction::create('editinsitetree');
-			$editButton->setTitle(_t("Product.EDIT", "Edit"));
-			$editButton->setDescription(_t("Product.EDIT_IN_SITETREE", "Edit this record in the site tree"));
-			$fields->push($editButton);
-		}
-		return $fields;
-	}
-	*/
-
-	/**
-	 * standard SS method
-	 * @return FieldList
 	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		//dirty hack to show images!
-		$fields->addFieldToTab('Root.Images', new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Group Image')));
+		$fields->addFieldToTab('Root.Images', Product_ProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
 		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
 		$fields->addFieldToTab(
 			'Root',
-			new Tab(
+			Tab::create(
 				'ProductDisplay',
-				new DropdownField("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show ..."), $this->showProductLevels),
-				new HeaderField("WhatProductsAreShown", _t("ProductGroup.WHATPRODUCTSSHOWN", _t("ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS", "Inherited options"))),
-				new NumericField("NumberOfProductsPerPage", _t("ProductGroup.PRODUCTSPERPAGE", "Number of products per page").$numberOfProductsPerPageExplanation)
+				DropdownField::create("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show ..."), $this->showProductLevels),
+				HeaderField::create("WhatProductsAreShown", _t("ProductGroup.WHATPRODUCTSSHOWN", _t("ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS", "Inherited options"))),
+				NumericField::create("NumberOfProductsPerPage", _t("ProductGroup.PRODUCTSPERPAGE", "Number of products per page").$numberOfProductsPerPageExplanation)
 			)
 		);
 		//sort
@@ -560,7 +575,7 @@ class ProductGroup extends Page {
 			}
 			$fields->addFieldToTab(
 				"Root.ProductDisplay",
-				new DropdownField("DefaultSortOrder", _t("ProductGroup.DEFAULTSORTORDER", "Default Sort Order"), $sortDropdownList)
+				DropdownField::create("DefaultSortOrder", _t("ProductGroup.DEFAULTSORTORDER", "Default Sort Order"), $sortDropdownList)
 			);
 		}
 		//filter
@@ -573,7 +588,7 @@ class ProductGroup extends Page {
 			}
 			$fields->addFieldToTab(
 				"Root.ProductDisplay",
-				new DropdownField("DefaultFilter", _t("ProductGroup.DEFAULTFILTER", "Default Filter"), $filterDropdownList)
+				DropdownField::create("DefaultFilter", _t("ProductGroup.DEFAULTFILTER", "Default Filter"), $filterDropdownList)
 			);
 		}
 		//display style
@@ -586,7 +601,7 @@ class ProductGroup extends Page {
 			}
 			$fields->addFieldToTab(
 				"Root.ProductDisplay",
-				new DropdownField("DisplayStyle", _t("ProductGroup.DEFAULTDISPLAYSTYLE", "Default Display Style"), $displayStyleDropdownList)
+				DropdownField::create("DisplayStyle", _t("ProductGroup.DEFAULTDISPLAYSTYLE", "Default Display Style"), $displayStyleDropdownList)
 			);
 		}
 		if($this->EcomConfig()->ProductsAlsoInOtherGroups) {
@@ -594,7 +609,7 @@ class ProductGroup extends Page {
 				$fields->addFieldsToTab(
 					'Root.OtherProductsShown',
 					array(
-						new HeaderField('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
+						HeaderField::create('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
 						$this->getProductGroupsTable()
 					)
 				);
@@ -609,91 +624,30 @@ class ProductGroup extends Page {
 	 **/
 	protected function getProductGroupsTable() {
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
-		$gridField = new GridField(
+		$gridField = GridField::create(
 			"AlsoShowProducts",
 			_t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),
 			$this->AlsoShowProducts(),
 			$gridFieldConfig
 		);
+		//make sure edits are done in the right place ...
 		$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
 		$gridField->getConfig()->removeComponentsByType("GridFieldAddNewButton");
-		$gridField->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
+		$gridField->getConfig()->addComponent(GridFieldEditButtonOriginalPage::create());
 		return $gridField;
 	}
 
 
 	/*****************************************************
 	 *
-	 * START OF THE DATA LIST SYSTEM: select the products to show
-	 * (see top of this file for more information)
+	 *
+	 *
+	 * PRODUCTS THAT BELONG WITH THIS PRODUCT GROUP
+	 *
+	 *
 	 *
 	 *****************************************************/
 
-	/**
-	 * This is the dataList that contains all the products
-	 * @var DataList $allProducts
-	 */
-	protected $allProducts = null;
-
-
-	/**
-	 * a list of relevant buyables that can
-	 * not be purchased and therefore should be excluded.
-	 * Should be set to NULL to start with so we know if it has been
-	 * set yet.
-	 * @var NULL | Array (like so: array(1,2,4,5,99))
-	 */
-	private $canNOTbePurchasedArray = null;
-
-
-	/**
-	 * a list of relevant buyables that can
-	 * be purchased.  We keep this so that
-	 * that we can save to session, etc... for future use.
-	 * Should be set to NULL to start with so we know if it has been
-	 * set yet.
-	 * @var NULL | Array (like so: array(1,2,4,5,99))
-	 */
-	protected $canBePurchasedArray = null;
-
-	/**
-	 * this is used to save a list of sorted products
-	 * so that you can find a previous and a next button, etc...
-	 * @return Array
-	 */
-	public function getProductsThatCanBePurchasedArray(){
-		return $this->canBePurchasedArray;
-	}
-
-	/**
-	 * Retrieve a set of products, based on the given parameters.
-	 * This method is usually called by the various controller methods.
-	 * The extraFilter helps you to select different products,
-	 * depending on the method used in the controller.
-	 *
-	 * Furthermore, extrafilter can take all sorts of variables.
-	 * This is basically setup like this so that in ProductGroup extensions you
-	 * can setup all sorts of filters, while still using the ProductsShowable method.
-	 *
-	 * The extra filter can be supplied as array (e.g. array("ID" => 12) or array("ID" => array(12,13,45)))
-	 * or as string. Arrays are used like this $productDataList->filter($array) and
-	 * strings are used with the where commands $productDataList->where($string).
-	 *
-	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
-	 * @param array | string $alternativeSort Additional SQL for sorting
-	 * @param string $alternativeFilterKey alternative filter key to be used
-	 * @return DataList | Null
-	 */
-	public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = ''){
-
-		//get original products without sort
-		$this->allProducts = $this->currentInitialProducts($extraFilter, $alternativeFilterKey);
-
-		//sort products
-		$this->allProducts = $this->currentFinalProducts($alternativeSort);
-
-		return $this->allProducts;
-	}
 
 	/**
 	 * returns the inital (all) products, based on the all the eligible products
@@ -761,34 +715,7 @@ class ProductGroup extends Page {
 		return $array;
 	}
 
-	/**
-	 * returns the final products, based on the all the eligile products
-	 * for the page.
-	 *
-	 * In the process we also save a list of included products
-	 * and we sort them.  We also keep a record of the total count.
-	 *
-	 * All of the 'current' methods are to support the currentFinalProducts Method.
-	 *
-	 * @TODO: cache data for faster access.
-	 *
-	 * @param array | string $alternativeSort = Alternative Sort String or array
-	 * @return DataList
-	 **/
-	protected function currentFinalProducts($alternativeSort = null){
-		if($this->allProducts) {
-			if($alternativeSort) {
-				$sort = $alternativeSort;
-			}
-			else {
-				$sort = $this->currentSortSQL();
-			}
-			$this->allProducts = $this->allProducts->Sort($sort);
-			$this->allProducts = $this->limitCurrentFinalProducts();
-			$this->allProducts = $this->removeExcludedProductsAndSaveIncludedProducts($this->allProducts);
-			return $this->allProducts;
-		}
-	}
+
 
 	/*****************************************************
 	 * DATALIST: adjusters
@@ -901,6 +828,7 @@ class ProductGroup extends Page {
 
 	/**
 	 * Join statement for the product groups.
+	 *
 	 * IMPORTANT: Adjusts allProducts and returns it...
 	 * @return DataList
 	 */
@@ -908,6 +836,175 @@ class ProductGroup extends Page {
 		return $this->allProducts;
 	}
 
+	/**
+	 * Quick - dirty hack - filter to
+	 * only show relevant products
+	 * @param Boolean $asArray
+	 * @param String $table
+	 * @return NULL | STRING | ARRAY
+	 *
+	 */
+	protected function allowPurchaseWhereStatement($asArray = true, $table = "Product") {
+		if($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
+			if($asArray) {
+				$allowPurchaseWhereStatement = array("AllowPurchase" => 1);
+			}
+			else {
+				$allowPurchaseWhereStatement = "\"$table\".\"AllowPurchase\" = 1  ";
+			}
+			return $allowPurchaseWhereStatement;
+		}
+	}
+
+
+	/*****************************************************
+	 *
+	 *
+	 *
+	 *
+	 * FINAL PRODUCTS
+	 *
+	 *
+	 *
+	 *
+	 *****************************************************/
+
+	/**
+	 * This is the dataList that contains all the products
+	 * @var DataList $allProducts
+	 */
+	protected $allProducts = null;
+
+	/**
+	 * a list of relevant buyables that can
+	 * not be purchased and therefore should be excluded.
+	 * Should be set to NULL to start with so we know if it has been
+	 * set yet.
+	 * @var NULL | Array (like so: array(1,2,4,5,99))
+	 */
+	private $canNOTbePurchasedArray = null;
+
+	/**
+	 * a list of relevant buyables that can
+	 * be purchased.  We keep this so that
+	 * that we can save to session, etc... for future use.
+	 * Should be set to NULL to start with so we know if it has been
+	 * set yet.
+	 * @var NULL | Array (like so: array(1,2,4,5,99))
+	 */
+	protected $canBePurchasedArray = null;
+
+	/**
+	 * returns the total numer of products (before pagination)
+	 * @return Integer
+	 **/
+	public function RawCount() {
+		return $this->rawCount ? $this->rawCount : 0;
+	}
+
+	/**
+	 * returns the total numer of products (before pagination)
+	 * @return Integer
+	 **/
+	public function TotalCount() {
+		return $this->totalCount ? $this->totalCount : 0;
+	}
+
+	/**
+	 * this is used to save a list of sorted products
+	 * so that you can find a previous and a next button, etc...
+	 * @return Array
+	 */
+	public function getProductsThatCanBePurchasedArray(){
+		return $this->canBePurchasedArray;
+	}
+
+	/**
+	 * Retrieve a set of products, based on the given parameters.
+	 * This method is usually called by the various controller methods.
+	 * The extraFilter helps you to select different products,
+	 * depending on the method used in the controller.
+	 *
+	 * Furthermore, extrafilter can take all sorts of variables.
+	 * This is basically setup like this so that in ProductGroup extensions you
+	 * can setup all sorts of filters, while still using the ProductsShowable method.
+	 *
+	 * The extra filter can be supplied as array (e.g. array("ID" => 12) or array("ID" => array(12,13,45)))
+	 * or as string. Arrays are used like this $productDataList->filter($array) and
+	 * strings are used with the where commands $productDataList->where($string).
+	 *
+	 * @param array | string $extraFilter Additional SQL filters to apply to the Product retrieval
+	 * @param array | string $alternativeSort Additional SQL for sorting
+	 * @param string $alternativeFilterKey alternative filter key to be used
+	 * @return DataList | Null
+	 */
+	public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = ''){
+
+		//get original products without sort
+		$this->allProducts = $this->currentInitialProducts($extraFilter, $alternativeFilterKey);
+
+		//sort products
+		$this->allProducts = $this->currentFinalProducts($alternativeSort);
+
+		return $this->allProducts;
+	}
+
+	/**
+	 * returns the final products, based on the all the eligile products
+	 * for the page.
+	 *
+	 * In the process we also save a list of included products
+	 * and we sort them.  We also keep a record of the total count.
+	 *
+	 * All of the 'current' methods are to support the currentFinalProducts Method.
+	 *
+	 * @TODO: cache data for faster access.
+	 *
+	 * @param array | string $alternativeSort = Alternative Sort String or array
+	 * @return DataList
+	 **/
+	protected function currentFinalProducts($alternativeSort = null){
+		if($this->allProducts) {
+
+			//limit to maximum number of products for speed's sake
+			$this->allProducts = $this->sortCurrentFinalProducts($alternativeSort);
+			$this->allProducts = $this->limitCurrentFinalProducts();
+			$this->allProducts = $this->removeExcludedProductsAndSaveIncludedProducts($this->allProducts);
+			return $this->allProducts;
+		}
+	}
+
+	/**
+	 * returns the SORT part of the final selection of products.
+	 * @return DataList (allProducts)
+	 */
+	protected function sortCurrentFinalProducts($alternativeSort) {
+		if($alternativeSort) {
+			if( $this->IsIDarray($alternativeSort) ) {
+				$sort = $this->createSortStatementFromIDArray($alternativeSort);
+			}
+			else {
+				$sort = $alternativeSort;
+			}
+		}
+		else {
+			$sort = $this->currentSortSQL();
+		}
+		$this->allProducts = $this->allProducts->Sort($sort);
+		return $this->allProducts;
+
+	}
+
+	/**
+	 * is the variable provided is an array
+	 * that can be used as a list of IDs?
+	 *
+	 * @param mixed
+	 * @return Boolean
+	 */
+	protected function IsIDarray($variable) {
+		return $variable && is_array($variable) && count($variable) && intval(current($variable)) == current($variable);
+	}
 
 	/**
 	 * returns the SORT part of the final selection of products.
@@ -916,6 +1013,25 @@ class ProductGroup extends Page {
 	protected function currentSortSQL() {
 		$sortKey = $this->getCurrentUserPreferences("SORT");
 		return $this->getUserSettingsOptionSQL("SORT", $sortKey);
+	}
+
+	/**
+	 * creates a sort string from a list of ID arrays...
+	 *
+	 * @param Array $IDarray - list of product IDs
+	 * @return String
+	 */
+	protected function createSortStatementFromIDArray($IDarray, $table = "Product") {
+		$ifStatement = 'CASE ';
+		$sortStatement = "";
+		$stage = $this->getStage();
+		$count = 0;
+		foreach($IDarray as $productID) {
+			$ifStatement .= " WHEN \"".$table.$stage."\".\"ID\" = $productID THEN $count";
+			$count++;
+		}
+		$sortStatement = $ifStatement." END";
+		return $sortStatement;
 	}
 
 	/**
@@ -940,17 +1056,17 @@ class ProductGroup extends Page {
 	 * We all make a record of all the products that are in the current list
 	 * For efficiency sake, we do both these things at the same time.
 	 * IMPORTANT: Adjusts allProducts and returns it...
+	 * @todo: cache data per user ....
 	 * @return DataList
 	 */
 	protected function removeExcludedProductsAndSaveIncludedProducts() {
-		$onlyShowProductsThatCanBePurchased = $this->EcomConfig()->OnlyShowProductsThatCanBePurchased;
 		if( is_array($this->canBePurchasedArray) && is_array($this->canNOTbePurchasedArray)) {
 			//already done!
 		}
 		else {
 			$this->canNOTbePurchasedArray = array();
 			$this->canBePurchasedArray = array();
-			if($onlyShowProductsThatCanBePurchased) {
+			if($this->config()->get("actively_check_for_can_purchase")) {
 				foreach($this->allProducts as $buyable) {
 					if(!$buyable->canPurchase()) {
 						$this->canNOTbePurchasedArray[$buyable->ID] = $buyable->ID;
@@ -961,7 +1077,12 @@ class ProductGroup extends Page {
 				}
 			}
 			else {
-				$this->canBePurchasedArray = $this->allProducts->map("ID", "ID")->toArray();
+				if($this->rawCount > 0) {
+					$this->canBePurchasedArray = $this->allProducts->map("ID", "ID")->toArray();
+				}
+				else {
+					$this->canBePurchasedArray = array();
+				}
 			}
 			if(count($this->canNOTbePurchasedArray)) {
 				$this->allProducts = $this->allProducts->Exclude(array("ID" => $this->canNOTbePurchasedArray));
@@ -970,87 +1091,7 @@ class ProductGroup extends Page {
 		return $this->allProducts;
 	}
 
-	/**
-	 * returns the CLASSNAME part of the final selection of products.
-	 * @return String
-	 */
-	protected function currentWhereSQL() {
-		Deprecation::notice('3.1', "No longer in use. Use getStandardFilter / getGroupFilter instead. See comments at the top of the class");
-	}
 
-	/**
-	 * returns the CLASSNAME part of the final selection of products.
-	 * @return String
-	 */
-	protected function currentClassNameSQL() {
-		Deprecation::notice('3.1', 'Use the "ProductGroup.getBuyableClassName" instead');
-	}
-
-	/**
-	 * returns the JOIN part of the final selection of products.
-	 * @return String
-	 */
-	protected function currentJoinSQL() {
-		Deprecation::notice('3.1', "No longer in use. Use getGroupJoin instead");
-	}
-
-	/*****************************************************
-	 * DATALIST: totals, number per page, etc..
-	 *****************************************************/
-
-
-
-	/**
-	 * returns the total numer of products (before pagination)
-	 * @return Integer
-	 **/
-	public function RawCount() {
-		return $this->rawCount ? $this->rawCount : 0;
-	}
-
-	/**
-	 * returns the total numer of products (before pagination)
-	 * @return Integer
-	 **/
-	public function TotalCount() {
-		return $this->totalCount ? $this->totalCount : 0;
-	}
-
-	/**
-	 * returns the total numer of products (before pagination)
-	 * @return Boolean
-	 **/
-	public function TotalCountGreaterThanOne($greaterThan = 1) {
-		return $this->totalCount > $greaterThan;
-	}
-
-	/**
-	 * have the ProductsShowable been limited
-	 * @return Boolean
-	 **/
-	public function TotalCountGreaterThanMax() {
-		return $this->rawCount >  $this->totalCount;
-	}
-
-	/**
-	 *@return Integer
-	 **/
-	public function ProductsPerPage() {return $this->MyNumberOfProductsPerPage();}
-	public function MyNumberOfProductsPerPage() {
-		$productsPagePage = 0;
-		if($this->NumberOfProductsPerPage) {
-			$productsPagePage = $this->NumberOfProductsPerPage;
-		}
-		else {
-			if($parent = $this->ParentGroup()) {
-				$productsPagePage = $parent->MyNumberOfProductsPerPage();
-			}
-			else {
-				$productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
-			}
-		}
-		return $productsPagePage;
-	}
 
 
 	/*****************************************************
@@ -1066,7 +1107,7 @@ class ProductGroup extends Page {
 	 * @return ArrayList (ProductGroups)
 	 */
 	function ChildGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0) {
-		$arrayList = new ArrayList();
+		$arrayList = ArrayList::create();
 		$numberOfRecursions++;
 		if($numberOfRecursions < $maxRecursiveLevel){
 			if($filter && is_string($filter)) {
@@ -1089,7 +1130,7 @@ class ProductGroup extends Page {
 				}
 			}
 		}
-		if(!$arrayList instanceOf ArrayList) {
+		if(!$arrayList instanceof ArrayList) {
 			user_error("We expect an array list as output");
 		}
 		return $arrayList;
@@ -1142,7 +1183,6 @@ class ProductGroup extends Page {
 	}
 
 
-
 	/*****************************************************
 	 * Other Stuff
 	 *****************************************************/
@@ -1183,6 +1223,11 @@ class ProductGroup extends Page {
 		}
 	}
 
+
+	/*****************************************************
+	 * Other related products
+	 *****************************************************/
+
 	/**
 	 * returns a list of Product Groups that have the products for
 	 * the CURRENT product group listed as part of their AlsoShowProducts list.
@@ -1199,8 +1244,9 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	public function ProductGroupsFromAlsoShowProducts() {
+		$parentIDs = array();
 		//we need to add the last array to make sure we have some products...
-		$myProductsArray = $this->currentInitialProductsAsCachedArray($this->getUserPreferencesDefault("FILTER"));
+		$myProductsArray = $this->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault("FILTER"));
 		$rows = array();
 		if(count($myProductsArray)) {
 			$rows = DB::query("
@@ -1210,33 +1256,69 @@ class ProductGroup extends Page {
 				GROUP BY \"ProductGroupID\";
 			");
 		}
-		$selectArray = array(0);
 		foreach($rows as $row) {
-			$selectArray[$row["ProductGroupID"]] = $row["ProductGroupID"];
+			$parentIDs[$row["ProductGroupID"]] = $row["ProductGroupID"];
 		}
 		//just in case
-		unset($selectArray[$this->ID]);
-		return ProductGroup::get()->filter(array("ID" => $selectArray));
+		unset($parentIDs[$this->ID]);
+		if(!count($parentIDs)) {
+			$parentIDs += array(0 => 0);
+		}
+		return ProductGroup::get()->filter(array("ID" => $parentIDs, "ShowInSearch" => 1));
 	}
 
 	/**
 	 * This is the inverse of ProductGroupsFromAlsoShowProducts
-	 * That is, it list the product groups that a product is usually listed under (exact parents only)
+	 * That is, it list the product groups that a product is primarily listed under (exact parents only)
 	 * from a "AlsoShow" product List.
 	 *
 	 * @return DataList
 	 */
 	public function ProductGroupsFromAlsoShowProductsInverse() {
-		$alsoShowProductsArray = array(0 => 0) + $this->AlsoShowProducts()->map("ID", "ID")->toArray();
+		$allowPurchaseWhereStatement = $this->allowPurchaseWhereStatement(true);
+		$alsoShowProductsArray = array(0 => 0) + $this->AlsoShowProducts()
+			->filter($allowPurchaseWhereStatement)
+			->map("ID", "ID")->toArray();
 		$parentIDs = Product::get()->filter(array("ID" => $alsoShowProductsArray))->map("ParentID", "ParentID")->toArray();
-		//HACK - we put SiteTree here because it did not seem to work to put ProductGroup
-		$stage = $this->getStage();
-		return SiteTree::get()
-			->filter(array("ID" => $parentIDs))
-			->where("\"ChildProducts\".\"AllowPurchase\" = 1")
-			->innerJoin("SiteTree".$stage, "\"ChildSiteTree\".\"ParentID\" = \"SiteTree".$stage."\".\"ID\"", "ChildSiteTree")
-			->innerJoin("Product".$stage, "\"ChildProducts\".\"ID\" = \"ChildSiteTree\".\"ID\"", "ChildProducts");
+		//just in case
+		unset($parentIDs[$this->ID]);
+		if(!count($parentIDs)) {
+			$parentIDs += array(0 => 0);
+		}
+		return ProductGroup::get()->filter(array("ID" => $parentIDs, "ShowInMenus" => 1));
 	}
+
+	/**
+	 * given the products for this page,
+	 * retrieve the parent groups excluding the current one.
+	 * @return DataList
+	 */
+	public function ProductGroupsParentGroups() {
+		$arrayOfIDs = $this->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault("FILTER")) + array(0 => 0);
+		$parentIDs = Product::get()->filter(array("ID" => $arrayOfIDs))->map("ParentID", "ParentID")->toArray();
+		//just in case
+		unset($parentIDs[$this->ID]);
+		if(!count($parentIDs)) {
+			$parentIDs += array(0 => 0);
+		}
+		return ProductGroup::get()->filter(array("ID" => $parentIDs, "ShowInSearch" => 1));
+	}
+
+	/**
+	 * returns stage as "" or "_Live"
+	 * @return String
+	 */
+	protected function getStage() {
+		$stage = '';
+		//@to do - make sure products are versioned!
+		if(Versioned::current_stage() == "Live") {
+			$stage = "_Live";
+		}
+	}
+
+	/*****************************************************
+	 * STANDARD SS METHODS
+	 *****************************************************/
 
 	/**
 	 * tells us if the current page is part of e-commerce.
@@ -1257,17 +1339,10 @@ class ProductGroup extends Page {
 		}
 	}
 
-	/**
-	 * returns stage as "" or "_Live"
-	 * @return String
-	 */
-	public function getStage() {
-		$stage = '';
-		//@to do - make sure products are versioned!
-		if(Versioned::current_stage() == "Live") {
-			$stage = "_Live";
-		}
-	}
+
+	/*****************************************************
+	 * CACHING
+	 *****************************************************/
 
 	/**
 	 * saving an object to the
@@ -1275,24 +1350,42 @@ class ProductGroup extends Page {
 	 * @return Mixed
 	 */
 	protected function retrieveObjectStore($cacheKey) {
-		$cache = SS_Cache::factory($cacheKey);
-		$data = $cache->load($cacheKey);
-		if(!$data) {
-			return null;
+		if($this->allowCaching) {
+			$cache = SS_Cache::factory($cacheKey);
+			$data = $cache->load($cacheKey);
+			if(!$data) {
+				return null;
+			}
+			return @unserialize($data);
 		}
-		return @unserialize($data);
+		return null;
 	}
 
 	/**
+	 * returns true when the data is saved...
 	 * @param Mixed $data
 	 * @param String $cacheKey - key under which the data is saved...
+	 * @return Boolean
 	 */
 	protected function saveObjectStore($data, $cacheKey) {
-		$data = @serialize($data);
-		$cache = SS_Cache::factory($cacheKey);
-		$cache->save($data, $cacheKey);
+		if($this->allowCaching) {
+			$data = @serialize($data);
+			$cache = SS_Cache::factory($cacheKey);
+			$cache->save($data, $cacheKey);
+			return true;
+		}
+		return false;
 	}
 
+	public function SearchResultsSessionVariable($isForGroups = false) {
+		$idString = "_".$this->ID;
+		if($isForGroups) {
+			return Config::inst()->get("ProductSearchForm", "product_session_variable").$idString;
+		}
+		else {
+			return Config::inst()->get("ProductSearchForm", "product_group_session_variable").$idString;
+		}
+	}
 
 }
 
@@ -1319,7 +1412,7 @@ class ProductGroup_Controller extends Page_Controller {
 	protected $originalTitle = "";
 
 	/**
-	 *
+	 * list of products that are going to be shown
 	 * @var DataList
 	 */
 	protected $products = null;
@@ -1342,18 +1435,6 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	protected $isSearchResults = false;
 
-	/**
-	 * Latest search results as product ID array
-	 * @var Array
-	 */
-	protected $searchResultsArrayProducts = array();
-
-	/**
-	 * Latest search results as product group ID array
-	 * (these are the groups that match the search)
-	 * @var Array
-	 */
-	protected $searchResultsArrayProductGroups = array();
 
 	/**
 	 * standard SS method
@@ -1367,9 +1448,7 @@ class ProductGroup_Controller extends Page_Controller {
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 		//we save data from get variables...
-		if(isset($_GET) && is_array($_GET) && count($_GET)) {
-			$this->saveUserPreferences();
-		}
+		$this->saveUserPreferences();
 	}
 
 
@@ -1384,6 +1463,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	public function index(){
 		//set the filter and the sort...
+		$this->addSecondaryTitle();
 		$this->products = $this->paginateList($this->ProductsShowable(null));
 		return array();
 	}
@@ -1403,9 +1483,10 @@ class ProductGroup_Controller extends Page_Controller {
 			$otherProductGroup = ProductGroup::get()->filter(array("URLSegment" => $otherGroupURLSegment))->first();
 			if($otherProductGroup) {
 				$this->filterForGroupObject = $otherProductGroup;
-				$arrayOfIDs = $otherProductGroup->currentInitialProductsAsCachedArray($this->getUserPreferencesDefault("FILTER"));
+				$arrayOfIDs = $otherProductGroup->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault("FILTER"));
 			}
 		}
+		$this->addSecondaryTitle();
 		$this->products = $this->paginateList($this->ProductsShowable(array("ID" => $arrayOfIDs)));
 		return array();
 	}
@@ -1418,23 +1499,18 @@ class ProductGroup_Controller extends Page_Controller {
 		$this->resetfilter();
 		$this->isSearchResults = true;
 		//reset filter and sort
-		$resultsArray = (array)$this->searchResultsArrayProducts + array(0 => 0);
-		$ifStatement = 'CASE ';
-		$stage = $this->getStage();
-		$count = 0;
-		$sortStatement = "";
-		if($defaultKey = $this->getUserPreferencesDefault("SORT") == $this->getCurrentUserPreferences("SORT")) {
-			foreach($resultsArray as $productID) {
-				$ifStatement .= " WHEN \"Product".$stage."\".\"ID\" = $productID THEN $count";
-				$count++;
-			}
-			$sortStatement = $ifStatement." END";
+		$resultArray = explode(",", Session::get($this->SearchResultsSessionVariable(false)));
+		if(!$resultArray || !count($resultArray)) {
+			$resultArray = array(0 => 0);
 		}
-
-		$this->products = $this->ProductsShowable(array("ID" => $resultsArray), $sortStatement);
-		$this->products = $this->paginateList(
-			$this->products
-		);
+		$defaultKeySort = $this->getMyUserPreferencesDefault("SORT");
+		$myKeySort = $this->getCurrentUserPreferences("SORT");
+		$searchArray = null;
+		if($defaultKeySort == $myKeySort) {
+			$searchArray = $resultArray;
+		}
+		$this->addSecondaryTitle();
+		$this->products = $this->paginateList($this->ProductsShowable(array("ID" => $resultArray), $searchArray));
 		return Array();
 	}
 
@@ -1443,7 +1519,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 */
 	public function resetfilter(){
-		$defaultKey = $this->getUserPreferencesDefault("FILTER");
+		$defaultKey = $this->getMyUserPreferencesDefault("FILTER");
 		$this->saveUserPreferences(
 			array(
 				"filterfor" => $defaultKey,
@@ -1451,6 +1527,7 @@ class ProductGroup_Controller extends Page_Controller {
 		);
 		return array();
 	}
+
 
 	/****************************************************
 	 *  TEMPLATE METHODS PRODUCTS
@@ -1478,6 +1555,26 @@ class ProductGroup_Controller extends Page_Controller {
 		return $this->products;
 	}
 
+
+	/*****************************************************
+	 * DATALIST: totals, number per page, etc..
+	 *****************************************************/
+
+	/**
+	 * returns the total numer of products (before pagination)
+	 * @return Boolean
+	 **/
+	public function TotalCountGreaterThanOne($greaterThan = 1) {
+		return $this->TotalCount() > $greaterThan;
+	}
+
+	/**
+	 * have the ProductsShowable been limited
+	 * @return Boolean
+	 **/
+	public function TotalCountGreaterThanMax() {
+		return $this->RawCount() >  $this->TotalCount();
+	}
 
 	/****************************************************
 	 *  TEMPLATE METHODS MENUS AND SIDEBARS
@@ -1509,26 +1606,17 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return DataList | Null (ProductGroups)
 	 */
 	public function SearchResultsChildGroups(){
-		$groupArray = $this->searchResultsArrayProductGroups;
+		$groupArray = explode(",",Session::get($this->SearchResultsSessionVariable($isForGroup = true)));
 		if(is_array($groupArray) && count($groupArray)) {
-			$ifStatement = 'CASE ';
-			$stage = $this->getStage();
-			$count = 0;
-			foreach($groupArray as $productGroupID) {
-				$ifStatement .= " WHEN \"ProductGroup".$stage."\".\"ID\" = $productGroupID THEN $count";
-				$count++;
-			}
-			$sortStatement = $ifStatement." END";
+			$sortStatement = $this->createSortStatementFromIDArray($groupArray, "ProductGroup");
 			return ProductGroup::get()->filter(array("ID" => $groupArray, "ShowInSearch" => 1))->sort($sortStatement);
 		}
 		return null;
 	}
 
 	/****************************************************
-	 *  TEMPLATE METHODS DISPLAY
+	 *  Search Form Related controllers
 	/****************************************************/
-
-
 
 	/**
 	 * returns a search form to search current products
@@ -1540,14 +1628,25 @@ class ProductGroup_Controller extends Page_Controller {
 			$this,
 			'ProductSearchForm',
 			$this->originalTitle,
-			$this->currentInitialProducts(null, $this->getUserPreferencesDefault("FILTER"))
+			$this->currentInitialProducts(null, $this->getMyUserPreferencesDefault("FILTER"))
 		);
 		$filterGetVariable = $this->getSortFilterDisplayNames("FILTER", "getVariable");
 		$sortGetVariable = $this->getSortFilterDisplayNames("SORT", "getVariable");
-		$additionalGetParameters = $filterGetVariable."=".$this->getUserPreferencesDefault("FILTER")."&".
-		                           $sortGetVariable."=".$this->getUserPreferencesDefault("SORT");
+		$additionalGetParameters = $filterGetVariable."=".$this->getMyUserPreferencesDefault("FILTER")."&".
+		                           $sortGetVariable."=".$this->getMyUserPreferencesDefault("SORT");
 		$form->setAdditionalGetParameters($additionalGetParameters);
 		return $form;
+	}
+
+	/**
+	 * Does this page have meaningful search results?
+	 * If search was carried out without returns
+	 * then it returns false.
+	 * @return Boolean
+	 */
+	public function HasSearchResults(){
+		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
+		return $resultArray && count($resultArray) ? true: false;
 	}
 
 
@@ -1575,14 +1674,26 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/**
+	 * Is the current page a display of search results
+	 *
+	 * @return Boolean
+	 */
+	public function IsSearchResults(){
+		return $this->isSearchResults;
+	}
+
+
+	/****************************************************
+	 *  Filter / Sort / Display related controllers
+	/****************************************************/
+
+
+	/**
 	 * Do we show all products on one page?
 	 *
 	 * @return Boolean
 	 */
 	public function ShowFiltersAndDisplayLinks(){
-		if($this->IsSearchResults()) {
-			return false;
-		}
 		if($this->TotalCountGreaterThanOne()) {
 			return true;
 		}
@@ -1596,38 +1707,40 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/**
-	 * Do we show the sort links
+	 * Do we show the sort links.
+	 *
+	 * A bit arbitrary to say three,
+	 * but there is not much point to sort three or less products
 	 *
 	 * @return Boolean
 	 */
-	public function ShowSortLinks(){
-		if($this->IsSearchResults()) {
-			return false;
-		}
-		if($this->TotalCountGreaterThanOne()) {
+	public function ShowSortLinks($minimumCount = 3){
+		if($this->TotalCountGreaterThanOne($minimumCount)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Do we show all products on one page?
+	 * Is there a special filter operating at the moment?
+	 * Is the current filter the default one (return inverse!)?
 	 *
 	 * @return Boolean
 	 */
 	public function HasFilter(){
-		return $this->getCurrentUserPreferences("FILTER") != $this->getUserPreferencesDefault("FILTER")
+		return $this->getCurrentUserPreferences("FILTER") != $this->getMyUserPreferencesDefault("FILTER")
 		|| $this->filterForGroupObject;
 	}
 
 	/**
-	 * Is the current page a display of search results
+	 * are filters available?
 	 *
 	 * @return Boolean
 	 */
-	public function IsSearchResults(){
-		return $this->isSearchResults;
+	public function HasFilters(){
+		return $this->FilterLinks()->count() || $this->ProductGroupFilterLinks()->count();
 	}
+
 
 	/**
 	 * Do we show all products on one page?
@@ -1638,14 +1751,6 @@ class ProductGroup_Controller extends Page_Controller {
 		return $this->showFullList;
 	}
 
-	/**
-	 * Number of entries per page limited by total number of pages available...
-	 *
-	 * @return Int
-	 */
-	public function MaxNumberOfProductsPerPage(){
-		return $this->MyNumberOfProductsPerPage() > $this->TotalCount() ? $this->TotalCount() : $this->MyNumberOfProductsPerPage();
-	}
 
 	/**
 	 * returns the current filter applied to the list
@@ -1655,7 +1760,7 @@ class ProductGroup_Controller extends Page_Controller {
 	function CurrentFilterTitle(){
 		$filterKey = $this->getCurrentUserPreferences("FILTER");
 		$filters = array();
-		if($filterKey != $this->getUserPreferencesDefault("FILTER")) {
+		if($filterKey != $this->getMyUserPreferencesDefault("FILTER")) {
 			$filters[] = $this->getUserPreferencesTitle("FILTER", $filterKey);
 		}
 		if($this->filterForGroupObject) {
@@ -1673,128 +1778,34 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	function CurrentSortTitle(){
 		$sortKey = $this->getCurrentUserPreferences("SORT");
-		if($sortKey != $this->getUserPreferencesDefault("SORT")) {
+		if($sortKey != $this->getMyUserPreferencesDefault("SORT")) {
 			return $this->getUserPreferencesTitle("SORT", $sortKey);
 		}
 	}
 
-	/****************************************************
-	 *  TEMPLATE METHODS LINKS
-	/****************************************************/
-
 	/**
-	 *
-	 *
-	 * @return Boolean
+	 * short-cut for getMyUserPreferencesDefault("DISPLAY")
+	 * for use in templtes
+	 * @return String - key
 	 */
-	public function HasFilters(){
-		return $this->FilterLinks()->count() || $this->ProductGroupsFromAlsoShowProductsLinks()->count();
+	public function MyDefaultDisplayStyle() {
+		return $this->getMyUserPreferencesDefault("DISPLAY");
 	}
 
 	/**
+	 * Number of entries per page limited by total number of pages available...
 	 *
-	 * returns a list of items (with links)
-	 * @return ArrayList( ArrayData(Name, FilterLink,  SelectKey, Current (boolean), LinkingMode))
-	 */
-	public function ProductGroupsFromAlsoShowProductsLinks() {
-		$arrayList = new ArrayList();
-		$cacheKey = "ProductGroupsFromAlsoShowProductsLinksObjectStore".$this->ID;
-		if($arrayOfItems = $this->retrieveObjectStore($cacheKey)) {
-			//do nothing
-		}
-		else {
-			$arrayOfItems = array();
-
-			$filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
-
-			$items = $this->ProductGroupsFromAlsoShowProducts();
-			if($items->count()) {
-				foreach($items as $item){
-					$count = $this->productGroupsFromAlsoShowProductsLinksCount($item->ID);
-					$arrayOfItems[$item->Title] = array(
-						"Item" => $item,
-						"FilterForGroupObjectID" => $filterForGroupObjectID,
-						"Count" => $count
-					);
-				}
-			}
-
-			$items = $this->ProductGroupsFromAlsoShowProductsInverse();
-			if($items->count()) {
-				foreach($items as $item){
-					$count = $this->productGroupsFromAlsoShowProductsLinksCount($item->ID);
-					$arrayOfItems[$item->Title] = array(
-						"Item" => $item,
-						"FilterForGroupObjectID" => $filterForGroupObjectID,
-						"Count" => $count
-					);
-				}
-			}
-			ksort($arrayOfItems);
-			$this->saveObjectStore($arrayOfItems, $cacheKey);
-		}
-		foreach($arrayOfItems as $arrayOfItem) {
-			$arrayList->push($this->makeArrayItem($arrayOfItem));
-		}
-		return $arrayList;
-	}
-
-	/**
-	 * counts the total number in the combination....
-	 * @param Int $id ID of product group
 	 * @return Int
 	 */
-	protected function productGroupsFromAlsoShowProductsLinksCount($id){
-		$arrayOfIDs = array(0 => 0);
-		$otherProductGroup = ProductGroup::get()->byId($id);
-		if($otherProductGroup) {
-			$arrayOfIDs = $otherProductGroup->currentInitialProductsAsCachedArray($this->getUserPreferencesDefault("FILTER"));
-			$newArray = array_intersect_key(
-				$arrayOfIDs,
-				$this->currentInitialProductsAsCachedArray($this->getUserPreferencesDefault("FILTER"))
-			);
-			return count($newArray);
-		}
-		else {
-			return 0;
-		}
+	public function MaxNumberOfProductsPerPage(){
+		return $this->MyNumberOfProductsPerPage() > $this->TotalCount() ? $this->TotalCount() : $this->MyNumberOfProductsPerPage();
 	}
 
-	/**
-	 * @param Array itemInArray (Item, FilterForGroupObjectID, Count)
-	 * @return ArrayData
-	 */
-	protected function makeArrayItem($itemInArray) {
-		$item = $itemInArray["Item"];
-		$count = $itemInArray["Count"];
-		$filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
-		$isCurrent = $item->ID == $filterForGroupObjectID;
-		return new ArrayData(
-			array(
-				"Title" => $item->Title,
-				"Count" => $count,
-				"SelectKey" => $item->URLSegment,
-				"Current" => $isCurrent ? true : false,
-				"MyLinkingMode" => $isCurrent ? "current" : "link",
-				"FilterLink" => $this->Link("filterforgroup/".$item->URLSegment)
-			)
-		);
-	}
 
-	/**
-	 * Provides a ArrayList of links for sorting products.
-	 *
-	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
-	 */
-	public function SortLinks(){
-		$list = $this->userPreferencesLinks("SORT");
-		$selectedItem = $this->getCurrentUserPreferences("SORT");
-		foreach($list as $obj) {
-			$obj->Current = $selectedItem == $obj->SelectKey ? true : false;
-			$obj->LinkingMode = $obj->Current ? "current" : "link";
-		}
-		return $list;
-	}
+
+	/****************************************************
+	 *  TEMPLATE METHODS FILTER LINK
+	/****************************************************/
 
 	/**
 	 * Provides a ArrayList of links for filters products.
@@ -1810,7 +1821,7 @@ class ProductGroup_Controller extends Page_Controller {
 			$list = $this->userPreferencesLinks("FILTER") ;
 			foreach($list as $obj) {
 				$key = $obj->SelectKey;
-				if($key != $this->getUserPreferencesDefault("FILTER")) {
+				if($key != $this->getMyUserPreferencesDefault("FILTER")) {
 					$count = count($this->currentInitialProductsAsCachedArray($key));
 					if($count == 0) {
 						$list->remove($obj);
@@ -1830,17 +1841,136 @@ class ProductGroup_Controller extends Page_Controller {
 			}
 			$obj->Current = $selectedItem == $obj->SelectKey && $canHaveCurrent ? true : false;
 			$obj->LinkingMode = $obj->Current ? "current" : "link";
+			$obj->Ajaxify = true;
 		}
 		return $list;
 	}
 
 	/**
+	 *
+	 * returns a list of items (with links)
+	 * @return ArrayList( ArrayData(Name, FilterLink,  SelectKey, Current (boolean), LinkingMode))
+	 */
+	public function ProductGroupFilterLinks() {
+		$arrayList = ArrayList::create();
+		$cacheKey = "ProductGroupFilterLinksObjectStore".$this->ID;
+		if($arrayOfItems = $this->retrieveObjectStore($cacheKey)) {
+			//do nothing
+		}
+		else {
+			$arrayOfItems = array();
+
+			$baseArray = $this->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault("FILTER"));
+
+			$items = $this->ProductGroupsFromAlsoShowProducts();
+			$arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+			$items = $this->ProductGroupsFromAlsoShowProductsInverse();
+			$arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+			$items = $this->ProductGroupsParentGroups();
+			$arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+			$items = $this->MenuChildGroups();
+			$arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+			ksort($arrayOfItems);
+			$this->saveObjectStore($arrayOfItems, $cacheKey);
+		}
+		foreach($arrayOfItems as $arrayOfItem) {
+			$arrayList->push($this->makeArrayItem($arrayOfItem));
+		}
+		return $arrayList;
+	}
+
+	/**
+	 * counts the total number in the combination....
+	 * @param DataList $items - list of
+	 * @param Arary $baseArray - list of products on the current page
+	 * @return array
+	 */
+	protected function productGroupFilterLinksCount($items, $baseArray, $ajaxify = true){
+		$array = array();
+		if($items && $items->count()) {
+			foreach($items as $item){
+				$arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault("FILTER"));
+				$newArray = array_intersect_key(
+					$arrayOfIDs,
+					$baseArray
+				);
+				$count = count($newArray);
+				if($count) {
+					$array[$item->Title] = array(
+						"Item" => $item,
+						"Count" => $count,
+						"Ajaxify" => $ajaxify
+					);
+				}
+			}
+		}
+		return $array;
+	}
+
+	/**
+	 * @param Array itemInArray (Item, Count, UserFilterAction)
+	 * @return ArrayData
+	 */
+	protected function makeArrayItem($itemInArray) {
+		$item = $itemInArray["Item"];
+		$count = $itemInArray["Count"];
+		$ajaxify = $itemInArray["Ajaxify"];
+		$filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
+		$isCurrent = $item->ID == $filterForGroupObjectID;
+		if($ajaxify) {
+			$link = $this->Link("filterforgroup/".$item->URLSegment);
+		}
+		else {
+			$link = $item->Link();
+		}
+		return ArrayData::create(
+			array(
+				"Title" => $item->Title,
+				"Count" => $count,
+				"SelectKey" => $item->URLSegment,
+				"Current" => $isCurrent ? true : false,
+				"MyLinkingMode" => $isCurrent ? "current" : "link",
+				"FilterLink" => $link,
+				"Ajaxify" => $ajaxify ? true : false
+			)
+		);
+	}
+
+	/**
+	 * Provides a ArrayList of links for sorting products.
+	 *
+	 * @return NULL | ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+	 */
+	public function SortLinks(){
+		$list = $this->userPreferencesLinks("SORT");
+		$selectedItem = $this->getCurrentUserPreferences("SORT");
+		if($list) {
+			foreach($list as $obj) {
+				$obj->Current = $selectedItem == $obj->SelectKey ? true : false;
+				$obj->LinkingMode = $obj->Current ? "current" : "link";
+				$obj->Ajaxify = true;
+			}
+			return $list;
+		}
+	}
+
+
+	/**
 	 * Provides a ArrayList for displaying display links
 	 *
-	 * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+	 * @return NULL | ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function DisplayLinks(){
-		return $this->userPreferencesLinks("DISPLAY");
+		$list = $this->userPreferencesLinks("DISPLAY");
+		$selectedItem = $this->getCurrentUserPreferences("DISPLAY");
+		if($list) {
+			foreach($list as $obj) {
+				$obj->Current = $selectedItem == $obj->SelectKey ? true : false;
+				$obj->LinkingMode = $obj->Current ? "current" : "link";
+				$obj->Ajaxify = true;
+			}
+			return $list;
+		}
 	}
 
 	/**
@@ -1862,9 +1992,23 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return String
 	 */
 	public function ResetPreferencesLink() {
-		$getVariableName = $this->getSortFilterDisplayNames("FILTER", "getVariable");
-		return $this->Link()."?".$getVariableName."=".$this->getUserPreferencesDefault("FILTER")."&reload=1";
-		//what about?
+		$getVariableNameFilter = $this->getSortFilterDisplayNames("FILTER", "getVariable");
+		$getVariableNameSort = $this->getSortFilterDisplayNames("SORT", "getVariable");
+		return $this->Link()."?".
+			$getVariableNameFilter."=".$this->getMyUserPreferencesDefault("FILTER").
+			$getVariableNameSort."=".$this->getMyUserPreferencesDefault("SORT").
+			"&reload=1";
+	}
+
+	/**
+	 * Link to the search results
+	 *
+	 * @return String
+	 */
+	public function SearchResultLink() {
+		if($this->HasSearchResults() && !$this->isSearchResults) {
+			return $this->Link("searchresults");
+		}
 	}
 
 	/****************************************************
@@ -1879,12 +2023,12 @@ class ProductGroup_Controller extends Page_Controller {
 	protected function paginateList(SS_List $list){
 		if($list && $list->count()) {
 			if($this->IsShowFullList()) {
-				$obj = new PaginatedList($list, $this->request);
+				$obj = PaginatedList::create($list, $this->request);
 				$obj->setPageLength(EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list") + 1);
 				return $obj;
 			}
 			else {
-				$obj = new PaginatedList($list, $this->request);
+				$obj = PaginatedList::create($list, $this->request);
 				$obj->setPageLength($this->MyNumberOfProductsPerPage());
 				return $obj;
 			}
@@ -1923,57 +2067,28 @@ class ProductGroup_Controller extends Page_Controller {
 					//debug::log("ProductGroup_".$sessionName ."---". $newPreference);
 					Session::set("ProductGroup_".$sessionName, $newPreference);
 					//save in model as well...
-					$this->setCurrentUserPreference($type, $newPreference);
 				}
 			}
+			else {
+				$newPreference = Session::get("ProductGroup_".$sessionName);
+			}
+			//save data in model...
+			$this->setCurrentUserPreference($type, $newPreference);
 		}
 
 		//clearing data..
 		if($this->request->getVar("reload")) {
 			//reset other session variables...
-			Session::set(Config::inst()->get("ProductSearchForm", "product_session_variable"), array());
-			Session::set(Config::inst()->get("ProductSearchForm", "product_group_session_variable"), array());
+			Session::set($this->SearchResultsSessionVariable(false), "");
+			Session::set($this->SearchResultsSessionVariable(true), "");
 			return $this->redirect($this->Link());
-		}
-
-		//product search form ....
-		else {
-			//we dont have to do this twice...
-			if(!count($this->searchResultsArrayProducts)) {
-				$productIDs = $this->request->getVar(Config::inst()->get("ProductSearchForm", "product_get_variable"));
-				if($productIDs || $productIDs == 0) {
-					$productIDsFinal = array();
-					$productIDs = explode(",", $productIDs);
-					foreach($productIDs as $productID) {
-						if(intval($productID)) {
-							$productIDsFinal[] = $productID;
-						}
-					}
-					$this->searchResultsArrayProducts = $productIDsFinal;
-					Session::set(Config::inst()->get("ProductSearchForm", "product_session_variable"), $productIDsFinal);
-				}
-			}
-			//we dont have to do this twice...
-			if(!count($this->searchResultsArrayProductGroups)) {
-				$productGroupIDs = $this->request->getVar(Config::inst()->get("ProductSearchForm", "product_group_get_variable"));
-				if($productGroupIDs || $productGroupIDs == 0) {
-					$productGroupIDsFinal = array();
-					$productGroupIDs = explode(",", $productGroupIDs);
-					foreach($productGroupIDs as $productGroupID) {
-						if(intval($productGroupID)) {
-							$productGroupIDsFinal[] = $productGroupID;
-						}
-					}
-					$this->searchResultsArrayProductGroups = $productGroupIDsFinal;
-					Session::set(Config::inst()->get("ProductSearchForm", "product_group_session_variable"), $productGroupIDsFinal);
-				}
-			}
 		}
 
 		//full list ....
 		if($this->request->getVar("showfulllist")) {
 			$this->showFullList = true;
 		}
+
 	}
 
 	/**
@@ -2008,8 +2123,7 @@ class ProductGroup_Controller extends Page_Controller {
 	protected function userPreferencesLinks($type){
 		//get basics
 		$sortFilterDisplayNames = $this->getSortFilterDisplayNames();
-		$configName = $sortFilterDisplayNames[$type]["configName"];
-		$options = EcommerceConfig::get($this->dataRecord->ClassName, $configName);
+		$options = $this->getConfigOptions($type);
 
 		//if there is only one option then do not bother
 		if(count($options) < 2) return null;
@@ -2017,14 +2131,14 @@ class ProductGroup_Controller extends Page_Controller {
 		//get more config names
 		$translationCode = $sortFilterDisplayNames[$type]["translationCode"];
 		$getVariableName = $sortFilterDisplayNames[$type]["getVariable"];
-		$arrayList = new ArrayList();
+		$arrayList = ArrayList::create();
 		if(count($options)) {
 			foreach($options as $key => $array){
 				//$isCurrent = ($key == $selectedItem) ? true : false;
 
 				$link =  "?".$getVariableName."=$key";
 				if($type == "FILTER") {
-					if($key == $this->getUserPreferencesDefault($type)) {
+					if($key == $this->getMyUserPreferencesDefault($type)) {
 						$link .= "&amp;reload=1";
 					}
 					$link = $this->Link().$link;
@@ -2032,7 +2146,7 @@ class ProductGroup_Controller extends Page_Controller {
 				else {
 					$link = $this->request->getVar('url').$link;
 				}
-				$arrayList->push(new ArrayData(array(
+				$arrayList->push(ArrayData::create(array(
 					'Name' => _t('ProductGroup.'.$translationCode.strtoupper(str_replace(' ','',$array['Title'])),$array['Title']),
 					'Link' => $link,
 					'SelectKey' => $key,
@@ -2051,13 +2165,12 @@ class ProductGroup_Controller extends Page_Controller {
 	 *  INTERNAL PROCESSING: TITLES
 	/****************************************************/
 
-
-
 	/**
-	 *
+	 * variable to make sure secondary title only gets
+	 * added once.
 	 * @var Boolean
 	 */
-	private $secondaryTitleHasBeenAdded = false;
+	protected $secondaryTitleHasBeenAdded = false;
 
 	/**
 	 * add a secondary title to the main title
@@ -2076,15 +2189,18 @@ class ProductGroup_Controller extends Page_Controller {
 			if(is_object($this->filterForGroupObject)) {
 				$secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
 			}
+			if($this->IsSearchResults()) {
+				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results");
+			}
 			if($this->IsShowFullList()) {
 				$secondaryTitle .= $pipe._t("ProductGroup.LIST_VIEW", "List View");
 			}
 			$filter = $this->getCurrentUserPreferences("FILTER");
-			if($filter != $this->getUserPreferencesDefault("FILTER")) {
+			if($filter != $this->getMyUserPreferencesDefault("FILTER")) {
 				$secondaryTitle .= $pipe.$this->getUserPreferencesTitle("FILTER", $this->getCurrentUserPreferences("FILTER"));
 			}
 			$sort = $this->getCurrentUserPreferences("SORT");
-			if($sort != $this->getUserPreferencesDefault("SORT")) {
+			if($sort != $this->getMyUserPreferencesDefault("SORT")) {
 				$secondaryTitle .= $pipe.$this->getUserPreferencesTitle("SORT", $this->getCurrentUserPreferences("SORT"));
 			}
 			if($secondaryTitle) {
@@ -2092,6 +2208,7 @@ class ProductGroup_Controller extends Page_Controller {
 				if(isset($this->MetaTitle)) {
 					$this->MetaTitle .= $secondaryTitle;
 				}
+				$this->MenuTitle .= "AAAAAAAAAAAAAAAAAAAAAAA";
 			}
 			//dont update menu title, because the entry in the menu
 			//should stay the same as it links back to the unfiltered
@@ -2123,11 +2240,6 @@ class ProductGroup_Controller extends Page_Controller {
 		$html .= "<li><b>Filter Options for Dropdown:</b><pre> ".print_r($this->getUserPreferencesOptionsForDropdown("FILTER"), 1)."</pre></li>";
 		$html .= "<li><b>Display Styles for Dropdown:</b><pre> ".print_r($this->getUserPreferencesOptionsForDropdown("DISPLAY"), 1)."</pre> </li>";
 
-		$html .= "<li><hr /><h3>Default Keys (what is the default for the site)</h3><hr /></li>";
-		$html .= "<li><b>Default Sort Key:</b> ".$this->getUserPreferencesDefault("SORT")." </li>";
-		$html .= "<li><b>Default Filter Key:</b> ".$this->getUserPreferencesDefault("FILTER")." </li>";
-		$html .= "<li><b>Default Display Style Key:</b> ".$this->getUserPreferencesDefault("DISPLAY")." </li>";
-
 		$html .= "<li><hr /><h3>Selection Setting (what is set as default for this page)</h3><hr /></li>";
 		$html .= "<li><b>MyDefaultFilter:</b> ".$this->getMyUserPreferencesDefault("FILTER")." </li>";
 		$html .= "<li><b>MyDefaultSortOrder:</b> ".$this->getMyUserPreferencesDefault("SORT")." </li>";
@@ -2155,9 +2267,11 @@ class ProductGroup_Controller extends Page_Controller {
 		$html .= "<li><b>allProducts:</b> ".print_r(str_replace("\"", "`", $this->allProducts->sql()), 1)." </li>";
 
 		$html .= "<li><hr /><h3>Search</h3><hr /></li>";
-		$html .= "<li><b>Is Search Results:</b> ".($this->IsSearchResults ? "YES" : "NO")." </li>";
-		$html .= "<li><b>Products In Search:</b> ".print_r($this->searchResultsArrayProducts, 1)." </li>";
-		$html .= "<li><b>Product Groups In Search:</b> ".print_r($this->searchResultsArrayProductGroups, 1)." </li>";
+		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
+		$productGroupArray = explode(",", Session::get($this->SearchResultsSessionVariable(true)));
+		$html .= "<li><b>Is Search Results:</b> ".($this->IsSearchResults() ? "YES" : "NO")." </li>";
+		$html .= "<li><b>Products In Search (session variable : ".$this->SearchResultsSessionVariable(false)."):</b> ".print_r($resultArray, 1)." </li>";
+		$html .= "<li><b>Product Groups In Search (session variable : ".$this->SearchResultsSessionVariable(true)."):</b> ".print_r($productGroupArray, 1)." </li>";
 
 		$html .= "<li><hr /><h3>Other</h3><hr /></li>";
 		if($image = $this->BestAvailableImage()) {
@@ -2178,6 +2292,7 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 		$html .= "<li><b>a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list:</b><pre>".print_r($this->ProductGroupsFromAlsoShowProducts()->map("ID", "Title")->toArray(), 1)." </pre></li>";
 		$html .= "<li><b>the inverse of ProductGroupsFromAlsoShowProducts:</b><pre> ".print_r($this->ProductGroupsFromAlsoShowProductsInverse()->map("ID", "Title")->toArray(), 1)." </pre></li>";
+		$html .= "<li><b>all product parent groups:</b><pre> ".print_r($this->ProductGroupsParentGroups()->map("ID", "Title")->toArray(), 1)." </pre></li>";
 
 		$html .= "<li><hr /><h3>Product Example and Links</h3><hr /></li>";
 		$product = Product::get()->filter(array("ParentID" => $this->ID))->first();
@@ -2194,6 +2309,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$html .= "</ul>";
 		return $html;
 	}
+
 
 
 }

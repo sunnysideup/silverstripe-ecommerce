@@ -205,7 +205,8 @@ class EcommerceDBConfig extends DataObject {
 		public static function reset_my_current_one() {self::$my_current_one = null;}
 
 	/**
-	 * implements singleton pattern
+	 * implements singleton pattern.
+	 * Gets the current USE THIS ONE e-commerce option.
 	 * @return EcommerceDBConfig | Object
 	 */
 	public static function current_ecommerce_db_config(){
@@ -214,9 +215,8 @@ class EcommerceDBConfig extends DataObject {
 			if(!class_exists("EcommerceDBConfig")) {
 				$class = "EcommerceDBConfig";
 			}
-			$query = $className::get();
-			if($query->count()) {
-				self::$my_current_one = $query->First();
+			if(self::$my_current_one = $className::get()->filter(array("UseThisOne" => 1))->first()) {
+				 //do nothing
 			}
 			else {
 				self::$my_current_one = new $className();
@@ -256,7 +256,7 @@ class EcommerceDBConfig extends DataObject {
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
 			"PostalCodeLabel" => _t("EcommerceDBConfig.POSTALCODELABEL", "Postal code link label"),
 			"NumberOfProductsPerPage" => _t("EcommerceDBConfig.NUMBEROFPRODUCTSPERPAGE", "Number of products per page"),
-			"OnlyShowProductsThatCanBePurchased" => _t("EcommerceDBConfig.ONLYSHOWPRODUCTSTHATCANBEPURCHASED", "Only show products that can be purchased"),
+			"OnlyShowProductsThatCanBePurchased" => _t("EcommerceDBConfig.ONLYSHOWPRODUCTSTHATCANBEPURCHASED", "Only show products that can be purchased (Allow Purchase)."),
 			"NotForSaleMessage" => _t("EcommerceDBConfig.NOTFORSALEMESSAGE", "Message shown for products that can not be purchased"),
 			"ProductsHaveWeight" =>  _t("EcommerceDBConfig.PRODUCTSHAVEWEIGHT", "Products have weight (e.g. 1.2kg) - untick to hide weight field"),
 			"ProductsHaveModelNames" =>  _t("EcommerceDBConfig.PRODUCTSHAVEMODELNAMES", "Products have model names / numbers -  untick to hide model field"),
@@ -270,7 +270,7 @@ class EcommerceDBConfig extends DataObject {
 			"DefaultSmallImageSize" => _t("EcommerceDBConfig.DEFAULTSMALLIMAGESIZE", "Product Small Image Optimised Size"),
 			"DefaultContentImageSize" => _t("EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE", "Product Content Image Optimised Size"),
 			"DefaultLargeImageSize" => _t("EcommerceDBConfig.DEFAULTLARGEIMAGESIZE", "Product Large Image Optimised Size"),
-			"AllowFreeProductPurchase" => _t("EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE", "Allow free products to be purchased")
+			"AllowFreeProductPurchase" => _t("EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE", "Allow free products to be purchased?  This is basically a protection to disallow sales of products that do not have a price entered yet. ")
 		);
 		return $newLabels;
 	}

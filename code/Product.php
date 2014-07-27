@@ -310,6 +310,15 @@ class Product extends Page implements BuyableModel {
 	 */
 	function onBeforeWrite(){
 		parent::onBeforeWrite();
+		$config = $this->EcomConfig();
+		//set allowpurchase to false IF
+		//free products are not allowed to be purchased
+		if($config && !$config->AllowFreeProductPurchase) {
+			$price = $this->getCalculatedPrice();
+			if($price == 0) {
+				$this->AllowPurchase = 0;
+			}
+		}
 		$filter = EcommerceCodeFilter::create();
 		$filter->checkCode($this, "InternalItemID");
 		$this->prepareFullFields();
@@ -825,15 +834,6 @@ class Product extends Page implements BuyableModel {
 		else if($extended === false) {
 			return false;
 		}
-		//price
-		if(!$config->AllowFreeProductPurchase) {
-			if($checkPrice) {
-				$price = $this->getCalculatedPrice();
-				if($price == 0) {
-					return false;
-				}
-			}
-		}
 		// Standard mechanism for accepting permission changes from decorators
 		$extended = $this->extendedCan('canPurchase', $member);
 		if($extended !== null) {
@@ -879,16 +879,6 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	public function canPublish($member = null) {
-		return $this->canEdit($member);
-	}
-
-	/**
-	 * Standard SS method
-	 * //check if it is in a current cart?
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDeleteFromLive($member = null) {
 		return $this->canEdit($member);
 	}
 

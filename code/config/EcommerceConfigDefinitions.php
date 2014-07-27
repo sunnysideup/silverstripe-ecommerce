@@ -186,7 +186,8 @@ class EcommerceConfigDefinitions extends Object {
 		################### PRODUCT DISPLAY #####################
 			"ProductGroup" => array(
 				"base_buyable_class" => "The base class for the products being retrieved.  Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.",
-				"maximum_number_of_products_to_list" => "the maximum number of products to be shown in a list.  For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers",
+				"actively_check_for_can_purchase" => "Before listing a product, actively check if canPurcahse returns true.  This is useful, when for example, you are ",
+				"maximum_number_of_products_to_list" => "The maximum number of products to be shown in a list.  For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers.",
 				"sort_options" => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
 				"filter_options" => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
 				"display_styles" => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
