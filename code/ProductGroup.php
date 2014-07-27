@@ -1275,10 +1275,10 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	public function ProductGroupsFromAlsoShowProductsInverse() {
-		$allowPurchaseWhereStatement = $this->allowPurchaseWhereStatement(true);
-		$alsoShowProductsArray = array(0 => 0) + $this->AlsoShowProducts()
-			->filter($allowPurchaseWhereStatement)
+		$alsoShowProductsArray = $this->AlsoShowProducts()
+			->filter($this->getUserSettingsOptionSQL("FILTER", $this->getMyUserPreferencesDefault("FILTER")))
 			->map("ID", "ID")->toArray();
+		$alsoShowProductsArray[0] = 0;
 		$parentIDs = Product::get()->filter(array("ID" => $alsoShowProductsArray))->map("ParentID", "ParentID")->toArray();
 		//just in case
 		unset($parentIDs[$this->ID]);
@@ -1995,7 +1995,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$getVariableNameFilter = $this->getSortFilterDisplayNames("FILTER", "getVariable");
 		$getVariableNameSort = $this->getSortFilterDisplayNames("SORT", "getVariable");
 		return $this->Link()."?".
-			$getVariableNameFilter."=".$this->getMyUserPreferencesDefault("FILTER").
+			$getVariableNameFilter."=".$this->getMyUserPreferencesDefault("FILTER")."&amp;".
 			$getVariableNameSort."=".$this->getMyUserPreferencesDefault("SORT").
 			"&reload=1";
 	}
