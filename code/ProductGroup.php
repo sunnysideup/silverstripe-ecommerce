@@ -631,9 +631,10 @@ class ProductGroup extends Page {
 			$gridFieldConfig
 		);
 		//make sure edits are done in the right place ...
-		$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
-		$gridField->getConfig()->removeComponentsByType("GridFieldAddNewButton");
-		$gridField->getConfig()->addComponent(GridFieldEditButtonOriginalPage::create());
+		$gridField->getConfig()
+			->removeComponentsByType("GridFieldEditButton")
+			->getConfig()->removeComponentsByType("GridFieldAddNewButton")
+			->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
 		return $gridField;
 	}
 

@@ -237,9 +237,10 @@ class Product extends Page implements BuyableModel {
 			$this->ProductGroups(),
 			$gridFieldConfig
 		);
-		$gridField->getConfig()->removeComponentsByType("GridFieldEditButton");
-		$gridField->getConfig()->removeComponentsByType("GridFieldAddNewButton");
-		$gridField->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
+		$gridField->getConfig()
+			->removeComponentsByType("GridFieldEditButton")
+			->removeComponentsByType("GridFieldAddNewButton")
+			->addComponent(new GridFieldEditButtonOriginalPage());
 		return $gridField;
 	}
 
@@ -281,10 +282,9 @@ class Product extends Page implements BuyableModel {
 			$this->AdditionalFiles(),
 			GridFieldConfig_RelationEditor::create()
 		);
-		$config = $gridField->getConfig();
-		$components = $gridField->getComponents();
-		$config->removeComponentsByType("GridFieldAddNewButton");
-		$config->removeComponentsByType("GridFieldAddExistingAutocompleter");
+		$config = $gridField->getConfig()
+			->removeComponentsByType("GridFieldAddNewButton")
+			->removeComponentsByType("GridFieldAddExistingAutocompleter");
 		$gridField->setConfig($config);
 		//var_dump($components->items);
 
