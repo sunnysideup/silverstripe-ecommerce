@@ -1547,7 +1547,7 @@ class EcommerceTaskMigration extends BuildTask {
 		if($ordersWithoutCurrencyCount) {
 			$currencyID = EcommerceCurrency::default_currency_id();
 			DB::query("UPDATE \"Order\" SET \"CurrencyUsedID\" = $currencyID WHERE \"CurrencyUsedID\" = 0");
-			DB::alteration_message('All orders ($ordersWithoutCurrencyCount) have been set a currency value.', 'changed');
+			DB::alteration_message("All orders ($ordersWithoutCurrencyCount) have been set a currency value.", 'changed');
 		}
 		return 0;
 	}
@@ -1604,6 +1604,23 @@ class EcommerceTaskMigration extends BuildTask {
 		DB::alteration_message("Moving Payment to Ecommerce Payment", "created");
 		return 0;
 	}
+
+	function ecommercetaskupgradepickupordeliverymodifier_310 (){
+		$explanation = "
+			<h1>310.Upgrade Pick Up of Delivery Modifier</h1>
+			<p>Fixing data in this modifier if it exists.</p>
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
+		$obj = EcommerceTaskUpgradePickUpOrDeliveryModifier::create()
+		$obj->run();
+		$this->help();
+	}
+
 
 	function theEnd_9999(){
 		$explanation = "
