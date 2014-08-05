@@ -257,11 +257,18 @@ class EcommerceTaskMigration extends BuildTask {
 		else {
 			echo $explanation;
 		}
+		$table = "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL";
 		if($this->hasTableAndField("Product_OrderItem", "ProductVersion")) {
+			$table = "Product_OrderItem";
+		}
+		elseif($this->hasTableAndField("_obsolete_Product_OrderItem", "ProductVersion")) {
+			$table = "_obsolete_Product_OrderItem";
+		}
+		if($this->hasTableAndField($table, "ProductVersion")) {
 			DB::query("
-				UPDATE \"OrderItem\", \"Product_OrderItem\"
-					SET \"OrderItem\".\"Version\" = \"Product_OrderItem\".\"ProductVersion\"
-				WHERE \"OrderItem\".\"ID\" = \"Product_OrderItem\".\"ID\"
+				UPDATE \"OrderItem\", \"$table\"
+					SET \"OrderItem\".\"Version\" = \"$table\".\"ProductVersion\"
+				WHERE \"OrderItem\".\"ID\" = \"$table\".\"ID\"
 			");
 			$this->makeFieldObsolete("Product_OrderItem", "ProductVersion");
 			DB::alteration_message("Migrating Product_OrderItem.ProductVersion to OrderItem.Version.", "created");
@@ -282,12 +289,19 @@ class EcommerceTaskMigration extends BuildTask {
 		else {
 			echo $explanation;
 		}
+		$table = "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL";
 		if($this->hasTableAndField("Product_OrderItem", "ProductID")) {
+			$table = "Product_OrderItem";
+		}
+		elseif($this->hasTableAndField("_obsolete_Product_OrderItem", "ProductID")) {
+			$table = "_obsolete_Product_OrderItem";
+		}
+		if($this->hasTableAndField($table, "ProductID")) {
 			DB::query("
 				UPDATE \"OrderItem\"
-					INNER JOIN \"Product_OrderItem\"
-						ON \"OrderItem\".\"ID\" = \"Product_OrderItem\".\"ID\"
-				SET \"OrderItem\".\"BuyableID\" = \"Product_OrderItem\".\"ProductID\"
+					INNER JOIN \"$table\"
+						ON \"OrderItem\".\"ID\" = \"$table\".\"ID\"
+				SET \"OrderItem\".\"BuyableID\" = \"$table\".\"ProductID\"
 				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
 			");
 			$this->makeFieldObsolete("Product_OrderItem", "ProductID");
@@ -1233,7 +1247,7 @@ class EcommerceTaskMigration extends BuildTask {
 						}
 						$orderStatusLogs = OrderStatusLog::get()->filter(array("OrderID" =>  $order->ID));
 						if($orderStatusLogs->count()) {
-							foreach($orderStatusLogs as $orderStatusLog) {
+							foreach($orderStatusLogs as $orderStatusLog) {)
 								$orderStatusLog->OrderID = $lastOrderFromMember->ID;
 								$orderStatusLog->write();
 								DB::alteration_message("Moving order status log #".$orderStatusLog->ID, "created");
