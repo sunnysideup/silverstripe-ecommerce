@@ -924,8 +924,7 @@ class EcommerceTaskMigration extends BuildTask {
 			if($badOrders->count()) {
 				foreach($badOrders as $order) {
 					if($order->TotalItems() > 0) {
-						$order->StatusID = $firstOption->ID;
-						$order->write();
+						DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$firstOption->ID." WHERE \"Order\".\"ID\" = ".$order->ID);
 						DB::alteration_message("No order status for order number #".$order->ID." reverting to: $firstOption->Name.","error");
 					}
 				}
