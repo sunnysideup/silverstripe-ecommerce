@@ -1247,7 +1247,7 @@ class EcommerceTaskMigration extends BuildTask {
 						}
 						$orderStatusLogs = OrderStatusLog::get()->filter(array("OrderID" =>  $order->ID));
 						if($orderStatusLogs->count()) {
-							foreach($orderStatusLogs as $orderStatusLog) {)
+							foreach($orderStatusLogs as $orderStatusLog) {
 								$orderStatusLog->OrderID = $lastOrderFromMember->ID;
 								$orderStatusLog->write();
 								DB::alteration_message("Moving order status log #".$orderStatusLog->ID, "created");
