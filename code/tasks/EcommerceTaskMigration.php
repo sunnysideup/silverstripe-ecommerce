@@ -1236,9 +1236,8 @@ class EcommerceTaskMigration extends BuildTask {
 							->filter(array("OrderID" => $order->ID));
 						if($orderAttributes->count()) {
 							foreach($orderAttributes as $orderAttribute) {
-								$orderAttribute->OrderID = $lastOrderFromMember->ID;
-								$orderAttribute->write();
 								DB::alteration_message("Moving attribute #".$orderAttribute->ID, "created");
+								DB::query("UPDATE\" OrderAttribute\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$orderAttribute->ID);
 							}
 						}
 						else {
@@ -1247,9 +1246,8 @@ class EcommerceTaskMigration extends BuildTask {
 						$orderStatusLogs = OrderStatusLog::get()->filter(array("OrderID" =>  $order->ID));
 						if($orderStatusLogs->count()) {
 							foreach($orderStatusLogs as $orderStatusLog) {
-								$orderStatusLog->OrderID = $lastOrderFromMember->ID;
-								$orderStatusLog->write();
 								DB::alteration_message("Moving order status log #".$orderStatusLog->ID, "created");
+								DB::query("UPDATE \"OrderStatusLog\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$orderStatusLog->ID);
 							}
 						}
 						else {
@@ -1258,8 +1256,7 @@ class EcommerceTaskMigration extends BuildTask {
 						$orderEmailRecords = OrderEmailRecord::get()->filter(array("OrderID" =>  $order->ID));
 						if($orderEmailRecords->count()) {
 							foreach($orderEmailRecords as $orderEmailRecord) {
-								$orderEmailRecord->OrderID = $lastOrderFromMember->ID;
-								$orderEmailRecord->write();
+								DB::query("UPDATE \"OrderEmailRecord\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$orderEmailRecord->ID);
 								DB::alteration_message("Moving email #".$orderEmailRecord->ID, "created");
 							}
 						}
@@ -1274,14 +1271,14 @@ class EcommerceTaskMigration extends BuildTask {
 						DB::alteration_message("Found last order from member.");
 					}
 					if($order->BillingAddressID && !$lastOrderFromMember->BillingAddressID) {
-						$lastOrderFromMember->BillingAddressID = $order->BillingAddressID;
-						$lastOrderFromMember->write();
 						DB::alteration_message("Moving Billing Address.");
+						DB::query("UPDATE \"Order\" SET \"BillingAddressID\" = ".$order->BillingAddressID." WHERE \"ID\" = ".$lastOrderFromMember->ID);
+						DB::query("UPDATE \"BillingAddress\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$order->BillingAddressID);
 					}
 					if($order->ShippingAddressID && !$lastOrderFromMember->ShippingAddressID) {
-						$lastOrderFromMember->ShippingAddressID = $order->ShippingAddressID;
-						$lastOrderFromMember->write();
 						DB::alteration_message("Moving Shipping Address.");
+						DB::query("UPDATE \"Order\" SET \"ShippingAddressID\" = ".$order->ShippingAddressID." WHERE \"ID\" = ".$lastOrderFromMember->ID);
+						DB::query("UPDATE \"ShippingAddress\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$order->ShippingAddressID);
 					}
 					$order->delete();
 				}
@@ -1361,9 +1358,9 @@ class EcommerceTaskMigration extends BuildTask {
 			echo $explanation;
 		}
 		$count = 0;
-		Product::get()
-			->where("\"FullName\" = '' OR \"FullName\" IS NULL OR 1 = 1")
-			->sort("FullName", "ASC")
+		$products  = Product::get()
+			->where("\"FullName\" = '' OR \"FullName\" IS NULL")
+			->sort("ID", "ASC")
 			->limit($this->limit, $this->start);
 		if($products->count()) {
 			foreach($products as $product) {
@@ -1397,7 +1394,7 @@ class EcommerceTaskMigration extends BuildTask {
 		if(class_exists("ProductVariation")) {
 			ProductVariation::get()
 				->where("\"FullName\" = '' OR \"FullName\" IS NULL")
-				->sort("FullName", "ASC")
+				->sort("ID", "ASC")
 				->limit($this->limit, $this->start);
 			if($variations->count()) {
 				foreach($variations as $variation) {
