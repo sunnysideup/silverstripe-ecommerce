@@ -61,42 +61,44 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 
 		$lastOrderStep = OrderStep::get()->sort("Sort", "DESC")->First();
 		$submissionLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
+		if(!is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
+			user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
+		}
 		$orderStatusLogClassName = "OrderStatusLog";
 
 		$offSet = 0;
-		$orders = Order::get()
-			->filter(array("StatusID" => $lastOrderStep->ID))
-			->leftJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
-			->where("\"$orderStatusLogClassName\".\"ID\" IS NULL")
-			->limit(100, $offSet);
+		$orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
 		while($orders->count()) {
 			foreach($orders as $order) {
-
 				$isSubmitted = $submissionLogClassName::get()
 					->Filter(array("OrderID" => $order->ID))
 					->count();
 				if(!$isSubmitted) {
 					$obj = $submissionLogClassName::create();
-					if(is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
-						$obj->OrderID = $order->ID;
-						//it is important we add this here so that we can save the 'submitted' version.
-						//this is particular important for the Order Item Links.
-						$obj->write();
-						$obj->OrderAsHTML = $order->ConvertToHTML();
-						$obj->write();
-						DB::alteration_message("creating submission log for Order #".$obj->OrderID, "created");
-					}
-					else {
-						user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
-					}
+
+					$obj->OrderID = $order->ID;
+					//it is important we add this here so that we can save the 'submitted' version.
+					//this is particular important for the Order Item Links.
+					$obj->write();
+					$obj->OrderAsHTML = $order->ConvertToHTML();
+					$obj->write();
+					DB::alteration_message("creating submission log for Order #".$obj->OrderID, "created");
 				}
 			}
 			$offSet += 100;
-			$orders = Order::get()->filter(array("StatusID" => $lastOrderStep->ID))->limit(100, $offSet);
+			$orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
 		}
 
 
 
+	}
+
+	function getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset) {
+		return Order::get()
+			->filter(array("StatusID" => $lastOrderStep->ID))
+			->leftJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
+			->where("\"$orderStatusLogClassName\".\"ID\" IS NULL")
+			->limit(100, $offSet);
 	}
 
 }

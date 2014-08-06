@@ -62,6 +62,8 @@ class EcommerceTaskMigration extends BuildTask {
 		"cleanupImages_260",
 		"addNewPopUpManager_280",
 		"addCurrencyCodeIDToOrders_290",
+		"MovePaymentToEcommercePayment_300",
+		"ecommercetaskupgradepickupordeliverymodifier_310",
 		"theEnd_9999"
 	);
 
@@ -1567,7 +1569,7 @@ class EcommerceTaskMigration extends BuildTask {
 		$table = "Payment";
 		if($db->hasTable("_obsolete_Payment") && !$db->hasTable("Payment")) {
 			$table = "_obsolete_Payment";
-			DB::alteration_message("The table Payment has been moved to _obsolete_Payment. We are using the latter to fix things...", "deleted");
+			DB::alteration_message("The table Payment has been moved to _obsolete_Payment. We are using _obsolete_Payment to fix things...", "deleted");
 		}
 		DB::query('
 			INSERT IGNORE INTO EcommercePayment(
@@ -1616,9 +1618,11 @@ class EcommerceTaskMigration extends BuildTask {
 		else {
 			echo $explanation;
 		}
-		$obj = EcommerceTaskUpgradePickUpOrDeliveryModifier::create()
-		$obj->run();
-		$this->help();
+		if($this->hasTableAndField("PickUpOrDeliveryModifier", "PickupOrDeliveryType")) {
+			$obj = EcommerceTaskUpgradePickUpOrDeliveryModifier::create()
+			$obj->run();
+		}
+		return 0;
 	}
 
 
