@@ -64,12 +64,12 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 
 		$lastOrderStep = OrderStep::get()->sort("Sort", "DESC")->First();
 		$submissionLogClassName = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
+		$obj = $submissionLogClassName::create();
 		if(!is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
 			user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
 		}
 		$orderStatusLogClassName = "OrderStatusLog";
-
-		$offSet = 0;
+		$offset = 0;
 		$orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
 		while($orders->count()) {
 			foreach($orders as $order) {
@@ -88,7 +88,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 					DB::alteration_message("creating submission log for Order #".$obj->OrderID, "created");
 				}
 			}
-			$offSet += 100;
+			$offset += 100;
 			$orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
 		}
 
@@ -101,7 +101,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 			->filter(array("StatusID" => $lastOrderStep->ID))
 			->leftJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
 			->where("\"$orderStatusLogClassName\".\"ID\" IS NULL")
-			->limit(100, $offSet);
+			->limit(100, $offset);
 	}
 
 }
