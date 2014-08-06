@@ -1618,7 +1618,7 @@ class EcommerceTaskMigration extends BuildTask {
 		else {
 			echo $explanation;
 		}
-		if($this->hasTableAndField("PickUpOrDeliveryModifier", "PickupOrDeliveryType")) {
+		if(class_exists("EcommerceTaskUpgradePickUpOrDeliveryModifier") && $this->hasTableAndField("PickUpOrDeliveryModifier", "PickupOrDeliveryType")) {
 			$obj = EcommerceTaskUpgradePickUpOrDeliveryModifier::create();
 			$obj->run(null);
 		}
