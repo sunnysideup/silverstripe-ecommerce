@@ -1620,7 +1620,7 @@ class EcommerceTaskMigration extends BuildTask {
 		}
 		if($this->hasTableAndField("PickUpOrDeliveryModifier", "PickupOrDeliveryType")) {
 			$obj = EcommerceTaskUpgradePickUpOrDeliveryModifier::create();
-			$obj->run();
+			$obj->run(null);
 		}
 		return 0;
 	}
