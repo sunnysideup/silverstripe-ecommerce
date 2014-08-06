@@ -14,13 +14,15 @@
 
 class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 
-	protected $title = "Archive all orders with order items and adding a submit record.";
+	protected $title = "Archive all orders with order items and payment and add a submit record.";
 
 	protected $description = "
 		This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.
 		NB: It also adds a submit record.
 		This task is basically for orders that never got archived.
 	";
+
+	private static $payment_table = "EcommercePayment";
 
 	function run($request){
 		set_time_limit(0);
@@ -30,6 +32,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask{
 			$joinSQL = "
 			INNER JOIN \"OrderAttribute\" ON \"Order\".\"ID\" = \"OrderAttribute\".\"OrderID\"
 			INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\"
+			INNER JOIN \"".self::$payment_table."\" ON \"".self::$payment_table."\".\"OrderID\" = \"Order\".\"ID\"
 			";
 			$whereSQL = "WHERE \"StatusID\" <> ".$lastOrderStep->ID." ";
 			$count = DB::query("
