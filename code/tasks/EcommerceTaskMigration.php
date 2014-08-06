@@ -21,7 +21,7 @@
 
 class EcommerceTaskMigration extends BuildTask {
 
-	protected $limit = 100;
+	protected $limit = 300;
 
 	protected $start = 0;
 
@@ -68,6 +68,8 @@ class EcommerceTaskMigration extends BuildTask {
 	);
 
 	function run($request) {
+		set_time_limit(1200);
+		increase_memory_limit_to(-1);
 		$nextGetStatement = "";
 		if(isset($_REQUEST["limit"])) {
 			$this->limit = intval($_REQUEST["limit"]);
@@ -79,6 +81,9 @@ class EcommerceTaskMigration extends BuildTask {
 		$step = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "";
 		if(in_array($step, $this->listOfMigrationTasks)) {
 			$method = $step;
+			if($this->start) {
+				$this->DBAlterationMessageNow("starting at .... ".$this->start. " processing ".$this->limit, "created");
+			}
 			$nextLimit = $this->$method();
 			if($canDoNext && $nextLimit) {
 				$canDoNext = false;
@@ -174,13 +179,13 @@ class EcommerceTaskMigration extends BuildTask {
 		if($this->hasTableAndField($table, $field)) {
 			$db = DB::getConn();
 			$db->dontRequireField($table, $field);
-			DB::alteration_message("removed $field from $table", "deleted");
+			$this->DBAlterationMessageNow("removed $field from $table", "deleted");
 		}
 		else {
-			DB::alteration_message("ERROR: could not find $field in $table so it could not be removed", "deleted");
+			$this->DBAlterationMessageNow("ERROR: could not find $field in $table so it could not be removed", "deleted");
 		}
 		if($this->hasTableAndField($table, $field)) {
-			DB::alteration_message("ERROR: tried to remove $field from $table but it still seems to be there", "deleted");
+			$this->DBAlterationMessageNow("ERROR: tried to remove $field from $table but it still seems to be there", "deleted");
 		}
 	}
 
@@ -211,15 +216,15 @@ class EcommerceTaskMigration extends BuildTask {
 						\"Member\".\"Notes\" = \"ShopMember\".\"Notes\"
 					WHERE \"Member\".\"ID\" = \"ShopMember\".\"ID\"
 				");
-				DB::alteration_message("Successfully migrated ShopMember To Member.", "created");
+				$this->DBAlterationMessageNow("Successfully migrated ShopMember To Member.", "created");
 			}
 			else {
-				DB::alteration_message("No need to migrate ShopMember To Member because it does not have any records.");
+				$this->DBAlterationMessageNow("No need to migrate ShopMember To Member because it does not have any records.");
 			}
 			DB::query("DROP TABLE \"ShopMember\";");
  		}
  		else {
-			DB::alteration_message("There is no need to migrate the ShopMember table.");
+			$this->DBAlterationMessageNow("There is no need to migrate the ShopMember table.");
 		}
 	}
 
@@ -241,10 +246,10 @@ class EcommerceTaskMigration extends BuildTask {
 				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
 			");
  			$this->makeFieldObsolete("OrderItem", "ItemID");
- 			DB::alteration_message('Moved ItemID to BuyableID in OrderItem', 'created');
+ 			$this->DBAlterationMessageNow('Moved ItemID to BuyableID in OrderItem', 'created');
 		}
 		else {
-			DB::alteration_message('There is no need to move from ItemID to BuyableID');
+			$this->DBAlterationMessageNow('There is no need to move from ItemID to BuyableID');
 		}
 	}
 
@@ -273,10 +278,10 @@ class EcommerceTaskMigration extends BuildTask {
 				WHERE \"OrderItem\".\"ID\" = \"$table\".\"ID\"
 			");
 			$this->makeFieldObsolete("Product_OrderItem", "ProductVersion");
-			DB::alteration_message("Migrating Product_OrderItem.ProductVersion to OrderItem.Version.", "created");
+			$this->DBAlterationMessageNow("Migrating Product_OrderItem.ProductVersion to OrderItem.Version.", "created");
 		}
 		else {
-			DB::alteration_message("There is no need to migrate Product_OrderItem.ProductVersion to OrderItem.Version.");
+			$this->DBAlterationMessageNow("There is no need to migrate Product_OrderItem.ProductVersion to OrderItem.Version.");
 		}
 	}
 
@@ -307,10 +312,10 @@ class EcommerceTaskMigration extends BuildTask {
 				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
 			");
 			$this->makeFieldObsolete("Product_OrderItem", "ProductID");
-			DB::alteration_message("Migrating Product_OrderItem.ProductID to OrderItem.BuyableID", "created");
+			$this->DBAlterationMessageNow("Migrating Product_OrderItem.ProductID to OrderItem.BuyableID", "created");
 		}
 		else {
-			DB::alteration_message("There is no need to migrate Product_OrderItem.ProductID to OrderItem.BuyableID");
+			$this->DBAlterationMessageNow("There is no need to migrate Product_OrderItem.ProductID to OrderItem.BuyableID");
 		}
 		// we must check for individual database types here because each deals with schema in a none standard way
 		//can we use Table::has_field ???
@@ -321,10 +326,10 @@ class EcommerceTaskMigration extends BuildTask {
 				WHERE \"OrderItem\".\"ID\" = \"ProductVariation_OrderItem\".\"ID\"
 			");
 			$this->makeFieldObsolete("ProductVariation_OrderItem", "ProductVariationVersion");
-			DB::alteration_message("Migrating ProductVariation_OrderItem.ProductVariationVersion to OrderItem.Version", "created");
+			$this->DBAlterationMessageNow("Migrating ProductVariation_OrderItem.ProductVariationVersion to OrderItem.Version", "created");
 		}
 		else {
-			DB::alteration_message("No need to migrate ProductVariation_OrderItem.ProductVariationVersion");
+			$this->DBAlterationMessageNow("No need to migrate ProductVariation_OrderItem.ProductVariationVersion");
 		}
 		if(class_exists("ProductVariation_OrderItem")) {
 			if($this->hasTableAndField("ProductVariation_OrderItem", "ProductVariationID")) {
@@ -335,14 +340,14 @@ class EcommerceTaskMigration extends BuildTask {
 					WHERE \"OrderItem\".\"ID\" = \"ProductVariation_OrderItem\".\"ID\"
 				");
 				$this->makeFieldObsolete("ProductVariation_OrderItem", "ProductVariationID");
-				DB::alteration_message("Migrating ProductVariation_OrderItem.ProductVariationID to OrderItem.BuyableID and adding BuyableClassName = ProductVariation", "created");
+				$this->DBAlterationMessageNow("Migrating ProductVariation_OrderItem.ProductVariationID to OrderItem.BuyableID and adding BuyableClassName = ProductVariation", "created");
 			}
 			else {
-				DB::alteration_message("No need to migrate ProductVariation_OrderItem.ProductVariationID");
+				$this->DBAlterationMessageNow("No need to migrate ProductVariation_OrderItem.ProductVariationID");
 			}
 		}
 		else {
-			DB::alteration_message("There are not ProductVariations in this project");
+			$this->DBAlterationMessageNow("There are not ProductVariations in this project");
 		}
 	}
 
@@ -366,10 +371,10 @@ class EcommerceTaskMigration extends BuildTask {
 				WHERE \"OrderAttribute\".\"CalculatedTotal\" IS NULL OR \"OrderAttribute\".\"CalculatedTotal\" = 0
 			");
  			$this->makeFieldObsolete("OrderModifier", "Amount");
- 			DB::alteration_message('Moved OrderModifier.Amount to OrderAttribute.CalculatedTotal', 'created');
+ 			$this->DBAlterationMessageNow('Moved OrderModifier.Amount to OrderAttribute.CalculatedTotal', 'created');
 		}
 		else {
-			DB::alteration_message('There is no need to move OrderModifier.Amount to OrderAttribute.CalculatedTotal');
+			$this->DBAlterationMessageNow('There is no need to move OrderModifier.Amount to OrderAttribute.CalculatedTotal');
 		}
 	}
 
@@ -397,11 +402,11 @@ class EcommerceTaskMigration extends BuildTask {
 			");
 			$countAmountChanges = DB::affectedRows();
 			if($countAmountChanges) {
-				DB::alteration_message("Updated Payment.Amount field to 2.4 - $countAmountChanges rows updated", "edited");
+				$this->DBAlterationMessageNow("Updated Payment.Amount field to 2.4 - $countAmountChanges rows updated", "edited");
 			}
 		}
 		else {
-			DB::alteration_message('There is no need to move Payment.Amount to Payment.AmountAmount');
+			$this->DBAlterationMessageNow('There is no need to move Payment.Amount to Payment.AmountAmount');
 		}
 		if($this->hasTableAndField("Payment", "Currency")) {
 			DB::query("
@@ -417,14 +422,14 @@ class EcommerceTaskMigration extends BuildTask {
 			");
 			$countCurrencyChanges = DB::affectedRows();
 			if($countCurrencyChanges) {
-				DB::alteration_message("Updated Payment.Currency field to 2.4  - $countCurrencyChanges rows updated", "edited");
+				$this->DBAlterationMessageNow("Updated Payment.Currency field to 2.4  - $countCurrencyChanges rows updated", "edited");
 			}
 			if($countAmountChanges != $countCurrencyChanges) {
-				DB::alteration_message("Potential error in Payment fields update to 2.4, please review data", "deleted");
+				$this->DBAlterationMessageNow("Potential error in Payment fields update to 2.4, please review data", "deleted");
 			}
 		}
 		else {
-			DB::alteration_message('There is no need to move Payment.Currency to Payment.AmountCurrency');
+			$this->DBAlterationMessageNow('There is no need to move Payment.Currency to Payment.AmountCurrency');
 		}
 	}
 
@@ -451,18 +456,18 @@ class EcommerceTaskMigration extends BuildTask {
 					$modifier1->OrderID = $id;
 					$modifier1->TableTitle = 'Delivery';
 					$modifier1->write();
-					DB::alteration_message(" ------------- Added shipping cost.", "created");
+					$this->DBAlterationMessageNow(" ------------- Added shipping cost.", "created");
 				}
 				return $this->start + $this->limit;
 			}
 			else {
-				DB::alteration_message("There are no orders with HasShippingCost =1 and Shipping IS NOT NULL.");
+				$this->DBAlterationMessageNow("There are no orders with HasShippingCost =1 and Shipping IS NOT NULL.");
 			}
 			$this->makeFieldObsolete("Order", "HasShippingCost", "tinyint(1)");
 			$this->makeFieldObsolete("Order", "Shipping", "decimal(9,2)");
 		}
 		else {
-			DB::alteration_message("No need to update shipping cost.");
+			$this->DBAlterationMessageNow("No need to update shipping cost.");
 		}
 		return 0;
 	}
@@ -479,7 +484,7 @@ class EcommerceTaskMigration extends BuildTask {
 			echo $explanation;
 		}
 		if($this->hasTableAndField("Order", "AddedTax")) {
-			DB::alteration_message("Moving Order.AddedTax to Modifier.", "created");
+			$this->DBAlterationMessageNow("Moving Order.AddedTax to Modifier.", "created");
 			$orders = Order::get()
 				->where("\"AddedTax\" > 0")
 				->limit($this->limit, $this->start);
@@ -495,21 +500,21 @@ class EcommerceTaskMigration extends BuildTask {
 						$modifier1->OrderID = $id;
 						$modifier1->TableTitle = 'Tax';
 						$modifier1->write();
-						DB::alteration_message(" ------------- Added tax.", "created");
+						$this->DBAlterationMessageNow(" ------------- Added tax.", "created");
 					}
 					else {
-						DB::alteration_message(" ------------- No need to add tax even though field is present");
+						$this->DBAlterationMessageNow(" ------------- No need to add tax even though field is present");
 					}
 				}
 				return $this->start + $this->limit;
 			}
 			else {
-				DB::alteration_message("There are no orders with a AddedTax field greater than zero.");
+				$this->DBAlterationMessageNow("There are no orders with a AddedTax field greater than zero.");
 			}
 			$this->makeFieldObsolete("Order", "AddedTax");
 		}
 		else {
-			DB::alteration_message("No need to update taxes.");
+			$this->DBAlterationMessageNow("No need to update taxes.");
 		}
 		return 0;
 	}
@@ -552,13 +557,13 @@ class EcommerceTaskMigration extends BuildTask {
 							$order->write();
 						}
 						else {
-							DB::alteration_message("Strange contradiction occurred in Order with ID".$order->ID, "deleted");
+							$this->DBAlterationMessageNow("Strange contradiction occurred in Order with ID".$order->ID, "deleted");
 						}
 					}
 					return $this->start + $this->limit;
 				}
 				else {
-					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
+					$this->DBAlterationMessageNow("No orders need adjusting even though they followed the old pattern.");
 				}
 				$this->makeFieldObsolete("Order", "ShippingName");
 				$this->makeFieldObsolete("Order", "ShippingAddress");
@@ -572,11 +577,11 @@ class EcommerceTaskMigration extends BuildTask {
 				$this->makeFieldObsolete("Order", "ShippingMobilePhone");
 			}
 			else {
-				DB::alteration_message("There is no UseShippingAddress field even though there is a ShippingAddress Field - this is an issue.", "deleted");
+				$this->DBAlterationMessageNow("There is no UseShippingAddress field even though there is a ShippingAddress Field - this is an issue.", "deleted");
 			}
 		}
 		else {
-			DB::alteration_message("Orders do not have the shipping address to migrate.");
+			$this->DBAlterationMessageNow("Orders do not have the shipping address to migrate.");
 		}
 		return 0;
 	}
@@ -622,13 +627,13 @@ class EcommerceTaskMigration extends BuildTask {
 							$order->write();
 						}
 						else {
-							DB::alteration_message("Strange contradiction occurred in Order with ID".$order->ID, "deleted");
+							$this->DBAlterationMessageNow("Strange contradiction occurred in Order with ID".$order->ID, "deleted");
 						}
 					}
 					return $this->start + $this->limit;
 				}
 				else {
-					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
+					$this->DBAlterationMessageNow("No orders need adjusting even though they followed the old pattern.");
 				}
 				$this->makeFieldObsolete("Order", "Email");
 				$this->makeFieldObsolete("Order", "FirstName");
@@ -644,11 +649,11 @@ class EcommerceTaskMigration extends BuildTask {
 				$this->makeFieldObsolete("Order", "MobilePhone");
 			}
 			else {
-				DB::alteration_message("There is no UseBillingAddress field even though there is a BillingAddress Field - this is an issue.", "deleted");
+				$this->DBAlterationMessageNow("There is no UseBillingAddress field even though there is a BillingAddress Field - this is an issue.", "deleted");
 			}
 		}
 		else {
-			DB::alteration_message("Orders do not have the Billing address to migrate.");
+			$this->DBAlterationMessageNow("Orders do not have the Billing address to migrate.");
 		}
 		return 0;
 	}
@@ -694,25 +699,25 @@ class EcommerceTaskMigration extends BuildTask {
 								$order->write();
 							}
 							else {
-								DB::alteration_message("There is no memmber associated with this order ".$order->ID, "deleted");
+								$this->DBAlterationMessageNow("There is no memmber associated with this order ".$order->ID, "deleted");
 							}
 						}
 						else {
-							DB::alteration_message("Strange contraduction occurred!", "deleted");
+							$this->DBAlterationMessageNow("Strange contraduction occurred!", "deleted");
 						}
 					}
 					return $this->start+$this->limit;
 				}
 				else {
-					DB::alteration_message("No orders need adjusting even though they followed the old pattern.");
+					$this->DBAlterationMessageNow("No orders need adjusting even though they followed the old pattern.");
 				}
 			}
 			else {
-				DB::alteration_message("There is no Address2 field, but there is an Address field in Member - this might be an issue.", "deleted");
+				$this->DBAlterationMessageNow("There is no Address2 field, but there is an Address field in Member - this might be an issue.", "deleted");
 			}
 		}
 		else {
-			DB::alteration_message("Members do not have a billing address to migrate.");
+			$this->DBAlterationMessageNow("Members do not have a billing address to migrate.");
 		}
 		return 0;
 	}
@@ -737,12 +742,12 @@ class EcommerceTaskMigration extends BuildTask {
 				foreach($orders as $order) {
 					$order->CancelledByID = $admin->ID;
 					$order->write();
-					DB::alteration_message('The order which status was \'Cancelled\' have been successfully changed to the status \'AdminCancelled\'', 'created');
+					$this->DBAlterationMessageNow('The order which status was \'Cancelled\' have been successfully changed to the status \'AdminCancelled\'', 'created');
 				}
 				return $this->start + $this->limit;
 			}
 			else {
-				DB::alteration_message('There are no orders that are cancelled');
+				$this->DBAlterationMessageNow('There are no orders that are cancelled');
 			}
 			$rows = DB::query("SELECT \"ID\", \"Status\" FROM \"Order\"");
 			if($rows) {
@@ -763,7 +768,7 @@ class EcommerceTaskMigration extends BuildTask {
 									//do nothing
 								}
 								else {
-									DB::alteration_message("Creating default steps", "created");
+									$this->DBAlterationMessageNow("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
@@ -774,7 +779,7 @@ class EcommerceTaskMigration extends BuildTask {
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$cartObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]. " AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 							else {
-								DB::alteration_message("Could not find CREATED status", "deleted");
+								$this->DBAlterationMessageNow("Could not find CREATED status", "deleted");
 							}
 							break;
 						case "Query":
@@ -787,7 +792,7 @@ class EcommerceTaskMigration extends BuildTask {
 									//do nothing
 								}
 								else {
-									DB::alteration_message("Creating default steps", "created");
+									$this->DBAlterationMessageNow("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
@@ -798,7 +803,7 @@ class EcommerceTaskMigration extends BuildTask {
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$unpaidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 							else {
-								DB::alteration_message("Could not find SUBMITTED status", "deleted");
+								$this->DBAlterationMessageNow("Could not find SUBMITTED status", "deleted");
 							}
 							break;
 						case "Processing":
@@ -811,7 +816,7 @@ class EcommerceTaskMigration extends BuildTask {
 									//do nothing
 								}
 								else {
-									DB::alteration_message("Creating default steps", "created");
+									$this->DBAlterationMessageNow("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
@@ -820,10 +825,10 @@ class EcommerceTaskMigration extends BuildTask {
 								->First();
 							if($paidObject) {
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$paidObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]. " AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
-								DB::alteration_message("Updating to PAID status", "created");
+								$this->DBAlterationMessageNow("Updating to PAID status", "created");
 							}
 							else {
-								DB::alteration_message("Could not find new status", "deleted");
+								$this->DBAlterationMessageNow("Could not find new status", "deleted");
 							}
 							break;
 						case "Sent":
@@ -837,7 +842,7 @@ class EcommerceTaskMigration extends BuildTask {
 									//do nothing
 								}
 								else {
-									DB::alteration_message("Creating default steps", "created");
+									$this->DBAlterationMessageNow("Creating default steps", "created");
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
@@ -845,15 +850,15 @@ class EcommerceTaskMigration extends BuildTask {
 								->Filter(array("Code" => "SENT"))
 								->First();
 							if($sentObject) {
-								DB::alteration_message("Updating to SENT status", "created");
+								$this->DBAlterationMessageNow("Updating to SENT status", "created");
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$sentObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 							elseif($archivedObject = OrderStep::get()->Filter(array("Code" => "ARCHIVED"))->First()) {
-								DB::alteration_message("Updating to ARCHIVED status", "created");
+								$this->DBAlterationMessageNow("Updating to ARCHIVED status", "created");
 								DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$archivedObject->ID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							}
 							else {
-								DB::alteration_message("Could not find new status", "deleted");
+								$this->DBAlterationMessageNow("Could not find new status", "deleted");
 							}
 							break;
 						case "AdminCancelled":
@@ -872,7 +877,7 @@ class EcommerceTaskMigration extends BuildTask {
 							if(!$adminID) {
 								$adminID = 1;
 							}
-							DB::alteration_message("Updating to Admin Cancelled", "created");
+							$this->DBAlterationMessageNow("Updating to Admin Cancelled", "created");
 							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$adminCancelledObject->ID.", \"CancelledByID\" = ".$adminID." WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							break;
 						case "MemberCancelled":
@@ -887,21 +892,21 @@ class EcommerceTaskMigration extends BuildTask {
 									singleton('OrderStep')->requireDefaultRecords();
 								}
 							}
-							DB::alteration_message("Updating to MemberCancelled", "created");
+							$this->DBAlterationMessageNow("Updating to MemberCancelled", "created");
 							DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$memberCancelledObject->ID.", \"CancelledByID\" = \"MemberID\" WHERE \"Order\".\"ID\" = ".$row["ID"]." AND (\"StatusID\" = 0 OR \"StatusID\" IS NULL)");
 							break;
 						default:
-							DB::alteration_message("Unexpected status", "deleted");
+							$this->DBAlterationMessageNow("Unexpected status", "deleted");
 					}
 				}
 			}
 			else {
-				DB::alteration_message("No orders could be found.");
+				$this->DBAlterationMessageNow("No orders could be found.");
 			}
 			$this->makeFieldObsolete("Order", "Status");
 		}
 		else {
-			DB::alteration_message("There is no Status field in the Order Table.");
+			$this->DBAlterationMessageNow("There is no Status field in the Order Table.");
 		}
 		return 0;
 	}
@@ -927,17 +932,17 @@ class EcommerceTaskMigration extends BuildTask {
 				foreach($badOrders as $order) {
 					if($order->TotalItems() > 0) {
 						DB::query("UPDATE \"Order\" SET \"StatusID\" = ".$firstOption->ID." WHERE \"Order\".\"ID\" = ".$order->ID);
-						DB::alteration_message("No order status for order number #".$order->ID." reverting to: $firstOption->Name.","error");
+						$this->DBAlterationMessageNow("No order status for order number #".$order->ID." reverting to: $firstOption->Name.","error");
 					}
 				}
 				return $this->start + $this->limit;
 			}
 			else {
-				DB::alteration_message("There are no orders with incorrect order status.");
+				$this->DBAlterationMessageNow("There are no orders with incorrect order status.");
 			}
 		}
 		else {
-			DB::alteration_message("No first order step.","error");
+			$this->DBAlterationMessageNow("No first order step.","error");
 		}
 		return 0;
 	}
@@ -968,7 +973,7 @@ class EcommerceTaskMigration extends BuildTask {
 				SET \"LevelOfProductsToShow\" = ".$productGroupDefaults["LevelOfProductsToShow"]."
 				WHERE \"LevelOfProductsToShow\" = 0 OR \"LevelOfProductsToShow\"  IS NULL "
 			);
-			DB::alteration_message("resetting product 'show' levels", "created");
+			$this->DBAlterationMessageNow("resetting product 'show' levels", "created");
 			//default sort order
 			DB::query("
 				UPDATE \"ProductGroup\"
@@ -980,7 +985,7 @@ class EcommerceTaskMigration extends BuildTask {
 				SET \"DefaultSortOrder\" = ".$productGroupDefaults["DefaultSortOrder"]."
 				WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
 			);
-			DB::alteration_message("resetting product default sort order", "created");
+			$this->DBAlterationMessageNow("resetting product default sort order", "created");
 			//default filter
 			DB::query("
 				UPDATE \"ProductGroup\"
@@ -992,10 +997,10 @@ class EcommerceTaskMigration extends BuildTask {
 				SET \"DefaultFilter\" = ".$productGroupDefaults["DefaultFilter"]."
 				WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
 			);
-			DB::alteration_message("resetting product default filter", "created");
+			$this->DBAlterationMessageNow("resetting product default filter", "created");
 		}
 		else {
-			DB::alteration_message("there is no need for resetting product 'show' levels");
+			$this->DBAlterationMessageNow("there is no need for resetting product 'show' levels");
 		}
 		return 0;
 	}
@@ -1020,10 +1025,10 @@ class EcommerceTaskMigration extends BuildTask {
 				WHERE \"OrderAttribute\".\"CalculatedTotal\" = 0"
 			);
 			$this->makeFieldObsolete("OrderModifier", "CalculationValue");
-			DB::alteration_message("Moving values from OrderModifier.CalculationValue to OrderAttribute.CalculatedTotal", "created");
+			$this->DBAlterationMessageNow("Moving values from OrderModifier.CalculationValue to OrderAttribute.CalculatedTotal", "created");
 		}
 		else {
-			DB::alteration_message("There is no need to move values from OrderModifier.CalculationValue to OrderAttribute.CalculatedTotal");
+			$this->DBAlterationMessageNow("There is no need to move values from OrderModifier.CalculationValue to OrderAttribute.CalculatedTotal");
 		}
 		/////////////////////////////////
 		///////// We should not include the code below
@@ -1046,23 +1051,23 @@ class EcommerceTaskMigration extends BuildTask {
 							$orderItem->CalculatedTotal = $unitPrice * $orderItem->Quantity;
 							$orderItem->write();
 							$count++;
-							DB::alteration_message("RECALCULATING: ".$orderItem->UnitPrice($recalculate = true)." * ".$orderItem->Quantity  ." = ".$orderItem->CalculatedTotal." for OrderItem #".$orderItem->ID, "created");
+							$this->DBAlterationMessageNow("RECALCULATING: ".$orderItem->UnitPrice($recalculate = true)." * ".$orderItem->Quantity  ." = ".$orderItem->CalculatedTotal." for OrderItem #".$orderItem->ID, "created");
 						}
 					}
 					else {
-						DB::alteration_message("OrderItem is part of not-submitted order.");
+						$this->DBAlterationMessageNow("OrderItem is part of not-submitted order.");
 					}
 				}
 				else {
-					DB::alteration_message("OrderItem does not have an order! (OrderItemID: ".$orderItem->ID.")", "deleted");
+					$this->DBAlterationMessageNow("OrderItem does not have an order! (OrderItemID: ".$orderItem->ID.")", "deleted");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("All order items have a calculated total....");
+			$this->DBAlterationMessageNow("All order items have a calculated total....");
 		}
 		if($count) {
-			DB::alteration_message("Fixed price for all submmitted orders without a fixed one - affected: $count order items", "created");
+			$this->DBAlterationMessageNow("Fixed price for all submmitted orders without a fixed one - affected: $count order items", "created");
 		}
 		return 0;
 	}
@@ -1105,22 +1110,22 @@ class EcommerceTaskMigration extends BuildTask {
 			foreach($fields as $field) {
 				if($this->hasTableAndField("SiteConfig", $field)) {
 					if(!$this->hasTableAndField("EcommerceDBConfig", $field)) {
-						DB::alteration_message("Could not find EcommerceDBConfig.$field - this is unexpected!", "deleted");
+						$this->DBAlterationMessageNow("Could not find EcommerceDBConfig.$field - this is unexpected!", "deleted");
 					}
 					else {
-						DB::alteration_message("Migrated SiteConfig.$field", "created");
+						$this->DBAlterationMessageNow("Migrated SiteConfig.$field", "created");
 						$ecomConfig->$field = DB::query("SELECT \"$field\" FROM \"SiteConfig\" WHERE \"ID\" = ".$sc->ID)->value();
 						$ecomConfig->write();
 						$this->makeFieldObsolete("SiteConfig", $field);
 					}
 				}
 				else {
-					DB::alteration_message("SiteConfig.$field has been moved");
+					$this->DBAlterationMessageNow("SiteConfig.$field has been moved");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("ERROR: SiteConfig or EcommerceDBConfig are not available", "deleted");
+			$this->DBAlterationMessageNow("ERROR: SiteConfig or EcommerceDBConfig are not available", "deleted");
 		}
 		return 0;
 	}
@@ -1153,15 +1158,15 @@ class EcommerceTaskMigration extends BuildTask {
 						SET \"BuyableClassName\" = '$className'
 						WHERE \"ID\" = $id;
 					");
-					DB::alteration_message("Updating Order.BuyableClassName ( ID = $id ) to $className.", "created");
+					$this->DBAlterationMessageNow("Updating Order.BuyableClassName ( ID = $id ) to $className.", "created");
 				}
 				else {
-					DB::alteration_message("Order Item with ID = $id does not have a valid class name. This needs investigation.", "deleted");
+					$this->DBAlterationMessageNow("Order Item with ID = $id does not have a valid class name. This needs investigation.", "deleted");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("No order items could be found that need updating.");
+			$this->DBAlterationMessageNow("No order items could be found that need updating.");
 		}
 		return 0;
 	}
@@ -1185,18 +1190,18 @@ class EcommerceTaskMigration extends BuildTask {
 					$checkoutPage->TermsAndConditionsMessage = $checkoutPageDefaults["TermsAndConditionsMessage"];
 					$checkoutPage->writeToStage('Stage');
 					$checkoutPage->publish('Stage', 'Live');
-					DB::alteration_message("Added TermsAndConditionsMessage", "created");
+					$this->DBAlterationMessageNow("Added TermsAndConditionsMessage", "created");
 				}
 				else {
-					DB::alteration_message("There was no need to add a terms and conditions message because there was already a message.");
+					$this->DBAlterationMessageNow("There was no need to add a terms and conditions message because there was already a message.");
 				}
 			}
 			else {
-				DB::alteration_message("There was no need to add a terms and conditions message because there is no terms and conditions page.");
+				$this->DBAlterationMessageNow("There was no need to add a terms and conditions message because there is no terms and conditions page.");
 			}
 		}
 		else {
-			DB::alteration_message("There was no need to add a terms and conditions message because there is no checkout page", "deleted");
+			$this->DBAlterationMessageNow("There was no need to add a terms and conditions message because there is no checkout page", "deleted");
 		}
 		return 0;
 	}
@@ -1218,7 +1223,8 @@ class EcommerceTaskMigration extends BuildTask {
 				"MemberID" => "ASC",
 				"\"Order\".\"Created\"" => "DESC"
 			))
-			->innerJoin("Member", "\"Order\".\"MemberID\" = \"Member\".\"ID\"");
+			->innerJoin("Member", "\"Order\".\"MemberID\" = \"Member\".\"ID\"")
+			->limit($this->limit, $this->start);
 		$count = 0;
 		$previousOrderMemberID = 0;
 		$lastOrderFromMember = null;
@@ -1233,63 +1239,63 @@ class EcommerceTaskMigration extends BuildTask {
 					$memberID = $order->MemberID;
 					//recurring member
 					if($previousOrderMemberID == $memberID && $lastOrderFromMember) {
-						DB::alteration_message("We have a duplicate order for a member: ".$order->Member()->Email, "created");
+						$this->DBAlterationMessageNow("We have a duplicate order for a member: ".$order->Member()->Email, "created");
 						$orderAttributes = OrderAttribute::get()
 							->filter(array("OrderID" => $order->ID));
 						if($orderAttributes->count()) {
 							foreach($orderAttributes as $orderAttribute) {
-								DB::alteration_message("Moving attribute #".$orderAttribute->ID, "created");
-								DB::query("UPDATE\" OrderAttribute\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$orderAttribute->ID);
+								$this->DBAlterationMessageNow("Moving attribute #".$orderAttribute->ID, "created");
+								DB::query("UPDATE \"OrderAttribute\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$orderAttribute->ID);
 							}
 						}
 						else {
-							DB::alteration_message("There are no attributes for this order");
+							$this->DBAlterationMessageNow("There are no attributes for this order");
 						}
 						$orderStatusLogs = OrderStatusLog::get()->filter(array("OrderID" =>  $order->ID));
 						if($orderStatusLogs->count()) {
 							foreach($orderStatusLogs as $orderStatusLog) {
-								DB::alteration_message("Moving order status log #".$orderStatusLog->ID, "created");
+								$this->DBAlterationMessageNow("Moving order status log #".$orderStatusLog->ID, "created");
 								DB::query("UPDATE \"OrderStatusLog\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$orderStatusLog->ID);
 							}
 						}
 						else {
-							DB::alteration_message("There are no order status logs for this order");
+							$this->DBAlterationMessageNow("There are no order status logs for this order");
 						}
 						$orderEmailRecords = OrderEmailRecord::get()->filter(array("OrderID" =>  $order->ID));
 						if($orderEmailRecords->count()) {
 							foreach($orderEmailRecords as $orderEmailRecord) {
 								DB::query("UPDATE \"OrderEmailRecord\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$orderEmailRecord->ID);
-								DB::alteration_message("Moving email #".$orderEmailRecord->ID, "created");
+								$this->DBAlterationMessageNow("Moving email #".$orderEmailRecord->ID, "created");
 							}
 						}
 						else {
-							DB::alteration_message("There are no emails for this order.");
+							$this->DBAlterationMessageNow("There are no emails for this order.");
 						}
 					}
 					//new member
 					else {
 						$previousOrderMemberID = $order->MemberID;
 						$lastOrderFromMember = $order;
-						DB::alteration_message("Found last order from member.");
+						$this->DBAlterationMessageNow("Found last order from member.");
 					}
 					if($order->BillingAddressID && !$lastOrderFromMember->BillingAddressID) {
-						DB::alteration_message("Moving Billing Address.");
+						$this->DBAlterationMessageNow("Moving Billing Address.");
 						DB::query("UPDATE \"Order\" SET \"BillingAddressID\" = ".$order->BillingAddressID." WHERE \"ID\" = ".$lastOrderFromMember->ID);
 						DB::query("UPDATE \"BillingAddress\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$order->BillingAddressID);
 					}
 					if($order->ShippingAddressID && !$lastOrderFromMember->ShippingAddressID) {
-						DB::alteration_message("Moving Shipping Address.");
+						$this->DBAlterationMessageNow("Moving Shipping Address.");
 						DB::query("UPDATE \"Order\" SET \"ShippingAddressID\" = ".$order->ShippingAddressID." WHERE \"ID\" = ".$lastOrderFromMember->ID);
 						DB::query("UPDATE \"ShippingAddress\" SET \"OrderID\" = ".$lastOrderFromMember->ID." WHERE \"ID\" = ".$order->ShippingAddressID);
 					}
 					$order->delete();
 				}
 			}
-			DB::alteration_message("Ignored $count Orders that have already been submitted.");
+			$this->DBAlterationMessageNow("Ignored $count Orders that have already been submitted.");
 			return $this->start+$this->limit;
 		}
 		else {
-			DB::alteration_message("There were no orders at all to work through.");
+			$this->DBAlterationMessageNow("There were no orders at all to work through.");
 		}
 		return 0;
 	}
@@ -1334,16 +1340,16 @@ class EcommerceTaskMigration extends BuildTask {
 				$new = $submittedOrderLog->SequentialOrderNumber;
 				if($old != $new) {
 					$changes++;
-					DB::alteration_message("Changed the SequentialOrderNumber for order #".$submittedOrderLog->OrderID." from $old to $new ");
+					$this->DBAlterationMessageNow("Changed the SequentialOrderNumber for order #".$submittedOrderLog->OrderID." from $old to $new ");
 				}
 			}
 			if(!$changes) {
-				DB::alteration_message("There were no changes in any of the OrderStatusLog_Submitted.SequentialOrderNumber fields.");
+				$this->DBAlterationMessageNow("There were no changes in any of the OrderStatusLog_Submitted.SequentialOrderNumber fields.");
 			}
 			return $this->start + $this->limit;
 		}
 		else {
-			DB::alteration_message("There are no logs to update.");
+			$this->DBAlterationMessageNow("There are no logs to update.");
 		}
 		return 0;
 	}
@@ -1370,13 +1376,13 @@ class EcommerceTaskMigration extends BuildTask {
 					$count++;
 					$product->writeToStage('Stage');
 					$product->publish('Stage', 'Live');
-					DB::alteration_message("Saving Product ".$product->Title);
+					$this->DBAlterationMessageNow("Saving Product ".$product->Title);
 				}
 			}
 			return $this->start + $this->limit;
 		}
 		else {
-			DB::alteration_message("No products to update.");
+			$this->DBAlterationMessageNow("No products to update.");
 		}
 		return 0;
 	}
@@ -1403,17 +1409,17 @@ class EcommerceTaskMigration extends BuildTask {
 					if($variation->prepareFullFields()) {
 						$count++;
 						$variation->write();
-						DB::alteration_message("Saving Variation ".$variation->getTitle());
+						$this->DBAlterationMessageNow("Saving Variation ".$variation->getTitle());
 					}
 				}
 				return $this->start + $this->limit;
 			}
 			else {
-				DB::alteration_message("No product variations to update.");
+				$this->DBAlterationMessageNow("No product variations to update.");
 			}
 		}
 		else {
-			DB::alteration_message("There are not ProductVariations in this project");
+			$this->DBAlterationMessageNow("There are not ProductVariations in this project");
 		}
 		return 0;
 	}
@@ -1432,10 +1438,10 @@ class EcommerceTaskMigration extends BuildTask {
 		$checkoutPage = CheckoutPage::get()->First();
 		if(!$checkoutPage) {
 			$checkoutPage = new CheckoutPage();
-			DB::alteration_message("Creating a CheckoutPage", "created");
+			$this->DBAlterationMessageNow("Creating a CheckoutPage", "created");
 		}
 		else {
-			DB::alteration_message("No need to create a CheckoutPage Page");
+			$this->DBAlterationMessageNow("No need to create a CheckoutPage Page");
 		}
 		if($checkoutPage) {
 			$checkoutPage->HasCheckoutSteps = 1;
@@ -1443,18 +1449,18 @@ class EcommerceTaskMigration extends BuildTask {
 			$checkoutPage->publish('Stage', 'Live');
 			$orderConfirmationPage = OrderConfirmationPage::get()->First();
 			if($orderConfirmationPage) {
-				DB::alteration_message("No need to create an Order Confirmation Page");
+				$this->DBAlterationMessageNow("No need to create an Order Confirmation Page");
 			}
 			else {
 				$orderConfirmationPage = new OrderConfirmationPage();
 				$orderConfirmationPage->ParentID = $checkoutPage->ID;
 				$orderConfirmationPage->writeToStage('Stage');
 				$orderConfirmationPage->publish('Stage', 'Live');
-				DB::alteration_message("Creating an Order Confirmation Page", "created");
+				$this->DBAlterationMessageNow("Creating an Order Confirmation Page", "created");
 			}
 		}
 		else {
-			DB::alteration_message("There is no CheckoutPage available", "deleted");
+			$this->DBAlterationMessageNow("There is no CheckoutPage available", "deleted");
 		}
 		return 0;
 	}
@@ -1503,32 +1509,32 @@ class EcommerceTaskMigration extends BuildTask {
 								fclose($fp);
 								$fp = fopen($folderAndFileLocationWithBase, 'w+');
 								if (fwrite($fp, $newContent)) {
-									DB::alteration_message("file updated from $oldJSLibrary to $newJSLibrary in  $folderAndFileLocationWithoutBase", "created");
+									$this->DBAlterationMessageNow("file updated from $oldJSLibrary to $newJSLibrary in  $folderAndFileLocationWithoutBase", "created");
 								}
 								else {
-									DB::alteration_message("Could NOT update from $oldJSLibrary to $newJSLibrary in  $folderAndFileLocationWithoutBase");
+									$this->DBAlterationMessageNow("Could NOT update from $oldJSLibrary to $newJSLibrary in  $folderAndFileLocationWithoutBase");
 								}
 								fclose($fp);
 							}
 							else {
-								DB::alteration_message("There is no need to update $folderAndFileLocationWithBase");
+								$this->DBAlterationMessageNow("There is no need to update $folderAndFileLocationWithBase");
 							}
 						}
 						else {
-							DB::alteration_message("it seems that $folderAndFileLocationWithBase - does not have the right permission, please change manually.", "deleted");
+							$this->DBAlterationMessageNow("it seems that $folderAndFileLocationWithBase - does not have the right permission, please change manually.", "deleted");
 						}
 					}
 					else {
-						DB::alteration_message("Could not find $folderAndFileLocationWithBase - even though it is referenced in EcommerceConfig::\$folder_and_file_locations", "deleted");
+						$this->DBAlterationMessageNow("Could not find $folderAndFileLocationWithBase - even though it is referenced in EcommerceConfig::\$folder_and_file_locations", "deleted");
 					}
 				}
 				else {
-					DB::alteration_message("There is no need to replace the ecommerce default file: ecommerce/_config/ecommerce.yml", "created");
+					$this->DBAlterationMessageNow("There is no need to replace the ecommerce default file: ecommerce/_config/ecommerce.yml", "created");
 				}
 			}
 		}
 		else {
-			DB::alteration_message("Could not find any config files (most usual place: mysite/_config/ecommerce.yml)", "deleted");
+			$this->DBAlterationMessageNow("Could not find any config files (most usual place: mysite/_config/ecommerce.yml)", "deleted");
 		}
 		return 0;
 	}
@@ -1549,7 +1555,7 @@ class EcommerceTaskMigration extends BuildTask {
 		if($ordersWithoutCurrencyCount) {
 			$currencyID = EcommerceCurrency::default_currency_id();
 			DB::query("UPDATE \"Order\" SET \"CurrencyUsedID\" = $currencyID WHERE \"CurrencyUsedID\" = 0");
-			DB::alteration_message("All orders ($ordersWithoutCurrencyCount) have been set a currency value.", 'changed');
+			$this->DBAlterationMessageNow("All orders ($ordersWithoutCurrencyCount) have been set a currency value.", 'changed');
 		}
 		return 0;
 	}
@@ -1569,7 +1575,7 @@ class EcommerceTaskMigration extends BuildTask {
 		$table = "Payment";
 		if($db->hasTable("_obsolete_Payment") && !$db->hasTable("Payment")) {
 			$table = "_obsolete_Payment";
-			DB::alteration_message("The table Payment has been moved to _obsolete_Payment. We are using _obsolete_Payment to fix things...", "deleted");
+			$this->DBAlterationMessageNow("The table Payment has been moved to _obsolete_Payment. We are using _obsolete_Payment to fix things...", "deleted");
 		}
 		DB::query('
 			INSERT IGNORE INTO EcommercePayment(
@@ -1603,7 +1609,7 @@ class EcommerceTaskMigration extends BuildTask {
 					`PaidByID`
 				FROM '.$table.''
 		);
-		DB::alteration_message("Moving Payment to Ecommerce Payment", "created");
+		$this->DBAlterationMessageNow("Moving Payment to Ecommerce Payment", "created");
 		return 0;
 	}
 
@@ -1639,5 +1645,10 @@ class EcommerceTaskMigration extends BuildTask {
 		return 0;
 	}
 
+	function DBAlterationMessageNow($message, $type = "") {
+		DB::alteration_message($message, $type);
+		ob_end_flush();
+		ob_start();
+	}
 }
 
