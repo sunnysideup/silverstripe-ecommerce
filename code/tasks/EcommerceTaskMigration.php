@@ -1667,7 +1667,7 @@ class EcommerceTaskMigration extends BuildTask {
 		else {
 			$style = "created";
 		}
-		$this->DBAlterationMessageNow("There are ".." items that should be removed", $style);
+		$this->DBAlterationMessageNow("There are ".$count." items that should be removed", $style);
 		foreach($orderItems as $orderItem) {
 			$this->DBAlterationMessageNow("Deleting order item with ID: ".$orderItem->ID, "deleted");
 			$orderItem->delete();
