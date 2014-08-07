@@ -82,7 +82,7 @@ class EcommerceTaskMigration extends BuildTask {
 		if(in_array($step, $this->listOfMigrationTasks)) {
 			$method = $step;
 			if($this->start) {
-				$this->DBAlterationMessageNow("starting at .... ".$this->start. " processing ".$this->limit, "created");
+				$this->DBAlterationMessageNow("this task is broken down into baby steps - we are now starting at .... ".$this->start. " processing ".$this->limit, "created");
 			}
 			$nextLimit = $this->$method();
 			if($canDoNext && $nextLimit) {
@@ -93,7 +93,7 @@ class EcommerceTaskMigration extends BuildTask {
 		}
 
 		if($canDoNext) {
-			$nextGetStatement = "?action=".$this->listOfMigrationTasks[0];
+			$nextGetStatement = "?fullmigration=1&amp;action=".$this->listOfMigrationTasks[0];
 			$nextDescription = "Start Migration by clicking on <i>'Next'</i> (this link) until all tasks have been completed.";
 		}
 		$this->retrieveInfoOnly = true;
@@ -109,7 +109,7 @@ class EcommerceTaskMigration extends BuildTask {
 			if($task == $step) {
 				if($canDoNext) {
 					$keyPlusOne = $key + 1;
-					if(isset($this->listOfMigrationTasks[$keyPlusOne])) {
+					if(isset($this->listOfMigrationTasks[$keyPlusOne]) && isset($_REQUEST["fullmigration"])) {
 						$action = $this->listOfMigrationTasks[$keyPlusOne];
 						$nextGetStatement = "?action=".$action;
 						$nextDescription = $this->$action();
@@ -126,6 +126,9 @@ class EcommerceTaskMigration extends BuildTask {
 		if(!$step) {$html .= "</ul>";}
 		$nextLink = "/dev/ecommerce/ecommercetaskmigration/".$nextGetStatement;
 		if($nextGetStatement) {
+			if(isset($_REQUEST["fullmigration"])) {
+				$nextLink .= "&fullmigration=1";
+			}
 			echo "
 				<hr style=\"margin-top: 50px;\"/>
 				<h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>";
@@ -316,6 +319,20 @@ class EcommerceTaskMigration extends BuildTask {
 		}
 		else {
 			$this->DBAlterationMessageNow("There is no need to migrate Product_OrderItem.ProductID to OrderItem.BuyableID");
+		}
+		if($this->hasTableAndField($table, "ProductVersion")) {
+			DB::query("
+				UPDATE \"OrderItem\"
+					INNER JOIN \"$table\"
+						ON \"OrderItem\".\"ID\" = \"$table\".\"ID\"
+				SET \"OrderItem\".\"Version\" = \"$table\".\"ProductVersion\"
+				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
+			");
+			$this->makeFieldObsolete("Product_OrderItem", "ProductID");
+			$this->DBAlterationMessageNow("Migrating Product_OrderItem.ProductVersion to OrderItem.Version", "created");
+		}
+		else {
+			$this->DBAlterationMessageNow("There is no need to migrate Product_OrderItem.ProductVersion to OrderItem.Version");
 		}
 		// we must check for individual database types here because each deals with schema in a none standard way
 		//can we use Table::has_field ???

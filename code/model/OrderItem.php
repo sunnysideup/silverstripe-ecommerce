@@ -585,7 +585,7 @@ class OrderItem extends OrderAttribute {
 		$tempBuyableStoreType = $current ? "current" : "version";
 		if(!isset($this->tempBuyableStore[$tempBuyableStoreType])) {
 			if(!$this->BuyableID) {
-				user_error("There was an error retrieving the product");
+				user_error("There was an error retrieving the product", E_USER_NOTICE);
 				return null;
 			}
 			//start hack

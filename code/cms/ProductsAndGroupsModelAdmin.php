@@ -44,7 +44,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 					$gridField->getConfig()
 						->removeComponentsByType("GridFieldEditButton")
 						->removeComponentsByType("GridFieldDeleteAction")
-						->getConfig()->addComponent(new GridFieldEditButtonOriginalPage());
+						->addComponent(new GridFieldEditButtonOriginalPage());
 				}
 			}
 		}
