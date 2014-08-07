@@ -560,7 +560,7 @@ class ProductGroup extends Page {
 			'Root',
 			Tab::create(
 				'ProductDisplay',
-				DropdownField::create("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show ..."), $this->showProductLevels),
+				DropdownField::create("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show (may be overridden by special settings)..."), $this->showProductLevels),
 				HeaderField::create("WhatProductsAreShown", _t("ProductGroup.WHATPRODUCTSSHOWN", _t("ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS", "Inherited options"))),
 				NumericField::create("NumberOfProductsPerPage", _t("ProductGroup.PRODUCTSPERPAGE", "Number of products per page").$numberOfProductsPerPageExplanation)
 			)

@@ -289,6 +289,8 @@ class EcommerceTaskCartCleanup extends BuildTask {
 				}
 			}
 		}
+
+
 	}
 
 	private function flush(){

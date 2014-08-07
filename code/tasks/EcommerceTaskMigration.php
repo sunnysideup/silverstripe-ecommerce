@@ -142,7 +142,7 @@ class EcommerceTaskMigration extends BuildTask {
 						function(){
 							window.location = '$nextLink';
 						},
-						10000
+						500
 					);
 				</script>
 				<hr style=\"margin-bottom: 500px;\"/>
@@ -716,7 +716,7 @@ class EcommerceTaskMigration extends BuildTask {
 								$order->write();
 							}
 							else {
-								$this->DBAlterationMessageNow("There is no memmber associated with this order ".$order->ID, "deleted");
+								$this->DBAlterationMessageNow("There is no member associated with this order ".$order->ID, "deleted");
 							}
 						}
 						else {
@@ -1648,6 +1648,33 @@ class EcommerceTaskMigration extends BuildTask {
 		return 0;
 	}
 
+	function ecommercetaskupgradepickupordeliverymodifier_320 (){
+		$explanation = "
+			<h1>320. Removing empty Order Items</h1>
+			<p>Removes all the order items without a buyable.</p>
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
+		$orderItems = OrderItem::get()->filter(array("BuyableID" => 0));
+		$count = $orderItems->count();
+		if($count > 0) {
+			$style = "deleted";
+		}
+		else {
+			$style = "created";
+		}
+		$this->DBAlterationMessageNow("There are ".." items that should be removed", $style);
+		foreach($orderItems as $orderItem) {
+			$this->DBAlterationMessageNow("Deleting order item with ID: ".$orderItem->ID, "deleted");
+			$orderItem->delete();
+		}
+		return 0;
+	}
+
 
 	function theEnd_9999(){
 		$explanation = "
@@ -1662,8 +1689,8 @@ class EcommerceTaskMigration extends BuildTask {
 		return 0;
 	}
 
-	function DBAlterationMessageNow($message, $type = "") {
-		DB::alteration_message($message, $type);
+	function DBAlterationMessageNow($message, $style = "") {
+		DB::alteration_message($message, $style);
 		ob_end_flush();
 		ob_start();
 	}
