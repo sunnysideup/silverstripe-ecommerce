@@ -1389,12 +1389,10 @@ class EcommerceTaskMigration extends BuildTask {
 			->limit($this->limit, $this->start);
 		if($products->count()) {
 			foreach($products as $product) {
-				if($product->prepareFullFields()) {
-					$count++;
-					$product->writeToStage('Stage');
-					$product->publish('Stage', 'Live');
-					$this->DBAlterationMessageNow("Saving Product ".$product->Title);
-				}
+				$count++;
+				$product->writeToStage('Stage');
+				$product->publish('Stage', 'Live');
+				$this->DBAlterationMessageNow("Saving Product ".$product->Title);
 			}
 			return $this->start + $this->limit;
 		}
@@ -1423,11 +1421,9 @@ class EcommerceTaskMigration extends BuildTask {
 				->limit($this->limit, $this->start);
 			if($variations->count()) {
 				foreach($variations as $variation) {
-					if($variation->prepareFullFields()) {
-						$count++;
-						$variation->write();
-						$this->DBAlterationMessageNow("Saving Variation ".$variation->getTitle());
-					}
+					$count++;
+					$variation->write();
+					$this->DBAlterationMessageNow("Saving Variation ".$variation->getTitle());
 				}
 				return $this->start + $this->limit;
 			}

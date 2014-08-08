@@ -1334,7 +1334,7 @@ class ProductGroup extends Page {
 		parent::onAfterWrite();
 		if($this->ImageID) {
 			if($normalImage = Image::get()->exclude(array("ClassName" => "Product_Image"))->byID($this->ImageID)) {
-				$normalImage->ClassName = "Product_Image";
+				$normalImage = $normalImage->newClassInstance("Product_Image");
 				$normalImage->write();
 			}
 		}

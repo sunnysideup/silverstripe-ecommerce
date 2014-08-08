@@ -7,14 +7,19 @@ class EcommerceCodeFilter extends Object {
 	/**
 	 * @var Array
 	 */
-	private $replacements = array(
-		'/&amp;/u' => '-and-',
-		'/&/u' => '-and-',
-		'/\s/u' => '-', // remove whitespace
+	protected $regexReplacements = array(
 		'/[^A-Za-z0-9.\-_]+/u' => '', // remove non-ASCII chars, only allow alphanumeric, dashes and dots.
 		'/[\-]{2,}/u' => '-', // remove duplicate dashes
 		'/[\_]{2,}/u' => '_', // remove duplicate underscores
-		'/^[\.\-_]/u' => '', // Remove all leading dots, dashes or underscores
+	);
+
+	/**
+	 * @var Array
+	 */
+	protected $straightReplacements = array(
+		'&amp;' => '-and-', //change ampersands to -and-
+		'&' => '-and-', //change ampersands to -and-
+		' ' => '-', // remove whitespace
 	);
 
 	/**
@@ -33,22 +38,26 @@ class EcommerceCodeFilter extends Object {
 			$obj->$fieldName = strval($str);
 			$isObject = false;
 		}
-		$obj->$fieldName = trim($obj->$fieldName);
-		foreach($this->replacements as $regex => $replace) {
-			$obj->$fieldName = preg_replace($regex, $replace, $obj->$fieldName);
+		$s = trim($obj->$fieldName);
+		foreach($this->regexReplacements as $regex => $replace) {
+			$s = preg_replace($regex, $replace, $s);
 		}
-		if(!$obj->$fieldName) {
-			"CODE-NOT-SET";
+		foreach($this->straightReplacements as $find => $replace) {
+			$s = str_replace($find, $replace, $s);
+		}
+		if(!$s) {
+			$s = "CODE-NOT-SET";
 		}
 		//make upper-case
-		$obj->$fieldName = trim(strtoupper($obj->$fieldName));
+		$s = trim($s);
 		//check for other ones.
 		$count = 2;
-		$code = $obj->$fieldName;
-		while($isObject && $obj::get()->filter(array($fieldName => $obj->$fieldName))->exclude(array("ID" => $obj->ID))->Count()) {
-			$obj->$fieldName = $code . '-' . $count;
+		$code = $s;
+		while($isObject && $obj::get()->filter(array($fieldName => $s))->exclude(array("ID" => $obj->ID))->Count()) {
+			$s = $code . '_' . $count;
 			$count++;
 		}
+		$obj->$fieldName = $s;
 		return $obj->$fieldName;
 	}
 }
