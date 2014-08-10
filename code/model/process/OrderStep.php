@@ -385,7 +385,7 @@ class OrderStep extends DataObject {
 	}
 
 	/**
-	 *nextStep:
+	 * nextStep:
 	 * returns the next step (after it checks if everything is in place for the next step to run...)
 	 * @see Order::doNextStatus
 	 * @param Order $order
@@ -590,7 +590,7 @@ class OrderStep extends DataObject {
 		if(count($canArray)){
 			$v .=  "<br />"._t("OrderStep.CUSTOMER_CAN", "Customer Can").": ".implode(", ", $canArray)."";
 		}
-		if($this->HasCustomerMessageNice) {
+		if($this->hasCustomerMessage()) {
 			$v .= "<br />"._t("OrderStep.CUSTOMER_MESSAGES", "Includes message to customer");
 		}
 		return DBField::create_field("HTMLText", $v);
@@ -682,9 +682,7 @@ class OrderStep extends DataObject {
 	 */
 	public function canDelete($member = null) {
 		//cant delete last status if there are orders with this status
-		$nextOrderStepObject = OrderStep::get()
-			->filter(array("Sort:GreaterThan" => $this->Sort))
-			->First();
+		$nextOrderStepObject = $this->NextOrderStep();
 		if($nextOrderStepObject) {
 			//do nothing
 		}
@@ -712,6 +710,7 @@ class OrderStep extends DataObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		$this->Code = strtoupper($this->Code);
+		$this->ShowAsCompletedOrder = ($this->NextOrderStep() ? false : true);
 	}
 
 	/**
@@ -720,23 +719,19 @@ class OrderStep extends DataObject {
 	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
-		$nextOrderStepObject = OrderStep::get()
-			->filter(array("Sort:GreaterThan" => $this->Sort))
-			->First();
+		$nextOrderStepObject = $this->NextOrderStep();
 		//backup
 		if($nextOrderStepObject) {
 			//do nothing
 		}
 		else {
-			$nextOrderStepObject = OrderStep::get()
-				->filter(array("Sort:LessThan" => $this->Sort))
-				->Last();
+			$previousOrderStepObject = $this->PreviousOrderStep();
 		}
-		if($nextOrderStepObject) {
+		if($previousOrderStepObject) {
 			$ordersWithThisStatus = Order::get()->filter(array("StatusID" => $this->ID));
 			if($ordersWithThisStatus && $ordersWithThisStatus->count()) {
 				foreach($ordersWithThisStatus as $orderWithThisStatus) {
-					$orderWithThisStatus->StatusID = $nextOrderStepObject->ID;
+					$orderWithThisStatus->StatusID = $previousOrderStepObject->ID;
 					$orderWithThisStatus->write();
 				}
 			}
@@ -751,6 +746,17 @@ class OrderStep extends DataObject {
 		$this->requireDefaultRecords();
 	}
 
+	protected function NextOrderStep(){
+		return OrderStep::get()
+			->filter(array("Sort:GreaterThan" => $this->Sort))
+			->First();
+	}
+
+	protected function PreviousOrderStep(){
+		return OrderStep::get()
+			->filter(array("Sort:LessThan" => $this->Sort))
+			->First();
+	}
 
 	/**
 	 * standard SS method
@@ -1545,7 +1551,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 		"CustomerCanPay" => 0,
 		"Name" => "Send order",
 		"Code" => "SENT",
-		"ShowAsCompletedOrder" => 1
+		"ShowAsInProcessOrder" => 1
 	);
 
 	/**
@@ -1726,6 +1732,7 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface  {
 	protected function myDescription(){
 		return _t("OrderStep.ARCHIVED_DESCRIPTION", "This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.");
 	}
+
 
 }
 
