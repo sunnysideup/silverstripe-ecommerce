@@ -178,7 +178,7 @@ class OrderAttribute extends DataObject {
 			if($this->OrderID) {
 				if($o = $this->Order()) {
 					if($o->exists()) {
-						if($o->canEdit($member)) {
+						if(!$o->IsSubmitted()) {
 							$this->_canEdit = true;
 						}
 					}

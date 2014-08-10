@@ -480,8 +480,10 @@ class OrderModifier extends OrderAttribute {
 	 * @return Boolean
 	 */
 	public function ShowInTable() {
-		if(!$this->baseInitCalled && $this->canBeUpdated()) {
-			user_error("While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier", E_USER_ERROR);
+		if(!$this->baseInitCalled) {
+			if($this->canBeUpdated()) {
+				user_error("While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier", E_USER_ERROR);
+			}
 		}
 		return false;
 	}
@@ -854,7 +856,8 @@ class OrderModifier_Descriptor extends DataObject {
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		//if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		//we can only edit Order Modifiers that have not been submitted yet...
 		return parent::canEdit($member);
 	}
 
