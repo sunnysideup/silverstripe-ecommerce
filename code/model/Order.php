@@ -1707,7 +1707,14 @@ class Order extends DataObject {
 		$extended = $this->extendedCan('canEdit', $member->ID);
 		if($extended !== null) {return $extended;}
 
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
+			if($status = $this->Status()) {
+				if($status->ShowAsCompletedOrder) {
+					return false;
+				}
+				return true;
+			}
+		}
 
 		if(!$this->canView($member) || $this->IsCancelled()) {
 			return false;
