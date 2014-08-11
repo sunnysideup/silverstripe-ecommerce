@@ -54,7 +54,7 @@ class EcommercePayment extends DataObject {
 		'Created' => array(
 			'title' => 'Date (e.g. today)',
 			'field' => 'TextField',
-			'filter' => 'PaymentFilters_AroundDateFilter', //TODO: this breaks the sales section of the CMS
+			'filter' => 'EcommercePaymentFilters_AroundDateFilter'
 		),
 		'IP' => array(
 			'title' => 'IP Address',

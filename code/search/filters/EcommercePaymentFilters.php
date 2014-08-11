@@ -10,7 +10,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
+class EcommercePaymentFilters_AroundDateFilter extends ExactMatchFilter {
 
 	/**
 	 * The divider is used to work out the
@@ -32,7 +32,8 @@ class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 	 *
 	 *@return SQLQuery
 	 **/
-	public function apply(DataQuery $query) {
+	public function applyOne(DataQuery $query) {
+		die("AAA");
 		$query = $this->applyRelation($query);
 		$value = $this->getValue();
 		$date = new Date();
@@ -46,11 +47,11 @@ class PaymentFilter_AroundDateFilter extends ExactMatchFilter {
 		$db = DB::getConn();
 		if( $db instanceof PostgreSQLDatabase ) {
 			// don't know whether functions should be used, hence the following code using an interval cast to an integer
-			$query->where("(\"Payment\".\"Created\"::date - '$formattedDate'::date)::integer > -".$maxDays." AND (\"Payment\".\"Created\"::date - '$formattedDate'::date)::integer < ".$maxDays);
+			$query->where("(\"EcommercePayment\".\"Created\"::date - '$formattedDate'::date)::integer > -".$maxDays." AND (\"EcommercePayment\".\"Created\"::date - '$formattedDate'::date)::integer < ".$maxDays);
 		}
 		else {
 			// default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
-			$query->where("(DATEDIFF(\"Payment\".\"Created\", '$formattedDate') > -".$maxDays." AND DATEDIFF(\"Payment\".\"Created\", '$formattedDate') < ".$maxDays.")");
+			$query->where("(DATEDIFF(\"EcommercePayment\".\"Created\", '$formattedDate') > -".$maxDays." AND DATEDIFF(\"EcommercePayment\".\"Created\", '$formattedDate') < ".$maxDays.")");
 		}
 		return $query;
 	}
