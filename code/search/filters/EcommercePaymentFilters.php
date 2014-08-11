@@ -22,28 +22,31 @@ class EcommercePaymentFilters_AroundDateFilter extends ExactMatchFilter {
 	 * if we search for yesterdaty then the margin of error is one.
 	 *
 	 * The calculation works as follow: [today] - [searched day] / [divider].
+	 *
+	 * If it is set to 90 this means that for every 90 day you can be one day off.
+	 *
 	 * All variables are in days.
 	 *
 	 * @var Int
 	 */
-	private $divider = 12;
+	private $divider = 90;
 
 	/**
 	 *
 	 *@return SQLQuery
 	 **/
 	public function applyOne(DataQuery $query) {
-		die("AAA");
-		$query = $this->applyRelation($query);
+		//$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		$date = new Date();
 		$date->setValue($value);
 		$distanceFromToday = time() - strtotime($value);
-		$maxDays = round($distanceFromToday/($this->divider * 86400))+1;
+		$maxDays = round($distanceFromToday/(($this->divider * 2) * 86400))+1;
 		$formattedDate = $date->format("Y-m-d");
 
 		// changed for PostgreSQL compatability
 		// NOTE - we may wish to add DATEDIFF function to PostgreSQL schema, it's just that this would be the FIRST function added for SilverStripe
+			// default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
 		$db = DB::getConn();
 		if( $db instanceof PostgreSQLDatabase ) {
 			// don't know whether functions should be used, hence the following code using an interval cast to an integer

@@ -36,7 +36,8 @@ class EcommercePayment extends DataObject {
 
 	private static $summary_fields = array(
 		"Order.Title",
-		"ClassName" => "Type",
+		"Type" => "ClassName",
+		"Date" => "Created",
 		"AmountValue" => "Amount",
 		"Status" => "Status"
 	);

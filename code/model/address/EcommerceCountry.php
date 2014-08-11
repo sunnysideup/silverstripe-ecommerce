@@ -147,8 +147,8 @@ class EcommerceCountry extends DataObject {
 	 * @return Boolean
 	 */
 	function canDelete($member = null){
-		if( ShippingAddress::get()->filter(array("ShippingCountry", $this->Code))->count() ) {return false;}
-		if( BillingAddress::get()->filter(array("Country", $this->Code))->count() ) {return false;}
+		if( ShippingAddress::get()->filter(array("ShippingCountry" => $this->Code))->count() ) {return false;}
+		if( BillingAddress::get()->filter(array("Country" => $this->Code))->count() ) {return false;}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}

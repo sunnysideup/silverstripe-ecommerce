@@ -33,15 +33,12 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *@return SQLQuery
 	 **/
 	public function apply(DataQuery $query) {
-		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getValue();
 		$date = new Date();
 		$date->setValue($value);
 		$distanceFromToday = time() - strtotime($value);
-		$maxDays = round($distanceFromToday/($this->divider * 86400))+1;
+		$maxDays = round($distanceFromToday/(($this->divider * 2) * 86400))+1;
 		$formattedDate = $date->format("Y-m-d");
-		// changed for PostgreSQL compatability
-		// NOTE - we may wish to add DATEDIFF function to PostgreSQL schema, it's just that this would be the FIRST function added for SilverStripe
 		$db = DB::getConn();
 		if( $db instanceof PostgreSQLDatabase ) {
 			// don't know whether functions should be used, hence the following code using an interval cast to an integer
