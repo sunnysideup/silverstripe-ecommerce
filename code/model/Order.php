@@ -398,7 +398,7 @@ class Order extends DataObject {
 				}
 			}
 			$statusField = new CheckboxSetField("StatusID", "Status", $arrayOfStatusOptionsFinal);
-			$statusField->setValue($preSelected);
+			//$statusField->setValue($preSelected);
 			$fieldList->push($statusField);
 		}
 		$fieldList->push(new DropdownField("CancelledByID", "Cancelled", array(-1 => "(Any)", 1 => "yes", 0 => "no")));

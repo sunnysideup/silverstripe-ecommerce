@@ -26,7 +26,7 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter {
 	 *
 	 * @var Int
 	 */
-	private $divider = 12;
+	private $divider = 3;
 
 	/**
 	 *
