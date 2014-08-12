@@ -29,7 +29,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var Int
 	 */
-	private static $menu_priority = 23;
+	private static $menu_priority = 3.3;
 
 	/**
 	 * standard SS variable

@@ -28,7 +28,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var Int
 	 */
-	private static $menu_priority = 1;
+	private static $menu_priority = 3.1;
 
 	/**
 	 * Change this variable if you don't want the Import from CSV form to appear.

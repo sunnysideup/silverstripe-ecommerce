@@ -13,7 +13,7 @@
 
 class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 
-	private static $menu_priority = 2;
+	private static $menu_priority = 3.2;
 
 	private static $url_segment = 'products';
 
