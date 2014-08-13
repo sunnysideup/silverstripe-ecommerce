@@ -110,6 +110,12 @@ class ProductSearchForm extends Form {
 	 */
 	protected $resultArrayPos = 0;
 
+	/**
+	 * Is the extended or the short form?
+	 * @var Boolean
+	 */
+	protected $isShortForm = 0;
+
 
 	public function setControllerSearchResultDisplayMethod($s) {
 		$this->controllerSearchResultDisplayMethod = $s;
@@ -167,34 +173,43 @@ class ProductSearchForm extends Form {
 			}
 		}
 		$this->productsToSearch = $productsToSearch;
-
-		if(Config::inst()->get("ProductSearchForm", "include_price_filters")) {
+		if($this->isShortForm) {
 			$fields = FieldList::create(
-				TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords")),
-				NumericField::create("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price")),
-				NumericField::create("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"))
+				TextField::create("ShortKeyword", "")
+			);
+			$actions = FieldList::create(
+				FormAction::create('doProductSearchForm', 'Go')
 			);
 		}
 		else {
-			$fields = FieldList::create(
-				TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords"))
-			);
-		}
-		$actions = FieldList::create(
-			FormAction::create('doProductSearchForm', 'Search')
-		);
-		if(!$controller instanceof ProductGroupSearchPage_Controller ) {
-			if($productsToSearchCount) {
-				$fields->push(
-					CheckboxField::create("SearchOnlyFieldsInThisSection", _t("ProductSearchForm.ONLY_SHOW", "Only Show Results from")." <i>".$nameOfProductsBeingSearched."</i> "._t("ProductSearchForm.SECTION", "section"), true)
+			if(Config::inst()->get("ProductSearchForm", "include_price_filters")) {
+				$fields = FieldList::create(
+					TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords")),
+					NumericField::create("MinimumPrice", _t("ProductSearchForm.MINIMUM_PRICE", "Minimum Price")),
+					NumericField::create("MaximumPrice", _t("ProductSearchForm.MAXIMUM_PRICE", "Maximum Price"))
 				);
+			}
+			else {
+				$fields = FieldList::create(
+					TextField::create("Keyword",  _t("ProductSearchForm.KEYWORDS", "Keywords"))
+				);
+			}
+			$actions = FieldList::create(
+				FormAction::create('doProductSearchForm', 'Search')
+			);
+			if(!$controller instanceof ProductGroupSearchPage_Controller ) {
+				if($productsToSearchCount) {
+					$fields->push(
+						CheckboxField::create("SearchOnlyFieldsInThisSection", _t("ProductSearchForm.ONLY_SHOW", "Only Show Results from")." <i>".$nameOfProductsBeingSearched."</i> "._t("ProductSearchForm.SECTION", "section"), true)
+					);
+				}
+			}
+			if(Director::isDev() || Permission::check("ADMIN")) {
+				$fields->push(CheckboxField::create("DebugSearch", "Debug Search"));
 			}
 		}
 		$requiredFields = array();
 		$validator = ProductSearchForm_Validator::create($requiredFields);
-		if(Director::isDev() || Permission::check("ADMIN")) {
-			$fields->push(CheckboxField::create("DebugSearch", "Debug Search"));
-		}
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		//extensions need to be set after __construct
 		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
@@ -250,6 +265,9 @@ class ProductSearchForm extends Form {
 		$isKeywordSearch = false;
 		if($this->debug) { $this->debugOutput("<hr /><h3>BASE LIST</h3><pre>".str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql())."</pre>");}
 		//KEYWORD SEARCH - only bother if we have any keywords and results at all ...
+		if(isset($data["ShortKeyword"]) && !isset($data["Keyword"])) {
+			$data["Keyword"] = $data["ShortKeyword"];
+		}
 		if(isset($data["Keyword"]) && $keywordPhrase = $data["Keyword"]) {
 			if($baseList->count()) {
 				if(strlen($keywordPhrase) > 1){
@@ -487,6 +505,12 @@ class ProductSearchForm extends Form {
 		if(isset($data["MaximumPrice"]) && !$data["MaximumPrice"]) {
 			unset($data["MaximumPrice"]);
 		}
+		if(isset($data["ShortKeyword"]) && $data["ShortKeyword"]) {
+			$data["Keyword"] = $data["ShortKeyword"];
+		}
+		if(isset($data["Keyword"]) && $data["Keyword"]) {
+			$data["ShortKeyword"] = $data["Keyword"];
+		}
 		Session::set($this->Config()->get("form_data_session_variable"), $data);
 	}
 
@@ -514,13 +538,8 @@ class ProductSearchForm extends Form {
 class ProductSearchForm_Short extends ProductSearchForm {
 
 	function __construct($controller, $name, $nameOfProductsBeingSearched = "", $productsToSearch = null) {
+		$this->isShortForm = true;
 		parent::__construct($controller, $name, $nameOfProductsBeingSearched, $productsToSearch);
-		$this->fields = FieldList::create(
-			TextField::create("Keyword", "")
-		);
-		$this->actions = FieldList::create(
-			FormAction::create('doProductSearchForm', 'Go')
-		);
 		$oldData = Session::get(Config::inst()->get("ProductSearchForm", "form_data_session_variable"));
 		if($oldData && (is_array($oldData) || is_object($oldData))) {
 			$this->loadDataFrom($oldData);

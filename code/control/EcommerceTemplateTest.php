@@ -9,7 +9,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceTaskTemplateTest extends Page_Controller {
+class EcommerceTemplateTest extends Page_Controller {
 
 
 	/**
@@ -34,6 +34,13 @@ class EcommerceTaskTemplateTest extends Page_Controller {
 			$offSet++;
 		}
 		return $product;
+	}
+
+	function SubmittedOrder(){
+		$lastStatusOrder = OrderStep::get()->Last();
+		if($lastStatusOrder) {
+			return Order::get()->Filter("StatusID", $lastStatusOrder->ID)->Sort("RAND()")->First();
+		}
 	}
 
 	/**

@@ -1,4 +1,4 @@
-<div id="EcommerceTaskTemplateTest" class="mainSection content-container noSidebar">
+<div id="EcommerceTaskTemplateTest" class="mainSection content-container noSidebar typography">
 
 <h1>Ecommerce Template Test Page</h1>
 <p>
@@ -27,24 +27,67 @@
 <% end_if %>
 
 
+<h2>Cart Info</h2>
+<p>
+	Useful if you would like to display some information about the current cart ...
+</p>
+<table style="width: 95%;" border="1" cellspacing="5">
+	<tr><th scope="row" style="width: 60%;">Link to display order<br />&#36;Cart.Link</th><td>$Cart.Link</td></tr>
+	<tr><th scope="row" style="width: 60%;">Number or products in cart<br />&#36;Cart.TotalItems</th><td>$Cart.TotalItems</td></tr>
+	<tr><th scope="row" style="width: 60%;">Number of items in cart <br />&#36;Cart.TotalItemsTimesQuantity</th><td>$Cart.TotalItemsTimesQuantity</td></tr>
+	<tr><th scope="row" style="width: 60%;">More than one item in cart?<br />&#36;Cart.MoreThanOneItemInCart</th><td><% if Cart.MoreThanOneItemInCart %>YES<% else %>NO<% end_if %></td></tr>
+	<tr><th scope="row" style="width: 60%;">Link for unsubmitted order load it as current order<br />&#36;Cart.RetrieveLink</th><td>$Cart.RetrieveLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Sub-Total without currency<br />&#36;Cart.SubTotalAsCurrencyObject.Nice</th><td>$Cart.SubTotalAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Sub-Total with currency<br />&#36;Cart.SubTotalAsMoney.Nice</th><td>$Cart.SubTotalAsMoney.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Extras with currency<br />&#36;Cart.ModifiersSubTotalAsCurrencyObject.Nice</th><td>$Cart.ModifiersSubTotalAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total without currency<br />&#36;Cart.TotalAsCurrencyObject.Nice</th><td>$Cart.TotalAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total with currency<br />&#36;Cart.TotalAsMoney.Nice</th><td>$Cart.TotalAsMoney.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Paid without currency<br />&#36;Cart.TotalPaidAsCurrencyObject.Nice</th><td>$Cart.TotalPaidAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Paid with currency<br />&#36;Cart.TotalPaidAsMoney.Nice</th><td>$Cart.TotalPaidAsMoney.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Oustanding without currency<br />&#36;Cart.TotalOutstandingAsCurrencyObject.Nice</th><td>$Cart.TotalOutstandingAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Oustanding with currency<br />&#36;Cart.TotalOutstandingAsMoney.Nice</th><td>$Cart.TotalOutstandingAsMoney.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Country for current order<br />&#36;Cart.Country / &#36;Cart.FullNameCountry </th><td>$Cart.Country / $Cart.FullNameCountry</td></tr>
+
+
+</table>
+
+<h2>Submitted Order Info</h2>
+<p>
+	Useful if you would like to display some information about the a Submitted Order ...
+	For this example, you will need to create a method SubmittedOrder, accessible to your controller.
+	The method should return the submitted order you want to use for displaying the information below.
+</p>
+<% with SubmittedOrder %>
+<table style="width: 95%;" border="1" cellspacing="5">
+	<tr><th scope="row" style="width: 60%;">Order Title<br />&#36;SubmittedOrder.Title</th><td>$Title</td></tr>
+	<tr><th scope="row" style="width: 60%;">Email Address for communication with customer<br />&#36;SubmittedOrder.OrderEmail</th><td>$OrderEmail</td></tr>
+	<tr><th scope="row" style="width: 60%;">Link for submitted order that can be used in Emails<br />&#36;SubmittedOrder.EmailLink</th><td>$EmailLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Link for submitted order for printing<br />&#36;SubmittedOrder.PrintLink</th><td>$PrintLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Link for submitted order for packing slip<br />&#36;SubmittedOrder.PackingSlipLink</th><td>$PackingSlipLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Link for submitted order to delete it<br />&#36;SubmittedOrder.DeleteLink</th><td>$DeleteLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Link for submitted order to copy it<br />&#36;SubmittedOrder.CopyOrderLink</th><td>$CopyOrderLink</td></tr>
+</table>
+<% end_with %>
+
 <h2>Ecommerce Configurations</h2>
 <p>
 	These configurations are set in a special DataObject in the database.
 	They contain lots of settings, but here are the onest most useful for templates.
 	These can be accessed from anywhere.
 </p>
-<table style="width: 95%;">
-	<tr><th scope="row" style="width: 60%;">Shop Address (&#36;EcomConfig.ShopPhysicalAddress):</th><td>$EcomConfig.ShopPhysicalAddress</td></tr>
-	<tr><th scope="row" style="width: 60%;">Receipt Email (&#36;EcomConfig.ReceiptEmail):</th><td>$EcomConfig.ReceiptEmail</td></tr>
-	<tr><th scope="row" style="width: 60%;">PostalCodeURL (&#36;EcomConfig.PostalCodeURL):</th><td>$EcomConfig.PostalCodeURL</td></tr>
-	<tr><th scope="row" style="width: 60%;">Postal Code Label (&#36;EcomConfig.PostalCodeLabel):</th><td>$EcomConfig.PostalCodeLabel</td></tr>
-	<tr><th scope="row" style="width: 60%;">Currency (&#36;EcomConfig.Currency - you can also use Currencies for a list):</th><td>$EcomConfig.Currency</td></tr>
-	<tr><th scope="row" style="width: 60%;">Account Page Link (&#36;EcomConfig.AccountPageLink):</th><td>$EcomConfig.AccountPageLink</td></tr>
-	<tr><th scope="row" style="width: 60%;">Checkout Page Link (&#36;EcomConfig.CheckoutLink):</th><td>$EcomConfig.CheckoutLink</td></tr>
-	<tr><th scope="row" style="width: 60%;">Cart Page Link (&#36;EcomConfig.CartPageLink):</th><td>$EcomConfig.CartPageLink</td></tr>
-	<tr><th scope="row" style="width: 60%;">Order Confirmation Page Link (&#36;EcomConfig.OrderConfirmationPageLink):</th><td>$EcomConfig.OrderConfirmationPageLink</td></tr>
-	<tr><th scope="row" style="width: 60%;">Default Image Link (you can also use &#36;DefaultImage.SetWidth(100) and that sort of jazz) (&#36;EcomConfig.DefaultImageLink):</th><td>$EcomConfig.DefaultImageLink</td></tr>
-	<tr><th scope="row" style="width: 60%;">Current Customer Name (&#36;EcomConfig.Customer.Title, instead of Title, you can also use Email, FirstName, etc...):</th><td>$EcomConfig.Customer.Title</td></tr>
+<table style="width: 95%;" border="1" cellspacing="5">
+	<tr><th scope="row" style="width: 60%;">Shop Address <br />&#36;EcomConfig.ShopPhysicalAddress</th><td>$EcomConfig.ShopPhysicalAddress</td></tr>
+	<tr><th scope="row" style="width: 60%;">Receipt Email <br />&#36;EcomConfig.ReceiptEmail</th><td>$EcomConfig.ReceiptEmail</td></tr>
+	<tr><th scope="row" style="width: 60%;">PostalCodeURL <br />&#36;EcomConfig.PostalCodeURL</th><td>$EcomConfig.PostalCodeURL</td></tr>
+	<tr><th scope="row" style="width: 60%;">Postal Code Label <br />&#36;EcomConfig.PostalCodeLabel</th><td>$EcomConfig.PostalCodeLabel</td></tr>
+	<tr><th scope="row" style="width: 60%;">Currency <br />&#36;EcomConfig.Currency - you can also use Currencies for a list</th><td>$EcomConfig.Currency</td></tr>
+	<tr><th scope="row" style="width: 60%;">Account Page Link <br />&#36;EcomConfig.AccountPageLink</th><td>$EcomConfig.AccountPageLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Checkout Page Link <br />&#36;EcomConfig.CheckoutLink</th><td>$EcomConfig.CheckoutLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Cart Page Link <br />&#36;EcomConfig.CartPageLink</th><td>$EcomConfig.CartPageLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Order Confirmation Page Link <br />&#36;EcomConfig.OrderConfirmationPageLink</th><td>$EcomConfig.OrderConfirmationPageLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Default Image Link <br />&#36;EcomConfig.DefaultImageLink</th><td>$EcomConfig.DefaultImageLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Default Image @ Width = 100px <br />&#36;EcomConfig.DefaultImage.SetWidth(100)</th><td>$EcomConfig.DefaultImage.SetWidth(100)</td></tr>
+	<tr><th scope="row" style="width: 60%;">Current Customer Name <br />&#36;EcomConfig.Customer.Title, instead of Title, you can also use Email, FirstName, etc...</th><td>$EcomConfig.Customer.Title</td></tr>
 	<tr><th scope="row" style="width: 60%;">Is E-commerce Page? (This will be TRUE (YES) for the Product and Checkout type pages only.)</th><td><% if IsEcommercePage %>YES<% else %>NO<% end_if %></td></tr>
 </table>
 
@@ -82,31 +125,35 @@
 </p>
 <h4>Available variables for your templates ...</h4>
 <h5>without context (can be used at <i>root level</i> in any template)</h5>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SideBarCartID</th><td>$AJAXDefinitions.SideBarCartID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SmallCartID</th><td>$AJAXDefinitions.SmallCartID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TinyCartClassName</th><td>$AJAXDefinitions.TinyCartClassName</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TotalItemsClassName</th><td>$AJAXDefinitions.TotalItemsClassName</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TotalItemsTimesQuantityClassName</th><td>$AJAXDefinitions.TotalItemsTimesQuantityClassName</td></tr>
 </table>
+
 <h5>without context, country and region related</h5>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.ExpectedCountryClassName</th><td>$AJAXDefinitions.ExpectedCountryClassName</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.CountryFieldID</th><td>$AJAXDefinitions.CountryFieldID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.RegionFieldID</th><td>$AJAXDefinitions.RegionFieldID</td></tr>
 </table>
+
 <h5>within context of order, order item or order modifier</h5>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableID</th><td>$AJAXDefinitions.TableID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableTotalID</th><td>$AJAXDefinitions.TableTotalID</td></tr>
 </table>
+
 <h5>within context of order</h5>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableMessageID</th><td>$AJAXDefinitions.TableMessageID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableSubTotalID</th><td>$AJAXDefinitions.TableSubTotalID</td></tr>
 </table>
 <h5>within context of order item or order modifier</h5>
-<table style="width: 95%;">
+
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableTitleID</th><td>$AJAXDefinitions.TableTitleID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.CartTitleID</th><td>$AJAXDefinitions.CartTitleID</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableSubTitleID</th><td>$AJAXDefinitions.TableSubTitleID</td></tr>
@@ -130,7 +177,7 @@
 <% with RandomProduct %>
 
 <h4>Image Controllers</h4>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;Image.Link</th><td>$Image.SetWidth(100) $Image.Link</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;BestAvailableImage.Link</th><td>$BestAvailableImage.SetWidth(100) $BestAvailableImage.Link</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;DefaultImage.Link</th><td>$DefaultImage.SetWidth(100) $DefaultImage.Link</td></tr>
@@ -139,7 +186,7 @@
 </table>
 
 <h4>Links</h4>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;AddVariationsLink</th><td><a href="$AddVariationsLink">$AddVariationsLink</a></td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;AddLink</th><td><a href="$AddLink">$AddLink</a></td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;IncrementLink</th><td><a href="$IncrementLink">$IncrementLink</a></td></tr>
@@ -151,7 +198,7 @@
 </table>
 
 <h4>Status and Price</h4>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;IsInCart</th><td><% if IsInCart %> YES <% else %>NO<% end_if %></td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;Price</th><td>$Price</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;Price.Nice</th><td>$Price.Nice</td></tr>
@@ -160,12 +207,12 @@
 </table>
 
 <h4>Fields</h4>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;EcomQuantityField</th><td>$EcomQuantityField</td></tr>
 </table>
 
 <h4>Only Available on Product Page (through controller)</h4>
-<table style="width: 95%;">
+<table style="width: 95%;" border="1" cellspacing="5">
 	<tr><th scope="row" style="width: 60%;">&#36;AddProductForm</th><td>$AddProductForm</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;PreviousProduct</th><td>$PreviousProduct</td></tr>
 	<tr><th scope="row" style="width: 60%;">&#36;NextProduct</th><td>$NextProduct</td></tr>

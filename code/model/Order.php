@@ -1842,6 +1842,7 @@ class Order extends DataObject {
 	function HasPrintOrEmailLink(){
 		return $this->EmailLink() || $this->PrintLink();
 	}
+
 	/**
 	 * returns the absolute link to the order that can be used in the customer communication (email)
 	 * @return String
@@ -2329,7 +2330,7 @@ class Order extends DataObject {
 	 * Makes sure exchange rate is updated and maintained before order is submitted
 	 * This method is public because it could be called from a shopping Cart Object.
 	 **/
-	public function ensureCorrectExchangeRate() {
+	public function EnsureCorrectExchangeRate() {
 		if(!$this->IsSubmitted()) {
 			$oldExchangeRate = $this->ExchangeRate;
 			if($currency = $this->CurrencyUsed()) {
