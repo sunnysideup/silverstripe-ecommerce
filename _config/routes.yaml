@@ -6,8 +6,7 @@ Director:
   rules:
     'shoppingcart//$Action/$ID/$OtherID/$Version' : 'ShoppingCart_Controller'
     'ecommercepayment//$Action/$ID/$OtherID' : 'EcommercePaymentController'
-    'ecommercetasktemplatetest//$Action/$ID/$OtherID' : 'EcommerceTaskTemplateTest'
-    'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
+    'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTaskTemplateTest'
     'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
     'ecommerce-email-preview//$Action/$ID/$OtherID' : 'OrderEmailRecord_Review'
 
