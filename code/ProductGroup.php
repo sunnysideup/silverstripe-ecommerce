@@ -1521,9 +1521,10 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	public function resetfilter(){
 		$defaultKey = $this->getMyUserPreferencesDefault("FILTER");
+		$filterGetVariable = $this->getSortFilterDisplayNames("FILTER", "getVariable");
 		$this->saveUserPreferences(
 			array(
-				"filterfor" => $defaultKey,
+				$filterGetVariable => $defaultKey,
 			)
 		);
 		return array();
@@ -2053,7 +2054,6 @@ class ProductGroup_Controller extends Page_Controller {
 		//save sort - filter - display
 		$sortFilterDisplayNames = $this->getSortFilterDisplayNames();
 		foreach($sortFilterDisplayNames as $type => $oneTypeArray) {
-			$optionsVariableName = $oneTypeArray["configName"];
 			$getVariableName = $oneTypeArray["getVariable"];
 			$sessionName = $oneTypeArray["sessionName"];
 			if(isset($overrideArray[$getVariableName])) {
@@ -2063,6 +2063,7 @@ class ProductGroup_Controller extends Page_Controller {
 				$newPreference = $this->request->getVar($getVariableName);
 			}
 			if($newPreference) {
+				$optionsVariableName = $oneTypeArray["configName"];
 				$options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
 				if(isset($options[$newPreference])) {
 					//debug::log("ProductGroup_".$sessionName ."---". $newPreference);
