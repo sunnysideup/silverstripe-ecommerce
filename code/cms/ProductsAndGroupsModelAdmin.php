@@ -28,7 +28,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 	 * standard SS variable
 	 * @var String
 	 */
-	private static $menu_icon = "";
+	private static $menu_icon = "ecommerce/images/icons/product-file.gif";
 
 
 	function init() {

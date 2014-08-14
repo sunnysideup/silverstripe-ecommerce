@@ -35,7 +35,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var String
 	 */
-	private static $menu_icon = "";
+	private static $menu_icon = "ecommerce/images/icons/cart-file.gif";
 
 
 	function init() {

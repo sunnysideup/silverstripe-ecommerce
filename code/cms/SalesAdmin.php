@@ -41,7 +41,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	 * standard SS variable
 	 * @var String
 	 */
-	private static $menu_icon = "";
+	private static $menu_icon = "ecommerce/images/icons/money-file.gif";
 
 	function init() {
 		parent::init();

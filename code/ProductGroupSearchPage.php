@@ -16,7 +16,7 @@ class ProductGroupSearchPage extends ProductGroup {
 	 * @static String | Array
 	 *
 	 */
-	private static $icon = 'ecommerce/images/icons/productsearch';
+	private static $icon = 'ecommerce/images/icons/productgroupsearchpage';
 
 	/**
 	 * Standard SS variable.
