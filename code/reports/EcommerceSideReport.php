@@ -59,7 +59,7 @@ class EcommerceSideReport_EcommercePages extends SS_Report {
 	 * @return DataList
 	 */
 	function sourceRecords($params = null) {
-		return SiteTree::get()->filter("ClassName", array("CartPage", "AccountPage", "ProductSearchPage"));
+		return SiteTree::get()->filter("ClassName", array("CartPage", "AccountPage", "ProductGroupSearchPage"));
 	}
 
 	/**
