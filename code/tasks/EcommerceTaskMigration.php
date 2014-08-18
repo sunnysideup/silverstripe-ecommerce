@@ -93,7 +93,7 @@ class EcommerceTaskMigration extends BuildTask {
 			if($canDoNext && $nextLimit) {
 				$canDoNext = false;
 				//NEXT OPTION 1: do again with new limit
-				$nextGetStatement = "?action=".$method."&start=".$nextLimit;
+				$nextGetStatement = "?action=".$currentMethod."&start=".$nextLimit;
 				$nextDescription = "run next batch ...";
 			}
 		}
