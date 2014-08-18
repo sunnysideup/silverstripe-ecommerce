@@ -732,9 +732,8 @@ class EcommerceTaskMigration extends BuildTask {
 							if(isset($member->MobilePhone) && !$obj->MobilePhone)  {$obj->MobilePhone = $member->MobilePhone;}
 							$obj->OrderID = $order->ID;
 							$obj->write();
+							$this->DBAlterationMessageNow("Updated Order #".$order->ID." with Member details", "created");
 							DB::query("Update \"Order\" SET \"BillingAddressID\" = ".$obj->ID." WHERE \"Order\".ID = ".$order->ID);
-							//$order->BillingAddressID = $obj->ID;
-							//$order->write();
 						}
 						else {
 							$this->DBAlterationMessageNow("There is no member associated with this order ".$order->ID, "deleted");
