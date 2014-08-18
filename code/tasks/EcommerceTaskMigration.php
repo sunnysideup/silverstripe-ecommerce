@@ -733,8 +733,8 @@ class EcommerceTaskMigration extends BuildTask {
 							$obj->OrderID = $order->ID;
 							$obj->write();
 							DB::query("Update \"Order\" SET \"BillingAddressID\" = ".$obj->ID." WHERE \"Order\".ID = ".$order->ID);
-							$order->BillingAddressID = $obj->ID;
-							$order->write();
+							//$order->BillingAddressID = $obj->ID;
+							//$order->write();
 						}
 						else {
 							$this->DBAlterationMessageNow("There is no member associated with this order ".$order->ID, "deleted");
