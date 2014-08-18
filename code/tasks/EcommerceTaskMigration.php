@@ -708,38 +708,36 @@ class EcommerceTaskMigration extends BuildTask {
 					->limit($this->limit, $this->start);
 				if($orders->count()) {
 					foreach($orders as $order) {
-						if(!$order->BillingAddressID) {
-							$member = Member::get()->byID($order->MemberID);
-							if($member) {
-								if($obj = $order->BillingAddress()) {
-									//do nothing
-								}
-								else {
-									$obj = BillingAddress::create();
-								}
-								if(isset($member->Email) && !$obj->Email)              {$obj->Email = $member->Email;}
-								if(isset($member->FirstName) && !$obj->FirstName)      {$obj->FirstName = $member->FirstName;}
-								if(isset($member->Surname) && !$obj->Surname)          {$obj->Surname = $member->Surname;}
-								if(isset($member->Address) && !$obj->Address)          {$obj->Address = $member->Address;}
-								if(isset($member->AddressLine2) && !$obj->Address2)    {$obj->Address2 = $member->AddressLine2;}
-								if(isset($member->City) && !$obj->City)                {$obj->City = $member->City;}
-								if(isset($member->PostalCode) && !$obj->PostalCode)    {$obj->PostalCode = $member->PostalCode;}
-								if(isset($member->State) && !$obj->State)              {$obj->State = $member->State;}
-								if(isset($member->Country) && !$obj->Country)          {$obj->Country = $member->Country;}
-								if(isset($member->Phone) && !$obj->Phone)              {$obj->Phone = $member->Phone;}
-								if(isset($member->HomePhone) && !$obj->HomePhone)      {$obj->HomePhone .= $member->HomePhone;}
-								if(isset($member->MobilePhone) && !$obj->MobilePhone)  {$obj->MobilePhone = $member->MobilePhone;}
-								$obj->OrderID = $order->ID;
-								$obj->write();
-								$order->BillingAddressID = $obj->ID;
-								$order->write();
+						$member = Member::get()->byID($order->MemberID);
+						if($member) {
+							if($obj = $order->BillingAddress()) {
+								$this->DBAlterationMessageNow("Order (id = ".$order->ID.") already has a billing address");
+								//do nothing
 							}
 							else {
-								$this->DBAlterationMessageNow("There is no member associated with this order ".$order->ID, "deleted");
+								$this->DBAlterationMessageNow("Order (id = ".$order->ID.") now gets its own billing address...");
+								$obj = BillingAddress::create();
 							}
+							if(isset($member->Email) && !$obj->Email)              {$obj->Email = $member->Email;}
+							if(isset($member->FirstName) && !$obj->FirstName)      {$obj->FirstName = $member->FirstName;}
+							if(isset($member->Surname) && !$obj->Surname)          {$obj->Surname = $member->Surname;}
+							if(isset($member->Address) && !$obj->Address)          {$obj->Address = $member->Address;}
+							if(isset($member->AddressLine2) && !$obj->Address2)    {$obj->Address2 = $member->AddressLine2;}
+							if(isset($member->City) && !$obj->City)                {$obj->City = $member->City;}
+							if(isset($member->PostalCode) && !$obj->PostalCode)    {$obj->PostalCode = $member->PostalCode;}
+							if(isset($member->State) && !$obj->State)              {$obj->State = $member->State;}
+							if(isset($member->Country) && !$obj->Country)          {$obj->Country = $member->Country;}
+							if(isset($member->Phone) && !$obj->Phone)              {$obj->Phone = $member->Phone;}
+							if(isset($member->HomePhone) && !$obj->HomePhone)      {$obj->HomePhone .= $member->HomePhone;}
+							if(isset($member->MobilePhone) && !$obj->MobilePhone)  {$obj->MobilePhone = $member->MobilePhone;}
+							$obj->OrderID = $order->ID;
+							$obj->write();
+							DB::query("Update \"Order\" SET \"BillingAddressID\" = ".$obj->ID." WHERE \"Order\".ID = ".$order->ID);
+							$order->BillingAddressID = $obj->ID;
+							$order->write();
 						}
 						else {
-							$this->DBAlterationMessageNow("Order (id = ".$order->ID.") does not have a Billing Address!", "deleted");
+							$this->DBAlterationMessageNow("There is no member associated with this order ".$order->ID, "deleted");
 						}
 					}
 					return $this->start+$this->limit;
