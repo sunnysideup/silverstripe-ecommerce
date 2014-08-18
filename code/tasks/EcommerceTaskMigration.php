@@ -71,34 +71,46 @@ class EcommerceTaskMigration extends BuildTask {
 		set_time_limit(1200);
 		increase_memory_limit_to(-1);
 		$nextGetStatement = "";
+		//can we do the next step?
+		//IN general yes, but if the current one is not finished yet, then we do it again.
+		$canDoNext = true;
 		if(isset($_REQUEST["limit"])) {
 			$this->limit = intval($_REQUEST["limit"]);
 		}
 		if(isset($_REQUEST["start"])) {
 			$this->start = intval($_REQUEST["start"]);
 		}
-		$canDoNext = true;
-		$step = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "";
-		if(in_array($step, $this->listOfMigrationTasks)) {
-			$method = $step;
+
+		//what is the current step?
+		$currentMethod = isset($_REQUEST["action"]) ? $_REQUEST["action"] : "";
+		if(in_array($currentMethod, $this->listOfMigrationTasks)) {
+
+			//are we doing the same one for a different limti?
 			if($this->start) {
 				$this->DBAlterationMessageNow("this task is broken down into baby steps - we are now starting at .... ".$this->start. " processing ".$this->limit, "created");
 			}
-			$nextLimit = $this->$method();
+			$nextLimit = $this->$currentMethod();
 			if($canDoNext && $nextLimit) {
 				$canDoNext = false;
+				//NEXT OPTION 1: do again with new limit
 				$nextGetStatement = "?action=".$method."&start=".$nextLimit;
 				$nextDescription = "run next batch ...";
 			}
 		}
 
-		if($canDoNext) {
-			$nextGetStatement = "?fullmigration=1&amp;action=".$this->listOfMigrationTasks[0];
+		if($canDoNext && !$nextGetStatement) {
+			//NEXT OPTION 2: start from the beginning
+			$nextGetStatement = "?fullmigration=1&action=".$this->listOfMigrationTasks[0];
 			$nextDescription = "Start Migration by clicking on <i>'Next'</i> (this link) until all tasks have been completed.";
 		}
+		//retrieve data...
 		$this->retrieveInfoOnly = true;
 		$html = "";
-		if(!$step) {
+		$createListOfActions = false;
+		if(!$currentMethod) {
+			$createListOfActions = true;
+		}
+		if($createListOfActions) {
 			$html .= "
 			<p>Always make a backup of your database before running any migration tasks.</p>
 			<ul>";
@@ -106,33 +118,35 @@ class EcommerceTaskMigration extends BuildTask {
 		foreach($this->listOfMigrationTasks as $key => $task) {
 			$explanation = $this->$task();
 			$explanation = str_replace(array("<h1>","</h1>", "<p>", "</p>"), array("<strong>","</strong>: ", "<span style=\"color: grey;\">", "</span>"), $explanation);
-			if($task == $step) {
+			if($task == $currentMethod) {
 				if($canDoNext) {
 					$keyPlusOne = $key + 1;
 					if(isset($this->listOfMigrationTasks[$keyPlusOne]) && isset($_REQUEST["fullmigration"])) {
+						//NEXT OPTION 3: next action!
 						$action = $this->listOfMigrationTasks[$keyPlusOne];
 						$nextGetStatement = "?action=".$action;
 						$nextDescription = $this->$action();
 						$nextDescription = str_replace(array("<h1>","</h1>", "<p>", "</p>"), array("<strong>","</strong>: ", "<span style=\"color: grey;\">", "</span>"), $nextDescription);
 					}
 					else {
+						//NEXT OPTION 4: we have done all of them - no more next option...
 						$nextGetStatement = "";
 						$nextDescription = "";
 					}
 				}
 			}
-			if(!$step) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercetaskmigration/?action=".$task."\">$explanation </a></li>";}
+			if($createListOfActions) {$html .=  "<li><a href=\"/dev/ecommerce/ecommercetaskmigration/?action=".$task."\">$explanation </a></li>";}
 		}
-		if(!$step) {$html .= "</ul>";}
-		$nextLink = "/dev/ecommerce/ecommercetaskmigration/".$nextGetStatement;
+		if($createListOfActions) {$html .= "</ul>";}
 		if($nextGetStatement) {
+			$nextLink = "/dev/ecommerce/ecommercetaskmigration/".$nextGetStatement;
 			if(isset($_REQUEST["fullmigration"])) {
 				$nextLink .= "&fullmigration=1";
 			}
 			echo "
 				<hr style=\"margin-top: 50px;\"/>
 				<h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>";
-			if($step) {
+			if($currentMethod) {
 				echo "
 				<div style=\"width: 400px; height: 20px; padding-top: 20px; font-size: 11px; background: url(/ecommerce/images/loading.gif) no-repeat top left transparent\">
 					Next step, if any - will load automatically in ten seconds.
@@ -689,7 +703,7 @@ class EcommerceTaskMigration extends BuildTask {
 		if($this->hasTableAndField("Member", "Address")) {
 			if($this->hasTableAndField("Member", "City")) {
 				$orders = Order::get()
-					->where("\"MemberID\" > 0 AND \"BillingAddress\".\"ID\" IS NULL AND \"BillingAddressID\" = 0")
+					->where("\"MemberID\" > 0")
 					->leftJoin("BillingAddress", "\"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"")
 					->limit($this->limit, $this->start);
 				if($orders->count()) {
@@ -697,19 +711,24 @@ class EcommerceTaskMigration extends BuildTask {
 						if(!$order->BillingAddressID) {
 							$member = Member::get()->byID($order->MemberID);
 							if($member) {
-								$obj = BillingAddress::create();
-								if(isset($member->Email)) {$obj->BillingEmail = $member->Email;}
-								if(isset($member->FirstName)) {$obj->BillingFirstName = $member->FirstName;}
-								if(isset($member->Surname)) {$obj->BillingSurname = $member->Surname;}
-								if(isset($member->Address)) {$obj->BillingAddress = $member->Address;}
-								if(isset($member->AddressLine2)) {$obj->BillingAddress2 = $member->AddressLine2;}
-								if(isset($member->City)) {$obj->BillingCity = $member->City;}
-								if(isset($member->PostalCode)) {$obj->BillingPostalCode = $member->PostalCode;}
-								if(isset($member->State)) {$obj->BillingState = $member->State;}
-								if(isset($member->Country)) {$obj->BillingCountry = $member->Country;}
-								if(isset($member->Phone)) {$obj->BillingPhone = $member->Phone;}
-								if(isset($member->HomePhone)) {$obj->BillingPhone .= $member->HomePhone;}
-								if(isset($member->MobilePhone)) {$obj->MobilePhone = $member->MobilePhone;}
+								if($obj = $order->BillingAddress()) {
+									//do nothing
+								}
+								else {
+									$obj = BillingAddress::create();
+								}
+								if(isset($member->Email) && !$obj->Email)              {$obj->Email = $member->Email;}
+								if(isset($member->FirstName) && !$obj->FirstName)      {$obj->FirstName = $member->FirstName;}
+								if(isset($member->Surname) && !$obj->Surname)          {$obj->Surname = $member->Surname;}
+								if(isset($member->Address) && !$obj->Address)          {$obj->Address = $member->Address;}
+								if(isset($member->AddressLine2) && !$obj->Address2)    {$obj->Address2 = $member->AddressLine2;}
+								if(isset($member->City) && !$obj->City)                {$obj->City = $member->City;}
+								if(isset($member->PostalCode) && !$obj->PostalCode)    {$obj->PostalCode = $member->PostalCode;}
+								if(isset($member->State) && !$obj->State)              {$obj->State = $member->State;}
+								if(isset($member->Country) && !$obj->Country)          {$obj->Country = $member->Country;}
+								if(isset($member->Phone) && !$obj->Phone)              {$obj->Phone = $member->Phone;}
+								if(isset($member->HomePhone) && !$obj->HomePhone)      {$obj->HomePhone .= $member->HomePhone;}
+								if(isset($member->MobilePhone) && !$obj->MobilePhone)  {$obj->MobilePhone = $member->MobilePhone;}
 								$obj->OrderID = $order->ID;
 								$obj->write();
 								$order->BillingAddressID = $obj->ID;
@@ -720,7 +739,7 @@ class EcommerceTaskMigration extends BuildTask {
 							}
 						}
 						else {
-							$this->DBAlterationMessageNow("Strange contraduction occurred!", "deleted");
+							$this->DBAlterationMessageNow("Order (id = ".$order->ID.") does not have a Billing Address!", "deleted");
 						}
 					}
 					return $this->start+$this->limit;
