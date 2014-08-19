@@ -320,6 +320,20 @@ class EcommercePayment extends DataObject {
 		return $fields;
 	}
 
+
+	/**
+	 * Static method to quickly update the payment method on runtime
+	 * associative array that goes like ClassName => Description ...
+	 *
+	 * e.g. MyPaymentClass => Best Payment Method Ever	 * @param array $array -
+	 *
+	 */
+	public static function set_supported_methods($array) {
+		Config::inst()->update("EcommercePayment", "supported_methods", null);
+		Config::inst()->update("EcommercePayment", "supported_methods", $array);
+	}
+
+
 	/**
 	 * returns the list of supported methods
 	 * test methods are included if the site is in DEV mode OR

@@ -78,7 +78,7 @@ Do you want to customise the emails that are sent to customers after placing an 
 
 Do you want a different payment method?:
   Create your own payment class.:
-    - There are plenty of Payment Class examples out there... Create your own class and add a reference to it in your Payment:set_supported_methods:[]; call /mysite/_config/config.yml.
+    - There are plenty of Payment Class examples out there... Create your own class and add a reference to it in your /mysite/_config/config.yml file.
 
 Can you extend a class to achieve your result?:
   Use the standard MyClass extends CoreClass and override any methods and variables you want changed.:
