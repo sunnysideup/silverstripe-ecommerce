@@ -48,7 +48,8 @@ class EcommerceCurrency extends DataObject {
 	 */
 	private static $searchable_fields = array(
 		"Code" => "PartialMatchFilter",
-		"Name" => "PartialMatchFilter"
+		"Name" => "PartialMatchFilter",
+		"IsDefault"
 	);
 
 	/**

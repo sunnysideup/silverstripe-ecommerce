@@ -80,10 +80,8 @@ class EcommerceCountry extends DataObject {
 		'Code' => "PartialMatchFilter",
 		'Name' => "PartialMatchFilter",
 		'DoNotAllowSales' => array(
-			'field' => 'CheckboxField',
-			'filter' => 'EcommerceCountryFilters_AllowSales',
-			'title' => 'Allow Sales'
-		)
+			'title' => 'Sales are prohibited'
+		),
 	);
 
 	/**
