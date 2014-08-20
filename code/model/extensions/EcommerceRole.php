@@ -271,7 +271,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 		}
 
 		if(empty($passwordField)) {
-			$passwordField = new PasswordField('PasswordCheck1', _t('Account.CREATE_PASSWORD','Create Account (enter password)'));
+			$passwordField = new PasswordField('PasswordCheck1', _t('Account.CREATE_PASSWORD','Password'));
 			$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_PASSWORD','Confirm Password'));
 		}
 		if(empty($updatePasswordLinkField)) {
@@ -281,9 +281,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 			new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
 			new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
 			new TextField('Surname', _t('EcommerceRole.SURNAME','Surname')),
+			new EmailField('Email', _t('EcommerceRole.EMAIL','Email')),
 			$loginDetailsHeader,
 			$loginDetailsDescription,
-			new EmailField('Email', _t('EcommerceRole.EMAIL','Email')),
 			$updatePasswordLinkField,
 			$passwordField,
 			$passwordDoubleCheckField

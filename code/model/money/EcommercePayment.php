@@ -237,7 +237,11 @@ class EcommercePayment extends DataObject {
 	 * @return string
 	 */
 	public static function site_currency() {
-		return EcommerceConfig::get("EcommerceCurrency", "default_currency");
+		$currency = EcommerceConfig::get("EcommerceCurrency", "default_currency");
+		if(!$currency) {
+			user_error("It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)", E_USER_NOTICE); 
+		}
+		return $currency;
 	}
 
 	/**

@@ -97,7 +97,8 @@ class EcommerceConfigDefinitions extends Object {
 		),
 		"PRODUCTS" => array(
 			"ProductGroup",
-			"Product_Image"
+			"Product_Image",
+			"ProductSearchForm"
 		),
 		"ORDER OBJECTS" => array(
 			"Order",
@@ -202,7 +203,10 @@ class EcommerceConfigDefinitions extends Object {
 				"large_image_width" => "Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method."
 			),
 			"ProductSearchForm" => array(
-				"include_price_filters" => "For the product search form, make sure that there are no filter fields for minimum and maximum price"
+				"include_price_filters" => "For the product search form, make sure that there are no filter fields for minimum and maximum price",
+				"form_data_session_variable" => "Name of the session variable used to store the form field values",
+				"product_session_variable" => "Name of a session variable used to tell the website what products - based on a search - are to be shown",
+				"product_group_session_variable" => "Name of the session variable used to tell the website what products GROUPS - based on a search - are to be shown"
 			),
 
 		################### CART AND CHECKOUT PROCESS #####################

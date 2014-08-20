@@ -172,8 +172,6 @@ EcommerceRole:
 ProductSearchForm:
   form_data_session_variable: "ProductGroupSearchResultsFormData"
   include_price_filters: false
-  product_get_variable: "results"
-  product_group_get_variable: "resultproductgroups"
   product_session_variable: "ProductGroupSearchResultsProducts"
   product_group_session_variable: "ProductGroupSearchResultsProductGroups"
 
