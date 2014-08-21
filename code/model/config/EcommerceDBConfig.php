@@ -358,9 +358,9 @@ class EcommerceDBConfig extends DataObject {
 			)
 		);
 		//set cols
-		$fields->dataFieldByName("CurrenciesExplanation")->setRows(2);
-		$fields->dataFieldByName("NotForSaleMessage")->setRows(2);
-		$fields->dataFieldByName("ShopPhysicalAddress")->setRows(2);
+		if($f = $fields->dataFieldByName("CurrenciesExplanation")) {$f->setRows(2);}
+		if($f = $fields->dataFieldByName("NotForSaleMessage")) {$f->setRows(2);}
+		if($f = $fields->dataFieldByName("ShopPhysicalAddress")) {$f->setRows(2);}
 		Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
 		return $fields;
 	}
