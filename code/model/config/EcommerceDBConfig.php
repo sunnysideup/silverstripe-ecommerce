@@ -282,7 +282,7 @@ class EcommerceDBConfig extends DataObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 
-		foreach($this->fieldLabels() as $name => $label) {
+		foreach($this->customFieldLabels() as $name => $label) {
 			$fields->removeByName($name);
 		}
 		//new section
