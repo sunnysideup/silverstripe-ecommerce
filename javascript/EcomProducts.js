@@ -45,6 +45,22 @@ EcomProducts = {
 		jQuery(EcomProducts.imagePopupSelector).colorbox(
 			EcomProducts.colorboxDialogOptions_viewImages
 		);
+		jQuery("a.openCloseMySectionLink").click(
+			function(event) {
+				event.preventDefault();
+				var id = jQuery(this).attr("href");
+				var idLength = id.length;
+				var hashPosition = id.indexOf("#");
+				id = id.substr(id.indexOf("#"), idLength - hashPosition);
+				jQuery(this).toggleClass("close").toggleClass("open", true);
+				jQuery(id).slideToggle().toggleClass("close").toggleClass("open", true);
+			}
+		);
+		jQuery("a.openCloseMySectionLink").each(
+			function(i, el) {
+				jQuery(el).click();
+			}
+		)
 	}
 
 

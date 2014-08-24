@@ -1,4 +1,5 @@
 <?php
+
  /**
   * Product Group is a 'holder' for Products within the CMS
   * It contains functions for versioning child products

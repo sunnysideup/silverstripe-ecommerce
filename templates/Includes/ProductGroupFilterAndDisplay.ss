@@ -3,8 +3,10 @@
 
 <% if HasFilters %>
 	<div class="filterForSection">
-		<h3><% _t('ProductGroup.FILTERFOR','Filter for') %></h3>
-		<ul class="filterOptions filterSortOptions">
+		<h3>
+			<a href="#FilterForList" class="openCloseMySectionLink"><% _t('ProductGroup.FILTERFOR','Filter for') %><% if CurrentFilterTitle %> ($CurrentFilterTitle)<% end_if %></a>
+		</h3>
+		<ul id="FilterForList" class="filterOptions filterSortOptions">
 			<% if FilterLinks %><% loop FilterLinks %><li class="$FirstLast standardFilters"><a href="$Link" class="$LinkingMode">$Name<% if First %><% else %> ($Count)<% end_if %></a></li><% end_loop %><% end_if %>
 			<% if ProductGroupFilterLinks %><% loop ProductGroupFilterLinks %><li class="$FirstLast alsoShowFilters"><a href="$FilterLink" class="$MyLinkingMode">$Title ($Count)</a></li><% end_loop %><% end_if %>
 		</ul>
