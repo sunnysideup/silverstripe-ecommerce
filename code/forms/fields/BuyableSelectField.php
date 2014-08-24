@@ -161,11 +161,15 @@ class BuyableSelectField_DataList extends Controller {
 	private static $url_segment = "ecommercebuyabledatalist";
 
 	public function Link($action = null) {
-		$link = $this->Config()->get("url_segment")."/";
-		if($action) {
-			$link .= "$action/";
+		$URLSegment = Config::inst()->get($this->class, "url_segment");
+		if(!$URLSegment) {
+			$URLSegment = $this->class;
 		}
-		return $link;
+		return Controller::join_links(
+			Director::BaseURL(),
+			$URLSegment, 
+			$action
+		);
 	}
 
 	/**

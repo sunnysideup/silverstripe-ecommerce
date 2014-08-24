@@ -43,8 +43,11 @@ class EcommercePaymentController extends Controller {
 	 */
 	public static function make_payment_link($orderID){
 		$urlSegment = EcommerceConfig::get("EcommercePaymentController", "url_segment");
-		$s = "/".$urlSegment."/pay/".$orderID."/";
-		return $s;
+		$link = Controller::join_links(
+			Director::baseURL(), 
+			$urlSegment."/pay/".$orderID."/"
+		);
+		return $link;
 	}
 
 	function init(){
@@ -89,13 +92,16 @@ class EcommercePaymentController extends Controller {
 	 * @param String $action
 	 * @return String (Link)
 	 */
-	function Link($action = ''){
-		$urlSegment = EcommerceConfig::get("EcommercePaymentController", "url_segment");
-		$urlSegmentWithSlashes = "/".$urlSegment."/";
-		if($action) {
-			$urlSegmentWithSlashes .= $action."/";
+	function Link($action = null){
+		$URLSegment = Config::inst()->get($this->class, "url_segment");
+		if(!$URLSegment) {
+			$URLSegment = $this->class;
 		}
-		return $urlSegmentWithSlashes;
+		return Controller::join_links(
+			Director::baseURL(), 
+			$URLSegment, 
+			$action
+		);
 	}
 
 	/**

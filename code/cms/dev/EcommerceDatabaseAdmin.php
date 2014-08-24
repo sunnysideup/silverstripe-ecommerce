@@ -107,9 +107,12 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @param String $action
 	 * @return String link for the "Controller"
 	 */
-	public function Link($action = "") {
-		$action = ($action) ? $action : "";
-		return Controller::join_links(Director::absoluteBaseURL(), 'dev/ecommerce/'.$action);
+	public function Link($action = null) {
+		return Controller::join_links(
+			Director::BaseURL(), 
+			'dev/ecommerce/',
+			$action
+		);
 	}
 
 

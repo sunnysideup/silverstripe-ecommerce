@@ -21,7 +21,6 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask{
 		//file data
 		$now = Date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
-		$fileLocation = Director::baseFolder().'/'.$fileName;
 
 		//data object variables
 		$orderStatusSubmissionLog = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
@@ -65,8 +64,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask{
 			unset($orders);
 		}
 		if($fileData){
-			file_put_contents($fileLocation, $fileData);
-			Controller::redirect($fileName);
+			SS_HTTPRequest::send_file($fileData, $fileName, "text/csv")
 		}
 		else{
 			user_error("No records found", E_USER_ERROR);

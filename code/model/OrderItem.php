@@ -679,7 +679,7 @@ class OrderItem extends OrderAttribute {
 			$order = $this->Order();
 			if($order && $order->IsSubmitted()) {
 				return
-					"/". EcommerceConfig::get("ShoppingCart_Controller", "url_segment").
+					Controller::join_links(Director::baseURL(), EcommerceConfig::get("ShoppingCart_Controller", "url_segment")).
 					"/submittedbuyable".
 					"/".$item->ClassName.
 					"/".$item->ID.

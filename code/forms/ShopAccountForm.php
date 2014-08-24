@@ -50,10 +50,12 @@ class ShopAccountForm extends Form {
 			}
 			$fields = new FieldList();
 			$urlParams = $controller->getURLParams();
-			$backURLLink = "";
-			if($urlParams) foreach($urlParams as $urlParam) {
-				if($urlParam) {
-					$backURLLink .= "/".$urlParam;
+			$backURLLink = Director::baseURL();
+			if($urlParams) {
+				foreach($urlParams as $urlParam) {
+					if($urlParam) {
+						$backURLLink =  Controller::join_links($backURLLink, $urlParam);
+					}
 				}
 			}
 			$backURLLink = urlencode($backURLLink);

@@ -48,8 +48,7 @@ class EcommerceCurrency extends DataObject {
 	 */
 	private static $searchable_fields = array(
 		"Code" => "PartialMatchFilter",
-		"Name" => "PartialMatchFilter",
-		"IsDefault"
+		"Name" => "PartialMatchFilter"
 	);
 
 	/**
@@ -362,6 +361,7 @@ class EcommerceCurrency extends DataObject {
 	 * Returns the link that can be used in the shopping cart to
 	 * set the preferred currency to this one.
 	 * For example: /shoppingcart/setcurrency/nzd/
+	 * Dont be fooled by the set_ part in the set_currency_link....
 	 * @return String
 	 */
 	public function Link() {

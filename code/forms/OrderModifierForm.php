@@ -171,12 +171,15 @@ class OrderModifierForm_Controller extends Controller{
 	 * @return String
 	 */
 	function Link($action = null){
-		$action = ($action)? "/$action/" : "";
-		$urlSegment = Config::inst()->get($this->class, "url_segment");
-		if(!$urlSegment) {
-			$urlSegment = $this->class;
+		$URLSegment = Config::inst()->get($this->class, "url_segment");
+		if(!$URLSegment) {
+			$URLSegment = $this->class;
 		}
-		return $this->class.$action;
+		return Controller::join_links(
+			Director::BaseURL(),
+			$URLSegment, 
+			$action
+		);
 	}
 
 	function removemodifier(){

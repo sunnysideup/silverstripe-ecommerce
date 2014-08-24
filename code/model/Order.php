@@ -409,12 +409,12 @@ class Order extends DataObject {
 	 * @param String $action - e.g. edit
 	 * @return String
 	 */
-	public function CMSEditLink($action = "") {
-		$link = "/admin/sales/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."";
-		if($action) {
-			$link = $link . "/".$action;
-		}
-		return $link;
+	public function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/sales/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
 	}
 
 	/**
@@ -2448,10 +2448,10 @@ class Order extends DataObject {
 	 * @param String $action - any action that should be added to the link.
 	 * @return String(URLSegment)
 	 */
-	function Link($action = "") {
+	function Link($action = null) {
 		$page = $this->DisplayPage();
 		if($page) {
-			return $page->getOrderLink($this->ID);
+			return $page->getOrderLink($this->ID, $action);
 		}
 		else {
 			user_error("A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.", E_USER_NOTICE);
@@ -2459,7 +2459,7 @@ class Order extends DataObject {
 				->Filter(array("ErrorCode" => '404'))
 				->First();
 			if($page) {
-				return $page->Link($action);
+				return $page->Link();
 			}
 		}
 	}

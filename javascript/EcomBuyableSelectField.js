@@ -169,7 +169,7 @@ EcomBuyableSelectField = {
 						jQuery.ajax(
 							{
 								type: "POST",
-								url: "/"+EcomBuyableSelectField.url_segment+"/json/",
+								url: jQuery('base').attr('href') + EcomBuyableSelectField.url_segment+"/json/",
 								dataType: "json",
 								data: {
 									term: request.term,

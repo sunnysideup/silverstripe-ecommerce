@@ -47,11 +47,11 @@ class EcommerceTaskCartManipulation_Debug extends BuildTask{
 			<li><a href=\"/shoppingcart/debug/\" target=\"_debug\">debug cart</a></li>";
 		if($myProductGroup) {
 			$html .= "
-			<li><a href=\"/".$myProductGroup->Link("debug")."\" target=\"_debug\">debug product group</a></li>";
+			<li><a href=\"".$myProductGroup->Link("debug")."\" target=\"_debug\">debug product group</a></li>";
 		}
 		if($myProduct) {
 			$html .= "
-			<li><a href=\"/".$myProduct->Link("debug")."\" target=\"_debug\">debug product</a></li>";
+			<li><a href=\"".$myProduct->Link("debug")."\" target=\"_debug\">debug product</a></li>";
 		}
 		$html .="
 		</ul>";

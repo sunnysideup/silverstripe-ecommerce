@@ -1,8 +1,8 @@
 
 <% if MenuChildGroups %>
 	<div class="menuChildGroups">
-		<h3><% _t("Product.INTHISSECTION", "In this section") %></h3>
-		<ul class="menuChildGroupsList">
+		<h3><a href="#MenuChildGroupsList" class="openCloseMySectionLink"><% _t("Product.INTHISSECTION", "In this section") %></a></h3>
+		<ul id="MenuChildGroupsList">
 	<% loop MenuChildGroups %>
 			<li>
 	<% if Image %>

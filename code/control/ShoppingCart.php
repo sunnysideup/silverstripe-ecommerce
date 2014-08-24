@@ -1087,7 +1087,19 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String (Link)
 	 */
 	public function Link($action = null) {
-		return Controller::join_links(Director::baseURL(), $this->Config()->get("url_segment")."/".$action."/");
+		return self::create_link($ation);
+	}
+
+	/**
+	 * returns ABSOLUTE link to the shopping cart controller
+	 * @return String
+	 */
+	protected static function create_link($actionAndOtherLinkVariables = null) {
+		return Controller::join_links(
+			Director::baseURL(), 
+			Config::inst()->get("ShoppingCart_Controller", "url_segment"),
+			$actionAndOtherLinkVariables
+		);
 	}
 
 	/**
@@ -1098,7 +1110,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function add_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/additem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return self::create_link('additem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1109,7 +1121,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return self::create_link('removeitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1120,7 +1132,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_all_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeallitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return self::create_link('removeallitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1131,7 +1143,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeallitemandedit/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return self::create_link('removeallitemandedit/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1142,7 +1154,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function set_quantity_item_link($buyableID, $classNameForBuyable = "Product", Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/setquantityitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters);
+		return self::create_link('setquantityitem/'.$buyableID."/".$classNameForBuyable."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1152,7 +1164,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_modifier_link($modifierID, Array $parameters = array()) {
-		return  "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removemodifier/'.$modifierID."/".self::params_to_get_string($parameters);
+		return self::create_link('removemodifier/'.$modifierID."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1162,7 +1174,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function add_modifier_link($modifierID, Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/addmodifier/'.$modifierID."/".self::params_to_get_string($parameters);
+		return self::create_link('addmodifier/'.$modifierID."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1173,7 +1185,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function remove_address_link($addressID, $addressClassName, Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/removeaddress/'.$addressID."/".$addressClassName."/".self::params_to_get_string($parameters);
+		return self::create_link('removeaddress/'.$addressID."/".$addressClassName."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1181,7 +1193,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function clear_cart_link($parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/clear/'.self::params_to_get_string($parameters);
+		return self::create_link('clear/'.self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1189,7 +1201,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function save_cart_link(Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/save/'.self::params_to_get_string($parameters);
+		return self::create_link('save/'.self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1197,7 +1209,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function clear_cart_and_logout_link(Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/clearandlogout/'.self::params_to_get_string($parameters);
+		return self::create_link('clearandlogout/'.self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1205,19 +1217,21 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String
 	 */
 	public static function delete_order_link($orderID, Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters);
+		return self::create_link('deleteorder/'.$orderID."/".self::params_to_get_string($parameters));
 	}
 
 	public static function copy_order_link($orderID, $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/copyorder/'.$orderID.'/'.self::params_to_get_string($parameters);
+		return self::create_link('copyorder/'.$orderID."/".self::params_to_get_string($parameters));
 	}
 
 	/**
+	 * returns a link that allows you to set a currency...
+	 * dont be fooled by the set_ part...
 	 * @param String $code
 	 * @return String
 	 */
 	public static function set_currency_link($code, Array $parameters = array()) {
-		return "/".Config::inst()->get("ShoppingCart_Controller", "url_segment").'/setcurrency/'.$code.'/'.self::params_to_get_string($parameters);
+		return self::create_link('setcurrency/'.$code."/".self::params_to_get_string($parameters));
 	}
 
 	/**
@@ -1359,7 +1373,7 @@ class ShoppingCart_Controller extends Controller{
 	 **/
 	function clear(SS_HTTPRequest $request) {
 		$this->cart->clear();
-		$this->redirect("/");
+		$this->redirect(Director::baseURL());
 		return array();
 	}
 
@@ -1372,7 +1386,7 @@ class ShoppingCart_Controller extends Controller{
 		if($member = Member::currentUser()) {
 			$member->logout();
 		}
-		$this->redirect("/");
+		$this->redirect(Director::baseURL());
 		return array();
 	}
 
@@ -1429,7 +1443,7 @@ class ShoppingCart_Controller extends Controller{
 			return $this->redirect($cartPageLink);
 		}
 		else {
-			return $this->redirect("/");
+			return $this->redirect(Director::baseURL());
 		}
 	}
 
@@ -1515,7 +1529,12 @@ class ShoppingCart_Controller extends Controller{
 				if($oldMember){
 					$oldMember->logout();
 					$newMember->login();
-					return $this->redirect("/");
+					if($accountPage = AccountPage::get()->first()) {
+						return $this->redirect($accountPage->Link());
+					}
+					else {
+						return $this->redirect(Director::baseURL());
+					}
 				}
 				else {
 					echo "Another error occurred.";

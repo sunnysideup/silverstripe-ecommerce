@@ -138,8 +138,14 @@ class OrderStatusLogForm_Controller extends Controller{
 	 * @return String
 	 */
 	function Link($action = null){
-		$action = ($action)? "/$action/" : "";
-		return $this->class.$action;
+		$URLSegment = Config::inst()->get($this->class, "url_segment");
+		if(!$URLSegment) {
+			$URLSegment = $this->class;
+		}
+		return Controller::join_links(
+			Director::BaseURL(),$URLSegment, 
+			$action
+		);
 	}
 
 	function removeLog(){
