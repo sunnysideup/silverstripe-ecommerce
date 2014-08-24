@@ -1087,7 +1087,7 @@ class ShoppingCart_Controller extends Controller{
 	 * @return String (Link)
 	 */
 	public function Link($action = null) {
-		return self::create_link($ation);
+		return self::create_link($action);
 	}
 
 	/**
@@ -1096,7 +1096,7 @@ class ShoppingCart_Controller extends Controller{
 	 */
 	protected static function create_link($actionAndOtherLinkVariables = null) {
 		return Controller::join_links(
-			Director::baseURL(), 
+			Director::baseURL(),
 			Config::inst()->get("ShoppingCart_Controller", "url_segment"),
 			$actionAndOtherLinkVariables
 		);

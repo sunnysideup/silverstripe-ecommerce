@@ -118,9 +118,10 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 
 	protected function nextBatchLink(){
 		$link = Controller::join_links(
-			Director::baseURL(), 
+			Director::baseURL(),
 			"dev/ecommerce/ecommercetasklinkproductwithimages/"
-		)."?start=". ($this->start + $this->limit));
+		).
+		"?start=". ($this->start + $this->limit);
 		if($this->productID) {
 			$link .= "&productid=".$this->productID;
 		}
@@ -133,7 +134,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask {
 
 	public function Link($action = null){
 		return Controller::join_links(
-			Director::baseURL(), 
+			Director::baseURL(),
 			"dev/ecommerce/ecommercetasklinkproductwithimages/"
 		);
 	}

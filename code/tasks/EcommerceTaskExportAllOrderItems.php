@@ -65,7 +65,7 @@ class EcommerceTaskExportAllOrderItems extends BuildTask{
 			unset($orders);
 		}
 		if($fileData){
-			SS_HTTPRequest::send_file($fileData, $fileName, "text/csv")
+			SS_HTTPRequest::send_file($fileData, $fileName, "text/csv");
 		}
 		else{
 			user_error("No records found", E_USER_ERROR);
