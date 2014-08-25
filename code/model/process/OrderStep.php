@@ -527,10 +527,18 @@ class OrderStep extends DataObject {
 	 * @return Boolean
 	 **/
 	public function hasBeenSent(Order $order, $checkDateOfOrder = true) {
-		//if it has been more than a week since the order was last edited (submitted) then we do not send emails as
+		//if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
 		//this would be embarrasing.
-		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-".EcommerceConfig::get("OrderStep", "number_of_days_to_send_update_email")))) {
-			return true;
+		if( $checkDateOfOrder) {
+			if($log = $order->SubmissionLog()) {
+				$lastEditedValue = $log->LastEdited;
+			}
+			else {
+				$lastEditedValue = $order->LastEdited;
+			}
+			if((strtotime($lastEditedValue) < strtotime("-".EcommerceConfig::get("OrderStep", "number_of_days_to_send_update_email")." days"))) {
+				return true;
+			}
 		}
 		$count = OrderEmailRecord::get()
 			->Filter(array(
@@ -964,8 +972,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
 	private static $db = array(
 		"SaveOrderAsHTML" => "Boolean",
-		"SaveOrderAsSerializedObject" => "Boolean",
-		"SaveOrderAsJSON" => "Boolean"
+		"SaveOrderAsSerializedObject" => "Boolean"
 	);
 
 	private static $defaults = array(
@@ -976,8 +983,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 		"Code" => "SUBMITTED",
 		"ShowAsInProcessOrder" => 1,
 		"SaveOrderAsHTML" => 1,
-		"SaveOrderAsSerializedObject" => 0,
-		"SaveOrderAsJSON" => 0
+		"SaveOrderAsSerializedObject" => 0
 	);
 
 	/**
@@ -1011,6 +1017,8 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 		return (bool) $order->TotalItems($recalculate = true);
 	}
 
+
+	private static $test = 0;
 	/**
 	 * Add a member to the order - in case he / she is not a shop admin.
 	 *
@@ -1026,7 +1034,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 				//add currency if needed.
 				$order->getHasAlternativeCurrency();
 
-				$obj = new $className();
+				$obj = $className::create();
 				if(is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
 					//save versions
 					//@todo: test and implement
@@ -1048,10 +1056,10 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 					//it is important we add this here so that we can save the 'submitted' version.
 					//this is particular important for the Order Item Links.
 					$obj->write();
+					$obj = OrderStatusLog::get()->byID($obj->ID);
 					$saved = false;
-					if($this->SaveOrderAsJSON)												{$obj->OrderAsJSON = $order->ConvertToJSON(); $saved = true;}
-					if($this->SaveOrderAsHTML)												{$obj->OrderAsHTML = $order->ConvertToHTML(); $saved = true;}
-					if($this->SaveOrderAsSerializedObject || !$saved)	{$obj->OrderAsString = $order->ConvertToString();$saved = true; }
+					if($this->SaveOrderAsSerializedObject)       {$obj->OrderAsString  = $order->ConvertToString(); $saved = true; }
+					if($this->SaveOrderAsHTML || !$saved)        {$obj->OrderAsHTML    = Convert::raw2sql($order->ConvertToHTML());}
 					$obj->write();
 				}
 				else {

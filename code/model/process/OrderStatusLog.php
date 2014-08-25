@@ -304,7 +304,6 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 	private static $db = array(
 		"OrderAsHTML" => "HTMLText",
 		"OrderAsString" => "Text",
-		"OrderAsJSON" => "Text",
 		"SequentialOrderNumber" => "Int",
 		"Total" => "Currency",
 		"SubTotal" => "Currency"
@@ -370,9 +369,7 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 		elseif($this->OrderAsString) {
 			return unserialize($this->OrderAsString);
 		}
-		else {
-			return $this->OrderAsJSON;
-		}
+		return _t("OrderStatusLog.NO_FURTHER_INFO_AVAILABLE", "no further information available");
 	}
 
 	/**
@@ -387,7 +384,8 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 			}
 		}
 		if(!intval($this->SequentialOrderNumber)) {
-			$min = intval(EcommerceConfig::get("Order", "order_id_start_number"));
+			$this->SequentialOrderNumber = 1;
+			$min = intval(EcommerceConfig::get("Order", "order_id_start_number"))-0;
 			if(isset($this->ID)) {
 				$id = intval($this->ID);
 			}
@@ -395,21 +393,15 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 				$id = 0;
 			}
 			$lastOne = OrderStatusLog_Submitted::get()
-				->Filter(array("ID" => $id))
+				->Exclude(array("ID" => $id))
 				->Sort("SequentialOrderNumber", "DESC")
 				->First();
 			if($lastOne) {
 				$this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
-				if($this->SequentialOrderNumber < $min) {
-					$this->SequentialOrderNumber = $min;
-				}
 			}
-			else {
+			if(intval($min) && $this->SequentialOrderNumber < $min) {
 				$this->SequentialOrderNumber = $min;
 			}
-		}
-		if(!intval($this->SequentialOrderNumber)) {
-			$this->SequentialOrderNumber = 1;
 		}
 	}
 

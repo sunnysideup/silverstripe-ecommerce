@@ -2067,7 +2067,6 @@ class ProductGroup_Controller extends Page_Controller {
 				$optionsVariableName = $oneTypeArray["configName"];
 				$options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
 				if(isset($options[$newPreference])) {
-					//debug::log("ProductGroup_".$sessionName ."---". $newPreference);
 					Session::set("ProductGroup_".$sessionName, $newPreference);
 					//save in model as well...
 				}

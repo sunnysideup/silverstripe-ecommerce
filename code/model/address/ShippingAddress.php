@@ -121,7 +121,8 @@ class ShippingAddress extends OrderAddress {
 	 * @return Array
 	 */
 	private static $field_labels = array(
-		"Order.Title" => "Order"
+		"Order.Title" => "Order",
+		"Obsolete" => "Do not use for future transactions"
 	);
 
 	/**

@@ -423,6 +423,7 @@ class Order extends DataObject {
 	 **/
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
+		$currentMember = Member::currentUser();
 		if(!$this->exists() || !$this->StatusID) {
 			$firstStep = OrderStep::get()->First();
 			$this->StatusID = $firstStep->ID;
@@ -506,7 +507,14 @@ class Order extends DataObject {
 			}
 			$cancelledField = $fields->dataFieldByName("CancelledByID");
 			$fields->removeByName("CancelledByID");
-			$fields->addFieldToTab("Root.Cancellation", $cancelledField);
+			$fields->addFieldToTab("Root.Cancellation", DropdownField::create(
+				"CancelledByID",
+				$cancelledField->Title(),
+				array(
+					0 => "--- "._t("Order.NOT_CANCELLED", "Not Cancelled")." ---",
+					$currentMember->ID => _t("Order.CANCELLED_BY", "Cancelled By")." ".$currentMember->getName()
+				)
+			));
 			$fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());
 			$submissionLog = $this->SubmissionLog();
 			if($submissionLog) {
@@ -536,11 +544,11 @@ class Order extends DataObject {
 			//MEMBER STUFF
 			$specialOptionsArray = array();
 			if($this->MemberID) {
-				$specialOptionsArray[0] =  _t("Order.SELECTCUSTOMER", "-- - Remover Customer -- -");
+				$specialOptionsArray[0] =  _t("Order.SELECTCUSTOMER", "--- Remover Customer ---");
 				$specialOptionsArray[$this->MemberID] =  _t("Order.LEAVEWITHCURRENTCUSTOMER", "- Leave with current customer: ").$this->Member()->getTitle();
 			}
-			elseif($currentMember = Member::currentUser()) {
-				$specialOptionsArray[0] =  _t("Order.SELECTCUSTOMER", "-- - Select Customers -- -");
+			elseif($currentMember) {
+				$specialOptionsArray[0] =  _t("Order.SELECTCUSTOMER", "--- Select Customers ---");
 				$currentMemberID = $currentMember->ID;
 				$specialOptionsArray[$currentMemberID] = _t("Order.ASSIGNTHISORDERTOME", "- Assign this order to me: ").$currentMember->getTitle();
 			}
@@ -2492,14 +2500,15 @@ class Order extends DataObject {
 
 	/**
 	 * Converts the Order into HTML, based on the Order Template.
-	 * @return String - HTML
+	 * @return HTML Object
 	 **/
 	public function ConvertToHTML() {
 		Config::nest();
 		Config::inst()->update('SSViewer', 'theme_enabled', true);
 		$html = $this->renderWith("Order");
 		Config::unnest();
-		return $html;
+		$html = preg_replace('/(\s)+/', ' ', $html);
+		return DBField::create_field('HTMLText',$html);
 	}
 
 	/**
@@ -2527,22 +2536,15 @@ class Order extends DataObject {
 	 * @return Order - with most important has one and has many items included as variables.
 	 **/
 	protected function addHasOneAndHasManyAsVariables() {
-		/*
-			THIS HAS TO BE REDONE - IT IS NONSENSICAL!
-		$this->Member_serialized = serialize($this->Member());
-		$this->BillingAddress_serialized = serialize($this->BillingAddress());
-		$this->ShippingAddress_serialized = serialize($this->ShippingAddress());
-		$this->Attributes_serialized = serialize($this->Attributes());
-		$this->OrderStatusLogs_serialized = serialize($this->OrderStatusLogs());
-		$this->Payments_serialized = serialize($this->Payments());
-		$this->Emails_serialized = serialize($this->Emails());
-		$this->Title_serialized = serialize($this->Title());
-		$this->Total_serialized = serialize($this->Total());
-		$this->SubTotal_serialized = serialize($this->SubTotal());
-		$this->TotalPaid_serialized = serialize($this->TotalPaid());
-		*/
-
-		return $this;
+		$object = clone $this;
+		$object->Member_serialized = serialize($this->Member());
+		$object->BillingAddress_serialized = serialize($this->BillingAddress());
+		$object->ShippingAddress_serialized = serialize($this->ShippingAddress());
+		$object->Attributes_serialized = serialize($this->Attributes());
+		$object->OrderStatusLogs_serialized = serialize($this->OrderStatusLogs());
+		$object->Payments_serialized = serialize($this->Payments());
+		$object->Emails_serialized = serialize($this->Emails());
+		return $object;
 	}
 
 

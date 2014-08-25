@@ -33,14 +33,14 @@ Abstract class Order_Email extends Email {
 	public static function emogrify_html($html){
 		//get required files
 		$baseFolder = Director::baseFolder() ;
-		if(!class_exists('Emogrifier')) {
+		if(!class_exists('\Pelago\Emogrifier')) {
 			require_once($baseFolder . '/ecommerce/thirdparty/Emogrifier.php');
 		}
 		$cssFileLocation = Director::baseFolder()."/".EcommerceConfig::get("Order_Email", "css_file_location");
 		$cssFileHandler = fopen($cssFileLocation, 'r');
 		$css = fread($cssFileHandler,  filesize($cssFileLocation));
 		fclose($cssFileHandler);
-		$emogrifier = new Emogrifier($html, $css);
+		$emogrifier = new \Pelago\Emogrifier($html, $css);
 		$html = $emogrifier->emogrify();
 		//make links absolute!
 		$html = HTTP::absoluteURLs($html);

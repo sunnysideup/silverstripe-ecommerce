@@ -406,7 +406,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
 		}
 		$baseFolder = Director::baseFolder() ;
-		if(!class_exists('Emogrifier')) {
+		if(!class_exists('\Pelago\Emogrifier')) {
 			require_once(Director::baseFolder() . '/ecommerce/thirdparty/Emogrifier.php');
 		}
 		Requirements::clear();
@@ -424,7 +424,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		$cssFileHandler = fopen($cssFileLocation, 'r');
 		$css = fread($cssFileHandler,  filesize($cssFileLocation));
 		fclose($cssFileHandler);
-		$emog = new Emogrifier($html, $css);
+		$emog = new \Pelago\Emogrifier($html, $css);
 		$html = $emog->emogrify();
 		return $html;
 	}
