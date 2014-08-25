@@ -1696,30 +1696,27 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * if we set canEdit to false then we
+	 * can not see the child records
+	 * Basically, you can edit when you can view and canEdit (even as a customer)
+	 * Or if you are a Shop Admin you can always edit.
+	 * Otherwise it is false...
+	 *
 	 * @param Member $member
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
-		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
-			return true;
-		}
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canEdit', $member->ID);
 		if($extended !== null) {return $extended;}
 
+		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
+			return true;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {
-			if($status = $this->Status()) {
-				if($status->ShowAsCompletedOrder) {
-					return false;
-				}
-				return true;
-			}
+			return true;
 		}
-
-		if(!$this->canView($member) || $this->IsCancelled()) {
-			return false;
-		}
-		return $this->MyStep()->CustomerCanEdit && $this->canView($member);
+		return false;
 	}
 
 	/**

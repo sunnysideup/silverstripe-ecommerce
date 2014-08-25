@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div style="page-break-after: always;" id="Wrapper">
-		<h2><% _t("Order.PACKINGSLIP", "Packing Slip") %></h2>
+		<h1 class="title"><% if PackingSlipTitle %>$PackingSlipTitle<% else %><% _t("Order.PACKINGSLIP", "Packing Slip") %><% end_if %></h1>
 		<div id="AddressesHolder">
 			<div id="Sender" class="section">
 				<h3><% _t("Order.SENDER", "Sender:") %></h3>
