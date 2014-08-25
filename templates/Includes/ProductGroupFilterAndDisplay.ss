@@ -15,8 +15,10 @@
 
 <% if DisplayLinks %>
 	<div class="displayStyleSection">
-		<h3><% _t('ProductGroup.DISPLAYSTYLE','Views') %></h3>
-		<ul class="displayOptions displayStyleOptions">
+		<h3>
+			<a href="#DisplayOptionsForList" class="openCloseMySectionLink"><% _t('ProductGroup.DISPLAYSTYLE','Views') %></a>
+		</h3>
+		<ul class="displayOptions displayStyleOptions" id="DisplayOptionsForList">
 			<% loop DisplayLinks %><li class="$FirstLast displayStyles"><a href="$Link" class="$LinkingMode">$Name</a></li><% end_loop %>
 		</ul>
 	</div>
