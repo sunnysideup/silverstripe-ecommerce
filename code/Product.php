@@ -452,11 +452,13 @@ class Product extends Page implements BuyableModel {
 	 * @return Image | Null
 	 */
 	public function BestAvailableImage() {
-		$image = $this->Image();
-		if($image && $image->exists() && file_exists($image->getFullPath())) {
-			return $image;
+		if($this->ImageID) {
+			$image = Image::get()->byID($this->ImageID);
+			if($image && $image->exists() && file_exists($image->getFullPath())) {
+				return $image;
+			}
 		}
-		elseif($parent = $this->MainParentGroup()) {
+		if($parent = $this->MainParentGroup()) {
 			return $parent->BestAvailableImage();
 		}
 	}
