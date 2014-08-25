@@ -541,6 +541,7 @@ class Product extends Page implements BuyableModel {
 	 * Action to return specific version of a specific product.
 	 * This can be any product to enable the retrieval of deleted products.
 	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
+	 * If the version can not be found then we retrieve the current one.
 	 * @param Int $id
 	 * @param Int $version
 	 * @return DataObject | Null
@@ -552,7 +553,13 @@ class Product extends Page implements BuyableModel {
 		if(!$version) {
 			$version = $this->Version;
 		}
-		return OrderItem::get_version($this->ClassName, $id, $version);
+		//not sure why this is running via OrderItem...
+		$obj = OrderItem::get_version($this->ClassName, $id, $version);
+		if(!$obj) {
+			$className = $this->ClassName;
+			$obj = $className::get()->byID($id);
+		}
+		return $obj;
 	}
 
 
@@ -972,31 +979,19 @@ class Product_Controller extends Page_Controller {
 	 * @param SS_HTTPRequest
 	 */
 	function viewversion(SS_HTTPRequest $request) {
-		$id = intval($request->param("ID"))-0;
-		$version = intval($request->param("OtherID"))-0;
+		$version = intval($request->param("ID"))-0;
 		$currentVersion = $this->Version;
-		if($id != $this->ID) {
-			if(class_exists("ProductVariation")) {
-				//TO DO: CHECK VERSION!!! IS THIS CODE RIGHT
-				if($productVariation = ProductVariation::get()->byID($id)) {
-					if($productVariation->Version != $version) {
-						$productVariation = $productVariation->getVersionOfBuyable($id, $version);
-					}
-					///to do: how to add this to product page???
+		if($currentVersion != $version) {
+			if($record = $this->getVersionOfBuyable($this->ID, $version)) {
+				//we check again, because we may actually get the same version back...
+				if($record->Version != $this->Version) {
+					$this->record = $record;
+					$this->dataRecord->AllowPurchase = false;
+					$this->AllowPurchase = false;
+					$this->isCurrentVersion = false;
+					$this->Title .= _t("Product.OLDERVERSION", " - Older Version");
+					$this->MetaTitle .= _t("Product.OLDERVERSION", " - Older Version");
 				}
-				if(!$productVariation) {
-					return $this->httpError(404);
-				}
-			}
-		}
-		elseif($currentVersion != $version) {
-			if($record = $this->getVersionOfBuyable($id, $version)) {
-				$this->record = $record;
-				$this->dataRecord->AllowPurchase = false;
-				$this->AllowPurchase = false;
-				$this->isCurrentVersion = false;
-				$this->Title .= _t("Product.OLDERVERSION", " - Older Version");
-				$this->MetaTitle .= _t("Product.OLDERVERSION", " - Older Version");
 			}
 			else {
 				return $this->httpError(404);

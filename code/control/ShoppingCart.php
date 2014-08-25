@@ -991,6 +991,13 @@ class ShoppingCart extends Object{
 class ShoppingCart_Controller extends Controller{
 
 	/**
+	 * Default URL handlers - (Action)/(ID)/(OtherID)
+	 */
+	private static $url_handlers = array(
+		'$Action//$ID/$OtherID/$Version' => 'handleAction',
+	);
+
+	/**
 	 * We need to only use the Security ID on a few
 	 * actions, these are listed here.
 	 * @var Array
@@ -1498,8 +1505,7 @@ class ShoppingCart_Controller extends Controller{
 				$bestBuyable = $buyableClassName::get()->byID($buyableID);
 				if($bestBuyable) {
 					//show singleton with old version
-					$link = $bestBuyable->Link("viewversion/".$buyableID."/".$version."/");
-					header("location: $link");
+					$link = $bestBuyable->Link("viewversion/".$version."/");
 					$this->redirect($link);
 					return array();
 				}
