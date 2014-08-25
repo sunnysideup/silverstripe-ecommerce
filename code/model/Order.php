@@ -1717,7 +1717,6 @@ class Order extends DataObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canEdit', $member->ID);
 		if($extended !== null) {return $extended;}
-
 		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
 			return true;
 		}
