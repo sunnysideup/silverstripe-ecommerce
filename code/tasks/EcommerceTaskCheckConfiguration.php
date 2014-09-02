@@ -402,7 +402,7 @@ EcommerceConfig:
 					}
 					$defaultValueHTML = "";
 					if($defaultValue && !$isOtherConfigs) {
-						$defaultValueHTML = "<sub>e-commerce defaults:</sub><pre>$defaultValue</pre>";
+						$defaultValueHTML = "<sub>default:</sub><pre>$defaultValue</pre>";
 					}
 					if($configError) {
 						$configError = "<span style=\"color: red; font-size: 10px;\">$configError</span>";

@@ -239,7 +239,7 @@ class EcommercePayment extends DataObject {
 	public static function site_currency() {
 		$currency = EcommerceConfig::get("EcommerceCurrency", "default_currency");
 		if(!$currency) {
-			user_error("It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)", E_USER_NOTICE); 
+			user_error("It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)", E_USER_NOTICE);
 		}
 		return $currency;
 	}
@@ -263,11 +263,18 @@ class EcommercePayment extends DataObject {
 		$proxy = null;
 		$ip = null;
 
-		if(isset($_SERVER['HTTP_CLIENT_IP'])) $ip = $_SERVER['HTTP_CLIENT_IP'];
-		elseif(isset($_SERVER['REMOTE_ADDR'])) $ip = $_SERVER['REMOTE_ADDR'];
-		else $ip = null;
+		if(isset($_SERVER['HTTP_CLIENT_IP'])) {
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		}
+		elseif(isset($_SERVER['REMOTE_ADDR'])) {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		else {
+			$ip = null;
+		}
 
 		if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			//swapsies
 			$proxy = $ip;
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		}

@@ -277,7 +277,7 @@ SalesAdmin:
 
 
 EcommerceTaskCartCleanup:
-  clear_minutes_empty_carts: 60
+  clear_minutes_empty_carts: 120
   clear_minutes: 10080
   maximum_number_of_objects_deleted: 10
   never_delete_if_linked_to_member: true
