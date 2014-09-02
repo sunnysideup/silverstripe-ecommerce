@@ -66,6 +66,11 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	 *
 	 */
 	function onBeforeInit(){
+		//make sure that with a simple flush=all, all the caches are flushed...
+		if(isset($_GET["flush"]) && $_GET["flush"] == "all") {
+			$cache = SS_Cache::factory('any');
+			$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+		}
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
