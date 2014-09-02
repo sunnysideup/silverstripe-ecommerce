@@ -167,6 +167,9 @@ class EcommerceTaskCartCleanup extends BuildTask {
 		$oneToMany = EcommerceConfig::get("EcommerceTaskCartCleanup", "one_to_many_classes");
 		$oneToOne = EcommerceConfig::get("EcommerceTaskCartCleanup", "one_to_one_classes");
 		$manyToMany = EcommerceConfig::get("EcommerceTaskCartCleanup", "many_to_many_classes");
+		if(!is_array($oneToOne)) { $oneToOne = array();}
+		if(!is_array($oneToMany)) { $oneToMany = array();}
+		if(!is_array($manyToMany)) { $manyToMany = array();}
 
 		/***********************************************
 		//CLEANING ONE-TO-ONES
@@ -175,7 +178,7 @@ class EcommerceTaskCartCleanup extends BuildTask {
 			$this->flush();
 			DB::alteration_message("<h2>Checking one-to-one relationships</h2>.");
 		}
-		if(is_array($oneToOne) && count($oneToOne)) {
+		if(count($oneToOne)) {
 			foreach($oneToOne as $orderFieldName => $className) {
 				if(!in_array($className, $oneToMany) && !in_array($className, $manyToMany)) {
 					if($this->verbose) {
@@ -240,7 +243,7 @@ class EcommerceTaskCartCleanup extends BuildTask {
 			$this->flush();
 			DB::alteration_message("<h2>Checking one-to-many relationships</h2>.");
 		}
-		if(is_array($oneToMany) && count($oneToMany)) {
+		if(count($oneToMany)) {
 			foreach($oneToMany as $classWithOrderID => $classWithLastEdited) {
 				if(!in_array($classWithLastEdited, $oneToOne) && !in_array($classWithLastEdited, $manyToMany)) {
 					if($this->verbose) {
