@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="BuyableSelectField" namespace="" name="BuyableSelectField" abstract="false" final="false" start="13" end="146">
-  <file path="./../../../code/forms/fields" file="BuyableSelectField.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/fields/BuyableSelectField.php" size="8670" time="2014-04-25T10:22:59+12:00" unixtime="1398378179" sha1="04210e084d9829a991f9f937f4eb602b214dd682"/>
+  <file path="./../../../code/forms/fields" file="BuyableSelectField.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/forms/fields/BuyableSelectField.php" size="8771" time="2014-08-24T21:07:18+12:00" unixtime="1408871238" sha1="38dd31fbe2d212eba8076a7cfbdafb344bf294d6"/>
   <docblock>
     <description compact="Text input field that allows the user to select a Buyable.">A product, a product variation or any other buyable.
 using the auto-complete technique from jQuery UI.</description>

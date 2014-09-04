@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCountry" namespace="" name="EcommerceCountry" abstract="false" final="false" start="16" end="500">
-  <file path="./../../../code/model/address" file="EcommerceCountry.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/address/EcommerceCountry.php" size="14235" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="9c810811fc4ab04e5d514165fcad0453650a8945"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCountry" namespace="" name="EcommerceCountry" abstract="false" final="false" start="16" end="497">
+  <file path="./../../../code/model/address" file="EcommerceCountry.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/address/EcommerceCountry.php" size="14869" time="2014-09-04T14:44:13+12:00" unixtime="1409798653" sha1="ff0197c78cd227fe6f3ba64e585640d64c730d02"/>
   <docblock>
     <description/>
     <description compact="For example: To what countries can be sold.">/dev/build/?resetecommercecountries=1 will reset the list of countries...</description>
@@ -62,7 +62,7 @@
       <todo value=": how to translate this?"/>
     </docblock>
   </member>
-  <member name="default_sort" type="string" default="&quot;\&quot;DoNotAllowSales\&quot; ASC, \&quot;Name\&quot; ASC&quot;" visibility="private" line="93">
+  <member name="default_sort" type="string" default="&quot;\&quot;DoNotAllowSales\&quot; ASC, \&quot;Name\&quot; ASC&quot;" visibility="private" line="91">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -70,7 +70,7 @@
       </var>
     </docblock>
   </member>
-  <member name="singular_name" type="string" default="&quot;Country&quot;" visibility="private" line="99">
+  <member name="singular_name" type="string" default="&quot;Country&quot;" visibility="private" line="97">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -78,8 +78,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_singular_name" start="100" end="100" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="plural_name" type="string" default="&quot;Countries&quot;" visibility="private" line="106">
+  <method name="i18n_singular_name" start="98" end="98" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Countries&quot;" visibility="private" line="104">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -87,8 +87,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_plural_name" start="107" end="107" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="description" type="string" default="&quot;A country.&quot;" visibility="private" line="113">
+  <method name="i18n_plural_name" start="105" end="105" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;A country.&quot;" visibility="private" line="111">
     <docblock>
       <description compact="Standard SS variable."/>
       <var type="object">
@@ -96,7 +96,7 @@
       </var>
     </docblock>
   </member>
-  <method name="canCreate" start="120" end="122" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCreate" start="118" end="120" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <param type="object" variable="$member">
@@ -108,7 +108,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canView" start="129" end="131" abstract="false" final="false" static="false" visibility="public">
+  <method name="canView" start="127" end="130" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <param type="object" variable="$member">
@@ -120,7 +120,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canEdit" start="138" end="146" abstract="false" final="false" static="false" visibility="public">
+  <method name="canEdit" start="137" end="140" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <param type="object" variable="$member">
@@ -132,7 +132,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canDelete" start="153" end="155" abstract="false" final="false" static="false" visibility="public">
+  <method name="canDelete" start="147" end="152" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method"/>
       <param type="object" variable="$member">
@@ -144,7 +144,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="get_country_from_ip" start="162" end="169" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_country_from_ip" start="159" end="166" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="returns the country based on the Visitor Country Provider.">this is some sort of IP recogniser system (e.g. Geoip Class)</description>
       <return description="(country code)" type="object">
@@ -152,7 +152,7 @@
       </return>
     </docblock>
   </method>
-  <method name="get_country_dropdown" start="177" end="192" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_country_dropdown" start="174" end="189" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <return type="object">e.g.
@@ -163,7 +163,7 @@
     </docblock>
     <parameter name="showAllCountries" byreference="false" type="{unknown}" default="true"/>
   </method>
-  <method name="get_fixed_country_code" start="201" end="207" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_fixed_country_code" start="198" end="204" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="This function exists as a shortcut.">If there is only ONE allowed country code
 then a lot of checking of countries can be avoided.</description>
@@ -172,7 +172,7 @@ then a lot of checking of countries can be avoided.</description>
       </return>
     </docblock>
   </method>
-  <method name="countryCode2name" start="216" end="218" abstract="false" final="false" static="true" visibility="public">
+  <method name="countryCode2name" start="213" end="215" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <alias value="for EcommerceCountry::find_title"/>
@@ -183,7 +183,7 @@ then a lot of checking of countries can be avoided.</description>
     </docblock>
     <parameter name="code" byreference="false" type="{unknown}"/>
   </method>
-  <method name="find_title" start="224" end="233" abstract="false" final="false" static="true" visibility="public">
+  <method name="find_title" start="221" end="230" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="returns the country name from a code"/>
       <return type="object">
@@ -192,10 +192,10 @@ then a lot of checking of countries can be avoided.</description>
     </docblock>
     <parameter name="code" byreference="false" type="{unknown}"/>
     <inline>
-      <comment value="check if code was provided, and is found in the country array" line="226"/>
+      <comment value="check if code was provided, and is found in the country array" line="223"/>
     </inline>
   </method>
-  <member name="get_country_cache" type="{unknown}" default="null" visibility="private" line="239">
+  <member name="get_country_cache" type="{unknown}" default="null" visibility="private" line="236">
     <docblock>
       <description compact="Memory for the customer's country."/>
       <var description="| String" type="object">
@@ -203,8 +203,8 @@ then a lot of checking of countries can be avoided.</description>
       </var>
     </docblock>
   </member>
-  <method name="reset_get_country_cache" start="240" end="240" abstract="false" final="false" static="true" visibility="public"/>
-  <method name="get_country" start="248" end="280" abstract="false" final="false" static="true" visibility="public">
+  <method name="reset_get_country_cache" start="237" end="237" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="get_country" start="245" end="277" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="This function works out the most likely country for the current order."/>
       <param type="object" variable="$recalculate">
@@ -216,15 +216,15 @@ then a lot of checking of countries can be avoided.</description>
     </docblock>
     <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
     <inline>
-      <comment value="1. fixed country is first" line="251"/>
-      <comment value="2. check shipping address" line="254"/>
-      <comment value="3. check GEOIP information" line="258"/>
-      <comment value="4 check default country set in GEO IP...." line="261"/>
-      <comment value="5. take the FIRST country from the get_allowed_country_codes" line="264"/>
-      <comment value="we stop at the first one... as we have no idea which one is the best." line="269"/>
+      <comment value="1. fixed country is first" line="248"/>
+      <comment value="2. check shipping address" line="251"/>
+      <comment value="3. check GEOIP information" line="255"/>
+      <comment value="4 check default country set in GEO IP...." line="258"/>
+      <comment value="5. take the FIRST country from the get_allowed_country_codes" line="261"/>
+      <comment value="we stop at the first one... as we have no idea which one is the best." line="266"/>
     </inline>
   </method>
-  <member name="allow_sales_cache" type="{unknown}" default="null" visibility="private" line="286">
+  <member name="allow_sales_cache" type="{unknown}" default="null" visibility="private" line="283">
     <docblock>
       <description compact="Memory for allow country to check"/>
       <var description="| Boolean" type="object">
@@ -232,8 +232,8 @@ then a lot of checking of countries can be avoided.</description>
       </var>
     </docblock>
   </member>
-  <method name="reset_allow_sales_cache" start="287" end="287" abstract="false" final="false" static="true" visibility="public"/>
-  <method name="allow_sales" start="294" end="310" abstract="false" final="false" static="true" visibility="public">
+  <method name="reset_allow_sales_cache" start="284" end="284" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="allow_sales" start="291" end="307" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="Checks if we are allowed to sell to the current country."/>
       <return type="object">
@@ -241,7 +241,7 @@ then a lot of checking of countries can be avoided.</description>
       </return>
     </docblock>
   </method>
-  <method name="get_country_id" start="318" end="329" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_country_id" start="315" end="326" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="returns the ID of the country."/>
       <param type="object" variable="$countryCode">
@@ -253,7 +253,7 @@ then a lot of checking of countries can be avoided.</description>
     </docblock>
     <parameter name="countryCode" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="get_default_array" start="336" end="350" abstract="false" final="false" static="true" visibility="protected">
+  <method name="get_default_array" start="333" end="347" abstract="false" final="false" static="true" visibility="protected">
     <docblock>
       <description compact="returns an array of Codes =&gt; Names of all countries that can be used.">Use "list_of_allowed_entries_for_dropdown" to get the list.</description>
       <return type="object">
@@ -261,18 +261,18 @@ then a lot of checking of countries can be avoided.</description>
       </return>
     </docblock>
   </method>
-  <method name="getCMSFields" start="352" end="365" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="requireDefaultRecords" start="371" end="377" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCMSFields" start="349" end="362" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="requireDefaultRecords" start="368" end="374" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
     </docblock>
   </method>
-  <method name="onBeforeWrite" start="384" end="388" abstract="false" final="false" static="false" visibility="public">
+  <method name="onBeforeWrite" start="381" end="385" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method cleans up codes"/>
     </docblock>
   </method>
-  <member name="for_current_order_only_show_countries" type="array" visibility="private" line="404">
+  <member name="for_current_order_only_show_countries" type="array" visibility="private" line="401">
     <docblock>
       <description compact="List of countries that should be shown"/>
       <param description="should be country codes e.g. array(&quot;NZ&quot;, &quot;NP&quot;, &quot;AU&quot;);" type="object" variable="$a:">
@@ -283,14 +283,14 @@ then a lot of checking of countries can be avoided.</description>
       </var>
     </docblock>
   </member>
-  <method name="get_for_current_order_only_show_countries" start="405" end="405" abstract="false" final="false" static="true" visibility="public"/>
-  <method name="set_for_current_order_only_show_countries" start="406" end="414" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_for_current_order_only_show_countries" start="402" end="402" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="set_for_current_order_only_show_countries" start="403" end="411" abstract="false" final="false" static="true" visibility="public">
     <parameter name="a" byreference="false" type="array"/>
     <inline>
-      <comment value="we INTERSECT here so that only countries allowed by all forces (modifiers) are added." line="408"/>
+      <comment value="we INTERSECT here so that only countries allowed by all forces (modifiers) are added." line="405"/>
     </inline>
   </method>
-  <member name="for_current_order_do_not_show_countries" type="array" visibility="private" line="421">
+  <member name="for_current_order_do_not_show_countries" type="array" visibility="private" line="418">
     <docblock>
       <description compact="List of countries that should NOT be shown"/>
       <param description="should be country codes e.g. array(&quot;NZ&quot;, &quot;NP&quot;, &quot;AU&quot;);" type="object" variable="$a:">
@@ -301,14 +301,14 @@ then a lot of checking of countries can be avoided.</description>
       </var>
     </docblock>
   </member>
-  <method name="get_for_current_order_do_not_show_countries" start="422" end="422" abstract="false" final="false" static="true" visibility="public"/>
-  <method name="set_for_current_order_do_not_show_countries" start="423" end="426" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_for_current_order_do_not_show_countries" start="419" end="419" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="set_for_current_order_do_not_show_countries" start="420" end="423" abstract="false" final="false" static="true" visibility="public">
     <parameter name="a" byreference="false" type="array"/>
     <inline>
-      <comment value="We MERGE here because several modifiers may limit the countries" line="424"/>
+      <comment value="We MERGE here because several modifiers may limit the countries" line="421"/>
     </inline>
   </method>
-  <member name="list_of_allowed_entries_for_dropdown_array" type="array" visibility="private" line="432">
+  <member name="list_of_allowed_entries_for_dropdown_array" type="array" visibility="private" line="429">
     <docblock>
       <description/>
       <var type="object">
@@ -316,7 +316,7 @@ then a lot of checking of countries can be avoided.</description>
       </var>
     </docblock>
   </member>
-  <method name="list_of_allowed_entries_for_dropdown" start="438" end="460" abstract="false" final="false" static="true" visibility="public">
+  <method name="list_of_allowed_entries_for_dropdown" start="435" end="457" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="takes the defaultArray and limits it with &quot;only show&quot; and &quot;do not show&quot; value, relevant for the current order."/>
       <return description="(Code, Title)" type="object">
@@ -324,7 +324,7 @@ then a lot of checking of countries can be avoided.</description>
       </return>
     </docblock>
   </method>
-  <method name="code_allowed" start="467" end="469" abstract="false" final="false" static="true" visibility="public">
+  <method name="code_allowed" start="464" end="466" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="checks if a code is allowed"/>
       <param description="- e.g. NZ, NSW, or CO" type="object" variable="$code">
@@ -336,7 +336,7 @@ then a lot of checking of countries can be avoided.</description>
     </docblock>
     <parameter name="code" byreference="false" type="{unknown}"/>
   </method>
-  <method name="AllowSales" start="475" end="475" abstract="false" final="false" static="false" visibility="public">
+  <method name="AllowSales" start="472" end="472" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Casted variable to show if sales are allowed to this country."/>
       <return type="object">
@@ -344,8 +344,8 @@ then a lot of checking of countries can be avoided.</description>
       </return>
     </docblock>
   </method>
-  <method name="getAllowSales" start="476" end="483" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="AllowSalesNice" start="489" end="489" abstract="false" final="false" static="false" visibility="public">
+  <method name="getAllowSales" start="473" end="480" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="AllowSalesNice" start="486" end="486" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Casted variable to show if sales are allowed to this country."/>
       <return type="object">
@@ -353,5 +353,5 @@ then a lot of checking of countries can be avoided.</description>
       </return>
     </docblock>
   </method>
-  <method name="getAllowSalesNice" start="490" end="497" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getAllowSalesNice" start="487" end="494" abstract="false" final="false" static="false" visibility="public"/>
 </class>

@@ -3,3 +3,8 @@
 #    - ecommerce/javascript/EcomPrintAndMail.js
 
 
+#Injector:
+  #EcommercePaymentSupportedMethodsProvider:
+    #class: MyEcommercePaymentSupportedMethodsProvider
+
+

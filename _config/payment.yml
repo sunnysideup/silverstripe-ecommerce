@@ -1,5 +1,5 @@
 
-Only:
+only:
   environment: 'dev'
 ---
 EcommercePayment:

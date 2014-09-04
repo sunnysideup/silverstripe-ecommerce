@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCodeFilter" namespace="" name="EcommerceCodeFilter" abstract="false" final="false" start="5" end="54">
-  <file path="./../../../code/dev" file="EcommerceCodeFilter.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/dev/EcommerceCodeFilter.php" size="1476" time="2013-09-06T09:37:08+12:00" unixtime="1378417028" sha1="ff84e3e63cd6aa033f2e75e43837a21135aab06f"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCodeFilter" namespace="" name="EcommerceCodeFilter" abstract="false" final="false" start="5" end="63">
+  <file path="./../../../code/dev" file="EcommerceCodeFilter.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/dev/EcommerceCodeFilter.php" size="1535" time="2014-08-07T15:15:08+12:00" unixtime="1407381308" sha1="f488e413559f98450d7645d532693d52ad6d104b"/>
   <docblock>
     <description/>
   </docblock>
   <extends full="Object" namespace="" name="Object"/>
-  <member name="replacements" type="array" visibility="private" line="10">
+  <member name="regexReplacements" type="array" visibility="protected" line="10">
     <docblock>
       <description/>
       <var type="object">
@@ -13,7 +13,15 @@
       </var>
     </docblock>
   </member>
-  <method name="checkCode" start="27" end="53" abstract="false" final="false" static="false" visibility="public">
+  <member name="straightReplacements" type="array" visibility="protected" line="19">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="checkCode" start="32" end="62" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="makes sure that code is unique and gets rid of special characters should be run in onBeforeWrite"/>
       <param description="| String $obj" type="object">
@@ -23,9 +31,9 @@
     <parameter name="obj" byreference="false" type="{unknown}"/>
     <parameter name="fieldName" byreference="false" type="string" default="&quot;Code&quot;"/>
     <inline>
-      <comment value="exception dealing with Strings" line="28"/>
-      <comment value="make upper-case" line="43"/>
-      <comment value="check for other ones." line="45"/>
+      <comment value="exception dealing with Strings" line="33"/>
+      <comment value="make upper-case" line="51"/>
+      <comment value="check for other ones." line="53"/>
     </inline>
   </method>
 </class>

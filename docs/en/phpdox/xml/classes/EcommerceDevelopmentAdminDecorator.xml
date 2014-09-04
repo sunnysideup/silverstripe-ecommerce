@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceDevelopmentAdminDecorator" namespace="" name="EcommerceDevelopmentAdminDecorator" abstract="false" final="false" start="15" end="31">
-  <file path="./../../../code/cms/dev" file="EcommerceDevelopmentAdminDecorator.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/cms/dev/EcommerceDevelopmentAdminDecorator.php" size="732" time="2014-04-19T23:19:17+12:00" unixtime="1397906357" sha1="f0a56a66f2eceef5f54695a211ea7bd04cfcb4da"/>
+  <file path="./../../../code/cms/dev" file="EcommerceDevelopmentAdminDecorator.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/cms/dev/EcommerceDevelopmentAdminDecorator.php" size="732" time="2014-04-07T23:38:32+12:00" unixtime="1396870712" sha1="f0a56a66f2eceef5f54695a211ea7bd04cfcb4da"/>
   <docblock>
     <description compact="EcommerceDevelopmentAdminDecorator adds extra functionality to the DevelopmentAdmin It creates a developer view (as in www.mysite.com/dev/) specifically for ecommerce."/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>

@@ -109,7 +109,7 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 */
 	public function Link($action = null) {
 		return Controller::join_links(
-			Director::BaseURL(), 
+			Director::BaseURL(),
 			'dev/ecommerce/',
 			$action
 		);
@@ -128,7 +128,8 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $overallconfig = array(
-		"ecommercetaskcheckconfiguration"
+		"ecommercetaskcheckconfiguration",
+		"ecommercetaskapiandmore"
 	);
 
 	/**

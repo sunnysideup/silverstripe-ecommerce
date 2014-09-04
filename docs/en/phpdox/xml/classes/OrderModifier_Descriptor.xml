@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderModifier_Descriptor" namespace="" name="OrderModifier_Descriptor" abstract="false" final="false" start="765" end="942">
-  <file path="./../../../code/model" file="OrderModifier.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/OrderModifier.php" size="25295" time="2014-04-19T23:19:18+12:00" unixtime="1397906358" sha1="cd8557febca7f494665616da45fddcc246550bcd"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderModifier_Descriptor" namespace="" name="OrderModifier_Descriptor" abstract="false" final="false" start="767" end="943">
+  <file path="./../../../code/model" file="OrderModifier.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/OrderModifier.php" size="25444" time="2014-08-10T21:48:35+12:00" unixtime="1407664115" sha1="aa45fb8c22f1bf9ec2ce6ec6eacfc5dc6a9a065d"/>
   <extends full="DataObject" namespace="" name="DataObject"/>
-  <member name="db" type="array" visibility="private" line="771">
+  <member name="db" type="array" visibility="private" line="773">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -10,7 +10,7 @@
       </var>
     </docblock>
   </member>
-  <member name="has_one" type="array" visibility="private" line="781">
+  <member name="has_one" type="array" visibility="private" line="783">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -18,7 +18,7 @@
       </var>
     </docblock>
   </member>
-  <member name="indexes" type="array" visibility="private" line="789">
+  <member name="indexes" type="array" visibility="private" line="791">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -26,7 +26,7 @@
       </var>
     </docblock>
   </member>
-  <member name="searchable_fields" type="array" visibility="private" line="797">
+  <member name="searchable_fields" type="array" visibility="private" line="799">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -34,7 +34,7 @@
       </var>
     </docblock>
   </member>
-  <member name="field_labels" type="array" visibility="private" line="806">
+  <member name="field_labels" type="array" visibility="private" line="808">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -42,7 +42,7 @@
       </var>
     </docblock>
   </member>
-  <member name="summary_fields" type="array" visibility="private" line="814">
+  <member name="summary_fields" type="array" visibility="private" line="816">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -50,7 +50,7 @@
       </var>
     </docblock>
   </member>
-  <member name="casting" type="array" visibility="private" line="824">
+  <member name="casting" type="array" visibility="private" line="826">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -58,7 +58,7 @@
       </var>
     </docblock>
   </member>
-  <member name="singular_name" type="string" default="&quot;Order Modifier Description&quot;" visibility="private" line="832">
+  <member name="singular_name" type="string" default="&quot;Order Modifier Description&quot;" visibility="private" line="834">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -66,8 +66,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_singular_name" start="833" end="833" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="plural_name" type="string" default="&quot;Order Modifier Descriptions&quot;" visibility="private" line="839">
+  <method name="i18n_singular_name" start="835" end="835" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Order Modifier Descriptions&quot;" visibility="private" line="841">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -75,8 +75,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_plural_name" start="840" end="840" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="canCreate" start="847" end="849" abstract="false" final="false" static="false" visibility="public">
+  <method name="i18n_plural_name" start="842" end="842" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="canCreate" start="849" end="851" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <param type="object" variable="$member">
@@ -88,7 +88,23 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canEdit" start="856" end="861" abstract="false" final="false" static="false" visibility="public">
+  <method name="canEdit" start="858" end="862" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    <inline>
+      <comment value="if(Permission::checkMember($member, Config::inst()-&gt;get(&quot;EcommerceRole&quot;, &quot;admin_permission_code&quot;))) {return true;}" line="859"/>
+      <comment value="we can only edit Order Modifiers that have not been submitted yet..." line="860"/>
+    </inline>
+  </method>
+  <method name="canDelete" start="869" end="871" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <param type="object" variable="$member">
@@ -100,19 +116,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canDelete" start="868" end="870" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description compact="standard SS method"/>
-      <param type="object" variable="$member">
-        <type full="Member" namespace="" name="Member"/>
-      </param>
-      <return type="object">
-        <type full="Boolean" namespace="" name="Boolean"/>
-      </return>
-    </docblock>
-    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-  </method>
-  <method name="getCMSFields" start="876" end="882" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCMSFields" start="877" end="883" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <return type="object">
@@ -120,7 +124,7 @@
       </return>
     </docblock>
   </method>
-  <method name="RealName" start="888" end="888" abstract="false" final="false" static="false" visibility="public">
+  <method name="RealName" start="889" end="889" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="casted Variable"/>
       <return type="object">
@@ -128,18 +132,18 @@
       </return>
     </docblock>
   </method>
-  <method name="getRealName" start="889" end="895" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="onBeforeWrite" start="900" end="905" abstract="false" final="false" static="false" visibility="public">
+  <method name="getRealName" start="890" end="896" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="onBeforeWrite" start="901" end="906" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="stardard SS method"/>
     </docblock>
   </method>
-  <method name="requireDefaultRecords" start="911" end="940" abstract="false" final="false" static="false" visibility="public">
+  <method name="requireDefaultRecords" start="912" end="941" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Adds OrderModifier_Descriptors and deletes the irrelevant ones stardard SS method"/>
     </docblock>
     <inline>
-      <comment value="delete the ones that are not relevant" line="930"/>
+      <comment value="delete the ones that are not relevant" line="931"/>
     </inline>
   </method>
 </class>

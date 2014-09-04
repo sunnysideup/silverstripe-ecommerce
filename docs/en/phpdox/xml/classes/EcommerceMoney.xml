@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceMoney" namespace="" name="EcommerceMoney" abstract="false" final="false" start="3" end="65">
-  <file path="./../../../code/money" file="EcommerceMoney.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/money/EcommerceMoney.php" size="2215" time="2013-08-21T17:54:31+12:00" unixtime="1377064471" sha1="c933f2f1b78bbb1f75ac499f4c608906325c02e7"/>
+  <file path="./../../../code/money" file="EcommerceMoney.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/money/EcommerceMoney.php" size="2215" time="2014-03-27T11:45:32+13:00" unixtime="1395873932" sha1="c933f2f1b78bbb1f75ac499f4c608906325c02e7"/>
   <extends full="Extension" namespace="" name="Extension"/>
   <method name="get_default_symbol" start="5" end="8" abstract="false" final="false" static="true" visibility="public">
     <parameter name="currency" byreference="false" type="{unknown}"/>

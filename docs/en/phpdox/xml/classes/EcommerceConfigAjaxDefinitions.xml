@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceConfigAjaxDefinitions" namespace="" name="EcommerceConfigAjaxDefinitions" abstract="false" final="false" start="13" end="211">
-  <file path="./../../../code/config" file="EcommerceConfigAjaxDefinitions.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/config/EcommerceConfigAjaxDefinitions.php" size="4806" time="2014-05-06T12:23:47+12:00" unixtime="1399335827" sha1="234208b84a66ac9fbc0af500553c532fddd7d930"/>
+  <file path="./../../../code/config" file="EcommerceConfigAjaxDefinitions.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/config/EcommerceConfigAjaxDefinitions.php" size="4806" time="2014-05-06T12:59:24+12:00" unixtime="1399337964" sha1="234208b84a66ac9fbc0af500553c532fddd7d930"/>
   <docblock>
     <description compact="This class defines all the names for IDs and Classes that are used within the e-commerce ajax framework."/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>

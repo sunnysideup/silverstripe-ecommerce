@@ -77,16 +77,22 @@ This method is public so that you can retrieve a list of products for a product 
         <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>public function currentInitialProducts([string
-        $extraFilter = ''] )
+          <code>public function currentInitialProducts([
+        $extraFilter = null,
+            [string
+        $alternativeFilterKey = '']] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$extraFilter</code>
                 —
-                string</dt>
+                </dt>
           <dd/>
+          <dt><code>$alternativeFilterKey</code>
+                —
+                string</dt>
+          <dd>Alternative standard filter to be used.</dd>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">

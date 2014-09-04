@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskReviewSearches" namespace="" name="EcommerceTaskReviewSearches" abstract="false" final="false" start="19" end="79">
-  <file path="./../../../code/tasks" file="EcommerceTaskReviewSearches.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/tasks/EcommerceTaskReviewSearches.php" size="2692" time="2014-05-11T15:45:02+12:00" unixtime="1399779902" sha1="fc830ad3fd8b038149f379ea8e19fdc2ef5440ed"/>
+  <file path="./../../../code/tasks" file="EcommerceTaskReviewSearches.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskReviewSearches.php" size="2692" time="2014-05-06T14:40:27+12:00" unixtime="1399344027" sha1="fc830ad3fd8b038149f379ea8e19fdc2ef5440ed"/>
   <docblock>
     <description compact="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs"/>
     <todo value=": compare to default">shows you the link to remove the current cart</todo>

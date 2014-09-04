@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderModifierForm_Controller" namespace="" name="OrderModifierForm_Controller" abstract="false" final="false" start="111" end="186">
-  <file path="./../../../code/forms" file="OrderModifierForm.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/OrderModifierForm.php" size="4891" time="2014-05-06T12:04:38+12:00" unixtime="1399334678" sha1="236b12388edab24f04e6a83639319bde6b67a45a"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderModifierForm_Controller" namespace="" name="OrderModifierForm_Controller" abstract="false" final="false" start="111" end="189">
+  <file path="./../../../code/forms" file="OrderModifierForm.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/forms/OrderModifierForm.php" size="4909" time="2014-08-24T21:07:18+12:00" unixtime="1408871238" sha1="ab90a369144f1a794cc190519c1e5578199ffcaa"/>
   <docblock>
     <description compact="This controller allows you to submit modifier forms from anywhere on the site, Most likely this will be from the the cart / checkout page."/>
   </docblock>
@@ -41,7 +41,7 @@
     </docblock>
     <parameter name="name" byreference="false" type="{unknown}"/>
   </method>
-  <method name="Link" start="173" end="180" abstract="false" final="false" static="false" visibility="public">
+  <method name="Link" start="173" end="183" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <todo value=": check this method">It looks like this: /$ClassName/$action/</todo>
@@ -51,5 +51,5 @@
     </docblock>
     <parameter name="action" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="removemodifier" start="182" end="184" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="removemodifier" start="185" end="187" abstract="false" final="false" static="false" visibility="public"/>
 </class>

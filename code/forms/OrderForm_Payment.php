@@ -19,7 +19,7 @@ class OrderForm_Payment extends Form {
 		$bottomFields = new CompositeField();
 		$bottomFields->setID('BottomOrder');
 		if($order->Total() > 0) {
-			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceWithCurrencyCode(false));
+			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceWithCurrencyCode(false), $order);
 			foreach($paymentFields as $paymentField) {
 				$bottomFields->push($paymentField);
 			}

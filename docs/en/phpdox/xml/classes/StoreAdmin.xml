@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="StoreAdmin" namespace="" name="StoreAdmin" abstract="false" final="false" start="13" end="69">
-  <file path="./../../../code/cms" file="StoreAdmin.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/cms/StoreAdmin.php" size="1336" time="2014-04-19T23:19:17+12:00" unixtime="1397906357" sha1="7784f448b9d11eeb86ae52c93b2f4e8c79ff8bc3"/>
+  <file path="./../../../code/cms" file="StoreAdmin.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/cms/StoreAdmin.php" size="1373" time="2014-08-15T14:38:13+12:00" unixtime="1408070293" sha1="76b36abb5dc064b31f5084a1b229a33808bf8710"/>
   <docblock>
     <description/>
     <description/>
@@ -26,7 +26,7 @@
       </var>
     </docblock>
   </member>
-  <member name="menu_priority" type="integer" default="23" visibility="private" line="32">
+  <member name="menu_priority" type="float" default="3.3" visibility="private" line="32">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -34,7 +34,7 @@
       </var>
     </docblock>
   </member>
-  <member name="menu_icon" type="string" default="&quot;&quot;" visibility="private" line="38">
+  <member name="menu_icon" type="string" default="&quot;ecommerce/images/icons/cart-file.gif&quot;" visibility="private" line="38">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">

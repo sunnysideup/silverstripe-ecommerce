@@ -83,9 +83,10 @@
                     </li><li>public static String <a title="OrderAddress" href="../classes/OrderAddress/get_region_field_ID.xhtml">get_region_field_ID</a>()
                     </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/addReadOnlyField.xhtml">addReadOnlyField</a>()
                     </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/removeReadOnlyField.xhtml">removeReadOnlyField</a>()
-                    </li><li>public Boolean <a title="OrderAddress" href="../classes/OrderAddress/canCreate.xhtml">canCreate</a>()
+                    </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/canCreate.xhtml">canCreate</a>()
                     </li><li>public Boolean <a title="OrderAddress" href="../classes/OrderAddress/canView.xhtml">canView</a>()
                     </li><li>public Boolean <a title="OrderAddress" href="../classes/OrderAddress/canEdit.xhtml">canEdit</a>()
+                    </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/canDelete.xhtml">canDelete</a>()
                     </li><li>public FieldList <a title="OrderAddress" href="../classes/OrderAddress/scaffoldSearchFields.xhtml">scaffoldSearchFields</a>()
                     </li><li>protected FieldList <a title="OrderAddress" href="../classes/OrderAddress/getEcommerceFields.xhtml">getEcommerceFields</a>()
                     </li><li>protected TextField <a title="OrderAddress" href="../classes/OrderAddress/getPostalCodeField.xhtml">getPostalCodeField</a>()
@@ -142,7 +143,7 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">470+</td>
+            <td class="nummeric">466+</td>
             <td>: can wre write $this-&gt;Order() instead????</td>
           </tr>
         </table>
@@ -226,8 +227,12 @@
                 — Saves region - both shipping and billing fields are saved here for convenience sake (only one actually gets saved) NOTE: do not call this method SetCountry as this has a special meaning!</li>
             <li id="addReadOnlyField"><a title="OrderAddress" href="../classes/OrderAddress/addReadOnlyField.xhtml">addReadOnlyField()</a>
                 — sets a field to readonly state we use this when modifiers have been set that require a field to be a certain value for example - a PostalCode field maybe set in the modifier.</li>
-            <li id="canCreate"><a title="OrderAddress" href="../classes/OrderAddress/canCreate.xhtml">canCreate()</a>
-                — standard SS method</li>
+            <li id="canCreate">
+              <a title="OrderAddress" href="../classes/OrderAddress/canCreate.xhtml">canCreate()</a>
+            </li>
+            <li id="canDelete">
+              <a title="OrderAddress" href="../classes/OrderAddress/canDelete.xhtml">canDelete()</a>
+            </li>
             <li id="canEdit"><a title="OrderAddress" href="../classes/OrderAddress/canEdit.xhtml">canEdit()</a>
                 — Standard SS method This is an important method.</li>
             <li id="canView"><a title="OrderAddress" href="../classes/OrderAddress/canView.xhtml">canView()</a>

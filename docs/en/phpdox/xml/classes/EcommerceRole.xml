@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceRole" namespace="" name="EcommerceRole" abstract="false" final="false" start="14" end="414">
-  <file path="./../../../code/model/extensions" file="EcommerceRole.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/extensions/EcommerceRole.php" size="13160" time="2014-04-19T23:19:18+12:00" unixtime="1397906358" sha1="b8474a9f3f62cd1ea59ae7cd65766d10210bfe43"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceRole" namespace="" name="EcommerceRole" abstract="false" final="false" start="14" end="438">
+  <file path="./../../../code/model/extensions" file="EcommerceRole.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/extensions/EcommerceRole.php" size="13877" time="2014-08-24T21:07:18+12:00" unixtime="1408871238" sha1="c6c2698034d3bbd2518ff3a520c7afd32e2a155d"/>
   <docblock>
     <description/>
     <description compact="class for the ecommerce module."/>
@@ -10,6 +10,7 @@
     <inspiration value=": Silverstripe Ltd, Jeremy"/>
   </docblock>
   <extends full="DataExtension" namespace="" name="DataExtension"/>
+  <implements full="PermissionProvider" namespace="" name="PermissionProvider"/>
   <member name="max_count_of_members_in_array" type="integer" default="1500" visibility="private" line="16"/>
   <member name="api_access" type="array" visibility="private" line="18"/>
   <member name="db" type="array" visibility="private" line="29">
@@ -19,15 +20,12 @@
   </member>
   <member name="has_one" type="array" visibility="private" line="33"/>
   <member name="has_many" type="array" visibility="private" line="37"/>
-  <method name="get_customer_group" start="44" end="49" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_customer_group" start="44" end="48" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="return DataObject (Group) | NULL"/>
     </docblock>
-    <inline>
-      <comment value="$customerName = EcommerceConfig::get(&quot;EcommerceRole&quot;, &quot;customer_group_name&quot;);" line="46"/>
-    </inline>
   </method>
-  <method name="list_of_customers" start="59" end="88" abstract="false" final="false" static="true" visibility="public">
+  <method name="list_of_customers" start="58" end="87" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="returns an aray of customers The unselect option shows an extra line, basically allowing you to deselect the current option."/>
       <param type="object" variable="$showUnselectedOption">
@@ -39,13 +37,13 @@
     </docblock>
     <parameter name="showUnselectedOption" byreference="false" type="{unknown}" default="false"/>
     <inline>
-      <comment value="start array" line="60"/>
-      <comment value="get customer group" line="65"/>
-      <comment value="fill array" line="70"/>
-      <comment value="sort in a natural order" line="85"/>
+      <comment value="start array" line="59"/>
+      <comment value="get customer group" line="64"/>
+      <comment value="fill array" line="69"/>
+      <comment value="sort in a natural order" line="84"/>
     </inline>
   </method>
-  <method name="current_member_is_shop_admin" start="97" end="105" abstract="false" final="false" static="true" visibility="public">
+  <method name="current_member_is_shop_admin" start="96" end="104" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="tells us if the current member is in the Shop Administrators Group."/>
       <param description="| Null $member" type="object">
@@ -59,7 +57,7 @@
       <type full="\\Member" namespace="\" name="Member"/>
     </parameter>
   </method>
-  <method name="get_admin_group" start="110" end="114" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_admin_group" start="109" end="113" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <return description="(Group) | NULL" type="object">
@@ -67,7 +65,23 @@
       </return>
     </docblock>
   </method>
-  <method name="updateCMSFields" start="123" end="140" abstract="false" final="false" static="false" visibility="public">
+  <method name="get_default_shop_admin_user" start="118" end="123" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(Member) | NULL" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="providePermissions" start="130" end="144" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="creates two permission roles.">standard SS Method</description>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="updateCMSFields" start="153" end="173" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Update the CMS Fields for /admin/security"/>
       <param type="object" variable="$fields">
@@ -81,10 +95,10 @@
       <type full="\\FieldList" namespace="\" name="FieldList"/>
     </parameter>
     <inline>
-      <comment value="$orderField = $fields-&gt;dataFieldByName(&quot;Orders&quot;);" line="124"/>
+      <comment value="$orderField = $fields-&gt;dataFieldByName(&quot;Orders&quot;);" line="154"/>
     </inline>
   </method>
-  <method name="SetPreferredCurrency" start="146" end="153" abstract="false" final="false" static="false" visibility="public">
+  <method name="SetPreferredCurrency" start="179" end="186" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Save a preferred currency for a member."/>
       <param description="- object for the currency" type="object" variable="$currency">
@@ -95,7 +109,7 @@
       <type full="\\EcommerceCurrency" namespace="\" name="EcommerceCurrency"/>
     </parameter>
   </method>
-  <method name="getEcommerceFieldsForCMS" start="160" end="186" abstract="false" final="false" static="false" visibility="public">
+  <method name="getEcommerceFieldsForCMS" start="193" end="219" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="get CMS fields describing the member in the CMS when viewing the order."/>
       <return type="object">
@@ -103,7 +117,7 @@
       </return>
     </docblock>
   </method>
-  <method name="getEcommerceFields" start="192" end="263" abstract="false" final="false" static="false" visibility="public">
+  <method name="getEcommerceFields" start="225" end="296" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param description="add extra fields." type="object" variable="$additionalFields:">
@@ -114,13 +128,13 @@
       </return>
     </docblock>
   </method>
-  <method name="getEcommerceRequiredFields" start="271" end="294" abstract="false" final="false" static="false" visibility="public">
+  <method name="getEcommerceRequiredFields" start="304" end="327" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Return which member fields should be required on {@link OrderForm} and {@link ShopAccountForm}."/>
       <return type="array"/>
     </docblock>
   </method>
-  <method name="IsShopAdmin" start="300" end="307" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsShopAdmin" start="333" end="340" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Is the member a member of the ShopAdmin Group"/>
       <return type="object">
@@ -128,7 +142,7 @@
       </return>
     </docblock>
   </method>
-  <method name="LastOrder" start="314" end="326" abstract="false" final="false" static="false" visibility="public">
+  <method name="LastOrder" start="347" end="359" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the last (submitted) order  by the member"/>
       <param description="- set to TRUE to include unsubmitted orders" type="object" variable="$includeUnsubmittedOrders">
@@ -140,15 +154,15 @@
     </docblock>
     <parameter name="includeUnsubmittedOrders" byreference="false" type="{unknown}" default="false"/>
     <inline>
-      <comment value="limit to 10" line="315"/>
+      <comment value="limit to 10" line="348"/>
     </inline>
   </method>
-  <method name="onAfterWrite" start="332" end="340" abstract="false" final="false" static="false" visibility="public">
+  <method name="onAfterWrite" start="365" end="373" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method Make sure the member is added as a customer"/>
     </docblock>
   </method>
-  <method name="previousOrderAddresses" start="351" end="389" abstract="false" final="false" static="false" visibility="public">
+  <method name="previousOrderAddresses" start="384" end="422" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Finds previous addresses from the member of the current address"/>
       <param type="object" variable="$type">
@@ -172,7 +186,7 @@
     <parameter name="onlyLastRecord" byreference="false" type="{unknown}" default="false"/>
     <parameter name="keepDoubles" byreference="false" type="{unknown}" default="false"/>
   </method>
-  <method name="previousOrderAddress" start="397" end="402" abstract="false" final="false" static="false" visibility="public">
+  <method name="previousOrderAddress" start="430" end="435" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Finds the last address used by this member"/>
       <param type="object" variable="$type">
@@ -187,10 +201,5 @@
     </docblock>
     <parameter name="type" byreference="false" type="string" default="&quot;BillingAddress&quot;"/>
     <parameter name="excludeID" byreference="false" type="integer" default="0"/>
-  </method>
-  <method name="requireDefaultRecords" start="408" end="411" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description/>
-    </docblock>
   </method>
 </class>

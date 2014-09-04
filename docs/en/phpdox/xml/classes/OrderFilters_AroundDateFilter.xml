@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderFilters_AroundDateFilter" namespace="" name="OrderFilters_AroundDateFilter" abstract="false" final="false" start="13" end="66">
-  <file path="./../../../code/search/filters" file="OrderFilters.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/search/filters/OrderFilters.php" size="7153" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="407bb31f6bb55b976598375e2e7d9674c2c5d10b"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderFilters_AroundDateFilter" namespace="" name="OrderFilters_AroundDateFilter" abstract="false" final="false" start="13" end="63">
+  <file path="./../../../code/search/filters" file="OrderFilters.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/search/filters/OrderFilters.php" size="6914" time="2014-08-11T17:10:54+12:00" unixtime="1407733854" sha1="2d4c31a9d60c019c6027d2ed175edab83e9e2930"/>
   <docblock>
     <description/>
     <description/>
@@ -10,7 +10,7 @@
     <inspiration value=": Silverstripe Ltd, Jeremy"/>
   </docblock>
   <extends full="ExactMatchFilter" namespace="" name="ExactMatchFilter"/>
-  <member name="divider" type="integer" default="12" visibility="private" line="29">
+  <member name="divider" type="integer" default="3" visibility="private" line="29">
     <docblock>
       <description compact="The divider is used to work out the maximum number of days we should be from the date.">The Further back in time we go, the greater the margin of error.
 
@@ -25,7 +25,7 @@ All variables are in days.</description>
       </var>
     </docblock>
   </member>
-  <method name="apply" start="35" end="55" abstract="false" final="false" static="false" visibility="public">
+  <method name="apply" start="35" end="52" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return SQLQuery"/>
     </docblock>
@@ -33,12 +33,10 @@ All variables are in days.</description>
       <type full="\\DataQuery" namespace="\" name="DataQuery"/>
     </parameter>
     <inline>
-      <comment value="changed for PostgreSQL compatability" line="43"/>
-      <comment value="NOTE - we may wish to add DATEDIFF function to PostgreSQL schema, it's just that this would be the FIRST function added for SilverStripe" line="44"/>
-      <comment value="don't know whether functions should be used, hence the following code using an interval cast to an integer" line="47"/>
+      <comment value="don't know whether functions should be used, hence the following code using an interval cast to an integer" line="44"/>
     </inline>
   </method>
-  <method name="isEmpty" start="61" end="64" abstract="false" final="false" static="false" visibility="public">
+  <method name="isEmpty" start="58" end="61" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return Boolean"/>
     </docblock>

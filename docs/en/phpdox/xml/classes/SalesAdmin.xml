@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="SalesAdmin" namespace="" name="SalesAdmin" abstract="false" final="false" start="13" end="60">
-  <file path="./../../../code/cms" file="SalesAdmin.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/cms/SalesAdmin.php" size="2467" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="5e1375bd34c3bb557c2c8e4f2620f631a2d97f11"/>
+  <file path="./../../../code/cms" file="SalesAdmin.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/cms/SalesAdmin.php" size="1793" time="2014-08-15T14:38:13+12:00" unixtime="1408070293" sha1="c1c93f9a11a63c965a5d2fb293a0a9bef8c86fd9"/>
   <docblock>
     <description/>
     <description/>
@@ -26,7 +26,7 @@
       </var>
     </docblock>
   </member>
-  <member name="menu_priority" type="integer" default="1" visibility="private" line="31">
+  <member name="menu_priority" type="float" default="3.1" visibility="private" line="31">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -40,7 +40,7 @@
 If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')</description>
     </docblock>
   </member>
-  <member name="menu_icon" type="string" default="&quot;&quot;" visibility="private" line="44">
+  <member name="menu_icon" type="string" default="&quot;ecommerce/images/icons/money-file.gif&quot;" visibility="private" line="44">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderStatusLog_PaymentCheck" namespace="" name="OrderStatusLog_PaymentCheck" abstract="false" final="false" start="644" end="719">
-  <file path="./../../../code/model/process" file="OrderStatusLog.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/process/OrderStatusLog.php" size="20381" time="2013-08-29T12:03:23+12:00" unixtime="1377734603" sha1="dd00199c5834e09ae9b77b016f815b6fb01e6214"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderStatusLog_PaymentCheck" namespace="" name="OrderStatusLog_PaymentCheck" abstract="false" final="false" start="619" end="694">
+  <file path="./../../../code/model/process" file="OrderStatusLog.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/process/OrderStatusLog.php" size="20130" time="2014-08-25T17:15:42+12:00" unixtime="1408943742" sha1="9ef1b71d5e39401585cc8025a3a2a96254e22beb"/>
   <docblock>
     <description/>
     <description value=": We use this payment check class to double check that payment has arrived against">the order placed.  We do this independently of Order as a double-check.  It is important
@@ -14,9 +14,9 @@ it is important here that we do not add any payment details. Rather, all we have
     <inspiration value=": Silverstripe Ltd, Jeremy"/>
   </docblock>
   <extends full="OrderStatusLog" namespace="" name="OrderStatusLog"/>
-  <member name="defaults" type="array" visibility="private" line="646"/>
-  <member name="db" type="array" visibility="private" line="650"/>
-  <method name="canDelete" start="659" end="661" abstract="false" final="false" static="false" visibility="public">
+  <member name="defaults" type="array" visibility="private" line="621"/>
+  <member name="db" type="array" visibility="private" line="625"/>
+  <method name="canDelete" start="634" end="636" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method"/>
       <param type="object" variable="$member">
@@ -28,22 +28,22 @@ it is important here that we do not add any payment details. Rather, all we have
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <member name="searchable_fields" type="array" visibility="private" line="663"/>
-  <member name="summary_fields" type="array" visibility="private" line="671"/>
-  <member name="casting" type="array" visibility="private" line="677"/>
-  <method name="PaymentConfirmedNice" start="681" end="681" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="getPaymentConfirmedNice" start="682" end="682" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="singular_name" type="string" default="&quot;Payment Confirmation&quot;" visibility="private" line="684"/>
-  <method name="i18n_singular_name" start="685" end="685" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="plural_name" type="string" default="&quot;Payment Confirmations&quot;" visibility="private" line="687"/>
-  <method name="i18n_plural_name" start="688" end="688" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="getCMSFields" start="690" end="699" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="CustomerNote" start="706" end="706" abstract="false" final="false" static="false" visibility="public">
+  <member name="searchable_fields" type="array" visibility="private" line="638"/>
+  <member name="summary_fields" type="array" visibility="private" line="646"/>
+  <member name="casting" type="array" visibility="private" line="652"/>
+  <method name="PaymentConfirmedNice" start="656" end="656" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getPaymentConfirmedNice" start="657" end="657" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="singular_name" type="string" default="&quot;Payment Confirmation&quot;" visibility="private" line="659"/>
+  <method name="i18n_singular_name" start="660" end="660" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Payment Confirmations&quot;" visibility="private" line="662"/>
+  <method name="i18n_plural_name" start="663" end="663" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getCMSFields" start="665" end="674" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CustomerNote" start="681" end="681" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return String"/>
     </docblock>
   </method>
-  <method name="getCustomerNote" start="707" end="716" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getCustomerNote" start="682" end="691" abstract="false" final="false" static="false" visibility="public"/>
   <parent full="OrderStatusLog" namespace="" name="OrderStatusLog">
     <extends full="DataObject" namespace="" name="DataObject"/>
     <method name="InternalUseOnlyNice" start="66" end="66" abstract="false" final="false" static="false" visibility="public">
@@ -55,7 +55,7 @@ it is important here that we do not add any payment details. Rather, all we have
       </docblock>
     </method>
     <method name="getInternalUseOnlyNice" start="67" end="67" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="canView" start="75" end="90" abstract="false" final="false" static="false" visibility="public">
+    <method name="canCreate" start="74" end="77" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -67,7 +67,7 @@ it is important here that we do not add any payment details. Rather, all we have
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canDelete" start="97" end="99" abstract="false" final="false" static="false" visibility="public">
+    <method name="canView" start="84" end="94" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -79,7 +79,7 @@ it is important here that we do not add any payment details. Rather, all we have
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canCreate" start="106" end="108" abstract="false" final="false" static="false" visibility="public">
+    <method name="canEdit" start="102" end="107" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -91,9 +91,9 @@ it is important here that we do not add any payment details. Rather, all we have
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canEdit" start="115" end="120" abstract="false" final="false" static="false" visibility="public">
+    <method name="canDelete" start="115" end="117" abstract="false" final="false" static="false" visibility="public">
       <docblock>
-        <description compact="Standard SS method"/>
+        <description compact="Standard SS method logs can never be deleted..."/>
         <param type="object" variable="$member">
           <type full="Member" namespace="" name="Member"/>
         </param>
@@ -103,23 +103,23 @@ it is important here that we do not add any payment details. Rather, all we have
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="i18n_singular_name" start="144" end="144" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="i18n_plural_name" start="151" end="151" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="populateDefaults" start="168" end="171" abstract="false" final="false" static="false" visibility="public">
+    <method name="i18n_singular_name" start="141" end="141" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="148" end="148" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="populateDefaults" start="165" end="168" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS method"/>
       </docblock>
     </method>
-    <method name="getCMSFields" start="177" end="201" abstract="false" final="false" static="false" visibility="public">
+    <method name="getCMSFields" start="174" end="198" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="return FieldList"/>
       </docblock>
       <inline>
-        <comment value="OrderID Field" line="184"/>
-        <comment value="ClassName Field" line="190"/>
+        <comment value="OrderID Field" line="181"/>
+        <comment value="ClassName Field" line="187"/>
       </inline>
     </method>
-    <method name="Type" start="208" end="208" abstract="false" final="false" static="false" visibility="public">
+    <method name="Type" start="205" end="205" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description/>
         <return type="object">
@@ -127,8 +127,8 @@ it is important here that we do not add any payment details. Rather, all we have
         </return>
       </docblock>
     </method>
-    <method name="getType" start="209" end="211" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="scaffoldSearchFields" start="228" end="237" abstract="false" final="false" static="false" visibility="public">
+    <method name="getType" start="206" end="208" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="scaffoldSearchFields" start="225" end="234" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.">Some additional logic is included for switching field labels, based on
 how generic or specific the field type is.
@@ -142,23 +142,23 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </docblock>
       <parameter name="_params" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="onBeforeWrite" start="243" end="262" abstract="false" final="false" static="false" visibility="public">
+    <method name="onBeforeWrite" start="240" end="259" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS method"/>
       </docblock>
       <inline>
-        <comment value="START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS...." line="245"/>
-        <comment value="THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER..." line="246"/>
-        <comment value="END HACK TO PREVENT LOSS" line="253"/>
+        <comment value="START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS...." line="242"/>
+        <comment value="THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER..." line="243"/>
+        <comment value="END HACK TO PREVENT LOSS" line="250"/>
       </inline>
     </method>
-    <method name="CustomerNote" start="268" end="268" abstract="false" final="false" static="false" visibility="public">
+    <method name="CustomerNote" start="265" end="265" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="return String"/>
       </docblock>
     </method>
-    <method name="getCustomerNote" start="269" end="271" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="EcomConfig" start="278" end="280" abstract="false" final="false" static="false" visibility="protected">
+    <method name="getCustomerNote" start="266" end="268" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="EcomConfig" start="275" end="277" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the standard EcommerceDBConfig for use within OrderSteps."/>
         <return type="object">
@@ -166,7 +166,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="debug" start="287" end="289" abstract="false" final="false" static="false" visibility="public">
+    <method name="debug" start="284" end="286" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Debug helper method.">Can be called from /shoppingcart/debug/</description>
         <return type="object">

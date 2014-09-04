@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderEmailRecord" namespace="" name="OrderEmailRecord" abstract="false" final="false" start="16" end="194">
-  <file path="./../../../code/model/process" file="OrderEmailRecord.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/process/OrderEmailRecord.php" size="5156" time="2013-11-04T19:02:43+13:00" unixtime="1383544963" sha1="e62dfd15d76f27a2c2ab96058e306638b851932b"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderEmailRecord" namespace="" name="OrderEmailRecord" abstract="false" final="false" start="16" end="205">
+  <file path="./../../../code/model/process" file="OrderEmailRecord.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/process/OrderEmailRecord.php" size="5446" time="2014-07-20T11:41:08+12:00" unixtime="1405813268" sha1="638b7c95fe624ff5e4373098ba818fbec120f7a6"/>
   <docblock>
     <description/>
     <description value=": DataObject recording all order emails sent."/>
@@ -98,7 +98,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canEdit" start="120" end="120" abstract="false" final="false" static="false" visibility="public">
+  <method name="canView" start="120" end="123" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <param type="object" variable="$member">
@@ -110,7 +110,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canDelete" start="127" end="127" abstract="false" final="false" static="false" visibility="public">
+  <method name="canEdit" start="130" end="130" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <param type="object" variable="$member">
@@ -122,7 +122,19 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <member name="default_sort" type="string" default="&quot;\&quot;Created\&quot; DESC&quot;" visibility="private" line="134">
+  <method name="canDelete" start="137" end="137" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <member name="default_sort" type="string" default="&quot;\&quot;Created\&quot; DESC&quot;" visibility="private" line="145">
     <docblock>
       <description compact="standard SS variable"/>
       <return type="object">
@@ -130,7 +142,7 @@
       </return>
     </docblock>
   </member>
-  <method name="getCMSFields" start="140" end="147" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCMSFields" start="151" end="158" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <return type="object">
@@ -138,7 +150,7 @@
       </return>
     </docblock>
   </method>
-  <method name="scaffoldSearchFields" start="164" end="168" abstract="false" final="false" static="false" visibility="public">
+  <method name="scaffoldSearchFields" start="175" end="179" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.">Some additional logic is included for switching field labels, based on
 how generic or specific the field type is.
@@ -152,13 +164,13 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
     </docblock>
     <parameter name="_params" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="OrderStepNice" start="174" end="174" abstract="false" final="false" static="false" visibility="public">
+  <method name="OrderStepNice" start="185" end="185" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="casted variable  return String"/>
     </docblock>
   </method>
-  <method name="getOrderStepNice" start="175" end="182" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="debug" start="190" end="192" abstract="false" final="false" static="false" visibility="public">
+  <method name="getOrderStepNice" start="186" end="193" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="debug" start="201" end="203" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Debug helper method.">Can be called from /shoppingcart/debug/</description>
       <return type="object">

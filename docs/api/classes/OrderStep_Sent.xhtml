@@ -130,11 +130,15 @@
                         </li><li>public string <a title="OrderStep" href="../classes/OrderStep/getRelevantLogEntryClassName.xhtml">getRelevantLogEntryClassName</a>()
                         </li><li>public void <a title="OrderStep" href="../classes/OrderStep/setRelevantLogEntryClassName.xhtml">setRelevantLogEntryClassName</a>()
                         </li><li>public OrderStatusLog <a title="OrderStep" href="../classes/OrderStep/RelevantLogEntry.xhtml">RelevantLogEntry</a>()
-                        </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/canDelete.xhtml">canDelete</a>()
                         </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/canCreate.xhtml">canCreate</a>()
+                        </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/canView.xhtml">canView</a>()
+                        </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/canEdit.xhtml">canEdit</a>()
+                        </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/canDelete.xhtml">canDelete</a>()
                         </li><li>public void <a title="OrderStep" href="../classes/OrderStep/onBeforeWrite.xhtml">onBeforeWrite</a>()
                         </li><li>public void <a title="OrderStep" href="../classes/OrderStep/onBeforeDelete.xhtml">onBeforeDelete</a>()
                         </li><li>public void <a title="OrderStep" href="../classes/OrderStep/onAfterDelete.xhtml">onAfterDelete</a>()
+                        </li><li>protected void <a title="OrderStep" href="../classes/OrderStep/NextOrderStep.xhtml">NextOrderStep</a>()
+                        </li><li>protected void <a title="OrderStep" href="../classes/OrderStep/PreviousOrderStep.xhtml">PreviousOrderStep</a>()
                         </li><li>public void <a title="OrderStep" href="../classes/OrderStep/requireDefaultRecords.xhtml">requireDefaultRecords</a>()
                         </li><li>protected EcommerceDBConfig <a title="OrderStep" href="../classes/OrderStep/EcomConfig.xhtml">EcomConfig</a>()
                         </li><li>protected String <a title="OrderStep" href="../classes/OrderStep/myDescription.xhtml">myDescription</a>()
@@ -211,6 +215,12 @@
           <ul>
             <li id="EcomConfig"><a title="OrderStep" href="../classes/OrderStep/EcomConfig.xhtml">EcomConfig()</a>
                 — returns the standard EcommerceDBConfig for use within OrderSteps.</li>
+            <li id="NextOrderStep">
+              <a title="OrderStep" href="../classes/OrderStep/NextOrderStep.xhtml">NextOrderStep()</a>
+            </li>
+            <li id="PreviousOrderStep">
+              <a title="OrderStep" href="../classes/OrderStep/PreviousOrderStep.xhtml">PreviousOrderStep()</a>
+            </li>
             <li id="hasCustomerMessage"><a title="OrderStep" href="../classes/OrderStep/hasCustomerMessage.xhtml">hasCustomerMessage()</a>
                 — For some ordersteps this returns true...</li>
             <li id="isDefaultStatusOption"><a title="OrderStep" href="../classes/OrderStep/isDefaultStatusOption.xhtml">isDefaultStatusOption()</a>
@@ -250,8 +260,12 @@
             <li id="addOrderStepFields"><a title="OrderStep" href="../classes/OrderStep/addOrderStepFields.xhtml">addOrderStepFields()</a>
                 — Allows the opportunity for the Order Step to add any fields to Order::getCMSFields Usually this is added before ActionNextStepManually</li>
             <li id="canCreate"><a title="OrderStep" href="../classes/OrderStep/canCreate.xhtml">canCreate()</a>
-                — Standard SS method</li>
+                — Standard SS method These are only created programmatically.</li>
             <li id="canDelete"><a title="OrderStep" href="../classes/OrderStep/canDelete.xhtml">canDelete()</a>
+                — Standard SS method</li>
+            <li id="canEdit"><a title="OrderStep" href="../classes/OrderStep/canEdit.xhtml">canEdit()</a>
+                — standard SS method</li>
+            <li id="canView"><a title="OrderStep" href="../classes/OrderStep/canView.xhtml">canView()</a>
                 — Standard SS method</li>
             <li id="doStep"><a title="OrderStep" href="../classes/OrderStep/doStep.xhtml">doStep()</a>
                 — oStep: should only be able to run this function once (init stops you from running it twice - in theory....) runs the actual step</li>
@@ -321,7 +335,7 @@
             <li id="isBefore"><a title="OrderStep" href="../classes/OrderStep/isBefore.xhtml">isBefore()</a>
                 — Opposite of hasPassed</li>
             <li id="nextStep"><a title="OrderStep" href="../classes/OrderStep/nextStep.xhtml">nextStep()</a>
-                — extStep: returns the next step (after it checks if everything is in place for the next step to run...)</li>
+                — nextStep: returns the next step (after it checks if everything is in place for the next step to run...)</li>
             <li id="onAfterDelete"><a title="OrderStep" href="../classes/OrderStep/onAfterDelete.xhtml">onAfterDelete()</a>
                 — standard SS method</li>
             <li id="onBeforeDelete"><a title="OrderStep" href="../classes/OrderStep/onBeforeDelete.xhtml">onBeforeDelete()</a>

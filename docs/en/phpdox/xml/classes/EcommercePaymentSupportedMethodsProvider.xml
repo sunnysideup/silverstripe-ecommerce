@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommercePaymentSupportedMethodsProvider" namespace="" name="EcommercePaymentSupportedMethodsProvider" abstract="false" final="false" start="26" end="76">
+  <file path="./../../../code/money" file="EcommercePaymentSupportedMethodsProvider.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/money/EcommercePaymentSupportedMethodsProvider.php" size="2010" time="2014-09-04T12:00:12+12:00" unixtime="1409788812" sha1="f20c576f549b87b5e21dcce30b8d2a202a24f901"/>
+  <docblock>
+    <description compact="if you want to implement rules around selecting specific payment gateways for specific orders then you need to extend this class and add the following to mysite/_config/config.yml: &lt;code yml&gt;  Injector:    EcommercePaymentSupportedMethodsProvider:      class: MyCustom_EcommercePaymentSupportedMethodsProvider &lt;/code&gt;">in PHP you will have something like this:
+&lt;code php&gt;
+class MyCustom_EcommercePaymentSupportedMethodsProvider extends EcommercePaymentSupportedMethodsProvider {
+ //....
+}
+&lt;/code&gt;</description>
+  </docblock>
+  <extends full="Object" namespace="" name="Object"/>
+  <method name="SupportedMethods" start="34" end="55" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="this method returns an associative array of payment methods available for the current order."/>
+      <return type="array"/>
+    </docblock>
+    <parameter name="order" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="orderToUse" start="63" end="74" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="returns the order to use.... You can provide one which basically just checks that it is a real order"/>
+      <param description="| Int" type="object">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <return type="object">
+        <type full="Order" namespace="" name="Order"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="{unknown}" default="null"/>
+  </method>
+</class>

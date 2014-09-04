@@ -90,7 +90,6 @@
                     </li><li>protected <span title="String">String</span> <a href="#members">$defaultClassNameForOrderItem</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Product" href="../classes/Product/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="Product" href="../classes/Product/i18n_plural_name.xhtml">i18n_plural_name</a>()
-                    </li><li>public void <a title="Product" href="../classes/Product/getCMSActions.xhtml">getCMSActions</a>()
                     </li><li>public void <a title="Product" href="../classes/Product/getCMSFields.xhtml">getCMSFields</a>()
                     </li><li>protected TreeMultiselectField <a title="Product" href="../classes/Product/getProductGroupsTableField.xhtml">getProductGroupsTableField</a>()
                     </li><li>protected GridField <a title="Product" href="../classes/Product/getAdditionalImagesMessage.xhtml">getAdditionalImagesMessage</a>()
@@ -136,11 +135,10 @@
                     </li><li>public Money <a title="Product" href="../classes/Product/CalculatedPriceAsMoney.xhtml">CalculatedPriceAsMoney</a>()
                     </li><li>public void <a title="Product" href="../classes/Product/getCalculatedPriceAsMoney.xhtml">getCalculatedPriceAsMoney</a>()
                     </li><li>public Boolean <a title="Product" href="../classes/Product/canPurchase.xhtml">canPurchase</a>()
+                    </li><li>public void <a title="Product" href="../classes/Product/canCreate.xhtml">canCreate</a>()
                     </li><li>public Boolean <a title="Product" href="../classes/Product/canEdit.xhtml">canEdit</a>()
                     </li><li>public Boolean <a title="Product" href="../classes/Product/canDelete.xhtml">canDelete</a>()
                     </li><li>public Boolean <a title="Product" href="../classes/Product/canPublish.xhtml">canPublish</a>()
-                    </li><li>public Boolean <a title="Product" href="../classes/Product/canDeleteFromLive.xhtml">canDeleteFromLive</a>()
-                    </li><li>public Boolean <a title="Product" href="../classes/Product/canCreate.xhtml">canCreate</a>()
                     </li><li>public void <a title="Product" href="../classes/Product/debug.xhtml">debug</a>()
                     </li></ul>
 
@@ -173,7 +171,7 @@
             <td>: Ask the silverstripe gods why $default_sort won't work with FullSiteTreeSort</td>
           </tr>
           <tr>
-            <td class="nummeric">518+</td>
+            <td class="nummeric">532+</td>
             <td>: complete</td>
           </tr>
           <tr>
@@ -338,12 +336,11 @@
                 — set new specific new quantity for buyable's orderitem</li>
             <li id="Siblings"><a title="Product" href="../classes/Product/Siblings.xhtml">Siblings()</a>
                 — Returns products in the same group</li>
-            <li id="canCreate"><a title="Product" href="../classes/Product/canCreate.xhtml">canCreate()</a>
-                — Standard SS method</li>
+            <li id="canCreate">
+              <a title="Product" href="../classes/Product/canCreate.xhtml">canCreate()</a>
+            </li>
             <li id="canDelete"><a title="Product" href="../classes/Product/canDelete.xhtml">canDelete()</a>
                 — Standard SS method</li>
-            <li id="canDeleteFromLive"><a title="Product" href="../classes/Product/canDeleteFromLive.xhtml">canDeleteFromLive()</a>
-                — Standard SS method //check if it is in a current cart?</li>
             <li id="canEdit"><a title="Product" href="../classes/Product/canEdit.xhtml">canEdit()</a>
                 — Shop Admins can edit</li>
             <li id="canPublish"><a title="Product" href="../classes/Product/canPublish.xhtml">canPublish()</a>
@@ -354,9 +351,6 @@
                 — you can overwrite this function in your buyable items (such as Product)</li>
             <li id="debug">
               <a title="Product" href="../classes/Product/debug.xhtml">debug()</a>
-            </li>
-            <li id="getCMSActions">
-              <a title="Product" href="../classes/Product/getCMSActions.xhtml">getCMSActions()</a>
             </li>
             <li id="getCMSFields"><a title="Product" href="../classes/Product/getCMSFields.xhtml">getCMSFields()</a>
                 — Standard SS variable.</li>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderStatusLog_DispatchPhysicalOrder" namespace="" name="OrderStatusLog_DispatchPhysicalOrder" abstract="false" final="false" start="538" end="629">
-  <file path="./../../../code/model/process" file="OrderStatusLog.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/process/OrderStatusLog.php" size="20381" time="2013-08-29T12:03:23+12:00" unixtime="1377734603" sha1="dd00199c5834e09ae9b77b016f815b6fb01e6214"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderStatusLog_DispatchPhysicalOrder" namespace="" name="OrderStatusLog_DispatchPhysicalOrder" abstract="false" final="false" start="517" end="604">
+  <file path="./../../../code/model/process" file="OrderStatusLog.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/process/OrderStatusLog.php" size="20130" time="2014-08-25T17:15:42+12:00" unixtime="1408943742" sha1="9ef1b71d5e39401585cc8025a3a2a96254e22beb"/>
   <docblock>
     <description/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
@@ -9,45 +9,33 @@
     <inspiration value=": Silverstripe Ltd, Jeremy"/>
   </docblock>
   <extends full="OrderStatusLog_Dispatch" namespace="" name="OrderStatusLog_Dispatch"/>
-  <member name="db" type="array" visibility="private" line="540"/>
-  <member name="indexes" type="array" visibility="private" line="546"/>
-  <member name="searchable_fields" type="array" visibility="private" line="551"/>
-  <member name="summary_fields" type="array" visibility="private" line="562"/>
-  <member name="defaults" type="array" visibility="private" line="569"/>
-  <member name="singular_name" type="string" default="&quot;Order Log Physical Dispatch Entry&quot;" visibility="private" line="573"/>
-  <method name="i18n_singular_name" start="574" end="574" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="plural_name" type="string" default="&quot;Order Log Physical Dispatch Entries&quot;" visibility="private" line="576"/>
-  <method name="i18n_plural_name" start="577" end="577" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="default_sort" type="string" default="&quot;\&quot;DispatchedOn\&quot; DESC, \&quot;Created\&quot; DESC&quot;" visibility="private" line="580"/>
-  <method name="populateDefaults" start="582" end="591" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="getCMSFields" start="597" end="602" abstract="false" final="false" static="false" visibility="public">
+  <member name="db" type="array" visibility="private" line="519"/>
+  <member name="indexes" type="array" visibility="private" line="525"/>
+  <member name="searchable_fields" type="array" visibility="private" line="530"/>
+  <member name="summary_fields" type="array" visibility="private" line="541"/>
+  <member name="defaults" type="array" visibility="private" line="548"/>
+  <member name="singular_name" type="string" default="&quot;Order Log Physical Dispatch Entry&quot;" visibility="private" line="552"/>
+  <method name="i18n_singular_name" start="553" end="553" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Order Log Physical Dispatch Entries&quot;" visibility="private" line="555"/>
+  <method name="i18n_plural_name" start="556" end="556" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="default_sort" type="string" default="&quot;\&quot;DispatchedOn\&quot; DESC, \&quot;Created\&quot; DESC&quot;" visibility="private" line="559"/>
+  <method name="populateDefaults" start="561" end="570" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getCMSFields" start="576" end="581" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return FieldList"/>
     </docblock>
   </method>
-  <method name="onBeforeWrite" start="604" end="609" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="CustomerNote" start="615" end="615" abstract="false" final="false" static="false" visibility="public">
+  <method name="onBeforeWrite" start="583" end="588" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CustomerNote" start="594" end="594" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return String"/>
     </docblock>
   </method>
-  <method name="getCustomerNote" start="616" end="626" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getCustomerNote" start="595" end="601" abstract="false" final="false" static="false" visibility="public"/>
   <parent full="OrderStatusLog_Dispatch" namespace="" name="OrderStatusLog_Dispatch">
     <extends full="OrderStatusLog" namespace="" name="OrderStatusLog"/>
-    <method name="i18n_singular_name" start="493" end="493" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="i18n_plural_name" start="496" end="496" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="canDelete" start="503" end="505" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="Standard SS method"/>
-        <param type="object" variable="$member">
-          <type full="Member" namespace="" name="Member"/>
-        </param>
-        <return type="object">
-          <type full="Boolean" namespace="" name="Boolean"/>
-        </return>
-      </docblock>
-      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-    </method>
+    <method name="i18n_singular_name" start="482" end="482" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="485" end="485" abstract="false" final="false" static="false" visibility="public"/>
   </parent>
   <parent full="OrderStatusLog" namespace="" name="OrderStatusLog">
     <extends full="DataObject" namespace="" name="DataObject"/>
@@ -60,7 +48,7 @@
       </docblock>
     </method>
     <method name="getInternalUseOnlyNice" start="67" end="67" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="canView" start="75" end="90" abstract="false" final="false" static="false" visibility="public">
+    <method name="canCreate" start="74" end="77" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -72,7 +60,7 @@
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canDelete" start="97" end="99" abstract="false" final="false" static="false" visibility="public">
+    <method name="canView" start="84" end="94" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -84,7 +72,7 @@
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canCreate" start="106" end="108" abstract="false" final="false" static="false" visibility="public">
+    <method name="canEdit" start="102" end="107" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -96,9 +84,9 @@
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canEdit" start="115" end="120" abstract="false" final="false" static="false" visibility="public">
+    <method name="canDelete" start="115" end="117" abstract="false" final="false" static="false" visibility="public">
       <docblock>
-        <description compact="Standard SS method"/>
+        <description compact="Standard SS method logs can never be deleted..."/>
         <param type="object" variable="$member">
           <type full="Member" namespace="" name="Member"/>
         </param>
@@ -108,23 +96,23 @@
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="i18n_singular_name" start="144" end="144" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="i18n_plural_name" start="151" end="151" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="populateDefaults" start="168" end="171" abstract="false" final="false" static="false" visibility="public">
+    <method name="i18n_singular_name" start="141" end="141" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="148" end="148" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="populateDefaults" start="165" end="168" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS method"/>
       </docblock>
     </method>
-    <method name="getCMSFields" start="177" end="201" abstract="false" final="false" static="false" visibility="public">
+    <method name="getCMSFields" start="174" end="198" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="return FieldList"/>
       </docblock>
       <inline>
-        <comment value="OrderID Field" line="184"/>
-        <comment value="ClassName Field" line="190"/>
+        <comment value="OrderID Field" line="181"/>
+        <comment value="ClassName Field" line="187"/>
       </inline>
     </method>
-    <method name="Type" start="208" end="208" abstract="false" final="false" static="false" visibility="public">
+    <method name="Type" start="205" end="205" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description/>
         <return type="object">
@@ -132,8 +120,8 @@
         </return>
       </docblock>
     </method>
-    <method name="getType" start="209" end="211" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="scaffoldSearchFields" start="228" end="237" abstract="false" final="false" static="false" visibility="public">
+    <method name="getType" start="206" end="208" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="scaffoldSearchFields" start="225" end="234" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.">Some additional logic is included for switching field labels, based on
 how generic or specific the field type is.
@@ -147,23 +135,23 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </docblock>
       <parameter name="_params" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="onBeforeWrite" start="243" end="262" abstract="false" final="false" static="false" visibility="public">
+    <method name="onBeforeWrite" start="240" end="259" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS method"/>
       </docblock>
       <inline>
-        <comment value="START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS...." line="245"/>
-        <comment value="THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER..." line="246"/>
-        <comment value="END HACK TO PREVENT LOSS" line="253"/>
+        <comment value="START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS...." line="242"/>
+        <comment value="THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER..." line="243"/>
+        <comment value="END HACK TO PREVENT LOSS" line="250"/>
       </inline>
     </method>
-    <method name="CustomerNote" start="268" end="268" abstract="false" final="false" static="false" visibility="public">
+    <method name="CustomerNote" start="265" end="265" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="return String"/>
       </docblock>
     </method>
-    <method name="getCustomerNote" start="269" end="271" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="EcomConfig" start="278" end="280" abstract="false" final="false" static="false" visibility="protected">
+    <method name="getCustomerNote" start="266" end="268" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="EcomConfig" start="275" end="277" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the standard EcommerceDBConfig for use within OrderSteps."/>
         <return type="object">
@@ -171,7 +159,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="debug" start="287" end="289" abstract="false" final="false" static="false" visibility="public">
+    <method name="debug" start="284" end="286" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Debug helper method.">Can be called from /shoppingcart/debug/</description>
         <return type="object">

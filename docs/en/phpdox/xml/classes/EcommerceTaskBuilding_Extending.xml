@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskBuilding_Extending" namespace="" name="EcommerceTaskBuilding_Extending" abstract="false" final="false" start="32" end="42">
-  <file path="./../../../code/tasks" file="EcommerceTaskBuilding.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/tasks/EcommerceTaskBuilding.php" size="1104" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="611a66c3fd50820a4558add0aa996d367436ffbb"/>
+  <file path="./../../../code/tasks" file="EcommerceTaskBuilding.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskBuilding.php" size="1104" time="2014-07-07T14:16:54+12:00" unixtime="1404699414" sha1="611a66c3fd50820a4558add0aa996d367436ffbb"/>
   <docblock>
     <description/>
     <authors value=": Nicolaas"/>

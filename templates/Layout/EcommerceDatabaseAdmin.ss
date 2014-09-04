@@ -9,8 +9,11 @@
 		$Outcome
 	</div>
 	<% if OverallConfig %>
-	<h3>Check your settings</h3>
-	<p>Check your settings whenever you are working on this site to make sure they are all up-to-date and valid.</p>
+	<h3>1. Check your settings and start coding</h3>
+	<p>
+		Check your settings whenever you are working on this site to make sure they are all up-to-date and valid.
+		There are also a bunch of links here to useful places for developing e-commerce code.
+	</p>
 	<ul>
 	<% loop OverallConfig %>
 		<li><a href="$Link">$Title</a>: $Description</li>
@@ -19,7 +22,7 @@
 	<% end_if %>
 
 	<% if EcommerceSetup %>
-	<h3>E-commerce Setup</h3>
+	<h3>2. E-commerce Setup</h3>
 	<p>These actions are generally only run once to setup e-commerce.</p>
 	<ul>
 	<% loop EcommerceSetup %>
@@ -29,7 +32,7 @@
 	<% end_if %>
 
 	<% if DataReview %>
-	<h3>Review Data</h3>
+	<h3>3. Review Data</h3>
 	<p>Here are some quick links to review things like sales data, product searches, etc....</p>
 	<ul>
 	<% loop DataReview %>
@@ -39,7 +42,7 @@
 	<% end_if %>
 
 	<% if RegularMaintenance %>
-	<h3>Regular Maintenance</h3>
+	<h3>4. Regular Maintenance</h3>
 	<p>These actions should be run as cron job or you should configure e-commerce in such a way that they run regularly.</p>
 	<ul>
 	<% loop RegularMaintenance %>
@@ -49,7 +52,7 @@
 	<% end_if %>
 
 	<% if DebugActions %>
-	<h3>Building and Debugging</h3>
+	<h3>5. Building and Debugging</h3>
 	<p>Use the options listed below to debug your e-commerce application.</p>
 	<ul>
 	<% loop DebugActions %>
@@ -60,7 +63,7 @@
 
 
 	<% if DataCleanups %>
-	<h3>Data Cleaning</h3>
+	<h3>6. Data Cleaning</h3>
 	<ul>
 	<% loop DataCleanups %>
 		<li><a href="$Link">$Title</a>: $Description</li>
@@ -70,7 +73,7 @@
 
 
 	<% if Migrations %>
-	<h3>Migration</h3>
+	<h3>7. Migration</h3>
 	<p>Use the options listed below whenever your upgrade your source code.</p>
 	<ul>
 	<% loop Migrations %>
@@ -80,8 +83,8 @@
 	<% end_if %>
 
 	<% if CrazyShit %>
-	<h3>You are MAD?</h3>
-	<p>I guess you are ...</p>
+	<h3>8. You are MAD?</h3>
+	<p>Cleaning the slate ...</p>
 	<ul>
 	<% loop CrazyShit %>
 		<li><a href="$Link">$Title</a>: $Description</li>
@@ -90,7 +93,7 @@
 	<% end_if %>
 
 	<% if Tests %>
-	<h3>Ecommerce Unit Tests</h3>
+	<h3>9. Ecommerce Unit Tests</h3>
 	<ul>
 		<li><a href="/dev/tests/$AllTests"><strong>Run all ecommerce unit tests</strong></a></li>
 	<% loop Tests %>

@@ -71,13 +71,14 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class ShoppingCart_Controller
                 extends <a title="Controller" href="../classes/Controller.xhtml">Controller</a>
-            {<br/><ul class="none"><li>// members</li><li>private string <a href="#members">$url_segment</a>;
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$url_handlers</a>;
                     </li><li>protected <span title="Array">Array</span> <a href="#members">$methodsRequiringSecurityID</a>;
                     </li><li>protected <span title="ShoppingCart">ShoppingCart</span> <a href="#members">$cart</a>;
                     </li><li>private array <a href="#members">$allowed_actions</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/init.xhtml">init</a>()
                     </li><li>public void <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/index.xhtml">index</a>()
                     </li><li>public String <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/Link.xhtml">Link</a>()
+                    </li><li>protected static String <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/create_link.xhtml">create_link</a>()
                     </li><li>public static String <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/add_item_link.xhtml">add_item_link</a>()
                     </li><li>public static String <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/remove_item_link.xhtml">remove_item_link</a>()
                     </li><li>public static String <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/remove_all_item_link.xhtml">remove_all_item_link</a>()
@@ -140,11 +141,11 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">1450+</td>
+            <td class="nummeric">1464+</td>
             <td>: add non-ajax version of this request.</td>
           </tr>
           <tr>
-            <td class="nummeric">1553+</td>
+            <td class="nummeric">1571+</td>
             <td>: check that comment description actually matches what it does</td>
           </tr>
         </table>
@@ -155,10 +156,10 @@
             <li id="allowed_actions">
               <strong>$allowed_actions</strong>
             </li>
-            <li id="url_segment">
-              <strong>$url_segment</strong>
+            <li id="url_handlers">
+              <strong>$url_handlers</strong>
               <br/>
-              <span class="indent">URLSegment used for the Shopping Cart controller var string</span>
+              <span class="indent">Default URL handlers - (Action)/(ID)/(OtherID)</span>
             </li>
           </ul>
           <h4>protected</h4>
@@ -177,6 +178,8 @@
           <ul>
             <li id="buyable"><a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/buyable.xhtml">buyable()</a>
                 — Gets a buyable object based on URL actions</li>
+            <li id="create_link"><a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/create_link.xhtml">create_link()</a>
+                — returns ABSOLUTE link to the shopping cart controller</li>
             <li id="parameters"><a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/parameters.xhtml">parameters()</a>
                 — Gets the request parameters</li>
             <li id="params_to_get_string"><a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/params_to_get_string.xhtml">params_to_get_string()</a>
@@ -270,9 +273,8 @@
             <li id="save_cart_link">
               <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/save_cart_link.xhtml">save_cart_link()</a>
             </li>
-            <li id="set_currency_link">
-              <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/set_currency_link.xhtml">set_currency_link()</a>
-            </li>
+            <li id="set_currency_link"><a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/set_currency_link.xhtml">set_currency_link()</a>
+                — returns a link that allows you to set a currency...</li>
             <li id="set_quantity_item_link">
               <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/set_quantity_item_link.xhtml">set_quantity_item_link()</a>
             </li>

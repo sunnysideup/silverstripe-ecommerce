@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="Payment_Failure" namespace="" name="Payment_Failure" abstract="false" final="false" start="600" end="609">
-  <file path="./../../../code/model/money" file="EcommercePayment.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/money/EcommercePayment.php" size="15211" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="b5379c4bd3b234e00a2b66a558c8b8844eddf6bf"/>
+<class xmlns="http://xml.phpdox.net/src#" full="Payment_Failure" namespace="" name="Payment_Failure" abstract="false" final="false" start="624" end="633">
+  <file path="./../../../code/model/money" file="EcommercePayment.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/money/EcommercePayment.php" size="16015" time="2014-09-04T14:59:34+12:00" unixtime="1409799574" sha1="7940230dec683ebecbcfff32cf5a63856ef0a961"/>
   <extends full="Payment_Result" namespace="" name="Payment_Result"/>
-  <method name="isSuccess" start="602" end="604" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="isProcessing" start="606" end="608" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="isSuccess" start="626" end="628" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="isProcessing" start="630" end="632" abstract="false" final="false" static="false" visibility="public"/>
   <parent full="Payment_Result" namespace="" name="Payment_Result">
-    <member name="value" type="{unknown}" visibility="protected" line="561"/>
-    <constructor name="__construct" start="563" end="565" abstract="false" final="false" static="false" visibility="public">
+    <member name="value" type="{unknown}" visibility="protected" line="585"/>
+    <constructor name="__construct" start="587" end="589" abstract="false" final="false" static="false" visibility="public">
       <parameter name="value" byreference="false" type="{unknown}" default="null"/>
     </constructor>
-    <method name="getValue" start="567" end="569" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="isSuccess" start="571" end="571" abstract="true" final="false" static="false" visibility="public"/>
-    <method name="isProcessing" start="573" end="573" abstract="true" final="false" static="false" visibility="public"/>
+    <method name="getValue" start="591" end="593" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="isSuccess" start="595" end="595" abstract="true" final="false" static="false" visibility="public"/>
+    <method name="isProcessing" start="597" end="597" abstract="true" final="false" static="false" visibility="public"/>
   </parent>
 </class>

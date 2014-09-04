@@ -39,11 +39,11 @@ class OrderForm extends Form {
 		$bottomFields->setID('BottomOrder');
 		if($order->Total() > 0) {
 			$bottomFields->push(new HeaderField("PaymentHeader", _t("OrderForm.PAYMENT", "Payment"), 3));
-			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceWithCurrencyCode(false));
+			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceWithCurrencyCode(false), $order);
 			foreach($paymentFields as $paymentField) {
 				$bottomFields->push($paymentField);
 			}
-			if($paymentRequiredFields = EcommercePayment::combined_form_requirements()) {
+			if($paymentRequiredFields = EcommercePayment::combined_form_requirements($order)) {
 				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 			}
 		}

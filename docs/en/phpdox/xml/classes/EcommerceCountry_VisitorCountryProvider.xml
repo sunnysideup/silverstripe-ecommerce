@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCountry_VisitorCountryProvider" namespace="" name="EcommerceCountry_VisitorCountryProvider" abstract="false" final="false" start="511" end="524">
-  <file path="./../../../code/model/address" file="EcommerceCountry.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/address/EcommerceCountry.php" size="14235" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="9c810811fc4ab04e5d514165fcad0453650a8945"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCountry_VisitorCountryProvider" namespace="" name="EcommerceCountry_VisitorCountryProvider" abstract="false" final="false" start="508" end="525">
+  <file path="./../../../code/model/address" file="EcommerceCountry.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/address/EcommerceCountry.php" size="14869" time="2014-09-04T14:44:13+12:00" unixtime="1409798653" sha1="ff0197c78cd227fe6f3ba64e585640d64c730d02"/>
   <docblock>
     <description compact="this is a very basic class with as its sole purpose providing the country of the customer.">By default we are using the GEOIP class
 but you can switch it to your own system by changing
 the classname in the ecommerce.yml config file.</description>
   </docblock>
   <extends full="Object" namespace="" name="Object"/>
-  <method name="getCountry" start="517" end="522" abstract="false" final="false" static="false" visibility="public">
+  <implements full="EcommerceGEOipProvider" namespace="" name="EcommerceGEOipProvider"/>
+  <method name="getCountry" start="514" end="523" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return description="(Country Code - e.g. NZ, AU, or AF)" type="object">
@@ -15,4 +16,14 @@ the classname in the ecommerce.yml config file.</description>
       </return>
     </docblock>
   </method>
+  <interface full="EcommerceGEOipProvider" namespace="" name="EcommerceGEOipProvider">
+    <method name="getCountry" start="10" end="10" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns a country code of the current user..."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+  </interface>
 </class>

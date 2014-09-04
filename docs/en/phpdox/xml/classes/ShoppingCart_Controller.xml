@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="ShoppingCart_Controller" namespace="" name="ShoppingCart_Controller" abstract="false" final="false" start="991" end="1645">
-  <file path="./../../../code/control" file="ShoppingCart.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/control/ShoppingCart.php" size="51240" time="2014-05-11T15:45:02+12:00" unixtime="1399779902" sha1="12d6cc7e28f87babee4b3549127d2df56e510340"/>
+<class xmlns="http://xml.phpdox.net/src#" full="ShoppingCart_Controller" namespace="" name="ShoppingCart_Controller" abstract="false" final="false" start="991" end="1663">
+  <file path="./../../../code/control" file="ShoppingCart.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/control/ShoppingCart.php" size="51129" time="2014-08-26T11:36:36+12:00" unixtime="1409009796" sha1="c6a6632ca7f1f0a22b9cd3950f9e4cac6a4653b5"/>
   <docblock>
     <description compact="ShoppingCart_Controller">Handles the modification of a shopping cart via http requests.
 Provides links for making these modifications.
@@ -12,9 +12,9 @@ todo supply links for adding, removing, and clearing cart items
 todo link for removing modifier(s)</description>
   </docblock>
   <extends full="Controller" namespace="" name="Controller"/>
-  <member name="url_segment" type="string" default="'shoppingcart'" visibility="private" line="998">
+  <member name="url_handlers" type="array" visibility="private" line="996">
     <docblock>
-      <description compact="URLSegment used for the Shopping Cart controller var string"/>
+      <description compact="Default URL handlers - (Action)/(ID)/(OtherID)"/>
     </docblock>
   </member>
   <member name="methodsRequiringSecurityID" type="array" visibility="protected" line="1005">
@@ -48,7 +48,16 @@ todo link for removing modifier(s)</description>
     </docblock>
     <parameter name="action" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="add_item_link" start="1107" end="1109" abstract="false" final="false" static="true" visibility="public">
+  <method name="create_link" start="1104" end="1110" abstract="false" final="false" static="true" visibility="protected">
+    <docblock>
+      <description compact="returns ABSOLUTE link to the shopping cart controller"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="actionAndOtherLinkVariables" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="add_item_link" start="1119" end="1121" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$buyableID">
@@ -68,7 +77,7 @@ todo link for removing modifier(s)</description>
     <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="remove_item_link" start="1118" end="1120" abstract="false" final="false" static="true" visibility="public">
+  <method name="remove_item_link" start="1130" end="1132" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$buyableID">
@@ -88,7 +97,7 @@ todo link for removing modifier(s)</description>
     <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="remove_all_item_link" start="1129" end="1131" abstract="false" final="false" static="true" visibility="public">
+  <method name="remove_all_item_link" start="1141" end="1143" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$buyableID">
@@ -108,7 +117,7 @@ todo link for removing modifier(s)</description>
     <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="remove_all_item_and_edit_link" start="1140" end="1142" abstract="false" final="false" static="true" visibility="public">
+  <method name="remove_all_item_and_edit_link" start="1152" end="1154" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$buyableID">
@@ -128,7 +137,7 @@ todo link for removing modifier(s)</description>
     <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="set_quantity_item_link" start="1151" end="1153" abstract="false" final="false" static="true" visibility="public">
+  <method name="set_quantity_item_link" start="1163" end="1165" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$buyableID">
@@ -148,7 +157,7 @@ todo link for removing modifier(s)</description>
     <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="remove_modifier_link" start="1161" end="1163" abstract="false" final="false" static="true" visibility="public">
+  <method name="remove_modifier_link" start="1173" end="1175" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$modifierID">
@@ -164,7 +173,7 @@ todo link for removing modifier(s)</description>
     <parameter name="modifierID" byreference="false" type="{unknown}"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="add_modifier_link" start="1171" end="1173" abstract="false" final="false" static="true" visibility="public">
+  <method name="add_modifier_link" start="1183" end="1185" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$modifierID">
@@ -180,7 +189,7 @@ todo link for removing modifier(s)</description>
     <parameter name="modifierID" byreference="false" type="{unknown}"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="remove_address_link" start="1182" end="1184" abstract="false" final="false" static="true" visibility="public">
+  <method name="remove_address_link" start="1194" end="1196" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$addressID">
@@ -200,7 +209,7 @@ todo link for removing modifier(s)</description>
     <parameter name="addressClassName" byreference="false" type="{unknown}"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="clear_cart_link" start="1190" end="1192" abstract="false" final="false" static="true" visibility="public">
+  <method name="clear_cart_link" start="1202" end="1204" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$parameters">
@@ -212,7 +221,7 @@ todo link for removing modifier(s)</description>
     </docblock>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="save_cart_link" start="1198" end="1200" abstract="false" final="false" static="true" visibility="public">
+  <method name="save_cart_link" start="1210" end="1212" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$parameters">
@@ -224,7 +233,7 @@ todo link for removing modifier(s)</description>
     </docblock>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="clear_cart_and_logout_link" start="1206" end="1208" abstract="false" final="false" static="true" visibility="public">
+  <method name="clear_cart_and_logout_link" start="1218" end="1220" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$parameters">
@@ -236,7 +245,7 @@ todo link for removing modifier(s)</description>
     </docblock>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="delete_order_link" start="1214" end="1216" abstract="false" final="false" static="true" visibility="public">
+  <method name="delete_order_link" start="1226" end="1228" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$parameters">
@@ -249,13 +258,13 @@ todo link for removing modifier(s)</description>
     <parameter name="orderID" byreference="false" type="{unknown}"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="copy_order_link" start="1218" end="1220" abstract="false" final="false" static="true" visibility="public">
+  <method name="copy_order_link" start="1230" end="1232" abstract="false" final="false" static="true" visibility="public">
     <parameter name="orderID" byreference="false" type="{unknown}"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="set_currency_link" start="1226" end="1228" abstract="false" final="false" static="true" visibility="public">
+  <method name="set_currency_link" start="1240" end="1242" abstract="false" final="false" static="true" visibility="public">
     <docblock>
-      <description/>
+      <description compact="returns a link that allows you to set a currency...">dont be fooled by the set_ part...</description>
       <param type="object" variable="$code">
         <type full="String" namespace="" name="String"/>
       </param>
@@ -266,7 +275,7 @@ todo link for removing modifier(s)</description>
     <parameter name="code" byreference="false" type="{unknown}"/>
     <parameter name="parameters" byreference="false" type="array"/>
   </method>
-  <method name="additem" start="1236" end="1239" abstract="false" final="false" static="false" visibility="public">
+  <method name="additem" start="1250" end="1253" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Adds item to cart via controller action; one by default."/>
       <param type="object">
@@ -278,7 +287,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="setquantityitem" start="1248" end="1251" abstract="false" final="false" static="false" visibility="public">
+  <method name="setquantityitem" start="1262" end="1265" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Sets the exact passed quantity.">Note: If no ?quantity=x is specified in URL, then quantity will be set to 1.</description>
       <param type="object">
@@ -290,7 +299,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="removeitem" start="1259" end="1262" abstract="false" final="false" static="false" visibility="public">
+  <method name="removeitem" start="1273" end="1276" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Removes item from cart via controller action; one by default."/>
       <param type="object">
@@ -302,7 +311,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="removeallitem" start="1270" end="1273" abstract="false" final="false" static="false" visibility="public">
+  <method name="removeallitem" start="1284" end="1287" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Removes all of a specific item"/>
       <param type="object">
@@ -314,7 +323,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="removeallitemandedit" start="1281" end="1291" abstract="false" final="false" static="false" visibility="public">
+  <method name="removeallitemandedit" start="1295" end="1305" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Removes all of a specific item AND return back"/>
       <param type="object">
@@ -326,7 +335,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="removemodifier" start="1299" end="1303" abstract="false" final="false" static="false" visibility="public">
+  <method name="removemodifier" start="1313" end="1317" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Removes a specified modifier from the cart;"/>
       <param type="object">
@@ -338,7 +347,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="addmodifier" start="1311" end="1315" abstract="false" final="false" static="false" visibility="public">
+  <method name="addmodifier" start="1325" end="1329" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Adds a specified modifier to the cart;"/>
       <param type="object">
@@ -350,7 +359,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="setcountry" start="1324" end="1329" abstract="false" final="false" static="false" visibility="public">
+  <method name="setcountry" start="1338" end="1343" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="sets the country"/>
       <param type="object">
@@ -362,10 +371,10 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
     <inline>
-      <comment value="set_country will check if the country code is actually allowed...." line="1326"/>
+      <comment value="set_country will check if the country code is actually allowed...." line="1340"/>
     </inline>
   </method>
-  <method name="setregion" start="1336" end="1340" abstract="false" final="false" static="false" visibility="public">
+  <method name="setregion" start="1350" end="1354" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -377,7 +386,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="setcurrency" start="1347" end="1351" abstract="false" final="false" static="false" visibility="public">
+  <method name="setcurrency" start="1361" end="1365" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -389,7 +398,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="save" start="1358" end="1361" abstract="false" final="false" static="false" visibility="public">
+  <method name="save" start="1372" end="1375" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -401,7 +410,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="clear" start="1367" end="1371" abstract="false" final="false" static="false" visibility="public">
+  <method name="clear" start="1381" end="1385" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -415,7 +424,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="clearandlogout" start="1377" end="1384" abstract="false" final="false" static="false" visibility="public">
+  <method name="clearandlogout" start="1391" end="1398" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -429,7 +438,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="deleteorder" start="1390" end="1398" abstract="false" final="false" static="false" visibility="public">
+  <method name="deleteorder" start="1404" end="1412" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -443,10 +452,10 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="copyorder" start="1400" end="1406" abstract="false" final="false" static="false" visibility="public">
+  <method name="copyorder" start="1414" end="1420" abstract="false" final="false" static="false" visibility="public">
     <parameter name="request" byreference="false" type="{unknown}"/>
   </method>
-  <method name="numberofitemsincart" start="1413" end="1416" abstract="false" final="false" static="false" visibility="public">
+  <method name="numberofitemsincart" start="1427" end="1430" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return number of items in cart"/>
       <param type="object">
@@ -458,7 +467,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="showcart" start="1423" end="1425" abstract="false" final="false" static="false" visibility="public">
+  <method name="showcart" start="1437" end="1439" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return cart for ajax call"/>
       <param type="object">
@@ -472,7 +481,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="loadorder" start="1432" end="1441" abstract="false" final="false" static="false" visibility="public">
+  <method name="loadorder" start="1446" end="1455" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="loads an order"/>
       <param type="object">
@@ -486,7 +495,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="removeaddress" start="1450" end="1475" abstract="false" final="false" static="false" visibility="public">
+  <method name="removeaddress" start="1464" end="1489" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="remove address from list of available addresses in checkout."/>
       <param type="object">
@@ -501,7 +510,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="submittedbuyable" start="1484" end="1508" abstract="false" final="false" static="false" visibility="public">
+  <method name="submittedbuyable" start="1498" end="1521" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="allows us to view out-dated buyables that have been deleted where only old versions exist.">this method should redirect</description>
       <param type="object">
@@ -515,10 +524,10 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
     <inline>
-      <comment value="show singleton with old version" line="1493"/>
+      <comment value="show singleton with old version" line="1507"/>
     </inline>
   </method>
-  <method name="loginas" start="1517" end="1539" abstract="false" final="false" static="false" visibility="public">
+  <method name="loginas" start="1530" end="1557" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="This can be used by admins to log in as customers to place orders on their behalf..."/>
       <param type="object">
@@ -532,7 +541,7 @@ todo link for removing modifier(s)</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="params_to_get_string" start="1553" end="1557" abstract="false" final="false" static="true" visibility="protected">
+  <method name="params_to_get_string" start="1571" end="1575" abstract="false" final="false" static="true" visibility="protected">
     <docblock>
       <description compact="Helper function used by link functions Creates the appropriate url-encoded string parameters for links from array">Produces string such as: MyParam%3D11%26OtherParam%3D1
     ...which decodes to: MyParam=11&amp;OtherParam=1
@@ -545,7 +554,7 @@ you will need to decode the url with javascript before using it.</description>
     </docblock>
     <parameter name="array" byreference="false" type="array"/>
   </method>
-  <method name="buyable" start="1563" end="1582" abstract="false" final="false" static="false" visibility="protected">
+  <method name="buyable" start="1581" end="1600" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Gets a buyable object based on URL actions"/>
       <return description="| Null - returns buyable" type="object">
@@ -553,7 +562,7 @@ you will need to decode the url with javascript before using it.</description>
       </return>
     </docblock>
   </method>
-  <method name="quantity" start="1588" end="1594" abstract="false" final="false" static="false" visibility="protected">
+  <method name="quantity" start="1606" end="1612" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Gets the requested quantity"/>
       <return type="object">
@@ -561,7 +570,7 @@ you will need to decode the url with javascript before using it.</description>
       </return>
     </docblock>
   </method>
-  <method name="parameters" start="1601" end="1603" abstract="false" final="false" static="false" visibility="protected">
+  <method name="parameters" start="1619" end="1621" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Gets the request parameters"/>
       <param description="choose between obtaining the chosen parameters from GET or POST" variable="$getpost" type="object">
@@ -573,12 +582,12 @@ you will need to decode the url with javascript before using it.</description>
     </docblock>
     <parameter name="getpost" byreference="false" type="string" default="'GET'"/>
   </method>
-  <method name="debug" start="1609" end="1616" abstract="false" final="false" static="false" visibility="public">
+  <method name="debug" start="1627" end="1634" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Handy debugging action visit.">Log in as an administrator and visit mysite/shoppingcart/debug</description>
     </docblock>
   </method>
-  <method name="ajaxtest" start="1623" end="1642" abstract="false" final="false" static="false" visibility="public">
+  <method name="ajaxtest" start="1641" end="1660" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="test the ajax response for developers only"/>
       <return description="to buffer" type="object">

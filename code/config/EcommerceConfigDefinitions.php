@@ -187,7 +187,7 @@ class EcommerceConfigDefinitions extends Object {
 		################### PRODUCT DISPLAY #####################
 			"ProductGroup" => array(
 				"base_buyable_class" => "The base class for the products being retrieved.  Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.",
-				"actively_check_for_can_purchase" => "Before listing a product, actively check if canPurcahse returns true.  This is useful, when for example, you are ",
+				"actively_check_for_can_purchase" => "Before listing a product, actively check if canPurcahse returns true.  This is useful, when for example, you are deciding whether or not products can be sold based on the country of the customer.",
 				"maximum_number_of_products_to_list" => "The maximum number of products to be shown in a list.  For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers.",
 				"sort_options" => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
 				"filter_options" => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
@@ -212,7 +212,7 @@ class EcommerceConfigDefinitions extends Object {
 		################### CART AND CHECKOUT PROCESS #####################
 			"ShoppingCart" => array(
 				"session_code" => "The code use for the session variable that stores the Order ID.",
-				"cleanup_every_time" => "Are carts are cleaned up all the time (if this is set to FALSE then we recommend you setup a cron job to clean old carts)?",
+				"cleanup_every_time" => "Are carts are cleaned up all the time (if this is set to FALSE then we recommend you setup a cron job to clean old carts - this is recommended on large sites where any run-time activity will slow the site down (it is more efficient to clear 1000 carts once an hour than to clear 1 cart ever second))?",
 				"default_param_filters" => "Advanced filtering in the shopping cart.  Not currently being used. ",
 				"response_class" => "Class used for ajax responses.",
 			),

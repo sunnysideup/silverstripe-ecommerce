@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceDatabaseAdmin" namespace="" name="EcommerceDatabaseAdmin" abstract="false" final="false" start="78" end="459">
-  <file path="./../../../code/cms/dev" file="EcommerceDatabaseAdmin.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/cms/dev/EcommerceDatabaseAdmin.php" size="10800" time="2014-05-11T15:45:02+12:00" unixtime="1399779902" sha1="c7d74fac776ccd3cdbb419aa6d7ee0be1a5f4bc8"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceDatabaseAdmin" namespace="" name="EcommerceDatabaseAdmin" abstract="false" final="false" start="78" end="438">
+  <file path="./../../../code/cms/dev" file="EcommerceDatabaseAdmin.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/cms/dev/EcommerceDatabaseAdmin.php" size="10462" time="2014-09-04T10:25:09+12:00" unixtime="1409783109" sha1="52d430375c4cd09b0ae708e8e93e9cfba66f653e"/>
   <docblock>
     <description compact="One stop shop for massaging e-commerce related data AND running tests.">You can customise this menu by "decorating" this class
 and adding the method: "updateEcommerceDevMenu".
@@ -71,7 +71,7 @@ SECTIONS
   <extends full="TaskRunner" namespace="" name="TaskRunner"/>
   <member name="allowed_actions" type="array" visibility="private" line="80"/>
   <method name="index" start="88" end="103" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="Link" start="110" end="113" abstract="false" final="false" static="false" visibility="public">
+  <method name="Link" start="110" end="116" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard, required method"/>
       <param type="object" variable="$action">
@@ -81,9 +81,9 @@ SECTIONS
         <type full="String" namespace="" name="String"/>
       </return>
     </docblock>
-    <parameter name="action" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="action" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <member name="overallconfig" type="array" visibility="protected" line="127">
+  <member name="overallconfig" type="array" visibility="protected" line="130">
     <docblock>
       <description compact="List of overall configuration BuildTasks"/>
       <var type="object">
@@ -91,7 +91,7 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="OverallConfig" start="135" end="137" abstract="false" final="false" static="false" visibility="public">
+  <method name="OverallConfig" start="139" end="141" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="list of config tasks"/>
       <return type="object">
@@ -99,18 +99,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <method name="ecommercecheckconfiguration" start="143" end="145" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description compact="execute the task"/>
-      <param type="object" variable="$request">
-        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
-      </param>
-    </docblock>
-    <parameter name="request" byreference="false" type="object">
-      <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
-    </parameter>
-  </method>
-  <member name="ecommerceSetup" type="array" visibility="protected" line="162">
+  <member name="ecommerceSetup" type="array" visibility="protected" line="157">
     <docblock>
       <description compact="List of setup BuildTasks"/>
       <var type="object">
@@ -118,7 +107,7 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="EcommerceSetup" start="176" end="178" abstract="false" final="false" static="false" visibility="public">
+  <method name="EcommerceSetup" start="172" end="174" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="list of data setup tasks"/>
       <return type="object">
@@ -126,19 +115,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <method name="adddefaultecommerceproducts" start="183" end="185" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="request" byreference="false" type="{unknown}"/>
-  </method>
-  <method name="ecommercecountryandregiontasks" start="187" end="189" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="request" byreference="false" type="{unknown}"/>
-  </method>
-  <method name="ecommercecountryandregiontasks_disallowallcountries" start="191" end="193" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="request" byreference="false" type="{unknown}"/>
-  </method>
-  <method name="ecommercetasklinkproductwithimages" start="195" end="197" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="request" byreference="false" type="{unknown}"/>
-  </method>
-  <member name="dataReview" type="array" visibility="protected" line="213">
+  <member name="dataReview" type="array" visibility="protected" line="187">
     <docblock>
       <description compact="List of regular maintenance BuildTasks"/>
       <var type="object">
@@ -146,7 +123,7 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="DataReview" start="222" end="224" abstract="false" final="false" static="false" visibility="public">
+  <method name="DataReview" start="198" end="200" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="regular data cleanup tasks"/>
       <return type="object">
@@ -154,7 +131,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <member name="regularMaintenance" type="array" visibility="protected" line="235">
+  <member name="regularMaintenance" type="array" visibility="protected" line="211">
     <docblock>
       <description compact="List of regular maintenance BuildTasks"/>
       <var type="object">
@@ -162,7 +139,7 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="RegularMaintenance" start="251" end="253" abstract="false" final="false" static="false" visibility="public">
+  <method name="RegularMaintenance" start="229" end="231" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="regular data cleanup tasks"/>
       <return type="object">
@@ -170,7 +147,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <member name="debugActions" type="array" visibility="protected" line="269">
+  <member name="debugActions" type="array" visibility="protected" line="247">
     <docblock>
       <description compact="List of debug actions BuildTasks"/>
       <var type="object">
@@ -178,7 +155,7 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="DebugActions" start="281" end="283" abstract="false" final="false" static="false" visibility="public">
+  <method name="DebugActions" start="259" end="261" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="list of data debug actions"/>
       <return type="object">
@@ -186,7 +163,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <member name="migrations" type="array" visibility="protected" line="299">
+  <member name="migrations" type="array" visibility="protected" line="277">
     <docblock>
       <description compact="List of migration BuildTasks"/>
       <var type="object">
@@ -194,7 +171,7 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="Migrations" start="309" end="311" abstract="false" final="false" static="false" visibility="public">
+  <method name="Migrations" start="287" end="289" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="list of migration tasks"/>
       <return type="object">
@@ -202,7 +179,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <member name="crazyshit" type="array" visibility="protected" line="324">
+  <member name="crazyshit" type="array" visibility="protected" line="302">
     <docblock>
       <description compact="List of crazy shit BuildTasks"/>
       <var type="object">
@@ -210,7 +187,7 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="CrazyShit" start="333" end="335" abstract="false" final="false" static="false" visibility="public">
+  <method name="CrazyShit" start="312" end="314" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="list of crazy actions tasks"/>
       <return type="object">
@@ -218,7 +195,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <member name="tests" type="array" visibility="protected" line="350">
+  <member name="tests" type="array" visibility="protected" line="329">
     <docblock>
       <description compact="List of tests"/>
       <var type="object">
@@ -226,8 +203,8 @@ SECTIONS
       </var>
     </docblock>
   </member>
-  <method name="Tests" start="354" end="367" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="AllTests" start="373" end="375" abstract="false" final="false" static="false" visibility="public">
+  <method name="Tests" start="333" end="346" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="AllTests" start="352" end="354" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return description="????" type="object">
@@ -235,7 +212,7 @@ SECTIONS
       </return>
     </docblock>
   </method>
-  <method name="createMenuDOSFromArray" start="389" end="409" abstract="false" final="false" static="false" visibility="protected">
+  <method name="createMenuDOSFromArray" start="368" end="388" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description/>
       <param description="array of build tasks" type="object" variable="$buildTasksArray">
@@ -251,10 +228,10 @@ SECTIONS
     <parameter name="buildTasksArray" byreference="false" type="array"/>
     <parameter name="type" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="runTask" start="411" end="440" abstract="false" final="false" static="false" visibility="public">
+  <method name="runTask" start="390" end="419" abstract="false" final="false" static="false" visibility="public">
     <parameter name="request" byreference="false" type="{unknown}"/>
   </method>
-  <method name="displayCompletionMessage" start="447" end="457" abstract="false" final="false" static="false" visibility="protected">
+  <method name="displayCompletionMessage" start="426" end="436" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="shows a &quot;Task Completed Message&quot; on the screen."/>
       <param type="object" variable="$buildTask">

@@ -505,7 +505,7 @@ class EcommerceCountry extends DataObject {
  *
  *
  */
-class EcommerceCountry_VisitorCountryProvider extends Object {
+class EcommerceCountry_VisitorCountryProvider extends Object implements EcommerceGEOipProvider {
 
 	/**
 	 *
@@ -515,7 +515,11 @@ class EcommerceCountry_VisitorCountryProvider extends Object {
 		if(class_exists("Geoip")) {
 			return Geoip::visitor_country();
 		}
-		user_error("You need to install Geoip, which should have a method Geoip::visitor_country, returning the country code associated with the user's IP address.");
+		user_error("
+			You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
+			Alternatively you can set the following config EcommerceCountry.visitor_country_provider to something like MyGEOipProvider.
+			You then create a class MyGEOipProvider with a method getCountry().		
+		");
 	}
 
 }

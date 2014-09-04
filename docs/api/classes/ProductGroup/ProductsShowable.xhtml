@@ -80,22 +80,28 @@ strings are used with the where commands $productDataList-&gt;where($string).</p
         <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>public function ProductsShowable([string
-        $extraFilter = '',
+          <code>public function ProductsShowable([
+        $extraFilter = null,
+            [
+        $alternativeSort = null,
             [string
-        $alternativeSort = '']] )
+        $alternativeFilterKey = '']]] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$extraFilter</code>
                 —
-                string</dt>
+                </dt>
           <dd/>
           <dt><code>$alternativeSort</code>
                 —
-                string</dt>
+                </dt>
           <dd/>
+          <dt><code>$alternativeFilterKey</code>
+                —
+                string</dt>
+          <dd>alternative filter key to be used</dd>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">

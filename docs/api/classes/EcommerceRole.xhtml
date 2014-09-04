@@ -68,6 +68,8 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceRole
                 extends <a title="DataExtension" href="../classes/DataExtension.xhtml">DataExtension</a>
+                implements
+                <a title="PermissionProvider" href="../interfaces/PermissionProvider.xhtml">PermissionProvider</a>
             {<br/><ul class="none"><li>// members</li><li>private integer <a href="#members">$max_count_of_members_in_array</a>;
                     </li><li>private array <a href="#members">$api_access</a>;
                     </li><li>private array <a href="#members">$db</a>;
@@ -77,6 +79,8 @@
                     </li><li>public static Array <a title="EcommerceRole" href="../classes/EcommerceRole/list_of_customers.xhtml">list_of_customers</a>()
                     </li><li>public static Boolean <a title="EcommerceRole" href="../classes/EcommerceRole/current_member_is_shop_admin.xhtml">current_member_is_shop_admin</a>()
                     </li><li>public static DataObject <a title="EcommerceRole" href="../classes/EcommerceRole/get_admin_group.xhtml">get_admin_group</a>()
+                    </li><li>public static DataObject <a title="EcommerceRole" href="../classes/EcommerceRole/get_default_shop_admin_user.xhtml">get_default_shop_admin_user</a>()
+                    </li><li>public Array <a title="EcommerceRole" href="../classes/EcommerceRole/providePermissions.xhtml">providePermissions</a>()
                     </li><li>public FieldList <a title="EcommerceRole" href="../classes/EcommerceRole/updateCMSFields.xhtml">updateCMSFields</a>()
                     </li><li>public void <a title="EcommerceRole" href="../classes/EcommerceRole/SetPreferredCurrency.xhtml">SetPreferredCurrency</a>()
                     </li><li>public CompositeField <a title="EcommerceRole" href="../classes/EcommerceRole/getEcommerceFieldsForCMS.xhtml">getEcommerceFieldsForCMS</a>()
@@ -87,7 +91,6 @@
                     </li><li>public void <a title="EcommerceRole" href="../classes/EcommerceRole/onAfterWrite.xhtml">onAfterWrite</a>()
                     </li><li>public ArrayList <a title="EcommerceRole" href="../classes/EcommerceRole/previousOrderAddresses.xhtml">previousOrderAddresses</a>()
                     </li><li>public Null <a title="EcommerceRole" href="../classes/EcommerceRole/previousOrderAddress.xhtml">previousOrderAddress</a>()
-                    </li><li>public void <a title="EcommerceRole" href="../classes/EcommerceRole/requireDefaultRecords.xhtml">requireDefaultRecords</a>()
                     </li></ul>
 
             }<br/></div>
@@ -97,6 +100,12 @@
           <ul>
             <li>
               <a href="../classes/DataExtension.xhtml">DataExtension</a>
+            </li>
+          </ul>
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a href="../interfaces/PermissionProvider.xhtml">PermissionProvider</a>
             </li>
           </ul>
         </div>
@@ -147,6 +156,9 @@
             </li>
             <li id="get_customer_group"><a title="EcommerceRole" href="../classes/EcommerceRole/get_customer_group.xhtml">get_customer_group()</a>
                 — return DataObject (Group) | NULL</li>
+            <li id="get_default_shop_admin_user">
+              <a title="EcommerceRole" href="../classes/EcommerceRole/get_default_shop_admin_user.xhtml">get_default_shop_admin_user()</a>
+            </li>
             <li id="list_of_customers"><a title="EcommerceRole" href="../classes/EcommerceRole/list_of_customers.xhtml">list_of_customers()</a>
                 — returns an aray of customers The unselect option shows an extra line, basically allowing you to deselect the current option.</li>
             <li id="onAfterWrite"><a title="EcommerceRole" href="../classes/EcommerceRole/onAfterWrite.xhtml">onAfterWrite()</a>
@@ -155,9 +167,8 @@
                 — Finds the last address used by this member</li>
             <li id="previousOrderAddresses"><a title="EcommerceRole" href="../classes/EcommerceRole/previousOrderAddresses.xhtml">previousOrderAddresses()</a>
                 — Finds previous addresses from the member of the current address</li>
-            <li id="requireDefaultRecords">
-              <a title="EcommerceRole" href="../classes/EcommerceRole/requireDefaultRecords.xhtml">requireDefaultRecords()</a>
-            </li>
+            <li id="providePermissions"><a title="EcommerceRole" href="../classes/EcommerceRole/providePermissions.xhtml">providePermissions()</a>
+                — creates two permission roles.</li>
             <li id="updateCMSFields"><a title="EcommerceRole" href="../classes/EcommerceRole/updateCMSFields.xhtml">updateCMSFields()</a>
                 — Update the CMS Fields for /admin/security</li>
           </ul>

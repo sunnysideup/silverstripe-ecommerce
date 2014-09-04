@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderAttribute" namespace="" name="OrderAttribute" abstract="false" final="false" start="15" end="377">
-  <file path="./../../../code/model" file="OrderAttribute.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/OrderAttribute.php" size="8548" time="2013-10-27T22:08:29+13:00" unixtime="1382864909" sha1="4e00bcd557e2230559c82f71ace7a5bc58bae92a"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderAttribute" namespace="" name="OrderAttribute" abstract="false" final="false" start="15" end="378">
+  <file path="./../../../code/model" file="OrderAttribute.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/OrderAttribute.php" size="9789" time="2014-08-10T21:48:59+12:00" unixtime="1407664139" sha1="40b99bbddbcc30de40f294df60bf484168a00ac0"/>
   <docblock>
     <description/>
     <description/>
@@ -113,7 +113,7 @@
       <description compact="extended in OrderModifier and OrderItem Starts up the order Atribute TODO: introduce system like we have for Controller which makes sure that all parent init methods are called."/>
     </docblock>
   </method>
-  <method name="canCreate" start="136" end="138" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCreate" start="136" end="139" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <param type="object" variable="$member">
@@ -125,7 +125,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canView" start="146" end="163" abstract="false" final="false" static="false" visibility="public">
+  <method name="canView" start="147" end="164" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method This is an important method."/>
       <param type="object" variable="$member">
@@ -137,7 +137,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canEdit" start="171" end="188" abstract="false" final="false" static="false" visibility="public">
+  <method name="canEdit" start="172" end="189" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method This is an important method."/>
       <param type="object" variable="$member">
@@ -149,7 +149,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canDelete" start="195" end="197" abstract="false" final="false" static="false" visibility="public">
+  <method name="canDelete" start="196" end="198" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method"/>
       <param type="object" variable="$member">
@@ -161,7 +161,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="OrderAttributeType" start="216" end="218" abstract="false" final="false" static="false" visibility="public">
+  <method name="OrderAttributeType" start="217" end="219" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="This is a key function that returns the type of the object.  In principle anything can be returned but the intention is to only return a few options e.g. OrderItem, Tax, Delivery, etc... so that computations can be carried out based on the type of OrderAttribute we are looking at.">It also allows to get a group of Order Attributes that
 contains both modifiers and orderItems.</description>
@@ -170,7 +170,7 @@ contains both modifiers and orderItems.</description>
       </return>
     </docblock>
   </method>
-  <method name="Order" start="224" end="226" abstract="false" final="false" static="false" visibility="public">
+  <method name="Order" start="225" end="227" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the order - for some unknown reason it seems we need this."/>
       <return description="| null" type="object">
@@ -178,7 +178,7 @@ contains both modifiers and orderItems.</description>
       </return>
     </docblock>
   </method>
-  <method name="Classes" start="240" end="251" abstract="false" final="false" static="false" visibility="public">
+  <method name="Classes" start="241" end="252" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Return a string of class names, in order of hierarchy from OrderAttribute for the current attribute.">e.g.: "product_orderitem orderitem
 orderattribute".
@@ -187,7 +187,7 @@ Used by the templates and for ajax updating functionality.</description>
       <return type="string"/>
     </docblock>
   </method>
-  <method name="AJAXDefinitions" start="260" end="262" abstract="false" final="false" static="false" visibility="public">
+  <method name="AJAXDefinitions" start="261" end="263" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the instance of EcommerceConfigAjax for use in templates.">In templates, it is used like this:
 $EcommerceConfigAjax.TableID</description>
@@ -196,7 +196,7 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="EcomConfig" start="269" end="271" abstract="false" final="false" static="false" visibility="public">
+  <method name="EcomConfig" start="270" end="272" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the instance of EcommerceDBConfig"/>
       <return type="object">
@@ -204,31 +204,31 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="ShowInTable" start="277" end="279" abstract="false" final="false" static="false" visibility="public">
+  <method name="ShowInTable" start="278" end="280" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="hould this item be shown on check out page table? return Boolean"/>
     </docblock>
   </method>
-  <method name="ShowInCart" start="285" end="287" abstract="false" final="false" static="false" visibility="public">
+  <method name="ShowInCart" start="286" end="288" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="hould this item be shown on in the cart (which is on other pages than the checkout page) return Boolean"/>
     </docblock>
   </method>
-  <method name="TableTitle" start="295" end="295" abstract="false" final="false" static="false" visibility="public">
+  <method name="TableTitle" start="296" end="296" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Return a name of what this attribute is called e.g. &quot;Product 21&quot; or &quot;Discount&quot;"/>
       <return type="string"/>
     </docblock>
   </method>
-  <method name="getTableTitle" start="296" end="298" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="CartTitle" start="306" end="306" abstract="false" final="false" static="false" visibility="public">
+  <method name="getTableTitle" start="297" end="299" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CartTitle" start="307" end="307" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Return a name of what this attribute is called e.g. &quot;Product 21&quot; or &quot;Discount&quot; Cart is a short version of table"/>
       <return type="string"/>
     </docblock>
   </method>
-  <method name="getCartTitle" start="307" end="309" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="TableSubTitle" start="315" end="315" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCartTitle" start="308" end="310" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="TableSubTitle" start="316" end="316" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="the sub title for the order item or order modifier"/>
       <return type="object">
@@ -236,8 +236,8 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="getTableSubTitle" start="316" end="318" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="TableSubTitleNOHTML" start="325" end="325" abstract="false" final="false" static="false" visibility="public">
+  <method name="getTableSubTitle" start="317" end="319" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="TableSubTitleNOHTML" start="326" end="326" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="the sub title for the order item or order modifier"/>
       <return type="object">
@@ -245,8 +245,8 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="getTableSubTitleNOHTML" start="326" end="326" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="CartSubTitle" start="333" end="333" abstract="false" final="false" static="false" visibility="public">
+  <method name="getTableSubTitleNOHTML" start="327" end="327" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CartSubTitle" start="334" end="334" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="the sub title for the order item or order modifier.">Cart is a short version of table</description>
       <return type="object">
@@ -254,8 +254,8 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="getCartSubTitle" start="334" end="336" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="CalculatedTotalAsMoney" start="342" end="342" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCartSubTitle" start="335" end="337" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CalculatedTotalAsMoney" start="343" end="343" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the Money object of the CalculatedTotal"/>
       <return type="object">
@@ -263,26 +263,26 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="getCalculatedTotalAsMoney" start="343" end="345" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="onBeforeWrite" start="351" end="358" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCalculatedTotalAsMoney" start="344" end="346" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="onBeforeWrite" start="352" end="359" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method We add the Sort value from the OrderAttribute_Group to the OrderAttribute."/>
     </docblock>
   </method>
-  <method name="onAfterWrite" start="363" end="367" abstract="false" final="false" static="false" visibility="public">
+  <method name="onAfterWrite" start="364" end="368" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method"/>
     </docblock>
     <inline>
-      <comment value="crucial!" line="365"/>
+      <comment value="crucial!" line="366"/>
     </inline>
   </method>
-  <method name="debug" start="373" end="376" abstract="false" final="false" static="false" visibility="public">
+  <method name="debug" start="374" end="377" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Debug helper method.">Access through : /shoppingcart/debug/</description>
     </docblock>
   </method>
+  <extender full="Product_OrderItem" namespace="" name="Product_OrderItem"/>
   <extender full="OrderItem" namespace="" name="OrderItem"/>
   <extender full="OrderModifier" namespace="" name="OrderModifier"/>
-  <extender full="Product_OrderItem" namespace="" name="Product_OrderItem"/>
 </class>

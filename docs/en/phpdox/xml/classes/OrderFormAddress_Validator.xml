@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="OrderFormAddress_Validator" namespace="" name="OrderFormAddress_Validator" abstract="false" final="false" start="571" end="610">
-  <file path="./../../../code/forms" file="OrderFormAddress.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/OrderFormAddress.php" size="20223" time="2013-09-06T09:22:59+12:00" unixtime="1378416179" sha1="12d8db2cd054e4d53602ad45c115c3dc6b7d93cd"/>
+  <file path="./../../../code/forms" file="OrderFormAddress.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/forms/OrderFormAddress.php" size="20223" time="2014-03-27T11:45:32+13:00" unixtime="1395873932" sha1="12d8db2cd054e4d53602ad45c115c3dc6b7d93cd"/>
   <docblock>
     <description/>
     <description value=": allows customer to make additional payments for their order"/>
@@ -23,7 +23,7 @@
   </method>
   <parent full="ShopAccountForm_Validator" namespace="" name="ShopAccountForm_Validator">
     <extends full="RequiredFields" namespace="" name="RequiredFields"/>
-    <method name="php" start="204" end="333" abstract="false" final="false" static="false" visibility="public">
+    <method name="php" start="206" end="335" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Ensures member unique id stays unique and other basic stuff..."/>
         <param description="= array Form Field Data" type="array" variable="$data"/>
@@ -37,9 +37,9 @@
       <parameter name="data" byreference="false" type="{unknown}"/>
       <parameter name="allowExistingEmail" byreference="false" type="{unknown}" default="false"/>
       <inline>
-        <comment value="check password fields are the same before saving" line="278"/>
-        <comment value="if you are not logged in, you have not provided a password and the settings require you to be logged in then" line="288"/>
-        <comment value="we have a problem" line="289"/>
+        <comment value="check password fields are the same before saving" line="280"/>
+        <comment value="if you are not logged in, you have not provided a password and the settings require you to be logged in then" line="290"/>
+        <comment value="we have a problem" line="291"/>
       </inline>
     </method>
   </parent>

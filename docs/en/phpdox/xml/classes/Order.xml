@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="Order" namespace="" name="Order" abstract="false" final="false" start="32" end="2774">
-  <file path="./../../../code/model" file="Order.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/Order.php" size="84251" time="2014-04-28T13:36:53+12:00" unixtime="1398649013" sha1="1ea0a4a5a9a633d13ad4ac29bf9f57057cc0dd3a"/>
+<class xmlns="http://xml.phpdox.net/src#" full="Order" namespace="" name="Order" abstract="false" final="false" start="33" end="2764">
+  <file path="./../../../code/model" file="Order.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/Order.php" size="84226" time="2014-09-04T13:37:19+12:00" unixtime="1409794639" sha1="6df5a588534a7b252022c5901fcce6cb86d852a8"/>
   <docblock>
     <description/>
-    <description compact="Note that it works closely with the ShoppingCart class, which accompanies the Order until it has been paid for / confirmed by the user.">CONTENTS:
+    <description compact="The order class is a databound object for handling Orders within SilverStripe.">Note that it works closely with the ShoppingCart class, which accompanies the Order
+until it has been paid for / confirmed by the user.
+
+
+CONTENTS:
 ----------------------------------------------
 1. CMS STUFF
 2. MAIN TRANSITION FUNCTIONS:
@@ -22,7 +26,7 @@
     <inspiration value=": Silverstripe Ltd, Jeremy">NOTE: This is the SQL for selecting orders in sequence of</inspiration>
   </docblock>
   <extends full="DataObject" namespace="" name="DataObject"/>
-  <member name="api_access" type="array" visibility="private" line="38">
+  <member name="api_access" type="array" visibility="private" line="39">
     <docblock>
       <description compact="API Control"/>
       <var type="object">
@@ -30,7 +34,7 @@
       </var>
     </docblock>
   </member>
-  <member name="db" type="array" visibility="private" line="75">
+  <member name="db" type="array" visibility="private" line="76">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -38,8 +42,8 @@
       </var>
     </docblock>
   </member>
-  <member name="has_one" type="array" visibility="private" line="84"/>
-  <member name="has_many" type="array" visibility="private" line="97">
+  <member name="has_one" type="array" visibility="private" line="85"/>
+  <member name="has_many" type="array" visibility="private" line="98">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -47,7 +51,7 @@
       </var>
     </docblock>
   </member>
-  <member name="indexes" type="array" visibility="private" line="108">
+  <member name="indexes" type="array" visibility="private" line="109">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -55,7 +59,7 @@
       </var>
     </docblock>
   </member>
-  <member name="default_sort" type="string" default="&quot;\&quot;LastEdited\&quot; DESC&quot;" visibility="private" line="116">
+  <member name="default_sort" type="string" default="&quot;\&quot;LastEdited\&quot; DESC&quot;" visibility="private" line="117">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -63,7 +67,7 @@
       </var>
     </docblock>
   </member>
-  <member name="casting" type="array" visibility="private" line="122">
+  <member name="casting" type="array" visibility="private" line="123">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -71,7 +75,7 @@
       </var>
     </docblock>
   </member>
-  <member name="create_table_options" type="array" visibility="private" line="151">
+  <member name="create_table_options" type="array" visibility="private" line="152">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -79,7 +83,7 @@
       </var>
     </docblock>
   </member>
-  <member name="singular_name" type="string" default="&quot;Order&quot;" visibility="private" line="159">
+  <member name="singular_name" type="string" default="&quot;Order&quot;" visibility="private" line="160">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -87,8 +91,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_singular_name" start="160" end="160" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="plural_name" type="string" default="&quot;Orders&quot;" visibility="private" line="166">
+  <method name="i18n_singular_name" start="161" end="161" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Orders&quot;" visibility="private" line="167">
     <docblock>
       <description compact="standard SS variable"/>
       <var type="object">
@@ -96,8 +100,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_plural_name" start="167" end="167" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="description" type="string" default="&quot;A collection of items that together make up the 'Order'.  An order can be placed.&quot;" visibility="private" line="173">
+  <method name="i18n_plural_name" start="168" end="168" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;A collection of items that together make up the 'Order'.  An order can be placed.&quot;" visibility="private" line="174">
     <docblock>
       <description compact="Standard SS variable."/>
       <var type="object">
@@ -105,7 +109,7 @@
       </var>
     </docblock>
   </member>
-  <member name="needs_recalculating" type="{unknown}" default="false" visibility="private" line="179">
+  <member name="needs_recalculating" type="{unknown}" default="false" visibility="private" line="180">
     <docblock>
       <description compact="Tells us if an order needs to be recalculated"/>
       <var type="object">
@@ -113,17 +117,17 @@
       </var>
     </docblock>
   </member>
-  <method name="set_needs_recalculating" start="180" end="182" abstract="false" final="false" static="true" visibility="public">
+  <method name="set_needs_recalculating" start="181" end="183" abstract="false" final="false" static="true" visibility="public">
     <parameter name="b" byreference="false" type="{unknown}" default="true"/>
   </method>
-  <method name="get_needs_recalculating" start="183" end="183" abstract="false" final="false" static="true" visibility="public"/>
-  <member name="totalItems" type="{unknown}" default="null" visibility="protected" line="192">
+  <method name="get_needs_recalculating" start="184" end="184" abstract="false" final="false" static="true" visibility="public"/>
+  <member name="totalItems" type="{unknown}" default="null" visibility="protected" line="193">
     <docblock>
       <description compact="Total Items : total items in cart We start with -1 to easily identify if it has been run before."/>
       <var type="integer"/>
     </docblock>
   </member>
-  <member name="totalItemsTimesQuantity" type="{unknown}" default="null" visibility="protected" line="199">
+  <member name="totalItemsTimesQuantity" type="{unknown}" default="null" visibility="protected" line="200">
     <docblock>
       <description compact="Total Items : total items in cart We start with -1 to easily identify if it has been run before."/>
       <var type="object">
@@ -131,7 +135,7 @@
       </var>
     </docblock>
   </member>
-  <method name="getModifierForms" start="214" end="235" abstract="false" final="false" static="false" visibility="public">
+  <method name="getModifierForms" start="215" end="236" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns a set of modifier forms for use in the checkout order form, Controller is optional, because the orderForm has its own default controller.">This method only returns the Forms that should be included outside
 the editable table... Forms within it can be called
@@ -153,7 +157,7 @@ from through the modifier itself.</description>
       <type full="\\Validator" namespace="\" name="Validator"/>
     </parameter>
   </method>
-  <method name="get_order_status_options" start="243" end="245" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_order_status_options" start="244" end="246" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="This function returns the OrderSteps"/>
       <return description="(OrderSteps)" type="object">
@@ -161,7 +165,7 @@ from through the modifier itself.</description>
       </return>
     </docblock>
   </method>
-  <method name="get_by_id_if_can_view" start="252" end="262" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_by_id_if_can_view" start="253" end="263" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="Like the standard byID, but it checks whether we are allowed to view the order."/>
       <return description="Order | Null" type="object">
@@ -170,10 +174,10 @@ from through the modifier itself.</description>
     </docblock>
     <parameter name="id" byreference="false" type="{unknown}"/>
     <inline>
-      <comment value="LITTLE HACK TO MAKE SURE WE SHOW THE LATEST INFORMATION!" line="256"/>
+      <comment value="LITTLE HACK TO MAKE SURE WE SHOW THE LATEST INFORMATION!" line="257"/>
     </inline>
   </method>
-  <method name="get_datalist_of_orders_with_submit_record" start="271" end="284" abstract="false" final="false" static="true" visibility="public">
+  <method name="get_datalist_of_orders_with_submit_record" start="272" end="285" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="returns a Datalist with the submitted order log included this allows you to sort the orders by their submit dates.">You can retrieve this list and then add more to it (e.g. additional filters, additional joins, etc...)</description>
       <param description="- only include Orders that have already been submitted." type="object" variable="$onlySubmittedOrders">
@@ -185,7 +189,7 @@ from through the modifier itself.</description>
     </docblock>
     <parameter name="onlySubmittedOrders" byreference="false" type="{unknown}" default="false"/>
   </method>
-  <member name="fieldsAndTabsToBeRemoved" type="array" visibility="protected" line="296">
+  <member name="fieldsAndTabsToBeRemoved" type="array" visibility="protected" line="297">
     <docblock>
       <description compact="fields that we remove from the parent::getCMSFields object set"/>
       <var type="object">
@@ -193,18 +197,18 @@ from through the modifier itself.</description>
       </var>
     </docblock>
   </member>
-  <member name="summary_fields" type="array" visibility="private" line="317">
+  <member name="summary_fields" type="array" visibility="private" line="318">
     <docblock>
       <description compact="STANDARD SILVERSTRIPE STUFF"/>
     </docblock>
   </member>
-  <member name="searchable_fields" type="array" visibility="private" line="326">
+  <member name="searchable_fields" type="array" visibility="private" line="327">
     <docblock>
       <description compact="STANDARD SILVERSTRIPE STUFF"/>
       <todo value=": how to translate this?"/>
     </docblock>
   </member>
-  <method name="scaffoldSearchFields" start="367" end="406" abstract="false" final="false" static="false" visibility="public">
+  <method name="scaffoldSearchFields" start="368" end="407" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.">Some additional logic is included for switching field labels, based on
 how generic or specific the field type is.
@@ -218,10 +222,11 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
     </docblock>
     <parameter name="_params" byreference="false" type="{unknown}" default="null"/>
     <inline>
-      <comment value="we use 100 here because if there is such a big list, an additional filter should be added" line="390"/>
+      <comment value="we use 100 here because if there is such a big list, an additional filter should be added" line="391"/>
+      <comment value="$statusField-&gt;setValue($preSelected);" line="402"/>
     </inline>
   </method>
-  <method name="CMSEditLink" start="412" end="418" abstract="false" final="false" static="false" visibility="public">
+  <method name="CMSEditLink" start="413" end="419" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param description="- e.g. edit" type="object" variable="$action">
@@ -231,25 +236,29 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         <type full="String" namespace="" name="String"/>
       </return>
     </docblock>
-    <parameter name="action" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="action" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="getCMSFields" start="424" end="591" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCMSFields" start="425" end="596" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="STANDARD SILVERSTRIPE STUFF broken up into submitted and not (yet) submitted"/>
     </docblock>
     <inline>
-      <todo value="" line="433"/>
-      <comment value="Having trouble here, as when you submit the form (for example, a payment confirmation)" line="434"/>
-      <comment value="as the step moves forward, meaning the fields generated are incorrect, causing an error" line="435"/>
-      <comment value="&quot;I can't handle sub-URLs of a Form object.&quot; generated by the RequestHandler." line="436"/>
-      <comment value="Therefore we need to try reload the page so that it will be requesting the correct URL to generate the correct fields for the current step" line="437"/>
-      <comment value="Or something similar." line="438"/>
-      <comment value="why not check if the URL == $this-&gt;CMSEditLink()" line="439"/>
-      <comment value="and only tryToFinaliseOrder if this is true...." line="440"/>
-      <comment value="member" line="501"/>
+      <todo value="" line="435"/>
+      <comment value="Having trouble here, as when you submit the form (for example, a payment confirmation)" line="436"/>
+      <comment value="as the step moves forward, meaning the fields generated are incorrect, causing an error" line="437"/>
+      <comment value="&quot;I can't handle sub-URLs of a Form object.&quot; generated by the RequestHandler." line="438"/>
+      <comment value="Therefore we need to try reload the page so that it will be requesting the correct URL to generate the correct fields for the current step" line="439"/>
+      <comment value="Or something similar." line="440"/>
+      <comment value="why not check if the URL == $this-&gt;CMSEditLink()" line="441"/>
+      <comment value="and only tryToFinaliseOrder if this is true...." line="442"/>
+      <comment value="Config::nest();" line="474"/>
+      <comment value="Config::inst()-&gt;update('SSViewer', 'theme_enabled', true);" line="475"/>
+      <comment value="$htmlSummary = $this-&gt;renderWith(&quot;Order&quot;);" line="476"/>
+      <comment value="Config::unnest();" line="477"/>
+      <comment value="member" line="499"/>
     </inline>
   </method>
-  <method name="getOrderItemsField" start="597" end="601" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getOrderItemsField" start="602" end="606" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Field to add and edit Order Items"/>
       <return type="object">
@@ -257,7 +266,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="getModifierTableField" start="607" end="611" abstract="false" final="false" static="false" visibility="public">
+  <method name="getModifierTableField" start="612" end="616" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Field to add and edit Modifiers"/>
       <return type="object">
@@ -265,23 +274,23 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="getBillingAddressField" start="617" end="630" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getBillingAddressField" start="622" end="635" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="return GridField"/>
     </docblock>
     <inline>
-      <comment value="$source = $this-&gt;BillingAddress();" line="627"/>
+      <comment value="$source = $this-&gt;BillingAddress();" line="632"/>
     </inline>
   </method>
-  <method name="getShippingAddressField" start="637" end="650" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getShippingAddressField" start="642" end="655" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="return GridField"/>
     </docblock>
     <inline>
-      <comment value="$source = $this-&gt;ShippingAddress();" line="647"/>
+      <comment value="$source = $this-&gt;ShippingAddress();" line="652"/>
     </inline>
   </method>
-  <method name="getOrderStatusLogsTableField" start="661" end="671" abstract="false" final="false" static="false" visibility="public">
+  <method name="getOrderStatusLogsTableField" start="666" end="676" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Needs to be public because the OrderStep::getCMSFIelds accesses it."/>
       <param type="object" variable="$sourceClass">
@@ -309,7 +318,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       <type full="\\FieldList" namespace="\" name="FieldList"/>
     </parameter>
   </method>
-  <method name="getOrderStatusLogsTableField_Archived" start="681" end="688" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getOrderStatusLogsTableField_Archived" start="686" end="693" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description/>
       <param type="object" variable="$sourceClass">
@@ -337,7 +346,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       <type full="\\FieldList" namespace="\" name="FieldList"/>
     </parameter>
   </method>
-  <method name="getEmailsTableField" start="694" end="699" abstract="false" final="false" static="false" visibility="public">
+  <method name="getEmailsTableField" start="699" end="704" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="object">
@@ -345,7 +354,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="getPaymentsField" start="705" end="711" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getPaymentsField" start="710" end="716" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description/>
       <return type="object">
@@ -353,7 +362,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="OrderStepField" start="716" end="718" abstract="false" final="false" static="false" visibility="public">
+  <method name="OrderStepField" start="721" end="723" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="object">
@@ -361,7 +370,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="init" start="736" end="797" abstract="false" final="false" static="false" visibility="public">
+  <method name="init" start="741" end="802" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="init runs on start of a new Order (@see onAfterWrite) it adds all the modifiers to the orders and the starting OrderStep"/>
       <param type="object" variable="$recalculate">
@@ -373,17 +382,17 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
     </docblock>
     <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
   </method>
-  <method name="tryToFinaliseOrder" start="804" end="816" abstract="false" final="false" static="false" visibility="public">
+  <method name="tryToFinaliseOrder" start="809" end="821" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Goes through the order steps and tries to &quot;apply&quot; the next status to the order."/>
     </docblock>
     <inline>
-      <comment value="status of order is being progressed" line="809"/>
-      <comment value="a little hack to make sure we do not rely on a stored value" line="811"/>
-      <comment value="of &quot;isSubmitted&quot;" line="812"/>
+      <comment value="status of order is being progressed" line="814"/>
+      <comment value="a little hack to make sure we do not rely on a stored value" line="816"/>
+      <comment value="of &quot;isSubmitted&quot;" line="817"/>
     </inline>
   </method>
-  <method name="doNextStatus" start="822" end="833" abstract="false" final="false" static="false" visibility="public">
+  <method name="doNextStatus" start="827" end="838" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Goes through the order steps and tries to &quot;apply&quot; the next"/>
       <return description="(StatusID or false if the next status can not be &quot;applied&quot;)" type="object">
@@ -391,7 +400,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="Cancel" start="841" end="852" abstract="false" final="false" static="false" visibility="public">
+  <method name="Cancel" start="846" end="857" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="cancel an order."/>
       <param description="- the user cancelling the order" type="object" variable="$member">
@@ -407,7 +416,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
     </parameter>
     <parameter name="reason" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="MyStep" start="867" end="879" abstract="false" final="false" static="false" visibility="public">
+  <method name="MyStep" start="872" end="884" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return description="(current OrderStep)" type="object">
@@ -415,7 +424,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="RelevantLogEntry" start="884" end="886" abstract="false" final="false" static="false" visibility="public">
+  <method name="RelevantLogEntry" start="889" end="891" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="object">
@@ -423,7 +432,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="CurrentStepVisibleToCustomer" start="891" end="900" abstract="false" final="false" static="false" visibility="public">
+  <method name="CurrentStepVisibleToCustomer" start="896" end="905" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return description="(current OrderStep that can be seen by customer)" type="object">
@@ -431,74 +440,74 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </return>
     </docblock>
   </method>
-  <method name="IsFirstStep" start="906" end="915" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsFirstStep" start="911" end="920" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="works out if the order is still at the first OrderStep."/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsInCart" start="921" end="923" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsInCart" start="926" end="928" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Is the order still being &quot;edited&quot; by the customer?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsPastCart" start="929" end="931" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsPastCart" start="934" end="936" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="The order has &quot;passed&quot; the IsInCart phase"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsUncomplete" start="937" end="939" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsUncomplete" start="942" end="944" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Are there still steps the order needs to go through?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsProcessing" start="945" end="947" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsProcessing" start="950" end="952" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Is the order in the :&quot;processing&quot; phaase.?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsCompleted" start="953" end="955" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsCompleted" start="958" end="960" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Is the order completed?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsPaid" start="962" end="967" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsPaid" start="967" end="972" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Has the order been paid? TODO: why do we check if there is a total at all?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsCancelled" start="973" end="973" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsCancelled" start="978" end="978" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Has the order been cancelled?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="getIsCancelled" start="974" end="976" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="IsCustomerCancelled" start="982" end="987" abstract="false" final="false" static="false" visibility="public">
+  <method name="getIsCancelled" start="979" end="981" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="IsCustomerCancelled" start="987" end="992" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Has the order been cancelled by the customer?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="IsAdminCancelled" start="994" end="1006" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsAdminCancelled" start="999" end="1011" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Has the order been cancelled by the  administrator?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="ShopClosed" start="1013" end="1015" abstract="false" final="false" static="false" visibility="public">
+  <method name="ShopClosed" start="1018" end="1020" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Is the Shop Closed for business?"/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="CreateOrReturnExistingMember" start="1044" end="1065" abstract="false" final="false" static="false" visibility="public">
+  <method name="CreateOrReturnExistingMember" start="1049" end="1070" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns a member linked to the order.">If a member is already linked, it will return the existing member.
 Otherwise it will return a new Member.
@@ -517,7 +526,7 @@ Also note that if a new member is created, it is not automatically written</desc
     </docblock>
     <parameter name="forceCreation" byreference="false" type="{unknown}" default="false"/>
   </method>
-  <method name="CreateOrReturnExistingAddress" start="1079" end="1119" abstract="false" final="false" static="false" visibility="public">
+  <method name="CreateOrReturnExistingAddress" start="1084" end="1124" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns either the existing one or a new Order Address...">All Orders will have a Shipping and Billing address attached to it.
 Method used to retrieve object e.g. for $order-&gt;BillingAddress(); "BillingAddress" is the method name you can use.
@@ -535,7 +544,7 @@ If the method name is the same as the class name then dont worry about providing
     <parameter name="className" byreference="false" type="string" default="&quot;BillingAddress&quot;"/>
     <parameter name="alternativeMethodName" byreference="false" type="string" default="''"/>
   </method>
-  <method name="SetCountryFields" start="1126" end="1140" abstract="false" final="false" static="false" visibility="public">
+  <method name="SetCountryFields" start="1131" end="1145" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Sets the country in the billing and shipping address TO DO: only set one or the other...."/>
       <param description="- code for the country e.g. NZ" type="object" variable="$countryCode">
@@ -544,7 +553,7 @@ If the method name is the same as the class name then dont worry about providing
     </docblock>
     <parameter name="countryCode" byreference="false" type="{unknown}"/>
   </method>
-  <method name="SetRegionFields" start="1146" end="1160" abstract="false" final="false" static="false" visibility="public">
+  <method name="SetRegionFields" start="1151" end="1165" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Sets the region in the billing and shipping address"/>
       <param description="- ID for the region to be set" type="object" variable="$regionID">
@@ -553,7 +562,7 @@ If the method name is the same as the class name then dont worry about providing
     </docblock>
     <parameter name="regionID" byreference="false" type="{unknown}"/>
   </method>
-  <method name="UpdateCurrency" start="1167" end="1179" abstract="false" final="false" static="false" visibility="public">
+  <method name="UpdateCurrency" start="1172" end="1184" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Stores the preferred currency of the order.">IMPORTANTLY we store the exchange rate for future reference...</description>
       <param type="object" variable="$currency">
@@ -562,13 +571,13 @@ If the method name is the same as the class name then dont worry about providing
     </docblock>
     <parameter name="newCurrency" byreference="false" type="{unknown}"/>
   </method>
-  <method name="SetCurrency" start="1184" end="1186" abstract="false" final="false" static="false" visibility="public">
+  <method name="SetCurrency" start="1189" end="1191" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="alias for UpdateCurrency"/>
     </docblock>
     <parameter name="currency" byreference="false" type="{unknown}"/>
   </method>
-  <method name="sendEmail" start="1205" end="1207" abstract="false" final="false" static="false" visibility="public">
+  <method name="sendEmail" start="1210" end="1212" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Send the invoice of the order by email."/>
       <param description="- subject for the email" type="object" variable="$subject">
@@ -596,7 +605,7 @@ If the method name is the same as the class name then dont worry about providing
     <parameter name="adminOnly" byreference="false" type="{unknown}" default="false"/>
     <parameter name="emailClassName" byreference="false" type="string" default="'Order_InvoiceEmail'"/>
   </method>
-  <method name="sendError" start="1217" end="1219" abstract="false" final="false" static="false" visibility="public">
+  <method name="sendError" start="1222" end="1224" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Sends a message to the shop admin ONLY and not to the customer This can be used by ordersteps and orderlogs to notify the admin of any potential problems."/>
       <param description="- subject for the email" type="object" variable="$subject">
@@ -612,7 +621,7 @@ If the method name is the same as the class name then dont worry about providing
     <parameter name="subject" byreference="false" type="string" default="&quot;&quot;"/>
     <parameter name="message" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="sendAdminNotification" start="1229" end="1231" abstract="false" final="false" static="false" visibility="public">
+  <method name="sendAdminNotification" start="1234" end="1236" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Sends a message to the shop admin ONLY and not to the customer This can be used by ordersteps and orderlogs to notify the admin of any potential problems."/>
       <param description="- subject for the email" type="object" variable="$subject">
@@ -628,7 +637,7 @@ If the method name is the same as the class name then dont worry about providing
     <parameter name="subject" byreference="false" type="string" default="&quot;&quot;"/>
     <parameter name="message" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="prepareEmail" start="1244" end="1285" abstract="false" final="false" static="false" visibility="protected">
+  <method name="prepareEmail" start="1249" end="1290" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Send a mail of the order to the client (and another to the admin)."/>
       <param description="- the class name of the email you wish to send" type="object" variable="$emailClassName">
@@ -656,15 +665,15 @@ If the method name is the same as the class name then dont worry about providing
     <parameter name="resend" byreference="false" type="{unknown}" default="false"/>
     <parameter name="adminOnly" byreference="false" type="{unknown}" default="false"/>
     <inline>
-      <comment value="why are we using this email and NOT the member.EMAIL?" line="1247"/>
-      <comment value="for historical reasons????" line="1248"/>
-      <comment value="we take the subject from the Array Data, just in case it has been adjusted." line="1262"/>
-      <comment value="This might be called from within the CMS," line="1273"/>
-      <comment value="so we need to restore the theme, just in case" line="1274"/>
-      <comment value="templates within the theme exist" line="1275"/>
+      <comment value="why are we using this email and NOT the member.EMAIL?" line="1252"/>
+      <comment value="for historical reasons????" line="1253"/>
+      <comment value="we take the subject from the Array Data, just in case it has been adjusted." line="1267"/>
+      <comment value="This might be called from within the CMS," line="1278"/>
+      <comment value="so we need to restore the theme, just in case" line="1279"/>
+      <comment value="templates within the theme exist" line="1280"/>
     </inline>
   </method>
-  <method name="createReplacementArrayForEmail" start="1307" end="1330" abstract="false" final="false" static="false" visibility="public">
+  <method name="createReplacementArrayForEmail" start="1312" end="1335" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the Data that can be used in the body of an order Email we add the subject here so that the subject, for example, can be added to the &lt;title&gt; of the email template.">we add the subject here so that the subject, for example, can be added to the &lt;title&gt;
 of the email template.</description>
@@ -688,7 +697,7 @@ of the email template.</description>
     <parameter name="message" byreference="false" type="string" default="&quot;&quot;"/>
     <parameter name="subject" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="renderOrderInEmailFormat" start="1338" end="1349" abstract="false" final="false" static="false" visibility="public">
+  <method name="renderOrderInEmailFormat" start="1343" end="1351" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the order formatted as an email"/>
       <param description="- the additional message" type="object" variable="$message">
@@ -702,7 +711,7 @@ of the email template.</description>
     <parameter name="message" byreference="false" type="string" default="&quot;&quot;"/>
     <parameter name="emailClassName" byreference="false" type="{unknown}"/>
   </method>
-  <method name="getOrderAttributesByType" start="1368" end="1389" abstract="false" final="false" static="false" visibility="public">
+  <method name="getOrderAttributesByType" start="1370" end="1391" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns a list of Order Attributes by type"/>
       <param description="| String $types" type="object">
@@ -714,7 +723,7 @@ of the email template.</description>
     </docblock>
     <parameter name="types" byreference="false" type="{unknown}"/>
   </method>
-  <method name="Items" start="1397" end="1402" abstract="false" final="false" static="false" visibility="public">
+  <method name="Items" start="1399" end="1404" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the items of the order.">Items are the order items (products) and NOT the modifiers (discount, tax, etc...)</description>
       <param description="filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')" type="object">
@@ -726,7 +735,7 @@ of the email template.</description>
     </docblock>
     <parameter name="filterOrClassName" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="OrderItems" start="1409" end="1411" abstract="false" final="false" static="false" visibility="public">
+  <method name="OrderItems" start="1411" end="1413" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <alias value="function of Items"/>
@@ -739,7 +748,7 @@ of the email template.</description>
     </docblock>
     <parameter name="filterOrClassName" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="itemsFromDatabase" start="1420" end="1432" abstract="false" final="false" static="false" visibility="protected">
+  <method name="itemsFromDatabase" start="1422" end="1434" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Return all the {@link OrderItem} instances that are available as records in the database."/>
       <param description="filter - where statement to exclude certain items," type="object">you can also pass a classname (e.g. MyOrderItem), in which case only this class will be returned (and any class extending your given class)<type full="String" namespace="" name="String"/></param>
@@ -749,7 +758,7 @@ of the email template.</description>
     </docblock>
     <parameter name="filterOrClassName" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="OrderModifiers" start="1438" end="1440" abstract="false" final="false" static="false" visibility="public">
+  <method name="OrderModifiers" start="1440" end="1442" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <alias value="for Modifiers"/>
@@ -758,7 +767,7 @@ of the email template.</description>
       </return>
     </docblock>
   </method>
-  <method name="Modifiers" start="1449" end="1451" abstract="false" final="false" static="false" visibility="public">
+  <method name="Modifiers" start="1451" end="1453" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the modifiers of the order, if it hasn't been saved yet it returns the modifiers from session, if it has, it returns them from the DB entry. ONLY USE OUTSIDE ORDER"/>
       <param description="filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')" type="object">
@@ -770,7 +779,7 @@ of the email template.</description>
     </docblock>
     <parameter name="filterOrClassName" byreference="false" type="string" default="''"/>
   </method>
-  <method name="modifiersFromDatabase" start="1460" end="1472" abstract="false" final="false" static="false" visibility="protected">
+  <method name="modifiersFromDatabase" start="1462" end="1474" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Get all {@link OrderModifier} instances that are available as records in the database.">NOTE: includes REMOVED Modifiers, so that they do not get added again...</description>
       <param description="filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')" type="object">
@@ -782,7 +791,7 @@ of the email template.</description>
     </docblock>
     <parameter name="filterOrClassName" byreference="false" type="string" default="''"/>
   </method>
-  <method name="calculateOrderAttributes" start="1479" end="1492" abstract="false" final="false" static="false" visibility="public">
+  <method name="calculateOrderAttributes" start="1481" end="1494" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Calculates and updates all the order attributes."/>
       <param description="- run it, even if it has run already" type="object" variable="$recalculate">
@@ -791,7 +800,7 @@ of the email template.</description>
     </docblock>
     <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
   </method>
-  <method name="calculateOrderItems" start="1499" end="1512" abstract="false" final="false" static="false" visibility="protected">
+  <method name="calculateOrderItems" start="1501" end="1514" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Calculates and updates all the product items."/>
       <param description="- run it, even if it has run already" type="object" variable="$recalculate">
@@ -800,12 +809,12 @@ of the email template.</description>
     </docblock>
     <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
     <inline>
-      <comment value="check if order has modifiers already" line="1500"/>
-      <comment value="check /re-add all non-removable ones" line="1501"/>
-      <comment value="$start = microtime();" line="1502"/>
+      <comment value="check if order has modifiers already" line="1502"/>
+      <comment value="check /re-add all non-removable ones" line="1503"/>
+      <comment value="$start = microtime();" line="1504"/>
     </inline>
   </method>
-  <method name="calculateModifiers" start="1521" end="1531" abstract="false" final="false" static="false" visibility="protected">
+  <method name="calculateModifiers" start="1523" end="1533" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Calculates and updates all the modifiers."/>
       <param description="- run it, even if it has run already" type="object" variable="$recalculate">
@@ -814,7 +823,7 @@ of the email template.</description>
     </docblock>
     <parameter name="recalculate" byreference="false" type="{unknown}" default="false"/>
   </method>
-  <method name="ModifiersSubTotal" start="1543" end="1568" abstract="false" final="false" static="false" visibility="public">
+  <method name="ModifiersSubTotal" start="1545" end="1570" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the subtotal of the modifiers for this order.">If a modifier appears in the excludedModifiers array, it is not counted.</description>
       <param description="- Class(es) of modifier(s) to ignore in the calculation." type="object" variable="$excluded">
@@ -830,13 +839,13 @@ of the email template.</description>
     <parameter name="excluded" byreference="false" type="{unknown}" default="null"/>
     <parameter name="stopAtExcludedModifier" byreference="false" type="{unknown}" default="false"/>
     <inline>
-      <comment value="we just double-check this..." line="1548"/>
-      <comment value="do the next modifier" line="1553"/>
+      <comment value="we just double-check this..." line="1550"/>
+      <comment value="do the next modifier" line="1555"/>
     </inline>
   </method>
-  <method name="RetrieveModifier" start="1574" end="1583" abstract="false" final="false" static="false" visibility="public">
+  <method name="RetrieveModifier" start="1578" end="1587" abstract="false" final="false" static="false" visibility="public">
     <docblock>
-      <description/>
+      <description compact="returns a modifier that is an instanceof the classname it extends"/>
       <param description="class name for the modifier" type="object" variable="$className:">
         <type full="String" namespace="" name="String"/>
       </param>
@@ -846,12 +855,12 @@ of the email template.</description>
     </docblock>
     <parameter name="className" byreference="false" type="{unknown}"/>
   </method>
-  <method name="getMemberForCanFunctions" start="1595" end="1602" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getMemberForCanFunctions" start="1599" end="1606" abstract="false" final="false" static="false" visibility="protected">
     <parameter name="member" byreference="false" type="object" default="null">
       <type full="\\Member" namespace="\" name="Member"/>
     </parameter>
   </method>
-  <method name="canCreate" start="1608" end="1615" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCreate" start="1612" end="1619" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$member">
@@ -863,7 +872,7 @@ of the email template.</description>
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canView" start="1622" end="1694" abstract="false" final="false" static="false" visibility="public">
+  <method name="canView" start="1626" end="1698" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method - can the current member view this order?"/>
       <param type="object" variable="$member">
@@ -875,25 +884,25 @@ of the email template.</description>
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     <inline>
-      <comment value="check if this has been &quot;altered&quot; in any DataExtension" line="1627"/>
-      <comment value="if this method has been extended in a data object decorator then use this" line="1629"/>
-      <comment value="is the member is a shop admin they can always view it" line="1633"/>
-      <comment value="if the current member OWNS the order, (s)he can always view it." line="1637"/>
-      <comment value="it is the current order" line="1641"/>
-      <comment value="we do some additional CHECKS for session hackings!" line="1644"/>
-      <comment value="must be the same member!" line="1646"/>
-      <comment value="if the session ID matches, we can always view it." line="1681"/>
-      <comment value="SECURITYL RISK: if you know someone else his/her session" line="1682"/>
-      <comment value="OR you can view the sessions on the server" line="1683"/>
-      <comment value="OR you can guess the session" line="1684"/>
-      <comment value="THEN you can view the order." line="1685"/>
-      <comment value="by viewing the order you can also access some of the member details." line="1686"/>
-      <comment value="NB: this MUST be the last resort! If all other methods fail." line="1687"/>
-      <comment value="That is, if we are working with the current order then it is a good idea" line="1688"/>
-      <comment value="to deny non-matching members." line="1689"/>
+      <comment value="check if this has been &quot;altered&quot; in any DataExtension" line="1631"/>
+      <comment value="if this method has been extended in a data object decorator then use this" line="1633"/>
+      <comment value="is the member is a shop admin they can always view it" line="1637"/>
+      <comment value="if the current member OWNS the order, (s)he can always view it." line="1641"/>
+      <comment value="it is the current order" line="1645"/>
+      <comment value="we do some additional CHECKS for session hackings!" line="1648"/>
+      <comment value="must be the same member!" line="1650"/>
+      <comment value="if the session ID matches, we can always view it." line="1685"/>
+      <comment value="SECURITYL RISK: if you know someone else his/her session" line="1686"/>
+      <comment value="OR you can view the sessions on the server" line="1687"/>
+      <comment value="OR you can guess the session" line="1688"/>
+      <comment value="THEN you can view the order." line="1689"/>
+      <comment value="by viewing the order you can also access some of the member details." line="1690"/>
+      <comment value="NB: this MUST be the last resort! If all other methods fail." line="1691"/>
+      <comment value="That is, if we are working with the current order then it is a good idea" line="1692"/>
+      <comment value="to deny non-matching members." line="1693"/>
     </inline>
   </method>
-  <method name="IsInSession" start="1701" end="1703" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsInSession" start="1705" end="1707" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="object">
@@ -901,9 +910,9 @@ of the email template.</description>
       </return>
     </docblock>
   </method>
-  <method name="canEdit" start="1709" end="1726" abstract="false" final="false" static="false" visibility="public">
+  <method name="canEdit" start="1719" end="1730" abstract="false" final="false" static="false" visibility="public">
     <docblock>
-      <description/>
+      <description compact="if we set canEdit to false then we can not see the child records Basically, you can edit when you can view and canEdit (even as a customer) Or if you are a Shop Admin you can always edit.">Otherwise it is false...</description>
       <param type="object" variable="$member">
         <type full="Member" namespace="" name="Member"/>
       </param>
@@ -913,7 +922,7 @@ of the email template.</description>
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canPay" start="1733" end="1741" abstract="false" final="false" static="false" visibility="public">
+  <method name="canPay" start="1737" end="1745" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Can a payment be made for this Order?"/>
       <param type="object" variable="$member">
@@ -927,7 +936,7 @@ of the email template.</description>
       <type full="\\Member" namespace="\" name="Member"/>
     </parameter>
   </method>
-  <method name="canCancel" start="1748" end="1760" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCancel" start="1752" end="1762" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Can the given member cancel this order?"/>
       <param type="object" variable="$member">
@@ -941,10 +950,10 @@ of the email template.</description>
       <type full="\\Member" namespace="\" name="Member"/>
     </parameter>
     <inline>
-      <comment value="if it is already cancelled it can be cancelled again" line="1749"/>
+      <comment value="if it is already cancelled it can be cancelled again" line="1753"/>
     </inline>
   </method>
-  <method name="canDelete" start="1767" end="1778" abstract="false" final="false" static="false" visibility="public">
+  <method name="canDelete" start="1769" end="1778" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$member">
@@ -989,7 +998,7 @@ of the email template.</description>
       </return>
     </docblock>
   </method>
-  <method name="EmailLink" start="1856" end="1856" abstract="false" final="false" static="false" visibility="public">
+  <method name="EmailLink" start="1857" end="1857" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the absolute link to the order that can be used in the customer communication (email)"/>
       <return type="object">
@@ -998,10 +1007,10 @@ of the email template.</description>
     </docblock>
     <parameter name="type" byreference="false" type="string" default="&quot;Order_StatusEmail&quot;"/>
   </method>
-  <method name="getEmailLink" start="1857" end="1863" abstract="false" final="false" static="false" visibility="public">
+  <method name="getEmailLink" start="1858" end="1864" abstract="false" final="false" static="false" visibility="public">
     <parameter name="type" byreference="false" type="string" default="&quot;Order_StatusEmail&quot;"/>
   </method>
-  <method name="PrintLink" start="1869" end="1869" abstract="false" final="false" static="false" visibility="public">
+  <method name="PrintLink" start="1870" end="1870" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the absolute link to the order for printing"/>
       <return type="object">
@@ -1009,8 +1018,8 @@ of the email template.</description>
       </return>
     </docblock>
   </method>
-  <method name="getPrintLink" start="1870" end="1876" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="PackingSlipLink" start="1882" end="1882" abstract="false" final="false" static="false" visibility="public">
+  <method name="getPrintLink" start="1871" end="1877" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="PackingSlipLink" start="1883" end="1883" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the absolute link to the order for printing"/>
       <return type="object">
@@ -1018,7 +1027,7 @@ of the email template.</description>
       </return>
     </docblock>
   </method>
-  <method name="getPackingSlipLink" start="1883" end="1890" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getPackingSlipLink" start="1884" end="1890" abstract="false" final="false" static="false" visibility="public"/>
   <method name="RetrieveLink" start="1898" end="1898" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the absolute link that the customer can use to retrieve the email WITHOUT logging in."/>
@@ -1282,7 +1291,7 @@ if there is anything in the cart.</description>
     </docblock>
   </method>
   <method name="getHasAlternativeCurrency" start="2322" end="2334" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="ensureCorrectExchangeRate" start="2340" end="2358" abstract="false" final="false" static="false" visibility="public">
+  <method name="EnsureCorrectExchangeRate" start="2340" end="2358" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Makes sure exchange rate is updated and maintained before order is submitted This method is public because it could be called from a shopping Cart Object."/>
     </docblock>
@@ -1361,7 +1370,7 @@ Otherwise it will default to the checkout page</description>
         <type full="String(URLSegment)" namespace="" name="String(URLSegment)"/>
       </return>
     </docblock>
-    <parameter name="action" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="action" byreference="false" type="{unknown}" default="null"/>
   </method>
   <method name="APILink" start="2480" end="2482" abstract="false" final="false" static="false" visibility="public">
     <docblock>
@@ -1387,15 +1396,15 @@ Otherwise it will default to the checkout page</description>
       </return>
     </docblock>
   </method>
-  <method name="ConvertToHTML" start="2507" end="2517" abstract="false" final="false" static="false" visibility="public">
+  <method name="ConvertToHTML" start="2507" end="2514" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Converts the Order into HTML, based on the Order Template."/>
-      <return description="- HTML" type="object">
-        <type full="String" namespace="" name="String"/>
+      <return description="Object" type="object">
+        <type full="HTML" namespace="" name="HTML"/>
       </return>
     </docblock>
   </method>
-  <method name="ConvertToString" start="2524" end="2526" abstract="false" final="false" static="false" visibility="public">
+  <method name="ConvertToString" start="2521" end="2523" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Converts the Order into a serialized string TO DO: check if this works and check if we need to use special sapphire serialization code"/>
       <return description="- serialized object" type="object">
@@ -1403,7 +1412,7 @@ Otherwise it will default to the checkout page</description>
       </return>
     </docblock>
   </method>
-  <method name="ConvertToJSON" start="2533" end="2535" abstract="false" final="false" static="false" visibility="public">
+  <method name="ConvertToJSON" start="2530" end="2532" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Converts the Order into a JSON object TO DO: check if this works and check if we need to use special sapphire JSON code"/>
       <return description="-  JSON" type="object">
@@ -1411,29 +1420,15 @@ Otherwise it will default to the checkout page</description>
       </return>
     </docblock>
   </method>
-  <method name="addHasOneAndHasManyAsVariables" start="2543" end="2560" abstract="false" final="false" static="false" visibility="protected">
+  <method name="addHasOneAndHasManyAsVariables" start="2540" end="2550" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="returns itself wtih more data added as variables.">We add has_one and has_many as variables like this: $this-&gt;MyHasOne_serialized = serialize($this-&gt;MyHasOne())</description>
       <return description="- with most important has one and has many items included as variables." type="object">
         <type full="Order" namespace="" name="Order"/>
       </return>
     </docblock>
-    <inline>
-      <comment value="THIS HAS TO BE REDONE - IT IS NONSENSICAL!" line="2544"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;Member_serialized = serialize($this-&gt;Member());" line="2545"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;BillingAddress_serialized = serialize($this-&gt;BillingAddress());" line="2546"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;ShippingAddress_serialized = serialize($this-&gt;ShippingAddress());" line="2547"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;Attributes_serialized = serialize($this-&gt;Attributes());" line="2548"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;OrderStatusLogs_serialized = serialize($this-&gt;OrderStatusLogs());" line="2549"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;Payments_serialized = serialize($this-&gt;Payments());" line="2550"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;Emails_serialized = serialize($this-&gt;Emails());" line="2551"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;Title_serialized = serialize($this-&gt;Title());" line="2552"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;Total_serialized = serialize($this-&gt;Total());" line="2553"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;SubTotal_serialized = serialize($this-&gt;SubTotal());" line="2554"/>
-      <comment xmlns="http://xml.phpdox.net/src#" value="$this-&gt;TotalPaid_serialized = serialize($this-&gt;TotalPaid());" line="2555"/>
-    </inline>
   </method>
-  <method name="AJAXDefinitions" start="2576" end="2578" abstract="false" final="false" static="false" visibility="public">
+  <method name="AJAXDefinitions" start="2566" end="2568" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the instance of EcommerceConfigAjax for use in templates.">In templates, it is used like this:
 $EcommerceConfigAjax.TableID</description>
@@ -1442,7 +1437,7 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="EcomConfig" start="2585" end="2587" abstract="false" final="false" static="false" visibility="public">
+  <method name="EcomConfig" start="2575" end="2577" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the instance of EcommerceDBConfig"/>
       <return type="object">
@@ -1450,7 +1445,7 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="updateForAjax" start="2594" end="2644" abstract="false" final="false" static="false" visibility="public">
+  <method name="updateForAjax" start="2584" end="2634" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Collects the JSON data for an ajax return of the cart."/>
       <param type="object" variable="$js">
@@ -1462,7 +1457,7 @@ $EcommerceConfigAjax.TableID</description>
     </docblock>
     <parameter name="js" byreference="false" type="array"/>
   </method>
-  <method name="SubTotalCartValue" start="2650" end="2652" abstract="false" final="false" static="false" visibility="public">
+  <method name="SubTotalCartValue" start="2640" end="2642" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <todo value=": move to more appropriate class"/>
@@ -1471,27 +1466,27 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="populateDefaults" start="2667" end="2669" abstract="false" final="false" static="false" visibility="public">
+  <method name="populateDefaults" start="2657" end="2659" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="tandard SS method"/>
     </docblock>
   </method>
-  <method name="onBeforeWrite" start="2671" end="2676" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="onAfterWrite" start="2682" end="2701" abstract="false" final="false" static="false" visibility="public">
+  <method name="onBeforeWrite" start="2661" end="2666" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="onAfterWrite" start="2672" end="2691" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method adds the ability to update order after writing it."/>
     </docblock>
     <inline>
-      <comment value="crucial!" line="2684"/>
+      <comment value="crucial!" line="2674"/>
     </inline>
   </method>
-  <method name="onBeforeDelete" start="2709" end="2753" abstract="false" final="false" static="false" visibility="public">
+  <method name="onBeforeDelete" start="2699" end="2743" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="tandard SS method">delete attributes, statuslogs, and payments
 THIS SHOULD NOT BE USED AS ORDERS SHOULD BE CANCELLED NOT DELETED</description>
     </docblock>
   </method>
-  <method name="debug" start="2769" end="2772" abstract="false" final="false" static="false" visibility="public">
+  <method name="debug" start="2759" end="2762" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Debug helper method.">Can be called from /shoppingcart/debug/</description>
       <return type="object">

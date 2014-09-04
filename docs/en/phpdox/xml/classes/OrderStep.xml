@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderStep" namespace="" name="OrderStep" abstract="false" final="false" start="13" end="806">
-  <file path="./../../../code/model/process" file="OrderStep.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/process/OrderStep.php" size="51698" time="2014-04-19T23:19:18+12:00" unixtime="1397906358" sha1="d2dcfa48fb4885c6a4e47229bd80360f84a82e0c"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderStep" namespace="" name="OrderStep" abstract="false" final="false" start="13" end="842">
+  <file path="./../../../code/model/process" file="OrderStep.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/process/OrderStep.php" size="52743" time="2014-08-25T17:16:29+12:00" unixtime="1408943789" sha1="26ad45f22ad87adb54448c77ff01818c90157c26"/>
   <docblock>
     <description/>
     <description/>
@@ -288,7 +288,7 @@ When the method return null, the order is displayed using the standard display p
   </method>
   <method name="nextStep" start="394" end="402" abstract="false" final="false" static="false" visibility="public">
     <docblock>
-      <description compact="extStep: returns the next step (after it checks if everything is in place for the next step to run...)"/>
+      <description compact="nextStep: returns the next step (after it checks if everything is in place for the next step to run...)"/>
       <see value="Order::doNextStatus"/>
       <param type="object" variable="$order">
         <type full="Order" namespace="" name="Order"/>
@@ -391,7 +391,7 @@ When the method return null, the order is displayed using the standard display p
       </return>
     </docblock>
   </method>
-  <method name="hasBeenSent" start="529" end="543" abstract="false" final="false" static="false" visibility="public">
+  <method name="hasBeenSent" start="529" end="551" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Has an email been sent to the customer for this order step.">-10 days"</description>
       <param type="object" variable="$order">
@@ -409,11 +409,11 @@ When the method return null, the order is displayed using the standard display p
     </parameter>
     <parameter name="checkDateOfOrder" byreference="false" type="{unknown}" default="true"/>
     <inline>
-      <comment value="if it has been more than a week since the order was last edited (submitted) then we do not send emails as" line="530"/>
+      <comment value="if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as" line="530"/>
       <comment value="this would be embarrasing." line="531"/>
     </inline>
   </method>
-  <method name="hasCustomerMessage" start="549" end="551" abstract="false" final="false" static="false" visibility="protected">
+  <method name="hasCustomerMessage" start="557" end="559" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="For some ordersteps this returns true..."/>
       <return type="object">
@@ -421,7 +421,7 @@ When the method return null, the order is displayed using the standard display p
       </return>
     </docblock>
   </method>
-  <method name="HasCustomerMessageNice" start="557" end="557" abstract="false" final="false" static="false" visibility="public">
+  <method name="HasCustomerMessageNice" start="565" end="565" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Formatted answer for &quot;hasCustomerMessage&quot;"/>
       <return type="object">
@@ -429,8 +429,8 @@ When the method return null, the order is displayed using the standard display p
       </return>
     </docblock>
   </method>
-  <method name="getHasCustomerMessageNice" start="558" end="560" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="ShowAsSummary" start="567" end="567" abstract="false" final="false" static="false" visibility="public">
+  <method name="getHasCustomerMessageNice" start="566" end="568" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="ShowAsSummary" start="575" end="575" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Formatted answer for &quot;hasCustomerMessage&quot;"/>
       <return type="object">
@@ -438,8 +438,8 @@ When the method return null, the order is displayed using the standard display p
       </return>
     </docblock>
   </method>
-  <method name="getShowAsSummary" start="568" end="597" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="relevantLogEntryClassName" type="string" default="&quot;&quot;" visibility="protected" line="612">
+  <method name="getShowAsSummary" start="576" end="605" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="relevantLogEntryClassName" type="string" default="&quot;&quot;" visibility="protected" line="620">
     <docblock>
       <description compact="The OrderStatusLog that is relevant to the particular step."/>
       <var type="object">
@@ -447,13 +447,13 @@ When the method return null, the order is displayed using the standard display p
       </var>
     </docblock>
   </member>
-  <method name="getRelevantLogEntryClassName" start="617" end="619" abstract="false" final="false" static="false" visibility="public">
+  <method name="getRelevantLogEntryClassName" start="625" end="627" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="string"/>
     </docblock>
   </method>
-  <method name="setRelevantLogEntryClassName" start="624" end="626" abstract="false" final="false" static="false" visibility="public">
+  <method name="setRelevantLogEntryClassName" start="632" end="634" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -462,7 +462,7 @@ When the method return null, the order is displayed using the standard display p
     </docblock>
     <parameter name="s" byreference="false" type="{unknown}"/>
   </method>
-  <method name="RelevantLogEntry" start="633" end="637" abstract="false" final="false" static="false" visibility="public">
+  <method name="RelevantLogEntry" start="641" end="645" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the OrderStatusLog that is relevant to this step."/>
       <param type="object" variable="$order">
@@ -476,7 +476,43 @@ When the method return null, the order is displayed using the standard display p
       <type full="\\Order" namespace="\" name="Order"/>
     </parameter>
   </method>
-  <method name="canDelete" start="652" end="675" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCreate" start="662" end="664" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method These are only created programmatically."/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canView" start="671" end="674" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canEdit" start="681" end="684" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param description="| NULL" type="object">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canDelete" start="691" end="713" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method"/>
       <param type="object" variable="$member">
@@ -488,45 +524,35 @@ When the method return null, the order is displayed using the standard display p
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     <inline>
-      <comment value="cant delete last status if there are orders with this status" line="653"/>
+      <comment value="cant delete last status if there are orders with this status" line="692"/>
     </inline>
   </method>
-  <method name="canCreate" start="683" end="685" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description compact="Standard SS method"/>
-      <param type="object" variable="$member">
-        <type full="Member" namespace="" name="Member"/>
-      </param>
-      <return type="object">
-        <type full="Boolean" namespace="" name="Boolean"/>
-      </return>
-    </docblock>
-    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-  </method>
-  <method name="onBeforeWrite" start="690" end="693" abstract="false" final="false" static="false" visibility="public">
+  <method name="onBeforeWrite" start="718" end="722" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
     </docblock>
   </method>
-  <method name="onBeforeDelete" start="699" end="722" abstract="false" final="false" static="false" visibility="public">
+  <method name="onBeforeDelete" start="728" end="747" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="move linked orders to the next status standard SS method"/>
     </docblock>
     <inline>
-      <comment value="backup" line="704"/>
+      <comment value="backup" line="731"/>
     </inline>
   </method>
-  <method name="onAfterDelete" start="727" end="730" abstract="false" final="false" static="false" visibility="public">
+  <method name="onAfterDelete" start="752" end="755" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
     </docblock>
   </method>
-  <method name="requireDefaultRecords" start="737" end="788" abstract="false" final="false" static="false" visibility="public">
+  <method name="NextOrderStep" start="757" end="761" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="PreviousOrderStep" start="763" end="767" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="requireDefaultRecords" start="773" end="824" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart"/>
     </docblock>
   </method>
-  <method name="EcomConfig" start="794" end="796" abstract="false" final="false" static="false" visibility="protected">
+  <method name="EcomConfig" start="830" end="832" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="returns the standard EcommerceDBConfig for use within OrderSteps."/>
       <return type="object">
@@ -534,7 +560,7 @@ When the method return null, the order is displayed using the standard display p
       </return>
     </docblock>
   </method>
-  <method name="myDescription" start="802" end="804" abstract="false" final="false" static="false" visibility="protected">
+  <method name="myDescription" start="838" end="840" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Explains the current order step."/>
       <return type="object">

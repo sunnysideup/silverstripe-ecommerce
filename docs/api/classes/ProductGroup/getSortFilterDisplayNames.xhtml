@@ -65,13 +65,15 @@
       </nav>
       <section>
         <h1><small>ProductGroup::</small>getSortFilterDisplayNames</h1>
-        <h4>returns the full sortFilterDisplayNames set or a subset by either type (e.g. FILER) or variable (e.g dbFieldName)</h4>
+        <h4>returns the full sortFilterDisplayNames set, a subset, or one value by either type (e.g. FILER) or variable (e.g dbFieldName) or both.</h4>
         <p/>
         <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>public function getSortFilterDisplayNames([string
-        $typeOrVariable = ""] )
+          <code>protected function getSortFilterDisplayNames([string
+        $typeOrVariable = "",
+            [string
+        $variable = ""]] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
@@ -80,11 +82,15 @@
                 —
                 string</dt>
           <dd/>
+          <dt><code>$variable</code>
+                —
+                string</dt>
+          <dd/>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">
           <dt>Array</dt>
-          <dd><br/>
+          <dd>| String<br/>
         </dd>
         </dl>
       </section>

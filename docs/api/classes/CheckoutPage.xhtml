@@ -83,13 +83,22 @@
                     </li><li>public static String <a title="CheckoutPage" href="../classes/CheckoutPage/find_next_step_link.xhtml">find_next_step_link</a>()
                     </li><li>public static string <a title="CheckoutPage" href="../classes/CheckoutPage/get_checkout_order_link.xhtml">get_checkout_order_link</a>()
                     </li><li>public Boolean <a title="CheckoutPage" href="../classes/CheckoutPage/canCreate.xhtml">canCreate</a>()
+                    </li><li>public void <a title="CheckoutPage" href="../classes/CheckoutPage/caView.xhtml">caView</a>()
+                    </li><li>public Boolean <a title="CheckoutPage" href="../classes/CheckoutPage/canEdit.xhtml">canEdit</a>()
+                    </li><li>public Boolean <a title="CheckoutPage" href="../classes/CheckoutPage/canDelete.xhtml">canDelete</a>()
+                    </li><li>public Boolean <a title="CheckoutPage" href="../classes/CheckoutPage/canPublish.xhtml">canPublish</a>()
                     </li><li>public FieldList <a title="CheckoutPage" href="../classes/CheckoutPage/getCMSFields.xhtml">getCMSFields</a>()
                     </li><li>protected GridField <a title="CheckoutPage" href="../classes/CheckoutPage/getOrderModifierDescriptionField.xhtml">getOrderModifierDescriptionField</a>()
                     </li><li>protected GridField <a title="CheckoutPage" href="../classes/CheckoutPage/getCheckoutStepDescriptionField.xhtml">getCheckoutStepDescriptionField</a>()
+                    </li><li>public void <a title="CheckoutPage" href="../classes/CheckoutPage/requireDefaultRecords.xhtml">requireDefaultRecords</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="CartPage">CartPage</span></li><li>public void <a title="CartPage" href="../classes/CartPage/i18n_singular_name.xhtml">i18n_singular_name</a>()
                         </li><li>public void <a title="CartPage" href="../classes/CartPage/i18n_plural_name.xhtml">i18n_plural_name</a>()
                         </li><li>public void <a title="CartPage" href="../classes/CartPage/obj.xhtml">obj</a>()
                         </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/canCreate.xhtml">canCreate</a>()
+                        </li><li>public void <a title="CartPage" href="../classes/CartPage/caView.xhtml">caView</a>()
+                        </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/canEdit.xhtml">canEdit</a>()
+                        </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/canDelete.xhtml">canDelete</a>()
+                        </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/canPublish.xhtml">canPublish</a>()
                         </li><li>public void <a title="CartPage" href="../classes/CartPage/getCMSFields.xhtml">getCMSFields</a>()
                         </li><li>public static String <a title="CartPage" href="../classes/CartPage/find_link.xhtml">find_link</a>()
                         </li><li>public static String <a title="CartPage" href="../classes/CartPage/new_order_link.xhtml">new_order_link</a>()
@@ -154,8 +163,17 @@
           </ul>
           <h4>public</h4>
           <ul>
+            <li id="caView">
+              <a title="CheckoutPage" href="../classes/CheckoutPage/caView.xhtml">caView()</a>
+            </li>
             <li id="canCreate"><a title="CheckoutPage" href="../classes/CheckoutPage/canCreate.xhtml">canCreate()</a>
                 — Standard SS function, we only allow for one checkout page to exist but we do allow for extensions to exist at the same time.</li>
+            <li id="canDelete"><a title="CheckoutPage" href="../classes/CheckoutPage/canDelete.xhtml">canDelete()</a>
+                — Standard SS method</li>
+            <li id="canEdit"><a title="CheckoutPage" href="../classes/CheckoutPage/canEdit.xhtml">canEdit()</a>
+                — Shop Admins can edit</li>
+            <li id="canPublish"><a title="CheckoutPage" href="../classes/CheckoutPage/canPublish.xhtml">canPublish()</a>
+                — Standard SS method</li>
             <li id="find_last_step_link"><a title="CheckoutPage" href="../classes/CheckoutPage/find_last_step_link.xhtml">find_last_step_link()</a>
                 — Returns the link or the Link to the Checkout page on this site for the last step</li>
             <li id="find_link"><a title="CheckoutPage" href="../classes/CheckoutPage/find_link.xhtml">find_link()</a>
@@ -174,6 +192,9 @@
             <li id="i18n_singular_name">
               <a title="CheckoutPage" href="../classes/CheckoutPage/i18n_singular_name.xhtml">i18n_singular_name()</a>
             </li>
+            <li id="requireDefaultRecords">
+              <a title="CheckoutPage" href="../classes/CheckoutPage/requireDefaultRecords.xhtml">requireDefaultRecords()</a>
+            </li>
           </ul>
           <h3>Inherited from <a title="CartPage" href="../classes/CartPage.xhtml">CartPage</a></h3>
           <h4>public</h4>
@@ -190,8 +211,17 @@
                 — standard SS method for use in templates</li>
             <li id="OriginalMenuTitle"><a title="CartPage" href="../classes/CartPage/OriginalMenuTitle.xhtml">OriginalMenuTitle()</a>
                 — The original menu title of the page</li>
+            <li id="caView">
+              <a title="CartPage" href="../classes/CartPage/caView.xhtml">caView()</a>
+            </li>
             <li id="canCreate"><a title="CartPage" href="../classes/CartPage/canCreate.xhtml">canCreate()</a>
                 — Standard SS function, we only allow for one CartPage page to exist but we do allow for extensions to exist at the same time.</li>
+            <li id="canDelete"><a title="CartPage" href="../classes/CartPage/canDelete.xhtml">canDelete()</a>
+                — Standard SS method</li>
+            <li id="canEdit"><a title="CartPage" href="../classes/CartPage/canEdit.xhtml">canEdit()</a>
+                — Shop Admins can edit</li>
+            <li id="canPublish"><a title="CartPage" href="../classes/CartPage/canPublish.xhtml">canPublish()</a>
+                — Standard SS method</li>
             <li id="copy_order_link"><a title="CartPage" href="../classes/CartPage/copy_order_link.xhtml">copy_order_link()</a>
                 — Returns the "copy order" link</li>
             <li id="find_link"><a title="CartPage" href="../classes/CartPage/find_link.xhtml">find_link()</a>

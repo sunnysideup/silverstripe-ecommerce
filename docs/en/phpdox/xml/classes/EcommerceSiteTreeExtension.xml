@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceSiteTreeExtension" namespace="" name="EcommerceSiteTreeExtension" abstract="false" final="false" start="16" end="59">
-  <file path="./../../../code/model/extensions" file="EcommerceSiteTreeExtension.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/extensions/EcommerceSiteTreeExtension.php" size="3133" time="2013-10-27T10:14:32+13:00" unixtime="1382822072" sha1="fef6bd64fd6d40ce659092b00720dbc54db2c9f4"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceSiteTreeExtension" namespace="" name="EcommerceSiteTreeExtension" abstract="false" final="false" start="16" end="75">
+  <file path="./../../../code/model/extensions" file="EcommerceSiteTreeExtension.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/extensions/EcommerceSiteTreeExtension.php" size="3693" time="2014-09-02T13:32:37+12:00" unixtime="1409621557" sha1="5559ad13119143360698153655fd1b0339230226"/>
   <docblock>
     <description/>
     <description compact="some e-commerce related functionality."/>
@@ -42,5 +42,18 @@ $AJAXDefinitions.TableID</description>
         <type full="String" namespace="" name="String"/>
       </return>
     </docblock>
+  </method>
+  <method name="ClearZendCaches" start="64" end="73" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="clears all the Zend Caches"/>
+      <param type="object" variable="cacheName">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="cacheKey">
+        <type full="String" namespace="" name="String"/>
+      </param>
+    </docblock>
+    <parameter name="cacheName" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="cacheKey" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
 </class>

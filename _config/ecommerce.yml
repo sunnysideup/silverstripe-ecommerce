@@ -197,7 +197,8 @@ Order_Email:
 
 
 
-################### MONEY #####################
+################### MONEY #############
+### also see payment.yml
 
 EcommerceCurrency:
   exchange_provider_class: ExchangeRateProvider
@@ -289,6 +290,14 @@ EcommerceTaskCartCleanup:
     OrderStatusLog: OrderStatusLog
     OrderEmailRecord: OrderEmailRecord
   many_to_many_classes: []
+
+
+################### SERVICES #####################
+# these can be overriden in mysite/_config/config.yml #
+
+#Injector:
+  #EcommercePaymentSupportedMethodsProvider:
+    #class: EcommercePaymentSupportedMethodsProvider
 
 
 ###############################################

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceConfig" namespace="" name="EcommerceConfig" abstract="false" final="false" start="57" end="131">
-  <file path="./../../../code/config" file="EcommerceConfig.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/config/EcommerceConfig.php" size="3589" time="2013-10-27T22:08:29+13:00" unixtime="1382864909" sha1="e5bc8eacf462bb479d4b13d9f34fec7ef0d9450a"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceConfig" namespace="" name="EcommerceConfig" abstract="false" final="false" start="57" end="128">
+  <file path="./../../../code/config" file="EcommerceConfig.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/config/EcommerceConfig.php" size="3725" time="2014-09-04T14:33:35+12:00" unixtime="1409798015" sha1="15c2c98dc7a36d3ed23291cdea93e75a5085f405"/>
   <docblock>
     <description compact="This Class creates an array of configurations for e-commerce.">This class replaces static variables in individual classes, such as Blog::$allow_wysiwyg_editing</description>
     <see value="http://en.wikipedia.org/wiki/YAML#Examples"/>
@@ -48,15 +48,7 @@ Therefore, it is important to clearly document that at the top of each class.</s
     <inspiration value=": Silverstripe Ltd, Jeremy"/>
   </docblock>
   <extends full="Object" namespace="" name="Object"/>
-  <member name="singleton" type="{unknown}" default="null" visibility="private" line="64">
-    <docblock>
-      <description compact="Singleton"/>
-      <var type="object">
-        <type full="EcommerceConfig" namespace="" name="EcommerceConfig"/>
-      </var>
-    </docblock>
-  </member>
-  <method name="get" start="70" end="72" abstract="false" final="false" static="true" visibility="public">
+  <method name="get" start="64" end="66" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="Returns a configuration.  This is the main static method for this Object."/>
       <see value="Config::get()"/>
@@ -67,7 +59,7 @@ Therefore, it is important to clearly document that at the top of each class.</s
     <parameter name="result" byreference="false" type="{unknown}" default="null"/>
     <parameter name="suppress" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <member name="folder_and_file_locations" type="array" visibility="private" line="79">
+  <member name="folder_and_file_locations" type="array" visibility="private" line="73">
     <docblock>
       <description compact="The location(s) of the .yaml fixture file, relative to the site base dir"/>
       <var type="object">
@@ -75,18 +67,18 @@ Therefore, it is important to clearly document that at the top of each class.</s
       </var>
     </docblock>
   </member>
-  <member name="fixtureDictionary" type="array" visibility="private" line="86">
+  <member name="fixtureDictionary" type="array" visibility="private" line="80">
     <docblock>
       <description compact="Array of fixture items"/>
       <var type="array"/>
     </docblock>
   </member>
-  <method name="loadData" start="92" end="104" abstract="false" final="false" static="false" visibility="private">
+  <method name="loadData" start="86" end="98" abstract="false" final="false" static="false" visibility="private">
     <docblock>
       <description compact="loads data from file.">We have this method to create a complete list of configs</description>
     </docblock>
   </method>
-  <method name="getCompleteDataSet" start="110" end="118" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCompleteDataSet" start="104" end="115" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the complete Array of data"/>
       <return type="object">
@@ -94,8 +86,11 @@ Therefore, it is important to clearly document that at the top of each class.</s
       </return>
     </docblock>
     <parameter name="refresh" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="remove reserved class-names" line="108"/>
+    </inline>
   </method>
-  <method name="fileLocations" start="124" end="128" abstract="false" final="false" static="false" visibility="public">
+  <method name="fileLocations" start="121" end="125" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns a list of file locations"/>
       <return type="object">
@@ -103,7 +98,7 @@ Therefore, it is important to clearly document that at the top of each class.</s
       </return>
     </docblock>
     <inline>
-      <comment value="we reverse it so the default comes last" line="126"/>
+      <comment value="we reverse it so the default comes last" line="123"/>
     </inline>
   </method>
 </class>

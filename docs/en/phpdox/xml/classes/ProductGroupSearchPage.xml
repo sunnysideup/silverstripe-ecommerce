@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="ProductGroupSearchPage" namespace="" name="ProductGroupSearchPage" abstract="false" final="false" start="12" end="47">
-  <file path="./../../../code" file="ProductGroupSearchPage.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/ProductGroupSearchPage.php" size="1091" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="649e5743f641926f9faa0d7f1d6cc6b9473120ed"/>
+<class xmlns="http://xml.phpdox.net/src#" full="ProductGroupSearchPage" namespace="" name="ProductGroupSearchPage" abstract="false" final="false" start="12" end="89">
+  <file path="./../../../code" file="ProductGroupSearchPage.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/ProductGroupSearchPage.php" size="3354" time="2014-08-15T14:39:11+12:00" unixtime="1408070351" sha1="f1a6c0929b54d00034fb127dbc870ca295cdc6c8"/>
   <docblock>
     <description compact="This page manages searching for products"/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
@@ -8,13 +8,13 @@
     <sub value="-package: Pages"/>
   </docblock>
   <extends full="ProductGroup" namespace="" name="ProductGroup"/>
-  <member name="icon" type="string" default="'ecommerce/images/icons/productsearch'" visibility="private" line="19">
+  <member name="icon" type="string" default="'ecommerce/images/icons/productgroupsearchpage'" visibility="private" line="19">
     <docblock>
       <description compact="standard SS variable"/>
       <static value="String | Array"/>
     </docblock>
   </member>
-  <member name="description" type="string" default="&quot;This page manages searching for products.&quot;" visibility="private" line="25">
+  <member name="description" type="string" default="&quot;This page allowing the user to search for products.&quot;" visibility="private" line="25">
     <docblock>
       <description compact="Standard SS variable."/>
       <var type="object">
@@ -34,15 +34,43 @@
     </docblock>
   </member>
   <method name="i18n_plural_name" start="37" end="37" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="canCreate" start="43" end="45" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCreate" start="45" end="47" abstract="false" final="false" static="false" visibility="public">
     <docblock>
-      <description compact="This temporarily hides the page while we it is being completed."/>
+      <description compact="Standard SS function, we only allow for one Product Search Page to exist but we do allow for extensions to exist at the same time."/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
+  <member name="allowCaching" type="{unknown}" default="false" visibility="protected" line="54">
+    <docblock>
+      <description compact="Can product list (and related) be cached at all?"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="getGroupFilter" start="56" end="63" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="currentSortSQL" start="69" end="80" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="returns the SORT part of the final selection of products."/>
+      <return description="| Array" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="childGroups" start="82" end="84" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="maxRecursiveLevel" byreference="false" type="{unknown}"/>
+    <parameter name="filter" byreference="false" type="{unknown}" default="null"/>
+    <parameter name="numberOfRecursions" byreference="false" type="integer" default="0"/>
+  </method>
   <parent full="ProductGroup" namespace="" name="ProductGroup">
     <extends full="Page" namespace="" name="Page"/>
-    <member name="sortFilterDisplayNames" type="array" visibility="protected" line="224">
+    <member name="sortFilterDisplayNames" type="array" visibility="protected" line="200">
       <docblock>
         <description compact="list of sort / filter / display variables"/>
         <var type="object">
@@ -50,7 +78,7 @@
         </var>
       </docblock>
     </member>
-    <member name="showProductLevels" type="array" visibility="protected" line="496">
+    <member name="showProductLevels" type="array" visibility="protected" line="234">
       <docblock>
         <description/>
         <var type="object">List of options to show products.
@@ -59,7 +87,47 @@ NOTE: we can not have an option that has a zero key ( 0 =&gt; "none"), as this d
 (as it is equal to not completed yet - not yet entered in the Database).<type full="Array" namespace="" name="Array"/></var>
       </docblock>
     </member>
-    <member name="allProducts" type="{unknown}" default="null" visibility="protected" line="624">
+    <member name="configOptionsCache" type="array" visibility="protected" line="248">
+      <docblock>
+        <description compact="variable to speed up methods in this class"/>
+        <var type="object">
+          <type full="Array" namespace="" name="Array"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="myUserPreferencesDefaultCache" type="array" visibility="protected" line="254">
+      <docblock>
+        <description compact="cache variable for default preference key"/>
+        <var type="object">
+          <type full="Array" namespace="" name="Array"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="rawCount" type="integer" default="0" visibility="protected" line="261">
+      <docblock>
+        <description compact="count before limit"/>
+        <var type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="totalCount" type="integer" default="0" visibility="protected" line="267">
+      <docblock>
+        <description compact="count after limit"/>
+        <var type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="allowCaching" type="{unknown}" default="true" visibility="protected" line="273">
+      <docblock>
+        <description compact="Can product list (and related) be cached at all?"/>
+        <var type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="allProducts" type="{unknown}" default="null" visibility="protected" line="878">
       <docblock>
         <description compact="This is the dataList that contains all the products"/>
         <var description="$allProducts" type="object">
@@ -67,9 +135,21 @@ NOTE: we can not have an option that has a zero key ( 0 =&gt; "none"), as this d
         </var>
       </docblock>
     </member>
-    <method name="i18n_singular_name" start="137" end="137" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="i18n_plural_name" start="143" end="143" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="canEdit" start="156" end="167" abstract="false" final="false" static="false" visibility="public">
+    <member name="canBePurchasedArray" type="{unknown}" default="null" visibility="protected" line="897">
+      <docblock>
+        <description compact="a list of relevant buyables that can be purchased.  We keep this so that that we can save to session, etc... for future use.">Should be set to NULL to start with so we know if it has been
+set yet.</description>
+        <var description="| Array (like so: array(1,2,4,5,99))" type="object">
+          <type full="NULL" namespace="" name="NULL"/>
+        </var>
+      </docblock>
+    </member>
+    <method name="i18n_singular_name" start="139" end="139" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="145" end="145" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="canCreate" start="153" end="159" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canEdit" start="166" end="169" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Shop Admins can edit"/>
         <param type="object" variable="$member">
@@ -81,19 +161,7 @@ NOTE: we can not have an option that has a zero key ( 0 =&gt; "none"), as this d
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canView" start="174" end="179" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="Shop Admins can edit"/>
-        <param type="object" variable="$member">
-          <type full="Member" namespace="" name="Member"/>
-        </param>
-        <return type="object">
-          <type full="Boolean" namespace="" name="Boolean"/>
-        </return>
-      </docblock>
-      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-    </method>
-    <method name="canDelete" start="187" end="189" abstract="false" final="false" static="false" visibility="public">
+    <method name="canDelete" start="177" end="183" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -105,7 +173,7 @@ NOTE: we can not have an option that has a zero key ( 0 =&gt; "none"), as this d
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canPublish" start="196" end="198" abstract="false" final="false" static="false" visibility="public">
+    <method name="canPublish" start="190" end="193" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method"/>
         <param type="object" variable="$member">
@@ -117,43 +185,39 @@ NOTE: we can not have an option that has a zero key ( 0 =&gt; "none"), as this d
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canDeleteFromLive" start="206" end="208" abstract="false" final="false" static="false" visibility="public">
+    <method name="getConfigOptions" start="281" end="287" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
-        <description compact="Standard SS method //check if it is in a current cart?"/>
-        <param type="object" variable="$member">
-          <type full="Member" namespace="" name="Member"/>
-        </param>
-        <return type="object">
-          <type full="Boolean" namespace="" name="Boolean"/>
-        </return>
-      </docblock>
-      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-    </method>
-    <method name="canCreate" start="215" end="217" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="Standard SS method"/>
-        <param type="object" variable="$member">
-          <type full="Member" namespace="" name="Member"/>
-        </param>
-        <return type="object">
-          <type full="Boolean" namespace="" name="Boolean"/>
-        </return>
-      </docblock>
-      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-    </method>
-    <method name="getSortFilterDisplayNames" start="256" end="270" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="returns the full sortFilterDisplayNames set or a subset by either type (e.g. FILER) or variable (e.g dbFieldName)"/>
-        <param type="object" variable="$typeOfVariableName">
+        <description compact="return the options for one type.">This method solely exists to speed up processing.</description>
+        <param description="- options are FILTER | SORT | DISPLAY" type="object" variable="$type">
           <type full="String" namespace="" name="String"/>
         </param>
         <return type="object">
           <type full="Array" namespace="" name="Array"/>
         </return>
       </docblock>
-      <parameter name="typeOrVariable" byreference="false" type="string" default="&quot;&quot;"/>
+      <parameter name="type" byreference="false" type="{unknown}"/>
     </method>
-    <method name="setCurrentUserPreference" start="280" end="282" abstract="false" final="false" static="false" visibility="public">
+    <method name="getSortFilterDisplayNames" start="299" end="318" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="returns the full sortFilterDisplayNames set, a subset, or one value by either type (e.g. FILER) or variable (e.g dbFieldName) or both."/>
+        <param description="FILTER | SORT | DISPLAY or sessionName, getVariable, etc..." type="object" variable="$typeOfVariableName">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="sessionName, getVariable, etc..." type="object" variable="$variable:">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return description="| String" type="object">
+          <type full="Array" namespace="" name="Array"/>
+        </return>
+      </docblock>
+      <parameter name="typeOrVariable" byreference="false" type="string" default="&quot;&quot;"/>
+      <parameter name="variable" byreference="false" type="string" default="&quot;&quot;"/>
+      <inline>
+        <comment value="return a string ..." line="300"/>
+        <comment value="return an array ..." line="304"/>
+      </inline>
+    </method>
+    <method name="setCurrentUserPreference" start="328" end="330" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="sets a user preference.  This is typically used by the controller to set filter and sort."/>
         <param description="SORT | FILTER | DISPLAY" type="object" variable="$type">
@@ -166,7 +230,7 @@ NOTE: we can not have an option that has a zero key ( 0 =&gt; "none"), as this d
       <parameter name="type" byreference="false" type="{unknown}"/>
       <parameter name="value" byreference="false" type="{unknown}"/>
     </method>
-    <method name="getCurrentUserPreferences" start="293" end="295" abstract="false" final="false" static="false" visibility="protected">
+    <method name="getCurrentUserPreferences" start="341" end="343" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="Get a user preference.">This value can be updated by the controller
 For example, the filter can be changed, based on a session value.</description>
@@ -179,19 +243,20 @@ For example, the filter can be changed, based on a session value.</description>
       </docblock>
       <parameter name="type" byreference="false" type="{unknown}"/>
     </method>
-    <method name="getUserPreferencesDefault" start="309" end="318" abstract="false" final="false" static="false" visibility="public">
+    <method name="getMyUserPreferencesDefault" start="359" end="383" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
-        <description compact="returns the default value"/>
+        <description compact="Checks for the most applicable user preferences for this page: 1. what is saved in Database for this page.">2. what the parent product group has saved in the database
+3. what the standard default is</description>
         <param description="- FILTER | SORT | DISPLAY" type="object" variable="$type">
           <type full="String" namespace="" name="String"/>
         </param>
-        <return type="object">
+        <return description="- returns the key" type="object">
           <type full="String" namespace="" name="String"/>
         </return>
       </docblock>
       <parameter name="type" byreference="false" type="{unknown}"/>
     </method>
-    <method name="getUserPreferencesOptionsForDropdown" start="344" end="360" abstract="false" final="false" static="false" visibility="public">
+    <method name="getUserPreferencesOptionsForDropdown" start="408" end="423" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="SORT: returns an array of Key =&gt; Title for sort options">FILTER:
 Returns options for the dropdown of filter options.
@@ -212,7 +277,7 @@ Then you must make sure MyTemplate.ss exists.</description>
       </docblock>
       <parameter name="type" byreference="false" type="{unknown}"/>
     </method>
-    <method name="getUserSettingsOptionSQL" start="382" end="400" abstract="false" final="false" static="false" visibility="protected">
+    <method name="getUserSettingsOptionSQL" start="445" end="462" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="SORT: Returns the sort sql for a particular sorting key.">If no key is provided then the default key will be returned.</description>
         <param type="object" variable="$key">
@@ -226,17 +291,17 @@ Then you must make sure MyTemplate.ss exists.</description>
         </param>
         <return description="(e.g. Array(MyField =&gt; &quot;ASC&quot;, &quot;MyOtherField&quot; =&gt; &quot;DESC&quot;)" type="object">FILTER:
 Returns the sql associated with a filter option.<type full="Array" namespace="" name="Array"/></return>
-        <return description="(e.g. array(&quot;MyField&quot; =&gt; 1, &quot;MyOtherField&quot; =&gt; 0)) OR STRING!!!!" type="object">
+        <return description="| String (e.g. array(&quot;MyField&quot; =&gt; 1, &quot;MyOtherField&quot; =&gt; 0)) OR STRING" type="object">
           <type full="Array" namespace="" name="Array"/>
         </return>
       </docblock>
       <parameter name="type" byreference="false" type="{unknown}"/>
       <parameter name="key" byreference="false" type="string" default="&quot;&quot;"/>
       <inline>
-        <comment value="if we cant find the current one, use the default" line="385"/>
+        <comment value="if we cant find the current one, use the default" line="447"/>
       </inline>
     </method>
-    <method name="getUserPreferencesTitle" start="417" end="429" abstract="false" final="false" static="false" visibility="public">
+    <method name="getUserPreferencesTitle" start="479" end="490" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Returns the Title for a type key.">If no key is provided then the default key is used.</description>
         <param description="- FILTER | SORT | DISPLAY" type="object" variable="$type">
@@ -252,40 +317,24 @@ Returns the sql associated with a filter option.<type full="Array" namespace="" 
       <parameter name="type" byreference="false" type="{unknown}"/>
       <parameter name="key" byreference="false" type="string" default="&quot;&quot;"/>
     </method>
-    <method name="MyLevelOfProductsToShow" start="440" end="452" abstract="false" final="false" static="false" visibility="public">
+    <method name="ProductsPerPage" start="500" end="500" abstract="false" final="false" static="false" visibility="public">
       <docblock>
-        <description/>
+        <description compact="return Integer"/>
+      </docblock>
+    </method>
+    <method name="MyNumberOfProductsPerPage" start="501" end="515" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="MyLevelOfProductsToShow" start="529" end="541" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the number of product groups (children) to show in the current product list based on the user setting for this page."/>
         <return type="object">
           <type full="Int" namespace="" name="Int"/>
         </return>
       </docblock>
       <inline>
-        <comment value="reset to default" line="446"/>
+        <comment value="reset to default" line="535"/>
       </inline>
     </method>
-    <method name="getMyUserPreferencesDefault" start="464" end="479" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="Checks for the most applicable user preferences for this page: 1. what is saved in Database for this page.">2. what the parent product group has saved in the database
-3. what the standard default is</description>
-        <param description="- FILTER | SORT | DISPLAY" type="object" variable="$type">
-          <type full="String" namespace="" name="String"/>
-        </param>
-        <return type="object">
-          <type full="String" namespace="" name="String"/>
-        </return>
-      </docblock>
-      <parameter name="type" byreference="false" type="{unknown}"/>
-    </method>
-    <method name="MyDefaultDisplayStyle" start="481" end="483" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="getCMSActions" start="517" end="526" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="standard SS method"/>
-        <return type="object">
-          <type full="FieldList" namespace="" name="FieldList"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="getCMSFields" start="532" end="596" abstract="false" final="false" static="false" visibility="public">
+    <method name="getCMSFields" start="554" end="620" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS method"/>
         <return type="object">
@@ -293,23 +342,159 @@ Returns the sql associated with a filter option.<type full="Array" namespace="" 
         </return>
       </docblock>
       <inline>
-        <comment value="dirty hack to show images!" line="534"/>
-        <comment value="number of products" line="536"/>
-        <comment value="sort" line="547"/>
-        <comment value="filter" line="560"/>
-        <comment value="display style" line="573"/>
+        <comment value="dirty hack to show images!" line="556"/>
+        <comment value="number of products" line="558"/>
+        <comment value="sort" line="569"/>
+        <comment value="filter" line="582"/>
+        <comment value="display style" line="595"/>
       </inline>
     </method>
-    <method name="getProductGroupsTable" start="602" end="610" abstract="false" final="false" static="false" visibility="protected">
+    <method name="getProductGroupsTable" start="626" end="640" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="Used in getCSMFields"/>
         <return type="object">
           <type full="GridField" namespace="" name="GridField"/>
         </return>
       </docblock>
+      <inline>
+        <comment value="make sure edits are done in the right place ..." line="638"/>
+      </inline>
     </method>
-    <method name="getProductsThatCanBePurchasedArray" start="648" end="650" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="ProductsShowable" start="668" end="677" abstract="false" final="false" static="false" visibility="public">
+    <method name="currentInitialProducts" start="671" end="696" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the inital (all) products, based on the all the eligible products for the page.">This is THE pivotal method that probably changes for classes that
+extend ProductGroup as here you can determine what products or other buyables are shown.
+
+The return from this method will then be sorted to produce the final product list.
+
+There is no sort for the initial retrieval
+
+This method is public so that you can retrieve a list of products for a product group page.</description>
+        <param description="| string $extraFilter Additional SQL filters to apply to the Product retrieval" type="array"/>
+        <param description="Alternative standard filter to be used." type="string" variable="$alternativeFilterKey"/>
+        <return type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+      <parameter name="extraFilter" byreference="false" type="{unknown}" default="null"/>
+      <parameter name="alternativeFilterKey" byreference="false" type="string" default="''"/>
+      <inline>
+        <comment value="INIT ALLPRODUCTS" line="673"/>
+        <comment value="GROUP FILTER (PRODUCTS FOR THIS GROUP)" line="678"/>
+        <comment value="STANDARD FILTER (INCLUDES USER PREFERENCE)" line="681"/>
+        <comment value="EXTRA FILTER (ON THE FLY FROM CONTROLLER)" line="684"/>
+        <comment value="JOINS" line="692"/>
+      </inline>
+    </method>
+    <method name="currentInitialProductsAsCachedArray" start="708" end="718" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="this method can be used quickly current initial products whenever you write:  ```php   currentInitialProducts-&gt;(null, $key)-&gt;map(&quot;ID&quot;, &quot;ID&quot;)-&gt;toArray();  ``` this is the better replacement."/>
+        <param type="object" variable="$filterKey">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="Array" namespace="" name="Array"/>
+        </return>
+      </docblock>
+      <parameter name="filterKey" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="getProductsAlsoInOtherGroups" start="732" end="734" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Do products occur in more than one group"/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getBuyableClassName" start="740" end="742" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Returns the class we are working with"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getGroupFilter" start="750" end="783" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description/>
+        <see value=": important notes at the top of this file / class">IMPORTANT: Adjusts allProducts and returns it...</see>
+        <return type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getProductsToBeIncludedFromOtherGroups" start="792" end="804" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="If products are show in more than one group Then this returns a where phrase for any products that are linked to this product group"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <inline>
+        <comment value="TO DO: this should actually return" line="793"/>
+        <comment value="Product.ID = IN ARRAY(bla bla)" line="794"/>
+      </inline>
+    </method>
+    <method name="getStandardFilter" start="813" end="828" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description/>
+        <see value=": important notes at the top of this class / file for more information!">IMPORTANT: Adjusts allProducts and returns it...</see>
+        <param description="- filter key to be used... if none is specified then we use the current one." type="string" variable="$alternativeFilterKey"/>
+        <return type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+      <parameter name="alternativeFilterKey" byreference="false" type="string" default="''"/>
+    </method>
+    <method name="getGroupJoin" start="837" end="839" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Join statement for the product groups.">IMPORTANT: Adjusts allProducts and returns it...</description>
+        <return type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="allowPurchaseWhereStatement" start="849" end="859" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Quick - dirty hack - filter to only show relevant products"/>
+        <param type="object" variable="$asArray">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </param>
+        <param type="object" variable="$table">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return description="| STRING | ARRAY" type="object">
+          <type full="NULL" namespace="" name="NULL"/>
+        </return>
+      </docblock>
+      <parameter name="asArray" byreference="false" type="{unknown}" default="true"/>
+      <parameter name="table" byreference="false" type="string" default="&quot;Product&quot;"/>
+    </method>
+    <method name="RawCount" start="903" end="905" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the total numer of products (before pagination)"/>
+        <return type="object">
+          <type full="Integer" namespace="" name="Integer"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="TotalCount" start="911" end="913" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the total numer of products (before pagination)"/>
+        <return type="object">
+          <type full="Integer" namespace="" name="Integer"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getProductsThatCanBePurchasedArray" start="920" end="922" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="this is used to save a list of sorted products so that you can find a previous and a next button, etc..."/>
+        <return type="object">
+          <type full="Array" namespace="" name="Array"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="ProductsShowable" start="943" end="952" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Retrieve a set of products, based on the given parameters.">This method is usually called by the various controller methods.
 The extraFilter helps you to select different products,
@@ -323,117 +508,57 @@ The extra filter can be supplied as array (e.g. array("ID" =&gt; 12) or array("I
 or as string. Arrays are used like this $productDataList-&gt;filter($array) and
 strings are used with the where commands $productDataList-&gt;where($string).</description>
         <param description="| string $extraFilter Additional SQL filters to apply to the Product retrieval" type="array"/>
+        <param description="| string $alternativeSort Additional SQL for sorting" type="array"/>
+        <param description="alternative filter key to be used" type="string" variable="$alternativeFilterKey"/>
         <return description="| Null" type="object">
           <type full="DataList" namespace="" name="DataList"/>
         </return>
       </docblock>
-      <parameter name="extraFilter" byreference="false" type="string" default="''"/>
-      <parameter name="alternativeSort" byreference="false" type="string" default="''"/>
+      <parameter name="extraFilter" byreference="false" type="{unknown}" default="null"/>
+      <parameter name="alternativeSort" byreference="false" type="{unknown}" default="null"/>
+      <parameter name="alternativeFilterKey" byreference="false" type="string" default="''"/>
       <inline>
-        <comment value="get original products without sort" line="670"/>
-        <comment value="sort products" line="673"/>
+        <comment value="get original products without sort" line="945"/>
+        <comment value="sort products" line="948"/>
       </inline>
     </method>
-    <method name="currentInitialProducts" start="695" end="721" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="returns the inital (all) products, based on the all the eligible products for the page.">This is THE pivotal method that probably changes for classes that
-extend ProductGroup as here you can determine what products or other buyables are shown.
-
-The return from this method will then be sorted to produce the final product list.
-
-There is no sort for the initial retrieval
-
-This method is public so that you can retrieve a list of products for a product group page.</description>
-        <param description="| string $extraFilter Additional SQL filters to apply to the Product retrieval" type="array"/>
-        <return type="object">
-          <type full="DataList" namespace="" name="DataList"/>
-        </return>
-      </docblock>
-      <parameter name="extraFilter" byreference="false" type="string" default="''"/>
-      <inline>
-        <comment value="INIT ALLPRODUCTS" line="699"/>
-        <comment value="GROUP FILTER (PRODUCTS FOR THIS GROUP)" line="702"/>
-        <comment value="STANDARD FILTER (INCLUDES USER PREFERENCE)" line="705"/>
-        <comment value="EXTRA FILTER (ON THE FLY FROM CONTROLLER)" line="708"/>
-        <comment value="JOINS" line="716"/>
-      </inline>
-    </method>
-    <method name="currentFinalProducts" start="737" end="750" abstract="false" final="false" static="false" visibility="protected">
+    <method name="currentFinalProducts" start="968" end="977" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the final products, based on the all the eligile products for the page.">In the process we also save a list of included products
 and we sort them.  We also keep a record of the total count.
 
 All of the 'current' methods are to support the currentFinalProducts Method.</description>
         <todo value=": cache data for faster access."/>
-        <param description="= Alternative Sort String" type="object" variable="$alternativeSort">
-          <type full="String" namespace="" name="String"/>
-        </param>
+        <param description="| string $alternativeSort = Alternative Sort String or array" type="array"/>
         <return type="object">
           <type full="DataList" namespace="" name="DataList"/>
         </return>
       </docblock>
-      <parameter name="alternativeSort" byreference="false" type="string" default="&quot;&quot;"/>
+      <parameter name="alternativeSort" byreference="false" type="{unknown}" default="null"/>
+      <inline>
+        <comment value="limit to maximum number of products for speed's sake" line="971"/>
+      </inline>
     </method>
-    <method name="getProductsAlsoInOtherGroups" start="762" end="764" abstract="false" final="false" static="false" visibility="protected">
+    <method name="sortCurrentFinalProducts" start="983" end="998" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
-        <description compact="Do products occur in more than one group"/>
+        <description compact="returns the SORT part of the final selection of products."/>
+        <return description="(allProducts)" type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+      <parameter name="alternativeSort" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="IsIDarray" start="1007" end="1009" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="is the variable provided is an array that can be used as a list of IDs?"/>
+        <param type="mixed"/>
         <return type="object">
           <type full="Boolean" namespace="" name="Boolean"/>
         </return>
       </docblock>
+      <parameter name="variable" byreference="false" type="{unknown}"/>
     </method>
-    <method name="getBuyableClassName" start="770" end="772" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description compact="Returns the class we are working with"/>
-        <return type="object">
-          <type full="String" namespace="" name="String"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="getGroupFilter" start="780" end="806" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description/>
-        <see value=": important notes at the top of this file / class">IMPORTANT: Adjusts allProducts and returns it...</see>
-        <return type="object">
-          <type full="DataList" namespace="" name="DataList"/>
-        </return>
-      </docblock>
-      <inline>
-        <comment value="special cases" line="783"/>
-        <comment value="no produts but if LevelOfProductsToShow = -1 then show all" line="785"/>
-      </inline>
-    </method>
-    <method name="getProductsToBeIncludedFromOtherGroups" start="815" end="831" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description compact="If products are show in more than one group Then this returns a where phrase for any products that are linked to this product group"/>
-        <return type="object">
-          <type full="String" namespace="" name="String"/>
-        </return>
-      </docblock>
-      <inline>
-        <comment value="TO DO: this should actually return" line="816"/>
-        <comment value="Product.ID = IN ARRAY(bla bla)" line="817"/>
-        <comment value="@to do - make sure products are versioned!" line="824"/>
-      </inline>
-    </method>
-    <method name="getStandardFilter" start="840" end="850" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description/>
-        <see value=": important notes at the top of this class / file for more information!">IMPORTANT: Adjusts allProducts and returns it...</see>
-        <return type="object">
-          <type full="DataList" namespace="" name="DataList"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="getGroupJoin" start="858" end="860" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description compact="Join statement for the product groups.">IMPORTANT: Adjusts allProducts and returns it...</description>
-        <return type="object">
-          <type full="DataList" namespace="" name="DataList"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="currentSortSQL" start="867" end="870" abstract="false" final="false" static="false" visibility="protected">
+    <method name="currentSortSQL" start="1015" end="1018" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the SORT part of the final selection of products."/>
         <return description="| Array" type="object">
@@ -441,68 +566,43 @@ All of the 'current' methods are to support the currentFinalProducts Method.</de
         </return>
       </docblock>
     </method>
-    <method name="removeExcludedProductsAndSaveIncludedProducts" start="879" end="914" abstract="false" final="false" static="false" visibility="protected">
+    <method name="createSortStatementFromIDArray" start="1026" end="1037" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="creates a sort string from a list of ID arrays..."/>
+        <param description="- list of product IDs" type="object" variable="$IDarray">
+          <type full="Array" namespace="" name="Array"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="IDarray" byreference="false" type="{unknown}"/>
+      <parameter name="table" byreference="false" type="string" default="&quot;Product&quot;"/>
+    </method>
+    <method name="limitCurrentFinalProducts" start="1043" end="1054" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="limits the products to a maximum number (for speed's sake)"/>
+        <return description="(this-&gt;allProducts adjusted!)" type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="removeExcludedProductsAndSaveIncludedProducts" start="1064" end="1094" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="Excluded products that can not be purchased We all make a record of all the products that are in the current list For efficiency sake, we do both these things at the same time.">IMPORTANT: Adjusts allProducts and returns it...</description>
+        <todo value=": cache data per user ...."/>
         <return type="object">
           <type full="DataList" namespace="" name="DataList"/>
         </return>
       </docblock>
     </method>
-    <method name="currentWhereSQL" start="920" end="922" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description compact="returns the CLASSNAME part of the final selection of products."/>
-        <return type="object">
-          <type full="String" namespace="" name="String"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="currentClassNameSQL" start="928" end="930" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description compact="returns the CLASSNAME part of the final selection of products."/>
-        <return type="object">
-          <type full="String" namespace="" name="String"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="currentJoinSQL" start="936" end="938" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description compact="returns the JOIN part of the final selection of products."/>
-        <return type="object">
-          <type full="String" namespace="" name="String"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="TotalCount" start="948" end="950" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="returns the total numer of products (before pagination)"/>
-        <return type="object">
-          <type full="Integer" namespace="" name="Integer"/>
-        </return>
-      </docblock>
-    </method>
-    <method name="TotalCountGreaterThanOne" start="956" end="958" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="returns the total numer of products (before pagination)"/>
-        <return type="object">
-          <type full="Boolean" namespace="" name="Boolean"/>
-        </return>
-      </docblock>
-      <parameter name="greaterThan" byreference="false" type="integer" default="1"/>
-    </method>
-    <method name="ProductsPerPage" start="963" end="963" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="return Integer"/>
-      </docblock>
-    </method>
-    <method name="MyNumberOfProductsPerPage" start="964" end="978" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="ChildGroups" start="994" end="1015" abstract="false" final="false" static="false" visibility="public">
+    <method name="ChildGroups" start="1111" end="1139" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Returns children ProductGroup pages of this group."/>
         <param description="- maximum depth , e.g. 1 = one level down - so no Child Groups are returned..." type="object" variable="$maxRecursiveLevel">
           <type full="Int" namespace="" name="Int"/>
         </param>
-        <param description="- additional filter to be added" type="object" variable="$filter">
+        <param description="| Array $filter - additional filter to be added" type="object">
           <type full="String" namespace="" name="String"/>
         </param>
         <param description="- current level of depth" type="object" variable="$numberOfRecursions">
@@ -513,20 +613,17 @@ All of the 'current' methods are to support the currentFinalProducts Method.</de
         </return>
       </docblock>
       <parameter name="maxRecursiveLevel" byreference="false" type="{unknown}"/>
-      <parameter name="filter" byreference="false" type="string" default="&quot;&quot;"/>
+      <parameter name="filter" byreference="false" type="{unknown}" default="null"/>
       <parameter name="numberOfRecursions" byreference="false" type="integer" default="0"/>
     </method>
-    <method name="ChildGroupsBackup" start="1020" end="1055" abstract="false" final="false" static="false" visibility="public">
+    <method name="ChildGroupsBackup" start="1144" end="1175" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Deprecated method"/>
       </docblock>
       <parameter name="maxRecursiveLevel" byreference="false" type="{unknown}"/>
       <parameter name="filter" byreference="false" type="string" default="&quot;&quot;"/>
-      <inline>
-        <comment value="@to do - make sure products are versioned!" line="1027"/>
-      </inline>
     </method>
-    <method name="ParentGroup" start="1061" end="1065" abstract="false" final="false" static="false" visibility="public">
+    <method name="ParentGroup" start="1181" end="1185" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns the parent page, but only if it is an instance of Product Group."/>
         <return description="| Null (ProductGroup)" type="object">
@@ -534,7 +631,7 @@ All of the 'current' methods are to support the currentFinalProducts Method.</de
         </return>
       </docblock>
     </method>
-    <method name="GroupsMenu" start="1078" end="1085" abstract="false" final="false" static="false" visibility="public">
+    <method name="GroupsMenu" start="1197" end="1204" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Recursively generate a product menu."/>
         <param type="object" variable="$filter">
@@ -546,7 +643,7 @@ All of the 'current' methods are to support the currentFinalProducts Method.</de
       </docblock>
       <parameter name="filter" byreference="false" type="string" default="&quot;ShowInMenus = 1&quot;"/>
     </method>
-    <method name="BestAvailableImage" start="1099" end="1107" abstract="false" final="false" static="false" visibility="public">
+    <method name="BestAvailableImage" start="1218" end="1226" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns a &quot;BestAvailable&quot; image if the current one is not available In some cases this is appropriate and in some cases this is not.">For example, consider the following setup
 - product A with three variations
@@ -560,7 +657,7 @@ This can be achieved bu using the BestAvailable image.</description>
         </return>
       </docblock>
     </method>
-    <method name="ProductGroupsFromAlsoShowProducts" start="1124" end="1137" abstract="false" final="false" static="false" visibility="public">
+    <method name="ProductGroupsFromAlsoShowProducts" start="1248" end="1270" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list.">EXAMPLE:
 You can use the AlsoShowProducts to list products by Brand.
@@ -575,22 +672,44 @@ current product group (e.g. socks come in three brands - namely A, B and C)</des
         </return>
       </docblock>
       <inline>
-        <comment value="just in case" line="1133"/>
-        <comment value="HACK - we put SiteTree here because it did not seem to work to put ProductGroup" line="1135"/>
+        <comment value="we need to add the last array to make sure we have some products..." line="1250"/>
+        <comment value="just in case" line="1264"/>
       </inline>
     </method>
-    <method name="ProductGroupsFromAlsoShowProductsInverse" start="1146" end="1151" abstract="false" final="false" static="false" visibility="public">
+    <method name="ProductGroupsFromAlsoShowProductsInverse" start="1279" end="1291" abstract="false" final="false" static="false" visibility="public">
       <docblock>
-        <description compact="This is the inverse of ProductGroupsFromAlsoShowProducts That is, it list the product groups that a product is usually listed under (exact parents only) from a &quot;AlsoShow&quot; product List."/>
+        <description compact="This is the inverse of ProductGroupsFromAlsoShowProducts That is, it list the product groups that a product is primarily listed under (exact parents only) from a &quot;AlsoShow&quot; product List."/>
         <return type="object">
           <type full="DataList" namespace="" name="DataList"/>
         </return>
       </docblock>
       <inline>
-        <comment value="HACK - we put SiteTree here because it did not seem to work to put ProductGroup" line="1149"/>
+        <comment value="just in case" line="1285"/>
       </inline>
     </method>
-    <method name="IsEcommercePage" start="1157" end="1159" abstract="false" final="false" static="false" visibility="public">
+    <method name="ProductGroupsParentGroups" start="1298" end="1307" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="given the products for this page, retrieve the parent groups excluding the current one."/>
+        <return type="object">
+          <type full="DataList" namespace="" name="DataList"/>
+        </return>
+      </docblock>
+      <inline>
+        <comment value="just in case" line="1301"/>
+      </inline>
+    </method>
+    <method name="getStage" start="1313" end="1319" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="returns stage as &quot;&quot; or &quot;_Live&quot;"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <inline>
+        <comment value="@to do - make sure products are versioned!" line="1315"/>
+      </inline>
+    </method>
+    <method name="IsEcommercePage" start="1329" end="1331" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="tells us if the current page is part of e-commerce."/>
         <return type="object">
@@ -598,6 +717,37 @@ current product group (e.g. socks come in three brands - namely A, B and C)</des
         </return>
       </docblock>
     </method>
-    <method name="onAfterWrite" start="1162" end="1170" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="onAfterWrite" start="1334" end="1342" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="retrieveObjectStore" start="1354" end="1364" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="saving an object to the"/>
+        <param type="object" variable="$otherGroups">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </param>
+        <return type="object">
+          <type full="Mixed" namespace="" name="Mixed"/>
+        </return>
+      </docblock>
+      <parameter name="cacheKey" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="saveObjectStore" start="1372" end="1380" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="returns true when the data is saved..."/>
+        <param type="object" variable="$data">
+          <type full="Mixed" namespace="" name="Mixed"/>
+        </param>
+        <param description="- key under which the data is saved..." type="object" variable="$cacheKey">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="data" byreference="false" type="{unknown}"/>
+      <parameter name="cacheKey" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="SearchResultsSessionVariable" start="1382" end="1390" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="isForGroups" byreference="false" type="{unknown}" default="false"/>
+    </method>
   </parent>
 </class>

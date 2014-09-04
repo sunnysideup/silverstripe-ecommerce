@@ -70,7 +70,7 @@ class EcommerceConfig extends Object {
 	 *
 	 * @var Array
 	 */
-	private static $folder_and_file_locations = array("ecommerce/_config/ecommerce.yml");
+	private static $folder_and_file_locations = array("ecommerce/_config/ecommerce.yml", "ecommerce/_config/payment.yml", );
 
 	/**
 	 * Array of fixture items
@@ -102,11 +102,14 @@ class EcommerceConfig extends Object {
 	 * @return Array
 	 */
 	public function getCompleteDataSet($refresh = false){
-		if($refresh) {
+		if($refresh || !count($this->fixtureDictionary)) {
 			$this->loadData();
 		}
-		elseif(!count($this->fixtureDictionary)) {
-			$this->loadData();
+		//remove reserved class-names
+		foreach($this->fixtureDictionary as $className => $variables) {
+			if( in_array(strtolower($className), array("only", "except"))) {
+				unset($this->fixtureDictionary[$className]);
+			}
 		}
 		return $this->fixtureDictionary;
 	}

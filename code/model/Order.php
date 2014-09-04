@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @description: The order class is a databound object for handling Orders within SilverStripe.
+ * @description:
+ * The order class is a databound object for handling Orders within SilverStripe.
  * Note that it works closely with the ShoppingCart class, which accompanies the Order
  * until it has been paid for / confirmed by the user.
  *
@@ -1569,12 +1570,14 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * returns a modifier that is an instanceof the classname
+	 * it extends
 	 * @param String $className: class name for the modifier
 	 * @return DataObject (OrderModifier)
 	 **/
 	function RetrieveModifier($className) {
 		$modifiers = $this->Modifiers();
-		if($modifers->count()) {
+		if($modifiers->count()) {
 			foreach($modifiers as $modifier) {
 				if(is_a($modifier, Object::getCustomClass($className))) {
 					return $modifier;

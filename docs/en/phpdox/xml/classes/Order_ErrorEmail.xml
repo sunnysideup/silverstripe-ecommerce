@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="Order_ErrorEmail" namespace="" name="Order_ErrorEmail" abstract="false" final="false" start="16" end="24">
-  <file path="./../../../code/email" file="Order_ErrorEmail.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/email/Order_ErrorEmail.php" size="583" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="71c6ce87a56863b4f6418a8b372415e41bd7d6ea"/>
+  <file path="./../../../code/email" file="Order_ErrorEmail.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/email/Order_ErrorEmail.php" size="583" time="2014-03-27T11:45:32+13:00" unixtime="1395873932" sha1="71c6ce87a56863b4f6418a8b372415e41bd7d6ea"/>
   <docblock>
     <description/>
     <description value=": This class handles the error email which can be sent">to the admin only if something untowards is happening.

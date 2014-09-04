@@ -56,6 +56,9 @@
             <a href="#synopsis">Synopsis</a>
           </li>
           <li>
+            <a href="#parameter">Parameter</a>
+          </li>
+          <li>
             <a href="#return">Return</a>
           </li>
         </ul>
@@ -67,9 +70,17 @@
         <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>protected function getStandardFilter()
+          <code>protected function getStandardFilter([string
+        $alternativeFilterKey = ''] )
             </code>
         </div>
+        <h2 id="parameterlist">Parameters</h2>
+        <dl class="styled">
+          <dt><code>$alternativeFilterKey</code>
+                —
+                string</dt>
+          <dd>- filter key to be used... if none is specified then we use the current one.</dd>
+        </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">
           <dt>DataList</dt>

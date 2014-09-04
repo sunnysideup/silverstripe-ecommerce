@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="ShippingAddress" namespace="" name="ShippingAddress" abstract="false" final="false" start="14" end="249">
-  <file path="./../../../code/model/address" file="ShippingAddress.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/address/ShippingAddress.php" size="7482" time="2013-10-27T22:08:29+13:00" unixtime="1382864909" sha1="605a38c41578fec4c33b77bac97e9afabd2f46f2"/>
+<class xmlns="http://xml.phpdox.net/src#" full="ShippingAddress" namespace="" name="ShippingAddress" abstract="false" final="false" start="14" end="250">
+  <file path="./../../../code/model/address" file="ShippingAddress.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/address/ShippingAddress.php" size="7537" time="2014-08-25T13:22:02+12:00" unixtime="1408929722" sha1="25a2d811382f298d14110f8890a13b07ad533e60"/>
   <docblock>
     <description/>
     <description/>
@@ -79,7 +79,7 @@
       </return>
     </docblock>
   </member>
-  <member name="singular_name" type="string" default="&quot;Shipping Address&quot;" visibility="private" line="131">
+  <member name="singular_name" type="string" default="&quot;Shipping Address&quot;" visibility="private" line="132">
     <docblock>
       <description compact="standard SS variable"/>
       <return type="object">
@@ -87,8 +87,8 @@
       </return>
     </docblock>
   </member>
-  <method name="i18n_singular_name" start="132" end="132" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="plural_name" type="string" default="&quot;Shipping Addresses&quot;" visibility="private" line="138">
+  <method name="i18n_singular_name" start="133" end="133" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Shipping Addresses&quot;" visibility="private" line="139">
     <docblock>
       <description compact="standard SS variable"/>
       <return type="object">
@@ -96,8 +96,8 @@
       </return>
     </docblock>
   </member>
-  <method name="i18n_plural_name" start="139" end="139" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="description" type="string" default="&quot;The address for delivery of the order.&quot;" visibility="private" line="145">
+  <method name="i18n_plural_name" start="140" end="140" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;The address for delivery of the order.&quot;" visibility="private" line="146">
     <docblock>
       <description compact="Standard SS variable."/>
       <var type="object">
@@ -105,12 +105,12 @@
       </var>
     </docblock>
   </member>
-  <method name="getCMSFields" start="151" end="155" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCMSFields" start="152" end="156" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return FieldList"/>
     </docblock>
   </method>
-  <method name="ShippingFullCountryName" start="163" end="163" abstract="false" final="false" static="false" visibility="public">
+  <method name="ShippingFullCountryName" start="164" end="164" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the full name for the shipping country code saved."/>
       <return type="object">
@@ -118,8 +118,8 @@
       </return>
     </docblock>
   </method>
-  <method name="getShippingFullCountryName" start="164" end="166" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="getFields" start="173" end="220" abstract="false" final="false" static="false" visibility="public">
+  <method name="getShippingFullCountryName" start="165" end="167" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getFields" start="174" end="221" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Puts together the fields for the Order Form (and other front-end purposes)."/>
       <param type="object" variable="$member">
@@ -133,11 +133,11 @@
       <type full="\\Member" namespace="\" name="Member"/>
     </parameter>
     <inline>
-      <comment value="we want MORE than one here not just one." line="186"/>
-      <comment value="$shippingFields-&gt;push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));" line="202"/>
+      <comment value="we want MORE than one here not just one." line="187"/>
+      <comment value="$shippingFields-&gt;push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));" line="203"/>
     </inline>
   </method>
-  <method name="getRequiredFields" start="228" end="236" abstract="false" final="false" static="false" visibility="public">
+  <method name="getRequiredFields" start="229" end="237" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Return which shipping fields should be required on {@link OrderFormAddress}"/>
       <return type="array"/>
@@ -206,19 +206,10 @@
       </docblock>
       <parameter name="fieldName" byreference="false" type="{unknown}"/>
     </method>
-    <method name="canCreate" start="113" end="115" abstract="false" final="false" static="false" visibility="public">
-      <docblock>
-        <description compact="standard SS method"/>
-        <param type="object" variable="$member">
-          <type full="Member" namespace="" name="Member"/>
-        </param>
-        <return type="object">
-          <type full="Boolean" namespace="" name="Boolean"/>
-        </return>
-      </docblock>
+    <method name="canCreate" start="108" end="111" abstract="false" final="false" static="false" visibility="public">
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canView" start="123" end="138" abstract="false" final="false" static="false" visibility="public">
+    <method name="canView" start="119" end="134" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method This is an important method."/>
         <param type="object" variable="$member">
@@ -230,7 +221,7 @@
       </docblock>
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
-    <method name="canEdit" start="146" end="161" abstract="false" final="false" static="false" visibility="public">
+    <method name="canEdit" start="142" end="157" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Standard SS method This is an important method."/>
         <param type="object" variable="$member">
@@ -240,6 +231,9 @@
           <type full="Boolean" namespace="" name="Boolean"/>
         </return>
       </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canDelete" start="159" end="161" abstract="false" final="false" static="false" visibility="public">
       <parameter name="member" byreference="false" type="{unknown}" default="null"/>
     </method>
     <method name="scaffoldSearchFields" start="178" end="183" abstract="false" final="false" static="false" visibility="public">
@@ -352,8 +346,8 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="getFullString" start="332" end="342" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="comparisonString" start="348" end="362" abstract="false" final="false" static="false" visibility="public">
+    <method name="getFullString" start="332" end="338" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="comparisonString" start="344" end="358" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns a string that can be used to find out if two addresses are the same."/>
         <return type="object">
@@ -361,7 +355,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="getFieldNameArray" start="368" end="389" abstract="false" final="false" static="false" visibility="protected">
+    <method name="getFieldNameArray" start="364" end="385" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description/>
         <param description="- $prefix = either &quot;&quot; or &quot;Shipping&quot;" type="object">
@@ -373,7 +367,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </docblock>
       <parameter name="fieldPrefix" byreference="false" type="string" default="''"/>
     </method>
-    <method name="baseClassLinkingToOrder" start="395" end="402" abstract="false" final="false" static="false" visibility="protected">
+    <method name="baseClassLinkingToOrder" start="391" end="398" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the field prefix string for shipping addresses"/>
         <return type="object">
@@ -381,7 +375,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="fieldPrefix" start="408" end="415" abstract="false" final="false" static="false" visibility="protected">
+    <method name="fieldPrefix" start="404" end="411" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the field prefix string for shipping addresses"/>
         <return type="object">
@@ -389,7 +383,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="FillWithLastAddressFromMember" start="425" end="460" abstract="false" final="false" static="false" visibility="public">
+    <method name="FillWithLastAddressFromMember" start="421" end="456" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="todo: are there times when the Shipping rather than the Billing address should be linked? Copies the last address used by the member."/>
         <param description="(Member) $member" type="object">
@@ -407,11 +401,11 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
       </parameter>
       <parameter name="write" byreference="false" type="{unknown}" default="false"/>
       <inline>
-        <comment value="copy data from  member" line="444"/>
-        <comment value="NOTE, we always override the Billing Address (which does not have a fieldPrefix)" line="450"/>
+        <comment value="copy data from  member" line="440"/>
+        <comment value="NOTE, we always override the Billing Address (which does not have a fieldPrefix)" line="446"/>
       </inline>
     </method>
-    <method name="getMemberFromOrder" start="470" end="480" abstract="false" final="false" static="false" visibility="public">
+    <method name="getMemberFromOrder" start="466" end="476" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="find the member associated with the current Order and address."/>
         <note value=": this needs to be public to give DODS (extensions access to this)"/>
@@ -421,7 +415,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="MakeObsolete" start="486" end="499" abstract="false" final="false" static="false" visibility="public">
+    <method name="MakeObsolete" start="482" end="495" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="make an address obsolete and include all the addresses that are identical."/>
         <param type="object" variable="$member">
@@ -432,12 +426,12 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         <type full="\\Member" namespace="\" name="Member"/>
       </parameter>
     </method>
-    <method name="onAfterWrite" start="507" end="518" abstract="false" final="false" static="false" visibility="public">
+    <method name="onAfterWrite" start="503" end="514" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS method We &quot;hackishly&quot; ensure that the OrderID is set to the right value."/>
       </docblock>
     </method>
-    <method name="RemoveLink" start="524" end="526" abstract="false" final="false" static="false" visibility="public">
+    <method name="RemoveLink" start="520" end="522" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns the link that can be used to remove (make Obsolete) an address."/>
         <return type="object">
@@ -445,7 +439,7 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="getJSONData" start="532" end="532" abstract="false" final="false" static="false" visibility="public">
+    <method name="getJSONData" start="528" end="528" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="converts an address into JSON"/>
         <return description="(JSON)" type="object">
@@ -453,8 +447,8 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="JSONData" start="533" end="546" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="EcomConfig" start="554" end="556" abstract="false" final="false" static="false" visibility="public">
+    <method name="JSONData" start="529" end="542" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="EcomConfig" start="550" end="552" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns the instance of EcommerceDBConfig"/>
         <return type="object">
@@ -462,11 +456,11 @@ Used by <link xmlns="http://xml.phpdox.net/src#" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="onBeforeWrite" start="562" end="573" abstract="false" final="false" static="false" visibility="public">
+    <method name="onBeforeWrite" start="558" end="569" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS Method saves the region code"/>
       </docblock>
     </method>
-    <method name="debug" start="575" end="577" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="debug" start="571" end="573" abstract="false" final="false" static="false" visibility="public"/>
   </parent>
 </class>

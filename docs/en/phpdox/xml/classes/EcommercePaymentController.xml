@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommercePaymentController" namespace="" name="EcommercePaymentController" abstract="false" final="false" start="13" end="129">
-  <file path="./../../../code/control" file="EcommercePaymentController.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/control/EcommercePaymentController.php" size="2805" time="2013-10-27T22:08:28+13:00" unixtime="1382864908" sha1="b848f46448d7c2043e4dc794124c2980c1d7439a"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommercePaymentController" namespace="" name="EcommercePaymentController" abstract="false" final="false" start="13" end="135">
+  <file path="./../../../code/control" file="EcommercePaymentController.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/control/EcommercePaymentController.php" size="2852" time="2014-08-24T21:07:18+12:00" unixtime="1408871238" sha1="125819dc57d178c01b66170869cb6c5a3d652a52"/>
   <docblock>
     <description/>
     <description/>
@@ -35,7 +35,7 @@
       </var>
     </docblock>
   </member>
-  <method name="make_payment_link" start="44" end="48" abstract="false" final="false" static="true" visibility="public">
+  <method name="make_payment_link" start="44" end="51" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description/>
       <param description="| Int $orderID" type="object">
@@ -47,20 +47,20 @@
     </docblock>
     <parameter name="orderID" byreference="false" type="{unknown}"/>
   </method>
-  <method name="init" start="50" end="67" abstract="false" final="false" static="false" visibility="public">
+  <method name="init" start="53" end="70" abstract="false" final="false" static="false" visibility="public">
     <inline>
-      <comment value="Requirements::block(THIRDPARTY_DIR.&quot;/jquery/jquery.js&quot;);" line="55"/>
-      <comment value="Requirements::javascript(Director::protocol().&quot;ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;);" line="56"/>
+      <comment value="Requirements::block(THIRDPARTY_DIR.&quot;/jquery/jquery.js&quot;);" line="58"/>
+      <comment value="Requirements::javascript(Director::protocol().&quot;ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;);" line="59"/>
     </inline>
   </method>
-  <method name="index" start="69" end="71" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="pay" start="74" end="76" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="thankyou" start="82" end="86" abstract="false" final="false" static="false" visibility="public">
+  <method name="index" start="72" end="74" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="pay" start="77" end="79" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="thankyou" start="85" end="89" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="TO DO: TEST!!!"/>
     </docblock>
   </method>
-  <method name="Link" start="92" end="99" abstract="false" final="false" static="false" visibility="public">
+  <method name="Link" start="95" end="105" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object" variable="$action">
@@ -70,9 +70,9 @@
         <type full="String" namespace="" name="String"/>
       </return>
     </docblock>
-    <parameter name="action" byreference="false" type="string" default="''"/>
+    <parameter name="action" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="PaymentForm" start="104" end="118" abstract="false" final="false" static="false" visibility="public">
+  <method name="PaymentForm" start="110" end="124" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return description="(OrderForm_Payment) | Array" type="object">
@@ -80,6 +80,6 @@
       </return>
     </docblock>
   </method>
-  <method name="ErrorMessage" start="120" end="122" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="GoodMessage" start="124" end="126" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="ErrorMessage" start="126" end="128" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="GoodMessage" start="130" end="132" abstract="false" final="false" static="false" visibility="public"/>
 </class>

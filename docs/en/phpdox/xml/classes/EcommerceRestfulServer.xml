@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceRestfulServer" namespace="" name="EcommerceRestfulServer" abstract="false" final="false" start="45" end="86">
-  <file path="./../../../code/api" file="EcommerceRestfulServer.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/api/EcommerceRestfulServer.php" size="2809" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="a68bb640ccd545b94cb88097c6717c015b4df63f"/>
+  <file path="./../../../code/api" file="EcommerceRestfulServer.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/api/EcommerceRestfulServer.php" size="2809" time="2014-03-27T11:45:33+13:00" unixtime="1395873933" sha1="a68bb640ccd545b94cb88097c6717c015b4df63f"/>
   <docblock>
     <description compact="extends the standard RestfulServer to provide better access to extended classes.">see: http://api.silverstripe.org/2.4/sapphire/api/RestfulServer.html
 

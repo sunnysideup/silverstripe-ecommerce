@@ -116,9 +116,9 @@ class EcommerceTaskCheckConfiguration extends BuildTask{
 			if($this->configs) {
 				if($this->defaults) {
 					$this->checkFiles();
+					$this->configsNotSet();
 					$this->classesThatDoNotExist();
 					$this->definitionsNotSet();
-					$this->configsNotSet();
 					$this->addEcommerceDBConfigToConfigs();
 					$this->addOtherValuesToConfigs();
 					$this->addPages();
@@ -184,7 +184,7 @@ EcommerceConfig:
 	 * Work out items set in the configuration but not set in the config file.
 	 */
 	protected function definitionsNotSet(){
-		DB::alteration_message("<h2>Set in configs but not defined</h2>");
+		echo "<h2>Set in configs but not defined</h2>";
 		$allOK = true;
 		foreach($this->configs as $className => $setting) {
 			if(!isset($this->definitions[$className])) {
@@ -215,7 +215,7 @@ EcommerceConfig:
 	 * Work out items set in the configuration but not set in the config file.
 	 */
 	protected function classesThatDoNotExist(){
-		DB::alteration_message("<h2>Classes that do not exist</h2>");
+		echo "<h2>Classes that do not exist</h2>";
 		$allOK = true;
 		foreach($this->configs as $className => $setting) {
 			if(!class_exists($className)) {
@@ -237,10 +237,12 @@ EcommerceConfig:
 	 * Work out items set in the definitions but not set in the config file.
 	 */
 	protected function configsNotSet(){
+		echo "<h2>Defined variables not set in configs ...</h2>";
 		$allOK = true;
+		//print_r($this->configs["EcommercePayment"]);
 		foreach($this->definitions as $className => $setting) {
 			if(!isset($this->configs[$className])) {
-				$this->configs[$className] = array();
+				DB::alteration_message("No settings found for $className in /ecommerce/_config/config.yml", "deleted");
 			}
 			else {
 				$classConfigs = $this->definitions[$className];
@@ -248,15 +250,30 @@ EcommerceConfig:
 					if(!isset($this->configs[$className][$key])) {
 						$this->customisedValues[$className][$key] = false;
 						//fallback to Configs...
-						$this->configs[$className][$key] = Config::inst()->get($className, $key);
+
 					}
 					else {
 						$this->customisedValues[$className][$key] = false;
 					}
+					if(!isset($this->configs[$className][$key])) {
+						DB::alteration_message(" - $className.$key NOT SET in /ecommerce/_config/config.yml", "deleted");
+						$allOK = false;
+					}
+					else {
+						//$this->configs[$className][$key] = EcommerceConfig::get($className, $key);
+						//if(!$this->configs[$className][$key]) {
+							//DB::alteration_message(" - $className.$key exists, set to FALSE / [EMPTRY STRING]", "edited");
+						//}
+					}
 				}
 			}
 		}
-
+		if($allOK) {
+			DB::alteration_message("Perfect match, nothing to report", "created");
+		}
+		else {
+			DB::alteration_message("Recommended course of action: add the above configs to your mysite/_config/ecommerce.yml file if you required them.", "edited");
+		}
 	}
 
 
@@ -266,13 +283,21 @@ EcommerceConfig:
 	protected function definedConfigs(){
 		$htmlHeader = "
 		<style>
-			th[scope='col'] {text-align: left; border-bottom: 3px solid green;padding-top: 40px;}
-			td {vertical-align: top; border-left: 1px solid #d7d7d7; border-bottom: 1px solid #d7d7d7; font-weight: bold; padding: 10px;}
-			td span.spanTitle {color: #000; font-size: 1.3em; font-weight: 900; display: block; padding-left: 10px; padding-bottom: 5px;}
+			h2 {padding-top: 2em;margin-bottom: 0; padding-bottom: 0;}
+			th[scope='col'] {text-align: left; border-bottom: 3px solid #ccdef3;padding-top: 40px;}
+			td {vertical-align: top; border-left: 1px solid #d7d7d7; border-bottom: 1px solid #d7d7d7; padding: 10px; width: 47%;}
+			/** headings **/
+			td span.spanTitle {color: #002137; font-weight: 900; display: block; padding-left: 10px; padding-bottom: 5px;}
+			.ecommerceConfigHeadings th, h2 {
+				font-size: 1.2em;
+				padding-bottom: 5px;
+				color: #002137;
+			}
 			td span {color: #000; font-size: 0.8em; display: block; padding-left: 10px; }
 			.sameConfig {color: #000;}
-			.newConfig pre:first-of-type {background-color: #fff !important; color: #000; border: 5px solid green; }
-			.newConfig pre:nth-of-type(2) {background-color: #fff !important; color: #000;  }
+			.newConfig pre:first-of-type{color: #000; background-color: yellow;}
+			.newConfig pre:first-of-type { }
+			.newConfig pre:nth-of-type(2) { }
 			#TOC {
 				position: fixed;
 				top: -15px;
@@ -304,23 +329,22 @@ EcommerceConfig:
 				margin-left: -10px;
 			}
 			#TOC a:hover {
-				color: red;
+				color: #7da4be;
 			}
 			#TaskHolder, #EcommerceDatabaseAdmin, .info h1, .info h3, .info a:first-of-type  {
 				margin-left: 280px !important;
-			}
-			.ecommerceConfigHeadings th {
-				font-size: 1.4em;
-				padding-bottom: 5px;
 			}
 			.info h1, .info h3, .info a {
 				padding-left: 30px;
 			}
 			a.backToTop {display: block; font-size: 0.7em; float: right;}
-			td.newConfig {width: 70%;}
-			table td pre, table td sub {white-space:pre-wrap; font-size: 1em!important; font-weight: bold;margin: 5px; padding: 5px;}
+			td.newConfig {}
+			table td pre, table td sub {white-space:pre-wrap; font-size: 1em; font-weight: bold;margin: 3px; padding: 3px;}
+			table td sub {font-weight: normal; font-size: 77%;}
+
+			li pre {width: auto;}
 		</style>
-		<h2>Configuration Report</h2>";
+		";
 		$htmlTable = "
 		<table summary=\"list of configs\">
 		";
@@ -336,6 +360,9 @@ EcommerceConfig:
 			}
 			foreach($classesArray as $className) {
 				$completedListOfClasses[$className] = $className;
+				if(!isset($this->configs[$className])) {
+					$this->configs[$className] = array();
+				}
 				$settings = $this->configs[$className];
 				$count++;
 				if(in_array($className, $classesArray)) {
@@ -667,7 +694,7 @@ EcommerceConfig:
 					return "<span style=\"color: red\">ADDITIONAL CHECK: this file does not exist! For proper functioning of e-commerce, please make sure to create this file.</span>";
 				}
 				else {
-					return "<span style=\"color: green\">ADDITIONAL CHECK: file exists.</span>";
+					return "<span style=\"color: #7da4be\">ADDITIONAL CHECK: file exists.</span>";
 				}
 				break;
 			case "Order.modifiers":

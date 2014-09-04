@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceResponse" namespace="" name="EcommerceResponse" abstract="true" final="false" start="12" end="26">
-  <file path="./../../../code/control" file="EcommerceResponse.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/control/EcommerceResponse.php" size="753" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="db5c9d9cd662364f411f1b1da646aafc613b8247"/>
+  <file path="./../../../code/control" file="EcommerceResponse.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/control/EcommerceResponse.php" size="753" time="2014-03-27T11:45:32+13:00" unixtime="1395873932" sha1="db5c9d9cd662364f411f1b1da646aafc613b8247"/>
   <docblock>
     <description/>
     <description/>

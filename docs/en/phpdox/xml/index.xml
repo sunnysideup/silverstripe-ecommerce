@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<index xmlns="http://xml.phpdox.net/src#" basedir="/var/www/3.1.silverstripe-ecommerce.com/ecommerce">
+<index xmlns="http://xml.phpdox.net/src#" basedir="/var/www/3.1.photowarehouse.co.nz/ecommerce">
+  <namespace name="Pelago">
+    <class name="Emogrifier" src="thirdparty/Emogrifier.php" description="This class provides functions for converting CSS styles into inline style attributes in your HTML code." xml="classes/Pelago_Emogrifier.xml"/>
+  </namespace>
   <namespace name="">
-    <class name="Emogrifier" src="thirdparty/Emogrifier.php" xml="classes/Emogrifier.xml"/>
     <class name="AccountPage" src="code/AccountPage.php" xml="classes/AccountPage.xml"/>
     <class name="AccountPage_Controller" src="code/AccountPage.php" xml="classes/AccountPage_Controller.xml"/>
     <class name="OrderConfirmationPage" src="code/OrderConfirmationPage.php" xml="classes/OrderConfirmationPage.xml"/>
     <class name="OrderConfirmationPage_Controller" src="code/OrderConfirmationPage.php" xml="classes/OrderConfirmationPage_Controller.xml"/>
-    <class name="EcommerceProductVariationsFixesTask" src="code/tasks/EcommerceProductVariationsFixesTask.php" description="see description in class" xml="classes/EcommerceProductVariationsFixesTask.xml"/>
-    <class name="AddCustomersToCustomerGroups" src="code/tasks/AddCustomersToCustomerGroups.php" description="Adds all members, who have bought something, to the customer group." xml="classes/AddCustomersToCustomerGroups.xml"/>
-    <class name="EcommerceMigration" src="code/tasks/EcommerceMigration.php" xml="classes/EcommerceMigration.xml"/>
-    <class name="LinkOrderAddressesAtBothEnds" src="code/tasks/LinkOrderAddressesAtBothEnds.php" description="works out how many products have been sold, per product." xml="classes/LinkOrderAddressesAtBothEnds.xml"/>
-    <class name="DeleteEcommerceProductsTask" src="code/tasks/DeleteEcommerceProductsTask.php" xml="classes/DeleteEcommerceProductsTask.xml"/>
-    <class name="EcommerceCountryAndRegionTasks" src="code/tasks/EcommerceCountryAndRegionTasks.php" description="create standard country and regions" xml="classes/EcommerceCountryAndRegionTasks.xml"/>
-    <class name="EcommerceCountryAndRegionTasks_DisallowAllCountries" src="code/tasks/EcommerceCountryAndRegionTasks.php" description="update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country" xml="classes/EcommerceCountryAndRegionTasks_DisallowAllCountries.xml"/>
-    <class name="EcommerceCountryAndRegionTasks_AllowAllCountries" src="code/tasks/EcommerceCountryAndRegionTasks.php" description="update EcommerceCountry.DoNotAllowSales to 0 so that you can sell to all countries" xml="classes/EcommerceCountryAndRegionTasks_AllowAllCountries.xml"/>
+    <class name="EcommerceTaskDeleteAllOrders" src="code/tasks/EcommerceTaskDeleteAllOrders.php" xml="classes/EcommerceTaskDeleteAllOrders.xml"/>
+    <class name="EcommerceTaskFixBrokenOrderSubmissionData" src="code/tasks/EcommerceTaskFixBrokenOrderSubmissionData.php" description="After a bug in the saving of orders in the CMS This &quot;fixer&quot;  was introduced to fix older orders without a submission record." xml="classes/EcommerceTaskFixBrokenOrderSubmissionData.xml"/>
     <class name="EcommerceTaskBuilding_Model" src="code/tasks/EcommerceTaskBuilding.php" xml="classes/EcommerceTaskBuilding_Model.xml"/>
     <class name="EcommerceTaskBuilding_Extending" src="code/tasks/EcommerceTaskBuilding.php" xml="classes/EcommerceTaskBuilding_Extending.xml"/>
-    <class name="AddDefaultEcommerceProducts" src="code/tasks/AddDefaultEcommerceProducts.php" xml="classes/AddDefaultEcommerceProducts.xml"/>
+    <class name="EcommerceTaskAPIandMore" src="code/tasks/EcommerceTaskAPIandMore.php" description="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs" xml="classes/EcommerceTaskAPIandMore.xml"/>
     <class name="EcommerceTaskArchiveAllOrdersWithItems" src="code/tasks/EcommerceTaskArchiveAllOrdersWithItems.php" description="After a bug in the saving of orders in the CMS This &quot;fixer&quot;  was introduced to fix older orders without a submission record." xml="classes/EcommerceTaskArchiveAllOrdersWithItems.xml"/>
-    <class name="EcommerceProductImageReset" src="code/tasks/EcommerceProductImageReset.php" description="see description in class" xml="classes/EcommerceProductImageReset.xml"/>
-    <class name="EcommerceCheckConfiguration" src="code/tasks/EcommerceCheckConfiguration.php" description="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs" xml="classes/EcommerceCheckConfiguration.xml"/>
-    <class name="EcommerceDefaultRecords" src="code/tasks/EcommerceDefaultRecords.php" description="create default records for e-commerce This does not include any products." xml="classes/EcommerceDefaultRecords.xml"/>
-    <class name="CleanupProductFullSiteTreeSorting" src="code/tasks/CleanupProductFullSiteTreeSorting.php" xml="classes/CleanupProductFullSiteTreeSorting.xml"/>
+    <class name="EcommerceTaskSetDefaultProductGroupValues" src="code/tasks/EcommerceTaskSetDefaultProductGroupValues.php" xml="classes/EcommerceTaskSetDefaultProductGroupValues.xml"/>
+    <class name="EcommerceTaskDeleteProducts" src="code/tasks/EcommerceTaskDeleteProducts.php" xml="classes/EcommerceTaskDeleteProducts.xml"/>
+    <class name="EcommerceTaskProductVariationsFixes" src="code/tasks/EcommerceTaskProductVariationsFixes.php" description="see description in class" xml="classes/EcommerceTaskProductVariationsFixes.xml"/>
+    <class name="EcommerceTaskCartManipulation_Current" src="code/tasks/EcommerceTaskCartManipulation.php" description="shows you the link to remove the current cart" xml="classes/EcommerceTaskCartManipulation_Current.xml"/>
+    <class name="EcommerceTaskCartManipulation_Debug" src="code/tasks/EcommerceTaskCartManipulation.php" description="shows you the link to remove the current cart" xml="classes/EcommerceTaskCartManipulation_Debug.xml"/>
     <class name="EcommerceTaskExportAllOrderItems" src="code/tasks/EcommerceTaskExportAllOrderItems.php" description="set the order id number." xml="classes/EcommerceTaskExportAllOrderItems.xml"/>
     <class name="EcommerceTaskOrderItemsPerCustomer" src="code/tasks/EcommerceTaskOrderItemsPerCustomer.php" description="set the order id number." xml="classes/EcommerceTaskOrderItemsPerCustomer.xml"/>
     <class name="EcommerceTaskDebugCart" src="code/tasks/EcommerceTaskDebugCart.php" xml="classes/EcommerceTaskDebugCart.xml"/>
-    <class name="DeleteAllOrders" src="code/tasks/DeleteAllOrders.php" xml="classes/DeleteAllOrders.xml"/>
-    <class name="CreateEcommerceMemberGroups" src="code/tasks/CreateEcommerceMemberGroups.php" description="create the e-commerce specific Member Groups" xml="classes/CreateEcommerceMemberGroups.xml"/>
-    <class name="CartManipulation_Current" src="code/tasks/CartManipulation.php" description="shows you the link to remove the current cart" xml="classes/CartManipulation_Current.xml"/>
-    <class name="CartManipulation_Debug" src="code/tasks/CartManipulation.php" description="shows you the link to remove the current cart" xml="classes/CartManipulation_Debug.xml"/>
-    <class name="SetOrderIDStartingNumber" src="code/tasks/SetOrderIDStartingNumber.php" description="set the order id number." xml="classes/SetOrderIDStartingNumber.xml"/>
-    <class name="CartCleanupTask" src="code/tasks/CartCleanupTask.php" xml="classes/CartCleanupTask.xml"/>
-    <class name="FixBrokenOrderSubmissionData" src="code/tasks/FixBrokenOrderSubmissionData.php" description="After a bug in the saving of orders in the CMS This &quot;fixer&quot;  was introduced to fix older orders without a submission record." xml="classes/FixBrokenOrderSubmissionData.xml"/>
+    <class name="EcommerceTaskDefaultRecords" src="code/tasks/EcommerceTaskDefaultRecords.php" description="create default records for e-commerce This does not include any products." xml="classes/EcommerceTaskDefaultRecords.xml"/>
+    <class name="EcommerceTaskCreateMemberGroups" src="code/tasks/EcommerceTaskCreateMemberGroups.php" description="create the e-commerce specific Member Groups" xml="classes/EcommerceTaskCreateMemberGroups.xml"/>
+    <class name="EcommerceTaskProductImageReset" src="code/tasks/EcommerceTaskProductImageReset.php" description="see description in class" xml="classes/EcommerceTaskProductImageReset.xml"/>
+    <class name="EcommerceTaskCountryAndRegion" src="code/tasks/EcommerceTaskCountryAndRegion.php" description="create standard country and regions" xml="classes/EcommerceTaskCountryAndRegion.xml"/>
+    <class name="EcommerceTaskCountryAndRegion_DisallowAllCountries" src="code/tasks/EcommerceTaskCountryAndRegion.php" description="update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country" xml="classes/EcommerceTaskCountryAndRegion_DisallowAllCountries.xml"/>
+    <class name="EcommerceTaskCountryAndRegion_AllowAllCountries" src="code/tasks/EcommerceTaskCountryAndRegion.php" description="update EcommerceCountry.DoNotAllowSales to 0 so that you can sell to all countries" xml="classes/EcommerceTaskCountryAndRegion_AllowAllCountries.xml"/>
+    <class name="EcommerceTaskTryToFinaliseOrders" src="code/tasks/EcommerceTaskTryToFinaliseOrders.php" xml="classes/EcommerceTaskTryToFinaliseOrders.xml"/>
+    <class name="EcommerceTaskTryToFinaliseOrders_Mailer" src="code/tasks/EcommerceTaskTryToFinaliseOrders.php" xml="classes/EcommerceTaskTryToFinaliseOrders_Mailer.xml"/>
+    <class name="EcommerceTaskCleanupProductFullSiteTreeSorting" src="code/tasks/EcommerceTaskCleanupProductFullSiteTreeSorting.php" xml="classes/EcommerceTaskCleanupProductFullSiteTreeSorting.xml"/>
+    <class name="EcommerceTaskAddDefaultProducts" src="code/tasks/EcommerceTaskAddDefaultProducts.php" xml="classes/EcommerceTaskAddDefaultProducts.xml"/>
     <class name="EcommerceTaskArchiveAllSubmittedOrders" src="code/tasks/EcommerceTaskArchiveAllSubmittedOrders.php" description="After a bug in the saving of orders in the CMS This &quot;fixer&quot;  was introduced to fix older orders without a submission record." xml="classes/EcommerceTaskArchiveAllSubmittedOrders.xml"/>
-    <class name="EcommerceTemplateTestTask" src="code/tasks/EcommerceTemplateTestTask.php" description="Get examples for building templates." xml="classes/EcommerceTemplateTestTask.xml"/>
-    <class name="EcommerceTryToFinaliseOrdersTask" src="code/tasks/EcommerceTryToFinaliseOrdersTask.php" xml="classes/EcommerceTryToFinaliseOrdersTask.xml"/>
-    <class name="EcommerceTryToFinaliseOrdersTask_Mailer" src="code/tasks/EcommerceTryToFinaliseOrdersTask.php" xml="classes/EcommerceTryToFinaliseOrdersTask_Mailer.xml"/>
+    <class name="EcommerceTaskMigration" src="code/tasks/EcommerceTaskMigration.php" xml="classes/EcommerceTaskMigration.xml"/>
+    <class name="EcommerceTaskLinkOrderAddressesAtBothEnds" src="code/tasks/EcommerceTaskLinkOrderAddressesAtBothEnds.php" description="works out how many products have been sold, per product." xml="classes/EcommerceTaskLinkOrderAddressesAtBothEnds.xml"/>
+    <class name="EcommerceTaskTemplateTest" src="code/tasks/EcommerceTaskTemplateTest.php" description="Get examples for building templates." xml="classes/EcommerceTaskTemplateTest.xml"/>
+    <class name="EcommerceTaskCheckConfiguration" src="code/tasks/EcommerceTaskCheckConfiguration.php" description="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs" xml="classes/EcommerceTaskCheckConfiguration.xml"/>
+    <class name="EcommerceTaskSetOrderIDStartingNumber" src="code/tasks/EcommerceTaskSetOrderIDStartingNumber.php" description="set the order id number." xml="classes/EcommerceTaskSetOrderIDStartingNumber.xml"/>
     <class name="EcommerceTaskLinkProductWithImages" src="code/tasks/EcommerceTaskLinkProductsWithImages.php" description="Add any Image (or other file) to a product using the InternalItemID" xml="classes/EcommerceTaskLinkProductWithImages.xml"/>
+    <class name="EcommerceTaskAddCustomersToCustomerGroups" src="code/tasks/EcommerceTaskAddCustomersToCustomerGroups.php" description="Adds all members, who have bought something, to the customer group." xml="classes/EcommerceTaskAddCustomersToCustomerGroups.xml"/>
     <class name="EcommerceTaskReviewSearches" src="code/tasks/EcommerceTaskReviewSearches.php" description="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs" xml="classes/EcommerceTaskReviewSearches.xml"/>
+    <class name="EcommerceTaskCartCleanup" src="code/tasks/EcommerceTaskCartCleanup.php" xml="classes/EcommerceTaskCartCleanup.xml"/>
     <class name="EcommerceTaskCleanupProducts" src="code/tasks/EcommerceTaskCleanupProducts.php" xml="classes/EcommerceTaskCleanupProducts.xml"/>
-    <class name="SetDefaultProductGroupValues" src="code/tasks/SetDefaultProductGroupValues.php" xml="classes/SetDefaultProductGroupValues.xml"/>
     <class name="EcommerceConfigAjaxDefinitions" src="code/config/EcommerceConfigAjaxDefinitions.php" description="This class defines all the names for IDs and Classes that are used within the e-commerce ajax framework." xml="classes/EcommerceConfigAjaxDefinitions.xml"/>
     <class name="EcommerceConfigAjax" src="code/config/EcommerceConfigAjax.php" description="This class returns the Ajax Definitions class." xml="classes/EcommerceConfigAjax.xml"/>
     <class name="EcommerceConfig" src="code/config/EcommerceConfig.php" description="This Class creates an array of configurations for e-commerce." xml="classes/EcommerceConfig.xml"/>
@@ -61,6 +64,7 @@
     <class name="CartResponse" src="code/control/CartResponse.php" xml="classes/CartResponse.xml"/>
     <class name="ExchangeRateProvider" src="code/money/ExchangeRateProvider.php" xml="classes/ExchangeRateProvider.xml"/>
     <class name="ExchangeRateProvider_Dummy" src="code/money/ExchangeRateProvider.php" xml="classes/ExchangeRateProvider_Dummy.xml"/>
+    <class name="EcommercePaymentSupportedMethodsProvider" src="code/money/EcommercePaymentSupportedMethodsProvider.php" description="if you want to implement rules around selecting specific payment gateways for specific orders then you need to extend this class and add the following to mysite/_config/config.yml: &lt;code yml&gt;  Injector:    EcommercePaymentSupportedMethodsProvider:      class: MyCustom_EcommercePaymentSupportedMethodsProvider &lt;/code&gt;" xml="classes/EcommercePaymentSupportedMethodsProvider.xml"/>
     <class name="EcommerceMoney" src="code/money/EcommerceMoney.php" xml="classes/EcommerceMoney.xml"/>
     <class name="Order" src="code/model/Order.php" xml="classes/Order.xml"/>
     <class name="EcommerceRole" src="code/model/extensions/EcommerceRole.php" xml="classes/EcommerceRole.xml"/>
@@ -103,13 +107,15 @@
     <class name="OrderStep_SentReceipt" src="code/model/process/OrderStep.php" xml="classes/OrderStep_SentReceipt.xml"/>
     <class name="OrderStep_Sent" src="code/model/process/OrderStep.php" xml="classes/OrderStep_Sent.xml"/>
     <class name="OrderStep_Archived" src="code/model/process/OrderStep.php" xml="classes/OrderStep_Archived.xml"/>
+    <class name="CheckoutPage_StepDescription" src="code/model/process/CheckoutPage_StepDescription.php" xml="classes/CheckoutPage_StepDescription.xml"/>
     <class name="OrderEmailRecord" src="code/model/process/OrderEmailRecord.php" xml="classes/OrderEmailRecord.xml"/>
     <class name="OrderEmailRecord_Review" src="code/model/process/OrderEmailRecord.php" xml="classes/OrderEmailRecord_Review.xml"/>
+    <class name="Product_OrderItem" src="code/model/Product_OrderItem.php" xml="classes/Product_OrderItem.xml"/>
+    <class name="SearchHistory" src="code/model/search/SearchHistory.php" xml="classes/SearchHistory.xml"/>
     <class name="OrderItem" src="code/model/OrderItem.php" xml="classes/OrderItem.xml"/>
     <class name="OrderModifier" src="code/model/OrderModifier.php" description="which returns an array of IDs SEQUENCE - USE FOR ALL MODIFIERS!!! *** 1. model defining static variables (e.g. $db, $has_one) *** 2. cms variables + functions (e.g. getCMSFields, $searchableFields) *** 3. other (non) static variables (e.g. private static $special_name_for_something, protected $order) *** 4. CRUD functions (e.g. canEdit) *** 5. init and update functions *** 6. form functions (e. g. Showform and getform) *** 7. template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES *** 8. inner calculations.... USES CALCULATED VALUES *** 9. calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES *** 10. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...) *** 11. AJAX related functions *** 12. debug functions" xml="classes/OrderModifier.xml"/>
     <class name="OrderModifier_Descriptor" src="code/model/OrderModifier.php" xml="classes/OrderModifier_Descriptor.xml"/>
     <class name="ProductsAndGroupsModelAdmin" src="code/cms/ProductsAndGroupsModelAdmin.php" xml="classes/ProductsAndGroupsModelAdmin.xml"/>
-    <class name="ProductsAndGroupsModelAdmin_FieldDetailForm_ItemRequest" src="code/cms/ProductsAndGroupsModelAdmin.php" xml="classes/ProductsAndGroupsModelAdmin_FieldDetailForm_ItemRequest.xml"/>
     <class name="EcommerceDevelopmentAdminDecorator" src="code/cms/dev/EcommerceDevelopmentAdminDecorator.php" description="EcommerceDevelopmentAdminDecorator adds extra functionality to the DevelopmentAdmin It creates a developer view (as in www.mysite.com/dev/) specifically for ecommerce." xml="classes/EcommerceDevelopmentAdminDecorator.xml"/>
     <class name="EcommerceDatabaseAdmin" src="code/cms/dev/EcommerceDatabaseAdmin.php" description="One stop shop for massaging e-commerce related data AND running tests." xml="classes/EcommerceDatabaseAdmin.xml"/>
     <class name="DebugView_EcommerceDatabaseAdmin" src="code/cms/dev/EcommerceDatabaseAdmin.php" xml="classes/DebugView_EcommerceDatabaseAdmin.xml"/>
@@ -119,16 +125,15 @@
     <class name="ModelAdminEcommerceBaseClass" src="code/cms/ModelAdminEcommerceBaseClass.php" xml="classes/ModelAdminEcommerceBaseClass.xml"/>
     <interface name="BuyableModel" src="code/interfaces/BuyableModel.php" description="describes the buyable classes CONTENT: //GROUPS AND SIBLINGS //IMAGES //VERSIONING //ORDER ITEM //LINKS //TEMPLATE STUFF //CRUD SETTINGS" xml="interfaces/BuyableModel.xml"/>
     <interface name="OrderStepInterface" src="code/interfaces/OrderStepInterface.php" xml="interfaces/OrderStepInterface.xml"/>
+    <interface name="EcommerceGEOipProvider" src="code/interfaces/EcommerceGEOipProvider.php" xml="interfaces/EcommerceGEOipProvider.xml"/>
     <class name="EcommerceRestfulServer" src="code/api/EcommerceRestfulServer.php" description="extends the standard RestfulServer to provide better access to extended classes." xml="classes/EcommerceRestfulServer.xml"/>
+    <class name="Product_Image" src="code/filesystem/Product_Image.php" xml="classes/Product_Image.xml"/>
     <class name="ProductGroupSearchPage" src="code/ProductGroupSearchPage.php" description="This page manages searching for products" xml="classes/ProductGroupSearchPage.xml"/>
     <class name="ProductGroupSearchPage_Controller" src="code/ProductGroupSearchPage.php" xml="classes/ProductGroupSearchPage_Controller.xml"/>
     <class name="CartPage" src="code/CartPage.php" xml="classes/CartPage.xml"/>
     <class name="CartPage_Controller" src="code/CartPage.php" xml="classes/CartPage_Controller.xml"/>
-    <class name="SearchHistory" src="code/search/SearchHistory.php" xml="classes/SearchHistory.xml"/>
     <class name="SearchReplacement" src="code/search/SearchReplacement.php" xml="classes/SearchReplacement.xml"/>
-    <class name="SearchReplacement_Admin" src="code/search/SearchReplacement.php" xml="classes/SearchReplacement_Admin.xml"/>
-    <class name="EcommerceCountryFilters_AllowSales" src="code/search/filters/EcommerceCountryFilters.php" xml="classes/EcommerceCountryFilters_AllowSales.xml"/>
-    <class name="PaymentFilter_AroundDateFilter" src="code/search/filters/PaymentFilters.php" xml="classes/PaymentFilter_AroundDateFilter.xml"/>
+    <class name="EcommercePaymentFilters_AroundDateFilter" src="code/search/filters/EcommercePaymentFilters.php" xml="classes/EcommercePaymentFilters_AroundDateFilter.xml"/>
     <class name="OrderFilters_AroundDateFilter" src="code/search/filters/OrderFilters.php" xml="classes/OrderFilters_AroundDateFilter.xml"/>
     <class name="OrderFilters_MemberAndAddress" src="code/search/filters/OrderFilters.php" description="Filter that searches the Two Addresses (billing + shipping) and the member. It searches all the relevant fields." xml="classes/OrderFilters_MemberAndAddress.xml"/>
     <class name="OrderFilters_MultiOptionsetStatusIDFilter" src="code/search/filters/OrderFilters.php" description="Allows you to filter orders for multiple statusIDs" xml="classes/OrderFilters_MultiOptionsetStatusIDFilter.xml"/>
@@ -141,6 +146,8 @@
     <class name="OrderModifierForm" src="code/forms/OrderModifierForm.php" xml="classes/OrderModifierForm.xml"/>
     <class name="OrderModifierForm_Controller" src="code/forms/OrderModifierForm.php" description="This controller allows you to submit modifier forms from anywhere on the site, Most likely this will be from the the cart / checkout page." xml="classes/OrderModifierForm_Controller.xml"/>
     <class name="OrderModifierForm_Validator" src="code/forms/OrderModifierForm.php" xml="classes/OrderModifierForm_Validator.xml"/>
+    <class name="Product_ProductImageUploadField" src="code/forms/Product_ProductImageUploadField.php" xml="classes/Product_ProductImageUploadField.xml"/>
+    <class name="GridFieldEditButtonOriginalPage" src="code/forms/gridfield/GridFieldEditButtonOriginalPage.php" description="Provides the entry point to editing a single record presented by the {@link GridField}." xml="classes/GridFieldEditButtonOriginalPage.xml"/>
     <class name="OrderForm_Payment" src="code/forms/OrderForm_Payment.php" xml="classes/OrderForm_Payment.xml"/>
     <class name="OrderForm_Payment_Validator" src="code/forms/OrderForm_Payment.php" xml="classes/OrderForm_Payment_Validator.xml"/>
     <class name="OrderForm" src="code/forms/OrderForm.php" xml="classes/OrderForm.xml"/>
@@ -162,6 +169,7 @@
     <class name="EcomQuantityField" src="code/forms/fields/EcomQuantityField.php" xml="classes/EcomQuantityField.xml"/>
     <class name="OrderStepField" src="code/forms/fields/OrderStepField.php" description="This field shows the admin (and maybe the customer) where the Order is at (which orderstep)" xml="classes/OrderStepField.xml"/>
     <class name="ExpiryDateField" src="code/forms/fields/ExpiryDateField.php" xml="classes/ExpiryDateField.xml"/>
+    <class name="EcommerceSearchHistoryFormField" src="code/forms/fields/EcommerceSearchHistoryFormField.php" xml="classes/EcommerceSearchHistoryFormField.xml"/>
     <class name="OptionalTreeDropdownField" src="code/forms/fields/OptionalTreeDropdownField.php" description="TreeDropdown-like field that gives you a tree of items including an empty field, using ajax." xml="classes/OptionalTreeDropdownField.xml"/>
     <class name="SelectOrderAddressField" src="code/forms/fields/SelectOrderAddressField.php" description="A field that allows the user to select an old address for the current order." xml="classes/SelectOrderAddressField.xml"/>
     <class name="BuyableSelectField" src="code/forms/fields/BuyableSelectField.php" description="Text input field that allows the user to select a Buyable." xml="classes/BuyableSelectField.xml"/>
@@ -173,11 +181,7 @@
     <class name="Order_Email" src="code/email/Order_Email.php" xml="classes/Order_Email.xml"/>
     <class name="Product" src="code/Product.php" description="This is a standard Product page-type with fields like Price, Weight, Model and basic management of groups." xml="classes/Product.xml"/>
     <class name="Product_Controller" src="code/Product.php" xml="classes/Product_Controller.xml"/>
-    <class name="Product_Image" src="code/Product.php" xml="classes/Product_Image.xml"/>
-    <class name="Product_OrderItem" src="code/Product.php" xml="classes/Product_OrderItem.xml"/>
-    <class name="Product_ProductImageUploadField" src="code/Product.php" xml="classes/Product_ProductImageUploadField.xml"/>
     <class name="CheckoutPage" src="code/CheckoutPage.php" description="CheckoutPage is a CMS page-type that shows the order details to the customer for their current shopping cart on the site. It also lets the customer review the items in their cart, and manipulate them (add more, deduct or remove items completely). The most important thing is that the {@link CheckoutPage_Controller} handles the {@link OrderForm} form instance, allowing the customer to fill out their shipping details, confirming their order and making a payment." xml="classes/CheckoutPage.xml"/>
     <class name="CheckoutPage_Controller" src="code/CheckoutPage.php" xml="classes/CheckoutPage_Controller.xml"/>
-    <class name="CheckoutPage_StepDescription" src="code/CheckoutPage.php" xml="classes/CheckoutPage_StepDescription.xml"/>
   </namespace>
 </index>

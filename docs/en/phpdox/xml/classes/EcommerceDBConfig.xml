@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig" abstract="false" final="false" start="14" end="543">
-  <file path="./../../../code/model/config" file="EcommerceDBConfig.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/config/EcommerceDBConfig.php" size="18018" time="2014-04-19T23:42:35+12:00" unixtime="1397907755" sha1="f7513ce5d8106bee20891fdc4c291ae7dcec0ff4"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig" abstract="false" final="false" start="14" end="544">
+  <file path="./../../../code/model/config" file="EcommerceDBConfig.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/config/EcommerceDBConfig.php" size="18686" time="2014-08-21T14:24:59+12:00" unixtime="1408587899" sha1="e51ce5def0dbcb2d4c9f58853ec0875954772cf1"/>
   <docblock>
     <description compact="Database Settings for E-commerce Similar to SiteConfig but then for E-commerce To access a singleton here, use: EcommerceDBConfig::current_ecommerce_db_config()"/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
@@ -17,7 +17,7 @@
       </var>
     </docblock>
   </member>
-  <member name="has_one" type="array" visibility="private" line="46">
+  <member name="has_one" type="array" visibility="private" line="47">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -25,7 +25,7 @@
       </var>
     </docblock>
   </member>
-  <member name="indexes" type="array" visibility="private" line="55">
+  <member name="indexes" type="array" visibility="private" line="56">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -33,7 +33,7 @@
       </var>
     </docblock>
   </member>
-  <member name="casting" type="array" visibility="private" line="67">
+  <member name="casting" type="array" visibility="private" line="68">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -41,7 +41,7 @@
       </var>
     </docblock>
   </member>
-  <member name="searchable_fields" type="array" visibility="private" line="75">
+  <member name="searchable_fields" type="array" visibility="private" line="76">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -49,7 +49,7 @@
       </var>
     </docblock>
   </member>
-  <member name="field_labels" type="array" visibility="private" line="83">
+  <member name="field_labels" type="array" visibility="private" line="84">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -57,7 +57,7 @@
       </var>
     </docblock>
   </member>
-  <member name="summary_fields" type="array" visibility="private" line="89">
+  <member name="summary_fields" type="array" visibility="private" line="90">
     <docblock>
       <description compact="Standard SS Variable"/>
       <var type="object">
@@ -65,7 +65,7 @@
       </var>
     </docblock>
   </member>
-  <method name="canCreate" start="99" end="101" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCreate" start="100" end="102" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <param type="object" variable="$member">
@@ -77,7 +77,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canView" start="108" end="110" abstract="false" final="false" static="false" visibility="public">
+  <method name="canView" start="109" end="111" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <param type="object" variable="$member">
@@ -89,7 +89,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canEdit" start="117" end="125" abstract="false" final="false" static="false" visibility="public">
+  <method name="canEdit" start="118" end="121" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <param type="object" variable="$member">
@@ -101,7 +101,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canDelete" start="132" end="139" abstract="false" final="false" static="false" visibility="public">
+  <method name="canDelete" start="128" end="136" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <param type="object" variable="$member">
@@ -113,7 +113,7 @@
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <member name="default_sort" type="string" default="&quot;\&quot;UseThisOne\&quot; DESC, \&quot;Created\&quot; ASC&quot;" visibility="private" line="145">
+  <member name="default_sort" type="string" default="&quot;\&quot;UseThisOne\&quot; DESC, \&quot;Created\&quot; ASC&quot;" visibility="private" line="142">
     <docblock>
       <description compact="Standard SS variable"/>
       <var type="object">
@@ -121,7 +121,7 @@
       </var>
     </docblock>
   </member>
-  <member name="defaults" type="array" visibility="private" line="151">
+  <member name="defaults" type="array" visibility="private" line="148">
     <docblock>
       <description compact="Standard SS variable"/>
       <var type="object">
@@ -129,7 +129,7 @@
       </var>
     </docblock>
   </member>
-  <method name="populateDefaults" start="176" end="179" abstract="false" final="false" static="false" visibility="public">
+  <method name="populateDefaults" start="175" end="178" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS Method"/>
       <var type="object">
@@ -137,7 +137,7 @@
       </var>
     </docblock>
   </method>
-  <member name="singular_name" type="string" default="&quot;Ecommerce Configuration&quot;" visibility="private" line="185">
+  <member name="singular_name" type="string" default="&quot;Ecommerce Configuration&quot;" visibility="private" line="184">
     <docblock>
       <description compact="Standard SS variable"/>
       <var type="object">
@@ -145,8 +145,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_singular_name" start="186" end="186" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="plural_name" type="string" default="&quot;Ecommerce Configuration&quot;" visibility="private" line="192">
+  <method name="i18n_singular_name" start="185" end="185" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Ecommerce Configuration&quot;" visibility="private" line="191">
     <docblock>
       <description compact="Standard SS variable"/>
       <var type="object">
@@ -154,8 +154,8 @@
       </var>
     </docblock>
   </member>
-  <method name="i18n_plural_name" start="193" end="193" abstract="false" final="false" static="false" visibility="public"/>
-  <member name="description" type="string" default="&quot;A set of configurations for the online shop. Each shop needs to have one or more sets.&quot;" visibility="private" line="199">
+  <method name="i18n_plural_name" start="192" end="192" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;A set of configurations for the online shop. Each shop needs to have one or more sets.&quot;" visibility="private" line="198">
     <docblock>
       <description compact="Standard SS variable."/>
       <var type="object">
@@ -163,7 +163,7 @@
       </var>
     </docblock>
   </member>
-  <member name="my_current_one" type="{unknown}" default="null" visibility="private" line="205">
+  <member name="my_current_one" type="{unknown}" default="null" visibility="private" line="204">
     <docblock>
       <description compact="static holder for its own (or other EcommerceDBConfig) class."/>
       <var description="| NULL" type="object">
@@ -171,16 +171,16 @@
       </var>
     </docblock>
   </member>
-  <method name="reset_my_current_one" start="206" end="206" abstract="false" final="false" static="true" visibility="public"/>
-  <method name="current_ecommerce_db_config" start="212" end="227" abstract="false" final="false" static="true" visibility="public">
+  <method name="reset_my_current_one" start="205" end="205" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="current_ecommerce_db_config" start="212" end="226" abstract="false" final="false" static="true" visibility="public">
     <docblock>
-      <description compact="implements singleton pattern"/>
+      <description compact="implements singleton pattern.">Gets the current USE THIS ONE e-commerce option.</description>
       <return description="| Object" type="object">
         <type full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
       </return>
     </docblock>
   </method>
-  <method name="fieldLabels" start="234" end="240" abstract="false" final="false" static="false" visibility="public">
+  <method name="fieldLabels" start="233" end="239" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method for decorators."/>
       <param type="object" variable="$includerelations">
@@ -192,7 +192,7 @@
     </docblock>
     <parameter name="includerelations" byreference="false" type="{unknown}" default="true"/>
   </method>
-  <method name="customFieldLabels" start="247" end="276" abstract="false" final="false" static="false" visibility="public">
+  <method name="customFieldLabels" start="246" end="276" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="definition of field lables TODO: is this a common SS method?"/>
       <return type="object">
@@ -200,7 +200,7 @@
       </return>
     </docblock>
   </method>
-  <method name="getCMSFields" start="282" end="365" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCMSFields" start="282" end="366" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
       <return type="object">
@@ -209,11 +209,11 @@
     </docblock>
     <inline>
       <comment value="new section" line="288"/>
-      <comment value="set cols" line="359"/>
+      <comment value="set cols" line="360"/>
     </inline>
   </method>
-  <method name="getOrderStepsField" start="367" end="378" abstract="false" final="false" static="false" visibility="protected"/>
-  <method name="is_buyable" start="388" end="394" abstract="false" final="false" static="true" visibility="public">
+  <method name="getOrderStepsField" start="368" end="379" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="is_buyable" start="389" end="395" abstract="false" final="false" static="true" visibility="public">
     <docblock>
       <description compact="tells us if a Class Name is a buyable"/>
       <todo value=": consider using Ecomerce Configuration instead?">In EcomConfig we only list base classes.</todo>
@@ -226,7 +226,7 @@
     </docblock>
     <parameter name="className" byreference="false" type="{unknown}"/>
   </method>
-  <method name="Customer" start="400" end="402" abstract="false" final="false" static="false" visibility="public">
+  <method name="Customer" start="401" end="403" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the Current Member"/>
       <return description="| Member" type="object">
@@ -234,7 +234,7 @@
       </return>
     </docblock>
   </method>
-  <method name="Currency" start="408" end="410" abstract="false" final="false" static="false" visibility="public">
+  <method name="Currency" start="409" end="411" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Return the currency being used on the site e.g. &quot;NZD&quot; or &quot;USD&quot;"/>
       <return type="object">
@@ -242,7 +242,7 @@
       </return>
     </docblock>
   </method>
-  <method name="Currencies" start="417" end="419" abstract="false" final="false" static="false" visibility="public">
+  <method name="Currencies" start="418" end="420" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return null if there is less than two currencies in use on the site."/>
       <return description="| Null" type="object">
@@ -250,7 +250,7 @@
       </return>
     </docblock>
   </method>
-  <method name="AccountPageLink" start="424" end="426" abstract="false" final="false" static="false" visibility="public">
+  <method name="AccountPageLink" start="425" end="427" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return description="(URLSegment)" type="object">
@@ -258,7 +258,7 @@
       </return>
     </docblock>
   </method>
-  <method name="CheckoutLink" start="431" end="433" abstract="false" final="false" static="false" visibility="public">
+  <method name="CheckoutLink" start="432" end="434" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return description="(URLSegment)" type="object">
@@ -266,17 +266,17 @@
       </return>
     </docblock>
   </method>
-  <method name="CartPageLink" start="438" end="440" abstract="false" final="false" static="false" visibility="public">
+  <method name="CartPageLink" start="439" end="441" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return String (URLSegment)"/>
     </docblock>
   </method>
-  <method name="OrderConfirmationPageLink" start="445" end="447" abstract="false" final="false" static="false" visibility="public">
+  <method name="OrderConfirmationPageLink" start="446" end="448" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return String (URLSegment)"/>
     </docblock>
   </method>
-  <method name="DefaultImageLink" start="455" end="463" abstract="false" final="false" static="false" visibility="public">
+  <method name="DefaultImageLink" start="456" end="464" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns a link to a default image.">If a default image is set in the site config then this link is returned
 Otherwise, a standard link is returned</description>
@@ -285,7 +285,7 @@ Otherwise, a standard link is returned</description>
       </return>
     </docblock>
   </method>
-  <method name="DefaultImage" start="469" end="481" abstract="false" final="false" static="false" visibility="public">
+  <method name="DefaultImage" start="470" end="482" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the default image or a dummy one if it does not exists."/>
       <return type="object">
@@ -293,17 +293,17 @@ Otherwise, a standard link is returned</description>
       </return>
     </docblock>
   </method>
-  <method name="onAfterWrite" start="486" end="507" abstract="false" final="false" static="false" visibility="public">
+  <method name="onAfterWrite" start="487" end="508" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS method"/>
     </docblock>
   </method>
-  <method name="requireDefaultRecords" start="512" end="524" abstract="false" final="false" static="false" visibility="public">
+  <method name="requireDefaultRecords" start="513" end="525" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard SS Method"/>
     </docblock>
   </method>
-  <method name="SiteConfig" start="530" end="532" abstract="false" final="false" static="false" visibility="public">
+  <method name="SiteConfig" start="531" end="533" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns site config"/>
       <return type="object">
@@ -311,7 +311,7 @@ Otherwise, a standard link is returned</description>
       </return>
     </docblock>
   </method>
-  <method name="UseThisOneNice" start="539" end="541" abstract="false" final="false" static="false" visibility="public">
+  <method name="UseThisOneNice" start="540" end="542" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Casted Variable"/>
       <return type="object">

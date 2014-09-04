@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src#" full="EcommerceConfigAjax" namespace="" name="EcommerceConfigAjax" abstract="false" final="false" start="17" end="46">
-  <file path="./../../../code/config" file="EcommerceConfigAjax.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/config/EcommerceConfigAjax.php" size="1480" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="086e790b94bc0ac15abac340605301de82bdebea"/>
+  <file path="./../../../code/config" file="EcommerceConfigAjax.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/config/EcommerceConfigAjax.php" size="1480" time="2014-03-27T11:45:33+13:00" unixtime="1395873933" sha1="086e790b94bc0ac15abac340605301de82bdebea"/>
   <docblock>
     <description compact="This class returns the Ajax Definitions class.">The Ajax Definitions class is an object that contains all the values
 for ajax references in the templates.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskLinkProductWithImages" namespace="" name="EcommerceTaskLinkProductWithImages" abstract="false" final="false" start="14" end="135">
-  <file path="./../../../code/tasks" file="EcommerceTaskLinkProductsWithImages.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/tasks/EcommerceTaskLinkProductsWithImages.php" size="4381" time="2013-09-11T18:24:34+12:00" unixtime="1378880674" sha1="16ca9b34470d00002901fd01ad21c7cd159c3458"/>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskLinkProductWithImages" namespace="" name="EcommerceTaskLinkProductWithImages" abstract="false" final="false" start="14" end="142">
+  <file path="./../../../code/tasks" file="EcommerceTaskLinkProductsWithImages.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskLinkProductsWithImages.php" size="4519" time="2014-08-24T21:22:31+12:00" unixtime="1408872151" sha1="6bb1b0e754070d7a9bb41e482354d8eb23777488"/>
   <docblock>
     <description compact="Add any Image (or other file) to a product using the InternalItemID"/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
@@ -47,11 +47,11 @@
   <method name="run" start="58" end="117" abstract="false" final="false" static="false" visibility="public">
     <parameter name="request" byreference="false" type="{unknown}"/>
   </method>
-  <method name="nextBatchLink" start="119" end="125" abstract="false" final="false" static="false" visibility="protected"/>
-  <method name="setProductID" start="127" end="129" abstract="false" final="false" static="false" visibility="public">
+  <method name="nextBatchLink" start="119" end="129" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="setProductID" start="131" end="133" abstract="false" final="false" static="false" visibility="public">
     <parameter name="id" byreference="false" type="{unknown}"/>
   </method>
-  <method name="Link" start="131" end="133" abstract="false" final="false" static="false" visibility="public">
+  <method name="Link" start="135" end="140" abstract="false" final="false" static="false" visibility="public">
     <parameter name="action" byreference="false" type="{unknown}" default="null"/>
   </method>
 </class>

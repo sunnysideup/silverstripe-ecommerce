@@ -65,7 +65,7 @@
       </nav>
       <section>
         <h1 id="introduction"><small>\</small>Order</h1>
-        <h4>Note that it works closely with the ShoppingCart class, which accompanies the Order until it has been paid for / confirmed by the user.</h4>
+        <h4>The order class is a databound object for handling Orders within SilverStripe.</h4>
         <p/>
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
@@ -217,7 +217,7 @@
                     </li><li>public void <a title="Order" href="../classes/Order/getRegion.xhtml">getRegion</a>()
                     </li><li>public Boolean <a title="Order" href="../classes/Order/HasAlternativeCurrency.xhtml">HasAlternativeCurrency</a>()
                     </li><li>public void <a title="Order" href="../classes/Order/getHasAlternativeCurrency.xhtml">getHasAlternativeCurrency</a>()
-                    </li><li>public void <a title="Order" href="../classes/Order/ensureCorrectExchangeRate.xhtml">ensureCorrectExchangeRate</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/EnsureCorrectExchangeRate.xhtml">EnsureCorrectExchangeRate</a>()
                     </li><li>public Boolean <a title="Order" href="../classes/Order/IsSubmitted.xhtml">IsSubmitted</a>()
                     </li><li>public void <a title="Order" href="../classes/Order/getIsSubmitted.xhtml">getIsSubmitted</a>()
                     </li><li>public Submission <a title="Order" href="../classes/Order/SubmissionLog.xhtml">SubmissionLog</a>()
@@ -229,7 +229,7 @@
                     </li><li>public String(URLSegment) <a title="Order" href="../classes/Order/Link.xhtml">Link</a>()
                     </li><li>public String(URL) <a title="Order" href="../classes/Order/APILink.xhtml">APILink</a>()
                     </li><li>public String(URLSegment) <a title="Order" href="../classes/Order/CheckoutLink.xhtml">CheckoutLink</a>()
-                    </li><li>public String <a title="Order" href="../classes/Order/ConvertToHTML.xhtml">ConvertToHTML</a>()
+                    </li><li>public HTML <a title="Order" href="../classes/Order/ConvertToHTML.xhtml">ConvertToHTML</a>()
                     </li><li>public String <a title="Order" href="../classes/Order/ConvertToString.xhtml">ConvertToString</a>()
                     </li><li>public String <a title="Order" href="../classes/Order/ConvertToJSON.xhtml">ConvertToJSON</a>()
                     </li><li>protected Order <a title="Order" href="../classes/Order/addHasOneAndHasManyAsVariables.xhtml">addHasOneAndHasManyAsVariables</a>()
@@ -267,7 +267,7 @@
             <td>: how to translate this?</td>
           </tr>
           <tr>
-            <td class="nummeric">433</td>
+            <td class="nummeric">435</td>
             <td/>
           </tr>
           <tr>
@@ -279,7 +279,7 @@
             <td>: why do we dont return a string IF there is only one item.</td>
           </tr>
           <tr>
-            <td class="nummeric">2650+</td>
+            <td class="nummeric">2640+</td>
             <td>: move to more appropriate class</td>
           </tr>
         </table>
@@ -428,6 +428,8 @@
                 — returns the instance of EcommerceDBConfig</li>
             <li id="EmailLink"><a title="Order" href="../classes/Order/EmailLink.xhtml">EmailLink()</a>
                 — returns the absolute link to the order that can be used in the customer communication (email)</li>
+            <li id="EnsureCorrectExchangeRate"><a title="Order" href="../classes/Order/EnsureCorrectExchangeRate.xhtml">EnsureCorrectExchangeRate()</a>
+                — Makes sure exchange rate is updated and maintained before order is submitted This method is public because it could be called from a shopping Cart Object.</li>
             <li id="ExpectedCountryName"><a title="Order" href="../classes/Order/ExpectedCountryName.xhtml">ExpectedCountryName()</a>
                 — returns name of coutry that we expect the customer to have This takes into consideration more than just what has been entered for example, it looks at GEO IP</li>
             <li id="FixedCountry"><a title="Order" href="../classes/Order/FixedCountry.xhtml">FixedCountry()</a>
@@ -501,9 +503,8 @@
             </li>
             <li id="RetrieveLink"><a title="Order" href="../classes/Order/RetrieveLink.xhtml">RetrieveLink()</a>
                 — returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.</li>
-            <li id="RetrieveModifier">
-              <a title="Order" href="../classes/Order/RetrieveModifier.xhtml">RetrieveModifier()</a>
-            </li>
+            <li id="RetrieveModifier"><a title="Order" href="../classes/Order/RetrieveModifier.xhtml">RetrieveModifier()</a>
+                — returns a modifier that is an instanceof the classname it extends</li>
             <li id="SetCountryFields"><a title="Order" href="../classes/Order/SetCountryFields.xhtml">SetCountryFields()</a>
                 — Sets the country in the billing and shipping address TO DO: only set one or the other....</li>
             <li id="SetCurrency"><a title="Order" href="../classes/Order/SetCurrency.xhtml">SetCurrency()</a>
@@ -568,9 +569,8 @@
             <li id="canDelete">
               <a title="Order" href="../classes/Order/canDelete.xhtml">canDelete()</a>
             </li>
-            <li id="canEdit">
-              <a title="Order" href="../classes/Order/canEdit.xhtml">canEdit()</a>
-            </li>
+            <li id="canEdit"><a title="Order" href="../classes/Order/canEdit.xhtml">canEdit()</a>
+                — if we set canEdit to false then we can not see the child records Basically, you can edit when you can view and canEdit (even as a customer) Or if you are a Shop Admin you can always edit.</li>
             <li id="canPay"><a title="Order" href="../classes/Order/canPay.xhtml">canPay()</a>
                 — Can a payment be made for this Order?</li>
             <li id="canView"><a title="Order" href="../classes/Order/canView.xhtml">canView()</a>
@@ -581,8 +581,6 @@
                 — Debug helper method.</li>
             <li id="doNextStatus"><a title="Order" href="../classes/Order/doNextStatus.xhtml">doNextStatus()</a>
                 — Goes through the order steps and tries to "apply" the next</li>
-            <li id="ensureCorrectExchangeRate"><a title="Order" href="../classes/Order/ensureCorrectExchangeRate.xhtml">ensureCorrectExchangeRate()</a>
-                — Makes sure exchange rate is updated and maintained before order is submitted This method is public because it could be called from a shopping Cart Object.</li>
             <li id="getCMSFields"><a title="Order" href="../classes/Order/getCMSFields.xhtml">getCMSFields()</a>
                 — STANDARD SILVERSTRIPE STUFF broken up into submitted and not (yet) submitted</li>
             <li id="getCanHaveShippingAddress">

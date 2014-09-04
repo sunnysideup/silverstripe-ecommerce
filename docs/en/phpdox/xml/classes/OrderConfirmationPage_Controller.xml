@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderConfirmationPage_Controller" namespace="" name="OrderConfirmationPage_Controller" abstract="false" final="false" start="237" end="532">
-  <file path="./../../../code" file="OrderConfirmationPage.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/OrderConfirmationPage.php" size="18323" time="2014-05-06T12:04:38+12:00" unixtime="1399334678" sha1="fdfdde9e6a76163fe01748f865bfd1f6531bfd69"/>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderConfirmationPage_Controller" namespace="" name="OrderConfirmationPage_Controller" abstract="false" final="false" start="283" end="566">
+  <file path="./../../../code" file="OrderConfirmationPage.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/OrderConfirmationPage.php" size="19807" time="2014-08-25T16:30:15+12:00" unixtime="1408941015" sha1="fa7327467f1832e4c686d2942dfece93701fdb5b"/>
   <extends full="CartPage_Controller" namespace="" name="CartPage_Controller"/>
-  <member name="allowed_actions" type="array" visibility="private" line="245">
+  <member name="allowed_actions" type="array" visibility="private" line="291">
     <docblock>
       <description/>
       <static value="array">standard SS variable
 it is important that we list all the options here</static>
     </docblock>
   </member>
-  <method name="init" start="263" end="277" abstract="false" final="false" static="false" visibility="public">
+  <method name="init" start="309" end="323" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="standard controller function"/>
     </docblock>
     <inline>
-      <comment value="we retrieve the order in the parent page" line="264"/>
-      <comment value="the parent page also takes care of the security" line="265"/>
-      <comment value="clear steps from checkout page otherwise in the next order" line="271"/>
-      <comment value="you go straight to the last step." line="272"/>
+      <comment value="we retrieve the order in the parent page" line="310"/>
+      <comment value="the parent page also takes care of the security" line="311"/>
+      <comment value="clear steps from checkout page otherwise in the next order" line="317"/>
+      <comment value="you go straight to the last step." line="318"/>
     </inline>
   </method>
-  <method name="showorder" start="286" end="319" abstract="false" final="false" static="false" visibility="public">
+  <method name="showorder" start="332" end="357" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="This method exists just so that template sets CurrentOrder variable"/>
       <param type="object">
@@ -32,12 +32,12 @@ it is important that we list all the options here</static>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
     <inline>
-      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="290"/>
-      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="291"/>
-      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="292"/>
+      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="336"/>
+      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="337"/>
+      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="338"/>
     </inline>
   </method>
-  <method name="retrieveorder" start="327" end="329" abstract="false" final="false" static="false" visibility="public">
+  <method name="retrieveorder" start="365" end="367" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="This is an additional way to look at an order.">The order is already retrieved from the init function</description>
       <return type="object">
@@ -48,7 +48,7 @@ it is important that we list all the options here</static>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="copyorder" start="339" end="344" abstract="false" final="false" static="false" visibility="public">
+  <method name="copyorder" start="377" end="382" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="copies either the current order into the shopping cart">TO DO: untested
 TO DO: what to do with old order</description>
@@ -63,7 +63,7 @@ TO DO: what to do with old order</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
   </method>
-  <method name="sendreceipt" start="350" end="396" abstract="false" final="false" static="false" visibility="public">
+  <method name="sendreceipt" start="388" end="430" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param type="object">
@@ -77,13 +77,13 @@ TO DO: what to do with old order</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
     <inline>
-      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="376"/>
-      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="377"/>
-      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="378"/>
-      <comment value="if it's an html email, filter it through emogrifier" line="387"/>
+      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="414"/>
+      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="415"/>
+      <comment value="LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE" line="416"/>
+      <comment value="if it's an html email, filter it through emogrifier" line="421"/>
     </inline>
   </method>
-  <method name="CheckoutSteps" start="406" end="433" abstract="false" final="false" static="false" visibility="public">
+  <method name="CheckoutSteps" start="440" end="467" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns a dataobject set of the checkout steps if the OrderConfirmationPage is shown as part of the checkout process We repeat these here so that you can show the user that (s)he has reached the last step"/>
       <param description="- if set, it returns that one step." type="object" variable="$number">
@@ -95,7 +95,7 @@ TO DO: what to do with old order</description>
     </docblock>
     <parameter name="number" byreference="false" type="integer" default="0"/>
   </method>
-  <method name="PercentageDone" start="439" end="441" abstract="false" final="false" static="false" visibility="public">
+  <method name="PercentageDone" start="473" end="475" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the percentage of checkout steps done (0 - 100)"/>
       <return type="object">
@@ -103,7 +103,7 @@ TO DO: what to do with old order</description>
       </return>
     </docblock>
   </method>
-  <method name="CancelForm" start="450" end="460" abstract="false" final="false" static="false" visibility="public">
+  <method name="CancelForm" start="484" end="494" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the form to cancel the current order, checking to see if they can cancel their order first of all."/>
       <return type="object">
@@ -111,10 +111,10 @@ TO DO: what to do with old order</description>
       </return>
     </docblock>
     <inline>
-      <comment value="once cancelled, you will be redirected to main page - hence we need this..." line="456"/>
+      <comment value="once cancelled, you will be redirected to main page - hence we need this..." line="490"/>
     </inline>
   </method>
-  <method name="PaymentForm" start="467" end="474" abstract="false" final="false" static="false" visibility="public">
+  <method name="PaymentForm" start="501" end="508" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="show the payment form"/>
       <return description="(OrderForm_Payment) or Null" type="object">
@@ -122,7 +122,7 @@ TO DO: what to do with old order</description>
       </return>
     </docblock>
   </method>
-  <method name="onlyShowSubmittedOrders" start="481" end="481" abstract="false" final="false" static="false" visibility="protected">
+  <method name="onlyShowSubmittedOrders" start="515" end="515" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?"/>
       <return type="object">
@@ -130,7 +130,7 @@ TO DO: what to do with old order</description>
       </return>
     </docblock>
   </method>
-  <method name="onlyShowUnsubmittedOrders" start="487" end="487" abstract="false" final="false" static="false" visibility="protected">
+  <method name="onlyShowUnsubmittedOrders" start="521" end="521" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Can this page only show Unsubmitted Orders (e.g. CartPage) ?"/>
       <return type="object">
@@ -138,7 +138,7 @@ TO DO: what to do with old order</description>
       </return>
     </docblock>
   </method>
-  <method name="sendemail" start="496" end="530" abstract="false" final="false" static="false" visibility="public">
+  <method name="sendemail" start="530" end="564" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="sends an order email, which can be specified in the URL and displays a sample email typically this link is opened in a new window."/>
       <param type="object" variable="$request">
@@ -152,12 +152,12 @@ TO DO: what to do with old order</description>
       <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
     </parameter>
     <inline>
-      <comment value="display same data..." line="523"/>
+      <comment value="display same data..." line="557"/>
     </inline>
   </method>
   <parent full="CartPage_Controller" namespace="" name="CartPage_Controller">
     <extends full="Page_Controller" namespace="" name="Page_Controller"/>
-    <member name="actionLinks" type="{unknown}" default="null" visibility="protected" line="283">
+    <member name="actionLinks" type="{unknown}" default="null" visibility="protected" line="315">
       <docblock>
         <description compact="This ArraList holds DataObjects with a Link and Title each...."/>
         <var type="object">
@@ -165,7 +165,7 @@ TO DO: what to do with old order</description>
         </var>
       </docblock>
     </member>
-    <member name="workedOutMessagesAndActions" type="{unknown}" default="false" visibility="protected" line="289">
+    <member name="workedOutMessagesAndActions" type="{unknown}" default="false" visibility="protected" line="321">
       <docblock>
         <description compact="to ensure messages and actions links are only worked out once..."/>
         <var description="Boolean" type="object">
@@ -173,7 +173,7 @@ TO DO: what to do with old order</description>
         </var>
       </docblock>
     </member>
-    <member name="currentOrder" type="{unknown}" default="null" visibility="protected" line="295">
+    <member name="currentOrder" type="{unknown}" default="null" visibility="protected" line="327">
       <docblock>
         <description compact="order currently being shown on this page"/>
         <var description="DataObject" type="object">
@@ -181,7 +181,7 @@ TO DO: what to do with old order</description>
         </var>
       </docblock>
     </member>
-    <member name="showCreateAccountForm" type="{unknown}" default="false" visibility="protected" line="569">
+    <member name="showCreateAccountForm" type="{unknown}" default="false" visibility="protected" line="601">
       <docblock>
         <description/>
         <var type="object">
@@ -189,28 +189,28 @@ TO DO: what to do with old order</description>
         </var>
       </docblock>
     </member>
-    <method name="set_message" start="304" end="307" abstract="false" final="false" static="true" visibility="public">
+    <method name="set_message" start="336" end="339" abstract="false" final="false" static="true" visibility="public">
       <parameter name="s" byreference="false" type="{unknown}"/>
     </method>
-    <method name="init" start="313" end="388" abstract="false" final="false" static="false" visibility="public">
+    <method name="init" start="345" end="420" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description/>
         <standard value="SS method"/>
       </docblock>
       <inline>
-        <comment value="find the current order if any" line="315"/>
-        <comment value="WE HAVE THIS FOR SUBMITTING FORMS!" line="318"/>
-        <comment value="redirect if we are viewing the order with the wrong page!" line="355"/>
-        <comment value="IMPORTANT SECURITY QUESTION!" line="358"/>
-        <comment value="we always want to make sure the order is up-to-date." line="379"/>
+        <comment value="find the current order if any" line="347"/>
+        <comment value="WE HAVE THIS FOR SUBMITTING FORMS!" line="350"/>
+        <comment value="redirect if we are viewing the order with the wrong page!" line="387"/>
+        <comment value="IMPORTANT SECURITY QUESTION!" line="390"/>
+        <comment value="we always want to make sure the order is up-to-date." line="411"/>
       </inline>
     </method>
-    <method name="showorder" start="407" end="425" abstract="false" final="false" static="false" visibility="public">
+    <method name="showorder" start="439" end="457" abstract="false" final="false" static="false" visibility="public">
       <parameter name="request" byreference="false" type="object">
         <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
       </parameter>
     </method>
-    <method name="loadorder" start="435" end="440" abstract="false" final="false" static="false" visibility="public">
+    <method name="loadorder" start="467" end="472" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Loads either the &quot;current order&quot;&quot;into the shopping cart.">TO DO: untested
 TO DO: what to do with old order</description>
@@ -225,7 +225,7 @@ TO DO: what to do with old order</description>
         <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
       </parameter>
     </method>
-    <method name="saveorder" start="448" end="463" abstract="false" final="false" static="false" visibility="public">
+    <method name="saveorder" start="480" end="495" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="save the order to a member. If no member exists then create the member first using the ShopAccountForm."/>
         <param type="object">
@@ -237,7 +237,7 @@ TO DO: what to do with old order</description>
         <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
       </parameter>
     </method>
-    <method name="deleteorder" start="472" end="481" abstract="false" final="false" static="false" visibility="public">
+    <method name="deleteorder" start="504" end="513" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Delete the currently viewed order.">TO DO: untested</description>
         <param type="object">
@@ -251,7 +251,7 @@ TO DO: what to do with old order</description>
         <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
       </parameter>
     </method>
-    <method name="startneworder" start="490" end="495" abstract="false" final="false" static="false" visibility="public">
+    <method name="startneworder" start="522" end="527" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Start a new order"/>
         <param type="object">
@@ -263,7 +263,7 @@ TO DO: what to do with old order</description>
         <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
       </parameter>
     </method>
-    <method name="ActionLinks" start="501" end="507" abstract="false" final="false" static="false" visibility="public">
+    <method name="ActionLinks" start="533" end="539" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="This returns a ArraList, each dataobject has two vars: Title and Link"/>
         <return type="object">
@@ -271,7 +271,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="Message" start="512" end="524" abstract="false" final="false" static="false" visibility="public">
+    <method name="Message" start="544" end="556" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description/>
         <return type="object">
@@ -279,7 +279,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="Order" start="530" end="532" abstract="false" final="false" static="false" visibility="public">
+    <method name="Order" start="562" end="564" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description/>
         <return description="| Null - Order" type="object">
@@ -287,7 +287,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="CanEditOrder" start="538" end="547" abstract="false" final="false" static="false" visibility="public">
+    <method name="CanEditOrder" start="570" end="579" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description/>
         <return type="object">
@@ -295,7 +295,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="CurrentOrderIsInCart" start="553" end="562" abstract="false" final="false" static="false" visibility="public">
+    <method name="CurrentOrderIsInCart" start="585" end="594" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Tells you if the order you are viewing at the moment is also in the cart"/>
         <return type="object">
@@ -303,7 +303,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="ShowCreateAccountForm" start="575" end="587" abstract="false" final="false" static="false" visibility="public">
+    <method name="ShowCreateAccountForm" start="607" end="619" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Do we need to show the Create Account Form?"/>
         <return type="object">
@@ -311,7 +311,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="CreateAccountForm" start="593" end="595" abstract="false" final="false" static="false" visibility="public">
+    <method name="CreateAccountForm" start="625" end="627" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="Returns the CreateAccountForm"/>
         <return type="object">
@@ -319,34 +319,34 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="workOutMessagesAndActions" start="600" end="766" abstract="false" final="false" static="false" visibility="protected">
+    <method name="workOutMessagesAndActions" start="632" end="798" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="work out the options for the user"/>
       </docblock>
       <inline>
-        <comment value="what order are we viewing?" line="603"/>
-        <comment value="Continue Shopping" line="607"/>
-        <comment value="Proceed To CheckoutLabel" line="622"/>
-        <comment value="view account details" line="637"/>
-        <comment value="go to current order" line="650"/>
-        <comment value="Save order - we assume only current ones can be saved." line="664"/>
-        <comment value="load order" line="680"/>
-        <comment value="delete order" line="692"/>
-        <comment value="Start new order" line="704"/>
-        <comment value="Strictly speaking this is only part of the" line="705"/>
-        <comment value="OrderConfirmationPage but we put it here for simplicity's sake" line="706"/>
-        <comment value="copy order" line="716"/>
-        <comment value="Strictly speaking this is only part of the" line="717"/>
-        <comment value="OrderConfirmationPage but we put it here for simplicity's sake" line="718"/>
-        <comment value="actions from modifiers" line="728"/>
-        <comment value="log out" line="741"/>
-        <comment value="Strictly speaking this is only part of the" line="742"/>
-        <comment value="OrderConfirmationPage but we put it here for simplicity's sake" line="743"/>
-        <comment value="no items" line="753"/>
+        <comment value="what order are we viewing?" line="635"/>
+        <comment value="Continue Shopping" line="639"/>
+        <comment value="Proceed To CheckoutLabel" line="654"/>
+        <comment value="view account details" line="669"/>
+        <comment value="go to current order" line="682"/>
+        <comment value="Save order - we assume only current ones can be saved." line="696"/>
+        <comment value="load order" line="712"/>
+        <comment value="delete order" line="724"/>
+        <comment value="Start new order" line="736"/>
+        <comment value="Strictly speaking this is only part of the" line="737"/>
+        <comment value="OrderConfirmationPage but we put it here for simplicity's sake" line="738"/>
+        <comment value="copy order" line="748"/>
+        <comment value="Strictly speaking this is only part of the" line="749"/>
+        <comment value="OrderConfirmationPage but we put it here for simplicity's sake" line="750"/>
+        <comment value="actions from modifiers" line="760"/>
+        <comment value="log out" line="773"/>
+        <comment value="Strictly speaking this is only part of the" line="774"/>
+        <comment value="OrderConfirmationPage but we put it here for simplicity's sake" line="775"/>
+        <comment value="no items" line="785"/>
       </inline>
     </method>
-    <method name="isCartPage" start="785" end="790" abstract="false" final="false" static="false" visibility="protected"/>
-    <method name="isCheckoutPage" start="796" end="796" abstract="false" final="false" static="false" visibility="protected">
+    <method name="isCartPage" start="817" end="822" abstract="false" final="false" static="false" visibility="protected"/>
+    <method name="isCheckoutPage" start="828" end="828" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="Is this a CheckoutPage or is it another type (CartPage / OrderConfirmationPage)?"/>
         <return type="object">
@@ -354,7 +354,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="isOrderConfirmationPage" start="802" end="802" abstract="false" final="false" static="false" visibility="protected">
+    <method name="isOrderConfirmationPage" start="834" end="834" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="Is this a OrderConfirmationPage or is it another type (CartPage / CheckoutPage)?"/>
         <return type="object">
@@ -362,7 +362,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="onlyShowSubmittedOrders" start="808" end="808" abstract="false" final="false" static="false" visibility="protected">
+    <method name="onlyShowSubmittedOrders" start="840" end="840" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?"/>
         <return type="object">
@@ -370,7 +370,7 @@ TO DO: what to do with old order</description>
         </return>
       </docblock>
     </method>
-    <method name="onlyShowUnsubmittedOrders" start="814" end="814" abstract="false" final="false" static="false" visibility="protected">
+    <method name="onlyShowUnsubmittedOrders" start="846" end="846" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="Can this page only show Unsubmitted Orders (e.g. CartPage) ?"/>
         <return type="object">

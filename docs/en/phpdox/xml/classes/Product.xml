@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="Product" namespace="" name="Product" abstract="false" final="false" start="23" end="951">
-  <file path="./../../../code" file="Product.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/Product.php" size="44466" time="2014-05-06T12:04:38+12:00" unixtime="1399334678" sha1="18072e09e0d720bac422dee8c4c6cf3ebf1be45e"/>
+<class xmlns="http://xml.phpdox.net/src#" full="Product" namespace="" name="Product" abstract="false" final="false" start="23" end="946">
+  <file path="./../../../code" file="Product.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/Product.php" size="34654" time="2014-08-26T11:48:37+12:00" unixtime="1409010517" sha1="1ff778e598a803cd5d0ab58724da2e35c2b328d6"/>
   <docblock>
     <description compact="This is a standard Product page-type with fields like Price, Weight, Model and basic management of groups.">It also has an associated Product_OrderItem class,
 an extension of OrderItem, which is the mechanism
@@ -90,25 +90,24 @@ of this page type to the shopping cart.</description>
       <description compact="Standard SS variable."/>
     </docblock>
   </member>
-  <method name="getCMSActions" start="166" end="175" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="getCMSFields" start="180" end="224" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCMSFields" start="182" end="226" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS variable."/>
     </docblock>
     <inline>
-      <comment value="prevent calling updateSettingsFields extend function too early" line="181"/>
-      <comment value="$siteTreeFieldExtensions = $this-&gt;get_static('SiteTree','runCMSFieldsExtensions');" line="182"/>
-      <comment value="$this-&gt;disableCMSFieldsExtensions();" line="183"/>
-      <comment value="if($siteTreeFieldExtensions) {" line="186"/>
-      <comment value="$this-&gt;enableCMSFieldsExtensions();" line="187"/>
-      <comment value="}" line="188"/>
-      <comment value="dirty hack to show images!" line="192"/>
-      <comment value="if($siteTreeFieldExtensions) {" line="220"/>
-      <comment value="$this-&gt;extend('updateSettingsFields', $fields);" line="221"/>
-      <comment value="}" line="222"/>
+      <comment value="prevent calling updateSettingsFields extend function too early" line="183"/>
+      <comment value="$siteTreeFieldExtensions = $this-&gt;get_static('SiteTree','runCMSFieldsExtensions');" line="184"/>
+      <comment value="$this-&gt;disableCMSFieldsExtensions();" line="185"/>
+      <comment value="if($siteTreeFieldExtensions) {" line="188"/>
+      <comment value="$this-&gt;enableCMSFieldsExtensions();" line="189"/>
+      <comment value="}" line="190"/>
+      <comment value="dirty hack to show images!" line="194"/>
+      <comment value="if($siteTreeFieldExtensions) {" line="222"/>
+      <comment value="$this-&gt;extend('updateSettingsFields', $fields);" line="223"/>
+      <comment value="}" line="224"/>
     </inline>
   </method>
-  <method name="getProductGroupsTableField" start="230" end="244" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getProductGroupsTableField" start="232" end="245" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Used in getCSMFields"/>
       <return type="object">
@@ -116,7 +115,7 @@ of this page type to the shopping cart.</description>
       </return>
     </docblock>
   </method>
-  <method name="getAdditionalImagesMessage" start="250" end="271" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getAdditionalImagesMessage" start="251" end="272" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Used in getCSMFields"/>
       <return type="object">
@@ -124,7 +123,7 @@ of this page type to the shopping cart.</description>
       </return>
     </docblock>
   </method>
-  <method name="getAdditionalImagesField" start="277" end="294" abstract="false" final="false" static="false" visibility="protected">
+  <method name="getAdditionalImagesField" start="278" end="294" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Used in getCSMFields"/>
       <return type="object">
@@ -140,17 +139,19 @@ of this page type to the shopping cart.</description>
       </return>
     </docblock>
   </method>
-  <method name="onBeforeWrite" start="311" end="337" abstract="false" final="false" static="false" visibility="public">
+  <method name="onBeforeWrite" start="311" end="346" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Adds keywords to the MetaKeyword Standard SS Method"/>
     </docblock>
     <inline>
-      <comment value="we are adding all the fields to the keyword fields here for searching purposes." line="316"/>
-      <comment value="because the MetaKeywords Field is being searched." line="317"/>
+      <comment value="set allowpurchase to false IF" line="314"/>
+      <comment value="free products are not allowed to be purchased" line="315"/>
+      <comment value="we are adding all the fields to the keyword fields here for searching purposes." line="325"/>
+      <comment value="because the MetaKeywords Field is being searched." line="326"/>
     </inline>
   </method>
-  <method name="onAfterWrite" start="339" end="347" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="prepareFullFields" start="355" end="387" abstract="false" final="false" static="false" visibility="public">
+  <method name="onAfterWrite" start="348" end="356" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="prepareFullFields" start="364" end="396" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="sets the FullName and FullSiteTreeField to the latest values This can be useful as you can compare it to the ones saved in the database.">Returns true if the value is different from the one in the database.</description>
       <return type="object">
@@ -158,18 +159,18 @@ of this page type to the shopping cart.</description>
       </return>
     </docblock>
     <inline>
-      <comment value="FullName" line="356"/>
-      <comment value="FullSiteTreeSort" line="362"/>
-      <comment value="setting fields with new values!" line="380"/>
+      <comment value="FullName" line="365"/>
+      <comment value="FullSiteTreeSort" line="371"/>
+      <comment value="setting fields with new values!" line="389"/>
     </inline>
   </method>
-  <method name="AllParentGroups" start="397" end="399" abstract="false" final="false" static="false" visibility="public">
+  <method name="AllParentGroups" start="406" end="408" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns all the parent groups for the product.">This function has been added her to contrast it with MainParentGroup (see below).
 return ManyManyList (ProductGroups)</description>
     </docblock>
   </method>
-  <method name="MainParentGroup" start="406" end="408" abstract="false" final="false" static="false" visibility="public">
+  <method name="MainParentGroup" start="415" end="417" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns the direct parent group for the product."/>
       <return description="or NULL" type="object">
@@ -177,7 +178,7 @@ return ManyManyList (ProductGroups)</description>
       </return>
     </docblock>
   </method>
-  <method name="Siblings" start="414" end="427" abstract="false" final="false" static="false" visibility="public">
+  <method name="Siblings" start="423" end="436" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns products in the same group"/>
       <return description="(Products)" type="object">
@@ -185,7 +186,7 @@ return ManyManyList (ProductGroups)</description>
       </return>
     </docblock>
   </method>
-  <method name="BestAvailableImage" start="445" end="453" abstract="false" final="false" static="false" visibility="public">
+  <method name="BestAvailableImage" start="454" end="467" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns a &quot;BestAvailable&quot; image if the current one is not available In some cases this is appropriate and in some cases this is not.">For example, consider the following setup
 - product A with three variations
@@ -199,7 +200,7 @@ This can be achieved bu using the BestAvailable image.</description>
       </return>
     </docblock>
   </method>
-  <method name="CMSThumbnail" start="459" end="466" abstract="false" final="false" static="false" visibility="public">
+  <method name="CMSThumbnail" start="473" end="480" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Little hack to show thumbnail in summary fields in modeladmin in CMS."/>
       <return description="(HTML = formatted image)" type="object">
@@ -207,7 +208,7 @@ This can be achieved bu using the BestAvailable image.</description>
       </return>
     </docblock>
   </method>
-  <method name="DefaultImageLink" start="474" end="476" abstract="false" final="false" static="false" visibility="public">
+  <method name="DefaultImageLink" start="488" end="490" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Returns a link to a default image.">If a default image is set in the site config then this link is returned
 Otherwise, a standard link is returned</description>
@@ -216,7 +217,7 @@ Otherwise, a standard link is returned</description>
       </return>
     </docblock>
   </method>
-  <method name="DefaultImage" start="482" end="484" abstract="false" final="false" static="false" visibility="public">
+  <method name="DefaultImage" start="496" end="498" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the default image of the product"/>
       <return description="| Null" type="object">
@@ -224,7 +225,7 @@ Otherwise, a standard link is returned</description>
       </return>
     </docblock>
   </method>
-  <method name="DummyImage" start="492" end="494" abstract="false" final="false" static="false" visibility="public">
+  <method name="DummyImage" start="506" end="508" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns a product image for use in templates e.g. $DummyImage.Width();"/>
       <return type="object">
@@ -232,7 +233,7 @@ Otherwise, a standard link is returned</description>
       </return>
     </docblock>
   </method>
-  <method name="getVersionedComponents" start="518" end="524" abstract="false" final="false" static="false" visibility="public">
+  <method name="getVersionedComponents" start="532" end="538" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <todo value=": complete"/>
@@ -245,10 +246,11 @@ Otherwise, a standard link is returned</description>
     </docblock>
     <parameter name="component" byreference="false" type="string" default="&quot;ProductVariations&quot;"/>
   </method>
-  <method name="getVersionOfBuyable" start="534" end="542" abstract="false" final="false" static="false" visibility="public">
+  <method name="getVersionOfBuyable" start="549" end="563" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Action to return specific version of a specific product.">This can be any product to enable the retrieval of deleted products.
-This is really useful for sold products where you want to retrieve the actual version that you sold.</description>
+This is really useful for sold products where you want to retrieve the actual version that you sold.
+If the version can not be found then we retrieve the current one.</description>
       <param type="object" variable="$id">
         <type full="Int" namespace="" name="Int"/>
       </param>
@@ -261,8 +263,11 @@ This is really useful for sold products where you want to retrieve the actual ve
     </docblock>
     <parameter name="id" byreference="false" type="integer" default="0"/>
     <parameter name="version" byreference="false" type="integer" default="0"/>
+    <inline>
+      <comment value="not sure why this is running via OrderItem..." line="556"/>
+    </inline>
   </method>
-  <method name="OrderItem" start="555" end="563" abstract="false" final="false" static="false" visibility="public">
+  <method name="OrderItem" start="576" end="584" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the order item associated with the buyable.">ALWAYS returns one, even if there is none in the cart.
 Does not write to database.</description>
@@ -271,11 +276,11 @@ Does not write to database.</description>
       </return>
     </docblock>
     <inline>
-      <comment value="work out the filter" line="556"/>
-      <comment value="make the item and extend" line="559"/>
+      <comment value="work out the filter" line="577"/>
+      <comment value="make the item and extend" line="580"/>
     </inline>
   </method>
-  <member name="defaultClassNameForOrderItem" type="string" default="&quot;Product_OrderItem&quot;" visibility="protected" line="569">
+  <member name="defaultClassNameForOrderItem" type="string" default="&quot;Product_OrderItem&quot;" visibility="protected" line="590">
     <docblock>
       <description/>
       <var type="object">
@@ -283,7 +288,7 @@ Does not write to database.</description>
       </var>
     </docblock>
   </member>
-  <method name="classNameForOrderItem" start="576" end="583" abstract="false" final="false" static="false" visibility="public">
+  <method name="classNameForOrderItem" start="597" end="604" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="you can overwrite this function in your buyable items (such as Product)"/>
       <return type="object">
@@ -291,7 +296,7 @@ Does not write to database.</description>
       </return>
     </docblock>
   </method>
-  <method name="setAlternativeClassNameForOrderItem" start="589" end="591" abstract="false" final="false" static="false" visibility="public">
+  <method name="setAlternativeClassNameForOrderItem" start="610" end="612" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="You can set an alternative class name for order item using this method"/>
       <param type="object" variable="$ClassName">
@@ -300,7 +305,7 @@ Does not write to database.</description>
     </docblock>
     <parameter name="className" byreference="false" type="{unknown}"/>
   </method>
-  <method name="QuantityDecimals" start="600" end="602" abstract="false" final="false" static="false" visibility="public">
+  <method name="QuantityDecimals" start="621" end="623" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="This is used when you add a product to your cart if you set it to 1 then you can add 0.1 product to cart.">If you set it to -1 then you can add 10, 20, 30, etc.. products to cart.</description>
       <return type="object">
@@ -308,7 +313,7 @@ Does not write to database.</description>
       </return>
     </docblock>
   </method>
-  <method name="HasBeenSold" start="608" end="608" abstract="false" final="false" static="false" visibility="public">
+  <method name="HasBeenSold" start="629" end="629" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Number of variations sold"/>
       <return type="object">
@@ -316,8 +321,8 @@ Does not write to database.</description>
       </return>
     </docblock>
   </method>
-  <method name="getHasBeenSold" start="609" end="620" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="AddVariationsLink" start="637" end="639" abstract="false" final="false" static="false" visibility="public">
+  <method name="getHasBeenSold" start="630" end="641" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="AddVariationsLink" start="658" end="660" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Tells us the link to select variations If ajaxified, this controller method (selectvariation) Will return a html snippet for selecting the variation.">This is useful in the Product Group where you can both
 non-variation and variation products to have the same
@@ -328,7 +333,7 @@ pop-up select system for selecting a variation.</description>
       </return>
     </docblock>
   </method>
-  <method name="AddLink" start="645" end="647" abstract="false" final="false" static="false" visibility="public">
+  <method name="AddLink" start="666" end="668" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="passing on shopping cart links ...is this necessary?? ...why not just pass the cart?"/>
       <return type="object">
@@ -336,15 +341,15 @@ pop-up select system for selecting a variation.</description>
       </return>
     </docblock>
   </method>
-  <method name="IncrementLink" start="653" end="656" abstract="false" final="false" static="false" visibility="public">
+  <method name="IncrementLink" start="674" end="677" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="link use to add (one) to cart return String"/>
     </docblock>
     <inline>
-      <comment value="we can do this, because by default add link adds one" line="654"/>
+      <comment value="we can do this, because by default add link adds one" line="675"/>
     </inline>
   </method>
-  <method name="DecrementLink" start="663" end="665" abstract="false" final="false" static="false" visibility="public">
+  <method name="DecrementLink" start="684" end="686" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Link used to remove one from cart we can do this, because by default remove link removes one"/>
       <return type="object">
@@ -352,7 +357,7 @@ pop-up select system for selecting a variation.</description>
       </return>
     </docblock>
   </method>
-  <method name="RemoveLink" start="671" end="673" abstract="false" final="false" static="false" visibility="public">
+  <method name="RemoveLink" start="692" end="694" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="remove one buyable's orderitem from cart"/>
       <return description="(Link)" type="object">
@@ -360,7 +365,7 @@ pop-up select system for selecting a variation.</description>
       </return>
     </docblock>
   </method>
-  <method name="RemoveAllLink" start="679" end="681" abstract="false" final="false" static="false" visibility="public">
+  <method name="RemoveAllLink" start="700" end="702" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="remove all of this buyable's orderitem from cart"/>
       <return description="(Link)" type="object">
@@ -368,7 +373,7 @@ pop-up select system for selecting a variation.</description>
       </return>
     </docblock>
   </method>
-  <method name="RemoveAllAndEditLink" start="687" end="689" abstract="false" final="false" static="false" visibility="public">
+  <method name="RemoveAllAndEditLink" start="708" end="710" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="remove all of this buyable's orderitem from cart and go through to this buyble to add alternative selection."/>
       <return description="(Link)" type="object">
@@ -376,7 +381,7 @@ pop-up select system for selecting a variation.</description>
       </return>
     </docblock>
   </method>
-  <method name="SetSpecificQuantityItemLink" start="696" end="698" abstract="false" final="false" static="false" visibility="public">
+  <method name="SetSpecificQuantityItemLink" start="717" end="719" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="set new specific new quantity for buyable's orderitem"/>
       <param type="object">
@@ -388,7 +393,7 @@ pop-up select system for selecting a variation.</description>
     </docblock>
     <parameter name="quantity" byreference="false" type="{unknown}"/>
   </method>
-  <method name="linkParameters" start="707" end="711" abstract="false" final="false" static="false" visibility="protected">
+  <method name="linkParameters" start="728" end="732" abstract="false" final="false" static="false" visibility="protected">
     <docblock>
       <description compact="Here you can add additional information to your product links such as the AddLink and the RemoveLink.">One useful parameter you can add is the BackURL link.</description>
       <return type="object">
@@ -397,13 +402,13 @@ pop-up select system for selecting a variation.</description>
     </docblock>
     <parameter name="type" byreference="false" type="string" default="&quot;&quot;"/>
   </method>
-  <method name="IsInCart" start="722" end="724" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsInCart" start="743" end="745" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="boolean"/>
     </docblock>
   </method>
-  <method name="EcomQuantityField" start="730" end="732" abstract="false" final="false" static="false" visibility="public">
+  <method name="EcomQuantityField" start="751" end="753" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="object">
@@ -411,7 +416,7 @@ pop-up select system for selecting a variation.</description>
       </return>
     </docblock>
   </method>
-  <method name="AJAXDefinitions" start="741" end="743" abstract="false" final="false" static="false" visibility="public">
+  <method name="AJAXDefinitions" start="762" end="764" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns the instance of EcommerceConfigAjax for use in templates.">In templates, it is used like this:
 $EcommerceConfigAjax.TableID</description>
@@ -420,7 +425,7 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="EcomConfig" start="748" end="750" abstract="false" final="false" static="false" visibility="public">
+  <method name="EcomConfig" start="769" end="771" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <return type="object">
@@ -428,7 +433,7 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="IsProductVariation" start="756" end="758" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsProductVariation" start="777" end="779" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Is it a variation?"/>
       <return type="object">
@@ -436,7 +441,7 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="IsEcommercePage" start="764" end="766" abstract="false" final="false" static="false" visibility="public">
+  <method name="IsEcommercePage" start="785" end="787" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="tells us if the current page is part of e-commerce."/>
       <return type="object">
@@ -444,8 +449,8 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="AllowPurchaseNice" start="768" end="770" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="CalculatedPrice" start="777" end="777" abstract="false" final="false" static="false" visibility="public">
+  <method name="AllowPurchaseNice" start="789" end="791" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CalculatedPrice" start="798" end="798" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Products have a standard price, but for specific situations they have a calculated price.">The Price can be changed for specific member discounts, etc...</description>
       <return type="object">
@@ -453,8 +458,8 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="getCalculatedPrice" start="778" end="787" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="CalculatedPriceAsMoney" start="793" end="793" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCalculatedPrice" start="799" end="808" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CalculatedPriceAsMoney" start="814" end="814" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="How do we display the price?"/>
       <return type="object">
@@ -462,8 +467,8 @@ $EcommerceConfigAjax.TableID</description>
       </return>
     </docblock>
   </method>
-  <method name="getCalculatedPriceAsMoney" start="794" end="796" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="canPurchase" start="808" end="844" abstract="false" final="false" static="false" visibility="public">
+  <method name="getCalculatedPriceAsMoney" start="815" end="817" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="canPurchase" start="828" end="855" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Is the product for sale?"/>
       <param type="object" variable="$member">
@@ -481,14 +486,16 @@ $EcommerceConfigAjax.TableID</description>
     </parameter>
     <parameter name="checkPrice" byreference="false" type="{unknown}" default="true"/>
     <inline>
-      <comment value="shop closed" line="810"/>
-      <comment value="not sold at all" line="814"/>
-      <comment value="check country" line="819"/>
-      <comment value="price" line="829"/>
-      <comment value="Standard mechanism for accepting permission changes from decorators" line="838"/>
+      <comment value="shop closed" line="830"/>
+      <comment value="not sold at all" line="834"/>
+      <comment value="check country" line="839"/>
+      <comment value="Standard mechanism for accepting permission changes from decorators" line="849"/>
     </inline>
   </method>
-  <method name="canEdit" start="851" end="862" abstract="false" final="false" static="false" visibility="public">
+  <method name="canCreate" start="857" end="863" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canEdit" start="871" end="874" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Shop Admins can edit"/>
       <param type="object" variable="$member">
@@ -500,7 +507,7 @@ $EcommerceConfigAjax.TableID</description>
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canDelete" start="870" end="872" abstract="false" final="false" static="false" visibility="public">
+  <method name="canDelete" start="881" end="886" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method"/>
       <param type="object" variable="$member">
@@ -512,7 +519,7 @@ $EcommerceConfigAjax.TableID</description>
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canPublish" start="880" end="882" abstract="false" final="false" static="false" visibility="public">
+  <method name="canPublish" start="893" end="895" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Standard SS method"/>
       <param type="object" variable="$member">
@@ -524,31 +531,7 @@ $EcommerceConfigAjax.TableID</description>
     </docblock>
     <parameter name="member" byreference="false" type="{unknown}" default="null"/>
   </method>
-  <method name="canDeleteFromLive" start="890" end="892" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description compact="Standard SS method //check if it is in a current cart?"/>
-      <param type="object" variable="$member">
-        <type full="Member" namespace="" name="Member"/>
-      </param>
-      <return type="object">
-        <type full="Boolean" namespace="" name="Boolean"/>
-      </return>
-    </docblock>
-    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-  </method>
-  <method name="canCreate" start="899" end="901" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description compact="Standard SS method"/>
-      <param type="object" variable="$member">
-        <type full="Member" namespace="" name="Member"/>
-      </param>
-      <return type="object">
-        <type full="Boolean" namespace="" name="Boolean"/>
-      </return>
-    </docblock>
-    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
-  </method>
-  <method name="debug" start="903" end="949" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="debug" start="898" end="944" abstract="false" final="false" static="false" visibility="public"/>
   <interface full="BuyableModel" namespace="" name="BuyableModel">
     <method name="MainParentGroup" start="31" end="31" abstract="false" final="false" static="false" visibility="public">
       <docblock>

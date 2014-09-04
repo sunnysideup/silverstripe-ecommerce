@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="GridFieldEditButtonOriginalPage" namespace="" name="GridFieldEditButtonOriginalPage" abstract="false" final="false" start="16" end="40">
+  <file path="./../../../code/forms/gridfield" file="GridFieldEditButtonOriginalPage.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/forms/gridfield/GridFieldEditButtonOriginalPage.php" size="1240" time="2014-07-20T12:11:23+12:00" unixtime="1405815083" sha1="bbd469080d9feaf4d5336593d0a04c4edbe5a679"/>
+  <docblock>
+    <description compact="Provides the entry point to editing a single record presented by the {@link GridField}.">Doesn't show an edit view on its own or modifies the record, but rather
+relies on routing conventions established in <link xmlns="http://xml.phpdox.net/src#" value="getColumnContent()"/>.
+The default routing applies to the <link xmlns="http://xml.phpdox.net/src#" value="GridFieldDetailForm"/> component,
+which has to be added separately to the <link xmlns="http://xml.phpdox.net/src#" value="GridField"/> configuration.
+</description>
+    <package value="forms"/>
+    <subpackage value="fields-gridfield"/>
+  </docblock>
+  <extends full="GridFieldEditButton" namespace="" name="GridFieldEditButton"/>
+  <implements full="GridField_ColumnProvider" namespace="" name="GridField_ColumnProvider"/>
+  <method name="getColumnContent" start="26" end="38" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$gridField">
+        <type full="GridField" namespace="" name="GridField"/>
+      </param>
+      <param type="object" variable="$record">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param type="string" variable="$columnName"/>
+      <return description="- the HTML for the column" type="string"/>
+    </docblock>
+    <parameter name="gridField" byreference="false" type="{unknown}"/>
+    <parameter name="record" byreference="false" type="{unknown}"/>
+    <parameter name="columnName" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="No permission checks, handled through GridFieldDetailForm," line="27"/>
+      <comment value="which can make the form readonly if no edit permissions are available." line="28"/>
+    </inline>
+  </method>
+</class>

@@ -56,6 +56,9 @@
             <a href="#tasks">Tasks</a>
           </li>
           <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
             <a href="#methods">Methods</a>
           </li>
         </ul>
@@ -68,14 +71,16 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommercePayment_TestPending
                 extends <a title="EcommercePayment_Test" href="../classes/EcommercePayment_Test.xhtml">EcommercePayment_Test</a>
-            {<br/><ul class="none"><li>// methods</li><li>public void <a title="EcommercePayment_TestPending" href="../classes/EcommercePayment_TestPending/processPayment.xhtml">processPayment</a>()
+            {<br/><ul class="none"><li>// Inherited members from <span title="EcommercePayment">EcommercePayment</span></li><li>public <span title="EcommercePaymentSupportedMethodsProvider">EcommercePaymentSupportedMethodsProvider</span> <a href="#members">$supportedMethodsProvider</a>;
+                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommercePayment_TestPending" href="../classes/EcommercePayment_TestPending/processPayment.xhtml">processPayment</a>()
                     </li><li>public void <a title="EcommercePayment_TestPending" href="../classes/EcommercePayment_TestPending/getPaymentFormFields.xhtml">getPaymentFormFields</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="EcommercePayment_Test">EcommercePayment_Test</span></li><li>public void <a title="EcommercePayment_Test" href="../classes/EcommercePayment_Test/getPaymentFormRequirements.xhtml">getPaymentFormRequirements</a>()
                         </li></ul><ul class="none"><li>// Inherited methods from <span title="EcommercePayment">EcommercePayment</span></li><li>public static Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/process_payment_form_and_return_next_step.xhtml">process_payment_form_and_return_next_step</a>()
                         </li><li>public FieldList <a title="EcommercePayment" href="../classes/EcommercePayment/getCMSFields.xhtml">getCMSFields</a>()
                         </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/canCreate.xhtml">canCreate</a>()
-                        </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/canDelete.xhtml">canDelete</a>()
+                        </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/canView.xhtml">canView</a>()
                         </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/canEdit.xhtml">canEdit</a>()
+                        </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/canDelete.xhtml">canDelete</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/redirectToOrder.xhtml">redirectToOrder</a>()
                         </li><li>public float <a title="EcommercePayment" href="../classes/EcommercePayment/AmountValue.xhtml">AmountValue</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/getAmountValue.xhtml">getAmountValue</a>()
@@ -88,6 +93,7 @@
                         </li><li>protected void <a title="EcommercePayment" href="../classes/EcommercePayment/setClientIP.xhtml">setClientIP</a>()
                         </li><li>public string <a title="EcommercePayment" href="../classes/EcommercePayment/PaymentMethod.xhtml">PaymentMethod</a>()
                         </li><li>public static FieldList <a title="EcommercePayment" href="../classes/EcommercePayment/combined_form_fields.xhtml">combined_form_fields</a>()
+                        </li><li>public static void <a title="EcommercePayment" href="../classes/EcommercePayment/set_supported_methods.xhtml">set_supported_methods</a>()
                         </li><li>public static Array <a title="EcommercePayment" href="../classes/EcommercePayment/get_supported_methods.xhtml">get_supported_methods</a>()
                         </li><li>public static An <a title="EcommercePayment" href="../classes/EcommercePayment/combined_form_requirements.xhtml">combined_form_requirements</a>()
                         </li><li>public FieldList <a title="EcommercePayment" href="../classes/EcommercePayment/getPaymentFormFields.xhtml">getPaymentFormFields</a>()
@@ -121,14 +127,23 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">446+</td>
+            <td class="nummeric">470+</td>
             <td>: finish!</td>
           </tr>
           <tr>
-            <td class="nummeric">457+</td>
+            <td class="nummeric">481+</td>
             <td>: finish!</td>
           </tr>
         </table>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>public</h4>
+          <ul class="members">
+            <li id="supportedMethodsProvider"><strong>$supportedMethodsProvider</strong>
+                —
+                <a href="#">EcommercePaymentSupportedMethodsProvider</a><br/><span class="indent">automatically populated by the dependency manager</span></li>
+          </ul>
+        </div>
         <h2 id="methods">Methods</h2>
         <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
           <h4>public</h4>
@@ -174,9 +189,12 @@
             <li id="canCreate"><a title="EcommercePayment" href="../classes/EcommercePayment/canCreate.xhtml">canCreate()</a>
                 — Standard SS method</li>
             <li id="canDelete"><a title="EcommercePayment" href="../classes/EcommercePayment/canDelete.xhtml">canDelete()</a>
-                — Standard SS method</li>
+                — Standard SS method set to false as a security measure...</li>
             <li id="canEdit"><a title="EcommercePayment" href="../classes/EcommercePayment/canEdit.xhtml">canEdit()</a>
                 — Standard SS method</li>
+            <li id="canView">
+              <a title="EcommercePayment" href="../classes/EcommercePayment/canView.xhtml">canView()</a>
+            </li>
             <li id="combined_form_fields"><a title="EcommercePayment" href="../classes/EcommercePayment/combined_form_fields.xhtml">combined_form_fields()</a>
                 — Return a set of payment fields from all enabled payment methods for this site, given the .</li>
             <li id="combined_form_requirements"><a title="EcommercePayment" href="../classes/EcommercePayment/combined_form_requirements.xhtml">combined_form_requirements()</a>
@@ -210,6 +228,8 @@
                 — Process payment form and return next step in the payment process.</li>
             <li id="redirectToOrder"><a title="EcommercePayment" href="../classes/EcommercePayment/redirectToOrder.xhtml">redirectToOrder()</a>
                 — redirect to order action</li>
+            <li id="set_supported_methods"><a title="EcommercePayment" href="../classes/EcommercePayment/set_supported_methods.xhtml">set_supported_methods()</a>
+                — Static method to quickly update the payment method on runtime associative array that goes like ClassName =&gt; Description ...</li>
             <li id="site_currency"><a title="EcommercePayment" href="../classes/EcommercePayment/site_currency.xhtml">site_currency()</a>
                 — Return the site currency in use.</li>
             <li id="validCVC">

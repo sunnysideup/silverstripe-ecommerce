@@ -66,7 +66,7 @@
       <section>
         <h1 id="introduction"><small>\</small>ProductGroup</h1>
         <h4>Product Group is a 'holder' for Products within the CMS It contains functions for versioning child products</h4>
-        <p>The way the products are selected:<br/><br/>Controller calls:<br/>ProductGroup::ProductsShowable($extraFilter = "")<br/><br/>ProductsShowable runs currentInitialProducts. This selects ALL the applicable products<br/>but it does NOT PAGINATE (limit) or SORT them.<br/>After that, it calls currentFinalProducts, this sorts the products and notes the total<br/>count of products.<br/><br/><br/><br/>For each product page, there is a default:<br/>- filter<br/>- sort<br/>- number of levels to show (e.g. children, grand-children, etc...)<br/>and these settings can be changed in the CMS, depending on what the<br/>developer makes available to the content editor.<br/><br/>In extending the ProductGroup class, it is recommended<br/>that you override the following methods (as required ONLY!):<br/>- getBuyableClassName<br/>- getGroupFilter<br/>- getStandardFilter<br/>- getGroupJoin<br/>- currentSortSQL<br/>- removeExcludedProductsAndSaveIncludedProducts<br/><br/>To filter products, you have three options:<br/><br/>(1) getGroupFilter<br/>- the standard product groups from which the products are selected<br/>- if you extend Product Group this is the one you most likely want to change<br/>- for example, rather than children, you set it to "yellow" products<br/>- goes hand in hand with changes to showProductLevels / LevelOfProductsToShow<br/>- works out the group filter based on the LevelOfProductsToShow value<br/>- it also considers the other group many-many relationship<br/>- this filter ALWAYS returns something: 1 = 1 if nothing else.<br/><br/>(2) getStandardFilter<br/>- these are the standard (user selectable) filters<br/>- available options set via config<br/>- the standard filter is updated by controller<br/>- options can show above / below product lists to let user select alternative filter.<br/><br/>(3) the extraWhere in ProductsShowable<br/>- provided by the controller for specific ('on the fly') sub-sets<br/>- this is for example for search results<br/>- set in ProductShowable($extraWhere)</p>
+        <p>The way the products are selected:<br/><br/>Controller calls:<br/>ProductGroup::ProductsShowable($extraFilter = "")<br/><br/>ProductsShowable runs currentInitialProducts. This selects ALL the applicable products<br/>but it does NOT PAGINATE (limit) or SORT them.<br/>After that, it calls currentFinalProducts, this sorts the products and notes the total<br/>count of products (removing ones that can not be shown for one reason or another)<br/><br/>Pagination is done in the controller.<br/><br/>For each product page, there is a default:<br/>- filter<br/>- sort<br/>- number of levels to show (e.g. children, grand-children, etc...)<br/>and these settings can be changed in the CMS, depending on what the<br/>developer makes available to the content editor.<br/><br/>In extending the ProductGroup class, it is recommended<br/>that you override the following methods (as required ONLY!):<br/>- getBuyableClassName<br/>- getGroupFilter<br/>- getStandardFilter<br/>- getGroupJoin<br/>- currentSortSQL<br/>- limitCurrentFinalProducts<br/>- removeExcludedProductsAndSaveIncludedProducts<br/><br/>To filter products, you have three options:<br/><br/>(1) getGroupFilter<br/>- the standard product groups from which the products are selected<br/>- if you extend Product Group this is the one you most likely want to change<br/>- for example, rather than children, you set it to "yellow" products<br/>- goes hand in hand with changes to showProductLevels / LevelOfProductsToShow<br/>- works out the group filter based on the LevelOfProductsToShow value<br/>- it also considers the other group many-many relationship<br/>- this filter ALWAYS returns something: 1 = 1 if nothing else.<br/><br/>(2) getStandardFilter<br/>- these are the standard (user selectable) filters<br/>- available options set via config<br/>- the standard filter is updated by controller<br/>- options can show above / below product lists to let user select alternative filter.<br/><br/>(3) the extraWhere in ProductsShowable<br/>- provided by the controller for specific ('on the fly') sub-sets<br/>- this is for example for search results<br/>- set in ProductShowable($extraWhere)</p>
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class ProductGroup
@@ -83,49 +83,53 @@
                     </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
                     </li><li>protected <span title="Array">Array</span> <a href="#members">$sortFilterDisplayNames</a>;
                     </li><li>protected <span title="Array">Array</span> <a href="#members">$showProductLevels</a>;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$configOptionsCache</a>;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$myUserPreferencesDefaultCache</a>;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$rawCount</a>;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$totalCount</a>;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$allowCaching</a>;
                     </li><li>protected <span title="DataList">DataList</span> <a href="#members">$allProducts</a>;
                     </li><li>private <span title="NULL">NULL</span> <a href="#members">$canNOTbePurchasedArray</a>;
-                    </li><li>private <span title="NULL">NULL</span> <a href="#members">$canBePurchasedArray</a>;
+                    </li><li>protected <span title="NULL">NULL</span> <a href="#members">$canBePurchasedArray</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/canCreate.xhtml">canCreate</a>()
                     </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/canEdit.xhtml">canEdit</a>()
-                    </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/canView.xhtml">canView</a>()
                     </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/canDelete.xhtml">canDelete</a>()
                     </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/canPublish.xhtml">canPublish</a>()
-                    </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/canDeleteFromLive.xhtml">canDeleteFromLive</a>()
-                    </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/canCreate.xhtml">canCreate</a>()
-                    </li><li>public Array <a title="ProductGroup" href="../classes/ProductGroup/getSortFilterDisplayNames.xhtml">getSortFilterDisplayNames</a>()
-                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/setCurrentUserPreference.xhtml">setCurrentUserPreference</a>()
+                    </li><li>protected Array <a title="ProductGroup" href="../classes/ProductGroup/getConfigOptions.xhtml">getConfigOptions</a>()
+                    </li><li>protected Array <a title="ProductGroup" href="../classes/ProductGroup/getSortFilterDisplayNames.xhtml">getSortFilterDisplayNames</a>()
+                    </li><li>protected void <a title="ProductGroup" href="../classes/ProductGroup/setCurrentUserPreference.xhtml">setCurrentUserPreference</a>()
                     </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/getCurrentUserPreferences.xhtml">getCurrentUserPreferences</a>()
-                    </li><li>public String <a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesDefault.xhtml">getUserPreferencesDefault</a>()
-                    </li><li>public Array <a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesOptionsForDropdown.xhtml">getUserPreferencesOptionsForDropdown</a>()
+                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/getMyUserPreferencesDefault.xhtml">getMyUserPreferencesDefault</a>()
+                    </li><li>protected Array <a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesOptionsForDropdown.xhtml">getUserPreferencesOptionsForDropdown</a>()
                     </li><li>protected Array <a title="ProductGroup" href="../classes/ProductGroup/getUserSettingsOptionSQL.xhtml">getUserSettingsOptionSQL</a>()
                     </li><li>public String <a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesTitle.xhtml">getUserPreferencesTitle</a>()
+                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/ProductsPerPage.xhtml">ProductsPerPage</a>()
+                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/MyNumberOfProductsPerPage.xhtml">MyNumberOfProductsPerPage</a>()
                     </li><li>public Int <a title="ProductGroup" href="../classes/ProductGroup/MyLevelOfProductsToShow.xhtml">MyLevelOfProductsToShow</a>()
-                    </li><li>public String <a title="ProductGroup" href="../classes/ProductGroup/getMyUserPreferencesDefault.xhtml">getMyUserPreferencesDefault</a>()
-                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/MyDefaultDisplayStyle.xhtml">MyDefaultDisplayStyle</a>()
-                    </li><li>public FieldList <a title="ProductGroup" href="../classes/ProductGroup/getCMSActions.xhtml">getCMSActions</a>()
                     </li><li>public FieldList <a title="ProductGroup" href="../classes/ProductGroup/getCMSFields.xhtml">getCMSFields</a>()
                     </li><li>protected GridField <a title="ProductGroup" href="../classes/ProductGroup/getProductGroupsTable.xhtml">getProductGroupsTable</a>()
-                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/getProductsThatCanBePurchasedArray.xhtml">getProductsThatCanBePurchasedArray</a>()
-                    </li><li>public DataList <a title="ProductGroup" href="../classes/ProductGroup/ProductsShowable.xhtml">ProductsShowable</a>()
                     </li><li>public DataList <a title="ProductGroup" href="../classes/ProductGroup/currentInitialProducts.xhtml">currentInitialProducts</a>()
-                    </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/currentFinalProducts.xhtml">currentFinalProducts</a>()
+                    </li><li>public Array <a title="ProductGroup" href="../classes/ProductGroup/currentInitialProductsAsCachedArray.xhtml">currentInitialProductsAsCachedArray</a>()
                     </li><li>protected Boolean <a title="ProductGroup" href="../classes/ProductGroup/getProductsAlsoInOtherGroups.xhtml">getProductsAlsoInOtherGroups</a>()
                     </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/getBuyableClassName.xhtml">getBuyableClassName</a>()
                     </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/getGroupFilter.xhtml">getGroupFilter</a>()
                     </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/getProductsToBeIncludedFromOtherGroups.xhtml">getProductsToBeIncludedFromOtherGroups</a>()
                     </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/getStandardFilter.xhtml">getStandardFilter</a>()
                     </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/getGroupJoin.xhtml">getGroupJoin</a>()
-                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/currentSortSQL.xhtml">currentSortSQL</a>()
-                    </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/removeExcludedProductsAndSaveIncludedProducts.xhtml">removeExcludedProductsAndSaveIncludedProducts</a>()
-                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/currentWhereSQL.xhtml">currentWhereSQL</a>()
-                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/currentClassNameSQL.xhtml">currentClassNameSQL</a>()
-                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/currentJoinSQL.xhtml">currentJoinSQL</a>()
+                    </li><li>protected NULL <a title="ProductGroup" href="../classes/ProductGroup/allowPurchaseWhereStatement.xhtml">allowPurchaseWhereStatement</a>()
+                    </li><li>public Integer <a title="ProductGroup" href="../classes/ProductGroup/RawCount.xhtml">RawCount</a>()
                     </li><li>public Integer <a title="ProductGroup" href="../classes/ProductGroup/TotalCount.xhtml">TotalCount</a>()
-                    </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/TotalCountGreaterThanOne.xhtml">TotalCountGreaterThanOne</a>()
-                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/ProductsPerPage.xhtml">ProductsPerPage</a>()
-                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/MyNumberOfProductsPerPage.xhtml">MyNumberOfProductsPerPage</a>()
+                    </li><li>public Array <a title="ProductGroup" href="../classes/ProductGroup/getProductsThatCanBePurchasedArray.xhtml">getProductsThatCanBePurchasedArray</a>()
+                    </li><li>public DataList <a title="ProductGroup" href="../classes/ProductGroup/ProductsShowable.xhtml">ProductsShowable</a>()
+                    </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/currentFinalProducts.xhtml">currentFinalProducts</a>()
+                    </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/sortCurrentFinalProducts.xhtml">sortCurrentFinalProducts</a>()
+                    </li><li>protected Boolean <a title="ProductGroup" href="../classes/ProductGroup/IsIDarray.xhtml">IsIDarray</a>()
+                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/currentSortSQL.xhtml">currentSortSQL</a>()
+                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/createSortStatementFromIDArray.xhtml">createSortStatementFromIDArray</a>()
+                    </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/limitCurrentFinalProducts.xhtml">limitCurrentFinalProducts</a>()
+                    </li><li>protected DataList <a title="ProductGroup" href="../classes/ProductGroup/removeExcludedProductsAndSaveIncludedProducts.xhtml">removeExcludedProductsAndSaveIncludedProducts</a>()
                     </li><li>public ArrayList <a title="ProductGroup" href="../classes/ProductGroup/ChildGroups.xhtml">ChildGroups</a>()
                     </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/ChildGroupsBackup.xhtml">ChildGroupsBackup</a>()
                     </li><li>public DataObject <a title="ProductGroup" href="../classes/ProductGroup/ParentGroup.xhtml">ParentGroup</a>()
@@ -133,8 +137,13 @@
                     </li><li>public Image <a title="ProductGroup" href="../classes/ProductGroup/BestAvailableImage.xhtml">BestAvailableImage</a>()
                     </li><li>public DataList <a title="ProductGroup" href="../classes/ProductGroup/ProductGroupsFromAlsoShowProducts.xhtml">ProductGroupsFromAlsoShowProducts</a>()
                     </li><li>public DataList <a title="ProductGroup" href="../classes/ProductGroup/ProductGroupsFromAlsoShowProductsInverse.xhtml">ProductGroupsFromAlsoShowProductsInverse</a>()
+                    </li><li>public DataList <a title="ProductGroup" href="../classes/ProductGroup/ProductGroupsParentGroups.xhtml">ProductGroupsParentGroups</a>()
+                    </li><li>protected String <a title="ProductGroup" href="../classes/ProductGroup/getStage.xhtml">getStage</a>()
                     </li><li>public Boolean <a title="ProductGroup" href="../classes/ProductGroup/IsEcommercePage.xhtml">IsEcommercePage</a>()
                     </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/onAfterWrite.xhtml">onAfterWrite</a>()
+                    </li><li>protected Mixed <a title="ProductGroup" href="../classes/ProductGroup/retrieveObjectStore.xhtml">retrieveObjectStore</a>()
+                    </li><li>protected Boolean <a title="ProductGroup" href="../classes/ProductGroup/saveObjectStore.xhtml">saveObjectStore</a>()
+                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/SearchResultsSessionVariable.xhtml">SearchResultsSessionVariable</a>()
                     </li></ul>
 
             }<br/></div>
@@ -162,8 +171,12 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">737+</td>
+            <td class="nummeric">968+</td>
             <td>: cache data for faster access.</td>
+          </tr>
+          <tr>
+            <td class="nummeric">1064+</td>
+            <td>: cache data per user ....</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
@@ -175,9 +188,6 @@
               <br/>
               <span class="indent">standard SS variable</span>
             </li>
-            <li id="canBePurchasedArray"><strong>$canBePurchasedArray</strong>
-                —
-                <a href="#">NULL</a><br/><span class="indent">a list of relevant buyables that can be purchased.  We keep this so that that we can save to session, etc... for future use.</span></li>
             <li id="canNOTbePurchasedArray"><strong>$canNOTbePurchasedArray</strong>
                 —
                 <a href="#">NULL</a><br/><span class="indent">a list of relevant buyables that can not be purchased and therefore should be excluded.</span></li>
@@ -230,30 +240,50 @@
             <li id="allProducts"><strong>$allProducts</strong>
                 —
                 <a href="#">DataList</a><br/><span class="indent">This is the dataList that contains all the products</span></li>
+            <li id="allowCaching"><strong>$allowCaching</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">Can product list (and related) be cached at all?</span></li>
+            <li id="canBePurchasedArray"><strong>$canBePurchasedArray</strong>
+                —
+                <a href="#">NULL</a><br/><span class="indent">a list of relevant buyables that can be purchased.  We keep this so that that we can save to session, etc... for future use.</span></li>
+            <li id="configOptionsCache"><strong>$configOptionsCache</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">variable to speed up methods in this class</span></li>
+            <li id="myUserPreferencesDefaultCache"><strong>$myUserPreferencesDefaultCache</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">cache variable for default preference key</span></li>
+            <li id="rawCount"><strong>$rawCount</strong>
+                —
+                <a href="#">Int</a><br/><span class="indent">count before limit</span></li>
             <li id="showProductLevels"><strong>$showProductLevels</strong>
                 —
                 <a href="#">Array</a></li>
             <li id="sortFilterDisplayNames"><strong>$sortFilterDisplayNames</strong>
                 —
                 <a href="#">Array</a><br/><span class="indent">list of sort / filter / display variables</span></li>
+            <li id="totalCount"><strong>$totalCount</strong>
+                —
+                <a href="#">Int</a><br/><span class="indent">count after limit</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
         <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
           <h4>protected</h4>
           <ul>
-            <li id="currentClassNameSQL"><a title="ProductGroup" href="../classes/ProductGroup/currentClassNameSQL.xhtml">currentClassNameSQL()</a>
-                — returns the CLASSNAME part of the final selection of products.</li>
+            <li id="IsIDarray"><a title="ProductGroup" href="../classes/ProductGroup/IsIDarray.xhtml">IsIDarray()</a>
+                — is the variable provided is an array that can be used as a list of IDs?</li>
+            <li id="allowPurchaseWhereStatement"><a title="ProductGroup" href="../classes/ProductGroup/allowPurchaseWhereStatement.xhtml">allowPurchaseWhereStatement()</a>
+                — Quick - dirty hack - filter to only show relevant products</li>
+            <li id="createSortStatementFromIDArray"><a title="ProductGroup" href="../classes/ProductGroup/createSortStatementFromIDArray.xhtml">createSortStatementFromIDArray()</a>
+                — creates a sort string from a list of ID arrays...</li>
             <li id="currentFinalProducts"><a title="ProductGroup" href="../classes/ProductGroup/currentFinalProducts.xhtml">currentFinalProducts()</a>
                 — returns the final products, based on the all the eligile products for the page.</li>
-            <li id="currentJoinSQL"><a title="ProductGroup" href="../classes/ProductGroup/currentJoinSQL.xhtml">currentJoinSQL()</a>
-                — returns the JOIN part of the final selection of products.</li>
             <li id="currentSortSQL"><a title="ProductGroup" href="../classes/ProductGroup/currentSortSQL.xhtml">currentSortSQL()</a>
                 — returns the SORT part of the final selection of products.</li>
-            <li id="currentWhereSQL"><a title="ProductGroup" href="../classes/ProductGroup/currentWhereSQL.xhtml">currentWhereSQL()</a>
-                — returns the CLASSNAME part of the final selection of products.</li>
             <li id="getBuyableClassName"><a title="ProductGroup" href="../classes/ProductGroup/getBuyableClassName.xhtml">getBuyableClassName()</a>
                 — Returns the class we are working with</li>
+            <li id="getConfigOptions"><a title="ProductGroup" href="../classes/ProductGroup/getConfigOptions.xhtml">getConfigOptions()</a>
+                — return the options for one type.</li>
             <li id="getCurrentUserPreferences"><a title="ProductGroup" href="../classes/ProductGroup/getCurrentUserPreferences.xhtml">getCurrentUserPreferences()</a>
                 — Get a user preference.</li>
             <li id="getGroupFilter">
@@ -261,19 +291,37 @@
             </li>
             <li id="getGroupJoin"><a title="ProductGroup" href="../classes/ProductGroup/getGroupJoin.xhtml">getGroupJoin()</a>
                 — Join statement for the product groups.</li>
+            <li id="getMyUserPreferencesDefault"><a title="ProductGroup" href="../classes/ProductGroup/getMyUserPreferencesDefault.xhtml">getMyUserPreferencesDefault()</a>
+                — Checks for the most applicable user preferences for this page: 1. what is saved in Database for this page.</li>
             <li id="getProductGroupsTable"><a title="ProductGroup" href="../classes/ProductGroup/getProductGroupsTable.xhtml">getProductGroupsTable()</a>
                 — Used in getCSMFields</li>
             <li id="getProductsAlsoInOtherGroups"><a title="ProductGroup" href="../classes/ProductGroup/getProductsAlsoInOtherGroups.xhtml">getProductsAlsoInOtherGroups()</a>
                 — Do products occur in more than one group</li>
             <li id="getProductsToBeIncludedFromOtherGroups"><a title="ProductGroup" href="../classes/ProductGroup/getProductsToBeIncludedFromOtherGroups.xhtml">getProductsToBeIncludedFromOtherGroups()</a>
                 — If products are show in more than one group Then this returns a where phrase for any products that are linked to this product group</li>
+            <li id="getSortFilterDisplayNames"><a title="ProductGroup" href="../classes/ProductGroup/getSortFilterDisplayNames.xhtml">getSortFilterDisplayNames()</a>
+                — returns the full sortFilterDisplayNames set, a subset, or one value by either type (e.g. FILER) or variable (e.g dbFieldName) or both.</li>
+            <li id="getStage"><a title="ProductGroup" href="../classes/ProductGroup/getStage.xhtml">getStage()</a>
+                — returns stage as "" or "_Live"</li>
             <li id="getStandardFilter">
               <a title="ProductGroup" href="../classes/ProductGroup/getStandardFilter.xhtml">getStandardFilter()</a>
             </li>
+            <li id="getUserPreferencesOptionsForDropdown"><a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesOptionsForDropdown.xhtml">getUserPreferencesOptionsForDropdown()</a>
+                — SORT: returns an array of Key =&gt; Title for sort options</li>
             <li id="getUserSettingsOptionSQL"><a title="ProductGroup" href="../classes/ProductGroup/getUserSettingsOptionSQL.xhtml">getUserSettingsOptionSQL()</a>
                 — SORT: Returns the sort sql for a particular sorting key.</li>
+            <li id="limitCurrentFinalProducts"><a title="ProductGroup" href="../classes/ProductGroup/limitCurrentFinalProducts.xhtml">limitCurrentFinalProducts()</a>
+                — limits the products to a maximum number (for speed's sake)</li>
             <li id="removeExcludedProductsAndSaveIncludedProducts"><a title="ProductGroup" href="../classes/ProductGroup/removeExcludedProductsAndSaveIncludedProducts.xhtml">removeExcludedProductsAndSaveIncludedProducts()</a>
                 — Excluded products that can not be purchased We all make a record of all the products that are in the current list For efficiency sake, we do both these things at the same time.</li>
+            <li id="retrieveObjectStore"><a title="ProductGroup" href="../classes/ProductGroup/retrieveObjectStore.xhtml">retrieveObjectStore()</a>
+                — saving an object to the</li>
+            <li id="saveObjectStore"><a title="ProductGroup" href="../classes/ProductGroup/saveObjectStore.xhtml">saveObjectStore()</a>
+                — returns true when the data is saved...</li>
+            <li id="setCurrentUserPreference"><a title="ProductGroup" href="../classes/ProductGroup/setCurrentUserPreference.xhtml">setCurrentUserPreference()</a>
+                — sets a user preference.  This is typically used by the controller to set filter and sort.</li>
+            <li id="sortCurrentFinalProducts"><a title="ProductGroup" href="../classes/ProductGroup/sortCurrentFinalProducts.xhtml">sortCurrentFinalProducts()</a>
+                — returns the SORT part of the final selection of products.</li>
           </ul>
           <h4>public</h4>
           <ul>
@@ -287,12 +335,8 @@
                 — Recursively generate a product menu.</li>
             <li id="IsEcommercePage"><a title="ProductGroup" href="../classes/ProductGroup/IsEcommercePage.xhtml">IsEcommercePage()</a>
                 — tells us if the current page is part of e-commerce.</li>
-            <li id="MyDefaultDisplayStyle">
-              <a title="ProductGroup" href="../classes/ProductGroup/MyDefaultDisplayStyle.xhtml">MyDefaultDisplayStyle()</a>
-            </li>
-            <li id="MyLevelOfProductsToShow">
-              <a title="ProductGroup" href="../classes/ProductGroup/MyLevelOfProductsToShow.xhtml">MyLevelOfProductsToShow()</a>
-            </li>
+            <li id="MyLevelOfProductsToShow"><a title="ProductGroup" href="../classes/ProductGroup/MyLevelOfProductsToShow.xhtml">MyLevelOfProductsToShow()</a>
+                — returns the number of product groups (children) to show in the current product list based on the user setting for this page.</li>
             <li id="MyNumberOfProductsPerPage">
               <a title="ProductGroup" href="../classes/ProductGroup/MyNumberOfProductsPerPage.xhtml">MyNumberOfProductsPerPage()</a>
             </li>
@@ -301,44 +345,37 @@
             <li id="ProductGroupsFromAlsoShowProducts"><a title="ProductGroup" href="../classes/ProductGroup/ProductGroupsFromAlsoShowProducts.xhtml">ProductGroupsFromAlsoShowProducts()</a>
                 — returns a list of Product Groups that have the products for the CURRENT product group listed as part of their AlsoShowProducts list.</li>
             <li id="ProductGroupsFromAlsoShowProductsInverse"><a title="ProductGroup" href="../classes/ProductGroup/ProductGroupsFromAlsoShowProductsInverse.xhtml">ProductGroupsFromAlsoShowProductsInverse()</a>
-                — This is the inverse of ProductGroupsFromAlsoShowProducts That is, it list the product groups that a product is usually listed under (exact parents only) from a "AlsoShow" product List.</li>
+                — This is the inverse of ProductGroupsFromAlsoShowProducts That is, it list the product groups that a product is primarily listed under (exact parents only) from a "AlsoShow" product List.</li>
+            <li id="ProductGroupsParentGroups"><a title="ProductGroup" href="../classes/ProductGroup/ProductGroupsParentGroups.xhtml">ProductGroupsParentGroups()</a>
+                — given the products for this page, retrieve the parent groups excluding the current one.</li>
             <li id="ProductsPerPage"><a title="ProductGroup" href="../classes/ProductGroup/ProductsPerPage.xhtml">ProductsPerPage()</a>
                 — return Integer</li>
             <li id="ProductsShowable"><a title="ProductGroup" href="../classes/ProductGroup/ProductsShowable.xhtml">ProductsShowable()</a>
                 — Retrieve a set of products, based on the given parameters.</li>
+            <li id="RawCount"><a title="ProductGroup" href="../classes/ProductGroup/RawCount.xhtml">RawCount()</a>
+                — returns the total numer of products (before pagination)</li>
+            <li id="SearchResultsSessionVariable">
+              <a title="ProductGroup" href="../classes/ProductGroup/SearchResultsSessionVariable.xhtml">SearchResultsSessionVariable()</a>
+            </li>
             <li id="TotalCount"><a title="ProductGroup" href="../classes/ProductGroup/TotalCount.xhtml">TotalCount()</a>
                 — returns the total numer of products (before pagination)</li>
-            <li id="TotalCountGreaterThanOne"><a title="ProductGroup" href="../classes/ProductGroup/TotalCountGreaterThanOne.xhtml">TotalCountGreaterThanOne()</a>
-                — returns the total numer of products (before pagination)</li>
-            <li id="canCreate"><a title="ProductGroup" href="../classes/ProductGroup/canCreate.xhtml">canCreate()</a>
-                — Standard SS method</li>
+            <li id="canCreate">
+              <a title="ProductGroup" href="../classes/ProductGroup/canCreate.xhtml">canCreate()</a>
+            </li>
             <li id="canDelete"><a title="ProductGroup" href="../classes/ProductGroup/canDelete.xhtml">canDelete()</a>
                 — Standard SS method</li>
-            <li id="canDeleteFromLive"><a title="ProductGroup" href="../classes/ProductGroup/canDeleteFromLive.xhtml">canDeleteFromLive()</a>
-                — Standard SS method //check if it is in a current cart?</li>
             <li id="canEdit"><a title="ProductGroup" href="../classes/ProductGroup/canEdit.xhtml">canEdit()</a>
                 — Shop Admins can edit</li>
             <li id="canPublish"><a title="ProductGroup" href="../classes/ProductGroup/canPublish.xhtml">canPublish()</a>
                 — Standard SS method</li>
-            <li id="canView"><a title="ProductGroup" href="../classes/ProductGroup/canView.xhtml">canView()</a>
-                — Shop Admins can edit</li>
             <li id="currentInitialProducts"><a title="ProductGroup" href="../classes/ProductGroup/currentInitialProducts.xhtml">currentInitialProducts()</a>
                 — returns the inital (all) products, based on the all the eligible products for the page.</li>
-            <li id="getCMSActions"><a title="ProductGroup" href="../classes/ProductGroup/getCMSActions.xhtml">getCMSActions()</a>
-                — standard SS method</li>
+            <li id="currentInitialProductsAsCachedArray"><a title="ProductGroup" href="../classes/ProductGroup/currentInitialProductsAsCachedArray.xhtml">currentInitialProductsAsCachedArray()</a>
+                — this method can be used quickly current initial products whenever you write:  ```php   currentInitialProducts-&gt;(null, $key)-&gt;map("ID", "ID")-&gt;toArray();  ``` this is the better replacement.</li>
             <li id="getCMSFields"><a title="ProductGroup" href="../classes/ProductGroup/getCMSFields.xhtml">getCMSFields()</a>
                 — standard SS method</li>
-            <li id="getMyUserPreferencesDefault"><a title="ProductGroup" href="../classes/ProductGroup/getMyUserPreferencesDefault.xhtml">getMyUserPreferencesDefault()</a>
-                — Checks for the most applicable user preferences for this page: 1. what is saved in Database for this page.</li>
-            <li id="getProductsThatCanBePurchasedArray">
-              <a title="ProductGroup" href="../classes/ProductGroup/getProductsThatCanBePurchasedArray.xhtml">getProductsThatCanBePurchasedArray()</a>
-            </li>
-            <li id="getSortFilterDisplayNames"><a title="ProductGroup" href="../classes/ProductGroup/getSortFilterDisplayNames.xhtml">getSortFilterDisplayNames()</a>
-                — returns the full sortFilterDisplayNames set or a subset by either type (e.g. FILER) or variable (e.g dbFieldName)</li>
-            <li id="getUserPreferencesDefault"><a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesDefault.xhtml">getUserPreferencesDefault()</a>
-                — returns the default value</li>
-            <li id="getUserPreferencesOptionsForDropdown"><a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesOptionsForDropdown.xhtml">getUserPreferencesOptionsForDropdown()</a>
-                — SORT: returns an array of Key =&gt; Title for sort options</li>
+            <li id="getProductsThatCanBePurchasedArray"><a title="ProductGroup" href="../classes/ProductGroup/getProductsThatCanBePurchasedArray.xhtml">getProductsThatCanBePurchasedArray()</a>
+                — this is used to save a list of sorted products so that you can find a previous and a next button, etc...</li>
             <li id="getUserPreferencesTitle"><a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesTitle.xhtml">getUserPreferencesTitle()</a>
                 — Returns the Title for a type key.</li>
             <li id="i18n_plural_name">
@@ -350,8 +387,6 @@
             <li id="onAfterWrite">
               <a title="ProductGroup" href="../classes/ProductGroup/onAfterWrite.xhtml">onAfterWrite()</a>
             </li>
-            <li id="setCurrentUserPreference"><a title="ProductGroup" href="../classes/ProductGroup/setCurrentUserPreference.xhtml">setCurrentUserPreference()</a>
-                — sets a user preference.  This is typically used by the controller to set filter and sort.</li>
           </ul>
         </div>
       </section>

@@ -15,6 +15,20 @@
 class EcommercePayment extends DataObject {
 
 	/**
+	 * standard SS Variable
+	 * @var Array
+	 */
+	private static $dependencies = array(
+		'supportedMethodsProvider' => '%$EcommercePaymentSupportedMethodsProvider'
+	);
+
+	/**
+	 * automatically populated by the dependency manager
+	 * @var EcommercePaymentSupportedMethodsProvider
+	 */
+	public $supportedMethodsProvider = null;
+
+	/**
 	 * Incomplete (default): Payment created but nothing confirmed as successful
 	 * Success: Payment successful
 	 * Failure: Payment failed during process
@@ -69,8 +83,6 @@ class EcommercePayment extends DataObject {
 	 * @var String
 	 */
 	private static $default_sort = '"Created" DESC';
-
-	private static $supported_methods = array();
 
 
 	/**
@@ -286,10 +298,10 @@ class EcommercePayment extends DataObject {
 
 	/**
 	 * Returns the Payment type currently in use.
-	 * @return string
+	 * @return string | null
 	 */
 	function PaymentMethod() {
-		$supportedMethods = self::get_supported_methods();
+		$supportedMethods = self::get_supported_methods($this->Order());
 		if(isset($supportedMethods[$this->ClassName])) {
 			return $supportedMethods[$this->ClassName];
 		}
@@ -299,15 +311,17 @@ class EcommercePayment extends DataObject {
 	 * Return a set of payment fields from all enabled
 	 * payment methods for this site, given the .
 	 * is used to define which methods are available.
+	 *
 	 * @param String $amount formatted amount (e.g. 12.30) without the currency
+	 * @param Null | Order $order
 	 *
 	 * @return FieldList
 	 */
-	public static function combined_form_fields($amount) {
+	public static function combined_form_fields($amount, $order = null) {
 
 		// Create the initial form fields, which defines an OptionsetField
 		// allowing the user to choose which payment method to use.
-		$supportedMethods = self::get_supported_methods();
+		$supportedMethods = self::get_supported_methods($order);
 		$fields = new FieldList(
 			new OptionsetField(
 				'PaymentMethod',
@@ -337,7 +351,7 @@ class EcommercePayment extends DataObject {
 	 * associative array that goes like ClassName => Description ...
 	 *
 	 * e.g. MyPaymentClass => Best Payment Method Ever	 * @param array $array -
-	 *
+	 * @param Array $array
 	 */
 	public static function set_supported_methods($array) {
 		Config::inst()->update("EcommercePayment", "supported_methods", null);
@@ -351,43 +365,21 @@ class EcommercePayment extends DataObject {
 	 * the current user is a ShopAdmin.
 	 * @return Array
 	 */
-	public static function get_supported_methods(){
-		$isLive = true;
-		if(Director::isDev()) {
-			$isLive = false;
-		}
-		if($member = Member::currentUser()) {
-			if($member->IsShopAdmin()) {
-				$isLive = false;
-			}
-		}
-		$supportedMethods = EcommerceConfig::get("EcommercePayment", "supported_methods");
-		if(ArrayLib::is_associative($supportedMethods)) {
-			if(count($supportedMethods)) {
-				foreach($supportedMethods as $methodClass => $methodTitle) {
-					if($isLive) {
-						if(is_subclass_of($methodClass, "EcommercePayment_Test")) {
-							unset($supportedMethods[$methodClass]);
-						}
-					}
-				}
-			}
-		}
-		else {
-			user_error('EcommercePayment::$supported_methods() requires an associative array. Right now the supported payments methods are: '.print_r($supportedMethods, 1), E_USER_NOTICE);
-		}
-		return $supportedMethods;
+	public static function get_supported_methods($order = null){
+		$obj = EcommercePayment::create();
+		return $obj->supportedMethodsProvider->SupportedMethods($order);
 	}
 
 	/**
 	 * Return the form requirements for all the payment methods.
 	 *
+	 * @param NULL | Order $order
 	 * @return An array suitable for passing to CustomRequiredFields
 	 */
-	public static function combined_form_requirements() {
+	public static function combined_form_requirements($order = null) {
 		$requirements = array();
 		// Loop on available methods
-		$supportedMethods = self::get_supported_methods();
+		$supportedMethods = self::get_supported_methods($order);
 		if($supportedMethods) {
 			foreach($supportedMethods as $method => $methodTitle) {
 				$methodRequirements = singleton($method)->getPaymentFormRequirements();
