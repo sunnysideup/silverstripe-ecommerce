@@ -23,7 +23,7 @@ class OrderForm_Payment extends Form {
 			foreach($paymentFields as $paymentField) {
 				$bottomFields->push($paymentField);
 			}
-			if($paymentRequiredFields = EcommercePayment::combined_form_requirements()) {
+			if($paymentRequiredFields = EcommercePayment::combined_form_requirements($order)) {
 				$requiredFields = array_merge($requiredFields, $paymentRequiredFields);
 			}
 		}
