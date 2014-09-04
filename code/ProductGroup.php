@@ -1627,10 +1627,16 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return ProductSearchForm object
 	 */
 	function ProductSearchForm() {
+		$onlySearchTitle = $this->originalTitle;
+		if($this->dataRecord instanceof ProductGroupSearchPage) {
+			if($this->HasSearchResults()) {
+				$onlySearchTitle = "Last Search Results";
+			}
+		}
 		$form = ProductSearchForm::create(
 			$this,
 			'ProductSearchForm',
-			$this->originalTitle,
+			$onlySearchTitle,
 			$this->currentInitialProducts(null, $this->getMyUserPreferencesDefault("FILTER"))
 		);
 		$filterGetVariable = $this->getSortFilterDisplayNames("FILTER", "getVariable");

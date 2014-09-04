@@ -197,12 +197,10 @@ class ProductSearchForm extends Form {
 			$actions = FieldList::create(
 				FormAction::create('doProductSearchForm', 'Search')
 			);
-			if(!$controller instanceof ProductGroupSearchPage_Controller ) {
-				if($productsToSearchCount) {
-					$fields->push(
-						CheckboxField::create("SearchOnlyFieldsInThisSection", _t("ProductSearchForm.ONLY_SHOW", "Only Show Results from")." <i>".$nameOfProductsBeingSearched."</i> "._t("ProductSearchForm.SECTION", "section"), true)
-					);
-				}
+			if($productsToSearchCount) {
+				$fields->push(
+					CheckboxField::create("SearchOnlyFieldsInThisSection", _t("ProductSearchForm.ONLY_SHOW", "Only search in")." <i>".$nameOfProductsBeingSearched."</i> ", true)
+				);
 			}
 			if(Director::isDev() || Permission::check("ADMIN")) {
 				$fields->push(CheckboxField::create("DebugSearch", "Debug Search"));

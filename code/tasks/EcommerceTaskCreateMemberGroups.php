@@ -13,7 +13,7 @@
 
 class EcommerceTaskCreateMemberGroups extends BuildTask{
 
-	protected $title = "Create E-commerce Member Groups";
+	protected $title = "Create e-commerce Member Groups";
 
 	protected $description = "Create the member groups and members for e-commerce, such as Customers and Shop Admininistrators.";
 
@@ -73,8 +73,8 @@ class EcommerceTaskCreateMemberGroups extends BuildTask{
 
 	/**
 	 * set up a group with permissions, roles, etc...
-	 * also @see EcommerceRole::providePermissions 
-	 * also note that this class implements PermissionProvider 
+	 * also @see EcommerceRole::providePermissions
+	 * also note that this class implements PermissionProvider
 	 * @param String $code code for the group - will always be converted to lowercase
 	 * @param String $name title for the group
 	 * @param Group | String $parentGroup group object that is the parent of the group. You can also provide a string (name / title of group)
@@ -85,7 +85,7 @@ class EcommerceTaskCreateMemberGroups extends BuildTask{
 	 *
 	 */
 	public function CreateGroup($code, $name, $parentGroup = null, $permissionCode = "", $roleTitle = "", $permissionArray = array(), $member = null) {
-		//changing to lower case seems to be very important 
+		//changing to lower case seems to be very important
 		//unidentified bug so far
 		$code = strtolower($code);
 		if(!$code) {
