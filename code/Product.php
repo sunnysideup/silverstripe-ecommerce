@@ -135,6 +135,12 @@ class Product extends Page implements BuyableModel {
 		'FeaturedProduct'
 	);
 
+	function scaffoldSearchFields($_params = NULL){
+		$fields = parent::scaffoldSearchFields($_params);
+		$fields->fieldByName("AllowPurchase")->setValue(1);
+		return $fields;
+	}
+
 	/**
 	 * Standard SS variable.
 	 */
@@ -855,9 +861,6 @@ class Product extends Page implements BuyableModel {
 	}
 
 	function canCreate($member = null) {
-		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
-			return false;
-		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}

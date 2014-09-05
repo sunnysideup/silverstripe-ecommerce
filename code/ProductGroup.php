@@ -151,9 +151,6 @@ class ProductGroup extends Page {
 	private static $description = "A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)";
 
 	function canCreate($member = null) {
-		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
-			return false;
-		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
