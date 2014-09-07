@@ -133,6 +133,28 @@ class BillingAddress extends OrderAddress {
 	);
 
 	/**
+	 * Field to Google Geo Code Conversion
+	 * @return Array
+	 */
+	private static $fields_to_google_geocode_conversion = array(
+		"Address" => array('street_number'=> 'long_name', 'route'=> 'long_name'),
+		"Address2" => array(
+			'location' => 'long_name',
+			'sublocality_level_3' => 'long_name',
+			'sublocality_level_2' => 'long_name',
+			'sublocality_level_1' => 'long_name'
+		),
+		"City" => array(
+			'locality'=> 'long_name',
+			'administrative_area_level_3'=> 'long_name',
+			'administrative_area_level_2'=> 'long_name',
+			'administrative_area_level_1'=> 'long_name'
+		),
+		"Country" => array('country'=> 'short_name'),
+		"PostalCode" => array('postal_code'=> 'long_name')
+	);
+
+	/**
 	 * standard SS variable
 	 * @return String
 	 */
@@ -181,6 +203,8 @@ class BillingAddress extends OrderAddress {
 	public function getFields(Member $member = null) {
 		$fields = parent::getEcommerceFields();
 		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Details'), 3));
+		$billingFields = new CompositeField();
+		$hasPreviousAddresses = false;
 		if($member) {
 			if($member->exists()) {
 				$this->FillWithLastAddressFromMember($member, true);
@@ -188,12 +212,18 @@ class BillingAddress extends OrderAddress {
 				//we want MORE than one here not just one.
 				if($addresses->count() > 1) {
 					$fields->push(SelectOrderAddressField::create('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Billing Address'), $addresses));
+					$hasPreviousAddresses = true;
 				}
 			}
-			$billingFields = new CompositeField();
 		}
-		else {
-			$billingFields = new CompositeField();
+		if(!$hasPreviousAddresses) {
+			$billingFields->push(
+				$billingEcommerceGeocodingField = new EcommerceGeocodingField(
+					'BillingEcommerceGeocodingField',
+					_t('OrderAddress.Find_Address','Find address')
+				)
+			);
+			$billingEcommerceGeocodingField->setFieldMap($this->Config()->get("fields_to_google_geocode_conversion"));
 		}
 		//$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));
