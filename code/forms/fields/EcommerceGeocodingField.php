@@ -123,6 +123,8 @@ class EcommerceGeocodingField extends TextField {
 			Requirements::themedCSS($this->cssLocation, "ecommerce");
 		}
 		$this->setAttribute("autocomplete", "off");
+		$this->setRightTitle("
+			<a href=\"https://developers.google.com/maps/documentation/geocoding/\" class=\"bypassGoogleGeocoding\">"._t("EcommerceGeocodingField.BYPASS_GOOGLE_GEOCODING", "by-pass Google GeoCoding.")."</a>");
 		return parent::Field($properties);
 	}
 
@@ -132,6 +134,8 @@ class EcommerceGeocodingField extends TextField {
 	 */
 	protected function getJavascript(){
 		return "
+			EcomEcommerceGeocodingField.errorMessageMoreSpecific = '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_MORE_SPECIFIC", "Error: please enter a more specific location."))."';
+			EcomEcommerceGeocodingField.errorMessageAddressNotFound = '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_ADDRESS_NOT_FOUND", "Error: sorry, address could not be found."))."';
 			EcomEcommerceGeocodingField.useSensor = ".Convert::raw2js($this->userSensor ? "true" : "false").";
 			EcomEcommerceGeocodingField.fieldName = '".Convert::raw2js($this->getName())."';
 			EcomEcommerceGeocodingField.relatedFields = ".Convert::raw2json($this->getFieldMap()).";";

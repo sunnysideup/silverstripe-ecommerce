@@ -8,6 +8,11 @@ jQuery(document).ready(
 var EcomEcommerceGeocodingField = {
 
 	/**
+	 * @var Boolean
+	 */
+	debug: false,
+
+	/**
 	 * should we use the sensor on mobile
 	 * phones to help?
 	 * @var Boolean
@@ -51,13 +56,13 @@ var EcomEcommerceGeocodingField = {
 	 *
 	 * @var String
 	 */
-	errorMessageMoreSpecific: "Error: please enter a more specific location.",
+	errorMessageMoreSpecific: "",
 
 	/**
 	 *
 	 * @var String
 	 */
-	errorMessageAddressNotFound: "Error: sorry, address could not be found.",
+	errorMessageAddressNotFound: "",
 
 	/**
 	 *
@@ -134,13 +139,22 @@ var EcomEcommerceGeocodingField = {
 					//or...if ( e.which == 13 ) e.preventDefault();
 				}
 			);
+		//bypass
+		jQuery("a.bypassGoogleGeocoding").click(
+			function(e){
+				e.preventDefault();
+				EcomEcommerceGeocodingField.showFields();
+				jQuery("#"+EcomEcommerceGeocodingField.fieldName).hide();
+			}
+
+		);
 	},
 
 	fillInAddress: function() {
 		var updated = false;
 		var place = EcomEcommerceGeocodingField.autocomplete.getPlace();
 		EcomEcommerceGeocodingField.entryField.attr("data-has-result", "no");
-		//console.log(place);
+		if(EcomEcommerceGeocodingField.debug) {console.log(place);}
 		var placeIsSpecificEnough = false;
 		for (var i = 0; i < place.types.length; i++) {
 			if(place.types[i] == "street_address") {
@@ -153,21 +167,21 @@ var EcomEcommerceGeocodingField = {
 					var previousValues = [];
 					//reset field and show it...
 					jQuery("#"+formField).show().find("input, select").val("");
-					//console.debug("- checking form field: "+formField);
+					if(EcomEcommerceGeocodingField.debug) {console.debug("- checking form field: "+formField);}
 					for (var j = 0; j < place.address_components.length; j++) {
-						////console.debug("-- provided information: "+place.address_components[j]);
+						if(EcomEcommerceGeocodingField.debug) {console.debug("-- provided information: "+place.address_components[j]);}
 						for (var k = 0; k < place.address_components[j].types.length; k++) {
 							var googleType = place.address_components[j].types[k];
-							//console.debug("---- found Google Info for: "+googleType);
-							////console.log(EcomEcommerceGeocodingField.relatedFields[formField]);
+							if(EcomEcommerceGeocodingField.debug) {console.debug("---- found Google Info for: "+googleType);}
+							if(EcomEcommerceGeocodingField.debug) {console.log(EcomEcommerceGeocodingField.relatedFields[formField]);}
 							for (var fieldType in EcomEcommerceGeocodingField.relatedFields[formField]) {
-								//console.debug("-------- with form field checking: "+fieldType+" is the same as google type: "+googleType);
+								if(EcomEcommerceGeocodingField.debug) {console.debug("-------- with form field checking: "+fieldType+" is the same as google type: "+googleType);}
 								if (fieldType == googleType) {
 									var googleVariable = EcomEcommerceGeocodingField.relatedFields[formField][fieldType];
 									var value = place.address_components[j][googleVariable];
 									if(jQuery.inArray(value, previousValues) == -1) {
 										previousValues.push(value);
-										//console.debug("------------ setting: "+formField+" to "+value+", using "+googleVariable+" in google address");
+										if(EcomEcommerceGeocodingField.debug) {console.debug("------------ setting: "+formField+" to "+value+", using "+googleVariable+" in google address");}
 										previousValueForThisFormField = "";
 										if(jQuery('input[name="'+formField+'"]').length) {
 											var previousValueForThisFormField = jQuery('input[name="'+formField+'"]').val();
@@ -175,11 +189,11 @@ var EcomEcommerceGeocodingField = {
 										if(previousValueForThisFormField) {
 											value = previousValueForThisFormField + " " + value;
 										}
-										jQuery('input[name="'+formField+'"], select[name="'+formField+'"]').val(previousValueForThisFormField+ " "+value);
+										jQuery('input[name="'+formField+'"], select[name="'+formField+'"]').val(value);
 										EcomEcommerceGeocodingField.setResults("yes");
 									}
 									else {
-										//console.debug("-------- data already used: "+value);
+										if(EcomEcommerceGeocodingField.debug) {console.debug("-------- data already used: "+value);}
 									}
 								}
 							}
