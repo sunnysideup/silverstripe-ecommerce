@@ -1648,11 +1648,15 @@ class ProductGroup_Controller extends Page_Controller {
 	 * Does this page have any search results?
 	 * If search was carried out without returns
 	 * then it returns zero (false)
-	 * @return Int
+	 * @return Int | false
 	 */
 	public function HasSearchResults(){
 		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
-		return $resultArray && count($resultArray) ? count($resultArray): false;
+		if($resultArray) {
+			$count = count($resultArray) - 1;
+			return $count ? $count : 0;
+		}
+		return 0;
 	}
 
 

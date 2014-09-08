@@ -52,13 +52,19 @@ EcomProducts = {
 				var idLength = id.length;
 				var hashPosition = id.indexOf("#");
 				id = id.substr(id.indexOf("#"), idLength - hashPosition);
-				jQuery(this).toggleClass("close").toggleClass("open", true);
-				jQuery(id).slideToggle().toggleClass("close").toggleClass("open", true);
+				jQuery(this).toggleClass("close").toggleClass("open");
+				jQuery(id).slideToggle().toggleClass("close").toggleClass("open");
 			}
 		);
 		jQuery("a.openCloseMySectionLink").each(
 			function(i, el) {
-				jQuery(el).click();
+				var id = jQuery(el).attr("href");
+				var idLength = id.length;
+				var hashPosition = id.indexOf("#");
+				id = id.substr(id.indexOf("#"), idLength - hashPosition);
+				jQuery(id).addClass("open");
+				//must be last
+				jQuery(el).addClass("open").click();
 			}
 		)
 	}

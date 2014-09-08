@@ -1,10 +1,12 @@
 <h1 class="pageTitle">$Title</h1>
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
+
+<div class="filterSortDisplayAndSearch">
 <% include ProductGroupChildGroups %>
 <% include ProductGroupFilterAndDisplay %>
 <% include ProductGroupSearchForm %>
-
+</div>
 
 <% if Products %>
 <div id="Products" class="category">

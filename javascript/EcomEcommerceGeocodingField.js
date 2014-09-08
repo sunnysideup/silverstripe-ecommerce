@@ -168,8 +168,14 @@ var EcomEcommerceGeocodingField = {
 									if(jQuery.inArray(value, previousValues) == -1) {
 										previousValues.push(value);
 										//console.debug("------------ setting: "+formField+" to "+value+", using "+googleVariable+" in google address");
-										var previousValueForThisFormField = jQuery('input[name="'+formField+'"]').val();
-										jQuery('input[name="'+formField+'"]').val(previousValueForThisFormField+ " "+value);
+										previousValueForThisFormField = "";
+										if(jQuery('input[name="'+formField+'"]').length) {
+											var previousValueForThisFormField = jQuery('input[name="'+formField+'"]').val();
+										}
+										if(previousValueForThisFormField) {
+											value = previousValueForThisFormField + " " + value;
+										}
+										jQuery('input[name="'+formField+'"], select[name="'+formField+'"]').val(previousValueForThisFormField+ " "+value);
 										EcomEcommerceGeocodingField.setResults("yes");
 									}
 									else {
