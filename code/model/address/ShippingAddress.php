@@ -125,6 +125,30 @@ class ShippingAddress extends OrderAddress {
 		"Obsolete" => "Do not use for future transactions"
 	);
 
+
+	/**
+	 * Field to Google Geo Code Conversion, also see: https://developers.google.com/maps/documentation/geocoding/#Types
+	 * set to array() or NULL to avoid geo coding altogether
+	 * @return Array
+	 */
+	private static $fields_to_google_geocode_conversion = array(
+		"ShippingAddress" => array('street_number'=> 'long_name', 'route'=> 'long_name'),
+		"ShippingAddress2" => array(
+			'location' => 'long_name',
+			'sublocality_level_3' => 'long_name',
+			'sublocality_level_2' => 'long_name',
+			'sublocality_level_1' => 'long_name'
+		),
+		"ShippingCity" => array(
+			'locality'=> 'long_name',
+			'administrative_area_level_3'=> 'long_name',
+			'administrative_area_level_2'=> 'long_name',
+			'administrative_area_level_1'=> 'long_name'
+		),
+		"ShippingCountry" => array('country'=> 'short_name'),
+		"ShippingPostalCode" => array('postal_code'=> 'long_name')
+	);
+
 	/**
 	 * standard SS variable
 	 * @return String
@@ -173,6 +197,7 @@ class ShippingAddress extends OrderAddress {
 	 **/
 	public function getFields(Member $member = null) {
 		$fields = parent::getEcommerceFields();
+		$hasPreviousAddresses = false;
 		if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
 			$shippingFieldsHeader = new CompositeField(
 				new HeaderField('SendGoodsToADifferentAddress', _t('OrderAddress.SENDGOODSTODIFFERENTADDRESS','Send goods to different address'), 3),
@@ -186,6 +211,7 @@ class ShippingAddress extends OrderAddress {
 					$addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
 					//we want MORE than one here not just one.
 					if($addresses->count() > 1) {
+						$hasPreviousAddresses = true;
 						$shippingFieldsHeader->push(SelectOrderAddressField::create('SelectShippingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS','Select Shipping Address'), $addresses));
 					}
 				}
@@ -199,6 +225,18 @@ class ShippingAddress extends OrderAddress {
 					new TextField('ShippingFirstName', _t('OrderAddress.FIRSTNAME','First Name')),
 					new TextField('ShippingSurname', _t('OrderAddress.SURNAME','Surname'))
 				);
+			}
+			if(!$hasPreviousAddresses) {
+				$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
+				if(is_array($mappingArray) && count($mappingArray)) {
+					$shippingFields->push(
+						$shippingEcommerceGeocodingField = new EcommerceGeocodingField(
+							'ShippingEcommerceGeocodingField',
+							_t('OrderAddress.Find_Address','Find address')
+						)
+					);
+					$shippingEcommerceGeocodingField->setFieldMap($mappingArray);
+				}
 			}
 			//$shippingFields->push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 			$shippingFields->push(new TextField('ShippingAddress', _t('OrderAddress.ADDRESS','Address')));

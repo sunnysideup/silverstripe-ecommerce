@@ -129,6 +129,8 @@ class EcommerceConfigDefinitions extends Object {
 		"CUSTOMERS" => array(
 			"OrderAddress",
 			"EcommerceRole",
+			"BillingAddress",
+			"ShippingAddress",
 			"EcommerceCountry",
 			"EcommerceRegion"
 		),
@@ -298,6 +300,12 @@ class EcommerceConfigDefinitions extends Object {
 				"admin_permission_code" => "Permission code for the shop administrator member group.",
 				"admin_role_title" => "Role title for the shop administrator member group.",
 				"admin_role_permission_codes" => "Permission codes for the shop administrator member group.",
+			),
+			"BillingAddress" => array(
+				"fields_to_google_geocode_conversion" => "This variable tells us how Billing Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.",
+			),
+			"ShippingAddress" => array(
+				"fields_to_google_geocode_conversion" => "This variable tells us how Shipping Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.",
 			),
 			"EcommerceCountry" => array(
 				"allowed_country_codes" => "To what countries are you selling?  You can leave this as an empty array, in case you are selling to all countries or you can restrict it to just one country or a handful.  Once set, you can adjust this list in EcommerceCountry using the CMS. ",

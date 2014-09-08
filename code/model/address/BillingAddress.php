@@ -133,7 +133,8 @@ class BillingAddress extends OrderAddress {
 	);
 
 	/**
-	 * Field to Google Geo Code Conversion
+	 * Field to Google Geo Code Conversion - also see: https://developers.google.com/maps/documentation/geocoding/#Types
+	 * set to array() or NULL to avoid geo coding altogether
 	 * @return Array
 	 */
 	private static $fields_to_google_geocode_conversion = array(
@@ -217,13 +218,16 @@ class BillingAddress extends OrderAddress {
 			}
 		}
 		if(!$hasPreviousAddresses) {
-			$billingFields->push(
-				$billingEcommerceGeocodingField = new EcommerceGeocodingField(
-					'BillingEcommerceGeocodingField',
-					_t('OrderAddress.Find_Address','Find address')
-				)
-			);
-			$billingEcommerceGeocodingField->setFieldMap($this->Config()->get("fields_to_google_geocode_conversion"));
+			$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
+			if(is_array($mappingArray) && count($mappingArray)) {
+				$billingFields->push(
+					$billingEcommerceGeocodingField = new EcommerceGeocodingField(
+						'BillingEcommerceGeocodingField',
+						_t('OrderAddress.Find_Address','Find address')
+					)
+				);
+				$billingEcommerceGeocodingField->setFieldMap($mappingArray);
+			}
 		}
 		//$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));

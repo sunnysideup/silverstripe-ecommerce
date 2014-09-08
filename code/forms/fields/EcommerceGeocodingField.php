@@ -126,6 +126,10 @@ class EcommerceGeocodingField extends TextField {
 		return parent::Field($properties);
 	}
 
+	/**
+	 * retuns the customised Javascript for the form field.
+	 * @return String
+	 */
 	protected function getJavascript(){
 		return "
 			EcomEcommerceGeocodingField.useSensor = ".Convert::raw2js($this->userSensor ? "true" : "false").";
