@@ -155,7 +155,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 		$preferredCurrencyField = $fields->dataFieldByName("PreferredCurrencyID");
 		$notesFields = $fields->dataFieldByName("Notes");
 		$link =  Controller::join_links(
-			Director::baseURL(), 
+			Director::baseURL(),
 			Config::inst()->get("ShoppingCart_Controller", "url_segment")."/loginas/".$this->owner->ID."/"
 		);
 		$loginAsField = new LiteralField("LoginAsThisCustomer", "<a href=\"$link\" target=\"_blank\">Login as this customer</a>");
@@ -262,7 +262,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 			else {
 				$loginDetailsHeader = new HeaderField('CreateAnAccount',_t('OrderForm.CREATEANACCONTOPTIONAL','Create an account (optional)'), 3);
 				//allow people to purchase without creating a password
-				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password" datano="'.Convert::raw2att(_t('Account.DO_NOT_CREATE_ACCOUNT','Do not create account')).'" class="choosePassword">choose a password</a>');
+				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password" datano="'.Convert::raw2att(_t('Account.DO_NOT_CREATE_ACCOUNT','do not create account')).'" class="choosePassword">choose a password</a>');
 				$loginDetailsDescription = new LiteralField(
 					'AccountInfo',
 					'<p>'.

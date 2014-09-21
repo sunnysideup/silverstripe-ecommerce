@@ -66,7 +66,10 @@ EcomProducts = {
 				//must be last
 				jQuery(el).addClass("open").click();
 			}
-		)
+		);
+		if(jQuery(".openCloseMySectionLink").length == 1) {
+			jQuery(".openCloseMySectionLink").click();
+		}
 	}
 
 

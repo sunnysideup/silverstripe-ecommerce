@@ -7,7 +7,7 @@
 |
 	<span class="viewLinks">
 	<% if IsShowFullList %>
-		<a href="$Link" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.VIEW_DETAILS','View Details') %> ($MaxNumberOfProductsPerPage / $TotalCount)</a></li>
+		<a href="$Link" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.VIEW_DETAILS','View Detailed List') %></a></li>
 	<% else %>
 		<% if Products.MoreThanOnePage %>
 		<a href="$ListAllLink" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.LIST_ALL','List All') %> ($TotalCount)</a></li>
@@ -16,6 +16,6 @@
 		<% end_if %>
 	</span>
 	<% end_if %>
-
+	<% if ResetPreferencesLink %> | <a href="$ResetPreferencesLink" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.RESET_ALL','Reset Filters and Sort') %></a><% end_if %>
 </small>
 <% end_if %>

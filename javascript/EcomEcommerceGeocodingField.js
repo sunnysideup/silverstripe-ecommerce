@@ -147,7 +147,7 @@ var EcomEcommerceGeocodingField = {
 				jQuery("#"+EcomEcommerceGeocodingField.fieldName).hide();
 			}
 		);
-		if(EcomEcommerceGeocodingField.alreadyHasValues) {
+		if(EcomEcommerceGeocodingField.alreadyHasValues()) {
 			jQuery("a.bypassGoogleGeocoding").click();
 		}
 	},

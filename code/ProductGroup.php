@@ -1989,7 +1989,12 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return String
 	 */
 	public function ListAllLink() {
-		return $this->Link()."?showfulllist=1";
+		if($this->filterForGroupObject) {
+			return $this->Link("filterforgroup/".$this->filterForGroupObject->URLSegment)."?showfulllist=1";
+		}
+		else {
+			return $this->Link()."?showfulllist=1";
+		}
 	}
 
 	/**
@@ -2146,9 +2151,6 @@ class ProductGroup_Controller extends Page_Controller {
 
 				$link =  "?".$getVariableName."=$key";
 				if($type == "FILTER") {
-					if($key == $this->getMyUserPreferencesDefault($type)) {
-						$link .= "&amp;reload=1";
-					}
 					$link = $this->Link().$link;
 				}
 				else {
@@ -2194,11 +2196,11 @@ class ProductGroup_Controller extends Page_Controller {
 			if($secondaryTitle) {
 				$secondaryTitle = $pipe.$secondaryTitle;
 			}
+			if($this->IsSearchResults()) {
+				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results");
+			}
 			if(is_object($this->filterForGroupObject)) {
 				$secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
-			}
-			if($this->IsSearchResults()) {
-				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results (".$this->HasSearchResults().")");
 			}
 			if($this->IsShowFullList()) {
 				$secondaryTitle .= $pipe._t("ProductGroup.LIST_VIEW", "List View");
