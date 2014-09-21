@@ -1705,13 +1705,12 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	public function ShowFiltersAndDisplayLinks(){
 		if($this->TotalCountGreaterThanOne()) {
-			return true;
-		}
-		if($this->HasFilters()) {
-			return true;
-		}
-		if($this->DisplayLinks()) {
-			return true;
+			if($this->HasFilters()) {
+				return true;
+			}
+			if($this->DisplayLinks()) {
+				return true;
+			}
 		}
 		return false;
 	}

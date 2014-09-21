@@ -72,7 +72,7 @@ var EcomEcommerceGeocodingField = {
 	init: function () {
 
 		//clean up affected fields
-		EcomEcommerceGeocodingField.clearFields();
+		//EcomEcommerceGeocodingField.clearFields();
 		EcomEcommerceGeocodingField.hideFields();
 
 		//set basic classes for input field
@@ -146,8 +146,10 @@ var EcomEcommerceGeocodingField = {
 				EcomEcommerceGeocodingField.showFields();
 				jQuery("#"+EcomEcommerceGeocodingField.fieldName).hide();
 			}
-
 		);
+		if(EcomEcommerceGeocodingField.alreadyHasValues) {
+			jQuery("a.bypassGoogleGeocoding").click();
+		}
 	},
 
 	fillInAddress: function() {
@@ -223,6 +225,30 @@ var EcomEcommerceGeocodingField = {
 		for (var formField in EcomEcommerceGeocodingField.relatedFields) {
 			jQuery("#"+formField).hide();
 		}
+	},
+
+	/**
+	 *
+	 * @return Boolean
+	 */
+	alreadyHasValues: function(){
+		var empty = 0;
+		var count = 0;
+		//hide fields to be completed for now...
+		for (var formField in EcomEcommerceGeocodingField.relatedFields) {
+			jQuery("#"+formField).find("select, input, textarea").each(
+				function(i, el) {
+					count++;
+					if(jQuery(el).val() == "" || jQuery(el).val() == 0) {
+						empty++;
+					}
+				}
+			);
+		}
+		if(empty / count <= 0.25) {
+			return true;
+		}
+		return false;
 	},
 
 	clearFields: function(){

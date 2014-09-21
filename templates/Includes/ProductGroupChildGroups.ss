@@ -1,6 +1,6 @@
 
 <% if MenuChildGroups %>
-	<div class="menuChildGroups">
+	<div class="menuChildGroups dropdownOption">
 		<h3><a href="#MenuChildGroupsList" class="openCloseMySectionLink"><% _t("Product.INTHISSECTION", "In this section") %></a></h3>
 		<ul id="MenuChildGroupsList">
 	<% loop MenuChildGroups %>

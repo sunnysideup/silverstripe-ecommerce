@@ -1,4 +1,4 @@
-<div class="ProductGroupSearchFormHolder">
+<div class="ProductGroupSearchFormHolder dropdownOption">
 	<h3>
 	<% if HasSearchResults %><% if SearchResultLink %>
 		<a href="$SearchResultLink"><% _t("Product.LAST_SEARCH_RESULTS", "Last Search Results") %></a> |
