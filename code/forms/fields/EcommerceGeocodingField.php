@@ -134,11 +134,12 @@ class EcommerceGeocodingField extends TextField {
 	 */
 	protected function getJavascript(){
 		return "
-			EcomEcommerceGeocodingField.errorMessageMoreSpecific = '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_MORE_SPECIFIC", "Error: please enter a more specific location."))."';
-			EcomEcommerceGeocodingField.errorMessageAddressNotFound = '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_ADDRESS_NOT_FOUND", "Error: sorry, address could not be found."))."';
-			EcomEcommerceGeocodingField.useSensor = ".Convert::raw2js($this->userSensor ? "true" : "false").";
-			EcomEcommerceGeocodingField.fieldName = '".Convert::raw2js($this->getName())."';
-			EcomEcommerceGeocodingField.relatedFields = ".Convert::raw2json($this->getFieldMap()).";";
+			var EcommerceGeocodingField".$this->id()." = new EcomEcommerceGeocodingField( '".Convert::raw2js($this->getName())."');
+			EcommerceGeocodingField".$this->id().".setVar('errorMessageMoreSpecific', '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_MORE_SPECIFIC", "Error: please enter a more specific location."))."');
+			EcommerceGeocodingField".$this->id().".setVar('errorMessageAddressNotFound', '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_ADDRESS_NOT_FOUND", "Error: sorry, address could not be found."))."');
+			EcommerceGeocodingField".$this->id().".setVar('useSensor', ".Convert::raw2js($this->userSensor ? "true" : "false").");
+			EcommerceGeocodingField".$this->id().".setVar('relatedFields', ".Convert::raw2json($this->getFieldMap()).");
+			EcommerceGeocodingField".$this->id().".init();";
 	}
 
 
