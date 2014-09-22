@@ -102,12 +102,12 @@ class OrderFormAddress extends Form {
 			$addressFieldsShipping->merge($shippingAddressFields);
 		}
 		$leftFields = new CompositeField($addressFieldsBilling);
-		$leftFields->setID('LeftOrderBilling');
+		$leftFields->addExtraClass('leftOrderBilling');
 		$allLeftFields = new CompositeField($leftFields);
-		$allLeftFields->setID('LeftOrder');
+		$allLeftFields->addExtraClass('leftOrder');
 		if($addressFieldsShipping) {
 			$leftFieldsShipping = new CompositeField($addressFieldsShipping);
-			$leftFieldsShipping->setID('LeftOrderShipping');
+			$leftFieldsShipping->addExtraClass('leftOrderShipping');
 			$allLeftFields->push($leftFieldsShipping);
 		}
 
@@ -116,7 +116,7 @@ class OrderFormAddress extends Form {
 
 
 		$rightFields = new CompositeField();
-		$rightFields->setID('RightOrder');
+		$rightFields->addExtraClass('rightOrder');
 		//to do: simplify
 		if(EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
 			if($this->orderDoesNotHaveFullyOperationalMember()) {

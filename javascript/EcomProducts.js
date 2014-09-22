@@ -56,6 +56,10 @@ EcomProducts = {
 				jQuery(id).slideToggle().toggleClass("close").toggleClass("open");
 			}
 		);
+		var thereIsOnlyOne = false;
+		if(jQuery(".openCloseMySectionLink").length == 1) {
+			thereIsOnlyOne = true;
+		}
 		jQuery("a.openCloseMySectionLink").each(
 			function(i, el) {
 				var id = jQuery(el).attr("href");
@@ -64,12 +68,15 @@ EcomProducts = {
 				id = id.substr(id.indexOf("#"), idLength - hashPosition);
 				jQuery(id).addClass("open");
 				//must be last
-				jQuery(el).addClass("open").click();
+				if(thereIsOnlyOne) {
+					jQuery(el).addClass("open");
+				}
+				else {
+					jQuery(el).addClass("open").click();
+				}
 			}
+
 		);
-		if(jQuery(".openCloseMySectionLink").length == 1) {
-			jQuery(".openCloseMySectionLink").click();
-		}
 	}
 
 

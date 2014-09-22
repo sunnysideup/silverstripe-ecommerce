@@ -70,7 +70,7 @@ var EcomOrderFormWithShippingAddress = {
 
 	//================
 
-	shippingSectionSelector: "#ShippingFields, #ShippingFieldsHeader",
+	shippingSectionSelector: ".shippingFieldsHeader, .shippingFields",
 
 	useShippingDetailsSelector: "input[name='UseShippingAddress']",
 

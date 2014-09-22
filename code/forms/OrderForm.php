@@ -36,7 +36,7 @@ class OrderForm extends Form {
 
 		$bottomFields = new CompositeField();
 
-		$bottomFields->setID('BottomOrder');
+		$bottomFields->addExtraClass('bottomOrder');
 		if($order->Total() > 0) {
 			$bottomFields->push(new HeaderField("PaymentHeader", _t("OrderForm.PAYMENT", "Payment"), 3));
 			$paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceWithCurrencyCode(false), $order);
@@ -56,7 +56,7 @@ class OrderForm extends Form {
 
 
 		$finalFields = new CompositeField();
-		$finalFields->setID('FinalFields');
+		$finalFields->addExtraClass('finalFields');
 		$finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER','Complete Order'), 3));
 		// If a terms and conditions page exists, we need to create a field to confirm the user has read it
 		if($termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page()) {
