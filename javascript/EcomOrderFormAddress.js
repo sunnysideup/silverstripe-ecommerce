@@ -23,6 +23,11 @@ var EcomOrderFormAddress = {
 
 	formSelector: "#OrderFormAddress_OrderFormAddress",
 
+	init: function() {
+		jQuery(this.formSelector).attr('autocomplete', 'off');
+		this.postalCodeLinkSetup();
+	},
+
 	setReadOnly: function(fieldName) {
 		jQuery("name=['"+fieldName+"']").attr("disabled", true);
 		jQuery("name=['"+fieldName+"']").attr("readonly", true);
@@ -31,11 +36,6 @@ var EcomOrderFormAddress = {
 	undoReadOnly: function(fieldName) {
 		jQuery("name=['"+fieldName+"']").attr("disabled", false);
 		jQuery("name=['"+fieldName+"']").attr("readonly", false);
-	},
-
-	init: function() {
-		jQuery(this.formSelector).attr('autocomplete', 'off');
-		this.postalCodeLinkSetup();
 	},
 
 
