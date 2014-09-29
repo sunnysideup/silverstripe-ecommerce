@@ -82,11 +82,11 @@ var EcomOrderFormWithShippingAddress = {
 	init: function(){
 		//hide shipping fields
 		if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length > 0) {
-			if(jQuery(EcomOrderFormAddress.useShippingDetailsSelector).is(":checked")) {
-				alert("A");
+			jQuery(EcomOrderFormAddress.useShippingDetailsSelector).css("border", "1px solid red");
+			if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
+				//do nothing
 			}
 			else {
-				alert("B");
 				jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).hide();
 				EcomOrderFormWithShippingAddress.closed = true;
 			}
