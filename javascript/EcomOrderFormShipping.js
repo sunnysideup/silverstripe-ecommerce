@@ -82,8 +82,14 @@ var EcomOrderFormWithShippingAddress = {
 	init: function(){
 		//hide shipping fields
 		if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length > 0) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).hide();
-			EcomOrderFormWithShippingAddress.closed = true;
+			if(jQuery(EcomOrderFormAddress.useShippingDetailsSelector).is(":checked")) {
+				alert("A");
+			}
+			else {
+				alert("B");
+				jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).hide();
+				EcomOrderFormWithShippingAddress.closed = true;
+			}
 			//turn-on shipping details toggle
 			jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change(
 				function(){
