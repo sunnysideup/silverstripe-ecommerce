@@ -17,12 +17,28 @@ class CartResponse extends EcommerceResponse {
 	 */
 	private static $force_reload = false;
 
+	/**
+	 * Should the page be reloaded rather than using AJAX?
+	 * @var Boolean $force_reload
+	 */
+	protected $includeHeaders = true;
+
 
 	/**
 	 * Sets the $force_reload to true;
 	 */
 	public static function set_force_reload() {
 		self::$force_reload = true;
+	}
+
+	/**
+	 * turn the json headers on or off...
+	 * useful if you want to use the json data
+	 * but not the associated header.
+	 * @param Boolean
+	 */
+	public function setIncludeHeaders($b) {
+		$this->includeHeaders = $b;
 	}
 
 	/**
@@ -34,8 +50,11 @@ class CartResponse extends EcommerceResponse {
 	 **/
 	public function ReturnCartData(Array $messages = array(), Array $additionalData = null, $status = "success") {
 		//add header
-		$this->addHeader('Content-Type', 'application/json');
+		if($this->includeHeaders) {
+			$this->addHeader('Content-Type', 'application/json');
+		}
 		SSViewer::set_source_file_comments(false);
+
 
 		//merge messages
 		$messagesImploded = '';
@@ -93,9 +112,9 @@ class CartResponse extends EcommerceResponse {
 		$js[] = array(
 			"t" => "replaceclass",
 			"s" => $inCartArray,
-			"p" => ".productActions.inCart",
-			"v" => "inCart",
-			"without" => "notInCart"
+			"p" => $currentOrder->AJAXDefinitions()->ProductListItemClassName(),
+			"v" => $currentOrder->AJAXDefinitions()->ProductListItemInCartClassName(),
+			"without" => $currentOrder->AJAXDefinitions()->ProductListItemNotInCartClassName()
 		);
 
 		//order modifiers
@@ -185,6 +204,5 @@ class CartResponse extends EcommerceResponse {
 		}
 		return $json;
 	}
-
 
 }

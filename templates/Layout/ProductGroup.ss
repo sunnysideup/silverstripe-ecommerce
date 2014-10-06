@@ -1,5 +1,14 @@
-<div id="ProductGroup" class="mainSection content-container withSidebar">
-<% include LayoutProductGroupInner %>
+<div id="$AjaxDefinitions.ProductListHolderID" class="mainSection content-container withSidebar">
+<% if ProductsAreCacheable %>
+	$CachingRelatedJavascript
+	<% cached ProductGroupListCachingKey %>
+		<% include LayoutProductGroupInner %>
+	<% end_cached %>
+<% else %>
+	<% include LayoutProductGroupInner %>
+<% end_if %>
+
+
 </div>
 
 <aside>
@@ -12,5 +21,6 @@
 		<div class="sidebarBottom"></div>
 	</div>
 </aside>
+
 
 

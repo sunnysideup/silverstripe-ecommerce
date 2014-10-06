@@ -66,6 +66,35 @@ EcomCart = {
 		set_shoppingCartURLSegment: function(s) {this.shoppingCartURLSegment = s;},
 
 
+	/**
+	 * this is a collection of dom elements that hold the item causing the change
+	 * we retain this here so that we can add a loading class to it and,
+	 * on return, we can remove it.
+	 * Because it is an array, each clicked element can be individually given
+	 * the loading class and also removed when its particular request returns.
+	 */
+	loadingSelectors: [],
+
+	/**
+	 * tells us the number of ajax calls that are currently awaiting
+	 * processing
+	 * @var Int
+	 */
+	openAjaxCalls: 0,
+
+	/**
+	 * Tells us if we are currently processing
+	 * @var Boolean
+	 */
+	processing: true,
+
+	/**
+	 * This is the data that we start with (which may be contained in the original HTML)
+	 * @var Array
+	 */
+	initialData: [],
+		set_initialData: function(a) {this.initialData = a;},
+
 	//#################################
 	// COUNTRY + REGION SELECTION
 	//#################################
@@ -114,27 +143,6 @@ EcomCart = {
 	classToShowPageIsUpdating: "ecomCartIsUpdating",
 		set_classToShowPageIsUpdating: function(s) {this.classToShowPageIsUpdating = s;},
 
-
-	/**
-	 * this is a collection of dom elements that hold the item causing the change
-	 * we retain this here so that we can add a loading class to it and,
-	 * on return, we can remove it.
-	 * Because it is an array, each clicked element can be individually given
-	 * the loading class and also removed when its particular request returns.
-	 */
-	loadingSelectors: [],
-
-	/**
-	 * tells us the number of ajax calls that are currently awaiting
-	 * processing
-	 */
-	openAjaxCalls: 0,
-
-	/**
-	 * Tells us if we are currently processing
-	 *@var Boolean
-	 */
-	processing: true,
 
 	/**
 	 * the class used to show add/remove buyable buttons
@@ -216,10 +224,25 @@ EcomCart = {
 
 
 	/**
-	 * turn on / off the ajax buttons outside of the cart (e.g. add this product to cart, delete from cart)
+	 * turn on / off the ajax buttons outside of the cart
+	 * (e.g. add this product to cart, delete from cart)
+	 * @var Boolean
 	 */
 	ajaxButtonsOn: true,
 		set_ajaxButtonsOn: function(b) {this.ajaxButtonsOn = b;},
+
+	/**
+	 * go through product list to
+	 * work out what products are already in cart and which products are not in cart
+	 * yet.
+	 * This is used when the product list is cached.
+	 *
+	 *
+	 *
+	 * @var Boolean
+	 */
+	ajaxifyProductList: false,
+		set_ajaxifyProductList: function(b) {this.ajaxifyProductList = b;},
 
 	/**
 	 * NOTE: set to empty string to bypass confirmation step
@@ -257,6 +280,25 @@ EcomCart = {
 	 */
 	cartMenuLinksSelector: ".cartlink",
 		set_cartMenuLinksSelector: function(s) {this.cartMenuLinksSelector = s;},
+
+
+	/**
+	 * the selector used to identify links
+	 * that change the product list. These can be ajaxified so that the list
+	 * is using AJAX rather than reload the whole page.
+	 * @var String
+	 */
+	ajaxifiedListAdjusterSelectors: ".ajaxifyMyProductGroupLinks",
+		set_ajaxifiedListAdjusterSelectors: function(s) {this.ajaxifiedListAdjusterSelectors = s;},
+
+
+	/**
+	 * selector of element that will be replaced by the new
+	 * product list
+	 * @var String
+	 */
+	ajaxifiedListHolderSelector: "#ProductGroup",
+		set_ajaxifiedListHolderSelector: function(s) {this.ajaxifiedListsSelector = s;},
 
 
 
@@ -304,6 +346,36 @@ EcomCart = {
 		EcomCart.countryAndRegionUpdates();
 		//setup an area where the user can change their country / region
 		EcomCart.changeCountryFieldSwap();
+		if(EcomCart.ajaxifyProductList) {
+			jQuery(EcomCart.ajaxifiedListHolderSelector).on(
+				"click",
+				EcomCart.ajaxifiedListAdjusterSelectors + " a",
+				function(event){
+					event.preventDefault();
+					var url = jQuery(this).attr("href");
+					jQuery.ajax(
+						{
+							beforeSend: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).addClass(EcomCart.loadingClass);},
+							//cache: false,
+							complete: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.loadingClass);},
+							dataType: "html",
+							error: function(jqXHR, textStatus, errorThrown){
+								alert("An error occurred (" + textStatus + " " + errorThrown + ")! I will try reloading the page.");
+								location.reload();
+							},
+							success: function(data, textStatus, jqXHR){
+								jQuery(EcomCart.ajaxifiedListHolderSelector).html(data);
+								EcomProducts.init();
+								EcomCart.reinit();
+							},
+							url: url,
+						}
+					)
+				}
+			)
+			EcomCart.openAjaxCalls++;
+			EcomCart.setChanges(EcomCart.initialData, "");
+		}
 		if(EcomCart.ajaxButtonsOn) {
 			//make sure that "add to cart" links are updated with AJAX
 			EcomCart.addAddLinks(EcomCart.ajaxLinksAreaSelector);
@@ -338,19 +410,19 @@ EcomCart = {
 	 * sets the functions for updating country and region
 	 */
 	countryAndRegionUpdates: function() {
-		jQuery(EcomCart.countryAndRegionRootSelector).delegate(
-			EcomCart.ajaxCountryFieldSelector,
+		jQuery(EcomCart.countryAndRegionRootSelector).on(
 			"change",
+			EcomCart.ajaxCountryFieldSelector,
 			function() {
-				var url = jQuery('base').attr('href') + EcomCart.shoppingCartURLSegment + "/setcountry/" + this.value + "/";
+				var url = EcomCart.createUrl("setcountry", this.value);
 				EcomCart.getChanges(url, null, this);
 			}
 		);
-		jQuery(EcomCart.countryAndRegionRootSelector).delegate(
-			EcomCart.ajaxRegionFieldSelector,
+		jQuery(EcomCart.countryAndRegionRootSelector).on(
 			"change",
+			EcomCart.ajaxRegionFieldSelector,
 			function() {
-				var url = jQuery('base').attr('href')  + EcomCart.shoppingCartURLSegment + "/setregion/" + this.value + "/";
+				var url = EcomCart.createUrl("setregion", this.value);
 				EcomCart.getChanges(url, null, this);
 			}
 		);
@@ -362,13 +434,13 @@ EcomCart = {
 	 * to select a new country.
 	 */
 	changeCountryFieldSwap: function() {
-		jQuery(EcomCart.countryAndRegionRootSelector).delegate(
-			EcomCart.selectorChangeCountryFieldHolder + " select",
+		jQuery(EcomCart.countryAndRegionRootSelector).on(
 			"change",
+			EcomCart.selectorChangeCountryFieldHolder + " select",
 			function() {
 				var val = jQuery(EcomCart.selectorChangeCountryFieldHolder + " select").val();
 				jQuery(EcomCart.ajaxCountryFieldSelector).val(val);
-				var url = jQuery('base').attr('href') + EcomCart.shoppingCartURLSegment + "/setcountry/" + val + "/";
+				var url = EcomCart.createUrl("setcountry",val);
 				EcomCart.getChanges(url, null, this);
 				jQuery(EcomCart.selectorChangeCountryLink).click();
 			}
@@ -386,9 +458,9 @@ EcomCart = {
 	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
 	 */
 	addAddLinks: function(withinSelector) {
-		jQuery(withinSelector).delegate(
-			EcomCart.addLinkSelector,
+		jQuery(withinSelector).on(
 			"click",
+			EcomCart.addLinkSelector,
 			function(){
 				var url = jQuery(this).attr("href");
 				EcomCart.getChanges(url, null, this);
@@ -425,9 +497,9 @@ EcomCart = {
 	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
 	 */
 	addRemoveLinks: function (withinSelector) {
-		jQuery(withinSelector).delegate(
-			EcomCart.removeLinkSelector,
+		jQuery(withinSelector).on(
 			"click",
+			EcomCart.removeLinkSelector,
 			function(){
 				if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
 					var url = jQuery(this).attr("href");
@@ -486,6 +558,22 @@ EcomCart = {
 		return EcomCart.loadingSelectors.length-1;
 	},
 
+	/**
+	 *
+	 *
+	 *
+	 * @return String
+	 */
+	createUrl: function(method, variable) {
+		var url = jQuery('base').attr('href') + EcomCart.shoppingCartURLSegment + "/";
+		if(method) {
+			url += method + "/";
+		}
+		if(variable) {
+			url += variable + "/";
+		}
+		return url;
+	},
 
 	/**
 	 * apply changes to the page using the JSON data from the server.
@@ -606,12 +694,7 @@ EcomCart = {
 						//as part of this we check if they are still incart
 						//and as part of this process, we add the "inCart" where needed
 						//console.debug("starting process");
-						for(var i= 0; i < selector.length;i++){
-							var id = "#"+selector[i];
-							jQuery(id).removeClass(without).addClass(value);
-							//console.debug("adding "+id);
-						}
-						jQuery(parameter).each(
+						jQuery("."+parameter).each(
 							function(i, el) {
 								var id = jQuery(el).attr("id");
 								//console.debug("checking "+id);
@@ -620,16 +703,14 @@ EcomCart = {
 									//console.debug("testing: '"+selector[i]+"' AGAINST '"+id+"'");
 									if(id == selector[i]) {
 										inCart = true;
+										selector.splice(i, 1);
 									}
-									//to do - what is the javascript method for 'unset'
-									//unset(selector[i]);
 								}
-								if(!inCart) {
-									jQuery("#"+id).removeClass(value).addClass(without);
-									//console.debug("removing "+id);
+								if(inCart) {
+									jQuery(el).removeClass(without).addClass(value);
 								}
 								else {
-									//console.debug("leaving "+id);
+									jQuery(el).removeClass(value).addClass(without);
 								}
 							}
 						)

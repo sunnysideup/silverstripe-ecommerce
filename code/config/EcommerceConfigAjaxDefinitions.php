@@ -78,6 +78,37 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 **/
 	function TinyCartClassName() {return self::$prefix.'tiny_cart_class';}
 
+	/**
+	 * @return String
+	 **/
+	function ProductListHolderID() {return self::$prefix.'ProductGroup';}
+
+	/**
+	 * @return String
+	 **/
+	function ProductListAjaxifiedLinkClassName() {return self::$prefix.'ajaxifyMyProductGroupLinks';}
+
+	/**
+	 * List of products in the ProductGroup page...
+	 * @see ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss
+	 * @return String
+	 **/
+	function ProductListItemClassName() {return self::$prefix.'productActions';}
+
+	/**
+	 * Class used to identify that a product is in cart.
+	 * @see ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss
+	 * @return String
+	 **/
+	function ProductListItemInCartClassName() {return self::$prefix.'inCart';}
+
+	/**
+	 * Class used to identify that a product is not in cart.
+	 * @see ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss
+	 * @return String
+	 **/
+	function ProductListItemNotInCartClassName() {return self::$prefix.'notInCart';}
+
 
 
 	/*___________________

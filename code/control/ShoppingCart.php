@@ -1043,6 +1043,7 @@ class ShoppingCart_Controller extends Controller{
 	}
 
 	private static $allowed_actions = array (
+		'json',
 		'index',
 		'additem',
 		'removeitem',
@@ -1239,6 +1240,15 @@ class ShoppingCart_Controller extends Controller{
 	 */
 	public static function set_currency_link($code, Array $parameters = array()) {
 		return self::create_link('setcurrency/'.$code."/".self::params_to_get_string($parameters));
+	}
+
+	/**
+	 * return json for cart... no further actions.
+	 * @param SS_HTTPRequest
+	 * @return JSON
+	 */
+	public function json(SS_HTTPRequest $request) {
+		return $this->cart->setMessageAndReturn();
 	}
 
 	/**

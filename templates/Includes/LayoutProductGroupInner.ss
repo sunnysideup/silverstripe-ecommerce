@@ -22,7 +22,6 @@
 	<% else_if MyDefaultDisplayStyle = MoreDetail %><% loop Products %><% include ProductGroupItemMoreDetail %><% end_loop %>
 	<% else %><% loop Products %><% include ProductGroupItem %><% end_loop %>
 	<% end_if %>
-<% end_if %>
 	</ul>
 </div>
 

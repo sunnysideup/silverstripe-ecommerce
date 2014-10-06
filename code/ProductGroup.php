@@ -1342,6 +1342,9 @@ class ProductGroup extends Page {
 	/*****************************************************
 	 * CACHING
 	 *****************************************************/
+	public function AllowCaching(){
+		return $this->allowCaching;
+	}
 
 	/**
 	 * saving an object to the
@@ -1349,7 +1352,7 @@ class ProductGroup extends Page {
 	 * @return Mixed
 	 */
 	protected function retrieveObjectStore($cacheKey) {
-		if($this->allowCaching) {
+		if($this->AllowCaching()) {
 			$cache = SS_Cache::factory($cacheKey);
 			$data = $cache->load($cacheKey);
 			if(!$data) {
@@ -1367,7 +1370,7 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	protected function saveObjectStore($data, $cacheKey) {
-		if($this->allowCaching) {
+		if($this->AllowCaching()) {
 			$data = @serialize($data);
 			$cache = SS_Cache::factory($cacheKey);
 			$cache->save($data, $cacheKey);
@@ -1464,6 +1467,9 @@ class ProductGroup_Controller extends Page_Controller {
 		//set the filter and the sort...
 		$this->addSecondaryTitle();
 		$this->products = $this->paginateList($this->ProductsShowable(null));
+		if($this->returnAjaxifiedProductList()) {
+			return $this->renderWith("AjaxProductList");
+		}
 		return array();
 	}
 
@@ -1487,6 +1493,9 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 		$this->addSecondaryTitle();
 		$this->products = $this->paginateList($this->ProductsShowable(array("ID" => $arrayOfIDs)));
+		if($this->returnAjaxifiedProductList()) {
+			return $this->renderWith("AjaxProductList");
+		}
 		return array();
 	}
 
@@ -1510,6 +1519,9 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 		$this->addSecondaryTitle();
 		$this->products = $this->paginateList($this->ProductsShowable(array("ID" => $resultArray), $searchArray));
+		if($this->returnAjaxifiedProductList()) {
+			return $this->renderWith("AjaxProductList");
+		}
 		return Array();
 	}
 
@@ -1525,6 +1537,9 @@ class ProductGroup_Controller extends Page_Controller {
 				$filterGetVariable => $defaultKey,
 			)
 		);
+		if($this->returnAjaxifiedProductList()) {
+			return $this->renderWith("AjaxProductList");
+		}
 		return array();
 	}
 
@@ -1554,6 +1569,90 @@ class ProductGroup_Controller extends Page_Controller {
 
 		return $this->products;
 	}
+
+
+	/**
+	 * you can overload this function of ProductGroup Extensions
+	 * @return Boolean
+	 */
+	protected function returnAjaxifiedProductList(){
+		return $this->ProductsAreCacheable() && Director::is_ajax() ? true : false;
+	}
+
+
+	/**
+	 * is the product list cache-able?
+	 * @return Boolean
+	 */
+	public function ProductsAreCacheable(){
+		return $this->AllowCaching() && $this->productListsHTMLCanBeCached() && !$this->IsSearchResults()	? true : false;
+	}
+
+	/**
+	 * Unique caching key for the product list...
+	 * @return String | Null
+	 */
+	public function ProductGroupListCachingKey(){
+		if($this->ProductsAreCacheable()) {
+			$this->CachingRelatedJavascript();
+			$pageID = $this->ID;
+			$displayKey = $this->getCurrentUserPreferences("DISPLAY");
+			$filterKey = $this->getCurrentUserPreferences("FILTER");
+			$filterForGroupKey = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
+			$sortKey = $this->getCurrentUserPreferences("SORT");
+			$pageStart = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
+			$isFullList = $this->IsShowFullList() ? "Y" : "N";
+			return implode(
+				'_',
+				array(
+					$pageID,
+					$displayKey,
+					$filterKey,
+					$filterForGroupKey,
+					$sortKey,
+					$pageStart,
+					$isFullList
+				)
+			);
+		}
+		return null;
+	}
+
+	/**
+	 * adds Javascript to the page to make it work when products are cached.
+	 */
+	public function CachingRelatedJavascript(){
+		if($this->ProductsAreCacheable()) {
+			Requirements::customScript("
+					EcomCart.set_ajaxifyProductList(true);
+					EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
+					EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
+				",
+				"cachingRelatedJavascript"
+			);
+			$currentOrder = ShoppingCart::current_order();
+			if($currentOrder->TotalItems(true)) {
+				$responseClass = EcommerceConfig::get("ShoppingCart", "response_class");
+				$obj = new $responseClass();
+				$obj->setIncludeHeaders(false);
+				$json = $obj->ReturnCartData();
+				Requirements::customScript("
+						EcomCart.set_initialData(".$json.");
+					",
+					"cachingRelatedJavascript_JSON"
+				);
+			}
+		}
+	}
+
+	/**
+	 * you can overload this function of ProductGroup Extensions
+	 * @return Boolean
+	 */
+	protected function productListsHTMLCanBeCached(){
+		return true;
+	}
+
 
 
 	/*****************************************************

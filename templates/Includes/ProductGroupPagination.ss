@@ -1,5 +1,5 @@
 <% if Products.MoreThanOnePage %>
-<div class="pageNumbers">
+<div class="pageNumbers $AjaxDefinitions.ProductListAjaxifiedLinkClassName">
 	<small>
 		<span class="pagesLabel"><% _t('ProductGroup.PAGES','Pages:') %></span>
 	<% if Products.NotFirstPage %>
