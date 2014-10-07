@@ -703,7 +703,7 @@ class ProductGroup extends Page {
 	 * @return Array
 	 */
 	public function currentInitialProductsAsCachedArray($filterKey) {
-		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID.$filterKey;
+		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID."_".$filterKey;
 		if($array = $this->retrieveObjectStore($cacheKey)) {
 			//do nothing
 		}
@@ -745,13 +745,14 @@ class ProductGroup extends Page {
 	 * @return DataList
 	 */
 	protected function getGroupFilter(){
-		$cacheKey = "ProductGroup_GroupFilter_".$this->ID;
-		if($products = $this->retrieveObjectStore($cacheKey)) {
-			$this->allProducts = $products;
+		$levelToShow = $this->MyLevelOfProductsToShow();
+		$cacheKey = "ProductGroup_GroupFilter_".$this->ID."_".$levelToShow;
+		if($groupFilter = $this->retrieveObjectStore($cacheKey)) {
+			$this->allProducts = $this->allProducts->where($groupFilter);
 		}
 		else {
 			$groupFilter = "";
-			$levelToShow = $this->MyLevelOfProductsToShow();
+			$productFilterArray = array();
 			//special cases
 			if($levelToShow < 0) {
 				//no produts but if LevelOfProductsToShow = -1 then show all
@@ -759,22 +760,24 @@ class ProductGroup extends Page {
 			}
 			elseif($levelToShow > 0) {
 				$groupIDs = array($this->ID => $this->ID);
-				$groupFilter .= $this->getProductsToBeIncludedFromOtherGroups();
+				$productFilterTemp = $this->getProductsToBeIncludedFromOtherGroups();
+				$productFilterArray[$productFilterTemp] = $productFilterTemp;
 				$childGroups = $this->ChildGroups($levelToShow);
 				if($childGroups && $childGroups->count()) {
 					foreach($childGroups as $childGroup) {
 						$groupIDs[$childGroup->ID] = $childGroup->ID;
-						$groupFilter .= $childGroup->getProductsToBeIncludedFromOtherGroups();
+						$productFilterTemp = $childGroup->getProductsToBeIncludedFromOtherGroups();
+						$productFilterArray[$productFilterTemp] = $productFilterTemp;
 					}
 				}
-				$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ".$groupFilter;
+				$groupFilter = " ( \"ParentID\" IN (".implode(",", $groupIDs).") ) ".implode($productFilterArray)." ";
 			}
 			else {
 				//fall-back
 				$groupFilter = "\"ParentID\" < 0";
 			}
 			$this->allProducts = $this->allProducts->where($groupFilter);
-			$this->saveObjectStore($this->allProducts, $cacheKey);
+			$this->saveObjectStore($groupFilter, $cacheKey);
 		}
 		return $this->allProducts;
 	}
@@ -1358,7 +1361,7 @@ class ProductGroup extends Page {
 			if(!$data) {
 				return null;
 			}
-			return @unserialize($data);
+			return unserialize($data);
 		}
 		return null;
 	}
@@ -1371,7 +1374,7 @@ class ProductGroup extends Page {
 	 */
 	protected function saveObjectStore($data, $cacheKey) {
 		if($this->AllowCaching()) {
-			$data = @serialize($data);
+			$data = serialize($data);
 			$cache = SS_Cache::factory($cacheKey);
 			$cache->save($data, $cacheKey);
 			return true;
@@ -1436,7 +1439,6 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @var Boolean
 	 */
 	protected $isSearchResults = false;
-
 
 	/**
 	 * standard SS method
@@ -1519,9 +1521,6 @@ class ProductGroup_Controller extends Page_Controller {
 		}
 		$this->addSecondaryTitle();
 		$this->products = $this->paginateList($this->ProductsShowable(array("ID" => $resultArray), $searchArray));
-		if($this->returnAjaxifiedProductList()) {
-			return $this->renderWith("AjaxProductList");
-		}
 		return Array();
 	}
 
@@ -1537,9 +1536,6 @@ class ProductGroup_Controller extends Page_Controller {
 				$filterGetVariable => $defaultKey,
 			)
 		);
-		if($this->returnAjaxifiedProductList()) {
-			return $this->renderWith("AjaxProductList");
-		}
 		return array();
 	}
 
@@ -1576,7 +1572,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return Boolean
 	 */
 	protected function returnAjaxifiedProductList(){
-		return $this->ProductsAreCacheable() && Director::is_ajax() ? true : false;
+		return Director::is_ajax() ? true : false;
 	}
 
 
@@ -1921,7 +1917,10 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
 	 */
 	public function FilterLinks(){
-		$cacheKey = "FilterLinksObjectStore_".$this->ID;
+		$cacheKey = "ProductGroup_FilterLinks_".$this->ID;
+		if($this->filterForGroupObject) {
+			$cacheKey .= "_".$this->filterForGroupObject->ID;
+		}
 		if($list = $this->retrieveObjectStore($cacheKey)) {
 			//do nothing
 		}
@@ -1961,7 +1960,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	public function ProductGroupFilterLinks() {
 		$arrayList = ArrayList::create();
-		$cacheKey = "ProductGroupFilterLinksObjectStore".$this->ID;
+		$cacheKey = "ProductGroup_ProductGroupFilterLinks_".$this->ID;
 		if($arrayOfItems = $this->retrieveObjectStore($cacheKey)) {
 			//do nothing
 		}
@@ -2187,6 +2186,15 @@ class ProductGroup_Controller extends Page_Controller {
 			//save data in model...
 			$this->setCurrentUserPreference($type, $newPreference);
 		}
+		/* save URLSegments in model
+		$this->setCurrentUserPreference(
+			"URLSegments",
+			array(
+				"Action" => $this->request->param("Action"),
+				"ID" => $this->request->param("ID")
+			)
+		);
+		*/
 
 		//clearing data..
 		if($this->request->getVar("reload")) {

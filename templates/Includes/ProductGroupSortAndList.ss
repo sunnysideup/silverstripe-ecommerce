@@ -1,11 +1,11 @@
 <% if ShowSortLinks %>
-<small class="sortAndListLinks $AjaxDefinitions.ProductListAjaxifiedLinkClassName">
+<small class="sortAndListLinks">
 
 	<% if SortLinks %>
-	<span class="sortOptions filterSortOptions"><% _t('ProductGroup.SORTBY','Sort by') %> <% loop SortLinks %> <a href="$Link" class="sortlink $LinkingMode">$Name</a> <% end_loop %></span>
+	<span class="sortOptions filterSortOptions $AjaxDefinitions.ProductListAjaxifiedLinkClassName"><% _t('ProductGroup.SORTBY','Sort by') %> <% loop SortLinks %> <a href="$Link" class="sortlink $LinkingMode">$Name</a> <% end_loop %></span>
 	<% end_if %>
 |
-	<span class="viewLinks">
+	<span class="viewLinks $AjaxDefinitions.ProductListAjaxifiedLinkClassName">
 	<% if IsShowFullList %>
 		<a href="$Link" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.VIEW_DETAILS','View Detailed List') %></a></li>
 	<% else %>
