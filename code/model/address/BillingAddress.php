@@ -133,29 +133,6 @@ class BillingAddress extends OrderAddress {
 	);
 
 	/**
-	 * Field to Google Geo Code Conversion - also see: https://developers.google.com/maps/documentation/geocoding/#Types
-	 * set to array() or NULL to avoid geo coding altogether
-	 * @return Array
-	 */
-	private static $fields_to_google_geocode_conversion = array(
-		"Address" => array('street_number'=> 'long_name', 'route'=> 'long_name'),
-		"Address2" => array(
-			'location' => 'long_name',
-			'sublocality_level_3' => 'long_name',
-			'sublocality_level_2' => 'long_name',
-			'sublocality_level_1' => 'long_name'
-		),
-		"City" => array(
-			'locality'=> 'long_name',
-			'administrative_area_level_3'=> 'long_name',
-			'administrative_area_level_2'=> 'long_name',
-			'administrative_area_level_1'=> 'long_name'
-		),
-		"Country" => array('country'=> 'short_name'),
-		"PostalCode" => array('postal_code'=> 'long_name')
-	);
-
-	/**
 	 * standard SS variable
 	 * @return String
 	 */

@@ -1,4 +1,4 @@
-<div id="$AjaxDefinitions.ProductListHolderID" class="mainSection content-container withSidebar">
+<div id="$AjaxDefinitions.ProductListHolderID"  class="mainSection content-container withSidebar">
 <% if ProductsAreCacheable %>
 	$CachingRelatedJavascript
 	<% cached ProductGroupListCachingKey %>
