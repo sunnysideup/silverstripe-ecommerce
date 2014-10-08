@@ -355,9 +355,9 @@ EcomCart = {
 					var url = jQuery(this).attr("href");
 					jQuery.ajax(
 						{
-							beforeSend: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).addClass(EcomCart.loadingClass);},
+							beforeSend: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).addClass(EcomCart.classToShowLoading);},
 							//cache: false,
-							complete: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.loadingClass);},
+							complete: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.classToShowLoading);},
 							dataType: "html",
 							error: function(jqXHR, textStatus, errorThrown){
 								alert("An error occurred (" + textStatus + " " + errorThrown + ")! I will try reloading the page.");
@@ -367,6 +367,8 @@ EcomCart = {
 								jQuery(EcomCart.ajaxifiedListHolderSelector).html(data);
 								EcomProducts.init();
 								EcomCart.reinit();
+								EcomCart.setChanges(EcomCart.initialData, "");
+								jQuery('html, body').animate({scrollTop: jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top}, 500);
 							},
 							url: url,
 						}
@@ -581,6 +583,7 @@ EcomCart = {
 	 * @param String status: status of updates
 	 */
 	setChanges: function (changes, status) {
+		EcomCart.set_initialData(changes);
 		EcomCart.openAjaxCalls--;
 		//change to switch
 		//add loadingElement to data return
@@ -703,7 +706,8 @@ EcomCart = {
 									//console.debug("testing: '"+selector[i]+"' AGAINST '"+id+"'");
 									if(id == selector[i]) {
 										inCart = true;
-										selector.splice(i, 1);
+										//DO NOT REMOVE IT SO THAT WE CAN USE IT IN THE FUTURE
+										//selector.splice(i, 1);
 									}
 								}
 								if(inCart) {
@@ -826,5 +830,210 @@ EcomCart = {
 
 
 
+(function (window) {
+    var last = +new Date();
+    var delay = 100; // default delay
+
+    // Manage event queue
+    var stack = [];
+
+    function callback() {
+        var now = +new Date();
+        if (now - last > delay) {
+            for (var i = 0; i < stack.length; i++) {
+                stack[i]();
+            }
+            last = now;
+        }
+    }
+
+    // Public interface
+    var onDomChange = function (fn, newdelay) {
+        if (newdelay) delay = newdelay;
+        stack.push(fn);
+    };
+
+    // Naive approach for compatibility
+    function naive() {
+
+        var last = document.getElementsByTagName('*');
+        var lastlen = last.length;
+        var timer = setTimeout(function check() {
+
+            // get current state of the document
+            var current = document.getElementsByTagName('*');
+            var len = current.length;
+
+            // if the length is different
+            // it's fairly obvious
+            if (len != lastlen) {
+                // just make sure the loop finishes early
+                last = [];
+            }
+
+            // go check every element in order
+            for (var i = 0; i < len; i++) {
+                if (current[i] !== last[i]) {
+                    callback();
+                    last = current;
+                    lastlen = len;
+                    break;
+                }
+            }
+
+            // over, and over, and over again
+            setTimeout(check, delay);
+
+        }, delay);
+    }
+
+    //
+    //  Check for mutation events support
+    //
+
+    var support = {};
+
+    var el = document.documentElement;
+    var remain = 3;
+
+    // callback for the tests
+    function decide() {
+        if (support.DOMNodeInserted) {
+            window.addEventListener("DOMContentLoaded", function () {
+                if (support.DOMSubtreeModified) { // for FF 3+, Chrome
+                    el.addEventListener('DOMSubtreeModified', callback, false);
+                } else { // for FF 2, Safari, Opera 9.6+
+                    el.addEventListener('DOMNodeInserted', callback, false);
+                    el.addEventListener('DOMNodeRemoved', callback, false);
+                }
+            }, false);
+        } else if (document.onpropertychange) { // for IE 5.5+
+            document.onpropertychange = callback;
+        } else { // fallback
+            naive();
+        }
+    }
+
+    // checks a particular event
+    function test(event) {
+        el.addEventListener(event, function fn() {
+            support[event] = true;
+            el.removeEventListener(event, fn, false);
+            if (--remain === 0) decide();
+        }, false);
+    }
+
+    // attach test events
+    if (window.addEventListener) {
+        test('DOMSubtreeModified');
+        test('DOMNodeInserted');
+        test('DOMNodeRemoved');
+    } else {
+        decide();
+    }
+
+    // do the dummy test
+    var dummy = document.createElement("div");
+    el.appendChild(dummy);
+    el.removeChild(dummy);
+
+    // expose
+    window.onDomChange = onDomChange;
+})(window);
 
 
+
+
+// The node to be monitored
+var target = $( "#content" )[0];
+
+// Create an observer instance
+var observer = new MutationObserver(function( mutations ) {
+  mutations.forEach(function( mutation ) {
+    var newNodes = mutation.addedNodes; // DOM NodeList
+    if( newNodes !== null ) { // If there are new nodes added
+    	var $nodes = $( newNodes ); // jQuery set
+    	$nodes.each(function() {
+    		var $node = $( this );
+    		if( $node.hasClass( "message" ) ) {
+    			// do something
+    		}
+    	});
+    }
+  });
+});
+
+// Configuration of the observer:
+var config = {
+	attributes: true,
+	childList: true,
+	characterData: true
+};
+
+// Pass in the target node, as well as the observer options
+observer.observe(target, config);
+
+// Later, you can stop observing
+observer.disconnect();
+
+/*jshint browser: true */
+/*globals jQuery */
+;(function (factory) {
+    if (typeof exports == 'object') {
+        factory(require('jquery'));
+    } else if (typeof define == 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else {
+        factory(jQuery);
+    }
+}(function ($) {
+    'use strict';
+    /**
+     * Triggers the DOM changed event on the given element
+     *
+     * @private
+     * @param   {Object}    element     the jQuery element that has been modified
+     * @param   {String}    type        jQuery method used to trigger manipulation
+     */
+    function jQueryDOMChanged (element, type) {
+        return $(element).trigger('DOMChanged', type);
+    }
+    /**
+     * Wraps a given jQuery method and injects another function to be called
+     *
+     * @private
+     * @param   {String}    method
+     * @param   {Function}  caller
+     */
+    function jQueryHook (method, caller) {
+        var definition = $.fn[method];
+        if (definition) {
+            $.fn[method] = function () {
+                var args   = Array.prototype.slice.apply(arguments);
+                var result = definition.apply(this, args);
+                caller.apply(this, args);
+                return result;
+            };
+        }
+    }
+    jQueryHook('prepend', function () {
+        return jQueryDOMChanged(this, 'prepend');
+    });
+    jQueryHook('append', function () {
+        return jQueryDOMChanged(this, 'append');
+    });
+    jQueryHook('before', function () {
+        return jQueryDOMChanged($(this).parent(), 'before');
+    });
+    jQueryHook('after', function () {
+        return jQueryDOMChanged($(this).parent(), 'after');
+    });
+    jQueryHook('html', function (value) {
+        // Internally jQuery will set strings using innerHTML
+        // otherwise will use append to insert new elements
+        // Only trigger on string types to avoid doubled events
+        if (typeof value === 'string') {
+            return jQueryDOMChanged(this, 'html');
+        }
+    });
+}));

@@ -45,8 +45,9 @@ EcomProducts = {
 		jQuery(EcomProducts.imagePopupSelector).colorbox(
 			EcomProducts.colorboxDialogOptions_viewImages
 		);
-		jQuery("a.openCloseMySectionLink").on(
+		jQuery(document).on(
 			"click",
+			"a.openCloseMySectionLink",
 			function(event) {
 				event.preventDefault();
 				var id = jQuery(this).attr("href");
