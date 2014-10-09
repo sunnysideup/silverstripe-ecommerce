@@ -475,6 +475,30 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	}
 
 	/**
+	 * Is the Order paid?
+	 * This can be useful for choosing what header to show
+	 *
+	 * @return Boolean
+	 */
+	public function IsPaid(){
+		if($o = $this->Order()) {
+			return $o->IsPaid();
+		}
+	}
+
+	/**
+	 * Are there any order Payments Pending
+	 * This can be useful for choosing what header to show
+	 *
+	 * @return Boolean
+	 */
+	public function PaymentIsPending(){
+		if($o = $this->Order()) {
+			return $o->PaymentIsPending();
+		}
+	}
+
+	/**
 	 * Returns the form to cancel the current order,
 	 * checking to see if they can cancel their order
 	 * first of all.

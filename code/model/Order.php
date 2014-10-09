@@ -972,6 +972,27 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * Has the order been paid?
+	 * TODO: why do we check if there is a total at all?
+	 * @return boolean
+	 */
+	function PaymentIsPending() {
+		if($this->IsSubmitted()) {
+			if($this->IsPaid()) {
+				//do nothing;
+			}
+			elseif(($payments = $this->Payments()) && $payments->count()) {
+				foreach($payments as $payment) {
+					if("Pending" == $payment->Status) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Has the order been cancelled?
 	 * @return boolean
 	 */
