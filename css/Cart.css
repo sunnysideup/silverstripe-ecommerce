@@ -11,6 +11,8 @@
 
 .required label:before {content: "* ";}
 
+#PostalCode label.right:before {content: "";}
+
 /**
  * table general
  */
