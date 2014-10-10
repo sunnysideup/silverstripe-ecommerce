@@ -125,45 +125,128 @@
 </p>
 <h4>Available variables for your templates ...</h4>
 <h5>without context (can be used at <i>root level</i> in any template)</h5>
-<table style="width: 95%;" border="1" cellspacing="5">
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SideBarCartID</th><td>$AJAXDefinitions.SideBarCartID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.SmallCartID</th><td>$AJAXDefinitions.SmallCartID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TinyCartClassName</th><td>$AJAXDefinitions.TinyCartClassName</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TotalItemsClassName</th><td>$AJAXDefinitions.TotalItemsClassName</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TotalItemsTimesQuantityClassName</th><td>$AJAXDefinitions.TotalItemsTimesQuantityClassName</td></tr>
-</table>
+	<table style="width: 95%;" border="1" cellspacing="5">
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.SideBarCartID</th>
+			<td>$AJAXDefinitions.SideBarCartID<br /><i>$AJAXDefinitions.Define(SideBarCartID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.SmallCartID</th>
+			<td>$AJAXDefinitions.SmallCartID<br /><i>$AJAXDefinitions.Define(SmallCartID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TinyCartClassName</th>
+			<td>$AJAXDefinitions.TinyCartClassName<br /><i>$AJAXDefinitions.Define(TinyCartClassName)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TotalItemsClassName</th>
+			<td>$AJAXDefinitions.TotalItemsClassName<br /><i>$AJAXDefinitions.Define(TotalItemsClassName)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TotalItemsTimesQuantityClassName</th>
+			<td>$AJAXDefinitions.TotalItemsTimesQuantityClassName<br /><i>$AJAXDefinitions.Define(TotalItemsTimesQuantityClassName)</i></td>
+		</tr>
+	</table>
 
-<h5>without context, country and region related</h5>
-<table style="width: 95%;" border="1" cellspacing="5">
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.ExpectedCountryClassName</th><td>$AJAXDefinitions.ExpectedCountryClassName</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.CountryFieldID</th><td>$AJAXDefinitions.CountryFieldID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.RegionFieldID</th><td>$AJAXDefinitions.RegionFieldID</td></tr>
-</table>
+	<h5>without context, ajaxified product list</h5>
+	<table style="width: 95%;" border="1" cellspacing="5">
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.ProductListHolderID</th>
+			<td>$AJAXDefinitions.ProductListHolderID<br /><i>$AJAXDefinitions.Define(ProductListHolderID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.ProductListAjaxifiedLinkClassName</th>
+			<td>$AJAXDefinitions.ProductListAjaxifiedLinkClassName<br /><i>$AJAXDefinitions.Define(ProductListAjaxifiedLinkClassName)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.ProductListItemClassName</th>
+			<td>$AJAXDefinitions.ProductListItemClassName<br /><i>$AJAXDefinitions.Define(ProductListItemClassName)</i></td>
+		</tr>
+	</table>
 
-<h5>within context of order, order item or order modifier</h5>
-<table style="width: 95%;" border="1" cellspacing="5">
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableID</th><td>$AJAXDefinitions.TableID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableTotalID</th><td>$AJAXDefinitions.TableTotalID</td></tr>
-</table>
+	<h5>without context, products in (or not in cart) cart</h5>
+	<table style="width: 95%;" border="1" cellspacing="5">
+		<tr>
 
-<h5>within context of order</h5>
-<table style="width: 95%;" border="1" cellspacing="5">
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableMessageID</th><td>$AJAXDefinitions.TableMessageID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableSubTotalID</th><td>$AJAXDefinitions.TableSubTotalID</td></tr>
-</table>
-<h5>within context of order item or order modifier</h5>
+			<th scope="row">&#36;AJAXDefinitions.ProductListItemInCartClassName</th>
+			<td>$AJAXDefinitions.ProductListItemInCartClassName<br /><i>$AJAXDefinitions.Define(ProductListItemInCartClassName)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.ProductListItemNotInCartClassName</th>
+			<td>$AJAXDefinitions.ProductListItemNotInCartClassName<br /><i>$AJAXDefinitions.Define(ProductListItemNotInCartClassName)</i></td>
+		</tr>
+	</table>
 
-<table style="width: 95%;" border="1" cellspacing="5">
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableTitleID</th><td>$AJAXDefinitions.TableTitleID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.CartTitleID</th><td>$AJAXDefinitions.CartTitleID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.TableSubTitleID</th><td>$AJAXDefinitions.TableSubTitleID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.CartSubTitleID</th><td>$AJAXDefinitions.CartSubTitleID</td></tr>
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.QuantityFieldName</th><td>$AJAXDefinitions.QuantityFieldName</td></tr>
-</table>
-<h5>within context of buyable</h5>
-<table style="width: 95%;">
-	<tr><th scope="row" style="width: 60%;">&#36;AJAXDefinitions.UniqueIdentifier</th><td>$AJAXDefinitions.UniqueIdentifier</td></tr>
-</table>
+	<h5>without context, country and region related</h5>
+	<table style="width: 95%;" border="1" cellspacing="5">
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.ExpectedCountryClassName</th>
+			<td>$AJAXDefinitions.ExpectedCountryClassName<br /><i>$AJAXDefinitions.Define(ProductListItemInCartClassName)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.CountryFieldID</th>
+			<td>$AJAXDefinitions.CountryFieldID<br /><i>$AJAXDefinitions.Define(ProductListItemInCartClassName)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.RegionFieldID</th>
+			<td>$AJAXDefinitions.RegionFieldID<br /><i>$AJAXDefinitions.Define(RegionFieldID)</i></td>
+		</tr>
+	</table>
+
+	<h5>within context of order, order item or order modifier</h5>
+	<table style="width: 95%;" border="1" cellspacing="5">
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TableID</th>
+			<td>$AJAXDefinitions.TableID<br /><i>$AJAXDefinitions.Define(TableID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TableTotalID</th>
+			<td>$AJAXDefinitions.TableTotalID<br /><i>$AJAXDefinitions.Define(TableTotalID)</i></td>
+		</tr>
+	</table>
+
+	<h5>within context of order</h5>
+	<table style="width: 95%;" border="1" cellspacing="5">
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TableMessageID</th>
+			<td>$AJAXDefinitions.TableMessageID<br /><i>$AJAXDefinitions.Define(TableMessageID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TableSubTotalID</th>
+			<td>$AJAXDefinitions.TableSubTotalID<br /><i>$AJAXDefinitions.Define(TableSubTotalID)</i></td>
+		</tr>
+	</table>
+	<h5>within context of order item or order modifier</h5>
+
+	<table style="width: 95%;" border="1" cellspacing="5">
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TableTitleID</th>
+			<td>$AJAXDefinitions.TableTitleID<br /><i>$AJAXDefinitions.Define(TableTitleID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.CartTitleID</th>
+			<td>$AJAXDefinitions.CartTitleID<br /><i>$AJAXDefinitions.Define(CartTitleID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.TableSubTitleID</th>
+			<td>$AJAXDefinitions.TableSubTitleID<br /><i>$AJAXDefinitions.Define(TableSubTitleID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.CartSubTitleID</th>
+			<td>$AJAXDefinitions.CartSubTitleID<br /><i>$AJAXDefinitions.Define(CartSubTitleID)</i></td>
+		</tr>
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.QuantityFieldName</th>
+			<td>$AJAXDefinitions.QuantityFieldName<br /><i>$AJAXDefinitions.Define(QuantityFieldName)</i></td>
+		</tr>
+	</table>
+	<h5>within context of buyable</h5>
+	<table style="width: 95%;">
+		<tr>
+			<th scope="row">&#36;AJAXDefinitions.UniqueIdentifier</th>
+			<td>$AJAXDefinitions.UniqueIdentifier<br /><i>$AJAXDefinitions.Define(UniqueIdentifier)</i></td>
+		</tr>
+	</table>
 
 <h4>Ajax Shopping Cart</h4>
 <p>

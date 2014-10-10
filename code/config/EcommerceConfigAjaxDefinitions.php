@@ -235,8 +235,10 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	 */
 	function UniqueIdentifier() {return $this->TableID()."_Button";}
 
-
-
+	public function Define($name) {
+		$object = Injector::inst()->get('EcommerceConfigDefinitions');
+		return $object->getAjaxMethod($name);
+	}
 
 
 }

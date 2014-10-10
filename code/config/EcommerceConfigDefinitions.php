@@ -64,11 +64,21 @@ class EcommerceConfigDefinitions extends Object {
 	);
 
 	/**
-	 * returns the array of ajax definitions.
+	 * returns defition of Ajax Method
+	 * @param String $name
+	 * @return String
+	 *
+	 */
+	public function getAjaxMethod($name){
+		return $this->ajaxMethods[$name];
+	}
+
+	/**
+	 * returns the definition of an ajax definition.
 	 * @return Array
 	 *
 	 */
-	function getAjaxMethods(){
+	public function getAjaxMethods($name = ""){
 		return $this->ajaxMethods;
 	}
 
