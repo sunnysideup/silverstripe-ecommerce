@@ -64,6 +64,8 @@ class EcommerceTaskMigration extends BuildTask {
 		"addCurrencyCodeIDToOrders_290",
 		"MovePaymentToEcommercePayment_300",
 		"ecommercetaskupgradepickupordeliverymodifier_310",
+		"ecommercetaskupgradepickupordeliverymodifier_320",
+		"removemobilephones_330",
 		"theEnd_9999"
 	);
 
@@ -1684,6 +1686,38 @@ class EcommerceTaskMigration extends BuildTask {
 			$this->DBAlterationMessageNow("Deleting order item with ID: ".$orderItem->ID, "deleted");
 			$orderItem->delete();
 		}
+		return 0;
+	}
+
+	function removemobilephones_330 (){
+		$explanation = "
+			<h1>323. Removing mobile phones</h1>
+			<p>Move all Billing and Shipping Address Mobile Phone Entries to Phone.</p>
+		";
+		if($this->retrieveInfoOnly) {
+			return $explanation;
+		}
+		else {
+			echo $explanation;
+		}
+		$this->DBAlterationMessageNow("Moving Mobile Phone to Phone in Billing Address", "created");
+		DB::query("UPDATE BillingAddress SET Phone = MobilePhone WHERE Phone = '' OR Phone IS NULL;");
+
+		$this->DBAlterationMessageNow("Moving Mobile Phone to Phone in Shipping Address", "created");
+		DB::query("UPDATE ShippingAddress SET ShippingPhone = ShippingMobilePhone WHERE ShippingPhone = '' OR ShippingPhone IS NULL;");
+
+		$this->DBAlterationMessageNow("Merging Mobile Phone and Phone in Billing Address", "created");
+		DB::query("UPDATE BillingAddress SET Phone = CONCAT(Phone, ' ', MobilePhone) WHERE Phone <> '' AND Phone IS NOT NULL AND MobilePhone <> '' AND MobilePhone IS NOT NULL;");
+
+		$this->DBAlterationMessageNow("Merging Mobile Phone and Phone in Shipping Address", "created");
+		DB::query("UPDATE ShippingAddress SET ShippingPhone = CONCAT(ShippingPhone, ' ', ShippingMobilePhone) WHERE ShippingPhone <> '' AND ShippingPhone IS NOT NULL AND ShippingMobilePhone <> '' AND ShippingMobilePhone IS NOT NULL;");
+
+		//remove fields		
+		$this->DBAlterationMessageNow("Making obsolete: BillingAddress.MobilePhone", "deleted");
+		$this->makeFieldObsolete("BillingAddress", "MobilePhone");
+		
+		$this->DBAlterationMessageNow("Making obsolete: ShippingAddress.ShippingMobilePhone", "deleted");
+		$this->makeFieldObsolete("ShippingAddress", "ShippingMobilePhone");
 		return 0;
 	}
 

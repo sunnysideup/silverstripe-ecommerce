@@ -1,5 +1,20 @@
 <h1 class="pagetitle">$Title</h1>
 
+<div class="paymentMessage">
+<% if PaymentIsPending %>
+	<h2 class="paymentHeader">$PaymentPendingHeader</h2>
+	$PaymentPendingMessage
+<% else %>
+	<% if IsPaid %>
+		<h2 class="paymentHeader">$PaymentSuccessfulHeader</h2>
+		$PaymentSuccessfulMessage
+	<% else %>
+		<h2 class="paymentHeader">$PaymentNotSuccessfulHeader</h2>
+		$PaymentNotSuccessfulMessage
+	<% end_if %>
+<% end_if %>
+</div>
+
 <% if CheckoutSteps %><% include CheckoutStepsList %><% end_if %>
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>

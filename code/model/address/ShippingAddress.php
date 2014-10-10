@@ -28,8 +28,7 @@ class ShippingAddress extends OrderAddress {
 			'ShippingPostalCode',
 			'ShippingRegionCode',
 			'ShippingCountry',
-			'ShippingPhone',
-			'ShippingMobilePhone'
+			'ShippingPhone'
 		)
 	);
 
@@ -48,7 +47,6 @@ class ShippingAddress extends OrderAddress {
 		'ShippingRegionCode' => 'Varchar(20)',
 		'ShippingCountry' => 'Varchar(4)',
 		'ShippingPhone' => 'Varchar(100)',
-		'ShippingMobilePhone' => 'Varchar(100)',
 		'Obsolete' => 'Boolean',
 		'OrderID' => 'Int' ////NOTE: we have this here for faster look-ups and to make addresses behave similar to has_many dataobjects
 	);
@@ -202,6 +200,8 @@ class ShippingAddress extends OrderAddress {
 					new TextField('ShippingSurname', _t('OrderAddress.SURNAME','Surname'))
 				);
 			}
+			$shippingFields->push(new TextField('ShippingPhone', _t('OrderAddress.PHONE','Phone')));
+			//$shippingFields->push(new TextField('ShippingMobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 			if(!$hasPreviousAddresses) {
 				$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
 				if(is_array($mappingArray) && count($mappingArray)) {
@@ -221,8 +221,6 @@ class ShippingAddress extends OrderAddress {
 			$shippingFields->push($this->getPostalCodeField("ShippingPostalCode"));
 			$shippingFields->push($this->getRegionField("ShippingRegionID"));
 			$shippingFields->push($this->getCountryField("ShippingCountry"));
-			$shippingFields->push(new TextField('ShippingPhone', _t('OrderAddress.PHONE','Phone')));
-			$shippingFields->push(new TextField('ShippingMobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 			$this->makeSelectedFieldsReadOnly($shippingFields);
 			$shippingFieldsHeader->addExtraClass("shippingFieldsHeader");
 			$shippingFields->addExtraClass("orderAddressHolder");

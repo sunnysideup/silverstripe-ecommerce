@@ -55,6 +55,22 @@
   * - this is for example for search results
   * - set in ProductShowable($extraWhere)
   *
+  *
+  * Caching
+  * ==================
+  *
+  * There are two type of caching available:
+  *
+  * (1) caching of Product SQL queries
+  *     - turned on and off by variable: ProductGroup->allowCaching
+  *     - this is not a static so that you can create different settings for ProductGroup extensions.
+  * (2) caching of product lists
+  *     - see Product_Controller::ProductGroupListAreCacheable
+  *
+  * You can also ajaxify the product list, although this has nothing to do with
+  * caching, it is related to it.
+  *
+  *
   * @authors: Nicolaas [at] Sunny Side Up .co.nz
   * @package: ecommerce
   * @sub-package: Pages
@@ -265,6 +281,8 @@ class ProductGroup extends Page {
 
 	/**
 	 * Can product list (and related) be cached at all?
+	 * Set this to FALSE if the product details can be changed
+	 * for an individual user.
 	 * @var Boolean
 	 */
 	 protected $allowCaching = true;
@@ -1580,8 +1598,8 @@ class ProductGroup_Controller extends Page_Controller {
 	 * is the product list cache-able?
 	 * @return Boolean
 	 */
-	public function ProductsAreCacheable(){
-		return $this->AllowCaching() && $this->productListsHTMLCanBeCached() && !$this->IsSearchResults()	? true : false;
+	public function ProductGroupListAreCacheable(){
+		return $this->productListsHTMLCanBeCached() && !$this->IsSearchResults()	? true : false;
 	}
 
 	/**
@@ -1589,8 +1607,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return String | Null
 	 */
 	public function ProductGroupListCachingKey(){
-		if($this->ProductsAreCacheable()) {
-			$this->CachingRelatedJavascript();
+		if($this->ProductGroupListAreCacheable()) {
 			$pageID = $this->ID;
 			$displayKey = $this->getCurrentUserPreferences("DISPLAY");
 			$filterKey = $this->getCurrentUserPreferences("FILTER");
@@ -1618,11 +1635,10 @@ class ProductGroup_Controller extends Page_Controller {
 	 * adds Javascript to the page to make it work when products are cached.
 	 */
 	public function CachingRelatedJavascript(){
-		if($this->ProductsAreCacheable()) {
+		if($this->ProductGroupListAreCacheable()) {
 			Requirements::customScript("
-					EcomCart.set_ajaxifyProductList(true);
-					EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
 					EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
+					EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
 				",
 				"cachingRelatedJavascript"
 			);

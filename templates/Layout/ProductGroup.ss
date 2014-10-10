@@ -1,5 +1,5 @@
 <div id="$AjaxDefinitions.ProductListHolderID"  class="mainSection content-container withSidebar">
-<% if ProductsAreCacheable %>
+<% if ProductGroupListAreCacheable %>
 	$CachingRelatedJavascript
 	<% cached ProductGroupListCachingKey %>
 		<% include LayoutProductGroupInner %>

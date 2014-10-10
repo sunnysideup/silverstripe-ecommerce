@@ -1,5 +1,10 @@
 /**
  * manages autocomplete for the Buyable Select Field.
+ * Used in the CMS
+ *
+ * Uses the Entwine jQuery Extension
+ *
+ * TO DO: can only have one EcomBuyableSelectField per page.
  *
  *
  */
@@ -59,7 +64,7 @@ EcomBuyableSelectField = {
 	 * the term that is being searched for
 	 * @var String
 	 */
-	saerching: "searching",
+	searching: "searching",
 		set_searching: function(s) {this.searching = s;},
 
 

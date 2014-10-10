@@ -8,13 +8,12 @@
 	$(document).ready(
 		function() {
 			EcomProducts.init();
+			EcomProducts.reinit();
 		}
 	);
 })(jQuery);
 
 EcomProducts = {
-
-	selectVariationSelector: 'a.selectVariation',
 
 	//see: http://www.jacklmoore.com/colorbox/
 	colorboxDialogOptions_addVariations: {
@@ -33,21 +32,39 @@ EcomProducts = {
 		}
 	},
 
-	colorboxDialogOptions_viewImages: {
-	},
+	//see: http://www.jacklmoore.com/colorbox/
+	colorboxDialogOptions_viewImages: {},
+
+	selectVariationSelector: 'a.selectVariation',
 
 	imagePopupSelector: '.colorboxImagePopup',
 
+	openCloseSectionLinkSelector: "a.openCloseMySectionLink",
+
 	init: function(){
-		jQuery(EcomProducts.selectVariationSelector).colorbox(
-			EcomProducts.colorboxDialogOptions_addVariations
-		);
-		jQuery(EcomProducts.imagePopupSelector).colorbox(
-			EcomProducts.colorboxDialogOptions_viewImages
+		jQuery(document).on(
+			"click",
+			EcomProducts.selectVariationSelector,
+			function (e) {
+				EcomProducts.colorboxDialogOptions_addVariations.href = jQuery(this).attr('href');
+				EcomProducts.colorboxDialogOptions_addVariations.open = true;
+				jQuery.colorbox(EcomProducts.colorboxDialogOptions_addVariations);
+				return false;
+			}
 		);
 		jQuery(document).on(
 			"click",
-			"a.openCloseMySectionLink",
+			EcomProducts.imagePopupSelector,
+			function (e) {
+				EcomProducts.imagePopupSelector.href = jQuery(this).attr('href');
+				EcomProducts.imagePopupSelector.open = true;
+				jQuery.colorbox(EcomProducts.imagePopupSelector);
+				return false;
+			}
+		);
+		jQuery(document).on(
+			"click",
+			EcomProducts.openCloseSectionLinkSelector,
 			function(event) {
 				event.preventDefault();
 				var id = jQuery(this).attr("href");
@@ -58,17 +75,16 @@ EcomProducts = {
 				jQuery(id).slideToggle().toggleClass("close").toggleClass("open");
 			}
 		);
+	},
+
+
+	reinit: function(){
 		var thereIsOnlyOne = false;
-		if(jQuery(".openCloseMySectionLink").length == 1) {
+		if(jQuery(EcomProducts.openCloseSectionLinkSelector).length == 1) {
 			thereIsOnlyOne = true;
 		}
-		jQuery("a.openCloseMySectionLink").each(
+		jQuery(EcomProducts.openCloseSectionLinkSelector).each(
 			function(i, el) {
-				var id = jQuery(el).attr("href");
-				var idLength = id.length;
-				var hashPosition = id.indexOf("#");
-				id = id.substr(id.indexOf("#"), idLength - hashPosition);
-				jQuery(id).addClass("open");
 				//must be last
 				if(thereIsOnlyOne) {
 					jQuery(el).addClass("open");

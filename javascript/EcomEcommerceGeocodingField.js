@@ -1,3 +1,11 @@
+/**
+ * This JS comes with the EcommerceGeocodingField Field.
+ *
+ * It allows the user to find their address using the Google
+ * GeoCoding API.
+ *
+ */
+
 
 var EcomEcommerceGeocodingField = function(fieldName) {
 

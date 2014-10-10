@@ -232,17 +232,23 @@ EcomCart = {
 		set_ajaxButtonsOn: function(b) {this.ajaxButtonsOn = b;},
 
 	/**
-	 * go through product list to
-	 * work out what products are already in cart and which products are not in cart
-	 * yet.
-	 * This is used when the product list is cached.
-	 *
-	 *
+	 * Can the Product List be updated using AJAX?
 	 *
 	 * @var Boolean
 	 */
-	ajaxifyProductList: false,
+	ajaxifyProductList: true,
 		set_ajaxifyProductList: function(b) {this.ajaxifyProductList = b;},
+
+	/**
+	 * Is the product list from a cached source?
+	 *
+	 * This is important to know, because in this case
+	 * we have to disable the SecurityID by adding
+	 * cached=1 to all URLs
+	 *
+	 * @var Boolean
+	 */
+	productListIsFromCachedSource: true,
 
 	/**
 	 * NOTE: set to empty string to bypass confirmation step
@@ -346,38 +352,9 @@ EcomCart = {
 		EcomCart.countryAndRegionUpdates();
 		//setup an area where the user can change their country / region
 		EcomCart.changeCountryFieldSwap();
-		if(EcomCart.ajaxifyProductList) {
-			jQuery(EcomCart.ajaxifiedListHolderSelector).on(
-				"click",
-				EcomCart.ajaxifiedListAdjusterSelectors + " a",
-				function(event){
-					event.preventDefault();
-					var url = jQuery(this).attr("href");
-					jQuery.ajax(
-						{
-							beforeSend: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).addClass(EcomCart.classToShowLoading);},
-							//cache: false,
-							complete: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.classToShowLoading);},
-							dataType: "html",
-							error: function(jqXHR, textStatus, errorThrown){
-								alert("An error occurred (" + textStatus + " " + errorThrown + ")! I will try reloading the page.");
-								location.reload();
-							},
-							success: function(data, textStatus, jqXHR){
-								jQuery(EcomCart.ajaxifiedListHolderSelector).html(data);
-								EcomProducts.init();
-								EcomCart.reinit();
-								EcomCart.setChanges(EcomCart.initialData, "");
-								jQuery('html, body').animate({scrollTop: jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top}, 500);
-							},
-							url: url,
-						}
-					)
-				}
-			)
-			EcomCart.openAjaxCalls++;
-			EcomCart.setChanges(EcomCart.initialData, "");
-		}
+		//ajaxify product list
+		EcomCart.addAjaxificationOfProductList();
+		//cart buttons
 		if(EcomCart.ajaxButtonsOn) {
 			//make sure that "add to cart" links are updated with AJAX
 			EcomCart.addAddLinks(EcomCart.ajaxLinksAreaSelector);
@@ -386,7 +363,9 @@ EcomCart = {
 			//make sure that "delete from cart" links are updated with AJAX - looking at the actual cart itself.
 			EcomCart.addCartRemove(EcomCart.ajaxLinksAreaSelector);
 		}
-		EcomCart.reinit();
+		EcomCart.updateForZeroVSOneOrMoreRows();
+		EcomCart.initColorboxDialog();
+		EcomCart.setChanges(EcomCart.initialData, "");
 	},
 
 	/**
@@ -395,9 +374,8 @@ EcomCart = {
 	reinit: function(){
 		//hide or show "zero items" information
 		EcomCart.updateForZeroVSOneOrMoreRows();
-		EcomCart.initColorboxDialog();
 		if (typeof EcomQuantityField  != 'undefined') {
-			EcomQuantityField.init();
+			EcomQuantityField.reinit();
 		}
 		this.processing = false;
 	},
@@ -449,6 +427,47 @@ EcomCart = {
 		);
 	},
 
+	/**
+	 * ajaxify the product list
+	 *
+	 */
+	addAjaxificationOfProductList: function() {
+		if(EcomCart.ajaxifyProductList) {
+			jQuery(EcomCart.ajaxifiedListHolderSelector).on(
+				"click",
+				EcomCart.ajaxifiedListAdjusterSelectors + " a",
+				function(event){
+					event.preventDefault();
+					var url = jQuery(this).attr("href");
+					jQuery.ajax(
+						{
+							beforeSend: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).addClass(EcomCart.classToShowLoading);},
+							//cache: false,
+							complete: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.classToShowLoading);},
+							dataType: "html",
+							error: function(jqXHR, textStatus, errorThrown){
+								alert("An error occurred (" + textStatus + " " + errorThrown + ")! I will try reloading the page.");
+								location.reload();
+							},
+							success: function(data, textStatus, jqXHR){
+								jQuery(EcomCart.ajaxifiedListHolderSelector).html(data);
+								EcomCart.openAjaxCalls++;
+								//set changes also does the reinit
+								EcomCart.setChanges(EcomCart.initialData, "");
+								if (typeof EcomProducts  != 'undefined') {
+									EcomProducts.reinit();
+								}
+
+								jQuery('html, body').animate({scrollTop: jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top}, 500);
+							},
+							url: url,
+						}
+					)
+				}
+			)
+		}
+	},
+
 
 
 	//#################################
@@ -465,6 +484,9 @@ EcomCart = {
 			EcomCart.addLinkSelector,
 			function(){
 				var url = jQuery(this).attr("href");
+				if(EcomCart.productListIsFromCachedSource) {
+					url +="&cached=1";
+				}
 				EcomCart.getChanges(url, null, this);
 				return false;
 			}
@@ -472,14 +494,38 @@ EcomCart = {
 	},
 
 	/**
-	 * adds the "remove from cart" ajax functionality to links.
+	 * add ajax functionality to "remove from cart" links
+	 * outside the cart
+	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+	 */
+	addRemoveLinks: function (withinSelector) {
+		jQuery(withinSelector).on(
+			"click",
+			EcomCart.removeLinkSelector,
+			function(){
+				if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
+					var url = jQuery(this).attr("href");
+					if(EcomCart.productListIsFromCachedSource) {
+						url +="&cached=1";
+					}
+					EcomCart.getChanges(url, null, this);
+				}
+				return false;
+			}
+		);
+	},
+
+
+	/**
+	 * adds the "remove from cart" ajax functionality to links
+	 * IN THE CART!
 	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
 	 */
 	addCartRemove: function (withinSelector) {
-		jQuery(withinSelector + " " +EcomCart.removeCartSelector).on(
+		jQuery(withinSelector).on(
 			"click",
+			EcomCart.removeCartSelector,
 			function(event){
-				event.preventDefault();
 				if(!EcomCart.confirmDeleteText || confirm(EcomCart.confirmDeleteText)) {
 					var url = jQuery(this).attr("href");
 					var el = jQuery(this).parents(EcomCart.orderItemHolderSelector);
@@ -494,24 +540,6 @@ EcomCart = {
 		);
 	},
 
-	/**
-	 * add ajax functionality to "remove from cart" links
-	 * @param String withinSelector: area where these links can be found, the more specific the better (faster)
-	 */
-	addRemoveLinks: function (withinSelector) {
-		jQuery(withinSelector).on(
-			"click",
-			EcomCart.removeLinkSelector,
-			function(){
-				if(EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
-					var url = jQuery(this).attr("href");
-					EcomCart.getChanges(url, null, this);
-					return false;
-				}
-				return false;
-			}
-		);
-	},
 
 	//#################################
 	// UPDATE PAGE
@@ -817,8 +845,15 @@ EcomCart = {
 	 * Setup dialogue links
 	 */
 	initColorboxDialog: function(){
-		jQuery(EcomCart.colorboxDialogSelector).colorbox(
-			EcomCart.colorboxDialogOptions
+		jQuery(document).on(
+			"click",
+			EcomCart.colorboxDialogSelector,
+			function (e) {
+				EcomCart.colorboxDialogOptions.href = jQuery(this).attr('href');
+				EcomCart.colorboxDialogOptions.open = true;
+				jQuery.colorbox(EcomCart.colorboxDialogOptions);
+				return false;
+			}
 		);
 	}
 

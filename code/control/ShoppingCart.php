@@ -1023,18 +1023,20 @@ class ShoppingCart_Controller extends Controller{
 	function init() {
 		parent::init();
 		$action = $this->request->param('Action');
-		if($action && (in_array($action, $this->methodsRequiringSecurityID))) {
-			$savedSecurityID = Session::get("SecurityID");
-			if($savedSecurityID) {
-				if(!isset($_GET["SecurityID"])) {
-					$_GET["SecurityID"] = "";
-				}
+		if(!isset($_GET["cached"])) {
+			if($action && (in_array($action, $this->methodsRequiringSecurityID))) {
+				$savedSecurityID = Session::get("SecurityID");
 				if($savedSecurityID) {
-					if($_GET["SecurityID"] != $savedSecurityID) {
-						$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+					if(!isset($_GET["SecurityID"])) {
+						$_GET["SecurityID"] = "";
 					}
-					else {
-						//all OK!
+					if($savedSecurityID) {
+						if($_GET["SecurityID"] != $savedSecurityID) {
+							$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+						}
+						else {
+							//all OK!
+						}
 					}
 				}
 			}

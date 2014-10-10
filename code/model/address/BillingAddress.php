@@ -29,7 +29,6 @@ class BillingAddress extends OrderAddress {
 			'RegionCode',
 			'Country',
 			'Phone',
-			'MobilePhone',
 			'Email'
 		)
 	);
@@ -49,7 +48,6 @@ class BillingAddress extends OrderAddress {
 		'Country' => 'Varchar(4)',
 		'RegionCode' => 'Varchar(20)',
 		'Phone' => 'Varchar(50)',
-		'MobilePhone' => 'Varchar(50)',
 		'Email' => 'Varchar(250)',
 		'Obsolete' => 'Boolean',
 		'OrderID' => 'Int' //NOTE: we have this here for faster look-ups and to make addresses behave similar to has_many dataobjects
@@ -194,6 +192,8 @@ class BillingAddress extends OrderAddress {
 				}
 			}
 		}
+		$billingFields->push(new TextField('Phone', _t('OrderAddress.PHONE','Phone')));
+		//$billingFields->push(new TextField('MobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 		if(!$hasPreviousAddresses) {
 			$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
 			if(is_array($mappingArray) && count($mappingArray)) {
@@ -213,8 +213,6 @@ class BillingAddress extends OrderAddress {
 		$billingFields->push($this->getPostalCodeField("PostalCode"));
 		$billingFields->push($this->getRegionField("RegionID"));
 		$billingFields->push($this->getCountryField("Country"));
-		$billingFields->push(new TextField('Phone', _t('OrderAddress.PHONE','Phone')));
-		$billingFields->push(new TextField('MobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 		$billingFields->addExtraClass('billingFields');
 		$billingFields->addExtraClass("orderAddressHolder");
 		$this->makeSelectedFieldsReadOnly($billingFields);

@@ -90,9 +90,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"Address2\" LIKE '%$value%' OR
 			\"City\" LIKE '%$value%' OR
 			\"PostalCode\" LIKE '%$value%' OR
-			\"Phone\" LIKE '%$value%' OR
-			\"MobilePhone\" LIKE '%$value%'
-
+			\"Phone\" LIKE '%$value%'
 		");
 
 		if($billingAddresses->count()) {
@@ -107,9 +105,7 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter {
 			\"ShippingAddress2\" LIKE '%$value%' OR
 			\"ShippingCity\" LIKE '%$value%' OR
 			\"ShippingPostalCode\" LIKE '%$value%' OR
-			\"ShippingPhone\" LIKE '%$value%' OR
-			\"ShippingMobilePhone\" LIKE '%$value%'
-
+			\"ShippingPhone\" LIKE '%$value%'
 		");
 		if($shippingAddresses->count()) {
 			$shippingAddressesIDs = $shippingAddresses->map("ID", "ID")->toArray();

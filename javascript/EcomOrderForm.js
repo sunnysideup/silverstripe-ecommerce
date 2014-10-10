@@ -2,6 +2,12 @@
  *@author Nicolaas [at] sunnysideup.co.nz
  * adds JS functionality to the OrderForm
  *
+ * Adds the following function to the OrderForm (final form in Checkout):
+ * - T&C ticked CHECK
+ * - T&C link target is another window / tab
+ * - disallow clicking twice.
+ * -
+ *
  **/
 
 ;(function($) {
@@ -17,6 +23,8 @@ var EcomOrderForm = {
 
 	loadingClass: "loading",
 
+	orderFormSelector: "#OrderForm_OrderForm",
+
 	submitButtonSelector: ".Actions input",
 
 	termsAndConditionsCheckBoxSelector: "#ReadTermsAndConditions input",
@@ -29,10 +37,17 @@ var EcomOrderForm = {
 	processingMessage: "processing ...",
 		set_processingMessage: function(s){EcomOrderForm.processingMessage = s;},
 
+	clicked: false,
+
 	init: function() {
-		jQuery(EcomOrderForm.submitButtonSelector).click(
+		jQuery(document).on(
+			"click",
+			EcomOrderForm.orderFormSelector,
 			function(e) {
 				if(!EcomOrderForm.TandCcheck()) {
+					e.preventDefault();
+				}
+				if(EcomOrderForm.clicked) {
 					e.preventDefault();
 				}
 			}
@@ -59,8 +74,11 @@ var EcomOrderForm = {
 	},
 
 	ajaxifyForm: function() {
-		jQuery("form").submit(
+		jQuery(document).on(
+			"submit",
+			EcomOrderForm.orderFormSelector,
 			function(e) {
+				EcomOrderForm.clicked = true;
 				setTimeout(
 					function() {
 						jQuery(EcomOrderForm.submitButtonSelector).parent().addClass(EcomOrderForm.loadingClass).text(EcomOrderForm.processingMessage);

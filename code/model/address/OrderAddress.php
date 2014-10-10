@@ -373,8 +373,7 @@ class OrderAddress extends DataObject {
 			"PostalCode",
 			"RegionID",
 			"Country",
-			"Phone",
-			"MobilePhone",
+			"Phone"
 		);
 		if($fieldPrefix) {
 			foreach($fieldNameArray as $key => $value) {

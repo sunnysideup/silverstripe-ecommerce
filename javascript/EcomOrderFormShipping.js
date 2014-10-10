@@ -64,9 +64,9 @@ var EcomOrderFormWithShippingAddress = {
 
 	//
 
-	mobilePhoneSelector: "#MobilePhone input",
+	//mobilePhoneSelector: "#MobilePhone input",
 
-	shippingMobilePhoneSelector: "#ShippingMobilePhone input",
+	//shippingMobilePhoneSelector: "#ShippingMobilePhone input",
 
 	//================
 
@@ -82,9 +82,7 @@ var EcomOrderFormWithShippingAddress = {
 	init: function(){
 		//hide shipping fields
 		if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length > 0) {
-			jQuery(EcomOrderFormAddress.useShippingDetailsSelector).css("border", "1px solid red");
-			if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
-				//do nothing
+			if(jQuery(EcomOrderFormAddress.useShippingDetailsSelector).is(":checked")) {
 			}
 			else {
 				jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).hide();
@@ -114,8 +112,7 @@ var EcomOrderFormWithShippingAddress = {
 					EcomOrderFormWithShippingAddress.citySelector+", "+
 					EcomOrderFormWithShippingAddress.postalCodeSelector+", "+
 					EcomOrderFormWithShippingAddress.countrySelector+", "+
-					EcomOrderFormWithShippingAddress.phoneSelector+", "+
-					EcomOrderFormWithShippingAddress.mobilePhone;
+					EcomOrderFormWithShippingAddress.phoneSelector;
 			jQuery(originatorFieldSelector).change(
 				function() {
 					EcomOrderFormWithShippingAddress.updateFields();
@@ -133,11 +130,11 @@ var EcomOrderFormWithShippingAddress = {
 	updateFields: function() {
 
 		//mobile phone
-		var MobilePhone = jQuery(EcomOrderFormWithShippingAddress.mobilePhoneSelector).val();
-		var ShippingMobilePhone = jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val();
-		if((!ShippingMobilePhone && MobilePhone) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val(MobilePhone).change();
-		}
+		//var MobilePhone = jQuery(EcomOrderFormWithShippingAddress.mobilePhoneSelector).val();
+		//var ShippingMobilePhone = jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val();
+		//if((!ShippingMobilePhone && MobilePhone) || EcomOrderFormWithShippingAddress.closed) {
+			//jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val(MobilePhone).change();
+		//}
 
 		//phone
 		var Phone = jQuery(EcomOrderFormWithShippingAddress.phoneSelector).val();

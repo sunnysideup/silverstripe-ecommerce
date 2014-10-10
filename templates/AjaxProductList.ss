@@ -1,4 +1,4 @@
-<% if ProductsAreCacheable %>
+<% if ProductGroupListAreCacheable %>
 	<% cached ProductGroupListCachingKey %>
 		<% include LayoutProductGroupInner %>
 	<% end_cached %>
