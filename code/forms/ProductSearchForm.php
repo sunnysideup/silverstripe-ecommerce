@@ -162,6 +162,9 @@ class ProductSearchForm extends Form {
 	 */
 	function __construct($controller, $name, $nameOfProductsBeingSearched = "", $productsToSearch = null) {
 
+		//turn of security to allow caching of the form:
+		$this->disableSecurityToken();
+
 		//set basics
 		$productsToSearchCount = 0;
 		if($productsToSearch) {

@@ -236,7 +236,7 @@ EcomCart = {
 	 *
 	 * @var Boolean
 	 */
-	ajaxifyProductList: true,
+	ajaxifyProductList: false,
 		set_ajaxifyProductList: function(b) {this.ajaxifyProductList = b;},
 
 	/**

@@ -1471,6 +1471,8 @@ class ProductGroup_Controller extends Page_Controller {
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 		//we save data from get variables...
 		$this->saveUserPreferences();
+		//include JS
+		$this->cachingRelatedJavascript();
 	}
 
 
@@ -1637,6 +1639,7 @@ class ProductGroup_Controller extends Page_Controller {
 	public function CachingRelatedJavascript(){
 		if($this->ProductGroupListAreCacheable()) {
 			Requirements::customScript("
+					EcomCart.set_ajaxifyProductList(true);
 					EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
 					EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
 				",
@@ -1654,6 +1657,9 @@ class ProductGroup_Controller extends Page_Controller {
 					"cachingRelatedJavascript_JSON"
 				);
 			}
+		}
+		else {
+			Requirements::customScript("EcomCart.set_ajaxifyProductList(false);","cachingRelatedJavascript");
 		}
 	}
 
@@ -1871,6 +1877,18 @@ class ProductGroup_Controller extends Page_Controller {
 		return $this->showFullList;
 	}
 
+
+	/**
+	 * returns the current filter applied to the list
+	 * in a human readable string
+	 * @return String
+	 */
+	function CurrentDisplayTitle(){
+		$displayKey = $this->getCurrentUserPreferences("DISPLAY");
+		if($displayKey != $this->getMyUserPreferencesDefault("DISPLAY")) {
+			return $this->getUserPreferencesTitle("DISPLAY", $displayKey);
+		}
+	}
 
 	/**
 	 * returns the current filter applied to the list

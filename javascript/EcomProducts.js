@@ -39,9 +39,16 @@ EcomProducts = {
 
 	imagePopupSelector: '.colorboxImagePopup',
 
-	openCloseSectionLinkSelector: "a.openCloseMySectionLink",
+	openCloseSectionLinkSelector: "a.openCloseSectionLink",
+
+	openCloseSectionSelector: "div.openCloseSection",
+
+	openClass: "open",
+
+	closeClass: "close",
 
 	init: function(){
+		//pop-up for selections
 		jQuery(document).on(
 			"click",
 			EcomProducts.selectVariationSelector,
@@ -52,6 +59,7 @@ EcomProducts = {
 				return false;
 			}
 		);
+		//pop-up for images
 		jQuery(document).on(
 			"click",
 			EcomProducts.imagePopupSelector,
@@ -62,17 +70,27 @@ EcomProducts = {
 				return false;
 			}
 		);
+		//filter sort display tabs
 		jQuery(document).on(
 			"click",
 			EcomProducts.openCloseSectionLinkSelector,
 			function(event) {
 				event.preventDefault();
-				var id = jQuery(this).attr("href");
-				var idLength = id.length;
-				var hashPosition = id.indexOf("#");
-				id = id.substr(id.indexOf("#"), idLength - hashPosition);
-				jQuery(this).toggleClass("close").toggleClass("open");
-				jQuery(id).slideToggle().toggleClass("close").toggleClass("open");
+				var id = EcomProducts.findID(this);
+				//close the others that are open if the current one is about to open ...
+				if(jQuery(this).hasClass(EcomProducts.closeClass)) {
+					console.log("A");
+					jQuery(EcomProducts.openCloseSectionLinkSelector).each(
+						function(i, el) {
+							console.debug(el);
+							if(jQuery(el).hasClass(EcomProducts.openClass)) {
+								jQuery(el).click();
+							}
+						}
+					)
+				}
+				jQuery(this).toggleClass(EcomProducts.closeClass).toggleClass(EcomProducts.openClass);
+				jQuery(id).slideToggle().toggleClass(EcomProducts.closeClass).toggleClass(EcomProducts.openClass);
 			}
 		);
 	},
@@ -83,18 +101,17 @@ EcomProducts = {
 		if(jQuery(EcomProducts.openCloseSectionLinkSelector).length == 1) {
 			thereIsOnlyOne = true;
 		}
-		jQuery(EcomProducts.openCloseSectionLinkSelector).each(
-			function(i, el) {
-				//must be last
-				if(thereIsOnlyOne) {
-					jQuery(el).addClass("open");
-				}
-				else {
-					jQuery(el).addClass("open").click();
-				}
-			}
+		jQuery(".close.openCloseSection").css("display", "none");
+		if(thereIsOnlyOne) {
+			jQuery(EcomProducts.openCloseSectionLinkSelector).click();
+		}
+	},
 
-		);
+	findID: function(el) {
+		var id = jQuery(el).attr("href");
+		var idLength = id.length;
+		var hashPosition = id.indexOf("#");
+		return id.substr(id.indexOf("#"), idLength - hashPosition);
 	}
 
 
@@ -102,3 +119,4 @@ EcomProducts = {
 
 
 
+jQuery(EcomProducts.openCloseSectionSelector).css("display", "none");
