@@ -36,6 +36,9 @@ CheckoutPage_Controller:
     - orderformaddress
     - orderconfirmationandpayment
 
+ShopAccountForm_Validator:
+  minimum_password_length: 7
+
 OrderConfirmationPage_Controller:
   include_as_checkout_step: true
 

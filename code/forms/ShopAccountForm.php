@@ -186,6 +186,8 @@ class ShopAccountForm extends Form {
 	 */
 	function saveDataToSession(){
 		$data = $this->getData();
+		unset($data["AccountInfo"]);
+		unset($data["LoginDetails"]);
 		unset($data["LoggedInAsNote"]);
 		unset($data["PasswordCheck1"]);
 		unset($data["PasswordCheck2"]);
@@ -298,16 +300,16 @@ class ShopAccountForm_Validator extends RequiredFields{
 				$valid = false;
 			}
 			$letterCount = strlen($data["PasswordCheck1"]);
-			if($letterCount > 0 && $letterCount < 7) {
+			$minLength = Config::inst()->get("ShopAccountForm_Validator", "minimum_password_length");
+			if($letterCount > 0 && $letterCount < $minLength) {
 				$this->validationError(
 					"PasswordCheck1",
-					_t('Account.PASSWORDMINIMUMLENGTH', 'Please enter a password of at least seven characters.'),
+					_t('Account.PASSWORDMINIMUMLENGTH', 'Password does not meet minimum standards.'),
 					"required"
 				);
 				$valid = false;
 			}
 		}
-		//
 		if(isset($data["FirstName"])) {
 			if(strlen($data["FirstName"]) < 2) {
 				$this->validationError(

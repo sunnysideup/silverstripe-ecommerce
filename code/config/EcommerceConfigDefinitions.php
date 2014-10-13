@@ -129,6 +129,7 @@ class EcommerceConfigDefinitions extends Object {
 			"Pages",
 			"CartPage_Controller",
 			"CheckoutPage_Controller",
+			"ShopAccountForm_Validator",
 			"OrderModifierForm",
 			"EcommercePaymentController"
 		),
@@ -244,6 +245,9 @@ class EcommerceConfigDefinitions extends Object {
 			),
 			"CheckoutPage_Controller" => array(
 				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."
+			),
+			"ShopAccountForm_Validator" => array(
+				"minimum_password_length" => "The minimum length of the password for an account."
 			),
 			"OrderModifierForm" => array(
 				"controller_class" => "The controller class is used for Order Modifier Forms.",

@@ -337,6 +337,8 @@ class OrderFormAddress extends Form {
 	 */
 	function saveDataToSession(){
 		$data = $this->getData();
+		unset($data["AccountInfo"]);
+		unset($data["LoginDetails"]);
 		unset($data["LoggedInAsNote"]);
 		unset($data["PasswordCheck1"]);
 		unset($data["PasswordCheck2"]);
