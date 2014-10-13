@@ -42,7 +42,7 @@ var EcomOrderForm = {
 	init: function() {
 		jQuery(document).on(
 			"click",
-			EcomOrderForm.orderFormSelector,
+			EcomOrderForm.submitButtonSelector,
 			function(e) {
 				if(!EcomOrderForm.TandCcheck()) {
 					e.preventDefault();

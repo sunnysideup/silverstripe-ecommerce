@@ -239,8 +239,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 				$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
 				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\"  datano=\"".Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD','Do not update password'))."\"  class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
 			}
-			$loginDetailsHeader = new HeaderField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 5);
-			$loginDetailsDescription = new LiteralField(
+			//we simply hide these fields, as they add little extra ....
+			$loginDetailsHeader = new HiddenField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 5);
+			$loginDetailsDescription = new HiddenField(
 				'AccountInfo',
 				'<p>'.
 				_t('OrderForm.PLEASE_REVIEW','Please review your log in details below.')

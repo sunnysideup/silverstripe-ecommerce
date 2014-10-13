@@ -56,6 +56,12 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		 *
 		 * @var String
 		 */
+		findNewAddressText: "",
+
+		/**
+		 *
+		 * @var String
+		 */
 		errorMessageMoreSpecific: "",
 
 		/**
@@ -63,6 +69,32 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		 * @var String
 		 */
 		errorMessageAddressNotFound: "",
+
+		/**
+		 * when the Coding field has text...
+		 * @string
+		 */
+		hasTextClass: "hasText",
+
+		/**
+		 * @string
+		 */
+		useMeClass: "useMe",
+
+		/**
+		 * @string
+		 */
+		selectedClass: "selected",
+
+		/**
+		 * @string
+		 */
+		bypassSelector: "a.bypassGoogleGeocoding",
+
+		/**
+		 * @float
+		 */
+		percentageToBeCompleted: 0.25,
 
 		/**
 		 * @var Boolean
@@ -140,20 +172,28 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 							geocodingFieldVars.clearFields();
 							geocodingFieldVars.setResults( "no");
 							geocodingFieldVars.updateEntryFieldStatus();
+
 						}
 						//or...if ( e.which == 13 ) e.preventDefault();
 					}
 				);
 			//bypass
-			jQuery("a.bypassGoogleGeocoding").click(
+			jQuery(geocodingFieldVars.bypassSelector).click(
 				function(e){
 					e.preventDefault();
 					geocodingFieldVars.showFields();
 					jQuery("#"+geocodingFieldVars.fieldName).hide();
+					return false;
 				}
 			);
 			if(geocodingFieldVars.alreadyHasValues()) {
-				jQuery("a.bypassGoogleGeocoding").click();
+				if(jQuery("#"+geocodingFieldVars.fieldName).is(":hidden")) {
+
+				}
+				else {
+					geocodingFieldVars.showFields();
+					jQuery("#"+geocodingFieldVars.fieldName+" label.left").text(geocodingFieldVars.findNewAddressText);
+				}
 			}
 		},
 
@@ -207,6 +247,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 							}
 						}
 					}
+					jQuery("#"+geocodingFieldVars.fieldName+" label.left").text(geocodingFieldVars.findNewAddressText);
 				}
 				else {
 					geocodingFieldVars.entryField.val(geocodingFieldVars.errorMessageAddressNotFound);
@@ -250,7 +291,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					}
 				);
 			}
-			if(empty / count <= 0.25) {
+			if(empty / count <= geocodingFieldVars.percentageToBeCompleted) {
 				return true;
 			}
 			return false;
@@ -286,18 +327,18 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 			var hasResult =  geocodingFieldVars.hasResults();
 			var hasText = geocodingFieldVars.entryField.val().length > 1;
 			if(hasResult) {
-				geocodingFieldVars.entryField.addClass("selected");
-				geocodingFieldVars.entryField.removeClass("useMe");
+				geocodingFieldVars.entryField.addClass(geocodingFieldVars.selectedClass);
+				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.useMeClass);
 			}
 			else{
-				geocodingFieldVars.entryField.removeClass("selected");
-				geocodingFieldVars.entryField.addClass("useMe");
+				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.selectedClass);
+				geocodingFieldVars.entryField.addClass(geocodingFieldVars.useMeClass);
 			}
 			if(hasText) {
-				geocodingFieldVars.entryField.addClass("hasText");
+				geocodingFieldVars.entryField.addClass(geocodingFieldVars.hasTextClass);
 			}
 			else{
-				geocodingFieldVars.entryField.removeClass("hasText");
+				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.hasTextClass);
 			}
 		}
 	}
