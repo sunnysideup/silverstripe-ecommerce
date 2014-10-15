@@ -95,10 +95,10 @@ EcomCart = {
 	initialData: [],
 		set_initialData: function(a) {this.initialData = a;},
 
+
 	//#################################
 	// COUNTRY + REGION SELECTION
 	//#################################
-
 
 	/**
 	 * selector to identify the area in which the country + region selection takes place
@@ -189,6 +189,7 @@ EcomCart = {
 		add_synonym: function(key, value){this.synonyms[key] = value;},
 		remove_synonym: function(key){this.synonyms.splice(key, 1);},
 
+
 	//#################################
 	// ITEMS (OR LACK OF) IN THE CART
 	//#################################
@@ -216,6 +217,7 @@ EcomCart = {
 	 */
 	removeCartSelector: ".ajaxRemoveFromCart",
 		set_removeCartSelector: function(s) {this.removeCartSelector = s;},
+
 
 
 	//#################################
@@ -288,6 +290,11 @@ EcomCart = {
 		set_cartMenuLinksSelector: function(s) {this.cartMenuLinksSelector = s;},
 
 
+
+	//#################################
+	// AJAX PRODUCT LINKS
+	//#################################
+
 	/**
 	 * the selector used to identify links
 	 * that change the product list. These can be ajaxified so that the list
@@ -305,6 +312,15 @@ EcomCart = {
 	 */
 	ajaxifiedListHolderSelector: "#ProductGroup",
 		set_ajaxifiedListHolderSelector: function(s) {this.ajaxifiedListsSelector = s;},
+
+
+
+	/**
+	 * Hidden page title, used when products are updated using the
+	 * @var String
+	 */
+	hiddenPageTitleID: "#HiddenPageTitleID",
+		set_hiddenPageTitleID: function(s) {this.hiddenPageTitleID = s;},
 
 
 
@@ -366,6 +382,13 @@ EcomCart = {
 		EcomCart.updateForZeroVSOneOrMoreRows();
 		EcomCart.initColorboxDialog();
 		EcomCart.setChanges(EcomCart.initialData, "");
+		//allow ajax product list back and forth:
+		window.onpopstate = function(e){
+			if(e.state){
+				jQuery(EcomCart.ajaxifiedListHolderSelector).html(e.state.html);
+				document.title = e.state.pageTitle;
+			}
+		};
 	},
 
 	/**
@@ -446,18 +469,29 @@ EcomCart = {
 							complete: function(){jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.classToShowLoading);},
 							dataType: "html",
 							error: function(jqXHR, textStatus, errorThrown){
-								alert("An error occurred (" + textStatus + " " + errorThrown + ")! I will try reloading the page.");
-								location.reload();
+								alert("An error occurred (" + textStatus + " " + errorThrown + ")! I will try reloading the page now.");
+								window.location.href = url;
 							},
 							success: function(data, textStatus, jqXHR){
 								jQuery(EcomCart.ajaxifiedListHolderSelector).html(data);
-								EcomCart.openAjaxCalls++;
+
+								//create history
+								var pageTitle = jQuery(EcomCart.hiddenPageTitleID).text();
+								document.title = pageTitle
+								window.history.pushState(
+									{"html":data,"pageTitle":pageTitle},
+									pageTitle,
+									url
+								);
+								//update changes
 								//set changes also does the reinit
+								EcomCart.openAjaxCalls++;
 								EcomCart.setChanges(EcomCart.initialData, "");
 								if (typeof EcomProducts  != 'undefined') {
 									EcomProducts.reinit();
 								}
 
+								//scroll to the top of the product list.
 								jQuery('html, body').animate({scrollTop: jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top}, 500);
 							},
 							url: url,
@@ -861,69 +895,3 @@ EcomCart = {
 
 
 }
-
-
-
-
-
-/*jshint browser: true */
-/*globals jQuery */
-;(function (factory) {
-    if (typeof exports == 'object') {
-        factory(require('jquery'));
-    } else if (typeof define == 'function' && define.amd) {
-        define(['jquery'], factory);
-    } else {
-        factory(jQuery);
-    }
-}(function ($) {
-    'use strict';
-    /**
-     * Triggers the DOM changed event on the given element
-     *
-     * @private
-     * @param   {Object}    element     the jQuery element that has been modified
-     * @param   {String}    type        jQuery method used to trigger manipulation
-     */
-    function jQueryDOMChanged (element, type) {
-        return $(element).trigger('DOMChanged', type);
-    }
-    /**
-     * Wraps a given jQuery method and injects another function to be called
-     *
-     * @private
-     * @param   {String}    method
-     * @param   {Function}  caller
-     */
-    function jQueryHook (method, caller) {
-        var definition = $.fn[method];
-        if (definition) {
-            $.fn[method] = function () {
-                var args   = Array.prototype.slice.apply(arguments);
-                var result = definition.apply(this, args);
-                caller.apply(this, args);
-                return result;
-            };
-        }
-    }
-    jQueryHook('prepend', function () {
-        return jQueryDOMChanged(this, 'prepend');
-    });
-    jQueryHook('append', function () {
-        return jQueryDOMChanged(this, 'append');
-    });
-    jQueryHook('before', function () {
-        return jQueryDOMChanged($(this).parent(), 'before');
-    });
-    jQueryHook('after', function () {
-        return jQueryDOMChanged($(this).parent(), 'after');
-    });
-    jQueryHook('html', function (value) {
-        // Internally jQuery will set strings using innerHTML
-        // otherwise will use append to insert new elements
-        // Only trigger on string types to avoid doubled events
-        if (typeof value === 'string') {
-            return jQueryDOMChanged(this, 'html');
-        }
-    });
-}));

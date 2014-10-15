@@ -43,6 +43,7 @@ class EcommerceConfigDefinitions extends Object {
 		"SideBarCartID" => "The sidebar cart. Use in the following context: Order.AjaxDefinitions.SideBarCartID",
 		"SmallCartID" => "The small cart. Use in the following context: Order.AjaxDefinitions.SmallCartID",
 		"TinyCartClassName" => "The tiny cart. Use in the following context: Order.AjaxDefinitions.SmallCartID ",
+		"HiddenPageTitleID" => "The ID used to identify a (hidden) element that contains the title of the page. This can be used for ajax updates of the product list.  It will be used to update the title of the page. ",
 		"ProductListHolderID" => "The ID used to identify the product group list holder.  This list can be replaced using ajax. ",
 		"ProductListAjaxifiedLinkClassName" => "The class name use for sections that contain links for showing alternative views of the product group list. ",
 		"ProductListItemClassName" => "The class used to identify each LI item in the list of product items on the product group page (or elsewhere).",

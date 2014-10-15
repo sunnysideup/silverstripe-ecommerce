@@ -151,6 +151,10 @@
 	<h5>without context, ajaxified product list</h5>
 	<table style="width: 95%;" border="1" cellspacing="5">
 		<tr>
+			<th scope="row">&#36;AJAXDefinitions.HiddenPageTitleID</th>
+			<td>$AJAXDefinitions.HiddenPageTitleID<br /><i>$AJAXDefinitions.Define(HiddenPageTitleID)</i></td>
+		</tr>
+		<tr>
 			<th scope="row">&#36;AJAXDefinitions.ProductListHolderID</th>
 			<td>$AJAXDefinitions.ProductListHolderID<br /><i>$AJAXDefinitions.Define(ProductListHolderID)</i></td>
 		</tr>

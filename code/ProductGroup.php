@@ -1471,10 +1471,7 @@ class ProductGroup_Controller extends Page_Controller {
 		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 		//we save data from get variables...
 		$this->saveUserPreferences();
-		//include JS
-		$this->cachingRelatedJavascript();
 	}
-
 
 
 	/****************************************************
@@ -1573,7 +1570,11 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return PaginatedList
 	 **/
 	public function Products(){
+		//IMPORTANT!
+		//two universal actions!
 		$this->addSecondaryTitle();
+		$this->cachingRelatedJavascript();
+
 		//save products to session for later use
 		$stringOfIDs = "";
 		$array = $this->getProductsThatCanBePurchasedArray();
@@ -1602,6 +1603,14 @@ class ProductGroup_Controller extends Page_Controller {
 	 */
 	public function ProductGroupListAreCacheable(){
 		return $this->productListsHTMLCanBeCached() && !$this->IsSearchResults()	? true : false;
+	}
+
+	/**
+	 * is the product list ajaxified
+	 * @return Boolean
+	 */
+	public function ProductGroupListAreAjaxified(){
+		return $this->IsSearchResults() ? false : true;
 	}
 
 	/**
@@ -1637,29 +1646,30 @@ class ProductGroup_Controller extends Page_Controller {
 	 * adds Javascript to the page to make it work when products are cached.
 	 */
 	public function CachingRelatedJavascript(){
-		if($this->ProductGroupListAreCacheable()) {
+		if($this->ProductGroupListAreAjaxified()) {
 			Requirements::customScript("
 					EcomCart.set_ajaxifyProductList(true);
 					EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
 					EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
+					EcomCart.set_hiddenPageTitleID('.".$this->AjaxDefinitions()->HiddenPageTitleID()."');
 				",
-				"cachingRelatedJavascript"
+				"cachingRelatedJavascript_AJAXlist"
 			);
-			$currentOrder = ShoppingCart::current_order();
-			if($currentOrder->TotalItems(true)) {
-				$responseClass = EcommerceConfig::get("ShoppingCart", "response_class");
-				$obj = new $responseClass();
-				$obj->setIncludeHeaders(false);
-				$json = $obj->ReturnCartData();
-				Requirements::customScript("
-						EcomCart.set_initialData(".$json.");
-					",
-					"cachingRelatedJavascript_JSON"
-				);
-			}
 		}
 		else {
-			Requirements::customScript("EcomCart.set_ajaxifyProductList(false);","cachingRelatedJavascript");
+			Requirements::customScript("EcomCart.set_ajaxifyProductList(false);","cachingRelatedJavascript_AJAXlist");
+		}
+		$currentOrder = ShoppingCart::current_order();
+		if($currentOrder->TotalItems(true)) {
+			$responseClass = EcommerceConfig::get("ShoppingCart", "response_class");
+			$obj = new $responseClass();
+			$obj->setIncludeHeaders(false);
+			$json = $obj->ReturnCartData();
+			Requirements::customScript("
+					EcomCart.set_initialData(".$json.");
+				",
+				"cachingRelatedJavascript_JSON"
+			);
 		}
 	}
 
@@ -1670,7 +1680,6 @@ class ProductGroup_Controller extends Page_Controller {
 	protected function productListsHTMLCanBeCached(){
 		return true;
 	}
-
 
 
 	/*****************************************************

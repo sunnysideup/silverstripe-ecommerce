@@ -79,10 +79,8 @@ EcomProducts = {
 				var id = EcomProducts.findID(this);
 				//close the others that are open if the current one is about to open ...
 				if(jQuery(this).hasClass(EcomProducts.closeClass)) {
-					console.log("A");
 					jQuery(EcomProducts.openCloseSectionLinkSelector).each(
 						function(i, el) {
-							console.debug(el);
 							if(jQuery(el).hasClass(EcomProducts.openClass)) {
 								jQuery(el).click();
 							}
@@ -93,6 +91,7 @@ EcomProducts = {
 				jQuery(id).slideToggle().toggleClass(EcomProducts.closeClass).toggleClass(EcomProducts.openClass);
 			}
 		);
+
 	},
 
 

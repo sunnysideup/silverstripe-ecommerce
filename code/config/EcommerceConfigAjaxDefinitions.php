@@ -81,6 +81,11 @@ class EcommerceConfigAjaxDefinitions extends ViewableData {
 	/**
 	 * @return String
 	 **/
+	function HiddenPageTitleID() {return self::$prefix.'HiddenPageTitle';}
+
+	/**
+	 * @return String
+	 **/
 	function ProductListHolderID() {return self::$prefix.'ProductGroup';}
 
 	/**

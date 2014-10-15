@@ -1,4 +1,4 @@
-<h1 class="pageTitle">$Title</h1>
+<h1 class="pageTitle" id="$AjaxDefinitions.HiddenPageTitleID">$Title</h1>
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 
