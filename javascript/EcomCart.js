@@ -324,6 +324,15 @@ EcomCart = {
 
 
 
+	/**
+	 * Hidden page title, used when products are updated using the
+	 * @var function
+	 */
+	ajaxifiedProductsCallBack: function(){},
+		set_ajaxifiedProductsCallBack: function(f) {this.ajaxifiedProductsCallBack = f;},
+
+
+
 	//#################################
 	// DIALOGUE POP-UP BOX
 	//#################################
@@ -487,10 +496,12 @@ EcomCart = {
 								//set changes also does the reinit
 								EcomCart.openAjaxCalls++;
 								EcomCart.setChanges(EcomCart.initialData, "");
-								if (typeof EcomProducts  != 'undefined') {
+								if (typeof(EcomProducts)  != 'undefined') {
 									EcomProducts.reinit();
 								}
-
+								if(typeof(EcomCart.ajaxifiedProductsCallBack) == "function") {
+									EcomCart.ajaxifiedProductsCallBack();
+								}
 								//scroll to the top of the product list.
 								jQuery('html, body').animate({scrollTop: jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top}, 500);
 							},
@@ -598,7 +609,7 @@ EcomCart = {
 		var loadingIndex = this.addLoadingSelector(loadingElement)
 		params.loadingindex = loadingIndex;
 		if(EcomCart.onBeforeUpdate) {
-			if(typeof EcomCart.onBeforeUpdate == 'function'){
+			if(typeof(EcomCart.onBeforeUpdate) == 'function'){
 				EcomCart.onBeforeUpdate.call(url, params, EcomCart.setChanges);
 			}
 		}
@@ -658,7 +669,7 @@ EcomCart = {
 		if(EcomCart.openAjaxCalls <= 0) {
 			for(var i in changes) {
 				var change = changes[i];
-				if(typeof(change.t) != 'undefined' && typeof(change.t) != 'undefined') {
+				if(typeof(change.t) != 'undefined') {
 					var type = change.t;
 					var selector = change.s;
 					var parameter = change.p;
@@ -667,7 +678,7 @@ EcomCart = {
 					if(EcomCart.debug) {console.debug("type" + type +", selector: " + selector +", parameter:"+ parameter +", value");}
 					if(type == "class" || type == "id") {
 						var additionalSelectors = "";
-						if(typeof EcomCart.synonyms[selector] != 'undefined') {
+						if(typeof(EcomCart.synonyms[selector]) != 'undefined') {
 							selector += ", "+EcomCart.synonyms[selector];
 						}
 						if(type == "id") {
@@ -785,7 +796,7 @@ EcomCart = {
 				}
 			}
 			if(EcomCart.onAfterUpdate) {
-				if(typeof EcomCart.onAfterUpdate == 'function'){
+				if(typeof(EcomCart.onAfterUpdate) == 'function'){
 					EcomCart.onAfterUpdate.call(changes, status);
 				}
 			}
@@ -848,7 +859,7 @@ EcomCart = {
 	 * @return Boolean
 	 */
 	variableIsSet: function(variable) {
-		if(typeof(variable) == 'undefined' || typeof variable == 'undefined' || variable == 'undefined') {
+		if(typeof(variable) == 'undefined' || variable == 'undefined') {
 			return false;
 		}
 		return true;
