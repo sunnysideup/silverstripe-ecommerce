@@ -1651,7 +1651,7 @@ class ProductGroup_Controller extends Page_Controller {
 					EcomCart.set_ajaxifyProductList(true);
 					EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
 					EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
-					EcomCart.set_hiddenPageTitleID('.".$this->AjaxDefinitions()->HiddenPageTitleID()."');
+					EcomCart.set_hiddenPageTitleID('#".$this->AjaxDefinitions()->HiddenPageTitleID()."');
 				",
 				"cachingRelatedJavascript_AJAXlist"
 			);

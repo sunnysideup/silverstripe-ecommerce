@@ -486,12 +486,12 @@ EcomCart = {
 
 								//create history
 								var pageTitle = jQuery(EcomCart.hiddenPageTitleID).text();
-								document.title = pageTitle
 								window.history.pushState(
 									{"html":data,"pageTitle":pageTitle},
 									pageTitle,
 									url
 								);
+								document.title = pageTitle;
 								//update changes
 								//set changes also does the reinit
 								EcomCart.openAjaxCalls++;
