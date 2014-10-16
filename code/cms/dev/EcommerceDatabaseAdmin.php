@@ -442,7 +442,7 @@ class DebugView_EcommerceDatabaseAdmin extends DebugView{
 
 
 	function writePreOutcome(){
-		echo "<div id='TaskHolder' style=\"border: 5px solid green; background-color: #e8e8e8; border-radius: 15px; margin: 20px; padding: 20px\">";
+		echo "<div id='TaskHolder' style=\"background-color: #e8e8e8; border-radius: 15px; margin: 20px; padding: 20px\">";
 	}
 
 	function writePostOutcome(){
