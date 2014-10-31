@@ -41,10 +41,13 @@ class EcommerceMoney extends Extension {
 
 	function NiceLongSymbol($html = true) {
 		$symbol = self::get_long_symbol($this->owner->currency);
+		$short = self::get_short_symbol($this->owner->currency);
+		$pre = substr($symbol, 0, mb_strlen($symbol) - mb_strlen($short));
 		if($html) {
-			$short = self::get_short_symbol($this->owner->currency);
-			$pre = substr($symbol, 0, mb_strlen($symbol) - mb_strlen($short));
 			$symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">$pre</span><span class=\"currencySymbol\">$short</span></span>";
+		}
+		else {
+			$symbol = $pre.$short;
 		}
 		$amount = $this->owner->getAmount();
 		return (is_numeric($amount)) ? $this->owner->currencyLib->toCurrency($amount, array('symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL)) : '';
@@ -55,13 +58,6 @@ class EcommerceMoney extends Extension {
 		return $this->owner->$function($html);
 	}
 
-	function NiceWithCurrencyCode($html = true) {
-		$symbol = $this->owner->currency;
-		if($html) {
-			$symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">$symbol</span></span>";
-		}
-		return strtoupper($this->owner->currency).$this->owner->Nice();
-	}
 
 
 }
