@@ -35,5 +35,4 @@
 
 <% if Form %><div id="FormHolder">$Form</div><% end_if %>
 <% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>
-<span data-cached-security-id="$AjaxDefinitions.SecurityID"></span>
 

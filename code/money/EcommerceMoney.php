@@ -35,7 +35,8 @@ class EcommerceMoney extends Extension {
 		if($html) {
 			$symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">$symbol</span></span>";
 		}
-		return $this->owner->Nice(array('symbol' => $symbol));
+		$amount = $this->owner->getAmount();
+		return (is_numeric($amount)) ? $this->owner->currencyLib->toCurrency($amount, array('symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL)) : '';
 	}
 
 	function NiceLongSymbol($html = true) {
@@ -45,7 +46,8 @@ class EcommerceMoney extends Extension {
 			$pre = substr($symbol, 0, mb_strlen($symbol) - mb_strlen($short));
 			$symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">$pre</span><span class=\"currencySymbol\">$short</span></span>";
 		}
-		return $this->owner->Nice(array('symbol' => $symbol));
+		$amount = $this->owner->getAmount();
+		return (is_numeric($amount)) ? $this->owner->currencyLib->toCurrency($amount, array('symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL)) : '';
 	}
 
 	function NiceDefaultFormat($html = true) {

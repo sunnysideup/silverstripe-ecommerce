@@ -1602,7 +1602,20 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return Boolean
 	 */
 	public function ProductGroupListAreCacheable(){
-		return $this->productListsHTMLCanBeCached() && !$this->IsSearchResults()	? true : false;
+		if($this->productListsHTMLCanBeCached()) {
+			//exception 1
+			if($this->IsSearchResults()){
+				return false;
+			}
+			//exception 2
+			$currentOrder = ShoppingCart::current_order();
+			if($currentOrder->getHasAlternativeCurrency()){
+				return false;
+			}
+			//can be cached...
+			return true;
+		}
+		return false;
 	}
 
 	/**
