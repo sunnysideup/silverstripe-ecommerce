@@ -1,26 +1,34 @@
 <?php
 
 /**
- * This class reviews all of the static configurations in e-commerce for review
- * (a) which configs are set, but not required
- * (b) which configs are required, but not set
- * (c) review of set configs
  *
- * @TODO: compare to default
  *
- * shows you the link to remove the current cart
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommerceTaskReviewSearches extends BuildTask{
 
-	private $defaultDays = 100;
+	/**
+	 * number of days shown
+	 * @int
+	 */
+	protected $defaultDays = 100;
 
-	private $defaultMinimum = 5;
+	/**
+	 * minimum number of searches for
+	 * a particular keyword in order to show it at all
+	 * @int
+	 */
+	protected $defaultMinimum = 5;
+
+	/**
+	 * show up to XXX days ago
+	 * @int
+	 */
+	protected $endingDaysBack = 0;
 
 	/**
 	 * Standard (required) SS variable for BuildTasks
@@ -33,7 +41,7 @@ class EcommerceTaskReviewSearches extends BuildTask{
 	 * @var String
 	 */
 	protected $description = "
-		What did people search for on the website over the last XXX days...";
+		What did people search for on the website, you can use the days, min and ago GET variables to query different sets.";
 
 	function run($request){
 		$days = intval($request->getVar("days")-0);
@@ -44,36 +52,23 @@ class EcommerceTaskReviewSearches extends BuildTask{
 		if(!$countMin) {
 			$countMin = $this->defaultMinimum;
 		}
-		$data = DB::query("SELECT COUNT(ID) count, Title FROM \"SearchHistory\" WHERE Created > ( NOW() - INTERVAL $days DAY ) GROUP BY \"Title\"  HAVING COUNT(ID) >= $countMin ORDER BY count DESC ");
-		$v = "
-		<h3>Settings</h3>
-		<p>You can set the number of days by using the get variable <i>days</i>.</p>
-		<p>You can set the minimum number of treshold with the get variable <i>min</i>.</p>
-		<p>For example: ".Director::absoluteBaseURL()."/dev/tasks/EcommerceTaskReviewSearches/?<strong>days</strong>=100&<strong>min</strong>=30</p>
-		<h3>Search Phrases entered at least $countMin times during the last $days days</h3>
-		<table>";
-		$list = array();
-		foreach($data as $key => $row) {
-			if(!$key) {
-				$multiplier = 700 / $row["count"];
+		$endingDaysBack = intval($request->getVar("ago")-0);
+		if(!$endingDaysBack) {
+			$endingDaysBack = $this->endingDaysBack;
+		}
+		$field = new EcommerceSearchHistoryFormField("stats", $this->title)
+			->setNumberOfDays($days)
+			->setMinimumCount($countMin)
+			->setEndingDaysBack($endingDaysBack);
+		echo $field->forTemplate();
+		$arrayNumberOfDays = array(30, 365);
+		$link = "/dev/tasks/EcommerceTaskReviewSearches/";
+		for($months = 0; $months++; $months < 36) {
+			foreach($arrayNumberOfDays as $numberOfDays) {
+				$myLink = $link . "?ago=".floor($months * 30.5)."&amp;days=".$numberOfDays;
+				DB::alteration_message("<a href=\"".$myLink."\">$months months ago, last $numberOfDays days</a>");
 			}
-			$multipliedWidth = floor($row["count"] * $multiplier);
-			$list[$row["count"]."-".$key] = $row["Title"];
-			$v .=' <tr><td style="text-align: right; width: 350px;">'.$row["Title"].'</td><td style="background-color: grey"><div style="width: '.$multipliedWidth.'px; background-color: #0066CC;">'.$row["count"].'</div></td></tr>';
 		}
-		$v .= '</table>';
-		asort($list);
-		$v .= "
-			<h3>A - Z</h3>
-			<table>";
-		foreach($list as $key => $title) {
-			$array = explode("-", $key);
-			$multipliedWidth = $array[0] * $multiplier;
-			$v .=' <tr><td style="text-align: right; width: 350px;">'.$title.'</td><td style="background-color: grey"><div style="width: '.$multipliedWidth.'px; background-color: #0066CC;">'.$array[0].'</div></td></tr>';
-		}
-		$v .= '</table>';
-		echo $v;
-
 	}
 
 }

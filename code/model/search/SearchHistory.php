@@ -6,18 +6,32 @@ class SearchHistory Extends DataObject {
 		"Title" => "Varchar(255)"
 	);
 
-	static function add_entry($KeywordString) {
+	private static $default_sort = "\"Created\" DESC";
+
+	/**
+	 * creates a new entry if you are not a shop admin
+	 *
+	 * @param String $keywordString
+	 * @return Int
+	 */
+	static function add_entry($keywordString) {
+		if($member = Member::currentUser()) {
+			if($member->IsShopAdmin()) {
+				return -1;
+			}
+		}
 		$obj = new SearchHistory();
-		$obj->Title = $KeywordString;
-		$obj->write();
+		$obj->Title = $keywordString;
+		return $obj->write();
 	}
 
-
+	/**
+	 * remove excessive spaces
+	 */
 	function onBeforeWrite() {
 		$this->Title = trim(preg_replace('!\s+!', ' ', $this->Title));
 		parent::onBeforeWrite();
 	}
-
 
 	/**
 	 * standard SS method
