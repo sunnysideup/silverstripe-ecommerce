@@ -18,11 +18,16 @@ Can it be fixed by changing the config files?:
     - Check ecommerce/_config.php and the ecommerce/config/ folder for further ideas.
     - Update mysite/_config/ecommerce.yml with the required settings.  Bear in mind, that by default, arrays settings are added to any existing array elements.  To replace an array outright, use Config::inst()->update("MyClassName", "my_variable_as_array", $newArray);.
 
-Can it be fixed with CSS / JS?:
+Can it be fixed with CSS:
   Theme appropriate CSS file and change:
-    - Check the page source header to see what CSS files are used - theme (move a copy to /themes/mytheme_ecommerce/css) and adjust file as required.
+    - Check the page html source head section to see what CSS files are used - theme (move a copy to /themes/mytheme_ecommerce/css) and adjust file as required.
     - Try to "Theme" the most appropriate CSS file. If that does not work, use Requirements::block(oldFile) and add Requirements::css(newFileIncludingPath) or Requirements::themedCSS(newFileCode).
-    - The same approach can be used for javascript files.
+    - For more information on themeing, visit - <a href="http://docs.silverstripe.org/framework/en/topics/theme-development">http://docs.silverstripe.org/framework/en/topics/theme-development</a>.
+
+Can it be fixed with Javascript (JS):
+  Update JS variables or replace JS files:
+    - All the JS files contain JSON objects (<q>var MyVar = { .... }; </q>). You can replace variables and methods within those JSON objects by adding a bit of Javascript like this: <q>myVar.sizeOfSomething = 111</q> or <q>myVar.myJavascriptFunction = function(){....}</q>. This is a very easy and powerful way to change an existing JS library.
+    - Use Requirements::block(oldJSFile) and add Requirements::css(newFileIncludingPath) or Requirements::themedCSS(newFileCode).
     - For more information on themeing, visit - <a href="http://docs.silverstripe.org/framework/en/topics/theme-development">http://docs.silverstripe.org/framework/en/topics/theme-development</a>.
 
 Can it be fixed by adjusting the HTML?:
