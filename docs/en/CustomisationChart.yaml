@@ -27,8 +27,9 @@ Can it be fixed with CSS:
 Can it be fixed with Javascript (JS):
   Update JS variables or replace JS files:
     - All the JS files contain JSON objects (<q>var MyVar = { .... }; </q>). You can replace variables and methods within those JSON objects by adding a bit of Javascript like this: <q>myVar.sizeOfSomething = 111</q> or <q>myVar.myJavascriptFunction = function(){....}</q>. This is a very easy and powerful way to change an existing JS library.
-    - Use Requirements::block(oldJSFile) and add Requirements::css(newFileIncludingPath) or Requirements::themedCSS(newFileCode).
-    - For more information on themeing, visit - <a href="http://docs.silverstripe.org/framework/en/topics/theme-development">http://docs.silverstripe.org/framework/en/topics/theme-development</a>.
+    - Use Requirements::block(existingFileIncludingPath) and add Requirements::javascript(newFileIncludingPath) to replace entire JS files.
+    - Add new JS files.
+    - Requirement calls are often made in the Page_Controller::init method of a Controller or in a onBeforeInit and onAfterInit of an Extensions class that extends a Controller.
 
 Can it be fixed by adjusting the HTML?:
   Theme appropriate template file (.ss) and change as needed.:
