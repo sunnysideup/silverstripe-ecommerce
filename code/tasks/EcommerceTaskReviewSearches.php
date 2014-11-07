@@ -56,7 +56,7 @@ class EcommerceTaskReviewSearches extends BuildTask{
 		if(!$endingDaysBack) {
 			$endingDaysBack = $this->endingDaysBack;
 		}
-		$field = new EcommerceSearchHistoryFormField("stats", $this->title)
+		$field = EcommerceSearchHistoryFormField::create("stats", $this->title)
 			->setNumberOfDays($days)
 			->setMinimumCount($countMin)
 			->setEndingDaysBack($endingDaysBack);
