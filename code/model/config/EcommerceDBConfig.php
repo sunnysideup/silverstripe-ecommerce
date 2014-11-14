@@ -35,7 +35,7 @@ class EcommerceDBConfig extends DataObject {
 		"ProductsHaveModelNames" => "Boolean",
 		"ProductsHaveQuantifiers" => "Boolean",
 		"ProductsAlsoInOtherGroups" => "Boolean",
-		"ProductsHaveVariations" => "Boolean",
+		//"ProductsHaveVariations" => "Boolean",
 		"CurrenciesExplanation" => "HTMLText",
 		'AllowFreeProductPurchase' => 'Boolean'
 	);

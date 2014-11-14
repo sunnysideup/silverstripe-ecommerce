@@ -45,17 +45,15 @@ class EcommerceCodeFilter extends Object {
 		foreach($this->straightReplacements as $find => $replace) {
 			$s = str_replace($find, $replace, $s);
 		}
-		if(!$s) {
-			$s = "CODE-NOT-SET";
-		}
-		//make upper-case
 		$s = trim($s);
 		//check for other ones.
-		$count = 2;
-		$code = $s;
-		while($isObject && $obj::get()->filter(array($fieldName => $s))->exclude(array("ID" => $obj->ID))->Count()) {
-			$s = $code . '_' . $count;
-			$count++;
+		if($s) {
+			$count = 2;
+			$code = $s;
+			while($isObject && $obj::get()->filter(array($fieldName => $s))->exclude(array("ID" => $obj->ID))->Count()) {
+				$s = $code . '_' . $count;
+				$count++;
+			}
 		}
 		$obj->$fieldName = $s;
 		return $obj->$fieldName;

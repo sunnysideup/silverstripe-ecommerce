@@ -228,15 +228,15 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Adds any number of items to the cart.
+	 * Returns the order item on succes OR false on failure.
 	 * @param DataObject $buyable - the buyable (generally a product) being added to the cart
 	 * @param Float $quantity - number of items add.
-	 * @param $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+	 * @param Mixed $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+	 *                            if you make it a form, it will save the form into the orderitem
 	 * @return false | DataObject (OrderItem)
 	 */
-	public function addBuyable(BuyableModel $buyable, $quantity = 1, Array $parameters = array()){
-
+	public function addBuyable(BuyableModel $buyable, $quantity = 1, $parameters = array()){
 		if(!$buyable) {
-
 			$this->addMessage(_t("Order.ITEMCOULDNOTBEFOUND", "This item could not be found."),'bad');
 			return false;
 		}
@@ -266,7 +266,7 @@ class ShoppingCart extends Object{
 		else {
 			$this->addMessage(_t("Order.ITEMCOULDNOTBEADDED", "Item could not be added."),'bad');
 		}
-		return false;
+		return $item;
 	}
 
 	/**
