@@ -283,6 +283,7 @@ EcommerceConfig:
 	protected function definedConfigs(){
 		$htmlHeader = "
 		<style>
+			body {margin-left: 300px!important;}
 			h2 {padding-top: 2em;margin-bottom: 0; padding-bottom: 0;}
 			th[scope='col'] {text-align: left; border-bottom: 3px solid #ccdef3;padding-top: 40px;}
 			td {vertical-align: top; border-left: 1px solid #d7d7d7; border-bottom: 1px solid #d7d7d7; padding: 10px; width: 47%;}
