@@ -14,6 +14,6 @@
 // CACHING RECOMMENDATION - you can overrule that in the mysite _config.php file...
 SS_Cache::set_cache_lifetime('any', 602000, 100);
 
-CMSMenu::add_menu_item('refresh', 'Refresh Website', 'home/?flush=all', $controllerClass = null, $priority = 2.9, array("target" => "_blank"));
+CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array("target" => "_blank"));
 
 
