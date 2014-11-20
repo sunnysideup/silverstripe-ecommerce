@@ -296,10 +296,10 @@ class OrderStep extends DataObject {
 			$fields->replaceField("Code", $fields->dataFieldByName("Code")->performReadonlyTransformation());
 		}
 		//headers
-		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING1", _t("OrderStep.CAREFUL", "CAREFUL! please edit with care"), 1), "Description");
+		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING1", _t("OrderStep.CAREFUL", "CAREFUL! please edit details below with care"), 2), "Description");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING2", _t("OrderStep.CUSTOMERCANCHANGE", "What can be changed during this step?"), 3), "CustomerCanEdit");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING5", _t("OrderStep.ORDERGROUPS", "Order groups for customer?"), 3), "ShowAsUncompletedOrder");
-		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING7", _t("OrderStep.SORTINGINDEXHEADER", "Index Number (lower number come first)"), 3), "Sort");
+		$fields->removeFieldFromTab("Root.Main", "Sort");
 		$fields->addFieldToTab("Root.Main", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only")), "WARNING1");
 		return $fields;
 	}
@@ -1103,9 +1103,9 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
 	/**
 	 * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-	 *@param FieldList $fields
-	 *@param Order $order
-	 *@return FieldList
+	 * @param FieldList $fields
+	 * @param Order $order
+	 * @return FieldList
 	 **/
 	function addOrderStepFields(FieldList $fields, Order $order) {
 		$fields = parent::addOrderStepFields($fields, $order);

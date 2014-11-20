@@ -181,21 +181,21 @@ class EcommerceDBConfig extends DataObject {
 	 * Standard SS variable
 	 * @var String
 	 */
-	private static $singular_name = "Ecommerce Configuration";
-		function i18n_singular_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATION", "Ecommerce Configuration");}
+	private static $singular_name = "Main E-commerce Configuration";
+		function i18n_singular_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATION", "Main E-commerce Configuration");}
 
 	/**
 	 * Standard SS variable
 	 * @var String
 	 */
-	private static $plural_name = "Ecommerce Configuration";
-		function i18n_plural_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATIONS", "Ecommerce Configurations");}
+	private static $plural_name = "Main E-commerce Configurations";
+		function i18n_plural_name() { return _t("EcommerceDBConfig.ECOMMERCECONFIGURATIONS", "Main E-commerce Configurations");}
 
 	/**
 	 * Standard SS variable.
 	 * @var String
 	 */
-	private static $description = "A set of configurations for the online shop. Each shop needs to have one or more sets.";
+	private static $description = "A set of configurations for the shop. Each shop needs to have one or more of these settings.";
 
 	/**
 	 * static holder for its own (or other EcommerceDBConfig) class.

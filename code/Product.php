@@ -183,7 +183,7 @@ class Product extends Page implements BuyableModel {
 	*/
 
 	/**
-	 * Standard SS variable.
+	 * Standard SS Method.
 	 */
 	function getCMSFields() {
 		//prevent calling updateSettingsFields extend function too early
@@ -233,7 +233,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Used in getCSMFields
-	 * @return TreeMultiselectField
+	 * @return GridField
 	 **/
 	protected function getProductGroupsTableField() {
 		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
@@ -252,7 +252,7 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Used in getCSMFields
-	 * @return GridField
+	 * @return LiteralField
 	 **/
 	protected function getAdditionalImagesMessage() {
 		$msg = "";

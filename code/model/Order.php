@@ -884,6 +884,8 @@ class Order extends DataObject {
 	}
 
 	/**
+	 * Return the OrderStatusLog that is relevant to the Order status.
+	 *
 	 * @return OrderStatusLog
 	 */
 	public function RelevantLogEntry(){
