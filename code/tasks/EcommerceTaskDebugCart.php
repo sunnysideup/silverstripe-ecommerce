@@ -30,12 +30,12 @@ class EcommerceTaskDebugCart extends BuildTask {
 		if(count($fields)) {
 			foreach($fields as  $key => $type) {
 				$method = $key;
-				if(method_exists($obj, $method)) {
+				if($obj->hasMethod($method)) {
 					$value = $obj->$method();
 				}
 				else {
 					$method = "get".$key;
-					if(method_exists($obj, $method)) {
+					if($obj->hasMethod($method)) {
 						$value = $obj->$method();
 					}
 					else{
