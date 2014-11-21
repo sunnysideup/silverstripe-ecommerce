@@ -19,8 +19,7 @@
 	},
 	"suggest": {
 		"silverstripe/geoip": "HIGHLY RECOMMENDED: Native Silverstripe way to work out the customer country. Make sure this work on your server, before installing it - otherwise it is useless.",
-		"silverstripe/restfulserver": "adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)",
-		"tractorcow/silverstripe-geocoding": "adds geocoding for easy address recognition."
+		"silverstripe/restfulserver": "adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)"
 	},
 	"support":{
 		"issues" : "http://code.google.com/p/silverstripe-ecommerce/issues/list"
