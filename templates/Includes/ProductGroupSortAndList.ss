@@ -7,10 +7,10 @@
 |
 	<span class="viewLinks $AjaxDefinitions.ProductListAjaxifiedLinkClassName">
 	<% if IsShowFullList %>
-		<a href="$Link" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.VIEW_DETAILS','View Detailed List') %></a></li>
+		<a href="$Link" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.VIEW_DETAILS','View Detailed List') %></a>
 	<% else %>
 		<% if Products.MoreThanOnePage %>
-		<a href="$ListAllLink" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.LIST_ALL','List All') %> ($TotalCount)</a></li>
+		<a href="$ListAllLink" class="viewChangeLink filterSortOptions"><% _t('ProductGroup.LIST_ALL','List All') %> ($TotalCount)</a>
 		<% else %>
 		<span class="totalCout">$TotalCount  <% _t('ProductGroup.PRODUCTSFOUND','products found.') %></span>
 		<% end_if %>

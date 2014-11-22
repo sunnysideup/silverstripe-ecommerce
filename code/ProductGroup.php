@@ -2166,13 +2166,17 @@ class ProductGroup_Controller extends Page_Controller {
 	 *
 	 * @return String
 	 */
-	public function ResetPreferencesLink() {
+	public function ResetPreferencesLink($escapedAmpersands = true) {
+		$ampersand = '&';
+		if($escapedAmpersands) {
+			$ampersand = "&amp;";
+		}
 		$getVariableNameFilter = $this->getSortFilterDisplayNames("FILTER", "getVariable");
 		$getVariableNameSort = $this->getSortFilterDisplayNames("SORT", "getVariable");
 		return $this->Link()."?".
-			$getVariableNameFilter."=".$this->getMyUserPreferencesDefault("FILTER")."&amp;".
-			$getVariableNameSort."=".$this->getMyUserPreferencesDefault("SORT").
-			"&reload=1";
+			$getVariableNameFilter."=".$this->getMyUserPreferencesDefault("FILTER").$ampersand.
+			$getVariableNameSort."=".$this->getMyUserPreferencesDefault("SORT").$ampersand.
+			"reload=1";
 	}
 
 	/**
