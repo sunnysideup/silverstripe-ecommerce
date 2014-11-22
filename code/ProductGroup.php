@@ -1882,11 +1882,18 @@ class ProductGroup_Controller extends Page_Controller {
 
 	/**
 	 * are filters available?
+	 * we check one at the time so that we do the least
+	 * amount of DB queries.
 	 *
 	 * @return Boolean
 	 */
 	public function HasFilters(){
-		return $this->FilterLinks()->count() || $this->ProductGroupFilterLinks()->count();
+		$countFilters = $this->FilterLinks()->count();
+		if($countFilters > 1) {return true;}
+		$countGroupFilters = $this->ProductGroupFilterLinks()->count();
+		if($countGroupFilters > 1) {return true;}
+		if($countFilters + $countGroupFilters > 1) {return true;}
+		return false;
 	}
 
 
