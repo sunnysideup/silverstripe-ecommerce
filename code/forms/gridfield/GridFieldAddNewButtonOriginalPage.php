@@ -30,7 +30,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton {
 		}
 
 		$data = new ArrayData(array(
-			'NewLink' => "/admin/pages/add/",
+			'NewLink' => "/admin/".Config::inst()->get("CMSPageAddController_Products", "url_segment")."/",
 			'ButtonName' => $this->buttonName,
 		));
 
