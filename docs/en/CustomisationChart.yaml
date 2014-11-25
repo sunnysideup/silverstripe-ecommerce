@@ -8,7 +8,7 @@ Is it a wording change?:
   Create your own language file and add your own translation.:
     - Do a search for the text in your source code to see how to replace it.
     - What is your default AND current user locale?
-    - Create new folder "z" with config folder in it, add "lang" directory with "_manifest_exlude" file.
+    - Create new folder "z" with config folder in it, add "lang" directory with "_manifest_exclude" file.
     - In the lang directory add the required translation file(s) - see <a href="https://github.com/silverstripe/silverstripe-cms/tree/3.1/lang">cms/lang/</a> for examples.
     - 'Also see <a href="http://docs.silverstripe.org/framework/en/topics/i18n">http://docs.silverstripe.org/framework/en/topics/i18n</a>'
 
