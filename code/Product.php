@@ -410,8 +410,31 @@ class Product extends Page implements BuyableModel {
 			array(
 				"ID" => array($this->ParentID => $this->ParentID) + $otherGroupsArray
 			)
-		)
+		);
+	}
 
+	/**
+	 * Returns all the parent groups for the product,
+	 * including the parents and parents and so on.
+	 *
+	 * @return DataList (ProductGroups)
+	 */
+	function AllParentGroupsIncludingParents() {
+		$directParents = $this->AllParentGroups();
+		$allParentsArray = array();
+		foreach($directParents as $parent) {
+			$obj = $parent;
+			$allParentsArray[$obj->ID] = $obj->ID;
+			while($obj && $obj->ParentID) {
+				$obj = SiteTree::get()->byID(intval($obj->ParentID)-0);
+				if($obj) {
+					if(is_a($obj, Object::getCustomClass("ProductGroup"))) {
+						$allParentsArray[$obj->ID] = $obj->ID;
+					}
+				}
+			}
+		}
+		return ProductGroup::get()->filter(array("ID" => $allParentsArray));
 	}
 
 	/**
