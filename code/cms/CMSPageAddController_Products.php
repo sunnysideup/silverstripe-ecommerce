@@ -14,6 +14,13 @@ class CMSPageAddController_Products extends CMSPageAddController {
 		'doAdd',
 		'doCancel'
 	);
+
+	/**
+	 * the class of the page that is the root parent for the shop
+	 * @var String
+	 */
+	private static $root_parent_class_for_adding_page = "ProductGroupSearchPage";
+
 	/**
 	 *
 	 * @return Form
@@ -23,18 +30,25 @@ class CMSPageAddController_Products extends CMSPageAddController {
 	}
 
 	/**
-	 *
-	 * @return
+	 * @return ArrayList
 	 */
 	public function PageTypes(){
 		$pageTypes = parent::PageTypes();
 		$result = new ArrayList();
+		$productClass = Object::getCustomClass("Product");
+		$productGroupClass = Object::getCustomClass("Product");
+		$acceptedClasses1 = ClassInfo::subclassesFor("ProductGroup");
+		$acceptedClasses1[$productClass] = $productClass;
+		$acceptedClasses2 = ClassInfo::subclassesFor($productGroupClass);
+		$acceptedClasses2[$productGroupClass] = $productGroupClass;
+		$acceptedClasses = $acceptedClasses1 + $acceptedClasses2;
 		foreach($pageTypes as $type) {
-			if(is_a($type->ClassName, "Product", true) || is_a($type->ClassName, "ProductGroup", true)) {
+			if(in_array($type->ClassName, $acceptedClasses)) {
 				$result->push($type);
 			}
 		}
 		return $result;
 	}
+
 
 }

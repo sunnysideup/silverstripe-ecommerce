@@ -29,14 +29,34 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton {
 			$this->buttonName = _t('GridField.Add_USING_PAGES_SECTION', 'Add {name} using pages section', array('name' => $objectName));
 		}
 
+		$getSegment = "";
+		if($page = $this->BestParentPage()) {
+			$getSegment = "?ParentID=".$page->ID;
+		}
+
 		$data = new ArrayData(array(
-			'NewLink' => "/admin/".Config::inst()->get("CMSPageAddController_Products", "url_segment")."/",
+			'NewLink' => "/admin/".Config::inst()->get("CMSPageAddController_Products", "url_segment")."/".$getSegment,
 			'ButtonName' => $this->buttonName,
 		));
 
 		return array(
 			$this->targetFragment => $data->renderWith('GridFieldAddNewbutton'),
 		);
+	}
+
+
+	/**
+	 * finds the most likely root parent for the shop
+	 *
+	 * @return SiteTree | NULL
+	 */
+	public function BestParentPage(){
+		$defaultRootParentClass = Config::inst()->get("CMSPageAddController_Products", "root_parent_class_for_adding_page");
+		$rootParentClassArray = array($defaultRootParentClass, "ProductGroup");
+		foreach($rootParentClassArray as $rootParentClass) {
+			if($result = $rootParentClass::get()->filter("ParentID", 0)->First()) {return $result;}
+			if($result = $rootParentClass::get()->filter("MyParentPage.ParentID", 0)->innerJoin("SiteTree", "MyParentPage.ID = SiteTree.ParentID", "MyParentPage")->First()) {return $result;}
+		}
 	}
 
 }
