@@ -764,7 +764,7 @@ class ProductGroup extends Page {
 	 */
 	protected function getGroupFilter(){
 		$levelToShow = $this->MyLevelOfProductsToShow();
-		$cacheKey = "ProductGroup_GroupFilter_".$this->ID."_".$levelToShow;
+		$cacheKey = "ProductGroup_GroupFilter_".$this->ID."_".abs(int($levelToShow + 999));
 		if($groupFilter = $this->retrieveObjectStore($cacheKey)) {
 			$this->allProducts = $this->allProducts->where($groupFilter);
 		}
