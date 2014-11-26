@@ -135,6 +135,11 @@ class Product extends Page implements BuyableModel {
 		'FeaturedProduct'
 	);
 
+	/**
+	 * By default we search for products that are allowed to be purchased only
+	 * standard SS method
+	 * @return FieldList
+	 */
 	function scaffoldSearchFields($_params = NULL){
 		$fields = parent::scaffoldSearchFields($_params);
 		$fields->fieldByName("AllowPurchase")->setValue(1);
@@ -168,19 +173,6 @@ class Product extends Page implements BuyableModel {
 	 * Standard SS variable.
 	 */
 	private static $icon = 'ecommerce/images/icons/product';
-
-	/*
-	public function getCMSActions() {
-		$fields = parent::getCMSActions();
-		if(!$this->canEdit()) {
-			$editButton = FormAction::create('editinsitetree');
-			$editButton->setTitle(_t("Product.EDIT", "Edit"));
-			$editButton->setDescription(_t("Product.EDIT_IN_SITETREE", "Edit this record in the site tree"));
-			$fields->push($editButton);
-		}
-		return $fields;
-	}
-	*/
 
 	/**
 	 * Standard SS Method.
@@ -351,6 +343,10 @@ class Product extends Page implements BuyableModel {
 		}
 	}
 
+	/**
+	 * standard SS Method
+	 * Make sure that the image is a product image.
+	 */
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		if($this->ImageID) {
@@ -406,17 +402,22 @@ class Product extends Page implements BuyableModel {
 
 	/**
 	 * Returns all the parent groups for the product.
-	 * This function has been added her to contrast it with MainParentGroup (see below).
-	  *@return ManyManyList (ProductGroups)
+	  *@return DataList (ProductGroups)
 	 **/
 	function AllParentGroups() {
-		return $this->ProductGroups();
+		$otherGroupsArray =  $this->ProductGroups()->map("ID", "ID")->toArray();
+		return ProductGroup::get()->filter(
+			array(
+				"ID" => array($this->ParentID => $this->ParentID) + $otherGroupsArray
+			)
+		)
+
 	}
 
 	/**
 	 * Returns the direct parent group for the product.
 	 *
-	 * @return DataObject(ProductGroup) or NULL
+	 * @return ProductGroup | NULL
 	 **/
 	function MainParentGroup() {
 		return ProductGroup::get()->byID($this->ParentID);
