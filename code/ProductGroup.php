@@ -721,7 +721,7 @@ class ProductGroup extends Page {
 	 * @return Array
 	 */
 	public function currentInitialProductsAsCachedArray($filterKey) {
-		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID."_".$filterKey;
+		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID."_".abs(intval($filterKey));
 		if($array = $this->retrieveObjectStore($cacheKey)) {
 			//do nothing
 		}
@@ -764,7 +764,7 @@ class ProductGroup extends Page {
 	 */
 	protected function getGroupFilter(){
 		$levelToShow = $this->MyLevelOfProductsToShow();
-		$cacheKey = "ProductGroup_GroupFilter_".$this->ID."_".abs(int($levelToShow + 999));
+		$cacheKey = "ProductGroup_GroupFilter_".$this->ID."_".abs(intval($levelToShow + 999));
 		if($groupFilter = $this->retrieveObjectStore($cacheKey)) {
 			$this->allProducts = $this->allProducts->where($groupFilter);
 		}
