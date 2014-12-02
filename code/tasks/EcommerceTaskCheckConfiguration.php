@@ -126,6 +126,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask{
 					$this->checkoutAndModifierDetails();
 					$this->getAjaxDefinitions();
 					$this->definedConfigs();
+					$this->checkGEOIP();
 				}
 				else {
 					DB::alteration_message("ERROR: could not find any defaults", "deleted");
@@ -727,6 +728,25 @@ EcommerceConfig:
 			$actualValue = "[FALSE] / 0";
 		}
 		return $actualValue;
+	}
+
+	protected function checkGEOIP(){
+		if(Config::inst()->get("EcommerceCountry", "visitor_country_provider") == "EcommerceCountry_VisitorCountryProvider" && !class_exists("Geoip")) {
+			user_error("
+				You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
+				Alternatively you can set the following config EcommerceCountry.visitor_country_provider to something like MyGEOipProvider.
+				You then create a class MyGEOipProvider with a method getCountry().",
+				E_USER_NOTICE
+			);
+		}
+		elseif(class_exists("Geoip") && $this->Config()->get("visitor_country_provider") == "EcommerceCountry_VisitorCountryProvider") {
+			if(Director::isLive() && !Geoip::visitor_country()) {
+				user_error("
+					Please make sure that Geoip is working on your server (see the GEOIP module for details).",
+					E_USER_NOTICE
+				);
+			}
+		}
 	}
 
 }

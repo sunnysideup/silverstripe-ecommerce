@@ -227,7 +227,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 			$fields = new FieldList(
 				new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
 				new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
-				new TextField('Surname', _t('EcommerceRole.SURNAME','Surname'))
+				new TextField('Surname', _t('EcommerceRole.SURNAME','Surname')),
+				new EmailField('Email', _t('EcommerceRole.EMAIL','Email'))
 			);
 			$this->owner->extend('augmentEcommerceFields', $fields);
 			return $fields;

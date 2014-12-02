@@ -164,7 +164,9 @@ class OrderStatusLog extends DataObject {
 	 */
 	function populateDefaults() {
 		parent::populateDefaults();
-		$this->AuthorID = Member::currentUserID();
+		if(Security::database_is_ready()) {
+			$this->AuthorID = Member::currentUserID();
+		}
 	}
 
 	/**
