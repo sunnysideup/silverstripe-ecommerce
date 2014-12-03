@@ -7,6 +7,11 @@ After: 'framework/*','cms/*'
 DevelopmentAdmin:
   extensions:
     - EcommerceDevelopmentAdminDecorator
+  registered_controllers:
+    ecommerce:
+      controller: 'EcommerceDatabaseAdmin'
+      links:
+        ecommerce: 'The home page for everything e-commerce'
 
 Member:
   extensions:

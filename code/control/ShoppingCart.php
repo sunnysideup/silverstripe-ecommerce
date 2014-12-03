@@ -74,7 +74,6 @@ class ShoppingCart extends Object{
 		if(!self::$singletoncart){
 			self::$singletoncart = ShoppingCart::create();
 		}
-
 		return self::$singletoncart;
 	}
 

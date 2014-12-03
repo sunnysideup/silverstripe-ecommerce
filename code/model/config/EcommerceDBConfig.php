@@ -416,7 +416,10 @@ class EcommerceDBConfig extends DataObject {
 	 * @return DataList | Null
 	 */
 	function Currencies() {
-		return EcommerceCurrency::get_list();
+		$list = EcommerceCurrency::get_list();
+		if($list && $list->count() > 1) {
+			return $list;
+		}
 	}
 
 	/**
