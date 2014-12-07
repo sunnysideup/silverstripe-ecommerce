@@ -178,19 +178,23 @@ class OrderFormAddress extends Form {
 		$nextButton = new FormAction('saveAddress', _t('OrderForm.NEXT','Next'));
 		$nextButton->addExtraClass("next");
 		$actions = new FieldList($nextButton);
+
 		$validator = OrderFormAddress_Validator::create($requiredFields);
-		foreach($requiredFields as $requiredField) {
-			$field = $fields->dataFieldByName($requiredField);
-			if($field) {
-				$field->addExtraClass("required");
-			}
-		}
+
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
 		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
 		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
 		if($this->extend('updateValidator', $validator) !== null) {$this->setValidator($validator);}
+
+		//this needs to come after the extension calls
+		foreach($validator->getRequired() as $requiredField) {
+			$field = $fields->dataFieldByName($requiredField);
+			if($field) {
+				$field->addExtraClass("required");
+			}
+		}
 
 		//  ________________  7)  Load saved data
 
