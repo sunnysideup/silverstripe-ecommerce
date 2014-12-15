@@ -1,3 +1,10 @@
+---
+Name: ecommerce_default_settings
+Before: 'mysite/*'
+After: 'framework/*','cms/*', 'ecommerce/*'
+---
+
+
 # USAGAE:
 # 1. copy this file to another location (e.g. mysite/_config)
 # 2. reference the new file location in /ecommerce/_config/

@@ -23,6 +23,18 @@ class EcommerceGeocodingField extends TextField {
 	public function setUseSensor($b) {$this->useSensor = $b;}
 
 	/**
+	 *
+	 * @var Boolean
+	 */
+	protected $allowByPass = true;
+
+	/**
+	 * Do you like to allow the user to by-pass the Google Coding
+	 * @param Boolean
+	 */
+	public function setAllowByPass($b) {$this->allowByPass = $b;}
+
+	/**
 	 * JS file used to run this field
 	 * @var String
 	 */
@@ -123,8 +135,15 @@ class EcommerceGeocodingField extends TextField {
 			Requirements::themedCSS($this->cssLocation, "ecommerce");
 		}
 		$this->setAttribute("autocomplete", "off");
-		$this->setRightTitle("
-			<a href=\"https://developers.google.com/maps/documentation/geocoding/\" class=\"bypassGoogleGeocoding\">"._t("EcommerceGeocodingField.BYPASS_GOOGLE_GEOCODING", "by-pass Google GeoCoding.")."</a>");
+		//right title
+		$byPassLink = "";
+		$viewGoogleMapLink = "";
+		if($this->allowByPass) {
+			$byPassLink = "<a href=\"https://developers.google.com/maps/documentation/geocoding/\" class=\"bypassGoogleGeocoding\">"._t("EcommerceGeocodingField.BYPASS_GOOGLE_GEOCODING", "by-pass Google GeoCoding")."</a>";
+
+		}
+		$viewGoogleMapLink = "<a href=\"#\" class=\"viewGoogleMapLink\">"._t("EcommerceGeocodingField.VIEW_GOOGLE_MAP", "View Map")."</a>";
+		$this->setRightTitle($byPassLink.$viewGoogleMapLink);
 		return parent::Field($properties);
 	}
 

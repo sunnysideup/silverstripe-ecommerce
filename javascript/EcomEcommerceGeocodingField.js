@@ -92,6 +92,21 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		bypassSelector: "a.bypassGoogleGeocoding",
 
 		/**
+		 * @string
+		 */
+		viewGoogleMapLinkSelector: "a.viewGoogleMapLink",
+
+		/**
+		 * @string
+		 */
+		googleStaticMapLink: "http://maps.googleapis.com/maps/api/staticmap?center=[ADDRESS1]&zoom=17&scale=false&size=600x300&maptype=roadmap&sensor=false&format=png&visual_refresh=true&markers=size:mid%7Ccolor:red%7Clabel:%7C[ADDRESS2]",
+
+		/**
+		 * @string
+		 */
+		urlForViewGoogleMapLink: "http://maps.google.com/maps/search/",
+
+		/**
 		 * @float
 		 */
 		percentageToBeCompleted: 0.25,
@@ -99,7 +114,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		/**
 		 * @var Boolean
 		 */
-		debug: false,
+		debug: true,
 
 		/**
 		 *
@@ -195,6 +210,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					jQuery("#"+geocodingFieldVars.fieldName+" label.left").text(geocodingFieldVars.findNewAddressText);
 				}
 			}
+			jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).attr("target", "_googleMap");
 		},
 
 		fillInAddress: function() {
@@ -209,42 +225,57 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				}
 			}
 			if(placeIsSpecificEnough) {
+				var escapedAddress = encodeURIComponent(place.formatted_address);
+				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).attr("href", geocodingFieldVars.urlForViewGoogleMapLink+escapedAddress);
+				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).html("<img src=\""+geocodingFieldVars.getStaticMapImage(escapedAddress)+"\" alt=\"Google Map\" />");
 				if(place && place.address_components) {
 					for (var formField in geocodingFieldVars.relatedFields) {
+						place.address_components.push(
+							{
+								long_name: place.formatted_address,
+								short_name: place.formatted_address,
+								types: ["formatted_address"]
+							}
+						);
 						var previousValues = [];
 						//reset field and show it...
-						jQuery("#"+formField).show().find("input, select").val("");
-						if(geocodingFieldVars.debug) {console.debug("- checking form field: "+formField);}
-						for (var j = 0; j < place.address_components.length; j++) {
-							if(geocodingFieldVars.debug) {console.debug("-- provided information: "+place.address_components[j]);}
-							for (var k = 0; k < place.address_components[j].types.length; k++) {
-								var googleType = place.address_components[j].types[k];
-								if(geocodingFieldVars.debug) {console.debug("---- found Google Info for: "+googleType);}
-								if(geocodingFieldVars.debug) {console.log(geocodingFieldVars.relatedFields[formField]);}
-								for (var fieldType in geocodingFieldVars.relatedFields[formField]) {
-									if(geocodingFieldVars.debug) {console.debug("-------- with form field checking: "+fieldType+" is the same as google type: "+googleType);}
-									if (fieldType == googleType) {
-										var googleVariable = geocodingFieldVars.relatedFields[formField][fieldType];
-										var value = place.address_components[j][googleVariable];
-										if(jQuery.inArray(value, previousValues) == -1) {
-											previousValues.push(value);
-											if(geocodingFieldVars.debug) {console.debug("------------ setting: "+formField+" to "+value+", using "+googleVariable+" in google address");}
-											previousValueForThisFormField = "";
-											if(jQuery('input[name="'+formField+'"]').length) {
-												var previousValueForThisFormField = jQuery('input[name="'+formField+'"]').val();
+						fieldExists = jQuery("#"+formField).show().find("input, select").val("").length;
+						if(fieldExists > 0) {
+							if(geocodingFieldVars.debug) {console.debug("- checking form field: "+formField+" now searching for data ...");}
+							for (var j = 0; j < place.address_components.length; j++) {
+								if(geocodingFieldVars.debug) {console.debug("- -----  ----- ----- provided information: "+place.address_components[j].long_name);}
+								for (var k = 0; k < place.address_components[j].types.length; k++) {
+									var googleType = place.address_components[j].types[k];
+									if(geocodingFieldVars.debug) {console.debug("- ----- ----- ----- ----- ----- ----- found Google Info for: "+googleType);}
+									//if(geocodingFieldVars.debug) {console.log(geocodingFieldVars.relatedFields[formField]);}
+									for (var fieldType in geocodingFieldVars.relatedFields[formField]) {
+										if(geocodingFieldVars.debug) {console.debug("- ----- ----- ----- ----- ----- ----- ----- ----- ----- with form field checking: "+fieldType+" is the same as google type: "+googleType);}
+										if (fieldType == googleType) {
+											var googleVariable = geocodingFieldVars.relatedFields[formField][fieldType];
+											var value = place.address_components[j][googleVariable];
+											if(jQuery.inArray(value, previousValues) == -1) {
+												previousValues.push(value);
+												if(geocodingFieldVars.debug) {console.debug("- ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** setting: "+formField+" to "+value+", using "+googleVariable+" in google address");}
+												previousValueForThisFormField = "";
+												if(jQuery('input[name="'+formField+'"]').length) {
+													var previousValueForThisFormField = jQuery('input[name="'+formField+'"]').val();
+												}
+												if(previousValueForThisFormField) {
+													value = previousValueForThisFormField + " " + value;
+												}
+												jQuery('input[name="'+formField+'"], select[name="'+formField+'"]').val(value);
+												geocodingFieldVars.setResults("yes");
 											}
-											if(previousValueForThisFormField) {
-												value = previousValueForThisFormField + " " + value;
+											else {
+												if(geocodingFieldVars.debug) {console.debug("- ----- ----- ----- ----- ----- ----- ----- ----- ----- data already used: "+value);}
 											}
-											jQuery('input[name="'+formField+'"], select[name="'+formField+'"]').val(value);
-											geocodingFieldVars.setResults("yes");
-										}
-										else {
-											if(geocodingFieldVars.debug) {console.debug("-------- data already used: "+value);}
 										}
 									}
 								}
 							}
+						}
+						else {
+							if(geocodingFieldVars.debug) {console.debug("E -----  ----- ----- could not find: "+formField+"");}
 						}
 					}
 					jQuery("#"+geocodingFieldVars.fieldName+" label.left").text(geocodingFieldVars.findNewAddressText);
@@ -255,6 +286,9 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 			}
 			else {
 				geocodingFieldVars.entryField.val(geocodingFieldVars.errorMessageMoreSpecific);
+				//reset links
+				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).attr("href", geocodingFieldVars.urlForViewGoogleMapLink);
+				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).html("");
 			}
 			geocodingFieldVars.updateEntryFieldStatus();
 		},
@@ -324,15 +358,22 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		 * sets up all the various class options based on the current status
 		 */
 		updateEntryFieldStatus: function() {
+			var value =  geocodingFieldVars.entryField.val();
 			var hasResult =  geocodingFieldVars.hasResults();
-			var hasText = geocodingFieldVars.entryField.val().length > 1;
+			var hasText = value.length > 1;
 			if(hasResult) {
 				geocodingFieldVars.entryField.addClass(geocodingFieldVars.selectedClass);
 				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.useMeClass);
+				//swap links:
+				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).show();
+				jQuery(geocodingFieldVars.bypassSelector).hide();
 			}
 			else{
 				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.selectedClass);
 				geocodingFieldVars.entryField.addClass(geocodingFieldVars.useMeClass);
+				//swap links:
+				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).hide();
+				jQuery(geocodingFieldVars.bypassSelector).show();
 			}
 			if(hasText) {
 				geocodingFieldVars.entryField.addClass(geocodingFieldVars.hasTextClass);
@@ -340,6 +381,13 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 			else{
 				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.hasTextClass);
 			}
+		},
+
+		getStaticMapImage: function(escapedLocation) {
+			var string = geocodingFieldVars.googleStaticMapLink;
+			string = string.replace("[ADDRESS1]", escapedLocation, "gi");
+			string = string.replace("[ADDRESS2]", escapedLocation, "gi");
+			return string;
 		}
 	}
 
