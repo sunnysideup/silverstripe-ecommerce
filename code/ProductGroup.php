@@ -571,16 +571,21 @@ class ProductGroup extends Page {
 		//dirty hack to show images!
 		$fields->addFieldToTab('Root.Images', Product_ProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
-		$numberOfProductsPerPageExplanation = $this->MyNumberOfProductsPerPage() != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$this->MyNumberOfProductsPerPage()." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
+		$calculatedNumberOfProductsPerPage = $this->MyNumberOfProductsPerPage();
+		$numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$calculatedNumberOfProductsPerPage." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
 		$fields->addFieldToTab(
 			'Root',
 			Tab::create(
 				'ProductDisplay',
 				DropdownField::create("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show (may be overridden by special settings)..."), $this->showProductLevels),
 				HeaderField::create("WhatProductsAreShown", _t("ProductGroup.WHATPRODUCTSSHOWN", _t("ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS", "Inherited options"))),
-				NumericField::create("NumberOfProductsPerPage", _t("ProductGroup.PRODUCTSPERPAGE", "Number of products per page").$numberOfProductsPerPageExplanation)
+				$numberOfProductsPerPageField = NumericField::create("NumberOfProductsPerPage", _t("ProductGroup.PRODUCTSPERPAGE", "Number of products per page").$numberOfProductsPerPageExplanation)
 			)
 		);
+		if($calculatedNumberOfProductsPerPage && !$this->NumberOfProductsPerPage) {
+			$this->NumberOfProductsPerPage = null;
+			$numberOfProductsPerPageField->setAttribute("placeholder", $calculatedNumberOfProductsPerPage);
+		}
 		//sort
 		$sortDropdownList = $this->getUserPreferencesOptionsForDropdown("SORT");
 		if(count($sortDropdownList) > 1) {
