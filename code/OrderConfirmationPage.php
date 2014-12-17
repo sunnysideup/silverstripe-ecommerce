@@ -312,6 +312,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		parent::init();
 		Requirements::themedCSS('Order', 'ecommerce');
 		Requirements::themedCSS('Order_Print', 'ecommerce', "print");
+		Requirements::themedCSS('CheckoutPage', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		//clear steps from checkout page otherwise in the next order
