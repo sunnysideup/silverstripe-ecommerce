@@ -139,16 +139,17 @@ BillingAddress:
     Address:
       street_number: long_name
       route: long_name
-    Address2:
       location: long_name
+    Address2:
       sublocality_level_3: long_name
       sublocality_level_2: long_name
       sublocality_level_1: long_name
-    City:
-      locality: long_name
       administrative_area_level_3: long_name
       administrative_area_level_2: long_name
-      administrative_area_level_1: long_name
+    City:
+      locality: long_name
+    RegionCode:
+      administrative_area_level_1: short_name
     Country:
       country: short_name
     PostalCode:
@@ -159,8 +160,8 @@ ShippingAddress:
     ShippingAddress:
       street_number: long_name
       route: long_name
-    ShippingAddress2:
       location: long_name
+    ShippingAddress2:
       sublocality_level_3: long_name
       sublocality_level_2: long_name
       sublocality_level_1: long_name
@@ -168,7 +169,8 @@ ShippingAddress:
       locality: long_name
       administrative_area_level_3: long_name
       administrative_area_level_2: long_name
-      administrative_area_level_1: long_name
+    ShippingRegionCode:
+      administrative_area_level_1: short_name
     ShippingCountry:
       country: short_name
     ShippingPostalCode:
@@ -183,6 +185,7 @@ EcommerceCountry:
 
 EcommerceRegion:
   visitor_region_provider: "EcommerceRegion_VisitorRegionProvider"
+  show_freetext_region_field: true
 
 OrderAddress:
   use_separate_shipping_address: true
@@ -212,6 +215,7 @@ EcommerceRole:
   admin_role_title: "Managing Store"
   admin_role_permission_codes:
     - CMS_ACCESS_ProductsAndGroupsModelAdmin
+    - CMS_ACCESS_ProductConfigModelAdmin
     - CMS_ACCESS_SalesAdmin
     - CMS_ACCESS_StoreAdmin
     - CMS_ACCESS_AssetAdmin
@@ -310,6 +314,8 @@ ProductsAndGroupsModelAdmin:
   managed_models:
     - Product
     - ProductGroup
+
+ProductConfigModelAdmin:
     - SearchReplacement
     - SearchHistory
 

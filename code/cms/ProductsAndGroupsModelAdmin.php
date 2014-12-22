@@ -41,12 +41,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 		if(singleton($this->modelClass) instanceof SiteTree) {
 			if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
 				if($gridField instanceof GridField) {
-					$gridField->getConfig()
-						->removeComponentsByType("GridFieldEditButton")
-						->removeComponentsByType("GridFieldDeleteAction")
-						->removeComponentsByType("GridFieldAddNewButton")
-						->addComponent(new GridFieldAddNewButtonOriginalPage())
-						->addComponent(new GridFieldEditButtonOriginalPage());
+					$gridField->setConfig(GridFieldEditOriginalPageConfig::create());
 				}
 			}
 		}

@@ -38,6 +38,12 @@ class CheckoutPage extends CartPage {
 
 	/**
 	 * standard SS variable
+	 * @Var Boolean
+	 */
+	private static $hide_ancestor = 'CartPage';
+
+	/**
+	 * standard SS variable
 	 * @Var string
 	 */
 	private static $icon = 'ecommerce/images/icons/CheckoutPage';

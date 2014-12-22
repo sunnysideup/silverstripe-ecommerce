@@ -112,6 +112,9 @@ class EcommerceRegion extends DataObject {
 	 * @return Bool
 	 **/
 	public static function show() {
+		if(Config::inst()->get("EcommerceRegion", "show_freetext_region_field")){
+			return true;
+		}
 		return EcommerceRegion::get()->First() ? true : false;
 	}
 

@@ -6,4 +6,3 @@
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 <% include OtherProductInfo %>
 <% if Form %><div id="FormHolder">$Form</div><% end_if %>
-<% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>

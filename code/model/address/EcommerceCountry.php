@@ -176,14 +176,13 @@ class EcommerceCountry extends DataObject {
 			return Geoip::getCountryDropDown();
 		}
 		if($showAllCountries) {
-			$where = "";
+			$objects = EcommerceCountry::get();
 		}
 		else {
-			$where = "\"DoNotAllowSales\" = 0";
+			$objects = EcommerceCountry::get()->filter(array("DoNotAllowSales" => 0));
 		}
-		$objects = EcommerceCountry::get()->where($where);
 		if($objects && $objects->count()) {
-			return $objects->map("ID", "Name")->toArray();
+			return $objects->map("Code", "Name")->toArray();
 		}
 		return array();
 	}
@@ -219,10 +218,13 @@ class EcommerceCountry extends DataObject {
 	 * @return String
 	 **/
 	public static function find_title($code) {
-		$options = EcommerceCountry::get_country_dropdown();
+		$options = EcommerceCountry::get_country_dropdown($showAllCountries = true);
 		// check if code was provided, and is found in the country array
 		if(isset($options[$code])) {
 			return $options[$code];
+		}
+		elseif($code) {
+			return $code;
 		}
 		else {
 			return "[COUNTRY NOT FOUND]";

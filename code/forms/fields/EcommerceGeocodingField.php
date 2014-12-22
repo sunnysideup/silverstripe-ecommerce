@@ -47,6 +47,21 @@ class EcommerceGeocodingField extends TextField {
 	public function setGoogleSourceJS($s) {$this->googleSourceJS = $s;}
 
 	/**
+	 * Link to the static map.  Set to an empty string to have no static image appear.
+	 * Use the [ADDRESS] tag to insert the address...
+	 * user the [MAXWIDTH] tag to set it automatically to the width of the container.
+	 * @var String
+	 */
+	protected $googleStaticMapLink = "http://maps.googleapis.com/maps/api/staticmap?center=[ADDRESS]&zoom=17&scale=false&size=[MAXWIDTH]x300&maptype=roadmap&sensor=false&format=png&visual_refresh=true&markers=size:mid%7Ccolor:red%7Clabel:%7C[ADDRESS]";
+
+	/**
+	 * set to empty string to NOT show a static map
+	 *
+	 * @param String
+	 */
+	public function setGoogleStaticMapLink($s) {$this->googleStaticMapLink = $s;}
+
+	/**
 	 * JS file used to run this field
 	 * @var String
 	 */
@@ -159,6 +174,8 @@ class EcommerceGeocodingField extends TextField {
 			EcommerceGeocodingField".$this->id().".setVar('findNewAddressText', '".Convert::raw2js(_t("EcommerceGeocodingField.FIND_NEW_ADDRESS", "Find Alternative Address"))."');
 			EcommerceGeocodingField".$this->id().".setVar('useSensor', ".Convert::raw2js($this->userSensor ? "true" : "false").");
 			EcommerceGeocodingField".$this->id().".setVar('relatedFields', ".Convert::raw2json($this->getFieldMap()).");
+			EcommerceGeocodingField".$this->id().".setVar('googleStaticMapLink', '".Convert::raw2js($this->googleStaticMapLink)."');
+			EcommerceGeocodingField".$this->id().".setVar('linkLabelToViewMap', '".Convert::raw2js(_t("EcommerceGeocodingField.LINK_LABEL_TO_VIEW_MAP", "view map"))."');
 			EcommerceGeocodingField".$this->id().".init();";
 	}
 

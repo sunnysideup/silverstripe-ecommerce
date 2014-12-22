@@ -41,10 +41,10 @@ class ShippingAddress extends OrderAddress {
 		'ShippingFirstName' => 'Varchar(100)',
 		'ShippingSurname' => 'Varchar(100)',
 		'ShippingAddress' => 'Varchar(200)',
-		'ShippingAddress2' => 'Varchar(200)',
+		'ShippingAddress2' => 'Varchar(255)',
 		'ShippingCity' => 'Varchar(100)',
 		'ShippingPostalCode' => 'Varchar(30)',
-		'ShippingRegionCode' => 'Varchar(20)',
+		'ShippingRegionCode' => 'Varchar(100)',
 		'ShippingCountry' => 'Varchar(4)',
 		'ShippingPhone' => 'Varchar(100)',
 		'Obsolete' => 'Boolean',
@@ -202,24 +202,26 @@ class ShippingAddress extends OrderAddress {
 			}
 			$shippingFields->push(new TextField('ShippingPhone', _t('OrderAddress.PHONE','Phone')));
 			//$shippingFields->push(new TextField('ShippingMobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
-			if(!$hasPreviousAddresses) {
-				$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
-				if(is_array($mappingArray) && count($mappingArray)) {
-					$shippingFields->push(
-						$shippingEcommerceGeocodingField = new EcommerceGeocodingField(
-							'ShippingEcommerceGeocodingField',
-							_t('OrderAddress.Find_Address','Find address')
-						)
-					);
-					$shippingEcommerceGeocodingField->setFieldMap($mappingArray);
-				}
+			$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
+			if(is_array($mappingArray) && count($mappingArray)) {
+				$shippingFields->push(
+					$shippingEcommerceGeocodingField = new EcommerceGeocodingField(
+						'ShippingEcommerceGeocodingField',
+						_t('OrderAddress.Find_Address','Find address')
+					)
+				);
+				$shippingEcommerceGeocodingField->setFieldMap($mappingArray);
+				//$shippingFields->push(new HiddenField('ShippingAddress2'));
+				//$shippingFields->push(new HiddenField('ShippingCity'));
+			}
+			else {
 			}
 			//$shippingFields->push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 			$shippingFields->push(new TextField('ShippingAddress', _t('OrderAddress.ADDRESS','Address')));
-			$shippingFields->push(new TextField('ShippingAddress2', _t('OrderAddress.ADDRESS2','&nbsp;')));
+			$shippingFields->push(new TextField('ShippingAddress2', _t('OrderAddress.ADDRESS2','')));
 			$shippingFields->push(new TextField('ShippingCity', _t('OrderAddress.CITY','Town')));
+			$shippingFields->push($this->getRegionField("ShippingRegionID", "ShippingRegionCode"));
 			$shippingFields->push($this->getPostalCodeField("ShippingPostalCode"));
-			$shippingFields->push($this->getRegionField("ShippingRegionID"));
 			$shippingFields->push($this->getCountryField("ShippingCountry"));
 			$this->makeSelectedFieldsReadOnly($shippingFields);
 			$shippingFieldsHeader->addExtraClass("shippingFieldsHeader");
@@ -242,6 +244,9 @@ class ShippingAddress extends OrderAddress {
 		$requiredFieldsArray = array(
 			'ShippingAddress',
 			'ShippingCity',
+			'ShippingPostalCode',
+			'ShippingRegionCode',
+			'ShippingRegionID',
 			'ShippingCountry'
 		);
 		$this->extend('augmentEcommerceShippingAddressRequiredFields', $requiredFieldsArray);

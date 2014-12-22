@@ -12,6 +12,11 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 	var geocodingFieldVars = {
 
 		/**
+		 * @var Boolean
+		 */
+		debug: false,
+
+		/**
 		 * name of the html field (e.g. MyInputField)
 		 * this is provided by PHP using a small customScript
 		 *
@@ -42,11 +47,11 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 
 		/**
 		 * based on format FormField: [GeocodingAddressType: format]
-			Address1: {'street_number': 'short_name', 'route': 'long_name'},
-			Address2: {'locality': 'long_name'},
-			City: {'administrative_area_level_1': 'short_name'},
-			Country: {'country': 'long_name'},
-			PostcalCode: {'postal_code': 'short_name'}
+		 *    Address1: {'street_number': 'short_name', 'route': 'long_name'},
+		 *    Address2: {'locality': 'long_name'},
+		 *    City: {'administrative_area_level_1': 'short_name'},
+		 *    Country: {'country': 'long_name'},
+		 *    PostcalCode: {'postal_code': 'short_name'}
 		 *
 		 * @var JSON
 		 */
@@ -99,7 +104,13 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		/**
 		 * @string
 		 */
-		googleStaticMapLink: "http://maps.googleapis.com/maps/api/staticmap?center=[ADDRESS1]&zoom=17&scale=false&size=600x300&maptype=roadmap&sensor=false&format=png&visual_refresh=true&markers=size:mid%7Ccolor:red%7Clabel:%7C[ADDRESS2]",
+		googleStaticMapLink: "",
+
+		/**
+		 * default witdth of static image
+		 * @Int
+		 */
+		defaultWidthOfStaticImage: 500,
 
 		/**
 		 * @string
@@ -107,14 +118,14 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		urlForViewGoogleMapLink: "http://maps.google.com/maps/search/",
 
 		/**
+		 * @string
+		 */
+		linkLabelToViewMap: "View Map",
+
+		/**
 		 * @float
 		 */
 		percentageToBeCompleted: 0.25,
-
-		/**
-		 * @var Boolean
-		 */
-		debug: true,
 
 		/**
 		 *
@@ -224,23 +235,33 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					placeIsSpecificEnough = true;
 				}
 			}
+			var mapLink = jQuery("#"+geocodingFieldVars.fieldName).find(geocodingFieldVars.viewGoogleMapLinkSelector);
 			if(placeIsSpecificEnough) {
 				var escapedAddress = encodeURIComponent(place.formatted_address);
-				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).attr("href", geocodingFieldVars.urlForViewGoogleMapLink+escapedAddress);
-				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).html("<img src=\""+geocodingFieldVars.getStaticMapImage(escapedAddress)+"\" alt=\"Google Map\" />");
+				mapLink.attr("href", geocodingFieldVars.urlForViewGoogleMapLink+escapedAddress);
+				var staticMapImageLink = geocodingFieldVars.getStaticMapImage(escapedAddress);
+				if(staticMapImageLink) {
+					mapLink.html("<img src=\""+staticMapImageLink+"\" alt=\"Google Map\" />");
+				}
+				else {
+					mapLink.html(geocodingFieldVars.linkLabelToViewMap);
+				}
 				if(place && place.address_components) {
+					place.address_components.push(
+						{
+							long_name: place.formatted_address,
+							short_name: place.formatted_address,
+							types: ["formatted_address"]
+						}
+					);
 					for (var formField in geocodingFieldVars.relatedFields) {
-						place.address_components.push(
-							{
-								long_name: place.formatted_address,
-								short_name: place.formatted_address,
-								types: ["formatted_address"]
-							}
-						);
 						var previousValues = [];
 						//reset field and show it...
-						fieldExists = jQuery("#"+formField).show().find("input, select").val("").length;
-						if(fieldExists > 0) {
+						var holderToSet = jQuery("#"+formField);
+						holderToSet.removeClass("geoCodingSet");
+						var fieldToSet = jQuery("input[name='"+formField+"'],select[name='"+formField+"']");
+						if(fieldToSet.length > 0) {
+							fieldToSet.show().val("");
 							if(geocodingFieldVars.debug) {console.debug("- checking form field: "+formField+" now searching for data ...");}
 							for (var j = 0; j < place.address_components.length; j++) {
 								if(geocodingFieldVars.debug) {console.debug("- -----  ----- ----- provided information: "+place.address_components[j].long_name);}
@@ -257,14 +278,14 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 												previousValues.push(value);
 												if(geocodingFieldVars.debug) {console.debug("- ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** setting: "+formField+" to "+value+", using "+googleVariable+" in google address");}
 												previousValueForThisFormField = "";
-												if(jQuery('input[name="'+formField+'"]').length) {
+												//in input field
+												if(fieldToSet.is("input")) {
 													var previousValueForThisFormField = jQuery('input[name="'+formField+'"]').val();
-												}
-												if(previousValueForThisFormField) {
 													value = previousValueForThisFormField + " " + value;
 												}
-												jQuery('input[name="'+formField+'"], select[name="'+formField+'"]').val(value);
+												fieldToSet.val(value);
 												geocodingFieldVars.setResults("yes");
+												holderToSet.addClass("geoCodingSet");
 											}
 											else {
 												if(geocodingFieldVars.debug) {console.debug("- ----- ----- ----- ----- ----- ----- ----- ----- ----- data already used: "+value);}
@@ -275,7 +296,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 							}
 						}
 						else {
-							if(geocodingFieldVars.debug) {console.debug("E -----  ----- ----- could not find: "+formField+"");}
+							if(geocodingFieldVars.debug) {console.debug("E -----  ----- ----- could not find form field with ID: #"+formField+"");}
 						}
 					}
 					jQuery("#"+geocodingFieldVars.fieldName+" label.left").text(geocodingFieldVars.findNewAddressText);
@@ -287,23 +308,33 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 			else {
 				geocodingFieldVars.entryField.val(geocodingFieldVars.errorMessageMoreSpecific);
 				//reset links
-				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).attr("href", geocodingFieldVars.urlForViewGoogleMapLink);
-				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).html("");
+				mapLink
+					.attr("href", geocodingFieldVars.urlForViewGoogleMapLink)
+					.html("");
 			}
 			geocodingFieldVars.updateEntryFieldStatus();
+			if(geocodingFieldVars.hasResults()) {
+				geocodingFieldVars.showFields();
+			}
 		},
 
+		/**
+		 * shows the address fields
+		 */
 		showFields: function(){
 			//hide fields to be completed for now...
 			for (var formField in geocodingFieldVars.relatedFields) {
-				jQuery("#"+formField).show();
+				jQuery("#"+formField).removeClass("hide").addClass("show");
 			}
 		},
 
+		/**
+		 * hides the address fields
+		 */
 		hideFields: function(){
 			//hide fields to be completed for now...
 			for (var formField in geocodingFieldVars.relatedFields) {
-				jQuery("#"+formField).hide();
+				jQuery("#"+formField).removeClass("show").addClass("hide");
 			}
 		},
 
@@ -331,6 +362,9 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 			return false;
 		},
 
+		/**
+		 * removes all the data from the address fields
+		 */
 		clearFields: function(){
 			//hide fields to be completed for now...
 			for (var formField in geocodingFieldVars.relatedFields) {
@@ -339,7 +373,8 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		},
 
 		/**
-		 * tells us if results have been found
+		 * shows the user that there is a result.
+		 *
 		 * @param string
 		 */
 		setResults: function(resultAsYesOrNo) {
@@ -348,6 +383,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 
 		/**
 		 * tells us if results have been found
+		 *
 		 * @return Boolean
 		 */
 		hasResults: function() {
@@ -383,11 +419,26 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 			}
 		},
 
+		/**
+		 *
+		 * @return NULL | String
+		 */
 		getStaticMapImage: function(escapedLocation) {
-			var string = geocodingFieldVars.googleStaticMapLink;
-			string = string.replace("[ADDRESS1]", escapedLocation, "gi");
-			string = string.replace("[ADDRESS2]", escapedLocation, "gi");
-			return string;
+			if(geocodingFieldVars.googleStaticMapLink) {
+				var string = geocodingFieldVars.googleStaticMapLink;
+				string = string.replace("[ADDRESS]", escapedLocation, "gi");
+				string = string.replace("[ADDRESS]", escapedLocation, "gi");
+				string = string.replace("[ADDRESS]", escapedLocation, "gi");
+				var maxWidth = jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).parents("div.field").width();
+				if(!maxWidth) {
+					maxWidth = geocodingFieldVars.defaultWidthOfStaticImage;
+				}
+				if(maxWidth) {
+					string = string.replace("[MAXWIDTH]", maxWidth, "gi");
+					string = string.replace("[MAXWIDTH]", maxWidth, "gi");
+				}
+				return string;
+			}
 		}
 	}
 

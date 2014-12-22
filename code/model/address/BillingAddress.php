@@ -41,12 +41,12 @@ class BillingAddress extends OrderAddress {
 		'Prefix' => 'Varchar(10)',
 		'FirstName' => 'Varchar(100)',
 		'Surname' => 'Varchar(100)',
-		'Address' => 'Varchar(200)',
+		'Address' => 'Varchar(255)',
 		'Address2' => 'Varchar(200)',
 		'City' => 'Varchar(100)',
 		'PostalCode' => 'Varchar(30)',
 		'Country' => 'Varchar(4)',
-		'RegionCode' => 'Varchar(20)',
+		'RegionCode' => 'Varchar(100)',
 		'Phone' => 'Varchar(50)',
 		'Email' => 'Varchar(250)',
 		'Obsolete' => 'Boolean',
@@ -178,7 +178,8 @@ class BillingAddress extends OrderAddress {
 	 **/
 	public function getFields(Member $member = null) {
 		$fields = parent::getEcommerceFields();
-		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Details'), 3));
+		$fields->push(new TextField('Phone', _t('OrderAddress.PHONE','Phone')));
+		$fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS','Billing Address'), 3));
 		$billingFields = new CompositeField();
 		$hasPreviousAddresses = false;
 		if($member) {
@@ -192,26 +193,26 @@ class BillingAddress extends OrderAddress {
 				}
 			}
 		}
-		$billingFields->push(new TextField('Phone', _t('OrderAddress.PHONE','Phone')));
+
 		//$billingFields->push(new TextField('MobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
-		if(!$hasPreviousAddresses) {
-			$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
-			if(is_array($mappingArray) && count($mappingArray)) {
-				$billingFields->push(
-					$billingEcommerceGeocodingField = new EcommerceGeocodingField(
-						'BillingEcommerceGeocodingField',
-						_t('OrderAddress.Find_Address','Find address')
-					)
-				);
-				$billingEcommerceGeocodingField->setFieldMap($mappingArray);
-			}
+		$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
+		if(is_array($mappingArray) && count($mappingArray)) {
+			$billingFields->push(
+				$billingEcommerceGeocodingField = new EcommerceGeocodingField(
+					'BillingEcommerceGeocodingField',
+					_t('OrderAddress.FIND_ADDRESS','Find address')
+				)
+			);
+			$billingEcommerceGeocodingField->setFieldMap($mappingArray);
+			//$billingFields->push(new HiddenField('Address2', "NOT SET", "NOT SET"));
+			//$billingFields->push(new HiddenField('City', "NOT SET", "NOT SET"));
 		}
 		//$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
 		$billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS','Address')));
-		$billingFields->push(new TextField('Address2', _t('OrderAddress.ADDRESS2','&nbsp;')));
+		$billingFields->push(new TextField('Address2', _t('OrderAddress.ADDRESS2','')));
 		$billingFields->push(new TextField('City', _t('OrderAddress.CITY','Town')));
 		$billingFields->push($this->getPostalCodeField("PostalCode"));
-		$billingFields->push($this->getRegionField("RegionID"));
+		$billingFields->push($this->getRegionField("RegionID", "RegionCode"));
 		$billingFields->push($this->getCountryField("Country"));
 		$billingFields->addExtraClass('billingFields');
 		$billingFields->addExtraClass("orderAddressHolder");
@@ -234,6 +235,8 @@ class BillingAddress extends OrderAddress {
 			'Address',
 			'City',
 			'PostalCode',
+			'RegionCode',
+			'RegionID'
 		);
 		$this->extend('augmentEcommerceBillingAddressRequiredFields', $requiredFieldsArray);
 		return $requiredFieldsArray;

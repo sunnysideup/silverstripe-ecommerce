@@ -644,11 +644,7 @@ class ProductGroup extends Page {
 	 * @return GridField
 	 **/
 	protected function getProductGroupsTable() {
-		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
-		$gridFieldConfig
-			->removeComponentsByType("GridFieldEditButton")
-			->removeComponentsByType("GridFieldAddNewButton")
-			->addComponent(new GridFieldEditButtonOriginalPage());
+		$gridFieldConfig = GridFieldEditOriginalPageConfig::create();
 		$gridField = GridField::create(
 			"AlsoShowProducts",
 			_t("ProductGroup.OTHERPRODUCTSSHOWINTHISGROUP", "Other products shown in this group ..."),

@@ -105,6 +105,7 @@ class EcommerceConfigDefinitions extends Object {
 			"SiteConfig",
 			"StoreAdmin",
 			"ProductsAndGroupsModelAdmin",
+			"ProductConfigModelAdmin",
 			"SalesAdmin"
 		),
 		"TEMPLATES" => array(
@@ -197,7 +198,10 @@ class EcommerceConfigDefinitions extends Object {
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
 			),
 			"ProductsAndGroupsModelAdmin" => array(
-				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
+				"managed_models" => "An array of data object classes that are managed as Products and Product Groups ",
+			),
+			"ProductConfigModelAdmin" => array(
+				"managed_models" => "An array of data object classes that are managed as 'Product Config' configuration items.  These are all items that relate to Products and Product Groups that are not in the main group.  This includes any searches carried out in the Product Group. ",
 			),
 			"SalesAdmin" => array(
 				"managed_models" => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
@@ -333,7 +337,8 @@ class EcommerceConfigDefinitions extends Object {
 				"default_country_code" => "The default country code (e.g. NZ or CA or UK). "
 			),
 			"EcommerceRegion" => array(
-				"visitor_region_provider" => "The class that is being used to provide the region of the customer. It is sort of like a GEOIP for regions."
+				"visitor_region_provider" => "The class that is being used to provide the region of the customer. It is sort of like a GEOIP for regions.",
+				"show_freetext_region_field" => "Provide a free text region field if no regions are specified. Region can also be 'State', or 'Province', etc..."
 			),
 
 		################### PAYMENT AND MONEY #####################

@@ -214,15 +214,18 @@ class OrderAddress extends DataObject {
 	 * @param String $name - name of the field
 	 * @return DropdownField
 	 **/
-	protected function getRegionField($name) {
+	protected function getRegionField($name, $freeTextName = "") {
 		if(EcommerceRegion::show()) {
+			$title = singleton("EcommerceRegion")->i18n_singular_name();
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
 			$count = count($regionsForDropdown);
 			if($count< 1) {
-				$regionField = new HiddenField($name, '', 0);
+				if(!$freeTextName) {
+					$freeTextName = str_replace("ID", "", $name)."Code";
+				}
+				$regionField = new TextField($freeTextName, $title);
 			}
 			else {
-				$title = singleton("EcommerceRegion")->i18n_singular_name();
 				$regionField = new DropdownField($name, $title, $regionsForDropdown);
 				if($count < 2) {
 					//readonly shows as number (ID), rather than title

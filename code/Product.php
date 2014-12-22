@@ -228,17 +228,13 @@ class Product extends Page implements BuyableModel {
 	 * @return GridField
 	 **/
 	protected function getProductGroupsTableField() {
-		$gridFieldConfig = GridFieldConfig_RelationEditor::create();
+		$gridFieldConfig = GridFieldEditOriginalPageConfig::create();
 		$gridField = new GridField(
 			"ProductGroups",
 			_t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
 			$this->ProductGroups(),
 			$gridFieldConfig
 		);
-		$gridField->getConfig()
-			->removeComponentsByType("GridFieldEditButton")
-			->removeComponentsByType("GridFieldAddNewButton")
-			->addComponent(new GridFieldEditButtonOriginalPage());
 		return $gridField;
 	}
 
