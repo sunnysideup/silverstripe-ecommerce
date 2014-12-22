@@ -324,8 +324,16 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		showFields: function(){
 			//hide fields to be completed for now...
 			for (var formField in geocodingFieldVars.relatedFields) {
-				jQuery("#"+formField).removeClass("hide").addClass("show");
+				var holder = jQuery("#"+formField);
+				holder.removeClass("hide").addClass("show");
+				var input = holder.find("select[data-has-required='yes'], input[data-has-required='yes']").each(
+					function(i, el) {
+						jQuery(el).attr("required", "required").removeAttr("data-has-required");
+					}
+				);
+				jQuery("#"+formField)
 			}
+			jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').removeAttr("required");
 		},
 
 		/**
@@ -334,7 +342,19 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		hideFields: function(){
 			//hide fields to be completed for now...
 			for (var formField in geocodingFieldVars.relatedFields) {
-				jQuery("#"+formField).removeClass("show").addClass("hide");
+				var holder = jQuery("#"+formField);
+				holder.removeClass("show").addClass("hide");
+				var input = holder.find("select[required='required'], input[required='required']").each(
+					function(i, el) {
+						jQuery(el).attr("data-has-required", "yes").removeAttr("required");
+					}
+				);
+			}
+			if(jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').is(":visible")) {
+				jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').attr("required", "required");
+			}
+			else {
+				jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').removeAttr("required");
 			}
 		},
 

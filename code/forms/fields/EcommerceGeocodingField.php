@@ -140,6 +140,7 @@ class EcommerceGeocodingField extends TextField {
 	 * @return string
 	 */
 	function Field($properties = array()) {
+		$this->addExtraClass("text");
 		if($this->useSensor) {
 			$this->googleSourceJS .= "&sensor=true";
 		}

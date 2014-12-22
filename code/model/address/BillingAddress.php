@@ -200,7 +200,8 @@ class BillingAddress extends OrderAddress {
 			$billingFields->push(
 				$billingEcommerceGeocodingField = new EcommerceGeocodingField(
 					'BillingEcommerceGeocodingField',
-					_t('OrderAddress.FIND_ADDRESS','Find address')
+					_t('OrderAddress.FIND_ADDRESS','Find address'),
+					Session::get("ShippingEcommerceGeocodingFieldValue")
 				)
 			);
 			$billingEcommerceGeocodingField->setFieldMap($mappingArray);

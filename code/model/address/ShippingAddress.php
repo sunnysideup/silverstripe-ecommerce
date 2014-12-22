@@ -207,7 +207,8 @@ class ShippingAddress extends OrderAddress {
 				$shippingFields->push(
 					$shippingEcommerceGeocodingField = new EcommerceGeocodingField(
 						'ShippingEcommerceGeocodingField',
-						_t('OrderAddress.Find_Address','Find address')
+						_t('OrderAddress.Find_Address','Find address'),
+						Session::get("ShippingEcommerceGeocodingFieldValue")
 					)
 				);
 				$shippingEcommerceGeocodingField->setFieldMap($mappingArray);

@@ -52,6 +52,19 @@ var EcomOrderFormWithShippingAddress = {
 
 	//
 
+	regionCodeSelector: "#RegionCode input",
+
+	shippingRegionCodeSelector: "#ShippingRegionCode input",
+
+	//
+
+
+	regionIDCodeSelector: "#RegionID select",
+
+	shippingRegionIDSelector: "#ShippingRegionID select",
+
+	//
+
 	countrySelector: "#Country select",
 
 	shippingCountrySelector: "#ShippingCountry select",
@@ -74,6 +87,8 @@ var EcomOrderFormWithShippingAddress = {
 
 	useShippingDetailsSelector: "input[name='UseShippingAddress']",
 
+	shippingGeoCodingFieldSelector: "input[name='ShippingEcommerceGeocodingField']",
+
 	closed: false,
 
 	//hides shipping fields
@@ -94,11 +109,13 @@ var EcomOrderFormWithShippingAddress = {
 					if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
 						jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideDown();
 						jQuery(EcomOrderFormWithShippingAddress.shippingFirstNameSelector).focus();
+						jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).attr("required", "required");
 						EcomOrderFormWithShippingAddress.updateFields();
 						EcomOrderFormWithShippingAddress.closed = false;
 					}
 					else {
 						jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideUp();
+						jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).removeAttr("required");
 						EcomOrderFormWithShippingAddress.closed = true;
 					}
 				}
@@ -111,6 +128,8 @@ var EcomOrderFormWithShippingAddress = {
 					EcomOrderFormWithShippingAddress.extraAddressSelector+", "+
 					EcomOrderFormWithShippingAddress.citySelector+", "+
 					EcomOrderFormWithShippingAddress.postalCodeSelector+", "+
+					EcomOrderFormWithShippingAddress.regionCodeSelector+", "+
+					EcomOrderFormWithShippingAddress.regionIDCodeSelector+", "+
 					EcomOrderFormWithShippingAddress.countrySelector+", "+
 					EcomOrderFormWithShippingAddress.phoneSelector;
 			jQuery(originatorFieldSelector).change(
@@ -124,6 +143,7 @@ var EcomOrderFormWithShippingAddress = {
 				}
 			);
 		}
+		jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).removeAttr("required");
 	},
 
 	//copy the billing address details to the shipping address details
@@ -141,6 +161,20 @@ var EcomOrderFormWithShippingAddress = {
 		var ShippingPhone = jQuery(EcomOrderFormWithShippingAddress.shippingPhoneSelector).val();
 		if((!ShippingPhone && Phone) || EcomOrderFormWithShippingAddress.closed) {
 			jQuery(EcomOrderFormWithShippingAddress.shippingPhoneSelector).val(Phone).change();
+		}
+
+		//region Code
+		var RegionCode = jQuery(EcomOrderFormWithShippingAddress.regionCodeSelector).val();
+		var ShippingRegionCode = jQuery(EcomOrderFormWithShippingAddress.shippingRegionCodeSelector).val();
+		if((!ShippingRegionCode && RegionCode) || EcomOrderFormWithShippingAddress.closed) {
+			jQuery(EcomOrderFormWithShippingAddress.shippingRegionCodeSelector).val(RegionCode).change();
+		}
+
+		//region ID
+		var RegionID = jQuery(EcomOrderFormWithShippingAddress.regionIDCodeSelector).val();
+		var ShippingRegionID = jQuery(EcomOrderFormWithShippingAddress.shippingRegionIDSelector).val();
+		if((!ShippingRegionID && RegionID) || EcomOrderFormWithShippingAddress.closed) {
+			jQuery(EcomOrderFormWithShippingAddress.shippingRegionIDSelector).val(RegionID).change();
 		}
 
 		//postal code

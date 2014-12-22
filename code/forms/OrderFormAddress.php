@@ -346,6 +346,8 @@ class OrderFormAddress extends Form {
 		unset($data["LoggedInAsNote"]);
 		unset($data["PasswordCheck1"]);
 		unset($data["PasswordCheck2"]);
+		Session::set("BillingEcommerceGeocodingFieldValue", empty($data["BillingEcommerceGeocodingField"]) ? null : $data["BillingEcommerceGeocodingField"]);
+		Session::set("ShippingEcommerceGeocodingFieldValue", empty($data["ShippingEcommerceGeocodingField"]) ? null : $data["ShippingEcommerceGeocodingField"]);
 		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
 
