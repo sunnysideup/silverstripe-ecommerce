@@ -334,6 +334,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				jQuery("#"+formField)
 			}
 			jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').removeAttr("required");
+			jQuery('#'+geocodingFieldVars.fieldName).removeAttr("required");
 		},
 
 		/**
@@ -350,11 +351,13 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					}
 				);
 			}
-			if(jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').is(":visible")) {
+			if(jQuery('#'+geocodingFieldVars.fieldName).is(":visible")) {
 				jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').attr("required", "required");
+				jQuery('#'+geocodingFieldVars.fieldName).attr("required", "required");
 			}
 			else {
 				jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').removeAttr("required");
+				jQuery('#'+geocodingFieldVars.fieldName).removeAttr("required");
 			}
 		},
 
