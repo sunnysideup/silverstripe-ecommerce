@@ -267,6 +267,9 @@ class OrderFormAddress extends Form {
 	 * @param HTTPRequest $request Request object for this action
 	 */
 	function saveAddress(Array $data, Form $form, SS_HTTPRequest $request) {
+		Session::set("BillingEcommerceGeocodingFieldValue", empty($data["BillingEcommerceGeocodingField"]) ? null: $data["BillingEcommerceGeocodingField"]);
+		Session::set("ShippingEcommerceGeocodingFieldValue", empty($data["ShippingEcommerceGeocodingField"]) ? null : $data["ShippingEcommerceGeocodingField"]);
+
 		$data = Convert::raw2sql($data);
 		//check for cart items
 		if(!$this->order) {
@@ -346,8 +349,6 @@ class OrderFormAddress extends Form {
 		unset($data["LoggedInAsNote"]);
 		unset($data["PasswordCheck1"]);
 		unset($data["PasswordCheck2"]);
-		Session::set("BillingEcommerceGeocodingFieldValue", empty($data["BillingEcommerceGeocodingField"]) ? null : $data["BillingEcommerceGeocodingField"]);
-		Session::set("ShippingEcommerceGeocodingFieldValue", empty($data["ShippingEcommerceGeocodingField"]) ? null : $data["ShippingEcommerceGeocodingField"]);
 		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
 

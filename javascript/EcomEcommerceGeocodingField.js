@@ -4,6 +4,10 @@
  * It allows the user to find their address using the Google
  * GeoCoding API.
  *
+ * @todo: integrate with GeoCoder for lookups of previous addresses... see http://jsfiddle.net/YphZw/
+ *
+ * @see: https://developers.google.com/maps/documentation/javascript/places-autocomplete
+ *
  */
 
 
@@ -31,6 +35,28 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		 * @var jQueryObject
 		 */
 		entryField: null,
+
+		/**
+		 * div holding the input
+		 * basically the jquery object of the input field in html
+		 * This is set in the init method
+		 * @var jQueryObject
+		 */
+		entryFieldHolder: null,
+
+		/**
+		 * Right Label
+		 * This is set in the init method
+		 * @var jQueryObject
+		 */
+		entryFieldRightLabel: null,
+
+		/**
+		 * Left Label
+		 * This is set in the init method
+		 * @var jQueryObject
+		 */
+		entryFieldRightLabel: null,
 
 		/**
 		 * should we use the sensor on mobile
@@ -123,9 +149,16 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		linkLabelToViewMap: "View Map",
 
 		/**
+		 * percentage of fields that need to be completed.
 		 * @float
 		 */
 		percentageToBeCompleted: 0.25,
+
+		/**
+		 * Restrict search to country (currently only one country at the time is supported)
+		 * @String
+		 */
+		country: "",
 
 		/**
 		 *
@@ -134,20 +167,29 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		 */
 		init: function () {
 
+			geocodingFieldVars.entryFieldHolder = jQuery('#'+geocodingFieldVars.fieldName);
+			geocodingFieldVars.entryField = geocodingFieldVars.entryFieldHolder.find('input[name="'+geocodingFieldVars.fieldName+'"]');
+			geocodingFieldVars.entryFieldRightLabel = geocodingFieldVars.entryFieldHolder.find('label.right');
+			geocodingFieldVars.entryFieldLeftLabel = geocodingFieldVars.entryFieldHolder.find('label.left');
+
 			//clean up affected fields
 			//geocodingFieldVars.clearFields();
 			geocodingFieldVars.hideFields();
 
 			//set basic classes for input field
-			geocodingFieldVars.entryField = jQuery('input[name="'+geocodingFieldVars.fieldName+'"]');
+
 			geocodingFieldVars.setResults("no");
 			geocodingFieldVars.updateEntryFieldStatus();
 
 			//set up auto-complete stuff
 			var fieldID = geocodingFieldVars.entryField.attr("id");
+			var config = { types: [ 'address' ] };
+			if(geocodingFieldVars.country){
+				config.componentRestrictions = geocodingFieldVars.country;
+			}
 			geocodingFieldVars.autocomplete = new google.maps.places.Autocomplete(
 				document.getElementById(fieldID),
-				{ types: [ 'geocode' ] }
+				{ types: [ 'address' ] }
 			);
 			google.maps.event.addListener(
 				geocodingFieldVars.autocomplete,
@@ -208,20 +250,27 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				function(e){
 					e.preventDefault();
 					geocodingFieldVars.showFields();
-					jQuery("#"+geocodingFieldVars.fieldName).hide();
+					geocodingFieldVars.entryFieldHolder.hide();
 					return false;
 				}
 			);
 			if(geocodingFieldVars.alreadyHasValues()) {
-				if(jQuery("#"+geocodingFieldVars.fieldName).is(":hidden")) {
+				if(geocodingFieldVars.entryFieldHolder.is(":hidden")) {
 
 				}
 				else {
 					geocodingFieldVars.showFields();
-					jQuery("#"+geocodingFieldVars.fieldName+" label.left").text(geocodingFieldVars.findNewAddressText);
+					geocodingFieldVars.entryFieldLeftLabel.text(geocodingFieldVars.findNewAddressText);
 				}
 			}
 			jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).attr("target", "_googleMap");
+			if(geocodingFieldVars.entryField.val().length > 0) {
+				//to do - to be completed!
+				geocodingFieldVars.entryField.attr("placeholder", geocodingFieldVars.entryField.val());;
+				geocodingFieldVars.entryField.val("")
+				//google.maps.event.trigger(geocodingFieldVars.autocomplete, 'place_changed');
+				//console.debug(geocodingFieldVars.autocomplete);
+			}
 		},
 
 		fillInAddress: function() {
@@ -235,7 +284,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					placeIsSpecificEnough = true;
 				}
 			}
-			var mapLink = jQuery("#"+geocodingFieldVars.fieldName).find(geocodingFieldVars.viewGoogleMapLinkSelector);
+			var mapLink = geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.viewGoogleMapLinkSelector);
 			if(placeIsSpecificEnough) {
 				var escapedAddress = encodeURIComponent(place.formatted_address);
 				mapLink.attr("href", geocodingFieldVars.urlForViewGoogleMapLink+escapedAddress);
@@ -283,7 +332,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 													var previousValueForThisFormField = jQuery('input[name="'+formField+'"]').val();
 													value = previousValueForThisFormField + " " + value;
 												}
-												fieldToSet.val(value);
+												fieldToSet.val(value.trim());
 												geocodingFieldVars.setResults("yes");
 												holderToSet.addClass("geoCodingSet");
 											}
@@ -299,7 +348,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 							if(geocodingFieldVars.debug) {console.debug("E -----  ----- ----- could not find form field with ID: #"+formField+"");}
 						}
 					}
-					jQuery("#"+geocodingFieldVars.fieldName+" label.left").text(geocodingFieldVars.findNewAddressText);
+					geocodingFieldVars.entryFieldLeftLabel.text(geocodingFieldVars.findNewAddressText);
 				}
 				else {
 					geocodingFieldVars.entryField.val(geocodingFieldVars.errorMessageAddressNotFound);
@@ -333,8 +382,8 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				);
 				jQuery("#"+formField)
 			}
-			jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').removeAttr("required");
-			jQuery('#'+geocodingFieldVars.fieldName).removeAttr("required");
+			geocodingFieldVars.entryField.removeAttr("required");
+			geocodingFieldVars.entryFieldHolder.removeAttr("required");
 		},
 
 		/**
@@ -351,13 +400,13 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					}
 				);
 			}
-			if(jQuery('#'+geocodingFieldVars.fieldName).is(":visible")) {
-				jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').attr("required", "required");
-				jQuery('#'+geocodingFieldVars.fieldName).attr("required", "required");
+			if(geocodingFieldVars.entryFieldHolder.is(":visible")) {
+				geocodingFieldVars.entryField.attr("required", "required");
+				geocodingFieldVars.entryFieldHolder.attr("required", "required");
 			}
 			else {
-				jQuery('input[name="'+geocodingFieldVars.fieldName+'"]').removeAttr("required");
-				jQuery('#'+geocodingFieldVars.fieldName).removeAttr("required");
+				geocodingFieldVars.entryField.removeAttr("required");
+				geocodingFieldVars.entryFieldHolder.removeAttr("required");
 			}
 		},
 
@@ -463,6 +512,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				return string;
 			}
 		}
+
 	}
 
 
