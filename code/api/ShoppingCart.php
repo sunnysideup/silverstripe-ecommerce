@@ -22,6 +22,9 @@
  * //get order
  * $myOrder = ShoppingCart::current_order();
  *
+ * //view order (from another controller)
+ * $this->redirect(ShoppingCart::current_order()->Link());
+ *
  * //add item to cart
  * ShoppingCart::singleton()->addBuyable($myProduct);
  *
