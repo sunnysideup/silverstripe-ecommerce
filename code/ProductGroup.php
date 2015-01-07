@@ -1330,11 +1330,11 @@ class ProductGroup extends Page {
 	 * @return String
 	 */
 	protected function getStage() {
-		$stage = '';
-		//@to do - make sure products are versioned!
+		$stage = "";
 		if(Versioned::current_stage() == "Live") {
 			$stage = "_Live";
 		}
+		return $stage;
 	}
 
 	/*****************************************************
