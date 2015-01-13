@@ -54,11 +54,11 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton {
 		$defaultRootParentClass = Config::inst()->get("CMSPageAddController_Products", "root_parent_class_for_adding_page");
 		$rootParentClassArray = array($defaultRootParentClass, "ProductGroup");
 		foreach($rootParentClassArray as $rootParentClass) {
+			if($result = $rootParentClass::get()->filter("ParentID", 0)->First()) {return $result;}
 			$stage = '';
 			if(Versioned::current_stage() == "Live") {
 				$stage = "_Live";
 			}
-			if($result = $rootParentClass::get()->filter("ParentID", 0)->First()) {return $result;}
 			if($result = $rootParentClass::get()->filter("MyParentPage.ParentID", 0)->innerJoin("SiteTree".$stage, "MyParentPage.ID = SiteTree".$stage.".ParentID", "MyParentPage")->First()) {return $result;}
 		}
 	}

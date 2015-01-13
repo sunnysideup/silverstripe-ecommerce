@@ -309,13 +309,13 @@ StoreAdmin:
     - EcommerceCountry
     - EcommerceCurrency
 
-
 ProductsAndGroupsModelAdmin:
   managed_models:
     - Product
     - ProductGroup
 
 ProductConfigModelAdmin:
+  managed_models:
     - SearchReplacement
     - SearchHistory
 
