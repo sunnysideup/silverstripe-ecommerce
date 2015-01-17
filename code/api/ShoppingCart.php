@@ -148,6 +148,7 @@ class ShoppingCart extends Object{
 								)
 								->First()
 						) {
+							//arbritary 12 attempts ...
 							if($count > 12) {
 								break;
 							}
@@ -182,6 +183,9 @@ class ShoppingCart extends Object{
 							}
 						}
 					}
+				}
+				if($this->order && !$this->order->exists()) {
+					$this->order = null;
 				}
 				if(!$this->order) {
 					//here we cleanup old orders, because they should be

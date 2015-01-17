@@ -819,7 +819,7 @@ class Product extends Page implements BuyableModel {
 	/**
 	 * Products have a standard price, but for specific situations they have a calculated price.
 	 * The Price can be changed for specific member discounts, etc...
-	 * @return Currency
+	 * @return Float
 	 */
 	function CalculatedPrice() {return $this->getCalculatedPrice();}
 	function getCalculatedPrice() {
