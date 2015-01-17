@@ -5,9 +5,8 @@
 
 ## Need Help? ##
 
-This Silverstripe Module is available for you free of charge.  In addition, I am happy to provide anyone who is keen to use it with
-up to two hours of free support to get it working and/or ask some basic questions. Free support is available via e-mail and it may not
-be available at all times of the year (just ask!). After that, support can be provided @ USD85 per hour (paid in advance).
+This Silverstripe Module is available for you free of charge.  In addition, I am happy to provide anyone who is keen to use
+this module  with up to two hours of free support to get it working and/or ask some basic questions.
 
 ## Can Help? ##
 
@@ -75,4 +74,4 @@ We welcome contributions and/or donations to make this happen.
 ## Developers ##
 
 Nicolaas Francken [at] sunnysideup.co.nz
-Jeremy, Silverstripe Ltd, Romain, Toro, Shane, and many others.
+Jeremy, Silverstripe Ltd, Toro, Shane, and many others.
