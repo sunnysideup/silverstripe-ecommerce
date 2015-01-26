@@ -501,7 +501,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				string = string.replace("[ADDRESS]", escapedLocation, "gi");
 				string = string.replace("[ADDRESS]", escapedLocation, "gi");
 				string = string.replace("[ADDRESS]", escapedLocation, "gi");
-				var maxWidth = jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).parents("div.field").width();
+				var maxWidth = jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).closest("div.field.ecommercegeocoding").width();
 				if(!maxWidth) {
 					maxWidth = geocodingFieldVars.defaultWidthOfStaticImage;
 				}
