@@ -56,7 +56,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		 * This is set in the init method
 		 * @var jQueryObject
 		 */
-		entryFieldRightLabel: null,
+		entryFieldLeftLabel: null,
 
 		/**
 		 * should we use the sensor on mobile
@@ -246,7 +246,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					}
 				);
 			//bypass
-			jQuery(geocodingFieldVars.bypassSelector).click(
+			geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.bypassSelector).click(
 				function(e){
 					e.preventDefault();
 					geocodingFieldVars.showFields();
@@ -263,7 +263,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 					geocodingFieldVars.entryFieldLeftLabel.text(geocodingFieldVars.findNewAddressText);
 				}
 			}
-			jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).attr("target", "_googleMap");
+			geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.viewGoogleMapLinkSelector).attr("target", "_googleMap");
 			if(geocodingFieldVars.entryField.val().length > 0) {
 				//to do - to be completed!
 				geocodingFieldVars.entryField.attr("placeholder", geocodingFieldVars.entryField.val());;
@@ -473,15 +473,15 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				geocodingFieldVars.entryField.addClass(geocodingFieldVars.selectedClass);
 				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.useMeClass);
 				//swap links:
-				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).show();
-				jQuery(geocodingFieldVars.bypassSelector).hide();
+				geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.viewGoogleMapLinkSelector).show();
+				geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.bypassSelector).hide();
 			}
 			else{
 				geocodingFieldVars.entryField.removeClass(geocodingFieldVars.selectedClass);
 				geocodingFieldVars.entryField.addClass(geocodingFieldVars.useMeClass);
 				//swap links:
-				jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).hide();
-				jQuery(geocodingFieldVars.bypassSelector).show();
+				geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.viewGoogleMapLinkSelector).hide();
+				geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.bypassSelector).show();
 			}
 			if(hasText) {
 				geocodingFieldVars.entryField.addClass(geocodingFieldVars.hasTextClass);
@@ -501,7 +501,7 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 				string = string.replace("[ADDRESS]", escapedLocation, "gi");
 				string = string.replace("[ADDRESS]", escapedLocation, "gi");
 				string = string.replace("[ADDRESS]", escapedLocation, "gi");
-				var maxWidth = jQuery(geocodingFieldVars.viewGoogleMapLinkSelector).closest("div.field.ecommercegeocoding").width();
+				var maxWidth = geocodingFieldVars.entryFieldHolder.find(geocodingFieldVars.viewGoogleMapLinkSelector).closest("div.field.ecommercegeocoding").width();
 				if(!maxWidth) {
 					maxWidth = geocodingFieldVars.defaultWidthOfStaticImage;
 				}
