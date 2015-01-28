@@ -1968,20 +1968,33 @@ class Order extends DataObject {
 
 	/**
 	 * A "Title" for the order, which summarises the main details (date, and customer) in a string.
+	 *
+	 * @param String $dateFormat - e.g. "D j M Y, G:i T"
+	 * @param Boolean $includeName - e.g. by Mr Johnson
+	 *
 	 * @return String
 	 **/
-	function Title($dateFormat = "D j M Y, G:i T", $includeName = true) {return $this->getTitle($dateFormat, $includeName);}
-	function getTitle($dateFormat = "D j M Y, G:i T", $includeName = true) {
+	function Title($dateFormat = null, $includeName = false) {return $this->getTitle($dateFormat, $includeName);}
+	function getTitle($dateFormat = null, $includeName = false) {
 		if($this->exists()) {
-			if($submissionLog = $this->SubmissionLog()) {
-				$dateObject = $submissionLog->dbObject('Created');
-				$placed = _t("Order.PLACED", "placed");
+			if($dateFormat === null) {
+				$dateFormat = EcommerceConfig::get("Order", "date_format_for_title");
 			}
-			else {
-				$dateObject = $this->dbObject('Created');
-				$placed = _t("Order.STARTED", "started");
+			if($includeName === null) {
+				$includeName = EcommerceConfig::get("Order", "include_customer_name_in_title");
 			}
-			$title = $this->i18n_singular_name(). " #$this->ID - ".$placed." ".$dateObject->Format($dateFormat);
+			$title = $this->i18n_singular_name(). " #$this->ID";
+			if($dateFormat) {
+				if($submissionLog = $this->SubmissionLog()) {
+					$dateObject = $submissionLog->dbObject('Created');
+					$placed = _t("Order.PLACED", "placed");
+				}
+				else {
+					$dateObject = $this->dbObject('Created');
+					$placed = _t("Order.STARTED", "started");
+				}
+				$title .= $placed." ".$dateObject->Format($dateFormat);
+			}
 			$name = "";
 			if($this->CancelledByID) {
 				$name = " - "._t("Order.CANCELLED","CANCELLED");
@@ -2009,8 +2022,8 @@ class Order extends DataObject {
 						}
 					}
 				}
-				$title .= $name;
 			}
+			$title .= $name;
 		}
 		else {
 			$title = _t("Order.NEW", "New")." ".$this->i18n_singular_name();

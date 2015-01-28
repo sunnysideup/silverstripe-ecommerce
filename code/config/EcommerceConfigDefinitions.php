@@ -294,7 +294,9 @@ class EcommerceConfigDefinitions extends Object {
 				"order_id_start_number" => "The starting number for the order number. For example, if you enter 1000 here then the first order will have number 1000, the next one 1001 and so on.",
 				"template_id_prefix" => "If you end up with conflicts in your templates (e.g. having the same ID twice) then you can use this variable to set an prefix to all PHP generated IDs in all templates. We use these PHP generated IDs for AJAX templates - where HTML, JS and PHP need to work together.",
 				"ajax_subtotal_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the SubTotal value. You can also specify if you want a format to be called on that function.",
-				"ajax_total_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function."
+				"ajax_total_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function.",
+				"date_format_for_title" => "PHP Date format to show date in the title of the order e.g. Y-m-d, leave blank to exclude date format.",
+				"include_customer_name_in_title" => "Include the name of the customer in the title of the order.  Set to false to exclude the name of the customer in the order title."
 			),
 			"OrderItem" => array(
 				"ajax_total_format" => "This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function."
