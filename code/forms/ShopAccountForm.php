@@ -165,6 +165,7 @@ class ShopAccountForm extends Form {
 			$this->controller->redirectBack();
 		}
 		if($member->validate()){
+			$member->write();
 			if($link) {
 				return $this->controller->redirect($link);
 			}
