@@ -1148,20 +1148,25 @@ class Order extends DataObject {
 
 	/**
 	 * Sets the country in the billing and shipping address
-	 * TO DO: only set one or the other....
 	 * @param String $countryCode - code for the country e.g. NZ
+	 * @param Boolean $includeBillingAddress
+	 * @param Boolean $includeShippingAddress
 	 **/
-	public function SetCountryFields($countryCode) {
+	public function SetCountryFields($countryCode, $includeBillingAddress = true, $includeShippingAddress = true) {
 		if($this->IsSubmitted()) {
 			user_error("Can not change country in submitted order", E_USER_NOTICE);
 		}
 		else {
-			if($billingAddress = $this->CreateOrReturnExistingAddress("BillingAddress")) {
-				$billingAddress->SetCountryFields($countryCode);
+			if($includeBillingAddress) {
+				if($billingAddress = $this->CreateOrReturnExistingAddress("BillingAddress")) {
+					$billingAddress->SetCountryFields($countryCode);
+				}
 			}
 			if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
-				if($shippingAddress = $this->CreateOrReturnExistingAddress("ShippingAddress")) {
-					$shippingAddress->SetCountryFields($countryCode);
+				if($includeShippingAddress) {
+					if($shippingAddress = $this->CreateOrReturnExistingAddress("ShippingAddress")) {
+						$shippingAddress->SetCountryFields($countryCode);
+					}
 				}
 			}
 		}
@@ -2427,7 +2432,7 @@ class Order extends DataObject {
 	function getCustomerStatus($withDetail = true) {
 		if($this->MyStep()->ShowAsUncompletedOrder) { $v =  _t("Order.UNCOMPLETED", "Uncompleted");}
 		elseif($this->MyStep()->ShowAsInProcessOrder) { $v = _t("Order.IN_PROCESS", "In Process");}
-		elseif($this->MyStep()->ShowAsCompletedOrder) { $v = _t("Order.UNCOMPLETED", "Uncompleted");}
+		elseif($this->MyStep()->ShowAsCompletedOrder) { $v = _t("Order.COMPLETED", "Completed");}
 		if(!$this->HideStepFromCustomer && $withDetail) {
 			$v .= ' ('.$this->MyStep()->Name.')';
 		}
