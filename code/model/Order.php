@@ -2430,13 +2430,16 @@ class Order extends DataObject {
 	 **/
 	function CustomerStatus($withDetail = true){return $this->getCustomerStatus($withDetail);}
 	function getCustomerStatus($withDetail = true) {
-		if($this->MyStep()->ShowAsUncompletedOrder) { $v =  _t("Order.UNCOMPLETED", "Uncompleted");}
-		elseif($this->MyStep()->ShowAsInProcessOrder) { $v = _t("Order.IN_PROCESS", "In Process");}
-		elseif($this->MyStep()->ShowAsCompletedOrder) { $v = _t("Order.COMPLETED", "Completed");}
-		if(!$this->HideStepFromCustomer && $withDetail) {
-			$v .= ' ('.$this->MyStep()->Name.')';
+		$str = "";
+		if($this->MyStep()->ShowAsUncompletedOrder) { $str =  _t("Order.UNCOMPLETED", "Uncompleted");}
+		elseif($this->MyStep()->ShowAsInProcessOrder) { $str = _t("Order.IN_PROCESS", "In Process");}
+		elseif($this->MyStep()->ShowAsCompletedOrder) { $str = _t("Order.COMPLETED", "Completed");}
+		if($withDetail) {
+			if(!$this->HideStepFromCustomer) {
+				$str .= ' ('.$this->MyStep()->Name.')';
+			}
 		}
-		return $v;
+		return $str;
 	}
 
 

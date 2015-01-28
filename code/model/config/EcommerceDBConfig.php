@@ -245,22 +245,22 @@ class EcommerceDBConfig extends DataObject {
 	 */
 	function customFieldLabels(){
 		$newLabels = array(
-			"Title" => _t("EcommerceDBConfig.TITLE", "Name"),
-			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings (you can create several setting records so that you can switch between configurations)."),
+			"Title" => _t("EcommerceDBConfig.TITLE", "Name of settings"),
+			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE", "Use these configuration settings"),
 			"ShopClosed" => _t("EcommerceDBConfig.SHOPCLOSED", "Shop Closed"),
-			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive (if this option is NOT ticked, it is assumed that prices are tax inclusive)"),
+			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive"),
 			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Email title (e.g. Tax Invoice or Update from ...)"),
 			"PackingSlipTitle" => _t("EcommerceDBConfig.PACKINGSLIPTITLE", "Packing slip title (e.g. What is in this Parcel)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),
-			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address (e.g. sales@mysite.com, you can also use something like: \"Our Shop Name Goes Here\" &lt;sales@mysite.com&gt;)"),
+			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address"),
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
 			"PostalCodeLabel" => _t("EcommerceDBConfig.POSTALCODELABEL", "Postal code link label"),
 			"NumberOfProductsPerPage" => _t("EcommerceDBConfig.NUMBEROFPRODUCTSPERPAGE", "Number of products per page"),
 			"OnlyShowProductsThatCanBePurchased" => _t("EcommerceDBConfig.ONLYSHOWPRODUCTSTHATCANBEPURCHASED", "Only show products that can be purchased (Allow Purchase)."),
 			"NotForSaleMessage" => _t("EcommerceDBConfig.NOTFORSALEMESSAGE", "Message shown for products that can not be purchased"),
-			"ProductsHaveWeight" =>  _t("EcommerceDBConfig.PRODUCTSHAVEWEIGHT", "Products have weight (e.g. 1.2kg) - untick to hide weight field"),
-			"ProductsHaveModelNames" =>  _t("EcommerceDBConfig.PRODUCTSHAVEMODELNAMES", "Products have model names / numbers -  untick to hide model field"),
-			"ProductsHaveQuantifiers" => _t("EcommerceDBConfig.PRODUCTSHAVEQUANTIFIERS", "Products have quantifiers (e.g. per year, each, per dozen, etc...) - untick to hide model field"),
+			"ProductsHaveWeight" =>  _t("EcommerceDBConfig.PRODUCTSHAVEWEIGHT", "Products have weight (e.g. 1.2kg)"),
+			"ProductsHaveModelNames" =>  _t("EcommerceDBConfig.PRODUCTSHAVEMODELNAMES", "Products have model names / numbers"),
+			"ProductsHaveQuantifiers" => _t("EcommerceDBConfig.PRODUCTSHAVEQUANTIFIERS", "Products have quantifiers (e.g. per year, each, per dozen, etc...)"),
 			"ProductsAlsoInOtherGroups" => _t("EcommerceDBConfig.PRODUCTSALSOINOTHERGROUPS", "Allow products to show in multiple product groups."),
 			//"ProductsHaveVariations" => _t("EcommerceDBConfig.PRODUCTSHAVEVARIATIONS", "Products have variations (e.g. size, colour, etc...)."),
 			"CurrenciesExplanation" => _t("EcommerceDBConfig.CURRENCIESEXPLANATION", "Explanation on how the currency options work (if any)."),
@@ -270,7 +270,23 @@ class EcommerceDBConfig extends DataObject {
 			"DefaultSmallImageSize" => _t("EcommerceDBConfig.DEFAULTSMALLIMAGESIZE", "Product Small Image Optimised Size"),
 			"DefaultContentImageSize" => _t("EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE", "Product Content Image Optimised Size"),
 			"DefaultLargeImageSize" => _t("EcommerceDBConfig.DEFAULTLARGEIMAGESIZE", "Product Large Image Optimised Size"),
-			"AllowFreeProductPurchase" => _t("EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE", "Allow free products to be purchased?  This is basically a protection to disallow sales of products that do not have a price entered yet. ")
+			"AllowFreeProductPurchase" => _t("EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE", "Allow free products to be purchased? ")
+		);
+		return $newLabels;
+	}
+
+	/**
+	 * definition of field lables
+	 * TODO: is this a common SS method?
+	 * @return Array
+	 */
+	function customDescriptionsForFields(){
+		$newLabels = array(
+			"Title" => _t("EcommerceDBConfig.TITLE_DESCRIPTION", "For internal use only."),
+			"UseThisOne" => _t("EcommerceDBConfig.USETHISONE_DESCRIPTION", "You can create several setting records so that you can switch between configurations."),
+			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE_DESCRIPTION", "If this option is NOT ticked, it is assumed that prices are tax inclusive."),
+			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL_DESCRIPTION_DESCRIPTION", "e.g. sales@mysite.com, you can also use something like: \"Our Shop Name Goes Here\" &lt;sales@mysite.com&gt;"),
+			"AllowFreeProductPurchase" => _t("EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE_DESCRIPTION", "This is basically a protection to disallow sales of products that do not have a price entered yet. ")
 		);
 		return $newLabels;
 	}
@@ -286,6 +302,7 @@ class EcommerceDBConfig extends DataObject {
 			$fields->removeByName($name);
 		}
 		//new section
+		$fieldDescriptions = $this->customDescriptionsForFields();
 		$fieldLabels = $this->fieldLabels();
 		$productImage = new Product_Image();
 		$versionInfo = EcommerceConfigDefinitions::create();
@@ -347,6 +364,14 @@ class EcommerceDBConfig extends DataObject {
 				new LiteralField('op','Include a drag-and-drop interface for customising order steps (Like WidgetArea)')
 			)*/
 		));
+		$mappingArray = Config::inst()->get("BillingAddress", "fields_to_google_geocode_conversion");
+		if(is_array($mappingArray) && count($mappingArray)) {
+			$mappingArray = Config::inst()->get("ShippingAddress", "fields_to_google_geocode_conversion");
+			if(is_array($mappingArray) && count($mappingArray)) {
+				$fields->removeByName("PostalCodeURL");
+				$fields->removeByName("PostalCodeLabel");
+			}
+		}
 		$htmlEditorField1->setRows(3);
 		$htmlEditorField2->setRows(3);
 		$htmlEditorField3->setRows(3);
@@ -361,6 +386,16 @@ class EcommerceDBConfig extends DataObject {
 		if($f = $fields->dataFieldByName("CurrenciesExplanation")) {$f->setRows(2);}
 		if($f = $fields->dataFieldByName("NotForSaleMessage")) {$f->setRows(2);}
 		if($f = $fields->dataFieldByName("ShopPhysicalAddress")) {$f->setRows(2);}
+		foreach($fields->dataFields() as $field) {
+			if(isset($fieldDescriptions[$field->getName()])) {
+				if($field instanceof CheckboxField) {
+					$field->setDescription($fieldDescriptions[$field->Name]);
+				}
+				else {
+					$field->setRightTitle($fieldDescriptions[$field->Name]);
+				}
+			}
+		}
 		Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
 		return $fields;
 	}

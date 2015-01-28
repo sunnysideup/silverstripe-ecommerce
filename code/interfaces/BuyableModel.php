@@ -183,7 +183,11 @@ interface BuyableModel {
 	 */
 	function SetSpecificQuantityItemLink($quantity);
 
-
+	/**
+	 *
+	 * @return String
+	 */
+	function AddToCartAndGoToCheckoutLink();
 
 
 
