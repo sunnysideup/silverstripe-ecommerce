@@ -525,9 +525,11 @@ var EcomEcommerceGeocodingField = function(fieldName) {
 		},
 		setVar: function(variableName, value) {
 			geocodingFieldVars[variableName] = value;
+			return this;
 		},
 		init: function(){
 			geocodingFieldVars.init();
+			return this;
 		}
 
 	}

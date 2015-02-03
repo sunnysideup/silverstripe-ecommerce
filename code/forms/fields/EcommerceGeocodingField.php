@@ -169,15 +169,15 @@ class EcommerceGeocodingField extends TextField {
 	 */
 	protected function getJavascript(){
 		return "
-			var EcommerceGeocodingField".$this->id()." = new EcomEcommerceGeocodingField( '".Convert::raw2js($this->getName())."');
-			EcommerceGeocodingField".$this->id().".setVar('errorMessageMoreSpecific', '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_MORE_SPECIFIC", "Error: please enter a more specific location."))."');
-			EcommerceGeocodingField".$this->id().".setVar('errorMessageAddressNotFound', '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_ADDRESS_NOT_FOUND", "Error: sorry, address could not be found."))."');
-			EcommerceGeocodingField".$this->id().".setVar('findNewAddressText', '".Convert::raw2js(_t("EcommerceGeocodingField.FIND_NEW_ADDRESS", "Find Alternative Address"))."');
-			EcommerceGeocodingField".$this->id().".setVar('useSensor', ".Convert::raw2js($this->userSensor ? "true" : "false").");
-			EcommerceGeocodingField".$this->id().".setVar('relatedFields', ".Convert::raw2json($this->getFieldMap()).");
-			EcommerceGeocodingField".$this->id().".setVar('googleStaticMapLink', '".Convert::raw2js($this->googleStaticMapLink)."');
-			EcommerceGeocodingField".$this->id().".setVar('linkLabelToViewMap', '".Convert::raw2js(_t("EcommerceGeocodingField.LINK_LABEL_TO_VIEW_MAP", "view map"))."');
-			EcommerceGeocodingField".$this->id().".init();";
+			var EcommerceGeocodingField".$this->id()." = new EcomEcommerceGeocodingField( '".Convert::raw2js($this->getName())."')
+				.setVar('errorMessageMoreSpecific', '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_MORE_SPECIFIC", "Error: please enter a more specific location."))."')
+				.setVar('errorMessageAddressNotFound', '".Convert::raw2js(_t("EcommerceGeocodingField.ERROR_MESSAGE_ADDRESS_NOT_FOUND", "Error: sorry, address could not be found."))."')
+				.setVar('findNewAddressText', '".Convert::raw2js(_t("EcommerceGeocodingField.FIND_NEW_ADDRESS", "Find Alternative Address"))."')
+				.setVar('useSensor', ".Convert::raw2js($this->userSensor ? "true" : "false").")
+				.setVar('relatedFields', ".Convert::raw2json($this->getFieldMap()).")
+				.setVar('googleStaticMapLink', '".Convert::raw2js($this->googleStaticMapLink)."')
+				.setVar('linkLabelToViewMap', '".Convert::raw2js(_t("EcommerceGeocodingField.LINK_LABEL_TO_VIEW_MAP", "view map"))."')
+				.init();";
 	}
 
 
