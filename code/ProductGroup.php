@@ -1465,11 +1465,9 @@ class ProductGroup_Controller extends Page_Controller {
 	function init() {
 		parent::init();
 		$this->originalTitle = $this->Title;
-		Requirements::themedCSS('Products', 'ecommerce');
 		Requirements::themedCSS('ProductGroup', 'ecommerce');
 		Requirements::themedCSS('ProductGroupPopUp', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomProducts.js');
-		Requirements::javascript('ecommerce/javascript/EcomQuantityField.js');
 		//we save data from get variables...
 		$this->saveUserPreferences();
 	}
