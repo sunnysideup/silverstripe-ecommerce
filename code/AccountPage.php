@@ -64,7 +64,7 @@ class AccountPage extends Page {
 	 * @param Member $member
 	 * @return Boolean
 	 */
-	function caView($member = null) {
+	function canView($member = null) {
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
