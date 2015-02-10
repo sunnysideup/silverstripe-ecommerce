@@ -12,7 +12,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderAddress extends DataObject {
+class OrderAddress extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * standard SS static definition
@@ -90,6 +90,19 @@ class OrderAddress extends DataObject {
 	 */
 	function removeReadOnlyField($fieldName) {
 		unset($this->readOnlyFields[$fieldName]);
+	}
+
+	/**
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
+	 * @return String
+	 */
+	public function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/sales/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
 	}
 
 	/**

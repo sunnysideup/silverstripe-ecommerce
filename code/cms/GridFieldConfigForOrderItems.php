@@ -1,4 +1,8 @@
 <?php
+/**
+ * ensures that order items can not be auto-linked or deleted
+ * but retains all the other features of the GridFieldConfig_RelationEditor settings.
+ */
 
 class GridFieldConfigForOrderItems extends GridFieldConfig_RelationEditor {
 

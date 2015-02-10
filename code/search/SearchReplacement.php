@@ -1,6 +1,16 @@
 <?php
+/**
+ * This dataobject 
+ * saves search replacements
+ * as in Smoogle will be replaced by Google
+ *
+ *
+ *
+ *
+ */
 
-class SearchReplacement extends DataObject {
+
+class SearchReplacement extends DataObject implements EditableEcommerceObject {
 
 	private static $db = array(
 		'Search' => 'Text',
@@ -78,4 +88,16 @@ class SearchReplacement extends DataObject {
 		return parent::canEdit($member);
 	}
 
+	/**
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
+	 * @return String
+	 */
+	public function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/shop/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
+	}
 }

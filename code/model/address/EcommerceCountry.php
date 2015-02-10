@@ -13,7 +13,7 @@
  **/
 
 
-class EcommerceCountry extends DataObject {
+class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceCountry/
@@ -361,6 +361,19 @@ class EcommerceCountry extends DataObject {
 			")
 		);
 		return $fields;
+	}
+
+	/**
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
+	 * @return String
+	 */
+	public function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/shop/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
 	}
 
 	/**

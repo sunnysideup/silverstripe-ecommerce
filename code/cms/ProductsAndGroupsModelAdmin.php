@@ -2,8 +2,7 @@
 
 
 /**
- * @description: Manages everything you sell.
- * Can include ProductVariations, etc..
+ * @description: for the management of Product and Product Groups only
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -37,8 +36,8 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
 	}
 
 	function getEditForm($id = null, $fields = null){
-		$form = parent::getEditForm();
 		if(singleton($this->modelClass) instanceof SiteTree) {
+			$form = parent::getEditForm();
 			if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
 				if($gridField instanceof GridField) {
 					$gridField->setConfig(GridFieldEditOriginalPageConfig::create());

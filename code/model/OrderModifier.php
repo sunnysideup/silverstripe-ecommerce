@@ -764,7 +764,7 @@ class OrderModifier extends OrderAttribute {
 
 }
 
-class OrderModifier_Descriptor extends DataObject {
+class OrderModifier_Descriptor extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * standard SS variable
@@ -880,6 +880,19 @@ class OrderModifier_Descriptor extends DataObject {
 		$fields->replaceField("LinkID", new TreeDropdownField("LinkID", "More info link (optional)", "SiteTree"));
 		$fields->replaceField("Description", new TextareaField("Description", "Description"));
 		return $fields;
+	}
+
+	/**
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
+	 * @return String
+	 */
+	public function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/shop/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
 	}
 
 	/**

@@ -12,7 +12,7 @@
  *
  * @package payment
  */
-class EcommercePayment extends DataObject {
+class EcommercePayment extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * standard SS Variable
@@ -144,15 +144,25 @@ class EcommercePayment extends DataObject {
 		}
 	}
 
-	/**
-	 * standard SS method
-	 * @return FieldList
-	 */
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("OrderID", new ReadonlyField("OrderID", "Order ID"));
 		return $fields;
 	}
+
+	/**
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
+	 * @return String
+	 */
+	function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/sales/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
+	}
+
 
 	/**
 	 * Standard SS method

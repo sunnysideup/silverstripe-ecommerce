@@ -57,5 +57,18 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass{
 	function urlSegmenter() {
 		return $this->config()->get("url_segment");
 	}
+	
+	/**
+	 * @return DataList
+	 */
+	function getList(){
+		$list = parent::getList();
+		if(singleton($this->modelClass) instanceof Order) {
+			$list = $list->innerJoin("OrderStep", "\"OrderStep\".\"ID\" = \"Order\".\"StatusID\"");
+		}
+		return $list;
+	}
+
+
 }
 

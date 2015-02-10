@@ -7,7 +7,7 @@
  *
  */
 
-class CheckoutPage_StepDescription extends DataObject{
+class CheckoutPage_StepDescription extends DataObject implements EditableEcommerceObject{
 
 	/**
 	 * standard SS variable
@@ -134,6 +134,19 @@ class CheckoutPage_StepDescription extends DataObject{
 		$fields->replaceField("Above", new TextareaField("Above", _t("Checkout.ABOVE", "Top of section note")));
 		$fields->replaceField("Below", new TextareaField("Below", _t("Checkout.BELOW", "Bottom of section note")));
 		return $fields;
+	}
+
+	/**
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
+	 * @return String
+	 */
+	public function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/shop/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
 	}
 
 	/**

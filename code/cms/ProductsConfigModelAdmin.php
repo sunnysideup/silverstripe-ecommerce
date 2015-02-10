@@ -2,9 +2,10 @@
 
 
 /**
- * @description: Manages everything you sell.
- * Can include ProductVariations, etc..
+ * @description: Manages stuff related to products,
+ * but not the product (groups) themselves
  *
+ * Main example is product variations
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

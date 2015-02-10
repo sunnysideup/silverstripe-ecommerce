@@ -30,7 +30,7 @@
  *
  **/
 
-class Order extends DataObject {
+class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * API Control
@@ -379,6 +379,9 @@ class Order extends DataObject {
 			$arrayOfStatusOptionsFinal = array();
 			if(count($arrayOfStatusOptions)) {
 				foreach($arrayOfStatusOptions as $key => $value) {
+					if(isset($_GET["q"]["StatusID"][$key])) {
+						$preSelected[$key] = $key;
+					}
 					$count = Order::get()
 						->Filter(array("StatusID" => intval($key)))
 						->count();
@@ -388,18 +391,9 @@ class Order extends DataObject {
 					else {
 						$arrayOfStatusOptionsFinal[$key] = $value . " ($count)";
 					}
-					//we use 100 here because if there is such a big list, an additional filter should be added
-					if($count > 100) {
-					}
-					else {
-						if($key != $createdOrderStatusID) {
-							$preSelected[$key] = $key;
-						}
-					}
 				}
 			}
-			$statusField = new CheckboxSetField("StatusID", "Status", $arrayOfStatusOptionsFinal);
-			//$statusField->setValue($preSelected);
+			$statusField = new CheckboxSetField("StatusID", "Status", $arrayOfStatusOptionsFinal, $preSelected);
 			$fieldList->push($statusField);
 		}
 		$fieldList->push(new DropdownField("CancelledByID", "Cancelled", array(-1 => "(Any)", 1 => "yes", 0 => "no")));
@@ -407,7 +401,8 @@ class Order extends DataObject {
 	}
 
 	/**
-	 * @param String $action - e.g. edit
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
 	 * @return String
 	 */
 	public function CMSEditLink($action = null) {
@@ -1993,7 +1988,7 @@ class Order extends DataObject {
 					$dateObject = $this->dbObject('Created');
 					$placed = _t("Order.STARTED", "started");
 				}
-				$title .= $placed." ".$dateObject->Format($dateFormat);
+				$title .= ", ".$placed." ".$dateObject->Format($dateFormat);
 			}
 			$name = "";
 			if($this->CancelledByID) {

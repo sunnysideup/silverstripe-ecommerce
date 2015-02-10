@@ -55,6 +55,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass{
 
 	/**
 	 * @return array Map of class name to an array of 'title' (see {@link $managed_models})
+	 * we make sure that the EcommerceDBConfig is FIRST
 	 */
 	function getManagedModels() {
 		$models = parent::getManagedModels();

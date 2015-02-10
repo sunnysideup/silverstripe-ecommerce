@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceDBConfig extends DataObject {
+class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * Standard SS Variable
@@ -398,6 +398,19 @@ class EcommerceDBConfig extends DataObject {
 		}
 		Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
 		return $fields;
+	}
+
+	/**
+	 * link to edit the record
+	 * @param String | Null $action - e.g. edit
+	 * @return String
+	 */
+	public function CMSEditLink($action = null) {
+		return Controller::join_links(
+			Director::baseURL(),
+			"/admin/shop/".$this->ClassName."/EditForm/field/".$this->ClassName."/item/".$this->ID."/",
+			$action
+		);
 	}
 
 	protected function getOrderStepsField(){
