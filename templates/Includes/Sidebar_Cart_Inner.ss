@@ -1,8 +1,10 @@
 <!--
 NOTE:
-Any element with the following classname: $AJAXDefinitions.TinyCartClassName
+Any element with the following classname: $AJAXDefinitions.SideBarCartID
 will be set to the contents of this file when the cart is updated using AJAX
 If you are not using this snippet then theme it and remove its content to speed up your AJAX cart.
+You can also change the JSON response not to include this using YML config setting:
+CartResponse.cart_responses_required
 -->
 <div class="sidebarCartInner">
 <% if Items %>
