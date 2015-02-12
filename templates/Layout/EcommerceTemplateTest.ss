@@ -3,15 +3,15 @@
 <h1>Ecommerce Template Test Page</h1>
 <p>
 	Welcome to the ecommerce template test.
-	On this page you can see the most useful e-commerce template controls.
+	On this page you can find a bunch of information on making smart e-commerce templates.
 </p>
 
 <h2>The Cart</h2>
-<p>The Cart can be accessed from anywhere using:</p>
+<p>The Cart can be accessed from any ContentController using, for example:</p>
 <pre>
 &lt;% if Cart %&gt;
 	&lt;% with Cart %&gt;
-		//do cart stuff here
+		&lt;% include Sidebar_Cart %&gt;
 	&lt;% end_with %&gt;
 &lt;% else %&gt;
 	&lt;p&gt;No cart was found!&lt;/p&gt;
@@ -20,7 +20,7 @@
 
 <% if Cart %>
 	<% with Cart %>
-
+		<% include Sidebar_Cart %>
 	<% end_with %>
 <% else %>
 <p>No cart was found!</p>
@@ -36,16 +36,17 @@
 	<tr><th scope="row" style="width: 60%;">Number or products in cart<br />&#36;Cart.TotalItems</th><td>$Cart.TotalItems</td></tr>
 	<tr><th scope="row" style="width: 60%;">Number of items in cart <br />&#36;Cart.TotalItemsTimesQuantity</th><td>$Cart.TotalItemsTimesQuantity</td></tr>
 	<tr><th scope="row" style="width: 60%;">More than one item in cart?<br />&#36;Cart.MoreThanOneItemInCart</th><td><% if Cart.MoreThanOneItemInCart %>YES<% else %>NO<% end_if %></td></tr>
-	<tr><th scope="row" style="width: 60%;">Link for unsubmitted order load it as current order<br />&#36;Cart.RetrieveLink</th><td>$Cart.RetrieveLink</td></tr>
-	<tr><th scope="row" style="width: 60%;">Sub-Total without currency<br />&#36;Cart.SubTotalAsCurrencyObject.Nice</th><td>$Cart.SubTotalAsCurrencyObject.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Sub-Total with currency<br />&#36;Cart.SubTotalAsMoney.Nice</th><td>$Cart.SubTotalAsMoney.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Extras with currency<br />&#36;Cart.ModifiersSubTotalAsCurrencyObject.Nice</th><td>$Cart.ModifiersSubTotalAsCurrencyObject.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Total without currency<br />&#36;Cart.TotalAsCurrencyObject.Nice</th><td>$Cart.TotalAsCurrencyObject.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Total with currency<br />&#36;Cart.TotalAsMoney.Nice</th><td>$Cart.TotalAsMoney.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Total Paid without currency<br />&#36;Cart.TotalPaidAsCurrencyObject.Nice</th><td>$Cart.TotalPaidAsCurrencyObject.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Total Paid with currency<br />&#36;Cart.TotalPaidAsMoney.Nice</th><td>$Cart.TotalPaidAsMoney.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Total Oustanding without currency<br />&#36;Cart.TotalOutstandingAsCurrencyObject.Nice</th><td>$Cart.TotalOutstandingAsCurrencyObject.Nice</td></tr>
-	<tr><th scope="row" style="width: 60%;">Total Oustanding with currency<br />&#36;Cart.TotalOutstandingAsMoney.Nice</th><td>$Cart.TotalOutstandingAsMoney.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Link to load unsubmitted order as current order<br />&#36;Cart.RetrieveLink</th><td>$Cart.RetrieveLink</td></tr>
+	<tr><th scope="row" style="width: 60%;">Sub-Total as currency object<br />&#36;Cart.SubTotalAsCurrencyObject.Nice</th><td>$Cart.SubTotalAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Sub-Total as money object<br />&#36;Cart.SubTotalAsMoney.NiceDefaultFormat</th><td>$Cart.SubTotalAsMoney.NiceDefaultFormat</td></tr>
+	<tr><th scope="row" style="width: 60%;">Extras as currency object<br />&#36;Cart.ModifiersSubTotalAsCurrencyObject.Nice</th><td>$Cart.ModifiersSubTotalAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Extras as money object<br />&#36;Cart.ModifiersSubTotalAsMoneyObject.NiceDefaultFormat</th><td>$Cart.ModifiersSubTotalAsMoneyObject.NiceDefaultFormat</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total as currency object<br />&#36;Cart.TotalAsCurrencyObject.Nice</th><td>$Cart.TotalAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total as money object<br />&#36;Cart.TotalAsMoney.NiceDefaultFormat</th><td>$Cart.TotalAsMoney.NiceDefaultFormat</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Paid as currency object<br />&#36;Cart.TotalPaidAsCurrencyObject.Nice</th><td>$Cart.TotalPaidAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Paid as money object<br />&#36;Cart.TotalPaidAsMoney.NiceDefaultFormat</th><td>$Cart.TotalPaidAsMoney.NiceDefaultFormat</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Oustanding as currency object<br />&#36;Cart.TotalOutstandingAsCurrencyObject.Nice</th><td>$Cart.TotalOutstandingAsCurrencyObject.Nice</td></tr>
+	<tr><th scope="row" style="width: 60%;">Total Oustanding as money object<br />&#36;Cart.TotalOutstandingAsMoney.NiceDefaultFormat</th><td>$Cart.TotalOutstandingAsMoney.NiceDefaultFormat</td></tr>
 	<tr><th scope="row" style="width: 60%;">Country for current order<br />&#36;Cart.Country / &#36;Cart.FullNameCountry </th><td>$Cart.Country / $Cart.FullNameCountry</td></tr>
 
 
@@ -54,8 +55,8 @@
 <h2>Submitted Order Info</h2>
 <p>
 	Useful if you would like to display some information about the a Submitted Order ...
-	For this example, you will need to create a method SubmittedOrder, accessible to your controller.
-	The method should return the submitted order you want to use for displaying the information below.
+	For this example, we have created a method <i>SubmittedOrder</i> in the Page controller.
+	The method returns a random submitted order for the use of displaying the information below.
 </p>
 <% with SubmittedOrder %>
 <table style="width: 95%;" border="1" cellspacing="5">

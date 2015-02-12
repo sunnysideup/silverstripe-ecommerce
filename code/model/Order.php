@@ -2077,6 +2077,17 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
+	 *
+	 * @param string|array $excluded - Class(es) of modifier(s) to ignore in the calculation.
+	 * @param Boolean $stopAtExcludedModifier  - when this flag is TRUE, we stop adding the modifiers when we reach an excluded modifier.
+	 *
+	 * @return Money (DB Object)
+	 **/
+	function ModifiersSubTotalAsMoneyObject($excluded = null, $stopAtExcludedModifier = false) {
+		return EcommerceCurrency::get_money_object_from_order_currency($this->ModifiersSubTotal($excluded, $stopAtExcludedModifier), $this);
+	}
+
+	/**
 	 * Returns the total cost of an order including the additional charges or deductions of its modifiers.
 	 * @return float
 	 */

@@ -242,6 +242,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * This function works out the most likely country for the current order.
 	 *
 	 * @param Boolean $recalculate
+	 *
 	 * @return String - Country Code - e.g. NZ
 	 **/
 	public static function get_country($recalculate = false) {
@@ -279,6 +280,41 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
+	 * This function works out the most likely country for the current order
+	 * and returns the Country Object, if any.
+	 *
+	 * @param Boolean $recalculate
+	 *
+	 * @return EcommerceCountry | Null
+	 **/
+	public static function get_country_object($recalculate = false) {
+		$code = self::get_country($recalculate);
+		return EcommerceCountry::get()->filter(array("Code" => $code))->First();
+	}
+
+
+	/**
+	 * returns the ID of the country or 0
+	 *
+	 * @param String $countryCode
+	 * @param Boolean $recalculate
+	 *
+	 * @return Int
+	 **/
+	public static function get_country_id($countryCode = "", $recalculate = false) {
+		if(!$countryCode) {
+			$countryCode = self::get_country($recalculate);
+		}
+		$country = EcommerceCountry::get()
+			->filter(array("Code" => $countryCode))
+			->first();
+		if($country) {
+			return $country->ID;
+		}
+		return 0;
+	}
+
+	/**
 	 * Memory for allow country to check
 	 * @var Null | Boolean
 	 */
@@ -306,25 +342,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 			}
 		}
 		return self::$allow_sales_cache;
-	}
-
-	/**
-	 * returns the ID of the country.
-	 *
-	 * @param String $countryCode
-	 * @return Int
-	 **/
-	public static function get_country_id($countryCode = "") {
-		if(!$countryCode) {
-			$countryCode = self::get_country();
-		}
-		$country = EcommerceCountry::get()
-			->filter(array("Code" => $countryCode))
-			->first();
-		if($country) {
-			return $country->ID;
-		}
-		return 0;
 	}
 
 	/**
