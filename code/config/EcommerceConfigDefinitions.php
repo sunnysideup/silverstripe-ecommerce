@@ -328,9 +328,11 @@ class EcommerceConfigDefinitions extends Object {
 				"admin_role_permission_codes" => "Permission codes for the shop administrator member group.",
 			),
 			"BillingAddress" => array(
+				"required_fields" => "List of fields that is required to be entered.",
 				"fields_to_google_geocode_conversion" => "This variable tells us how Billing Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.",
 			),
 			"ShippingAddress" => array(
+				"required_fields" => "List of fields that is required to be entered.",
 				"fields_to_google_geocode_conversion" => "This variable tells us how Shipping Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.",
 			),
 			"EcommerceCountry" => array(

@@ -229,7 +229,7 @@ class BillingAddress extends OrderAddress {
 	 * @return array
 	 */
 	function getRequiredFields() {
-		return $this->Config()->get("required_fields_array");
+		return $this->Config()->get("required_fields");
 	}
 
 	/**
