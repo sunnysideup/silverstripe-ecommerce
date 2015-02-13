@@ -217,7 +217,7 @@ class OrderConfirmationPage extends CartPage{
 	 * @return String (URLSegment)
 	 */
 	public static function get_email_link($orderID, $emailClassName = "Order_StatusEmail", $actuallySendEmail = false, $alternativeOrderStepID = 0) {
-		$link = self::find_link(). 'sendemail/' . $orderID . '/'.$emailClassName.'/';
+		$link = self::find_link(). 'sendemail/' . $orderID . '/'.$emailClassName;
 		if($actuallySendEmail) {
 			$link .= "?send=1";
 		}

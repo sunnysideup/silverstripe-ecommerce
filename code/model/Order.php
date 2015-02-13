@@ -875,6 +875,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 		if(!$step) {
 			$step = OrderStep_Created::create();
 		}
+		if(!$step) {
+			user_error("each order needs a status");
+		}
 		return $step;
 	}
 
