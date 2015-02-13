@@ -213,9 +213,11 @@ class ProductSearchForm extends Form {
 		$validator = ProductSearchForm_Validator::create($requiredFields);
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		//extensions need to be set after __construct
-		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
-		if($this->extend('updateActions',$actions) !== null) {$this->setActions($actions);}
-		if($this->extend('updateValidator',$requiredFields) !== null) {$this->setValidator($requiredFields);}
+		//extension point
+		$this->extend('updateFields', $fields); $this->setFields($fields);
+		$this->extend('updateActions', $actions); $this->setActions($actions);
+		$this->extend('updateValidator', $validator); $this->setValidator($validator);
+
 		$oldData = Session::get($this->Config()->get("form_data_session_variable"));
 		if($oldData && (is_array($oldData) || is_object($oldData))) {
 			$this->loadDataFrom($oldData);

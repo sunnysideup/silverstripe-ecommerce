@@ -363,11 +363,12 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 *
 	 * @param Array $buildTasksArray array of build tasks
 	 * @param String $type
+	 *
 	 * @return ArrayList(ArrayData(Link, Title, Description))
 	 */
 	protected function createMenuDOSFromArray(Array $buildTasksArray, $type = "") {
 		$extendedBuildTasksArray = $this->extend("updateEcommerceDevMenu".$type, $buildTasksArray);
-		if(is_array($extendedBuildTasksArray)) {
+		if($extendedBuildTasksArray !== null && is_array($extendedBuildTasksArray) && count($extendedBuildTasksArray)) {
 			foreach($extendedBuildTasksArray as $extendedBuildTasks) {
 				$buildTasksArray += $extendedBuildTasks;
 			}

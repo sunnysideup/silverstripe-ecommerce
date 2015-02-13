@@ -80,9 +80,11 @@ class ShopAccountForm extends Form {
 		parent::__construct($controller, $name, $fields, $actions, $requiredFields);
 		$this->setAttribute("autocomplete", "off");
 		//extensions need to be set after __construct
-		if($this->extend('updateFields',$fields) !== null) {$this->setFields($fields);}
-		if($this->extend('updateActions',$actions) !== null) {$this->setActions($actions);}
-		if($this->extend('updateValidator',$requiredFields) !== null) {$this->setValidator($requiredFields);}
+		//extension point
+		$this->extend('updateFields', $fields); $this->setFields($fields);
+		$this->extend('updateActions', $actions); $this->setActions($actions);
+		$this->extend('updateValidator', $requiredFields); $this->setValidator($requiredFields);
+
 		if($member){
 			$this->loadDataFrom($member);
 		}

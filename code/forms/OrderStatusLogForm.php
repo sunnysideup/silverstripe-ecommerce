@@ -49,6 +49,12 @@ class OrderStatusLogForm extends Form {
 			$optionalValidator = new $validatorClassName();
 		}
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
+
+		//extension point
+		$this->extend('updateFields', $fields); $this->setFields($fields);
+		$this->extend('updateActions', $actions); $this->setActions($actions);
+		$this->extend('updateValidator', $optionalValidator); $this->setValidator($optionalValidator);
+
 		$this->setAttribute("autocomplete", "off");
 		Requirements::themedCSS($this->ClassName, 'ecommerce');
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
@@ -143,7 +149,7 @@ class OrderStatusLogForm_Controller extends Controller{
 			$URLSegment = $this->class;
 		}
 		return Controller::join_links(
-			Director::BaseURL(),$URLSegment, 
+			Director::BaseURL(),$URLSegment,
 			$action
 		);
 	}

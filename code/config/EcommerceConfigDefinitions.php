@@ -370,7 +370,13 @@ class EcommerceConfigDefinitions extends Object {
 			),
 		);
 		//add more stuff through extensions
-		$this->extend("moreDefinitions", $array);
+
+		$extendedArray = $this->extend("moreDefinitions", $array);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedLabelsUpdate) {
+				$array += $extendedLabelsUpdate;
+			}
+		}
 		//add more stuff through child classes
 		$childClasses = ClassInfo::subclassesFor($this->class);
 		if(is_array($childClasses) && count($childClasses)) {

@@ -28,9 +28,10 @@ class OrderForm_Cancel extends Form {
 		$requiredFields = array();
 		$validator = OrderForm_Cancel_Validator::create($requiredFields);
 		parent::__construct($controller, $name, $fields, $actions, $validator);
-		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
-		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
-		if($this->extend('updateValidator', $requiredFields) !== null) {$this->setValidator($requiredFields);}
+		//extension point
+		$this->extend('updateFields', $fields); $this->setFields($fields);
+		$this->extend('updateActions', $actions); $this->setActions($actions);
+		$this->extend('updateValidator', $validator); $this->setValidator($validator);
 
 		$oldData = Session::get("FormInfo.{$this->FormName()}.data");
 		if($oldData && (is_array($oldData) || is_object($oldData))) {

@@ -229,18 +229,7 @@ class BillingAddress extends OrderAddress {
 	 * @return array
 	 */
 	function getRequiredFields() {
-		$requiredFieldsArray = array(
-			'Email',
-			'FirstName',
-			'Surname',
-			'Address',
-			'City',
-			'PostalCode',
-			'RegionCode',
-			'RegionID'
-		);
-		$this->extend('augmentEcommerceBillingAddressRequiredFields', $requiredFieldsArray);
-		return $requiredFieldsArray;
+		return $this->Config()->get("required_fields_array");
 	}
 
 	/**

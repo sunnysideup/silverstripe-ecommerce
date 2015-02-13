@@ -242,27 +242,8 @@ class ShippingAddress extends OrderAddress {
 	 * @return array
 	 */
 	function getRequiredFields() {
-		$requiredFieldsArray = array(
-			'ShippingAddress',
-			'ShippingCity',
-			'ShippingPostalCode',
-			'ShippingRegionCode',
-			'ShippingRegionID',
-			'ShippingCountry'
-		);
-		$this->extend('augmentEcommerceShippingAddressRequiredFields', $requiredFieldsArray);
-		return $requiredFieldsArray;
+		return $this->Config()->get("required_fields_array");
 	}
-
-	/**
-	 * standard SS method
-	 * sets the country to the best known country {@link EcommerceCountry}
-	 **/
-	//function populateDefaults() {
-		//parent::populateDefaults();
-		//$this->ShippingCountry = EcommerceCountry::get_country();
-	//}
-
 
 
 }

@@ -45,6 +45,12 @@ class OrderModifierForm extends Form {
 			$optionalValidator = new $validatorClassName();
 		}
 		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
+
+		//extension point
+		$this->extend('updateFields', $fields); $this->setFields($fields);
+		$this->extend('updateActions', $actions); $this->setActions($actions);
+		$this->extend('updateValidator', $optionalValidator); $this->setValidator($optionalValidator);
+
 		$this->setAttribute("autocomplete", "off");
 		Requirements::themedCSS($this->ClassName, 'ecommerce');
 		$this->addExtraClass($this->myLcFirst(ucwords($name)));
@@ -54,7 +60,7 @@ class OrderModifierForm extends Form {
 		if($oldData && (is_array($oldData) || is_object($oldData))) {
 			$this->loadDataFrom($oldData);
 		}
-		$this->extend('updateOrderModifierForm',$this);
+		$this->extend('updateOrderModifierForm', $this);
 	}
 
 	protected function myLcFirst($str){
@@ -177,7 +183,7 @@ class OrderModifierForm_Controller extends Controller{
 		}
 		return Controller::join_links(
 			Director::BaseURL(),
-			$URLSegment, 
+			$URLSegment,
 			$action
 		);
 	}

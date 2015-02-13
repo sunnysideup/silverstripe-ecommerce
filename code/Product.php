@@ -609,7 +609,10 @@ class Product extends Page implements BuyableModel {
 	public function OrderItem() {
 		//work out the filter
 		$filter = "";
-		$this->extend('updateItemFilter',$filter);
+		$extendedFilter = $this->extend('updateItemFilter', $filter);
+		if($extendedFilter !== null && is_array($extendedFilter) && count($extendedFilter)) {
+			$filter = $extendedFilter;
+		}
 		//make the item and extend
 		$item = ShoppingCart::singleton()->findOrMakeItem($this, $filter);
 		$this->extend('updateDummyItem',$item);
@@ -629,9 +632,9 @@ class Product extends Page implements BuyableModel {
 	 **/
 	public function classNameForOrderItem() {
 		$className = $this->defaultClassNameForOrderItem;
-		$update = $this->extend("updateClassNameForOrderItem", $className);
-		if(is_string($update) && class_exists($update)) {
-			$className = $update;
+		$updateClassName = $this->extend("updateClassNameForOrderItem", $className);
+		if($updateClassName !== null && is_array($updateClassName) && count($updateClassName)) {
+			$className = $updateClassName[0];
 		}
 		return $className;
 	}
@@ -778,11 +781,10 @@ class Product extends Page implements BuyableModel {
 	protected function linkParameters($type = ""){
 		$array = array();
 		$extendedArray = $this->extend('updateLinkParameters', $array, $type);
-		if($extendedArray) {
-			if(!is_array($extendedArray)) {
-				user_error("decoration method updateLinkParameters should return an array");
+		if($extendedArray != null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedArrayUpdate) {
+				$array += $extendedArrayUpdate;
 			}
-			return $extendedArray;
 		}
 		return $array;
 	}
@@ -855,10 +857,8 @@ class Product extends Page implements BuyableModel {
 	function getCalculatedPrice() {
 		$price = $this->Price;
 		$updatedPrice = $this->extend('updateCalculatedPrice',$price);
-		if($updatedPrice !== null) {
-			if(is_array($updatedPrice) && count($updatedPrice)) {
-				$price = $updatedPrice[0];
-			}
+		if($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
+			$price = $updatedPrice[0];
 		}
 		return $price;
 	}

@@ -38,15 +38,18 @@ class OrderForm_Payment extends Form {
 		$requiredFields = array();
 		$validator = OrderForm_Payment_Validator::create($requiredFields);
 		$form = parent::__construct($controller, $name, $fields, $actions, $validator);
-		if($this->extend('updateFields', $fields) !== null) {$this->setFields($fields);}
-		if($this->extend('updateActions', $actions) !== null) {$this->setActions($actions);}
-		if($this->extend('updateValidator', $validator) !== null) {$this->setValidator($validator);}
+
+		//extension point
+		$this->extend('updateFields', $fields); $this->setFields($fields);
+		$this->extend('updateActions', $actions); $this->setActions($actions);
+		$this->extend('updateValidator', $validator); $this->setValidator($validator);
+
 		$this->setFormAction($controller->Link($name));
 		$oldData = Session::get("FormInfo.{$this->FormName()}.data");
 		if($oldData && (is_array($oldData) || is_object($oldData))) {
 			$this->loadDataFrom($oldData);
 		}
-		$this->extend('updateOrderForm_Payment',$this);
+		$this->extend('updateOrderForm_Payment', $this);
 	}
 
 	function dopayment($data, $form) {

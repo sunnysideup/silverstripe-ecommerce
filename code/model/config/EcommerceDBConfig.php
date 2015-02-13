@@ -234,7 +234,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 		$defaultLabels = parent::fieldLabels();
 		$newLabels = $this->customFieldLabels();
 		$labels = array_merge($defaultLabels, $newLabels);
-		$this->extend('updateFieldLabels', $labels);
+		$extendedLabels = $this->extend('updateFieldLabels', $labels);
+		if($extendedLabels !== null && is_array($extendedLabels) && count($extendedLabels)) {
+			foreach($extendedLabels as $extendedLabelsUpdate) {
+				$labels += $extendedLabelsUpdate;
+			}
+		}
 		return $labels;
 	}
 

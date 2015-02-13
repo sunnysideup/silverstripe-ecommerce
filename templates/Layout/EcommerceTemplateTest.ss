@@ -1,6 +1,7 @@
 <div id="EcommerceTaskTemplateTest" class="mainSection content-container noSidebar typography">
 
 <h1>Ecommerce Template Test Page</h1>
+<div id="TOCGoesHere"></div>
 <p>
 	Welcome to the ecommerce template test.
 	On this page you can find a bunch of information on making smart e-commerce templates.
@@ -310,3 +311,40 @@
 
 </div>
 
+<script type="text/javascript">
+
+var ToC =
+	"<nav role='navigation' class='table-of-contents'>" +
+		"<h2>On this page:</h2>" +
+		"<ul>";
+
+var newLine, el, title, link, id, basehref;
+basehref = window.location.href;
+jQuery("#EcommerceTaskTemplateTest h2").each(
+	function() {
+		el = jQuery(this);
+		title = el.text();
+		id = title.replace(/[^a-z0-9]/gmi, "");
+		id = "TOCGoTo"+id;
+		el.attr("id", id);
+		link = basehref + "#" + id;
+
+		newLine =
+			"<li>" +
+				"<a href='" + link + "'>" +
+					title +
+				"</a>" +
+			"</li>";
+
+		ToC += newLine;
+
+	}
+);
+
+ToC +=
+	 "</ul>" +
+	"</nav>";
+
+jQuery("#TOCGoesHere").html(ToC);
+
+</script>

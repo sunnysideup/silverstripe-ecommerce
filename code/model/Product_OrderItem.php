@@ -72,11 +72,9 @@ class Product_OrderItem extends OrderItem {
 		else {
 			$unitPrice = 0;
 		}
-		$updatedUnitPrice = $this->extend('updateUnitPrice',$unitPrice);
-		if($updatedUnitPrice !== null) {
-			if(is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
-				$unitPrice = $updatedUnitPrice[0];
-			}
+		$updatedUnitPrice = $this->extend('updateUnitPrice', $unitPrice);
+		if($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
+			$unitPrice = $updatedUnitPrice[0];
 		}
 		return $unitPrice;
 	}
@@ -94,34 +92,24 @@ class Product_OrderItem extends OrderItem {
 			Config::unnest();
 		}
 		$updatedTableTitle = $this->extend('updateTableTitle',$tableTitle);
-		if($updatedTableTitle) {
-			if(is_array($updatedTableTitle)) {
-				$tableTitle = implode($updatedTableTitle);
-			}
-			else {
-				$tableTitle = $updatedTableTitle;
-			}
+		if($updatedTableTitle !== null && is_array($updatedTableTitle) && count($updatedTableTitle)) {
+			$tableTitle = implode($updatedTableTitle);
 		}
 		return $tableTitle;
 	}
 
 	/**
-	 *@return String
-	 **/
+	 * @return String
+	 */
 	function TableSubTitle() {return $this->getTableSubTitle();}
 	function getTableSubTitle() {
 		$tableSubTitle = '';
 		if($product = $this->Product()) {
 			$tableSubTitle = $product->Quantifier;
 		}
-		$updatedSubTableTitle = $this->extend('updateSubTableTitle',$tableSubTitle);
-		if($updatedSubTableTitle) {
-			if(is_array($updatedSubTableTitle)) {
-				$tableSubTitle = implode($updatedSubTableTitle);
-			}
-			else {
-				$tableSubTitle = $updatedSubTableTitle;
-			}
+		$updatedSubTableTitle = $this->extend('updateSubTableTitle', $tableSubTitle);
+		if($updatedSubTableTitle !== null && is_array($updatedSubTableTitle) && count($updatedSubTableTitle)) {
+			$tableSubTitle = implode("", $updatedSubTableTitle);
 		}
 		return $tableSubTitle;
 	}
@@ -145,7 +133,10 @@ class Product_OrderItem extends OrderItem {
 				<b>Product Version : </b>$productVersion
 			</p>
 HTML;
-		$this->extend('updateDebug',$html);
+		$updatedHTML = $this->extend('updateDebug',$html);
+		if($updatedHTML !== null && is_array($updatedHTML) && count($updatedHTML)) {
+			$html = implode("", $updatedHTML);
+		}
 		return $html;
 	}
 

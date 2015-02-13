@@ -586,7 +586,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		$fields->addFieldToTab("Root.Log", new ReadonlyField("Created", _t("Root.CREATED", "Created")));
 		$fields->addFieldToTab("Root.Log", new ReadonlyField("LastEdited", _t("Root.LASTEDITED", "Last saved")));
-		$this->extend('updateSettingsFields',$fields);
+		$this->extend('updateSettingsFields', $fields);
 		return $fields;
 	}
 
@@ -1634,7 +1634,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canCreate($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canCreate', $member->ID);
+		$extended = $this->extendedCan('canCreate', $member);
 		if($extended !== null) {return $extended;}
 		if($member->exists()) {
 			return $member->IsShopAdmin();
@@ -1652,7 +1652,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		$member = $this->getMemberForCanFunctions($member);
 		//check if this has been "altered" in any DataExtension
-		$extended = $this->extendedCan('canView', $member->ID);
+		$extended = $this->extendedCan('canView', $member);
 		//if this method has been extended in a data object decorator then use this
 		if($extended !== null) {
 			return $extended;
@@ -1741,7 +1741,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canEdit($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canEdit', $member->ID);
+		$extended = $this->extendedCan('canEdit', $member);
 		if($extended !== null) {return $extended;}
 		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
 			return true;
@@ -1759,7 +1759,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canPay(Member $member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canPay', $member->ID);
+		$extended = $this->extendedCan('canPay', $member);
 		if($extended !== null) {return $extended;}
 		if($this->IsPaid() || $this->IsCancelled()) {
 			return false;
@@ -1778,7 +1778,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return false;
 		}
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canCancel', $member->ID);
+		$extended = $this->extendedCan('canCancel', $member);
 		if($extended !== null) {return $extended;}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return $this->MyStep()->CustomerCanCancel && $this->canView($member);
@@ -1791,7 +1791,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canDelete($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canDelete', $member->ID);
+		$extended = $this->extendedCan('canDelete', $member);
 		if($extended !== null) {return $extended;}
 		if($this->IsSubmitted()){
 			return false;
@@ -1861,7 +1861,10 @@ class Order extends DataObject implements EditableEcommerceObject {
 				$email = $this->Member()->Email;
 			}
 		}
-		$this->extend('updateOrderEmail', $email);
+		$extendedEmail = $this->extend('updateOrderEmail', $email);
+		if($extendedEmail !== null && is_array($extendedEmail) && count($extendedEmail)) {
+			$email = implode("", $extendedEmail[0]);
+		}
 		return $email;
 	}
 
@@ -2023,7 +2026,10 @@ class Order extends DataObject implements EditableEcommerceObject {
 		else {
 			$title = _t("Order.NEW", "New")." ".$this->i18n_singular_name();
 		}
-		$this->extend('updateTitle', $title);
+		$extendedTitle = $this->extend('updateTitle', $title);
+		if($extendedTitle !== null && is_array($extendedTitle) && count($extendedTitle)) {
+			$title = implode("", $extendedTitle);
+		}
 		return $title;
 	}
 

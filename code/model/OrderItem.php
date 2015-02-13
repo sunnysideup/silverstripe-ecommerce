@@ -447,10 +447,8 @@ class OrderItem extends OrderAttribute {
 			$unitPrice = 0;
 		}
 		$updatedUnitPrice = $this->extend('updateUnitPrice',$price);
-		if($updatedUnitPrice !== null) {
-			if(is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
-				$unitPrice = $updatedUnitPrice[0];
-			}
+		if($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
+			$unitPrice = $updatedUnitPrice[0];
 		}
 		return $unitPrice;
 	}
@@ -476,10 +474,8 @@ class OrderItem extends OrderAttribute {
 			$total = $this->getUnitPrice($recalculate) * $this->Quantity;
 		}
 		$updatedTotal = $this->extend('updateTotal', $total);
-		if($updatedTotal !== null) {
-			if(is_array($updatedTotal) && count($updatedTotal)) {
-				$total = $$updatedTotal[0];
-			}
+		if($updatedTotal !== null && is_array($updatedTotal) && count($updatedTotal)) {
+			$total = $updatedTotal[0];
 		}
 		return $total;
 	}
@@ -772,7 +768,12 @@ class OrderItem extends OrderAttribute {
 	 **/
 	protected function linkParameters(){
 		$array = array();
-		$this->extend('updateLinkParameters',$array);
+		$updatedLinkParameters = $this->extend('updateLinkParameters', $array);
+		if($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
+			foreach($updatedLinkParameters as $updatedLinkParametersUpdate) {
+				$array += $updatedLinkParametersUpdate;
+			}
+		}
 		return $array;
 	}
 

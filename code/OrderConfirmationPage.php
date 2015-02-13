@@ -136,13 +136,18 @@ class OrderConfirmationPage extends CartPage{
 	/**
 	 * standard SS method for decorators.
 	 * @param Boolean - $includerelations: array of fields to start with
-	 * @return null ($fields variable is automatically updated)
+	 * @return array
 	 */
 	function fieldLabels($includerelations = true) {
 		$defaultLabels = parent::fieldLabels();
 		$newLabels = $this->customFieldLabels();
 		$labels = array_merge($defaultLabels, $newLabels);
-		$this->extend('updateFieldLabels', $labels);
+		$extendedLabels = $this->extend('updateFieldLabels', $labels);
+		if($extendedLabels !== null && is_array($extendedLabels) && count($extendedLabels)) {
+			foreach($extendedLabels as $extendedLabelsUpdate) {
+				return $labels += $extendedLabels;
+			}
+		}
 		return $labels;
 	}
 
