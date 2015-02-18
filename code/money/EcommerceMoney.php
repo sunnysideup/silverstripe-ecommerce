@@ -94,7 +94,7 @@ class EcommerceMoney extends Extension {
 	}
 
 	/**
-	 * returns a currency like this: 8,001.00 USD / 12.12 NZD
+	 * returns a currency like this: 8,001 usd / 12.12 nzd
 	 *
 	 * @param Boolean $html
 	 *
@@ -110,7 +110,7 @@ class EcommerceMoney extends Extension {
 			$code = "<span class=\"currencyHolder\">$code</span>";
 		}
 		$amount = $this->owner->getAmount();
-		return (is_numeric($amount)) ?  $symbol.$this->owner->currencyLib->toCurrency($amount, array("symbol" => "")).$code : '';
+		return (is_numeric($amount)) ?  $symbol.$this->owner->currencyLib->toCurrency($amount, array("symbol" => "", "precision" => 0))." ".$code : '';
 	}
 
 	/**

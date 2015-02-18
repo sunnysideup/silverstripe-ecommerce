@@ -175,7 +175,6 @@ ShippingAddress:
     - ShippingRegionCode
     - ShippingRegionID
     - ShippingCountry
-
   fields_to_google_geocode_conversion:
     ShippingAddress:
       street_number: long_name
