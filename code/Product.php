@@ -193,9 +193,22 @@ class Product extends Page implements BuyableModel {
 		$fields->addFieldToTab('Root.Images', new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
 		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
 		$fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
-		$fields->addFieldToTab('Root.Details',new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
-		$fields->addFieldToTab('Root.Details',new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
-		$fields->addFieldToTab('Root.Details',new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased'), 1));
+		$fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
+		$fields->addFieldToTab('Root.Details', new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
+		$fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
+		$config = $this->EcomConfig();
+		if($config && !$config->AllowFreeProductPurchase) {
+			$price = $this->getCalculatedPrice();
+			if($price == 0) {
+				$link = $config->CMSEditLink();
+				$allowPurchaseField->setDescription(
+					_t("Product.DO_NOT_ALLOW_FREE_PRODUCTS_TO_BE_PURCHASED",
+						"NB: Allow Purchase + zero price is not allowed.  Change the <a href=\"$link\">Shop Settings</a> to allow a zero price product purchases or set price on this product."
+					)
+				);
+			}
+		}
+
 		$fields->addFieldToTab('Root.Details',new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
 		$fields->addFieldToTab('Root.Details',new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
 		$fields->addFieldToTab('Root.Details',new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
@@ -314,12 +327,7 @@ class Product extends Page implements BuyableModel {
 		$config = $this->EcomConfig();
 		//set allowpurchase to false IF
 		//free products are not allowed to be purchased
-		if($config && !$config->AllowFreeProductPurchase) {
-			$price = $this->getCalculatedPrice();
-			if($price == 0) {
-				$this->AllowPurchase = 0;
-			}
-		}
+
 		$filter = EcommerceCodeFilter::create();
 		$filter->checkCode($this, "InternalItemID");
 		$this->prepareFullFields();
