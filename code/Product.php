@@ -459,6 +459,22 @@ class Product extends Page implements BuyableModel {
 	}
 
 	/**
+	 * Returns the top parent group of the product (in the hierarchy).
+	 *
+	 * @return ProductGroup | NULL
+	 **/
+	function TopParentGroup() {
+		$parent = $this->MainParentGroup();
+		$x = 0;
+		while($parent && $x < 100) {
+			$returnValue = $parent;
+			$parent = ProductGroup::get()->filter(array("ID" => $parent->ParentID))->first();
+			$x++;
+		}
+		return $returnValue;
+	}
+
+	/**
 	 * Returns products in the same group
 	 * @return DataList (Products)
 	 **/
