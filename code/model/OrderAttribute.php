@@ -305,7 +305,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return string
 	 */
-	function TableTitle(){return $this->getTableTitle();}
+	function TableTitle(){ return $this->getTableTitle();}
 	function getTableTitle() {
 		return $this->i18n_singular_name();
 	}

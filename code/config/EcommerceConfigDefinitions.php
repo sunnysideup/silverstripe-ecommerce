@@ -217,6 +217,9 @@ class EcommerceConfigDefinitions extends Object {
 				"display_styles" => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
 				"session_name_for_product_array" => "This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. ",
 			),
+			"Product" => array(
+				"folder_name_for_images" => "Default folder for uploading product images."
+			),
 			"Product_Image" =>  array(
 				"thumbnail_width" => "Thumbnail width in pixels. For thumbnails, we use paddedResize.",
 				"thumbnail_height" => "Thumbnail height in pixels. For thumbnails, we use paddedResize.",

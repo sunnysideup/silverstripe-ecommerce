@@ -75,6 +75,8 @@ ProductGroup:
       Title: default
   session_name_for_product_array: ProductGroupProductIDs
 
+Product:
+  folder_name_for_images: "ProductImages"
 
 Product_Image:
   thumbnail_width: 75

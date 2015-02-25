@@ -1,16 +1,35 @@
 <?php
 
 /**
+ * This is a preset upload field for product images.
+ *
+ * In the config you can set the default folder name for a certain image Field
+ * using
  *
  *
+ * MyClass:
+ *   folder_name_for_images: "MyFolderName"
+ *
+ *
+ * It is recommended that you also set the calling class manually as we expect this
+ * to be faster
+ *
+ * e.g.
+ *
+ *
+ *     $fields->addFieldToTab('Root.Images', $uploadField = new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
+ *     $uploadField->setCallingClass("Product");
  *
  */
 
 class Product_ProductImageUploadField extends UploadField {
 
-	function getRelationAutosetClass($default ='File'){
-		return "Image";
-	}
+
+	/**
+	 *
+	 * @var String
+	 */
+	protected $callingClass = "";
 
 	/**
 	 * @var array Config for this field used in both, php and javascript
@@ -83,6 +102,66 @@ class Product_ProductImageUploadField extends UploadField {
 		 */
 		'fileEditValidator' => null
 	);
+
+	/**
+	 * Must be a real class name.
+	 * @param String $name
+	 */
+	public function setCallingClass($name){
+		$this->callingClass = $name;
+	}
+
+	/**
+	 * Construct a new UploadField instance
+	 *
+	 * @param string $name The internal field name, passed to forms.
+	 * @param string $title The field label.
+	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on
+	 *                       @link $record}, with the same name as the field name.
+	 * @param Form $form Reference to the container form
+	 */
+	public function __construct($name, $title = null, SS_List $items = null) {
+		parent::__construct($name, $title, $items);
+		$this->getValidator()->setAllowedExtensions(array("gif", "jpg", "jpeg", "png"));
+
+		$callingClass = $this->getCallingClass();
+		$folderName = Config::inst()->get($callingClass, "folder_name_for_images");
+		if(!$folderName) {
+			$folderName = $callingClass."_".$name;
+		}
+		$this->setFolderName($folderName);
+	}
+
+	/**
+	 *
+	 * @return String
+	 */
+	protected function getCallingClass() {
+		if($this->callingClass) {
+			return $this->callingClass;
+		}
+		//get the trace
+		$trace = debug_backtrace();
+		// Get the class that is asking for who awoke it
+		$class = $trace[1]['class'];
+		// +1 to i cos we have to account for calling this function
+		for ( $i=1; $i<count( $trace ); $i++ ) {
+			if ( isset( $trace[$i] ) ) {// is it set?
+				if ( $class != $trace[$i]['class'] ) { // is it a different class
+					return $trace[$i]['class'];
+				}
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @return String
+	 */
+	function getRelationAutosetClass($default ='File'){
+		return "Image";
+	}
+
 
 }
 
