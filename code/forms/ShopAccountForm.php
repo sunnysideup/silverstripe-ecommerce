@@ -113,6 +113,13 @@ class ShopAccountForm extends Form {
 	}
 
 
+	/**
+	 * create a member and add it to the order
+	 * then redirect back...
+	 *
+	 * @param Array $data
+	 * @param Form $form
+	 */
 	function creatememberandaddtoorder($data, $form){
 		$member = new Member();
 		$order =  ShoppingCart::current_order();
