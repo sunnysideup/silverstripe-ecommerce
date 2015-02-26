@@ -119,7 +119,7 @@ class ShopAccountForm extends Form {
 			$password = ShopAccountForm_PasswordValidator::clean_password($data);
 			if($password) {
 				$member->changePassword($password);
-				if($member->validate()){
+				if($member->validate()->valid()){
 					$member->write();
 					if($member->exists()) {
 						if(!$order->MemberID) {
@@ -164,7 +164,7 @@ class ShopAccountForm extends Form {
 			$form->sessionMessage(_t('Account.NO_VALID_PASSWORD','You need to enter a valid password.'), 'bad');
 			$this->controller->redirectBack();
 		}
-		if($member->validate()){
+		if($member->validate()->valid()){
 			$member->write();
 			if($link) {
 				return $this->controller->redirect($link);
