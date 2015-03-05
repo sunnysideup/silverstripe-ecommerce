@@ -167,7 +167,10 @@ class BillingAddress extends OrderAddress {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("OrderID", new ReadonlyField("OrderID", _t("OrderAddress.ORDERID", "Order #")));
 		$fields->replaceField("Email", new EmailField("Email", _t("OrderAddress.EMAIL", "Email")));
-		$fields->replaceField("RegionID", $this->getRegionField("RegionID"));
+		//We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
+		$fields->removeByName('RegionCode');
+		$fields->removeByName('RegionID');
+		$fields->insertAfter($this->getRegionField("RegionID"), 'Country');
 		$fields->replaceField("Country", $this->getCountryField("Country"));
 		return $fields;
 	}
