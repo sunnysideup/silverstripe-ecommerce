@@ -170,7 +170,7 @@ class BillingAddress extends OrderAddress {
 		//We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
 		$fields->removeByName('RegionCode');
 		$fields->removeByName('RegionID');
-		$fields->insertAfter($this->getRegionField("RegionID"), 'Country');
+		$fields->insertBefore($this->getRegionField("RegionID"), 'Country');
 		$fields->replaceField("Country", $this->getCountryField("Country"));
 		return $fields;
 	}
