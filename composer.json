@@ -15,7 +15,8 @@
 	],
 	"require":{
 		"silverstripe/framework": "~3.1",
-		"silverstripe/cms": "~3.1"
+		"silverstripe/cms": "~3.1",
+		"sunnysideup/google_address_field": "dev/master"
 	},
 	"suggest": {
 		"silverstripe/geoip": "HIGHLY RECOMMENDED: Native Silverstripe way to work out the customer country. Make sure this work on your server, before installing it - otherwise it is useless.",

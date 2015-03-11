@@ -200,8 +200,11 @@ class BillingAddress extends OrderAddress {
 		//$billingFields->push(new TextField('MobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 		$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
 		if(is_array($mappingArray) && count($mappingArray)) {
+			if(!class_exists("GoogleAddressField")) {
+				user_error("You must install the Sunny Side Up google_address_field module OR remove entries from: BillingAddress.fields_to_google_geocode_conversion");
+			}
 			$billingFields->push(
-				$billingEcommerceGeocodingField = new EcommerceGeocodingField(
+				$billingEcommerceGeocodingField = new GoogleAddressField(
 					'BillingEcommerceGeocodingField',
 					_t('OrderAddress.FIND_ADDRESS','Find address'),
 					Session::get("BillingEcommerceGeocodingFieldValue")

@@ -204,8 +204,11 @@ class ShippingAddress extends OrderAddress {
 			//$shippingFields->push(new TextField('ShippingMobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
 			$mappingArray = $this->Config()->get("fields_to_google_geocode_conversion");
 			if(is_array($mappingArray) && count($mappingArray)) {
+				if(!class_exists("GoogleAddressField")) {
+					user_error("You must install the Sunny Side Up google_address_field module OR remove entries from: ShippingAddress.fields_to_google_geocode_conversion");
+				}
 				$shippingFields->push(
-					$shippingEcommerceGeocodingField = new EcommerceGeocodingField(
+					$shippingEcommerceGeocodingField = new GoogleAddressField(
 						'ShippingEcommerceGeocodingField',
 						_t('OrderAddress.Find_Address','Find address'),
 						Session::get("ShippingEcommerceGeocodingFieldValue")
