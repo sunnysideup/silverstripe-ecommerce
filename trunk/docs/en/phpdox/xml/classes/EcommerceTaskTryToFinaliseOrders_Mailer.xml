@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskTryToFinaliseOrders_Mailer" namespace="" name="EcommerceTaskTryToFinaliseOrders_Mailer" abstract="false" final="false" start="115" end="133">
+  <file path="./../../../code/tasks" file="EcommerceTaskTryToFinaliseOrders.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskTryToFinaliseOrders.php" size="4700" time="2014-07-07T13:47:50+12:00" unixtime="1404697670" sha1="398b62830b18b4bf3762a476e4983caa35231dad"/>
+  <extends full="mailer" namespace="" name="mailer"/>
+  <method name="sendPlain" start="121" end="123" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="FAKE Send a plain-text email."/>
+      <return type="object">
+        <type full="bool" namespace="" name="bool"/>
+      </return>
+    </docblock>
+    <parameter name="to" byreference="false" type="{unknown}"/>
+    <parameter name="from" byreference="false" type="{unknown}"/>
+    <parameter name="subject" byreference="false" type="{unknown}"/>
+    <parameter name="plainContent" byreference="false" type="{unknown}"/>
+    <parameter name="attachedFiles" byreference="false" type="{unknown}" default="false"/>
+    <parameter name="customheaders" byreference="false" type="{unknown}" default="false"/>
+  </method>
+  <method name="sendHTML" start="130" end="132" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="FAKE Send a multi-part HTML email."/>
+      <return type="object">
+        <type full="bool" namespace="" name="bool"/>
+      </return>
+    </docblock>
+    <parameter name="to" byreference="false" type="{unknown}"/>
+    <parameter name="from" byreference="false" type="{unknown}"/>
+    <parameter name="subject" byreference="false" type="{unknown}"/>
+    <parameter name="htmlContent" byreference="false" type="{unknown}"/>
+    <parameter name="attachedFiles" byreference="false" type="{unknown}" default="false"/>
+    <parameter name="customheaders" byreference="false" type="{unknown}" default="false"/>
+    <parameter name="plainContent" byreference="false" type="{unknown}" default="false"/>
+  </method>
+</class>

@@ -1,0 +1,1 @@
+<a class="action action-detail edit-link" href="$Link" title="<% _t('GridFieldEditButton_ss.EDITINSITETREE', 'Edit in SiteTree') %>" target="_blank"><% _t('GridFieldEditButton_ss.EDITINSITETREE', 'Edit in SiteTree') %></a>

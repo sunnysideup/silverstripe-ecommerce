@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - EcommerceTaskMigration</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">EcommerceTaskMigration</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>EcommerceTaskMigration</h1>
+        <h4>This has been placed here rather than in the individual classes for the following reasons: - not to clog up individual classes - to get a complete overview in one class - to be able to run parts and older and newer version without having to go through several clases to retrieve them</h4>
+        <p/>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class EcommerceTaskMigration
+                extends <a title="BuildTask" href="../classes/BuildTask.xhtml">BuildTask</a>
+            {<br/><ul class="none"><li>// members</li><li>protected integer <a href="#members">$limit</a>;
+                    </li><li>protected integer <a href="#members">$start</a>;
+                    </li><li>protected <a href="#members">$retrieveInfoOnly</a>;
+                    </li><li>protected string <a href="#members">$title</a>;
+                    </li><li>protected string <a href="#members">$description</a>;
+                    </li><li>protected array <a href="#members">$listOfMigrationTasks</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/run.xhtml">run</a>()
+                    </li><li>protected Boolean <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/hasTableAndField.xhtml">hasTableAndField</a>()
+                    </li><li>protected Boolean <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/makeFieldObsolete.xhtml">makeFieldObsolete</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/shopMemberToMemberTableMigration_10.xhtml">shopMemberToMemberTableMigration_10</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/moveItemToBuyable_20.xhtml">moveItemToBuyable_20</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/productVersionToOrderItem_25.xhtml">productVersionToOrderItem_25</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/productIDToBuyableID_26.xhtml">productIDToBuyableID_26</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/amountToCalculatedTotal_27.xhtml">amountToCalculatedTotal_27</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/currencyToMoneyFields_30.xhtml">currencyToMoneyFields_30</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderShippingCost_40.xhtml">orderShippingCost_40</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderTax_45.xhtml">orderTax_45</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderShippingAddress_50.xhtml">orderShippingAddress_50</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderBillingAddress_51.xhtml">orderBillingAddress_51</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/memberBillingAddress_52.xhtml">memberBillingAddress_52</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/moveOrderStatus_60.xhtml">moveOrderStatus_60</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/fixBadOrderStatus_68.xhtml">fixBadOrderStatus_68</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/updateProductGroups_110.xhtml">updateProductGroups_110</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/setFixedPriceForSubmittedOrderItems_120.xhtml">setFixedPriceForSubmittedOrderItems_120</a>()
+                    </li><li>protected void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/moveSiteConfigToEcommerceDBConfig_140.xhtml">moveSiteConfigToEcommerceDBConfig_140</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addClassNameToOrderItems_150.xhtml">addClassNameToOrderItems_150</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addTermsAndConditionsMessage_160.xhtml">addTermsAndConditionsMessage_160</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/mergeUncompletedOrderForOneMember_170.xhtml">mergeUncompletedOrderForOneMember_170</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/updateFullSiteTreeSortFieldForAllProducts_180.xhtml">updateFullSiteTreeSortFieldForAllProducts_180</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/updateOrderStatusLogSequentialOrderNumber_190.xhtml">updateOrderStatusLogSequentialOrderNumber_190</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/resaveAllPRoducts_200.xhtml">resaveAllPRoducts_200</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/resaveAllPRoductsVariations_210.xhtml">resaveAllPRoductsVariations_210</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addConfirmationPage_250.xhtml">addConfirmationPage_250</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/cleanupImages_260.xhtml">cleanupImages_260</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addNewPopUpManager_280.xhtml">addNewPopUpManager_280</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addCurrencyCodeIDToOrders_290.xhtml">addCurrencyCodeIDToOrders_290</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/MovePaymentToEcommercePayment_300.xhtml">MovePaymentToEcommercePayment_300</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/ecommercetaskupgradepickupordeliverymodifier_310.xhtml">ecommercetaskupgradepickupordeliverymodifier_310</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/ecommercetaskupgradepickupordeliverymodifier_320.xhtml">ecommercetaskupgradepickupordeliverymodifier_320</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/theEnd_9999.xhtml">theEnd_9999</a>()
+                    </li><li>public void <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/DBAlterationMessageNow.xhtml">DBAlterationMessageNow</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/BuildTask.xhtml">BuildTask</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="tasks">Tasks</h2>
+        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <thead>
+            <tr>
+              <th style="width:3em;">Line</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tr>
+            <td class="nummeric">22+</td>
+            <td>: change methods to simple names f10, f20, etc... and then allow individual ones to be run.</td>
+          </tr>
+          <tr>
+            <td class="nummeric">22+</td>
+            <td>: 200 + 210 need attention.</td>
+          </tr>
+        </table>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="description">
+              <strong>$description</strong>
+            </li>
+            <li id="limit">
+              <strong>$limit</strong>
+            </li>
+            <li id="listOfMigrationTasks">
+              <strong>$listOfMigrationTasks</strong>
+            </li>
+            <li id="retrieveInfoOnly">
+              <strong>$retrieveInfoOnly</strong>
+            </li>
+            <li id="start">
+              <strong>$start</strong>
+            </li>
+            <li id="title">
+              <strong>$title</strong>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="amountToCalculatedTotal_27">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/amountToCalculatedTotal_27.xhtml">amountToCalculatedTotal_27()</a>
+            </li>
+            <li id="currencyToMoneyFields_30">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/currencyToMoneyFields_30.xhtml">currencyToMoneyFields_30()</a>
+            </li>
+            <li id="fixBadOrderStatus_68">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/fixBadOrderStatus_68.xhtml">fixBadOrderStatus_68()</a>
+            </li>
+            <li id="hasTableAndField"><a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/hasTableAndField.xhtml">hasTableAndField()</a>
+                — Returns true if the table and field (within this table) exist.</li>
+            <li id="makeFieldObsolete"><a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/makeFieldObsolete.xhtml">makeFieldObsolete()</a>
+                — Returns true if the table and field (within this table) exist.</li>
+            <li id="memberBillingAddress_52">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/memberBillingAddress_52.xhtml">memberBillingAddress_52()</a>
+            </li>
+            <li id="moveItemToBuyable_20">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/moveItemToBuyable_20.xhtml">moveItemToBuyable_20()</a>
+            </li>
+            <li id="moveOrderStatus_60">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/moveOrderStatus_60.xhtml">moveOrderStatus_60()</a>
+            </li>
+            <li id="moveSiteConfigToEcommerceDBConfig_140">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/moveSiteConfigToEcommerceDBConfig_140.xhtml">moveSiteConfigToEcommerceDBConfig_140()</a>
+            </li>
+            <li id="orderBillingAddress_51">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderBillingAddress_51.xhtml">orderBillingAddress_51()</a>
+            </li>
+            <li id="orderShippingAddress_50">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderShippingAddress_50.xhtml">orderShippingAddress_50()</a>
+            </li>
+            <li id="orderShippingCost_40">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderShippingCost_40.xhtml">orderShippingCost_40()</a>
+            </li>
+            <li id="orderTax_45">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/orderTax_45.xhtml">orderTax_45()</a>
+            </li>
+            <li id="productIDToBuyableID_26">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/productIDToBuyableID_26.xhtml">productIDToBuyableID_26()</a>
+            </li>
+            <li id="productVersionToOrderItem_25">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/productVersionToOrderItem_25.xhtml">productVersionToOrderItem_25()</a>
+            </li>
+            <li id="setFixedPriceForSubmittedOrderItems_120">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/setFixedPriceForSubmittedOrderItems_120.xhtml">setFixedPriceForSubmittedOrderItems_120()</a>
+            </li>
+            <li id="shopMemberToMemberTableMigration_10">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/shopMemberToMemberTableMigration_10.xhtml">shopMemberToMemberTableMigration_10()</a>
+            </li>
+            <li id="updateProductGroups_110">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/updateProductGroups_110.xhtml">updateProductGroups_110()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="DBAlterationMessageNow">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/DBAlterationMessageNow.xhtml">DBAlterationMessageNow()</a>
+            </li>
+            <li id="MovePaymentToEcommercePayment_300">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/MovePaymentToEcommercePayment_300.xhtml">MovePaymentToEcommercePayment_300()</a>
+            </li>
+            <li id="addClassNameToOrderItems_150">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addClassNameToOrderItems_150.xhtml">addClassNameToOrderItems_150()</a>
+            </li>
+            <li id="addConfirmationPage_250">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addConfirmationPage_250.xhtml">addConfirmationPage_250()</a>
+            </li>
+            <li id="addCurrencyCodeIDToOrders_290">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addCurrencyCodeIDToOrders_290.xhtml">addCurrencyCodeIDToOrders_290()</a>
+            </li>
+            <li id="addNewPopUpManager_280">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addNewPopUpManager_280.xhtml">addNewPopUpManager_280()</a>
+            </li>
+            <li id="addTermsAndConditionsMessage_160">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/addTermsAndConditionsMessage_160.xhtml">addTermsAndConditionsMessage_160()</a>
+            </li>
+            <li id="cleanupImages_260">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/cleanupImages_260.xhtml">cleanupImages_260()</a>
+            </li>
+            <li id="ecommercetaskupgradepickupordeliverymodifier_310">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/ecommercetaskupgradepickupordeliverymodifier_310.xhtml">ecommercetaskupgradepickupordeliverymodifier_310()</a>
+            </li>
+            <li id="ecommercetaskupgradepickupordeliverymodifier_320">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/ecommercetaskupgradepickupordeliverymodifier_320.xhtml">ecommercetaskupgradepickupordeliverymodifier_320()</a>
+            </li>
+            <li id="mergeUncompletedOrderForOneMember_170">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/mergeUncompletedOrderForOneMember_170.xhtml">mergeUncompletedOrderForOneMember_170()</a>
+            </li>
+            <li id="resaveAllPRoductsVariations_210">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/resaveAllPRoductsVariations_210.xhtml">resaveAllPRoductsVariations_210()</a>
+            </li>
+            <li id="resaveAllPRoducts_200">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/resaveAllPRoducts_200.xhtml">resaveAllPRoducts_200()</a>
+            </li>
+            <li id="run">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/run.xhtml">run()</a>
+            </li>
+            <li id="theEnd_9999">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/theEnd_9999.xhtml">theEnd_9999()</a>
+            </li>
+            <li id="updateFullSiteTreeSortFieldForAllProducts_180">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/updateFullSiteTreeSortFieldForAllProducts_180.xhtml">updateFullSiteTreeSortFieldForAllProducts_180()</a>
+            </li>
+            <li id="updateOrderStatusLogSequentialOrderNumber_190">
+              <a title="EcommerceTaskMigration" href="../classes/EcommerceTaskMigration/updateOrderStatusLogSequentialOrderNumber_190.xhtml">updateOrderStatusLogSequentialOrderNumber_190()</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

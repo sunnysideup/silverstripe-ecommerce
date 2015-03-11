@@ -1,0 +1,41 @@
+---
+Name: ecommerce
+Before: 'mysite/*'
+After: 'framework/*','cms/*'
+---
+
+DevelopmentAdmin:
+  extensions:
+    - EcommerceDevelopmentAdminDecorator
+  registered_controllers:
+    ecommerce:
+      controller: 'EcommerceDatabaseAdmin'
+      links:
+        ecommerce: 'The home page for everything e-commerce'
+
+Member:
+  extensions:
+    - EcommerceRole
+
+SiteTree:
+  extensions:
+    - EcommerceSiteTreeExtension
+
+Page_Controller:
+  extensions:
+    - EcommerceSiteTreeExtension_Controller
+
+Money:
+  extensions:
+    - EcommerceMoney
+
+OrderEmailRecord_Review:
+  url_segment: "ecommerce-email-preview"
+
+EcommerceDatabaseAdmin:
+  allowed_actions:
+    - runTask
+
+LeftAndMain:
+  extra_requirements_css:
+    - ecommerce/css/ecommercecmsfixes.css

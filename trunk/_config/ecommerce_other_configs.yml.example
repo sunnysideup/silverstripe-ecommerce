@@ -1,0 +1,10 @@
+#LeftAndMain:
+#  extra_requirements_javascript:
+#    - ecommerce/javascript/EcomPrintAndMail.js
+
+
+#Injector:
+  #EcommercePaymentSupportedMethodsProvider:
+    #class: MyEcommercePaymentSupportedMethodsProvider
+
+

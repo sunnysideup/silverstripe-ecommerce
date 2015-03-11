@@ -1,0 +1,120 @@
+/**
+ * IMPORTANT NOTE:
+ * The default e-commerce css only includes the basics and it is recommended that you theme these files.
+ * Also make sure you have the site's general layout and typography styled before you do this.
+ *
+ * This file is used to format any order that has not been submitted yet (e.g. CartPage, CheckoutPage)
+ * It is also used for add to cart buttons, etc...
+ *
+ **/
+
+
+.required label:before {content: "* ";}
+
+#PostalCode label.right:before {content: "";}
+
+/**
+ * table general
+ */
+table {width: 100%;}
+table .right { text-align: right; float: none!important}
+table .center { text-align: center; float: none!important}
+table .left, table th { text-align: left; float: none!important}
+
+/**
+ * table items
+ */
+td div.productImage {float: left; }
+td div.itemTitleAndSubTitle { margin-left: 90px;}
+
+.hideOnZeroItems {}
+.hideForNow{display: none;}
+
+.show{display: block;}
+.hide{display: none;}
+
+.notInCart .addLink {display: block!important;}
+.notInCart .removeLink {display: none!important;}
+.notInCart .goToCheckoutLink {display: none!important;}
+
+.inCart .addLink {display: none!important;}
+.inCart .removeLink {display: block!important;}
+.inCart .goToCheckoutLink {display: block!important;}
+
+.productItem .productActions li {text-align: center;}
+.productItem .productActions li.removeLink {text-align: left;}
+.productItem .productActions li.removeLink a {display: inline;}
+
+/*
+even when theme-ing ecommerce, these should not be themed
+*/
+
+.ecomquantityfield {text-align: center; }
+.ajaxQuantityField {text-align: center; width: 2em;}
+.removeOneLink {padding-right: 5px;}
+.removeOneLink, .addOneLink {text-decoration: none!important;}
+
+
+
+.loadingCartData #InformationTable, .loadingCartData #Amount {color: #e7e7e7!important;}
+
+.doNotShow { display: none; }
+.loading { background-image: url(/ecommerce/images/loading.gif); background-repeat: no-repeat; background-position: 95% 0; }
+.loading * {visibility: hidden;}
+
+
+.productActions.loading {
+	background-image: none;
+}
+.productActions.loading a {
+	background-image: url(/ecommerce/images/loading.gif)!important;
+	background-repeat: no-repeat;
+	background-position: top left;
+	-moz-transition: color 0.25s ease-in-out;
+	-webkit-transition: color 0.25s ease-in-out;
+	transition: color 0.25s ease-in-out;
+}
+
+
+/**
+ * Checkout Steps
+ **/
+/**
+ * Steps
+ */
+#Checkout ol.steps, #OrderConfirmationPage ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; margin-left: 0px;}
+#Checkout ol.steps li, #OrderConfirmationPage ol.steps li {
+	padding: 0px;
+	display: block;
+	float: left;
+	width: 24.5%;
+	height: 1em;
+	background-color: #EDEDED;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	text-align: center;
+	color: #888888;
+	line-height: 1;
+	list-style-type: decimal;
+	margin: 0px;
+	margin-bottom: 10px;
+	border-bottom: 3px solid #000;
+}
+#Checkout ol.steps li.link,  #OrderConfirmationPage ol.steps li.link {color: #000;}
+#Checkout ol.steps li.current,  #OrderConfirmationPage ol.steps li.current{color: green; border-bottom: 3px solid green;}
+#Checkout ol.steps li.completed:hover{border-bottom: 3px solid green;}
+#Checkout ol.steps li a{display: block; color: #000;}
+#Checkout ol.steps li a:hover{border: none;}
+
+td.remove a img {
+	filter: url(/ecommerce/css/filters.svg#grayscale); /* Firefox 3.5+ */
+	filter: gray; /* IE6-9 */
+	-webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+	background: none;
+}
+
+
+td.remove a:hover img {
+	filter: none;
+	-webkit-filter: grayscale(0);
+}

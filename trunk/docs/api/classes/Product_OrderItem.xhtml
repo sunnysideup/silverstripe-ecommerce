@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - Product_OrderItem</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">Product_OrderItem</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>Product_OrderItem</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Product_OrderItem
+                extends <a title="OrderItem" href="../classes/OrderItem.xhtml">OrderItem</a>
+            {<br/><ul class="none"><li>// members</li><li>private <span title="Array">Array</span> <a href="#members">$api_access</a>;
+                    </li></ul><ul class="none"><li>// Inherited members from <span title="OrderItem">OrderItem</span></li><li>protected array <a href="#members">$calculated_buyable_price</a>;
+                        </li><li>protected <span title="Array">Array</span> <a href="#members">$tempBuyableStore</a>;
+                        </li></ul><ul class="none"><li>// Inherited members from <span title="OrderAttribute">OrderAttribute</span></li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canEdit</a>;
+                        </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canView</a>;
+                        </li></ul><ul class="none"><li>// methods</li><li>public Product <a title="Product_OrderItem" href="../classes/Product_OrderItem/Product.xhtml">Product</a>()
+                    </li><li>public Boolean <a title="Product_OrderItem" href="../classes/Product_OrderItem/hasSameContent.xhtml">hasSameContent</a>()
+                    </li><li>public Float <a title="Product_OrderItem" href="../classes/Product_OrderItem/UnitPrice.xhtml">UnitPrice</a>()
+                    </li><li>public void <a title="Product_OrderItem" href="../classes/Product_OrderItem/getUnitPrice.xhtml">getUnitPrice</a>()
+                    </li><li>public void <a title="Product_OrderItem" href="../classes/Product_OrderItem/TableTitle.xhtml">TableTitle</a>()
+                    </li><li>public void <a title="Product_OrderItem" href="../classes/Product_OrderItem/getTableTitle.xhtml">getTableTitle</a>()
+                    </li><li>public void <a title="Product_OrderItem" href="../classes/Product_OrderItem/TableSubTitle.xhtml">TableSubTitle</a>()
+                    </li><li>public void <a title="Product_OrderItem" href="../classes/Product_OrderItem/getTableSubTitle.xhtml">getTableSubTitle</a>()
+                    </li><li>public String <a title="Product_OrderItem" href="../classes/Product_OrderItem/debug.xhtml">debug</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="OrderItem">OrderItem</span></li><li>public void <a title="OrderItem" href="../classes/OrderItem/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                        </li><li>public static DataObject <a title="OrderItem" href="../classes/OrderItem/get_version.xhtml">get_version</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getCMSFields.xhtml">getCMSFields</a>()
+                        </li><li>public Boolean <a title="OrderItem" href="../classes/OrderItem/canDelete.xhtml">canDelete</a>()
+                        </li><li>public FieldList <a title="OrderItem" href="../classes/OrderItem/scaffoldSearchFields.xhtml">scaffoldSearchFields</a>()
+                        </li><li>public FieldList <a title="OrderItem" href="../classes/OrderItem/addBuyableToOrderItem.xhtml">addBuyableToOrderItem</a>()
+                        </li><li>public Array <a title="OrderItem" href="../classes/OrderItem/updateForAjax.xhtml">updateForAjax</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/runUpdate.xhtml">runUpdate</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/onBeforeWrite.xhtml">onBeforeWrite</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/onAfterWrite.xhtml">onAfterWrite</a>()
+                        </li><li>public Boolean <a title="OrderItem" href="../classes/OrderItem/hasSameContent.xhtml">hasSameContent</a>()
+                        </li><li>public static void <a title="OrderItem" href="../classes/OrderItem/reset_calculated_buyable_price.xhtml">reset_calculated_buyable_price</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/UnitPrice.xhtml">UnitPrice</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getUnitPrice.xhtml">getUnitPrice</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/UnitPriceAsMoney.xhtml">UnitPriceAsMoney</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getUnitPriceAsMoney.xhtml">getUnitPriceAsMoney</a>()
+                        </li><li>public Float <a title="OrderItem" href="../classes/OrderItem/Total.xhtml">Total</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getTotal.xhtml">getTotal</a>()
+                        </li><li>public Money <a title="OrderItem" href="../classes/OrderItem/TotalAsMoney.xhtml">TotalAsMoney</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getTotalAsMoney.xhtml">getTotalAsMoney</a>()
+                        </li><li>public NULL <a title="OrderItem" href="../classes/OrderItem/InternalItemID.xhtml">InternalItemID</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getInternalItemID.xhtml">getInternalItemID</a>()
+                        </li><li>public Field <a title="OrderItem" href="../classes/OrderItem/QuantityField.xhtml">QuantityField</a>()
+                        </li><li>public Currency <a title="OrderItem" href="../classes/OrderItem/TotalAsCurrencyObject.xhtml">TotalAsCurrencyObject</a>()
+                        </li><li>public static void <a title="OrderItem" href="../classes/OrderItem/reset_price_has_been_fixed.xhtml">reset_price_has_been_fixed</a>()
+                        </li><li>protected Boolean <a title="OrderItem" href="../classes/OrderItem/priceHasBeenFixed.xhtml">priceHasBeenFixed</a>()
+                        </li><li>public DataObject <a title="OrderItem" href="../classes/OrderItem/Buyable.xhtml">Buyable</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/BuyableTitle.xhtml">BuyableTitle</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/ProductTitle.xhtml">ProductTitle</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/Link.xhtml">Link</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getLink.xhtml">getLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/AbsoluteLink.xhtml">AbsoluteLink</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/getAbsoluteLink.xhtml">getAbsoluteLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/CheckoutLink.xhtml">CheckoutLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/AddLink.xhtml">AddLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/IncrementLink.xhtml">IncrementLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/DecrementLink.xhtml">DecrementLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/RemoveLink.xhtml">RemoveLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/RemoveAllLink.xhtml">RemoveAllLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/RemoveAllAndEditLink.xhtml">RemoveAllAndEditLink</a>()
+                        </li><li>public String <a title="OrderItem" href="../classes/OrderItem/SetSpecificQuantityItemLink.xhtml">SetSpecificQuantityItemLink</a>()
+                        </li><li>protected array <a title="OrderItem" href="../classes/OrderItem/linkParameters.xhtml">linkParameters</a>()
+                        </li><li>public void <a title="OrderItem" href="../classes/OrderItem/debug.xhtml">debug</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="OrderAttribute">OrderAttribute</span></li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/init.xhtml">init</a>()
+                        </li><li>public Boolean <a title="OrderAttribute" href="../classes/OrderAttribute/canCreate.xhtml">canCreate</a>()
+                        </li><li>public Boolean <a title="OrderAttribute" href="../classes/OrderAttribute/canView.xhtml">canView</a>()
+                        </li><li>public Boolean <a title="OrderAttribute" href="../classes/OrderAttribute/canEdit.xhtml">canEdit</a>()
+                        </li><li>public Boolean <a title="OrderAttribute" href="../classes/OrderAttribute/canDelete.xhtml">canDelete</a>()
+                        </li><li>public String <a title="OrderAttribute" href="../classes/OrderAttribute/OrderAttributeType.xhtml">OrderAttributeType</a>()
+                        </li><li>public Order <a title="OrderAttribute" href="../classes/OrderAttribute/Order.xhtml">Order</a>()
+                        </li><li>public string <a title="OrderAttribute" href="../classes/OrderAttribute/Classes.xhtml">Classes</a>()
+                        </li><li>public EcommerceConfigAjax <a title="OrderAttribute" href="../classes/OrderAttribute/AJAXDefinitions.xhtml">AJAXDefinitions</a>()
+                        </li><li>public EcommerceDBConfig <a title="OrderAttribute" href="../classes/OrderAttribute/EcomConfig.xhtml">EcomConfig</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/ShowInTable.xhtml">ShowInTable</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/ShowInCart.xhtml">ShowInCart</a>()
+                        </li><li>public string <a title="OrderAttribute" href="../classes/OrderAttribute/TableTitle.xhtml">TableTitle</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getTableTitle.xhtml">getTableTitle</a>()
+                        </li><li>public string <a title="OrderAttribute" href="../classes/OrderAttribute/CartTitle.xhtml">CartTitle</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getCartTitle.xhtml">getCartTitle</a>()
+                        </li><li>public String <a title="OrderAttribute" href="../classes/OrderAttribute/TableSubTitle.xhtml">TableSubTitle</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getTableSubTitle.xhtml">getTableSubTitle</a>()
+                        </li><li>public String <a title="OrderAttribute" href="../classes/OrderAttribute/TableSubTitleNOHTML.xhtml">TableSubTitleNOHTML</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getTableSubTitleNOHTML.xhtml">getTableSubTitleNOHTML</a>()
+                        </li><li>public String <a title="OrderAttribute" href="../classes/OrderAttribute/CartSubTitle.xhtml">CartSubTitle</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getCartSubTitle.xhtml">getCartSubTitle</a>()
+                        </li><li>public Money <a title="OrderAttribute" href="../classes/OrderAttribute/CalculatedTotalAsMoney.xhtml">CalculatedTotalAsMoney</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getCalculatedTotalAsMoney.xhtml">getCalculatedTotalAsMoney</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/onBeforeWrite.xhtml">onBeforeWrite</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/onAfterWrite.xhtml">onAfterWrite</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/debug.xhtml">debug</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/OrderItem.xhtml">OrderItem</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="tasks">Tasks</h2>
+        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <thead>
+            <tr>
+              <th style="width:3em;">Line</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tr>
+            <td class="nummeric">609</td>
+            <td>check if the version exists?? - see sample below</td>
+          </tr>
+          <tr>
+            <td class="nummeric">773+</td>
+            <td>: do we still need this?</td>
+          </tr>
+        </table>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="api_access"><strong>$api_access</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">standard SS method</span></li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="_canEdit"><strong>$_canEdit</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">save edit status for speed's sake</span></li>
+            <li id="_canView"><strong>$_canView</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">save view status for speed's sake</span></li>
+            <li id="calculated_buyable_price">
+              <strong>$calculated_buyable_price</strong>
+            </li>
+            <li id="tempBuyableStore"><strong>$tempBuyableStore</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">Store for buyables.</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="Product"><a title="Product_OrderItem" href="../classes/Product_OrderItem/Product.xhtml">Product()</a>
+                — Overloaded Product accessor method.</li>
+            <li id="TableSubTitle"><a title="Product_OrderItem" href="../classes/Product_OrderItem/TableSubTitle.xhtml">TableSubTitle()</a>
+                — return String</li>
+            <li id="TableTitle"><a title="Product_OrderItem" href="../classes/Product_OrderItem/TableTitle.xhtml">TableTitle()</a>
+                — return String</li>
+            <li id="UnitPrice">
+              <a title="Product_OrderItem" href="../classes/Product_OrderItem/UnitPrice.xhtml">UnitPrice()</a>
+            </li>
+            <li id="debug"><a title="Product_OrderItem" href="../classes/Product_OrderItem/debug.xhtml">debug()</a>
+                — method for developers only you can access it like this: /shoppingcart/debug/</li>
+            <li id="getTableSubTitle">
+              <a title="Product_OrderItem" href="../classes/Product_OrderItem/getTableSubTitle.xhtml">getTableSubTitle()</a>
+            </li>
+            <li id="getTableTitle">
+              <a title="Product_OrderItem" href="../classes/Product_OrderItem/getTableTitle.xhtml">getTableTitle()</a>
+            </li>
+            <li id="getUnitPrice">
+              <a title="Product_OrderItem" href="../classes/Product_OrderItem/getUnitPrice.xhtml">getUnitPrice()</a>
+            </li>
+            <li id="hasSameContent">
+              <a title="Product_OrderItem" href="../classes/Product_OrderItem/hasSameContent.xhtml">hasSameContent()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="OrderItem" href="../classes/OrderItem.xhtml">OrderItem</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="linkParameters">
+              <a title="OrderItem" href="../classes/OrderItem/linkParameters.xhtml">linkParameters()</a>
+            </li>
+            <li id="priceHasBeenFixed"><a title="OrderItem" href="../classes/OrderItem/priceHasBeenFixed.xhtml">priceHasBeenFixed()</a>
+                — meaning that is has been saved in the CalculatedTotal field so that it can not be altered.</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="AbsoluteLink">
+              <a title="OrderItem" href="../classes/OrderItem/AbsoluteLink.xhtml">AbsoluteLink()</a>
+            </li>
+            <li id="AddLink">
+              <a title="OrderItem" href="../classes/OrderItem/AddLink.xhtml">AddLink()</a>
+            </li>
+            <li id="Buyable">
+              <a title="OrderItem" href="../classes/OrderItem/Buyable.xhtml">Buyable()</a>
+            </li>
+            <li id="BuyableTitle">
+              <a title="OrderItem" href="../classes/OrderItem/BuyableTitle.xhtml">BuyableTitle()</a>
+            </li>
+            <li id="CheckoutLink">
+              <a title="OrderItem" href="../classes/OrderItem/CheckoutLink.xhtml">CheckoutLink()</a>
+            </li>
+            <li id="DecrementLink">
+              <a title="OrderItem" href="../classes/OrderItem/DecrementLink.xhtml">DecrementLink()</a>
+            </li>
+            <li id="IncrementLink">
+              <a title="OrderItem" href="../classes/OrderItem/IncrementLink.xhtml">IncrementLink()</a>
+            </li>
+            <li id="InternalItemID"><a title="OrderItem" href="../classes/OrderItem/InternalItemID.xhtml">InternalItemID()</a>
+                — Casted variable returns InternalItemID from Buyable</li>
+            <li id="Link">
+              <a title="OrderItem" href="../classes/OrderItem/Link.xhtml">Link()</a>
+            </li>
+            <li id="ProductTitle">
+              <a title="OrderItem" href="../classes/OrderItem/ProductTitle.xhtml">ProductTitle()</a>
+            </li>
+            <li id="QuantityField">
+              <a title="OrderItem" href="../classes/OrderItem/QuantityField.xhtml">QuantityField()</a>
+            </li>
+            <li id="RemoveAllAndEditLink">
+              <a title="OrderItem" href="../classes/OrderItem/RemoveAllAndEditLink.xhtml">RemoveAllAndEditLink()</a>
+            </li>
+            <li id="RemoveAllLink">
+              <a title="OrderItem" href="../classes/OrderItem/RemoveAllLink.xhtml">RemoveAllLink()</a>
+            </li>
+            <li id="RemoveLink">
+              <a title="OrderItem" href="../classes/OrderItem/RemoveLink.xhtml">RemoveLink()</a>
+            </li>
+            <li id="SetSpecificQuantityItemLink">
+              <a title="OrderItem" href="../classes/OrderItem/SetSpecificQuantityItemLink.xhtml">SetSpecificQuantityItemLink()</a>
+            </li>
+            <li id="Total">
+              <a title="OrderItem" href="../classes/OrderItem/Total.xhtml">Total()</a>
+            </li>
+            <li id="TotalAsCurrencyObject">
+              <a title="OrderItem" href="../classes/OrderItem/TotalAsCurrencyObject.xhtml">TotalAsCurrencyObject()</a>
+            </li>
+            <li id="TotalAsMoney">
+              <a title="OrderItem" href="../classes/OrderItem/TotalAsMoney.xhtml">TotalAsMoney()</a>
+            </li>
+            <li id="UnitPrice">
+              <a title="OrderItem" href="../classes/OrderItem/UnitPrice.xhtml">UnitPrice()</a>
+            </li>
+            <li id="UnitPriceAsMoney">
+              <a title="OrderItem" href="../classes/OrderItem/UnitPriceAsMoney.xhtml">UnitPriceAsMoney()</a>
+            </li>
+            <li id="addBuyableToOrderItem"><a title="OrderItem" href="../classes/OrderItem/addBuyableToOrderItem.xhtml">addBuyableToOrderItem()</a>
+                — standard SS method</li>
+            <li id="canDelete"><a title="OrderItem" href="../classes/OrderItem/canDelete.xhtml">canDelete()</a>
+                — standard SS method</li>
+            <li id="debug">
+              <a title="OrderItem" href="../classes/OrderItem/debug.xhtml">debug()</a>
+            </li>
+            <li id="getAbsoluteLink">
+              <a title="OrderItem" href="../classes/OrderItem/getAbsoluteLink.xhtml">getAbsoluteLink()</a>
+            </li>
+            <li id="getCMSFields"><a title="OrderItem" href="../classes/OrderItem/getCMSFields.xhtml">getCMSFields()</a>
+                — Standard SS method</li>
+            <li id="getInternalItemID">
+              <a title="OrderItem" href="../classes/OrderItem/getInternalItemID.xhtml">getInternalItemID()</a>
+            </li>
+            <li id="getLink">
+              <a title="OrderItem" href="../classes/OrderItem/getLink.xhtml">getLink()</a>
+            </li>
+            <li id="getTotal">
+              <a title="OrderItem" href="../classes/OrderItem/getTotal.xhtml">getTotal()</a>
+            </li>
+            <li id="getTotalAsMoney">
+              <a title="OrderItem" href="../classes/OrderItem/getTotalAsMoney.xhtml">getTotalAsMoney()</a>
+            </li>
+            <li id="getUnitPrice">
+              <a title="OrderItem" href="../classes/OrderItem/getUnitPrice.xhtml">getUnitPrice()</a>
+            </li>
+            <li id="getUnitPriceAsMoney">
+              <a title="OrderItem" href="../classes/OrderItem/getUnitPriceAsMoney.xhtml">getUnitPriceAsMoney()</a>
+            </li>
+            <li id="get_version"><a title="OrderItem" href="../classes/OrderItem/get_version.xhtml">get_version()</a>
+                — HACK: Versioned is BROKEN this method helps in fixing it.</li>
+            <li id="hasSameContent"><a title="OrderItem" href="../classes/OrderItem/hasSameContent.xhtml">hasSameContent()</a>
+                — Check if two Order Items are the same.</li>
+            <li id="i18n_plural_name">
+              <a title="OrderItem" href="../classes/OrderItem/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="OrderItem" href="../classes/OrderItem/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+            <li id="onAfterWrite"><a title="OrderItem" href="../classes/OrderItem/onAfterWrite.xhtml">onAfterWrite()</a>
+                — Standard SS method the method below is very important...</li>
+            <li id="onBeforeWrite"><a title="OrderItem" href="../classes/OrderItem/onBeforeWrite.xhtml">onBeforeWrite()</a>
+                — Standard SS method.</li>
+            <li id="reset_calculated_buyable_price">
+              <a title="OrderItem" href="../classes/OrderItem/reset_calculated_buyable_price.xhtml">reset_calculated_buyable_price()</a>
+            </li>
+            <li id="reset_price_has_been_fixed">
+              <a title="OrderItem" href="../classes/OrderItem/reset_price_has_been_fixed.xhtml">reset_price_has_been_fixed()</a>
+            </li>
+            <li id="runUpdate"><a title="OrderItem" href="../classes/OrderItem/runUpdate.xhtml">runUpdate()</a>
+                — saves details about the Order Item before the order is submittted</li>
+            <li id="scaffoldSearchFields"><a title="OrderItem" href="../classes/OrderItem/scaffoldSearchFields.xhtml">scaffoldSearchFields()</a>
+                — Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.</li>
+            <li id="updateForAjax"><a title="OrderItem" href="../classes/OrderItem/updateForAjax.xhtml">updateForAjax()</a>
+                — used to return data for ajax</li>
+          </ul>
+          <h3>Inherited from <a title="OrderAttribute" href="../classes/OrderAttribute.xhtml">OrderAttribute</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="AJAXDefinitions"><a title="OrderAttribute" href="../classes/OrderAttribute/AJAXDefinitions.xhtml">AJAXDefinitions()</a>
+                — returns the instance of EcommerceConfigAjax for use in templates.</li>
+            <li id="CalculatedTotalAsMoney"><a title="OrderAttribute" href="../classes/OrderAttribute/CalculatedTotalAsMoney.xhtml">CalculatedTotalAsMoney()</a>
+                — Returns the Money object of the CalculatedTotal</li>
+            <li id="CartSubTitle"><a title="OrderAttribute" href="../classes/OrderAttribute/CartSubTitle.xhtml">CartSubTitle()</a>
+                — the sub title for the order item or order modifier.</li>
+            <li id="CartTitle"><a title="OrderAttribute" href="../classes/OrderAttribute/CartTitle.xhtml">CartTitle()</a>
+                — Return a name of what this attribute is called e.g. "Product 21" or "Discount" Cart is a short version of table</li>
+            <li id="Classes"><a title="OrderAttribute" href="../classes/OrderAttribute/Classes.xhtml">Classes()</a>
+                — Return a string of class names, in order of hierarchy from OrderAttribute for the current attribute.</li>
+            <li id="EcomConfig"><a title="OrderAttribute" href="../classes/OrderAttribute/EcomConfig.xhtml">EcomConfig()</a>
+                — returns the instance of EcommerceDBConfig</li>
+            <li id="Order"><a title="OrderAttribute" href="../classes/OrderAttribute/Order.xhtml">Order()</a>
+                — returns the order - for some unknown reason it seems we need this.</li>
+            <li id="OrderAttributeType"><a title="OrderAttribute" href="../classes/OrderAttribute/OrderAttributeType.xhtml">OrderAttributeType()</a>
+                — This is a key function that returns the type of the object.  In principle anything can be returned but the intention is to only return a few options e.g. OrderItem, Tax, Delivery, etc... so that computations can be carried out based on the type of OrderAttribute we are looking at.</li>
+            <li id="ShowInCart"><a title="OrderAttribute" href="../classes/OrderAttribute/ShowInCart.xhtml">ShowInCart()</a>
+                — hould this item be shown on in the cart (which is on other pages than the checkout page) return Boolean</li>
+            <li id="ShowInTable"><a title="OrderAttribute" href="../classes/OrderAttribute/ShowInTable.xhtml">ShowInTable()</a>
+                — hould this item be shown on check out page table? return Boolean</li>
+            <li id="TableSubTitle"><a title="OrderAttribute" href="../classes/OrderAttribute/TableSubTitle.xhtml">TableSubTitle()</a>
+                — the sub title for the order item or order modifier</li>
+            <li id="TableSubTitleNOHTML"><a title="OrderAttribute" href="../classes/OrderAttribute/TableSubTitleNOHTML.xhtml">TableSubTitleNOHTML()</a>
+                — the sub title for the order item or order modifier</li>
+            <li id="TableTitle"><a title="OrderAttribute" href="../classes/OrderAttribute/TableTitle.xhtml">TableTitle()</a>
+                — Return a name of what this attribute is called e.g. "Product 21" or "Discount"</li>
+            <li id="canCreate"><a title="OrderAttribute" href="../classes/OrderAttribute/canCreate.xhtml">canCreate()</a>
+                — standard SS method</li>
+            <li id="canDelete"><a title="OrderAttribute" href="../classes/OrderAttribute/canDelete.xhtml">canDelete()</a>
+                — Standard SS method</li>
+            <li id="canEdit"><a title="OrderAttribute" href="../classes/OrderAttribute/canEdit.xhtml">canEdit()</a>
+                — Standard SS method This is an important method.</li>
+            <li id="canView"><a title="OrderAttribute" href="../classes/OrderAttribute/canView.xhtml">canView()</a>
+                — Standard SS method This is an important method.</li>
+            <li id="debug"><a title="OrderAttribute" href="../classes/OrderAttribute/debug.xhtml">debug()</a>
+                — Debug helper method.</li>
+            <li id="getCalculatedTotalAsMoney">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/getCalculatedTotalAsMoney.xhtml">getCalculatedTotalAsMoney()</a>
+            </li>
+            <li id="getCartSubTitle">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/getCartSubTitle.xhtml">getCartSubTitle()</a>
+            </li>
+            <li id="getCartTitle">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/getCartTitle.xhtml">getCartTitle()</a>
+            </li>
+            <li id="getTableSubTitle">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/getTableSubTitle.xhtml">getTableSubTitle()</a>
+            </li>
+            <li id="getTableSubTitleNOHTML">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/getTableSubTitleNOHTML.xhtml">getTableSubTitleNOHTML()</a>
+            </li>
+            <li id="getTableTitle">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/getTableTitle.xhtml">getTableTitle()</a>
+            </li>
+            <li id="i18n_plural_name">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+            <li id="init"><a title="OrderAttribute" href="../classes/OrderAttribute/init.xhtml">init()</a>
+                — extended in OrderModifier and OrderItem Starts up the order Atribute TODO: introduce system like we have for Controller which makes sure that all parent init methods are called.</li>
+            <li id="onAfterWrite"><a title="OrderAttribute" href="../classes/OrderAttribute/onAfterWrite.xhtml">onAfterWrite()</a>
+                — Standard SS method</li>
+            <li id="onBeforeWrite"><a title="OrderAttribute" href="../classes/OrderAttribute/onBeforeWrite.xhtml">onBeforeWrite()</a>
+                — Standard SS method We add the Sort value from the OrderAttribute_Group to the OrderAttribute.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

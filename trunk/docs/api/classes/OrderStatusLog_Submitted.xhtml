@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - OrderStatusLog_Submitted</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">OrderStatusLog_Submitted</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>OrderStatusLog_Submitted</h1>
+        <h4>OrderStatusLog_Submitted is an important class that is created when an order is submitted.</h4>
+        <p>It is created by the order and it signifies to the OrderStep to continue to the next step.</p>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class OrderStatusLog_Submitted
+                extends <a title="OrderStatusLog" href="../classes/OrderStatusLog.xhtml">OrderStatusLog</a>
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$db</a>;
+                    </li><li>private array <a href="#members">$defaults</a>;
+                    </li><li>private array <a href="#members">$casting</a>;
+                    </li><li>private string <a href="#members">$singular_name</a>;
+                    </li><li>private string <a href="#members">$plural_name</a>;
+                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                    </li><li>public void <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                    </li><li>public Boolean <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/canDelete.xhtml">canDelete</a>()
+                    </li><li>public Boolean <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/canEdit.xhtml">canEdit</a>()
+                    </li><li>public Boolean <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/canCreate.xhtml">canCreate</a>()
+                    </li><li>public void <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/HTMLRepresentation.xhtml">HTMLRepresentation</a>()
+                    </li><li>public void <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/getHTMLRepresentation.xhtml">getHTMLRepresentation</a>()
+                    </li><li>public void <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/onBeforeWrite.xhtml">onBeforeWrite</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="OrderStatusLog">OrderStatusLog</span></li><li>public String <a title="OrderStatusLog" href="../classes/OrderStatusLog/InternalUseOnlyNice.xhtml">InternalUseOnlyNice</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/getInternalUseOnlyNice.xhtml">getInternalUseOnlyNice</a>()
+                        </li><li>public Boolean <a title="OrderStatusLog" href="../classes/OrderStatusLog/canCreate.xhtml">canCreate</a>()
+                        </li><li>public Boolean <a title="OrderStatusLog" href="../classes/OrderStatusLog/canView.xhtml">canView</a>()
+                        </li><li>public Boolean <a title="OrderStatusLog" href="../classes/OrderStatusLog/canEdit.xhtml">canEdit</a>()
+                        </li><li>public Boolean <a title="OrderStatusLog" href="../classes/OrderStatusLog/canDelete.xhtml">canDelete</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/populateDefaults.xhtml">populateDefaults</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCMSFields.xhtml">getCMSFields</a>()
+                        </li><li>public String <a title="OrderStatusLog" href="../classes/OrderStatusLog/Type.xhtml">Type</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/getType.xhtml">getType</a>()
+                        </li><li>public FieldList <a title="OrderStatusLog" href="../classes/OrderStatusLog/scaffoldSearchFields.xhtml">scaffoldSearchFields</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/onBeforeWrite.xhtml">onBeforeWrite</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/CustomerNote.xhtml">CustomerNote</a>()
+                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCustomerNote.xhtml">getCustomerNote</a>()
+                        </li><li>protected EcommerceDBConfig <a title="OrderStatusLog" href="../classes/OrderStatusLog/EcomConfig.xhtml">EcomConfig</a>()
+                        </li><li>public String <a title="OrderStatusLog" href="../classes/OrderStatusLog/debug.xhtml">debug</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/OrderStatusLog.xhtml">OrderStatusLog</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="casting">
+              <strong>$casting</strong>
+            </li>
+            <li id="db">
+              <strong>$db</strong>
+            </li>
+            <li id="defaults">
+              <strong>$defaults</strong>
+            </li>
+            <li id="description"><strong>$description</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+            <li id="plural_name">
+              <strong>$plural_name</strong>
+            </li>
+            <li id="singular_name">
+              <strong>$singular_name</strong>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="HTMLRepresentation"><a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/HTMLRepresentation.xhtml">HTMLRepresentation()</a>
+                — can only be created when the order is submitted return String</li>
+            <li id="canCreate"><a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/canCreate.xhtml">canCreate()</a>
+                — Standard SS method</li>
+            <li id="canDelete"><a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/canDelete.xhtml">canDelete()</a>
+                — Standard SS method</li>
+            <li id="canEdit"><a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/canEdit.xhtml">canEdit()</a>
+                — Standard SS method</li>
+            <li id="getHTMLRepresentation">
+              <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/getHTMLRepresentation.xhtml">getHTMLRepresentation()</a>
+            </li>
+            <li id="i18n_plural_name">
+              <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+            <li id="onBeforeWrite"><a title="OrderStatusLog_Submitted" href="../classes/OrderStatusLog_Submitted/onBeforeWrite.xhtml">onBeforeWrite()</a>
+                — adding a sequential order number.</li>
+          </ul>
+          <h3>Inherited from <a title="OrderStatusLog" href="../classes/OrderStatusLog.xhtml">OrderStatusLog</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="EcomConfig"><a title="OrderStatusLog" href="../classes/OrderStatusLog/EcomConfig.xhtml">EcomConfig()</a>
+                — returns the standard EcommerceDBConfig for use within OrderSteps.</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="CustomerNote"><a title="OrderStatusLog" href="../classes/OrderStatusLog/CustomerNote.xhtml">CustomerNote()</a>
+                — return String</li>
+            <li id="InternalUseOnlyNice"><a title="OrderStatusLog" href="../classes/OrderStatusLog/InternalUseOnlyNice.xhtml">InternalUseOnlyNice()</a>
+                — casted method</li>
+            <li id="Type">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/Type.xhtml">Type()</a>
+            </li>
+            <li id="canCreate"><a title="OrderStatusLog" href="../classes/OrderStatusLog/canCreate.xhtml">canCreate()</a>
+                — Standard SS method</li>
+            <li id="canDelete"><a title="OrderStatusLog" href="../classes/OrderStatusLog/canDelete.xhtml">canDelete()</a>
+                — Standard SS method logs can never be deleted...</li>
+            <li id="canEdit"><a title="OrderStatusLog" href="../classes/OrderStatusLog/canEdit.xhtml">canEdit()</a>
+                — Standard SS method</li>
+            <li id="canView"><a title="OrderStatusLog" href="../classes/OrderStatusLog/canView.xhtml">canView()</a>
+                — Standard SS method</li>
+            <li id="debug"><a title="OrderStatusLog" href="../classes/OrderStatusLog/debug.xhtml">debug()</a>
+                — Debug helper method.</li>
+            <li id="getCMSFields"><a title="OrderStatusLog" href="../classes/OrderStatusLog/getCMSFields.xhtml">getCMSFields()</a>
+                — return FieldList</li>
+            <li id="getCustomerNote">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCustomerNote.xhtml">getCustomerNote()</a>
+            </li>
+            <li id="getInternalUseOnlyNice">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/getInternalUseOnlyNice.xhtml">getInternalUseOnlyNice()</a>
+            </li>
+            <li id="getType">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/getType.xhtml">getType()</a>
+            </li>
+            <li id="i18n_plural_name">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+            <li id="onBeforeWrite"><a title="OrderStatusLog" href="../classes/OrderStatusLog/onBeforeWrite.xhtml">onBeforeWrite()</a>
+                — standard SS method</li>
+            <li id="populateDefaults"><a title="OrderStatusLog" href="../classes/OrderStatusLog/populateDefaults.xhtml">populateDefaults()</a>
+                — standard SS method</li>
+            <li id="scaffoldSearchFields"><a title="OrderStatusLog" href="../classes/OrderStatusLog/scaffoldSearchFields.xhtml">scaffoldSearchFields()</a>
+                — Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

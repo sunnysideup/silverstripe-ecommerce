@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="Product_Image" namespace="" name="Product_Image" abstract="false" final="false" start="4" end="154">
+  <file path="./../../../code/filesystem" file="Product_Image.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/filesystem/Product_Image.php" size="2826" time="2014-07-21T10:40:00+12:00" unixtime="1405896000" sha1="28d4bba292d972171dec381fd6529bd20f81fbd6"/>
+  <extends full="Image" namespace="" name="Image"/>
+  <member name="casting" type="array" visibility="private" line="6"/>
+  <method name="summaryFields" start="14" end="19" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Fields"/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ThumbWidth" start="25" end="27" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ThumbHeight" start="33" end="35" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="SmallWidth" start="41" end="43" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="SmallHeight" start="49" end="51" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ContentWidth" start="57" end="59" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="LargeWidth" start="65" end="67" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="generateThumbnail" start="74" end="77" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <usage value="can be used in a template like this $Image.Thumbnail.Link"/>
+      <param type="object" variable="$gd">
+        <type full="GD" namespace="" name="GD"/>
+      </param>
+      <return type="object">
+        <type full="GD" namespace="" name="GD"/>
+      </return>
+    </docblock>
+    <parameter name="gd" byreference="false" type="object">
+      <type full="\\GD" namespace="\" name="GD"/>
+    </parameter>
+  </method>
+  <method name="Thumbnail" start="79" end="81" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="generateSmallImage" start="87" end="90" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <usage value="can be used in a template like this $Image.SmallImage.Link"/>
+      <return type="object">
+        <type full="GD" namespace="" name="GD"/>
+      </return>
+    </docblock>
+    <parameter name="gd" byreference="false" type="object">
+      <type full="\\GD" namespace="\" name="GD"/>
+    </parameter>
+  </method>
+  <method name="SmallImage" start="92" end="94" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="generateContentImage" start="100" end="103" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <usage value="can be used in a template like this $Image.ContentImage.Link"/>
+      <return type="object">
+        <type full="GD" namespace="" name="GD"/>
+      </return>
+    </docblock>
+    <parameter name="gd" byreference="false" type="object">
+      <type full="\\GD" namespace="\" name="GD"/>
+    </parameter>
+  </method>
+  <method name="LargeImage" start="106" end="108" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="generateLargeImage" start="113" end="116" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <usage value="can be used in a template like this $Image.LargeImage.Link"/>
+      <return type="object">
+        <type full="GD" namespace="" name="GD"/>
+      </return>
+    </docblock>
+    <parameter name="gd" byreference="false" type="object">
+      <type full="\\GD" namespace="\" name="GD"/>
+    </parameter>
+  </method>
+  <method name="exists" start="119" end="127" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CMSThumbnail" start="133" end="135" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="HTML" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getCMSThumbnail" start="142" end="151" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="HTML" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+</class>

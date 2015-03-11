@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceRestfulServer" namespace="" name="EcommerceRestfulServer" abstract="false" final="false" start="45" end="86">
+  <file path="./../../../code/api" file="EcommerceRestfulServer.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/api/EcommerceRestfulServer.php" size="2809" time="2014-03-27T11:45:33+13:00" unixtime="1395873933" sha1="a68bb640ccd545b94cb88097c6717c015b4df63f"/>
+  <docblock>
+    <description compact="extends the standard RestfulServer to provide better access to extended classes.">see: http://api.silverstripe.org/2.4/sapphire/api/RestfulServer.html
+
+You can show JSON by hacking: RestfulServer::getDataFormatter
+NOTE: JSON IS NOT AVAILABLE YET WITHIN RESTFUL SERVER</description>
+    <todo value=":">- fix http://site/api/ecommerce/v1/Order/123/BillingAddress.xml
+- fix http://site/api/ecommerce/v1/Order/123/ShippingAddress.xml
+- fix http://site/api/ecommerce/v1/Order/123/Member.xml
+
+&lt;b&gt;Test Post&lt;/b&gt;
+&lt;code&gt;
+$baseURL = Director::absoluteBaseURL();
+	// 1) My Personal Data
+	$className = 'EcommerceClassWithEditableFields';
+	$fields = array(
+		'MyField' =&gt; 1
+	);
+	// 2) The Query
+	$url = "{$baseURL}/api/ecommerce/v1/{$className}.xml";
+	$body = $fields;
+	$c = curl_init($url);
+	curl_setopt($c, CURLOPT_POST, true);
+	curl_setopt($c, CURLOPT_POSTFIELDS, $body);
+	curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+	$page = curl_exec($c);
+	curl_close($c);
+
+	// 3) The XML Result
+
+	return $page;
+&lt;/code&gt;</todo>
+    <authors value=": Romain [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: api"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="RestfulServer" namespace="" name="RestfulServer"/>
+  <method name="index" start="47" end="85" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="Check input formats" line="54"/>
+      <comment value="fix" line="59"/>
+      <comment value="if api access is disabled, don't proceed" line="70"/>
+      <comment value="authenticate through HTTP BasicAuth" line="74"/>
+      <comment value="handle different HTTP verbs" line="77"/>
+      <comment value="if no HTTP verb matches, return error" line="83"/>
+    </inline>
+  </method>
+</class>

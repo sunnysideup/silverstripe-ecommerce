@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - ProductGroup_Controller</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">ProductGroup_Controller</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>ProductGroup_Controller</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class ProductGroup_Controller
+                extends <a title="Page_Controller" href="../classes/Page_Controller.xhtml">Page_Controller</a>
+            {<br/><ul class="none"><li>// members</li><li>private <span title="Array">Array</span> <a href="#members">$allowed_actions</a>;
+                    </li><li>protected <span title="String">String</span> <a href="#members">$originalTitle</a>;
+                    </li><li>protected <span title="DataList">DataList</span> <a href="#members">$products</a>;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$showFullList</a>;
+                    </li><li>protected <span title="ProductGroup">ProductGroup</span> <a href="#members">$filterForGroupObject</a>;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isSearchResults</a>;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$secondaryTitleHasBeenAdded</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/init.xhtml">init</a>()
+                    </li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/index.xhtml">index</a>()
+                    </li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/filterforgroup.xhtml">filterforgroup</a>()
+                    </li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/searchresults.xhtml">searchresults</a>()
+                    </li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/resetfilter.xhtml">resetfilter</a>()
+                    </li><li>public PaginatedList <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/Products.xhtml">Products</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/TotalCountGreaterThanOne.xhtml">TotalCountGreaterThanOne</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/TotalCountGreaterThanMax.xhtml">TotalCountGreaterThanMax</a>()
+                    </li><li>public Null <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SidebarProducts.xhtml">SidebarProducts</a>()
+                    </li><li>public ArrayList <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MenuChildGroups.xhtml">MenuChildGroups</a>()
+                    </li><li>public DataList <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SearchResultsChildGroups.xhtml">SearchResultsChildGroups</a>()
+                    </li><li>public ProductSearchForm <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ProductSearchForm.xhtml">ProductSearchForm</a>()
+                    </li><li>public Int <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasSearchResults.xhtml">HasSearchResults</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSearchFormImmediately.xhtml">ShowSearchFormImmediately</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSearchFormAtAll.xhtml">ShowSearchFormAtAll</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/IsSearchResults.xhtml">IsSearchResults</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowFiltersAndDisplayLinks.xhtml">ShowFiltersAndDisplayLinks</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSortLinks.xhtml">ShowSortLinks</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasFilter.xhtml">HasFilter</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasFilters.xhtml">HasFilters</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/IsShowFullList.xhtml">IsShowFullList</a>()
+                    </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/CurrentFilterTitle.xhtml">CurrentFilterTitle</a>()
+                    </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/CurrentSortTitle.xhtml">CurrentSortTitle</a>()
+                    </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MyDefaultDisplayStyle.xhtml">MyDefaultDisplayStyle</a>()
+                    </li><li>public Int <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MaxNumberOfProductsPerPage.xhtml">MaxNumberOfProductsPerPage</a>()
+                    </li><li>public ArrayList( <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/FilterLinks.xhtml">FilterLinks</a>()
+                    </li><li>public ArrayList( <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ProductGroupFilterLinks.xhtml">ProductGroupFilterLinks</a>()
+                    </li><li>protected array <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/productGroupFilterLinksCount.xhtml">productGroupFilterLinksCount</a>()
+                    </li><li>protected ArrayData <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/makeArrayItem.xhtml">makeArrayItem</a>()
+                    </li><li>public NULL <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SortLinks.xhtml">SortLinks</a>()
+                    </li><li>public NULL <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/DisplayLinks.xhtml">DisplayLinks</a>()
+                    </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ListAllLink.xhtml">ListAllLink</a>()
+                    </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ResetPreferencesLink.xhtml">ResetPreferencesLink</a>()
+                    </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SearchResultLink.xhtml">SearchResultLink</a>()
+                    </li><li>protected PaginatedList <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/paginateList.xhtml">paginateList</a>()
+                    </li><li>protected void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/saveUserPreferences.xhtml">saveUserPreferences</a>()
+                    </li><li>protected String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/getCurrentUserPreferences.xhtml">getCurrentUserPreferences</a>()
+                    </li><li>protected ArrayList( <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/userPreferencesLinks.xhtml">userPreferencesLinks</a>()
+                    </li><li>protected void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/addSecondaryTitle.xhtml">addSecondaryTitle</a>()
+                    </li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/debug.xhtml">debug</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/Page_Controller.xhtml">Page_Controller</a>
+            </li>
+          </ul>
+          <h4>Extended by</h4>
+          <ul>
+            <li>
+              <a href="../classes/ProductGroupSearchPage_Controller.xhtml">ProductGroupSearchPage_Controller</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="tasks">Tasks</h2>
+        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <thead>
+            <tr>
+              <th style="width:3em;">Line</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tr>
+            <td class="nummeric">2107+</td>
+            <td>: move to controller?</td>
+          </tr>
+        </table>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="allowed_actions"><strong>$allowed_actions</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="filterForGroupObject"><strong>$filterForGroupObject</strong>
+                —
+                <a href="#">ProductGroup</a><br/><span class="indent">The group filter that is applied to this page</span></li>
+            <li id="isSearchResults"><strong>$isSearchResults</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">Is this a product search</span></li>
+            <li id="originalTitle"><strong>$originalTitle</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">The original Title of this page before filters, etc...</span></li>
+            <li id="products"><strong>$products</strong>
+                —
+                <a href="#">DataList</a><br/><span class="indent">list of products that are going to be shown</span></li>
+            <li id="secondaryTitleHasBeenAdded"><strong>$secondaryTitleHasBeenAdded</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">variable to make sure secondary title only gets added once.</span></li>
+            <li id="showFullList"><strong>$showFullList</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">Show all products on one page?</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="addSecondaryTitle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/addSecondaryTitle.xhtml">addSecondaryTitle()</a>
+                — add a secondary title to the main title in case there is, for example, a filter applied e.g. Socks | MyBrand</li>
+            <li id="getCurrentUserPreferences"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/getCurrentUserPreferences.xhtml">getCurrentUserPreferences()</a>
+                — Checks for the most applicable user preferences for this user: 1. session value 2. getMyUserPreferencesDefault</li>
+            <li id="makeArrayItem">
+              <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/makeArrayItem.xhtml">makeArrayItem()</a>
+            </li>
+            <li id="paginateList"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/paginateList.xhtml">paginateList()</a>
+                — turns full list into paginated list</li>
+            <li id="productGroupFilterLinksCount"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/productGroupFilterLinksCount.xhtml">productGroupFilterLinksCount()</a>
+                — counts the total number in the combination....</li>
+            <li id="saveUserPreferences"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/saveUserPreferences.xhtml">saveUserPreferences()</a>
+                — Checks out a bunch of $_GET variables that are used to work out user preferences Some of these are saved to session.</li>
+            <li id="userPreferencesLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/userPreferencesLinks.xhtml">userPreferencesLinks()</a>
+                — Provides a dataset of links for a particular user preference</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="CurrentFilterTitle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/CurrentFilterTitle.xhtml">CurrentFilterTitle()</a>
+                — returns the current filter applied to the list in a human readable string</li>
+            <li id="CurrentSortTitle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/CurrentSortTitle.xhtml">CurrentSortTitle()</a>
+                — returns the current sort applied to the list in a human readable string</li>
+            <li id="DisplayLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/DisplayLinks.xhtml">DisplayLinks()</a>
+                — Provides a ArrayList for displaying display links</li>
+            <li id="FilterLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/FilterLinks.xhtml">FilterLinks()</a>
+                — Provides a ArrayList of links for filters products.</li>
+            <li id="HasFilter"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasFilter.xhtml">HasFilter()</a>
+                — Is there a special filter operating at the moment? Is the current filter the default one (return inverse!)?</li>
+            <li id="HasFilters"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasFilters.xhtml">HasFilters()</a>
+                — are filters available?</li>
+            <li id="HasSearchResults"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasSearchResults.xhtml">HasSearchResults()</a>
+                — Does this page have any search results? If search was carried out without returns then it returns zero (false)</li>
+            <li id="IsSearchResults"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/IsSearchResults.xhtml">IsSearchResults()</a>
+                — Is the current page a display of search results</li>
+            <li id="IsShowFullList"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/IsShowFullList.xhtml">IsShowFullList()</a>
+                — Do we show all products on one page?</li>
+            <li id="ListAllLink"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ListAllLink.xhtml">ListAllLink()</a>
+                — Link that returns a list of all the products for this product group as a simple list.</li>
+            <li id="MaxNumberOfProductsPerPage"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MaxNumberOfProductsPerPage.xhtml">MaxNumberOfProductsPerPage()</a>
+                — Number of entries per page limited by total number of pages available...</li>
+            <li id="MenuChildGroups"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MenuChildGroups.xhtml">MenuChildGroups()</a>
+                — returns child product groups for use in 'in this section'. For example the vegetable Product Group May have listed here: Carrot, Cabbage, etc...</li>
+            <li id="MyDefaultDisplayStyle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MyDefaultDisplayStyle.xhtml">MyDefaultDisplayStyle()</a>
+                — short-cut for getMyUserPreferencesDefault("DISPLAY") for use in templtes</li>
+            <li id="ProductGroupFilterLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ProductGroupFilterLinks.xhtml">ProductGroupFilterLinks()</a>
+                — returns a list of items (with links)</li>
+            <li id="ProductSearchForm"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ProductSearchForm.xhtml">ProductSearchForm()</a>
+                — returns a search form to search current products</li>
+            <li id="Products"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/Products.xhtml">Products()</a>
+                — Return the products for this group.</li>
+            <li id="ResetPreferencesLink"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ResetPreferencesLink.xhtml">ResetPreferencesLink()</a>
+                — Link that returns a list of all the products for this product group as a simple list.</li>
+            <li id="SearchResultLink"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SearchResultLink.xhtml">SearchResultLink()</a>
+                — Link to the search results</li>
+            <li id="SearchResultsChildGroups"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SearchResultsChildGroups.xhtml">SearchResultsChildGroups()</a>
+                — After a search is conducted you may end up with a bunch of recommended product groups. They will be returned here...</li>
+            <li id="ShowFiltersAndDisplayLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowFiltersAndDisplayLinks.xhtml">ShowFiltersAndDisplayLinks()</a>
+                — Do we show all products on one page?</li>
+            <li id="ShowSearchFormAtAll"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSearchFormAtAll.xhtml">ShowSearchFormAtAll()</a>
+                — Show a search form on this page?</li>
+            <li id="ShowSearchFormImmediately"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSearchFormImmediately.xhtml">ShowSearchFormImmediately()</a>
+                — Should the product search form be shown immediately?</li>
+            <li id="ShowSortLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSortLinks.xhtml">ShowSortLinks()</a>
+                — Do we show the sort links.</li>
+            <li id="SidebarProducts"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SidebarProducts.xhtml">SidebarProducts()</a>
+                — This method can be extended to show products in the side bar.</li>
+            <li id="SortLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SortLinks.xhtml">SortLinks()</a>
+                — Provides a ArrayList of links for sorting products.</li>
+            <li id="TotalCountGreaterThanMax"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/TotalCountGreaterThanMax.xhtml">TotalCountGreaterThanMax()</a>
+                — have the ProductsShowable been limited</li>
+            <li id="TotalCountGreaterThanOne"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/TotalCountGreaterThanOne.xhtml">TotalCountGreaterThanOne()</a>
+                — returns the total numer of products (before pagination)</li>
+            <li id="debug">
+              <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/debug.xhtml">debug()</a>
+            </li>
+            <li id="filterforgroup"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/filterforgroup.xhtml">filterforgroup()</a>
+                — cross filter with another product group..</li>
+            <li id="index"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/index.xhtml">index()</a>
+                — standard selection of products</li>
+            <li id="init"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/init.xhtml">init()</a>
+                — standard SS method</li>
+            <li id="resetfilter"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/resetfilter.xhtml">resetfilter()</a>
+                — resets the filter only</li>
+            <li id="searchresults"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/searchresults.xhtml">searchresults()</a>
+                — get the search results</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

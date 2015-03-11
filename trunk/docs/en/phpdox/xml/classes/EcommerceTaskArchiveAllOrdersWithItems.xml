@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskArchiveAllOrdersWithItems" namespace="" name="EcommerceTaskArchiveAllOrdersWithItems" abstract="false" final="false" start="15" end="107">
+  <file path="./../../../code/tasks" file="EcommerceTaskArchiveAllOrdersWithItems.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskArchiveAllOrdersWithItems.php" size="3796" time="2014-08-06T16:54:28+12:00" unixtime="1407300868" sha1="fd6dcda5e6c290a6fc690b0450d5304295fcf258"/>
+  <docblock>
+    <description compact="After a bug in the saving of orders in the CMS This &quot;fixer&quot;  was introduced to fix older orders without a submission record."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <member name="title" type="string" default="&quot;Archive all orders with order items and payment and add a submit record.&quot;" visibility="protected" line="17"/>
+  <member name="description" type="string" default="&quot;&#13;&#10;&#9;&#9;This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.&#13;&#10;&#9;&#9;NB: It also adds a submit record.&#13;&#10;&#9;&#9;This task is basically for orders that never got archived.&#13;&#10;&#9;&quot;" visibility="protected" line="19"/>
+  <member name="payment_table" type="string" default="&quot;EcommercePayment&quot;" visibility="private" line="25"/>
+  <method name="run" start="27" end="61" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="IMPORTANT!" line="29"/>
+    </inline>
+  </method>
+  <method name="createSubmissionLogForArchivedOrders" start="63" end="97" abstract="false" final="false" static="false" visibility="protected">
+    <inline>
+      <comment value="it is important we add this here so that we can save the 'submitted' version." line="83"/>
+      <comment value="this is particular important for the Order Item Links." line="84"/>
+    </inline>
+  </method>
+  <method name="getOrdersForCreateSubmissionLogForArchivedOrders" start="99" end="105" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="lastOrderStep" byreference="false" type="{unknown}"/>
+    <parameter name="orderStatusLogClassName" byreference="false" type="{unknown}"/>
+    <parameter name="offset" byreference="false" type="{unknown}"/>
+  </method>
+</class>

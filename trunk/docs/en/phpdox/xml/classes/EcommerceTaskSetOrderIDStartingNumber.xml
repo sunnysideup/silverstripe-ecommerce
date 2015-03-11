@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskSetOrderIDStartingNumber" namespace="" name="EcommerceTaskSetOrderIDStartingNumber" abstract="false" final="false" start="11" end="42">
+  <file path="./../../../code/tasks" file="EcommerceTaskSetOrderIDStartingNumber.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskSetOrderIDStartingNumber.php" size="1259" time="2014-07-07T13:30:49+12:00" unixtime="1404696649" sha1="0ae819c527f7ce761d5e15e04cb5601c365748a8"/>
+  <docblock>
+    <description compact="set the order id number."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <member name="title" type="string" default="&quot;Set Order ID starting number&quot;" visibility="protected" line="13"/>
+  <member name="description" type="string" default="&quot;Sets the starting order number with all order numbers following this number.&quot;" visibility="protected" line="15"/>
+  <method name="run" start="17" end="40" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="set starting order number ID" line="19"/>
+      <comment value="set order ID" line="22"/>
+    </inline>
+  </method>
+</class>

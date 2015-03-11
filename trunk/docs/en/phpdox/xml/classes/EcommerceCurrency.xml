@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCurrency" namespace="" name="EcommerceCurrency" abstract="false" final="false" start="11" end="565">
+  <file path="./../../../code/model/money" file="EcommerceCurrency.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/money/EcommerceCurrency.php" size="14939" time="2014-08-24T21:07:18+12:00" unixtime="1408871238" sha1="1cdc79e28171de547a9ff72776185a26e9ad01c6"/>
+  <docblock>
+    <description compact="Object to manage currencies"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: money">Precondition : There should always be at least one currency usable.</sub>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="db" type="array" visibility="private" line="17">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="indexes" type="array" visibility="private" line="27">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="casting" type="array" visibility="private" line="35">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="searchable_fields" type="array" visibility="private" line="49">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="field_labels" type="array" visibility="private" line="58">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="summary_fields" type="array" visibility="private" line="74">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="singular_name" type="string" default="&quot;Currency&quot;" visibility="private" line="86">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="87" end="87" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Currencies&quot;" visibility="private" line="93">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="94" end="94" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="default_sort" type="string" default="&quot;\&quot;InUse\&quot; DESC, \&quot;Name\&quot; ASC, \&quot;Code\&quot; ASC&quot;" visibility="private" line="100">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="defaults" type="array" visibility="private" line="106">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="canCreate" start="115" end="118" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canView" start="125" end="128" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canEdit" start="135" end="138" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canDelete" start="145" end="151" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="ecommerce_currency_list" start="158" end="173" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="NOTE: when there is only one currency we return an empty DataList as one currency is meaningless."/>
+      <return description="| null" type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="get_list" start="175" end="185" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="get_money_object_from_order_currency" start="193" end="207" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$price">
+        <type full="Float" namespace="" name="Float"/>
+      </param>
+      <param type="object" variable="$order">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <return type="object">
+        <type full="Money" namespace="" name="Money"/>
+      </return>
+    </docblock>
+    <parameter name="price" byreference="false" type="{unknown}"/>
+    <parameter name="order" byreference="false" type="object" default="null">
+      <type full="\\Order" namespace="\" name="Order"/>
+    </parameter>
+  </method>
+  <method name="default_currency" start="214" end="223" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the default currency"/>
+      <return description="| EcommerceCurrency" type="object">
+        <type full="NULL" namespace="" name="NULL"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="default_currency_id" start="230" end="233" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="get_one_from_code" start="241" end="250" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Only returns a currency when it is a valid currency."/>
+      <param description="- the code of the currency" type="object" variable="$currencyCode">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="| Null" type="object">
+        <type full="EcommerceCurrency" namespace="" name="EcommerceCurrency"/>
+      </return>
+    </docblock>
+    <parameter name="currencyCode" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="getCMSFields" start="255" end="270" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="STANDARD SILVERSTRIPE STUFF"/>
+    </docblock>
+  </method>
+  <method name="DefaultSymbol" start="272" end="272" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getDefaultSymbol" start="273" end="273" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="ShortSymbol" start="275" end="275" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getShortSymbol" start="276" end="276" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="LongSymbol" start="278" end="278" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getLongSymbol" start="279" end="279" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="IsDefault" start="285" end="285" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable method"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getIsDefault" start="286" end="294" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="IsDefaultNice" start="300" end="300" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable method"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getIsDefaultNice" start="301" end="308" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="InUseNice" start="314" end="314" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable method"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getInUseNice" start="315" end="322" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="ExchangeRate" start="329" end="329" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable"/>
+      <return type="object">
+        <type full="Double" namespace="" name="Double"/>
+      </return>
+      <todo value="$className is not used at all here"/>
+    </docblock>
+  </method>
+  <method name="getExchangeRate" start="330" end="334" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="ExchangeRateExplanation" start="340" end="340" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getExchangeRateExplanation" start="341" end="350" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="IsCurrent" start="355" end="358" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="Link" start="367" end="369" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Returns the link that can be used in the shopping cart to set the preferred currency to this one.">For example: /shoppingcart/setcurrency/nzd/
+Dont be fooled by the set_ part in the set_currency_link....</description>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="LinkingMode" start="375" end="387" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the link type"/>
+      <return description="(link | default | current)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="validate" start="389" end="411" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="Check that there are no 2 same code currencies in use" line="400"/>
+    </inline>
+  </method>
+  <method name="populateDefaults" start="417" end="420" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method Adds the default currency"/>
+    </docblock>
+  </method>
+  <method name="onBeforeWrite" start="422" end="432" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="Check that there is always at least one currency in use" line="424"/>
+    </inline>
+  </method>
+  <method name="requireDefaultRecords" start="438" end="444" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method Adds the default currency"/>
+    </docblock>
+  </method>
+  <method name="create_new" start="446" end="462" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="code" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="debug" start="469" end="471" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Debug helper method.">Can be called from /shoppingcart/debug/</description>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <member name="currencies" type="array" visibility="private" line="473"/>
+</class>

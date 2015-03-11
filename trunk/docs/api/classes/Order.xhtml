@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - Order</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">Order</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>Order</h1>
+        <h4>The order class is a databound object for handling Orders within SilverStripe.</h4>
+        <p/>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Order
+                extends <a title="DataObject" href="../classes/DataObject.xhtml">DataObject</a>
+            {<br/><ul class="none"><li>// members</li><li>private <span title="Array">Array</span> <a href="#members">$api_access</a>;
+                    </li><li>private <span title="Array">Array</span> <a href="#members">$db</a>;
+                    </li><li>private array <a href="#members">$has_one</a>;
+                    </li><li>private <span title="Array">Array</span> <a href="#members">$has_many</a>;
+                    </li><li>private <span title="Array">Array</span> <a href="#members">$indexes</a>;
+                    </li><li>private <span title="String">String</span> <a href="#members">$default_sort</a>;
+                    </li><li>private <span title="Array">Array</span> <a href="#members">$casting</a>;
+                    </li><li>private <span title="Array">Array</span> <a href="#members">$create_table_options</a>;
+                    </li><li>private <span title="String">String</span> <a href="#members">$singular_name</a>;
+                    </li><li>private <span title="String">String</span> <a href="#members">$plural_name</a>;
+                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
+                    </li><li>private <span title="Boolean">Boolean</span> <a href="#members">$needs_recalculating</a>;
+                    </li><li>protected integer <a href="#members">$totalItems</a>;
+                    </li><li>protected <span title="Double">Double</span> <a href="#members">$totalItemsTimesQuantity</a>;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$fieldsAndTabsToBeRemoved</a>;
+                    </li><li>private array <a href="#members">$summary_fields</a>;
+                    </li><li>private array <a href="#members">$searchable_fields</a>;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isSubmittedTempVar</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Order" href="../classes/Order/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                    </li><li>public static void <a title="Order" href="../classes/Order/set_needs_recalculating.xhtml">set_needs_recalculating</a>()
+                    </li><li>public static void <a title="Order" href="../classes/Order/get_needs_recalculating.xhtml">get_needs_recalculating</a>()
+                    </li><li>public ArrayList <a title="Order" href="../classes/Order/getModifierForms.xhtml">getModifierForms</a>()
+                    </li><li>public static ArrayList <a title="Order" href="../classes/Order/get_order_status_options.xhtml">get_order_status_options</a>()
+                    </li><li>public static : <a title="Order" href="../classes/Order/get_by_id_if_can_view.xhtml">get_by_id_if_can_view</a>()
+                    </li><li>public static DataList <a title="Order" href="../classes/Order/get_datalist_of_orders_with_submit_record.xhtml">get_datalist_of_orders_with_submit_record</a>()
+                    </li><li>public FieldList <a title="Order" href="../classes/Order/scaffoldSearchFields.xhtml">scaffoldSearchFields</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/CMSEditLink.xhtml">CMSEditLink</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getCMSFields.xhtml">getCMSFields</a>()
+                    </li><li>protected GridField <a title="Order" href="../classes/Order/getOrderItemsField.xhtml">getOrderItemsField</a>()
+                    </li><li>public GridField <a title="Order" href="../classes/Order/getModifierTableField.xhtml">getModifierTableField</a>()
+                    </li><li>protected void <a title="Order" href="../classes/Order/getBillingAddressField.xhtml">getBillingAddressField</a>()
+                    </li><li>protected void <a title="Order" href="../classes/Order/getShippingAddressField.xhtml">getShippingAddressField</a>()
+                    </li><li>public GridField <a title="Order" href="../classes/Order/getOrderStatusLogsTableField.xhtml">getOrderStatusLogsTableField</a>()
+                    </li><li>protected GridField <a title="Order" href="../classes/Order/getOrderStatusLogsTableField_Archived.xhtml">getOrderStatusLogsTableField_Archived</a>()
+                    </li><li>public GridField <a title="Order" href="../classes/Order/getEmailsTableField.xhtml">getEmailsTableField</a>()
+                    </li><li>protected GridField <a title="Order" href="../classes/Order/getPaymentsField.xhtml">getPaymentsField</a>()
+                    </li><li>public OrderStepField <a title="Order" href="../classes/Order/OrderStepField.xhtml">OrderStepField</a>()
+                    </li><li>public DataObject <a title="Order" href="../classes/Order/init.xhtml">init</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/tryToFinaliseOrder.xhtml">tryToFinaliseOrder</a>()
+                    </li><li>public Integer <a title="Order" href="../classes/Order/doNextStatus.xhtml">doNextStatus</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/Cancel.xhtml">Cancel</a>()
+                    </li><li>public DataObject <a title="Order" href="../classes/Order/MyStep.xhtml">MyStep</a>()
+                    </li><li>public OrderStatusLog <a title="Order" href="../classes/Order/RelevantLogEntry.xhtml">RelevantLogEntry</a>()
+                    </li><li>public DataObject <a title="Order" href="../classes/Order/CurrentStepVisibleToCustomer.xhtml">CurrentStepVisibleToCustomer</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsFirstStep.xhtml">IsFirstStep</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsInCart.xhtml">IsInCart</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsPastCart.xhtml">IsPastCart</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsUncomplete.xhtml">IsUncomplete</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsProcessing.xhtml">IsProcessing</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsCompleted.xhtml">IsCompleted</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsPaid.xhtml">IsPaid</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsCancelled.xhtml">IsCancelled</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getIsCancelled.xhtml">getIsCancelled</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsCustomerCancelled.xhtml">IsCustomerCancelled</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/IsAdminCancelled.xhtml">IsAdminCancelled</a>()
+                    </li><li>public boolean <a title="Order" href="../classes/Order/ShopClosed.xhtml">ShopClosed</a>()
+                    </li><li>public Member <a title="Order" href="../classes/Order/CreateOrReturnExistingMember.xhtml">CreateOrReturnExistingMember</a>()
+                    </li><li>public Null <a title="Order" href="../classes/Order/CreateOrReturnExistingAddress.xhtml">CreateOrReturnExistingAddress</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/SetCountryFields.xhtml">SetCountryFields</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/SetRegionFields.xhtml">SetRegionFields</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/UpdateCurrency.xhtml">UpdateCurrency</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/SetCurrency.xhtml">SetCurrency</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/sendEmail.xhtml">sendEmail</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/sendError.xhtml">sendError</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/sendAdminNotification.xhtml">sendAdminNotification</a>()
+                    </li><li>protected Boolean <a title="Order" href="../classes/Order/prepareEmail.xhtml">prepareEmail</a>()
+                    </li><li>public ArrayData <a title="Order" href="../classes/Order/createReplacementArrayForEmail.xhtml">createReplacementArrayForEmail</a>()
+                    </li><li>public array <a title="Order" href="../classes/Order/renderOrderInEmailFormat.xhtml">renderOrderInEmailFormat</a>()
+                    </li><li>public ArrayList <a title="Order" href="../classes/Order/getOrderAttributesByType.xhtml">getOrderAttributesByType</a>()
+                    </li><li>public DataList <a title="Order" href="../classes/Order/Items.xhtml">Items</a>()
+                    </li><li>public DataList <a title="Order" href="../classes/Order/OrderItems.xhtml">OrderItems</a>()
+                    </li><li>protected DataList <a title="Order" href="../classes/Order/itemsFromDatabase.xhtml">itemsFromDatabase</a>()
+                    </li><li>public DataList <a title="Order" href="../classes/Order/OrderModifiers.xhtml">OrderModifiers</a>()
+                    </li><li>public DataList <a title="Order" href="../classes/Order/Modifiers.xhtml">Modifiers</a>()
+                    </li><li>protected DataList <a title="Order" href="../classes/Order/modifiersFromDatabase.xhtml">modifiersFromDatabase</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/calculateOrderAttributes.xhtml">calculateOrderAttributes</a>()
+                    </li><li>protected void <a title="Order" href="../classes/Order/calculateOrderItems.xhtml">calculateOrderItems</a>()
+                    </li><li>protected void <a title="Order" href="../classes/Order/calculateModifiers.xhtml">calculateModifiers</a>()
+                    </li><li>public Float <a title="Order" href="../classes/Order/ModifiersSubTotal.xhtml">ModifiersSubTotal</a>()
+                    </li><li>public DataObject <a title="Order" href="../classes/Order/RetrieveModifier.xhtml">RetrieveModifier</a>()
+                    </li><li>protected void <a title="Order" href="../classes/Order/getMemberForCanFunctions.xhtml">getMemberForCanFunctions</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/canCreate.xhtml">canCreate</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/canView.xhtml">canView</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/IsInSession.xhtml">IsInSession</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/canEdit.xhtml">canEdit</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/canPay.xhtml">canPay</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/canCancel.xhtml">canCancel</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/canDelete.xhtml">canDelete</a>()
+                    </li><li>public ArrayList <a title="Order" href="../classes/Order/CanViewOrderStatusLogs.xhtml">CanViewOrderStatusLogs</a>()
+                    </li><li>public ArrayList <a title="Order" href="../classes/Order/CustomerViewableOrderStatusLogs.xhtml">CustomerViewableOrderStatusLogs</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/OrderEmail.xhtml">OrderEmail</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getOrderEmail.xhtml">getOrderEmail</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/HasPrintOrEmailLink.xhtml">HasPrintOrEmailLink</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/EmailLink.xhtml">EmailLink</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getEmailLink.xhtml">getEmailLink</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/PrintLink.xhtml">PrintLink</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getPrintLink.xhtml">getPrintLink</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/PackingSlipLink.xhtml">PackingSlipLink</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getPackingSlipLink.xhtml">getPackingSlipLink</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/RetrieveLink.xhtml">RetrieveLink</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getRetrieveLink.xhtml">getRetrieveLink</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/DeleteLink.xhtml">DeleteLink</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getDeleteLink.xhtml">getDeleteLink</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/CopyOrderLink.xhtml">CopyOrderLink</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getCopyOrderLink.xhtml">getCopyOrderLink</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/Title.xhtml">Title</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTitle.xhtml">getTitle</a>()
+                    </li><li>public float <a title="Order" href="../classes/Order/SubTotal.xhtml">SubTotal</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getSubTotal.xhtml">getSubTotal</a>()
+                    </li><li>public Currency <a title="Order" href="../classes/Order/SubTotalAsCurrencyObject.xhtml">SubTotalAsCurrencyObject</a>()
+                    </li><li>public Money <a title="Order" href="../classes/Order/SubTotalAsMoney.xhtml">SubTotalAsMoney</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getSubTotalAsMoney.xhtml">getSubTotalAsMoney</a>()
+                    </li><li>public Currency <a title="Order" href="../classes/Order/ModifiersSubTotalAsCurrencyObject.xhtml">ModifiersSubTotalAsCurrencyObject</a>()
+                    </li><li>public float <a title="Order" href="../classes/Order/Total.xhtml">Total</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotal.xhtml">getTotal</a>()
+                    </li><li>public Currency <a title="Order" href="../classes/Order/TotalAsCurrencyObject.xhtml">TotalAsCurrencyObject</a>()
+                    </li><li>public Money <a title="Order" href="../classes/Order/TotalAsMoney.xhtml">TotalAsMoney</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotalAsMoney.xhtml">getTotalAsMoney</a>()
+                    </li><li>public float <a title="Order" href="../classes/Order/TotalOutstanding.xhtml">TotalOutstanding</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotalOutstanding.xhtml">getTotalOutstanding</a>()
+                    </li><li>public Currency <a title="Order" href="../classes/Order/TotalOutstandingAsCurrencyObject.xhtml">TotalOutstandingAsCurrencyObject</a>()
+                    </li><li>public Money <a title="Order" href="../classes/Order/TotalOutstandingAsMoney.xhtml">TotalOutstandingAsMoney</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotalOutstandingAsMoney.xhtml">getTotalOutstandingAsMoney</a>()
+                    </li><li>public float <a title="Order" href="../classes/Order/TotalPaid.xhtml">TotalPaid</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotalPaid.xhtml">getTotalPaid</a>()
+                    </li><li>public Currency <a title="Order" href="../classes/Order/TotalPaidAsCurrencyObject.xhtml">TotalPaidAsCurrencyObject</a>()
+                    </li><li>public Money <a title="Order" href="../classes/Order/TotalPaidAsMoney.xhtml">TotalPaidAsMoney</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotalPaidAsMoney.xhtml">getTotalPaidAsMoney</a>()
+                    </li><li>public Integer <a title="Order" href="../classes/Order/TotalItems.xhtml">TotalItems</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotalItems.xhtml">getTotalItems</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/MoreThanOneItemInCart.xhtml">MoreThanOneItemInCart</a>()
+                    </li><li>public Double <a title="Order" href="../classes/Order/TotalItemsTimesQuantity.xhtml">TotalItemsTimesQuantity</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getTotalItemsTimesQuantity.xhtml">getTotalItemsTimesQuantity</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/Country.xhtml">Country</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getCountry.xhtml">getCountry</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/FullNameCountry.xhtml">FullNameCountry</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getFullNameCountry.xhtml">getFullNameCountry</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/ExpectedCountryName.xhtml">ExpectedCountryName</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getExpectedCountryName.xhtml">getExpectedCountryName</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/FixedCountry.xhtml">FixedCountry</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getFixedCountry.xhtml">getFixedCountry</a>()
+                    </li><li>public DataObject <a title="Order" href="../classes/Order/Region.xhtml">Region</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getRegion.xhtml">getRegion</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/HasAlternativeCurrency.xhtml">HasAlternativeCurrency</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getHasAlternativeCurrency.xhtml">getHasAlternativeCurrency</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/EnsureCorrectExchangeRate.xhtml">EnsureCorrectExchangeRate</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/IsSubmitted.xhtml">IsSubmitted</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getIsSubmitted.xhtml">getIsSubmitted</a>()
+                    </li><li>public Submission <a title="Order" href="../classes/Order/SubmissionLog.xhtml">SubmissionLog</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/CustomerStatus.xhtml">CustomerStatus</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getCustomerStatus.xhtml">getCustomerStatus</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/CanHaveShippingAddress.xhtml">CanHaveShippingAddress</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/getCanHaveShippingAddress.xhtml">getCanHaveShippingAddress</a>()
+                    </li><li>public CartPage <a title="Order" href="../classes/Order/DisplayPage.xhtml">DisplayPage</a>()
+                    </li><li>public String(URLSegment) <a title="Order" href="../classes/Order/Link.xhtml">Link</a>()
+                    </li><li>public String(URL) <a title="Order" href="../classes/Order/APILink.xhtml">APILink</a>()
+                    </li><li>public String(URLSegment) <a title="Order" href="../classes/Order/CheckoutLink.xhtml">CheckoutLink</a>()
+                    </li><li>public HTML <a title="Order" href="../classes/Order/ConvertToHTML.xhtml">ConvertToHTML</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/ConvertToString.xhtml">ConvertToString</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/ConvertToJSON.xhtml">ConvertToJSON</a>()
+                    </li><li>protected Order <a title="Order" href="../classes/Order/addHasOneAndHasManyAsVariables.xhtml">addHasOneAndHasManyAsVariables</a>()
+                    </li><li>public EcommerceConfigAjax <a title="Order" href="../classes/Order/AJAXDefinitions.xhtml">AJAXDefinitions</a>()
+                    </li><li>public EcommerceDBConfig <a title="Order" href="../classes/Order/EcomConfig.xhtml">EcomConfig</a>()
+                    </li><li>public Array <a title="Order" href="../classes/Order/updateForAjax.xhtml">updateForAjax</a>()
+                    </li><li>public Float <a title="Order" href="../classes/Order/SubTotalCartValue.xhtml">SubTotalCartValue</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/populateDefaults.xhtml">populateDefaults</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/onBeforeWrite.xhtml">onBeforeWrite</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/onAfterWrite.xhtml">onAfterWrite</a>()
+                    </li><li>public void <a title="Order" href="../classes/Order/onBeforeDelete.xhtml">onBeforeDelete</a>()
+                    </li><li>public String <a title="Order" href="../classes/Order/debug.xhtml">debug</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/DataObject.xhtml">DataObject</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="tasks">Tasks</h2>
+        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <thead>
+            <tr>
+              <th style="width:3em;">Line</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tr>
+            <td class="nummeric">+</td>
+            <td>: how to translate this?</td>
+          </tr>
+          <tr>
+            <td class="nummeric">435</td>
+            <td/>
+          </tr>
+          <tr>
+            <td class="nummeric">1898+</td>
+            <td>: is this a security risk?</td>
+          </tr>
+          <tr>
+            <td class="nummeric">2256+</td>
+            <td>: why do we dont return a string IF there is only one item.</td>
+          </tr>
+          <tr>
+            <td class="nummeric">2640+</td>
+            <td>: move to more appropriate class</td>
+          </tr>
+        </table>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="api_access"><strong>$api_access</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">API Control</span></li>
+            <li id="casting"><strong>$casting</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="create_table_options"><strong>$create_table_options</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="db"><strong>$db</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="default_sort"><strong>$default_sort</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="description"><strong>$description</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+            <li id="has_many"><strong>$has_many</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="has_one">
+              <strong>$has_one</strong>
+            </li>
+            <li id="indexes"><strong>$indexes</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="needs_recalculating"><strong>$needs_recalculating</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">Tells us if an order needs to be recalculated</span></li>
+            <li id="plural_name"><strong>$plural_name</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="searchable_fields">
+              <strong>$searchable_fields</strong>
+              <br/>
+              <span class="indent">STANDARD SILVERSTRIPE STUFF</span>
+            </li>
+            <li id="singular_name"><strong>$singular_name</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+            <li id="summary_fields">
+              <strong>$summary_fields</strong>
+              <br/>
+              <span class="indent">STANDARD SILVERSTRIPE STUFF</span>
+            </li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="fieldsAndTabsToBeRemoved"><strong>$fieldsAndTabsToBeRemoved</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">fields that we remove from the parent::getCMSFields object set</span></li>
+            <li id="isSubmittedTempVar"><strong>$isSubmittedTempVar</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">speeds up processing by storing the IsSubmitted value we start with -1 to know if it has been requested before.</span></li>
+            <li id="totalItems"><strong>$totalItems</strong>
+                —
+                integer<br/><span class="indent">Total Items : total items in cart We start with -1 to easily identify if it has been run before.</span></li>
+            <li id="totalItemsTimesQuantity"><strong>$totalItemsTimesQuantity</strong>
+                —
+                <a href="#">Double</a><br/><span class="indent">Total Items : total items in cart We start with -1 to easily identify if it has been run before.</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="addHasOneAndHasManyAsVariables"><a title="Order" href="../classes/Order/addHasOneAndHasManyAsVariables.xhtml">addHasOneAndHasManyAsVariables()</a>
+                — returns itself wtih more data added as variables.</li>
+            <li id="calculateModifiers"><a title="Order" href="../classes/Order/calculateModifiers.xhtml">calculateModifiers()</a>
+                — Calculates and updates all the modifiers.</li>
+            <li id="calculateOrderItems"><a title="Order" href="../classes/Order/calculateOrderItems.xhtml">calculateOrderItems()</a>
+                — Calculates and updates all the product items.</li>
+            <li id="getBillingAddressField"><a title="Order" href="../classes/Order/getBillingAddressField.xhtml">getBillingAddressField()</a>
+                — return GridField</li>
+            <li id="getMemberForCanFunctions">
+              <a title="Order" href="../classes/Order/getMemberForCanFunctions.xhtml">getMemberForCanFunctions()</a>
+            </li>
+            <li id="getOrderItemsField"><a title="Order" href="../classes/Order/getOrderItemsField.xhtml">getOrderItemsField()</a>
+                — Field to add and edit Order Items</li>
+            <li id="getOrderStatusLogsTableField_Archived">
+              <a title="Order" href="../classes/Order/getOrderStatusLogsTableField_Archived.xhtml">getOrderStatusLogsTableField_Archived()</a>
+            </li>
+            <li id="getPaymentsField">
+              <a title="Order" href="../classes/Order/getPaymentsField.xhtml">getPaymentsField()</a>
+            </li>
+            <li id="getShippingAddressField"><a title="Order" href="../classes/Order/getShippingAddressField.xhtml">getShippingAddressField()</a>
+                — return GridField</li>
+            <li id="itemsFromDatabase"><a title="Order" href="../classes/Order/itemsFromDatabase.xhtml">itemsFromDatabase()</a>
+                — Return all the {@link OrderItem} instances that are available as records in the database.</li>
+            <li id="modifiersFromDatabase"><a title="Order" href="../classes/Order/modifiersFromDatabase.xhtml">modifiersFromDatabase()</a>
+                — Get all {@link OrderModifier} instances that are available as records in the database.</li>
+            <li id="prepareEmail"><a title="Order" href="../classes/Order/prepareEmail.xhtml">prepareEmail()</a>
+                — Send a mail of the order to the client (and another to the admin).</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="AJAXDefinitions"><a title="Order" href="../classes/Order/AJAXDefinitions.xhtml">AJAXDefinitions()</a>
+                — returns the instance of EcommerceConfigAjax for use in templates.</li>
+            <li id="APILink"><a title="Order" href="../classes/Order/APILink.xhtml">APILink()</a>
+                — Returns to link to access the Order's API</li>
+            <li id="CMSEditLink">
+              <a title="Order" href="../classes/Order/CMSEditLink.xhtml">CMSEditLink()</a>
+            </li>
+            <li id="CanHaveShippingAddress"><a title="Order" href="../classes/Order/CanHaveShippingAddress.xhtml">CanHaveShippingAddress()</a>
+                — Casted variable - does the order have a potential shipping address?</li>
+            <li id="CanViewOrderStatusLogs"><a title="Order" href="../classes/Order/CanViewOrderStatusLogs.xhtml">CanViewOrderStatusLogs()</a>
+                — Returns all the order logs that the current member can view i.e. some order logs can only be viewed by the admin (e.g. suspected fraud orderlog).</li>
+            <li id="Cancel"><a title="Order" href="../classes/Order/Cancel.xhtml">Cancel()</a>
+                — cancel an order.</li>
+            <li id="CheckoutLink"><a title="Order" href="../classes/Order/CheckoutLink.xhtml">CheckoutLink()</a>
+                — returns the link to finalise the Order</li>
+            <li id="ConvertToHTML"><a title="Order" href="../classes/Order/ConvertToHTML.xhtml">ConvertToHTML()</a>
+                — Converts the Order into HTML, based on the Order Template.</li>
+            <li id="ConvertToJSON"><a title="Order" href="../classes/Order/ConvertToJSON.xhtml">ConvertToJSON()</a>
+                — Converts the Order into a JSON object TO DO: check if this works and check if we need to use special sapphire JSON code</li>
+            <li id="ConvertToString"><a title="Order" href="../classes/Order/ConvertToString.xhtml">ConvertToString()</a>
+                — Converts the Order into a serialized string TO DO: check if this works and check if we need to use special sapphire serialization code</li>
+            <li id="CopyOrderLink"><a title="Order" href="../classes/Order/CopyOrderLink.xhtml">CopyOrderLink()</a>
+                — link to copy order.</li>
+            <li id="Country"><a title="Order" href="../classes/Order/Country.xhtml">Country()</a>
+                — Returns the country code for the country that applies to the order.</li>
+            <li id="CreateOrReturnExistingAddress"><a title="Order" href="../classes/Order/CreateOrReturnExistingAddress.xhtml">CreateOrReturnExistingAddress()</a>
+                — Returns either the existing one or a new Order Address...</li>
+            <li id="CreateOrReturnExistingMember"><a title="Order" href="../classes/Order/CreateOrReturnExistingMember.xhtml">CreateOrReturnExistingMember()</a>
+                — Returns a member linked to the order.</li>
+            <li id="CurrentStepVisibleToCustomer">
+              <a title="Order" href="../classes/Order/CurrentStepVisibleToCustomer.xhtml">CurrentStepVisibleToCustomer()</a>
+            </li>
+            <li id="CustomerStatus"><a title="Order" href="../classes/Order/CustomerStatus.xhtml">CustomerStatus()</a>
+                — Casted variable - has the order been submitted?</li>
+            <li id="CustomerViewableOrderStatusLogs"><a title="Order" href="../classes/Order/CustomerViewableOrderStatusLogs.xhtml">CustomerViewableOrderStatusLogs()</a>
+                — returns all the logs that can be viewed by the customer.</li>
+            <li id="DeleteLink"><a title="Order" href="../classes/Order/DeleteLink.xhtml">DeleteLink()</a>
+                — link to delete order.</li>
+            <li id="DisplayPage"><a title="Order" href="../classes/Order/DisplayPage.xhtml">DisplayPage()</a>
+                — returns the link to view the Order WHY NOT CHECKOUT PAGE: first we check for cart page.</li>
+            <li id="EcomConfig"><a title="Order" href="../classes/Order/EcomConfig.xhtml">EcomConfig()</a>
+                — returns the instance of EcommerceDBConfig</li>
+            <li id="EmailLink"><a title="Order" href="../classes/Order/EmailLink.xhtml">EmailLink()</a>
+                — returns the absolute link to the order that can be used in the customer communication (email)</li>
+            <li id="EnsureCorrectExchangeRate"><a title="Order" href="../classes/Order/EnsureCorrectExchangeRate.xhtml">EnsureCorrectExchangeRate()</a>
+                — Makes sure exchange rate is updated and maintained before order is submitted This method is public because it could be called from a shopping Cart Object.</li>
+            <li id="ExpectedCountryName"><a title="Order" href="../classes/Order/ExpectedCountryName.xhtml">ExpectedCountryName()</a>
+                — returns name of coutry that we expect the customer to have This takes into consideration more than just what has been entered for example, it looks at GEO IP</li>
+            <li id="FixedCountry"><a title="Order" href="../classes/Order/FixedCountry.xhtml">FixedCountry()</a>
+                — return the title of the fixed country (if any)</li>
+            <li id="FullNameCountry"><a title="Order" href="../classes/Order/FullNameCountry.xhtml">FullNameCountry()</a>
+                — returns name of coutry</li>
+            <li id="HasAlternativeCurrency"><a title="Order" href="../classes/Order/HasAlternativeCurrency.xhtml">HasAlternativeCurrency()</a>
+                — Casted variable Currency is not the same as the standard one?</li>
+            <li id="HasPrintOrEmailLink"><a title="Order" href="../classes/Order/HasPrintOrEmailLink.xhtml">HasPrintOrEmailLink()</a>
+                — Returns true if there is a prink or email link.</li>
+            <li id="IsAdminCancelled"><a title="Order" href="../classes/Order/IsAdminCancelled.xhtml">IsAdminCancelled()</a>
+                — Has the order been cancelled by the  administrator?</li>
+            <li id="IsCancelled"><a title="Order" href="../classes/Order/IsCancelled.xhtml">IsCancelled()</a>
+                — Has the order been cancelled?</li>
+            <li id="IsCompleted"><a title="Order" href="../classes/Order/IsCompleted.xhtml">IsCompleted()</a>
+                — Is the order completed?</li>
+            <li id="IsCustomerCancelled"><a title="Order" href="../classes/Order/IsCustomerCancelled.xhtml">IsCustomerCancelled()</a>
+                — Has the order been cancelled by the customer?</li>
+            <li id="IsFirstStep"><a title="Order" href="../classes/Order/IsFirstStep.xhtml">IsFirstStep()</a>
+                — works out if the order is still at the first OrderStep.</li>
+            <li id="IsInCart"><a title="Order" href="../classes/Order/IsInCart.xhtml">IsInCart()</a>
+                — Is the order still being "edited" by the customer?</li>
+            <li id="IsInSession">
+              <a title="Order" href="../classes/Order/IsInSession.xhtml">IsInSession()</a>
+            </li>
+            <li id="IsPaid"><a title="Order" href="../classes/Order/IsPaid.xhtml">IsPaid()</a>
+                — Has the order been paid? TODO: why do we check if there is a total at all?</li>
+            <li id="IsPastCart"><a title="Order" href="../classes/Order/IsPastCart.xhtml">IsPastCart()</a>
+                — The order has "passed" the IsInCart phase</li>
+            <li id="IsProcessing"><a title="Order" href="../classes/Order/IsProcessing.xhtml">IsProcessing()</a>
+                — Is the order in the :"processing" phaase.?</li>
+            <li id="IsSubmitted"><a title="Order" href="../classes/Order/IsSubmitted.xhtml">IsSubmitted()</a>
+                — Casted variable - has the order been submitted?</li>
+            <li id="IsUncomplete"><a title="Order" href="../classes/Order/IsUncomplete.xhtml">IsUncomplete()</a>
+                — Are there still steps the order needs to go through?</li>
+            <li id="Items"><a title="Order" href="../classes/Order/Items.xhtml">Items()</a>
+                — Returns the items of the order.</li>
+            <li id="Link"><a title="Order" href="../classes/Order/Link.xhtml">Link()</a>
+                — returns the link to view the Order WHY NOT CHECKOUT PAGE: first we check for cart page.</li>
+            <li id="Modifiers"><a title="Order" href="../classes/Order/Modifiers.xhtml">Modifiers()</a>
+                — Returns the modifiers of the order, if it hasn't been saved yet it returns the modifiers from session, if it has, it returns them from the DB entry. ONLY USE OUTSIDE ORDER</li>
+            <li id="ModifiersSubTotal"><a title="Order" href="../classes/Order/ModifiersSubTotal.xhtml">ModifiersSubTotal()</a>
+                — Returns the subtotal of the modifiers for this order.</li>
+            <li id="ModifiersSubTotalAsCurrencyObject">
+              <a title="Order" href="../classes/Order/ModifiersSubTotalAsCurrencyObject.xhtml">ModifiersSubTotalAsCurrencyObject()</a>
+            </li>
+            <li id="MoreThanOneItemInCart"><a title="Order" href="../classes/Order/MoreThanOneItemInCart.xhtml">MoreThanOneItemInCart()</a>
+                — Little shorthand</li>
+            <li id="MyStep">
+              <a title="Order" href="../classes/Order/MyStep.xhtml">MyStep()</a>
+            </li>
+            <li id="OrderEmail"><a title="Order" href="../classes/Order/OrderEmail.xhtml">OrderEmail()</a>
+                — returns the email to be used for customer communication</li>
+            <li id="OrderItems">
+              <a title="Order" href="../classes/Order/OrderItems.xhtml">OrderItems()</a>
+            </li>
+            <li id="OrderModifiers">
+              <a title="Order" href="../classes/Order/OrderModifiers.xhtml">OrderModifiers()</a>
+            </li>
+            <li id="OrderStepField">
+              <a title="Order" href="../classes/Order/OrderStepField.xhtml">OrderStepField()</a>
+            </li>
+            <li id="PackingSlipLink"><a title="Order" href="../classes/Order/PackingSlipLink.xhtml">PackingSlipLink()</a>
+                — returns the absolute link to the order for printing</li>
+            <li id="PrintLink"><a title="Order" href="../classes/Order/PrintLink.xhtml">PrintLink()</a>
+                — returns the absolute link to the order for printing</li>
+            <li id="Region"><a title="Order" href="../classes/Order/Region.xhtml">Region()</a>
+                — Returns the region that applies to the order.</li>
+            <li id="RelevantLogEntry">
+              <a title="Order" href="../classes/Order/RelevantLogEntry.xhtml">RelevantLogEntry()</a>
+            </li>
+            <li id="RetrieveLink"><a title="Order" href="../classes/Order/RetrieveLink.xhtml">RetrieveLink()</a>
+                — returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.</li>
+            <li id="RetrieveModifier"><a title="Order" href="../classes/Order/RetrieveModifier.xhtml">RetrieveModifier()</a>
+                — returns a modifier that is an instanceof the classname it extends</li>
+            <li id="SetCountryFields"><a title="Order" href="../classes/Order/SetCountryFields.xhtml">SetCountryFields()</a>
+                — Sets the country in the billing and shipping address TO DO: only set one or the other....</li>
+            <li id="SetCurrency"><a title="Order" href="../classes/Order/SetCurrency.xhtml">SetCurrency()</a>
+                — alias for UpdateCurrency</li>
+            <li id="SetRegionFields"><a title="Order" href="../classes/Order/SetRegionFields.xhtml">SetRegionFields()</a>
+                — Sets the region in the billing and shipping address</li>
+            <li id="ShopClosed"><a title="Order" href="../classes/Order/ShopClosed.xhtml">ShopClosed()</a>
+                — Is the Shop Closed for business?</li>
+            <li id="SubTotal"><a title="Order" href="../classes/Order/SubTotal.xhtml">SubTotal()</a>
+                — Returns the subtotal of the items for this order.</li>
+            <li id="SubTotalAsCurrencyObject">
+              <a title="Order" href="../classes/Order/SubTotalAsCurrencyObject.xhtml">SubTotalAsCurrencyObject()</a>
+            </li>
+            <li id="SubTotalAsMoney">
+              <a title="Order" href="../classes/Order/SubTotalAsMoney.xhtml">SubTotalAsMoney()</a>
+            </li>
+            <li id="SubTotalCartValue">
+              <a title="Order" href="../classes/Order/SubTotalCartValue.xhtml">SubTotalCartValue()</a>
+            </li>
+            <li id="SubmissionLog"><a title="Order" href="../classes/Order/SubmissionLog.xhtml">SubmissionLog()</a>
+                — Submission Log for this Order (if any)</li>
+            <li id="Title"><a title="Order" href="../classes/Order/Title.xhtml">Title()</a>
+                — A "Title" for the order, which summarises the main details (date, and customer) in a string.</li>
+            <li id="Total"><a title="Order" href="../classes/Order/Total.xhtml">Total()</a>
+                — Returns the total cost of an order including the additional charges or deductions of its modifiers.</li>
+            <li id="TotalAsCurrencyObject">
+              <a title="Order" href="../classes/Order/TotalAsCurrencyObject.xhtml">TotalAsCurrencyObject()</a>
+            </li>
+            <li id="TotalAsMoney">
+              <a title="Order" href="../classes/Order/TotalAsMoney.xhtml">TotalAsMoney()</a>
+            </li>
+            <li id="TotalItems"><a title="Order" href="../classes/Order/TotalItems.xhtml">TotalItems()</a>
+                — returns the total number of OrderItems (not modifiers).</li>
+            <li id="TotalItemsTimesQuantity"><a title="Order" href="../classes/Order/TotalItemsTimesQuantity.xhtml">TotalItemsTimesQuantity()</a>
+                — returns the total number of OrderItems (not modifiers) times their respectective quantities.</li>
+            <li id="TotalOutstanding"><a title="Order" href="../classes/Order/TotalOutstanding.xhtml">TotalOutstanding()</a>
+                — Checks to see if any payments have been made on this order and if so, subracts the payment amount from the order</li>
+            <li id="TotalOutstandingAsCurrencyObject">
+              <a title="Order" href="../classes/Order/TotalOutstandingAsCurrencyObject.xhtml">TotalOutstandingAsCurrencyObject()</a>
+            </li>
+            <li id="TotalOutstandingAsMoney">
+              <a title="Order" href="../classes/Order/TotalOutstandingAsMoney.xhtml">TotalOutstandingAsMoney()</a>
+            </li>
+            <li id="TotalPaid">
+              <a title="Order" href="../classes/Order/TotalPaid.xhtml">TotalPaid()</a>
+            </li>
+            <li id="TotalPaidAsCurrencyObject">
+              <a title="Order" href="../classes/Order/TotalPaidAsCurrencyObject.xhtml">TotalPaidAsCurrencyObject()</a>
+            </li>
+            <li id="TotalPaidAsMoney">
+              <a title="Order" href="../classes/Order/TotalPaidAsMoney.xhtml">TotalPaidAsMoney()</a>
+            </li>
+            <li id="UpdateCurrency"><a title="Order" href="../classes/Order/UpdateCurrency.xhtml">UpdateCurrency()</a>
+                — Stores the preferred currency of the order.</li>
+            <li id="calculateOrderAttributes"><a title="Order" href="../classes/Order/calculateOrderAttributes.xhtml">calculateOrderAttributes()</a>
+                — Calculates and updates all the order attributes.</li>
+            <li id="canCancel"><a title="Order" href="../classes/Order/canCancel.xhtml">canCancel()</a>
+                — Can the given member cancel this order?</li>
+            <li id="canCreate">
+              <a title="Order" href="../classes/Order/canCreate.xhtml">canCreate()</a>
+            </li>
+            <li id="canDelete">
+              <a title="Order" href="../classes/Order/canDelete.xhtml">canDelete()</a>
+            </li>
+            <li id="canEdit"><a title="Order" href="../classes/Order/canEdit.xhtml">canEdit()</a>
+                — if we set canEdit to false then we can not see the child records Basically, you can edit when you can view and canEdit (even as a customer) Or if you are a Shop Admin you can always edit.</li>
+            <li id="canPay"><a title="Order" href="../classes/Order/canPay.xhtml">canPay()</a>
+                — Can a payment be made for this Order?</li>
+            <li id="canView"><a title="Order" href="../classes/Order/canView.xhtml">canView()</a>
+                — Standard SS method - can the current member view this order?</li>
+            <li id="createReplacementArrayForEmail"><a title="Order" href="../classes/Order/createReplacementArrayForEmail.xhtml">createReplacementArrayForEmail()</a>
+                — returns the Data that can be used in the body of an order Email we add the subject here so that the subject, for example, can be added to the &lt;title&gt; of the email template.</li>
+            <li id="debug"><a title="Order" href="../classes/Order/debug.xhtml">debug()</a>
+                — Debug helper method.</li>
+            <li id="doNextStatus"><a title="Order" href="../classes/Order/doNextStatus.xhtml">doNextStatus()</a>
+                — Goes through the order steps and tries to "apply" the next</li>
+            <li id="getCMSFields"><a title="Order" href="../classes/Order/getCMSFields.xhtml">getCMSFields()</a>
+                — STANDARD SILVERSTRIPE STUFF broken up into submitted and not (yet) submitted</li>
+            <li id="getCanHaveShippingAddress">
+              <a title="Order" href="../classes/Order/getCanHaveShippingAddress.xhtml">getCanHaveShippingAddress()</a>
+            </li>
+            <li id="getCopyOrderLink">
+              <a title="Order" href="../classes/Order/getCopyOrderLink.xhtml">getCopyOrderLink()</a>
+            </li>
+            <li id="getCountry">
+              <a title="Order" href="../classes/Order/getCountry.xhtml">getCountry()</a>
+            </li>
+            <li id="getCustomerStatus">
+              <a title="Order" href="../classes/Order/getCustomerStatus.xhtml">getCustomerStatus()</a>
+            </li>
+            <li id="getDeleteLink">
+              <a title="Order" href="../classes/Order/getDeleteLink.xhtml">getDeleteLink()</a>
+            </li>
+            <li id="getEmailLink">
+              <a title="Order" href="../classes/Order/getEmailLink.xhtml">getEmailLink()</a>
+            </li>
+            <li id="getEmailsTableField">
+              <a title="Order" href="../classes/Order/getEmailsTableField.xhtml">getEmailsTableField()</a>
+            </li>
+            <li id="getExpectedCountryName">
+              <a title="Order" href="../classes/Order/getExpectedCountryName.xhtml">getExpectedCountryName()</a>
+            </li>
+            <li id="getFixedCountry">
+              <a title="Order" href="../classes/Order/getFixedCountry.xhtml">getFixedCountry()</a>
+            </li>
+            <li id="getFullNameCountry">
+              <a title="Order" href="../classes/Order/getFullNameCountry.xhtml">getFullNameCountry()</a>
+            </li>
+            <li id="getHasAlternativeCurrency">
+              <a title="Order" href="../classes/Order/getHasAlternativeCurrency.xhtml">getHasAlternativeCurrency()</a>
+            </li>
+            <li id="getIsCancelled">
+              <a title="Order" href="../classes/Order/getIsCancelled.xhtml">getIsCancelled()</a>
+            </li>
+            <li id="getIsSubmitted">
+              <a title="Order" href="../classes/Order/getIsSubmitted.xhtml">getIsSubmitted()</a>
+            </li>
+            <li id="getModifierForms"><a title="Order" href="../classes/Order/getModifierForms.xhtml">getModifierForms()</a>
+                — Returns a set of modifier forms for use in the checkout order form, Controller is optional, because the orderForm has its own default controller.</li>
+            <li id="getModifierTableField"><a title="Order" href="../classes/Order/getModifierTableField.xhtml">getModifierTableField()</a>
+                — Field to add and edit Modifiers</li>
+            <li id="getOrderAttributesByType"><a title="Order" href="../classes/Order/getOrderAttributesByType.xhtml">getOrderAttributesByType()</a>
+                — returns a list of Order Attributes by type</li>
+            <li id="getOrderEmail">
+              <a title="Order" href="../classes/Order/getOrderEmail.xhtml">getOrderEmail()</a>
+            </li>
+            <li id="getOrderStatusLogsTableField"><a title="Order" href="../classes/Order/getOrderStatusLogsTableField.xhtml">getOrderStatusLogsTableField()</a>
+                — Needs to be public because the OrderStep::getCMSFIelds accesses it.</li>
+            <li id="getPackingSlipLink">
+              <a title="Order" href="../classes/Order/getPackingSlipLink.xhtml">getPackingSlipLink()</a>
+            </li>
+            <li id="getPrintLink">
+              <a title="Order" href="../classes/Order/getPrintLink.xhtml">getPrintLink()</a>
+            </li>
+            <li id="getRegion">
+              <a title="Order" href="../classes/Order/getRegion.xhtml">getRegion()</a>
+            </li>
+            <li id="getRetrieveLink">
+              <a title="Order" href="../classes/Order/getRetrieveLink.xhtml">getRetrieveLink()</a>
+            </li>
+            <li id="getSubTotal">
+              <a title="Order" href="../classes/Order/getSubTotal.xhtml">getSubTotal()</a>
+            </li>
+            <li id="getSubTotalAsMoney">
+              <a title="Order" href="../classes/Order/getSubTotalAsMoney.xhtml">getSubTotalAsMoney()</a>
+            </li>
+            <li id="getTitle">
+              <a title="Order" href="../classes/Order/getTitle.xhtml">getTitle()</a>
+            </li>
+            <li id="getTotal">
+              <a title="Order" href="../classes/Order/getTotal.xhtml">getTotal()</a>
+            </li>
+            <li id="getTotalAsMoney">
+              <a title="Order" href="../classes/Order/getTotalAsMoney.xhtml">getTotalAsMoney()</a>
+            </li>
+            <li id="getTotalItems">
+              <a title="Order" href="../classes/Order/getTotalItems.xhtml">getTotalItems()</a>
+            </li>
+            <li id="getTotalItemsTimesQuantity">
+              <a title="Order" href="../classes/Order/getTotalItemsTimesQuantity.xhtml">getTotalItemsTimesQuantity()</a>
+            </li>
+            <li id="getTotalOutstanding">
+              <a title="Order" href="../classes/Order/getTotalOutstanding.xhtml">getTotalOutstanding()</a>
+            </li>
+            <li id="getTotalOutstandingAsMoney">
+              <a title="Order" href="../classes/Order/getTotalOutstandingAsMoney.xhtml">getTotalOutstandingAsMoney()</a>
+            </li>
+            <li id="getTotalPaid">
+              <a title="Order" href="../classes/Order/getTotalPaid.xhtml">getTotalPaid()</a>
+            </li>
+            <li id="getTotalPaidAsMoney">
+              <a title="Order" href="../classes/Order/getTotalPaidAsMoney.xhtml">getTotalPaidAsMoney()</a>
+            </li>
+            <li id="get_by_id_if_can_view"><a title="Order" href="../classes/Order/get_by_id_if_can_view.xhtml">get_by_id_if_can_view()</a>
+                — Like the standard byID, but it checks whether we are allowed to view the order.</li>
+            <li id="get_datalist_of_orders_with_submit_record"><a title="Order" href="../classes/Order/get_datalist_of_orders_with_submit_record.xhtml">get_datalist_of_orders_with_submit_record()</a>
+                — returns a Datalist with the submitted order log included this allows you to sort the orders by their submit dates.</li>
+            <li id="get_needs_recalculating">
+              <a title="Order" href="../classes/Order/get_needs_recalculating.xhtml">get_needs_recalculating()</a>
+            </li>
+            <li id="get_order_status_options"><a title="Order" href="../classes/Order/get_order_status_options.xhtml">get_order_status_options()</a>
+                — This function returns the OrderSteps</li>
+            <li id="i18n_plural_name">
+              <a title="Order" href="../classes/Order/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="Order" href="../classes/Order/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+            <li id="init"><a title="Order" href="../classes/Order/init.xhtml">init()</a>
+                — init runs on start of a new Order (@see onAfterWrite) it adds all the modifiers to the orders and the starting OrderStep</li>
+            <li id="onAfterWrite"><a title="Order" href="../classes/Order/onAfterWrite.xhtml">onAfterWrite()</a>
+                — standard SS method adds the ability to update order after writing it.</li>
+            <li id="onBeforeDelete"><a title="Order" href="../classes/Order/onBeforeDelete.xhtml">onBeforeDelete()</a>
+                — tandard SS method</li>
+            <li id="onBeforeWrite">
+              <a title="Order" href="../classes/Order/onBeforeWrite.xhtml">onBeforeWrite()</a>
+            </li>
+            <li id="populateDefaults"><a title="Order" href="../classes/Order/populateDefaults.xhtml">populateDefaults()</a>
+                — tandard SS method</li>
+            <li id="renderOrderInEmailFormat"><a title="Order" href="../classes/Order/renderOrderInEmailFormat.xhtml">renderOrderInEmailFormat()</a>
+                — returns the order formatted as an email</li>
+            <li id="scaffoldSearchFields"><a title="Order" href="../classes/Order/scaffoldSearchFields.xhtml">scaffoldSearchFields()</a>
+                — Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.</li>
+            <li id="sendAdminNotification"><a title="Order" href="../classes/Order/sendAdminNotification.xhtml">sendAdminNotification()</a>
+                — Sends a message to the shop admin ONLY and not to the customer This can be used by ordersteps and orderlogs to notify the admin of any potential problems.</li>
+            <li id="sendEmail"><a title="Order" href="../classes/Order/sendEmail.xhtml">sendEmail()</a>
+                — Send the invoice of the order by email.</li>
+            <li id="sendError"><a title="Order" href="../classes/Order/sendError.xhtml">sendError()</a>
+                — Sends a message to the shop admin ONLY and not to the customer This can be used by ordersteps and orderlogs to notify the admin of any potential problems.</li>
+            <li id="set_needs_recalculating">
+              <a title="Order" href="../classes/Order/set_needs_recalculating.xhtml">set_needs_recalculating()</a>
+            </li>
+            <li id="tryToFinaliseOrder"><a title="Order" href="../classes/Order/tryToFinaliseOrder.xhtml">tryToFinaliseOrder()</a>
+                — Goes through the order steps and tries to "apply" the next status to the order.</li>
+            <li id="updateForAjax"><a title="Order" href="../classes/Order/updateForAjax.xhtml">updateForAjax()</a>
+                — Collects the JSON data for an ajax return of the cart.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>
