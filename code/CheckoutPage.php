@@ -344,8 +344,8 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	public function init() {
 		parent::init();
 		Requirements::themedCSS('CheckoutPage', 'ecommerce');
+		//Requirements::javascript('ecommerce/javascript/EcomCheckoutPage.js');
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
-		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
 				EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
@@ -553,14 +553,19 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	}
 
 	/**
-	 * sets a checkout step
+	 * sets the current checkout step
+	 * if it is ajax it returns the current controller
+	 * as the inner for the page.
 	 * @param SS_HTTPRequest $request
 	 * @return Array
 	 */
 	function checkoutstep(SS_HTTPRequest $request) {
-		return array ();
+		if($this->request->isAjax()) {
+			Requirements::clear();
+			return $this->renderWith("LayoutCheckoutPageInner");
+		}
+		return array();
 	}
-
 
 	/**
 	 * when you extend the CheckoutPage you can change this...

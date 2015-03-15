@@ -6,6 +6,8 @@
 
 <% if CanCheckout %>
 
+<!-- add your own steps here... -->
+
 <!-- step 1 OrderItems -->
 <% if CanShowStep(orderitems) %>
 <div id="OrderItemsOuter" class="checkoutStep">
@@ -25,6 +27,8 @@
 </div>
 <% end_if %>
 
+
+<!-- add your own steps here... -->
 
 <!-- step 2 OrderFormAddress -->
 <% if CanShowStep(orderformaddress) %>
@@ -47,9 +51,6 @@
 
 
 
-<!-- add your own steps here... -->
-<!-- add your own steps here... -->
-<!-- add your own steps here... -->
 <!-- add your own steps here... -->
 
 
