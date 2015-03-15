@@ -252,7 +252,8 @@ class EcommerceConfigDefinitions extends Object {
 				"session_code" => "Code name for session variable used in Cart Page.  This session variable is used to retain a message.",
 			),
 			"CheckoutPage_Controller" => array(
-				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment."
+				"checkout_steps" => "The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment.",
+				"ajaxify_steps" => "Array of Javascript files that are required to ajaxify the steps in the checkout. Defaults to none, but there is a sample JS file available: ecommerce/javascript/EcomCheckoutPage.js."
 			),
 			"ShopAccountForm_Validator" => array(
 				"minimum_password_length" => "The minimum length of the password for an account."

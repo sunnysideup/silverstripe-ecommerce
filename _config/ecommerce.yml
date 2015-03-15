@@ -42,6 +42,8 @@ CheckoutPage_Controller:
     - orderitems
     - orderformaddress
     - orderconfirmationandpayment
+  ajaxify_steps: []
+   #- ecommerce/javascript/EcomCheckoutPage.js
 
 ShopAccountForm_Validator:
   minimum_password_length: 7

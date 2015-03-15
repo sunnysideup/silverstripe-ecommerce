@@ -344,17 +344,18 @@ class CheckoutPage_Controller extends CartPage_Controller {
 	public function init() {
 		parent::init();
 		Requirements::themedCSS('CheckoutPage', 'ecommerce');
-		//Requirements::javascript('ecommerce/javascript/EcomCheckoutPage.js');
+		$ajaxifyArray = EcommerceConfig::get("CheckoutPage_Controller", "ajaxify_steps");
+		if(count($ajaxifyArray)) {
+			foreach($ajaxifyArray as $js) {
+				Requirements::javascript($js);
+			}
+		}
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::customScript('
 			if (typeof EcomOrderForm != "undefined") {
 				EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
 			}',
 			"TermsAndConditionsMessage"
-		);
-		Requirements::customScript('
-			jQuery(".orderattribute a").attr("data-popup", "true");',
-			"OpenProductLinksInNewTab"
 		);
 		$this->steps = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		$this->currentStep = $this->request->Param("ID");
