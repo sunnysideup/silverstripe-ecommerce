@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderForm_Payment_Validator" namespace="" name="OrderForm_Payment_Validator" abstract="false" final="false" start="82" end="89">
-  <file path="./../../../code/forms" file="OrderForm_Payment.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/forms/OrderForm_Payment.php" size="2794" time="2014-09-04T14:57:50+12:00" unixtime="1409799470" sha1="8968ee5406d1bc319baa8174686e13c6142aa7c3"/>
-  <extends full="RequiredFields" namespace="" name="RequiredFields"/>
-  <method name="php" start="84" end="87" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="data" byreference="false" type="{unknown}"/>
-  </method>
-</class>
