@@ -24,6 +24,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 		"ShopPricesAreTaxExclusive" => "Boolean",
 		"InvoiceTitle" => "Varchar(200)",
 		"PackingSlipTitle" => "Varchar(200)",
+		"PackingSlipNote" => "HTMLText",
 		"ShopPhysicalAddress" => "HTMLText",
 		"ReceiptEmail" => "Varchar(255)",
 		"PostalCodeURL" => "Varchar(255)",
@@ -152,6 +153,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 		"ShopPricesAreTaxExclusive" => false,
 		"InvoiceTitle" => "Invoice",
 		"PackingSlipTitle" => "Package Contents",
+		"PackingSlipNote" => "Please make sure that all items are contained in this package.",
 		"ShopPhysicalAddress" => "<p>Enter your shop address here.</p>",
 		//"ReceiptEmail" => "Varchar(255)", - see populate defaults
 		"PostalCodeURL" => "",
@@ -256,6 +258,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 			"ShopPricesAreTaxExclusive" => _t("EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE", "Shop prices are tax exclusive"),
 			"InvoiceTitle" => _t("EcommerceDBConfig.INVOICETITLE", "Email title (e.g. Tax Invoice or Update from ...)"),
 			"PackingSlipTitle" => _t("EcommerceDBConfig.PACKINGSLIPTITLE", "Packing slip title (e.g. What is in this Parcel)"),
+			"PackingSlipNote" => _t("EcommerceDBConfig.PACKING_SLIP_NOTE", "Packing slip notes (e.g. disclaimer)"),
 			"ShopPhysicalAddress" => _t("EcommerceDBConfig.SHOPPHYSICALADDRESS", "Shop physical address"),
 			"ReceiptEmail" => _t("EcommerceDBConfig.RECEIPTEMAIL", "Shop Email Address"),
 			"PostalCodeURL" => _t("EcommerceDBConfig.POSTALCODEURL", "Postal code link"),
@@ -339,7 +342,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 				new TextField("PostalCodeURL", $fieldLabels["PostalCodeURL"]),
 				new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"]),
 				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"]),
-				new TextField("PackingSlipTitle",$fieldLabels["PackingSlipTitle"])
+				new TextField("PackingSlipTitle",$fieldLabels["PackingSlipTitle"]),
+				$htmlEditorField4 = new HTMLEditorField("PackingSlipNote",$fieldLabels["PackingSlipTitle"])
 			),
 			new Tab('Emails',
 				new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),
@@ -380,6 +384,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 		$htmlEditorField1->setRows(3);
 		$htmlEditorField2->setRows(3);
 		$htmlEditorField3->setRows(3);
+		$htmlEditorField4->setRows(3);
 		$fields->addFieldsToTab(
 			"Root.Main",
 			array(

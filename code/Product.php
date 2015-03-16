@@ -249,12 +249,11 @@ class Product extends Page implements BuyableModel {
 	 * @return GridField
 	 **/
 	protected function getProductGroupsTableField() {
-		$gridFieldConfig = GridFieldEditOriginalPageConfig::create();
 		$gridField = new GridField(
 			"ProductGroups",
-			_t("Product.THISPRODUCTSHOULDALSOBELISTEDUNDER", "This product is also listed under ..."),
+			_t("Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER", "This product is also listed under ..."),
 			$this->ProductGroups(),
-			$gridFieldConfig
+			GridFieldEditOriginalPageConfigWithDelete::create()
 		);
 		return $gridField;
 	}
