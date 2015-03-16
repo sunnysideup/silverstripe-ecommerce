@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpdox xmlns="http://phpdox.net/config">
+  <project name="Silverstripe E-commerce" source="${basedir}/../../.." workdir="${basedir}/xml">
+    <collector backend="parser" />
+    <generator output="${basedir}/../../">
+      <build engine="html" output="api" />
+    </generator>
+  </project>
+</phpdox>

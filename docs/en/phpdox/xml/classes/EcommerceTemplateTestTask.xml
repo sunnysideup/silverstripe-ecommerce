@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTemplateTestTask" namespace="" name="EcommerceTemplateTestTask" abstract="false" final="false" start="11" end="21">
+  <file path="./../../../code/tasks" file="EcommerceTemplateTestTask.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/tasks/EcommerceTemplateTestTask.php" size="672" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="1310232151cc0ef8273ad3f90d171bc7c3b1bca3"/>
+  <docblock>
+    <description compact="Get examples for building templates."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <member name="title" type="string" default="&quot;Get help with building templates&quot;" visibility="protected" line="13"/>
+  <member name="description" type="string" default="&quot;Shows you some of the variables and controls you can use in your templates.&quot;" visibility="protected" line="15"/>
+  <method name="run" start="17" end="19" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+</class>

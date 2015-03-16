@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="SearchReplacement_Admin" namespace="" name="SearchReplacement_Admin" abstract="false" final="false" start="31" end="37">
+  <file path="./../../../code/search" file="SearchReplacement.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/search/SearchReplacement.php" size="749" time="2014-05-06T13:23:20+12:00" unixtime="1399339400" sha1="e9c8be01272ea6c48bfd96104895aa2186d82459"/>
+  <extends full="ModelAdmin" namespace="" name="ModelAdmin"/>
+  <member name="url_segment" type="string" default="'search'" visibility="private" line="33"/>
+  <member name="menu_title" type="string" default="'Search'" visibility="private" line="34"/>
+  <member name="managed_models" type="array" visibility="private" line="35"/>
+</class>

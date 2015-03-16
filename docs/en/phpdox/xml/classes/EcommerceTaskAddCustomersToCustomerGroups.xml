@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskAddCustomersToCustomerGroups" namespace="" name="EcommerceTaskAddCustomersToCustomerGroups" abstract="false" final="false" start="13" end="57">
+  <file path="./../../../code/tasks" file="EcommerceTaskAddCustomersToCustomerGroups.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskAddCustomersToCustomerGroups.php" size="1571" time="2014-07-07T14:22:26+12:00" unixtime="1404699746" sha1="a8e814a0c969320ed943ba363cf3e4c898f679c9"/>
+  <docblock>
+    <description compact="Adds all members, who have bought something, to the customer group."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <member name="title" type="string" default="&quot;Add Customers to Customer Group&quot;" visibility="protected" line="15"/>
+  <member name="description" type="string" default="&quot;Takes all the Members that have ordered something and adds them to the Customer Security Group.&quot;" visibility="protected" line="17"/>
+  <method name="run" start="19" end="54" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="make an array of all combos" line="27"/>
+      <comment value="add combos" line="42"/>
+    </inline>
+  </method>
+</class>

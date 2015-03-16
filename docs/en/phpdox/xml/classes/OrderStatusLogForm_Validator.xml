@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderStatusLogForm_Validator" namespace="" name="OrderStatusLogForm_Validator" abstract="false" final="false" start="158" end="165">
+  <file path="./../../../code/forms" file="OrderStatusLogForm.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/forms/OrderStatusLogForm.php" size="3940" time="2014-08-24T21:07:18+12:00" unixtime="1408871238" sha1="5a06684c44114027027f2eab51af63722deea1d5"/>
+  <extends full="RequiredFields" namespace="" name="RequiredFields"/>
+  <method name="php" start="160" end="163" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="data" byreference="false" type="{unknown}"/>
+  </method>
+</class>

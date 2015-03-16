@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderAttribute_Group" namespace="" name="OrderAttribute_Group" abstract="false" final="false" start="386" end="443">
+  <file path="./../../../code/model" file="OrderAttribute.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/OrderAttribute.php" size="9789" time="2014-08-10T21:48:59+12:00" unixtime="1407664139" sha1="40b99bbddbcc30de40f294df60bf484168a00ac0"/>
+  <docblock>
+    <description compact="Allows you to group OrderAttributes"/>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="db" type="array" visibility="private" line="388"/>
+  <member name="indexes" type="array" visibility="private" line="397">
+    <docblock>
+      <description compact="Standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="canCreate" start="407" end="410" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canView" start="417" end="420" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canEdit" start="427" end="430" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canDelete" start="437" end="440" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS Method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+</class>

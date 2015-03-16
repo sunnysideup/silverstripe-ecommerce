@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderForm" namespace="" name="OrderForm" abstract="false" final="false" start="15" end="238">
+  <file path="./../../../code/forms" file="OrderForm.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/forms/OrderForm.php" size="9434" time="2014-09-04T14:58:38+12:00" unixtime="1409799518" sha1="cf52ba76758ce720dd0700f256f03bfbc11fc81d"/>
+  <docblock>
+    <description/>
+    <description value=": form to submit order."/>
+    <see value="CheckoutPage"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: forms"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Form" namespace="" name="Form"/>
+  <constructor name="__construct" start="22" end="107" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$controller">
+        <type full="Controller" namespace="" name="Controller"/>
+      </param>
+      <param type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+    </docblock>
+    <parameter name="controller" byreference="false" type="object">
+      <type full="\\Controller" namespace="\" name="Controller"/>
+    </parameter>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="requirements" line="24"/>
+      <comment value="set basics" line="27"/>
+      <comment value="________________  3) Payment fields - BOTTOM FIELDS" line="33"/>
+      <comment value="________________  4) FINAL FIELDS" line="55"/>
+      <comment value="If a terms and conditions page exists, we need to create a field to confirm the user has read it" line="61"/>
+      <comment value="________________  5) Put all the fields in one FieldList" line="77"/>
+      <comment value="________________  6) Actions and required fields creation + Final Form construction" line="84"/>
+      <comment value="we stick with standard validation here, because of the complexity and" line="89"/>
+      <comment value="hard-coded payment validation that is required" line="90"/>
+      <comment value="extensions need to be set after __construct" line="93"/>
+      <comment value="________________  7)  Load saved data" line="98"/>
+      <comment value="allow updating via decoration" line="104"/>
+    </inline>
+  </constructor>
+  <method name="processOrder" start="119" end="205" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Process final confirmation and payment"><link value="Payment"/> instance is created, linked to the order,
+and payment is processed <link xmlns="http://xml.phpdox.net/src#" value="EcommercePayment::processPayment()"/></description>
+      <param description="Form request data submitted from OrderForm" type="array" variable="$data"/>
+      <param description="Form object for this action" type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+      <param description="Request object for this action" type="object" variable="$request">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+    </docblock>
+    <parameter name="data" byreference="false" type="array"/>
+    <parameter name="form" byreference="false" type="object">
+      <type full="\\Form" namespace="\" name="Form"/>
+    </parameter>
+    <parameter name="request" byreference="false" type="object">
+      <type full="\\SS_HTTPRequest" namespace="\" name="SS_HTTPRequest"/>
+    </parameter>
+    <inline>
+      <comment value="save for later if necessary" line="120"/>
+      <comment value="check for cart items" line="122"/>
+      <comment value="WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE" line="129"/>
+      <comment value="RUN UPDATES TO CHECK NOTHING HAS CHANGED" line="141"/>
+      <comment value="if the extend line below does not return null then we know there" line="143"/>
+      <comment value="is an error in the form (e.g. Payment Option not entered)" line="144"/>
+      <comment value="saving into order" line="153"/>
+      <comment value="saving into member, in case we add additional fields for the member" line="156"/>
+      <comment value="e.g. newslettersignup" line="157"/>
+      <comment value="----------------- CLEAR OLD DATA ------------------------------" line="175"/>
+      <comment value="clears the stored session form data that might have been needed if validation failed" line="176"/>
+      <comment value="----------------- PAYMENT ------------------------------" line="177"/>
+      <comment value="-------------- NOW SUBMIT -------------" line="179"/>
+      <comment value="this should be done before paying, as only submitted orders can be paid!" line="181"/>
+      <comment value="-------------- ACTION PAYMENT -------------" line="185"/>
+      <comment value="-------------- DO WE HAVE ANY PROGRESS NOW -------------" line="188"/>
+      <comment value="any changes to the order at this point can be taken care by ordsteps." line="190"/>
+      <comment value="------------- WHAT DO WE DO NEXT? -----------------" line="192"/>
+      <comment value="redirection is taken care of by EcommercePayment" line="194"/>
+    </inline>
+  </method>
+  <method name="saveDataToSession" start="212" end="218" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="saves the form into session"/>
+      <param description="- data from form." type="object" variable="$data">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+    </docblock>
+  </method>
+  <method name="clearSessionData" start="223" end="226" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="clear the form data (after the form has been submitted and processed)"/>
+    </docblock>
+  </method>
+  <method name="EcomConfig" start="234" end="236" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="returns the instance of EcommerceDBConfig"/>
+      <return type="object">
+        <type full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+      </return>
+    </docblock>
+  </method>
+</class>

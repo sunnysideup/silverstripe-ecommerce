@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="SearchReplacement" namespace="" name="SearchReplacement" abstract="false" final="false" start="3" end="81">
+  <file path="./../../../code/search" file="SearchReplacement.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/search/SearchReplacement.php" size="2152" time="2014-07-20T19:56:48+12:00" unixtime="1405843008" sha1="b44445de0eea1fb003c01abc5279a426360eed05"/>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <member name="db" type="array" visibility="private" line="5"/>
+  <member name="summary_fields" type="array" visibility="private" line="10"/>
+  <member name="field_labels" type="array" visibility="private" line="15"/>
+  <member name="separator" type="string" default="','" visibility="private" line="20"/>
+  <method name="fieldLabels" start="22" end="27" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="includerelations" byreference="false" type="{unknown}" default="true"/>
+  </method>
+  <method name="onBeforeWrite" start="29" end="39" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="all lower case and make replace double spaces" line="31"/>
+    </inline>
+  </method>
+  <method name="canCreate" start="46" end="49" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canView" start="56" end="59" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canEdit" start="66" end="69" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="canDelete" start="76" end="79" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+  </method>
+</class>

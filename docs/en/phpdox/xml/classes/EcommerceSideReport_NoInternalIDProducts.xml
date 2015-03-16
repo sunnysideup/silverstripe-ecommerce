@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceSideReport_NoInternalIDProducts" namespace="" name="EcommerceSideReport_NoInternalIDProducts" abstract="false" final="false" start="314" end="377">
+  <file path="./../../../code/reports" file="EcommerceSideReport.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/reports/EcommerceSideReport.php" size="10929" time="2014-08-15T12:20:04+12:00" unixtime="1408062004" sha1="6c8a29a891d832cfc7e539c8b102765048e8ea2d"/>
+  <docblock>
+    <description compact="Selects all products without an InternalID"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: reports"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="SS_Report" namespace="" name="SS_Report"/>
+  <member name="dataClass" type="string" default="'Product'" visibility="protected" line="320">
+    <docblock>
+      <description compact="The class of object being managed by this report.">Set by overriding in your subclass.</description>
+    </docblock>
+  </member>
+  <method name="title" start="326" end="329" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="group" start="335" end="337" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="not sure if this is used in SS3"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="sort" start="343" end="345" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="- for sorting reports" type="object">
+        <type full="INT" namespace="" name="INT"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="sourceRecords" start="351" end="355" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="working out the items"/>
+      <return type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </return>
+    </docblock>
+    <parameter name="params" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="columns" start="360" end="367" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getParameterFields" start="373" end="375" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+  </method>
+</class>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceMigration" namespace="" name="EcommerceMigration" abstract="false" final="false" start="22" end="1551">
+  <file path="./../../../code/tasks" file="EcommerceMigration.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/tasks/EcommerceMigration.php" size="56023" time="2014-04-25T09:02:16+12:00" unixtime="1398373336" sha1="8170f360d7d9295d721d51dc3eed0de6d14ab91d"/>
+  <docblock>
+    <description/>
+    <description compact="This has been placed here rather than in the individual classes for the following reasons: - not to clog up individual classes - to get a complete overview in one class - to be able to run parts and older and newer version without having to go through several clases to retrieve them"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+    <todo value=": change methods to simple names f10, f20, etc... and then allow individual ones to be run."/>
+    <todo value=": 200 + 210 need attention."/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <member name="limit" type="integer" default="100" visibility="protected" line="24"/>
+  <member name="start" type="integer" default="0" visibility="protected" line="26"/>
+  <member name="retrieveInfoOnly" type="{unknown}" default="false" visibility="protected" line="28"/>
+  <member name="title" type="string" default="&quot;Ecommerce Migration&quot;" visibility="protected" line="30"/>
+  <member name="description" type="string" default="&quot;&#13;&#10;&#9;&#9;Migrates all the data from the oldest version of e-commerce to the current one.&#13;&#10;&#9;&#9;Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.&#13;&#10;&#9;&quot;" visibility="protected" line="32"/>
+  <member name="listOfMigrationTasks" type="array" visibility="protected" line="37"/>
+  <method name="run" start="68" end="142" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="hasTableAndField" start="152" end="161" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Returns true if the table and field (within this table) exist.">Otherwise it returns false.</description>
+      <param description="- $field - name of the field to be tested" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="- $table - name of the table to be tested" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="table" byreference="false" type="{unknown}"/>
+    <parameter name="field" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="makeFieldObsolete" start="170" end="182" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Returns true if the table and field (within this table) exist.">Otherwise it returns false.</description>
+      <param description="- $field - name of the field to be tested" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="- $table - name of the table to be tested" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="table" byreference="false" type="{unknown}"/>
+    <parameter name="field" byreference="false" type="{unknown}"/>
+    <parameter name="format" byreference="false" type="string" default="&quot;&quot;"/>
+  </method>
+  <method name="shopMemberToMemberTableMigration_10" start="185" end="221" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="moveItemToBuyable_20" start="223" end="246" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="productVersionToOrderItem_25" start="248" end="271" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="productIDToBuyableID_26" start="273" end="330" abstract="false" final="false" static="false" visibility="protected">
+    <inline>
+      <comment value="we must check for individual database types here because each deals with schema in a none standard way" line="298"/>
+      <comment value="can we use Table::has_field ???" line="299"/>
+    </inline>
+  </method>
+  <method name="amountToCalculatedTotal_27" start="332" end="357" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="currencyToMoneyFields_30" start="359" end="412" abstract="false" final="false" static="false" visibility="protected">
+    <inline>
+      <comment value="ECOMMERCE PAYMENT *************************" line="371"/>
+    </inline>
+  </method>
+  <method name="orderShippingCost_40" start="414" end="451" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="orderTax_45" start="453" end="498" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="orderShippingAddress_50" start="501" end="565" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="orderBillingAddress_51" start="568" end="637" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="memberBillingAddress_52" start="639" end="701" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="moveOrderStatus_60" start="703" end="890" abstract="false" final="false" static="false" visibility="protected">
+    <inline>
+      <comment value="2) Cancel status update" line="715"/>
+    </inline>
+  </method>
+  <method name="fixBadOrderStatus_68" start="892" end="927" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="updateProductGroups_110" start="930" end="985" abstract="false" final="false" static="false" visibility="protected">
+    <inline>
+      <comment value="level of products to show" line="944"/>
+      <comment value="default sort order" line="956"/>
+      <comment value="default filter" line="968"/>
+    </inline>
+  </method>
+  <method name="setFixedPriceForSubmittedOrderItems_120" start="987" end="1052" abstract="false" final="false" static="false" visibility="protected">
+    <inline>
+      <comment value="///////////////////////////////" line="1012"/>
+      <comment value="/////// We should not include the code below" line="1013"/>
+      <comment value="/////// Because it may affect past orders badly." line="1014"/>
+      <comment value="///////////////////////////////" line="1015"/>
+      <comment value="///////////////////////////////" line="1016"/>
+      <comment value="TO DO: WHAT THE HELL IS THAT (true)" line="1027"/>
+    </inline>
+  </method>
+  <method name="moveSiteConfigToEcommerceDBConfig_140" start="1054" end="1110" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="addClassNameToOrderItems_150" start="1112" end="1151" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="addTermsAndConditionsMessage_160" start="1153" end="1186" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="mergeUncompletedOrderForOneMember_170" start="1188" end="1282" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="crucial ONLY for non-submitted orders..." line="1211"/>
+      <comment value="do nothing!" line="1213"/>
+    </inline>
+  </method>
+  <method name="updateFullSiteTreeSortFieldForAllProducts_180" start="1284" end="1300" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="level 10" line="1295"/>
+    </inline>
+  </method>
+  <method name="updateOrderStatusLogSequentialOrderNumber_190" start="1302" end="1336" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="resaveAllPRoducts_200" start="1338" end="1369" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="resaveAllPRoductsVariations_210" start="1371" end="1406" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="addConfirmationPage_250" start="1408" end="1447" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="cleanupImages_260" start="1449" end="1463" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="addNewPopUpManager_280" start="1466" end="1521" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="addCurrencyCodeIDToOrders_290" start="1524" end="1536" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="theEnd_9999" start="1538" end="1549" abstract="false" final="false" static="false" visibility="public"/>
+</class>

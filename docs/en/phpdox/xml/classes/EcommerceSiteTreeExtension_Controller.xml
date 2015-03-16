@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceSiteTreeExtension_Controller" namespace="" name="EcommerceSiteTreeExtension_Controller" abstract="false" final="false" start="77" end="142">
+  <file path="./../../../code/model/extensions" file="EcommerceSiteTreeExtension.php" realpath="/var/www/3.1.photowarehouse.co.nz/ecommerce/code/model/extensions/EcommerceSiteTreeExtension.php" size="3693" time="2014-09-02T13:32:37+12:00" unixtime="1409621557" sha1="5559ad13119143360698153655fd1b0339230226"/>
+  <extends full="Extension" namespace="" name="Extension"/>
+  <method name="onBeforeInit" start="84" end="98" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method.">Runs before the Page::init method is called.</description>
+    </docblock>
+    <inline>
+      <comment value="make sure that with a simple flush=all, all the caches are flushed..." line="85"/>
+      <comment value="Requirements::block(THIRDPARTY_DIR.&quot;/jquery/jquery.js&quot;);" line="90"/>
+      <comment value="Requirements::javascript(Director::protocol().&quot;ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;);" line="91"/>
+      <todo value="check if we even need this (via ShoppingCartsRequirements.ss)" line="92"/>
+    </inline>
+  </method>
+  <method name="onAfterInit" start="104" end="109" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method.">Runs after the Page::init method is called.</description>
+    </docblock>
+  </method>
+  <method name="SimpleCartLinkAjax" start="117" end="119" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This returns a link that displays just the cart, for use in ajax calls."/>
+      <see value="ShoppingCart::showcart">It uses AjaxSimpleCart.ss to render the cart.</see>
+      <return type="string"/>
+    </docblock>
+  </method>
+  <method name="Cart" start="125" end="127" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the current order."/>
+      <return type="object">
+        <type full="Order" namespace="" name="Order"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ContinueShoppingLink" start="133" end="139" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(Link)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+</class>
