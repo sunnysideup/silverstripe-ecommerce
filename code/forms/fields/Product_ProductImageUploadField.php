@@ -154,13 +154,6 @@ class Product_ProductImageUploadField extends UploadField {
 		}
 	}
 
-	/**
-	 *
-	 * @return String
-	 */
-	function getRelationAutosetClass($default ='File'){
-		return "Image";
-	}
 
 
 }
