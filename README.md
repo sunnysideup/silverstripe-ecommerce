@@ -35,6 +35,10 @@ See http://www.silverstripe-ecommerce.com
 There are no special tricks to install this module. Install like any
 other Silverstripe Module module.
 
+To use SSL one some pages only, you can define:
+
+DEFINE('_SECURE_URL', "https://www.mysite.co.nz");
+DEFINE('_STANDARD_URL', "http://www.mysite.co.nz");
 
 ## Development Philosophy and Version Management ##
 

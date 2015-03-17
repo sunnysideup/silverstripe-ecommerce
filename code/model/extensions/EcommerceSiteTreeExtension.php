@@ -82,10 +82,13 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	 *
 	 */
 	function onBeforeInit(){
+		$this->secureHostSwitcher();
+		
 		//make sure that with a simple flush=all, all the caches are flushed...
 		if(isset($_GET["flush"]) && $_GET["flush"] == "all") {
 			$this->owner->ClearZendCaches();
 		}
+		
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
@@ -138,5 +141,54 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		return $link;
 	}
 
+
+
+
+	/**
+	 * Is the page a secure page?
+	 * @return true/false
+	 */
+	public function isSecurePage() {
+		return ($this->owner->dataRecord instanceof CartPage);
+	}
+
+	/**
+	 * Redirect users if found on incorrect domain
+	 * Detects if $_GET['session'] is present, sets session
+	 * and redirects back to "clean URL"
+	 * Both _SECURE_URL and _STANDARD_URL must be defined,
+	 * and include protocol (http(s)://mydomain.com) with no trailing slash
+	 * @return null
+	 */
+	protected function secureHostSwitcher() {
+		if (!DEFINED('_SECURE_URL') || !DEFINED('_STANDARD_URL')) {
+			return false;
+		}
+
+		$protocol = Director::is_https() ? 'https://' : 'http://';
+		$current_url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+		$redirect_session = session_id() ? '?session=' . session_id() : false;
+
+		$isSecure = $this->owner->isSecurePage();
+
+		if ($isSecure && !preg_match('/^' . preg_quote(_SECURE_URL, '/') . '/', $current_url)) {
+			return $this->owner->redirect(_SECURE_URL . $this->owner->Link() . $redirect_session);
+		}
+		else if (!$isSecure && !preg_match('/^' . preg_quote(_STANDARD_URL, '/') . '/', $current_url)) {
+			return $this->owner->redirect(_STANDARD_URL . $this->owner->Link() . $redirect_session);
+		}
+
+		/* if session is set, set session & hard-redirect to $Link preventing child classes from executing */
+		if ($this->owner->request->getVar('session')) {
+			/* force hard-coded session setting */
+			@session_write_close();
+			@session_id($this->owner->request->getVar('session'));
+			@session_start();
+			header("location: " . $this->owner->Link(), 302);
+			exit;
+		}
+
+	}
 
 }
