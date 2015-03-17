@@ -21,8 +21,10 @@ var EcomCheckoutPage = {
 	nextPreviousButtonsSelector: ".checkoutStepPrevNextHolder a",
 
 	outerHolderSelector: "#Checkout",
+	
+	formsSelectors: "#OrderFormAddress_OrderFormAddress",
 
-	loadingSelector: ".loading",
+	loadingClass: "loading",
 
 	init: function(){
 		EcomCheckoutPage.makeAllPreviousAndNextAjaxified();
@@ -38,7 +40,7 @@ var EcomCheckoutPage = {
 				var href = jQuery(this).attr("href");
 				jQuery(EcomCheckoutPage.outerHolderSelector).fadeOut(
 					function() {
-						jQuery(EcomCheckoutPage.outerHolderSelector).addClass(EcomCheckoutPage.loadingSelector);
+						jQuery(EcomCheckoutPage.outerHolderSelector).addClass(EcomCheckoutPage.loadingClass);
 						var jqxhr = jQuery.ajax(
 							{
 								url: href,
@@ -49,33 +51,8 @@ var EcomCheckoutPage = {
 						)
 						.done(
 							function( data, textStatus, jqXHR ) {
-								var headers = EcomCheckoutPage.parseResponseHeaders(jqXHR.getAllResponseHeaders());
-								console.debug(headers);
-								var CSSArray = headers["X-Include-CSS"].split(",");
-								console.debug(headers["X-Include-CSS"]);
-								console.debug(CSSArray);
-								if(CSSArray.length > 0) {
-									jQuery.each(
-										CSSArray,
-										function( index, value ) {
-											jQuery('<link>')
-												.appendTo('head')
-												.attr({type : 'text/css', rel : 'stylesheet'})
-												.attr('href', value);
-										}
-									);
-								}
-								var JSArray = headers["X-Include-JS"].split(",");
-								if(JSArray.length > 0) {
-									jQuery.each(
-										JSArray,
-										function( index, value ) {
-											jQuery.getScript( value);
-										}
-									);
-								}
+								EcomCheckoutPage.attachCSSAndJSHeader(jqXHR);
 								jQuery(EcomCheckoutPage.outerHolderSelector).html(data);
-								EcomQuantityField.reinit();
 							}
 						)
 						.fail(
@@ -87,7 +64,7 @@ var EcomCheckoutPage = {
 							function() {
 								jQuery(EcomCheckoutPage.outerHolderSelector).fadeIn(
 									function() {
-										jQuery(EcomCheckoutPage.outerHolderSelector).removeClass(EcomCheckoutPage.loadingSelector);
+										jQuery(EcomCheckoutPage.outerHolderSelector).removeClass(EcomCheckoutPage.loadingClass);
 									}
 								);
 							}
@@ -100,7 +77,93 @@ var EcomCheckoutPage = {
 	},
 
 	makeAllFormsAjaxified: function(){
+    var options = { 
+        target:        EcomCheckoutPage.outerHolderSelector,   // target element(s) to be updated with server response 
+        beforeSubmit:  EcomCheckoutPage.showRequestFromForm,  // pre-submit callback 
+        success:       EcomCheckoutPage.showResponseFromForm,  // post-submit callback 
+        error:         EcomCheckoutPage.handleFormError  // post-submit callback 
+ 
+        // other available options: 
+        //url:       url         // override for form's 'action' attribute 
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+        //clearForm: true        // clear all form fields after successful submit 
+        //resetForm: true        // reset the form after successful submit 
+ 
+        // $.ajax options can be used here too, for example: 
+        //timeout:   3000 
+    }; 
+     // bind form using 'ajaxForm' 
+    jQuery(EcomCheckoutPage.formsSelectors).ajaxForm(options); 
+ 	},
 
+
+	// pre-submit callback 
+	showRequestFromForm: function(formData, jqForm, options) { 
+		// formData is an array; here we use $.param to convert it to a string to display it 
+		// but the form plugin does this for you automatically when it submits the data 
+		var queryString = $.param(formData); 
+
+		// jqForm is a jQuery object encapsulating the form element.  To access the 
+		// DOM element for the form do this: 
+		// var formElement = jqForm[0]; 
+
+		alert('About to submit: \n\n' + queryString); 
+
+		// here we could return false to prevent the form from being submitted; 
+		// returning anything other than false will allow the form submit to continue 
+		return true; 
+	}, 
+ 
+	// post-submit callback 
+	showResponseFromForm: function(responseText, statusText, xhr, $form)  { 
+		// for normal html responses, the first argument to the success callback 
+		// is the XMLHttpRequest object's responseText property 
+
+		// if the ajaxForm method was passed an Options Object with the dataType 
+		// property set to 'xml' then the first argument to the success callback 
+		// is the XMLHttpRequest object's responseXML property 
+
+		// if the ajaxForm method was passed an Options Object with the dataType 
+		// property set to 'json' then the first argument to the success callback 
+		// is the json data object returned by the server 
+
+		alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
+				'\n\nThe output div should have already been updated with the responseText.'); 
+		EcomCheckoutPage.attachCSSAndJSHeader(xhr);
+	},
+
+	attachCSSAndJSHeader: function(jqXHRResponse) {
+		var headers = EcomCheckoutPage.parseResponseHeaders(jqXHRResponse.getAllResponseHeaders());
+		console.debug(headers);
+		var CSSArray = headers["X-Include-CSS"].split(",");
+		console.debug(headers["X-Include-CSS"]);
+		console.debug(CSSArray);
+		if(CSSArray.length > 0) {
+			jQuery.each(
+				CSSArray,
+				function( index, value ) {
+					jQuery('<link>')
+						.appendTo('head')
+						.attr({type : 'text/css', rel : 'stylesheet'})
+						.attr('href', value);
+				}
+			);
+		}
+		var JSArray = headers["X-Include-JS"].split(",");
+		if(JSArray.length > 0) {
+			jQuery.each(
+				JSArray,
+				function( index, value ) {
+					jQuery.getScript( value);
+				}
+			);
+		}
+		EcomQuantityField.reinit();
+	},
+	
+	handleFormError: function(){
+		alert("Error Occured, please try again");
 	},
 
 	/**
