@@ -1368,7 +1368,6 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 */
 	public function renderOrderInEmailFormat($message = "", $emailClassName) {
 		$arrayData = $this->createReplacementArrayForEmail($message);
-		$isThemeEnabled = Config::inst()->get('SSViewer', 'theme_enabled');
 		Config::nest();
 		Config::inst()->update('SSViewer', 'theme_enabled', true);
 		$html = $arrayData->renderWith($emailClassName);
@@ -1436,6 +1435,20 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 */
 	function OrderItems($filterOrClassName = "") {
 		return $this->Items($filterOrClassName);
+	}
+
+	/**
+	 * returns the buyables asscoiated with the order items
+	 * @param String filter - where statement to exclude certain items.
+	 * @return ArrayList (Buyables)
+	 */
+	function Buyables($filterOrClassName = "") {
+		$items = $this->Items($filterOrClassName);
+		$arrayList = new ArrayList();
+		foreach($items as $item) {
+			$arrayList->push($item->Buyable());
+		}
+		return $arrayList;
 	}
 
 	/**

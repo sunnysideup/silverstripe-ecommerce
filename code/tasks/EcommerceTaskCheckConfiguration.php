@@ -704,19 +704,19 @@ EcommerceConfig:
 				break;
 			case "Order.modifiers":
 				$classes = ClassInfo::subclassesFor("OrderModifier");
-				unset($classes[0]);
+				unset($classes["OrderModifier"]);
 				$classesAsString = implode(", <br />", $classes);
 				return "<br /><h4>Available Modifiers</h4>$classesAsString";
 				break;
 			case "OrderStatusLog.available_log_classes_array":
 				$classes = ClassInfo::subclassesFor("OrderStatusLog");
-				unset($classes[0]);
+				unset($classes["OrderStatusLog"]);
 				$classesAsString = implode(", <br />", $classes);
 				return "<br /><h4>Available Modifiers</h4>$classesAsString";
 				break;
 			case "OrderStep.order_steps_to_include":
 				$classes = ClassInfo::subclassesFor("OrderStep");
-				unset($classes[0]);
+				unset($classes["OrderStep"]);
 				$classesAsString = implode("<br /> - ", $classes);
 				return "<br /><h4>Available Order Steps</h4> - $classesAsString";
 				break;
