@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderForm_Validator" namespace="" name="OrderForm_Validator" abstract="false" final="false" start="253" end="297">
+  <file path="./../../../code/forms" file="OrderForm.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/OrderForm.php" size="9437" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="b7ecb14ba32a5473ccec730249b80822854d81ad"/>
+  <docblock>
+    <description/>
+    <description value=": checks the data for the OrderForm, before submission."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: forms"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="RequiredFields" namespace="" name="RequiredFields"/>
+  <method name="php" start="260" end="294" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Ensures member unique id stays unique and other basic stuff..."/>
+      <param description="= Form Data" type="array" variable="$data"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+  </method>
+</class>

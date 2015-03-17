@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - BillingAddress</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">BillingAddress</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>BillingAddress</h1>
+        <h4/>
+        <p/>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class BillingAddress
+                extends <a title="OrderAddress" href="../classes/OrderAddress.xhtml">OrderAddress</a>
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$api_access</a>;
+                    </li><li>private array <a href="#members">$db</a>;
+                    </li><li>private array <a href="#members">$has_one</a>;
+                    </li><li>private array <a href="#members">$belongs_to</a>;
+                    </li><li>private string <a href="#members">$default_sort</a>;
+                    </li><li>private array <a href="#members">$indexes</a>;
+                    </li><li>private array <a href="#members">$casting</a>;
+                    </li><li>private array <a href="#members">$searchable_fields</a>;
+                    </li><li>private array <a href="#members">$summary_fields</a>;
+                    </li><li>private array <a href="#members">$field_labels</a>;
+                    </li><li>private string <a href="#members">$singular_name</a>;
+                    </li><li>private string <a href="#members">$plural_name</a>;
+                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
+                    </li></ul><ul class="none"><li>// Inherited members from <span title="OrderAddress">OrderAddress</span></li><li>protected <span title="Array">Array</span> <a href="#members">$readOnlyFields</a>;
+                        </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canEdit</a>;
+                        </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canView</a>;
+                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                    </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                    </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/FullCountryName.xhtml">FullCountryName</a>()
+                    </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/getFullCountryName.xhtml">getFullCountryName</a>()
+                    </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/getCMSFields.xhtml">getCMSFields</a>()
+                    </li><li>public FieldList <a title="BillingAddress" href="../classes/BillingAddress/getFields.xhtml">getFields</a>()
+                    </li><li>public array <a title="BillingAddress" href="../classes/BillingAddress/getRequiredFields.xhtml">getRequiredFields</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="OrderAddress">OrderAddress</span></li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                        </li><li>public static String <a title="OrderAddress" href="../classes/OrderAddress/get_country_field_ID.xhtml">get_country_field_ID</a>()
+                        </li><li>public static String <a title="OrderAddress" href="../classes/OrderAddress/get_region_field_ID.xhtml">get_region_field_ID</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/addReadOnlyField.xhtml">addReadOnlyField</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/removeReadOnlyField.xhtml">removeReadOnlyField</a>()
+                        </li><li>public String <a title="OrderAddress" href="../classes/OrderAddress/CMSEditLink.xhtml">CMSEditLink</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/canCreate.xhtml">canCreate</a>()
+                        </li><li>public Boolean <a title="OrderAddress" href="../classes/OrderAddress/canView.xhtml">canView</a>()
+                        </li><li>public Boolean <a title="OrderAddress" href="../classes/OrderAddress/canEdit.xhtml">canEdit</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/canDelete.xhtml">canDelete</a>()
+                        </li><li>public FieldList <a title="OrderAddress" href="../classes/OrderAddress/scaffoldSearchFields.xhtml">scaffoldSearchFields</a>()
+                        </li><li>protected FieldList <a title="OrderAddress" href="../classes/OrderAddress/getEcommerceFields.xhtml">getEcommerceFields</a>()
+                        </li><li>protected TextField <a title="OrderAddress" href="../classes/OrderAddress/getPostalCodeField.xhtml">getPostalCodeField</a>()
+                        </li><li>protected DropdownField <a title="OrderAddress" href="../classes/OrderAddress/getRegionField.xhtml">getRegionField</a>()
+                        </li><li>protected DropdownField <a title="OrderAddress" href="../classes/OrderAddress/getCountryField.xhtml">getCountryField</a>()
+                        </li><li>protected FieldList <a title="OrderAddress" href="../classes/OrderAddress/makeSelectedFieldsReadOnly.xhtml">makeSelectedFieldsReadOnly</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/SetRegionFields.xhtml">SetRegionFields</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/SetCountryFields.xhtml">SetCountryFields</a>()
+                        </li><li>public String <a title="OrderAddress" href="../classes/OrderAddress/getFullName.xhtml">getFullName</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/FullName.xhtml">FullName</a>()
+                        </li><li>public String <a title="OrderAddress" href="../classes/OrderAddress/FullString.xhtml">FullString</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/getFullString.xhtml">getFullString</a>()
+                        </li><li>public String <a title="OrderAddress" href="../classes/OrderAddress/comparisonString.xhtml">comparisonString</a>()
+                        </li><li>protected Array <a title="OrderAddress" href="../classes/OrderAddress/getFieldNameArray.xhtml">getFieldNameArray</a>()
+                        </li><li>protected String <a title="OrderAddress" href="../classes/OrderAddress/baseClassLinkingToOrder.xhtml">baseClassLinkingToOrder</a>()
+                        </li><li>protected String <a title="OrderAddress" href="../classes/OrderAddress/fieldPrefix.xhtml">fieldPrefix</a>()
+                        </li><li>public DataObject <a title="OrderAddress" href="../classes/OrderAddress/FillWithLastAddressFromMember.xhtml">FillWithLastAddressFromMember</a>()
+                        </li><li>public DataObject <a title="OrderAddress" href="../classes/OrderAddress/getMemberFromOrder.xhtml">getMemberFromOrder</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/MakeObsolete.xhtml">MakeObsolete</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/onAfterWrite.xhtml">onAfterWrite</a>()
+                        </li><li>public String <a title="OrderAddress" href="../classes/OrderAddress/RemoveLink.xhtml">RemoveLink</a>()
+                        </li><li>public String <a title="OrderAddress" href="../classes/OrderAddress/getJSONData.xhtml">getJSONData</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/JSONData.xhtml">JSONData</a>()
+                        </li><li>public EcommerceDBConfig <a title="OrderAddress" href="../classes/OrderAddress/EcomConfig.xhtml">EcomConfig</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/onBeforeWrite.xhtml">onBeforeWrite</a>()
+                        </li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/debug.xhtml">debug</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/OrderAddress.xhtml">OrderAddress</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="tasks">Tasks</h2>
+        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <thead>
+            <tr>
+              <th style="width:3em;">Line</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tr>
+            <td class="nummeric">481+</td>
+            <td>: can wre write $this-&gt;Order() instead????</td>
+          </tr>
+        </table>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="api_access"><strong>$api_access</strong>
+                —
+                array<br/><span class="indent">what variables are accessible through  http://mysite.com/api/ecommerce/v1/BillingAddress/</span></li>
+            <li id="belongs_to">
+              <strong>$belongs_to</strong>
+              <br/>
+              <span class="indent">standard SS static definition</span>
+            </li>
+            <li id="casting">
+              <strong>$casting</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+            <li id="db">
+              <strong>$db</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+            <li id="default_sort">
+              <strong>$default_sort</strong>
+              <br/>
+              <span class="indent">standard SS static definition</span>
+            </li>
+            <li id="description"><strong>$description</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+            <li id="field_labels">
+              <strong>$field_labels</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+            <li id="has_one">
+              <strong>$has_one</strong>
+              <br/>
+              <span class="indent">HAS_ONE =array(ORDER =&gt; ORDER); we place this relationship here (rather than in the parent class: OrderAddress) because that makes for a cleaner relationship (otherwise we ended up with a "has two" relationship in Order)</span>
+            </li>
+            <li id="indexes">
+              <strong>$indexes</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+            <li id="plural_name">
+              <strong>$plural_name</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+            <li id="searchable_fields">
+              <strong>$searchable_fields</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+            <li id="singular_name">
+              <strong>$singular_name</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+            <li id="summary_fields">
+              <strong>$summary_fields</strong>
+              <br/>
+              <span class="indent">standard SS variable</span>
+            </li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="_canEdit"><strong>$_canEdit</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">save edit status for speed's sake</span></li>
+            <li id="_canView"><strong>$_canView</strong>
+                —
+                <a href="#">Boolean</a><br/><span class="indent">save view status for speed's sake</span></li>
+            <li id="readOnlyFields"><strong>$readOnlyFields</strong>
+                —
+                <a href="#">Array</a><br/><span class="indent">There might be times when a modifier needs to make an address field read-only.</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="FullCountryName"><a title="BillingAddress" href="../classes/BillingAddress/FullCountryName.xhtml">FullCountryName()</a>
+                — method for casted variable return String</li>
+            <li id="getCMSFields"><a title="BillingAddress" href="../classes/BillingAddress/getCMSFields.xhtml">getCMSFields()</a>
+                — return FieldList</li>
+            <li id="getFields">
+              <a title="BillingAddress" href="../classes/BillingAddress/getFields.xhtml">getFields()</a>
+            </li>
+            <li id="getFullCountryName">
+              <a title="BillingAddress" href="../classes/BillingAddress/getFullCountryName.xhtml">getFullCountryName()</a>
+            </li>
+            <li id="getRequiredFields"><a title="BillingAddress" href="../classes/BillingAddress/getRequiredFields.xhtml">getRequiredFields()</a>
+                — Return which billing address fields should be required on {@link OrderFormAddress}</li>
+            <li id="i18n_plural_name">
+              <a title="BillingAddress" href="../classes/BillingAddress/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="BillingAddress" href="../classes/BillingAddress/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="OrderAddress" href="../classes/OrderAddress.xhtml">OrderAddress</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="baseClassLinkingToOrder"><a title="OrderAddress" href="../classes/OrderAddress/baseClassLinkingToOrder.xhtml">baseClassLinkingToOrder()</a>
+                — returns the field prefix string for shipping addresses</li>
+            <li id="fieldPrefix"><a title="OrderAddress" href="../classes/OrderAddress/fieldPrefix.xhtml">fieldPrefix()</a>
+                — returns the field prefix string for shipping addresses</li>
+            <li id="getCountryField"><a title="OrderAddress" href="../classes/OrderAddress/getCountryField.xhtml">getCountryField()</a>
+                — put together a dropdown for the country field</li>
+            <li id="getEcommerceFields">
+              <a title="OrderAddress" href="../classes/OrderAddress/getEcommerceFields.xhtml">getEcommerceFields()</a>
+            </li>
+            <li id="getFieldNameArray">
+              <a title="OrderAddress" href="../classes/OrderAddress/getFieldNameArray.xhtml">getFieldNameArray()</a>
+            </li>
+            <li id="getPostalCodeField"><a title="OrderAddress" href="../classes/OrderAddress/getPostalCodeField.xhtml">getPostalCodeField()</a>
+                — put together a textfield for a postal code field</li>
+            <li id="getRegionField"><a title="OrderAddress" href="../classes/OrderAddress/getRegionField.xhtml">getRegionField()</a>
+                — put together a dropdown for the region field</li>
+            <li id="makeSelectedFieldsReadOnly"><a title="OrderAddress" href="../classes/OrderAddress/makeSelectedFieldsReadOnly.xhtml">makeSelectedFieldsReadOnly()</a>
+                — makes selected fields into read only using the $this-&gt;readOnlyFields array</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="CMSEditLink"><a title="OrderAddress" href="../classes/OrderAddress/CMSEditLink.xhtml">CMSEditLink()</a>
+                — link to edit the record</li>
+            <li id="EcomConfig"><a title="OrderAddress" href="../classes/OrderAddress/EcomConfig.xhtml">EcomConfig()</a>
+                — returns the instance of EcommerceDBConfig</li>
+            <li id="FillWithLastAddressFromMember"><a title="OrderAddress" href="../classes/OrderAddress/FillWithLastAddressFromMember.xhtml">FillWithLastAddressFromMember()</a>
+                — todo: are there times when the Shipping rather than the Billing address should be linked? Copies the last address used by the member.</li>
+            <li id="FullName">
+              <a title="OrderAddress" href="../classes/OrderAddress/FullName.xhtml">FullName()</a>
+            </li>
+            <li id="FullString"><a title="OrderAddress" href="../classes/OrderAddress/FullString.xhtml">FullString()</a>
+                — Casted variable returns the full strng of the record</li>
+            <li id="JSONData">
+              <a title="OrderAddress" href="../classes/OrderAddress/JSONData.xhtml">JSONData()</a>
+            </li>
+            <li id="MakeObsolete"><a title="OrderAddress" href="../classes/OrderAddress/MakeObsolete.xhtml">MakeObsolete()</a>
+                — make an address obsolete and include all the addresses that are identical.</li>
+            <li id="RemoveLink"><a title="OrderAddress" href="../classes/OrderAddress/RemoveLink.xhtml">RemoveLink()</a>
+                — returns the link that can be used to remove (make Obsolete) an address.</li>
+            <li id="SetCountryFields"><a title="OrderAddress" href="../classes/OrderAddress/SetCountryFields.xhtml">SetCountryFields()</a>
+                — Saves country - both shipping and billing fields are saved here for convenience sake (only one actually gets saved) NOTE: do not call this method SetCountry as this has a special meaning!</li>
+            <li id="SetRegionFields"><a title="OrderAddress" href="../classes/OrderAddress/SetRegionFields.xhtml">SetRegionFields()</a>
+                — Saves region - both shipping and billing fields are saved here for convenience sake (only one actually gets saved) NOTE: do not call this method SetCountry as this has a special meaning!</li>
+            <li id="addReadOnlyField"><a title="OrderAddress" href="../classes/OrderAddress/addReadOnlyField.xhtml">addReadOnlyField()</a>
+                — sets a field to readonly state we use this when modifiers have been set that require a field to be a certain value for example - a PostalCode field maybe set in the modifier.</li>
+            <li id="canCreate">
+              <a title="OrderAddress" href="../classes/OrderAddress/canCreate.xhtml">canCreate()</a>
+            </li>
+            <li id="canDelete">
+              <a title="OrderAddress" href="../classes/OrderAddress/canDelete.xhtml">canDelete()</a>
+            </li>
+            <li id="canEdit"><a title="OrderAddress" href="../classes/OrderAddress/canEdit.xhtml">canEdit()</a>
+                — Standard SS method This is an important method.</li>
+            <li id="canView"><a title="OrderAddress" href="../classes/OrderAddress/canView.xhtml">canView()</a>
+                — Standard SS method This is an important method.</li>
+            <li id="comparisonString"><a title="OrderAddress" href="../classes/OrderAddress/comparisonString.xhtml">comparisonString()</a>
+                — returns a string that can be used to find out if two addresses are the same.</li>
+            <li id="debug">
+              <a title="OrderAddress" href="../classes/OrderAddress/debug.xhtml">debug()</a>
+            </li>
+            <li id="getFullName"><a title="OrderAddress" href="../classes/OrderAddress/getFullName.xhtml">getFullName()</a>
+                — Casted variable returns the full name of the person, e.g. "John Smith"</li>
+            <li id="getFullString">
+              <a title="OrderAddress" href="../classes/OrderAddress/getFullString.xhtml">getFullString()</a>
+            </li>
+            <li id="getJSONData"><a title="OrderAddress" href="../classes/OrderAddress/getJSONData.xhtml">getJSONData()</a>
+                — converts an address into JSON</li>
+            <li id="getMemberFromOrder"><a title="OrderAddress" href="../classes/OrderAddress/getMemberFromOrder.xhtml">getMemberFromOrder()</a>
+                — find the member associated with the current Order and address.</li>
+            <li id="get_country_field_ID"><a title="OrderAddress" href="../classes/OrderAddress/get_country_field_ID.xhtml">get_country_field_ID()</a>
+                — returns the id of the MAIN country field for template manipulation.</li>
+            <li id="get_region_field_ID"><a title="OrderAddress" href="../classes/OrderAddress/get_region_field_ID.xhtml">get_region_field_ID()</a>
+                — returns the id of the MAIN region field for template manipulation.</li>
+            <li id="i18n_plural_name">
+              <a title="OrderAddress" href="../classes/OrderAddress/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="OrderAddress" href="../classes/OrderAddress/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+            <li id="onAfterWrite"><a title="OrderAddress" href="../classes/OrderAddress/onAfterWrite.xhtml">onAfterWrite()</a>
+                — standard SS method We "hackishly" ensure that the OrderID is set to the right value.</li>
+            <li id="onBeforeWrite"><a title="OrderAddress" href="../classes/OrderAddress/onBeforeWrite.xhtml">onBeforeWrite()</a>
+                — standard SS Method saves the region code</li>
+            <li id="removeReadOnlyField"><a title="OrderAddress" href="../classes/OrderAddress/removeReadOnlyField.xhtml">removeReadOnlyField()</a>
+                — removes a field from the readonly state</li>
+            <li id="scaffoldSearchFields"><a title="OrderAddress" href="../classes/OrderAddress/scaffoldSearchFields.xhtml">scaffoldSearchFields()</a>
+                — Determine which properties on the DataObject are searchable, and map them to their default {@link FormField} representations. Used for scaffolding a searchform for {@link ModelAdmin}.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

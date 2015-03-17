@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceRegion_VisitorRegionProvider" namespace="" name="EcommerceRegion_VisitorRegionProvider" abstract="false" final="false" start="329" end="342">
+  <file path="./../../../code/model/address" file="EcommerceRegion.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/address/EcommerceRegion.php" size="9300" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="61e710c2a0084d5f7809fb998a9dfbf2f1b71bd2"/>
+  <extends full="Object" namespace="" name="Object"/>
+  <method name="getRegion" start="335" end="340" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="- region ID" type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+</class>

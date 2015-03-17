@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceMoney" namespace="" name="EcommerceMoney" abstract="false" final="false" start="3" end="128">
+  <file path="./../../../code/money" file="EcommerceMoney.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/money/EcommerceMoney.php" size="3668" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="2fd3c26a846aaa94fed0ddce3bbf53c425ac0045"/>
+  <extends full="Extension" namespace="" name="Extension"/>
+  <method name="get_default_symbol" start="11" end="14" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the symbol for a currency, e.g. $"/>
+      <param type="object" variable="$currency">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="currency" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="get_short_symbol" start="23" end="32" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the short symbol for a currency This is shorter than the default one."/>
+      <param type="object" variable="$currency">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="currency" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="get_long_symbol" start="40" end="46" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the long symbol for a currency"/>
+      <param type="object" variable="$currency">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="currency" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="NiceDefaultSymbol" start="55" end="57" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the default symbol for a site.">with or without html</description>
+      <param type="object" variable="$html">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="html" byreference="false" type="{unknown}" default="true"/>
+  </method>
+  <method name="NiceShortSymbol" start="66" end="73" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the short symbol for a site.">with or without html</description>
+      <param type="object" variable="$html">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="html" byreference="false" type="{unknown}" default="true"/>
+  </method>
+  <method name="NiceLongSymbol" start="82" end="94" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the long symbol for a site.">with or without html</description>
+      <param type="object" variable="$html">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="html" byreference="false" type="{unknown}" default="true"/>
+  </method>
+  <method name="SymbolNumberAndCode" start="103" end="114" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns a currency like this: 8,001 usd / 12.12 nzd"/>
+      <param type="object" variable="$html">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="html" byreference="false" type="{unknown}" default="true"/>
+  </method>
+  <method name="NiceDefaultFormat" start="123" end="126" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the default format for a site for currency"/>
+      <param type="object" variable="$html">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="html" byreference="false" type="{unknown}" default="true"/>
+  </method>
+</class>

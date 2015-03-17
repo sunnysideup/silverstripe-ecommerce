@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderFilters_MustHaveAtLeastOnePayment" namespace="" name="OrderFilters_MustHaveAtLeastOnePayment" abstract="false" final="false" start="219" end="246">
+  <file path="./../../../code/search/filters" file="OrderFilters.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/search/filters/OrderFilters.php" size="6824" time="2014-10-09T15:51:30+13:00" unixtime="1412823090" sha1="42e340bc3af67f01121993ceec4e95c7d467453d"/>
+  <docblock>
+    <description compact="Allows you to filter for orders that have at leat one payment"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: search"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="ExactMatchFilter" namespace="" name="ExactMatchFilter"/>
+  <method name="apply" start="225" end="236" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return SQLQuery"/>
+    </docblock>
+    <parameter name="query" byreference="false" type="object">
+      <type full="\\DataQuery" namespace="\" name="DataQuery"/>
+    </parameter>
+  </method>
+  <method name="isEmpty" start="242" end="245" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return Boolean"/>
+    </docblock>
+  </method>
+</class>

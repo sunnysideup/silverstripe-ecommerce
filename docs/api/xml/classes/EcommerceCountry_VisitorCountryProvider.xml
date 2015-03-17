@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceCountry_VisitorCountryProvider" namespace="" name="EcommerceCountry_VisitorCountryProvider" abstract="false" final="false" start="540" end="555">
+  <file path="./../../../code/model/address" file="EcommerceCountry.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/address/EcommerceCountry.php" size="15525" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="6ae885004b6aba34684d4927b24ccb9ab90dabeb"/>
+  <docblock>
+    <description compact="this is a very basic class with as its sole purpose providing the country of the customer.">By default we are using the GEOIP class
+but you can switch it to your own system by changing
+the classname in the ecommerce.yml config file.</description>
+  </docblock>
+  <extends full="Object" namespace="" name="Object"/>
+  <implements full="EcommerceGEOipProvider" namespace="" name="EcommerceGEOipProvider"/>
+  <method name="getCountry" start="546" end="553" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="(Country Code - e.g. NZ, AU, or AF)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <interface full="EcommerceGEOipProvider" namespace="" name="EcommerceGEOipProvider">
+    <method name="getCountry" start="10" end="10" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns a country code of the current user..."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+  </interface>
+</class>

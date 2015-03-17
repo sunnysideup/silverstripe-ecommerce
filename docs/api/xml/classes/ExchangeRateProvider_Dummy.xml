@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="ExchangeRateProvider_Dummy" namespace="" name="ExchangeRateProvider_Dummy" abstract="false" final="false" start="102" end="111">
+  <file path="./../../../code/money" file="ExchangeRateProvider.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/money/ExchangeRateProvider.php" size="2643" time="2013-08-21T13:50:48+12:00" unixtime="1377049848" sha1="a3ed3b88befa1ab810d89759e72c1d2e714d8bab"/>
+  <extends full="ExchangeRateProvider" namespace="" name="ExchangeRateProvider"/>
+  <method name="ExchangeRate" start="108" end="110" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$fromCode">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$toCode">
+        <type full="String" namespace="" name="String"/>
+      </param>
+    </docblock>
+    <parameter name="fromCode" byreference="false" type="{unknown}"/>
+    <parameter name="toCode" byreference="false" type="{unknown}"/>
+  </method>
+  <parent full="ExchangeRateProvider" namespace="" name="ExchangeRateProvider">
+    <extends full="Object" namespace="" name="Object"/>
+    <member name="exchangeCostMultiplier" type="float" default="1.05" visibility="protected" line="34">
+      <docblock>
+        <description compact="adds a bit of additional cost to account for the exchange cost."/>
+        <var type="object">
+          <type full="floatval" namespace="" name="floatval"/>
+        </var>
+      </docblock>
+    </member>
+    <method name="ExchangeRate" start="43" end="61" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Get the exchange rate"/>
+        <param description="e.g. NZD" type="object" variable="$fromCode">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="e.g. USD" type="object" variable="$toCode">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="Double" namespace="" name="Double"/>
+        </return>
+        <return type="object">
+          <type full="Float" namespace="" name="Float"/>
+        </return>
+      </docblock>
+      <parameter name="fromCode" byreference="false" type="{unknown}"/>
+      <parameter name="toCode" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="getRate" start="70" end="96" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="gets a rate from a FROM and a TO currency"/>
+        <param description="- UPPERCASE Code, e.g. NZD" type="object" variable="$fromCode">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="- UPPERCASE Code, e.g. EUR" type="object" variable="$toCode">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return description="- returns exchange rate" type="object">
+          <type full="Double" namespace="" name="Double"/>
+        </return>
+      </docblock>
+      <parameter name="fromCode" byreference="false" type="{unknown}"/>
+      <parameter name="toCode" byreference="false" type="{unknown}"/>
+      <inline>
+        <comment value="$url = http://finance.yahoo.com/currency/convert?amt=1&amp;from=NZD&amp;to=USD&amp;submit=Convert" line="72"/>
+        <comment value="set to zero for no timeout" line="75"/>
+      </inline>
+    </method>
+  </parent>
+</class>

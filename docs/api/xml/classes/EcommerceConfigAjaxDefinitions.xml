@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceConfigAjaxDefinitions" namespace="" name="EcommerceConfigAjaxDefinitions" abstract="false" final="false" start="13" end="249">
+  <file path="./../../../code/config" file="EcommerceConfigAjaxDefinitions.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/config/EcommerceConfigAjaxDefinitions.php" size="6040" time="2014-11-19T15:20:16+13:00" unixtime="1416363616" sha1="3c7f43d75f7a2d76d6b25f4885e2b8da1030d196"/>
+  <docblock>
+    <description compact="This class defines all the names for IDs and Classes that are used within the e-commerce ajax framework."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: configuration"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="ViewableData" namespace="" name="ViewableData"/>
+  <member name="prefix" type="{unknown}" default="null" visibility="private" line="21">
+    <docblock>
+      <description compact="prefix used for all classes and IDs"/>
+      <var description="| String $prefix" type="object">
+        <type full="Null" namespace="" name="Null"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="requestor" type="{unknown}" default="null" visibility="protected" line="37">
+    <docblock>
+      <description compact="the class that is requesting the ajax definitions we provide the requestor so that we can dynamically change the ids and classes, using the requestor.">e.g.
+&lt;code&gt;
+	MyTableRowID(){
+		return $this-&gt;requestor-&gt;ClassName."_bla".$this-&gt;requestor-&gt;ID;
+	}
+&lt;/code&gt;</description>
+      <var description="$requestor" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="setRequestor" start="44" end="49" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="set the requestor"/>
+      <param description="- the object that requested the data." type="object" variable="$do">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+    </docblock>
+    <parameter name="do" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="SideBarCartID" start="63" end="63" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="id that is used in templates and in the JSON return @see CartResponse The Side bar cart ID is used for populating a small cart on the side bar."/>
+      <see value="Sidebar_Cart.ss"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="SmallCartID" start="70" end="70" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Small representation of cart"/>
+      <see value="CartShort.ss"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="TinyCartClassName" start="79" end="79" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="class that is used in templates and in the JSON return @see CartResponse The Menu Cart class is used for populating a tiny cart on your site (e.g. you have 3 items in your cart ($1343))"/>
+      <see value="CartTiny.ss"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="HiddenPageTitleID" start="84" end="84" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ProductListHolderID" start="89" end="89" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ProductListAjaxifiedLinkClassName" start="94" end="94" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ProductListItemClassName" start="101" end="101" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="List of products in the ProductGroup page..."/>
+      <see value="ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ProductListItemInCartClassName" start="108" end="108" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Class used to identify that a product is in cart."/>
+      <see value="ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ProductListItemNotInCartClassName" start="115" end="115" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Class used to identify that a product is not in cart."/>
+      <see value="ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="TableID" start="128" end="128" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return String for use in the Templates"/>
+    </docblock>
+  </method>
+  <method name="TableTotalID" start="134" end="134" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return String for use in the Templates"/>
+    </docblock>
+  </method>
+  <method name="TableMessageID" start="147" end="147" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="id that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="TableSubTotalID" start="153" end="153" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="id that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="TotalItemsTimesQuantityClassName" start="159" end="159" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="class that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="TotalItemsClassName" start="165" end="165" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="class that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ExpectedCountryClassName" start="170" end="170" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="class that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="CountryFieldID" start="176" end="176" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="class that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="RegionFieldID" start="182" end="182" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="class that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="TableTitleID" start="195" end="195" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return String for use in the Templates"/>
+    </docblock>
+  </method>
+  <method name="CartTitleID" start="200" end="200" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return String for use in the Templates"/>
+    </docblock>
+  </method>
+  <method name="TableSubTitleID" start="205" end="205" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return String for use in the Templates"/>
+    </docblock>
+  </method>
+  <method name="CartSubTitleID" start="210" end="210" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return String for use in the Templates"/>
+    </docblock>
+  </method>
+  <method name="QuantityFieldName" start="222" end="222" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="id that is used in templates and in the JSON return @see CartResponse"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="UniqueIdentifier" start="241" end="241" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns a string that can be used as a unique Identifier for use in templates, etc..."/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="Define" start="243" end="246" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="name" byreference="false" type="{unknown}"/>
+  </method>
+</class>

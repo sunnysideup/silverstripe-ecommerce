@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="ShoppingCart" namespace="" name="ShoppingCart" abstract="false" final="false" start="37" end="982">
+  <file path="./../../../code/api" file="ShoppingCart.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/api/ShoppingCart.php" size="31386" time="2015-01-19T20:17:08+13:00" unixtime="1421651828" sha1="96faf8e8fa8a740d7bd6d1700a0a1d4fc11f1f81"/>
+  <docblock>
+    <description compact="ShoppingCart - provides a global way to interface with the cart (current order).">This can be used in other code by calling $cart = ShoppingCart::singleton();
+
+The shopping cart can be accessed as an order handler from the back-end
+(e.g. when creating an order programmatically), while the accompagnying controller
+is used by web-users to manipulate their order.
+
+A bunch of core functions are also stored in the order itself.
+Methods and variables are in the shopping cart if they are relevant
+only before (and while) the order is placed (e.g. latest update message),
+and others are in the order because they are relevant even after the
+order has been submitted (e.g. Total Cost).
+
+Key methods:
+
+//get Cart
+$myCart = ShoppingCart::singleton();
+
+//get order
+$myOrder = ShoppingCart::current_order();
+
+//view order (from another controller)
+$this-&gt;redirect(ShoppingCart::current_order()-&gt;Link());
+
+//add item to cart
+ShoppingCart::singleton()-&gt;addBuyable($myProduct);</description>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: control"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Object" namespace="" name="Object"/>
+  <member name="session_variable_names" type="array" visibility="private" line="45">
+    <docblock>
+      <description compact="List of names that can be used as session variables.">Also @see ShoppingCart::sessionVariableName</description>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="singletoncart" type="{unknown}" default="null" visibility="private" line="52">
+    <docblock>
+      <description compact="This is where we hold the (singleton) Shoppingcart"/>
+      <var description="(ShoppingCart)" type="object">
+        <type full="Object" namespace="" name="Object"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="messages" type="array" visibility="protected" line="58">
+    <docblock>
+      <description compact="Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).">var Array</description>
+    </docblock>
+  </member>
+  <member name="order" type="{unknown}" default="null" visibility="protected" line="64">
+    <docblock>
+      <description compact="stores a reference to the current order object"/>
+      <var type="object">
+        <type full="Object" namespace="" name="Object"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="requireSavedOrder" type="{unknown}" default="false" visibility="protected" line="70">
+    <docblock>
+      <description compact="This variable is set to YES when we actually need an order (i.e. write it)"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="singleton" start="76" end="81" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Allows access to the cart from anywhere in code."/>
+      <return description="Object" type="object">
+        <type full="ShoppingCart" namespace="" name="ShoppingCart"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="current_order" start="87" end="89" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Allows access to the current order from anywhere in the code.."/>
+      <return description="Object" type="object">
+        <type full="ShoppingCart" namespace="" name="ShoppingCart"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="currentOrder" start="99" end="222" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Gets or creates the current order.">Based on the session ONLY!
+IMPORTANT FUNCTION!</description>
+      <todo value="- does this need to be public????"/>
+      <return type="object">
+        <type full="void" namespace="" name="void"/>
+      </return>
+    </docblock>
+    <inline>
+      <comment value="first reason to set to null: it is already submitted" line="108"/>
+      <comment value="here we cleanup old orders, because they should be" line="191"/>
+      <comment value="cleaned at the same rate that they are created..." line="192"/>
+      <comment value="create new order" line="197"/>
+    </inline>
+  </method>
+  <method name="Link" start="228" end="233" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Allows access to the current order from anywhere in the code.."/>
+      <return description="Object" type="object">
+        <type full="ShoppingCart" namespace="" name="ShoppingCart"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="addBuyable" start="244" end="276" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Adds any number of items to the cart.">Returns the order item on succes OR false on failure.</description>
+      <param description="- the buyable (generally a product) being added to the cart" type="object" variable="$buyable">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param description="- number of items add." type="object" variable="$quantity">
+        <type full="Float" namespace="" name="Float"/>
+      </param>
+      <param description="- array of parameters to target a specific order item. eg: group=1, length=5" type="object" variable="$parameters">if you make it a form, it will save the form into the orderitem<type full="Mixed" namespace="" name="Mixed"/></param>
+      <return description="| DataObject (OrderItem)" type="object">
+        <type full="false" namespace="" name="false"/>
+      </return>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="quantity" byreference="false" type="integer" default="1"/>
+    <parameter name="parameters" byreference="false" type="array"/>
+    <inline>
+      <comment value="find existing order item or make one" line="255"/>
+      <comment value="save to current order" line="258"/>
+      <todo value="distinquish between incremented and set" line="259"/>
+      <todo value="use sprintf to allow product name etc to be included in message" line="260"/>
+    </inline>
+  </method>
+  <method name="setQuantity" start="285" end="298" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Sets quantity for an item in the cart."/>
+      <param description="- the buyable (generally a product) being added to the cart" type="object" variable="$buyable">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param description="- number of items add." type="object" variable="$quantity">
+        <type full="Float" namespace="" name="Float"/>
+      </param>
+      <param description="- array of parameters to target a specific order item. eg: group=1, length=5" type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="| DataObject (OrderItem)" type="object">
+        <type full="false" namespace="" name="false"/>
+      </return>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="quantity" byreference="false" type="{unknown}"/>
+    <parameter name="parameters" byreference="false" type="array"/>
+    <inline>
+      <comment value="remove quantity" line="289"/>
+    </inline>
+  </method>
+  <method name="decrementBuyable" start="307" end="329" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Removes any number of items from the cart."/>
+      <param description="- the buyable (generally a product) being added to the cart" type="object" variable="$buyable">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param description="- number of items add." type="object" variable="$quantity">
+        <type full="Float" namespace="" name="Float"/>
+      </param>
+      <param description="- array of parameters to target a specific order item. eg: group=1, length=5" type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="| DataObject (OrderItem)" type="object">
+        <type full="false" namespace="" name="false"/>
+      </return>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="quantity" byreference="false" type="integer" default="1"/>
+    <parameter name="parameters" byreference="false" type="array"/>
+    <inline>
+      <comment value="remove quantity" line="311"/>
+    </inline>
+  </method>
+  <method name="deleteBuyable" start="337" end="350" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Delete item from the cart."/>
+      <param description="- the buyable (generally a product) being added to the cart" type="object" variable="$buyable">
+        <type full="OrderItem" namespace="" name="OrderItem"/>
+      </param>
+      <param description="- array of parameters to target a specific order item. eg: group=1, length=5" type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="| item - successfully removed" type="boolean"/>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="parameters" byreference="false" type="array"/>
+  </method>
+  <method name="prepareOrderItem" start="360" end="383" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item."/>
+      <param description="- the buyable (generally a product) being added to the cart" type="object" variable="$buyable">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param description="- number of items add." type="object" variable="$quantity">
+        <type full="Float" namespace="" name="Float"/>
+      </param>
+      <param description="- if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item." type="object" variable="$mustBeExistingItems">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <param description="- array of parameters to target a specific order item. eg: group=1, length=5*" type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="| DataObject ($orderItem)" type="boolean"/>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="parameters" byreference="false" type="array"/>
+    <parameter name="mustBeExistingItem" byreference="false" type="{unknown}" default="true"/>
+    <inline>
+      <comment value="check for existence of item" line="379"/>
+    </inline>
+  </method>
+  <method name="prepareQuantity" start="391" end="398" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <todo value=": what does this method do???"/>
+      <return type="object">
+        <type full="Integer" namespace="" name="Integer"/>
+      </return>
+      <param type="object" variable="($buyable)">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param type="object" variable="$quantity">
+        <type full="Float" namespace="" name="Float"/>
+      </param>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="quantity" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="findOrMakeItem" start="408" end="433" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Helper function for making / retrieving order items.">we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
+NOTE: does not write!</description>
+      <param type="object" variable="$buyable">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="OrderItem" namespace="" name="OrderItem"/>
+      </return>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="parameters" byreference="false" type="array"/>
+  </method>
+  <method name="submit" start="441" end="448" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="submit the order so that it is no longer available in the cart but will continue its journey through the order steps."/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <inline>
+      <comment value="little hack to clear static memory" line="444"/>
+      <comment value="we cleanup the old orders here so that we immediately know if there is a problem." line="446"/>
+    </inline>
+  </method>
+  <method name="save" start="453" end="457" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="clear" start="464" end="488" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Clears the cart contents completely by removing the orderID from session, and thus creating a new cart on next request."/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <inline>
+      <comment value="we keep this here so that a flush can be added..." line="465"/>
+    </inline>
+  </method>
+  <method name="reset" start="493" end="495" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="alias for clear"/>
+    </docblock>
+  </method>
+  <method name="removeModifier" start="505" end="521" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Removes a modifier from the cart It does not actually remove it, but it just sets it as &quot;removed&quot;, to avoid that it is being added again."/>
+      <param type="object" variable="$modifier">
+        <type full="OrderModifier" namespace="" name="OrderModifier"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="modifier" byreference="false" type="object">
+      <type full="\\OrderModifier" namespace="\" name="OrderModifier"/>
+    </parameter>
+  </method>
+  <method name="addModifier" start="528" end="543" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Removes a modifier from the cart"/>
+      <param type="object" variable="OrderModifier">
+        <type full="Int/" namespace="" name="Int/"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="modifier" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="loadOrder" start="550" end="579" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Sets an order as the current order."/>
+      <param description="| Order $order" type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="{unknown}"/>
+    <inline>
+      <todo value="how to handle existing order" line="551"/>
+      <todo value="permission check - does this belong to another member? ...or should permission be assumed already?" line="552"/>
+    </inline>
+  </method>
+  <method name="copyOrder" start="586" end="632" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="NOTE: tried to copy part to the Order Class - but that was not much of a go-er."/>
+      <param description="| Order $order" type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return type="object">
+        <type full="DataObject(Order)" namespace="" name="DataObject(Order)"/>
+      </return>
+    </docblock>
+    <parameter name="oldOrder" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="copying fields." line="599"/>
+      <comment value="important to set it this way..." line="601"/>
+      <comment value="load the order" line="604"/>
+    </inline>
+  </method>
+  <method name="setCountry" start="639" end="649" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="sets country in order so that modifiers can be recalculated, etc..."/>
+      <param description="- $countryCode" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="countryCode" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setRegion" start="656" end="666" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="sets region in order so that modifiers can be recalculated, etc..."/>
+      <param description="| String - $regionID you can use the ID or the code." type="object">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="regionID" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setCurrency" start="673" end="692" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="sets the display currency for the cart."/>
+      <param type="object" variable="$currencyCode">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="currencyCode" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="debug" start="697" end="788" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Produces a debug of the shopping cart."/>
+    </docblock>
+  </method>
+  <method name="addMessage" start="796" end="809" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Stores a message that can later be returned via ajax or to $form-&gt;sessionMessage();"/>
+      <param description="the message, which could be a notification of successful action, or reason for failure" variable="$message" type="object">
+        <type full="-" namespace="" name="-"/>
+      </param>
+      <param description="please use good, bad, warning" variable="$type" type="object">
+        <type full="-" namespace="" name="-"/>
+      </param>
+    </docblock>
+    <parameter name="message" byreference="false" type="{unknown}"/>
+    <parameter name="status" byreference="false" type="string" default="'good'"/>
+    <inline>
+      <comment value="clean status for the lazy programmer" line="797"/>
+      <todo value="remove the awkward replace" line="798"/>
+    </inline>
+  </method>
+  <method name="getExistingItem" start="823" end="837" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Gets an existing order item based on buyable and passed parameters"/>
+      <param type="object" variable="$buyable">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="or null" type="object">
+        <type full="OrderItem" namespace="" name="OrderItem"/>
+      </return>
+    </docblock>
+    <parameter name="buyable" byreference="false" type="object">
+      <type full="\\BuyableModel" namespace="\" name="BuyableModel"/>
+    </parameter>
+    <parameter name="parameters" byreference="false" type="array"/>
+  </method>
+  <method name="cleanParameters" start="844" end="856" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Removes parameters that aren't in the default array, merges with default parameters, and converts raw2SQL."/>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="array" type="object">
+        <type full="cleaned" namespace="" name="cleaned"/>
+      </return>
+    </docblock>
+    <parameter name="params" byreference="false" type="array"/>
+    <inline>
+      <comment value="clone array" line="846"/>
+    </inline>
+  </method>
+  <method name="parametersToSQL" start="862" end="876" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <param type="object" variable="$parameters">Converts parameter array to SQL query filter<type full="Array" namespace="" name="Array"/></param>
+    </docblock>
+    <parameter name="parameters" byreference="false" type="array"/>
+  </method>
+  <method name="getMessages" start="887" end="898" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Retrieves all good, bad, and ugly messages that have been produced during the current request."/>
+      <return description="of messages" type="array"/>
+    </docblock>
+    <inline>
+      <comment value="get old messages" line="889"/>
+      <comment value="clear old messages" line="891"/>
+      <comment value="set to form????" line="893"/>
+    </inline>
+  </method>
+  <method name="StoreMessagesInSession" start="904" end="907" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="aves current messages in session for retrieving them later.">return array of messages</description>
+    </docblock>
+  </method>
+  <method name="setMessageAndReturn" start="926" end="958" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This method is used to return data after an ajax call was made.">When a asynchronious request is made to the shopping cart (ajax),
+then you will first action the request and then use this function
+to return some values.
+
+It can also be used without ajax, in wich case it will redirects back
+to the last page.
+
+Note that you can set the ajax response class in the configuration file.</description>
+      <param type="object" variable="$message">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$status">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+      <returns value="String (JSON)"/>
+    </docblock>
+    <parameter name="message" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="status" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="form" byreference="false" type="object" default="null">
+      <type full="\\Form" namespace="\" name="Form"/>
+    </parameter>
+    <inline>
+      <todo value="handle passing back multiple messages" line="930"/>
+    </inline>
+  </method>
+  <method name="EcomConfig" start="964" end="966" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="sessionVariableName" start="974" end="980" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Return the name of the session variable that should be used."/>
+      <param type="object" variable="$name">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="name" byreference="false" type="string" default="&quot;&quot;"/>
+  </method>
+</class>

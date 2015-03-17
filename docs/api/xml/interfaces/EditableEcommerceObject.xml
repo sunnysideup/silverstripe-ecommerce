@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface xmlns="http://xml.phpdox.net/src#" full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject" abstract="false" final="false" start="11" end="19">
+  <file path="./../../../code/interfaces" file="EditableEcommerceObject.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/interfaces/EditableEcommerceObject.php" size="351" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="b6a8d409307750b2cbccde23dfabd70c8e44b4db"/>
+  <docblock>
+    <description compact="describes any dataobject (apart from pages) that is editable in the CMS"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+  </docblock>
+  <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the link to edit the object"/>
+      <param description="| Null $action" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <implementor full="Order" namespace="" name="Order"/>
+  <implementor full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+  <implementor full="EcommercePayment" namespace="" name="EcommercePayment"/>
+  <implementor full="EcommercePayment_Test" namespace="" name="EcommercePayment_Test"/>
+  <implementor full="EcommercePayment_TestSuccess" namespace="" name="EcommercePayment_TestSuccess"/>
+  <implementor full="EcommercePayment_TestPending" namespace="" name="EcommercePayment_TestPending"/>
+  <implementor full="EcommercePayment_TestFailure" namespace="" name="EcommercePayment_TestFailure"/>
+  <implementor full="EcommerceCurrency" namespace="" name="EcommerceCurrency"/>
+  <implementor full="OrderAttribute" namespace="" name="OrderAttribute"/>
+  <implementor full="OrderAttribute_Group" namespace="" name="OrderAttribute_Group"/>
+  <implementor full="EcommerceCountry" namespace="" name="EcommerceCountry"/>
+  <implementor full="BillingAddress" namespace="" name="BillingAddress"/>
+  <implementor full="EcommerceRegion" namespace="" name="EcommerceRegion"/>
+  <implementor full="ShippingAddress" namespace="" name="ShippingAddress"/>
+  <implementor full="OrderAddress" namespace="" name="OrderAddress"/>
+  <implementor full="OrderStatusLog" namespace="" name="OrderStatusLog"/>
+  <implementor full="OrderStatusLog_Submitted" namespace="" name="OrderStatusLog_Submitted"/>
+  <implementor full="OrderStatusLog_Cancel" namespace="" name="OrderStatusLog_Cancel"/>
+  <implementor full="OrderStatusLog_Dispatch" namespace="" name="OrderStatusLog_Dispatch"/>
+  <implementor full="OrderStatusLog_DispatchElectronicOrder" namespace="" name="OrderStatusLog_DispatchElectronicOrder"/>
+  <implementor full="OrderStatusLog_DispatchPhysicalOrder" namespace="" name="OrderStatusLog_DispatchPhysicalOrder"/>
+  <implementor full="OrderStatusLog_PaymentCheck" namespace="" name="OrderStatusLog_PaymentCheck"/>
+  <implementor full="OrderStatusLog_Archived" namespace="" name="OrderStatusLog_Archived"/>
+  <implementor full="OrderStep" namespace="" name="OrderStep"/>
+  <implementor full="OrderStep_Created" namespace="" name="OrderStep_Created"/>
+  <implementor full="OrderStep_Submitted" namespace="" name="OrderStep_Submitted"/>
+  <implementor full="OrderStep_SentInvoice" namespace="" name="OrderStep_SentInvoice"/>
+  <implementor full="OrderStep_Paid" namespace="" name="OrderStep_Paid"/>
+  <implementor full="OrderStep_Confirmed" namespace="" name="OrderStep_Confirmed"/>
+  <implementor full="OrderStep_SentReceipt" namespace="" name="OrderStep_SentReceipt"/>
+  <implementor full="OrderStep_Sent" namespace="" name="OrderStep_Sent"/>
+  <implementor full="OrderStep_Archived" namespace="" name="OrderStep_Archived"/>
+  <implementor full="CheckoutPage_StepDescription" namespace="" name="CheckoutPage_StepDescription"/>
+  <implementor full="OrderEmailRecord" namespace="" name="OrderEmailRecord"/>
+  <implementor full="Product_OrderItem" namespace="" name="Product_OrderItem"/>
+  <implementor full="OrderItem" namespace="" name="OrderItem"/>
+  <implementor full="OrderModifier" namespace="" name="OrderModifier"/>
+  <implementor full="OrderModifier_Descriptor" namespace="" name="OrderModifier_Descriptor"/>
+  <implementor full="SearchReplacement" namespace="" name="SearchReplacement"/>
+</interface>

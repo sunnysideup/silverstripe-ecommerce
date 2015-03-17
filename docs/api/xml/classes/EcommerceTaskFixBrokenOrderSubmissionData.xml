@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceTaskFixBrokenOrderSubmissionData" namespace="" name="EcommerceTaskFixBrokenOrderSubmissionData" abstract="false" final="false" start="15" end="54">
+  <file path="./../../../code/tasks" file="EcommerceTaskFixBrokenOrderSubmissionData.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/tasks/EcommerceTaskFixBrokenOrderSubmissionData.php" size="1911" time="2014-08-18T10:10:59+12:00" unixtime="1408313459" sha1="1bf9ff7b14ef61bd871734735631c462c7416cb9"/>
+  <docblock>
+    <description compact="After a bug in the saving of orders in the CMS This &quot;fixer&quot;  was introduced to fix older orders without a submission record."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask"/>
+  <member name="title" type="string" default="&quot;Fixes broken order submission links&quot;" visibility="protected" line="17"/>
+  <member name="description" type="string" default="&quot;Fixes broken order submission links (submission records without an order).&quot;" visibility="protected" line="19"/>
+  <method name="run" start="21" end="52" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+</class>

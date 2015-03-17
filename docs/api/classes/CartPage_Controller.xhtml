@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - CartPage_Controller</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">CartPage_Controller</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>CartPage_Controller</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class CartPage_Controller
+                extends <a title="Page_Controller" href="../classes/Page_Controller.xhtml">Page_Controller</a>
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$allowed_actions</a>;
+                    </li><li>protected <span title="ArraList">ArraList</span> <a href="#members">$actionLinks</a>;
+                    </li><li>protected <span title="$workedOutMessagesAndActions">$workedOutMessagesAndActions</span> <a href="#members">$workedOutMessagesAndActions</a>;
+                    </li><li>protected <span title="$order">$order</span> <a href="#members">$currentOrder</a>;
+                    </li><li>private string <a href="#members">$message</a>;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$showCreateAccountForm</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public static void <a title="CartPage_Controller" href="../classes/CartPage_Controller/set_message.xhtml">set_message</a>()
+                    </li><li>public void <a title="CartPage_Controller" href="../classes/CartPage_Controller/init.xhtml">init</a>()
+                    </li><li>public void <a title="CartPage_Controller" href="../classes/CartPage_Controller/showorder.xhtml">showorder</a>()
+                    </li><li>public Array <a title="CartPage_Controller" href="../classes/CartPage_Controller/loadorder.xhtml">loadorder</a>()
+                    </li><li>public Array <a title="CartPage_Controller" href="../classes/CartPage_Controller/saveorder.xhtml">saveorder</a>()
+                    </li><li>public Array <a title="CartPage_Controller" href="../classes/CartPage_Controller/deleteorder.xhtml">deleteorder</a>()
+                    </li><li>public Array <a title="CartPage_Controller" href="../classes/CartPage_Controller/startneworder.xhtml">startneworder</a>()
+                    </li><li>public ArraList <a title="CartPage_Controller" href="../classes/CartPage_Controller/ActionLinks.xhtml">ActionLinks</a>()
+                    </li><li>public String <a title="CartPage_Controller" href="../classes/CartPage_Controller/Message.xhtml">Message</a>()
+                    </li><li>public DataObject <a title="CartPage_Controller" href="../classes/CartPage_Controller/Order.xhtml">Order</a>()
+                    </li><li>public Boolean <a title="CartPage_Controller" href="../classes/CartPage_Controller/CanEditOrder.xhtml">CanEditOrder</a>()
+                    </li><li>public Boolean <a title="CartPage_Controller" href="../classes/CartPage_Controller/CurrentOrderIsInCart.xhtml">CurrentOrderIsInCart</a>()
+                    </li><li>public Boolean <a title="CartPage_Controller" href="../classes/CartPage_Controller/ShowCreateAccountForm.xhtml">ShowCreateAccountForm</a>()
+                    </li><li>public ShopAccountForm <a title="CartPage_Controller" href="../classes/CartPage_Controller/CreateAccountForm.xhtml">CreateAccountForm</a>()
+                    </li><li>protected void <a title="CartPage_Controller" href="../classes/CartPage_Controller/workOutMessagesAndActions.xhtml">workOutMessagesAndActions</a>()
+                    </li><li>protected void <a title="CartPage_Controller" href="../classes/CartPage_Controller/isCartPage.xhtml">isCartPage</a>()
+                    </li><li>protected Boolean <a title="CartPage_Controller" href="../classes/CartPage_Controller/isCheckoutPage.xhtml">isCheckoutPage</a>()
+                    </li><li>protected Boolean <a title="CartPage_Controller" href="../classes/CartPage_Controller/isOrderConfirmationPage.xhtml">isOrderConfirmationPage</a>()
+                    </li><li>protected Boolean <a title="CartPage_Controller" href="../classes/CartPage_Controller/onlyShowSubmittedOrders.xhtml">onlyShowSubmittedOrders</a>()
+                    </li><li>protected Boolean <a title="CartPage_Controller" href="../classes/CartPage_Controller/onlyShowUnsubmittedOrders.xhtml">onlyShowUnsubmittedOrders</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/Page_Controller.xhtml">Page_Controller</a>
+            </li>
+          </ul>
+          <h4>Extended by</h4>
+          <ul>
+            <li>
+              <a href="../classes/OrderConfirmationPage_Controller.xhtml">OrderConfirmationPage_Controller</a>
+            </li>
+            <li>
+              <a href="../classes/CheckoutPage_Controller.xhtml">CheckoutPage_Controller</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="tasks">Tasks</h2>
+        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <thead>
+            <tr>
+              <th style="width:3em;">Line</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tr>
+            <td class="nummeric">+</td>
+            <td>: check if we need this....!</td>
+          </tr>
+        </table>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="allowed_actions">
+              <strong>$allowed_actions</strong>
+            </li>
+            <li id="message">
+              <strong>$message</strong>
+              <br/>
+              <span class="indent">Message shown (e.g. no current order, could not find order, order updated, etc...)</span>
+            </li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="actionLinks"><strong>$actionLinks</strong>
+                —
+                <a href="#">ArraList</a><br/><span class="indent">This ArraList holds DataObjects with a Link and Title each....</span></li>
+            <li id="currentOrder"><strong>$currentOrder</strong>
+                —
+                <a href="#">$order</a><br/><span class="indent">order currently being shown on this page</span></li>
+            <li id="showCreateAccountForm"><strong>$showCreateAccountForm</strong>
+                —
+                <a href="#">Boolean</a></li>
+            <li id="workedOutMessagesAndActions"><strong>$workedOutMessagesAndActions</strong>
+                —
+                <a href="#">$workedOutMessagesAndActions</a><br/><span class="indent">to ensure messages and actions links are only worked out once...</span></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="isCartPage">
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller/isCartPage.xhtml">isCartPage()</a>
+            </li>
+            <li id="isCheckoutPage"><a title="CartPage_Controller" href="../classes/CartPage_Controller/isCheckoutPage.xhtml">isCheckoutPage()</a>
+                — Is this a CheckoutPage or is it another type (CartPage / OrderConfirmationPage)?</li>
+            <li id="isOrderConfirmationPage"><a title="CartPage_Controller" href="../classes/CartPage_Controller/isOrderConfirmationPage.xhtml">isOrderConfirmationPage()</a>
+                — Is this a OrderConfirmationPage or is it another type (CartPage / CheckoutPage)?</li>
+            <li id="onlyShowSubmittedOrders"><a title="CartPage_Controller" href="../classes/CartPage_Controller/onlyShowSubmittedOrders.xhtml">onlyShowSubmittedOrders()</a>
+                — Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?</li>
+            <li id="onlyShowUnsubmittedOrders"><a title="CartPage_Controller" href="../classes/CartPage_Controller/onlyShowUnsubmittedOrders.xhtml">onlyShowUnsubmittedOrders()</a>
+                — Can this page only show Unsubmitted Orders (e.g. CartPage) ?</li>
+            <li id="workOutMessagesAndActions"><a title="CartPage_Controller" href="../classes/CartPage_Controller/workOutMessagesAndActions.xhtml">workOutMessagesAndActions()</a>
+                — work out the options for the user</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="ActionLinks"><a title="CartPage_Controller" href="../classes/CartPage_Controller/ActionLinks.xhtml">ActionLinks()</a>
+                — This returns a ArraList, each dataobject has two vars: Title and Link</li>
+            <li id="CanEditOrder">
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller/CanEditOrder.xhtml">CanEditOrder()</a>
+            </li>
+            <li id="CreateAccountForm"><a title="CartPage_Controller" href="../classes/CartPage_Controller/CreateAccountForm.xhtml">CreateAccountForm()</a>
+                — Returns the CreateAccountForm</li>
+            <li id="CurrentOrderIsInCart"><a title="CartPage_Controller" href="../classes/CartPage_Controller/CurrentOrderIsInCart.xhtml">CurrentOrderIsInCart()</a>
+                — Tells you if the order you are viewing at the moment is also in the cart</li>
+            <li id="Message">
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller/Message.xhtml">Message()</a>
+            </li>
+            <li id="Order">
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller/Order.xhtml">Order()</a>
+            </li>
+            <li id="ShowCreateAccountForm"><a title="CartPage_Controller" href="../classes/CartPage_Controller/ShowCreateAccountForm.xhtml">ShowCreateAccountForm()</a>
+                — Do we need to show the Create Account Form?</li>
+            <li id="deleteorder"><a title="CartPage_Controller" href="../classes/CartPage_Controller/deleteorder.xhtml">deleteorder()</a>
+                — Delete the currently viewed order.</li>
+            <li id="init">
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller/init.xhtml">init()</a>
+            </li>
+            <li id="loadorder"><a title="CartPage_Controller" href="../classes/CartPage_Controller/loadorder.xhtml">loadorder()</a>
+                — Loads either the "current order""into the shopping cart.</li>
+            <li id="saveorder"><a title="CartPage_Controller" href="../classes/CartPage_Controller/saveorder.xhtml">saveorder()</a>
+                — save the order to a member. If no member exists then create the member first using the ShopAccountForm.</li>
+            <li id="set_message">
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller/set_message.xhtml">set_message()</a>
+            </li>
+            <li id="showorder">
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller/showorder.xhtml">showorder()</a>
+            </li>
+            <li id="startneworder"><a title="CartPage_Controller" href="../classes/CartPage_Controller/startneworder.xhtml">startneworder()</a>
+                — Start a new order</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

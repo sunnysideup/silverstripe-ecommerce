@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderStep_Confirmed" namespace="" name="OrderStep_Confirmed" abstract="false" final="false" start="1352" end="1430">
+  <file path="./../../../code/model/process" file="OrderStep.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/process/OrderStep.php" size="53024" time="2015-02-27T15:21:09+13:00" unixtime="1425003669" sha1="97dd3f42d2f8b21043a880dda5429a7594db86a5"/>
+  <docblock>
+    <description/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: model"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="OrderStep" namespace="" name="OrderStep"/>
+  <implements full="OrderStepInterface" namespace="" name="OrderStepInterface"/>
+  <member name="defaults" type="array" visibility="private" line="1354"/>
+  <member name="relevantLogEntryClassName" type="string" default="&quot;OrderStatusLog_PaymentCheck&quot;" visibility="protected" line="1366">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="initStep" start="1376" end="1378" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="nitStep: makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).">should be able to run this function many times to check if the step is ready</description>
+      <see value="Order::doNextStatus"/>
+      <param type="object" variable="object">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <return description="- true if the current step is ready to be run..." type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="object">
+      <type full="\\Order" namespace="\" name="Order"/>
+    </parameter>
+  </method>
+  <method name="doStep" start="1389" end="1391" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="oStep: should only be able to run this function once (init stops you from running it twice - in theory....) runs the actual step"/>
+      <see value="Order::doNextStatus"/>
+      <param type="object" variable="object">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <return description="- true if run correctly." type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="object">
+      <type full="\\Order" namespace="\" name="Order"/>
+    </parameter>
+  </method>
+  <method name="nextStep" start="1398" end="1406" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="can go to next step if order payment has been confirmed..."/>
+      <param description="Order" type="object" variable="$order">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </param>
+      <return description="| Null - DataObject = OrderStep" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="object">
+      <type full="\\Order" namespace="\" name="Order"/>
+    </parameter>
+  </method>
+  <method name="addOrderStepFields" start="1414" end="1420" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Allows the opportunity for the Order Step to add any fields to Order::getCMSFields"/>
+      <param type="object" variable="$fields">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </param>
+      <param type="object" variable="$order">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+    <parameter name="fields" byreference="false" type="object">
+      <type full="\\FieldList" namespace="\" name="FieldList"/>
+    </parameter>
+    <parameter name="order" byreference="false" type="object">
+      <type full="\\Order" namespace="\" name="Order"/>
+    </parameter>
+  </method>
+  <method name="myDescription" start="1426" end="1428" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Explains the current order step."/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <parent full="OrderStep" namespace="" name="OrderStep">
+    <extends full="DataObject" namespace="" name="DataObject"/>
+    <member name="emailClassName" type="string" default="&quot;&quot;" visibility="protected" line="491">
+      <docblock>
+        <description/>
+        <var type="object">
+          <type full="String" namespace="" name="String"/>
+        </var>
+      </docblock>
+    </member>
+    <member name="relevantLogEntryClassName" type="string" default="&quot;&quot;" visibility="protected" line="633">
+      <docblock>
+        <description compact="The OrderStatusLog that is relevant to the particular step."/>
+        <var type="object">
+          <type full="String" namespace="" name="String"/>
+        </var>
+      </docblock>
+    </member>
+    <method name="Title" start="113" end="113" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="casted variable"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getTitle" start="114" end="114" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="CustomerCanEditNice" start="121" end="121" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="casted variable"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getCustomerCanEditNice" start="122" end="122" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="CustomerCanPayNice" start="129" end="129" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="casted variable"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getCustomerCanPayNice" start="130" end="130" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="CustomerCanCancelNice" start="137" end="137" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="casted variable"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getCustomerCanCancelNice" start="138" end="138" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="ShowAsUncompletedOrderNice" start="140" end="140" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="getShowAsUncompletedOrderNice" start="141" end="141" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="ShowAsInProcessOrderNice" start="147" end="147" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="casted variable"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getShowAsInProcessOrderNice" start="148" end="148" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="ShowAsCompletedOrderNice" start="154" end="154" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="casted variable"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getShowAsCompletedOrderNice" start="155" end="155" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="HideStepFromCustomerNice" start="161" end="161" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="casted variable"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getHideStepFromCustomerNice" start="162" end="162" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_singular_name" start="169" end="169" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="i18n_plural_name" start="176" end="176" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="get_status_id_from_code" start="197" end="203" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description compact="turns code into ID"/>
+        <param type="object" variable="$code">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param type="object">
+          <type full="Int" namespace="" name="Int"/>
+        </param>
+      </docblock>
+      <parameter name="code" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="get_codes_for_order_steps_to_include" start="209" end="219" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description compact="return Array"/>
+      </docblock>
+    </method>
+    <method name="get_not_created_codes_for_order_steps_to_include" start="225" end="236" abstract="false" final="false" static="true" visibility="public">
+      <docblock>
+        <description compact="returns a list of ordersteps that have not been created yet."/>
+        <return type="object">
+          <type full="Array" namespace="" name="Array"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getMyCode" start="242" end="246" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="return String"/>
+      </docblock>
+    </method>
+    <method name="populateDefaults" start="266" end="269" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method"/>
+      </docblock>
+    </method>
+    <method name="getCMSFields" start="275" end="305" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="return FieldList"/>
+      </docblock>
+      <inline>
+        <comment value="replacing" line="277"/>
+        <comment value="adding" line="290"/>
+        <comment value="headers" line="298"/>
+      </inline>
+    </method>
+    <method name="CMSEditLink" start="312" end="318" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="link to edit the record"/>
+        <param description="| Null $action - e.g. edit" type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="action" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="AlternativeDisplayPage" start="332" end="334" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="tells the order to display itself with an alternative display page.">in that way, orders can be displayed differently for certain steps
+for example, in a print step, the order can be displayed in a
+PRINT ONLY format.
+
+When the method return null, the order is displayed using the standard display page</description>
+        <see value="Order::DisplayPage"/>
+        <return description="(Page)" type="object">
+          <type full="Null|Object" namespace="" name="Null|Object"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="addOrderStepFields" start="344" end="346" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Allows the opportunity for the Order Step to add any fields to Order::getCMSFields Usually this is added before ActionNextStepManually"/>
+        <param type="object" variable="$fields">
+          <type full="FieldList" namespace="" name="FieldList"/>
+        </param>
+        <param type="object" variable="$order">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return type="object">
+          <type full="FieldList" namespace="" name="FieldList"/>
+        </return>
+      </docblock>
+      <parameter name="fields" byreference="false" type="object">
+        <type full="\\FieldList" namespace="\" name="FieldList"/>
+      </parameter>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="validate" start="352" end="367" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="return ValidationResult"/>
+      </docblock>
+    </method>
+    <method name="initStep" start="381" end="384" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="nitStep: makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).">should be able to run this function many times to check if the step is ready</description>
+        <see value="Order::doNextStatus"/>
+        <param type="object" variable="object">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return description="- true if the current step is ready to be run..." type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="doStep" start="395" end="398" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="oStep: should only be able to run this function once (init stops you from running it twice - in theory....) runs the actual step"/>
+        <see value="Order::doNextStatus"/>
+        <param type="object" variable="object">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return description="- true if run correctly." type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="nextStep" start="407" end="415" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="nextStep: returns the next step (after it checks if everything is in place for the next step to run...)"/>
+        <see value="Order::doNextStatus"/>
+        <param type="object" variable="$order">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return description="| Null (next step OrderStep object)" type="object">
+          <type full="OrderStep" namespace="" name="OrderStep"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="hasPassed" start="428" end="444" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Checks if a step has passed (been completed) in comparison to the current step"/>
+        <param description="the name of the step to check" type="object" variable="$code:">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="if set to true, this method will return TRUE if the step being checked is the current one" type="object" variable="$orIsEqualTo">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="code" byreference="false" type="{unknown}"/>
+      <parameter name="orIsEqualTo" byreference="false" type="{unknown}" default="false"/>
+    </method>
+    <method name="hasPassedOrIsEqualTo" start="450" end="452" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param type="object" variable="$code">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="code" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="hasNotPassed" start="458" end="460" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param type="object" variable="$code">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="code" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="isBefore" start="467" end="469" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Opposite of hasPassed"/>
+        <param type="object" variable="$code">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="code" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="isDefaultStatusOption" start="475" end="477" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="return Boolean"/>
+      </docblock>
+    </method>
+    <method name="getEmailClassName" start="498" end="500" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the email class used for emailing the customer during a specific step (IF ANY!)"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="setEmailClassName" start="507" end="509" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="sets the email class used for emailing the customer during a specific step (IF ANY!)"/>
+        <param type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+      </docblock>
+      <parameter name="s" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="testEmailLink" start="519" end="531" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="returns a link that can be used to test the email being sent during this step this method returns NULL if no email is being sent OR if there is no suitable Order to test with..."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="hasBeenSent" start="542" end="564" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Has an email been sent to the customer for this order step.">-10 days"</description>
+        <param type="object" variable="$order">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <param type="object" variable="$checkDateOfOrder">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+      <parameter name="checkDateOfOrder" byreference="false" type="{unknown}" default="true"/>
+      <inline>
+        <comment value="if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as" line="543"/>
+        <comment value="this would be embarrasing." line="544"/>
+      </inline>
+    </method>
+    <method name="hasCustomerMessage" start="570" end="572" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="For some ordersteps this returns true..."/>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="HasCustomerMessageNice" start="578" end="578" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Formatted answer for &quot;hasCustomerMessage&quot;"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getHasCustomerMessageNice" start="579" end="581" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="ShowAsSummary" start="588" end="588" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Formatted answer for &quot;hasCustomerMessage&quot;"/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="getShowAsSummary" start="589" end="618" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="getRelevantLogEntryClassName" start="638" end="640" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <return type="string"/>
+      </docblock>
+    </method>
+    <method name="setRelevantLogEntryClassName" start="645" end="647" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+      </docblock>
+      <parameter name="s" byreference="false" type="{unknown}"/>
+    </method>
+    <method name="RelevantLogEntry" start="654" end="658" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the OrderStatusLog that is relevant to this step."/>
+        <param type="object" variable="$order">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return description="| Null" type="object">
+          <type full="OrderStatusLog" namespace="" name="OrderStatusLog"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="canCreate" start="675" end="677" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method These are only created programmatically."/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canView" start="684" end="687" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method"/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canEdit" start="694" end="697" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method"/>
+        <param description="| NULL" type="object">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+    </method>
+    <method name="canDelete" start="704" end="726" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Standard SS method"/>
+        <param type="object" variable="$member">
+          <type full="Member" namespace="" name="Member"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="member" byreference="false" type="{unknown}" default="null"/>
+      <inline>
+        <comment value="cant delete last status if there are orders with this status" line="705"/>
+      </inline>
+    </method>
+    <method name="onBeforeWrite" start="731" end="735" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method"/>
+      </docblock>
+    </method>
+    <method name="onBeforeDelete" start="741" end="760" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="move linked orders to the next status standard SS method"/>
+      </docblock>
+      <inline>
+        <comment value="backup" line="744"/>
+      </inline>
+    </method>
+    <method name="onAfterDelete" start="765" end="768" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method"/>
+      </docblock>
+    </method>
+    <method name="NextOrderStep" start="770" end="774" abstract="false" final="false" static="false" visibility="protected"/>
+    <method name="PreviousOrderStep" start="776" end="780" abstract="false" final="false" static="false" visibility="protected"/>
+    <method name="requireDefaultRecords" start="786" end="837" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="standard SS method USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart"/>
+      </docblock>
+    </method>
+    <method name="EcomConfig" start="843" end="845" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="returns the standard EcommerceDBConfig for use within OrderSteps."/>
+        <return type="object">
+          <type full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+        </return>
+      </docblock>
+    </method>
+    <method name="myDescription" start="851" end="853" abstract="false" final="false" static="false" visibility="protected">
+      <docblock>
+        <description compact="Explains the current order step."/>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+    </method>
+  </parent>
+  <interface full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject">
+    <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the link to edit the object"/>
+        <param description="| Null $action" type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="action" byreference="false" type="{unknown}" default="null"/>
+    </method>
+  </interface>
+  <interface full="OrderStepInterface" namespace="" name="OrderStepInterface">
+    <method name="initStep" start="17" end="17" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Initiate the step. REturns true if the step is ready to run.">You should be able to run this method many times without causing problems.</description>
+        <param description="- $order" type="object">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="doStep" start="26" end="26" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Do the actual step.">Returns true if the step runs successfully.
+You should be able to run this method many times without causing problems.</description>
+        <param description="- $order" type="object">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="nextStep" start="34" end="34" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Returns the nextStep when we are ready or null if we are not ready.">You should be able to run this method many times without causing problems.</description>
+        <param type="object">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return description="| Null (nextStep DataObject)" type="object">
+          <type full="OrderStep" namespace="" name="OrderStep"/>
+        </return>
+      </docblock>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+    <method name="addOrderStepFields" start="43" end="43" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Allows the opportunity for the Order Step to add any fields to Order::getCMSFields You should be able to run this method many times without causing problems."/>
+        <param type="object" variable="$fields">
+          <type full="FieldList" namespace="" name="FieldList"/>
+        </param>
+        <param type="object" variable="$order">
+          <type full="Order" namespace="" name="Order"/>
+        </param>
+        <return type="object">
+          <type full="FieldList" namespace="" name="FieldList"/>
+        </return>
+      </docblock>
+      <parameter name="fields" byreference="false" type="object">
+        <type full="\\FieldList" namespace="\" name="FieldList"/>
+      </parameter>
+      <parameter name="order" byreference="false" type="object">
+        <type full="\\Order" namespace="\" name="Order"/>
+      </parameter>
+    </method>
+  </interface>
+</class>

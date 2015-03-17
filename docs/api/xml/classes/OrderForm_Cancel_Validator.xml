@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderForm_Cancel_Validator" namespace="" name="OrderForm_Cancel_Validator" abstract="false" final="false" start="98" end="105">
+  <file path="./../../../code/forms" file="OrderForm_Cancel.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/OrderForm_Cancel.php" size="2866" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="4e8f8b3229b1337c205e3238dace29ddd70b4cf6"/>
+  <extends full="RequiredFields" namespace="" name="RequiredFields"/>
+  <method name="php" start="100" end="103" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="data" byreference="false" type="{unknown}"/>
+  </method>
+</class>

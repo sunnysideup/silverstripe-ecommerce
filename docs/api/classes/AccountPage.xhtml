@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+    <title>phpDox - AccountPage</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../reports/index.xhtml">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">AccountPage</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>AccountPage</h1>
+        <h4>The Account Page allows the user to update their details.</h4>
+        <p/>
+        <ul/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class AccountPage
+                extends <a title="Page" href="../classes/Page.xhtml">Page</a>
+            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$casting</a>;
+                    </li><li>protected integer <a href="#members">$calculatedTotal</a>;
+                    </li><li>protected integer <a href="#members">$calculatedPaid</a>;
+                    </li><li>protected integer <a href="#members">$calculatedOutstanding</a>;
+                    </li><li>protected <a href="#members">$pastOrders</a>;
+                    </li><li>private string <a href="#members">$icon</a>;
+                    </li><li>private string <a href="#members">$singular_name</a>;
+                    </li><li>private string <a href="#members">$plural_name</a>;
+                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canCreate.xhtml">canCreate</a>()
+                    </li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canView.xhtml">canView</a>()
+                    </li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canEdit.xhtml">canEdit</a>()
+                    </li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canDelete.xhtml">canDelete</a>()
+                    </li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canPublish.xhtml">canPublish</a>()
+                    </li><li>public void <a title="AccountPage" href="../classes/AccountPage/i18n_singular_name.xhtml">i18n_singular_name</a>()
+                    </li><li>public void <a title="AccountPage" href="../classes/AccountPage/i18n_plural_name.xhtml">i18n_plural_name</a>()
+                    </li><li>public static String <a title="AccountPage" href="../classes/AccountPage/find_link.xhtml">find_link</a>()
+                    </li><li>public DataList <a title="AccountPage" href="../classes/AccountPage/PastOrders.xhtml">PastOrders</a>()
+                    </li><li>public Float <a title="AccountPage" href="../classes/AccountPage/getRunningTotal.xhtml">getRunningTotal</a>()
+                    </li><li>public void <a title="AccountPage" href="../classes/AccountPage/RunningTotal.xhtml">RunningTotal</a>()
+                    </li><li>public Float <a title="AccountPage" href="../classes/AccountPage/getRunningPaid.xhtml">getRunningPaid</a>()
+                    </li><li>public void <a title="AccountPage" href="../classes/AccountPage/RunningPaid.xhtml">RunningPaid</a>()
+                    </li><li>public Float <a title="AccountPage" href="../classes/AccountPage/getRunningOutstanding.xhtml">getRunningOutstanding</a>()
+                    </li><li>public void <a title="AccountPage" href="../classes/AccountPage/RunningOutstanding.xhtml">RunningOutstanding</a>()
+                    </li><li>protected void <a title="AccountPage" href="../classes/AccountPage/calculatePastOrders.xhtml">calculatePastOrders</a>()
+                    </li><li>protected DataList <a title="AccountPage" href="../classes/AccountPage/pastOrdersSelection.xhtml">pastOrdersSelection</a>()
+                    </li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/IsEcommercePage.xhtml">IsEcommercePage</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a href="../classes/Page.xhtml">Page</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="casting">
+              <strong>$casting</strong>
+              <br/>
+              <span class="indent">standard SS variable var Array</span>
+            </li>
+            <li id="description"><strong>$description</strong>
+                —
+                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+            <li id="icon"><strong>$icon</strong>
+                —
+                <br/><span class="indent">Standard SS variable</span></li>
+            <li id="plural_name"><strong>$plural_name</strong>
+                —
+                <br/><span class="indent">standard SS variable</span></li>
+            <li id="singular_name"><strong>$singular_name</strong>
+                —
+                <br/><span class="indent">standard SS variable</span></li>
+          </ul>
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="calculatedOutstanding">
+              <strong>$calculatedOutstanding</strong>
+              <br/>
+              <span class="indent">var float</span>
+            </li>
+            <li id="calculatedPaid">
+              <strong>$calculatedPaid</strong>
+              <br/>
+              <span class="indent">var float</span>
+            </li>
+            <li id="calculatedTotal">
+              <strong>$calculatedTotal</strong>
+              <br/>
+              <span class="indent">var float</span>
+            </li>
+            <li id="pastOrders">
+              <strong>$pastOrders</strong>
+              <br/>
+              <span class="indent">var DataList</span>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="calculatePastOrders"><a title="AccountPage" href="../classes/AccountPage/calculatePastOrders.xhtml">calculatePastOrders()</a>
+                — retrieves previous orders and adds totals to it...</li>
+            <li id="pastOrdersSelection">
+              <a title="AccountPage" href="../classes/AccountPage/pastOrdersSelection.xhtml">pastOrdersSelection()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="IsEcommercePage"><a title="AccountPage" href="../classes/AccountPage/IsEcommercePage.xhtml">IsEcommercePage()</a>
+                — tells us if the current page is part of e-commerce.</li>
+            <li id="PastOrders"><a title="AccountPage" href="../classes/AccountPage/PastOrders.xhtml">PastOrders()</a>
+                — Returns a list of all previous orders for the member / account</li>
+            <li id="RunningOutstanding">
+              <a title="AccountPage" href="../classes/AccountPage/RunningOutstanding.xhtml">RunningOutstanding()</a>
+            </li>
+            <li id="RunningPaid">
+              <a title="AccountPage" href="../classes/AccountPage/RunningPaid.xhtml">RunningPaid()</a>
+            </li>
+            <li id="RunningTotal">
+              <a title="AccountPage" href="../classes/AccountPage/RunningTotal.xhtml">RunningTotal()</a>
+            </li>
+            <li id="canCreate"><a title="AccountPage" href="../classes/AccountPage/canCreate.xhtml">canCreate()</a>
+                — Standard SS function, we only allow for one AccountPage to exist but we do allow for extensions to exist at the same time.</li>
+            <li id="canDelete"><a title="AccountPage" href="../classes/AccountPage/canDelete.xhtml">canDelete()</a>
+                — Standard SS method</li>
+            <li id="canEdit"><a title="AccountPage" href="../classes/AccountPage/canEdit.xhtml">canEdit()</a>
+                — Shop Admins can edit</li>
+            <li id="canPublish"><a title="AccountPage" href="../classes/AccountPage/canPublish.xhtml">canPublish()</a>
+                — Standard SS method</li>
+            <li id="canView"><a title="AccountPage" href="../classes/AccountPage/canView.xhtml">canView()</a>
+                — Shop Admins can view</li>
+            <li id="find_link"><a title="AccountPage" href="../classes/AccountPage/find_link.xhtml">find_link()</a>
+                — Returns the link to the AccountPage on this site</li>
+            <li id="getRunningOutstanding"><a title="AccountPage" href="../classes/AccountPage/getRunningOutstanding.xhtml">getRunningOutstanding()</a>
+                — casted variable</li>
+            <li id="getRunningPaid"><a title="AccountPage" href="../classes/AccountPage/getRunningPaid.xhtml">getRunningPaid()</a>
+                — casted variable</li>
+            <li id="getRunningTotal"><a title="AccountPage" href="../classes/AccountPage/getRunningTotal.xhtml">getRunningTotal()</a>
+                — casted variable</li>
+            <li id="i18n_plural_name">
+              <a title="AccountPage" href="../classes/AccountPage/i18n_plural_name.xhtml">i18n_plural_name()</a>
+            </li>
+            <li id="i18n_singular_name">
+              <a title="AccountPage" href="../classes/AccountPage/i18n_singular_name.xhtml">i18n_singular_name()</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
+      <span/>
+    </footer>
+  </body>
+</html>

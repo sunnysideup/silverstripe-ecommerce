@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="CMSPageAddController_Products" namespace="" name="CMSPageAddController_Products" abstract="false" final="false" start="4" end="54">
+  <file path="./../../../code/cms" file="CMSPageAddController_Products.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/cms/CMSPageAddController_Products.php" size="1359" time="2014-11-26T14:45:54+13:00" unixtime="1416966354" sha1="b924db1f0b8ca4d8e2642b768bb8da058e1815ff"/>
+  <extends full="CMSPageAddController" namespace="" name="CMSPageAddController"/>
+  <member name="url_segment" type="string" default="'product/add'" visibility="private" line="6"/>
+  <member name="url_rule" type="string" default="'/$Action/$ID/$OtherID'" visibility="private" line="7"/>
+  <member name="url_priority" type="integer" default="41" visibility="private" line="8"/>
+  <member name="menu_title" type="string" default="'Add Product'" visibility="private" line="9"/>
+  <member name="required_permission_codes" type="string" default="'CMS_ACCESS_CMSMain'" visibility="private" line="10"/>
+  <member name="allowed_actions" type="array" visibility="private" line="12"/>
+  <member name="root_parent_class_for_adding_page" type="string" default="&quot;ProductGroupSearchPage&quot;" visibility="private" line="22">
+    <docblock>
+      <description compact="the class of the page that is the root parent for the shop"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="AddForm" start="28" end="30" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Form" namespace="" name="Form"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="PageTypes" start="35" end="51" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="ArrayList" namespace="" name="ArrayList"/>
+      </return>
+    </docblock>
+  </method>
+</class>

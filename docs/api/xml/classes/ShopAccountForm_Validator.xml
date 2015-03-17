@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="ShopAccountForm_Validator" namespace="" name="ShopAccountForm_Validator" abstract="false" final="false" start="210" end="351">
+  <file path="./../../../code/forms" file="ShopAccountForm.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/ShopAccountForm.php" size="11212" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="0da80db80771a1902d73c97db3e53858b1658c97"/>
+  <extends full="RequiredFields" namespace="" name="RequiredFields"/>
+  <method name="php" start="218" end="347" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Ensures member unique id stays unique and other basic stuff..."/>
+      <param description="= array Form Field Data" type="array" variable="$data"/>
+      <param description="- see comment below" type="object" variable="$allowExistingEmail">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="allowExistingEmail" byreference="false" type="{unknown}" default="false"/>
+    <inline>
+      <comment value="check password fields are the same before saving" line="292"/>
+      <comment value="if you are not logged in, you have not provided a password and the settings require you to be logged in then" line="302"/>
+      <comment value="we have a problem" line="303"/>
+    </inline>
+  </method>
+  <extender full="OrderFormAddress_Validator" namespace="" name="OrderFormAddress_Validator"/>
+</class>

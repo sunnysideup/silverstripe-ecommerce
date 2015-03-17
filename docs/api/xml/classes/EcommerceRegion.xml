@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="EcommerceRegion" namespace="" name="EcommerceRegion" abstract="false" final="false" start="16" end="326">
+  <file path="./../../../code/model/address" file="EcommerceRegion.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/model/address/EcommerceRegion.php" size="9300" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="61e710c2a0084d5f7809fb998a9dfbf2f1b71bd2"/>
+  <docblock>
+    <description/>
+    <description compact="The regions can be states (e.g. we only sell within New York and Penn State), suburbs (pizza delivery place), or whatever other geographical borders you are using.">Each region has one country, so a region can not span more than one country.</description>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: address"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject"/>
+  <implements full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject"/>
+  <member name="api_access" type="array" visibility="private" line="22">
+    <docblock>
+      <description compact="what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceRegion/"/>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <member name="db" type="array" visibility="private" line="33">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="has_one" type="array" visibility="private" line="44">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="indexes" type="array" visibility="private" line="52">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="default_sort" type="string" default="&quot;\&quot;Name\&quot; ASC&quot;" visibility="private" line="61">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="singular_name" type="string" default="&quot;Region&quot;" visibility="private" line="67">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="68" end="68" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Regions&quot;" visibility="private" line="74">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="75" end="75" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="searchable_fields" type="array" visibility="private" line="81">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="field_labels" type="array" visibility="private" line="90">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="summary_fields" type="array" visibility="private" line="98">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="description" type="string" default="&quot;A region within a country.  This can be a state or a province or the equivalent.&quot;" visibility="private" line="108">
+    <docblock>
+      <description compact="Standard SS variable."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="show" start="114" end="119" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="do we use regions at all in this ecommerce application?"/>
+      <return type="object">
+        <type full="Bool" namespace="" name="Bool"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getCMSFields" start="125" end="130" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS FieldList"/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="CMSEditLink" start="137" end="143" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="link to edit the record"/>
+      <param description="| Null $action - e.g. edit" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="null"/>
+  </method>
+  <method name="code_allowed" start="150" end="156" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="checks if a code is allowed"/>
+      <param description="- e.g. NZ, NSW, or CO" type="object" variable="$code">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="code" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="regionid_allowed" start="165" end="167" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="checks if a code is allowed"/>
+      <param description="- e.g. NZ, NSW, or CO" type="object" variable="$code">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="regionID" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="find_title" start="174" end="183" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="converts a code into a proper title"/>
+      <param description="(Code)" type="object" variable="$regionID">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return description="( name)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="regionID" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="check if code was provided, and is found in the country array" line="176"/>
+    </inline>
+  </method>
+  <method name="get_default_array" start="189" end="203" abstract="false" final="false" static="true" visibility="protected">
+    <docblock>
+      <description compact="This function returns back the default list of regions, filtered by the currently selected country."/>
+      <return description="- array of Region.ID =&gt; Region.Name" type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="list_of_allowed_entries_for_dropdown" start="211" end="230" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="takes the defaultArray and limits it with &quot;only show&quot; and &quot;do not show&quot; value, relevant for the current order."/>
+      <return description="(Code, Title)" type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <member name="for_current_order_only_show_regions" type="array" visibility="protected" line="239">
+    <docblock>
+      <description compact="these variables and methods allow to to &quot;dynamically limit the regions available, based on, for example: ordermodifiers, item selection, etc....">for example, if hot delivery of a catering item is only available in a certain region, then the regions can be limited with the methods below.
+NOTE: these methods / variables below are IMPORTANT, because they allow the dropdown for the region to be limited for just that order</description>
+      <var description="of regions codes, e.g. (&quot;NSW&quot;, &quot;WA&quot;, &quot;VIC&quot;);" type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="get_for_current_order_only_show_regions" start="240" end="240" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="set_for_current_order_only_show_regions" start="241" end="249" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="a" byreference="false" type="array"/>
+    <inline>
+      <comment value="we INTERSECT here so that only countries allowed by all forces (modifiers) are added." line="243"/>
+    </inline>
+  </method>
+  <member name="for_current_order_do_not_show_regions" type="array" visibility="private" line="255">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="get_for_current_order_do_not_show_regions" start="256" end="256" abstract="false" final="false" static="true" visibility="public"/>
+  <method name="set_for_current_order_do_not_show_regions" start="257" end="260" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="a" byreference="false" type="array"/>
+    <inline>
+      <comment value="We MERGE here because several modifiers may limit the countries" line="258"/>
+    </inline>
+  </method>
+  <method name="get_region_id" start="266" end="291" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="This function works out the most likely region for the current order"/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+    <inline>
+      <comment value="3. check GEOIP information" line="273"/>
+    </inline>
+  </method>
+  <method name="get_region_from_ip" start="299" end="306" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the country based on the Visitor Country Provider.">this is some sort of IP recogniser system (e.g. Geoip Class)</description>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="get_region" start="311" end="313" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <alias value="for get_region_id"/>
+    </docblock>
+  </method>
+  <method name="onBeforeWrite" start="320" end="324" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method cleans up codes"/>
+    </docblock>
+  </method>
+  <interface full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject">
+    <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the link to edit the object"/>
+        <param description="| Null $action" type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="action" byreference="false" type="{unknown}" default="null"/>
+    </method>
+  </interface>
+</class>

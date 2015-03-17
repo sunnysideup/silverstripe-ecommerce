@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="OrderFormAddress_Validator" namespace="" name="OrderFormAddress_Validator" abstract="false" final="false" start="581" end="620">
+  <file path="./../../../code/forms" file="OrderFormAddress.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/OrderFormAddress.php" size="20665" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="2de6fb8f79a96e3df66cb8d9b5f576624c33ca51"/>
+  <docblock>
+    <description/>
+    <description value=": allows customer to make additional payments for their order"/>
+    <package value=": ecommerce"/>
+    <authors value=": Silverstripe, Jeremy, Nicolaas"/>
+  </docblock>
+  <extends full="ShopAccountForm_Validator" namespace="" name="ShopAccountForm_Validator"/>
+  <method name="php" start="588" end="618" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Ensures member unique id stays unique and other basic stuff..."/>
+      <param description="= Form Data" type="array" variable="$data"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="Note the exclamation Mark - only applies if it return FALSE." line="597"/>
+    </inline>
+  </method>
+  <parent full="ShopAccountForm_Validator" namespace="" name="ShopAccountForm_Validator">
+    <extends full="RequiredFields" namespace="" name="RequiredFields"/>
+    <method name="php" start="218" end="347" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="Ensures member unique id stays unique and other basic stuff..."/>
+        <param description="= array Form Field Data" type="array" variable="$data"/>
+        <param description="- see comment below" type="object" variable="$allowExistingEmail">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </param>
+        <return type="object">
+          <type full="Boolean" namespace="" name="Boolean"/>
+        </return>
+      </docblock>
+      <parameter name="data" byreference="false" type="{unknown}"/>
+      <parameter name="allowExistingEmail" byreference="false" type="{unknown}" default="false"/>
+      <inline>
+        <comment value="check password fields are the same before saving" line="292"/>
+        <comment value="if you are not logged in, you have not provided a password and the settings require you to be logged in then" line="302"/>
+        <comment value="we have a problem" line="303"/>
+      </inline>
+    </method>
+  </parent>
+</class>

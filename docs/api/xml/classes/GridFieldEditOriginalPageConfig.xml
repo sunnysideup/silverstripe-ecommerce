@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="GridFieldEditOriginalPageConfig" namespace="" name="GridFieldEditOriginalPageConfig" abstract="false" final="false" start="16" end="31">
+  <file path="./../../../code/forms/gridfield" file="GridFieldEditOriginalPageConfig.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/gridfield/GridFieldEditOriginalPageConfig.php" size="621" time="2015-01-07T16:05:13+13:00" unixtime="1420599913" sha1="9f27874a55c08a2e585bf3b02b8f9c2924e90f3c"/>
+  <docblock>
+    <description/>
+    <author value="nicolaas &lt;github@sunnysideup.co.nz&gt;"/>
+  </docblock>
+  <extends full="GridFieldConfig_RelationEditor" namespace="" name="GridFieldConfig_RelationEditor"/>
+  <constructor name="__construct" start="21" end="29" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="- How many items per page should show up" type="int" variable="$itemsPerPage"/>
+    </docblock>
+    <parameter name="itemsPerPage" byreference="false" type="{unknown}" default="null"/>
+  </constructor>
+</class>

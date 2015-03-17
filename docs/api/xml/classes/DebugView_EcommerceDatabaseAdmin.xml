@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src#" full="DebugView_EcommerceDatabaseAdmin" namespace="" name="DebugView_EcommerceDatabaseAdmin" abstract="false" final="false" start="442" end="457">
+  <file path="./../../../code/cms/dev" file="EcommerceDatabaseAdmin.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/cms/dev/EcommerceDatabaseAdmin.php" size="10514" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="2bede6ba8111d68d9285c02f27a41b640d3274e1"/>
+  <extends full="DebugView" namespace="" name="DebugView"/>
+  <method name="writePreOutcome" start="445" end="447" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="writePostOutcome" start="449" end="451" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="writeContent" start="453" end="455" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="controller" byreference="false" type="object">
+      <type full="\\Controller" namespace="\" name="Controller"/>
+    </parameter>
+  </method>
+</class>
