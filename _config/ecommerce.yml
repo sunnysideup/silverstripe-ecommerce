@@ -223,7 +223,7 @@ OrderAddress:
 
 
 EcommerceRole:
-  allow_customers_to_setup_accounts: true
+  allow_customers_to_setup_accounts: 1
   must_have_account_to_purchase: false
   automatically_update_member_details: true
   customer_group_code: "shopcustomers"
