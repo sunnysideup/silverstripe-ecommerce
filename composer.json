@@ -19,7 +19,8 @@
 		"sunnysideup/google_address_field": "dev-master"
 	},
 	"suggest": {
-		"silverstripe/geoip": "HIGHLY RECOMMENDED: Native Silverstripe way to work out the customer country. Make sure this work on your server, before installing it - otherwise it is useless.",
+		"silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this work on your server, before installing it - otherwise it is useless.",
+		"sunnysideup/cloudflaregeoip": "Extends Geoip if you are using cloudflare",
 		"silverstripe/restfulserver": "adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)"
 	},
 	"support":{
