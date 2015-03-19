@@ -748,13 +748,11 @@ EcommerceConfig:
 				E_USER_NOTICE
 			);
 		}
-		elseif(class_exists("Geoip") && $this->Config()->get("visitor_country_provider") == "EcommerceCountry_VisitorCountryProvider") {
-			if(Director::isLive() && !Geoip::visitor_country()) {
-				user_error("
-					Please make sure that Geoip is working on your server (see the GEOIP module for details).",
-					E_USER_NOTICE
-				);
-			}
+		elseif(Director::isLive() && !EcommerceCountry::get_country_from_ip()) {
+			user_error("
+				Please make sure that '".$this->Config()->get("visitor_country_provider")."' (visitor_country_provider) is working on your server (see the GEOIP module for details).",
+				E_USER_NOTICE
+			);
 		}
 	}
 
