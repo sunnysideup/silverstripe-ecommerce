@@ -38,6 +38,8 @@ class EcommerceSideReport_EcommercePages extends SS_Report {
 		" (".$this->sourceRecords()->count().")";
 	}
 
+	private static $additional_classnames = array();
+
 	/**
 	 * not sure if this is used in SS3
 	 * @return String
@@ -59,7 +61,7 @@ class EcommerceSideReport_EcommercePages extends SS_Report {
 	 * @return DataList
 	 */
 	function sourceRecords($params = null) {
-		return SiteTree::get()->filter("ClassName", array("CartPage", "AccountPage", "ProductGroupSearchPage"));
+		return SiteTree::get()->filter("ClassName", array("CartPage", "AccountPage", "ProductGroupSearchPage", "CheckoutPage", "OrderConfirmationPage") + (array)$this->Config()->get("additional_classnames"));
 	}
 
 	/**

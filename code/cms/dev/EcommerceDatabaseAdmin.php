@@ -185,9 +185,10 @@ class EcommerceDatabaseAdmin extends TaskRunner{
 	 * @var Array
 	 */
 	protected $dataReview = array(
+		"ecommercetaskreviewreports",
 		"ecommercetaskreviewsearches",
 		"ecommercetaskorderitemspercustomer",
-		"ecommercetaskexportallorderitems",
+		"ecommercetaskexportallorderitems"
 	);
 
 	/**
