@@ -299,6 +299,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING1", _t("OrderStep.CAREFUL", "CAREFUL! please edit details below with care"), 2), "Description");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING2", _t("OrderStep.CUSTOMERCANCHANGE", "What can be changed during this step?"), 3), "CustomerCanEdit");
 		$fields->addFieldToTab("Root.Main", new HeaderField("WARNING5", _t("OrderStep.ORDERGROUPS", "Order groups for customer?"), 3), "ShowAsUncompletedOrder");
+		$fields->addFieldToTab("Root.Main", new HeaderField("HideStepFromCustomerHeader", _t("OrderStep.HIDE_STEP_FROM_CUSTOMER_HEADER", "Customer Interaction"), 3), "HideStepFromCustomer");
+		//final cleanup
 		$fields->removeFieldFromTab("Root.Main", "Sort");
 		$fields->addFieldToTab("Root.Main", new TextareaField("Description", _t("OrderStep.DESCRIPTION", "Explanation for internal use only")), "WARNING1");
 		return $fields;
@@ -731,7 +733,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		$this->Code = strtoupper($this->Code);
-		$this->ShowAsCompletedOrder = ($this->NextOrderStep() ? false : true);
 	}
 
 	/**

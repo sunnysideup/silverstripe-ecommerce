@@ -24,4 +24,12 @@ class EcommerceCountry_VisitorCountryProvider extends Object implements Ecommerc
 		}
 	}
 
+	/**
+	 *
+	 * returns string of IP address.
+	 */
+	public function getIP(){
+		return $_SERVER['REMOTE_ADDR'];
+	}
+
 }

@@ -160,7 +160,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 			->Filter(array("InUse" => 1))
 			->Sort(
 				array(
-					"IF(\"Code\" = '".EcommerceConfig::get("EcommerceCurrency", "default_currency")."', 0, 1)" => "ASC",
+					"IF(\"Code\" = '".strtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency"))."', 0, 1)" => "ASC",
 					"Name" => "ASC",
 					"Code" => "ASC"
 				)
@@ -215,7 +215,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 		return EcommerceCurrency::get()
 			->Filter(
 				array(
-					"Code" => EcommerceConfig::get("EcommerceCurrency", "default_currency"),
+					"Code" => trimtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency")),
 					"InUse" => 1
 				)
 			)
@@ -235,14 +235,14 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	/**
 	 * Only returns a currency when it is a valid currency.
 	 *
-	 * @param String $currencyCode - the code of the currency
+	 * @param String $currencyCode - the code of the currency, e.g. nzd
 	 * @return EcommerceCurrency | Null
 	 */
 	public static function get_one_from_code($currencyCode) {
 		return EcommerceCurrency::get()
 			->Filter(
 				array(
-					"Code" => $currencyCode,
+					"Code" => trim(strtolower($currencyCode)),
 					"InUse" => 1
 				)
 			)
@@ -457,17 +457,23 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	}
 
 	public static function create_new($code) {
-		$code = strtolower($code);
+		$code = trim(strtolower($code));
 		$name = $code;
 		if(isset(self::$currencies[$code])) {
 			$name = self::$currencies[$code];
 		}
 		$name = ucwords($name);
-		$currency = EcommerceCurrency::create(array(
-			'Code' => $code,
-			'Name' => $name,
-			'InUse' => true
-		));
+		if($currency = EcommerceCurrency::get()->filter(array("Code" => $code))->first()) {
+			$currency->Name = $name;
+			$currency->InUse = true;
+		}
+		else {
+			$currency = EcommerceCurrency::create(array(
+				'Code' => $code,
+				'Name' => $name,
+				'InUse' => true
+			));
+		}
 		$valid = $currency->write();
 		if($valid) {
 			return $currency;

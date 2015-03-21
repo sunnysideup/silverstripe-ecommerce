@@ -166,6 +166,20 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
+	 * returns the country based on the Visitor Country Provider.
+	 * this is some sort of IP recogniser system (e.g. Geoip Class)
+	 * @return String (country code)
+	 **/
+	public static function get_ip(){
+		$visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
+		if(!$visitorCountryProviderClassName) {
+			$visitorCountryProviderClassName = "EcommerceCountry_VisitorCountryProvider";
+		}
+		$visitorCountryProvider = new $visitorCountryProviderClassName();
+		return $visitorCountryProvider->getIP();
+	}
+
+	/**
 	 * @return Array
 	 * e.g.
 	 * "NZ" => "New Zealand"
@@ -218,6 +232,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * @return String
 	 **/
 	public static function find_title($code) {
+		$code = strtoupper($code);
 		$options = EcommerceCountry::get_country_dropdown($showAllCountries = true);
 		// check if code was provided, and is found in the country array
 		if(isset($options[$code])) {
@@ -227,7 +242,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 			return $code;
 		}
 		else {
-			return "[COUNTRY NOT FOUND]";
+			return _t("Ecommerce.COUNTRY_NOT_FOUND", "[COUNTRY NOT FOUND]");
 		}
 	}
 
