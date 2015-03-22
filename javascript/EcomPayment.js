@@ -22,16 +22,20 @@ var EcomPayment = {
 
 		methodFields.hide();
 
-		paymentInputs.each(function(e) {
-			if(jQuery(this).attr('checked') == true) {
+		paymentInputs.each(
+			function(e) {
+				if(jQuery(this).attr('checked') == true) {
+					jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
+				}
+			}
+		);
+
+		paymentInputs.click(
+			function(e) {
+				methodFields.hide();
 				jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
 			}
-		});
-
-		paymentInputs.click(function(e) {
-			methodFields.hide();
-			jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
-		});
+		);
 
 		jQuery(EcomPayment.paymentInputsSelector).first().click();
 
