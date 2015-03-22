@@ -215,7 +215,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 		return EcommerceCurrency::get()
 			->Filter(
 				array(
-					"Code" => trim(strtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency")),
+					"Code" => trim(strtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency"))),
 					"InUse" => 1
 				)
 			)
