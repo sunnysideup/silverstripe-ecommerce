@@ -8,6 +8,8 @@
 	});
 })(jQuery);
 
+
+
 var EcomPayment = {
 
 	paymentInputsSelector: '#PaymentMethod input[type=radio]',
@@ -43,3 +45,5 @@ var EcomPayment = {
 
 
 }
+
+jQuery(EcomPayments.paymentFieldSelector).hide();
