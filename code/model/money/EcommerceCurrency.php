@@ -160,7 +160,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 			->Filter(array("InUse" => 1))
 			->Sort(
 				array(
-					"IF(\"Code\" = '".strtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency"))."', 0, 1)" => "ASC",
+					"IF(\"Code\" = '".strtoupper(EcommerceConfig::get("EcommerceCurrency", "default_currency"))."', 0, 1)" => "ASC",
 					"Name" => "ASC",
 					"Code" => "ASC"
 				)
@@ -215,7 +215,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 		return EcommerceCurrency::get()
 			->Filter(
 				array(
-					"Code" => trimtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency")),
+					"Code" => trim(strtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency")),
 					"InUse" => 1
 				)
 			)
@@ -242,7 +242,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 		return EcommerceCurrency::get()
 			->Filter(
 				array(
-					"Code" => trim(strtolower($currencyCode)),
+					"Code" => trim(strtoupper($currencyCode)),
 					"InUse" => 1
 				)
 			)
@@ -303,7 +303,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 				user_error("This currency (ID = ".$this->ID.") does not have a code ");
 			}
 		}
-		return strtolower($this->Code) ==  strtolower(EcommerceConfig::get("EcommerceCurrency", "default_currency"));
+		return strtoupper($this->Code) ==  strtoupper(EcommerceConfig::get("EcommerceCurrency", "default_currency"));
 	}
 
 	/**
@@ -457,7 +457,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	}
 
 	public static function create_new($code) {
-		$code = trim(strtolower($code));
+		$code = trim(strtoupper($code));
 		$name = $code;
 		if(isset(self::$currencies[$code])) {
 			$name = self::$currencies[$code];
