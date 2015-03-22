@@ -46,4 +46,4 @@ var EcomPayment = {
 
 }
 
-jQuery(EcomPayments.paymentFieldSelector).hide();
+jQuery(EcomPayment.paymentFieldSelector).hide();
