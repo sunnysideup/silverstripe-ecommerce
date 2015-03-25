@@ -56,8 +56,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 * @var Array
 	 */
 	private static $field_labels = array(
-		"Code" => "Short Code (e.g. NZD)",
-		"Name" => "Name (e.g. New Zealand Dollar)",
+		"Code" => "Short Code",
+		"Name" => "Name",
 		"InUse" => "It is available for use?",
 		"ExchangeRate" => "Exchange Rate",
 		"ExchangeRateExplanation" => "Exchange Rate explanation",
@@ -255,6 +255,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	function getCMSFields(){
 		$fields = parent::getCMSFields();
 		$fieldLabels = $this->fieldLabels();
+		$codeField = $fields->dataFieldByName("Code");
+		$codeField->setRightTitle("e.g. NZD, use uppercase codes");
+		$titleField = $fields->dataFieldByName("Name");
+		$titleField->setRightTitle("e.g. New Zealand Dollar");
 		$fields->addFieldToTab("Root.Main", new ReadonlyField("IsDefaulNice", $fieldLabels["IsDefaultNice"], $this->getIsDefaultNice()));
 		if(!$this->isDefault()) {
 			$fields->addFieldToTab("Root.Main", new ReadonlyField("ExchangeRate", $fieldLabels["ExchangeRate"], $this->ExchangeRate()));
@@ -456,11 +460,24 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 		}
 	}
 
-	public static function create_new($code) {
+	/**
+	 *
+	 * checks if a currency exists, creates it and returns it.
+	 * @param String $code
+	 * @param String $name OPTIONAL
+	 *
+	 * @return NULL | EcommerceCurrency
+	 */ 
+	public static function create_new($code, $name = "") {
 		$code = trim(strtoupper($code));
-		$name = $code;
-		if(isset(self::$currencies[$code])) {
-			$name = self::$currencies[$code];
+		if(!$name) {
+			$currencies = Config::inst()->get("EcommerceCurrency", "currencies");
+			if(isset($currencies[$code])) {
+				$name = $currencies[$code];
+			}
+			else {
+				$name = $code;
+			}
 		}
 		$name = ucwords($name);
 		if($currency = EcommerceCurrency::get()->filter(array("Code" => $code))->first()) {
@@ -490,95 +507,93 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	}
 
 	private static $currencies = array(
-		'afa' => 'afghanistan afghanis',
-		'all' => 'albania leke',
-		'dzd' => 'algeria dinars',
-		'ars' => 'argentina pesos',
-		'aud' => 'australia dollars',
-		'ats' => 'austria schillings*',
-		'bsd' => 'bahamas dollars',
-		'bhd' => 'bahrain dinars',
-		'bdt' => 'bangladesh taka',
-		'bbd' => 'barbados dollars',
-		'bef' => 'belgium francs*',
-		'bmd' => 'bermuda dollars',
-		'brl' => 'brazil reais',
-		'bgn' => 'bulgaria leva',
-		'cad' => 'canada dollars',
-		'xof' => 'cfa bceao francs',
-		'xaf' => 'cfa beac francs',
-		'clp' => 'chile pesos',
-		'cny' => 'china yuan renminbi',
-		'cop' => 'colombia pesos',
-		'crc' => 'costa rica colones',
-		'hrk' => 'croatia kuna',
-		'cyp' => 'cyprus pounds',
-		'czk' => 'czech republic koruny',
-		'dkk' => 'denmark kroner',
-		'dop' => 'dominican republic pesos',
-		'xcd' => 'eastern caribbean dollars',
-		'egp' => 'egypt pounds',
-		'eek' => 'estonia krooni',
-		'eur' => 'euro',
-		'fjd' => 'fiji dollars',
-		'dem' => 'germany deutsche marks*',
-		'xau' => 'gold ounces',
-		'nlg' => 'holland (netherlands) guilders*',
-		'hkd' => 'hong kong dollars',
-		'huf' => 'hungary forint',
-		'isk' => 'iceland kronur',
-		'xdr' => 'imf special drawing right',
-		'inr' => 'india rupees',
-		'idr' => 'indonesia rupiahs',
-		'irr' => 'iran rials',
-		'iqd' => 'iraq dinars',
-		'ils' => 'israel new shekels',
-		'jmd' => 'jamaica dollars',
-		'jpy' => 'japan yen',
-		'jod' => 'jordan dinars',
-		'kes' => 'kenya shillings',
-		'krw' => 'korea (south) won',
-		'kwd' => 'kuwait dinars',
-		'lbp' => 'lebanon pounds',
-		'myr' => 'malaysia ringgits',
-		'mtl' => 'malta liri',
-		'mur' => 'mauritius rupees',
-		'mxn' => 'mexico pesos',
-		'mad' => 'morocco dirhams',
-		'nzd' => 'new zealand dollars',
-		'nok' => 'norway kroner',
-		'omr' => 'oman rials',
-		'pkr' => 'pakistan rupees',
-		'xpd' => 'palladium ounces',
-		'pen' => 'peru nuevos soles',
-		'php' => 'philippines pesos',
-		'xpt' => 'platinum ounces',
-		'pln' => 'poland zlotych',
-		'qar' => 'qatar riyals',
-		'rol' => 'romania lei',
-		'rub' => 'russia rubles',
-		'sar' => 'saudi arabia riyals',
-		'xag' => 'silver ounces',
-		'sgd' => 'singapore dollars',
-		'skk' => 'slovakia koruny',
-		'sit' => 'slovenia tolars',
-		'zar' => 'south africa rand',
-		'krw' => 'south korea won',
-		'xdr' => 'special drawing rights (imf)',
-		'lkr' => 'sri lanka rupees',
-		'sdd' => 'sudan dinars',
-		'sek' => 'sweden kronor',
-		'chf' => 'switzerland francs',
-		'twd' => 'taiwan new dollars',
-		'thb' => 'thailand baht',
-		'ttd' => 'trinidad and tobago dollars',
-		'tnd' => 'tunisia dinars',
-		'try' => 'turkey new lira',
-		'aed' => 'united arab emirates dirhams',
+		'AFA' => 'afghanistan afghanis',
+		'ALL' => 'albania leke',
+		'DZD' => 'algeria dinars',
+		'ARS' => 'argentina pesos',
+		'AUD' => 'australia dollars',
+		'ATS' => 'austria schillings*',
+		'BSD' => 'bahamas dollars',
+		'BHD' => 'bahrain dinars',
+		'BDT' => 'bangladesh taka',
+		'BBD' => 'barbados dollars',
+		'BEF' => 'belgium francs*',
+		'BMD' => 'bermuda dollars',
+		'BRL' => 'brazil reais',
+		'BGN' => 'bulgaria leva',
+		'CAD' => 'canada dollars',
+		'XOF' => 'cfa bceao francs',
+		'XAF' => 'cfa beac francs',
+		'CLP' => 'chile pesos',
+		'CNY' => 'china yuan renminbi',
+		'COP' => 'colombia pesos',
+		'CRC' => 'costa rica colones',
+		'HRK' => 'croatia kuna',
+		'CYP' => 'cyprus pounds',
+		'CZK' => 'czech republic koruny',
+		'DKK' => 'denmark kroner',
+		'DOP' => 'dominican republic pesos',
+		'XCD' => 'eastern caribbean dollars',
+		'EGP' => 'egypt pounds',
+		'EEK' => 'estonia krooni',
+		'EUR' => 'euro',
+		'FJD' => 'fiji dollars',
+		'DEM' => 'germany deutsche marks*',
+		'XAU' => 'gold ounces',
+		'NLG' => 'holland (netherlands) guilders*',
+		'HKD' => 'hong kong dollars',
+		'HUF' => 'hungary forint',
+		'ISK' => 'iceland kronur',
+		'XDR' => 'imf special drawing right',
+		'INR' => 'india rupees',
+		'IDR' => 'indonesia rupiahs',
+		'IRR' => 'iran rials',
+		'IQD' => 'iraq dinars',
+		'ILS' => 'israel new shekels',
+		'JMD' => 'jamaica dollars',
+		'JPY' => 'japan yen',
+		'JOD' => 'jordan dinars',
+		'KES' => 'kenya shillings',
+		'KRW' => 'korea (south) won',
+		'KWD' => 'kuwait dinars',
+		'LBP' => 'lebanon pounds',
+		'MYR' => 'malaysia ringgits',
+		'MTL' => 'malta liri',
+		'MUR' => 'mauritius rupees',
+		'MXN' => 'mexico pesos',
+		'MAD' => 'morocco dirhams',
+		'NZD' => 'new zealand dollars',
+		'NOK' => 'norway kroner',
+		'OMR' => 'oman rials',
+		'PKR' => 'pakistan rupees',
+		'XPD' => 'palladium ounces',
+		'PEN' => 'peru nuevos soles',
+		'PHP' => 'philippines pesos',
+		'PLN' => 'poland zlotych',
+		'QAR' => 'qatar riyals',
+		'ROL' => 'romania lei',
+		'RUB' => 'russia rubles',
+		'SAR' => 'saudi arabia riyals',
+		'XAG' => 'silver ounces',
+		'SGD' => 'singapore dollars',
+		'SKK' => 'slovakia koruny',
+		'SIT' => 'slovenia tolars',
+		'ZAR' => 'south africa rand',
+		'KRW' => 'south korea won',
+		'LKR' => 'sri lanka rupees',
+		'SDD' => 'sudan dinars',
+		'SEK' => 'sweden kronor',
+		'CHF' => 'switzerland francs',
+		'TWD' => 'taiwan new dollars',
+		'THB' => 'thailand baht',
+		'TTD' => 'trinidad and tobago dollars',
+		'TND' => 'tunisia dinars',
+		'TRY' => 'turkey new lira',
+		'AED' => 'united arab emirates dirhams',
 		'gbp' => 'united kingdom pounds',
-		'usd' => 'united states dollars',
-		'veb' => 'venezuela bolivares',
-		'vnd' => 'vietnam dong',
-		'zmk' => 'zambia kwacha'
+		'USD' => 'united states dollars',
+		'VEB' => 'venezuela bolivares',
+		'VND' => 'vietnam dong',
+		'ZMK' => 'zambia kwacha'
 	);
 }
