@@ -83,19 +83,19 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	 */
 	function onBeforeInit(){
 		$this->secureHostSwitcher();
-		
+
 		//make sure that with a simple flush=all, all the caches are flushed...
 		if(isset($_GET["flush"]) && $_GET["flush"] == "all") {
 			$this->owner->ClearZendCaches();
 		}
-		
+
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
 		//todo: check if we even need this (via ShoppingCartsRequirements.ss)
 		if($this->owner->dataRecord) {
 			if(is_a($this->owner->dataRecord, Object::getCustomClass("Product")) || is_a($this->owner->dataRecord, Object::getCustomClass("ProductGroup"))) {
-				Session::set("ContinueShoppingLink", substr($_SERVER['REQUEST_URI'], strlen(Director::baseURL())));
+				Session::set("ContinueShoppingLink", $this->owner->Link());
 			}
 		}
 	}
