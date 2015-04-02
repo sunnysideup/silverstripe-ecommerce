@@ -166,17 +166,29 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		}
 
 		$protocol = Director::is_https() ? 'https://' : 'http://';
-		$current_url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-		$redirect_session = session_id() ? '?session=' . session_id() : false;
+		$currentUrlFull = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$currentUrlWithoutHost = $_SERVER['REQUEST_URI'];
+		$currentUrlWithoutHost = strstr($currentUrlWithoutHost, "#", true);
+		$sessionPartOfURL = "";
+		$sessionID = session_id();
+		if($sessionID) {
+			if(strpos($currentUrl, "?")) {
+				$sessionPartOfURL .= "&";
+			}
+			else {
+				$sessionPartOfURL =  "?";
+			}
+			$sessionPartOfURL .= "session=".$sessionID;
+		}
+		$currentUrlWithoutHost .= $sessionPartOfURL;
 
 		$isSecure = $this->owner->isSecurePage();
 
-		if ($isSecure && !preg_match('/^' . preg_quote(_SECURE_URL, '/') . '/', $current_url)) {
-			return $this->owner->redirect(_SECURE_URL . $this->owner->Link() . $redirect_session);
+		if ($isSecure && !preg_match('/^' . preg_quote(_SECURE_URL, '/') . '/', $currentUrlFull)) {
+			return $this->owner->redirect(_SECURE_URL . $currentUrlWithoutHost);
 		}
-		else if (!$isSecure && !preg_match('/^' . preg_quote(_STANDARD_URL, '/') . '/', $current_url)) {
-			return $this->owner->redirect(_STANDARD_URL . $this->owner->Link() . $redirect_session);
+		else if (!$isSecure && !preg_match('/^' . preg_quote(_STANDARD_URL, '/') . '/', $currentUrlFull)) {
+			return $this->owner->redirect(_STANDARD_URL . $currentUrlWithoutHost);
 		}
 
 		/* if session is set, set session & hard-redirect to $Link preventing child classes from executing */
@@ -185,7 +197,8 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 			@session_write_close();
 			@session_id($this->owner->request->getVar('session'));
 			@session_start();
-			header("location: " . $this->owner->Link(), 302);
+			header("location: " . $currentUrlFull, 302);
+			//header("location: " . $this->owner->Link(), 302);
 			exit;
 		}
 
