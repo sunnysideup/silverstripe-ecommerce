@@ -172,7 +172,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		$sessionPartOfURL = "";
 		$sessionID = session_id();
 		if($sessionID) {
-			if(strpos($currentUrl, "?")) {
+			if(strpos($currentUrlWithoutHost, "?")) {
 				$sessionPartOfURL .= "&";
 			}
 			else {
