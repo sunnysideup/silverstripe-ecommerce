@@ -168,7 +168,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		$protocol = Director::is_https() ? 'https://' : 'http://';
 		$currentUrlFull = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		$currentUrlWithoutHost = $_SERVER['REQUEST_URI'];
-		$currentUrlWithoutHost = strstr($currentUrlWithoutHost, "#", true);
+		$currentUrlWithoutHost = strtok($currentUrlWithoutHost, "#", true);
 		$sessionPartOfURL = "";
 		$sessionID = session_id();
 		if($sessionID) {
