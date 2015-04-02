@@ -192,10 +192,11 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 		}
 
 		/* if session is set, set session & hard-redirect to $Link preventing child classes from executing */
-		if ($this->owner->request->getVar('session')) {
+		if ($sessionID = $this->owner->request->getVar('session')) {
+			$currentUrlFull = str_replace("session=".$sessionID, "", $currentUrlFull);
 			/* force hard-coded session setting */
 			@session_write_close();
-			@session_id($this->owner->request->getVar('session'));
+			@session_id($sessionID);
 			@session_start();
 			header("location: " . $currentUrlFull, 302);
 			//header("location: " . $this->owner->Link(), 302);
