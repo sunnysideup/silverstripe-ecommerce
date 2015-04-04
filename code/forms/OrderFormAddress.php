@@ -327,7 +327,7 @@ class OrderFormAddress extends Form {
 			}
 		}
 
-		$this->extend("saveAddressExtension", $data);
+		$this->extend("saveAddressExtension", $data, $form, $order, $this->orderMember);
 
 		//SAVE ORDER
 		$this->order->write();
