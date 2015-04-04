@@ -327,6 +327,8 @@ class OrderFormAddress extends Form {
 			}
 		}
 
+		$this->extend("saveAddressExtension", $data);
+
 		//SAVE ORDER
 		$this->order->write();
 
