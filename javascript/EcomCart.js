@@ -576,7 +576,11 @@ EcomCart = {
 					var el = jQuery(this).parents(EcomCart.orderItemHolderSelector);
 					jQuery(el).slideUp(
 						"slow",
-						function() {jQuery(el).remove();}
+						function() {
+							jQuery(el).remove();
+							//swap out infomation "in cart" vs "nothing in cart"
+							EcomCart.updateForZeroVSOneOrMoreRows();
+						}
 					);
 					EcomCart.getChanges(url, null, this);
 				}
@@ -824,6 +828,7 @@ EcomCart = {
 			);
 		}
 		else {
+			alert("no items in cart");
 			jQuery(EcomCart.selectorShowOnZeroItems).show();
 			jQuery(EcomCart.selectorHideOnZeroItems).hide();
 		}
