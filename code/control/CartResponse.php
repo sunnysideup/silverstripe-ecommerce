@@ -89,8 +89,6 @@ class CartResponse extends EcommerceResponse {
 
 		//order items
 
-
-
 		$inCartArray = array();
 		$items = $currentOrder->Items();
 		if ($items->count()) {

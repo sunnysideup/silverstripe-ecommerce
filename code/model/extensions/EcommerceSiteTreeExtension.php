@@ -181,8 +181,8 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 				$sessionPartOfURL =  "?";
 			}
 			$sessionPartOfURL .= "session=".$sessionID;
+			$currentUrlWithoutHost .= $sessionPartOfURL;
 		}
-		$currentUrlWithoutHost .= $sessionPartOfURL;
 
 		$isSecure = $this->owner->isSecurePage();
 
@@ -193,7 +193,6 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 			return $this->owner->redirect(_STANDARD_URL . $currentUrlWithoutHost);
 		}
 
-		/* if session is set, set session & hard-redirect to $Link preventing child classes from executing */
 		if ($sessionID = $this->owner->request->getVar('session')) {
 			$currentUrlFull = str_replace("?session=".$sessionID, "", $currentUrlFull);
 			$currentUrlFull = str_replace("&session=".$sessionID, "", $currentUrlFull);
@@ -202,7 +201,6 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 			@session_id($sessionID);
 			@session_start();
 			header("location: " . $currentUrlFull, 302);
-			//header("location: " . $this->owner->Link(), 302);
 			exit;
 		}
 

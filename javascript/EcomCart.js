@@ -89,12 +89,6 @@ EcomCart = {
 	cartHasitems: false,
 
 	/**
-	 * Tells us if we are currently processing
-	 * @var Boolean
-	 */
-	processing: true,
-
-	/**
 	 * This is the data that we start with (which may be contained in the original HTML)
 	 * @var Array
 	 */
@@ -201,13 +195,13 @@ EcomCart = {
 	//#################################
 
 	/**
-	 * selector of the dom element shown when there are no items in cart.
+	 * selector of the dom elements shown when there are no items in cart.
 	 */
 	selectorShowOnZeroItems: ".showOnZeroItems",
 		set_selectorShowOnZeroItems: function(s) {this.selectorShowOnZeroItems = s;},
 
 	/**
-	 * selector of the dom element that is hidden on zero items.
+	 * selector of the dom elements that is hidden on zero items.
 	 */
 	selectorHideOnZeroItems: ".hideOnZeroItems",
 		set_selectorHideOnZeroItems: function(s) {this.selectorHideOnZeroItems = s;},
@@ -364,7 +358,7 @@ EcomCart = {
 		loadingClass: "loading",
 		iframe: true,
 		onOpen: function (event) {
-			EcomCart.reinit();
+			EcomCart.reinit(true);
 		}
 	},
 		set_colorboxDialogOptions: function(o){this.colorboxDialogOptions = o;},
@@ -394,7 +388,9 @@ EcomCart = {
 			//make sure that "delete from cart" links are updated with AJAX - looking at the actual cart itself.
 			EcomCart.addCartRemove(EcomCart.ajaxLinksAreaSelector);
 		}
-		EcomCart.updateForZeroVSOneOrMoreRows();
+		//EcomCart.updateForZeroVSOneOrMoreRows(); is only required after changes are made
+		//because HTML loads the right stuff by default.
+		//EcomCart.updateForZeroVSOneOrMoreRows();
 		EcomCart.initColorboxDialog();
 		EcomCart.setChanges(EcomCart.initialData, "");
 		//allow ajax product list back and forth:
@@ -408,14 +404,17 @@ EcomCart = {
 
 	/**
 	 * runs everytime the cart is updated
+	 * @param Boolean changes applied? have changes been applied in the meantime.
 	 */
-	reinit: function(){
+	reinit: function(changesApplied){
 		//hide or show "zero items" information
-		EcomCart.updateForZeroVSOneOrMoreRows();
 		if (typeof EcomQuantityField  != 'undefined') {
 			EcomQuantityField.reinit();
 		}
-		this.processing = false;
+		if(changesApplied) {
+			alert("doing updateForZeroVSOneOrMoreRows");
+			EcomCart.updateForZeroVSOneOrMoreRows();
+		}
 	},
 
 
@@ -584,8 +583,6 @@ EcomCart = {
 						"slow",
 						function() {
 							jQuery(el).remove();
-							//swap out infomation "in cart" vs "nothing in cart"
-							EcomCart.updateForZeroVSOneOrMoreRows();
 						}
 					);
 					EcomCart.getChanges(url, null, this);
@@ -721,6 +718,7 @@ EcomCart = {
 						}
 						if(selector == ".number_of_items") {
 							numericValue = parseInt(value);
+							alert(numericValue);
 							EcomCart.cartHasitems = (numericValue > 0 ? true : false);
 							//update cart menu items
 							jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(
@@ -813,7 +811,7 @@ EcomCart = {
 				}
 			}
 
-			EcomCart.reinit();
+			EcomCart.reinit(changes.length > 0);
 			jQuery("body").removeClass(EcomCart.classToShowPageIsUpdating);
 			for(var i = 0; i < EcomCart.loadingSelectors.length; i++) {
 				jQuery(EcomCart.loadingSelectors[i]).removeClass(EcomCart.classToShowLoading);
