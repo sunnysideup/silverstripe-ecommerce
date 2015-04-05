@@ -79,6 +79,7 @@ ProductGroup:
 
 Product:
   folder_name_for_images: "ProductImages"
+  add_data_to_meta_description_for_search: false
 
 Product_Image:
   thumbnail_width: 75

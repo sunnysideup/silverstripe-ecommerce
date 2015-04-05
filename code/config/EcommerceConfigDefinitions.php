@@ -218,7 +218,8 @@ class EcommerceConfigDefinitions extends Object {
 				"session_name_for_product_array" => "This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. ",
 			),
 			"Product" => array(
-				"folder_name_for_images" => "Default folder for uploading product images."
+				"folder_name_for_images" => "Default folder for uploading product images.",
+				"add_data_to_meta_description_for_search" => "Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details"
 			),
 			"Product_Image" =>  array(
 				"thumbnail_width" => "Thumbnail width in pixels. For thumbnails, we use paddedResize.",

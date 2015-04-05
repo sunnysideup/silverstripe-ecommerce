@@ -333,21 +333,24 @@ class Product extends Page implements BuyableModel {
 		$this->prepareFullFields();
 		//we are adding all the fields to the keyword fields here for searching purposes.
 		//because the MetaKeywords Field is being searched.
-		$this->MetaDescription = "";
-		$fieldsToExclude = Config::inst()->get("SiteTree", "db");
-		foreach($this->db() as $fieldName => $fieldType) {
-			if(is_string($this->$fieldName) && strlen($this->$fieldName) > 2) {
-				if(!in_array($fieldName, $fieldsToExclude)) {
-					$this->MetaDescription .= strip_tags($this->$fieldName);
+		if($this->Config()->get("add_data_to_meta_description_for_search")) {
+			$this->MetaDescription = "";
+			$fieldsToExclude = Config::inst()->get("SiteTree", "db");
+			foreach($this->db() as $fieldName => $fieldType) {
+				if(is_string($this->$fieldName) && strlen($this->$fieldName) > 2) {
+					if(!in_array($fieldName, $fieldsToExclude)) {
+						$this->MetaDescription .= strip_tags($this->$fieldName);
+					}
 				}
 			}
-		}
-		if($this->hasExtension("ProductWithVariationDecorator")) {
-			$variations = $this->Variations();
-			if($variations) {
-				if($variations->count()) {
-					foreach($variations as $variation) {
-						$this->MetaDescription .= " - ".$variation->FullName;
+			if($this->hasExtension("ProductWithVariationDecorator")) {
+				$variations = $this->Variations();
+				if($variations) {
+					$variationCount = $variations->count();
+					if($variationCount > 0 && $variationCount < 8) {
+						foreach($variations as $variation) {
+							$this->MetaDescription .= " - ".$variation->FullName;
+						}
 					}
 				}
 			}
