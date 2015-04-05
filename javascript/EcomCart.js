@@ -828,7 +828,6 @@ EcomCart = {
 			);
 		}
 		else {
-			alert("no items in cart");
 			jQuery(EcomCart.selectorShowOnZeroItems).show();
 			jQuery(EcomCart.selectorHideOnZeroItems).hide();
 		}
