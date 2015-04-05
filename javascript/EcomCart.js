@@ -412,7 +412,6 @@ EcomCart = {
 			EcomQuantityField.reinit();
 		}
 		if(changesApplied) {
-			alert("doing updateForZeroVSOneOrMoreRows");
 			EcomCart.updateForZeroVSOneOrMoreRows();
 		}
 	},
@@ -718,7 +717,6 @@ EcomCart = {
 						}
 						if(selector == ".number_of_items") {
 							numericValue = parseInt(value);
-							alert(numericValue);
 							EcomCart.cartHasitems = (numericValue > 0 ? true : false);
 							//update cart menu items
 							jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(
