@@ -83,6 +83,12 @@ EcomCart = {
 	openAjaxCalls: 0,
 
 	/**
+	 * are there any items in the cart
+	 * @var Boolean
+	 */
+	cartHasitems: false,
+
+	/**
 	 * Tells us if we are currently processing
 	 * @var Boolean
 	 */
@@ -714,6 +720,8 @@ EcomCart = {
 							jQuery(selector).attr(parameter, value);
 						}
 						if(selector == ".number_of_items") {
+							numericValue = parseInt(value);
+							EcomCart.cartHasitems = (numericValue > 0 ? true : false);
 							//update cart menu items
 							jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(
 								function(i, el) {
@@ -817,7 +825,7 @@ EcomCart = {
 	 * changes to the cart based on zero OR one or more rows
 	 */
 	updateForZeroVSOneOrMoreRows: function() {
-		if(EcomCart.cartHasItems()) {
+		if(EcomCart.cartHasItems) {
 			jQuery(EcomCart.selectorShowOnZeroItems).hide();
 			jQuery(EcomCart.selectorHideOnZeroItems).each(
 				function(i, el) {
@@ -846,15 +854,6 @@ EcomCart = {
 	 */
 	escapeHTML: function (str) {
 		return str;
-	},
-
-
-	/**
-	 * check if there are any items in the cart
-	 * @return Boolean
-	 */
-	cartHasItems: function() {
-		return jQuery(EcomCart.selectorItemRows).length > 0 ? true : false;
 	},
 
 	/**
