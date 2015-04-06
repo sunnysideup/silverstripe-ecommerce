@@ -56,21 +56,6 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension {
 		return "/Security/login?BackURL=".urlencode($link);
 	}
 
-	/**
-	 * clears all the Zend Caches
-	 * @param String cacheName
-	 * @param String cacheKey
-	 */
-	function ClearZendCaches($cacheName = "", $cacheKey = ""){
-		if($cacheName && $cacheKey) {
-			$cache = SS_Cache::factory($cacheName);
-			$cache->remove($cacheKey);
-		}
-		else {
-			$cache = SS_Cache::factory('any');
-			$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-		}
-	}
 
 }
 
@@ -83,11 +68,6 @@ class EcommerceSiteTreeExtension_Controller extends Extension {
 	 */
 	function onBeforeInit(){
 		$this->secureHostSwitcher();
-
-		//make sure that with a simple flush=all, all the caches are flushed...
-		if(isset($_GET["flush"]) && $_GET["flush"] == "all") {
-			$this->owner->ClearZendCaches();
-		}
 
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
 		//Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
