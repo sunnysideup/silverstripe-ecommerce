@@ -86,7 +86,7 @@ EcomCart = {
 	 * are there any items in the cart
 	 * @var Boolean
 	 */
-	cartHasitems: false,
+	cartHasItems: false,
 
 	/**
 	 * This is the data that we start with (which may be contained in the original HTML)
@@ -716,8 +716,10 @@ EcomCart = {
 							jQuery(selector).attr(parameter, value);
 						}
 						if(selector == ".number_of_items") {
-							numericValue = parseInt(value);
-							EcomCart.cartHasitems = (numericValue > 0 ? true : false);
+							console.debug("doing .number_of_items");
+							numericValue = parseFloat(value);
+							console.debug("value "+numericValue);
+							EcomCart.cartHasItems = (numericValue > 0 ? true : false);
 							//update cart menu items
 							jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(
 								function(i, el) {
