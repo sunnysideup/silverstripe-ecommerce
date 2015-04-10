@@ -123,6 +123,25 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 	}
 
 	/**
+	 * you can't delete a Member with one or more orders.
+	 * @return null | boolean
+	 */
+	function canDelete($member = null) {
+		if($this->getOrders()->count()) {
+			return false;
+		}
+	}
+
+	/**
+	 * we need this function because $this->Orders does not return anything
+	 * that is probably because Order links the member twice (placed by and cancelled by)
+	 * @return DataList
+	 */
+	function getOrders() {
+		return Order::get()->filter(array("MemberID" => $this->owner->ID));
+	}
+
+	/**
 	 * creates two permission roles.
 	 * standard SS Method
 	 * @return Array
@@ -151,7 +170,17 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 	 * @return FieldList
 	 */
 	public function updateCMSFields(FieldList $fields) {
-		//$orderField = $fields->dataFieldByName("Orders");
+		$orderField = $fields->dataFieldByName("Orders");
+		if($orderField) {
+			$config = GridFieldConfig_RecordEditor::create();
+			$config->removeComponentsByType('GridFieldDeleteAction');
+			$config->removeComponentsByType('GridFieldAddNewButton');
+			$orderField->setConfig($config);
+			$orderField->setList($this->getOrders());
+		}
+		else {
+			$orderField = new HiddenField("Orders", "Orders");
+		}
 		$preferredCurrencyField = $fields->dataFieldByName("PreferredCurrencyID");
 		$notesFields = $fields->dataFieldByName("Notes");
 		$link =  Controller::join_links(
@@ -162,7 +191,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 		$fields->addFieldsToTab(
 			"Root.Orders",
 			array(
-				//$orderField,
+				$orderField,
 				$preferredCurrencyField,
 				$notesFields,
 				$loginAsField
@@ -224,6 +253,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 	 */
 	function getEcommerceFields() {
 		if(!EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
+			//if no accounts are made then we simply return the basics....
 			$fields = new FieldList(
 				new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION','Personal Information'), 3),
 				new TextField('FirstName', _t('EcommerceRole.FIRSTNAME','First Name')),
@@ -239,6 +269,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 				$passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD','New Password'));
 				$passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD','Confirm New Password'));
 				$updatePasswordLinkField = new LiteralField('UpdatePasswordLink', "<a href=\"#Password\"  datano=\"".Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD','Do not update password'))."\"  class=\"updatePasswordLink\" rel=\"Password\">"._t('Account.UPDATE_PASSWORD','Update Password')."</a>");
+			}
+			else {
+				//if they dont have a password then we now force them to create one.
+				//the fields of which are added further down the line...
 			}
 			//we simply hide these fields, as they add little extra ....
 			$loginDetailsHeader = new HiddenField('LoginDetails',_t('Account.LOGINDETAILS','Login Details'), 5);
@@ -435,7 +469,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 			return $addresses->First();
 		}
 	}
-
 
 }
 

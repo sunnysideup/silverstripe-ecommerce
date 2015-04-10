@@ -16,13 +16,15 @@ class OrderFormAddress extends Form {
 
 
 	/**
-	 *
+	 * the member attached to the order
+	 * this is not always the same as the loggedInMember
 	 * @var Object (Member)
 	 */
 	protected $orderMember = null;
 
 	/**
-	 *
+	 * the logged in member, if any
+	 * this is not always the same as the orderMember
 	 * @var Object (Member)
 	 */
 	protected $loggedInMember = null;
@@ -305,8 +307,8 @@ class OrderFormAddress extends Form {
 				$this->orderMember->LogIn();
 			}
 			//this causes ERRORS ....
-			Session::set("Ecommerce_Member_For_Order", $this->orderMember->ID);
 			//$this->order->MemberID = $this->orderMember->ID;
+			Session::set("Ecommerce_Member_For_Order", $this->orderMember->ID);
 		}
 
 		//BILLING ADDRESS
@@ -364,12 +366,15 @@ class OrderFormAddress extends Form {
 	}
 
 	/**
-	 * works out the most likely member for the order after submission of the form.
+	 * Works out the most likely member for the order after submission of the form.
 	 * It returns a member if appropriate.
-	 * 1. does the order already have a member?
-	 * 2. shop allows creation of member
-	 * 3. can the entered data be used?
-	 * 4. is there no member logged in yet?
+	 * 1. does the order already have a member that is not a shop-admin - if so - DONE.
+	 * 2. shop allows creation of member? - if NOT return NULL
+	 * A. is the logged in member the shop admin placing an order on behalf of someone else?
+	 * A1. is the email entered different from the admin email?
+	 * A2. attach to other member as new one or existing one.
+	 * 3. can the entered data be used? - if
+	 * 4. is there no member logged in yet? - If there is one return null, member is already linked to order.
 	 * 5. find member from data entered (even if not logged in)
 	 * 6. At this stage, if we dont have a member, we will create one!
 	 * 7. We do one last check to see if we are allowed to create one
@@ -378,47 +383,66 @@ class OrderFormAddress extends Form {
 	 * @return Member | Null
 	 **/
 	protected function createOrFindMember(Array $data) {
+		//get the best available from order.
 		$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
 
 		//1. does the order already have a member
-		if($this->orderMember->exists()) {
-			//do nothing
-			if(!$this->debug) {$this->debugString .= "does the order already have a member";}
+		if($this->orderMember->exists() && !$this->orderMember->IsShopAdmin()) {
+			if(!$this->debug) {$this->debugString .= "1. the order already has a member";}
 		}
-
-		// 2. shop allows creation of member
-		elseif(EcommerceConfig::get("EcommerceRole", "allow_customers_to_setup_accounts")) {
-
-			if(!$this->debug) {$this->debug .= "2. shop allows creation of member";}
-			$this->orderMember = null;
-
-			//3. can the entered data be used?
-			//member that will be added does not exist somewhere else.
-			if($this->uniqueMemberFieldCanBeUsed($data)) {
-
-				if(!$this->debug) {$this->debug .= "3. can the entered data be used?";}
-				// 4. is there no member logged in yet?
-				//no logged in member
-				if(!$this->loggedInMember) {
-
-					if(!$this->debug) {$this->debug .= "4. is there no member logged in yet?";}
-					//5. find member from data entered (even if not logged in)
-					//another member with the same email?
-
-					if(!$this->debug) {$this->debug .= "5. find member from data entered (even if not logged in)";}
+		else {
+			//special shop admin situation:
+			if($this->orderMember->IsShopAdmin()) {
+				if(!$this->debug) {$this->debug .= "A1. shop admin places order ";}
+				//2. does email match shopadmin email
+				if($newEmail = $this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
+					$this->orderMember = null;
+					if(!$this->debug) {$this->debug .= "A2. email does not match shopadmin email - reset orderMember";}
 					$this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
+					if($this->orderMember) {
+						if(!$this->debug) {$this->debug .= "A3. the other member already exists";}
+					}
+					elseif($this->memberShouldBeCreated($data)) {
+						if(!$this->debug) {$this->debug .= "A4. No other member found - creating new one";}
+						$this->orderMember = new Member();
+						$this->orderMember->Email = Convert::raw2sql($newEmail);
+						$this->orderMember->write($forceCreation = true);
+						$this->newlyCreatedMemberID = $this->orderMember->ID;
+					}
+				}
+			}
+			else {
+				if(!$this->debug) {$this->debug .= "2. shop allows creation of member";}
+				$this->orderMember = null;
 
-					//6. At this stage, if we dont have a member, we will create one!
-					//in case we still dont have a member AND we should create a member for every customer, then we do this below...
-					if(!$this->orderMember) {
-						if(!$this->debug) {$this->debug .= "6. No other member found";}
-						// 7. We do one last check to see if we are allowed to create one
-						//are we allowed to create a member?
-						if($this->memberShouldBeCreated($data)) {
-							if(!$this->debug) {$this->debug .= "7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER";}
-							$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-							$this->orderMember->write($forceCreation = true);
-							$this->newlyCreatedMemberID = $this->orderMember->ID;
+				//3. can the entered data be used?
+				//member that will be added does not exist somewhere else.
+				if($this->uniqueMemberFieldCanBeUsed($data)) {
+
+					if(!$this->debug) {$this->debug .= "3. can the entered data be used?";}
+					// 4. is there no member logged in yet?
+					//no logged in member
+					if(!$this->loggedInMember) {
+
+						if(!$this->debug) {$this->debug .= "4. is there no member logged in yet?";}
+						//5. find member from data entered (even if not logged in)
+						//another member with the same email?
+
+						if(!$this->debug) {$this->debug .= "5. find member from data entered (even if not logged in)";}
+						$this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
+
+						//6. At this stage, if we dont have a member, we will create one!
+						//in case we still dont have a member AND we should create a member for every customer, then we do this below...
+						if(!$this->orderMember) {
+							if(!$this->debug) {$this->debug .= "6. No other member found";}
+							// 7. We do one last check to see if we are allowed to create one
+							//are we allowed to create a member?
+							if($this->memberShouldBeCreated($data)) {
+								if(!$this->debug) {$this->debug .= "7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER";}
+								$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
+								$this->orderMember->write($forceCreation = true);
+								$this->newlyCreatedMemberID = $this->orderMember->ID;
+							}
 						}
 					}
 				}
@@ -428,10 +452,7 @@ class OrderFormAddress extends Form {
 	}
 
 	/**
-	 *returns TRUE if
-	 * - the member is not logged in
-	 * - AND non-members are automatically created OR password has been provided
-	 * - AND unique field does not exist already (someone else has used that email)
+	 * Should a new member be created?
 	 *
 	 * @Todo: explain why password needs to be more than three characters...
 	 * @todo: create class that checks if password is good enough
@@ -439,17 +460,61 @@ class OrderFormAddress extends Form {
 	 * @return Boolean
 	 **/
 	protected function memberShouldBeCreated(Array $data) {
-		if($this->loggedInMember || $this->newlyCreatedMemberID) {
-			return false;
-		}
-		else {
-			$mustHavePassword = EcommerceConfig::get("EcommerceRole", "must_have_account_to_purchase");
-			$validPassword = $this->validPasswordHasBeenEntered($data);
-			if($validPassword) {
-				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){
-				 return true;
+		//shop admin and
+		//data entered does not match shop admin and
+		//data entered does not match existing member...
+		//TRUE!
+		if($this->loggedInMember && $this->loggedInMember->IsShopAdmin()) {
+			if($newEmail = $this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
+				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
+					return true;
 				}
 			}
+		}
+		// already logged in or already create...
+		// FALSE!
+		elseif($this->loggedInMember || $this->newlyCreatedMemberID) {
+			return false;
+		}
+		// no other user exists with the email...
+		// TRUE!
+		else {
+			if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){
+			 return true;
+			}
+		}
+		//defaults to FALSE...
+		return false;
+	}
+
+	/**
+	 * @param Array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+	 * @return Boolean
+	 **/
+	protected function memberShouldBeSaved(Array $data) {
+
+		//new members always need to be saved
+		$newMember = (
+			$this->memberShouldBeCreated($data) ||
+			$this->newlyCreatedMemberID
+		) ? true : false;
+
+		// existing logged in members need to be saved if they are updateable
+		// AND do not match someone else...
+		$updateableMember = (
+			$this->loggedInMember &&
+			!$this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
+			EcommerceConfig::get("EcommerceRole", "automatically_update_member_details")
+		) ? true : false;
+
+		// logged in member is shop admin and members are updateable...
+		$memberIsShopAdmin = (
+			$this->loggedInMember &&
+			$this->loggedInMember->IsShopAdmin() &&
+			EcommerceConfig::get("EcommerceRole", "automatically_update_member_details")
+		) ? true : false;
+		if( $newMember || $updateableMember || $memberIsShopAdmin){
+			return true;
 		}
 		return false;
 	}
@@ -457,8 +522,8 @@ class OrderFormAddress extends Form {
 	/**
 	 * returns TRUE if
 	 * - the member is not logged in
-	 * - AND non-members are automatically created OR password has been provided
-	 * - AND unique field does not exist already (someone else has used that email)
+	 * - the member is new AND
+	 * - the password is valid
 	 *
 	 * @param Array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
 	 * @return Boolean
@@ -473,28 +538,12 @@ class OrderFormAddress extends Form {
 	}
 
 
-	/**
-	 * returns TRUE
-	 * - if member should be logged-in OR
-	 * - member is logged and the unique field matches and member data is automatically updated.
-	 * @param Array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
-	 * @return Boolean
-	 **/
-	protected function memberShouldBeSaved(Array $data) {
-		$a = $this->memberShouldBeCreated($data) ? true : false;
-		$b = ($this->loggedInMember && !$this->anotherExistingMemberWithSameUniqueFieldValue($data) && EcommerceConfig::get("EcommerceRole", "automatically_update_member_details")) ? true : false;
-		$c = $this->newlyCreatedMemberID ? true : false;
-		if( ($a) || ($b) || ($c) ){
-			return true;
-		}
-		return false;
-	}
-
 
 	/**
 	 * returns TRUE if
 	 * - there is no existing member with the same value in the unique field
 	 * - OR the member is not logged in.
+	 * - OR the member is a Shop Admin (we assume they are placing an order on behalf of someone else).
 	 * returns FALSE if
 	 * - the unique field already exists in another member
 	 * - AND the member being "tested" is already logged in...
@@ -506,17 +555,19 @@ class OrderFormAddress extends Form {
 	 * @return Boolean
 	 **/
 	public function uniqueMemberFieldCanBeUsed(Array $data) {
-		if($this->anotherExistingMemberWithSameUniqueFieldValue($data) && $this->loggedInMember) {
+		if($this->loggedInMember && $this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
 			//there is an exception for shop admins
 			//who can place an order on behalve of a customer.
 			if($this->loggedInMember->IsShopAdmin()) {
+				//REMOVED PART:
 				//but NOT when the member placing the Order is the ShopAdmin
 				//AND there is another member with the same credentials.
 				//because in that case the ShopAdmin is not placing an order
 				//on behalf of someone else.
-				if($this->orderMember->ID == $this->loggedInMember->ID) {
-					return false;
-				}
+				//that is,
+				//if($this->orderMember->ID == $this->loggedInMember->ID) {
+				//	return false;
+				//}
 			}
 			else {
 				return false;
@@ -561,6 +612,32 @@ class OrderFormAddress extends Form {
 	}
 
 	/**
+	 * returns the email if
+	 * - user is logged in already
+	 * - user's email in DB does not match email entered.
+	 *
+	 * @param Array
+	 * @return String | false
+	 */
+	protected function enteredEmailAddressDoesNotMatchLoggedInUser($data){
+		if($this->loggedInMember) {
+			$DBUniqueFieldName = $this->loggedInMember->Email;
+			if($DBUniqueFieldName) {
+				$uniqueFieldName = Member::get_unique_identifier_field();
+				if(isset($data[$uniqueFieldName])) {
+					$enteredUniqueFieldName = $data[$uniqueFieldName];
+					if($enteredUniqueFieldName) {
+						if($DBUniqueFieldName != $enteredUniqueFieldName) {
+							return $enteredUniqueFieldName;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Check if the password is good enough
 	 * @param data (from form)
 	 * @return String
@@ -568,6 +645,7 @@ class OrderFormAddress extends Form {
 	protected function validPasswordHasBeenEntered($data){
 		return ShopAccountForm_PasswordValidator::clean_password($data);
 	}
+
 
 }
 
@@ -596,7 +674,6 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator{
 			$allowExistingEmail = true;
 		}
 		$valid = parent::php($data, $allowExistingEmail);
-		//Note the exclamation Mark - only applies if it return FALSE.
 		if($this->form->uniqueMemberFieldCanBeUsed($data)) {
 			//do nothing
 		}

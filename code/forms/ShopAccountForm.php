@@ -139,11 +139,11 @@ class ShopAccountForm extends Form {
 						$this->sessionMessage(_t("ShopAccountForm.SAVEDDETAILS", "Your details has been saved."), "good");
 					}
 					else {
-						$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
+						$this->sessionMessage(_t("ShopAccountForm.COULD_NOT_CREATE_RECORD", "Could not save create a record for your details."), "bad");
 					}
 				}
 				else {
-					$this->sessionMessage(_t("ShopAccountForm.COULDNOTCREATEMEMBER", "Could not save your details."), "bad");
+					$this->sessionMessage(_t("ShopAccountForm.COULD_NOT_VALIDATE_MEMBER", "Could not save your details."), "bad");
 				}
 			}
 		}
