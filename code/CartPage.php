@@ -343,6 +343,7 @@ class CartPage_Controller extends Page_Controller{
 	 * @standard SS method
 	 */
 	public function init() {
+		HTTP::set_cache_age(0);
 		parent::init();
 		// find the current order if any
 		$orderID = 0;
