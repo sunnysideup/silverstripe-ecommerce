@@ -465,6 +465,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
+	 * Returns the Current Member
+	 * @return Null | Member
+	 */
+	public function CustomerForOrder(){
+		$order = ShoppingCart::current_order();
+		return $order->Member();
+	}
+
+	/**
 	 * Return the currency being used on the site e.g. "NZD" or "USD"
 	 * @return String
 	 */
