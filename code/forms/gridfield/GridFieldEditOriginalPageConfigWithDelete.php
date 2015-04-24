@@ -1,19 +1,7 @@
 <?php
 
 
-/**
- *
- *
- *
- *
- *
- *
- * @author nicolaas <github@sunnysideup.co.nz>
- */
-
-
-
-class GridFieldEditOriginalPageConfig extends GridFieldConfig_RelationEditor {
+class GridFieldEditOriginalPageConfigWithDelete extends GridFieldConfig_RelationEditor {
 
 	/**
 	 * @param int $itemsPerPage - How many items per page should show up
@@ -22,11 +10,9 @@ class GridFieldEditOriginalPageConfig extends GridFieldConfig_RelationEditor {
 		parent::__construct($itemsPerPage);
 		$this
 			->removeComponentsByType("GridFieldEditButton")
-			->removeComponentsByType("GridFieldDeleteAction")
 			->removeComponentsByType("GridFieldAddNewButton")
 			->addComponent(new GridFieldAddNewButtonOriginalPage())
 			->addComponent(new GridFieldEditButtonOriginalPage());
 	}
 
 }
-
