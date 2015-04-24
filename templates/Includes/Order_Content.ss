@@ -33,10 +33,13 @@
 			<td class="right unitprice">$UnitPriceAsMoney.NiceDefaultFormat</td>
 			<td class="right total">$CalculatedTotalAsMoney.NiceDefaultFormat</td>
 		</tr>
+		<% end_loop %>
+
 		<tr class="gap summary" id="SubTotal">
 			<th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
 			<td class="right subTotal">$SubTotalAsMoney.NiceDefaultFormat</td>
 		</tr>
+
 		<% loop Modifiers %>
 			<% if ShowInTable %>
 		<tr class="modifierRow $EvenOdd $FirstLast $Classes <% if HideInAjaxUpdate %> hideForNow<% end_if %>">
@@ -48,11 +51,6 @@
 		</tr>
 			<% end_if %>
 		<% end_loop %>
-		<% end_loop %>
-
-
-
-
 	<% else %>
 		<tr class="showOnZeroItems">
 			<td colspan="4" class="center">
