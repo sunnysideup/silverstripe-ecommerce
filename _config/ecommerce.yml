@@ -282,7 +282,7 @@ Order_Email:
 
 EcommerceCurrency:
   exchange_provider_class: ExchangeRateProvider
-  default_currency: USD
+  default_currency: NZD
 
 EcommerceMoney:
   default_format: NiceShortSymbol
