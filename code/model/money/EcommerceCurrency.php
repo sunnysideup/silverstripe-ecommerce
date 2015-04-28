@@ -467,7 +467,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 * @param String $name OPTIONAL
 	 *
 	 * @return NULL | EcommerceCurrency
-	 */ 
+	 */
 	public static function create_new($code, $name = "") {
 		$code = trim(strtoupper($code));
 		if(!$name) {

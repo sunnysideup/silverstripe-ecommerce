@@ -96,7 +96,7 @@ class ShoppingCart extends Object{
 	 * @todo - does this need to be public????
 	 * @return void
 	 */
-	public function currentOrder(){
+	public function currentOrder($recurseCount = 0){
 		if(!$this->order) {
 			$sessionVariableName = $this->sessionVariableName("OrderID");
 			$orderIDFromSession = intval(Session::get($sessionVariableName));
@@ -208,15 +208,20 @@ class ShoppingCart extends Object{
 			// THIS MAY NOT BE CORRECT, BECAUSE THIS MEANS YOU CAN NOT CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!!
 			elseif($this->order->MemberID && !$member) {
 				$this->clear();
-				return false;
+				$this->order = null;
 			}
 			if($this->order && $this->order->exists()) {
 				$this->order->calculateOrderAttributes($force = false);
 			}
-			if(!$this->order->SessionID) {
+			if($this->order && !$this->order->SessionID) {
 				$this->order->SessionID = session_id();
 				$this->order->write();
 			}
+		}
+		//just in case ...
+		if(!$this->order && $recurseCount < 3) {
+			$recurseCount++;
+			return $this->currentOrder();
 		}
 		return $this->order;
 	}

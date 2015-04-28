@@ -229,12 +229,13 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	 **/
 	protected function getRegionField($name, $freeTextName = "") {
 		if(EcommerceRegion::show()) {
-			$title = _t("OrderAddress.".strtoupper($name), "Region / Province / State");
+			$nameWithoutID = str_replace("ID", "", $name);
+			$title = _t("OrderAddress.".strtoupper($nameWithoutID), "Region / Province / State");
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
 			$count = count($regionsForDropdown);
 			if($count< 1) {
 				if(!$freeTextName) {
-					$freeTextName = str_replace("ID", "", $name)."Code";
+					$freeTextName = $nameWithoutID."Code";
 				}
 				$regionField = new TextField($freeTextName, $title);
 			}
