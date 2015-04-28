@@ -266,7 +266,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	 **/
 	protected function getCountryField($name) {
 		$countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
-		$title = singleton("EcommerceCountry")->i18n_singular_name();
+		$title = _t("OrderAddress.BILLING_ADDRESS_".strtoupper($name), "Country");
 		$countryField = new DropdownField($name, $title, $countriesForDropdown, EcommerceCountry::get_country());
 		if(count($countriesForDropdown) < 2) {
 			$countryField = $countryField->performReadonlyTransformation();
