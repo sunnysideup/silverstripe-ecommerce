@@ -229,7 +229,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	 **/
 	protected function getRegionField($name, $freeTextName = "") {
 		if(EcommerceRegion::show()) {
-			$title = singleton("EcommerceRegion")->i18n_singular_name();
+			$title = _t("OrderAddress.BILLING_ADDRESS_".strtoupper($name), "Region / Province / State");
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
 			$count = count($regionsForDropdown);
 			if($count< 1) {
@@ -268,6 +268,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 		$countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
 		$title = _t("OrderAddress.BILLING_ADDRESS_".strtoupper($name), "Country");
 		$countryField = new DropdownField($name, $title, $countriesForDropdown, EcommerceCountry::get_country());
+		$countryField->setRightTitle(_t("OrderAddress.BILLING_ADDRESS_".strtoupper($name)."_RIGHT", ""));
 		if(count($countriesForDropdown) < 2) {
 			$countryField = $countryField->performReadonlyTransformation();
 			if(count($countriesForDropdown) < 1) {
