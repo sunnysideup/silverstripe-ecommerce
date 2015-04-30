@@ -182,7 +182,9 @@ class Product extends Page implements BuyableModel {
 		//$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
 		//$this->disableCMSFieldsExtensions();
 		$fields = parent::getCMSFields();
-		$fields->removeByName("MetaDescription");
+		if($this->Config()->get("add_data_to_meta_description_for_search")){
+			$fields->removeByName("MetaDescription");
+		}
 		//if($siteTreeFieldExtensions) {
 			//$this->enableCMSFieldsExtensions();
 		//}
