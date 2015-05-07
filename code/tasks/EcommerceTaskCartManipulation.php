@@ -44,7 +44,8 @@ class EcommerceTaskCartManipulation_Debug extends BuildTask{
 		$html = "
 		Please use the links below:
 		<ul>
-			<li><a href=\"/shoppingcart/debug/\" target=\"_debug\">debug cart</a></li>";
+			<li><a href=\"/shoppingcart/debug/\" target=\"_debug\">debug cart</a></li>
+			<li><a href=\"/shoppingcart/ajaxtest/?ajax=1\" target=\"_debug\">view cart response</a></li>";
 		if($myProductGroup) {
 			$html .= "
 			<li><a href=\"".$myProductGroup->Link("debug")."\" target=\"_debug\">debug product group</a></li>";
