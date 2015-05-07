@@ -249,9 +249,23 @@ class CheckoutPage extends CartPage {
 		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"CurrentOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"SaveOrderLinkLabel");
 		$fields->removeFieldFromTab('Root.Messages.Messages.Actions',"DeleteOrderLinkLabel");
-		$termsPageIDField = OptionalTreeDropdownField::create('TermsPageID', _t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page (if any - to remove, delete message below)"), 'SiteTree');
-		$fields->addFieldToTab('Root.Process', $termsPageIDField);
-		$fields->addFieldToTab('Root.Process', new TextField('TermsAndConditionsMessage', _t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Terms and conditions page message (shown if the user does not tick the box) - leave blank to allow customer to proceed without ticking the box")));
+		$termsPageIDField = OptionalTreeDropdownField::create(
+			'TermsPageID',
+			_t("CheckoutPage.TERMSANDCONDITIONSPAGE", "Terms and conditions page"),
+			'SiteTree'
+		);
+		$termsPageIDField->setRightTitle(_t("CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT", "This is optional. To remove this page clear the reminder message below."));
+		$fields->addFieldToTab('Root.Terms', $termsPageIDField);
+		$fields->addFieldToTab(
+			'Root.Terms',
+			$termsPageIDFieldMessage = new TextField(
+				'TermsAndConditionsMessage',
+				_t("CheckoutPage.TERMSANDCONDITIONSMESSAGE", "Reminder Message")
+			)
+		);
+		$termsPageIDFieldMessage->setRightTitle(
+			_t("CheckoutPage.TERMSANDCONDITIONSMESSAGE_RIGHT", "Shown if the user does not tick the 'I agree with the Terms and Conditions' box. Leave blank to allow customer to proceed without ticking this box")
+		);
 		//The Content field has a slightly different meaning for the Checkout Page.
 		$fields->removeFieldFromTab('Root.Main', "Content");
 		$fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t("CheckoutPage.CONTENT", 'General note - always visible on the checkout page')));

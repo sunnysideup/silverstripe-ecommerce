@@ -341,7 +341,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 			Requirements::clear();
 			Requirements::themedCSS("typography", $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Requirements::themedCSS("OrderReport", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-			Requirements::themedCSS("Order_Invoice", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("Order_Invoice", "ecommerce"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+			Requirements::themedCSS("Order_Invoice_Print_Only", "ecommerce", "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 			Config::nest();
 			Config::inst()->update('SSViewer', 'theme_enabled', true);
 			$html = $this->renderWith("Invoice");
