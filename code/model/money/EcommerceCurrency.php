@@ -143,8 +143,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	function canDelete($member = null){
-		if( ! $this->InUse && self::get_list()->Count() > 1) {
-			if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
+		if( ! $this->InUse && EcommerceCurrency::get()->Count() > 1) {
+			if(
+				Permission::checkMember(
+					$member,
+					Config::inst()->get("EcommerceRole", "admin_permission_code")
+				)
+			) {return true;}
 			return parent::canEdit($member);
 		}
 		return false;
