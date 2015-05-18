@@ -716,9 +716,9 @@ EcomCart = {
 							jQuery(selector).attr(parameter, value);
 						}
 						if(selector == ".number_of_items") {
-							console.debug("doing .number_of_items");
+							if(EcomCart.debug) {console.debug("doing .number_of_items");}
 							numericValue = parseFloat(value);
-							console.debug("value "+numericValue);
+							if(EcomCart.debug) {console.debug("value "+numericValue);}
 							EcomCart.cartHasItems = (numericValue > 0 ? true : false);
 							//update cart menu items
 							jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(
@@ -779,14 +779,14 @@ EcomCart = {
 						//we go through all the ones that are marked as 'inCart' already
 						//as part of this we check if they are still incart
 						//and as part of this process, we add the "inCart" where needed
-						//console.debug("starting process");
+						if(EcomCart.debug) {console.debug("starting process");}
 						jQuery("."+parameter).each(
 							function(i, el) {
 								var id = jQuery(el).attr("id");
-								//console.debug("checking "+id);
+								if(EcomCart.debug) {console.debug("checking "+id);}
 								var inCart = false;
 								for(var i = 0; i < selector.length;i++) {
-									//console.debug("testing: '"+selector[i]+"' AGAINST '"+id+"'");
+									if(EcomCart.debug) {console.debug("testing: '"+selector[i]+"' AGAINST '"+id+"'");}
 									if(id == selector[i]) {
 										inCart = true;
 										//DO NOT REMOVE IT SO THAT WE CAN USE IT IN THE FUTURE

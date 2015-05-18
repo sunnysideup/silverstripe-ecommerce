@@ -534,6 +534,7 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch {
 		'DispatchedBy' => 'Varchar(100)',
 		'DispatchedOn' => 'Date',
 		'DispatchTicket' => 'Varchar(100)',
+		'DispatchLink' => 'Varchar(255)'
 	);
 
 	private static $indexes = array(

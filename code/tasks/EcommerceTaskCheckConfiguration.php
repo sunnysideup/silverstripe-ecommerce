@@ -696,7 +696,7 @@ EcommerceConfig:
 		switch($className.".".$key) {
 			case "Order_Email.css_file_location":
 				if(!file_exists(Director::baseFolder()."/$actualValue")) {
-					return "<span style=\"color: red\">ADDITIONAL CHECK: this file does not exist! For proper functioning of e-commerce, please make sure to create this file.</span>";
+					return "<span style=\"color: red\">ADDITIONAL CHECK: this file ".Director::baseFolder()."/".$actualValue." does not exist! For proper functioning of e-commerce, please make sure to create this file.</span>";
 				}
 				else {
 					return "<span style=\"color: #7da4be\">ADDITIONAL CHECK: file exists.</span>";
