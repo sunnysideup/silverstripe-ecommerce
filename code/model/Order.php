@@ -570,7 +570,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			"Root.Next",
 			new LiteralField(
 				"StatusIDExplanation",
-				"<br /><br /><a href=\"".$this->CMSEditLink()."\" class=\"action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-button-text\">"._t("Order.REFRESH", "move order")."</span></a>"
+				"<h3><a href=\"".$this->CMSEditLink()."\" class=\"action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-button-text\">"._t("Order.REFRESH", "move order")."</span></a></h3>"
 			)
 		);
 		$currencies = EcommerceCurrency::get_list();
