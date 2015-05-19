@@ -570,8 +570,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			"Root.Next",
 			new LiteralField(
 				"StatusIDExplanation",
-				_t("Order.STATUSIDEXPLANATION", "You can not manually update the status of an order.").
-				"<br /><br /><a href=\"".$this->CMSEditLink()."\">"._t("Order.REFRESH", "refresh order status")."</a>"
+				"<br /><br /><a href=\"".$this->CMSEditLink()."\" class=\"action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-button-text\">"._t("Order.REFRESH", "move order")."</span></a>"
 			)
 		);
 		$currencies = EcommerceCurrency::get_list();
