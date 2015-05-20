@@ -456,15 +456,20 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$fields->insertAfter(
 			new Tab(
 				"Next",
-				new HeaderField("MyOrderStepHeader", _t("Order.CURRENTSTATUS", "Current Status")),
+				new HeaderField("MyOrderStepHeader", _t("Order.CURRENTSTATUS", "1. Current Status")),
 				$this->OrderStepField(),
-				new HeaderField("OrderStepNextStepHeader", _t("Order.ACTIONNEXTSTEP", "Action Next Step"), 1),
+				new HeaderField("OrderStepNextStepHeader", _t("Order.ACTIONNEXTSTEP", "2. Action Next Step")),
 				new LiteralField("OrderStepNextStepHeaderExtra", "<p><strong>"._t("Order.NEEDTOREFRESH", "If you have made any changes to the order then you will have to refresh or save this record to see up-to-date options here.")."</strong></p>"),
-				new LiteralField("ActionNextStepManually", "<br /><br /><br /><h3>"._t("Order.MANUALSTATUSCHANGE", "Manual Status Change")."</h3>")
-				//SEE: $this->MyStep()->addOrderStepFields($fields, $this); BELOW
+				new HeaderField("ActionNextStepManually", _t("Order.MANUALSTATUSCHANGE", "3. Move order along")),
+				new LiteralField(
+					"StatusIDExplanation",
+					"<h3><a href=\"".$this->CMSEditLink()."\" class=\"action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-button-text\">"._t("Order.REFRESH", "refresh now")."</span></a></h3>"
+				)
 			),
 			"Main"
 		);
+		$this->MyStep()->addOrderStepFields($fields, $this);
+
 		if($submitted) {
 			//Config::nest();
 			//Config::inst()->update('SSViewer', 'theme_enabled', true);
@@ -565,14 +570,6 @@ class Order extends DataObject implements EditableEcommerceObject {
 				$fields->addFieldToTab('Root.Addresses',$this->getShippingAddressField());
 			}
 		}
-		$this->MyStep()->addOrderStepFields($fields, $this);
-		$fields->addFieldToTab(
-			"Root.Next",
-			new LiteralField(
-				"StatusIDExplanation",
-				"<h3><a href=\"".$this->CMSEditLink()."\" class=\"action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-button-text\">"._t("Order.REFRESH", "move order")."</span></a></h3>"
-			)
-		);
 		$currencies = EcommerceCurrency::get_list();
 		if($currencies && $currencies->count()) {
 			$currencies = $currencies->map()->toArray();
