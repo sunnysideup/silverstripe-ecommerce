@@ -460,7 +460,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 				$this->OrderStepField(),
 				new HeaderField("OrderStepNextStepHeader", _t("Order.ACTIONNEXTSTEP", "2. Action Next Step")),
 				new LiteralField("OrderStepNextStepHeaderExtra", "<p><strong>"._t("Order.NEEDTOREFRESH", "If you have made any changes to the order then you will have to refresh or save this record to see up-to-date options here.")."</strong></p>"),
-				new HeaderField("ActionNextStepManually", _t("Order.MANUALSTATUSCHANGE", "3. Move order along")),
+				new HeaderField("ActionNextStepManually", _t("Order.MANUALSTATUSCHANGE", "3. Move Order Along")),
 				new LiteralField(
 					"StatusIDExplanation",
 					"<h3><a href=\"".$this->CMSEditLink()."\" class=\"action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only\"><span class=\"ui-button-text\">"._t("Order.REFRESH", "refresh now")."</span></a></h3>"
