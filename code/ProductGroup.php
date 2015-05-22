@@ -1835,13 +1835,13 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * Is there something actively being search for?
 	 *
-	 * This is different from IsSearchResults
+	 * This is different from IsSearchResults.
 	 *
 	 * @return Boolean
 	 */
 	public function ActiveSearchTerm(){
 		$data = Session::get(Config::inst()->get("ProductSearchForm", "form_data_session_variable"));
-		if(!empty($date["Keyword"])) {
+		if(!empty($data["Keyword"])) {
 			return $this->IsSearchResults();
 		}
 	}
