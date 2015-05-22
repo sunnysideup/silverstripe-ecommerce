@@ -1821,12 +1821,29 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/**
-	 * Is the current page a display of search results
+	 * Is the current page a display of search results.
+	 *
+	 * This does not mean that something is actively being search for,
+	 * it could also be just "showing the search results"
 	 *
 	 * @return Boolean
 	 */
 	public function IsSearchResults(){
 		return $this->isSearchResults;
+	}
+
+	/**
+	 * Is there something actively being search for?
+	 *
+	 * This is different from IsSearchResults
+	 *
+	 * @return Boolean
+	 */
+	public function ActiveSearchTerm(){
+		$data = Session::get(Config::inst()->get("ProductSearchForm", "form_data_session_variable"));
+		if(!empty($date["Keyword"])) {
+			return $this->IsSearchResults();
+		}
 	}
 
 
