@@ -45,7 +45,7 @@ class Product extends Page implements BuyableModel {
 	 */
 	private static $db = array(
 		'Price' => 'Currency',
-		'Weight' => 'Decimal(9,4)',
+		'Weight' => 'Float',
 		'Model' => 'Varchar(30)',
 		'Quantifier' => 'Varchar(30)',
 		'FeaturedProduct' => 'Boolean',
