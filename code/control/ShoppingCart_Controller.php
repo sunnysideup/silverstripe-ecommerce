@@ -612,7 +612,7 @@ class ShoppingCart_Controller extends Controller implements Flushable {
 	 */
 	protected static function params_to_get_string(Array $array){
 		$token = SecurityToken::inst();
-		if(isset($array["SecurityID"])) {
+		if(!isset($array["SecurityID"])) {
 			$array["SecurityID"] = $token->getValue();
 		}
 		return "?".http_build_query($array);
