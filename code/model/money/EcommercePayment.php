@@ -382,28 +382,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	/**
 	 * Return the form requirements for all the payment methods.
 	 *
-	 * @param NULL | Order $order
+	 * @param NULL | Array
 	 * @return An array suitable for passing to CustomRequiredFields
 	 */
 	public static function combined_form_requirements($order = null) {
-		$requirements = array();
-		// Loop on available methods
-		$supportedMethods = self::get_supported_methods($order);
-		if($supportedMethods) {
-			foreach($supportedMethods as $method => $methodTitle) {
-				$methodRequirements = singleton($method)->getPaymentFormRequirements();
-				if($methodRequirements) {
-					// Put limiters into the JS/PHP code to only use those requirements for this payment method
-					$methodRequirements['js'] = "for(var i=0; i <= this.elements.PaymentMethod.length-1; i++) "
-						. "if(this.elements.PaymentMethod[i].value == '$method' && this.elements.PaymentMethod[i].checked == true) {"
-						. $methodRequirements['js'] . " } ";
-					$methodRequirements['php'] = "if(\$data['PaymentMethod'] == '$method') { " .
-					$methodRequirements['php'] . " } ";
-					$requirements[] = $methodRequirements;
-				}
-			}
-		}
-		return $requirements;
+		return null;
 	}
 
 	/**
@@ -443,8 +426,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 */
 	function processPayment($data, $form){user_error("Please implement processPayment() on $this->class", E_USER_ERROR);}
 
-	function getForm($whichTest){user_error("Please implement getForm() on $this->class", E_USER_ERROR);}
-
 	protected function handleError($e){
 		$this->ExceptionError = $e->getMessage();
 		$this->write();
@@ -462,9 +443,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @param String | Int $number
 	 * @return Boolean
 	 */
-	public function validCreditCard($number) {
-		for ($sum = 0, $i = strlen($number) - 1; $i >= 0; $i--) {
-			$digit = (int) $number[$i];
+	public function validCreditCard($cardNumber) {
+		for ($sum = 0, $i = strlen($cardNumber) - 1; $i >= 0; $i--) {
+			$digit = (int) $cardNumber[$i];
 			$sum += (($i % 2) === 0) ? array_sum(str_split($digit * 2)) : $digit;
 		}
 		return (($sum % 10) === 0);
@@ -473,22 +454,67 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	/**
 	 * @todo: finish!
 	 * valid expiry date
-	 * @param String | Int $number
+	 * @param String $monthYear - e.g. 0218
 	 * @return Boolean
 	 */
-	public function validExpiryDate($number) {
-		return true;
+	public function validExpiryDate($monthYear) {
+		$month = intval(substr($monthYear, 0, 2));
+		$year = intval("20".substr($monthYear, 2));
+		$currentYear = intval(Date("Y"));
+		$currentMonth = intval(Date("m"));
+		if(($month > 0 || $month < 13) && $year > 0 ) {
+			if($year > $currentYear) {
+				return true;
+			}
+			elseif($year == $currentYear) {
+				if($currentMonth <= $month) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
-	 * @todo: finish!
-	 * valid CVC number
+	 * @todo: TEST
+	 * valid CVC/CVV number?
 	 *
-	 * @param String | Int $number
+	 * @param int $cardNumber
+	 * @param int $cvv
 	 * @return Boolean
 	 */
-	public function validCVC($number) {
-		return true;
+	public function validCVV($cardNumber, $cvv) {
+		$cardNumber = preg_replace('/\D/', '', $cardNumber);
+		$cvv = preg_replace('/\D/', '', $cvv);
+
+		//Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
+		if(is_numeric($cardNumber)) {
+			//Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
+			if(is_numeric($cvv)) {
+				//Splits up the card number into various identifying lengths.
+				$firstOne = substr($cardNumber, 0, 1);
+				$firstTwo = substr($cardNumber, 0, 2);
+
+				//If the card is an American Express
+				if($firstTwo == "34" || $firstTwo == "37") {
+					if (!preg_match("/^\d{4}$/", $cvv)) {
+						// The credit card is an American Express card but does not have a four digit CVV code
+						return false;
+					}
+				}
+				else if (!preg_match("/^\d{3}$/", $cvv)) {
+					// The credit card is a Visa, MasterCard, or Discover Card card but does not have a three digit CVV code
+					return false;
+				}
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
 	}
 
 

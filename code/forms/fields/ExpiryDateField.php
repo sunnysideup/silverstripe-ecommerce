@@ -24,10 +24,10 @@ class ExpiryDateField extends TextField {
 		}
 		$field = "
 			<span id=\"".$this->getName()."_Holder\" class=\"expiryDateField\">
-				<select class=\"expiryDate expiryDateMonth\" name=\"".$this->getName()."[0]\" >
+				<select class=\"expiryDate expiryDateMonth\" name=\"".$this->getName()."[month]\" >
 					<option value=\"\" selected=\"selected\">Month</option>".$this->makeSelectList($this->monthArray(), $monthValue)."
 				</select>
-				<select class=\"expiryDate expiryDateYear\" name=\"".$this->getName()."[1]\" >
+				<select class=\"expiryDate expiryDateYear\" name=\"".$this->getName()."[year]\" >
 					<option value=\"\" selected=\"selected\">Year</option>".$this->makeSelectList($this->yearArray(), $yearValue)."
 				</select>
 			</span>";
@@ -87,26 +87,26 @@ JS;
 	 **/
 	function validate($validator){
 		// If the field is empty then don't return an invalidation message'
-		if(!isset($this->value[0])) {
+		if(!isset($this->value["month"])) {
 			$validator->validationError(
 				$this->getName(),
-				"Please ensure you have entered the expiry date month correctly.",
+				"Please ensure you have entered the expiry date 'month'.",
 				"validation",
 				false
 			);
 			return false;
 		}
-		if(!isset($this->value[1])) {
+		if(!isset($this->value["year"])) {
 			$validator->validationError(
 				$this->getName(),
-				"Please ensure you have entered the expiry date year correctly.",
+				"Please ensure you have entered the expiry date 'year'.",
 				"validation",
 				false
 			);
 			return false;
 		}
-		$value = str_pad($this->value[0], 2, "0", STR_PAD_LEFT);
-		$value .= str_pad($this->value[1], 2, "0", STR_PAD_LEFT);
+		$value = str_pad($this->value['month'], 2, "0", STR_PAD_LEFT);
+		$value .= str_pad($this->value['year'], 2, "0", STR_PAD_LEFT);
 		$this->value = $value;
 		// months are entered as a simple number (e.g. 1,2,3, we add a leading zero if needed)
 		$monthValue = substr($this->value, 0, 2);
@@ -163,34 +163,34 @@ JS;
 		$shortMonths = EcommerceConfig::get("ExpiryDateField", "short_months");
 		if($shortMonths) {
 		  return array(
-				1 => "01 | Jan",
-				2 => "02 | Feb",
-				3 => "03 | Mar",
-				4 => "04 | Apr",
-				5 => "05 | May",
-				6 => "06 | Jun",
-				7 => "07 | Jul",
-				8 => "08 | Aug",
-				9 => "09 | Sep",
-				10 => "10 | Oct",
-				11 => "11 | Nov",
-				12 => "12 | Dec"
+				"01" => "01 - Jan",
+				"02" => "02 - Feb",
+				"03" => "03 - Mar",
+				"04" => "04 - Apr",
+				"05" => "05 - May",
+				"06" => "06 - Jun",
+				"07" => "07 - Jul",
+				"08" => "08 - Aug",
+				"09" => "09 - Sep",
+				"10" => "10 - Oct",
+				"11" => "11 - Nov",
+				"12" => "12 - Dec"
 			);
 		}
 		else {
 		  return array(
-				1 => "January",
-				2 => "February",
-				3 => "March",
-				4 => "April",
-				5 => "May",
-				6 => "June",
-				7 => "July",
-				8 => "August",
-				9 => "September",
-				10 => "October",
-				11 => "November",
-				12 => "December"
+				"01" => "01 - January",
+				"02" => "02 - February",
+				"03" => "03 - March",
+				"04" => "04 - April",
+				"05" => "05 - May",
+				"06" => "06 - June",
+				"07" => "07 - July",
+				"08" => "08 - August",
+				"09" => "09 - September",
+				"10" => "10 - October",
+				"11" => "11 - November",
+				"12" => "12 - December"
 			);
 		}
 	}
