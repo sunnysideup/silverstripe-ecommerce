@@ -12,6 +12,38 @@
 
 class ExpiryDateField extends TextField {
 
+
+	public function __construct($name, $title = null, $value = "", $form = null) {
+		/*
+		$monthValue = '';
+		$yearValue = '';
+		if(strlen($this->value) == 4) {
+			$monthValue = substr($value, 0, 2);
+			$yearValue = "20".substr($value, 2, 2);
+		}
+		$this->children = new FieldList(
+			$monthField = new DropdownField(
+				"{$name}[month]",
+				"",
+				$this->makeSelectList($this->monthArray(), $monthValue)
+			),
+			$yearField = new DropdownField(
+				"{$name}[year]",
+				"",
+				$this->makeSelectList($this->yearArray(), $yearValue)
+			)
+		);
+		$monthField->addExtraClass("");
+		$yearField->addExtraClass("");
+		// disable auto complete
+		foreach($this->children as $child) {
+			$child->setAttribute('autocomplete', 'off');
+		}
+		*/
+		parent::__construct($name, $title, null, $form);
+		$this->setValue($value);
+	}
+
 	/**
 	 *@return HTML
 	 **/
@@ -20,14 +52,14 @@ class ExpiryDateField extends TextField {
 		$yearValue = '';
 		if(strlen($this->value) == 4) {
 			$monthValue = substr($this->value, 0, 2);
-			$yearValue = "20".substr($this->value, 2, 2);
+			$yearValue = substr($this->value, 2, 2);
 		}
 		$field = "
 			<span id=\"".$this->getName()."_Holder\" class=\"expiryDateField\">
-				<select class=\"expiryDate expiryDateMonth\" name=\"".$this->getName()."[month]\" >
+				<select class=\"expiryDate expiryDateMonth\" name=\"".$this->getName()."[month]\" autocomplete=\"off\" >
 					<option value=\"\" selected=\"selected\">Month</option>".$this->makeSelectList($this->monthArray(), $monthValue)."
 				</select>
-				<select class=\"expiryDate expiryDateYear\" name=\"".$this->getName()."[year]\" >
+				<select class=\"expiryDate expiryDateYear\" name=\"".$this->getName()."[year]\" autocomplete=\"off\" >
 					<option value=\"\" selected=\"selected\">Year</option>".$this->makeSelectList($this->yearArray(), $yearValue)."
 				</select>
 			</span>";
@@ -52,36 +84,6 @@ class ExpiryDateField extends TextField {
 	}
 
 	/**
-	 *@return string (Javascript)
-	 **/
-	function jsValidation() {
-		$formID = $this->form->FormName();
-		$jsFunc =<<<JS
-Behaviour.register({
-	"#$formID": {
-		validateExpiryDate: function(fieldName) {
-			if(!$(fieldName + "_Holder")) return true;
-
-			// Expiry Dates are split into multiple values, so get the inputs from the form.
-			var fields = $(fieldName + "_Holder").getElementsByTagName('input');
-			var error = false;
-			if(fields[0].value == null || fields[0].value == "" || fields[1].value == null || fields[1].value == "") {
-				error = true;
-			}
-			if(error){
-				validationError(monthField,"Make sure to enter a valid expiration date.","validation",false);
-				return false;
-			}
-			return true;
-		}
-	}
-});
-JS;
-		Requirements::customScript($jsFunc, 'func_validateExpiryDate');
-		return "\$('$formID').validateExpiryDate('".$this->getName()."');";
-	}
-
-	/**
 	 * @param $validator Validator
 	 * @return boolean
 	 **/
@@ -90,18 +92,16 @@ JS;
 		if(!isset($this->value["month"])) {
 			$validator->validationError(
 				$this->getName(),
-				"Please ensure you have entered the expiry date 'month'.",
-				"validation",
-				false
+				_t("ExpiryDateField.NO_MONTH", "Please ensure you have entered the expiry date 'month' portion."),
+				"bad"
 			);
 			return false;
 		}
 		if(!isset($this->value["year"])) {
 			$validator->validationError(
 				$this->getName(),
-				"Please ensure you have entered the expiry date 'year'.",
-				"validation",
-				false
+				_t("ExpiryDateField.NO_YEAR","Please ensure you have entered the expiry date 'year' portion."),
+				"bad"
 			);
 			return false;
 		}
@@ -116,9 +116,8 @@ JS;
 		if($ts > $expiryTs) {
 			$validator->validationError(
 				$this->getName(),
-				"Please ensure you have entered the expiry date correctly.",
-				"validation",
-				false
+				_t("ExpiryDateField.PAST_DATE","Please ensure you have entered the expiry date correctly."),
+				"bad"
 			);
 			return false;
 		}
@@ -195,4 +194,79 @@ JS;
 		}
 	}
 
+	/**
+	 * Makes a read only field with some stars in it to replace the password
+	 *
+	 * @return ReadonlyField
+	 */
+	public function performReadonlyTransformation() {
+		$field = $this->castedCopy('ReadonlyField')
+			->setTitle($this->title)
+			->setValue(substr($this->value, 0, 2)."/".substr($this->value, 2, 2));
+		return $field;
+	}
+
+	/**
+	 * @param string $title
+	 *
+	 * @return ConfirmedPasswordField
+	 */
+	public function setRightTitle($title) {
+		/*
+		foreach($this->children as $field) {
+			$field->setRightTitle($title);
+		}
+		*/
+		parent::setRightTitle($title);
+		return $this;
+	}
+
+
+	/**
+	 * @param array $titles 2 entry array with the customized title for each
+	 *						of the 2 children.
+	 *
+	 * @return ConfirmedPasswordField
+	 */
+	public function setChildrenTitles($titles) {
+		/*
+		if(is_array($titles) && count($titles) == 2) {
+			foreach($this->children as $field) {
+				if(isset($titles[0])) {
+					$field->setTitle($titles[0]);
+					array_shift($titles);
+				}
+			}
+		}
+		return $this;
+		*/
+	}
+
+
+	/**
+	 * Value is sometimes an array, and sometimes a single value, so we need
+	 * to handle both cases.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return ConfirmedPasswordField
+	 */
+	public function setValue($value, $data = null) {
+
+		//store this for later
+		$oldValue = $this->value;
+		$this->value = $value;
+
+		//looking up field by name is expensive, so lets check it needs to change
+		/*
+		if ($oldValue != $this->value) {
+			$this->children->fieldByName($this->getName() . '[month]')->setValue($this->value);
+			$this->children->fieldByName($this->getName() . '[year]')->setValue($this->value);
+		}
+		*/
+		return $this;
+	}
+
+
 }
+

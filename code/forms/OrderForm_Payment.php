@@ -58,11 +58,22 @@ class OrderForm_Payment extends Form {
 			if($orderID = intval($SQLData['OrderID'])) {
 				$order = Order::get_by_id_if_can_view($orderID);
 				if($order && $order->canPay()) {
-					return EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
+					if(EcommercePayment::validate_payment($order, $form, $data)) {
+
+						return EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
+					}
+					else {
+						//error messages are set in validation
+						return $this->controller->redirectBack();
+					}
+				}
+				else {
+					$form->sessionMessage(_t('OrderForm.NO_PAYMENTS_CAN_BE_MADE_FOR_THIS_ORDER','No payments can be made for this order.'),'bad');
+					return $this->controller->redirectBack();
 				}
 			}
 		}
-		$form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT','Sorry, we could not process your payment.'),'bad');
+		$form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT','Sorry, we could not find the Order for payment.'),'bad');
 		$this->controller->redirectBack();
 		return false;
 	}

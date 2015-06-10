@@ -84,6 +84,35 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 */
 	private static $default_sort = '"Created" DESC';
 
+	/**
+	 * @param Order $order - the order that is being paid
+	 * @param Form $form - the form that is being submitted
+	 * @param Array $data - Array of data that is submittted
+	 * @return Boolean - true if the data is valid
+	 */
+	public static function validate_payment(Order $order, Form $form, Array $data) {
+		if(!$order){
+			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
+			return false;
+		}
+
+		$hasValidPaymentClass = false;
+		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
+		if($paymentClass) {
+			if(class_exists($paymentClass)) {
+				$paymentClass = new $paymentClass();
+				if($paymentClass instanceof EcommercePayment) {
+					$hasValidPaymentClass = true;
+				}
+			}
+		}
+		if(!$hasValidPaymentClass) {
+			$form->sessionMessage(_t('EcommercePayment.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
+			return false;
+		}
+		// Check payment, get the result back
+		return $paymentClass->validatePayment($data, $form);
+	}
 
 	/**
 	 * Process payment form and return next step in the payment process.
@@ -98,18 +127,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean - if successful, this method will return TRUE
 	 */
 	public static function process_payment_form_and_return_next_step(Order $order, Form $form, Array $data) {
-		if(!$order){
-			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
-			$form->controller->redirectBack();
-			return false;
-		}
-
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
-
-		$payment = class_exists($paymentClass) ? new $paymentClass() : null;
+		if($paymentClass) {
+			if(class_exists($paymentClass)) {
+				$payment = new $paymentClass();
+			}
+		}
 		if(!$payment) {
-			$form->sessionMessage(_t('EcommercePayment.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
-			$form->controller->redirectBack();
 			return false;
 		}
 		// Save payment data from form and process payment
@@ -121,6 +145,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 		// Process payment, get the result back
 		$result = $payment->processPayment($data, $form);
 		if(!(is_a($result, Object::getCustomClass("Payment_Result")))) {
+			$form->controller->redirectBack();
 			return false;
 		}
 		else {
@@ -410,6 +435,16 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return array
 	 */
 	function getPaymentFormRequirements(){user_error("Please implement getPaymentFormRequirements() on $this->class", E_USER_ERROR);}
+
+	/**
+	 * Checks if all the data for payment is correct (e.g. credit card)
+	 * By default it returns true, because lots of payments gatewawys
+	 * do not have any fields required here.
+	 *
+	 * @param array $data The form request data - see OrderForm
+	 * @param OrderForm $form The form object submitted on
+	 */
+	function validatePayment($data, $form){return true;}
 
 	/**
 	 * Perform payment processing for the type of

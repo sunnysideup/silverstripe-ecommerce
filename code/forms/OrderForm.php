@@ -174,7 +174,13 @@ class OrderForm extends Form {
 
 		//----------------- CLEAR OLD DATA ------------------------------
 		$this->clearSessionData(); //clears the stored session form data that might have been needed if validation failed
-		//----------------- PAYMENT ------------------------------
+		//----------------- VALIDATE PAYMENT ------------------------------
+
+		$paymentIsValid = EcommercePayment::validate_payment($order, $form, $data);
+		if(!$paymentIsValid) {
+			$this->controller->redirectBack();
+			return false;
+		}
 
 		//-------------- NOW SUBMIT -------------
 		$this->extend("OrderFormBeforeSubmit", $order);
