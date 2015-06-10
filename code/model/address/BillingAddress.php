@@ -186,7 +186,7 @@ class BillingAddress extends OrderAddress {
 		$billingFields = new CompositeField();
 		$hasPreviousAddresses = false;
 		if($member) {
-			if($member->exists()) {
+			if($member->exists() && !$member->IsShopAdmin()) {
 				$this->FillWithLastAddressFromMember($member, true);
 				$addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
 				//we want MORE than one here not just one.
