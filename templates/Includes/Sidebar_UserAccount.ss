@@ -7,7 +7,7 @@
 	<a href="Security/logout/"><% _t("SideBar.LOG_OUT","log-out") %></a>
 	<% _t("SideBar.AT_ANY_TIME_YOUR_ORDER_IS_SAVE","at any time; your order information will be retained for when you next log in.") %>
 <% else %>
-	<% _t("SideBar.YOU_ARE_NOT","Your are not") %> <a href="$EcommerceLogInLink"><% _t("SideBar.LOGGED_IN","logged in") %></a>.
+	<% _t("SideBar.YOU_ARE_NOT","You are not") %> <a href="$EcommerceLogInLink"><% _t("SideBar.LOGGED_IN","logged in") %></a>.
 	<% if EcomConfig.AccountPageLink %>
 	<% _t("SideBar.YOU_CAN","You can") %>
 	<a href="{$EcomConfig.AccountPageLink}"><% _t("SideBar.CREATE_AN_ACCOUNT","create an account") %></a>
