@@ -31,6 +31,7 @@ class EcommerceCreditCardField extends TextField {
 	 *
 	 */
 	public function Field($properties = array()) {
+		Requirements::javascript("ecommerce/javascript/EcomCreditCardValidation.js");
 		$parts = $this->value;
 		if(!is_array($parts)) {
 			$parts = explode("\n", chunk_split($parts,4,"\n"));

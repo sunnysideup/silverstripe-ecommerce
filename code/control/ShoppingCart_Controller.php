@@ -538,13 +538,17 @@ class ShoppingCart_Controller extends Controller implements Flushable {
 	 * @return REDIRECT
 	 */
 	function submittedbuyable(SS_HTTPRequest $request){
-
 		$buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
 		$buyableID = intval($this->getRequest()->param('OtherID'));
 		$version = intval($this->getRequest()->param('Version'));
 		if($buyableClassName && $buyableID){
 			if(EcommerceDBConfig::is_buyable($buyableClassName)) {
 				$bestBuyable = $buyableClassName::get()->byID($buyableID);
+				if($bestBuyable instanceof ProductVariation) {
+					$link = $bestBuyable->Link("filterforvariations/".$buyableID."/?version=".$version."/");
+					$this->redirect($link);
+					return array();
+				}
 				if($bestBuyable) {
 					//show singleton with old version
 					$link = $bestBuyable->Link("viewversion/".$version."/");
