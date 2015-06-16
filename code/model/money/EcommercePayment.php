@@ -353,7 +353,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return FieldList
 	 */
 	public static function combined_form_fields($amount, $order = null) {
-
 		// Create the initial form fields, which defines an OptionsetField
 		// allowing the user to choose which payment method to use.
 		$supportedMethods = self::get_supported_methods($order);
@@ -375,7 +374,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 		}
 
 		// Add the amount and subtotal fields for the payment amount
-		$fields->push(new ReadonlyField('Amount', _t('Payment.AMOUNT', 'Amount'),$amount));
+		$fields->push(new HeaderField('Amount', _t('Payment.AMOUNT_COLON', 'Amount to be charged: ').'<u class="totalAmountToBeCharged">'.$amount.'</u>'));
 		return $fields;
 	}
 
@@ -479,6 +478,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function validCreditCard($cardNumber) {
+		if(!$cardNumber) {
+			return false;
+		}
 		for ($sum = 0, $i = strlen($cardNumber) - 1; $i >= 0; $i--) {
 			$digit = (int) $cardNumber[$i];
 			$sum += (($i % 2) === 0) ? array_sum(str_split($digit * 2)) : $digit;
@@ -533,14 +535,17 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 				//If the card is an American Express
 				if($firstTwo == "34" || $firstTwo == "37") {
 					if (!preg_match("/^\d{4}$/", $cvv)) {
-						// The credit card is an American Express card but does not have a four digit CVV code
+						// The credit card is an American Express card
+						// but does not have a four digit CVV code
 						return false;
 					}
 				}
 				else if (!preg_match("/^\d{3}$/", $cvv)) {
-					// The credit card is a Visa, MasterCard, or Discover Card card but does not have a three digit CVV code
+					// The credit card is a Visa, MasterCard, or Discover Card card
+					// but does not have a three digit CVV code
 					return false;
 				}
+				//passed all checks
 				return true;
 			}
 			else {

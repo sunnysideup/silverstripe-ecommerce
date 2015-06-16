@@ -12,6 +12,8 @@
 
 var EcomPayment = {
 
+	paymentInputsSelectorParent: '#PaymentMethod',
+
 	paymentInputsSelector: '#PaymentMethod input[type=radio]',
 
 	paymentFieldSelector: 'div.paymentfields',
@@ -40,6 +42,9 @@ var EcomPayment = {
 		);
 
 		jQuery(EcomPayment.paymentInputsSelector).first().click();
+		if(jQuery(EcomPayment.paymentInputsSelector).length == 1) {
+			jQuery(EcomPayment.paymentInputsSelectorParent).hide();
+		}
 
 	}
 
