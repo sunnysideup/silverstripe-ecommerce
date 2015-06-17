@@ -175,8 +175,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider{
 			$config = GridFieldConfig_RecordEditor::create();
 			$config->removeComponentsByType('GridFieldDeleteAction');
 			$config->removeComponentsByType('GridFieldAddNewButton');
-			$orderField->setConfig($config);
-			$orderField->setList($this->getOrders());
+			if($orderField instanceof GridField) {
+				$orderField->setConfig($config);
+				$orderField->setList($this->getOrders());
+			}
 		}
 		else {
 			$orderField = new HiddenField("Orders", "Orders");
