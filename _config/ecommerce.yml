@@ -143,8 +143,8 @@ OrderStatusLog:
 
 BillingAddress:
   required_fields:
-    - Email
     - Phone
+    - Email
     - FirstName
     - Surname
     - Address
@@ -155,8 +155,8 @@ BillingAddress:
 
 ShippingAddress:
   required_fields:
-    - ShippingAddress
     - ShippingPhone
+    - ShippingAddress
     - ShippingCity
     - ShippingPostalCode
     - ShippingRegionCode

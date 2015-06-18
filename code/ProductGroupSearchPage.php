@@ -106,7 +106,7 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller {
 	 * Is this a product search?
 	 * @var Boolean
 	 */
-	protected $isSearchResults = true;
+	protected $isSearchResults = false;
 
 
 	/**
@@ -114,6 +114,7 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller {
 	 * @param HTTPRequest
 	 */
 	public function searchresults($request){
+		$this->isSearchResults = true;
 		//set the filter and the sort...
 		$this->addSecondaryTitle();
 		$this->products = $this->paginateList($this->ProductsShowable(null));

@@ -68,7 +68,7 @@ class OrderForm extends Form {
 			else {
 				$alreadyTicked = true;
 			}
-			$finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1','I have read and agree with the ').' <a href="'.$termsAndConditionsPage->Link().'">'.Convert::raw2xml($termsAndConditionsPage->Title).'</a>'._t('OrderForm.AGREEWITHTERMS2','.'), $alreadyTicked));
+			$finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1','I have read and agree with the ').' <a href="'.$termsAndConditionsPage->Link().'">'.trim(Convert::raw2xml($termsAndConditionsPage->Title)).'</a>'._t('OrderForm.AGREEWITHTERMS2','.'), $alreadyTicked));
 		}
 		$textAreaField = new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE','Note / Question'));
 		$finalFields->push($textAreaField);
