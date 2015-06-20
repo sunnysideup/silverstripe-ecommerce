@@ -183,7 +183,7 @@ class ProductSearchForm extends Form {
 			$actions = FieldList::create(
 				FormAction::create('doProductSearchForm', 'Go')
 			);
-			$shortKeywordField->setAttribute("placeholder", _t("ProductSearchForm.SHORT_KEYWORD_PLACEHOLDER", "What are you looking for ..."));
+			$shortKeywordField->setAttribute("placeholder", _t("ProductSearchForm.SHORT_KEYWORD_PLACEHOLDER", "search products ..."));
 		}
 		else {
 			if(Config::inst()->get("ProductSearchForm", "include_price_filters")) {
@@ -209,7 +209,7 @@ class ProductSearchForm extends Form {
 			if(Director::isDev() || Permission::check("ADMIN")) {
 				$fields->push(CheckboxField::create("DebugSearch", "Debug Search"));
 			}
-			$keywordField->setAttribute("placeholder", _t("ProductSearchForm.KEYWORD_PLACEHOLDER", "What are you looking for ..."));
+			$keywordField->setAttribute("placeholder", _t("ProductSearchForm.KEYWORD_PLACEHOLDER", "search products ..."));
 		}
 		$requiredFields = array();
 		$validator = ProductSearchForm_Validator::create($requiredFields);
