@@ -2180,7 +2180,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return String
 	 */
 	public function ListAFewLink() {
-		return str_replace("?showfulllist=1", "", $this->ListAFewLink());
+		return str_replace("?showfulllist=1", "", $this->ListAllLink());
 	}
 
 	/**
