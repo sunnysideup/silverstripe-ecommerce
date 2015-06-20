@@ -2177,6 +2177,16 @@ class ProductGroup_Controller extends Page_Controller {
 	 * Link that returns a list of all the products
 	 * for this product group as a simple list.
 	 *
+	 * @return String
+	 */
+	public function ListAFewLink() {
+		return str_replace("?showfulllist=1", "", $this->ListAFewLink());
+	}
+
+	/**
+	 * Link that returns a list of all the products
+	 * for this product group as a simple list.
+	 *
 	 * It resets everything - not just filter....
 	 *
 	 * @return String
