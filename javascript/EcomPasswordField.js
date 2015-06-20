@@ -88,7 +88,7 @@ var EcomPasswordField = {
 		);
 		//show passwords straight away IF there is an error
 		if(jQuery(EcomPasswordField.errorMessageSelector).length){
-			jQuery(EcomPassword.choosePasswordLinkSelector).click();
+			jQuery(EcomPasswordField.choosePasswordLinkSelector).click();
 		}
 	},
 
