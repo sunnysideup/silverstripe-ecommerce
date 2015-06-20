@@ -21,6 +21,8 @@ var EcomPasswordField = {
 
 	passwordFieldInputSelectors: "#PasswordCheck1, #PasswordCheck2",
 
+	errorMessageSelector: "#PasswordCheck1 span.message, #PasswordCheck2 span.message",
+
 	choosePasswordLinkSelector: ".choosePassword, .updatePasswordLink",
 
 	stringLength : 14,
@@ -32,6 +34,7 @@ var EcomPasswordField = {
 		if(!jQuery(EcomPasswordField.choosePasswordLinkSelector).attr("datayes")) {
 			jQuery(EcomPasswordField.choosePasswordLinkSelector).attr("datayes", yesLabel);
 		}
+
 		if(jQuery(EcomPasswordField.passwordFieldInputSelectors).length) {
 			jQuery(document).on(
 				"click",
@@ -60,6 +63,7 @@ var EcomPasswordField = {
 			);
 			jQuery(EcomPasswordField.choosePasswordLinkSelector).click();
 		}
+
 		jQuery("form").on(
 			"click",
 			".Actions input",
@@ -82,6 +86,10 @@ var EcomPasswordField = {
 				}
 			}
 		);
+		//show passwords straight away IF there is an error
+		if(jQuery(EcomPasswordField.errorMessageSelector).length){
+			jQuery(EcomPassword.choosePasswordLinkSelector).click();
+		}
 	},
 
 	//generates random password
