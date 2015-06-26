@@ -572,16 +572,17 @@ class ProductGroup extends Page {
 		$fields->addFieldToTab('Root.Images', Product_ProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')));
 		//number of products
 		$calculatedNumberOfProductsPerPage = $this->MyNumberOfProductsPerPage();
-		$numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", " - current value: ").$calculatedNumberOfProductsPerPage." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
+		$numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage != $this->NumberOfProductsPerPage ? _t("ProductGroup.CURRENTLVALUE", "Current value: ").$calculatedNumberOfProductsPerPage." "._t("ProductGroup.INHERITEDFROMPARENTSPAGE", " (inherited from parent page because the current page is set to zero)") : "";
 		$fields->addFieldToTab(
 			'Root',
 			Tab::create(
 				'ProductDisplay',
-				DropdownField::create("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show (may be overridden by special settings)..."), $this->showProductLevels),
+				$productsToShowField = DropdownField::create("LevelOfProductsToShow", _t("ProductGroup.PRODUCTSTOSHOW", "Products to show"), $this->showProductLevels),
 				HeaderField::create("WhatProductsAreShown", _t("ProductGroup.WHATPRODUCTSSHOWN", _t("ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS", "Inherited options"))),
-				$numberOfProductsPerPageField = NumericField::create("NumberOfProductsPerPage", _t("ProductGroup.PRODUCTSPERPAGE", "Number of products per page").$numberOfProductsPerPageExplanation)
+				$numberOfProductsPerPageField = NumericField::create("NumberOfProductsPerPage", _t("ProductGroup.PRODUCTSPERPAGE", "Number of products per page"))
 			)
 		);
+		$numberOfProductsPerPageField->setRightTitle($numberOfProductsPerPageExplanation);
 		if($calculatedNumberOfProductsPerPage && !$this->NumberOfProductsPerPage) {
 			$this->NumberOfProductsPerPage = null;
 			$numberOfProductsPerPageField->setAttribute("placeholder", $calculatedNumberOfProductsPerPage);
@@ -596,8 +597,9 @@ class ProductGroup extends Page {
 			}
 			$fields->addFieldToTab(
 				"Root.ProductDisplay",
-				DropdownField::create("DefaultSortOrder", _t("ProductGroup.DEFAULTSORTORDER", "Default Sort Order"), $sortDropdownList)
+				$defaultSortOrderField = DropdownField::create("DefaultSortOrder", _t("ProductGroup.DEFAULTSORTORDER", "Default Sort Order"), $sortDropdownList)
 			);
+			$defaultSortOrderField->setRightTitle(_t("ProductGroup.INHERIT_RIGHT_TITLE", "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
 		}
 		//filter
 		$filterDropdownList = $this->getUserPreferencesOptionsForDropdown("FILTER");
@@ -609,12 +611,13 @@ class ProductGroup extends Page {
 			}
 			$fields->addFieldToTab(
 				"Root.ProductDisplay",
-				DropdownField::create("DefaultFilter", _t("ProductGroup.DEFAULTFILTER", "Default Filter"), $filterDropdownList)
+				$defaultFilterField = DropdownField::create("DefaultFilter", _t("ProductGroup.DEFAULTFILTER", "Default Filter"), $filterDropdownList)
 			);
+			$defaultFilterField->setRightTitle(_t("ProductGroup.INHERIT_RIGHT_TITLE", "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
 		}
 		//display style
 		$displayStyleDropdownList = $this->getUserPreferencesOptionsForDropdown("DISPLAY");
-		if(count($displayStyleDropdownList) > 1) {
+		if(count($displayStyleDropdownList) > 2) {
 			$displayStyleKey = $this->getMyUserPreferencesDefault("DISPLAY");
 			if($this->DisplayStyle == "inherit") {
 				$actualValue = " (".(isset($displayStyleDropdownList[$displayStyleKey]) ? $displayStyleDropdownList[$displayStyleKey] : _t("ProductGroup.ERROR", "ERROR")).")";

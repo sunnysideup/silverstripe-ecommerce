@@ -229,7 +229,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 					$isShopAdmin = true;
 				}
 			}
-			if($isShopAdmin) {
+			if($isShopAdmin && $allowExistingEmail) {
 				//do nothing
 			}
 			else {
@@ -243,41 +243,13 @@ class ShopAccountForm_Validator extends RequiredFields{
 					// if we are currently NOT logged in
 					// in case we place an order!
 					if($allowExistingEmail) {
-
+						//do nothing
 					}
 					else {
 						$message = _t(
 							"Account.ALREADYTAKEN",
-							"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}",
+							"{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}.",
 							array("uniqueFieldValue" => $uniqueFieldValue, "uniqueFieldName" => $uniqueFieldName)
-						);
-						$this->validationError(
-							$uniqueFieldName,
-							$message,
-							"required"
-						);
-						$valid = false;
-					}
-				}
-				else {
-					$uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
-					//can't be taken
-					$memberExistsCheck = Member::get()
-						->filter(
-							array(
-								$uniqueFieldName => $uniqueFieldValue,
-								"ID" => $loggedInMemberID
-							)
-						)->exclude(
-							array(
-								"ID" => $loggedInMemberID
-							)
-						)->count();
-					if($memberExistsCheck){
-						$message = sprintf(
-							_t("Account.ALREADYTAKEN",  '%1$s is already taken by another member. Please log in or use another %2$s'),
-							$uniqueFieldValue,
-							$uniqueFieldName
 						);
 						$this->validationError(
 							$uniqueFieldName,

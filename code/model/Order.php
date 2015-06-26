@@ -317,6 +317,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	private static $summary_fields = array(
 		"Title" => "Title",
+		"Member.Email" => "Customer",
 		"Status.Title" => "Next Step"
 	);
 
