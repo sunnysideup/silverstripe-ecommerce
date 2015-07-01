@@ -228,6 +228,25 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
+	 * returns the default currency as Code
+	 *
+	 * @return string - e.g. NZD
+	 */
+	public static function default_currency_code(){
+		$obj = self::default_currency();
+		if($obj) {
+			$code = $obj->Code;
+		}
+		if(!$code){
+			$code = EcommerceConfig::get("EcommerceCurrency", "default_currency");
+		}
+		if(!$code) {
+			$code = "NZD";
+		}
+		return strtoupper($code);
+	}
+
+	/**
 	 *
 	 * @return Int
 	 */

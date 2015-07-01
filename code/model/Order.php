@@ -1208,6 +1208,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * alias for UpdateCurrency
+	 * @param EcommerceCurrency $currency
 	 */
 	public function SetCurrency($currency) {
 		$this->UpdateCurrency($currency);

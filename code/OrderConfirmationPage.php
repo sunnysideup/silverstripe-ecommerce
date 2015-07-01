@@ -35,7 +35,8 @@ class OrderConfirmationPage extends CartPage{
 		'PaymentPendingHeader' => 'Varchar(255)',
 		'PaymentSuccessfulMessage' => 'HTMLText',
 		'PaymentNotSuccessfulMessage' => 'HTMLText',
-		'PaymentPendingMessage' => 'HTMLText'
+		'PaymentPendingMessage' => 'HTMLText',
+		'EnableGoogleAnalytics' => 'Boolean'
 	);
 
 	/**
@@ -128,7 +129,8 @@ class OrderConfirmationPage extends CartPage{
 			"PaymentPendingHeader" => _t("EcommerceDBConfig.PAYMENTPENDINGHEADER", "Message showing when the order has not been paid in full - but the payment is pending"),
 			"PaymentSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULMESSAGE", "Message showing when order has been paid in full"),
 			"PaymentNotSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULMESSAGE", "Message showing when the order has not been paid in full"),
-			"PaymentPendingMessage" => _t("EcommerceDBConfig.PAYMENTPENDINGMESSAGE", "Message showing when the order has not been paid in full - but the payment is pending")
+			"PaymentPendingMessage" => _t("EcommerceDBConfig.PAYMENTPENDINGMESSAGE", "Message showing when the order has not been paid in full - but the payment is pending"),
+			"EnableGoogleAnalytics" => _t("EcommerceDBConfig.ENABLEGOOGLEANALYTICS", "Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.")
 		);
 		return $newLabels;
 	}
@@ -178,6 +180,7 @@ class OrderConfirmationPage extends CartPage{
 		$htmlEditorField1->setRows(3);
 		$htmlEditorField2->setRows(3);
 		$htmlEditorField3->setRows(3);
+		$fields->addFieldToTab("Root.Analytics", new CheckboxField("EnableGoogleAnalytics", $fieldLabels["EnableGoogleAnalytics"]));
 		return $fields;
 	}
 
@@ -326,6 +329,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		Session::clear("CheckoutPageCurrentOrderID");
 		Session::set("CheckoutPageCurrentOrderID", 0);
 		Session::save();
+		$this->includeGoogleAnalyticsCode();
 	}
 
 
@@ -591,6 +595,30 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 		}
 		else {
 			return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
+		}
+	}
+
+	protected function includeGoogleAnalyticsCode(){
+		if($this->EnableGoogleAnalytics && $this->currentOrder && Director::isLive()) {
+			$currencyUsedObject = $this->currentOrder->CurrencyUsed();
+			if($currencyUsedObject) {
+				$currencyUsedString = $currencyUsedObject->Code;
+			}
+			if(empty($currencyUsedString)) {
+				$currencyUsedString = EcommerceCurrency::default_currency_code();
+			}
+			$js = '
+				ga(\'require\', \'ecommerce\');
+				ga(
+					\'ecommerce:addTransaction\',
+					{
+						\'id\': \''.$this->currentOrder->ID.'\',
+						\'revenue\': \''.$this->currentOrder->getSubTotal().'\',
+						\'currency\': \''.$currencyUsedString.'\'
+					}
+				);
+				ga(\'ecommerce:send\');';
+			Requirements::customScript($js, "GoogleAnalyticsEcommerce");
 		}
 	}
 
