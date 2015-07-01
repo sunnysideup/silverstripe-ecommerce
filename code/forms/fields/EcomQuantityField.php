@@ -131,7 +131,7 @@ class EcomQuantityField extends NumericField {
 			'value' => ($this->orderItem->Quantity) ? $this->orderItem->Quantity : 0,
 			'maxlength' => $this->maxLength,
 			'size' => $this->fieldSize,
-			'rel' => $this->getQuantityLink(),
+			'data-quantity-link' => $this->getQuantityLink(),
 			'tabindex' => self::$tabindex[$name],
 			'disabled' => 'disabled'
 		);

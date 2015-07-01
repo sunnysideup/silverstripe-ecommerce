@@ -150,7 +150,7 @@ EcomQuantityField = {
 			return jQuery('[name=' + name + ']').val();
 		};
 		//backup!
-		return jQuery(inputField).attr("rel");
+		return jQuery(inputField).attr("data-quantity-link");
 	},
 
 	debug: function() {
