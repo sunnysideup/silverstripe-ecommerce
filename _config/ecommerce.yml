@@ -173,7 +173,7 @@ EcommerceRegion:
   show_freetext_region_field: true
 
 OrderAddress:
-  use_separate_shipping_address: true
+  use_separate_shipping_address: false
   use_shipping_address_for_main_region_and_country: false
   field_class_and_id_prefix: ""
 

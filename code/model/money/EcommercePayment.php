@@ -96,6 +96,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 			return false;
 		}
 
+		//nothing to pay, always valid
+		if($order->TotalOutstanding() == 0) {
+			return true;
+		}
 		$hasValidPaymentClass = false;
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 		if($paymentClass) {
