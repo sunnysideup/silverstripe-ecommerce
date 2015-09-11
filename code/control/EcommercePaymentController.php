@@ -15,7 +15,8 @@ class EcommercePaymentController extends Controller {
 	private static $allowed_actions = array(
 		"thankyou",
 		"index",
-		"pay"
+		"pay",
+		"PaymentForm"
 	);
 
 	/**
