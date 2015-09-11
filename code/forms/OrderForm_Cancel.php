@@ -63,11 +63,15 @@ class OrderForm_Cancel extends Form {
 							$reason = $SQLData["CancellationReason"];
 						}
 						$order->Cancel($member, $reason);
+						$form->sessionMessage(
+							_t(
+								'OrderForm.CANCELLED',
+								'Order has been cancelled.'
+							),
+							'good'
+						);
 						return $this->controller->redirectBack();
 					}
-					$order->Cancel($member, $reason);
-					$this->controller->redirectBack();
-					return false;
 				}
 			}
 		}
