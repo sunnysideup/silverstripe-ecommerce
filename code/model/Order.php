@@ -1789,7 +1789,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canPay', $member);
 		if($extended !== null) {return $extended;}
-		if($this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending()) {
+		if( $this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending() ) {
 			return false;
 		}
 		return $this->MyStep()->CustomerCanPay;

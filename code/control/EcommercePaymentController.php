@@ -7,7 +7,6 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
- * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommercePaymentController extends Controller {
@@ -111,13 +110,8 @@ class EcommercePaymentController extends Controller {
 	function PaymentForm(){
 		if($this->currentOrder){
 			if($this->currentOrder->canPay()) {
-				if($this->currentOrder->PaymentIsPending()) {
-
-				}
-				else {
-					Requirements::javascript("ecommerce/javascript/EcomPayment.js");
-					return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder, $this->Link("thankyou"));
-				}
+				Requirements::javascript("ecommerce/javascript/EcomPayment.js");
+				return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder, $this->Link("thankyou"));
 			}
 			else {
 				$this->errorMessage = _t("EcommercePaymentController.CANNOTMAKEPAYMENT", "You can not make a payment for this order.");

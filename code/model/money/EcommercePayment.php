@@ -3,9 +3,6 @@
  * "Abstract" class for a number of different payment
  * types allowing a user to pay for something on a site.
  *
- * @see DPSPayment
- * @see WorldPayPayment
- * @see ChequePayment
  *
  * This can't be an abstract class because sapphire doesn't
  * support abstract DataObject classes.

@@ -1,5 +1,4 @@
 <h1 class="pagetitle">$Title</h1>
-
 <div class="paymentMessage">
 <% if PaymentIsPending %>
 	<h2 class="paymentHeader">$PaymentPendingHeader</h2>
@@ -16,7 +15,6 @@
 </div>
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
-
 
 <% if Order %>
 <% with Order %>

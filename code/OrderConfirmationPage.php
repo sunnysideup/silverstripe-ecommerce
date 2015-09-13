@@ -534,15 +534,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 * @return Form (OrderForm_Payment) or Null
 	 **/
 	function PaymentForm(){
-		if($this->Order()){
+		if($this->currentOrder){
 			if($this->currentOrder->canPay()) {
-				if($this->currentOrder->PaymentIsPending()) {
-					//if the payment is pending then dont allow further payment.
-				}
-				else {
-					Requirements::javascript("ecommerce/javascript/EcomPayment.js");
-					return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder);
-				}
+				Requirements::javascript("ecommerce/javascript/EcomPayment.js");
+				return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder);
 			}
 		}
 	}
