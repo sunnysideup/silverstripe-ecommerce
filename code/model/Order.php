@@ -854,7 +854,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	/**
 	 *
 	 * @return Boolean
-	 */ 
+	 */
 	public function Archive() {
 		if($lastStep = OrderStep::get()->Last()) {
 			$this->StatusID = $lastStep->ID;
@@ -1789,7 +1789,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canPay', $member);
 		if($extended !== null) {return $extended;}
-		if($this->IsPaid() || $this->IsCancelled()) {
+		if($this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending()) {
 			return false;
 		}
 		return $this->MyStep()->CustomerCanPay;
