@@ -22,8 +22,8 @@
 <% with Order %>
 	<% include Order %>
 <% end_with %>
-<div id="PaymentForm">$PaymentForm</div>
-<div id="CancelForm">$CancelForm</div>
+<% if PaymentForm %><div id="PaymentForm">$PaymentForm</div><% end_if %>
+<% if CancelForm %><div id="CancelForm">$CancelForm</div><% end_if %>
 <% else %>
 <p class="message bad"><% _t("OrderConfirmationPage.COULDNOTBEFOUND","Your order could not be found.") %></p>
 <% end_if %>

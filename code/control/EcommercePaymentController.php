@@ -45,7 +45,7 @@ class EcommercePaymentController extends Controller {
 	public static function make_payment_link($orderID){
 		$urlSegment = EcommerceConfig::get("EcommercePaymentController", "url_segment");
 		$link = Controller::join_links(
-			Director::baseURL(), 
+			Director::baseURL(),
 			$urlSegment."/pay/".$orderID."/"
 		);
 		return $link;
@@ -99,8 +99,8 @@ class EcommercePaymentController extends Controller {
 			$URLSegment = $this->class;
 		}
 		return Controller::join_links(
-			Director::baseURL(), 
-			$URLSegment, 
+			Director::baseURL(),
+			$URLSegment,
 			$action
 		);
 	}
@@ -111,8 +111,13 @@ class EcommercePaymentController extends Controller {
 	function PaymentForm(){
 		if($this->currentOrder){
 			if($this->currentOrder->canPay()) {
-				Requirements::javascript("ecommerce/javascript/EcomPayment.js");
-				return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder, $this->Link("thankyou"));
+				if($this->currentOrder->PaymentIsPending()) {
+
+				}
+				else {
+					Requirements::javascript("ecommerce/javascript/EcomPayment.js");
+					return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder, $this->Link("thankyou"));
+				}
 			}
 			else {
 				$this->errorMessage = _t("EcommercePaymentController.CANNOTMAKEPAYMENT", "You can not make a payment for this order.");
