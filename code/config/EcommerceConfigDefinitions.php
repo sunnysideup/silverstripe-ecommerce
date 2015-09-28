@@ -368,7 +368,7 @@ class EcommerceConfigDefinitions extends Object {
 		################### CLEANUP AND OTHER TASKS #####################
 			"EcommerceTaskCartCleanup" => array(
 				"clear_minutes" => "The number of minutes after which carts are considered abandonned. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
-				"clear_minutes_empty_carts" => "The number of minutes after which empty carts should be deleted (to reduce the amount of empty (meaningless) carts in the database. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
+				"clear_minutes_empty_carts" => "The number of minutes after which empty carts should be deleted (to reduce the amount of empty (meaningless) carts in the database). If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.",
 				"maximum_number_of_objects_deleted" => "This sets the total number of objects to be cleaned per clean.  We can keep this low to reduce time per clean and to reduce risks.",
 				"never_delete_if_linked_to_member" => "If set to TRUE, then orders with a member linked to it will never be deleted.",
 				"one_to_one_classes" => "An array of key / value pairs that are linked to orders as one-to-one relationships.  The key is the order field name (e.g. BillingAddressID) and the value is the class name (e.g. BillingAddress)",
