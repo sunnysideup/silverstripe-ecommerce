@@ -7,7 +7,6 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
- * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
 class EcommercePaymentController extends Controller {
@@ -15,7 +14,8 @@ class EcommercePaymentController extends Controller {
 	private static $allowed_actions = array(
 		"thankyou",
 		"index",
-		"pay"
+		"pay",
+		"PaymentForm"
 	);
 
 	/**
@@ -44,7 +44,7 @@ class EcommercePaymentController extends Controller {
 	public static function make_payment_link($orderID){
 		$urlSegment = EcommerceConfig::get("EcommercePaymentController", "url_segment");
 		$link = Controller::join_links(
-			Director::baseURL(), 
+			Director::baseURL(),
 			$urlSegment."/pay/".$orderID."/"
 		);
 		return $link;
@@ -98,8 +98,8 @@ class EcommercePaymentController extends Controller {
 			$URLSegment = $this->class;
 		}
 		return Controller::join_links(
-			Director::baseURL(), 
-			$URLSegment, 
+			Director::baseURL(),
+			$URLSegment,
 			$action
 		);
 	}

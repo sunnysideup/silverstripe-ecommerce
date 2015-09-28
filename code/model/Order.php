@@ -800,6 +800,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function tryToFinaliseOrder() {
 		if($this->CancelledByID) {
+			$this->Archive();
 			return;
 		}
 		do {
@@ -837,7 +838,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 */
 	public function Cancel(Member $member, $reason = "") {
 		$this->CancelledByID = $member->ID;
-		$this->write();
+		if(!$this->Archive()) {
+			$this->write();
+		}
 		$log = OrderStatusLog_Cancel::create();
 		$log->AuthorID = $member->ID;
 		$log->OrderID = $this->ID;
@@ -848,7 +851,18 @@ class Order extends DataObject implements EditableEcommerceObject {
 		return $log->write();
 	}
 
-
+	/**
+	 *
+	 * @return Boolean
+	 */
+	public function Archive() {
+		if($lastStep = OrderStep::get()->Last()) {
+			$this->StatusID = $lastStep->ID;
+			$this->write();
+			return true;
+		}
+		return false;
+	}
 
 
 
@@ -1775,7 +1789,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$member = $this->getMemberForCanFunctions($member);
 		$extended = $this->extendedCan('canPay', $member);
 		if($extended !== null) {return $extended;}
-		if($this->IsPaid() || $this->IsCancelled()) {
+		if( $this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending() ) {
 			return false;
 		}
 		return $this->MyStep()->CustomerCanPay;
