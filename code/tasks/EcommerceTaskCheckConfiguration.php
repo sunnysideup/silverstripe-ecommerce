@@ -402,9 +402,9 @@ EcommerceConfig:
 						}
 						$manuallyAddedValue = print_r($this->configs[$className][$key], 1);
 						$actualValueRaw = EcommerceConfig::get($className, $key);
-						if(!$actualValueRaw && $manuallyAddedValue) {
-							$actualValueRaw = $manuallyAddedValue;
-						}
+						//if(!$actualValueRaw && $manuallyAddedValue) {
+						//	$actualValueRaw = $manuallyAddedValue;
+						//}
 
 						$actualValue = print_r($actualValueRaw, 1);
 						if($defaultValue === $manuallyAddedValue && $isCustomisedValues) {
