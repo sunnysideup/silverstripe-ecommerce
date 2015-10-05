@@ -1456,7 +1456,7 @@ class ProductGroup_Controller extends Page_Controller {
 	protected $filterForGroupObject = null;
 
 	/**
-	 * Is this a product search
+	 * Is this a product search?
 	 * @var Boolean
 	 */
 	protected $isSearchResults = false;
@@ -1836,7 +1836,7 @@ class ProductGroup_Controller extends Page_Controller {
 	}
 
 	/**
-	 * Is there something actively being search for?
+	 * Is there something actively being searched for?
 	 *
 	 * This is different from IsSearchResults.
 	 *

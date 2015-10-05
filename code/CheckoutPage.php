@@ -316,16 +316,11 @@ class CheckoutPage extends CartPage {
 	public function requireDefaultRecords(){
 		parent::requireDefaultRecords();
 		$checkoutPage = CheckoutPage::get()->first();
-		$defaults = $this->Config()->get("defaults");
-		foreach($defaults as $field => $value) {
-			if($value != 1 && $value != "Inherit") {
-				if(!$this->$field) {
-					$this->$field = $value;
-					DB::alteration_message("Creating value for checkout page: ".$field." = ".$value, "created");
-				}
-			}
+		if(!$checkoutPage) {
+			$checkoutPage = CheckoutPage::create();
+			$checkoutPage->writeToStage("Stage");
+			$checkoutPage->publish("Stage", "Live");
 		}
-
 	}
 
 }
