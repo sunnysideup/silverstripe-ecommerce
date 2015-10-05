@@ -411,6 +411,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 			}
 		}
 		Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
+		$this->extend("UpdateCMSFieldsAfter", $fields);
 		return $fields;
 	}
 
