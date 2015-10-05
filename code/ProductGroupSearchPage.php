@@ -54,10 +54,8 @@ class ProductGroupSearchPage extends ProductGroup {
 	protected $allowCaching = false;
 
 	function getGroupFilter(){
-		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
-		if(!is_array($resultArray) || !count($resultArray)) {
-			$resultArray = array(0 => 0);
-		}
+		$resultArray = $this->resultArray();;
+
 		$this->allProducts = $this->allProducts->filter(array("ID" => $resultArray));
 		return $this->allProducts;
 	}
@@ -70,10 +68,7 @@ class ProductGroupSearchPage extends ProductGroup {
 		$sortKey = $this->getCurrentUserPreferences("SORT");
 		$defaultSortKey = $this->getMyUserPreferencesDefault("FILTER");
 		if($sortKey == $defaultSortKey) {
-			$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
-			if(!$resultArray || !count($resultArray)) {
-				$resultArray = array(0 => 0);
-			}
+			$resultArray = $this->resultArray();
 			return $this->createSortStatementFromIDArray($resultArray);
 		}
 		return $this->getUserSettingsOptionSQL("SORT", $sortKey);
@@ -83,7 +78,21 @@ class ProductGroupSearchPage extends ProductGroup {
 		return ArrayList::create();
 	}
 
+	private static $_result_array = null;
 
+	/**
+	 *
+	 * @return array
+	 */ 
+	public function resultArray(){
+		if(self::$_result_array === null) {
+			self::$_result_array = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
+		}
+		if(!is_array(self::$_result_array) || !count(self::$_result_array)) {
+			self::$_result_array = array(0 => 0);
+		}		
+		return self::$_result_array;
+	}
 
 
 }
@@ -102,12 +111,13 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller {
 		"resetfilter" => true
 	);
 
-	/**
-	 * Is this a product search?
-	 * @var Boolean
-	 */
-	protected $isSearchResults = false;
-
+	function init(){
+		parent::init();
+		$array = $this->resultArray();
+		if(count($array) > 1) {
+			$this->isSearchResults = true;
+		}
+	}
 
 	/**
 	 * get the search results
