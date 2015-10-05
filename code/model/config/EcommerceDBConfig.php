@@ -310,109 +310,111 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 
-		foreach($this->customFieldLabels() as $name => $label) {
-			$fields->removeByName($name);
-		}
-		//new section
-		$fieldDescriptions = $this->customDescriptionsForFields();
-		$fieldLabels = $this->fieldLabels();
-		$productImage = new Product_Image();
-		$versionInfo = EcommerceConfigDefinitions::create();
-		$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
-		$fields->addFieldsToTab("Root",array(
-			new Tab('Pricing',
-				new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
-				new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
-				$htmlEditorField1 = new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"])
-			),
-			new Tab('Products',
-				new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
-				new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
-				new CheckboxField("OnlyShowProductsThatCanBePurchased", $fieldLabels["OnlyShowProductsThatCanBePurchased"]),
-				$htmlEditorField2 = new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
-				new CheckboxField("ProductsHaveWeight", $fieldLabels["ProductsHaveWeight"]),
-				new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
-				new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"])
-				//new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
-			),
-			new Tab('ProductImages',
-				new Product_ProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
-				new ReadonlyField("DefaultThumbnailImageSize", $fieldLabels["DefaultThumbnailImageSize"], $productImage->ThumbWidth()."px x ".$productImage->ThumbHeight()."px "),
-				new ReadonlyField("DefaultSmallImageSize", $fieldLabels["DefaultSmallImageSize"], $productImage->SmallWidth()."px x ".$productImage->SmallHeight()."px "),
-				new ReadonlyField("DefaultContentImageSize", $fieldLabels["DefaultContentImageSize"], $productImage->ContentWidth()."px wide"),
-				new ReadonlyField("DefaultLargeImageSize", $fieldLabels["DefaultLargeImageSize"], $productImage->LargeWidth()."px wide")
-			),
-			new Tab('AddressAndDelivery',
-				new TextField("PostalCodeURL", $fieldLabels["PostalCodeURL"]),
-				new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"]),
-				$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"]),
-				new TextField("PackingSlipTitle",$fieldLabels["PackingSlipTitle"]),
-				$htmlEditorField4 = new HTMLEditorField("PackingSlipNote",$fieldLabels["PackingSlipNote"])
-			),
-			new Tab('Emails',
-				new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),
-				new UploadField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos"),
-				new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"])
-			),
-			new Tab('Process',
-				$this->getOrderStepsField()
-			),
-			new Tab('Advanced',
-				new HeaderField("EcommerceVersionHeading", "Version"),
-				new LiteralField("EcommerceVersion", "<p><strong>E-commerce</strong>: ".$versionInfo->Version()."</p>"),
-				new LiteralField("SVNVersion", "<p><strong>SVN</strong>: ".$versionInfo->SvnVersion()."</p>"),
-				new LiteralField("GITVersion", "<p><strong>GIT</strong>: not available yet.</p>"),
-				new HeaderField("ReviewHardcodedSettingsHeading", "Hard-coded settings"),
-				new LiteralField(
-					"ReviewHardcodedSettings",
-					"<p>
-						Your developer has pre-set some configurations for you.  You can
-						<a href=\"/dev/ecommerce/ecommercetaskcheckconfiguration\" data-popup=\"true\">review these settings</a>
-						but you will need to ask your developer to change them if they are not right.
-						The reason they can not be set is that changing them can potentially break your application.
-					</p>"
+		$self = $this;
+		$this->beforeUpdateCMSFields(function($fields) use ($self) {
+			foreach($this->customFieldLabels() as $name => $label) {
+				$fields->removeByName($name);
+			}
+			//new section
+			$fieldDescriptions = $this->customDescriptionsForFields();
+			$fieldLabels = $this->fieldLabels();
+			$productImage = new Product_Image();
+			$versionInfo = EcommerceConfigDefinitions::create();
+			$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
+			$fields->addFieldsToTab("Root",array(
+				new Tab('Pricing',
+					new CheckboxField("ShopPricesAreTaxExclusive", $fieldLabels["ShopPricesAreTaxExclusive"]),
+					new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
+					$htmlEditorField1 = new HTMLEditorField("CurrenciesExplanation", $fieldLabels["CurrenciesExplanation"])
+				),
+				new Tab('Products',
+					new NumericField("NumberOfProductsPerPage", $fieldLabels["NumberOfProductsPerPage"]),
+					new CheckboxField("ProductsAlsoInOtherGroups", $fieldLabels["ProductsAlsoInOtherGroups"]),
+					new CheckboxField("OnlyShowProductsThatCanBePurchased", $fieldLabels["OnlyShowProductsThatCanBePurchased"]),
+					$htmlEditorField2 = new HTMLEditorField("NotForSaleMessage", $fieldLabels["NotForSaleMessage"]),
+					new CheckboxField("ProductsHaveWeight", $fieldLabels["ProductsHaveWeight"]),
+					new CheckboxField("ProductsHaveModelNames",$fieldLabels["ProductsHaveModelNames"]),
+					new CheckboxField("ProductsHaveQuantifiers", $fieldLabels["ProductsHaveQuantifiers"])
+					//new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
+				),
+				new Tab('ProductImages',
+					new Product_ProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
+					new ReadonlyField("DefaultThumbnailImageSize", $fieldLabels["DefaultThumbnailImageSize"], $productImage->ThumbWidth()."px x ".$productImage->ThumbHeight()."px "),
+					new ReadonlyField("DefaultSmallImageSize", $fieldLabels["DefaultSmallImageSize"], $productImage->SmallWidth()."px x ".$productImage->SmallHeight()."px "),
+					new ReadonlyField("DefaultContentImageSize", $fieldLabels["DefaultContentImageSize"], $productImage->ContentWidth()."px wide"),
+					new ReadonlyField("DefaultLargeImageSize", $fieldLabels["DefaultLargeImageSize"], $productImage->LargeWidth()."px wide")
+				),
+				new Tab('AddressAndDelivery',
+					new TextField("PostalCodeURL", $fieldLabels["PostalCodeURL"]),
+					new TextField("PostalCodeLabel", $fieldLabels["PostalCodeLabel"]),
+					$htmlEditorField3 = new HTMLEditorField("ShopPhysicalAddress",$fieldLabels["ShopPhysicalAddress"]),
+					new TextField("PackingSlipTitle",$fieldLabels["PackingSlipTitle"]),
+					$htmlEditorField4 = new HTMLEditorField("PackingSlipNote",$fieldLabels["PackingSlipNote"])
+				),
+				new Tab('Emails',
+					new TextField("ReceiptEmail",$fieldLabels["ReceiptEmail"]),
+					new UploadField("EmailLogo",$fieldLabels["EmailLogo"] ,  null, null, null, "logos"),
+					new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"])
+				),
+				new Tab('Process',
+					$this->getOrderStepsField()
+				),
+				new Tab('Advanced',
+					new HeaderField("EcommerceVersionHeading", "Version"),
+					new LiteralField("EcommerceVersion", "<p><strong>E-commerce</strong>: ".$versionInfo->Version()."</p>"),
+					new LiteralField("SVNVersion", "<p><strong>SVN</strong>: ".$versionInfo->SvnVersion()."</p>"),
+					new LiteralField("GITVersion", "<p><strong>GIT</strong>: not available yet.</p>"),
+					new HeaderField("ReviewHardcodedSettingsHeading", "Hard-coded settings"),
+					new LiteralField(
+						"ReviewHardcodedSettings",
+						"<p>
+							Your developer has pre-set some configurations for you.  You can
+							<a href=\"/dev/ecommerce/ecommercetaskcheckconfiguration\" data-popup=\"true\">review these settings</a>
+							but you will need to ask your developer to change them if they are not right.
+							The reason they can not be set is that changing them can potentially break your application.
+						</p>"
+					)
 				)
-			)
-			/*$processtab = new Tab('OrderProcess',
-				new LiteralField('op','Include a drag-and-drop interface for customising order steps (Like WidgetArea)')
-			)*/
-		));
-		$mappingArray = Config::inst()->get("BillingAddress", "fields_to_google_geocode_conversion");
-		if(is_array($mappingArray) && count($mappingArray)) {
-			$mappingArray = Config::inst()->get("ShippingAddress", "fields_to_google_geocode_conversion");
+				/*$processtab = new Tab('OrderProcess',
+					new LiteralField('op','Include a drag-and-drop interface for customising order steps (Like WidgetArea)')
+				)*/
+			));
+			$mappingArray = Config::inst()->get("BillingAddress", "fields_to_google_geocode_conversion");
 			if(is_array($mappingArray) && count($mappingArray)) {
-				$fields->removeByName("PostalCodeURL");
-				$fields->removeByName("PostalCodeLabel");
-			}
-		}
-		$htmlEditorField1->setRows(3);
-		$htmlEditorField2->setRows(3);
-		$htmlEditorField3->setRows(3);
-		$htmlEditorField4->setRows(3);
-		$fields->addFieldsToTab(
-			"Root.Main",
-			array(
-				new CheckboxField("UseThisOne", $fieldLabels["UseThisOne"]),
-				new CheckboxField("ShopClosed", $fieldLabels["ShopClosed"])
-			)
-		);
-		//set cols
-		if($f = $fields->dataFieldByName("CurrenciesExplanation")) {$f->setRows(2);}
-		if($f = $fields->dataFieldByName("NotForSaleMessage")) {$f->setRows(2);}
-		if($f = $fields->dataFieldByName("ShopPhysicalAddress")) {$f->setRows(2);}
-		foreach($fields->dataFields() as $field) {
-			if(isset($fieldDescriptions[$field->getName()])) {
-				if($field instanceof CheckboxField) {
-					$field->setDescription($fieldDescriptions[$field->Name]);
-				}
-				else {
-					$field->setRightTitle($fieldDescriptions[$field->Name]);
+				$mappingArray = Config::inst()->get("ShippingAddress", "fields_to_google_geocode_conversion");
+				if(is_array($mappingArray) && count($mappingArray)) {
+					$fields->removeByName("PostalCodeURL");
+					$fields->removeByName("PostalCodeLabel");
 				}
 			}
-		}
-		Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
-		$this->extend("UpdateCMSFieldsAfter", $fields);
-		return $fields;
+			$htmlEditorField1->setRows(3);
+			$htmlEditorField2->setRows(3);
+			$htmlEditorField3->setRows(3);
+			$htmlEditorField4->setRows(3);
+			$fields->addFieldsToTab(
+				"Root.Main",
+				array(
+					new CheckboxField("UseThisOne", $fieldLabels["UseThisOne"]),
+					new CheckboxField("ShopClosed", $fieldLabels["ShopClosed"])
+				)
+			);
+			//set cols
+			if($f = $fields->dataFieldByName("CurrenciesExplanation")) {$f->setRows(2);}
+			if($f = $fields->dataFieldByName("NotForSaleMessage")) {$f->setRows(2);}
+			if($f = $fields->dataFieldByName("ShopPhysicalAddress")) {$f->setRows(2);}
+			foreach($fields->dataFields() as $field) {
+				if(isset($fieldDescriptions[$field->getName()])) {
+					if($field instanceof CheckboxField) {
+						$field->setDescription($fieldDescriptions[$field->Name]);
+					}
+					else {
+						$field->setRightTitle($fieldDescriptions[$field->Name]);
+					}
+				}
+			}
+			Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
+		});
+		return parent::getCMSFields();
 	}
 
 	/**
