@@ -286,6 +286,22 @@ class OrderConfirmationPage extends CartPage{
 		return parent::LinkOrCurrent();
 	}
 
+	public function requireDefaultRecords(){
+		parent::requireDefaultRecords();
+		$checkoutPage = CheckoutPage::get()->first();
+		if($checkoutPage) {
+			$orderConfirmationPage = OrderConfirmationPage::get()->first();
+			if($orderConfirmationPage) {
+				$orderConfirmationPage = CheckoutPage::create();
+				$orderConfirmationPage->Title = "Order Confirmation";
+				$orderConfirmationPage->MenuTitle = "Order Confirmation";
+				$orderConfirmationPage->URLSegment = "order-confirmation";
+				$orderConfirmationPage->writeToStage("Stage");
+				$orderConfirmationPage->publish("Stage", "Live");
+			}
+		}
+	}
+
 }
 
 class OrderConfirmationPage_Controller extends CartPage_Controller{
