@@ -41,6 +41,8 @@ DEFINE('_STANDARD_URL', "http://www.mysite.co.nz");
 
 ## Development Philosophy and Version Management ##
 
+This flavour of Silvertripe E-commerce aims to be a polished, one click install solution for basic e-commerce websites. 
+
 We are in the process of moving towards semantic versioning.
 
 ## Features ##
