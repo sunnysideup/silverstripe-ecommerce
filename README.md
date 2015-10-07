@@ -21,7 +21,6 @@ see composer.json
 
 ## Project Home ##
 
- * See http://code.google.com/p/silverstripe-ecommerce
  * See http://www.silverstripe-ecommerce.com
  * https://github.com/sunnysideup/silverstripe-ecommerce
 
