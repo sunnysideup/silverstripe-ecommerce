@@ -42,33 +42,70 @@ DEFINE('_STANDARD_URL', "http://www.mysite.co.nz");
 
 ## Development Philosophy and Version Management ##
 
-In contrast with most projects, the master is regularly chopped, altered, changed and improved.
-This is not best practice, but it works for us.
+We are in the process of moving towards semantic versioning.
 
-While we regularly change the core, we try to keep API changes to a minimum and
-we ensure that you can upgrade an e-commerce project from version 0.0001 to 99.0 without
-much hassle.  For this purpose, we have written a build task that upgrades your database schema,
-fixes data issues (e.g. adds defaults to new database fields), etc...
+## Features ##
 
-From time to time, we create a tag. This will usually coincide with a new version of Framework.
-For example, when Framework tag 4.3.1 is released,
-we may tag a version of the e-commercemaster as 4.3.1 at the same time.
-From time to time, we also update the latest branch.
+ * 40+ sub-modules available (varying quality levels, but plenty of inspiration and example code ;-))
 
-To make it work for you, in case you are working with the latest stable version of
-the Silverstripe Framework, you just check out (fork) master, keep updating and working with it
-until your projects is getting close to going live.  At that moment you lock e-commerce and
-you only apply bug fixes where needed.
+ * extensive dev tools:
+  - bundled under dev/ecommerce/ (e.g. www.mysite.co.nz/dev/ecommerce/
+  - full list of all configs (~70) available through wizard like interface
+  - install complete test site within two minutes (as per previous e-mail)
+  - example front-end template showing nearly all variables available and how to use them
+  - javascript code included (e.g. ajaxifies cart)
+  - basic customisation guide: http://www.silverstripe-ecommerce.com/home/customisation-guide/
+  - lots of helpful maintenance and debug scripts 
+  - add /debug to the end of a product / product category URL (e.g. www.mysite.co.nz/my-product/debug/ to get all the coding info you may need for that object - e.g. SQL to select products in product category)
 
-Next, when you get to update your clients Framework version you can choose to update e-commerce at the same time.
-This will require you to retest the e-commerce functionality as we may have inadvertently broken something.
+ * cart responses are easily customised / ajaxified and will update all identified areas on any page view
 
-In terms of version numbering, we try to keep the tags and branch numbers synchronised with the
-Silverstripe Framework versions.  This makes it easier to see what version is right for you
-(e.g. ecommerce 3.1 should work well with the 3.1 branch of framework, etc...).
+ * ability to use
+  (a) no account (i.e. guest checkout),
+  (b) must have account, or
+  (c) account optional.
+  This is one of the major e-com discussion points with clients. We have tried to cater for all three scenarios.
+
+ * super flexible order process with customisable OrderModifiers and OrderSteps:
+
+  - OrderModifiers add/deduct cost, products, etc... before placing the final order (e.g. tax, delivery, discounts)
+
+  - OrderSteps do stuff after order is placed (e.g. email invoice, update stock, ping another API, etc... ) - kudos to Jeremy Shipman for promoting this concept
+
+ * supports multi-currency
+
+ * emails look great thanks to emogrifier e-mail formatting
+
+ * we aim to have polished CMS views.
+
+ * very flexible and powerful product categories:
+
+  - extensive caching makes the product lists very fast, even with 1000s of products.
+
+  - some smart features such as "previous" and "next" product links (based on last list shown),
+
+  - built-in search, with ability to search within category, previous search, or entire product range
+
+  - one product can be in many product categories
+
+  - extensive filter and sort options (customisable through yml)
+
+ * ability to use RESTFUL service API for connecting with third-party software
+
+ * ability to create country specific pricing (requires custom code)
+
+ * we are starting to use semantic versioning
+
+ * can use Omnipay (code can be made available), although there are also a number of other payment gateways available (DPS, Paypal, etc...)
+
+ * we are super happy to help anyone to get started with version of e-commerce
+
+ * we would welcome financial support and other help to add
+  (a) translations 
+  (b) test suite
 
 
-## Where the hell are the Unit Tests? ##
+## Now you mention it ... where the hell are the Unit Tests? ##
 
 Right now, ecommerce does not have any php unit tests.
 This is a major shortcoming that will be set right in due course.
