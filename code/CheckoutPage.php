@@ -318,6 +318,9 @@ class CheckoutPage extends CartPage {
 		$checkoutPage = CheckoutPage::get()->first();
 		if(!$checkoutPage) {
 			$checkoutPage = CheckoutPage::create();
+			$checkoutPage->Title = "Checkout";
+			$checkoutPage->MenuTitle = "Checkout";
+			$checkoutPage->URLSegment = "checkout";
 			$checkoutPage->writeToStage("Stage");
 			$checkoutPage->publish("Stage", "Live");
 		}
