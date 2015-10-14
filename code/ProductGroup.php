@@ -2399,7 +2399,13 @@ class ProductGroup_Controller extends Page_Controller {
 				$secondaryTitle = $pipe.$secondaryTitle;
 			}
 			if($this->IsSearchResults()) {
-				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results");
+				if($array = $this->resultArray()) {
+					$count = count($array)-1;
+					$secondaryTitle .= $pipe.$count." "._t("ProductGroup.PRODUCTS_FOUND", "Products Found");
+				}
+				else {
+					$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results");
+				}
 			}
 			if(is_object($this->filterForGroupObject)) {
 				$secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
