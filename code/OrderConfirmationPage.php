@@ -291,8 +291,8 @@ class OrderConfirmationPage extends CartPage{
 		$checkoutPage = CheckoutPage::get()->first();
 		if($checkoutPage) {
 			$orderConfirmationPage = OrderConfirmationPage::get()->first();
-			if($orderConfirmationPage) {
-				$orderConfirmationPage = CheckoutPage::create();
+			if(!$orderConfirmationPage) {
+				$orderConfirmationPage = OrderConfirmationPage::create();
 				$orderConfirmationPage->Title = "Order Confirmation";
 				$orderConfirmationPage->MenuTitle = "Order Confirmation";
 				$orderConfirmationPage->URLSegment = "order-confirmation";
