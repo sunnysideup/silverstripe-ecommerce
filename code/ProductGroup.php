@@ -724,7 +724,7 @@ class ProductGroup extends Page {
 	 * @return Array
 	 */
 	public function currentInitialProductsAsCachedArray($filterKey) {
-		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID."_".abs(intval($filterKey));
+		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID."_".$filterKey;
 		if($array = $this->retrieveObjectStore($cacheKey)) {
 			//do nothing
 		}
@@ -1376,6 +1376,7 @@ class ProductGroup extends Page {
 	 * @return Mixed
 	 */
 	protected function retrieveObjectStore($cacheKey) {
+		$cacheKey = str_replace("-", "_", $cacheKey);
 		if($this->AllowCaching()) {
 			$cache = SS_Cache::factory($cacheKey);
 			$data = $cache->load($cacheKey);
