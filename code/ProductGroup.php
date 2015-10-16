@@ -1395,6 +1395,7 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	protected function saveObjectStore($data, $cacheKey) {
+		$cacheKey = str_replace("-", "_", $cacheKey);
 		if($this->AllowCaching()) {
 			$data = serialize($data);
 			$cache = SS_Cache::factory($cacheKey);
