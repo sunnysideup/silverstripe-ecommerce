@@ -1723,6 +1723,13 @@ class ProductGroup_Controller extends Page_Controller {
 	/****************************************************/
 
 	/**
+	 * title without additions
+	 * @return string
+	 */ 
+	public function OriginalTitle(){
+		return $this->originalTitle;
+	}
+	/**
 	 *
 	 * This method can be extended to show products in the side bar.
 	 * @return Null | DataList
