@@ -724,7 +724,7 @@ class ProductGroup extends Page {
 	 * @return Array
 	 */
 	public function currentInitialProductsAsCachedArray($filterKey) {
-		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID."_".abs(intval($filterKey));
+		$cacheKey = "ProductGroup_CurrentInitialProductsArray_".$this->ID."_".$filterKey;
 		if($array = $this->retrieveObjectStore($cacheKey)) {
 			//do nothing
 		}
@@ -1376,6 +1376,7 @@ class ProductGroup extends Page {
 	 * @return Mixed
 	 */
 	protected function retrieveObjectStore($cacheKey) {
+		$cacheKey = str_replace("-", "_", $cacheKey);
 		if($this->AllowCaching()) {
 			$cache = SS_Cache::factory($cacheKey);
 			$data = $cache->load($cacheKey);
@@ -1394,6 +1395,7 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	protected function saveObjectStore($data, $cacheKey) {
+		$cacheKey = str_replace("-", "_", $cacheKey);
 		if($this->AllowCaching()) {
 			$data = serialize($data);
 			$cache = SS_Cache::factory($cacheKey);
@@ -1720,6 +1722,13 @@ class ProductGroup_Controller extends Page_Controller {
 	 *  TEMPLATE METHODS MENUS AND SIDEBARS
 	/****************************************************/
 
+	/**
+	 * title without additions
+	 * @return string
+	 */ 
+	public function OriginalTitle(){
+		return $this->originalTitle;
+	}
 	/**
 	 *
 	 * This method can be extended to show products in the side bar.
@@ -2399,7 +2408,13 @@ class ProductGroup_Controller extends Page_Controller {
 				$secondaryTitle = $pipe.$secondaryTitle;
 			}
 			if($this->IsSearchResults()) {
-				$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results");
+				if($array = $this->resultArray()) {
+					$count = count($array)-1;
+					$secondaryTitle .= $pipe.$count." "._t("ProductGroup.PRODUCTS_FOUND", "Products Found");
+				}
+				else {
+					$secondaryTitle .= $pipe._t("ProductGroup.SEARCH_RESULTS", "Search Results");
+				}
 			}
 			if(is_object($this->filterForGroupObject)) {
 				$secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
