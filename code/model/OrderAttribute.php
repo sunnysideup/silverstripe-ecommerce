@@ -119,6 +119,13 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject {
 	protected $_canView = null;
 
 	/**
+	 * we use this variable to make sure that the parent::runUpdate() is called in all child classes
+	 * this is similar to the checks run for parent::init in the controller class.
+	 * @var Boolean
+	 **/
+	protected $baseInitCalled = false;
+
+	/**
 	 * extended in OrderModifier and OrderItem
 	 * Starts up the order Atribute
 	 * TODO: introduce system like we have for Controller
@@ -283,9 +290,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject {
 		return EcommerceDBConfig::current_ecommerce_db_config();
 	}
 
-	/**
-	 *Should this item be shown on check out page table?
-	 *@return Boolean
+	/*
+	 * Should this item be shown on check out page table?
+	 * @return Boolean
 	 **/
 	function ShowInTable() {
 		return true;
@@ -355,6 +362,10 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject {
 	function CalculatedTotalAsMoney() {return $this->getCalculatedTotalAsMoney();}
 	function getCalculatedTotalAsMoney() {
 		return EcommerceCurrency::get_money_object_from_order_currency($this->CalculatedTotal, $this->Order());
+	}
+
+	function runUpdate($force = false) {
+		$this->baseRunUpdateCalled = true;
 	}
 
 	/**

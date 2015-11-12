@@ -76,25 +76,11 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 
 				$obj = $className::create();
 				if(is_a($obj, Object::getCustomClass("OrderStatusLog"))) {
-					//save versions
-					//@todo: test and implement
-					/*
-					if($this->Attributes()->exists()){
-						foreach($this->Attributes() as $attribute){
-							if(is_a($attribute, Object::getCustomClass("OrderItem"))){
-								$buyable = $attribute->Buyable();
-								if(isset($buyable->Version)) {
-									$attribute->Version = $buyable->Version;
-									$attribute->write();
-								}
-							}
-						}
-          }
-          */
 					$obj->OrderID = $order->ID;
 					$obj->Title = $this->Name;
 					//it is important we add this here so that we can save the 'submitted' version.
 					//this is particular important for the Order Item Links.
+					//order write will also update all the OrderAttributes!
 					$obj->write();
 					$obj = OrderStatusLog::get()->byID($obj->ID);
 					$saved = false;

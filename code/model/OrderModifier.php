@@ -215,13 +215,6 @@ class OrderModifier extends OrderAttribute {
 	protected $canBeRemoved = false;
 
 	/**
-	 * we use this variable to make sure that the parent::runUpdate() is called in all child classes
-	 * this is similar to the checks run for parent::init in the controller class.
-	 * @var Boolean
-	 **/
-	protected $baseInitCalled = false;
-
-	/**
 	 * This is a flag for running an update.
 	 * Running an update means that all fields are (re)set, using the Live{FieldName} methods.
 	 * @var Boolean
@@ -264,10 +257,10 @@ class OrderModifier extends OrderAttribute {
 		return true;
 	}
 
-	/**
-	* all classes extending OrderModifier must have this method if it has more fields
-	 * @param Bool $recalculate - run it, even if it has run already
-	**/
+	/*
+	 * all classes extending OrderModifier must have this method if it has more fields
+	 * @param boolean $recalculate - run it, even if it has run already
+	 **/
 	public function runUpdate($recalculate = false) {
 		if(!$this->IsRemoved()) {
 			$this->checkField("Name");
@@ -278,7 +271,7 @@ class OrderModifier extends OrderAttribute {
 			}
 			$this->runningTotal += $this->CalculatedTotal;
 		}
-		$this->baseInitCalled = true;
+		parent::runUpdate($recalculate);
 	}
 
 	/**
@@ -480,7 +473,7 @@ class OrderModifier extends OrderAttribute {
 	 * @return Boolean
 	 */
 	public function ShowInTable() {
-		if(!$this->baseInitCalled) {
+		if(!$this->baseRunUpdateCalled) {
 			if($this->canBeUpdated()) {
 				user_error("While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier", E_USER_ERROR);
 			}
