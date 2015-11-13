@@ -11,7 +11,7 @@
 	<td class="right remove">
 		<% if RemoveAllLink %>
 		<strong>
-			<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveAllLink" title="<%t Order.REMOVEALL 'Remove &quot;{name}&quot; from your cart' name=$TableTitle %>">
+			<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveAllLink">
 				<img src="ecommerce/images/remove.gif" alt="x"/>
 			</a>
 		</strong>
