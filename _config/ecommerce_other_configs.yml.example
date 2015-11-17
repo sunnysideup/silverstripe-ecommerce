@@ -13,6 +13,7 @@ BillingAddress:
       street_number: long_name
       route: long_name
       location: long_name
+      subpremise: long_name
     Address2:
       sublocality_level_3: long_name
       sublocality_level_2: long_name
@@ -35,6 +36,7 @@ ShippingAddress:
       street_number: long_name
       route: long_name
       location: long_name
+      subpremise: long_name
     ShippingAddress2:
       sublocality_level_3: long_name
       sublocality_level_2: long_name

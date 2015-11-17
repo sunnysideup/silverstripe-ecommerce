@@ -232,7 +232,6 @@ class OrderItem extends OrderAttribute {
 		return $this->canEdit($member);
 	}
 
-
 	/**
 	 * Determine which properties on the DataObject are
 	 * searchable, and map them to their default {@link FormField}
@@ -344,6 +343,12 @@ class OrderItem extends OrderAttribute {
 	function runUpdate($recalculate = false){
 		$buyable = $this->Buyable(true);
 		if($buyable && $buyable->canPurchase()) {
+			if(isset($buyable->Version)) {
+				if($this->Version != $buyable->Version) {
+					$this->Version = $buyable->Version;
+					$this->write();
+				}
+			}
 			$oldValue = $this->CalculatedTotal - 0;
 			$newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
 			if((round($newValue, 5) != round($oldValue, 5) ) || $recalculate) {
@@ -357,6 +362,7 @@ class OrderItem extends OrderAttribute {
 			$this->delete();
 			user_error("Product added to cart can not be purchased. It has been deleted.");
 		}
+		return parent::runUpdate($recalculate);
 	}
 
 	/**
