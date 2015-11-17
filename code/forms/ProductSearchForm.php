@@ -277,6 +277,7 @@ class ProductSearchForm extends Form {
 			if($baseList->count()) {
 				if(strlen($keywordPhrase) > 1){
 					$isKeywordSearch = true;
+					$immediateRedirectLink = "";
 					$this->resultArrayPos = 0;
 					$this->resultArray = Array();
 
@@ -288,18 +289,15 @@ class ProductSearchForm extends Form {
 					// 1) Exact search by code
 					$count = 0;
 					if($this->debug) { $this->debugOutput("<hr /><h2>SEARCH BY CODE</h2>");}
-					if($code = intval($keywordPhrase) ) {
-						$list1 = $baseList->filter(array("InternalItemID" => $code));
-						$count = $list1->count();
-						if($count == 1) {
-							if(!$this->debug) {
-								return $this->controller->redirect($list1->First()->Link());
-							}
-						}
-						elseif($count > 1) {
-							if($this->addToResults($list1)) {
-								break;
-							}
+					$list1 = $baseList->filter(array("InternalItemID" => $keywordPhrase));
+					$count = $list1->count();
+					if($count == 1) {
+						$immediateRedirectLink = $this->controller->redirect($list1->First()->Link());
+						$this->debugOutput("<p style=\"color: red\">Found one answer for potential immediate redirect: ".$immediateRedirectLink."</p>");
+					}
+					if($count > 0) {
+						if($this->addToResults($list1)) {
+							break;
 						}
 					}
 					if($this->debug) { $this->debugOutput("<h3>SEARCH BY CODE RESULT: $count</h3>");}
@@ -348,12 +346,7 @@ class ProductSearchForm extends Form {
 							$list2 = $baseList->where($search);
 							$count = $list2->count();
 							if($this->debug) { $this->debugOutput("<p>$search: $count</p>");}
-							if($count == 1) {
-								if(!$this->debug) {
-									return $this->controller->redirect($list2->First()->Link());
-								}
-							}
-							elseif($count > 1) {
+							if($count > 0) {
 								if($this->addToResults($list2)) {
 									break;
 								}
@@ -379,12 +372,11 @@ class ProductSearchForm extends Form {
 							$productGroups = ProductGroup::get()->where($search)->filter(array("ShowInSearch" => 1));
 							$count = $productGroups->count();
 							//redirect if we find exactly one match and we have no matches so far...
-							if($count == 1 && !$this->resultArrayPos) {
-								if(!$this->debug) {
-									return $this->controller->redirect($productGroups->First()->Link());
-								}
+							if($count == 1 && !$this->resultArrayPos && !$limitToCurrentSection) {
+								$immediateRedirectLink = $this->controller->redirect($productGroups->First()->Link());
+								$this->debugOutput("<p style=\"color: red\">Found one answer for potential immediate redirect: ".$immediateRedirectLink."</p>");
 							}
-							elseif($count) {
+							if($count > 0) {
 								foreach($productGroups as $productGroup) {
 									//we add them like this because we like to keep them in order!
 									if(!in_array($productGroup->ID, $this->productGroupIDs)) {
@@ -426,7 +418,12 @@ class ProductSearchForm extends Form {
 				"<h3>SAVING Groups to session: ".$redirectToPage->SearchResultsSessionVariable(true)."</h3><p>".print_r(explode(",", Session::get($redirectToPage->SearchResultsSessionVariable(true))), 1)."</p>"
 			);
 		}
-		$link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod);
+		if($immediateRedirectLink) {
+			$link = $immediateRedirectLink;
+		}
+		else {
+			$link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod);
+		}
 		if($this->additionalGetParameters) {
 			$link .= "?".$this->additionalGetParameters;
 		}
