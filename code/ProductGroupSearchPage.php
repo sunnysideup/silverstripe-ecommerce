@@ -54,8 +54,7 @@ class ProductGroupSearchPage extends ProductGroup {
 	protected $allowCaching = false;
 
 	function getGroupFilter(){
-		$resultArray = $this->resultArray();;
-
+		$resultArray = $this->searchResultsArrayFromSession();
 		$this->allProducts = $this->allProducts->filter(array("ID" => $resultArray));
 		return $this->allProducts;
 	}
@@ -68,7 +67,7 @@ class ProductGroupSearchPage extends ProductGroup {
 		$sortKey = $this->getCurrentUserPreferences("SORT");
 		$defaultSortKey = $this->getMyUserPreferencesDefault("FILTER");
 		if($sortKey == $defaultSortKey) {
-			$resultArray = $this->resultArray();
+			$resultArray = $this->searchResultsArrayFromSession();
 			return $this->createSortStatementFromIDArray($resultArray);
 		}
 		return $this->getUserSettingsOptionSQL("SORT", $sortKey);
@@ -77,23 +76,6 @@ class ProductGroupSearchPage extends ProductGroup {
 	function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0){
 		return ArrayList::create();
 	}
-
-	private static $_result_array = null;
-
-	/**
-	 *
-	 * @return array
-	 */ 
-	public function resultArray(){
-		if(self::$_result_array === null) {
-			self::$_result_array = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
-		}
-		if(!is_array(self::$_result_array) || !count(self::$_result_array)) {
-			self::$_result_array = array(0 => 0);
-		}		
-		return self::$_result_array;
-	}
-
 
 }
 
@@ -113,7 +95,7 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller {
 
 	function init(){
 		parent::init();
-		$array = $this->resultArray();
+		$array = $this->searchResultsArrayFromSession();
 		if(count($array) > 1) {
 			$this->isSearchResults = true;
 		}

@@ -1415,6 +1415,27 @@ class ProductGroup extends Page {
 		}
 	}
 
+	/**
+	 * cache for result array
+	 * @var array
+	 */ 
+	private static $_result_array = array();
+
+	/**
+	 *
+	 * @return array
+	 */ 
+	public function searchResultsArrayFromSession(){
+		if(self::$_result_array[$this->ID] === null) {
+			self::$_result_array[$this->ID] = explode(",", Session::get($this->SearchResultsSessionVariable(false)));
+		}
+		if(!is_array(self::$_result_array[$this->ID]) || !count(self::$_result_array[$this->ID])) {
+			self::$_result_array[$this->ID] = array(0 => 0);
+		}		
+		return self::$_result_array[$this->ID];
+	}
+
+
 }
 
 
@@ -1529,7 +1550,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$this->resetfilter();
 		$this->isSearchResults = true;
 		//reset filter and sort
-		$resultArray = explode(",", Session::get($this->SearchResultsSessionVariable(false)));
+		$resultArray = $this->searchResultsArrayFromSession();
 		if(!$resultArray || !count($resultArray)) {
 			$resultArray = array(0 => 0);
 		}
@@ -1800,7 +1821,7 @@ class ProductGroup_Controller extends Page_Controller {
 	 * @return Int | false
 	 */
 	public function HasSearchResults(){
-		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
+		$resultArray = $this->searchResultsArrayFromSession();
 		if($resultArray) {
 			$count = count($resultArray) - 1;
 			return $count ? $count : 0;
@@ -2408,7 +2429,7 @@ class ProductGroup_Controller extends Page_Controller {
 				$secondaryTitle = $pipe.$secondaryTitle;
 			}
 			if($this->IsSearchResults()) {
-				if($array = $this->resultArray()) {
+				if($array = $this->searchResultsArrayFromSession()) {
 					$count = count($array)-1;
 					$secondaryTitle .= $pipe.$count." "._t("ProductGroup.PRODUCTS_FOUND", "Products Found");
 				}
@@ -2493,7 +2514,7 @@ class ProductGroup_Controller extends Page_Controller {
 		$html .= "<li><b>allProducts:</b> ".print_r(str_replace("\"", "`", $this->allProducts->sql()), 1)." </li>";
 
 		$html .= "<li><hr /><h3>Search</h3><hr /></li>";
-		$resultArray = explode(",",Session::get($this->SearchResultsSessionVariable(false)));
+		$resultArray = explode(",",$this->searchResultsArrayFromSession());
 		$productGroupArray = explode(",", Session::get($this->SearchResultsSessionVariable(true)));
 		$html .= "<li><b>Is Search Results:</b> ".($this->IsSearchResults() ? "YES" : "NO")." </li>";
 		$html .= "<li><b>Products In Search (session variable : ".$this->SearchResultsSessionVariable(false)."):</b> ".print_r($resultArray, 1)." </li>";
