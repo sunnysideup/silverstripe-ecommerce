@@ -22,10 +22,7 @@ class GridFieldBasicPageRelationConfig extends GridFieldConfig_RelationEditor {
 		parent::__construct($itemsPerPage);
 		$this
 			->removeComponentsByType("GridFieldEditButton")
-			->removeComponentsByType("GridFieldDeleteAction")
-			->removeComponentsByType("GridFieldAddNewButton")
-			->addComponent(new GridFieldAddNewButtonOriginalPage())
-			->addComponent(new GridFieldEditButtonOriginalPage());
+			->removeComponentsByType("GridFieldAddNewButton");
 	}
 
 }
