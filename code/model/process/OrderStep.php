@@ -501,6 +501,27 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
+	 * return true if one already or done now.
+	 * 
+	 * @return boolean;
+	 */ 
+	protected function sendEmailForStep(){
+		if(!$this->hasBeenSent($order)) {
+			$subject = $this->EmailSubject;
+			$message = "";
+			if($this->SendDetailsToCustomer){
+				return $order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
+			}
+			else {
+				//looks like we are sending an error, but we are just using this for notification
+				$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
+				return $order->sendAdminNotification($subject, $message);
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * sets the email class used for emailing the
 	 * customer during a specific step (IF ANY!)
 	 * @param String

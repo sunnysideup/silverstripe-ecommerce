@@ -59,21 +59,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 * @return Boolean
 	 **/
 	public function doStep(Order $order) {
-		$subject = $this->EmailSubject;
-		$message = "";
-		if($this->SendInvoiceToCustomer){
-			if(!$this->hasBeenSent($order)) {
-				return $order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
-			}
-		}
-		else {
-			if(!$this->hasBeenSent($order)) {
-				//looks like we are sending an error, but we are actually just sending a message to admin
-				$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-				return $order->sendAdminNotification($subject, $message);
-			}
-		}
-		return true;
+		return $this->sendEmailForStep();
 	}
 
 	/**
