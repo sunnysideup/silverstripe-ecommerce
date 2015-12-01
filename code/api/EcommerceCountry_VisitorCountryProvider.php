@@ -29,7 +29,22 @@ class EcommerceCountry_VisitorCountryProvider extends Object implements Ecommerc
 	 * returns string of IP address.
 	 */
 	public function getIP(){
-		return $_SERVER['REMOTE_ADDR'];
+		$controller = Controller::curr();
+		if($controller && $controller->request) {
+			return $controller->request->getIP();
+		}
+		//backup - copy of HTTPRequest::getIP()....
+		if (TRUSTED_PROXY && !empty($_SERVER['HTTP_CLIENT_IP'])) {
+			//check ip from share internet
+			return $_SERVER['HTTP_CLIENT_IP'];
+		}
+		else if (TRUSTED_PROXY && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			//to check ip is pass from proxy
+			return  $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		else if(isset($_SERVER['REMOTE_ADDR'])) {
+			return $_SERVER['REMOTE_ADDR'];
+		}
 	}
 
 }

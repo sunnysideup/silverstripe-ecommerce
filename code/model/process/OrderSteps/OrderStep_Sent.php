@@ -61,7 +61,9 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 * @return Boolean - true if run correctly.
 	 **/
 	public function doStep(Order $order) {
-		return true;
+		if($this->RelevantLogEntry($order)) {
+			return true;
+		}
 	}
 
 
@@ -73,22 +75,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
-		if($this->RelevantLogEntry($order)) {
-			$subject = $this->EmailSubject;
-			$message = "";
-			if($this->SendDetailsToCustomer){
-				if(!$this->hasBeenSent($order)) {
-					$subject = $this->EmailSubject;
-					$order->sendEmail($subject, $message, $resend = false, $adminOnly = false, $this->getEmailClassName());
-				}
-			}
-			else {
-				if(!$this->hasBeenSent($order)) {
-					//looks like we are sending an error, but we are just using this for notification
-					$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-					$order->sendAdminNotification($subject, $message);
-				}
-			}
+		if($this->sendEmailForStep()) {
 			return parent::nextStep($order);
 		}
 		return null;
