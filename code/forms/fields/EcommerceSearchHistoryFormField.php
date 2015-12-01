@@ -21,6 +21,39 @@ class EcommerceSearchHistoryFormField extends LiteralField {
 	protected $minimumCount = 1;
 
 	function __construct($name, $title = "") {
+		return parent::__construct($name, $title);
+	}
+
+	/**
+	 * @param Int
+	 * @return Field
+	 */
+	public function setNumberOfDays($days) {
+		$this->numberOfDays = intval($days);
+		return $this;
+	}
+
+	/**
+	 * @param Int
+	 * @return Field
+	 */
+	public function setMinimumCount($count) {
+		$this->minimumCount = intval($count);
+		return $this;
+	}
+
+	/**
+	 * @param Int
+	 * @return Field
+	 */
+	public function setEndingDaysBack($count) {
+		$this->endingDaysBack = intval($count);
+		return $this;
+	}
+
+	public function Field($properties = array()) {
+		$name = $this->getName();
+		$title = $this->title;
 		$totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
 		$data = DB::query("
 			SELECT COUNT(ID) myCount, \"Title\"
@@ -78,34 +111,7 @@ class EcommerceSearchHistoryFormField extends LiteralField {
 		$content .= '
 			</table>
 		</div>';
-		return parent::__construct($name, $content);
-	}
-
-	/**
-	 * @param Int
-	 * @return Field
-	 */
-	public function setNumberOfDays($days) {
-		$this->numberOfDays = intval($days);
-		return $this;
-	}
-
-	/**
-	 * @param Int
-	 * @return Field
-	 */
-	public function setMinimumCount($count) {
-		$this->minimumCount = intval($count);
-		return $this;
-	}
-
-	/**
-	 * @param Int
-	 * @return Field
-	 */
-	public function setEndingDaysBack($count) {
-		$this->endingDaysBack = intval($count);
-		return $this;
+		return "---------------------".$content;
 	}
 
 }
