@@ -128,6 +128,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean - if successful, this method will return TRUE
 	 */
 	public static function process_payment_form_and_return_next_step(Order $order, Form $form, Array $data) {
+		$payment = null;
 		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 		if($paymentClass) {
 			if(class_exists($paymentClass)) {

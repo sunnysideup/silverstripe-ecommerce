@@ -140,6 +140,13 @@ Abstract class Order_Email extends Email {
 		if($this->bcc) {
 			$orderEmailRecord->To .= ", BCC: ".$this->emailToVarchar($this->bcc);
 		}
+		//always set result to try if
+		if(!$result) {
+			if(Director::isDev()) {
+				$result = true;
+				$this->Subject .= " -- FAKELY RECORDED AS SENT";
+			}
+		}
 		$orderEmailRecord->Subject = $this->subject;
 		$orderEmailRecord->Content = $this->body;
 		$orderEmailRecord->Result = $result ? 1 : 0;

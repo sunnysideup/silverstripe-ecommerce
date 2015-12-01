@@ -229,7 +229,7 @@ class ShopAccountForm_Validator extends RequiredFields{
 					$isShopAdmin = true;
 				}
 			}
-			if($isShopAdmin && $allowExistingEmail) {
+			if($isShopAdmin || $allowExistingEmail) {
 				//do nothing
 			}
 			else {

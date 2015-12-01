@@ -216,4 +216,3 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject{
 	}
 
 }
-
