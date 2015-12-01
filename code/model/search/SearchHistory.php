@@ -3,10 +3,25 @@
 class SearchHistory Extends DataObject {
 
 	private static $db = array(
-		"Title" => "Varchar(255)"
+		"Title" => "Varchar(255)",
+		"ProductCount" => "Int",
+		"GroupCount" => "Int"
 	);
 
 	private static $default_sort = "\"Created\" DESC";
+
+	private static $searchable_fields = array(
+		"Title" => "PartialMatchFilter",
+		"ProductCount" => "GreaterThanOrEqualFilter",
+		"GroupCount" => "GreaterThanOrEqualFilter"
+	);
+
+	private static $summary_fields = array(
+		"Created" => "When",
+		"Title" => "Keyword",
+		"ProductCount" => "Products Found",
+		"GroupCount" => "Categories Found"
+	);
 
 	/**
 	 * creates a new entry if you are not a shop admin
@@ -14,7 +29,7 @@ class SearchHistory Extends DataObject {
 	 * @param String $keywordString
 	 * @return Int
 	 */
-	static function add_entry($keywordString) {
+	static function add_entry($keywordString, $productCount = 0, $groupCount = 0) {
 		if($member = Member::currentUser()) {
 			if($member->IsShopAdmin()) {
 				return -1;
@@ -22,6 +37,8 @@ class SearchHistory Extends DataObject {
 		}
 		$obj = new SearchHistory();
 		$obj->Title = $keywordString;
+		$obj->ProductCount = $productCount;
+		$obj->GroupCount = $groupCount;
 		return $obj->write();
 	}
 

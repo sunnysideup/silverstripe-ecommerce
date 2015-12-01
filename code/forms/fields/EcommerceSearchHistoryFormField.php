@@ -111,7 +111,7 @@ class EcommerceSearchHistoryFormField extends LiteralField {
 		$content .= '
 			</table>
 		</div>';
-		return "---------------------".$content;
+		return $content;
 	}
 
 }

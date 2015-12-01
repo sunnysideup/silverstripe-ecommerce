@@ -229,6 +229,7 @@ class ProductSearchForm extends Form {
 	}
 
 	function doProductSearchForm($data, $form){
+		$searchHistoryObject = null;
 		if(!$this->maximumNumberOfResults) {
 			$this->maximumNumberOfResults = EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list");
 		}
@@ -284,7 +285,10 @@ class ProductSearchForm extends Form {
 					$keywordPhrase = Convert::raw2sql($keywordPhrase);
 					$keywordPhrase = strtolower($keywordPhrase);
 
-					SearchHistory::add_entry($keywordPhrase);
+					$searchHistoryObjectID = SearchHistory::add_entry($keywordPhrase);
+					if($searchHistoryObjectID) {
+						$searchHistoryObject = SearchHistory::get()->byID($searchHistoryObjectID);
+					}
 
 					// 1) Exact search by code
 					$count = 0;
@@ -412,6 +416,11 @@ class ProductSearchForm extends Form {
 		Session::set($redirectToPage->SearchResultsSessionVariable(false), implode(",", $this->resultArray));
 		Session::set($redirectToPage->SearchResultsSessionVariable(true), implode(",", $this->productGroupIDs));
 		Session::save();
+		if($searchHistoryObject) {
+			$searchHistoryObject->ProductCount = count($this->resultArray);
+			$searchHistoryObject->GroupCount = count($this->productGroupIDs);
+			$searchHistoryObject->write();
+		}
 		if($this->debug) {
 			$this->debugOutput("<hr />".
 				"<h3>SAVING Products to session: ".$redirectToPage->SearchResultsSessionVariable(false)."</h3><p>".print_r(explode(",", Session::get($redirectToPage->SearchResultsSessionVariable(false))), 1)."</p>".
