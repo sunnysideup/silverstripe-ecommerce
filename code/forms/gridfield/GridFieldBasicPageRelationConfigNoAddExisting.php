@@ -23,7 +23,8 @@ class GridFieldBasicPageRelationConfigNoAddExisting extends GridFieldConfig_Rela
 		$this
 			->removeComponentsByType("GridFieldEditButton")
 			->removeComponentsByType("GridFieldAddNewButton")
-			->removeComponentsByType("GridFieldAddExistingAutocompleter");
+			->removeComponentsByType("GridFieldAddExistingAutocompleter")
+			->removeComponentsByType("GridFieldDeleteAction");
 	}
 
 }
