@@ -423,6 +423,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	public static function validate_payment($order, $data, $form) {
 		return EcommercePaymentValidation::validate_payment($order, $data, $form)
 	}
+
+	
 }
 
 
