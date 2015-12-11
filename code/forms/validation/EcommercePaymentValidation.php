@@ -1,0 +1,280 @@
+<?php
+
+class EcommercePaymentValidation extends Object {
+
+
+	/**
+	 * @param Order $order - the order that is being paid
+	 * @param Array $data - Array of data that is submittted
+	 * @param Form $form - the form that is being submitted
+	 * 
+	 * @return Boolean - true if the data is valid
+	 */
+	public static function validate_payment($order, $data, $form) {
+		if(!$order){
+			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
+			return false;
+		}
+
+		//nothing to pay, always valid
+		if($order->TotalOutstanding() == 0) {
+			return true;
+		}
+		$hasValidPaymentClass = false;
+		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
+		if($paymentClass) {
+			if(class_exists($paymentClass)) {
+				$paymentClass = $paymentClass::create();
+				if($paymentClass instanceof EcommercePayment) {
+					$hasValidPaymentClass = true;
+				}
+			}
+		}
+		if(!$hasValidPaymentClass) {
+			$form->sessionMessage(_t('EcommercePaymentValidation.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
+			return false;
+		}
+		// Check payment, get the result back
+		return $paymentClass->validatePayment($data, $form);
+	}
+
+
+
+	/**
+	 * Process payment form and return next step in the payment process.
+	 * Steps taken are:
+	 * 1. create new payment
+	 * 2. save form into payment
+	 * 3. return payment result
+	 *
+	 * @param Order $order - the order that is being paid
+	 * @param Form $form - the form that is being submitted
+	 * @param array $data - Array of data that is submittted
+	 * 
+	 * @return Boolean - if successful, this method will return TRUE
+	 */
+	public static function process_payment_form_and_return_next_step(Order $order, Form $form, Array $data) {
+		$payment = null;
+		$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
+		if($paymentClass) {
+			if(class_exists($paymentClass)) {
+				$payment = $paymentClass::create();
+			}
+		}
+		if(!$payment) {
+			return false;
+		}
+		// Save payment data from form and process payment
+		$form->saveInto($payment);
+		$payment->OrderID = $order->ID;
+		//important to set the amount and currency.
+		$payment->Amount = $order->getTotalOutstandingAsMoney();
+		$payment->write();
+		// Process payment, get the result back
+		$result = $payment->processPayment($data, $form);
+		if(!(is_a($result, Object::getCustomClass("EcommercePayment_Result")))) {
+			$form->controller->redirectBack();
+			return false;
+		}
+		else {
+			if($result->isProcessing()) {
+				//IMPORTANT!!!
+				// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)
+				//redirection is taken care of by payment processor
+				return $result->getValue();
+			}
+			else {
+				//payment is done, redirect to either returntolink
+				//OR to the link of the order ....
+				if(isset($data["returntolink"])) {
+					$form->controller->redirect($data["returntolink"]);
+				}
+				else {
+					$form->controller->redirect($order->Link());
+				}
+			}
+			return true;
+		}
+	}
+
+	protected $_creditCardNumber = "";
+
+	protected $_expiryDate = "";
+
+	protected $_CVVNumber = "";
+
+	protected $_nameOnCard = "";
+
+	/**
+	 * return false if there is an error and
+	 * returns and array with validated data if there is no error
+	 * 
+	 * @param Form $form
+	 * @param array $data
+	 * @param array $creditCardFormFields - format is as follows:
+	 *    CreditCard => FieldName - e.g. MyPaymentProcessorCreditCardField
+	 *    ExpiryDate => FieldName - e.g. MyPaymentProcessorExpiryDateField
+	 *    CVV => FieldName - e.g. MyPaymentProcessorCVVField
+	 *    NameOnCard => FieldName - e.g. MyPaymentProcessorNameOnCardField
+	 *
+	 * @return false | array
+	 *
+	 */
+	public static function validate_credit_card_information(Form $form, Array $data, Array $creditCardFormFields) {
+		$errors = false;
+		$returnArray = array();
+		foreach($creditCardFormFields as $fieldType => $formFieldName)
+		switch ($fieldType) {
+			case "CreditCard":
+				$this->_creditCardNumber = trim(
+					$data[$formFieldName][0].
+					$data[$formFieldName][1].
+					$data[$formFieldName][2].
+					$data[$formFieldName][3]
+				);
+				if(!$this->validCreditCard($this->_creditCardNumber)) {
+					$form->addErrorMessage(
+						$formFieldName,
+						_t('EcommercePaymentValidation.INVALID_CREDIT_CARD','Invalid credit card number.'),
+						'bad'
+					);
+					$errors = true;
+				}
+				$returnArray[$formFieldName] = $this->_creditCardNumber;
+				break;
+			case "ExpiryDate":
+				$this->_expiryDate =
+					$data[$formFieldName]["month"].
+					$data[$formFieldName]["year"];
+				if(!$this->validExpiryDate($this->_expiryDate)) {
+					$form->addErrorMessage(
+						$formFieldName,
+						_t('EcommercePaymentValidation.INVALID_EXPIRY_DATE','Expiry date not valid.'),
+						'bad'
+					);
+					$errors = true;
+				}
+				$returnArray[$formFieldName] = $this->_creditCardNumber;
+				break;
+			case "CVV":
+				$this->_CVVNumber = trime($data[$formFieldName]);
+				if(!$this->validCVV($this->_creditCardNumber, $this->_CVVNumber)) {
+					$form->addErrorMessage(
+						$formFieldName,
+						_t('EcommercePaymentValidation.INVALID_CVV_NUMBER','Invalid security number.'),
+						'bad'
+					);
+				}
+				$returnArray[$formFieldName] = $this->_nameOnCard;
+				break;
+			case "NameOnCard":
+				$this->_nameOnCard = trim($data[$formFieldName]);
+				if(strlen($this->_nameOnCard) < 3) {
+					$form->addErrorMessage(
+						$formFieldName,
+						_t("EcommercePaymentValidation.NO_CARD_NAME",'No card name provided.'),
+						'bad'
+					);
+					$errors = true;
+				}
+				$returnArray[$formFieldName] = $this->_nameOnCard;
+				break;
+			default:
+				user_error("Type must be one of four options: CreditCard, NameOnCard, CVV, ExpiryDate");
+		}
+		if($errors) {
+			$form->sessionMessage(_t('EcommercePaymentValidation.PLEASE_REVIEW_CARD_DETAILS','Please review your card details.'),'bad');
+			return false;
+		}
+		return $returnArray;
+	}
+
+	/**
+	 * checks if a credit card is a real credit card number
+	 * @reference: http://en.wikipedia.org/wiki/Luhn_algorithm
+	 *
+	 * @param String | Int $number
+	 * @return Boolean
+	 */
+	protected function validCreditCard($cardNumber) {
+		if(!$cardNumber) {
+			return false;
+		}
+		for ($sum = 0, $i = strlen($cardNumber) - 1; $i >= 0; $i--) {
+			$digit = (int) $cardNumber[$i];
+			$sum += (($i % 2) === 0) ? array_sum(str_split($digit * 2)) : $digit;
+		}
+		return (($sum % 10) === 0);
+	}
+
+	/**
+	 * @todo: finish!
+	 * valid expiry date
+	 * @param String $monthYear - e.g. 0218
+	 * @return Boolean
+	 */
+	protected function validExpiryDate($monthYear) {
+		$month = intval(substr($monthYear, 0, 2));
+		$year = intval("20".substr($monthYear, 2));
+		$currentYear = intval(Date("Y"));
+		$currentMonth = intval(Date("m"));
+		if(($month > 0 || $month < 13) && $year > 0 ) {
+			if($year > $currentYear) {
+				return true;
+			}
+			elseif($year == $currentYear) {
+				if($currentMonth <= $month) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @todo: TEST
+	 * valid CVC/CVV number?
+	 *
+	 * @param int $cardNumber
+	 * @param int $cvv
+	 * @return Boolean
+	 */
+	protected function validCVV($cardNumber, $cvv) {
+		$cardNumber = preg_replace('/\D/', '', $cardNumber);
+		$cvv = preg_replace('/\D/', '', $cvv);
+
+		//Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
+		if(is_numeric($cardNumber)) {
+			//Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
+			if(is_numeric($cvv)) {
+				//Splits up the card number into various identifying lengths.
+				$firstOne = substr($cardNumber, 0, 1);
+				$firstTwo = substr($cardNumber, 0, 2);
+
+				//If the card is an American Express
+				if($firstTwo == "34" || $firstTwo == "37") {
+					if (!preg_match("/^\d{4}$/", $cvv)) {
+						// The credit card is an American Express card
+						// but does not have a four digit CVV code
+						return false;
+					}
+				}
+				else if (!preg_match("/^\d{3}$/", $cvv)) {
+					// The credit card is a Visa, MasterCard, or Discover Card card
+					// but does not have a three digit CVV code
+					return false;
+				}
+				//passed all checks
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+
+}

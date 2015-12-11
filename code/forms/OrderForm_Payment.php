@@ -52,15 +52,21 @@ class OrderForm_Payment extends Form {
 		$this->extend('updateOrderForm_Payment', $this);
 	}
 
+	/**
+	 *
+	 * @param array $data
+	 * @param Form $form
+	 * 
+	 * @return mixed
+	 */ 
 	function dopayment($data, $form) {
 		$SQLData = Convert::raw2sql($data);
 		if(isset($SQLData['OrderID'])) {
 			if($orderID = intval($SQLData['OrderID'])) {
 				$order = Order::get_by_id_if_can_view($orderID);
 				if($order && $order->canPay()) {
-					if(EcommercePayment::validate_payment($order, $form, $data)) {
-
-						return EcommercePayment::process_payment_form_and_return_next_step($order, $form, $data);
+					if(EcommercePaymentValidation::validate_payment($order, $data, $form)) {
+						return EcommercePaymentValidation::process_payment_form_and_return_next_step($order, $data, $form);
 					}
 					else {
 						//error messages are set in validation
