@@ -569,6 +569,91 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 		return $html;
 	}
 
+
+	protected $_creditCardNumber = "";
+	/**
+	 * @param array $data
+	 * @param Form $form
+	 * @param string $dbFieldName
+	 * @param string $formFieldName
+	 * @param string $fieldType (CreditCard, ExpiryDate, CVV, NameOnCard)
+	 *
+	 * @return boolean
+	 *
+	 */
+	protected function validateAndSaveCreditCardInformation($data, $form, $dbFieldName, $formFieldName, $fieldType) {
+		$errors = false;
+		switch ($fieldType) {
+			case "CreditCard":
+					$this->$dbFieldName = trim(
+						$data[$formFieldName][0].
+						$data[$formFieldName][1].
+						$data[$formFieldName][2].
+						$data[$formFieldName][3]
+					);
+					$this->_creditCardNumber = $this->$dbFieldName;
+					if(!$this->validCreditCard($this->$dbFieldName)) {
+						$form->addErrorMessage(
+							$formFieldName,
+							_t('EcommercePayment.INVALID_CREDIT_CARD','Invalid credit card number.'),
+							'bad'
+						);
+						$errors = true;
+					}
+				break;
+			case "ExpiryDate":
+				$this->$dbFieldName =
+					$data[$formFieldName]["month"].
+					$data[$formFieldName]["year"];
+				if(!$this->validExpiryDate($this->$dbFieldName)) {
+					$form->addErrorMessage(
+						$formFieldName,
+						_t('EcommercePayment.INVALID_EXPIRY_DATE','Expiry date not valid.'),
+						'bad'
+					);
+					$errors = true;
+				}
+				break;
+			case "CVV":
+					$this->$dbFieldName = trime($data[$formFieldName]);
+					if(!$this->validCVV($this->_creditCardNumber, $this->$dbFieldName)) {
+						$form->addErrorMessage(
+							$formFieldName,
+							_t('EcommercePayment.INVALID_CVV_NUMBER','Invalid security number.'),
+							'bad'
+						);
+					}
+				break;
+			case "NameOnCard":
+					$this->$dbFieldName = trim($data[$formFieldName]);
+					if(strlen($this->$dbFieldName) < 3) {
+						$form->addErrorMessage(
+							$formFieldName,
+							_t("EcommercePayment.NO_CARD_NAME",'No card name provided.'),
+							'bad'
+						);
+						$errors = true;
+					}
+				break;
+			default:
+				user_error("Type must be one of four options: CreditCard, NameOnCard, CVV, ExpiryDate");
+		}
+		$this->write();
+		if($errors) {
+			$form->sessionMessage(_t('EcommercePayment.PLEASE_REVIEW_CARD_DETAILS','Please review your card details.'),'bad');
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @param Array $data
+	 */
+	protected function getCreditCardDataFromForm($creditCardFieldName, $nameOnCardFieldName, $expiryDateField) {
+
+	}
+
+
 }
 
 /**
