@@ -65,8 +65,8 @@ class OrderForm_Payment extends Form {
 			if($orderID = intval($SQLData['OrderID'])) {
 				$order = Order::get_by_id_if_can_view($orderID);
 				if($order && $order->canPay()) {
-					if(EcommercePaymentValidation::validate_payment($order, $data, $form)) {
-						return EcommercePaymentValidation::process_payment_form_and_return_next_step($order, $data, $form);
+					if(EcommercePaymentFormSetupAndValidation::validate_payment($order, $data, $form)) {
+						return EcommercePaymentFormSetupAndValidation::process_payment_form_and_return_next_step($order, $data, $form);
 					}
 					else {
 						//error messages are set in validation

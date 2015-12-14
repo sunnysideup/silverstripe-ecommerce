@@ -408,8 +408,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return Boolean - if successful, this method will return TRUE
 	 */
-	public static function process_payment_form_and_return_next_step(Order $order, Form $form, Array $data) {
-		return EcommercePaymentValidation::process_payment_form_and_return_next_step($order, $form, $data);
+	public static function process_payment_form_and_return_next_step($order, $data, $form) {
+		return EcommercePaymentFormSetupAndValidation::process_payment_form_and_return_next_step($order, $data, $form);
 	}
 
 	/**
@@ -421,7 +421,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean - true if the data is valid
 	 */
 	public static function validate_payment($order, $data, $form) {
-		return EcommercePaymentValidation::validate_payment($order, $data, $form)
+		return EcommercePaymentFormSetupAndValidation::validate_payment($order, $data, $form);
 	}
 
 	

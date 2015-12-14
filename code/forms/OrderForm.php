@@ -174,9 +174,9 @@ class OrderForm extends Form {
 
 		//----------------- CLEAR OLD DATA ------------------------------
 		$this->clearSessionData(); //clears the stored session form data that might have been needed if validation failed
-		//----------------- VALIDATE PAYMENT ------------------------------
 
-		$paymentIsValid = EcommercePaymentValidation::validate_payment($order, $data, $form);
+		//----------------- VALIDATE PAYMENT ------------------------------
+		$paymentIsValid = EcommercePaymentFormSetupAndValidation::validate_payment($order, $data, $form);
 		if(!$paymentIsValid) {
 			$this->controller->redirectBack();
 			return false;
@@ -189,7 +189,7 @@ class OrderForm extends Form {
 		$this->extend("OrderFormAfterSubmit", $order);
 
 		//-------------- ACTION PAYMENT -------------
-		$paymentResult = EcommercePaymentValidation::process_payment_form_and_return_next_step($order, $form, $data);
+		$paymentResult = EcommercePaymentFormSetupAndValidation::process_payment_form_and_return_next_step($order, $data, $form);
 
 		//-------------- DO WE HAVE ANY PROGRESS NOW -------------
 		$order->tryToFinaliseOrder();
