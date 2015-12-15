@@ -2,7 +2,7 @@
 
 
 
-abstract class EcommercePayment_Result {
+abstract class EcommercePayment_Result extends Object {
 
 	protected $value;
 

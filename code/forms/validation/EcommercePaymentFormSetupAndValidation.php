@@ -153,7 +153,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 			return false;
 		}
 		// Save payment data from form and process payment
-		$form->saveInto($paymentObject = null);
+		$form->saveInto(self::$_payment_object);
 		self::$_payment_object->OrderID = $order->ID;
 		//important to set the amount and currency.
 		self::$_payment_object->Amount = $order->getTotalOutstandingAsMoney();
@@ -278,7 +278,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		}
 		else {
 			self::$_payment_object->write();
-			echo "0000".self::$_payment_object->ID."0000";
 			return true;
 		}
 	}
