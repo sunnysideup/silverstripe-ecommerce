@@ -409,7 +409,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean - if successful, this method will return TRUE
 	 */
 	public static function process_payment_form_and_return_next_step($order, $data, $form) {
-		return EcommercePaymentFormSetupAndValidation::process_payment_form_and_return_next_step($order, $data, $form);
+		$formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
+		return $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
 	}
 
 	/**
@@ -421,10 +422,30 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean - true if the data is valid
 	 */
 	public static function validate_payment($order, $data, $form) {
-		return EcommercePaymentFormSetupAndValidation::validate_payment($order, $data, $form);
+		$formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
+		return $formHelper->validatePayment($order, $data, $form);
 	}
 
-	
+	private $ecommercePaymentFormSetupAndValidationObject = null;
+
+	/**
+	 *
+	 * @return EcommercePaymentFormSetupAndValidation
+	 */ 
+	protected function ecommercePaymentFormSetupAndValidationObject() {
+		if(!$this->ecommercePaymentFormSetupAndValidationObject) {
+			$this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
+		}
+		return $this->ecommercePaymentFormSetupAndValidationObject;
+	}
+
+	/**
+	 *
+	 * @return EcommercePaymentFormSetupAndValidation
+	 */ 
+	public static function ecommerce_payment_form_setup_and_validation_object(){
+		return Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
+	}
 }
 
 

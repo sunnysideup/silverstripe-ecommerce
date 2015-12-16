@@ -1,5 +1,14 @@
 <?php
 
+//get_credit_card_payment_form_fields: $formHelper->getCreditCardPaymentFormFields
+//get_credit_card_payment_form_fields_required: : $formHelper->getCreditCardPaymentFormFieldsRequired
+//validate_payment: $formHelper->validatePayment
+//validate_and_save_credit_card_information: validateAndSaveCreditCardInformation
+//process_payment_form_and_return_next_step: processPaymentFormAndReturnNextStep
+//validate_card_number:  validateCardNumber
+//validate_expiry_month: :validateExpiryMonth
+//validate_CVV: validateCVV
+
 class EcommercePaymentFormSetupAndValidation extends Object {
 
 	/**
@@ -15,10 +24,10 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 */
 	private static $db_field_map = array();
 
-	private static $singletons_per_payment_type = array();
-
-	private $paymentObject = null;
-
+	/**
+	 * @var EcommercePayment
+	 */ 
+	protected $paymentObject = null;
 
 	/**
 	 * Return the payment form fields that should
@@ -28,14 +37,14 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 * credit card details.
 	 *
 	 * @param EcommercePayment $paymentObject
-	 *
+	 * 
 	 * @return FieldList
 	 */
-	public static function get_credit_card_payment_form_fields($paymentObject = null){
-		if(!$this->paymentObject) {
-			$this->PaymentObject = $paymentObject;
+	public function getCreditCardPaymentFormFields($paymentObject = null){
+		if($paymentObject) {
+			$this->paymentObject = $paymentObject;
 		}
-		$paymentClassName = $this->PaymentObject->ClassName;
+		$paymentClassName = $this->paymentObject->ClassName;
 		$fieldList = new FieldList(
 			array(
 				$CardNumberField = new EcommerceCreditCardField(
@@ -69,11 +78,11 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 *
 	 * @return array
 	 */
-	public static function get_credit_card_payment_form_fields_required($paymentObject = null){
-		if(!$this->paymentObject) {
-			$this->PaymentObject = $paymentObject;
+	public function getCreditCardPaymentFormFieldsRequired($paymentObject = null){
+		if($paymentObject) {
+			$this->paymentObject = $paymentObject;
 		}
-		$paymentClassName = $this->PaymentObject->ClassName;
+		$paymentClassName = $this->paymentObject->ClassName;
 		return array(
 			$paymentClassName."_CardNumber",
 			$paymentClassName."_NameOnCard",
@@ -90,7 +99,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 *
 	 * @return boolean - true if the data is valid
 	 */
-	public static function validate_payment($order, $data, $form) {
+	public function validatePayment($order, $data, $form) {
 		if(!$order){
 			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
 			return false;
@@ -104,19 +113,116 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 			$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 			if($paymentClass) {
 				if(class_exists($paymentClass)) {
-					$this->PaymentObject = $paymentClass::create();
+					$this->paymentObject = $paymentClass::create();
 				}
 			}
 		}
-		if(!$this->PaymentObject || !$this->PaymentObject instanceof EcommercePayment) {
+		if(!$this->paymentObject || !($this->paymentObject instanceof EcommercePayment)) {
 			$form->sessionMessage(_t('EcommercePaymentFormSetupAndValidation.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
 			return false;
 		}
 		// Check payment, get the result back
-		return $this->PaymentObject->validatePayment($data, $form);
+		debug::log("validatePayment".$this->paymentObject->ID);
+		return $this->paymentObject->validatePayment($data, $form);
 	}
 
-
+	/**
+	 * return false if there is an error and
+	 * returns true if all is well.
+	 * If there are no errors, then the payment object will also be written...
+	 * If there are errors, the errors will be added to the form.
+	 *
+	 * @param Form $form
+	 * @param array $data
+	 * @param EcommercePayment $paymentObject
+	 *
+	 * @return boolean
+	 *
+	 */
+	public function validateAndSaveCreditCardInformation($data, $form, $paymentObject = null) {
+		$errors = false;
+		if($paymentObject) {
+			$this->paymentObject = $paymentObject;
+		}
+		$paymentClassName = $this->paymentObject->ClassName;
+		$dbFieldMap = Config::inst()->get("EcommercePaymentFormSetupAndValidation","db_field_map");
+		$cardNumberFormFields = array(
+			"CardNumber",
+			"ExpiryDate" ,
+			"CVVNumber" ,
+			"NameOnCard"
+		);
+		foreach($cardNumberFormFields as $dbFieldName) {
+			$formFieldName = $paymentClassName."_".$dbFieldName;
+			switch ($dbFieldName) {
+				case "CardNumber":
+					if(isset($dbFieldMap[$paymentClassName]["CardNumber"])) {
+						$dbFieldName = $dbFieldMap[$paymentClassName]["CardNumber"];
+					}
+					$this->paymentObject->$dbFieldName = trim(
+						$data[$formFieldName][0].
+						$data[$formFieldName][1].
+						$data[$formFieldName][2].
+						$data[$formFieldName][3]
+					);
+					$cardNumber = $this->paymentObject->$dbFieldName;
+					if(!$this->validateCardNumber($this->paymentObject->$dbFieldName)) {
+						$form->addErrorMessage(
+							$formFieldName,
+							_t('EcommercePaymentFormSetupAndValidation.INVALID_CREDIT_CARD','Invalid credit card number.'),
+							'bad'
+						);
+						$errors = true;
+					}
+					break;
+				case "ExpiryDate":
+					$this->paymentObject->$dbFieldName =
+						$data[$formFieldName]["month"].
+						$data[$formFieldName]["year"];
+					if(!$this->validateExpiryMonth($this->paymentObject->$dbFieldName)) {
+						$form->addErrorMessage(
+							$formFieldName,
+							_t('EcommercePaymentFormSetupAndValidation.INVALID_EXPIRY_DATE','Expiry date not valid.'),
+							'bad'
+						);
+						$errors = true;
+					}
+					break;
+				case "CVVNumber":
+					$this->paymentObject->$dbFieldName = trim($data[$formFieldName]);
+					if(!$this->validateCVV($cardNumber, $this->paymentObject->$dbFieldName)) {
+						$form->addErrorMessage(
+							$formFieldName,
+							_t('EcommercePaymentFormSetupAndValidation.INVALID_CVV_NUMBER','Invalid security number.'),
+							'bad'
+						);
+					}
+					break;
+				case "NameOnCard":
+					$this->paymentObject->$dbFieldName = trim($data[$formFieldName]);
+					if(strlen($this->paymentObject->$dbFieldName) < 3) {
+						$form->addErrorMessage(
+							$formFieldName,
+							_t("EcommercePaymentFormSetupAndValidation.NO_CARD_NAME",'No card name provided.'),
+							'bad'
+						);
+						$errors = true;
+					}
+					break;
+				default:
+					user_error("Type must be one of four options: CardNumber, NameOnCard, CVV, ExpiryDate");
+			}
+		}
+		if($errors) {
+			$form->sessionMessage(_t('EcommercePaymentFormSetupAndValidation.PLEASE_REVIEW_CARD_DETAILS','Please review your card details.'),'bad');
+			return false;
+		}
+		else {
+			$this->paymentObject->write();
+			debug::log("validateAndSaveCreditCardInformation".$this->paymentObject->ID);
+			return true;
+		}
+	}
 
 	/**
 	 * Process payment form and return next step in the payment process.
@@ -131,12 +237,12 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 *
 	 * @return Boolean - if successful, this method will return TRUE
 	 */
-	public static function process_payment_form_and_return_next_step($order, $data, $form) {
+	public function processPaymentFormAndReturnNextStep($order, $data, $form) {
 		if(!$this->paymentObject) {
 			$paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
 			if($paymentClass) {
 				if(class_exists($paymentClass)) {
-					$this->PaymentObject = $paymentClass::create();
+					$this->paymentObject = $paymentClass::create();
 				}
 			}
 		}
@@ -144,18 +250,19 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 			return false;
 		}
 		// Save payment data from form and process payment
-		$form->saveInto($this->PaymentObject);
-		$this->PaymentObject->OrderID = $order->ID;
-		//important to set the amount and currency.
-		$this->PaymentObject->Amount = $order->getTotalOutstandingAsMoney();
-		$this->PaymentObject->write();
+		$form->saveInto($this->paymentObject);
+		$this->paymentObject->OrderID = $order->ID;
+		//important to set the amount and currency (WE SET THEM BOTH AT THE SAME TIME!)
+		$this->paymentObject->Amount = $order->getTotalOutstandingAsMoney();
+		$this->paymentObject->write();
 		// Process payment, get the result back
-		$result = $this->PaymentObject->processPayment($data, $form);
+		$result = $this->paymentObject->processPayment($data, $form);
 		if(!(is_a($result, Object::getCustomClass("EcommercePayment_Result")))) {
 			$form->controller->redirectBack();
 			return false;
 		}
 		else {
+			debug::log("processPaymentFormAndReturnNextStep".$this->paymentObject->ID);
 			if($result->isProcessing()) {
 				//IMPORTANT!!!
 				// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)
@@ -176,102 +283,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		}
 	}
 
-	/**
-	 * return false if there is an error and
-	 * returns true if all is well.
-	 * If there are no errors, then the payment object will also be written...
-	 * If there are errors, the errors will be added to the form.
-	 *
-	 * @param Form $form
-	 * @param array $data
-	 * @param EcommercePayment $paymentObject
-	 *
-	 * @return boolean
-	 *
-	 */
-	public static function validate_and_save_credit_card_information($data, $form, $paymentObject = null) {
-		$errors = false;
-		if(!$this->paymentObject) {
-			$this->PaymentObject = $paymentObject;
-		}
-		$paymentClassName = $this->PaymentObject->ClassName;
-		$dbFieldMap = Config::inst()->get("EcommercePaymentFormSetupAndValidation","db_field_map");
-		$cardNumberFormFields = array(
-			"CardNumber",
-			"ExpiryDate" ,
-			"CVVNumber" ,
-			"NameOnCard"
-		);
-		foreach($cardNumberFormFields as $dbFieldName) {
-			$formFieldName = $paymentClassName."_".$dbFieldName;
-			switch ($dbFieldName) {
-				case "CardNumber":
-					if(isset($dbFieldMap[$paymentClassName]["CardNumber"])) {
-						$dbFieldName = $dbFieldMap[$paymentClassName]["CardNumber"];
-					}
-					$this->PaymentObject->$dbFieldName = trim(
-						$data[$formFieldName][0].
-						$data[$formFieldName][1].
-						$data[$formFieldName][2].
-						$data[$formFieldName][3]
-					);
-					$cardNumber = $this->PaymentObject->$dbFieldName;
-					if(!self::validate_card_number($this->PaymentObject->$dbFieldName)) {
-						$form->addErrorMessage(
-							$formFieldName,
-							_t('EcommercePaymentFormSetupAndValidation.INVALID_CREDIT_CARD','Invalid credit card number.'),
-							'bad'
-						);
-						$errors = true;
-					}
-					break;
-				case "ExpiryDate":
-					$this->PaymentObject->$dbFieldName =
-						$data[$formFieldName]["month"].
-						$data[$formFieldName]["year"];
-					if(!self::validate_expiry_month($this->PaymentObject->$dbFieldName)) {
-						$form->addErrorMessage(
-							$formFieldName,
-							_t('EcommercePaymentFormSetupAndValidation.INVALID_EXPIRY_DATE','Expiry date not valid.'),
-							'bad'
-						);
-						$errors = true;
-					}
-					break;
-				case "CVVNumber":
-					$this->PaymentObject->$dbFieldName = trim($data[$formFieldName]);
-					if(!self::validate_CVV($cardNumber, $this->PaymentObject->$dbFieldName)) {
-						$form->addErrorMessage(
-							$formFieldName,
-							_t('EcommercePaymentFormSetupAndValidation.INVALID_CVV_NUMBER','Invalid security number.'),
-							'bad'
-						);
-					}
-					break;
-				case "NameOnCard":
-					$this->PaymentObject->$dbFieldName = trim($data[$formFieldName]);
-					if(strlen($this->PaymentObject->$dbFieldName) < 3) {
-						$form->addErrorMessage(
-							$formFieldName,
-							_t("EcommercePaymentFormSetupAndValidation.NO_CARD_NAME",'No card name provided.'),
-							'bad'
-						);
-						$errors = true;
-					}
-					break;
-				default:
-					user_error("Type must be one of four options: CardNumber, NameOnCard, CVV, ExpiryDate");
-			}
-		}
-		if($errors) {
-			$form->sessionMessage(_t('EcommercePaymentFormSetupAndValidation.PLEASE_REVIEW_CARD_DETAILS','Please review your card details.'),'bad');
-			return false;
-		}
-		else {
-			$this->PaymentObject->write();
-			return true;
-		}
-	}
 
 	/**
 	 * checks if a credit card is a real credit card number
@@ -280,7 +291,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 * @param String | Int $number
 	 * @return Boolean
 	 */
-	public static function validate_card_number($cardNumber) {
+	public function validateCardNumber($cardNumber) {
 		if(!$cardNumber) {
 			return false;
 		}
@@ -297,7 +308,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 * @param String $monthYear - e.g. 0218
 	 * @return Boolean
 	 */
-	public static function validate_expiry_month($monthYear) {
+	public function validateExpiryMonth($monthYear) {
 		$month = intval(substr($monthYear, 0, 2));
 		$year = intval("20".substr($monthYear, 2));
 		$currentYear = intval(Date("Y"));
@@ -323,7 +334,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 * @param int $cvv
 	 * @return Boolean
 	 */
-	protected static function validate_CVV($cardNumber, $cvv) {
+	public function validateCVV($cardNumber, $cvv) {
 		$cardNumber = preg_replace('/\D/', '', $cardNumber);
 		$cvv = preg_replace('/\D/', '', $cvv);
 
@@ -360,11 +371,5 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		}
 	}
 
-	protected static singleton_creator($paymentObject) {
-		if($paymentObject) {
-			self::$payment_objects_per_payment_type[$paymentObject->ClassName] = $paymentObject;
-		}
-		return $paymentObject;
-	}
 
 }
