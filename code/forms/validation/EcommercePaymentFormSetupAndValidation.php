@@ -101,12 +101,16 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 */
 	public function validatePayment($order, $data, $form) {
 		if(!$order){
+			die("TEMP dddddddERRORRRRR");
 			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
 			return false;
 		}
 
 		//nothing to pay, always valid
-		if($order->TotalOutstanding() == 0) {
+		if($order->TotalOutstanding() == 0 && $order->IsSubmitted()) {
+			$this->ID;
+			echo $order->ID;
+			die("kkkkkkkkkkkkkk");
 			return true;
 		}
 		if(!$this->paymentObject) {
@@ -119,6 +123,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		}
 		if(!$this->paymentObject || !($this->paymentObject instanceof EcommercePayment)) {
 			$form->sessionMessage(_t('EcommercePaymentFormSetupAndValidation.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
+			die("jjjjjjjjjjjjjjjjjjj");
 			return false;
 		}
 		// Check payment, get the result back
@@ -214,6 +219,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 			}
 		}
 		if($errors) {
+			die("TEMP ERRORRRRR");
 			$form->sessionMessage(_t('EcommercePaymentFormSetupAndValidation.PLEASE_REVIEW_CARD_DETAILS','Please review your card details.'),'bad');
 			return false;
 		}
