@@ -312,7 +312,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 
 		$self = $this;
 		$this->beforeUpdateCMSFields(
-			function($fields) use ($self) {
+			function($fields) {
 				foreach($this->customFieldLabels() as $name => $label) {
 					$fields->removeByName($name);
 				}
