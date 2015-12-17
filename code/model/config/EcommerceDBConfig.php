@@ -310,7 +310,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 
-		$self = $self;
+		$self = $this;
 		$self->beforeUpdateCMSFields(
 			function($fields) use ($self) {
 				foreach($self->customFieldLabels() as $name => $label) {
