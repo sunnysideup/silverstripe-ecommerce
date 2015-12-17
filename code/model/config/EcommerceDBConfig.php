@@ -310,15 +310,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 
-		$self = $this;
-		$this->beforeUpdateCMSFields(
-			function($fields) {
-				foreach($this->customFieldLabels() as $name => $label) {
+		$self = $self;
+		$self->beforeUpdateCMSFields(
+			function($fields) use ($self) {
+				foreach($self->customFieldLabels() as $name => $label) {
 					$fields->removeByName($name);
 				}
 				//new section
-				$fieldDescriptions = $this->customDescriptionsForFields();
-				$fieldLabels = $this->fieldLabels();
+				$fieldDescriptions = $self->customDescriptionsForFields();
+				$fieldLabels = $self->fieldLabels();
 				$productImage = new Product_Image();
 				$versionInfo = EcommerceConfigDefinitions::create();
 				$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
@@ -358,7 +358,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 						new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"])
 					),
 					new Tab('Process',
-						$this->getOrderStepsField()
+						$self->getOrderStepsField()
 					),
 					new Tab('Advanced',
 						new HeaderField("EcommerceVersionHeading", "Version"),
