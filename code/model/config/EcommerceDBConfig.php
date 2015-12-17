@@ -414,6 +414,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 					}
 				}
 				Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
+				if (strnatcmp(phpversion(),'5.5.1') >= 0) { 
+					$fields->addFieldToTab('Root.ProductImages', new Product_ProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"));
+				}
 			}
 		);
 		return parent::getCMSFields();
