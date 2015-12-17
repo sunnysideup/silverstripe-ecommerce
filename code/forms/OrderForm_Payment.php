@@ -81,8 +81,7 @@ class OrderForm_Payment extends Form {
 			}
 		}
 		$form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT','Sorry, we could not find the Order for payment.'),'bad');
-		$this->controller->redirectBack();
-		return false;
+		return $this->controller->redirectBack();
 	}
 
 	/**

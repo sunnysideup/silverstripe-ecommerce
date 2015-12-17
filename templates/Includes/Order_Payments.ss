@@ -14,6 +14,8 @@
 	</thead>
 	<tbody>
 	<% loop Payments %>
+		<% if Status = Incomplete %>
+		<% else %>
 		<tr>
 			<td class="center">$LastEdited.Nice24</td>
 			<td class="center">$Status</td>
@@ -21,6 +23,7 @@
 			<td class="left">$Message.NoHTML.XML</td>
 			<td class="right">$Amount.NiceDefaultFormat</td>
 		</tr>
+		<% end_if %>
 	<% end_loop %>
 	</tbody>
 </table>

@@ -852,14 +852,29 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 *
+	 * returns true if successful
+	 * 
+	 * @param boolean $avoidWrites
+	 * 
 	 * @return Boolean
 	 */
-	public function Archive() {
-		if($lastStep = OrderStep::get()->Last()) {
-			$this->StatusID = $lastStep->ID;
-			$this->write();
-			return true;
+	public function Archive($avoidWrites = false) {
+		$lastOrderStep = OrderStep::get()->Last();
+		if($lastOrderStep) {
+			if($avoidWrites) {
+				DB::query("
+					UPDATE \"Order\"
+					SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
+					WHERE \"Order\".\"ID\" = ".$this->ID."
+					LIMIT 1
+				");
+				return true;
+			}
+			else {
+				$this->StatusID = $lastOrderStep->ID;
+				$this->write();
+				return true;
+			}
 		}
 		return false;
 	}

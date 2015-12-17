@@ -556,6 +556,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 				return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder);
 			}
 		}
+		return array();
 	}
 
 
