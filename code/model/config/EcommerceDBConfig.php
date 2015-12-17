@@ -314,7 +314,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 			$self = $this;
 		}
 		else {
-			$self = self;
+			return FieldList::create();
 		}
 	
 		if($this) {
