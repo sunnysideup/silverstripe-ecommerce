@@ -105,11 +105,12 @@ class OrderItem extends OrderAttribute {
 	private static $summary_fields = array(
 		"OrderID" => "Order ID",
 		"TableTitle" => "Title",
-		"TableSubTitle" => "Sub Title",
+		"TableSubTitleNOHTML" => "",
 		"UnitPrice" => "Unit Price" ,
 		"Quantity" => "Quantity" ,
 		"Total" => "Total Price" ,
 	);
+
 
 	/**
 	 * singular name of the object. it is recommended to override this
