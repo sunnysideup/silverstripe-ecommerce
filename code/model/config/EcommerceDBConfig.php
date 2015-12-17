@@ -310,21 +310,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 
-		if($this && $this->ID) {
-			$self = $this;
-		}
-		else {
-			return FieldList::create();
-		}
-	
-		if($this) {
-			$self->beforeUpdateCMSFields(function($fields) use ($self) {
-				foreach($self->customFieldLabels() as $name => $label) {
+		$self = $this;
+		$this->beforeUpdateCMSFields(
+			function($fields) use ($self) {
+				foreach($this->customFieldLabels() as $name => $label) {
 					$fields->removeByName($name);
 				}
 				//new section
-				$fieldDescriptions = $self->customDescriptionsForFields();
-				$fieldLabels = $self->fieldLabels();
+				$fieldDescriptions = $this->customDescriptionsForFields();
+				$fieldLabels = $this->fieldLabels();
 				$productImage = new Product_Image();
 				$versionInfo = EcommerceConfigDefinitions::create();
 				$fields->addFieldToTab("Root.Main", new TextField("Title", $fieldLabels["Title"]));
@@ -364,7 +358,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 						new TextField("InvoiceTitle",$fieldLabels["InvoiceTitle"])
 					),
 					new Tab('Process',
-						$self->getOrderStepsField()
+						$this->getOrderStepsField()
 					),
 					new Tab('Advanced',
 						new HeaderField("EcommerceVersionHeading", "Version"),
@@ -420,8 +414,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 					}
 				}
 				Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
-			});
-		}
+			}
+		);
 		return parent::getCMSFields();
 	}
 
