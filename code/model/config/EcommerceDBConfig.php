@@ -432,7 +432,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 		);
 	}
 
-	protected function getOrderStepsField(){
+	public function getOrderStepsField(){
 		$gridFieldConfig = GridFieldConfig::create()->addComponents(
 			new GridFieldToolbarHeader(),
 			new GridFieldSortableHeader(),
