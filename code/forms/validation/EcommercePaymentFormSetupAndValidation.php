@@ -26,7 +26,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 
 	/**
 	 * @var EcommercePayment
-	 */ 
+	 */
 	protected $paymentObject = null;
 
 	/**
@@ -37,7 +37,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 * credit card details.
 	 *
 	 * @param EcommercePayment $paymentObject
-	 * 
+	 *
 	 * @return FieldList
 	 */
 	public function getCreditCardPaymentFormFields($paymentObject = null){
@@ -101,7 +101,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 */
 	public function validatePayment($order, $data, $form) {
 		if(!$order){
-			die("TEMP dddddddERRORRRRR");
 			$form->sessionMessage(_t('EcommercePayment.NOORDER','Order not found.'), 'bad');
 			return false;
 		}
@@ -109,8 +108,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		//nothing to pay, always valid
 		if($order->TotalOutstanding() == 0 && $order->IsSubmitted()) {
 			$this->ID;
-			echo $order->ID;
-			die("kkkkkkkkkkkkkk");
 			return true;
 		}
 		if(!$this->paymentObject) {
@@ -123,7 +120,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		}
 		if(!$this->paymentObject || !($this->paymentObject instanceof EcommercePayment)) {
 			$form->sessionMessage(_t('EcommercePaymentFormSetupAndValidation.NOPAYMENTOPTION','No Payment option selected.'), 'bad');
-			die("jjjjjjjjjjjjjjjjjjj");
 			return false;
 		}
 		// Check payment, get the result back
@@ -219,7 +215,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 			}
 		}
 		if($errors) {
-			die("TEMP ERRORRRRR");
 			$form->sessionMessage(_t('EcommercePaymentFormSetupAndValidation.PLEASE_REVIEW_CARD_DETAILS','Please review your card details.'),'bad');
 			return false;
 		}
