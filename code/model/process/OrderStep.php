@@ -681,7 +681,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * returns the OrderStatusLog that is relevant to this step.
+	 *
 	 * @param Order $order
+	 * 
 	 * @return OrderStatusLog | Null
 	 */
 	public function RelevantLogEntry(Order $order){

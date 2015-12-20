@@ -30,9 +30,11 @@ class OrderConfirmationPage extends CartPage{
 	private static $db = array(
 		'StartNewOrderLinkLabel' => 'Varchar(100)',
 		'CopyOrderLinkLabel' => 'Varchar(100)',
+		'OrderCancelledHeader' => 'Varchar(255)',
 		'PaymentSuccessfulHeader' => 'Varchar(255)',
 		'PaymentNotSuccessfulHeader' => 'Varchar(255)',
 		'PaymentPendingHeader' => 'Varchar(255)',
+		'OrderCancelledMessage' => 'HTMLText',
 		'PaymentSuccessfulMessage' => 'HTMLText',
 		'PaymentNotSuccessfulMessage' => 'HTMLText',
 		'PaymentPendingMessage' => 'HTMLText',
@@ -48,9 +50,11 @@ class OrderConfirmationPage extends CartPage{
 		"ShowInSearch" => false,
 		"StartNewOrderLinkLabel" => "start new order",
 		"CopyOrderLinkLabel" => "copy order items into a new order",
+		'OrderCancelledHeader' => 'Order has been cancelled',
 		'PaymentSuccessfulHeader' => 'Payment Successful',
 		'PaymentNotSuccessfulHeader' => 'Payment not Completed',
 		'PaymentPendingHeader' => 'Payment Pending',
+		'OrderCancelledMessage' => '<p>This order is no longer valid.</p>',
 		'PaymentSuccessfulMessage' => '<p>Your order will be processed.</p>',
 		'PaymentNotSuccessfulMessage' => '<p>Your order will not be processed until your payment has been completed.</p>',
 		'PaymentPendingMessage' => '<p>Please complete your payment before the order can be processed.</p>'
@@ -122,15 +126,17 @@ class OrderConfirmationPage extends CartPage{
 
 	function customFieldLabels(){
 		$newLabels = array(
-			"StartNewOrderLinkLabel" => _t("EcommerceDBConfig.STARTNEWORDERLINKLABEL", 'Label for starting new order - e.g. click here to start new order'),
-			"CopyOrderLinkLabel" => _t("EcommerceDBConfig.COPYORDERLINKLABEL", 'Label for copying order items into a new one  - e.g. click here start a new order with the current order items'),
-			"PaymentSuccessfulHeader" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULHEADER", "Message showing when order has been paid in full (usually at the top of the page)"),
-			"PaymentNotSuccessfulHeader" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULHEADER", "Message showing when the order has not been paid in full (usually at the top of the page)"),
-			"PaymentPendingHeader" => _t("EcommerceDBConfig.PAYMENTPENDINGHEADER", "Message showing when the order has not been paid in full - but the payment is pending"),
-			"PaymentSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTSUCCESSFULMESSAGE", "Message showing when order has been paid in full"),
-			"PaymentNotSuccessfulMessage" => _t("EcommerceDBConfig.PAYMENTNOTSUCCESSFULMESSAGE", "Message showing when the order has not been paid in full"),
-			"PaymentPendingMessage" => _t("EcommerceDBConfig.PAYMENTPENDINGMESSAGE", "Message showing when the order has not been paid in full - but the payment is pending"),
-			"EnableGoogleAnalytics" => _t("EcommerceDBConfig.ENABLEGOOGLEANALYTICS", "Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.")
+			"StartNewOrderLinkLabel" => _t("OrderConfirmationPage.STARTNEWORDERLINKLABEL", 'Label for starting new order - e.g. click here to start new order.'),
+			"CopyOrderLinkLabel" => _t("OrderConfirmationPage.COPYORDERLINKLABEL", 'Label for copying order items into a new one  - e.g. click here start a new order with the current order items.'),
+			"OrderCancelledHeader" => _t("OrderConfirmationPage.ORDERCANCELLEDHEADER", "Header showing when order has been cancelled."),
+			"PaymentSuccessfulHeader" => _t("OrderConfirmationPage.PAYMENTSUCCESSFULHEADER", "Header showing when order has been paid in full."),
+			"PaymentNotSuccessfulHeader" => _t("OrderConfirmationPage.PAYMENTNOTSUCCESSFULHEADER", "Header showing when the order has not been paid in full."),
+			"PaymentPendingHeader" => _t("OrderConfirmationPage.PAYMENTPENDINGHEADER", "Header showing when the order has not been paid in full - but the payment is pending."),
+			"OrderCancelledMessage" => _t("OrderConfirmationPage.ORDERCANCELLEDMESSAGE", "Message showing when order has been paid cancelled."),
+			"PaymentSuccessfulMessage" => _t("OrderConfirmationPage.PAYMENTSUCCESSFULMESSAGE", "Message showing when order has been paid in full."),
+			"PaymentNotSuccessfulMessage" => _t("OrderConfirmationPage.PAYMENTNOTSUCCESSFULMESSAGE", "Message showing when the order has not been paid in full."),
+			"PaymentPendingMessage" => _t("OrderConfirmationPage.PAYMENTPENDINGMESSAGE", "Message showing when the order has not been paid in full - but the payment is pending."),
+			"EnableGoogleAnalytics" => _t("OrderConfirmationPage.ENABLEGOOGLEANALYTICS", "Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.")
 		);
 		return $newLabels;
 	}
@@ -175,7 +181,10 @@ class OrderConfirmationPage extends CartPage{
 			$htmlEditorField2 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels["PaymentNotSuccessfulMessage"]),
 			new HeaderField('Pending'),
 			new TextField('PaymentPendingHeader', $fieldLabels['PaymentPendingHeader']),
-			$htmlEditorField3 = new HTMLEditorField('PaymentPendingMessage', $fieldLabels["PaymentPendingMessage"])
+			$htmlEditorField3 = new HTMLEditorField('PaymentPendingMessage', $fieldLabels["PaymentPendingMessage"]),
+			new HeaderField('Cancelled'),
+			new TextField('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
+			$htmlEditorField3 = new HTMLEditorField('OrderCancelledMessage', $fieldLabels["OrderCancelledMessage"])
 		));
 		$htmlEditorField1->setRows(3);
 		$htmlEditorField2->setRows(3);
@@ -502,14 +511,61 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	}
 
 	/**
+	 *
+	 * @return string
+	 */ 
+	public function PaymentHeader(){
+		if($order = $this->Order()) {
+			if($this->OrderIsCancelled()) {
+				return $this->OrderCancelledHeader;
+			}
+			elseif($this->PaymentIsPending()) {
+				return $this->PaymentPendingHeader;
+			}
+			elseif($this->IsPaid()) {
+				return $this->PaymentSuccessfulHeader;
+			}
+			else {
+				return $this->PaymentNotSuccessfulHeader;
+			}
+		}
+	}
+
+	public function PaymentMessage(){
+		if($order = $this->Order()) {
+			if($this->OrderIsCancelled()) {
+				return $this->OrderCancelledMessage;
+			}
+			elseif($this->PaymentIsPending()) {
+				return $this->PaymentPendingMessage;
+			}
+			elseif($this->IsPaid()) {
+				return $this->PaymentSuccessfulMessage;
+			}
+			else {
+				return $this->PaymentNotSuccessfulMessage;
+			}
+		}
+	}
+
+	/**
+	 * @return boolean
+	 */ 
+	public function OrderIsCancelled() {
+		if($order = $this->Order()) {
+			return $order->getIsCancelled();
+		}
+	}
+
+	/**
 	 * Is the Order paid?
 	 * This can be useful for choosing what header to show
 	 *
 	 * @return Boolean
 	 */
 	public function IsPaid(){
-		if($o = $this->Order()) {
-			return $o->IsPaid();
+		if($order = $this->Order()) {
+			return $order->IsPaid();
 		}
 	}
 
@@ -520,8 +576,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	 * @return Boolean
 	 */
 	public function PaymentIsPending(){
-		if($o = $this->Order()) {
-			return $o->PaymentIsPending();
+		if($order = $this->Order()) {
+			return $order->PaymentIsPending();
 		}
 	}
 
