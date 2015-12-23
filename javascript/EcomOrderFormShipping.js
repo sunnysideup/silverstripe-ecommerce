@@ -16,72 +16,13 @@
 
 var EcomOrderFormWithShippingAddress = {
 
-	firstNameSelector: "#FirstName input",
+	//================
 
-	shippingFirstNameSelector: "#ShippingFirstName input",
-
-	//
-
-	surnameSelector: "#Surname input",
-
-	shippingSurnameSelector: "#ShippingSurname input",
-
-	//
-
-	addressSelector: "#Address input",
-
-	shippingAddressSelector: "#ShippingAddress input",
-
-	//
-
-	extraAddressSelector: "#Address2 input",
-
-	shippingExtraAddressSelector: "#ShippingAddress2 input",
-
-	//
-
-	citySelector: "#City input",
-
-	shippingCitySelector: "#ShippingCity input",
-
-	//
-
-	postalCodeSelector: "#PostalCode input",
-
-	shippingPostalCodeSelector: "#ShippingPostalCode input",
-
-	//
-
-	regionCodeSelector: "#RegionCode input",
-
-	shippingRegionCodeSelector: "#ShippingRegionCode input",
-
-	//
-
-
-	regionIDCodeSelector: "#RegionID select",
-
-	shippingRegionIDSelector: "#ShippingRegionID select",
-
-	//
-
-	countrySelector: "#Country select",
-
-	shippingCountrySelector: "#ShippingCountry select",
-
-	//
-
-	phoneSelector: "#Phone input",
-
-	shippingPhoneSelector: "#ShippingPhone input",
-
-	//
-
-	//mobilePhoneSelector: "#MobilePhone input",
-
-	//shippingMobilePhoneSelector: "#ShippingMobilePhone input",
+	fieldArray: [],
 
 	//================
+
+	formSelector: "#OrderFormAddress_OrderFormAddress",
 
 	shippingSectionSelector: ".shippingFieldsHeader, .shippingFields",
 
@@ -95,9 +36,23 @@ var EcomOrderFormWithShippingAddress = {
 	//toggle shipping fields when "use separate shipping address" is ticked
 	//update shipping fields, when billing fields are changed.
 	init: function(){
+
+		jQuery(this.formSelector+' input, '+this.formSelector+", select"+this.formSelector+" textarea").each(
+			function(i, el){
+				var name = jQuery(el).attr("name");
+				if(typeof name != 'undefined') {
+					var shippingHolderSelector = EcomOrderFormWithShippingAddress.shippingHolderSelector(name);
+					if(jQuery(shippingHolderSelector).length > 0) {
+						EcomOrderFormWithShippingAddress.fieldArray.push(name);
+					}
+				}
+				//your code here
+		});
+
 		//hide shipping fields
+
 		if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length > 0) {
-			if(jQuery(EcomOrderFormAddress.useShippingDetailsSelector).is(":checked")) {
+			if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
 			}
 			else {
 				jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).hide();
@@ -108,7 +63,8 @@ var EcomOrderFormWithShippingAddress = {
 				function(){
 					if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
 						jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideDown();
-						jQuery(EcomOrderFormWithShippingAddress.shippingFirstNameSelector).focus();
+						var firstShippingField = EcomOrderFormWithShippingAddress.fieldArray[0];
+						jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelector(firstShippingField)).focus();
 						jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).attr("required", "required");
 						EcomOrderFormWithShippingAddress.updateFields();
 						EcomOrderFormWithShippingAddress.closed = false;
@@ -120,18 +76,14 @@ var EcomOrderFormWithShippingAddress = {
 					}
 				}
 			);
-			//update on change
-			var originatorFieldSelector =
-					EcomOrderFormWithShippingAddress.firstNameSelector+", "+
-					EcomOrderFormWithShippingAddress.surnameSelector+", "+
-					EcomOrderFormWithShippingAddress.addressSelector+" ,"+
-					EcomOrderFormWithShippingAddress.extraAddressSelector+", "+
-					EcomOrderFormWithShippingAddress.citySelector+", "+
-					EcomOrderFormWithShippingAddress.postalCodeSelector+", "+
-					EcomOrderFormWithShippingAddress.regionCodeSelector+", "+
-					EcomOrderFormWithShippingAddress.regionIDCodeSelector+", "+
-					EcomOrderFormWithShippingAddress.countrySelector+", "+
-					EcomOrderFormWithShippingAddress.phoneSelector;
+			var i;
+			var originatorFieldSelector = " ";
+			for (i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
+				if((i  + 1) < EcomOrderFormWithShippingAddress.fieldArray.length) {
+					originatorFieldSelector += ", ";
+				}
+				originatorFieldSelector += EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
+			}
 			jQuery(originatorFieldSelector).change(
 				function() {
 					EcomOrderFormWithShippingAddress.updateFields();
@@ -143,88 +95,55 @@ var EcomOrderFormWithShippingAddress = {
 				}
 			);
 		}
+		//why this????
 		jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).removeAttr("required");
 	},
 
-	//copy the billing address details to the shipping address details
 	updateFields: function() {
-
-		//mobile phone
-		//var MobilePhone = jQuery(EcomOrderFormWithShippingAddress.mobilePhoneSelector).val();
-		//var ShippingMobilePhone = jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val();
-		//if((!ShippingMobilePhone && MobilePhone) || EcomOrderFormWithShippingAddress.closed) {
-			//jQuery(EcomOrderFormWithShippingAddress.shippingMobilePhoneSelector).val(MobilePhone).change();
-		//}
-
-		//phone
-		var Phone = jQuery(EcomOrderFormWithShippingAddress.phoneSelector).val();
-		var ShippingPhone = jQuery(EcomOrderFormWithShippingAddress.shippingPhoneSelector).val();
-		if((!ShippingPhone && Phone) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingPhoneSelector).val(Phone).change();
+		//copy the billing address details to the shipping address details
+		var billingFieldSelector = "";
+		var shippingFieldSelector = "";
+		var billingFieldValue = "";
+		var shippingFieldValue = "";
+		for (i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
+			billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
+			shippingFieldSelector = EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
+			billingFieldValue = jQuery(billingFieldSelector).val();
+			shippingFieldValue = jQuery(shippingFieldSelector).val();
+			if((!shippingFieldValue && billingFieldValue) || EcomOrderFormWithShippingAddress.closed) {
+				jQuery(shippingFieldSelector).val(billingFieldValue).change();
+			}
 		}
-
-		//region Code
-		var RegionCode = jQuery(EcomOrderFormWithShippingAddress.regionCodeSelector).val();
-		var ShippingRegionCode = jQuery(EcomOrderFormWithShippingAddress.shippingRegionCodeSelector).val();
-		if((!ShippingRegionCode && RegionCode) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingRegionCodeSelector).val(RegionCode).change();
-		}
-
-		//region ID
-		var RegionID = jQuery(EcomOrderFormWithShippingAddress.regionIDCodeSelector).val();
-		var ShippingRegionID = jQuery(EcomOrderFormWithShippingAddress.shippingRegionIDSelector).val();
-		if((!ShippingRegionID && RegionID) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingRegionIDSelector).val(RegionID).change();
-		}
-
-		//postal code
-		var PostalCode = jQuery(EcomOrderFormWithShippingAddress.postalCodeSelector).val();
-		var ShippingPostalCode = jQuery(EcomOrderFormWithShippingAddress.shippingPostalCodeSelector).val();
-		if((!ShippingPostalCode && PostalCode) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingPostalCodeSelector).val(PostalCode).change();
-		}
-
-		//country
-		var Country = jQuery(EcomOrderFormWithShippingAddress.countrySelector).val();
-		var ShippingCountry = jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val();
-		if(((!ShippingCountry || ShippingCountry == "AF") && Country) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingCountrySelector).val(Country);
-		}
-
-		//city
-		var City = jQuery(EcomOrderFormWithShippingAddress.citySelector).val();
-		var ShippingCity = jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val();
-		if((!ShippingCity && City) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val(City).change();
-		}
-		//address
-		var Address = jQuery(EcomOrderFormWithShippingAddress.addressSelector).val();
-		var ShippingAddress = jQuery(EcomOrderFormWithShippingAddress.shippingAddressSelector).val();
-		if((!ShippingAddress && Address) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingAddressSelector).val(Address).change();
-		}
-		//address 2
-		var AddressLine2 = jQuery(EcomOrderFormWithShippingAddress.extraAddressSelector).val();
-		var ShippingAddress2 = jQuery(EcomOrderFormWithShippingAddress.shippingExtraAddressSelector).val();
-		if((!ShippingAddress2 && AddressLine2) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingExtraAddressSelector).val(AddressLine2).change();
-		}
-
-		//surname
-		var Surname = jQuery(EcomOrderFormWithShippingAddress.surnameSelector).val();
-		var ShippingSurname = jQuery(EcomOrderFormWithShippingAddress.shippingSurnameSelector).val();
-		if((!ShippingSurname && Surname) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingSurnameSelector).val(Surname).change();
-		}
-
-		//first name
-		var FirstName = jQuery(EcomOrderFormWithShippingAddress.firstNameSelector).val();
-		var ShippingFirstName = jQuery(EcomOrderFormWithShippingAddress.shippingFirstNameSelector).val();
-		if((!ShippingFirstName && FirstName) || EcomOrderFormWithShippingAddress.closed) {
-			jQuery(EcomOrderFormWithShippingAddress.shippingFirstNameSelector).val(FirstName).change();
-		}
-
 	},
+
+
+	billingFieldSelector: function(name) {
+		return ""+
+			EcomOrderFormWithShippingAddress.formSelector+" input[name='"+name+"'], "+
+			EcomOrderFormWithShippingAddress.formSelector+" select[name='"+name+"'], "+
+			EcomOrderFormWithShippingAddress.formSelector+" textarea[name='"+name+"']";
+	},
+
+	shippingFieldSelector: function(name) {
+		name = name.replace("Billing", "");
+		return ""+
+			EcomOrderFormWithShippingAddress.formSelector+" input[name='Shipping"+name+"'], "+
+			EcomOrderFormWithShippingAddress.formSelector+" select[name='Shipping"+name+"'], "+
+			EcomOrderFormWithShippingAddress.formSelector+" textarea[name='Shipping"+name+"']";
+	},
+
+	billingHolderSelector: function(name) {
+		return ""+
+			EcomOrderFormWithShippingAddress.formSelector+" div#"+name;
+	},
+
+	shippingHolderSelector: function(name) {
+		name = name.replace("Billing", "");
+		return ""+
+			EcomOrderFormWithShippingAddress.formSelector+" div#Shipping"+name;
+	},
+
+
 
 	//this function exists, because FF was auto-completing Shipping City as the username part of a password / username combination (password being the next field)
 	removeEmailFromShippingCityHack: function() {
@@ -236,6 +155,6 @@ var EcomOrderFormWithShippingAddress = {
 		else{
 			//do nothing
 		}
-
 	}
+
 }

@@ -233,7 +233,7 @@ class ShippingAddress extends OrderAddress {
 			$shippingFields->addExtraClass('shippingFields');
 			$fields->push($shippingFields);
 		}
-		$this->extend('augmentEcommerceShippingAddressFields', $fields);
+		$this->extend('augmentEcommerceShippingAddressFields', $shippingFields);
 		return $fields;
 	}
 
