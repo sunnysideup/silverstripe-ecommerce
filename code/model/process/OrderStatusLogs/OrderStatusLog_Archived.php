@@ -49,5 +49,12 @@ class OrderStatusLog_Archived extends OrderStatusLog {
 		return true;
 	}
 
+	function getCMSFields(){
+		$fields = parent::getCMSFields();
+		$fields->replaceField("ClassName", new HiddenField("ClassName", "ClassName", $this->ClassName));
+		$fields->addFieldToTab("Root.Main", new ReadonlyField("Created", "Created"));
+		return $fields;
+	}
+
 }
 
