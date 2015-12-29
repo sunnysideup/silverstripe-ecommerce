@@ -370,6 +370,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @param array $data The form request data - see OrderForm
 	 * @param OrderForm $form The form object submitted on
+	 *
+	 * @return EcommercePayment_Result
 	 */
 	function processPayment($data, $form){user_error("Please implement processPayment() on $this->class", E_USER_ERROR);}
 
@@ -418,7 +420,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @param Order $order - the order that is being paid
 	 * @param array $data - Array of data that is submittted
 	 * @param Form $form - the form that is being submitted
-	 * 
+	 *
 	 * @return Boolean - true if the data is valid
 	 */
 	public static function validate_payment($order, $data, $form) {
@@ -431,7 +433,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	/**
 	 *
 	 * @return EcommercePaymentFormSetupAndValidation
-	 */ 
+	 */
 	protected function ecommercePaymentFormSetupAndValidationObject() {
 		if(!$this->ecommercePaymentFormSetupAndValidationObject) {
 			$this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
@@ -442,7 +444,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	/**
 	 *
 	 * @return EcommercePaymentFormSetupAndValidation
-	 */ 
+	 */
 	public static function ecommerce_payment_form_setup_and_validation_object(){
 		return Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
 	}
