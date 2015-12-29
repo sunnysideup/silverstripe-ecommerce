@@ -655,7 +655,12 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return GridField
 	 **/
-	public function getOrderStatusLogsTableField($sourceClass = "OrderStatusLog", $title = "", FieldList $fieldList = null, FieldList $detailedFormFields = null) {
+	public function getOrderStatusLogsTableField(
+		$sourceClass = "OrderStatusLog",
+		$title = "",
+		FieldList $fieldList = null,
+		FieldList $detailedFormFields = null
+	) {
 		$gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
 			new GridFieldAddNewButton('toolbar-header-right'),
 			new GridFieldDetailForm()
@@ -853,9 +858,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * returns true if successful
-	 * 
+	 *
 	 * @param boolean $avoidWrites
-	 * 
+	 *
 	 * @return Boolean
 	 */
 	public function Archive($avoidWrites = false) {
