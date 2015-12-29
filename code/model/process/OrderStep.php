@@ -683,7 +683,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * returns the OrderStatusLog that is relevant to this step.
 	 *
 	 * @param Order $order
-	 * 
+	 *
 	 * @return OrderStatusLog | Null
 	 */
 	public function RelevantLogEntry(Order $order){
@@ -774,6 +774,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
+		$previousOrderStepObject = null;
 		$nextOrderStepObject = $this->NextOrderStep();
 		//backup
 		if($nextOrderStepObject) {
