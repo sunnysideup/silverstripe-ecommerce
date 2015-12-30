@@ -798,24 +798,35 @@ class Order extends DataObject implements EditableEcommerceObject {
 		return $this;
 	}
 
+	/**
+	 *
+	 * @var boolean
+	 */
+	private static $_try_to_finalise_order_is_running = false;
 
 	/**
 	 * Goes through the order steps and tries to "apply" the next status to the order.
 	 *
+	 * @param boolean $runAgain
 	 **/
-	public function tryToFinaliseOrder() {
-		if($this->CancelledByID) {
-			$this->Archive();
-			return;
+	public function tryToFinaliseOrder($runAgain = false) {
+		if(!self::$_try_to_finalise_order_is_running || $runAgain) {
+			self::$_try_to_finalise_order_is_running = true;
+			if($this->CancelledByID) {
+				$this->Archive(true);
+				return;
+			}
+			do {
+				//status of order is being progressed
+				$nextStatusID = $this->doNextStatus();
+				//a little hack to make sure we do not rely on a stored value
+				//of "isSubmitted"
+				$this->isSubmittedTempVar = -1;
+			}
+			while ($nextStatusID);
+			//release ... to run again ...
+			self::$_try_to_finalise_order_is_running = false;
 		}
-		do {
-			//status of order is being progressed
-			$nextStatusID = $this->doNextStatus();
-			//a little hack to make sure we do not rely on a stored value
-			//of "isSubmitted"
-			$this->isSubmittedTempVar = -1;
-		}
-		while ($nextStatusID);
 	}
 
 	/**
@@ -843,7 +854,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 */
 	public function Cancel(Member $member, $reason = "") {
 		$this->CancelledByID = $member->ID;
-		if(!$this->Archive()) {
+		if(!$this->Archive(true)) {
 			$this->write();
 		}
 		$log = OrderStatusLog_Cancel::create();
@@ -1298,19 +1309,25 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @param String $emailClassName - the class name of the email you wish to send
 	 * @param String $subject - email subject
-	 * @param Boolean $copyToAdmin - true by default, whether it should send a copy to the admin
-	 * @param Boolean $resend - sends the email even it has been sent before.
-	 * @param Boolean $adminOnly - sends the email to the ADMIN ONLY.
+	 * @param boolean $copyToAdmin - true by default, whether it should send a copy to the admin
+	 * @param boolean $resend - sends the email even it has been sent before.
+	 * @param boolean | string $toAdminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
+	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $toAdminOnlyOrToEmail = false) {
 		$arrayData = $this->createReplacementArrayForEmail($message, $subject);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
-		if($adminOnly) {
-			$to = Order_Email::get_from_email();
+		if($toAdminOnlyOrToEmail) {
+			if (filter_var($toAdminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
+				$to = $toAdminOnlyOrToEmail;
+				// invalid e-mail address
+			}
+			else {
+				$to = Order_Email::get_from_email();
+			}
 		}
 		else {
 			$to = $this->getOrderEmail();
