@@ -507,12 +507,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @param string $subject
 	 * @param string $message
 	 * @param boolean $resend
-	 * @param boolean $adminOnly
+	 * @param boolean | string $toAdminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
 	 * @param string $emailClassName
 	 *
 	 * @return boolean;
 	 */
-	protected function sendEmailForStep($order, $subject, $message = "", $resend = false, $adminOnly = false, $emailClassName = ""){
+	protected function sendEmailForStep($order, $subject, $message = "", $resend = false, $adminOnlyOrToEmail = false, $emailClassName = ""){
 		if(!$this->hasBeenSent($order)) {
 			if(!$subject) {
 				$subject = $this->EmailSubject;
@@ -521,7 +521,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 				$emailClassName = $this->getEmailClassName();
 			}
 			if($this->SendDetailsToCustomer){
-				return $order->sendEmail($subject, $message, $resend, $adminOnly, $emailClassName);
+				return $order->sendEmail(
+					$subject, 
+					$message, 
+					$resend, 
+					$toAdminOnlyOrToEmail, 
+					$emailClassName
+				);
 			}
 			else {
 				//looks like we are sending an error, but we are just using this for notification
