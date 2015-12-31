@@ -513,7 +513,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	/**
 	 *
 	 * @return string
-	 */ 
+	 */
 	public function PaymentHeader(){
 		if($order = $this->Order()) {
 			if($this->OrderIsCancelled()) {
@@ -550,7 +550,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 
 	/**
 	 * @return boolean
-	 */ 
+	 */
 	public function OrderIsCancelled() {
 		if($order = $this->Order()) {
 			return $order->getIsCancelled();
@@ -658,9 +658,11 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 					$this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
 				}
 			}
-			elseif($use = $request->getVar("use")) {
-				//WE MUST MAKE SURE THAT WE DO NOT SAVE ORDER AS
-				$this->currentOrder->StatusID = intval($use);
+			elseif($statusID = intval($request->getVar("use"))) {
+				$step = OrderStep::get()->byID($statusID);
+				if($step) {
+					$emailClassName = $step->getEmailClassName();
+				}
 			}
 			//display same data...
 			Requirements::clear();
