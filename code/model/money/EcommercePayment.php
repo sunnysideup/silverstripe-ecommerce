@@ -255,7 +255,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 		}
 	}
 
-
 	/**
 	 * Static method to quickly update the payment method on runtime
 	 * associative array that goes like ClassName => Description ...
