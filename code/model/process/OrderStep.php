@@ -177,7 +177,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * Standard SS variable.
-	 * @var String
+	 * @var string
 	 */
 	private static $description = "A step that any order goes through.";
 
@@ -185,13 +185,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	/**
 	 * SUPER IMPORTANT TO KEEP ORDER!
 	 * standard SS variable
-	 * @return String
+	 * @return string
 	 */
 	private static $default_sort = "\"Sort\" ASC";
 
 	/**
 	 * turns code into ID
-	 * @param String $code
+	 * @param string $code
+	 *
 	 * @param Int
 	 */
 	public static function get_status_id_from_code($code) {
@@ -522,10 +523,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 			}
 			if($this->SendDetailsToCustomer){
 				return $order->sendEmail(
-					$subject, 
-					$message, 
-					$resend, 
-					$toAdminOnlyOrToEmail, 
+					$subject,
+					$message,
+					$resend,
+					$toAdminOnlyOrToEmail,
 					$emailClassName
 				);
 			}
