@@ -1824,13 +1824,14 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 *
+	 * returns a pseudo random part of the session id
+	 * @param int $size
 	 *
 	 * @return string
 	 */
 	public function LessSecureSessionID($size = 7){
 		$randomNumber = rand(0, (32-$size));
-		return substr($randomNumber, $randomNumber, $size);
+		return substr($this->SessionID, $randomNumber, $size);
 	}
 
 	/**
