@@ -10,16 +10,17 @@
  **/
 
 
-class CurrencyWidget extends Widget{
+class CurrencyWidget extends Widget
+{
 
-	private static $title = "Select Currency";
+    private static $title = "Select Currency";
 
-	private static $cmsTitle = "Select Currency";
+    private static $cmsTitle = "Select Currency";
 
-	private static $description = "Displays the current contents of the user's cart.";
+    private static $description = "Displays the current contents of the user's cart.";
 
-	function Currencies(){
-		return EcommerceCurrency::get_list();
-	}
-
+    public function Currencies()
+    {
+        return EcommerceCurrency::get_list();
+    }
 }

@@ -8,51 +8,52 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class SelectOrderAddressField extends OptionsetField {
+class SelectOrderAddressField extends OptionsetField
+{
 
-	/**
-	 * @var DataList
-	 */
-	protected $addresses = null;
+    /**
+     * @var DataList
+     */
+    protected $addresses = null;
 
-	/**
-	 * Creates a new optionset field.
-	 * @param String $name The field name
-	 * @param String $title The field title
-	 * @param ArrayList $addresses
-	 * @param String $value The current value
-	 * @param Form $form - The parent form
-	 */
-	function __construct($name, $title = "", $addresses = null, $value = "", Form $form = null) {
-		$this->addresses = $addresses;
-		$source = array();
-		if($this->addresses && $this->addresses instanceOf ArrayList) {
-			$source = array();
-			foreach($this->addresses as $address) {
-				$source[$address->ID] = $address->FullString();
-			}
-		}
-		parent::__construct($name, $title, $source, $value, $form);
-	}
+    /**
+     * Creates a new optionset field.
+     * @param String $name The field name
+     * @param String $title The field title
+     * @param ArrayList $addresses
+     * @param String $value The current value
+     * @param Form $form - The parent form
+     */
+    public function __construct($name, $title = "", $addresses = null, $value = "", Form $form = null)
+    {
+        $this->addresses = $addresses;
+        $source = array();
+        if ($this->addresses && $this->addresses instanceof ArrayList) {
+            $source = array();
+            foreach ($this->addresses as $address) {
+                $source[$address->ID] = $address->FullString();
+            }
+        }
+        parent::__construct($name, $title, $source, $value, $form);
+    }
 
-	/**
-	 * Standard SS method - returns the string for the Field.
-	 * Note that we include JS from this method.
-	 * @return HTML
-	 */
-	function Field($properties = array()) {
-		$jsArray = array();
-		$js = '';
-		$jsonCompare = array();
-		if($this->addresses) {
-			foreach($this->addresses as $address) {
-				$js .= " EcomSelectOrderAddressField.set_data(".$address->ID.", ".$address->JSONData().");\r\n";
-			}
-		}
-		Requirements::javascript("ecommerce/javascript/EcomSelectOrderAddressField.js");
-		Requirements::customScript($js, "Update_".$this->getName());
-		return parent::Field();
-	}
-
+    /**
+     * Standard SS method - returns the string for the Field.
+     * Note that we include JS from this method.
+     * @return HTML
+     */
+    public function Field($properties = array())
+    {
+        $jsArray = array();
+        $js = '';
+        $jsonCompare = array();
+        if ($this->addresses) {
+            foreach ($this->addresses as $address) {
+                $js .= " EcomSelectOrderAddressField.set_data(".$address->ID.", ".$address->JSONData().");\r\n";
+            }
+        }
+        Requirements::javascript("ecommerce/javascript/EcomSelectOrderAddressField.js");
+        Requirements::customScript($js, "Update_".$this->getName());
+        return parent::Field();
+    }
 }
-

@@ -13,24 +13,27 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask{
+class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask
+{
 
-	protected $title = "Links the Order Addresses at the Order And Address side";
+    protected $title = "Links the Order Addresses at the Order And Address side";
 
-	protected $description = "This only needs to be run if you have an outdated version of e-commerce where the links seem broken";
+    protected $description = "This only needs to be run if you have an outdated version of e-commerce where the links seem broken";
 
-	function run($request){
-		$this->linkOrderWithBillingAndShippingAddress(true);
-	}
+    public function run($request)
+    {
+        $this->linkOrderWithBillingAndShippingAddress(true);
+    }
 
-	/**
-	 * make sure that the link between order and the two addresses is made on
-	 * both sides.
-	 * @param Boolean $verbose - show output?
-	 *
-	 */
-	protected function linkOrderWithBillingAndShippingAddress($verbose = false) {
-		DB::query("
+    /**
+     * make sure that the link between order and the two addresses is made on
+     * both sides.
+     * @param Boolean $verbose - show output?
+     *
+     */
+    protected function linkOrderWithBillingAndShippingAddress($verbose = false)
+    {
+        DB::query("
 			UPDATE \"Order\"
 				INNER JOIN \"BillingAddress\" ON \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"
 			SET \"BillingAddress\".\"OrderID\" = \"Order\".\"ID\"
@@ -39,7 +42,7 @@ class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask{
 				AND
 				(\"Order\".\"BillingAddressID\" IS NOT NULL AND \"Order\".\"BillingAddressID\" > 0)
 		");
-		DB::query("
+        DB::query("
 			UPDATE \"Order\"
 				INNER JOIN \"BillingAddress\" ON \"BillingAddress\".\"OrderID\" = \"Order\".\"ID\"
 			SET \"Order\".\"BillingAddressID\" = \"BillingAddress\".\"ID\"
@@ -48,7 +51,7 @@ class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask{
 				AND
 				(\"BillingAddress\".\"OrderID\" IS NOT NULL AND \"BillingAddress\".\"OrderID\" > 0)
 		");
-		DB::query("
+        DB::query("
 			UPDATE \"Order\"
 				INNER JOIN \"ShippingAddress\" ON \"Order\".\"ShippingAddressID\" = \"ShippingAddress\".\"ID\"
 			SET \"ShippingAddress\".\"OrderID\" = \"Order\".\"ID\"
@@ -57,7 +60,7 @@ class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask{
 				AND
 				(\"Order\".\"ShippingAddressID\" IS NOT NULL AND \"Order\".\"ShippingAddressID\" > 0)
 		");
-		DB::query("
+        DB::query("
 			UPDATE \"Order\"
 				INNER JOIN \"ShippingAddress\" ON \"ShippingAddress\".\"OrderID\" = \"Order\".\"ID\"
 			SET \"Order\".\"ShippingAddressID\" = \"ShippingAddress\".\"ID\"
@@ -66,8 +69,8 @@ class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask{
 				AND
 				(\"ShippingAddress\".\"OrderID\" IS NOT NULL AND \"ShippingAddress\".\"OrderID\" > 0)
 		");
-		if($verbose){
-			DB::alteration_message("Linking Order to Billing and Shipping Address on both sides");
-		}
-	}
+        if ($verbose) {
+            DB::alteration_message("Linking Order to Billing and Shipping Address on both sides");
+        }
+    }
 }

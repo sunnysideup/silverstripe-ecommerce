@@ -13,69 +13,70 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class OrderStatusLogForm extends Form {
+class OrderStatusLogForm extends Form
+{
 
-	/**
-	 *
-	 * @var Order
-	 */
-	protected $order;
+    /**
+     *
+     * @var Order
+     */
+    protected $order;
 
 
-	/**
-	 *NOTE: we semi-enforce using the OrderLog_Controller here to deal with the submission of the OrderStatusLogForm
-	 * You can use your own Logs or an extension of OrderLog_Controller by setting the first parameter (optionalController)
-	 * to your own controller.
-	 *
-	 *@param $optionalController Controller
-	 *@param $name String
-	 *@param $fields FieldList
-	 *@param $actions FieldList
-	 *@param $validator Validator
-	 **/
+    /**
+     *NOTE: we semi-enforce using the OrderLog_Controller here to deal with the submission of the OrderStatusLogForm
+     * You can use your own Logs or an extension of OrderLog_Controller by setting the first parameter (optionalController)
+     * to your own controller.
+     *
+     *@param $optionalController Controller
+     *@param $name String
+     *@param $fields FieldList
+     *@param $actions FieldList
+     *@param $validator Validator
+     **/
 
-	function __construct(
-		Controller $optionalController = null,
-		$name, FieldList $fields,
-		FieldList $actions,
-		Validator $optionalValidator = null
-	){
-		if(!$optionalController) {
-			$controllerClassName = EcommerceConfig::get("OrderStatusLogForm", "controller_class");
-			$optionalController = new $controllerClassName();
-		}
-		if(!$optionalValidator) {
-			$validatorClassName = EcommerceConfig::get("OrderStatusLogForm", "validator_class");
-			$optionalValidator = new $validatorClassName();
-		}
-		parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
+    public function __construct(
+        Controller $optionalController = null,
+        $name, FieldList $fields,
+        FieldList $actions,
+        Validator $optionalValidator = null
+    ) {
+        if (!$optionalController) {
+            $controllerClassName = EcommerceConfig::get("OrderStatusLogForm", "controller_class");
+            $optionalController = new $controllerClassName();
+        }
+        if (!$optionalValidator) {
+            $validatorClassName = EcommerceConfig::get("OrderStatusLogForm", "validator_class");
+            $optionalValidator = new $validatorClassName();
+        }
+        parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
 
-		//extension point
-		$this->extend('updateFields', $fields); $this->setFields($fields);
-		$this->extend('updateActions', $actions); $this->setActions($actions);
-		$this->extend('updateValidator', $optionalValidator); $this->setValidator($optionalValidator);
+        //extension point
+        $this->extend('updateFields', $fields);
+        $this->setFields($fields);
+        $this->extend('updateActions', $actions);
+        $this->setActions($actions);
+        $this->extend('updateValidator', $optionalValidator);
+        $this->setValidator($optionalValidator);
 
-		$this->setAttribute("autocomplete", "off");
-		Requirements::themedCSS($this->ClassName, 'ecommerce');
-		Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
-		//add JS for the Log - added in Log
-		$oldData = Session::get("FormInfo.{$this->FormName()}.data");
-		if($oldData && (is_array($oldData) || is_object($oldData))) {
-			$this->loadDataFrom($oldData);
-		}
-		$this->extend('updateOrderStatusLogForm',$this);
-	}
+        $this->setAttribute("autocomplete", "off");
+        Requirements::themedCSS($this->ClassName, 'ecommerce');
+        Requirements::javascript(THIRDPARTY_DIR."/jquery-form/jquery.form.js");
+        //add JS for the Log - added in Log
+        $oldData = Session::get("FormInfo.{$this->FormName()}.data");
+        if ($oldData && (is_array($oldData) || is_object($oldData))) {
+            $this->loadDataFrom($oldData);
+        }
+        $this->extend('updateOrderStatusLogForm', $this);
+    }
 
-	/**
-	 * saves the form into session
-	 * @param Array $data - data from form.
-	 */
-	public function saveDataToSession(){
-		$data = $this->getData();
-		Session::set("FormInfo.{$this->FormName()}.data", $data);
-	}
-
+    /**
+     * saves the form into session
+     * @param Array $data - data from form.
+     */
+    public function saveDataToSession()
+    {
+        $data = $this->getData();
+        Session::set("FormInfo.{$this->FormName()}.data", $data);
+    }
 }
-
-
-

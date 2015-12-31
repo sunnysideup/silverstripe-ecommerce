@@ -2,20 +2,22 @@
 
 
 
-abstract class EcommercePayment_Result extends Object {
+abstract class EcommercePayment_Result extends Object
+{
 
-	protected $value;
+    protected $value;
 
-	function __construct($value = null) {
-		$this->value = $value;
-	}
+    public function __construct($value = null)
+    {
+        $this->value = $value;
+    }
 
-	function getValue() {
-		return $this->value;
-	}
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	abstract function isSuccess();
+    abstract public function isSuccess();
 
-	abstract function isProcessing();
-
+    abstract public function isProcessing();
 }

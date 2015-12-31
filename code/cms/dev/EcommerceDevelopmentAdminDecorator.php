@@ -12,22 +12,21 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceDevelopmentAdminDecorator extends Extension{
+class EcommerceDevelopmentAdminDecorator extends Extension
+{
 
 
-	private static $allowed_actions = array(
-		"ecommerce"
-	);
+    private static $allowed_actions = array(
+        "ecommerce"
+    );
 
-	/**
-	 * handles ecommerce request or provide options to run request in the form of HTML output.
-	 * @param SS_HTTPRequest
-	 * @return HTML
-	 **/
-	function ecommerce(SS_HTTPRequest $request) {
-		return EcommerceDatabaseAdmin::create();
-	}
-
+    /**
+     * handles ecommerce request or provide options to run request in the form of HTML output.
+     * @param SS_HTTPRequest
+     * @return HTML
+     **/
+    public function ecommerce(SS_HTTPRequest $request)
+    {
+        return EcommerceDatabaseAdmin::create();
+    }
 }
-
-

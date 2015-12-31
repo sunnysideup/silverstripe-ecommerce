@@ -8,12 +8,13 @@
  * @package: ecommerce
  **/
 
-interface EditableEcommerceObject {
+interface EditableEcommerceObject
+{
 
-	/**
-	 * returns the link to edit the object
-	 * @param String | Null $action
-	 * @return String
-	 */
-	function CMSEditLink($action = null);
+    /**
+     * returns the link to edit the object
+     * @param String | Null $action
+     * @return String
+     */
+    public function CMSEditLink($action = null);
 }

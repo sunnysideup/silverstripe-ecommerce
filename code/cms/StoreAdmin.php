@@ -10,63 +10,64 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class StoreAdmin extends ModelAdminEcommerceBaseClass{
+class StoreAdmin extends ModelAdminEcommerceBaseClass
+{
 
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	private static $url_segment = 'shop';
+    /**
+     * standard SS variable
+     * @var String
+     */
+    private static $url_segment = 'shop';
 
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	private static $menu_title = "Shop Settings";
-
-
-	/**
-	 * standard SS variable
-	 * @var Int
-	 */
-	private static $menu_priority = 3.3;
-
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	private static $menu_icon = "ecommerce/images/icons/cart-file.gif";
+    /**
+     * standard SS variable
+     * @var String
+     */
+    private static $menu_title = "Shop Settings";
 
 
-	function init() {
-		parent::init();
-	}
+    /**
+     * standard SS variable
+     * @var Int
+     */
+    private static $menu_priority = 3.3;
+
+    /**
+     * standard SS variable
+     * @var String
+     */
+    private static $menu_icon = "ecommerce/images/icons/cart-file.gif";
 
 
-	/**
-	 *
-	 *@return String (URLSegment)
-	 **/
-	function urlSegmenter() {
-		return $this->config()->get("url_segment");
-	}
+    public function init()
+    {
+        parent::init();
+    }
+
+
+    /**
+     *
+     *@return String (URLSegment)
+     **/
+    public function urlSegmenter()
+    {
+        return $this->config()->get("url_segment");
+    }
 
 
 
-	/**
-	 * @return array Map of class name to an array of 'title' (see {@link $managed_models})
-	 * we make sure that the EcommerceDBConfig is FIRST
-	 */
-	function getManagedModels() {
-		$models = parent::getManagedModels();
-		$ecommerceDBConfig = isset($models["EcommerceDBConfig"]) ? $models["EcommerceDBConfig"] : null;
-		if($ecommerceDBConfig) {
-			unset($models["EcommerceDBConfig"]);
-			return array("EcommerceDBConfig" => $ecommerceDBConfig) + $models;
-		}
-		return $models;
-	}
-
+    /**
+     * @return array Map of class name to an array of 'title' (see {@link $managed_models})
+     * we make sure that the EcommerceDBConfig is FIRST
+     */
+    public function getManagedModels()
+    {
+        $models = parent::getManagedModels();
+        $ecommerceDBConfig = isset($models["EcommerceDBConfig"]) ? $models["EcommerceDBConfig"] : null;
+        if ($ecommerceDBConfig) {
+            unset($models["EcommerceDBConfig"]);
+            return array("EcommerceDBConfig" => $ecommerceDBConfig) + $models;
+        }
+        return $models;
+    }
 }
-
-

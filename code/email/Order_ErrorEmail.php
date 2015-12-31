@@ -13,12 +13,12 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class Order_ErrorEmail extends Order_Email {
+class Order_ErrorEmail extends Order_Email
+{
 
 
-	/**
-	 * @param string $ss_template The name of the used template (without *.ss extension)
-	 */
-	protected $ss_template = "Order_ErrorEmail";
-
+    /**
+     * @param string $ss_template The name of the used template (without *.ss extension)
+     */
+    protected $ss_template = "Order_ErrorEmail";
 }

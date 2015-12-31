@@ -17,81 +17,98 @@
  * @sub-package: model
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class OrderStatusLog_PaymentCheck extends OrderStatusLog {
+class OrderStatusLog_PaymentCheck extends OrderStatusLog
+{
 
-	private static $defaults = array(
-		"InternalUseOnly" => true
-	);
+    private static $defaults = array(
+        "InternalUseOnly" => true
+    );
 
-	private static $db = array(
-		'PaymentConfirmed' => "Boolean",
-	);
+    private static $db = array(
+        'PaymentConfirmed' => "Boolean",
+    );
 
-	/**
-	 * Standard SS method
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	public function canDelete($member = null) {
-		return false;
-	}
+    /**
+     * Standard SS method
+     * @param Member $member
+     * @return Boolean
+     */
+    public function canDelete($member = null)
+    {
+        return false;
+    }
 
-	private static $searchable_fields = array(
-		'OrderID' => array(
-			'field' => 'NumericField',
-			'title' => 'Order Number'
-		),
-		"PaymentConfirmed" => true
-	);
+    private static $searchable_fields = array(
+        'OrderID' => array(
+            'field' => 'NumericField',
+            'title' => 'Order Number'
+        ),
+        "PaymentConfirmed" => true
+    );
 
-	private static $summary_fields = array(
-		"Created" => "Date",
-		"Author.Title" => "Checked by",
-		"PaymentConfirmedNice" => "Payment Confirmed"
-	);
+    private static $summary_fields = array(
+        "Created" => "Date",
+        "Author.Title" => "Checked by",
+        "PaymentConfirmedNice" => "Payment Confirmed"
+    );
 
-	private static $casting = array(
-		"PaymentConfirmedNice" => "Varchar"
-	);
+    private static $casting = array(
+        "PaymentConfirmedNice" => "Varchar"
+    );
 
-	function PaymentConfirmedNice() {return $this->getPaymentConfirmedNice();}
-	function getPaymentConfirmedNice() {if($this->PaymentConfirmed) {return _t("OrderStatusLog.YES", "yes");}return _t("OrderStatusLog.No", "no");}
+    public function PaymentConfirmedNice()
+    {
+        return $this->getPaymentConfirmedNice();
+    }
+    public function getPaymentConfirmedNice()
+    {
+        if ($this->PaymentConfirmed) {
+            return _t("OrderStatusLog.YES", "yes");
+        }
+        return _t("OrderStatusLog.No", "no");
+    }
 
-	private static $singular_name = "Payment Confirmation";
-		function i18n_singular_name() { return _t("OrderStatusLog.PAYMENTCONFIRMATION", "Payment Confirmation");}
+    private static $singular_name = "Payment Confirmation";
+    public function i18n_singular_name()
+    {
+        return _t("OrderStatusLog.PAYMENTCONFIRMATION", "Payment Confirmation");
+    }
 
-	private static $plural_name = "Payment Confirmations";
-		function i18n_plural_name() { return _t("OrderStatusLog.PAYMENTCONFIRMATIONS", "Payment Confirmations");}
+    private static $plural_name = "Payment Confirmations";
+    public function i18n_plural_name()
+    {
+        return _t("OrderStatusLog.PAYMENTCONFIRMATIONS", "Payment Confirmations");
+    }
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		$fields->removeByName("Title");
-		$fields->removeByName("Note");
-		$fields->addFieldToTab(
-			'Root.Main',
-			new CheckboxField("PaymentConfirmed", _t("OrderStatusLog.CONFIRMED", "Payment is confirmed"))
-		);
-		return $fields;
-	}
-
-
-	/**
-	*
-	*@return String
-	**/
-	function CustomerNote(){return $this->getCustomerNote();}
-	function getCustomerNote() {
-		if($this->Author()) {
-			if($this->PaymentConfirmed) {
-				return _t("OrderStatusLog.PAYMENTCONFIRMEDBY", "Payment Confirmed by: ").$this->Author()->getTitle()." | ".$this->Created;
-			}
-			else {
-				return _t("OrderStatusLog.PAYMENTDECLINEDBY", "Payment DECLINED by: ").$this->Author()->getTitle()." | ".$this->Created;
-			}
-		}
-	}
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->removeByName("Title");
+        $fields->removeByName("Note");
+        $fields->addFieldToTab(
+            'Root.Main',
+            new CheckboxField("PaymentConfirmed", _t("OrderStatusLog.CONFIRMED", "Payment is confirmed"))
+        );
+        return $fields;
+    }
 
 
+    /**
+    *
+    *@return String
+    **/
+    public function CustomerNote()
+    {
+        return $this->getCustomerNote();
+    }
+    public function getCustomerNote()
+    {
+        if ($this->Author()) {
+            if ($this->PaymentConfirmed) {
+                return _t("OrderStatusLog.PAYMENTCONFIRMEDBY", "Payment Confirmed by: ").$this->Author()->getTitle()." | ".$this->Created;
+            } else {
+                return _t("OrderStatusLog.PAYMENTDECLINEDBY", "Payment DECLINED by: ").$this->Author()->getTitle()." | ".$this->Created;
+            }
+        }
+    }
 }
-
-

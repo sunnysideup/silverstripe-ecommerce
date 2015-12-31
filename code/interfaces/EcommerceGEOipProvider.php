@@ -1,18 +1,18 @@
 <?php
 
 
-interface EcommerceGEOipProvider {
+interface EcommerceGEOipProvider
+{
 
-	/**
-	 * returns a country code of the current user...
-	 * @return String
-	 */
-	public function getCountry();
+    /**
+     * returns a country code of the current user...
+     * @return String
+     */
+    public function getCountry();
 
-	/**
-	 * returns a country code of the current user...
-	 * @return String
-	 */
-	public function getIP();
-
+    /**
+     * returns a country code of the current user...
+     * @return String
+     */
+    public function getIP();
 }

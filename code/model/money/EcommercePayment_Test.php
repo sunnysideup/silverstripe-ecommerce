@@ -7,12 +7,11 @@
  * @package ecommerce
  * @subpackage payment
  */
-class EcommercePayment_Test extends EcommercePayment {
+class EcommercePayment_Test extends EcommercePayment
+{
 
-	function getPaymentFormRequirements() {
-		return null;
-	}
+    public function getPaymentFormRequirements()
+    {
+        return null;
+    }
 }
-
-
-

@@ -11,48 +11,46 @@
  **/
 
 
-class EcommerceTaskSetDefaultProductGroupValues extends BuildTask {
+class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
+{
 
 
-	protected $title = "Set Default Product Group Values";
+    protected $title = "Set Default Product Group Values";
 
-	protected $description = "Set default product group values such as DefaultSortOrder.";
+    protected $description = "Set default product group values such as DefaultSortOrder.";
 
-	protected $fieldsToCheck = array(
-		"SORT" => "DefaultSortOrder",
-		"FILTER" => "DefaultFilter",
-		"DISPLAY" => "DisplayStyle"
-	);
+    protected $fieldsToCheck = array(
+        "SORT" => "DefaultSortOrder",
+        "FILTER" => "DefaultFilter",
+        "DISPLAY" => "DisplayStyle"
+    );
 
-	function run($request) {
-		$productGroup = ProductGroup::get()->First();
-		if($productGroup) {
-			foreach($this->fieldsToCheck as $method => $fieldName) {
-				$acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));
-				$this->checkField($fieldName, $acceptableValuesArray, "inherit");
-			}
-		}
-		else {
-			DB::alteration_message("There are no ProductGroup pages to correct", 'created');
-		}
-	}
+    public function run($request)
+    {
+        $productGroup = ProductGroup::get()->First();
+        if ($productGroup) {
+            foreach ($this->fieldsToCheck as $method => $fieldName) {
+                $acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));
+                $this->checkField($fieldName, $acceptableValuesArray, "inherit");
+            }
+        } else {
+            DB::alteration_message("There are no ProductGroup pages to correct", 'created');
+        }
+    }
 
-	protected function checkField($fieldName, $acceptableValuesArray, $resetValue) {
-		$faultyProductGroups = ProductGroup::get()
-			->exclude(array($fieldName =>  $acceptableValuesArray));
-		if($faultyProductGroups->count()) {
-			foreach($faultyProductGroups as $faultyProductGroup) {
-				$faultyProductGroup->$fieldName = $resetValue;
-				$faultyProductGroup->writeToStage('Stage');
-				$faultyProductGroup->publish('Stage', 'Live');
-				DB::alteration_message("Reset $fieldName for ".$faultyProductGroup->Title, 'created');
-			}
-		}
-		else {
-			DB::alteration_message("Could not find any faulty records for ProductGroup.$fieldName");
-		}
-	}
-
-
+    protected function checkField($fieldName, $acceptableValuesArray, $resetValue)
+    {
+        $faultyProductGroups = ProductGroup::get()
+            ->exclude(array($fieldName =>  $acceptableValuesArray));
+        if ($faultyProductGroups->count()) {
+            foreach ($faultyProductGroups as $faultyProductGroup) {
+                $faultyProductGroup->$fieldName = $resetValue;
+                $faultyProductGroup->writeToStage('Stage');
+                $faultyProductGroup->publish('Stage', 'Live');
+                DB::alteration_message("Reset $fieldName for ".$faultyProductGroup->Title, 'created');
+            }
+        } else {
+            DB::alteration_message("Could not find any faulty records for ProductGroup.$fieldName");
+        }
+    }
 }
-

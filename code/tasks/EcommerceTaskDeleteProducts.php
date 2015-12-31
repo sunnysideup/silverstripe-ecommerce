@@ -9,35 +9,35 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceTaskDeleteProducts extends BuildTask{
+class EcommerceTaskDeleteProducts extends BuildTask
+{
 
-	private static $allowed_actions = array(
-		'*' => 'ADMIN'
-	);
+    private static $allowed_actions = array(
+        '*' => 'ADMIN'
+    );
 
-	protected $title = "Delete e-commerce Buyables";
+    protected $title = "Delete e-commerce Buyables";
 
-	protected $description = "Removes all Buyables (Products) from the database.";
+    protected $description = "Removes all Buyables (Products) from the database.";
 
-	function run($request){
-		$arrayOfBuyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
-		foreach($arrayOfBuyables as $buyable) {
-			$allproducts = $buyable::get();
-			if($allproducts->count()){
-				foreach($allproducts as $product){
-					DB::alteration_message("Deleting ".$product->ClassName." ID = ".$product->ID, "deleted");
-					if(is_a($product, Object::getCustomClass("SiteTree"))) {
-						$product->deleteFromStage('Live');
-						$product->deleteFromStage('Stage');
-					}
-					else {
-						$product->delete();
-					}
-					$product->destroy();
-					//TODO: remove versions
-				}
-			}
-		}
-	}
-
+    public function run($request)
+    {
+        $arrayOfBuyables = EcommerceConfig::get("EcommerceDBConfig", "array_of_buyables");
+        foreach ($arrayOfBuyables as $buyable) {
+            $allproducts = $buyable::get();
+            if ($allproducts->count()) {
+                foreach ($allproducts as $product) {
+                    DB::alteration_message("Deleting ".$product->ClassName." ID = ".$product->ID, "deleted");
+                    if (is_a($product, Object::getCustomClass("SiteTree"))) {
+                        $product->deleteFromStage('Live');
+                        $product->deleteFromStage('Stage');
+                    } else {
+                        $product->delete();
+                    }
+                    $product->destroy();
+                    //TODO: remove versions
+                }
+            }
+        }
+    }
 }
