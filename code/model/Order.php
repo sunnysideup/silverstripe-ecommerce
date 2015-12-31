@@ -517,7 +517,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 				$shopAdmins = $group->Members();
 				if($shopAdmins->count()) {
 					$shopAdminArray += $shopAdmins->map("ID", "Name")->toArray();
-				}	
+				}
 			}
 			$shopAdminArray += array(
 				$currentMember->ID => $currentMember->getName()
@@ -1821,6 +1821,16 @@ class Order extends DataObject implements EditableEcommerceObject {
 	public function IsInSession(){
 		$sessionVariableName = EcommerceConfig::get("ShoppingCart", "session_code")."_OrderID";
 		return ($this->ID && $this->ID == Session::get($sessionVariableName)) ? true : false;
+	}
+
+	/**
+	 *
+	 *
+	 * @return string
+	 */
+	public function LessSecureSessionID($size = 7){
+		$randomNumber = rand(0, (32-$size));
+		return substr($randomNumber, $randomNumber, $size);
 	}
 
 	/**
