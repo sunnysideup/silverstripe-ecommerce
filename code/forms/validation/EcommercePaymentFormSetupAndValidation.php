@@ -123,7 +123,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 			return false;
 		}
 		// Check payment, get the result back
-		debug::log("validatePayment".$this->paymentObject->ID);
 		return $this->paymentObject->validatePayment($data, $form);
 	}
 
@@ -220,7 +219,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		}
 		else {
 			$this->paymentObject->write();
-			debug::log("validateAndSaveCreditCardInformation".$this->paymentObject->ID);
 			return true;
 		}
 	}
@@ -263,7 +261,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 			return false;
 		}
 		else {
-			debug::log("processPaymentFormAndReturnNextStep".$this->paymentObject->ID);
 			if($result->isProcessing()) {
 				//IMPORTANT!!!
 				// isProcessing(): Long payment process redirected to another website (PayPal, Worldpay)

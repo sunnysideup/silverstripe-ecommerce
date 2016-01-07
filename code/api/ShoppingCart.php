@@ -214,7 +214,7 @@ class ShoppingCart extends Object{
 				$this->order->calculateOrderAttributes($force = false);
 			}
 			if($this->order && !$this->order->SessionID) {
-				$this->order->SessionID = session_id();
+				//add session ID...
 				$this->order->write();
 			}
 		}

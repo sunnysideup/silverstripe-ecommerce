@@ -177,7 +177,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * Standard SS variable.
-	 * @var String
+	 * @var string
 	 */
 	private static $description = "A step that any order goes through.";
 
@@ -185,13 +185,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	/**
 	 * SUPER IMPORTANT TO KEEP ORDER!
 	 * standard SS variable
-	 * @return String
+	 * @return string
 	 */
 	private static $default_sort = "\"Sort\" ASC";
 
 	/**
 	 * turns code into ID
-	 * @param String $code
+	 * @param string $code
+	 *
 	 * @param Int
 	 */
 	public static function get_status_id_from_code($code) {
@@ -507,12 +508,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @param string $subject
 	 * @param string $message
 	 * @param boolean $resend
-	 * @param boolean $adminOnly
+	 * @param boolean | string $toAdminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
 	 * @param string $emailClassName
 	 *
 	 * @return boolean;
 	 */
-	protected function sendEmailForStep($order, $subject, $message = "", $resend = false, $adminOnly = false, $emailClassName = ""){
+	protected function sendEmailForStep($order, $subject, $message = "", $resend = false, $adminOnlyOrToEmail = false, $emailClassName = ""){
 		if(!$this->hasBeenSent($order)) {
 			if(!$subject) {
 				$subject = $this->EmailSubject;
@@ -521,7 +522,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 				$emailClassName = $this->getEmailClassName();
 			}
 			if($this->SendDetailsToCustomer){
-				return $order->sendEmail($subject, $message, $resend, $adminOnly, $emailClassName);
+				return $order->sendEmail(
+					$subject,
+					$message,
+					$resend,
+					$toAdminOnlyOrToEmail,
+					$emailClassName
+				);
 			}
 			else {
 				//looks like we are sending an error, but we are just using this for notification
@@ -683,7 +690,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * returns the OrderStatusLog that is relevant to this step.
 	 *
 	 * @param Order $order
-	 * 
+	 *
 	 * @return OrderStatusLog | Null
 	 */
 	public function RelevantLogEntry(Order $order){
@@ -774,6 +781,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 */
 	function onBeforeDelete() {
 		parent::onBeforeDelete();
+		$previousOrderStepObject = null;
 		$nextOrderStepObject = $this->NextOrderStep();
 		//backup
 		if($nextOrderStepObject) {

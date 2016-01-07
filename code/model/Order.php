@@ -509,13 +509,23 @@ class Order extends DataObject implements EditableEcommerceObject {
 			}
 			$cancelledField = $fields->dataFieldByName("CancelledByID");
 			$fields->removeByName("CancelledByID");
+			$shopAdminArray = array(
+				0 => "--- "._t("Order.NOT_CANCELLED", "Not Cancelled")." ---",
+				$member->ID => $member->getName()
+			);
+			if($group = EcommerceRole::get_admin_group()) {
+				$shopAdmins = $group->Members();
+				if($shopAdmins->count()) {
+					$shopAdminArray += $shopAdmins->map("ID", "Name")->toArray();
+				}
+			}
+			$shopAdminArray += array(
+				$currentMember->ID => $currentMember->getName()
+			);
 			$fields->addFieldToTab("Root.Cancellation", DropdownField::create(
 				"CancelledByID",
 				$cancelledField->Title(),
-				array(
-					0 => "--- "._t("Order.NOT_CANCELLED", "Not Cancelled")." ---",
-					$currentMember->ID => _t("Order.CANCELLED_BY", "Cancelled By")." ".$currentMember->getName()
-				)
+				$shopAdminArray
 			));
 			$fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());
 			$submissionLog = $this->SubmissionLog();
@@ -655,7 +665,12 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return GridField
 	 **/
-	public function getOrderStatusLogsTableField($sourceClass = "OrderStatusLog", $title = "", FieldList $fieldList = null, FieldList $detailedFormFields = null) {
+	public function getOrderStatusLogsTableField(
+		$sourceClass = "OrderStatusLog",
+		$title = "",
+		FieldList $fieldList = null,
+		FieldList $detailedFormFields = null
+	) {
 		$gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
 			new GridFieldAddNewButton('toolbar-header-right'),
 			new GridFieldDetailForm()
@@ -793,24 +808,35 @@ class Order extends DataObject implements EditableEcommerceObject {
 		return $this;
 	}
 
+	/**
+	 *
+	 * @var boolean
+	 */
+	private static $_try_to_finalise_order_is_running = false;
 
 	/**
 	 * Goes through the order steps and tries to "apply" the next status to the order.
 	 *
+	 * @param boolean $runAgain
 	 **/
-	public function tryToFinaliseOrder() {
-		if($this->CancelledByID) {
-			$this->Archive();
-			return;
+	public function tryToFinaliseOrder($runAgain = false) {
+		if(!self::$_try_to_finalise_order_is_running || $runAgain) {
+			self::$_try_to_finalise_order_is_running = true;
+			if($this->CancelledByID) {
+				$this->Archive(true);
+				return;
+			}
+			do {
+				//status of order is being progressed
+				$nextStatusID = $this->doNextStatus();
+				//a little hack to make sure we do not rely on a stored value
+				//of "isSubmitted"
+				$this->isSubmittedTempVar = -1;
+			}
+			while ($nextStatusID);
+			//release ... to run again ...
+			self::$_try_to_finalise_order_is_running = false;
 		}
-		do {
-			//status of order is being progressed
-			$nextStatusID = $this->doNextStatus();
-			//a little hack to make sure we do not rely on a stored value
-			//of "isSubmitted"
-			$this->isSubmittedTempVar = -1;
-		}
-		while ($nextStatusID);
 	}
 
 	/**
@@ -838,9 +864,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 */
 	public function Cancel(Member $member, $reason = "") {
 		$this->CancelledByID = $member->ID;
-		if(!$this->Archive()) {
-			$this->write();
-		}
+		//archive and write
+		$this->Archive();
+		//create log ...
 		$log = OrderStatusLog_Cancel::create();
 		$log->AuthorID = $member->ID;
 		$log->OrderID = $this->ID;
@@ -853,9 +879,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * returns true if successful
-	 * 
+	 *
 	 * @param boolean $avoidWrites
-	 * 
+	 *
 	 * @return Boolean
 	 */
 	public function Archive($avoidWrites = false) {
@@ -1017,6 +1043,24 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		return false;
 	}
+
+	/**
+	 * shows payments that are meaningfull
+	 * if the order has been paid then only show successful payments
+	 *
+	 * @return DataList
+	 */
+	function RelevantPayments() {
+		if($this->IsPaid()) {
+			return $this->Payments("\"Status\" = 'Success'");
+			//EcommercePayment::get()->
+			//	filter(array("OrderID" => $this->ID, "Status" => "Success"));
+		}
+		else {
+			return $this->Payments();
+		}
+	}
+
 
 	/**
 	 * Has the order been cancelled?
@@ -1293,19 +1337,25 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @param String $emailClassName - the class name of the email you wish to send
 	 * @param String $subject - email subject
-	 * @param Boolean $copyToAdmin - true by default, whether it should send a copy to the admin
-	 * @param Boolean $resend - sends the email even it has been sent before.
-	 * @param Boolean $adminOnly - sends the email to the ADMIN ONLY.
+	 * @param boolean $copyToAdmin - true by default, whether it should send a copy to the admin
+	 * @param boolean $resend - sends the email even it has been sent before.
+	 * @param boolean | string $toAdminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $adminOnly = false) {
+	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $toAdminOnlyOrToEmail = false) {
 		$arrayData = $this->createReplacementArrayForEmail($message, $subject);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
-		if($adminOnly) {
-			$to = Order_Email::get_from_email();
+		if($toAdminOnlyOrToEmail) {
+			if (filter_var($toAdminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
+				$to = $toAdminOnlyOrToEmail;
+				// invalid e-mail address
+			}
+			else {
+				$to = Order_Email::get_from_email();
+			}
 		}
 		else {
 			$to = $this->getOrderEmail();
@@ -1781,7 +1831,19 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function IsInSession(){
-		return ($this->SessionID && $this->SessionID == session_id()) ? true : false;
+		$sessionVariableName = EcommerceConfig::get("ShoppingCart", "session_code")."_OrderID";
+		return ($this->ID && $this->ID == Session::get($sessionVariableName)) ? true : false;
+	}
+
+	/**
+	 * returns a pseudo random part of the session id
+	 * @param int $size
+	 *
+	 * @return string
+	 */
+	public function LessSecureSessionID($size = 7){
+		$randomNumber = rand(0, (32-$size));
+		return substr($this->SessionID, $randomNumber, $size);
 	}
 
 	/**
@@ -2007,9 +2069,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	function RetrieveLink(){return $this->getRetrieveLink();}
 	function getRetrieveLink() {
 		if($this->IsSubmitted()) {
-			//add session if not added yet...
+			//add session ID if not added yet...
 			if(!$this->SessionID) {
-				$this->SessionID = substr(md5(microtime()),0,32);
 				$this->write();
 			}
 			return Director::AbsoluteURL(OrderConfirmationPage::find_link())."retrieveorder/".$this->SessionID."/".$this->ID."/";
@@ -2801,6 +2862,11 @@ class Order extends DataObject implements EditableEcommerceObject {
 		parent::onBeforeWrite();
 		if(! $this->CurrencyUsedID) {
 			$this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
+		}
+		if(!$this->SessionID) {
+			$generator = Injector::inst()->create('RandomGenerator');
+			$token = $generator->randomToken('sha1');
+			$this->SessionID = substr($token, 0, 32);
 		}
 	}
 
