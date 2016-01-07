@@ -637,14 +637,14 @@ class Product extends Page implements BuyableModel {
 	 **/
 	public function OrderItem() {
 		//work out the filter
-		$filter = "";
+		$filterArray = array();
 		$extendedFilter = $this->extend('updateItemFilter', $filter);
 		if($extendedFilter !== null && is_array($extendedFilter) && count($extendedFilter)) {
-			$filter = $extendedFilter;
+			$filterArray = $extendedFilter;
 		}
 		//make the item and extend
-		$item = ShoppingCart::singleton()->findOrMakeItem($this, $filter);
-		$this->extend('updateDummyItem',$item);
+		$item = ShoppingCart::singleton()->findOrMakeItem($this, $filterArray);
+		$this->extend('updateDummyItem', $item);
 		return $item;
 	}
 
@@ -810,7 +810,7 @@ class Product extends Page implements BuyableModel {
 	protected function linkParameters($type = ""){
 		$array = array();
 		$extendedArray = $this->extend('updateLinkParameters', $array, $type);
-		if($extendedArray != null && is_array($extendedArray) && count($extendedArray)) {
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
 			foreach($extendedArray as $extendedArrayUpdate) {
 				$array += $extendedArrayUpdate;
 			}
@@ -922,13 +922,13 @@ class Product extends Page implements BuyableModel {
 			return false;
 		}
 		//check country
-		$extended = $this->extendedCan('canPurchaseByCountry', $member);
-		if($extended === null) {
+		$extendedArray = $this->extendedCan('canPurchaseByCountry', $member);
+		if($extendedArray === null) {
 			if(! EcommerceCountry::allow_sales()) {
 				return false;
 			}
 		}
-		else if($extended === false) {
+		else {
 			return false;
 		}
 		$price = $this->getCalculatedPrice();
@@ -936,9 +936,14 @@ class Product extends Page implements BuyableModel {
 			return false;
 		}
 		// Standard mechanism for accepting permission changes from decorators
-		$extended = $this->extendedCan('canPurchase', $member);
-		if($extended !== null) {
-			$allowpurchase = $extended;
+		$extendedArray = $this->extendedCan('canPurchase', $member);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				if($extendedResult === false) {
+					return false;
+				}
+			}
+			return true;
 		}
 		return $allowpurchase;
 	}

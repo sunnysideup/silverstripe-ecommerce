@@ -150,10 +150,10 @@ class OrderConfirmationPage extends CartPage{
 		$defaultLabels = parent::fieldLabels();
 		$newLabels = $this->customFieldLabels();
 		$labels = array_merge($defaultLabels, $newLabels);
-		$extendedLabels = $this->extend('updateFieldLabels', $labels);
-		if($extendedLabels !== null && is_array($extendedLabels) && count($extendedLabels)) {
-			foreach($extendedLabels as $extendedLabelsUpdate) {
-				return $labels += $extendedLabels;
+		$extendedArray = $this->extend('updateFieldLabels', $labels);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				return $labels += $extendedResult;
 			}
 		}
 		return $labels;

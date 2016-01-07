@@ -1677,8 +1677,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canCreate($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canCreate', $member);
-		if($extended !== null) {return $extended;}
+		$extendedArray = $this->extendedCan('canCreate', $member);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				if($extendedResult === false) {
+					return false;
+				}
+			}
+			return true;
+		}
 		if($member->exists()) {
 			return $member->IsShopAdmin();
 		}
@@ -1695,10 +1702,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		$member = $this->getMemberForCanFunctions($member);
 		//check if this has been "altered" in any DataExtension
-		$extended = $this->extendedCan('canView', $member);
+		$extendedArray = $this->extendedCan('canView', $member);
 		//if this method has been extended in a data object decorator then use this
-		if($extended !== null) {
-			return $extended;
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				if($extendedResult === false) {
+					return false;
+				}
+			}
+			return true;
 		}
 		//is the member is a shop admin they can always view it
 		if(EcommerceRole::current_member_is_shop_admin($member)) {
@@ -1784,8 +1796,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canEdit($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canEdit', $member);
-		if($extended !== null) {return $extended;}
+		$extendedArray = $this->extendedCan('canEdit', $member);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				if($extendedResult === false) {
+					return false;
+				}
+			}
+			return true;
+		}
 		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
 			return true;
 		}
@@ -1802,8 +1821,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canPay(Member $member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canPay', $member);
-		if($extended !== null) {return $extended;}
+		$extendedArray = $this->extendedCan('canPay', $member);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				if($extendedResult === false) {
+					return false;
+				}
+			}
+			return true;
+		}
 		if( $this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending() ) {
 			return false;
 		}
@@ -1821,8 +1847,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return false;
 		}
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canCancel', $member);
-		if($extended !== null) {return $extended;}
+		$extendedArray = $this->extendedCan('canCancel', $member);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				if($extendedResult === false) {
+					return false;
+				}
+			}
+			return true;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return $this->MyStep()->CustomerCanCancel && $this->canView($member);
 	}
@@ -1834,8 +1867,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canDelete($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extended = $this->extendedCan('canDelete', $member);
-		if($extended !== null) {return $extended;}
+		$extendedArray = $this->extendedCan('canDelete', $member);
+		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+			foreach($extendedArray as $extendedResult) {
+				if($extendedResult === false) {
+					return false;
+				}
+			}
+			return true;
+		}
 		if($this->IsSubmitted()){
 			return false;
 		}
@@ -1906,7 +1946,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		$extendedEmail = $this->extend('updateOrderEmail', $email);
 		if($extendedEmail !== null && is_array($extendedEmail) && count($extendedEmail)) {
-			$email = implode("", $extendedEmail[0]);
+			$email = implode(";", $extendedEmail);
 		}
 		return $email;
 	}
@@ -2071,7 +2111,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		$extendedTitle = $this->extend('updateTitle', $title);
 		if($extendedTitle !== null && is_array($extendedTitle) && count($extendedTitle)) {
-			$title = implode("", $extendedTitle);
+			$title = implode("; ", $extendedTitle);
 		}
 		return $title;
 	}
