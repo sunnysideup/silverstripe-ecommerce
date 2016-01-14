@@ -101,17 +101,19 @@ var EcomOrderFormWithShippingAddress = {
 
 	updateFields: function() {
 		//copy the billing address details to the shipping address details
-		var billingFieldSelector = "";
-		var shippingFieldSelector = "";
-		var billingFieldValue = "";
-		var shippingFieldValue = "";
-		for (i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
-			billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
-			shippingFieldSelector = EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
-			billingFieldValue = jQuery(billingFieldSelector).val();
-			shippingFieldValue = jQuery(shippingFieldSelector).val();
-			if((!shippingFieldValue && billingFieldValue) || EcomOrderFormWithShippingAddress.closed) {
-				jQuery(shippingFieldSelector).val(billingFieldValue).change();
+		if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
+			var billingFieldSelector = "";
+			var shippingFieldSelector = "";
+			var billingFieldValue = "";
+			var shippingFieldValue = "";
+			for (i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
+				billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
+				shippingFieldSelector = EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
+				billingFieldValue = jQuery(billingFieldSelector).val();
+				shippingFieldValue = jQuery(shippingFieldSelector).val();
+				if((!shippingFieldValue && billingFieldValue) || EcomOrderFormWithShippingAddress.closed) {
+					jQuery(shippingFieldSelector).val(billingFieldValue).change();
+				}
 			}
 		}
 	},
