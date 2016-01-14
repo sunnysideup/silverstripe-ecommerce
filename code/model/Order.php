@@ -1842,8 +1842,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return string
 	 */
 	public function LessSecureSessionID($size = 7, $start = null){
-		if($start == null) {
-			$start = rand(0, (32-$size));
+		if(!$start || $start < 0 || $start > (32-$size)) {
+			$start = 0;
 		}
 		return substr($this->SessionID, $start, $size);
 	}
