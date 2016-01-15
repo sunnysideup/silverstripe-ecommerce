@@ -196,6 +196,9 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 * @return Money
 	 */
 	public static function get_money_object_from_order_currency($price, Order $order = null) {
+		if($price instanceof Currency) {
+			$price = $price->getValue();
+		}
 		if(! $order) {
 			$order = ShoppingCart::current_order();
 		}
