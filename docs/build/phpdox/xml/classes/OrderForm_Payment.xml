@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="OrderForm_Payment" namespace="" name="OrderForm_Payment" abstract="false" final="false" start="3" end="98">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms" file="OrderForm_Payment.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/OrderForm_Payment.php" size="3321" time="2015-12-22T19:04:19+13:00" unixtime="1450764259" sha1="400df79a5428d2c6a95445ea2e28088ad917cb45" relative="code/forms/OrderForm_Payment.php"/>
+  <extends full="Form" namespace="" name="Form" unresolved="true"/>
+  <constructor name="__construct" start="11" end="53" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$controller">
+        <type full="Controller" namespace="" name="Controller"/>
+      </param>
+      <param type="object" variable="$name">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$order">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <param type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+    </docblock>
+    <parameter name="controller" byreference="false" type="object">
+      <type full="Controller" namespace="" name="Controller"/>
+    </parameter>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <parameter name="order" byreference="false" type="object">
+      <type full="Order" namespace="" name="Order"/>
+    </parameter>
+    <parameter name="returnToLink" byreference="false" type="string" default="''"/>
+    <inline>
+      <comment value="extension point" line="42"/>
+    </inline>
+  </constructor>
+  <method name="dopayment" start="62" end="85" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="array" variable="$data"/>
+      <param type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+      <return type="mixed"/>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="saveDataToSession" start="91" end="95" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="saves the form into session"/>
+      <param description="- data from form." type="object" variable="$data">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+    </docblock>
+  </method>
+</class>

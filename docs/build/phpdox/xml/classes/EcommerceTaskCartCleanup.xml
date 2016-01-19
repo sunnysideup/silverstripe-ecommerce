@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskCartCleanup" namespace="" name="EcommerceTaskCartCleanup" abstract="false" final="false" start="14" end="310">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskCartCleanup.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskCartCleanup.php" size="12693" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="bb94345891eaeb1e07e64a37bf6e03eff07d13c3" relative="code/tasks/EcommerceTaskCartCleanup.php"/>
+  <docblock>
+    <description/>
+    <description/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask" unresolved="true"/>
+  <member name="allowed_actions" type="array" default="" visibility="private" static="true" line="20">
+    <docblock>
+      <description compact="Standard SS Variable TODO: either remove or add to all tasks"/>
+    </docblock>
+  </member>
+  <member name="title" type="string" default="'Clear old carts'" visibility="protected" static="false" line="25"/>
+  <member name="description" type="string" default="&quot;Deletes abandonned carts (add ?limit=xxxx to the end of the URL to set the number of records (xxx = number of records) to be deleted in one load).&quot;" visibility="protected" static="false" line="27"/>
+  <member name="verbose" type="boolean" default="false" visibility="public" static="false" line="33">
+    <docblock>
+      <description compact="Output feedback about task?"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="run_on_demand" start="39" end="43" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="run in verbose mode"/>
+    </docblock>
+  </method>
+  <method name="runSilently" start="48" end="51" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="runs the task without output"/>
+    </docblock>
+  </method>
+  <method name="run" start="55" end="297" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="- number of carts destroyed" type="object">
+        <type full="Integer" namespace="" name="Integer"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="ABANDONNED CARTS" line="62"/>
+      <comment value="EMPTY ORDERS" line="117"/>
+      <comment value="CLEANING ONE-TO-ONES" line="174"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="***********************************************" line="175"/>
+      <comment value="CLEANING ONE-TO-MANY" line="239"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="************************************************" line="240"/>
+    </inline>
+  </method>
+  <method name="flush" start="299" end="302" abstract="false" final="false" static="false" visibility="private"/>
+  <method name="deleteObject" start="304" end="307" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="objectToDelete" byreference="false" type="{unknown}"/>
+  </method>
+</class>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceSideReport_NoPriceProducts" namespace="" name="EcommerceSideReport_NoPriceProducts" abstract="false" final="false" start="391" end="456">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/reports" file="EcommerceSideReport.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/reports/EcommerceSideReport.php" size="11076" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="44303863f0fc3a72a6fbc82a5c4c141407d150bc" relative="code/reports/EcommerceSideReport.php"/>
+  <docblock>
+    <description compact="Selects all products without a price."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: reports"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="SS_Report" namespace="" name="SS_Report" unresolved="true"/>
+  <member name="dataClass" type="string" default="'Product'" visibility="protected" static="false" line="397">
+    <docblock>
+      <description compact="The class of object being managed by this report.">Set by overriding in your subclass.</description>
+    </docblock>
+  </member>
+  <method name="title" start="403" end="406" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="group" start="412" end="414" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="not sure if this is used in SS3"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="sort" start="421" end="423" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="- for sorting reports" type="object">
+        <type full="INT" namespace="" name="INT"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="sourceRecords" start="429" end="433" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="working out the items"/>
+      <return type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </return>
+    </docblock>
+    <parameter name="params" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="columns" start="439" end="446" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getParameterFields" start="452" end="454" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+  </method>
+</class>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommercePayment_Result" namespace="" name="EcommercePayment_Result" abstract="true" final="false" start="5" end="21">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/money" file="EcommercePayment_Result.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/money/EcommercePayment_Result.php" size="275" time="2015-12-16T11:19:57+13:00" unixtime="1450217997" sha1="39c9d3ffe55a15a00a7a55c60ee8b64babb44343" relative="code/model/money/EcommercePayment_Result.php"/>
+  <extends full="Object" namespace="" name="Object" unresolved="true"/>
+  <member name="value" visibility="protected" static="false" line="7"/>
+  <constructor name="__construct" start="9" end="11" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="value" byreference="false" type="{unknown}" default="" constant="null"/>
+  </constructor>
+  <method name="getValue" start="13" end="15" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="isSuccess" start="17" end="17" abstract="true" final="false" static="false" visibility="public"/>
+  <method name="isProcessing" start="19" end="19" abstract="true" final="false" static="false" visibility="public"/>
+  <extenders>
+    <extender full="EcommercePayment_Failure" namespace="" name="EcommercePayment_Failure"/>
+    <extender full="EcommercePayment_Processing" namespace="" name="EcommercePayment_Processing"/>
+    <extender full="EcommercePayment_Success" namespace="" name="EcommercePayment_Success"/>
+  </extenders>
+</class>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskLinkProductWithImages" namespace="" name="EcommerceTaskLinkProductWithImages" abstract="false" final="false" start="14" end="142">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskLinkProductsWithImages.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskLinkProductsWithImages.php" size="4519" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="6bb1b0e754070d7a9bb41e482354d8eb23777488" relative="code/tasks/EcommerceTaskLinkProductsWithImages.php"/>
+  <docblock>
+    <description compact="Add any Image (or other file) to a product using the InternalItemID"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask" unresolved="true"/>
+  <member name="title" type="string" default="&quot;Find product images&quot;" visibility="protected" static="false" line="16"/>
+  <member name="description" type="string" default="&quot;&#13;&#10;&#9;&#9;Finds product images (or other files) based on their name.&#13;&#10;&#9;&#9;That is, any image name [InteralItemID]_[two digits].[png/gif/jpg/pdf/(etc)] will automatically be linked to the product.&#13;&#10;&#9;&#9;For example SKUAAFF_1 or SKU_02.&#13;&#10;&#9;&#9;All files ending in a number from 00 to 99 will be added (e.g. 02, 5 or 55)&#13;&#10;&#9;&#9;Also SKUAAFF.jpg (without the standard ending with underscore and number) will be added to the product where InternalItemID equals SKUAAFF.&#13;&#10;&#9;&quot;" visibility="protected" static="false" line="18"/>
+  <member name="productManyManyField" type="string" default="&quot;AdditionalFiles&quot;" visibility="protected" static="false" line="32">
+    <docblock>
+      <description compact="In the default e-commerce, each product only has one image.">Many e-commerce sites, however, like to have more than one image per product.</description>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="start" type="integer" default="0" visibility="protected" static="false" line="40">
+    <docblock>
+      <description compact="Starting point for selecting products Usually starts at zero and goes up to the total number of products"/>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="limit" type="integer" default="100" visibility="protected" static="false" line="47">
+    <docblock>
+      <description compact="The number of products selected per cycle."/>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="verbose" type="boolean" default="true" visibility="public" static="false" line="54">
+    <docblock>
+      <description compact="output messages?"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="productID" type="integer" default="0" visibility="protected" static="false" line="56"/>
+  <method name="run" start="58" end="117" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="nextBatchLink" start="119" end="129" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="setProductID" start="131" end="133" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="id" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="Link" start="135" end="140" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+</class>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceConfig" namespace="" name="EcommerceConfig" abstract="false" final="false" start="57" end="128">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/config" file="EcommerceConfig.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/config/EcommerceConfig.php" size="3753" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="06e81d003e178318ba9e112ce9edb4960b6db150" relative="code/config/EcommerceConfig.php"/>
+  <docblock>
+    <description compact="This Class creates an array of configurations for e-commerce.">This class replaces static variables in individual classes, such as Blog::$allow_wysiwyg_editing</description>
+    <see value="http://en.wikipedia.org/wiki/YAML#Examples"/>
+    <see value="thirdparty/spyc/spyc.php"># HOW TO USE IT
+
+1. Copy ecommerce/_config/ecommerce.yml and move it your project folder, e.g. mysite/_config/ecommerce.yml
+In the copied file, set your configs as you see fit, using the YAML format.  E.g.
+
+Order:
+	Test: 1
+
+Next, include in ecommerce.yml file:
+&lt;code yml&gt;
+EcommerceConfig:
+  folder_and_file_locations:
+    - "mysite/_config/ecommerce.yml"
+    - "myotherconfig.yaml"
+&lt;/code&gt;
+
+Then, in individual classes, you can access configs like this:
+
+&lt;code&gt;
+EcommerceConfig::get("OrderAddress", "include_bla_bla_widget");
+&lt;/code&gt;
+
+OR
+
+&lt;code&gt;
+EcommerceConfig::get($this-&gt;ClassName, "include_bla_bla_widget");
+&lt;/code&gt;
+
+if you are using PHP 5.3.0+ then you can write this in a static method
+
+&lt;code&gt;
+EcommerceConfig::get("MyClassName", "include_bla_bla_widget");
+&lt;/code&gt;
+
+Even though there is no direct connection, we keep linking statics to invidual classes.
+We do this to (a) group configs (b) make it more interchangeable with other config systems.
+One of the problems now is to know what "configs" are used by individual classes.
+Therefore, it is important to clearly document that at the top of each class.</see>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: configuration"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Object" namespace="" name="Object" unresolved="true"/>
+  <method name="get" start="64" end="66" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Returns a configuration.  This is the main static method for this Object."/>
+      <see value="Config::get()"/>
+    </docblock>
+    <parameter name="className" byreference="false" type="{unknown}"/>
+    <parameter name="identifier" byreference="false" type="{unknown}"/>
+    <parameter name="sourceOptions" byreference="false" type="integer" default="0"/>
+    <parameter name="result" byreference="false" type="{unknown}" default="" constant="null"/>
+    <parameter name="suppress" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <member name="folder_and_file_locations" type="array" default="" visibility="private" static="true" line="73">
+    <docblock>
+      <description compact="The location(s) of the .yaml fixture file, relative to the site base dir"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="fixtureDictionary" type="array" default="" visibility="private" static="false" line="80">
+    <docblock>
+      <description compact="Array of fixture items"/>
+      <var type="array"/>
+    </docblock>
+  </member>
+  <method name="loadData" start="86" end="98" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description compact="loads data from file.">We have this method to create a complete list of configs</description>
+    </docblock>
+  </method>
+  <method name="getCompleteDataSet" start="104" end="115" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the complete Array of data"/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="refresh" byreference="false" type="boolean" default="false"/>
+    <inline>
+      <comment value="remove reserved class-names" line="108"/>
+    </inline>
+  </method>
+  <method name="fileLocations" start="121" end="125" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns a list of file locations"/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <inline>
+      <comment value="we reverse it so the default comes last" line="123"/>
+    </inline>
+  </method>
+</class>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="SearchReplacement" namespace="" name="SearchReplacement" abstract="false" final="false" start="13" end="103">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/search" file="SearchReplacement.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/search/SearchReplacement.php" size="2621" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="00236e69049341546c56c7d2033b60cdfe87879a" relative="code/search/SearchReplacement.php"/>
+  <docblock>
+    <description compact="This dataobject saves search replacements as in Smoogle will be replaced by Google"/>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject" unresolved="true"/>
+  <implements full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject"/>
+  <member name="db" type="array" default="" visibility="private" static="true" line="15"/>
+  <member name="summary_fields" type="array" default="" visibility="private" static="true" line="20"/>
+  <member name="field_labels" type="array" default="" visibility="private" static="true" line="25"/>
+  <member name="separator" type="string" default="','" visibility="private" static="true" line="30"/>
+  <method name="fieldLabels" start="32" end="37" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="includerelations" byreference="false" type="boolean" default="true"/>
+  </method>
+  <method name="onBeforeWrite" start="39" end="49" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="all lower case and make replace double spaces" line="41"/>
+    </inline>
+  </method>
+  <method name="canCreate" start="56" end="59" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canView" start="66" end="69" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canEdit" start="76" end="79" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canDelete" start="86" end="89" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="CMSEditLink" start="96" end="102" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="link to edit the record"/>
+      <param description="| Null $action - e.g. edit" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <interface full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject">
+    <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the link to edit the object"/>
+        <param description="| Null $action" type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+    </method>
+  </interface>
+</class>

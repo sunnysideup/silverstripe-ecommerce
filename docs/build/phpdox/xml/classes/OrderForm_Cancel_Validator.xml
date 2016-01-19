@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="OrderForm_Cancel_Validator" namespace="" name="OrderForm_Cancel_Validator" abstract="false" final="false" start="4" end="11">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/validation" file="OrderForm_Cancel_Validator.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/validation/OrderForm_Cancel_Validator.php" size="159" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="d3819e49e3b1187c4646ecf13b6bb5c4b13d7636" relative="code/forms/validation/OrderForm_Cancel_Validator.php"/>
+  <extends full="RequiredFields" namespace="" name="RequiredFields" unresolved="true"/>
+  <method name="php" start="6" end="9" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="data" byreference="false" type="{unknown}"/>
+  </method>
+</class>

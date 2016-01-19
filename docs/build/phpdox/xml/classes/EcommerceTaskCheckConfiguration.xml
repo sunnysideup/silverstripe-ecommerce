@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskCheckConfiguration" namespace="" name="EcommerceTaskCheckConfiguration" abstract="false" final="false" start="19" end="759">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskCheckConfiguration.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskCheckConfiguration.php" size="28672" time="2015-10-16T14:28:14+13:00" unixtime="1444958894" sha1="d743e7ba92c7f8accd48e11a8df943f9395c4c81" relative="code/tasks/EcommerceTaskCheckConfiguration.php"/>
+  <docblock>
+    <description compact="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs"/>
+    <todo value=": compare to default">shows you the link to remove the current cart</todo>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask" unresolved="true"/>
+  <member name="defaultLocation" type="string" default="&quot;ecommerce/_config/ecommerce.yml&quot;" visibility="protected" static="false" line="25">
+    <docblock>
+      <description compact="Default Location for Configuration File"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="title" type="string" default="&quot;Check Configuration&quot;" visibility="protected" static="false" line="31">
+    <docblock>
+      <description compact="Standard (required) SS variable for BuildTasks"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="description" type="string" default="&quot;Runs through all static configuration for review.&quot;" visibility="protected" static="false" line="37">
+    <docblock>
+      <description compact="Standard (required) SS variable for BuildTasks"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="definitions" type="array" default="" visibility="protected" static="false" line="45">
+    <docblock>
+      <description compact="Array of definitions - set like this: ClassName &#9;&#9;VariableName: Description"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="definitionsHeaders" type="array" default="" visibility="protected" static="false" line="53">
+    <docblock>
+      <description compact="Array of definitions Header - set like this: HEADER TITLE &#9;&#9;ClassName"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="defaults" type="array" default="" visibility="protected" static="false" line="61">
+    <docblock>
+      <description compact="Array of defaults - set like this: ClassName &#9;&#9;VariableName: Default Variable Value"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="configs" type="array" default="" visibility="protected" static="false" line="70">
+    <docblock>
+      <description compact="Array of configs - set like this: ClassName &#9;&#9;VariableName: VariableValue"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="databaseValues" type="array" default="" visibility="protected" static="false" line="78">
+    <docblock>
+      <description compact="which values are derived from DB ClassName &#9;&#9;VariableName: TRUE | FALSE"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="customisedValues" type="array" default="" visibility="protected" static="false" line="86">
+    <docblock>
+      <description compact="set in default yml, but not customised.">ClassName
+		VariableName: TRUE | FALSE</description>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="otherConfigs" type="array" default="" visibility="protected" static="false" line="94">
+    <docblock>
+      <description compact="Other configs ClassName &#9;&#9;VariableName: TRUE | FLASE"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="missingClasses" type="array" default="" visibility="protected" static="false" line="101">
+    <docblock>
+      <description compact="Array of classes (partially) missing in configs.">VariableName: VariableName
+ @var Array</description>
+    </docblock>
+  </member>
+  <method name="run" start="108" end="143" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard (required) SS method, runs buildtask"/>
+    </docblock>
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="checkFiles" start="148" end="182" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Check what files is being used"/>
+    </docblock>
+  </method>
+  <method name="definitionsNotSet" start="187" end="212" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Work out items set in the configuration but not set in the config file."/>
+    </docblock>
+  </method>
+  <method name="classesThatDoNotExist" start="218" end="234" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Work out items set in the configuration but not set in the config file."/>
+    </docblock>
+  </method>
+  <method name="configsNotSet" start="240" end="278" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Work out items set in the definitions but not set in the config file."/>
+    </docblock>
+    <inline>
+      <comment value="print_r($this-&gt;configs[&quot;EcommercePayment&quot;]);" line="243"/>
+    </inline>
+  </method>
+  <method name="definedConfigs" start="284" end="467" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Work out items set in the definitions but not set in the config file."/>
+    </docblock>
+  </method>
+  <method name="getDefaultValues" start="469" end="474" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="addEcommerceDBConfigToConfigs" start="479" end="502" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Adding EcommerceDBConfig values"/>
+    </docblock>
+  </method>
+  <method name="addOtherValuesToConfigs" start="505" end="523" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="addPages" start="525" end="564" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="getPageDefinitions" start="566" end="582" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="page" byreference="false" type="object">
+      <type full="SiteTree" namespace="" name="SiteTree"/>
+    </parameter>
+  </method>
+  <method name="orderSteps" start="585" end="607" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="checkoutAndModifierDetails" start="609" end="660" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getAjaxDefinitions" start="662" end="689" abstract="false" final="false" static="false" visibility="private"/>
+  <method name="specialCases" start="695" end="724" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description compact="check for any additional settings"/>
+    </docblock>
+    <parameter name="className" byreference="false" type="{unknown}"/>
+    <parameter name="key" byreference="false" type="{unknown}"/>
+    <parameter name="actualValue" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="turnValueIntoHumanReadableValue" start="726" end="740" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="actualValue" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="checkGEOIP" start="742" end="757" abstract="false" final="false" static="false" visibility="protected"/>
+</class>

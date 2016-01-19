@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskCreateMemberGroups" namespace="" name="EcommerceTaskCreateMemberGroups" abstract="false" final="false" start="14" end="258">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskCreateMemberGroups.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskCreateMemberGroups.php" size="10380" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="724cbcfc19599d4e259cb2216709c545e97e0cf0" relative="code/tasks/EcommerceTaskCreateMemberGroups.php"/>
+  <docblock>
+    <description compact="create the e-commerce specific Member Groups"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask" unresolved="true"/>
+  <member name="title" type="string" default="&quot;Create e-commerce Member Groups&quot;" visibility="protected" static="false" line="16"/>
+  <member name="description" type="string" default="&quot;Create the member groups and members for e-commerce, such as Customers and Shop Admininistrators.&quot;" visibility="protected" static="false" line="18"/>
+  <method name="run" start="20" end="72" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="CreateGroup" start="87" end="256" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="set up a group with permissions, roles, etc...">also @see EcommerceRole::providePermissions
+also note that this class implements PermissionProvider</description>
+      <param description="code for the group - will always be converted to lowercase" type="object" variable="$code">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="title for the group" type="object" variable="$name">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="| String $parentGroup group object that is the parent of the group. You can also provide a string (name / title of group)" type="object">
+        <type full="Group" namespace="" name="Group"/>
+      </param>
+      <param description="Permission Code for the group (e.g. CMS_DO_THIS_OR_THAT)" type="object" variable="$permissionCode">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="Role Title - e.g. Store Manager" type="object" variable="$roleTitle">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="Permission Array - list of permission codes applied to the group" type="object" variable="$permissionArray">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param description="| String $member Default Member added to the group (e.g. sales@mysite.co.nz). You can also provide an email address" type="object">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+    </docblock>
+    <parameter name="code" byreference="false" type="{unknown}"/>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <parameter name="parentGroup" byreference="false" type="{unknown}" default="" constant="null"/>
+    <parameter name="permissionCode" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="roleTitle" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="permissionArray" byreference="false" type="array" default=""/>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+    <inline>
+      <comment value="changing to lower case seems to be very important" line="88"/>
+      <comment value="unidentified bug so far" line="89"/>
+      <comment value="we unset it here to avoid confusion with the" line="156"/>
+      <comment value="other codes we use later on" line="157"/>
+    </inline>
+  </method>
+</class>

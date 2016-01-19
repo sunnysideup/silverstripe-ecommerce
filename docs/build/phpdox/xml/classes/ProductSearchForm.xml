@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="ProductSearchForm" namespace="" name="ProductSearchForm" abstract="false" final="false" start="7" end="547">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms" file="ProductSearchForm.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/ProductSearchForm.php" size="19155" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="1be4eed5ef30ede367e7b2f43eb5c7fd94625477" relative="code/forms/ProductSearchForm.php"/>
+  <docblock>
+    <description/>
+    <description/>
+  </docblock>
+  <extends full="Form" namespace="" name="Form" unresolved="true"/>
+  <member name="debug" type="boolean" default="false" visibility="protected" static="false" line="13">
+    <docblock>
+      <description compact="set to TRUE to show the search logic"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="additionalFields" type="array" default="" visibility="protected" static="false" line="34">
+    <docblock>
+      <description compact="list of additional fields to add to search">Additional fields array is formatted as follows:
+array(
+ "FormField" =&gt; Field,
+ "DBField" =&gt; Acts On / Searches,
+ "FilterUsed" =&gt; SearchFilter
+);
+e.g.
+array(
+ [1] =&gt; array(
+   "FormField" =&gt; TextField::create("MyDatabaseField", "Keyword"),
+   "DBField" =&gt; "MyDatabaseField",
+   "FilterUsed" =&gt; "PartialMatchFilter"
+  )
+);</description>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="productsToSearch" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="40">
+    <docblock>
+      <description compact="list of products that need to be searched"/>
+      <var description="| Array | Datalist" type="object">
+        <type full="NULL" namespace="" name="NULL"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="baseClassNameForBuyables" type="string" default="&quot;&quot;" visibility="protected" static="false" line="49">
+    <docblock>
+      <description compact="class name of the buyables to search at this stage, you can only search one type of buyable at any one time e.g. only products or only mydataobject"/>
+      <var type="string"/>
+    </docblock>
+  </member>
+  <member name="useBooleanSearch" type="boolean" default="true" visibility="protected" static="false" line="56">
+    <docblock>
+      <description compact="this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="additionalGetParameters" type="string" default="&quot;&quot;" visibility="protected" static="false" line="66">
+    <docblock>
+      <description compact="get parameters added to the link you dont need to start them with &amp; or ? e.g.">a=23&amp;b=234</description>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="extraBuyableFieldsToSearchFullText" type="array" default="" visibility="protected" static="false" line="73">
+    <docblock>
+      <description compact="List of additional fields that should be searched full text.">We are matching this against the buyable class name.</description>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="maximumNumberOfResults" type="integer" default="0" visibility="protected" static="false" line="86">
+    <docblock>
+      <description compact="Maximum number of results to return we limit this because otherwise the system will choke the assumption is that no user is really interested in looking at tons of results.">It defaults to: EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list")</description>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="controllerSearchResultDisplayMethod" type="string" default="&quot;searchresults&quot;" visibility="protected" static="false" line="93">
+    <docblock>
+      <description compact="The method on the parent controller that can display the results of the search results"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="resultArray" type="array" default="" visibility="protected" static="false" line="99">
+    <docblock>
+      <description compact="array of IDs of the results found so far"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="productGroupIDs" type="array" default="" visibility="protected" static="false" line="105">
+    <docblock>
+      <description compact="product groups found"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="resultArrayPos" type="integer" default="0" visibility="protected" static="false" line="111">
+    <docblock>
+      <description compact="Number of results found so far"/>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="isShortForm" type="integer" default="0" visibility="protected" static="false" line="117">
+    <docblock>
+      <description compact="Is the extended or the short form?"/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="setControllerSearchResultDisplayMethod" start="120" end="122" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="s" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setExtraBuyableFieldsToSearchFullText" start="124" end="126" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="a" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setBaseClassNameForBuyables" start="128" end="130" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="s" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setUseBooleanSearch" start="132" end="134" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="b" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setMaximumNumberOfResults" start="136" end="138" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="i" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setAdditionalGetParameters" start="140" end="142" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="s" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="addAdditionalField" start="144" end="151" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="formField" byreference="false" type="{unknown}"/>
+    <parameter name="dbField" byreference="false" type="{unknown}"/>
+    <parameter name="filterUsed" byreference="false" type="{unknown}"/>
+  </method>
+  <constructor name="__construct" start="163" end="229" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="ProductsToSearch can be left blank to search all products"/>
+      <param description="- associated controller" type="object" variable="$controller">
+        <type full="Controller" namespace="" name="Controller"/>
+      </param>
+      <param description="- name of form" type="object" variable="$name">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="- name of the products being search (also see productsToSearch below)" type="object" variable="$nameOfProductsBeingSearched">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="| Array | Null $productsToSearch  (see comments above)" type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </param>
+    </docblock>
+    <parameter name="controller" byreference="false" type="{unknown}"/>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <parameter name="nameOfProductsBeingSearched" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="productsToSearch" byreference="false" type="{unknown}" default="" constant="null"/>
+    <inline>
+      <comment value="turn of security to allow caching of the form:" line="165"/>
+      <comment value="set basics" line="168"/>
+      <comment value="extensions need to be set after __construct" line="217"/>
+      <comment value="extension point" line="218"/>
+    </inline>
+  </constructor>
+  <method name="doProductSearchForm" start="231" end="443" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="what is the baseclass?" line="241"/>
+      <comment value="basic get" line="249"/>
+      <comment value="defining some variables" line="270"/>
+      <comment value="KEYWORD SEARCH - only bother if we have any keywords and results at all ..." line="273"/>
+      <comment value="if no specific section is being searched then we redirect to search page:" line="401"/>
+    </inline>
+  </method>
+  <method name="addToResults" start="452" end="464" abstract="false" final="false" static="false" visibility="private">
+    <docblock>
+      <description compact="creates three levels of searches that can be executed one after the other, each being less specific than the last..."/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="listToAdd" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="getSearchArrays" start="476" end="505" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="creates three levels of searches that can be executed one after the other, each being less specific than the last..."/>
+      <param description="- words being search" type="object" variable="$words">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param description="- fields being searched" type="object" variable="$fields">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="keywordPhrase" byreference="false" type="{unknown}"/>
+    <parameter name="fields" byreference="false" type="array" default=""/>
+    <inline>
+      <comment value="make three levels of search" line="477"/>
+      <comment value="$searches[3][] = DB::getconn()-&gt;fullTextSearchSQL($fields, $wordsAsString, true);" line="499"/>
+    </inline>
+  </method>
+  <method name="saveDataToSession" start="511" end="526" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="saves the form into session"/>
+      <param description="- data from form." type="object" variable="$data">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+    </docblock>
+  </method>
+  <method name="debugOutput" start="528" end="530" abstract="false" final="false" static="false" visibility="private">
+    <parameter name="string" byreference="false" type="{unknown}"/>
+  </method>
+  <member name="sqlWords" type="array" default="" visibility="private" static="false" line="536">
+    <docblock>
+      <description/>
+      <var type="array">List of words to be replaced.</var>
+    </docblock>
+  </member>
+  <extenders>
+    <extender full="ProductSearchForm_Short" namespace="" name="ProductSearchForm_Short"/>
+  </extenders>
+</class>

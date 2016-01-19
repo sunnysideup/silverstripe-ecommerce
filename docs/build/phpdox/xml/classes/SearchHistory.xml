@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="SearchHistory" namespace="" name="SearchHistory" abstract="false" final="false" start="3" end="84">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/search" file="SearchHistory.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/search/SearchHistory.php" size="1956" time="2015-12-01T15:51:28+13:00" unixtime="1448938288" sha1="316659efe749bcbd4387b1efdc0c09cee74c133f" relative="code/model/search/SearchHistory.php"/>
+  <extends full="DataObject" namespace="" name="DataObject" unresolved="true"/>
+  <member name="db" type="array" default="" visibility="private" static="true" line="5"/>
+  <member name="default_sort" type="string" default="&quot;\&quot;Created\&quot; DESC&quot;" visibility="private" static="true" line="11"/>
+  <member name="searchable_fields" type="array" default="" visibility="private" static="true" line="13"/>
+  <member name="summary_fields" type="array" default="" visibility="private" static="true" line="19"/>
+  <method name="add_entry" start="32" end="43" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="creates a new entry if you are not a shop admin"/>
+      <param type="object" variable="$keywordString">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+    <parameter name="keywordString" byreference="false" type="{unknown}"/>
+    <parameter name="productCount" byreference="false" type="integer" default="0"/>
+    <parameter name="groupCount" byreference="false" type="integer" default="0"/>
+  </method>
+  <method name="onBeforeWrite" start="48" end="51" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="remove excessive spaces"/>
+    </docblock>
+  </method>
+  <method name="canCreate" start="58" end="58" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canView" start="65" end="68" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canEdit" start="75" end="75" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canDelete" start="82" end="82" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+</class>

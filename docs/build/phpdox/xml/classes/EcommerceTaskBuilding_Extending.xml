@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskBuilding_Extending" namespace="" name="EcommerceTaskBuilding_Extending" abstract="false" final="false" start="32" end="42">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskBuilding.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskBuilding.php" size="1104" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="611a66c3fd50820a4558add0aa996d367436ffbb" relative="code/tasks/EcommerceTaskBuilding.php"/>
+  <docblock>
+    <description/>
+    <authors value=": Nicolaas"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: tasks"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="BuildTask" namespace="" name="BuildTask" unresolved="true"/>
+  <member name="title" type="string" default="&quot;Customise e-commerce&quot;" visibility="protected" static="false" line="34"/>
+  <member name="description" type="string" default="&quot;Shows you the options for extending (customising) e-commerce.&quot;" visibility="protected" static="false" line="36"/>
+  <method name="run" start="38" end="40" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+</class>

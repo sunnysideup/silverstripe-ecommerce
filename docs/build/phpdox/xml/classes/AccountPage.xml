@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="AccountPage" namespace="" name="AccountPage" abstract="false" final="false" start="14" end="224">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="AccountPage.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/AccountPage.php" size="6194" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="930cefdd3e2e326da3fb4b99729880e3cfa82f9a" relative="code/AccountPage.php"/>
+  <docblock>
+    <description/>
+    <description compact="The Account Page allows the user to update their details.">You do not need to be logged in to the account page in order to view it... If you are not logged in
+then the account page can be a page to create an account.</description>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: Pages"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Page" namespace="" name="Page" unresolved="true"/>
+  <member name="casting" type="array" default="" visibility="private" static="true" line="20">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="calculatedTotal" type="integer" default="0" visibility="protected" static="false" line="29">
+    <docblock>
+      <description/>
+      <var type="float"/>
+    </docblock>
+  </member>
+  <member name="calculatedPaid" type="integer" default="0" visibility="protected" static="false" line="34">
+    <docblock>
+      <description/>
+      <var type="float"/>
+    </docblock>
+  </member>
+  <member name="calculatedOutstanding" type="integer" default="0" visibility="protected" static="false" line="39">
+    <docblock>
+      <description/>
+      <var type="float"/>
+    </docblock>
+  </member>
+  <member name="pastOrders" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="44">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="icon" type="string" default="'ecommerce/images/icons/AccountPage'" visibility="private" static="true" line="50">
+    <docblock>
+      <description compact="Standard SS variable"/>
+      <var value="String"/>
+    </docblock>
+  </member>
+  <method name="canCreate" start="58" end="60" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS function, we only allow for one AccountPage to exist but we do allow for extensions to exist at the same time."/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canView" start="67" end="70" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Shop Admins can view"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canEdit" start="77" end="80" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Shop Admins can edit"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canDelete" start="87" end="89" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canPublish" start="96" end="98" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <member name="singular_name" type="string" default="&quot;Account Page&quot;" visibility="private" static="true" line="104">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="String"/>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="105" end="105" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Account Pages&quot;" visibility="private" static="true" line="111">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var value="String"/>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="112" end="112" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="description" type="string" default="&quot;A page where the customer can view all their orders and update their details.&quot;" visibility="private" static="true" line="118">
+    <docblock>
+      <description compact="Standard SS variable."/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="find_link" start="124" end="131" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Returns the link to the AccountPage on this site"/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="PastOrders" start="137" end="140" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Returns a list of all previous orders for the member / account"/>
+      <return type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getRunningTotal" start="146" end="146" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable"/>
+      <return description="(casted as Currency)" type="object">
+        <type full="Float" namespace="" name="Float"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="RunningTotal" start="147" end="150" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getRunningPaid" start="156" end="156" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable"/>
+      <return description="(casted as Currency)" type="object">
+        <type full="Float" namespace="" name="Float"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="RunningPaid" start="157" end="160" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getRunningOutstanding" start="166" end="166" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted variable"/>
+      <return description="(casted as Currency)" type="object">
+        <type full="Float" namespace="" name="Float"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="RunningOutstanding" start="167" end="170" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="calculatePastOrders" start="177" end="194" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="retrieves previous orders and adds totals to it...">return DataList</description>
+    </docblock>
+  </method>
+  <method name="pastOrdersSelection" start="200" end="214" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return description="(Orders)" type="object">
+        <type full="DataList" namespace="" name="DataList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="IsEcommercePage" start="220" end="222" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="tells us if the current page is part of e-commerce."/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+</class>

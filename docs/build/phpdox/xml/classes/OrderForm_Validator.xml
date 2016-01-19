@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="OrderForm_Validator" namespace="" name="OrderForm_Validator" abstract="false" final="false" start="260" end="304">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms" file="OrderForm.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/OrderForm.php" size="9704" time="2015-12-17T11:51:30+13:00" unixtime="1450306290" sha1="9d2ef621d795d8a1feea8eed0a162b010f42b408" relative="code/forms/OrderForm.php"/>
+  <docblock>
+    <description/>
+    <description value=": checks the data for the OrderForm, before submission."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: forms"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="RequiredFields" namespace="" name="RequiredFields" unresolved="true"/>
+  <method name="php" start="267" end="301" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Ensures member unique id stays unique and other basic stuff..."/>
+      <param description="= Form Data" type="array" variable="$data"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+  </method>
+</class>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="ExpiryDateField" namespace="" name="ExpiryDateField" abstract="false" final="false" start="13" end="271">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/fields" file="ExpiryDateField.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/fields/ExpiryDateField.php" size="7032" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="88d1ae16c1b1c93f5cd5e3561057849d0a925027" relative="code/forms/fields/ExpiryDateField.php"/>
+  <docblock>
+    <description/>
+    <description value=": ExpiryDate field, contains validation and formspec for expirydate fields.">This can be useful when collecting a credit card.</description>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: forms"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="TextField" namespace="" name="TextField" unresolved="true"/>
+  <constructor name="__construct" start="16" end="45" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <parameter name="title" byreference="false" type="{unknown}" default="" constant="null"/>
+    <parameter name="value" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="form" byreference="false" type="{unknown}" default="" constant="null"/>
+    <inline>
+      <comment value="$monthValue = '';" line="17"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$yearValue = '';" line="18"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="if(strlen($this-&gt;value) == 4) {" line="19"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$monthValue = substr($value, 0, 2);" line="20"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$yearValue = &quot;20&quot;.substr($value, 2, 2);" line="21"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="}" line="22"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$this-&gt;children = new FieldList(" line="23"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$monthField = new DropdownField(" line="24"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="&quot;{$name}[month]&quot;," line="25"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="&quot;&quot;," line="26"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$this-&gt;makeSelectList($this-&gt;monthArray(), $monthValue)" line="27"/>
+      <comment xmlns="http://xml.phpdox.net/src" value=")," line="28"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$yearField = new DropdownField(" line="29"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="&quot;{$name}[year]&quot;," line="30"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="&quot;&quot;," line="31"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$this-&gt;makeSelectList($this-&gt;yearArray(), $yearValue)" line="32"/>
+      <comment xmlns="http://xml.phpdox.net/src" value=")" line="33"/>
+      <comment xmlns="http://xml.phpdox.net/src" value=");" line="34"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$monthField-&gt;addExtraClass(&quot;&quot;);" line="35"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$yearField-&gt;addExtraClass(&quot;&quot;);" line="36"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="disable auto complete" line="37"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="foreach($this-&gt;children as $child) {" line="38"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$child-&gt;setAttribute('autocomplete', 'off');" line="39"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="}" line="40"/>
+    </inline>
+  </constructor>
+  <method name="Field" start="50" end="67" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="HTML" namespace="" name="HTML"/>
+      </return>
+    </docblock>
+    <parameter name="properties" byreference="false" type="array" default=""/>
+  </method>
+  <method name="dataValue" start="72" end="84" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="string"/>
+    </docblock>
+  </method>
+  <method name="validate" start="90" end="125" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param variable="$validator" type="object">
+        <type full="Validator" namespace="" name="Validator"/>
+      </param>
+      <return type="boolean"/>
+    </docblock>
+    <parameter name="validator" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="If the field is empty then don't return an invalidation message'" line="91"/>
+      <comment value="months are entered as a simple number (e.g. 1,2,3, we add a leading zero if needed)" line="111"/>
+    </inline>
+  </method>
+  <method name="yearArray" start="130" end="138" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return description="=&gt; 2000, 2001 =&gt; 2001, etc...)" type="object">
+        <type full="array(2000" namespace="" name="array(2000"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="makeSelectList" start="146" end="156" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <param description="list of options..." variable="$array" type="object">
+        <type full="-" namespace="" name="-"/>
+      </param>
+      <param type="object" variable="$currentValue">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="(html)" type="string"/>
+    </docblock>
+    <parameter name="array" byreference="false" type="array"/>
+    <parameter name="currentValue" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="monthArray" start="161" end="195" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return description="=&gt; &quot;Jan&quot;, etc...)" type="object">
+        <type full="array(1" namespace="" name="array(1"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="performReadonlyTransformation" start="202" end="207" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Makes a read only field with some stars in it to replace the password"/>
+      <return type="object">
+        <type full="ReadonlyField" namespace="" name="ReadonlyField"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="setRightTitle" start="214" end="222" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="string" variable="$title"/>
+      <return type="object">
+        <type full="ConfirmedPasswordField" namespace="" name="ConfirmedPasswordField"/>
+      </return>
+    </docblock>
+    <parameter name="title" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="foreach($this-&gt;children as $field) {" line="215"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$field-&gt;setRightTitle($title);" line="216"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="}" line="217"/>
+    </inline>
+  </method>
+  <method name="setChildrenTitles" start="231" end="243" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="2 entry array with the customized title for each" type="array" variable="$titles">of the 2 children.</param>
+      <return type="object">
+        <type full="ConfirmedPasswordField" namespace="" name="ConfirmedPasswordField"/>
+      </return>
+    </docblock>
+    <parameter name="titles" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setValue" start="254" end="268" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Value is sometimes an array, and sometimes a single value, so we need to handle both cases."/>
+      <param type="mixed" variable="$value"/>
+      <return type="object">
+        <type full="ConfirmedPasswordField" namespace="" name="ConfirmedPasswordField"/>
+      </return>
+    </docblock>
+    <parameter name="value" byreference="false" type="{unknown}"/>
+    <parameter name="data" byreference="false" type="{unknown}" default="" constant="null"/>
+    <inline>
+      <comment value="store this for later" line="256"/>
+      <comment value="looking up field by name is expensive, so lets check it needs to change" line="260"/>
+      <comment value="if ($oldValue != $this-&gt;value) {" line="261"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$this-&gt;children-&gt;fieldByName($this-&gt;getName() . '[month]')-&gt;setValue($this-&gt;value);" line="262"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="$this-&gt;children-&gt;fieldByName($this-&gt;getName() . '[year]')-&gt;setValue($this-&gt;value);" line="263"/>
+      <comment xmlns="http://xml.phpdox.net/src" value="}" line="264"/>
+    </inline>
+  </method>
+</class>

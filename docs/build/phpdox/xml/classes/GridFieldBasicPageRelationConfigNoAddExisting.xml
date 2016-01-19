@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="GridFieldBasicPageRelationConfigNoAddExisting" namespace="" name="GridFieldBasicPageRelationConfigNoAddExisting" abstract="false" final="false" start="16" end="30">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/gridfield" file="GridFieldBasicPageRelationConfigNoAddExisting.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/gridfield/GridFieldBasicPageRelationConfigNoAddExisting.php" size="585" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="fc7d48bcb910d32220640b205aca1d9f7880e60d" relative="code/forms/gridfield/GridFieldBasicPageRelationConfigNoAddExisting.php"/>
+  <docblock>
+    <description/>
+    <author value="nicolaas &lt;github@sunnysideup.co.nz&gt;"/>
+  </docblock>
+  <extends full="GridFieldConfig_RelationEditor" namespace="" name="GridFieldConfig_RelationEditor" unresolved="true"/>
+  <constructor name="__construct" start="21" end="28" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="- How many items per page should show up" type="int" variable="$itemsPerPage"/>
+    </docblock>
+    <parameter name="itemsPerPage" byreference="false" type="{unknown}" default="" constant="null"/>
+  </constructor>
+</class>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="ModelAdminEcommerceBaseClass" namespace="" name="ModelAdminEcommerceBaseClass" abstract="false" final="false" start="9" end="36">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/cms" file="ModelAdminEcommerceBaseClass.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/cms/ModelAdminEcommerceBaseClass.php" size="990" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="46bc716b5ffaf5d278748583a31fb95b6c1575a4" relative="code/cms/ModelAdminEcommerceBaseClass.php"/>
+  <docblock>
+    <description/>
+    <see value=": http://doc.silverstripe.org/framework/en/reference/ModelAdmin"/>
+    <author value="Nicolaas [at] sunnyside up . co .nz"/>
+  </docblock>
+  <extends full="ModelAdmin" namespace="" name="ModelAdmin" unresolved="true"/>
+  <method name="getManagedModels" start="15" end="27" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="Map of class name to an array of 'title' (see {@link $managed_models})" type="array"/>
+    </docblock>
+  </method>
+  <member name="showImportForm" type="boolean" default="false" visibility="public" static="false" line="34">
+    <docblock>
+      <description compact="Change this variable if you don't want the Import from CSV form to appear.">This variable can be a boolean or an array.
+If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')</description>
+    </docblock>
+  </member>
+  <extenders>
+    <extender full="ProductsAndGroupsModelAdmin" namespace="" name="ProductsAndGroupsModelAdmin"/>
+    <extender full="StoreAdmin" namespace="" name="StoreAdmin"/>
+    <extender full="SalesAdmin" namespace="" name="SalesAdmin"/>
+    <extender full="ProductConfigModelAdmin" namespace="" name="ProductConfigModelAdmin"/>
+  </extenders>
+</class>

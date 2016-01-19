@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="CartPage_Controller" namespace="" name="CartPage_Controller" abstract="false" final="false" start="292" end="849">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="CartPage.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/CartPage.php" size="24215" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="1a0e7a82d2c16dab8349563ab4dc852fb8a91daf" relative="code/CartPage.php"/>
+  <extends full="Page_Controller" namespace="" name="Page_Controller" unresolved="true"/>
+  <member name="allowed_actions" type="array" default="" visibility="private" static="true" line="299">
+    <docblock>
+      <description/>
+      <static value="array">standard SS variable
+it is important that we list all the options here</static>
+    </docblock>
+  </member>
+  <member name="actionLinks" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="315">
+    <docblock>
+      <description compact="This ArraList holds DataObjects with a Link and Title each...."/>
+      <var type="object">
+        <type full="ArraList" namespace="" name="ArraList"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="workedOutMessagesAndActions" type="boolean" default="false" visibility="protected" static="false" line="321">
+    <docblock>
+      <description compact="to ensure messages and actions links are only worked out once..."/>
+      <var description="Boolean" type="object">
+        <type full="$workedOutMessagesAndActions" namespace="" name="$workedOutMessagesAndActions"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="currentOrder" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="327">
+    <docblock>
+      <description compact="order currently being shown on this page"/>
+      <var description="DataObject" type="object">
+        <type full="$order" namespace="" name="$order"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="message" type="string" default="&quot;&quot;" visibility="private" static="false" line="335">
+    <docblock>
+      <description compact="Message shown (e.g. no current order, could not find order, order updated, etc...)"/>
+      <var description="String" type="object">
+        <type full="$message" namespace="" name="$message"/>
+      </var>
+      <todo value=": check if we need this....!"/>
+    </docblock>
+  </member>
+  <method name="set_message" start="336" end="339" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="s" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="init" start="345" end="421" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <standard value="SS method"/>
+    </docblock>
+    <inline>
+      <comment value="find the current order if any" line="348"/>
+      <comment value="WE HAVE THIS FOR SUBMITTING FORMS!" line="351"/>
+      <comment value="redirect if we are viewing the order with the wrong page!" line="388"/>
+    </inline>
+  </method>
+  <method name="showorder" start="440" end="458" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="loadorder" start="468" end="473" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Loads either the &quot;current order&quot;&quot;into the shopping cart.">TO DO: untested
+TO DO: what to do with old order</description>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="saveorder" start="481" end="496" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="save the order to a member. If no member exists then create the member first using the ShopAccountForm."/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">TO DO: untested<type full="Array" namespace="" name="Array"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="deleteorder" start="505" end="514" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Delete the currently viewed order.">TO DO: untested</description>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="startneworder" start="523" end="528" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Start a new order"/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">TO DO: untested<type full="Array" namespace="" name="Array"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="ActionLinks" start="534" end="540" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This returns a ArraList, each dataobject has two vars: Title and Link"/>
+      <return type="object">
+        <type full="ArraList" namespace="" name="ArraList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="Message" start="545" end="557" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="Order" start="563" end="565" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return description="| Null - Order" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="CanEditOrder" start="571" end="580" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="CurrentOrderIsInCart" start="586" end="595" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Tells you if the order you are viewing at the moment is also in the cart"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <member name="showCreateAccountForm" type="boolean" default="false" visibility="protected" static="false" line="602">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="ShowCreateAccountForm" start="608" end="620" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Do we need to show the Create Account Form?"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="CreateAccountForm" start="626" end="628" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Returns the CreateAccountForm"/>
+      <return type="object">
+        <type full="ShopAccountForm" namespace="" name="ShopAccountForm"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="workOutMessagesAndActions" start="633" end="799" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="work out the options for the user"/>
+    </docblock>
+  </method>
+  <method name="isCartPage" start="818" end="823" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="isCheckoutPage" start="829" end="829" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Is this a CheckoutPage or is it another type (CartPage / OrderConfirmationPage)?"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="isOrderConfirmationPage" start="835" end="835" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Is this a OrderConfirmationPage or is it another type (CartPage / CheckoutPage)?"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="onlyShowSubmittedOrders" start="841" end="841" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="onlyShowUnsubmittedOrders" start="847" end="847" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Can this page only show Unsubmitted Orders (e.g. CartPage) ?"/>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+  </method>
+  <extenders>
+    <extender full="OrderConfirmationPage_Controller" namespace="" name="OrderConfirmationPage_Controller"/>
+    <extender full="CheckoutPage_Controller" namespace="" name="CheckoutPage_Controller"/>
+  </extenders>
+</class>

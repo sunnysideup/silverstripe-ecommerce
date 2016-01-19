@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceDevelopmentAdminDecorator" namespace="" name="EcommerceDevelopmentAdminDecorator" abstract="false" final="false" start="15" end="31">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/cms/dev" file="EcommerceDevelopmentAdminDecorator.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/cms/dev/EcommerceDevelopmentAdminDecorator.php" size="732" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="f0a56a66f2eceef5f54695a211ea7bd04cfcb4da" relative="code/cms/dev/EcommerceDevelopmentAdminDecorator.php"/>
+  <docblock>
+    <description compact="EcommerceDevelopmentAdminDecorator adds extra functionality to the DevelopmentAdmin It creates a developer view (as in www.mysite.com/dev/) specifically for ecommerce."/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: cms"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Extension" namespace="" name="Extension" unresolved="true"/>
+  <member name="allowed_actions" type="array" default="" visibility="private" static="true" line="18"/>
+  <method name="ecommerce" start="27" end="29" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="handles ecommerce request or provide options to run request in the form of HTML output."/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="HTML" namespace="" name="HTML"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+</class>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="BuyableSelectField" namespace="" name="BuyableSelectField" abstract="false" final="false" start="13" end="146">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/fields" file="BuyableSelectField.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/fields/BuyableSelectField.php" size="8771" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="38dd31fbe2d212eba8076a7cfbdafb344bf294d6" relative="code/forms/fields/BuyableSelectField.php"/>
+  <docblock>
+    <description compact="Text input field that allows the user to select a Buyable.">A product, a product variation or any other buyable.
+using the auto-complete technique from jQuery UI.</description>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: forms"/>
+    <inspiration value=": https://github.com/sheadawson/silverstripe-zenautocompletefield"/>
+  </docblock>
+  <extends full="FormField" namespace="" name="FormField" unresolved="true"/>
+  <member name="jquery_UI_JS_location" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="19">
+    <docblock>
+      <description compact="Location for jQuery UI library location"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="jquery_UI_CSS_location" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="25">
+    <docblock>
+      <description compact="Location for jQuery UI library location"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="countOfSuggestions" visibility="protected" static="false" line="31">
+    <docblock>
+      <description compact="number of suggestions"/>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="fieldFindBuyable" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="36">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="FormField" namespace="" name="FormField"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="fieldSelectedBuyable" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="41">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="FormField" namespace="" name="FormField"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="buyable" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="46">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </var>
+    </docblock>
+  </member>
+  <constructor name="__construct" start="55" end="67" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$name">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$title">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="- currently selected buyable" type="object" variable="$buyable">
+        <type full="Object" namespace="" name="Object"/>
+      </param>
+      <param description="- number of suggestions shown (max)" type="object" variable="$countOfSuggestions">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <param type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+    </docblock>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <parameter name="title" byreference="false" type="{unknown}" default="" constant="null"/>
+    <parameter name="buyable" byreference="false" type="{unknown}" default="" constant="null"/>
+    <parameter name="countOfSuggestions" byreference="false" type="integer" default="100"/>
+    <parameter name="form" byreference="false" type="{unknown}" default="" constant="null"/>
+  </constructor>
+  <method name="hasData" start="69" end="69" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="Field" start="74" end="85" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="string"/>
+    </docblock>
+    <parameter name="properties" byreference="false" type="array" default=""/>
+    <inline>
+      <comment value="Requirements::javascript($this-&gt;jquery_UI_JS_location);" line="75"/>
+      <comment value="Requirements::css($this-&gt;jquery_UI_CSS_location);" line="76"/>
+    </inline>
+  </method>
+  <method name="getJavascript" start="87" end="96" abstract="false" final="false" static="false" visibility="protected"/>
+  <method name="setValue" start="101" end="107" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Do we do anything with data???"/>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="performReadonlyTransformation" start="112" end="116" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Returns a readonly version of this field."/>
+    </docblock>
+  </method>
+  <method name="setReadonly" start="120" end="126" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+    </docblock>
+    <parameter name="bool" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="set_jquery_UI_JS_location" start="133" end="135" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="set alternative location for jQuerry UI Autocomplete JAVASCRIPT FILE"/>
+      <see value="http://jqueryui.com/download"/>
+      <param type="object" variable="$pathFileName">
+        <type full="String" namespace="" name="String"/>
+      </param>
+    </docblock>
+    <parameter name="pathFileName" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="set_jquery_UI_CSS_location" start="142" end="144" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="set alternative location for jQuerry UI Autocomplete CSS File"/>
+      <see value="http://jqueryui.com/download"/>
+      <param type="object" variable="$pathFileName">
+        <type full="String" namespace="" name="String"/>
+      </param>
+    </docblock>
+    <parameter name="pathFileName" byreference="false" type="{unknown}"/>
+  </method>
+</class>

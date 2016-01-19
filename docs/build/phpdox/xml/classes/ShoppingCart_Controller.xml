@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="ShoppingCart_Controller" namespace="" name="ShoppingCart_Controller" abstract="false" final="false" start="16" end="711">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/control" file="ShoppingCart_Controller.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/control/ShoppingCart_Controller.php" size="20885" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="545dbaae1925da74d2a52abbf34e710ebec90e6a" relative="code/control/ShoppingCart_Controller.php"/>
+  <docblock>
+    <description compact="ShoppingCart_Controller">Handles the modification of a shopping cart via http requests.
+Provides links for making these modifications.</description>
+    <author value=": Jeremy Shipman, Nicolaas Francken"/>
+    <package value=": ecommerce"/>
+    <todo value="supply links for adding, removing, and clearing cart items"/>
+    <todo value="link for removing modifier(s)"/>
+  </docblock>
+  <extends full="Controller" namespace="" name="Controller" unresolved="true"/>
+  <implements full="Flushable" namespace="" name="Flushable" unresolved="true"/>
+  <method name="flush" start="18" end="21" abstract="false" final="false" static="true" visibility="public"/>
+  <member name="url_handlers" type="array" default="" visibility="private" static="true" line="26">
+    <docblock>
+      <description compact="Default URL handlers - (Action)/(ID)/(OtherID)"/>
+    </docblock>
+  </member>
+  <member name="methodsRequiringSecurityID" type="array" default="" visibility="protected" static="false" line="35">
+    <docblock>
+      <description compact="We need to only use the Security ID on a few actions, these are listed here."/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="cart" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="51">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="ShoppingCart" namespace="" name="ShoppingCart"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="init" start="53" end="75" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="allowed_actions" type="array" default="" visibility="private" static="true" line="77"/>
+  <method name="index" start="105" end="119" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="Link" start="129" end="131" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$action">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="(Link)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="create_link" start="137" end="143" abstract="false" final="false" static="true" visibility="protected">
+    <docblock>
+      <description compact="returns ABSOLUTE link to the shopping cart controller"/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="actionAndOtherLinkVariables" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="add_item_link" start="152" end="154" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$buyableID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$classNameForBuyable">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="buyableID" byreference="false" type="{unknown}"/>
+    <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="remove_item_link" start="163" end="165" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$buyableID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$classNameForBuyable">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="buyableID" byreference="false" type="{unknown}"/>
+    <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="remove_all_item_link" start="174" end="176" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$buyableID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$classNameForBuyable">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="buyableID" byreference="false" type="{unknown}"/>
+    <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="remove_all_item_and_edit_link" start="185" end="187" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$buyableID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$classNameForBuyable">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="buyableID" byreference="false" type="{unknown}"/>
+    <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="set_quantity_item_link" start="196" end="198" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$buyableID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$classNameForBuyable">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="buyableID" byreference="false" type="{unknown}"/>
+    <parameter name="classNameForBuyable" byreference="false" type="string" default="&quot;Product&quot;"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="remove_modifier_link" start="206" end="208" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$modifierID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="modifierID" byreference="false" type="{unknown}"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="add_modifier_link" start="216" end="218" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$modifierID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="modifierID" byreference="false" type="{unknown}"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="remove_address_link" start="227" end="229" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$addressID">
+        <type full="Integer" namespace="" name="Integer"/>
+      </param>
+      <param type="object" variable="$addressClassName">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="addressID" byreference="false" type="{unknown}"/>
+    <parameter name="addressClassName" byreference="false" type="{unknown}"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="clear_cart_link" start="235" end="237" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="save_cart_link" start="243" end="245" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="clear_cart_and_logout_link" start="251" end="253" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="delete_order_link" start="259" end="261" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$parameters">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="orderID" byreference="false" type="{unknown}"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="copy_order_link" start="263" end="265" abstract="false" final="false" static="true" visibility="public">
+    <parameter name="orderID" byreference="false" type="{unknown}"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="set_currency_link" start="273" end="275" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns a link that allows you to set a currency...">dont be fooled by the set_ part...</description>
+      <param type="object" variable="$code">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="code" byreference="false" type="{unknown}"/>
+    <parameter name="parameters" byreference="false" type="array" default=""/>
+  </method>
+  <method name="json" start="282" end="284" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return json for cart... no further actions."/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="JSON" namespace="" name="JSON"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="additem" start="292" end="295" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Adds item to cart via controller action; one by default."/>
+      <param type="object">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="setquantityitem" start="304" end="307" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Sets the exact passed quantity.">Note: If no ?quantity=x is specified in URL, then quantity will be set to 1.</description>
+      <param type="object">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="removeitem" start="315" end="318" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Removes item from cart via controller action; one by default."/>
+      <param type="object">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="removeallitem" start="326" end="329" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Removes all of a specific item"/>
+      <param type="object">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="removeallitemandedit" start="337" end="347" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Removes all of a specific item AND return back"/>
+      <param type="object">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="removemodifier" start="355" end="359" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Removes a specified modifier from the cart;"/>
+      <param type="object">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="addmodifier" start="367" end="371" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Adds a specified modifier to the cart;"/>
+      <param type="object">
+        <type full="HTTPRequest" namespace="" name="HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="setcountry" start="380" end="385" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="sets the country"/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+    <inline>
+      <comment value="set_country will check if the country code is actually allowed...." line="382"/>
+    </inline>
+  </method>
+  <method name="setregion" start="392" end="396" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="setcurrency" start="403" end="407" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="save" start="414" end="417" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return description="- if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();" type="object">If it is not AJAX it redirects back to requesting page.<type full="Mixed" namespace="" name="Mixed"/></return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="clear" start="423" end="427" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="REDIRECT" namespace="" name="REDIRECT"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="clearandlogout" start="433" end="440" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="REDIRECT" namespace="" name="REDIRECT"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="deleteorder" start="446" end="454" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="REDIRECT" namespace="" name="REDIRECT"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="copyorder" start="456" end="462" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="numberofitemsincart" start="469" end="472" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return number of items in cart"/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="integer"/>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="showcart" start="479" end="481" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="return cart for ajax call"/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="HTML" namespace="" name="HTML"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="loadorder" start="488" end="497" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="loads an order"/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="REDIRECT" namespace="" name="REDIRECT"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="removeaddress" start="506" end="531" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="remove address from list of available addresses in checkout."/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return description="| REDIRECT" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+      <todo value=": add non-ajax version of this request."/>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="submittedbuyable" start="540" end="567" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="allows us to view out-dated buyables that have been deleted where only old versions exist.">this method should redirect</description>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="REDIRECT" namespace="" name="REDIRECT"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="loginas" start="576" end="603" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="This can be used by admins to log in as customers to place orders on their behalf..."/>
+      <param type="object">
+        <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+      </param>
+      <return type="object">
+        <type full="REDIRECT" namespace="" name="REDIRECT"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+  <method name="params_to_get_string" start="617" end="623" abstract="false" final="false" static="true" visibility="protected">
+    <docblock>
+      <description compact="Helper function used by link functions Creates the appropriate url-encoded string parameters for links from array">Produces string such as: MyParam%3D11%26OtherParam%3D1
+    ...which decodes to: MyParam=11&amp;OtherParam=1
+
+you will need to decode the url with javascript before using it.</description>
+      <todo value=": check that comment description actually matches what it does"/>
+      <return description="(URLSegment)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="array" byreference="false" type="array"/>
+  </method>
+  <method name="buyable" start="629" end="648" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Gets a buyable object based on URL actions"/>
+      <return description="| Null - returns buyable" type="object">
+        <type full="DataObject" namespace="" name="DataObject"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="quantity" start="654" end="660" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Gets the requested quantity"/>
+      <return type="object">
+        <type full="Float" namespace="" name="Float"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="parameters" start="667" end="669" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Gets the request parameters"/>
+      <param description="choose between obtaining the chosen parameters from GET or POST" variable="$getpost" type="object">
+        <type full="-" namespace="" name="-"/>
+      </param>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="getpost" byreference="false" type="string" default="'GET'"/>
+  </method>
+  <method name="debug" start="675" end="682" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Handy debugging action visit.">Log in as an administrator and visit mysite/shoppingcart/debug</description>
+    </docblock>
+  </method>
+  <method name="ajaxtest" start="689" end="708" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="test the ajax response for developers only"/>
+      <return description="to buffer" type="object">
+        <type full="output" namespace="" name="output"/>
+      </return>
+    </docblock>
+    <parameter name="request" byreference="false" type="object">
+      <type full="SS_HTTPRequest" namespace="" name="SS_HTTPRequest"/>
+    </parameter>
+  </method>
+</class>

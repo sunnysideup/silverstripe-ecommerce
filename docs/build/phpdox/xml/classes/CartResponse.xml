@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="CartResponse" namespace="" name="CartResponse" abstract="false" final="false" start="12" end="206">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/control" file="CartResponse.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/control/CartResponse.php" size="5291" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="2de1300a6087886d712a123b13ef00aae1dc5a47" relative="code/control/CartResponse.php"/>
+  <docblock>
+    <description/>
+    <description/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: control"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="EcommerceResponse" namespace="" name="EcommerceResponse"/>
+  <member name="force_reload" type="boolean" default="false" visibility="private" static="true" line="18">
+    <docblock>
+      <description compact="Should the page be reloaded rather than using AJAX?"/>
+      <var description="$force_reload" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="includeHeaders" type="boolean" default="true" visibility="protected" static="false" line="24">
+    <docblock>
+      <description compact="Should the page be reloaded rather than using AJAX?"/>
+      <var description="$force_reload" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="set_force_reload" start="30" end="32" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Sets the $force_reload to true;"/>
+    </docblock>
+  </method>
+  <method name="setIncludeHeaders" start="40" end="42" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="turn the json headers on or off...">useful if you want to use the json data
+but not the associated header.</description>
+      <param type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </param>
+    </docblock>
+    <parameter name="b" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="ReturnCartData" start="51" end="204" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Builds json object to be returned via ajax."/>
+      <param description="(Type, Message)" type="object" variable="$message">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param type="object" variable="$additionalData">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param type="object" variable="$status">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="+ JSON" type="object">
+        <type full="HEADER" namespace="" name="HEADER"/>
+      </return>
+    </docblock>
+    <parameter name="messages" byreference="false" type="array" default=""/>
+    <parameter name="additionalData" byreference="false" type="{unknown}" default="" constant="null"/>
+    <parameter name="status" byreference="false" type="string" default="&quot;success&quot;"/>
+    <inline>
+      <comment value="add header" line="52"/>
+      <comment value="merge messages" line="59"/>
+      <comment value="bad status" line="67"/>
+      <comment value="init Order - IMPORTANT" line="72"/>
+      <comment value="THIS LINE TAKES UP MOST OF THE TIME OF THE RESPONSE!!!" line="75"/>
+      <comment value="populate Javascript" line="79"/>
+      <comment value="must be first" line="82"/>
+      <comment value="order items" line="90"/>
+      <comment value="in cart items" line="109"/>
+      <comment value="order modifiers" line="118"/>
+      <comment value="order" line="126"/>
+      <comment value="messages" line="129"/>
+      <comment value="TO DO: set it up in such a way that it specifically requests one of these" line="154"/>
+      <comment value="now can check if it needs to be reloaded" line="170"/>
+      <comment value="merge and return" line="182"/>
+      <todo value="remove doubles?" line="186"/>
+      <comment value="turn HTMLText (et al.) objects into text" line="187"/>
+    </inline>
+  </method>
+  <parent full="EcommerceResponse" namespace="" name="EcommerceResponse">
+    <extends full="SS_HTTPResponse" namespace="" name="SS_HTTPResponse" unresolved="true"/>
+    <method name="ReturnCartData" start="21" end="23" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param description="the status to return" type="object" variable="$status">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="the message to return with the retur" type="object" variable="$message">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <param description="| Array $data, that should be included" type="object">
+          <type full="Null" namespace="" name="Null"/>
+        </param>
+      </docblock>
+      <parameter name="messages" byreference="false" type="array" default=""/>
+      <parameter name="additionalData" byreference="false" type="{unknown}" default="" constant="null"/>
+      <parameter name="status" byreference="false" type="string" default="&quot;success&quot;"/>
+    </method>
+  </parent>
+</class>

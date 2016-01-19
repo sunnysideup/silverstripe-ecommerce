@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface xmlns="http://xml.phpdox.net/src" full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject" abstract="false" final="false" start="11" end="19">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/interfaces" file="EditableEcommerceObject.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/interfaces/EditableEcommerceObject.php" size="351" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="b6a8d409307750b2cbccde23dfabd70c8e44b4db" relative="code/interfaces/EditableEcommerceObject.php"/>
+  <docblock>
+    <description compact="describes any dataobject (apart from pages) that is editable in the CMS"/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+  </docblock>
+  <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the link to edit the object"/>
+      <param description="| Null $action" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <implementors>
+    <class full="Order" namespace="" name="Order"/>
+    <class full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig"/>
+    <class full="EcommercePayment_Test" namespace="" name="EcommercePayment_Test"/>
+    <class full="EcommercePayment_TestFailure" namespace="" name="EcommercePayment_TestFailure"/>
+    <class full="EcommercePayment" namespace="" name="EcommercePayment"/>
+    <class full="EcommercePayment_TestPending" namespace="" name="EcommercePayment_TestPending"/>
+    <class full="EcommerceCurrency" namespace="" name="EcommerceCurrency"/>
+    <class full="EcommercePayment_TestSuccess" namespace="" name="EcommercePayment_TestSuccess"/>
+    <class full="OrderAttribute" namespace="" name="OrderAttribute"/>
+    <class full="OrderAttribute_Group" namespace="" name="OrderAttribute_Group"/>
+    <class full="EcommerceCountry" namespace="" name="EcommerceCountry"/>
+    <class full="BillingAddress" namespace="" name="BillingAddress"/>
+    <class full="EcommerceRegion" namespace="" name="EcommerceRegion"/>
+    <class full="ShippingAddress" namespace="" name="ShippingAddress"/>
+    <class full="OrderAddress" namespace="" name="OrderAddress"/>
+    <class full="OrderStep_Paid" namespace="" name="OrderStep_Paid"/>
+    <class full="OrderStep_Confirmed" namespace="" name="OrderStep_Confirmed"/>
+    <class full="OrderStep_Archived" namespace="" name="OrderStep_Archived"/>
+    <class full="OrderStep_Sent" namespace="" name="OrderStep_Sent"/>
+    <class full="OrderStep_SentInvoice" namespace="" name="OrderStep_SentInvoice"/>
+    <class full="OrderStep_Created" namespace="" name="OrderStep_Created"/>
+    <class full="OrderStep_SentReceipt" namespace="" name="OrderStep_SentReceipt"/>
+    <class full="OrderStep_Submitted" namespace="" name="OrderStep_Submitted"/>
+    <class full="OrderStatusLog" namespace="" name="OrderStatusLog"/>
+    <class full="OrderStep" namespace="" name="OrderStep"/>
+    <class full="CheckoutPage_StepDescription" namespace="" name="CheckoutPage_StepDescription"/>
+    <class full="OrderStatusLog_PaymentCheck" namespace="" name="OrderStatusLog_PaymentCheck"/>
+    <class full="OrderStatusLog_DispatchElectronicOrder" namespace="" name="OrderStatusLog_DispatchElectronicOrder"/>
+    <class full="OrderStatusLog_Submitted" namespace="" name="OrderStatusLog_Submitted"/>
+    <class full="OrderStatusLog_Archived" namespace="" name="OrderStatusLog_Archived"/>
+    <class full="OrderStatusLog_Cancel" namespace="" name="OrderStatusLog_Cancel"/>
+    <class full="OrderStatusLog_Dispatch" namespace="" name="OrderStatusLog_Dispatch"/>
+    <class full="OrderStatusLog_DispatchPhysicalOrder" namespace="" name="OrderStatusLog_DispatchPhysicalOrder"/>
+    <class full="OrderEmailRecord" namespace="" name="OrderEmailRecord"/>
+    <class full="Product_OrderItem" namespace="" name="Product_OrderItem"/>
+    <class full="OrderItem" namespace="" name="OrderItem"/>
+    <class full="OrderModifier" namespace="" name="OrderModifier"/>
+    <class full="OrderModifier_Descriptor" namespace="" name="OrderModifier_Descriptor"/>
+    <class full="SearchReplacement" namespace="" name="SearchReplacement"/>
+  </implementors>
+</interface>

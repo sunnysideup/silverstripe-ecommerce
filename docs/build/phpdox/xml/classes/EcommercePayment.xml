@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommercePayment" namespace="" name="EcommercePayment" abstract="false" final="false" start="12" end="450">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/money" file="EcommercePayment.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/money/EcommercePayment.php" size="12329" time="2016-01-06T13:19:37+13:00" unixtime="1452039577" sha1="cbfd8f242509efc2347f93a4f54c69fa7822411e" relative="code/model/money/EcommercePayment.php"/>
+  <docblock>
+    <description compact="&quot;Abstract&quot; class for a number of different payment types allowing a user to pay for something on a site.">This can't be an abstract class because sapphire doesn't
+support abstract DataObject classes.</description>
+    <package value="payment"/>
+  </docblock>
+  <extends full="DataObject" namespace="" name="DataObject" unresolved="true"/>
+  <implements full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject"/>
+  <member name="dependencies" type="array" default="" visibility="private" static="true" line="18">
+    <docblock>
+      <description compact="standard SS Variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="supportedMethodsProvider" type="{unknown}" default="" constant="null" visibility="public" static="false" line="26">
+    <docblock>
+      <description compact="automatically populated by the dependency manager"/>
+      <var type="object">
+        <type full="EcommercePaymentSupportedMethodsProvider" namespace="" name="EcommercePaymentSupportedMethodsProvider"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="db" type="array" default="" visibility="private" static="true" line="34">
+    <docblock>
+      <description compact="Incomplete (default): Payment created but nothing confirmed as successful Success: Payment successful Failure: Payment failed during process Pending: Payment awaiting receipt/bank transfer etc"/>
+    </docblock>
+  </member>
+  <member name="has_one" type="array" default="" visibility="private" static="true" line="43"/>
+  <member name="summary_fields" type="array" default="" visibility="private" static="true" line="48"/>
+  <member name="casting" type="array" default="" visibility="private" static="true" line="56"/>
+  <member name="searchable_fields" type="array" default="" visibility="private" static="true" line="61"/>
+  <member name="default_sort" type="string" default="'&quot;Created&quot; DESC'" visibility="private" static="true" line="82">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="getCMSFields" start="85" end="89" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="CMSEditLink" start="96" end="102" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="link to edit the record"/>
+      <param description="| Null $action - e.g. edit" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canCreate" start="110" end="113" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canView" start="116" end="119" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canEdit" start="126" end="132" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canDelete" start="140" end="142" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Standard SS method set to false as a security measure..."/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="redirectToOrder" start="147" end="156" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="redirect to order action"/>
+    </docblock>
+  </method>
+  <method name="AmountValue" start="161" end="161" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="float"/>
+    </docblock>
+  </method>
+  <method name="getAmountValue" start="162" end="164" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="AmountCurrency" start="169" end="169" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getAmountCurrency" start="170" end="172" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="onAfterWrite" start="179" end="185" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method try to finalise order if payment has been made."/>
+    </docblock>
+  </method>
+  <method name="Status" start="191" end="193" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="site_currency" start="199" end="205" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Return the site currency in use."/>
+      <return type="string"/>
+    </docblock>
+  </method>
+  <method name="populateDefaults" start="212" end="216" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Set currency to default one.">Set IP address</description>
+    </docblock>
+  </method>
+  <method name="setClientIP" start="222" end="245" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Set the IP address of the user to this payment record.">This isn't perfect - IP addresses can be hidden fairly easily.</description>
+    </docblock>
+    <inline>
+      <comment value="Only set the IP and ProxyIP if none currently set" line="242"/>
+    </inline>
+  </method>
+  <method name="PaymentMethod" start="251" end="256" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Returns the Payment type currently in use."/>
+      <return description="| null" type="string"/>
+    </docblock>
+  </method>
+  <method name="set_supported_methods" start="265" end="268" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Static method to quickly update the payment method on runtime associative array that goes like ClassName =&gt; Description ...">e.g. MyPaymentClass =&gt; Best Payment Method Ever	 * @param array $array -</description>
+      <param type="object" variable="$array">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+    </docblock>
+    <parameter name="array" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="get_supported_methods" start="277" end="280" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="returns the list of supported methods test methods are included if the site is in DEV mode OR the current user is a ShopAdmin."/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="combined_form_requirements" start="288" end="290" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Return the form requirements for all the payment methods."/>
+      <param description="| Array" type="object">
+        <type full="NULL" namespace="" name="NULL"/>
+      </param>
+      <return description="array suitable for passing to CustomRequiredFields" type="object">
+        <type full="An" namespace="" name="An"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="combined_form_fields" start="302" end="326" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="Return a set of payment fields from all enabled payment methods for this site, given the .">is used to define which methods are available.</description>
+      <param description="formatted amount (e.g. 12.30) without the currency" type="object" variable="$amount">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="| Order $order" type="object">
+        <type full="Null" namespace="" name="Null"/>
+      </param>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+    <parameter name="amount" byreference="false" type="{unknown}"/>
+    <parameter name="order" byreference="false" type="{unknown}" default="" constant="null"/>
+    <inline>
+      <comment value="Create the initial form fields, which defines an OptionsetField" line="303"/>
+      <comment value="allowing the user to choose which payment method to use." line="304"/>
+      <comment value="Add the amount and subtotal fields for the payment amount" line="323"/>
+    </inline>
+  </method>
+  <method name="getPaymentFormFields" start="337" end="337" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Return the payment form fields that should be shown on the checkout order form for the payment type. Example: for {@link DPSPayment}, this would be a set of fields to enter your credit card details."/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getPaymentFormRequirements" start="348" end="348" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Define what fields defined in {@link Order-&gt;getPaymentFormFields()} should be required."/>
+      <see value="DPSPayment-&gt;getPaymentFormRequirements() for an example on how">this is implemented.</see>
+      <return type="array"/>
+    </docblock>
+  </method>
+  <method name="validatePayment" start="358" end="358" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Checks if all the data for payment is correct (e.g. credit card) By default it returns true, because lots of payments gatewawys do not have any fields required here."/>
+      <param description="The form request data - see OrderForm" type="array" variable="$data"/>
+      <param description="The form object submitted on" type="object" variable="$form">
+        <type full="OrderForm" namespace="" name="OrderForm"/>
+      </param>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="processPayment" start="375" end="375" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Perform payment processing for the type of payment. For example, if this was a credit card payment type, you would perform the data send off to the payment gateway on this function for your payment subclass.">This is used by <link xmlns="http://xml.phpdox.net/src" value="OrderForm"/> when it is
+submitted.
+</description>
+      <param description="The form request data - see OrderForm" type="array" variable="$data"/>
+      <param description="The form object submitted on" type="object" variable="$form">
+        <type full="OrderForm" namespace="" name="OrderForm"/>
+      </param>
+      <return type="object">
+        <type full="EcommercePayment_Result" namespace="" name="EcommercePayment_Result"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="handleError" start="377" end="380" abstract="false" final="false" static="false" visibility="protected">
+    <parameter name="e" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="PaidObject" start="382" end="384" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="debug" start="391" end="394" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Debug helper method.">Access through : /shoppingcart/debug/</description>
+    </docblock>
+  </method>
+  <method name="process_payment_form_and_return_next_step" start="412" end="415" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="LEGACY METHOD Process payment form and return next step in the payment process.">Steps taken are:
+1. create new payment
+2. save form into payment
+3. return payment result</description>
+      <param description="- the order that is being paid" type="object" variable="$order">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <param description="- the form that is being submitted" type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+      <param description="- Array of data that is submittted" type="object" variable="$data">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <return description="- if successful, this method will return TRUE" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="{unknown}"/>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="validate_payment" start="425" end="428" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description compact="LEGACY METHOD"/>
+      <param description="- the order that is being paid" type="object" variable="$order">
+        <type full="Order" namespace="" name="Order"/>
+      </param>
+      <param description="- Array of data that is submittted" type="array" variable="$data"/>
+      <param description="- the form that is being submitted" type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+      <return description="- true if the data is valid" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="order" byreference="false" type="{unknown}"/>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+  </method>
+  <member name="ecommercePaymentFormSetupAndValidationObject" type="{unknown}" default="" constant="null" visibility="private" static="false" line="430"/>
+  <method name="ecommercePaymentFormSetupAndValidationObject" start="436" end="441" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="EcommercePaymentFormSetupAndValidation" namespace="" name="EcommercePaymentFormSetupAndValidation"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="ecommerce_payment_form_setup_and_validation_object" start="447" end="449" abstract="false" final="false" static="true" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="EcommercePaymentFormSetupAndValidation" namespace="" name="EcommercePaymentFormSetupAndValidation"/>
+      </return>
+    </docblock>
+  </method>
+  <extenders>
+    <extender full="EcommercePayment_Test" namespace="" name="EcommercePayment_Test"/>
+    <extender full="EcommercePayment_TestFailure" namespace="" name="EcommercePayment_TestFailure"/>
+    <extender full="EcommercePayment_TestPending" namespace="" name="EcommercePayment_TestPending"/>
+    <extender full="EcommercePayment_TestSuccess" namespace="" name="EcommercePayment_TestSuccess"/>
+  </extenders>
+  <interface full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject">
+    <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the link to edit the object"/>
+        <param description="| Null $action" type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+    </method>
+  </interface>
+</class>

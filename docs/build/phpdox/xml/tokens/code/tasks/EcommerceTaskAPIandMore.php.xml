@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<source xmlns="http://xml.phpdox.net/token">
+  <file xmlns="http://xml.phpdox.net/src" path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskAPIandMore.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskAPIandMore.php" size="1363" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="4b9490b8518b06451b886ef67f27afe3bb05edf7" relative="code/tasks/EcommerceTaskAPIandMore.php"/>
+  <line no="1">
+    <token name="T_OPEN_TAG">&lt;?php</token>
+  </line>
+  <line no="2"/>
+  <line no="3">
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="4">
+    <token name="T_DOC_COMMENT"> * This class reviews all of the static configurations in e-commerce for review</token>
+  </line>
+  <line no="5">
+    <token name="T_DOC_COMMENT"> * (a) which configs are set, but not required</token>
+  </line>
+  <line no="6">
+    <token name="T_DOC_COMMENT"> * (b) which configs are required, but not set</token>
+  </line>
+  <line no="7">
+    <token name="T_DOC_COMMENT"> * (c) review of set configs</token>
+  </line>
+  <line no="8">
+    <token name="T_DOC_COMMENT"> *</token>
+  </line>
+  <line no="9">
+    <token name="T_DOC_COMMENT"> * @TODO: compare to default</token>
+  </line>
+  <line no="10">
+    <token name="T_DOC_COMMENT"> *</token>
+  </line>
+  <line no="11">
+    <token name="T_DOC_COMMENT"> * shows you the link to remove the current cart</token>
+  </line>
+  <line no="12">
+    <token name="T_DOC_COMMENT"> *</token>
+  </line>
+  <line no="13">
+    <token name="T_DOC_COMMENT"> * @authors: Nicolaas [at] Sunny Side Up .co.nz</token>
+  </line>
+  <line no="14">
+    <token name="T_DOC_COMMENT"> * @package: ecommerce</token>
+  </line>
+  <line no="15">
+    <token name="T_DOC_COMMENT"> * @sub-package: tasks</token>
+  </line>
+  <line no="16">
+    <token name="T_DOC_COMMENT"> * @inspiration: Silverstripe Ltd, Jeremy</token>
+  </line>
+  <line no="17">
+    <token name="T_DOC_COMMENT"> **/</token>
+  </line>
+  <line no="18"/>
+  <line no="19">
+    <token name="T_CLASS">class</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">EcommerceTaskAPIandMore</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_EXTENDS">extends</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">BuildTask</token>
+    <token name="T_PHPDOX_OPEN_CURLY">{</token>
+  </line>
+  <line no="20"/>
+  <line no="21"/>
+  <line no="22">
+    <token name="T_WHITESPACE">	</token>
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="23">
+    <token name="T_DOC_COMMENT">	 * Standard (required) SS variable for BuildTasks</token>
+  </line>
+  <line no="24">
+    <token name="T_DOC_COMMENT">	 * @var String</token>
+  </line>
+  <line no="25">
+    <token name="T_DOC_COMMENT">	 */</token>
+  </line>
+  <line no="26">
+    <token name="T_WHITESPACE">	</token>
+    <token name="T_PROTECTED">protected</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_VARIABLE">$title</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_EQUAL">=</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_CONSTANT_ENCAPSED_STRING">"Useful Links for the e-commerce project (including full API)"</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="27"/>
+  <line no="28">
+    <token name="T_WHITESPACE">	</token>
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="29">
+    <token name="T_DOC_COMMENT">	 * Standard (required) SS variable for BuildTasks</token>
+  </line>
+  <line no="30">
+    <token name="T_DOC_COMMENT">	 * @var String</token>
+  </line>
+  <line no="31">
+    <token name="T_DOC_COMMENT">	 */</token>
+  </line>
+  <line no="32">
+    <token name="T_WHITESPACE">	</token>
+    <token name="T_PROTECTED">protected</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_VARIABLE">$description</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_EQUAL">=</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_CONSTANT_ENCAPSED_STRING">"Provides a bunch of other links of use when developing e-commerce sites."</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="33"/>
+  <line no="34">
+    <token name="T_WHITESPACE">	</token>
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="35">
+    <token name="T_DOC_COMMENT">	 * Standard (required) SS method, runs buildtask</token>
+  </line>
+  <line no="36">
+    <token name="T_DOC_COMMENT">	 */</token>
+  </line>
+  <line no="37">
+    <token name="T_WHITESPACE">	</token>
+    <token name="T_FUNCTION">function</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">run</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_VARIABLE">$request</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_PHPDOX_OPEN_CURLY">{</token>
+  </line>
+  <line no="38">
+    <token name="T_WHITESPACE">		</token>
+    <token name="T_VARIABLE">$baseURL</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_EQUAL">=</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">Director</token>
+    <token name="T_DOUBLE_COLON">::</token>
+    <token name="T_STRING">baseURL</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="39">
+    <token name="T_WHITESPACE">		</token>
+    <token name="T_ECHO">echo</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_START_HEREDOC">&lt;&lt;&lt;html</token>
+  </line>
+  <line no="40">
+    <token name="T_ENCAPSED_AND_WHITESPACE">		&lt;h2&gt;usefull links&lt;/h2&gt;</token>
+  </line>
+  <line no="41">
+    <token name="T_ENCAPSED_AND_WHITESPACE">		&lt;ul&gt;</token>
+  </line>
+  <line no="42">
+    <token name="T_ENCAPSED_AND_WHITESPACE">			&lt;li&gt;&lt;a href="</token>
+    <token name="T_CURLY_OPEN">{</token>
+    <token name="T_VARIABLE">$baseURL</token>
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+    <token name="T_ENCAPSED_AND_WHITESPACE">ecommerce/docs/api/"&gt;API for the e-commerce project&lt;/a&gt;&lt;/li&gt;</token>
+  </line>
+  <line no="43">
+    <token name="T_ENCAPSED_AND_WHITESPACE">			&lt;li&gt;&lt;a href="</token>
+    <token name="T_CURLY_OPEN">{</token>
+    <token name="T_VARIABLE">$baseURL</token>
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+    <token name="T_ENCAPSED_AND_WHITESPACE">ecommerce/docs/README.md"&gt;Information on how to update the API&lt;/a&gt;&lt;/li&gt;</token>
+  </line>
+  <line no="44">
+    <token name="T_ENCAPSED_AND_WHITESPACE">			&lt;li&gt;&lt;a href="http://www.silverstripe-ecommerce.com/"&gt;demo site with lots more help and links&lt;/a&gt;&lt;/li&gt;</token>
+  </line>
+  <line no="45">
+    <token name="T_ENCAPSED_AND_WHITESPACE">		&lt;/ul&gt;</token>
+  </line>
+  <line no="46">
+    <token name="T_END_HEREDOC">html</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="47">
+    <token name="T_WHITESPACE">	</token>
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+  </line>
+  <line no="48"/>
+  <line no="49">
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+  </line>
+  <line no="50"/>
+  <line no="51"/>
+</source>

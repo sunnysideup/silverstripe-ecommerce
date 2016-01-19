@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceConfigDefinitions" namespace="" name="EcommerceConfigDefinitions" abstract="false" final="false" start="17" end="409">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/config" file="EcommerceConfigDefinitions.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/config/EcommerceConfigDefinitions.php" size="26936" time="2015-10-16T14:28:14+13:00" unixtime="1444958894" sha1="8c287de85e5b57f629709b2f5a8d590de40faf23" relative="code/config/EcommerceConfigDefinitions.php"/>
+  <docblock>
+    <description compact="This class sets out the static config variables for e-commerce.">It also adds the definitions of any classes that extend EcommerceConfigDefitions.</description>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: configuration"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Object" namespace="" name="Object" unresolved="true"/>
+  <member name="version" type="integer" default="1" visibility="private" static="false" line="25">
+    <docblock>
+      <description compact="Tells us what version of e-commerce we are using"/>
+      <var type="object">
+        <type full="Float" namespace="" name="Float"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="Version" start="31" end="33" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Tells us the version of e-commerce in use."/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <member name="ajaxMethods" type="array" default="" visibility="protected" static="false" line="40">
+    <docblock>
+      <description compact="LIST of ajax methods"/>
+    </docblock>
+  </member>
+  <method name="getAjaxMethod" start="73" end="75" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns defition of Ajax Method"/>
+      <param type="object" variable="$name">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="getAjaxMethods" start="82" end="84" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="returns the definition of an ajax definition."/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="name" byreference="false" type="string" default="&quot;&quot;"/>
+  </method>
+  <method name="SvnVersion" start="90" end="100" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Tells us the svn revision of e-commerce in use."/>
+      <return type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </return>
+    </docblock>
+  </method>
+  <member name="definitionGrouping" type="array" default="" visibility="private" static="false" line="102"/>
+  <method name="GroupDefinitions" start="169" end="171" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <return type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="Definitions" start="184" end="407" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Get a list of all definitions required for e-commerce.">We have this here so that we can check that all static variables have been defined.
+We can also use this list for clean formatting.
+
+This list is for developers only</description>
+      <param description="- only return for this class name" type="object" variable="$className">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <param description="#variable - only return this variable (must define class name as well)" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return description="| String" type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </return>
+    </docblock>
+    <parameter name="className" byreference="false" type="string" default="&quot;&quot;"/>
+    <parameter name="variable" byreference="false" type="string" default="&quot;&quot;"/>
+    <inline>
+      <comment value="add more stuff through extensions" line="379"/>
+      <comment value="add more stuff through child classes" line="387"/>
+      <comment value="return what is appropriate" line="397"/>
+    </inline>
+  </method>
+</class>

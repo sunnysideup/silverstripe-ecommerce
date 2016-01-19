@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="ShopAccountForm" namespace="" name="ShopAccountForm" abstract="false" final="false" start="12" end="207">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms" file="ShopAccountForm.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/ShopAccountForm.php" size="6578" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="2ce5a7a8509ccf2b228205bf5bd6c33b19cad875" relative="code/forms/ShopAccountForm.php"/>
+  <docblock>
+    <description/>
+    <description/>
+    <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>
+    <package value=": ecommerce"/>
+    <sub value="-package: forms"/>
+    <inspiration value=": Silverstripe Ltd, Jeremy"/>
+  </docblock>
+  <extends full="Form" namespace="" name="Form" unresolved="true"/>
+  <constructor name="__construct" start="19" end="96" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$controller">
+        <type full="Controller" namespace="" name="Controller"/>
+      </param>
+      <param description="Name of the form" type="object" variable="$name">
+        <type full="String" namespace="" name="String"/>
+      </param>
+    </docblock>
+    <parameter name="controller" byreference="false" type="{unknown}"/>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <inline>
+      <comment value="extensions need to be set after __construct" line="82"/>
+      <comment value="extension point" line="83"/>
+    </inline>
+  </constructor>
+  <method name="submit" start="103" end="105" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Save the changes to the form, and go back to the account page."/>
+      <return description="+ redirection" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="proceed" start="111" end="113" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Save the changes to the form, and redirect to the checkout page"/>
+      <return description="+ redirection" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+    <parameter name="request" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="creatememberandaddtoorder" start="123" end="154" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="create a member and add it to the order then redirect back..."/>
+      <param type="object" variable="$data">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+      <param type="object" variable="$form">
+        <type full="Form" namespace="" name="Form"/>
+      </param>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="processForm" start="161" end="190" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description/>
+      <return description="+ redirection" type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="data" byreference="false" type="{unknown}"/>
+    <parameter name="form" byreference="false" type="{unknown}"/>
+    <parameter name="request" byreference="false" type="{unknown}"/>
+    <parameter name="link" byreference="false" type="string" default="&quot;&quot;"/>
+  </method>
+  <method name="saveDataToSession" start="197" end="205" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="saves the form into session"/>
+      <param description="- data from form." type="object" variable="$data">
+        <type full="Array" namespace="" name="Array"/>
+      </param>
+    </docblock>
+  </method>
+</class>

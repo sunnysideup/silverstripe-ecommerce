@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="OrderStatusLogForm_Controller" namespace="" name="OrderStatusLogForm_Controller" abstract="false" final="false" start="10" end="86">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/control" file="OrderStatusLogForm_Controller.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/control/OrderStatusLogForm_Controller.php" size="1758" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="c572235a51657af6f5fb43866bb19db66a1d7f52" relative="code/control/OrderStatusLogForm_Controller.php"/>
+  <docblock>
+    <description compact="This controller allows you to submit Log forms from anywhere on the site, especially the cart / checkout page."/>
+  </docblock>
+  <extends full="Controller" namespace="" name="Controller" unresolved="true"/>
+  <member name="currentOrder" type="{unknown}" default="" constant="null" visibility="protected" static="false" line="15">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Order" namespace="" name="Order"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="allowed_actions" type="array" default="" visibility="private" static="true" line="20">
+    <docblock>
+      <description/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="init" start="29" end="33" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="init Class sets order creates virtual methods"/>
+    </docblock>
+  </method>
+  <method name="initVirtualMethods" start="39" end="48" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Inits the virtual methods from the name of the Log forms to redirect the action method to the form class"/>
+    </docblock>
+  </method>
+  <method name="getOrderStatusLogForm" start="56" end="64" abstract="false" final="false" static="false" visibility="protected">
+    <docblock>
+      <description compact="Return a specific {@link OrderStatusLogForm} by it's name."/>
+      <param description="The name of the form to return" type="string" variable="$name"/>
+      <return type="object">
+        <type full="Form" namespace="" name="Form"/>
+      </return>
+    </docblock>
+    <parameter name="name" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="Link" start="71" end="80" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$action">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="removeLog" start="82" end="84" abstract="false" final="false" static="false" visibility="public"/>
+</class>

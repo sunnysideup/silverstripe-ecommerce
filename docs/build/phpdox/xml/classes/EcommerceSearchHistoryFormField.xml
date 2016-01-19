@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="EcommerceSearchHistoryFormField" namespace="" name="EcommerceSearchHistoryFormField" abstract="false" final="false" start="3" end="117">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/fields" file="EcommerceSearchHistoryFormField.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/fields/EcommerceSearchHistoryFormField.php" size="3154" time="2015-12-01T15:51:28+13:00" unixtime="1448938288" sha1="8f81c177e08c8b85d9244387b1e1f87e281a6866" relative="code/forms/fields/EcommerceSearchHistoryFormField.php"/>
+  <extends full="LiteralField" namespace="" name="LiteralField" unresolved="true"/>
+  <member name="numberOfDays" type="integer" default="100" visibility="protected" static="false" line="9">
+    <docblock>
+      <description compact="total number days to search back"/>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="endingDaysBack" type="integer" default="0" visibility="protected" static="false" line="15">
+    <docblock>
+      <description compact="how many days ago the data-analysis should end"/>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="minimumCount" type="integer" default="1" visibility="protected" static="false" line="21">
+    <docblock>
+      <description compact="minimum number of searches for the data to show up"/>
+      <var type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </var>
+    </docblock>
+  </member>
+  <constructor name="__construct" start="23" end="25" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="name" byreference="false" type="{unknown}"/>
+    <parameter name="title" byreference="false" type="string" default="&quot;&quot;"/>
+  </constructor>
+  <method name="setNumberOfDays" start="31" end="34" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return type="object">
+        <type full="Field" namespace="" name="Field"/>
+      </return>
+    </docblock>
+    <parameter name="days" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setMinimumCount" start="40" end="43" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return type="object">
+        <type full="Field" namespace="" name="Field"/>
+      </return>
+    </docblock>
+    <parameter name="count" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="setEndingDaysBack" start="49" end="52" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object">
+        <type full="Int" namespace="" name="Int"/>
+      </param>
+      <return type="object">
+        <type full="Field" namespace="" name="Field"/>
+      </return>
+    </docblock>
+    <parameter name="count" byreference="false" type="{unknown}"/>
+  </method>
+  <method name="Field" start="54" end="115" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="properties" byreference="false" type="array" default=""/>
+  </method>
+</class>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="OrderModifier_Descriptor" namespace="" name="OrderModifier_Descriptor" abstract="false" final="false" start="770" end="959">
+  <file path="/var/www/bo.ihtf.us/ecommerce/code/model" file="OrderModifier.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/OrderModifier.php" size="26081" time="2015-11-12T13:06:13+13:00" unixtime="1447286773" sha1="581a837a8fa8fdb8dfb4c31d568ba1408053283f" relative="code/model/OrderModifier.php"/>
+  <extends full="DataObject" namespace="" name="DataObject" unresolved="true"/>
+  <implements full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject"/>
+  <member name="db" type="array" default="" visibility="private" static="true" line="776">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="has_one" type="array" default="" visibility="private" static="true" line="786">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="indexes" type="array" default="" visibility="private" static="true" line="794">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="searchable_fields" type="array" default="" visibility="private" static="true" line="802">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="field_labels" type="array" default="" visibility="private" static="true" line="811">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="summary_fields" type="array" default="" visibility="private" static="true" line="819">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="casting" type="array" default="" visibility="private" static="true" line="829">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="Array" namespace="" name="Array"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="singular_name" type="string" default="&quot;Order Modifier Description&quot;" visibility="private" static="true" line="837">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_singular_name" start="838" end="838" abstract="false" final="false" static="false" visibility="public"/>
+  <member name="plural_name" type="string" default="&quot;Order Modifier Descriptions&quot;" visibility="private" static="true" line="844">
+    <docblock>
+      <description compact="standard SS variable"/>
+      <var type="object">
+        <type full="String" namespace="" name="String"/>
+      </var>
+    </docblock>
+  </member>
+  <method name="i18n_plural_name" start="845" end="845" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="canCreate" start="852" end="854" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="canEdit" start="861" end="865" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+    <inline>
+      <comment value="if(Permission::checkMember($member, Config::inst()-&gt;get(&quot;EcommerceRole&quot;, &quot;admin_permission_code&quot;))) {return true;}" line="862"/>
+      <comment value="we can only edit Order Modifiers that have not been submitted yet..." line="863"/>
+    </inline>
+  </method>
+  <method name="canDelete" start="872" end="874" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <param type="object" variable="$member">
+        <type full="Member" namespace="" name="Member"/>
+      </param>
+      <return type="object">
+        <type full="Boolean" namespace="" name="Boolean"/>
+      </return>
+    </docblock>
+    <parameter name="member" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="getCMSFields" start="880" end="886" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="standard SS method"/>
+      <return type="object">
+        <type full="FieldList" namespace="" name="FieldList"/>
+      </return>
+    </docblock>
+  </method>
+  <method name="CMSEditLink" start="893" end="899" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="link to edit the record"/>
+      <param description="| Null $action - e.g. edit" type="object">
+        <type full="String" namespace="" name="String"/>
+      </param>
+      <return type="object">
+        <type full="String" namespace="" name="String"/>
+      </return>
+    </docblock>
+    <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+  </method>
+  <method name="RealName" start="905" end="905" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="casted Variable"/>
+      <return type="object">
+        <type full="String." namespace="" name="String."/>
+      </return>
+    </docblock>
+  </method>
+  <method name="getRealName" start="906" end="912" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="onBeforeWrite" start="917" end="922" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="stardard SS method"/>
+    </docblock>
+  </method>
+  <method name="requireDefaultRecords" start="928" end="957" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Adds OrderModifier_Descriptors and deletes the irrelevant ones stardard SS method"/>
+    </docblock>
+    <inline>
+      <comment value="delete the ones that are not relevant" line="947"/>
+    </inline>
+  </method>
+  <interface full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject">
+    <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description compact="returns the link to edit the object"/>
+        <param description="| Null $action" type="object">
+          <type full="String" namespace="" name="String"/>
+        </param>
+        <return type="object">
+          <type full="String" namespace="" name="String"/>
+        </return>
+      </docblock>
+      <parameter name="action" byreference="false" type="{unknown}" default="" constant="null"/>
+    </method>
+  </interface>
+</class>
