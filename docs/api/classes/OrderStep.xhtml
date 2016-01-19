@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - OrderStep</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/process/OrderStep.php.xhtml#line13">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,23 +70,37 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class OrderStep
-                extends <a title="DataObject" href="../classes/DataObject.xhtml">DataObject</a>
+                extends DataObject
                 implements
                 <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$indexes</a>;
-                    </li><li>private array <a href="#members">$has_many</a>;
-                    </li><li>private array <a href="#members">$field_labels</a>;
-                    </li><li>private array <a href="#members">$summary_fields</a>;
-                    </li><li>private array <a href="#members">$casting</a>;
-                    </li><li>private array <a href="#members">$searchable_fields</a>;
-                    </li><li>private string <a href="#members">$singular_name</a>;
-                    </li><li>private string <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
-                    </li><li>private string <a href="#members">$default_sort</a>;
-                    </li><li>private array <a href="#members">$defaults</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$emailClassName</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$relevantLogEntryClassName</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_many</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$field_labels</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$summary_fields</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$casting</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$searchable_fields</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Order Step";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Order Steps";
+                    </li><li>private static string <a href="#members">$description</a> =
+                        "A step that any order goes through.";
+                    </li><li>private static string <a href="#members">$default_sort</a> =
+                        "\"Sort\" ASC";
+                    </li><li>private static array <a href="#members">$defaults</a> =
+                        ;
+                    </li><li>protected <span title="String">String</span> <a href="#members">$emailClassName</a> =
+                        "";
+                    </li><li>protected <span title="String">String</span> <a href="#members">$relevantLogEntryClassName</a> =
+                        "";
                     </li></ul><ul class="none"><li>// methods</li><li>public String <a title="OrderStep" href="../classes/OrderStep/Title.xhtml">Title</a>()
                     </li><li>public void <a title="OrderStep" href="../classes/OrderStep/getTitle.xhtml">getTitle</a>()
                     </li><li>public String <a title="OrderStep" href="../classes/OrderStep/CustomerCanEditNice.xhtml">CustomerCanEditNice</a>()
@@ -103,15 +120,15 @@
                     </li><li>public void <a title="OrderStep" href="../classes/OrderStep/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="OrderStep" href="../classes/OrderStep/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li><li>public static void <a title="OrderStep" href="../classes/OrderStep/get_status_id_from_code.xhtml">get_status_id_from_code</a>()
-                    </li><li>public static void <a title="OrderStep" href="../classes/OrderStep/get_codes_for_order_steps_to_include.xhtml">get_codes_for_order_steps_to_include</a>()
+                    </li><li>public static Array <a title="OrderStep" href="../classes/OrderStep/get_codes_for_order_steps_to_include.xhtml">get_codes_for_order_steps_to_include</a>()
                     </li><li>public static Array <a title="OrderStep" href="../classes/OrderStep/get_not_created_codes_for_order_steps_to_include.xhtml">get_not_created_codes_for_order_steps_to_include</a>()
-                    </li><li>public void <a title="OrderStep" href="../classes/OrderStep/getMyCode.xhtml">getMyCode</a>()
+                    </li><li>public String <a title="OrderStep" href="../classes/OrderStep/getMyCode.xhtml">getMyCode</a>()
                     </li><li>public void <a title="OrderStep" href="../classes/OrderStep/populateDefaults.xhtml">populateDefaults</a>()
-                    </li><li>public void <a title="OrderStep" href="../classes/OrderStep/getCMSFields.xhtml">getCMSFields</a>()
+                    </li><li>public FieldList <a title="OrderStep" href="../classes/OrderStep/getCMSFields.xhtml">getCMSFields</a>()
                     </li><li>public String <a title="OrderStep" href="../classes/OrderStep/CMSEditLink.xhtml">CMSEditLink</a>()
                     </li><li>public Null|Object <a title="OrderStep" href="../classes/OrderStep/AlternativeDisplayPage.xhtml">AlternativeDisplayPage</a>()
                     </li><li>public FieldList <a title="OrderStep" href="../classes/OrderStep/addOrderStepFields.xhtml">addOrderStepFields</a>()
-                    </li><li>public void <a title="OrderStep" href="../classes/OrderStep/validate.xhtml">validate</a>()
+                    </li><li>public ValidationResult <a title="OrderStep" href="../classes/OrderStep/validate.xhtml">validate</a>()
                     </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/initStep.xhtml">initStep</a>()
                     </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/doStep.xhtml">doStep</a>()
                     </li><li>public OrderStep <a title="OrderStep" href="../classes/OrderStep/nextStep.xhtml">nextStep</a>()
@@ -119,8 +136,9 @@
                     </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/hasPassedOrIsEqualTo.xhtml">hasPassedOrIsEqualTo</a>()
                     </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/hasNotPassed.xhtml">hasNotPassed</a>()
                     </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/isBefore.xhtml">isBefore</a>()
-                    </li><li>protected void <a title="OrderStep" href="../classes/OrderStep/isDefaultStatusOption.xhtml">isDefaultStatusOption</a>()
+                    </li><li>protected Boolean <a title="OrderStep" href="../classes/OrderStep/isDefaultStatusOption.xhtml">isDefaultStatusOption</a>()
                     </li><li>public String <a title="OrderStep" href="../classes/OrderStep/getEmailClassName.xhtml">getEmailClassName</a>()
+                    </li><li>protected boolean; <a title="OrderStep" href="../classes/OrderStep/sendEmailForStep.xhtml">sendEmailForStep</a>()
                     </li><li>public void <a title="OrderStep" href="../classes/OrderStep/setEmailClassName.xhtml">setEmailClassName</a>()
                     </li><li>protected String <a title="OrderStep" href="../classes/OrderStep/testEmailLink.xhtml">testEmailLink</a>()
                     </li><li>public Boolean <a title="OrderStep" href="../classes/OrderStep/hasBeenSent.xhtml">hasBeenSent</a>()
@@ -148,49 +166,20 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/DataObject.xhtml">DataObject</a>
-            </li>
-          </ul>
-          <h4>Extended by</h4>
-          <ul>
-            <li>
-              <a href="../classes/OrderStep_Created.xhtml">OrderStep_Created</a>
-            </li>
-            <li>
-              <a href="../classes/OrderStep_Submitted.xhtml">OrderStep_Submitted</a>
-            </li>
-            <li>
-              <a href="../classes/OrderStep_SentInvoice.xhtml">OrderStep_SentInvoice</a>
-            </li>
-            <li>
-              <a href="../classes/OrderStep_Paid.xhtml">OrderStep_Paid</a>
-            </li>
-            <li>
-              <a href="../classes/OrderStep_Confirmed.xhtml">OrderStep_Confirmed</a>
-            </li>
-            <li>
-              <a href="../classes/OrderStep_SentReceipt.xhtml">OrderStep_SentReceipt</a>
-            </li>
-            <li>
-              <a href="../classes/OrderStep_Sent.xhtml">OrderStep_Sent</a>
-            </li>
-            <li>
-              <a href="../classes/OrderStep_Archived.xhtml">OrderStep_Archived</a>
-            </li>
+            <li>DataObject</li>
           </ul>
           <h4>Implements</h4>
           <ul>
             <li>
-              <a href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
+              <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
             </li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="casting">
@@ -215,7 +204,7 @@
             </li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                string<br/><span class="indent">Standard SS variable.</span></li>
             <li id="field_labels">
               <strong>$field_labels</strong>
               <br/>
@@ -256,14 +245,14 @@
           <ul class="members">
             <li id="emailClassName"><strong>$emailClassName</strong>
                 —
-                <a href="#">String</a></li>
+                <a title="String" href="../classes/String.xhtml">String</a></li>
             <li id="relevantLogEntryClassName"><strong>$relevantLogEntryClassName</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">The OrderStatusLog that is relevant to the particular step.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">The OrderStatusLog that is relevant to the particular step.</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="EcomConfig"><a title="OrderStep" href="../classes/OrderStep/EcomConfig.xhtml">EcomConfig()</a>
@@ -276,10 +265,13 @@
             </li>
             <li id="hasCustomerMessage"><a title="OrderStep" href="../classes/OrderStep/hasCustomerMessage.xhtml">hasCustomerMessage()</a>
                 — For some ordersteps this returns true...</li>
-            <li id="isDefaultStatusOption"><a title="OrderStep" href="../classes/OrderStep/isDefaultStatusOption.xhtml">isDefaultStatusOption()</a>
-                — return Boolean</li>
+            <li id="isDefaultStatusOption">
+              <a title="OrderStep" href="../classes/OrderStep/isDefaultStatusOption.xhtml">isDefaultStatusOption()</a>
+            </li>
             <li id="myDescription"><a title="OrderStep" href="../classes/OrderStep/myDescription.xhtml">myDescription()</a>
                 — Explains the current order step.</li>
+            <li id="sendEmailForStep"><a title="OrderStep" href="../classes/OrderStep/sendEmailForStep.xhtml">sendEmailForStep()</a>
+                — return true if done already or mailed successfully now.</li>
             <li id="testEmailLink"><a title="OrderStep" href="../classes/OrderStep/testEmailLink.xhtml">testEmailLink()</a>
                 — returns a link that can be used to test the email being sent during this step this method returns NULL if no email is being sent OR if there is no suitable Order to test with...</li>
           </ul>
@@ -323,9 +315,10 @@
             <li id="canView"><a title="OrderStep" href="../classes/OrderStep/canView.xhtml">canView()</a>
                 — Standard SS method</li>
             <li id="doStep"><a title="OrderStep" href="../classes/OrderStep/doStep.xhtml">doStep()</a>
-                — oStep: should only be able to run this function once (init stops you from running it twice - in theory....) runs the actual step</li>
-            <li id="getCMSFields"><a title="OrderStep" href="../classes/OrderStep/getCMSFields.xhtml">getCMSFields()</a>
-                — return FieldList</li>
+                — doStep: should only be able to run this function once (init stops you from running it twice - in theory....) runs the actual step</li>
+            <li id="getCMSFields">
+              <a title="OrderStep" href="../classes/OrderStep/getCMSFields.xhtml">getCMSFields()</a>
+            </li>
             <li id="getCustomerCanCancelNice">
               <a title="OrderStep" href="../classes/OrderStep/getCustomerCanCancelNice.xhtml">getCustomerCanCancelNice()</a>
             </li>
@@ -343,8 +336,9 @@
             <li id="getHideStepFromCustomerNice">
               <a title="OrderStep" href="../classes/OrderStep/getHideStepFromCustomerNice.xhtml">getHideStepFromCustomerNice()</a>
             </li>
-            <li id="getMyCode"><a title="OrderStep" href="../classes/OrderStep/getMyCode.xhtml">getMyCode()</a>
-                — return String</li>
+            <li id="getMyCode">
+              <a title="OrderStep" href="../classes/OrderStep/getMyCode.xhtml">getMyCode()</a>
+            </li>
             <li id="getRelevantLogEntryClassName">
               <a title="OrderStep" href="../classes/OrderStep/getRelevantLogEntryClassName.xhtml">getRelevantLogEntryClassName()</a>
             </li>
@@ -363,8 +357,9 @@
             <li id="getTitle">
               <a title="OrderStep" href="../classes/OrderStep/getTitle.xhtml">getTitle()</a>
             </li>
-            <li id="get_codes_for_order_steps_to_include"><a title="OrderStep" href="../classes/OrderStep/get_codes_for_order_steps_to_include.xhtml">get_codes_for_order_steps_to_include()</a>
-                — return Array</li>
+            <li id="get_codes_for_order_steps_to_include">
+              <a title="OrderStep" href="../classes/OrderStep/get_codes_for_order_steps_to_include.xhtml">get_codes_for_order_steps_to_include()</a>
+            </li>
             <li id="get_not_created_codes_for_order_steps_to_include"><a title="OrderStep" href="../classes/OrderStep/get_not_created_codes_for_order_steps_to_include.xhtml">get_not_created_codes_for_order_steps_to_include()</a>
                 — returns a list of ordersteps that have not been created yet.</li>
             <li id="get_status_id_from_code"><a title="OrderStep" href="../classes/OrderStep/get_status_id_from_code.xhtml">get_status_id_from_code()</a>
@@ -386,7 +381,7 @@
               <a title="OrderStep" href="../classes/OrderStep/i18n_singular_name.xhtml">i18n_singular_name()</a>
             </li>
             <li id="initStep"><a title="OrderStep" href="../classes/OrderStep/initStep.xhtml">initStep()</a>
-                — nitStep: makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).</li>
+                — initStep: makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).</li>
             <li id="isBefore"><a title="OrderStep" href="../classes/OrderStep/isBefore.xhtml">isBefore()</a>
                 — Opposite of hasPassed</li>
             <li id="nextStep"><a title="OrderStep" href="../classes/OrderStep/nextStep.xhtml">nextStep()</a>
@@ -406,14 +401,15 @@
             <li id="setRelevantLogEntryClassName">
               <a title="OrderStep" href="../classes/OrderStep/setRelevantLogEntryClassName.xhtml">setRelevantLogEntryClassName()</a>
             </li>
-            <li id="validate"><a title="OrderStep" href="../classes/OrderStep/validate.xhtml">validate()</a>
-                — return ValidationResult</li>
+            <li id="validate">
+              <a title="OrderStep" href="../classes/OrderStep/validate.xhtml">validate()</a>
+            </li>
           </ul>
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

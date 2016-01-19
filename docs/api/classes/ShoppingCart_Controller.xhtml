@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - ShoppingCart_Controller</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,21 +61,33 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/control/ShoppingCart_Controller.php.xhtml#line16">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
         <h1 id="introduction"><small>\</small>ShoppingCart_Controller</h1>
         <h4>ShoppingCart_Controller</h4>
-        <p>Handles the modification of a shopping cart via http requests.<br/>Provides links for making these modifications.<br/><br/>author: Jeremy Shipman, Nicolaas Francken<br/>package: ecommerce<br/><br/>todo supply links for adding, removing, and clearing cart items<br/>todo link for removing modifier(s)</p>
-        <ul/>
+        <p>Handles the modification of a shopping cart via http requests.<br/>Provides links for making these modifications.</p>
+        <ul>
+          <li>Author: : Jeremy Shipman, Nicolaas Francken</li>
+        </ul>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class ShoppingCart_Controller
-                extends <a title="Controller" href="../classes/Controller.xhtml">Controller</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$url_handlers</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$methodsRequiringSecurityID</a>;
-                    </li><li>protected <span title="ShoppingCart">ShoppingCart</span> <a href="#members">$cart</a>;
-                    </li><li>private array <a href="#members">$allowed_actions</a>;
-                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/init.xhtml">init</a>()
+                extends Controller
+                implements
+                Flushable
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$url_handlers</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$methodsRequiringSecurityID</a> =
+                        ;
+                    </li><li>protected <span title="ShoppingCart">ShoppingCart</span> <a href="#members">$cart</a> =
+                        null;
+                    </li><li>private static array <a href="#members">$allowed_actions</a> =
+                        ;
+                    </li></ul><ul class="none"><li>// methods</li><li>public static void <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/flush.xhtml">flush</a>()
+                    </li><li>public void <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/init.xhtml">init</a>()
                     </li><li>public void <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/index.xhtml">index</a>()
                     </li><li>public String <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/Link.xhtml">Link</a>()
                     </li><li>protected static String <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/create_link.xhtml">create_link</a>()
@@ -125,16 +137,18 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Controller.xhtml">Controller</a>
-            </li>
+            <li>Controller</li>
+          </ul>
+          <h4>Implements</h4>
+          <ul>
+            <li>Flushable</li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -142,16 +156,24 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">501+</td>
+            <td class="nummeric">16+</td>
+            <td>supply links for adding, removing, and clearing cart items</td>
+          </tr>
+          <tr>
+            <td class="nummeric">16+</td>
+            <td>link for removing modifier(s)</td>
+          </tr>
+          <tr>
+            <td class="nummeric">506+</td>
             <td>: add non-ajax version of this request.</td>
           </tr>
           <tr>
-            <td class="nummeric">608+</td>
+            <td class="nummeric">617+</td>
             <td>: check that comment description actually matches what it does</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="allowed_actions">
@@ -167,14 +189,14 @@
           <ul class="members">
             <li id="cart"><strong>$cart</strong>
                 —
-                <a href="#">ShoppingCart</a></li>
+                <a title="ShoppingCart" href="../classes/ShoppingCart.xhtml">ShoppingCart</a></li>
             <li id="methodsRequiringSecurityID"><strong>$methodsRequiringSecurityID</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">We need to only use the Security ID on a few actions, these are listed here.</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">We need to only use the Security ID on a few actions, these are listed here.</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="buyable"><a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/buyable.xhtml">buyable()</a>
@@ -230,6 +252,9 @@
             </li>
             <li id="deleteorder">
               <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/deleteorder.xhtml">deleteorder()</a>
+            </li>
+            <li id="flush">
+              <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/flush.xhtml">flush()</a>
             </li>
             <li id="index">
               <a title="ShoppingCart_Controller" href="../classes/ShoppingCart_Controller/index.xhtml">index()</a>
@@ -299,8 +324,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

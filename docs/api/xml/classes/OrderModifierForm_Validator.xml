@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src#" full="OrderModifierForm_Validator" namespace="" name="OrderModifierForm_Validator" abstract="false" final="false" start="199" end="206">
-  <file path="./../../../code/forms" file="OrderModifierForm.php" realpath="/var/www/3.1.silverstripe-ecommerce.com/ecommerce/code/forms/OrderModifierForm.php" size="5170" time="2015-02-27T15:21:08+13:00" unixtime="1425003668" sha1="97d81cbda9514946ef2a605f4444915af9bd766b"/>
-  <extends full="RequiredFields" namespace="" name="RequiredFields"/>
-  <method name="php" start="201" end="204" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="data" byreference="false" type="{unknown}"/>
-  </method>
-</class>

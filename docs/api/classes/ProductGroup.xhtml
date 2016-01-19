@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - ProductGroup</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/ProductGroup.php.xhtml#line81">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,27 +73,49 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class ProductGroup
-                extends <a title="Page" href="../classes/Page.xhtml">Page</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$has_one</a>;
-                    </li><li>private array <a href="#members">$belongs_many_many</a>;
-                    </li><li>private array <a href="#members">$defaults</a>;
-                    </li><li>private array <a href="#members">$indexes</a>;
-                    </li><li>private string <a href="#members">$default_child</a>;
-                    </li><li>private string <a href="#members">$icon</a>;
-                    </li><li>private string <a href="#members">$singular_name</a>;
-                    </li><li>private string <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$sortFilterDisplayNames</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$showProductLevels</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$configOptionsCache</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$myUserPreferencesDefaultCache</a>;
-                    </li><li>protected <span title="Int">Int</span> <a href="#members">$rawCount</a>;
-                    </li><li>protected <span title="Int">Int</span> <a href="#members">$totalCount</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$allowCaching</a>;
-                    </li><li>protected <span title="DataList">DataList</span> <a href="#members">$allProducts</a>;
-                    </li><li>private <span title="NULL">NULL</span> <a href="#members">$canNOTbePurchasedArray</a>;
-                    </li><li>protected <span title="NULL">NULL</span> <a href="#members">$canBePurchasedArray</a>;
+                extends Page
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_one</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$belongs_many_many</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$defaults</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$default_child</a> =
+                        'Product';
+                    </li><li>private static string <a href="#members">$icon</a> =
+                        'ecommerce/images/icons/productgroup';
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Product Category";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Product Categories";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)";
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$sortFilterDisplayNames</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$showProductLevels</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$configOptionsCache</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$myUserPreferencesDefaultCache</a> =
+                        ;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$rawCount</a> =
+                        0;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$totalCount</a> =
+                        0;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$allowCaching</a> =
+                        true;
+                    </li><li>protected <span title="DataList">DataList</span> <a href="#members">$allProducts</a> =
+                        null;
+                    </li><li>private <span title="NULL">NULL</span> <a href="#members">$canNOTbePurchasedArray</a> =
+                        null;
+                    </li><li>protected <span title="NULL">NULL</span> <a href="#members">$canBePurchasedArray</a> =
+                        null;
+                    </li><li>private static array <a href="#members">$_result_array</a> =
+                        ;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/canCreate.xhtml">canCreate</a>()
@@ -105,7 +130,7 @@
                     </li><li>protected Array <a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesOptionsForDropdown.xhtml">getUserPreferencesOptionsForDropdown</a>()
                     </li><li>protected Array <a title="ProductGroup" href="../classes/ProductGroup/getUserSettingsOptionSQL.xhtml">getUserSettingsOptionSQL</a>()
                     </li><li>public String <a title="ProductGroup" href="../classes/ProductGroup/getUserPreferencesTitle.xhtml">getUserPreferencesTitle</a>()
-                    </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/ProductsPerPage.xhtml">ProductsPerPage</a>()
+                    </li><li>public Integer <a title="ProductGroup" href="../classes/ProductGroup/ProductsPerPage.xhtml">ProductsPerPage</a>()
                     </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/MyNumberOfProductsPerPage.xhtml">MyNumberOfProductsPerPage</a>()
                     </li><li>public Int <a title="ProductGroup" href="../classes/ProductGroup/MyLevelOfProductsToShow.xhtml">MyLevelOfProductsToShow</a>()
                     </li><li>public FieldList <a title="ProductGroup" href="../classes/ProductGroup/getCMSFields.xhtml">getCMSFields</a>()
@@ -145,26 +170,19 @@
                     </li><li>protected Mixed <a title="ProductGroup" href="../classes/ProductGroup/retrieveObjectStore.xhtml">retrieveObjectStore</a>()
                     </li><li>protected Boolean <a title="ProductGroup" href="../classes/ProductGroup/saveObjectStore.xhtml">saveObjectStore</a>()
                     </li><li>public void <a title="ProductGroup" href="../classes/ProductGroup/SearchResultsSessionVariable.xhtml">SearchResultsSessionVariable</a>()
+                    </li><li>public array <a title="ProductGroup" href="../classes/ProductGroup/searchResultsArrayFromSession.xhtml">searchResultsArrayFromSession</a>()
                     </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Page.xhtml">Page</a>
-            </li>
-          </ul>
-          <h4>Extended by</h4>
-          <ul>
-            <li>
-              <a href="../classes/ProductGroupSearchPage.xhtml">ProductGroupSearchPage</a>
-            </li>
+            <li>Page</li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -172,18 +190,21 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">987+</td>
+            <td class="nummeric">989+</td>
             <td>: cache data for faster access.</td>
           </tr>
           <tr>
-            <td class="nummeric">1083+</td>
+            <td class="nummeric">1085+</td>
             <td>: cache data per user ....</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
+            <li id="_result_array"><strong>$_result_array</strong>
+                —
+                array<br/><span class="indent">cache for result array</span></li>
             <li id="belongs_many_many">
               <strong>$belongs_many_many</strong>
               <br/>
@@ -191,7 +212,7 @@
             </li>
             <li id="canNOTbePurchasedArray"><strong>$canNOTbePurchasedArray</strong>
                 —
-                <a href="#">NULL</a><br/><span class="indent">a list of relevant buyables that can not be purchased and therefore should be excluded.</span></li>
+                <a title="NULL" href="../classes/NULL.xhtml">NULL</a><br/><span class="indent">a list of relevant buyables that can not be purchased and therefore should be excluded.</span></li>
             <li id="db">
               <strong>$db</strong>
               <br/>
@@ -209,7 +230,7 @@
             </li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="has_one">
               <strong>$has_one</strong>
               <br/>
@@ -240,35 +261,35 @@
           <ul class="members">
             <li id="allProducts"><strong>$allProducts</strong>
                 —
-                <a href="#">DataList</a><br/><span class="indent">This is the dataList that contains all the products</span></li>
+                <a title="DataList" href="../classes/DataList.xhtml">DataList</a><br/><span class="indent">This is the dataList that contains all the products</span></li>
             <li id="allowCaching"><strong>$allowCaching</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">Can product list (and related) be cached at all? Set this to FALSE if the product details can be changed for an individual user.</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">Can product list (and related) be cached at all? Set this to FALSE if the product details can be changed for an individual user.</span></li>
             <li id="canBePurchasedArray"><strong>$canBePurchasedArray</strong>
                 —
-                <a href="#">NULL</a><br/><span class="indent">a list of relevant buyables that can be purchased.  We keep this so that that we can save to session, etc... for future use.</span></li>
+                <a title="NULL" href="../classes/NULL.xhtml">NULL</a><br/><span class="indent">a list of relevant buyables that can be purchased.  We keep this so that that we can save to session, etc... for future use.</span></li>
             <li id="configOptionsCache"><strong>$configOptionsCache</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">variable to speed up methods in this class</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">variable to speed up methods in this class</span></li>
             <li id="myUserPreferencesDefaultCache"><strong>$myUserPreferencesDefaultCache</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">cache variable for default preference key</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">cache variable for default preference key</span></li>
             <li id="rawCount"><strong>$rawCount</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">count before limit</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">count before limit</span></li>
             <li id="showProductLevels"><strong>$showProductLevels</strong>
                 —
-                <a href="#">Array</a></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a></li>
             <li id="sortFilterDisplayNames"><strong>$sortFilterDisplayNames</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">list of sort / filter / display variables</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">list of sort / filter / display variables</span></li>
             <li id="totalCount"><strong>$totalCount</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">count after limit</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">count after limit</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="IsIDarray"><a title="ProductGroup" href="../classes/ProductGroup/IsIDarray.xhtml">IsIDarray()</a>
@@ -352,8 +373,9 @@
                 — This is the inverse of ProductGroupsFromAlsoShowProducts That is, it list the product groups that a product is primarily listed under (exact parents only) from a "AlsoShow" product List.</li>
             <li id="ProductGroupsParentGroups"><a title="ProductGroup" href="../classes/ProductGroup/ProductGroupsParentGroups.xhtml">ProductGroupsParentGroups()</a>
                 — given the products for this page, retrieve the parent groups excluding the current one.</li>
-            <li id="ProductsPerPage"><a title="ProductGroup" href="../classes/ProductGroup/ProductsPerPage.xhtml">ProductsPerPage()</a>
-                — return Integer</li>
+            <li id="ProductsPerPage">
+              <a title="ProductGroup" href="../classes/ProductGroup/ProductsPerPage.xhtml">ProductsPerPage()</a>
+            </li>
             <li id="ProductsShowable"><a title="ProductGroup" href="../classes/ProductGroup/ProductsShowable.xhtml">ProductsShowable()</a>
                 — Retrieve a set of products, based on the given parameters.</li>
             <li id="RawCount"><a title="ProductGroup" href="../classes/ProductGroup/RawCount.xhtml">RawCount()</a>
@@ -391,12 +413,15 @@
             <li id="onAfterWrite">
               <a title="ProductGroup" href="../classes/ProductGroup/onAfterWrite.xhtml">onAfterWrite()</a>
             </li>
+            <li id="searchResultsArrayFromSession">
+              <a title="ProductGroup" href="../classes/ProductGroup/searchResultsArrayFromSession.xhtml">searchResultsArrayFromSession()</a>
+            </li>
           </ul>
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - ProductGroup_Controller</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/ProductGroup.php.xhtml#line1443">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -69,14 +72,21 @@
         <p/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class ProductGroup_Controller
-                extends <a title="Page_Controller" href="../classes/Page_Controller.xhtml">Page_Controller</a>
-            {<br/><ul class="none"><li>// members</li><li>private <span title="Array">Array</span> <a href="#members">$allowed_actions</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$originalTitle</a>;
-                    </li><li>protected <span title="DataList">DataList</span> <a href="#members">$products</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$showFullList</a>;
-                    </li><li>protected <span title="ProductGroup">ProductGroup</span> <a href="#members">$filterForGroupObject</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isSearchResults</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$secondaryTitleHasBeenAdded</a>;
+                extends Page_Controller
+            {<br/><ul class="none"><li>// members</li><li>private static <span title="Array">Array</span> <a href="#members">$allowed_actions</a> =
+                        ;
+                    </li><li>protected <span title="String">String</span> <a href="#members">$originalTitle</a> =
+                        "";
+                    </li><li>protected <span title="DataList">DataList</span> <a href="#members">$products</a> =
+                        null;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$showFullList</a> =
+                        false;
+                    </li><li>protected <span title="ProductGroup">ProductGroup</span> <a href="#members">$filterForGroupObject</a> =
+                        null;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isSearchResults</a> =
+                        false;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$secondaryTitleHasBeenAdded</a> =
+                        false;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/init.xhtml">init</a>()
                     </li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/index.xhtml">index</a>()
                     </li><li>public void <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/filterforgroup.xhtml">filterforgroup</a>()
@@ -91,6 +101,7 @@
                     </li><li>protected Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/productListsHTMLCanBeCached.xhtml">productListsHTMLCanBeCached</a>()
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/TotalCountGreaterThanOne.xhtml">TotalCountGreaterThanOne</a>()
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/TotalCountGreaterThanMax.xhtml">TotalCountGreaterThanMax</a>()
+                    </li><li>public string <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/OriginalTitle.xhtml">OriginalTitle</a>()
                     </li><li>public Null <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SidebarProducts.xhtml">SidebarProducts</a>()
                     </li><li>public ArrayList <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MenuChildGroups.xhtml">MenuChildGroups</a>()
                     </li><li>public DataList <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SearchResultsChildGroups.xhtml">SearchResultsChildGroups</a>()
@@ -99,6 +110,7 @@
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSearchFormImmediately.xhtml">ShowSearchFormImmediately</a>()
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSearchFormAtAll.xhtml">ShowSearchFormAtAll</a>()
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/IsSearchResults.xhtml">IsSearchResults</a>()
+                    </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ActiveSearchTerm.xhtml">ActiveSearchTerm</a>()
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowFiltersAndDisplayLinks.xhtml">ShowFiltersAndDisplayLinks</a>()
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ShowSortLinks.xhtml">ShowSortLinks</a>()
                     </li><li>public Boolean <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasFilter.xhtml">HasFilter</a>()
@@ -116,6 +128,7 @@
                     </li><li>public NULL <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SortLinks.xhtml">SortLinks</a>()
                     </li><li>public NULL <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/DisplayLinks.xhtml">DisplayLinks</a>()
                     </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ListAllLink.xhtml">ListAllLink</a>()
+                    </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ListAFewLink.xhtml">ListAFewLink</a>()
                     </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ResetPreferencesLink.xhtml">ResetPreferencesLink</a>()
                     </li><li>public String <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/SearchResultLink.xhtml">SearchResultLink</a>()
                     </li><li>protected PaginatedList <a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/paginateList.xhtml">paginateList</a>()
@@ -128,22 +141,14 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Page_Controller.xhtml">Page_Controller</a>
-            </li>
-          </ul>
-          <h4>Extended by</h4>
-          <ul>
-            <li>
-              <a href="../classes/ProductGroupSearchPage_Controller.xhtml">ProductGroupSearchPage_Controller</a>
-            </li>
+            <li>Page_Controller</li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -151,42 +156,42 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">2291+</td>
+            <td class="nummeric">2350+</td>
             <td>: move to controller?</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="allowed_actions"><strong>$allowed_actions</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
           </ul>
           <h4>protected</h4>
           <ul class="members">
             <li id="filterForGroupObject"><strong>$filterForGroupObject</strong>
                 —
-                <a href="#">ProductGroup</a><br/><span class="indent">The group filter that is applied to this page</span></li>
+                <a title="ProductGroup" href="../classes/ProductGroup.xhtml">ProductGroup</a><br/><span class="indent">The group filter that is applied to this page</span></li>
             <li id="isSearchResults"><strong>$isSearchResults</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">Is this a product search</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">Is this a product search?</span></li>
             <li id="originalTitle"><strong>$originalTitle</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">The original Title of this page before filters, etc...</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">The original Title of this page before filters, etc...</span></li>
             <li id="products"><strong>$products</strong>
                 —
-                <a href="#">DataList</a><br/><span class="indent">list of products that are going to be shown</span></li>
+                <a title="DataList" href="../classes/DataList.xhtml">DataList</a><br/><span class="indent">list of products that are going to be shown</span></li>
             <li id="secondaryTitleHasBeenAdded"><strong>$secondaryTitleHasBeenAdded</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">variable to make sure secondary title only gets added once.</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">variable to make sure secondary title only gets added once.</span></li>
             <li id="showFullList"><strong>$showFullList</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">Show all products on one page?</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">Show all products on one page?</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="addSecondaryTitle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/addSecondaryTitle.xhtml">addSecondaryTitle()</a>
@@ -211,6 +216,8 @@
           </ul>
           <h4>public</h4>
           <ul>
+            <li id="ActiveSearchTerm"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ActiveSearchTerm.xhtml">ActiveSearchTerm()</a>
+                — Is there something actively being searched for?</li>
             <li id="CachingRelatedJavascript"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/CachingRelatedJavascript.xhtml">CachingRelatedJavascript()</a>
                 — adds Javascript to the page to make it work when products are cached.</li>
             <li id="CurrentDisplayTitle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/CurrentDisplayTitle.xhtml">CurrentDisplayTitle()</a>
@@ -230,9 +237,11 @@
             <li id="HasSearchResults"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/HasSearchResults.xhtml">HasSearchResults()</a>
                 — Does this page have any search results? If search was carried out without returns then it returns zero (false)</li>
             <li id="IsSearchResults"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/IsSearchResults.xhtml">IsSearchResults()</a>
-                — Is the current page a display of search results</li>
+                — Is the current page a display of search results.</li>
             <li id="IsShowFullList"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/IsShowFullList.xhtml">IsShowFullList()</a>
                 — Do we show all products on one page?</li>
+            <li id="ListAFewLink"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ListAFewLink.xhtml">ListAFewLink()</a>
+                — Link that returns a list of all the products for this product group as a simple list.</li>
             <li id="ListAllLink"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ListAllLink.xhtml">ListAllLink()</a>
                 — Link that returns a list of all the products for this product group as a simple list.</li>
             <li id="MaxNumberOfProductsPerPage"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MaxNumberOfProductsPerPage.xhtml">MaxNumberOfProductsPerPage()</a>
@@ -241,6 +250,8 @@
                 — returns child product groups for use in 'in this section'. For example the vegetable Product Group May have listed here: Carrot, Cabbage, etc...</li>
             <li id="MyDefaultDisplayStyle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/MyDefaultDisplayStyle.xhtml">MyDefaultDisplayStyle()</a>
                 — short-cut for getMyUserPreferencesDefault("DISPLAY") for use in templtes</li>
+            <li id="OriginalTitle"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/OriginalTitle.xhtml">OriginalTitle()</a>
+                — title without additions</li>
             <li id="ProductGroupFilterLinks"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ProductGroupFilterLinks.xhtml">ProductGroupFilterLinks()</a>
                 — returns a list of items (with links)</li>
             <li id="ProductGroupListAreAjaxified"><a title="ProductGroup_Controller" href="../classes/ProductGroup_Controller/ProductGroupListAreAjaxified.xhtml">ProductGroupListAreAjaxified()</a>
@@ -292,8 +303,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

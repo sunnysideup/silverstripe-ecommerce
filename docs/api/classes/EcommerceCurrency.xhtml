@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommerceCurrency</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/money/EcommerceCurrency.php.xhtml#line11">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,20 +73,31 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceCurrency
-                extends <a title="DataObject" href="../classes/DataObject.xhtml">DataObject</a>
+                extends DataObject
                 implements
                 <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
-            {<br/><ul class="none"><li>// members</li><li>private <span title="Array">Array</span> <a href="#members">$db</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$indexes</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$casting</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$searchable_fields</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$field_labels</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$summary_fields</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$singular_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$default_sort</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$defaults</a>;
-                    </li><li>private array <a href="#members">$currencies</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static <span title="Array">Array</span> <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$casting</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$searchable_fields</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$field_labels</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$summary_fields</a> =
+                        ;
+                    </li><li>private static <span title="String">String</span> <a href="#members">$singular_name</a> =
+                        "Currency";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$plural_name</a> =
+                        "Currencies";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$default_sort</a> =
+                        "\"InUse\" DESC, \"Name\" ASC, \"Code\" ASC";
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$defaults</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$currencies</a> =
+                        ;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li><li>public void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/canCreate.xhtml">canCreate</a>()
@@ -94,6 +108,7 @@
                     </li><li>public static void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/get_list.xhtml">get_list</a>()
                     </li><li>public static Money <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/get_money_object_from_order_currency.xhtml">get_money_object_from_order_currency</a>()
                     </li><li>public static NULL <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/default_currency.xhtml">default_currency</a>()
+                    </li><li>public static string <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/default_currency_code.xhtml">default_currency_code</a>()
                     </li><li>public static Int <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/default_currency_id.xhtml">default_currency_id</a>()
                     </li><li>public static EcommerceCurrency <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/get_one_from_code.xhtml">get_one_from_code</a>()
                     </li><li>public void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/getCMSFields.xhtml">getCMSFields</a>()
@@ -121,28 +136,26 @@
                     </li><li>public void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/populateDefaults.xhtml">populateDefaults</a>()
                     </li><li>public void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/onBeforeWrite.xhtml">onBeforeWrite</a>()
                     </li><li>public void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/requireDefaultRecords.xhtml">requireDefaultRecords</a>()
-                    </li><li>public static void <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/create_new.xhtml">create_new</a>()
+                    </li><li>public static NULL <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/create_new.xhtml">create_new</a>()
                     </li><li>public String <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/debug.xhtml">debug</a>()
                     </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/DataObject.xhtml">DataObject</a>
-            </li>
+            <li>DataObject</li>
           </ul>
           <h4>Implements</h4>
           <ul>
             <li>
-              <a href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
+              <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
             </li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -150,51 +163,51 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">342+</td>
+            <td class="nummeric">373+</td>
             <td>$className is not used at all here</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="casting"><strong>$casting</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="currencies">
               <strong>$currencies</strong>
             </li>
             <li id="db"><strong>$db</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="default_sort"><strong>$default_sort</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="defaults"><strong>$defaults</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="field_labels"><strong>$field_labels</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="indexes"><strong>$indexes</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="plural_name"><strong>$plural_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="searchable_fields"><strong>$searchable_fields</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="singular_name"><strong>$singular_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="summary_fields"><strong>$summary_fields</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="CMSEditLink"><a title="EcommerceCurrency" href="../classes/EcommerceCurrency/CMSEditLink.xhtml">CMSEditLink()</a>
@@ -233,13 +246,14 @@
                 — Standard SS Method</li>
             <li id="canView"><a title="EcommerceCurrency" href="../classes/EcommerceCurrency/canView.xhtml">canView()</a>
                 — Standard SS Method</li>
-            <li id="create_new">
-              <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/create_new.xhtml">create_new()</a>
-            </li>
+            <li id="create_new"><a title="EcommerceCurrency" href="../classes/EcommerceCurrency/create_new.xhtml">create_new()</a>
+                — checks if a currency exists, creates it and returns it.</li>
             <li id="debug"><a title="EcommerceCurrency" href="../classes/EcommerceCurrency/debug.xhtml">debug()</a>
                 — Debug helper method.</li>
             <li id="default_currency"><a title="EcommerceCurrency" href="../classes/EcommerceCurrency/default_currency.xhtml">default_currency()</a>
                 — returns the default currency</li>
+            <li id="default_currency_code"><a title="EcommerceCurrency" href="../classes/EcommerceCurrency/default_currency_code.xhtml">default_currency_code()</a>
+                — returns the default currency as Code</li>
             <li id="default_currency_id">
               <a title="EcommerceCurrency" href="../classes/EcommerceCurrency/default_currency_id.xhtml">default_currency_id()</a>
             </li>
@@ -299,8 +313,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+  <head>
     <title>phpDox - Test Method</title>
     <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../../reports/index.xhtml">Reports</a>
+          <a href="../../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,16 +61,22 @@
           <li>
             <a href="#return">Return</a>
           </li>
+          <li>
+            <a href="../../source/code/forms/OrderFormAddress.php.xhtml#line385">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
         <h1><small>OrderFormAddress::</small>createOrFindMember</h1>
-        <h4>works out the most likely member for the order after submission of the form.</h4>
+        <h4>Works out the most likely member for the order after submission of the form.</h4>
         <p>It returns a member if appropriate.
-1. does the order already have a member?
-2. shop allows creation of member
-3. can the entered data be used?
-4. is there no member logged in yet?
+1. does the order already have a member that is not a shop-admin - if so - DONE.
+2. shop allows creation of member? - if NOT return NULL
+A. is the logged in member the shop admin placing an order on behalf of someone else?
+A1. is the email entered different from the admin email?
+A2. attach to other member as new one or existing one.
+3. can the entered data be used? - if
+4. is there no member logged in yet? - If there is one return null, member is already linked to order.
 5. find member from data entered (even if not logged in)
 6. At this stage, if we dont have a member, we will create one!
 7. We do one last check to see if we are allowed to create one</p>
@@ -96,8 +102,8 @@
         </dl>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

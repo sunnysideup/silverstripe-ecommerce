@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - ProductSearchForm</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/forms/ProductSearchForm.php.xhtml#line7">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,21 +70,35 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class ProductSearchForm
-                extends <a title="Form" href="../classes/Form.xhtml">Form</a>
-            {<br/><ul class="none"><li>// members</li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$debug</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$additionalFields</a>;
-                    </li><li>protected <span title="NULL">NULL</span> <a href="#members">$productsToSearch</a>;
-                    </li><li>protected string <a href="#members">$baseClassNameForBuyables</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$useBooleanSearch</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$additionalGetParameters</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$extraBuyableFieldsToSearchFullText</a>;
-                    </li><li>protected <span title="Int">Int</span> <a href="#members">$maximumNumberOfResults</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$controllerSearchResultDisplayMethod</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$resultArray</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$productGroupIDs</a>;
-                    </li><li>protected <span title="Int">Int</span> <a href="#members">$resultArrayPos</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isShortForm</a>;
-                    </li><li>private array <a href="#members">$sqlWords</a>;
+                extends Form
+            {<br/><ul class="none"><li>// members</li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$debug</a> =
+                        false;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$additionalFields</a> =
+                        ;
+                    </li><li>protected <span title="NULL">NULL</span> <a href="#members">$productsToSearch</a> =
+                        null;
+                    </li><li>protected string <a href="#members">$baseClassNameForBuyables</a> =
+                        "";
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$useBooleanSearch</a> =
+                        true;
+                    </li><li>protected <span title="String">String</span> <a href="#members">$additionalGetParameters</a> =
+                        "";
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$extraBuyableFieldsToSearchFullText</a> =
+                        ;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$maximumNumberOfResults</a> =
+                        0;
+                    </li><li>protected <span title="String">String</span> <a href="#members">$controllerSearchResultDisplayMethod</a> =
+                        "searchresults";
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$resultArray</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$productGroupIDs</a> =
+                        ;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$resultArrayPos</a> =
+                        0;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isShortForm</a> =
+                        0;
+                    </li><li>private array <a href="#members">$sqlWords</a> =
+                        ;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="ProductSearchForm" href="../classes/ProductSearchForm/setControllerSearchResultDisplayMethod.xhtml">setControllerSearchResultDisplayMethod</a>()
                     </li><li>public void <a title="ProductSearchForm" href="../classes/ProductSearchForm/setExtraBuyableFieldsToSearchFullText.xhtml">setExtraBuyableFieldsToSearchFullText</a>()
                     </li><li>public void <a title="ProductSearchForm" href="../classes/ProductSearchForm/setBaseClassNameForBuyables.xhtml">setBaseClassNameForBuyables</a>()
@@ -99,22 +116,14 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Form.xhtml">Form</a>
-            </li>
-          </ul>
-          <h4>Extended by</h4>
-          <ul>
-            <li>
-              <a href="../classes/ProductSearchForm_Short.xhtml">ProductSearchForm_Short</a>
-            </li>
+            <li>Form</li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="sqlWords"><strong>$sqlWords</strong>
@@ -125,47 +134,47 @@
           <ul class="members">
             <li id="additionalFields"><strong>$additionalFields</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">list of additional fields to add to search</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">list of additional fields to add to search</span></li>
             <li id="additionalGetParameters"><strong>$additionalGetParameters</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">get parameters added to the link you dont need to start them with &amp; or ? e.g.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">get parameters added to the link you dont need to start them with &amp; or ? e.g.</span></li>
             <li id="baseClassNameForBuyables"><strong>$baseClassNameForBuyables</strong>
                 —
                 string<br/><span class="indent">class name of the buyables to search at this stage, you can only search one type of buyable at any one time e.g. only products or only mydataobject</span></li>
             <li id="controllerSearchResultDisplayMethod"><strong>$controllerSearchResultDisplayMethod</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">The method on the parent controller that can display the results of the search results</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">The method on the parent controller that can display the results of the search results</span></li>
             <li id="debug"><strong>$debug</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">set to TRUE to show the search logic</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">set to TRUE to show the search logic</span></li>
             <li id="extraBuyableFieldsToSearchFullText"><strong>$extraBuyableFieldsToSearchFullText</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">List of additional fields that should be searched full text.</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">List of additional fields that should be searched full text.</span></li>
             <li id="isShortForm"><strong>$isShortForm</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">Is the extended or the short form?</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">Is the extended or the short form?</span></li>
             <li id="maximumNumberOfResults"><strong>$maximumNumberOfResults</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">Maximum number of results to return we limit this because otherwise the system will choke the assumption is that no user is really interested in looking at tons of results.</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">Maximum number of results to return we limit this because otherwise the system will choke the assumption is that no user is really interested in looking at tons of results.</span></li>
             <li id="productGroupIDs"><strong>$productGroupIDs</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">product groups found</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">product groups found</span></li>
             <li id="productsToSearch"><strong>$productsToSearch</strong>
                 —
-                <a href="#">NULL</a><br/><span class="indent">list of products that need to be searched</span></li>
+                <a title="NULL" href="../classes/NULL.xhtml">NULL</a><br/><span class="indent">list of products that need to be searched</span></li>
             <li id="resultArray"><strong>$resultArray</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">array of IDs of the results found so far</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">array of IDs of the results found so far</span></li>
             <li id="resultArrayPos"><strong>$resultArrayPos</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">Number of results found so far</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">Number of results found so far</span></li>
             <li id="useBooleanSearch"><strong>$useBooleanSearch</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>private</h4>
           <ul>
             <li id="addToResults"><a title="ProductSearchForm" href="../classes/ProductSearchForm/addToResults.xhtml">addToResults()</a>
@@ -213,8 +222,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

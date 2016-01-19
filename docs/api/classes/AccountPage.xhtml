@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - AccountPage</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/AccountPage.php.xhtml#line14">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,16 +70,25 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class AccountPage
-                extends <a title="Page" href="../classes/Page.xhtml">Page</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$casting</a>;
-                    </li><li>protected integer <a href="#members">$calculatedTotal</a>;
-                    </li><li>protected integer <a href="#members">$calculatedPaid</a>;
-                    </li><li>protected integer <a href="#members">$calculatedOutstanding</a>;
-                    </li><li>protected <a href="#members">$pastOrders</a>;
-                    </li><li>private string <a href="#members">$icon</a>;
-                    </li><li>private string <a href="#members">$singular_name</a>;
-                    </li><li>private string <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
+                extends Page
+            {<br/><ul class="none"><li>// members</li><li>private static <span title="Array">Array</span> <a href="#members">$casting</a> =
+                        ;
+                    </li><li>protected integer <a href="#members">$calculatedTotal</a> =
+                        0;
+                    </li><li>protected integer <a href="#members">$calculatedPaid</a> =
+                        0;
+                    </li><li>protected integer <a href="#members">$calculatedOutstanding</a> =
+                        0;
+                    </li><li>protected <span title="DataList">DataList</span> <a href="#members">$pastOrders</a> =
+                        null;
+                    </li><li>private static string <a href="#members">$icon</a> =
+                        'ecommerce/images/icons/AccountPage';
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Account Page";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Account Pages";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "A page where the customer can view all their orders and update their details.";
                     </li></ul><ul class="none"><li>// methods</li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canCreate.xhtml">canCreate</a>()
                     </li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canView.xhtml">canView</a>()
                     </li><li>public Boolean <a title="AccountPage" href="../classes/AccountPage/canEdit.xhtml">canEdit</a>()
@@ -99,26 +111,22 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Page.xhtml">Page</a>
-            </li>
+            <li>Page</li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
-            <li id="casting">
-              <strong>$casting</strong>
-              <br/>
-              <span class="indent">standard SS variable var Array</span>
-            </li>
+            <li id="casting"><strong>$casting</strong>
+                —
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="icon"><strong>$icon</strong>
                 —
                 <br/><span class="indent">Standard SS variable</span></li>
@@ -131,30 +139,22 @@
           </ul>
           <h4>protected</h4>
           <ul class="members">
-            <li id="calculatedOutstanding">
-              <strong>$calculatedOutstanding</strong>
-              <br/>
-              <span class="indent">var float</span>
-            </li>
-            <li id="calculatedPaid">
-              <strong>$calculatedPaid</strong>
-              <br/>
-              <span class="indent">var float</span>
-            </li>
-            <li id="calculatedTotal">
-              <strong>$calculatedTotal</strong>
-              <br/>
-              <span class="indent">var float</span>
-            </li>
-            <li id="pastOrders">
-              <strong>$pastOrders</strong>
-              <br/>
-              <span class="indent">var DataList</span>
-            </li>
+            <li id="calculatedOutstanding"><strong>$calculatedOutstanding</strong>
+                —
+                float</li>
+            <li id="calculatedPaid"><strong>$calculatedPaid</strong>
+                —
+                float</li>
+            <li id="calculatedTotal"><strong>$calculatedTotal</strong>
+                —
+                float</li>
+            <li id="pastOrders"><strong>$pastOrders</strong>
+                —
+                <a title="DataList" href="../classes/DataList.xhtml">DataList</a></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="calculatePastOrders"><a title="AccountPage" href="../classes/AccountPage/calculatePastOrders.xhtml">calculatePastOrders()</a>
@@ -206,8 +206,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

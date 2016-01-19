@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - BillingAddress</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/address/BillingAddress.php.xhtml#line14">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -71,27 +74,40 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class BillingAddress
                 extends <a title="OrderAddress" href="../classes/OrderAddress.xhtml">OrderAddress</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$api_access</a>;
-                    </li><li>private array <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$has_one</a>;
-                    </li><li>private array <a href="#members">$belongs_to</a>;
-                    </li><li>private string <a href="#members">$default_sort</a>;
-                    </li><li>private array <a href="#members">$indexes</a>;
-                    </li><li>private array <a href="#members">$casting</a>;
-                    </li><li>private array <a href="#members">$searchable_fields</a>;
-                    </li><li>private array <a href="#members">$summary_fields</a>;
-                    </li><li>private array <a href="#members">$field_labels</a>;
-                    </li><li>private string <a href="#members">$singular_name</a>;
-                    </li><li>private string <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$api_access</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_one</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$belongs_to</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$default_sort</a> =
+                        "\"BillingAddress\".\"ID\" DESC";
+                    </li><li>private static array <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$casting</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$searchable_fields</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$summary_fields</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$field_labels</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Billing Address";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Billing Addresses";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "The details of the person buying the order.";
                     </li></ul><ul class="none"><li>// Inherited members from <span title="OrderAddress">OrderAddress</span></li><li>protected <span title="Array">Array</span> <a href="#members">$readOnlyFields</a>;
                         </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canEdit</a>;
                         </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canView</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/i18n_plural_name.xhtml">i18n_plural_name</a>()
-                    </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/FullCountryName.xhtml">FullCountryName</a>()
+                    </li><li>public String <a title="BillingAddress" href="../classes/BillingAddress/FullCountryName.xhtml">FullCountryName</a>()
                     </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/getFullCountryName.xhtml">getFullCountryName</a>()
-                    </li><li>public void <a title="BillingAddress" href="../classes/BillingAddress/getCMSFields.xhtml">getCMSFields</a>()
+                    </li><li>public FieldList <a title="BillingAddress" href="../classes/BillingAddress/getCMSFields.xhtml">getCMSFields</a>()
                     </li><li>public FieldList <a title="BillingAddress" href="../classes/BillingAddress/getFields.xhtml">getFields</a>()
                     </li><li>public array <a title="BillingAddress" href="../classes/BillingAddress/getRequiredFields.xhtml">getRequiredFields</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="OrderAddress">OrderAddress</span></li><li>public void <a title="OrderAddress" href="../classes/OrderAddress/i18n_singular_name.xhtml">i18n_singular_name</a>()
@@ -135,16 +151,16 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/OrderAddress.xhtml">OrderAddress</a>
+              <a title="OrderAddress" href="../classes/OrderAddress.xhtml">OrderAddress</a>
             </li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -152,12 +168,16 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">481+</td>
+            <td class="nummeric">438+</td>
+            <td>: are there times when the Shipping rather than the Billing address should be linked?</td>
+          </tr>
+          <tr>
+            <td class="nummeric">483+</td>
             <td>: can wre write $this-&gt;Order() instead????</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="api_access"><strong>$api_access</strong>
@@ -185,7 +205,7 @@
             </li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="field_labels">
               <strong>$field_labels</strong>
               <br/>
@@ -226,23 +246,24 @@
           <ul class="members">
             <li id="_canEdit"><strong>$_canEdit</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">save edit status for speed's sake</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">save edit status for speed's sake</span></li>
             <li id="_canView"><strong>$_canView</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">save view status for speed's sake</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">save view status for speed's sake</span></li>
             <li id="readOnlyFields"><strong>$readOnlyFields</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">There might be times when a modifier needs to make an address field read-only.</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">There might be times when a modifier needs to make an address field read-only.</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="FullCountryName"><a title="BillingAddress" href="../classes/BillingAddress/FullCountryName.xhtml">FullCountryName()</a>
-                — method for casted variable return String</li>
-            <li id="getCMSFields"><a title="BillingAddress" href="../classes/BillingAddress/getCMSFields.xhtml">getCMSFields()</a>
-                — return FieldList</li>
+                — method for casted variable</li>
+            <li id="getCMSFields">
+              <a title="BillingAddress" href="../classes/BillingAddress/getCMSFields.xhtml">getCMSFields()</a>
+            </li>
             <li id="getFields">
               <a title="BillingAddress" href="../classes/BillingAddress/getFields.xhtml">getFields()</a>
             </li>
@@ -286,8 +307,9 @@
                 — link to edit the record</li>
             <li id="EcomConfig"><a title="OrderAddress" href="../classes/OrderAddress/EcomConfig.xhtml">EcomConfig()</a>
                 — returns the instance of EcommerceDBConfig</li>
-            <li id="FillWithLastAddressFromMember"><a title="OrderAddress" href="../classes/OrderAddress/FillWithLastAddressFromMember.xhtml">FillWithLastAddressFromMember()</a>
-                — todo: are there times when the Shipping rather than the Billing address should be linked? Copies the last address used by the member.</li>
+            <li id="FillWithLastAddressFromMember">
+              <a title="OrderAddress" href="../classes/OrderAddress/FillWithLastAddressFromMember.xhtml">FillWithLastAddressFromMember()</a>
+            </li>
             <li id="FullName">
               <a title="OrderAddress" href="../classes/OrderAddress/FullName.xhtml">FullName()</a>
             </li>
@@ -352,8 +374,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

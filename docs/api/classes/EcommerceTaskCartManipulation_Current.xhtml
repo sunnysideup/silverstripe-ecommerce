@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommerceTaskCartManipulation_Current</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/tasks/EcommerceTaskCartManipulation.php.xhtml#line12">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,24 +70,26 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceTaskCartManipulation_Current
-                extends <a title="BuildTask" href="../classes/BuildTask.xhtml">BuildTask</a>
-            {<br/><ul class="none"><li>// members</li><li>protected string <a href="#members">$title</a>;
-                    </li><li>protected string <a href="#members">$description</a>;
+                extends BuildTask
+            {<br/><ul class="none"><li>// members</li><li>protected string <a href="#members">$title</a> =
+                        "Clear the current Cart";
+                    </li><li>protected string <a href="#members">$description</a> =
+                        "&#13;
+		Removes the cart that is currently in memory (session) for the currrent user.&#13;
+		It does not delete the order itself.";
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommerceTaskCartManipulation_Current" href="../classes/EcommerceTaskCartManipulation_Current/run.xhtml">run</a>()
                     </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/BuildTask.xhtml">BuildTask</a>
-            </li>
+            <li>BuildTask</li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>protected</h4>
           <ul class="members">
             <li id="description">
@@ -96,7 +101,7 @@
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="run">
@@ -106,8 +111,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

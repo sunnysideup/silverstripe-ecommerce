@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - Product</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/Product.php.xhtml#line23">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,24 +73,39 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Product
-                extends <a title="Page" href="../classes/Page.xhtml">Page</a>
+                extends Page
                 implements
                 <a title="BuyableModel" href="../interfaces/BuyableModel.xhtml">BuyableModel</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$api_access</a>;
-                    </li><li>private array <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$has_one</a>;
-                    </li><li>private array <a href="#members">$many_many</a>;
-                    </li><li>private array <a href="#members">$casting</a>;
-                    </li><li>private array <a href="#members">$indexes</a>;
-                    </li><li>private array <a href="#members">$defaults</a>;
-                    </li><li>private array <a href="#members">$summary_fields</a>;
-                    </li><li>private array <a href="#members">$searchable_fields</a>;
-                    </li><li>private string <a href="#members">$singular_name</a>;
-                    </li><li>private string <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
-                    </li><li>private string <a href="#members">$default_parent</a>;
-                    </li><li>private string <a href="#members">$icon</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$defaultClassNameForOrderItem</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$api_access</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_one</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$many_many</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$casting</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$defaults</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$summary_fields</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$searchable_fields</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Product";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Products";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "A product that is for sale in the shop.";
+                    </li><li>private static string <a href="#members">$default_parent</a> =
+                        'ProductGroup';
+                    </li><li>private static string <a href="#members">$icon</a> =
+                        'ecommerce/images/icons/product';
+                    </li><li>protected <span title="String">String</span> <a href="#members">$defaultClassNameForOrderItem</a> =
+                        "Product_OrderItem";
                     </li></ul><ul class="none"><li>// methods</li><li>public FieldList <a title="Product" href="../classes/Product/scaffoldSearchFields.xhtml">scaffoldSearchFields</a>()
                     </li><li>public void <a title="Product" href="../classes/Product/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="Product" href="../classes/Product/i18n_plural_name.xhtml">i18n_plural_name</a>()
@@ -99,7 +117,7 @@
                     </li><li>public void <a title="Product" href="../classes/Product/onBeforeWrite.xhtml">onBeforeWrite</a>()
                     </li><li>public void <a title="Product" href="../classes/Product/onAfterWrite.xhtml">onAfterWrite</a>()
                     </li><li>public Boolean <a title="Product" href="../classes/Product/prepareFullFields.xhtml">prepareFullFields</a>()
-                    </li><li>public void <a title="Product" href="../classes/Product/AllParentGroups.xhtml">AllParentGroups</a>()
+                    </li><li>public DataList <a title="Product" href="../classes/Product/AllParentGroups.xhtml">AllParentGroups</a>()
                     </li><li>public DataList <a title="Product" href="../classes/Product/AllParentGroupsIncludingParents.xhtml">AllParentGroupsIncludingParents</a>()
                     </li><li>public ProductGroup <a title="Product" href="../classes/Product/MainParentGroup.xhtml">MainParentGroup</a>()
                     </li><li>public ProductGroup <a title="Product" href="../classes/Product/TopParentGroup.xhtml">TopParentGroup</a>()
@@ -119,7 +137,7 @@
                     </li><li>public void <a title="Product" href="../classes/Product/getHasBeenSold.xhtml">getHasBeenSold</a>()
                     </li><li>public String <a title="Product" href="../classes/Product/AddVariationsLink.xhtml">AddVariationsLink</a>()
                     </li><li>public String <a title="Product" href="../classes/Product/AddLink.xhtml">AddLink</a>()
-                    </li><li>public void <a title="Product" href="../classes/Product/IncrementLink.xhtml">IncrementLink</a>()
+                    </li><li>public String <a title="Product" href="../classes/Product/IncrementLink.xhtml">IncrementLink</a>()
                     </li><li>public String <a title="Product" href="../classes/Product/DecrementLink.xhtml">DecrementLink</a>()
                     </li><li>public String <a title="Product" href="../classes/Product/RemoveLink.xhtml">RemoveLink</a>()
                     </li><li>public String <a title="Product" href="../classes/Product/RemoveAllLink.xhtml">RemoveAllLink</a>()
@@ -148,22 +166,20 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Page.xhtml">Page</a>
-            </li>
+            <li>Page</li>
           </ul>
           <h4>Implements</h4>
           <ul>
             <li>
-              <a href="../interfaces/BuyableModel.xhtml">BuyableModel</a>
+              <a title="BuyableModel" href="../interfaces/BuyableModel.xhtml">BuyableModel</a>
             </li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -175,12 +191,12 @@
             <td>: Ask the silverstripe gods why $default_sort won't work with FullSiteTreeSort</td>
           </tr>
           <tr>
-            <td class="nummeric">590+</td>
+            <td class="nummeric">594+</td>
             <td>: complete</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="api_access">
@@ -210,7 +226,7 @@
             </li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="has_one">
               <strong>$has_one</strong>
               <br/>
@@ -256,11 +272,11 @@
           <ul class="members">
             <li id="defaultClassNameForOrderItem"><strong>$defaultClassNameForOrderItem</strong>
                 —
-                <a href="#">String</a></li>
+                <a title="String" href="../classes/String.xhtml">String</a></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="getAdditionalImagesField"><a title="Product" href="../classes/Product/getAdditionalImagesField.xhtml">getAdditionalImagesField()</a>
@@ -317,7 +333,7 @@
             <li id="HasBeenSold"><a title="Product" href="../classes/Product/HasBeenSold.xhtml">HasBeenSold()</a>
                 — Number of variations sold</li>
             <li id="IncrementLink"><a title="Product" href="../classes/Product/IncrementLink.xhtml">IncrementLink()</a>
-                — link use to add (one) to cart return String</li>
+                — link use to add (one) to cart</li>
             <li id="IsEcommercePage"><a title="Product" href="../classes/Product/IsEcommercePage.xhtml">IsEcommercePage()</a>
                 — tells us if the current page is part of e-commerce.</li>
             <li id="IsInCart">
@@ -395,8 +411,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

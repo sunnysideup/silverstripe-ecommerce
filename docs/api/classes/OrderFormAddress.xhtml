@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - OrderFormAddress</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/forms/OrderFormAddress.php.xhtml#line15">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,11 +73,15 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class OrderFormAddress
-                extends <a title="Form" href="../classes/Form.xhtml">Form</a>
-            {<br/><ul class="none"><li>// members</li><li>protected <span title="Object">Object</span> <a href="#members">$orderMember</a>;
-                    </li><li>protected <span title="Object">Object</span> <a href="#members">$loggedInMember</a>;
-                    </li><li>protected <span title="Int">Int</span> <a href="#members">$newlyCreatedMemberID</a>;
-                    </li><li>protected <span title="Order">Order</span> <a href="#members">$order</a>;
+                extends Form
+            {<br/><ul class="none"><li>// members</li><li>protected <span title="Object">Object</span> <a href="#members">$orderMember</a> =
+                        null;
+                    </li><li>protected <span title="Object">Object</span> <a href="#members">$loggedInMember</a> =
+                        null;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$newlyCreatedMemberID</a> =
+                        0;
+                    </li><li>protected <span title="Order">Order</span> <a href="#members">$order</a> =
+                        null;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="OrderFormAddress" href="../classes/OrderFormAddress/__construct.xhtml">__construct</a>()
                     </li><li>protected Boolean <a title="OrderFormAddress" href="../classes/OrderFormAddress/orderHasFullyOperationalMember.xhtml">orderHasFullyOperationalMember</a>()
                     </li><li>protected Boolean <a title="OrderFormAddress" href="../classes/OrderFormAddress/orderDoesNotHaveFullyOperationalMember.xhtml">orderDoesNotHaveFullyOperationalMember</a>()
@@ -83,25 +90,24 @@
                     </li><li>public void <a title="OrderFormAddress" href="../classes/OrderFormAddress/clearSessionData.xhtml">clearSessionData</a>()
                     </li><li>protected Member <a title="OrderFormAddress" href="../classes/OrderFormAddress/createOrFindMember.xhtml">createOrFindMember</a>()
                     </li><li>protected Boolean <a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeCreated.xhtml">memberShouldBeCreated</a>()
-                    </li><li>protected Boolean <a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeLoggedIn.xhtml">memberShouldBeLoggedIn</a>()
                     </li><li>protected Boolean <a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeSaved.xhtml">memberShouldBeSaved</a>()
+                    </li><li>protected Boolean <a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeLoggedIn.xhtml">memberShouldBeLoggedIn</a>()
                     </li><li>public Boolean <a title="OrderFormAddress" href="../classes/OrderFormAddress/uniqueMemberFieldCanBeUsed.xhtml">uniqueMemberFieldCanBeUsed</a>()
                     </li><li>protected Null <a title="OrderFormAddress" href="../classes/OrderFormAddress/anotherExistingMemberWithSameUniqueFieldValue.xhtml">anotherExistingMemberWithSameUniqueFieldValue</a>()
+                    </li><li>protected String <a title="OrderFormAddress" href="../classes/OrderFormAddress/enteredEmailAddressDoesNotMatchLoggedInUser.xhtml">enteredEmailAddressDoesNotMatchLoggedInUser</a>()
                     </li><li>protected String <a title="OrderFormAddress" href="../classes/OrderFormAddress/validPasswordHasBeenEntered.xhtml">validPasswordHasBeenEntered</a>()
                     </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Form.xhtml">Form</a>
-            </li>
+            <li>Form</li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -109,46 +115,49 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">439+</td>
+            <td class="nummeric">462+</td>
             <td>: explain why password needs to be more than three characters...</td>
           </tr>
           <tr>
-            <td class="nummeric">439+</td>
+            <td class="nummeric">462+</td>
             <td>: create class that checks if password is good enough</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>protected</h4>
           <ul class="members">
             <li id="loggedInMember"><strong>$loggedInMember</strong>
                 —
-                <a href="#">Object</a></li>
+                <a title="Object" href="../classes/Object.xhtml">Object</a><br/><span class="indent">the logged in member, if any this is not always the same as the orderMember</span></li>
             <li id="newlyCreatedMemberID"><strong>$newlyCreatedMemberID</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">ID of the member that has just been created.</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">ID of the member that has just been created.</span></li>
             <li id="order"><strong>$order</strong>
                 —
-                <a href="#">Order</a><br/><span class="indent">ID of the member that has just been created.</span></li>
+                <a title="Order" href="../classes/Order.xhtml">Order</a><br/><span class="indent">ID of the member that has just been created.</span></li>
             <li id="orderMember"><strong>$orderMember</strong>
                 —
-                <a href="#">Object</a></li>
+                <a title="Object" href="../classes/Object.xhtml">Object</a><br/><span class="indent">the member attached to the order this is not always the same as the loggedInMember</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="anotherExistingMemberWithSameUniqueFieldValue"><a title="OrderFormAddress" href="../classes/OrderFormAddress/anotherExistingMemberWithSameUniqueFieldValue.xhtml">anotherExistingMemberWithSameUniqueFieldValue()</a>
                 — returns existing member if it already exists and it is not the logged-in one.</li>
             <li id="createOrFindMember"><a title="OrderFormAddress" href="../classes/OrderFormAddress/createOrFindMember.xhtml">createOrFindMember()</a>
-                — works out the most likely member for the order after submission of the form.</li>
+                — Works out the most likely member for the order after submission of the form.</li>
+            <li id="enteredEmailAddressDoesNotMatchLoggedInUser"><a title="OrderFormAddress" href="../classes/OrderFormAddress/enteredEmailAddressDoesNotMatchLoggedInUser.xhtml">enteredEmailAddressDoesNotMatchLoggedInUser()</a>
+                — returns the email if - user is logged in already - user's email in DB does not match email entered.</li>
             <li id="memberShouldBeCreated"><a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeCreated.xhtml">memberShouldBeCreated()</a>
-                — eturns TRUE if - the member is not logged in - AND non-members are automatically created OR password has been provided - AND unique field does not exist already (someone else has used that email)</li>
+                — Should a new member be created?</li>
             <li id="memberShouldBeLoggedIn"><a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeLoggedIn.xhtml">memberShouldBeLoggedIn()</a>
-                — returns TRUE if - the member is not logged in - AND non-members are automatically created OR password has been provided - AND unique field does not exist already (someone else has used that email)</li>
-            <li id="memberShouldBeSaved"><a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeSaved.xhtml">memberShouldBeSaved()</a>
-                — returns TRUE - if member should be logged-in OR - member is logged and the unique field matches and member data is automatically updated.</li>
+                — returns TRUE if - the member is not logged in - the member is new AND - the password is valid</li>
+            <li id="memberShouldBeSaved">
+              <a title="OrderFormAddress" href="../classes/OrderFormAddress/memberShouldBeSaved.xhtml">memberShouldBeSaved()</a>
+            </li>
             <li id="orderDoesNotHaveFullyOperationalMember"><a title="OrderFormAddress" href="../classes/OrderFormAddress/orderDoesNotHaveFullyOperationalMember.xhtml">orderDoesNotHaveFullyOperationalMember()</a>
                 — Opposite of orderHasFullyOperationalMember method.</li>
             <li id="orderHasFullyOperationalMember"><a title="OrderFormAddress" href="../classes/OrderFormAddress/orderHasFullyOperationalMember.xhtml">orderHasFullyOperationalMember()</a>
@@ -173,8 +182,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

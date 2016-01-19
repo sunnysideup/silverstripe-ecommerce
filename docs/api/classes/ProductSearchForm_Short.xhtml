@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - ProductSearchForm_Short</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -57,6 +57,9 @@
           </li>
           <li>
             <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/code/forms/ProductSearchForm_Short.php.xhtml#line3">Source</a>
           </li>
         </ul>
       </nav>
@@ -96,61 +99,61 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/ProductSearchForm.xhtml">ProductSearchForm</a>
+              <a title="ProductSearchForm" href="../classes/ProductSearchForm.xhtml">ProductSearchForm</a>
             </li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>protected</h4>
           <ul class="members">
             <li id="additionalFields"><strong>$additionalFields</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">list of additional fields to add to search</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">list of additional fields to add to search</span></li>
             <li id="additionalGetParameters"><strong>$additionalGetParameters</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">get parameters added to the link you dont need to start them with &amp; or ? e.g.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">get parameters added to the link you dont need to start them with &amp; or ? e.g.</span></li>
             <li id="baseClassNameForBuyables"><strong>$baseClassNameForBuyables</strong>
                 —
                 string<br/><span class="indent">class name of the buyables to search at this stage, you can only search one type of buyable at any one time e.g. only products or only mydataobject</span></li>
             <li id="controllerSearchResultDisplayMethod"><strong>$controllerSearchResultDisplayMethod</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">The method on the parent controller that can display the results of the search results</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">The method on the parent controller that can display the results of the search results</span></li>
             <li id="debug"><strong>$debug</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">set to TRUE to show the search logic</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">set to TRUE to show the search logic</span></li>
             <li id="extraBuyableFieldsToSearchFullText"><strong>$extraBuyableFieldsToSearchFullText</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">List of additional fields that should be searched full text.</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">List of additional fields that should be searched full text.</span></li>
             <li id="isShortForm"><strong>$isShortForm</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">Is the extended or the short form?</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">Is the extended or the short form?</span></li>
             <li id="maximumNumberOfResults"><strong>$maximumNumberOfResults</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">Maximum number of results to return we limit this because otherwise the system will choke the assumption is that no user is really interested in looking at tons of results.</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">Maximum number of results to return we limit this because otherwise the system will choke the assumption is that no user is really interested in looking at tons of results.</span></li>
             <li id="productGroupIDs"><strong>$productGroupIDs</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">product groups found</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">product groups found</span></li>
             <li id="productsToSearch"><strong>$productsToSearch</strong>
                 —
-                <a href="#">NULL</a><br/><span class="indent">list of products that need to be searched</span></li>
+                <a title="NULL" href="../classes/NULL.xhtml">NULL</a><br/><span class="indent">list of products that need to be searched</span></li>
             <li id="resultArray"><strong>$resultArray</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">array of IDs of the results found so far</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">array of IDs of the results found so far</span></li>
             <li id="resultArrayPos"><strong>$resultArrayPos</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">Number of results found so far</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">Number of results found so far</span></li>
             <li id="useBooleanSearch"><strong>$useBooleanSearch</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h3>Inherited from <a title="ProductSearchForm" href="../classes/ProductSearchForm.xhtml">ProductSearchForm</a></h3>
           <h4>protected</h4>
           <ul>
@@ -189,8 +192,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

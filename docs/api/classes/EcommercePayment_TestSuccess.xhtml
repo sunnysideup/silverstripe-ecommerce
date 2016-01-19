@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommercePayment_TestSuccess</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -53,13 +53,13 @@
             <a href="#hierarchy">Hierarchy</a>
           </li>
           <li>
-            <a href="#tasks">Tasks</a>
-          </li>
-          <li>
             <a href="#members">Members</a>
           </li>
           <li>
             <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/code/model/money/EcommercePayment_TestSuccess.php.xhtml#line10">Source</a>
           </li>
         </ul>
       </nav>
@@ -72,12 +72,11 @@
         <div class="synopsis">class EcommercePayment_TestSuccess
                 extends <a title="EcommercePayment_Test" href="../classes/EcommercePayment_Test.xhtml">EcommercePayment_Test</a>
             {<br/><ul class="none"><li>// Inherited members from <span title="EcommercePayment">EcommercePayment</span></li><li>public <span title="EcommercePaymentSupportedMethodsProvider">EcommercePaymentSupportedMethodsProvider</span> <a href="#members">$supportedMethodsProvider</a>;
-                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommercePayment_TestSuccess" href="../classes/EcommercePayment_TestSuccess/processPayment.xhtml">processPayment</a>()
+                        </li></ul><ul class="none"><li>// methods</li><li>public EcommercePayment_Result <a title="EcommercePayment_TestSuccess" href="../classes/EcommercePayment_TestSuccess/processPayment.xhtml">processPayment</a>()
                     </li><li>public void <a title="EcommercePayment_TestSuccess" href="../classes/EcommercePayment_TestSuccess/getPaymentFormFields.xhtml">getPaymentFormFields</a>()
                     </li><li>public void <a title="EcommercePayment_TestSuccess" href="../classes/EcommercePayment_TestSuccess/getPaymentFormRequirements.xhtml">getPaymentFormRequirements</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="EcommercePayment_Test">EcommercePayment_Test</span></li><li>public void <a title="EcommercePayment_Test" href="../classes/EcommercePayment_Test/getPaymentFormRequirements.xhtml">getPaymentFormRequirements</a>()
-                        </li></ul><ul class="none"><li>// Inherited methods from <span title="EcommercePayment">EcommercePayment</span></li><li>public static Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/process_payment_form_and_return_next_step.xhtml">process_payment_form_and_return_next_step</a>()
-                        </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/getCMSFields.xhtml">getCMSFields</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="EcommercePayment">EcommercePayment</span></li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/getCMSFields.xhtml">getCMSFields</a>()
                         </li><li>public String <a title="EcommercePayment" href="../classes/EcommercePayment/CMSEditLink.xhtml">CMSEditLink</a>()
                         </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/canCreate.xhtml">canCreate</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/canView.xhtml">canView</a>()
@@ -89,65 +88,49 @@
                         </li><li>public String <a title="EcommercePayment" href="../classes/EcommercePayment/AmountCurrency.xhtml">AmountCurrency</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/getAmountCurrency.xhtml">getAmountCurrency</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/onAfterWrite.xhtml">onAfterWrite</a>()
-                        </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/Status.xhtml">Status</a>()
+                        </li><li>public String <a title="EcommercePayment" href="../classes/EcommercePayment/Status.xhtml">Status</a>()
                         </li><li>public static string <a title="EcommercePayment" href="../classes/EcommercePayment/site_currency.xhtml">site_currency</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/populateDefaults.xhtml">populateDefaults</a>()
                         </li><li>protected void <a title="EcommercePayment" href="../classes/EcommercePayment/setClientIP.xhtml">setClientIP</a>()
                         </li><li>public string <a title="EcommercePayment" href="../classes/EcommercePayment/PaymentMethod.xhtml">PaymentMethod</a>()
-                        </li><li>public static FieldList <a title="EcommercePayment" href="../classes/EcommercePayment/combined_form_fields.xhtml">combined_form_fields</a>()
                         </li><li>public static void <a title="EcommercePayment" href="../classes/EcommercePayment/set_supported_methods.xhtml">set_supported_methods</a>()
                         </li><li>public static Array <a title="EcommercePayment" href="../classes/EcommercePayment/get_supported_methods.xhtml">get_supported_methods</a>()
                         </li><li>public static An <a title="EcommercePayment" href="../classes/EcommercePayment/combined_form_requirements.xhtml">combined_form_requirements</a>()
+                        </li><li>public static FieldList <a title="EcommercePayment" href="../classes/EcommercePayment/combined_form_fields.xhtml">combined_form_fields</a>()
                         </li><li>public FieldList <a title="EcommercePayment" href="../classes/EcommercePayment/getPaymentFormFields.xhtml">getPaymentFormFields</a>()
                         </li><li>public array <a title="EcommercePayment" href="../classes/EcommercePayment/getPaymentFormRequirements.xhtml">getPaymentFormRequirements</a>()
-                        </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/processPayment.xhtml">processPayment</a>()
-                        </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/getForm.xhtml">getForm</a>()
+                        </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/validatePayment.xhtml">validatePayment</a>()
+                        </li><li>public EcommercePayment_Result <a title="EcommercePayment" href="../classes/EcommercePayment/processPayment.xhtml">processPayment</a>()
                         </li><li>protected void <a title="EcommercePayment" href="../classes/EcommercePayment/handleError.xhtml">handleError</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/PaidObject.xhtml">PaidObject</a>()
-                        </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/validCreditCard.xhtml">validCreditCard</a>()
-                        </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/validExpiryDate.xhtml">validExpiryDate</a>()
-                        </li><li>public Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/validCVC.xhtml">validCVC</a>()
                         </li><li>public void <a title="EcommercePayment" href="../classes/EcommercePayment/debug.xhtml">debug</a>()
+                        </li><li>public static Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/process_payment_form_and_return_next_step.xhtml">process_payment_form_and_return_next_step</a>()
+                        </li><li>public static Boolean <a title="EcommercePayment" href="../classes/EcommercePayment/validate_payment.xhtml">validate_payment</a>()
+                        </li><li>protected EcommercePaymentFormSetupAndValidation <a title="EcommercePayment" href="../classes/EcommercePayment/ecommercePaymentFormSetupAndValidationObject.xhtml">ecommercePaymentFormSetupAndValidationObject</a>()
+                        </li><li>public static EcommercePaymentFormSetupAndValidation <a title="EcommercePayment" href="../classes/EcommercePayment/ecommerce_payment_form_setup_and_validation_object.xhtml">ecommerce_payment_form_setup_and_validation_object</a>()
                         </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/EcommercePayment_Test.xhtml">EcommercePayment_Test</a>
+              <a title="EcommercePayment_Test" href="../classes/EcommercePayment_Test.xhtml">EcommercePayment_Test</a>
             </li>
           </ul>
         </div>
-        <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
-          <thead>
-            <tr>
-              <th style="width:3em;">Line</th>
-              <th>Task</th>
-            </tr>
-          </thead>
-          <tr>
-            <td class="nummeric">479+</td>
-            <td>: finish!</td>
-          </tr>
-          <tr>
-            <td class="nummeric">490+</td>
-            <td>: finish!</td>
-          </tr>
-        </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>public</h4>
           <ul class="members">
             <li id="supportedMethodsProvider"><strong>$supportedMethodsProvider</strong>
                 —
-                <a href="#">EcommercePaymentSupportedMethodsProvider</a><br/><span class="indent">automatically populated by the dependency manager</span></li>
+                <a title="EcommercePaymentSupportedMethodsProvider" href="../classes/EcommercePaymentSupportedMethodsProvider.xhtml">EcommercePaymentSupportedMethodsProvider</a><br/><span class="indent">automatically populated by the dependency manager</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="getPaymentFormFields">
@@ -170,6 +153,9 @@
           <h3>Inherited from <a title="EcommercePayment" href="../classes/EcommercePayment.xhtml">EcommercePayment</a></h3>
           <h4>protected</h4>
           <ul>
+            <li id="ecommercePaymentFormSetupAndValidationObject">
+              <a title="EcommercePayment" href="../classes/EcommercePayment/ecommercePaymentFormSetupAndValidationObject.xhtml">ecommercePaymentFormSetupAndValidationObject()</a>
+            </li>
             <li id="handleError">
               <a title="EcommercePayment" href="../classes/EcommercePayment/handleError.xhtml">handleError()</a>
             </li>
@@ -191,8 +177,9 @@
             </li>
             <li id="PaymentMethod"><a title="EcommercePayment" href="../classes/EcommercePayment/PaymentMethod.xhtml">PaymentMethod()</a>
                 — Returns the Payment type currently in use.</li>
-            <li id="Status"><a title="EcommercePayment" href="../classes/EcommercePayment/Status.xhtml">Status()</a>
-                — return String</li>
+            <li id="Status">
+              <a title="EcommercePayment" href="../classes/EcommercePayment/Status.xhtml">Status()</a>
+            </li>
             <li id="canCreate"><a title="EcommercePayment" href="../classes/EcommercePayment/canCreate.xhtml">canCreate()</a>
                 — Standard SS method</li>
             <li id="canDelete"><a title="EcommercePayment" href="../classes/EcommercePayment/canDelete.xhtml">canDelete()</a>
@@ -208,6 +195,9 @@
                 — Return the form requirements for all the payment methods.</li>
             <li id="debug"><a title="EcommercePayment" href="../classes/EcommercePayment/debug.xhtml">debug()</a>
                 — Debug helper method.</li>
+            <li id="ecommerce_payment_form_setup_and_validation_object">
+              <a title="EcommercePayment" href="../classes/EcommercePayment/ecommerce_payment_form_setup_and_validation_object.xhtml">ecommerce_payment_form_setup_and_validation_object()</a>
+            </li>
             <li id="getAmountCurrency">
               <a title="EcommercePayment" href="../classes/EcommercePayment/getAmountCurrency.xhtml">getAmountCurrency()</a>
             </li>
@@ -216,9 +206,6 @@
             </li>
             <li id="getCMSFields">
               <a title="EcommercePayment" href="../classes/EcommercePayment/getCMSFields.xhtml">getCMSFields()</a>
-            </li>
-            <li id="getForm">
-              <a title="EcommercePayment" href="../classes/EcommercePayment/getForm.xhtml">getForm()</a>
             </li>
             <li id="getPaymentFormFields"><a title="EcommercePayment" href="../classes/EcommercePayment/getPaymentFormFields.xhtml">getPaymentFormFields()</a>
                 — Return the payment form fields that should be shown on the checkout order form for the payment type. Example: for {@link DPSPayment}, this would be a set of fields to enter your credit card details.</li>
@@ -233,27 +220,23 @@
             <li id="processPayment"><a title="EcommercePayment" href="../classes/EcommercePayment/processPayment.xhtml">processPayment()</a>
                 — Perform payment processing for the type of payment. For example, if this was a credit card payment type, you would perform the data send off to the payment gateway on this function for your payment subclass.</li>
             <li id="process_payment_form_and_return_next_step"><a title="EcommercePayment" href="../classes/EcommercePayment/process_payment_form_and_return_next_step.xhtml">process_payment_form_and_return_next_step()</a>
-                — Process payment form and return next step in the payment process.</li>
+                — LEGACY METHOD Process payment form and return next step in the payment process.</li>
             <li id="redirectToOrder"><a title="EcommercePayment" href="../classes/EcommercePayment/redirectToOrder.xhtml">redirectToOrder()</a>
                 — redirect to order action</li>
             <li id="set_supported_methods"><a title="EcommercePayment" href="../classes/EcommercePayment/set_supported_methods.xhtml">set_supported_methods()</a>
                 — Static method to quickly update the payment method on runtime associative array that goes like ClassName =&gt; Description ...</li>
             <li id="site_currency"><a title="EcommercePayment" href="../classes/EcommercePayment/site_currency.xhtml">site_currency()</a>
                 — Return the site currency in use.</li>
-            <li id="validCVC">
-              <a title="EcommercePayment" href="../classes/EcommercePayment/validCVC.xhtml">validCVC()</a>
-            </li>
-            <li id="validCreditCard"><a title="EcommercePayment" href="../classes/EcommercePayment/validCreditCard.xhtml">validCreditCard()</a>
-                — checks if a credit card is a real credit card number</li>
-            <li id="validExpiryDate">
-              <a title="EcommercePayment" href="../classes/EcommercePayment/validExpiryDate.xhtml">validExpiryDate()</a>
-            </li>
+            <li id="validatePayment"><a title="EcommercePayment" href="../classes/EcommercePayment/validatePayment.xhtml">validatePayment()</a>
+                — Checks if all the data for payment is correct (e.g. credit card) By default it returns true, because lots of payments gatewawys do not have any fields required here.</li>
+            <li id="validate_payment"><a title="EcommercePayment" href="../classes/EcommercePayment/validate_payment.xhtml">validate_payment()</a>
+                — LEGACY METHOD</li>
           </ul>
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

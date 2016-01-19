@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - CartPage_Controller</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/CartPage.php.xhtml#line292">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -69,13 +72,19 @@
         <p/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class CartPage_Controller
-                extends <a title="Page_Controller" href="../classes/Page_Controller.xhtml">Page_Controller</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$allowed_actions</a>;
-                    </li><li>protected <span title="ArraList">ArraList</span> <a href="#members">$actionLinks</a>;
-                    </li><li>protected <span title="$workedOutMessagesAndActions">$workedOutMessagesAndActions</span> <a href="#members">$workedOutMessagesAndActions</a>;
-                    </li><li>protected <span title="$order">$order</span> <a href="#members">$currentOrder</a>;
-                    </li><li>private string <a href="#members">$message</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$showCreateAccountForm</a>;
+                extends Page_Controller
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$allowed_actions</a> =
+                        ;
+                    </li><li>protected <span title="ArraList">ArraList</span> <a href="#members">$actionLinks</a> =
+                        null;
+                    </li><li>protected <span title="$workedOutMessagesAndActions">$workedOutMessagesAndActions</span> <a href="#members">$workedOutMessagesAndActions</a> =
+                        false;
+                    </li><li>protected <span title="$order">$order</span> <a href="#members">$currentOrder</a> =
+                        null;
+                    </li><li>private <span title="$message">$message</span> <a href="#members">$message</a> =
+                        "";
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$showCreateAccountForm</a> =
+                        false;
                     </li></ul><ul class="none"><li>// methods</li><li>public static void <a title="CartPage_Controller" href="../classes/CartPage_Controller/set_message.xhtml">set_message</a>()
                     </li><li>public void <a title="CartPage_Controller" href="../classes/CartPage_Controller/init.xhtml">init</a>()
                     </li><li>public void <a title="CartPage_Controller" href="../classes/CartPage_Controller/showorder.xhtml">showorder</a>()
@@ -100,25 +109,14 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Page_Controller.xhtml">Page_Controller</a>
-            </li>
-          </ul>
-          <h4>Extended by</h4>
-          <ul>
-            <li>
-              <a href="../classes/OrderConfirmationPage_Controller.xhtml">OrderConfirmationPage_Controller</a>
-            </li>
-            <li>
-              <a href="../classes/CheckoutPage_Controller.xhtml">CheckoutPage_Controller</a>
-            </li>
+            <li>Page_Controller</li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -131,36 +129,34 @@
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="allowed_actions">
               <strong>$allowed_actions</strong>
             </li>
-            <li id="message">
-              <strong>$message</strong>
-              <br/>
-              <span class="indent">Message shown (e.g. no current order, could not find order, order updated, etc...)</span>
-            </li>
+            <li id="message"><strong>$message</strong>
+                —
+                <a title="$message" href="../classes/$message.xhtml">$message</a><br/><span class="indent">Message shown (e.g. no current order, could not find order, order updated, etc...)</span></li>
           </ul>
           <h4>protected</h4>
           <ul class="members">
             <li id="actionLinks"><strong>$actionLinks</strong>
                 —
-                <a href="#">ArraList</a><br/><span class="indent">This ArraList holds DataObjects with a Link and Title each....</span></li>
+                <a title="ArraList" href="../classes/ArraList.xhtml">ArraList</a><br/><span class="indent">This ArraList holds DataObjects with a Link and Title each....</span></li>
             <li id="currentOrder"><strong>$currentOrder</strong>
                 —
-                <a href="#">$order</a><br/><span class="indent">order currently being shown on this page</span></li>
+                <a title="$order" href="../classes/$order.xhtml">$order</a><br/><span class="indent">order currently being shown on this page</span></li>
             <li id="showCreateAccountForm"><strong>$showCreateAccountForm</strong>
                 —
-                <a href="#">Boolean</a></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a></li>
             <li id="workedOutMessagesAndActions"><strong>$workedOutMessagesAndActions</strong>
                 —
-                <a href="#">$workedOutMessagesAndActions</a><br/><span class="indent">to ensure messages and actions links are only worked out once...</span></li>
+                <a title="$workedOutMessagesAndActions" href="../classes/$workedOutMessagesAndActions.xhtml">$workedOutMessagesAndActions</a><br/><span class="indent">to ensure messages and actions links are only worked out once...</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="isCartPage">
@@ -217,8 +213,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - Order</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/Order.php.xhtml#line33">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,27 +73,47 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Order
-                extends <a title="DataObject" href="../classes/DataObject.xhtml">DataObject</a>
+                extends DataObject
                 implements
                 <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
-            {<br/><ul class="none"><li>// members</li><li>private <span title="Array">Array</span> <a href="#members">$api_access</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$has_one</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$has_many</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$indexes</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$default_sort</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$casting</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$create_table_options</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$singular_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
-                    </li><li>private <span title="Boolean">Boolean</span> <a href="#members">$needs_recalculating</a>;
-                    </li><li>protected integer <a href="#members">$totalItems</a>;
-                    </li><li>protected <span title="Double">Double</span> <a href="#members">$totalItemsTimesQuantity</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$fieldsAndTabsToBeRemoved</a>;
-                    </li><li>private array <a href="#members">$summary_fields</a>;
-                    </li><li>private array <a href="#members">$searchable_fields</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isSubmittedTempVar</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static <span title="Array">Array</span> <a href="#members">$api_access</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_one</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$has_many</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static <span title="String">String</span> <a href="#members">$default_sort</a> =
+                        "\"LastEdited\" DESC";
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$casting</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$create_table_options</a> =
+                        ;
+                    </li><li>private static <span title="String">String</span> <a href="#members">$singular_name</a> =
+                        "Order";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$plural_name</a> =
+                        "Orders";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "A collection of items that together make up the 'Order'.  An order can be placed.";
+                    </li><li>private static <span title="Boolean">Boolean</span> <a href="#members">$needs_recalculating</a> =
+                        false;
+                    </li><li>protected integer <a href="#members">$totalItems</a> =
+                        null;
+                    </li><li>protected <span title="Double">Double</span> <a href="#members">$totalItemsTimesQuantity</a> =
+                        null;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$fieldsAndTabsToBeRemoved</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$summary_fields</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$searchable_fields</a> =
+                        ;
+                    </li><li>private static boolean <a href="#members">$_try_to_finalise_order_is_running</a> =
+                        false;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isSubmittedTempVar</a> =
+                        1;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Order" href="../classes/Order/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="Order" href="../classes/Order/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li><li>public static void <a title="Order" href="../classes/Order/set_needs_recalculating.xhtml">set_needs_recalculating</a>()
@@ -104,8 +127,8 @@
                     </li><li>public void <a title="Order" href="../classes/Order/getCMSFields.xhtml">getCMSFields</a>()
                     </li><li>protected GridField <a title="Order" href="../classes/Order/getOrderItemsField.xhtml">getOrderItemsField</a>()
                     </li><li>public GridField <a title="Order" href="../classes/Order/getModifierTableField.xhtml">getModifierTableField</a>()
-                    </li><li>protected void <a title="Order" href="../classes/Order/getBillingAddressField.xhtml">getBillingAddressField</a>()
-                    </li><li>protected void <a title="Order" href="../classes/Order/getShippingAddressField.xhtml">getShippingAddressField</a>()
+                    </li><li>protected GridField <a title="Order" href="../classes/Order/getBillingAddressField.xhtml">getBillingAddressField</a>()
+                    </li><li>protected GridField <a title="Order" href="../classes/Order/getShippingAddressField.xhtml">getShippingAddressField</a>()
                     </li><li>public GridField <a title="Order" href="../classes/Order/getOrderStatusLogsTableField.xhtml">getOrderStatusLogsTableField</a>()
                     </li><li>protected GridField <a title="Order" href="../classes/Order/getOrderStatusLogsTableField_Archived.xhtml">getOrderStatusLogsTableField_Archived</a>()
                     </li><li>public GridField <a title="Order" href="../classes/Order/getEmailsTableField.xhtml">getEmailsTableField</a>()
@@ -115,6 +138,7 @@
                     </li><li>public void <a title="Order" href="../classes/Order/tryToFinaliseOrder.xhtml">tryToFinaliseOrder</a>()
                     </li><li>public Integer <a title="Order" href="../classes/Order/doNextStatus.xhtml">doNextStatus</a>()
                     </li><li>public void <a title="Order" href="../classes/Order/Cancel.xhtml">Cancel</a>()
+                    </li><li>public Boolean <a title="Order" href="../classes/Order/Archive.xhtml">Archive</a>()
                     </li><li>public DataObject <a title="Order" href="../classes/Order/MyStep.xhtml">MyStep</a>()
                     </li><li>public OrderStatusLog <a title="Order" href="../classes/Order/RelevantLogEntry.xhtml">RelevantLogEntry</a>()
                     </li><li>public DataObject <a title="Order" href="../classes/Order/CurrentStepVisibleToCustomer.xhtml">CurrentStepVisibleToCustomer</a>()
@@ -126,6 +150,7 @@
                     </li><li>public boolean <a title="Order" href="../classes/Order/IsCompleted.xhtml">IsCompleted</a>()
                     </li><li>public boolean <a title="Order" href="../classes/Order/IsPaid.xhtml">IsPaid</a>()
                     </li><li>public boolean <a title="Order" href="../classes/Order/PaymentIsPending.xhtml">PaymentIsPending</a>()
+                    </li><li>public DataList <a title="Order" href="../classes/Order/RelevantPayments.xhtml">RelevantPayments</a>()
                     </li><li>public boolean <a title="Order" href="../classes/Order/IsCancelled.xhtml">IsCancelled</a>()
                     </li><li>public void <a title="Order" href="../classes/Order/getIsCancelled.xhtml">getIsCancelled</a>()
                     </li><li>public boolean <a title="Order" href="../classes/Order/IsCustomerCancelled.xhtml">IsCustomerCancelled</a>()
@@ -146,6 +171,7 @@
                     </li><li>public ArrayList <a title="Order" href="../classes/Order/getOrderAttributesByType.xhtml">getOrderAttributesByType</a>()
                     </li><li>public DataList <a title="Order" href="../classes/Order/Items.xhtml">Items</a>()
                     </li><li>public DataList <a title="Order" href="../classes/Order/OrderItems.xhtml">OrderItems</a>()
+                    </li><li>public ArrayList <a title="Order" href="../classes/Order/Buyables.xhtml">Buyables</a>()
                     </li><li>protected DataList <a title="Order" href="../classes/Order/itemsFromDatabase.xhtml">itemsFromDatabase</a>()
                     </li><li>public DataList <a title="Order" href="../classes/Order/OrderModifiers.xhtml">OrderModifiers</a>()
                     </li><li>public DataList <a title="Order" href="../classes/Order/Modifiers.xhtml">Modifiers</a>()
@@ -159,6 +185,7 @@
                     </li><li>public Boolean <a title="Order" href="../classes/Order/canCreate.xhtml">canCreate</a>()
                     </li><li>public Boolean <a title="Order" href="../classes/Order/canView.xhtml">canView</a>()
                     </li><li>public Boolean <a title="Order" href="../classes/Order/IsInSession.xhtml">IsInSession</a>()
+                    </li><li>public string <a title="Order" href="../classes/Order/LessSecureSessionID.xhtml">LessSecureSessionID</a>()
                     </li><li>public Boolean <a title="Order" href="../classes/Order/canEdit.xhtml">canEdit</a>()
                     </li><li>public Boolean <a title="Order" href="../classes/Order/canPay.xhtml">canPay</a>()
                     </li><li>public Boolean <a title="Order" href="../classes/Order/canCancel.xhtml">canCancel</a>()
@@ -250,22 +277,20 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/DataObject.xhtml">DataObject</a>
-            </li>
+            <li>DataObject</li>
           </ul>
           <h4>Implements</h4>
           <ul>
             <li>
-              <a href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
+              <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
             </li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -277,59 +302,58 @@
             <td>: how to translate this?</td>
           </tr>
           <tr>
-            <td class="nummeric">430</td>
-            <td/>
-          </tr>
-          <tr>
-            <td class="nummeric">1927+</td>
+            <td class="nummeric">2071+</td>
             <td>: is this a security risk?</td>
           </tr>
           <tr>
-            <td class="nummeric">2312+</td>
+            <td class="nummeric">2455+</td>
             <td>: why do we dont return a string IF there is only one item.</td>
           </tr>
           <tr>
-            <td class="nummeric">2699+</td>
+            <td class="nummeric">2842+</td>
             <td>: move to more appropriate class</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
+            <li id="_try_to_finalise_order_is_running"><strong>$_try_to_finalise_order_is_running</strong>
+                —
+                boolean</li>
             <li id="api_access"><strong>$api_access</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">API Control</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">API Control</span></li>
             <li id="casting"><strong>$casting</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="create_table_options"><strong>$create_table_options</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="db"><strong>$db</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="default_sort"><strong>$default_sort</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="has_many"><strong>$has_many</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="has_one">
               <strong>$has_one</strong>
             </li>
             <li id="indexes"><strong>$indexes</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="needs_recalculating"><strong>$needs_recalculating</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">Tells us if an order needs to be recalculated</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">Tells us if an order needs to be recalculated</span></li>
             <li id="plural_name"><strong>$plural_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="searchable_fields">
               <strong>$searchable_fields</strong>
               <br/>
@@ -337,7 +361,7 @@
             </li>
             <li id="singular_name"><strong>$singular_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="summary_fields">
               <strong>$summary_fields</strong>
               <br/>
@@ -348,20 +372,20 @@
           <ul class="members">
             <li id="fieldsAndTabsToBeRemoved"><strong>$fieldsAndTabsToBeRemoved</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">fields that we remove from the parent::getCMSFields object set</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">fields that we remove from the parent::getCMSFields object set</span></li>
             <li id="isSubmittedTempVar"><strong>$isSubmittedTempVar</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">speeds up processing by storing the IsSubmitted value we start with -1 to know if it has been requested before.</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">speeds up processing by storing the IsSubmitted value we start with -1 to know if it has been requested before.</span></li>
             <li id="totalItems"><strong>$totalItems</strong>
                 —
                 integer<br/><span class="indent">Total Items : total items in cart We start with -1 to easily identify if it has been run before.</span></li>
             <li id="totalItemsTimesQuantity"><strong>$totalItemsTimesQuantity</strong>
                 —
-                <a href="#">Double</a><br/><span class="indent">Total Items : total items in cart We start with -1 to easily identify if it has been run before.</span></li>
+                <a title="Double" href="../classes/Double.xhtml">Double</a><br/><span class="indent">Total Items : total items in cart We start with -1 to easily identify if it has been run before.</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="addHasOneAndHasManyAsVariables"><a title="Order" href="../classes/Order/addHasOneAndHasManyAsVariables.xhtml">addHasOneAndHasManyAsVariables()</a>
@@ -370,8 +394,9 @@
                 — Calculates and updates all the modifiers.</li>
             <li id="calculateOrderItems"><a title="Order" href="../classes/Order/calculateOrderItems.xhtml">calculateOrderItems()</a>
                 — Calculates and updates all the product items.</li>
-            <li id="getBillingAddressField"><a title="Order" href="../classes/Order/getBillingAddressField.xhtml">getBillingAddressField()</a>
-                — return GridField</li>
+            <li id="getBillingAddressField">
+              <a title="Order" href="../classes/Order/getBillingAddressField.xhtml">getBillingAddressField()</a>
+            </li>
             <li id="getMemberForCanFunctions">
               <a title="Order" href="../classes/Order/getMemberForCanFunctions.xhtml">getMemberForCanFunctions()</a>
             </li>
@@ -383,8 +408,9 @@
             <li id="getPaymentsField">
               <a title="Order" href="../classes/Order/getPaymentsField.xhtml">getPaymentsField()</a>
             </li>
-            <li id="getShippingAddressField"><a title="Order" href="../classes/Order/getShippingAddressField.xhtml">getShippingAddressField()</a>
-                — return GridField</li>
+            <li id="getShippingAddressField">
+              <a title="Order" href="../classes/Order/getShippingAddressField.xhtml">getShippingAddressField()</a>
+            </li>
             <li id="itemsFromDatabase"><a title="Order" href="../classes/Order/itemsFromDatabase.xhtml">itemsFromDatabase()</a>
                 — Return all the {@link OrderItem} instances that are available as records in the database.</li>
             <li id="modifiersFromDatabase"><a title="Order" href="../classes/Order/modifiersFromDatabase.xhtml">modifiersFromDatabase()</a>
@@ -398,6 +424,10 @@
                 — returns the instance of EcommerceConfigAjax for use in templates.</li>
             <li id="APILink"><a title="Order" href="../classes/Order/APILink.xhtml">APILink()</a>
                 — Returns to link to access the Order's API</li>
+            <li id="Archive"><a title="Order" href="../classes/Order/Archive.xhtml">Archive()</a>
+                — returns true if successful</li>
+            <li id="Buyables"><a title="Order" href="../classes/Order/Buyables.xhtml">Buyables()</a>
+                — returns the buyables asscoiated with the order items</li>
             <li id="CMSEditLink"><a title="Order" href="../classes/Order/CMSEditLink.xhtml">CMSEditLink()</a>
                 — link to edit the record</li>
             <li id="CanHaveShippingAddress"><a title="Order" href="../classes/Order/CanHaveShippingAddress.xhtml">CanHaveShippingAddress()</a>
@@ -476,6 +506,8 @@
                 — Are there still steps the order needs to go through?</li>
             <li id="Items"><a title="Order" href="../classes/Order/Items.xhtml">Items()</a>
                 — Returns the items of the order.</li>
+            <li id="LessSecureSessionID"><a title="Order" href="../classes/Order/LessSecureSessionID.xhtml">LessSecureSessionID()</a>
+                — returns a pseudo random part of the session id</li>
             <li id="Link"><a title="Order" href="../classes/Order/Link.xhtml">Link()</a>
                 — returns the link to view the Order WHY NOT CHECKOUT PAGE: first we check for cart page.</li>
             <li id="Modifiers"><a title="Order" href="../classes/Order/Modifiers.xhtml">Modifiers()</a>
@@ -514,6 +546,8 @@
                 — Returns the region that applies to the order.</li>
             <li id="RelevantLogEntry"><a title="Order" href="../classes/Order/RelevantLogEntry.xhtml">RelevantLogEntry()</a>
                 — Return the OrderStatusLog that is relevant to the Order status.</li>
+            <li id="RelevantPayments"><a title="Order" href="../classes/Order/RelevantPayments.xhtml">RelevantPayments()</a>
+                — shows payments that are meaningfull if the order has been paid then only show successful payments</li>
             <li id="RetrieveLink"><a title="Order" href="../classes/Order/RetrieveLink.xhtml">RetrieveLink()</a>
                 — returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.</li>
             <li id="RetrieveModifier"><a title="Order" href="../classes/Order/RetrieveModifier.xhtml">RetrieveModifier()</a>
@@ -711,12 +745,12 @@
             <li id="onAfterWrite"><a title="Order" href="../classes/Order/onAfterWrite.xhtml">onAfterWrite()</a>
                 — standard SS method adds the ability to update order after writing it.</li>
             <li id="onBeforeDelete"><a title="Order" href="../classes/Order/onBeforeDelete.xhtml">onBeforeDelete()</a>
-                — tandard SS method</li>
+                — standard SS method</li>
             <li id="onBeforeWrite">
               <a title="Order" href="../classes/Order/onBeforeWrite.xhtml">onBeforeWrite()</a>
             </li>
             <li id="populateDefaults"><a title="Order" href="../classes/Order/populateDefaults.xhtml">populateDefaults()</a>
-                — tandard SS method</li>
+                — standard SS method</li>
             <li id="renderOrderInEmailFormat"><a title="Order" href="../classes/Order/renderOrderInEmailFormat.xhtml">renderOrderInEmailFormat()</a>
                 — returns the order formatted as an email</li>
             <li id="scaffoldSearchFields"><a title="Order" href="../classes/Order/scaffoldSearchFields.xhtml">scaffoldSearchFields()</a>
@@ -738,8 +772,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

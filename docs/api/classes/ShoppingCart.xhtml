@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - ShoppingCart</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/api/ShoppingCart.php.xhtml#line37">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,12 +73,17 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class ShoppingCart
-                extends <a title="Object" href="../classes/Object.xhtml">Object</a>
-            {<br/><ul class="none"><li>// members</li><li>private <span title="Array">Array</span> <a href="#members">$session_variable_names</a>;
-                    </li><li>private <span title="Object">Object</span> <a href="#members">$singletoncart</a>;
-                    </li><li>protected array <a href="#members">$messages</a>;
-                    </li><li>protected <span title="Object">Object</span> <a href="#members">$order</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$requireSavedOrder</a>;
+                extends Object
+            {<br/><ul class="none"><li>// members</li><li>private static <span title="Array">Array</span> <a href="#members">$session_variable_names</a> =
+                        ;
+                    </li><li>private static <span title="Object">Object</span> <a href="#members">$singletoncart</a> =
+                        null;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$messages</a> =
+                        ;
+                    </li><li>protected <span title="Object">Object</span> <a href="#members">$order</a> =
+                        null;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$requireSavedOrder</a> =
+                        false;
                     </li></ul><ul class="none"><li>// methods</li><li>public static ShoppingCart <a title="ShoppingCart" href="../classes/ShoppingCart/singleton.xhtml">singleton</a>()
                     </li><li>public static ShoppingCart <a title="ShoppingCart" href="../classes/ShoppingCart/current_order.xhtml">current_order</a>()
                     </li><li>public void <a title="ShoppingCart" href="../classes/ShoppingCart/currentOrder.xhtml">currentOrder</a>()
@@ -104,7 +112,7 @@
                     </li><li>protected cleaned <a title="ShoppingCart" href="../classes/ShoppingCart/cleanParameters.xhtml">cleanParameters</a>()
                     </li><li>protected void <a title="ShoppingCart" href="../classes/ShoppingCart/parametersToSQL.xhtml">parametersToSQL</a>()
                     </li><li>public array <a title="ShoppingCart" href="../classes/ShoppingCart/getMessages.xhtml">getMessages</a>()
-                    </li><li>protected void <a title="ShoppingCart" href="../classes/ShoppingCart/StoreMessagesInSession.xhtml">StoreMessagesInSession</a>()
+                    </li><li>protected array <a title="ShoppingCart" href="../classes/ShoppingCart/StoreMessagesInSession.xhtml">StoreMessagesInSession</a>()
                     </li><li>public void <a title="ShoppingCart" href="../classes/ShoppingCart/setMessageAndReturn.xhtml">setMessageAndReturn</a>()
                     </li><li>protected EcommerceDBConfig <a title="ShoppingCart" href="../classes/ShoppingCart/EcomConfig.xhtml">EcomConfig</a>()
                     </li><li>protected String <a title="ShoppingCart" href="../classes/ShoppingCart/sessionVariableName.xhtml">sessionVariableName</a>()
@@ -112,16 +120,14 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Object.xhtml">Object</a>
-            </li>
+            <li>Object</li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -133,69 +139,59 @@
             <td>- does this need to be public????</td>
           </tr>
           <tr>
-            <td class="nummeric">259</td>
-            <td>distinquish between incremented and set</td>
-          </tr>
-          <tr>
-            <td class="nummeric">260</td>
-            <td>use sprintf to allow product name etc to be included in message</td>
-          </tr>
-          <tr>
-            <td class="nummeric">391+</td>
+            <td class="nummeric">396+</td>
             <td>: what does this method do???</td>
           </tr>
           <tr>
-            <td class="nummeric">551</td>
+            <td class="nummeric">556</td>
             <td>how to handle existing order</td>
           </tr>
           <tr>
-            <td class="nummeric">552</td>
+            <td class="nummeric">557</td>
             <td>permission check - does this belong to another member? ...or should permission be assumed already?</td>
           </tr>
           <tr>
-            <td class="nummeric">798</td>
+            <td class="nummeric">803</td>
             <td>remove the awkward replace</td>
           </tr>
           <tr>
-            <td class="nummeric">930</td>
+            <td class="nummeric">935</td>
             <td>handle passing back multiple messages</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="session_variable_names"><strong>$session_variable_names</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">List of names that can be used as session variables.</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">List of names that can be used as session variables.</span></li>
             <li id="singletoncart"><strong>$singletoncart</strong>
                 —
-                <a href="#">Object</a><br/><span class="indent">This is where we hold the (singleton) Shoppingcart</span></li>
+                <a title="Object" href="../classes/Object.xhtml">Object</a><br/><span class="indent">This is where we hold the (singleton) Shoppingcart</span></li>
           </ul>
           <h4>protected</h4>
           <ul class="members">
-            <li id="messages">
-              <strong>$messages</strong>
-              <br/>
-              <span class="indent">Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).</span>
-            </li>
+            <li id="messages"><strong>$messages</strong>
+                —
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).</span></li>
             <li id="order"><strong>$order</strong>
                 —
-                <a href="#">Object</a><br/><span class="indent">stores a reference to the current order object</span></li>
+                <a title="Object" href="../classes/Object.xhtml">Object</a><br/><span class="indent">stores a reference to the current order object</span></li>
             <li id="requireSavedOrder"><strong>$requireSavedOrder</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">This variable is set to YES when we actually need an order (i.e. write it)</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">This variable is set to YES when we actually need an order (i.e. write it)</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="EcomConfig">
               <a title="ShoppingCart" href="../classes/ShoppingCart/EcomConfig.xhtml">EcomConfig()</a>
             </li>
             <li id="StoreMessagesInSession"><a title="ShoppingCart" href="../classes/ShoppingCart/StoreMessagesInSession.xhtml">StoreMessagesInSession()</a>
-                — aves current messages in session for retrieving them later.</li>
+                — Saves current messages in session for retrieving them later.</li>
             <li id="cleanParameters"><a title="ShoppingCart" href="../classes/ShoppingCart/cleanParameters.xhtml">cleanParameters()</a>
                 — Removes parameters that aren't in the default array, merges with default parameters, and converts raw2SQL.</li>
             <li id="getExistingItem"><a title="ShoppingCart" href="../classes/ShoppingCart/getExistingItem.xhtml">getExistingItem()</a>
@@ -266,8 +262,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

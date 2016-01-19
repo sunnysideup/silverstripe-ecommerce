@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - StoreAdmin</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/cms/StoreAdmin.php.xhtml#line13">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -68,43 +71,47 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class StoreAdmin
                 extends <a title="ModelAdminEcommerceBaseClass" href="../classes/ModelAdminEcommerceBaseClass.xhtml">ModelAdminEcommerceBaseClass</a>
-            {<br/><ul class="none"><li>// members</li><li>private <span title="String">String</span> <a href="#members">$url_segment</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$menu_title</a>;
-                    </li><li>private <span title="Int">Int</span> <a href="#members">$menu_priority</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$menu_icon</a>;
-                    </li></ul><ul class="none"><li>// Inherited members from <span title="ModelAdminEcommerceBaseClass">ModelAdminEcommerceBaseClass</span></li><li>public <a href="#members">$showImportForm</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static <span title="String">String</span> <a href="#members">$url_segment</a> =
+                        'shop';
+                    </li><li>private static <span title="String">String</span> <a href="#members">$menu_title</a> =
+                        "Shop Settings";
+                    </li><li>private static <span title="Int">Int</span> <a href="#members">$menu_priority</a> =
+                        3.3;
+                    </li><li>private static <span title="String">String</span> <a href="#members">$menu_icon</a> =
+                        "ecommerce/images/icons/cart-file.gif";
+                    </li></ul><ul class="none"><li>// Inherited members from <span title="ModelAdminEcommerceBaseClass">ModelAdminEcommerceBaseClass</span></li><li>public boolean <a href="#members">$showImportForm</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="StoreAdmin" href="../classes/StoreAdmin/init.xhtml">init</a>()
-                    </li><li>public void <a title="StoreAdmin" href="../classes/StoreAdmin/urlSegmenter.xhtml">urlSegmenter</a>()
+                    </li><li>public String <a title="StoreAdmin" href="../classes/StoreAdmin/urlSegmenter.xhtml">urlSegmenter</a>()
                     </li><li>public array <a title="StoreAdmin" href="../classes/StoreAdmin/getManagedModels.xhtml">getManagedModels</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="ModelAdminEcommerceBaseClass">ModelAdminEcommerceBaseClass</span></li><li>public array <a title="ModelAdminEcommerceBaseClass" href="../classes/ModelAdminEcommerceBaseClass/getManagedModels.xhtml">getManagedModels</a>()
                         </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/ModelAdminEcommerceBaseClass.xhtml">ModelAdminEcommerceBaseClass</a>
+              <a title="ModelAdminEcommerceBaseClass" href="../classes/ModelAdminEcommerceBaseClass.xhtml">ModelAdminEcommerceBaseClass</a>
             </li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="menu_icon"><strong>$menu_icon</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="menu_priority"><strong>$menu_priority</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">standard SS variable</span></li>
             <li id="menu_title"><strong>$menu_title</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
             <li id="url_segment"><strong>$url_segment</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">standard SS variable</span></li>
           </ul>
           <h4>public</h4>
           <ul class="members">
@@ -116,7 +123,7 @@
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="getManagedModels">
@@ -125,8 +132,9 @@
             <li id="init">
               <a title="StoreAdmin" href="../classes/StoreAdmin/init.xhtml">init()</a>
             </li>
-            <li id="urlSegmenter"><a title="StoreAdmin" href="../classes/StoreAdmin/urlSegmenter.xhtml">urlSegmenter()</a>
-                — return String (URLSegment)</li>
+            <li id="urlSegmenter">
+              <a title="StoreAdmin" href="../classes/StoreAdmin/urlSegmenter.xhtml">urlSegmenter()</a>
+            </li>
           </ul>
           <h3>Inherited from <a title="ModelAdminEcommerceBaseClass" href="../classes/ModelAdminEcommerceBaseClass.xhtml">ModelAdminEcommerceBaseClass</a></h3>
           <h4>public</h4>
@@ -138,8 +146,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

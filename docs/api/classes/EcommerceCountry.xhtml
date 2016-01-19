@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommerceCountry</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/address/EcommerceCountry.php.xhtml#line16">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,25 +73,41 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceCountry
-                extends <a title="DataObject" href="../classes/DataObject.xhtml">DataObject</a>
+                extends DataObject
                 implements
                 <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$api_access</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$db</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$has_many</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$indexes</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$summary_fields</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$casting</a>;
-                    </li><li>private array <a href="#members">$searchable_fields</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$default_sort</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$singular_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
-                    </li><li>private <span title="Null">Null</span> <a href="#members">$get_country_cache</a>;
-                    </li><li>private <span title="Null">Null</span> <a href="#members">$allow_sales_cache</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$for_current_order_only_show_countries</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$for_current_order_do_not_show_countries</a>;
-                    </li><li>private <span title="Array">Array</span> <a href="#members">$list_of_allowed_entries_for_dropdown_array</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$api_access</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$has_many</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$summary_fields</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$casting</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$searchable_fields</a> =
+                        ;
+                    </li><li>private static <span title="String">String</span> <a href="#members">$default_sort</a> =
+                        "\"DoNotAllowSales\" ASC, \"Name\" ASC";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$singular_name</a> =
+                        "Country";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$plural_name</a> =
+                        "Countries";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "A country.";
+                    </li><li>private static <span title="Null">Null</span> <a href="#members">$get_country_cache</a> =
+                        null;
+                    </li><li>private static <span title="Null">Null</span> <a href="#members">$allow_sales_cache</a> =
+                        null;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$for_current_order_only_show_countries</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$for_current_order_do_not_show_countries</a> =
+                        ;
+                    </li><li>private static <span title="Array">Array</span> <a href="#members">$list_of_allowed_entries_for_dropdown_array</a> =
+                        ;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommerceCountry" href="../classes/EcommerceCountry/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="EcommerceCountry" href="../classes/EcommerceCountry/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li><li>public void <a title="EcommerceCountry" href="../classes/EcommerceCountry/canCreate.xhtml">canCreate</a>()
@@ -96,6 +115,7 @@
                     </li><li>public void <a title="EcommerceCountry" href="../classes/EcommerceCountry/canEdit.xhtml">canEdit</a>()
                     </li><li>public Boolean <a title="EcommerceCountry" href="../classes/EcommerceCountry/canDelete.xhtml">canDelete</a>()
                     </li><li>public static String <a title="EcommerceCountry" href="../classes/EcommerceCountry/get_country_from_ip.xhtml">get_country_from_ip</a>()
+                    </li><li>public static String <a title="EcommerceCountry" href="../classes/EcommerceCountry/get_ip.xhtml">get_ip</a>()
                     </li><li>public static Array <a title="EcommerceCountry" href="../classes/EcommerceCountry/get_country_dropdown.xhtml">get_country_dropdown</a>()
                     </li><li>public static String <a title="EcommerceCountry" href="../classes/EcommerceCountry/get_fixed_country_code.xhtml">get_fixed_country_code</a>()
                     </li><li>public static String <a title="EcommerceCountry" href="../classes/EcommerceCountry/countryCode2name.xhtml">countryCode2name</a>()
@@ -125,22 +145,20 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/DataObject.xhtml">DataObject</a>
-            </li>
+            <li>DataObject</li>
           </ul>
           <h4>Implements</h4>
           <ul>
             <li>
-              <a href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
+              <a title="EditableEcommerceObject" href="../interfaces/EditableEcommerceObject.xhtml">EditableEcommerceObject</a>
             </li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -153,48 +171,48 @@
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="allow_sales_cache"><strong>$allow_sales_cache</strong>
                 —
-                <a href="#">Null</a><br/><span class="indent">Memory for allow country to check</span></li>
+                <a title="Null" href="../classes/Null.xhtml">Null</a><br/><span class="indent">Memory for allow country to check</span></li>
             <li id="api_access"><strong>$api_access</strong>
                 —
                 array<br/><span class="indent">what variables are accessible through  http://mysite.com/api/ecommerce/v1/EcommerceCountry/</span></li>
             <li id="casting"><strong>$casting</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
             <li id="db"><strong>$db</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Standard SS Variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Standard SS Variable</span></li>
             <li id="default_sort"><strong>$default_sort</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS Variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS Variable</span></li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="for_current_order_do_not_show_countries"><strong>$for_current_order_do_not_show_countries</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">List of countries that should NOT be shown</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">List of countries that should NOT be shown</span></li>
             <li id="for_current_order_only_show_countries"><strong>$for_current_order_only_show_countries</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">List of countries that should be shown</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">List of countries that should be shown</span></li>
             <li id="get_country_cache"><strong>$get_country_cache</strong>
                 —
-                <a href="#">Null</a><br/><span class="indent">Memory for the customer's country.</span></li>
+                <a title="Null" href="../classes/Null.xhtml">Null</a><br/><span class="indent">Memory for the customer's country.</span></li>
             <li id="has_many"><strong>$has_many</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Standard SS Variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Standard SS Variable</span></li>
             <li id="indexes"><strong>$indexes</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Standard SS Variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Standard SS Variable</span></li>
             <li id="list_of_allowed_entries_for_dropdown_array"><strong>$list_of_allowed_entries_for_dropdown_array</strong>
                 —
-                <a href="#">Array</a></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a></li>
             <li id="plural_name"><strong>$plural_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS Variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS Variable</span></li>
             <li id="searchable_fields">
               <strong>$searchable_fields</strong>
               <br/>
@@ -202,14 +220,14 @@
             </li>
             <li id="singular_name"><strong>$singular_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS Variable</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS Variable</span></li>
             <li id="summary_fields"><strong>$summary_fields</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">standard SS variable</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">standard SS variable</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="get_default_array"><a title="EcommerceCountry" href="../classes/EcommerceCountry/get_default_array.xhtml">get_default_array()</a>
@@ -268,6 +286,8 @@
             <li id="get_for_current_order_only_show_countries">
               <a title="EcommerceCountry" href="../classes/EcommerceCountry/get_for_current_order_only_show_countries.xhtml">get_for_current_order_only_show_countries()</a>
             </li>
+            <li id="get_ip"><a title="EcommerceCountry" href="../classes/EcommerceCountry/get_ip.xhtml">get_ip()</a>
+                — returns the country based on the Visitor Country Provider.</li>
             <li id="i18n_plural_name">
               <a title="EcommerceCountry" href="../classes/EcommerceCountry/i18n_plural_name.xhtml">i18n_plural_name()</a>
             </li>
@@ -296,8 +316,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

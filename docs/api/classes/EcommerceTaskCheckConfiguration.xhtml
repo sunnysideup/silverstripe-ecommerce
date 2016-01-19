@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommerceTaskCheckConfiguration</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/tasks/EcommerceTaskCheckConfiguration.php.xhtml#line19">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -70,18 +73,29 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceTaskCheckConfiguration
-                extends <a title="BuildTask" href="../classes/BuildTask.xhtml">BuildTask</a>
-            {<br/><ul class="none"><li>// members</li><li>protected <span title="String">String</span> <a href="#members">$defaultLocation</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$title</a>;
-                    </li><li>protected <span title="String">String</span> <a href="#members">$description</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$definitions</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$definitionsHeaders</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$defaults</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$configs</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$databaseValues</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$customisedValues</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$otherConfigs</a>;
-                    </li><li>protected array <a href="#members">$missingClasses</a>;
+                extends BuildTask
+            {<br/><ul class="none"><li>// members</li><li>protected <span title="String">String</span> <a href="#members">$defaultLocation</a> =
+                        "ecommerce/_config/ecommerce.yml";
+                    </li><li>protected <span title="String">String</span> <a href="#members">$title</a> =
+                        "Check Configuration";
+                    </li><li>protected <span title="String">String</span> <a href="#members">$description</a> =
+                        "Runs through all static configuration for review.";
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$definitions</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$definitionsHeaders</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$defaults</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$configs</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$databaseValues</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$customisedValues</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$otherConfigs</a> =
+                        ;
+                    </li><li>protected array <a href="#members">$missingClasses</a> =
+                        ;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommerceTaskCheckConfiguration" href="../classes/EcommerceTaskCheckConfiguration/run.xhtml">run</a>()
                     </li><li>protected void <a title="EcommerceTaskCheckConfiguration" href="../classes/EcommerceTaskCheckConfiguration/checkFiles.xhtml">checkFiles</a>()
                     </li><li>protected void <a title="EcommerceTaskCheckConfiguration" href="../classes/EcommerceTaskCheckConfiguration/definitionsNotSet.xhtml">definitionsNotSet</a>()
@@ -103,16 +117,14 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/BuildTask.xhtml">BuildTask</a>
-            </li>
+            <li>BuildTask</li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -125,33 +137,33 @@
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>protected</h4>
           <ul class="members">
             <li id="configs"><strong>$configs</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Array of configs - set like this: ClassName 		VariableName: VariableValue</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Array of configs - set like this: ClassName 		VariableName: VariableValue</span></li>
             <li id="customisedValues"><strong>$customisedValues</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">set in default yml, but not customised.</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">set in default yml, but not customised.</span></li>
             <li id="databaseValues"><strong>$databaseValues</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">which values are derived from DB ClassName 		VariableName: TRUE | FALSE</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">which values are derived from DB ClassName 		VariableName: TRUE | FALSE</span></li>
             <li id="defaultLocation"><strong>$defaultLocation</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Default Location for Configuration File</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Default Location for Configuration File</span></li>
             <li id="defaults"><strong>$defaults</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Array of defaults - set like this: ClassName 		VariableName: Default Variable Value</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Array of defaults - set like this: ClassName 		VariableName: Default Variable Value</span></li>
             <li id="definitions"><strong>$definitions</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Array of definitions - set like this: ClassName 		VariableName: Description</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Array of definitions - set like this: ClassName 		VariableName: Description</span></li>
             <li id="definitionsHeaders"><strong>$definitionsHeaders</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Array of definitions Header - set like this: HEADER TITLE 		ClassName</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Array of definitions Header - set like this: HEADER TITLE 		ClassName</span></li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard (required) SS variable for BuildTasks</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard (required) SS variable for BuildTasks</span></li>
             <li id="missingClasses">
               <strong>$missingClasses</strong>
               <br/>
@@ -159,14 +171,14 @@
             </li>
             <li id="otherConfigs"><strong>$otherConfigs</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Other configs ClassName 		VariableName: TRUE | FLASE</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Other configs ClassName 		VariableName: TRUE | FLASE</span></li>
             <li id="title"><strong>$title</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard (required) SS variable for BuildTasks</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard (required) SS variable for BuildTasks</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>private</h4>
           <ul>
             <li id="getAjaxDefinitions">
@@ -222,8 +234,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

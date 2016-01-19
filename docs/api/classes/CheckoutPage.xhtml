@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - CheckoutPage</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/CheckoutPage.php.xhtml#line37">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -68,14 +71,22 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class CheckoutPage
                 extends <a title="CartPage" href="../classes/CartPage.xhtml">CartPage</a>
-            {<br/><ul class="none"><li>// members</li><li>private string <a href="#members">$hide_ancestor</a>;
-                    </li><li>private string <a href="#members">$icon</a>;
-                    </li><li>private array <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$has_one</a>;
-                    </li><li>private array <a href="#members">$defaults</a>;
-                    </li><li>private string <a href="#members">$singular_name</a>;
-                    </li><li>private string <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static string <a href="#members">$hide_ancestor</a> =
+                        'CartPage';
+                    </li><li>private static string <a href="#members">$icon</a> =
+                        'ecommerce/images/icons/CheckoutPage';
+                    </li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_one</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$defaults</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Checkout Page";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Checkout Pages";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.";
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="CheckoutPage" href="../classes/CheckoutPage/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="CheckoutPage" href="../classes/CheckoutPage/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li><li>public static Page <a title="CheckoutPage" href="../classes/CheckoutPage/find_terms_and_conditions_page.xhtml">find_terms_and_conditions_page</a>()
@@ -100,14 +111,14 @@
                         </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/canEdit.xhtml">canEdit</a>()
                         </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/canDelete.xhtml">canDelete</a>()
                         </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/canPublish.xhtml">canPublish</a>()
-                        </li><li>public void <a title="CartPage" href="../classes/CartPage/getCMSFields.xhtml">getCMSFields</a>()
+                        </li><li>public FieldList <a title="CartPage" href="../classes/CartPage/getCMSFields.xhtml">getCMSFields</a>()
                         </li><li>public static String <a title="CartPage" href="../classes/CartPage/find_link.xhtml">find_link</a>()
                         </li><li>public static String <a title="CartPage" href="../classes/CartPage/new_order_link.xhtml">new_order_link</a>()
                         </li><li>public static String <a title="CartPage" href="../classes/CartPage/copy_order_link.xhtml">copy_order_link</a>()
                         </li><li>public static Int <a title="CartPage" href="../classes/CartPage/get_order_link.xhtml">get_order_link</a>()
                         </li><li>public String <a title="CartPage" href="../classes/CartPage/getOrderLink.xhtml">getOrderLink</a>()
                         </li><li>public Boolean <a title="CartPage" href="../classes/CartPage/IsEcommercePage.xhtml">IsEcommercePage</a>()
-                        </li><li>public void <a title="CartPage" href="../classes/CartPage/EcommerceMenuTitle.xhtml">EcommerceMenuTitle</a>()
+                        </li><li>public String <a title="CartPage" href="../classes/CartPage/EcommerceMenuTitle.xhtml">EcommerceMenuTitle</a>()
                         </li><li>public String <a title="CartPage" href="../classes/CartPage/OriginalMenuTitle.xhtml">OriginalMenuTitle</a>()
                         </li><li>public String <a title="CartPage" href="../classes/CartPage/LinkingMode.xhtml">LinkingMode</a>()
                         </li><li>public String <a title="CartPage" href="../classes/CartPage/LinkOrSection.xhtml">LinkOrSection</a>()
@@ -116,16 +127,16 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/CartPage.xhtml">CartPage</a>
+              <a title="CartPage" href="../classes/CartPage.xhtml">CartPage</a>
             </li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="db"><strong>$db</strong>
@@ -136,7 +147,7 @@
                 <br/><span class="indent">standard SS variable</span></li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="has_one"><strong>$has_one</strong>
                 —
                 <br/><span class="indent">standard SS variable</span></li>
@@ -155,7 +166,7 @@
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="getCheckoutStepDescriptionField">
@@ -203,8 +214,9 @@
           <h3>Inherited from <a title="CartPage" href="../classes/CartPage.xhtml">CartPage</a></h3>
           <h4>public</h4>
           <ul>
-            <li id="EcommerceMenuTitle"><a title="CartPage" href="../classes/CartPage/EcommerceMenuTitle.xhtml">EcommerceMenuTitle()</a>
-                — return String (HTML Snippet)</li>
+            <li id="EcommerceMenuTitle">
+              <a title="CartPage" href="../classes/CartPage/EcommerceMenuTitle.xhtml">EcommerceMenuTitle()</a>
+            </li>
             <li id="IsEcommercePage"><a title="CartPage" href="../classes/CartPage/IsEcommercePage.xhtml">IsEcommercePage()</a>
                 — tells us if the current page is part of e-commerce.</li>
             <li id="LinkOrCurrent"><a title="CartPage" href="../classes/CartPage/LinkOrCurrent.xhtml">LinkOrCurrent()</a>
@@ -230,8 +242,9 @@
                 — Returns the "copy order" link</li>
             <li id="find_link"><a title="CartPage" href="../classes/CartPage/find_link.xhtml">find_link()</a>
                 — Returns the Link to the CartPage on this site</li>
-            <li id="getCMSFields"><a title="CartPage" href="../classes/CartPage/getCMSFields.xhtml">getCMSFields()</a>
-                — return FieldList</li>
+            <li id="getCMSFields">
+              <a title="CartPage" href="../classes/CartPage/getCMSFields.xhtml">getCMSFields()</a>
+            </li>
             <li id="getOrderLink"><a title="CartPage" href="../classes/CartPage/getOrderLink.xhtml">getOrderLink()</a>
                 — Return a link to view the order on this page.</li>
             <li id="get_order_link"><a title="CartPage" href="../classes/CartPage/get_order_link.xhtml">get_order_link()</a>
@@ -251,8 +264,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

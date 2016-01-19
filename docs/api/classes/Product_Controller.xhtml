@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - Product_Controller</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -53,13 +53,13 @@
             <a href="#hierarchy">Hierarchy</a>
           </li>
           <li>
-            <a href="#tasks">Tasks</a>
-          </li>
-          <li>
             <a href="#members">Members</a>
           </li>
           <li>
             <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/code/Product.php.xhtml#line1040">Source</a>
           </li>
         </ul>
       </nav>
@@ -69,9 +69,11 @@
         <p/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Product_Controller
-                extends <a title="Page_Controller" href="../classes/Page_Controller.xhtml">Page_Controller</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$allowed_actions</a>;
-                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isCurrentVersion</a>;
+                extends Page_Controller
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$allowed_actions</a> =
+                        ;
+                    </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$isCurrentVersion</a> =
+                        true;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Product_Controller" href="../classes/Product_Controller/init.xhtml">init</a>()
                     </li><li>public void <a title="Product_Controller" href="../classes/Product_Controller/viewversion.xhtml">viewversion</a>()
                     </li><li>public void <a title="Product_Controller" href="../classes/Product_Controller/ajaxview.xhtml">ajaxview</a>()
@@ -88,29 +90,14 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/Page_Controller.xhtml">Page_Controller</a>
-            </li>
+            <li>Page_Controller</li>
           </ul>
         </div>
-        <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
-          <thead>
-            <tr>
-              <th style="width:3em;">Line</th>
-              <th>Task</th>
-            </tr>
-          </thead>
-          <tr>
-            <td class="nummeric">1103</td>
-            <td>perhaps use a dropdown instead (elimiates need to use keyboard)</td>
-          </tr>
-        </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="allowed_actions">
@@ -121,11 +108,11 @@
           <ul class="members">
             <li id="isCurrentVersion"><strong>$isCurrentVersion</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">is this the current version?</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">is this the current version?</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="getListOfIDs"><a title="Product_Controller" href="../classes/Product_Controller/getListOfIDs.xhtml">getListOfIDs()</a>
@@ -160,8 +147,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

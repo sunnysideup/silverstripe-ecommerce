@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - Pelago\Emogrifier</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/thirdparty/Emogrifier.php.xhtml#line13">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -72,13 +75,20 @@
         </ul>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Emogrifier
-            {<br/><ul class="none"><li>// constants</li><li>const ENCODING = 'UTF-8';</li><li>const CACHE_KEY_CSS = 0;</li><li>const CACHE_KEY_SELECTOR = 1;</li><li>const CACHE_KEY_XPATH = 2;</li><li>const CACHE_KEY_CSS_DECLARATION_BLOCK = 3;</li><li>const INDEX = 0;</li><li>const MULTIPLIER = 1;</li><li>const ID_ATTRIBUTE_MATCHER = '/(\\w+)?\\#([\\w\\-]+)/';</li><li>const CLASS_ATTRIBUTE_MATCHER = '/(\\w+|[\\*\\]])?((\\.[\\w\\-]+)+)/';</li></ul><ul class="none"><li>// members</li><li>private string <a href="#members">$html</a>;
-                    </li><li>private string <a href="#members">$css</a>;
-                    </li><li>private <span title="Pelago\array&lt;string&gt;">array&lt;string&gt;</span> <a href="#members">$unprocessableHtmlTags</a>;
-                    </li><li>private <span title="Pelago\array&lt;array&gt;">array&lt;array&gt;</span> <a href="#members">$caches</a>;
-                    </li><li>private <span title="Pelago\array&lt;\DOMNode&gt;">DOMNode&gt;</span> <a href="#members">$visitedNodes</a>;
-                    </li><li>private <span title="Pelago\array&lt;array&gt;&lt;string&gt;">array&lt;array&gt;&lt;string&gt;</span> <a href="#members">$styleAttributesForNodes</a>;
-                    </li><li>public boolean <a href="#members">$preserveEncoding</a>;
+            {<br/><ul class="none"><li>// constants</li><li>const ENCODING = 'UTF-8';</li><li>const CACHE_KEY_CSS = 0;</li><li>const CACHE_KEY_SELECTOR = 1;</li><li>const CACHE_KEY_XPATH = 2;</li><li>const CACHE_KEY_CSS_DECLARATION_BLOCK = 3;</li><li>const INDEX = 0;</li><li>const MULTIPLIER = 1;</li><li>const ID_ATTRIBUTE_MATCHER = '/(\\w+)?\\#([\\w\\-]+)/';</li><li>const CLASS_ATTRIBUTE_MATCHER = '/(\\w+|[\\*\\]])?((\\.[\\w\\-]+)+)/';</li></ul><ul class="none"><li>// members</li><li>private string <a href="#members">$html</a> =
+                        '';
+                    </li><li>private string <a href="#members">$css</a> =
+                        '';
+                    </li><li>private <span title="Pelago\array&lt;string&gt;">array&lt;string&gt;</span> <a href="#members">$unprocessableHtmlTags</a> =
+                        ;
+                    </li><li>private <span title="Pelago\array&lt;array&gt;">array&lt;array&gt;</span> <a href="#members">$caches</a> =
+                        ;
+                    </li><li>private <span title="Pelago\array&lt;\DOMNode&gt;">DOMNode&gt;</span> <a href="#members">$visitedNodes</a> =
+                        ;
+                    </li><li>private <span title="Pelago\array&lt;array&gt;&lt;string&gt;">array&lt;array&gt;&lt;string&gt;</span> <a href="#members">$styleAttributesForNodes</a> =
+                        ;
+                    </li><li>public boolean <a href="#members">$preserveEncoding</a> =
+                        FALSE;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Pelago\Emogrifier" href="../classes/Pelago_Emogrifier/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Pelago\Emogrifier" href="../classes/Pelago_Emogrifier/__destruct.xhtml">__destruct</a>()
                     </li><li>public void <a title="Pelago\Emogrifier" href="../classes/Pelago_Emogrifier/setHtml.xhtml">setHtml</a>()
@@ -110,7 +120,7 @@
 
             }<br/></div>
         <h2 id="constants">Constants</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th>Name</th>
@@ -157,12 +167,12 @@
           </tbody>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="caches"><strong>$caches</strong>
                 —
-                <a href="#">Pelago\array&lt;array&gt;</a></li>
+                <a title="Pelago\array&lt;array&gt;" href="../classes/Pelago_array&lt;array&gt;.xhtml">Pelago\array&lt;array&gt;</a></li>
             <li id="css"><strong>$css</strong>
                 —
                 string</li>
@@ -171,13 +181,13 @@
                 string</li>
             <li id="styleAttributesForNodes"><strong>$styleAttributesForNodes</strong>
                 —
-                <a href="#">Pelago\array&lt;array&gt;&lt;string&gt;</a><br/><span class="indent">the styles to apply to the nodes with the XPath paths as array keys for the outer array and the attribute names/values as key/value pairs for the inner array</span></li>
+                <a title="Pelago\array&lt;array&gt;&lt;string&gt;" href="../classes/Pelago_array&lt;array&gt;&lt;string&gt;.xhtml">Pelago\array&lt;array&gt;&lt;string&gt;</a><br/><span class="indent">the styles to apply to the nodes with the XPath paths as array keys for the outer array and the attribute names/values as key/value pairs for the inner array</span></li>
             <li id="unprocessableHtmlTags"><strong>$unprocessableHtmlTags</strong>
                 —
-                <a href="#">Pelago\array&lt;string&gt;</a></li>
+                <a title="Pelago\array&lt;string&gt;" href="../classes/Pelago_array&lt;string&gt;.xhtml">Pelago\array&lt;string&gt;</a></li>
             <li id="visitedNodes"><strong>$visitedNodes</strong>
                 —
-                <a href="#">Pelago\array&lt;\DOMNode&gt;</a><br/><span class="indent">the visited nodes with the XPath paths as array keys</span></li>
+                <a title="Pelago\array&lt;\DOMNode&gt;" href="../classes/Pelago_array&lt;_DOMNode&gt;.xhtml">Pelago\array&lt;\DOMNode&gt;</a><br/><span class="indent">the visited nodes with the XPath paths as array keys</span></li>
           </ul>
           <h4>public</h4>
           <ul class="members">
@@ -187,7 +197,7 @@
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>private</h4>
           <ul>
             <li id="addStyleElementToDocument"><a title="Pelago\Emogrifier" href="../classes/Pelago_Emogrifier/addStyleElementToDocument.xhtml">addStyleElementToDocument()</a>
@@ -258,8 +268,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - OrderConfirmationPage_Controller</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/OrderConfirmationPage.php.xhtml#line316">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,7 +70,8 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class OrderConfirmationPage_Controller
                 extends <a title="CartPage_Controller" href="../classes/CartPage_Controller.xhtml">CartPage_Controller</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$allowed_actions</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$allowed_actions</a> =
+                        ;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="CartPage_Controller">CartPage_Controller</span></li><li>protected <span title="ArraList">ArraList</span> <a href="#members">$actionLinks</a>;
                         </li><li>protected <span title="$workedOutMessagesAndActions">$workedOutMessagesAndActions</span> <a href="#members">$workedOutMessagesAndActions</a>;
                         </li><li>protected <span title="$order">$order</span> <a href="#members">$currentOrder</a>;
@@ -79,6 +83,9 @@
                     </li><li>public Array <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/sendreceipt.xhtml">sendreceipt</a>()
                     </li><li>public Null <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/CheckoutSteps.xhtml">CheckoutSteps</a>()
                     </li><li>public Integer <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PercentageDone.xhtml">PercentageDone</a>()
+                    </li><li>public string <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PaymentHeader.xhtml">PaymentHeader</a>()
+                    </li><li>public void <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PaymentMessage.xhtml">PaymentMessage</a>()
+                    </li><li>public boolean <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/OrderIsCancelled.xhtml">OrderIsCancelled</a>()
                     </li><li>public Boolean <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/IsPaid.xhtml">IsPaid</a>()
                     </li><li>public Boolean <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PaymentIsPending.xhtml">PaymentIsPending</a>()
                     </li><li>public OrderForm_Cancel <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/CancelForm.xhtml">CancelForm</a>()
@@ -86,6 +93,7 @@
                     </li><li>protected Boolean <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/onlyShowSubmittedOrders.xhtml">onlyShowSubmittedOrders</a>()
                     </li><li>protected Boolean <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/onlyShowUnsubmittedOrders.xhtml">onlyShowUnsubmittedOrders</a>()
                     </li><li>public HTML <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/sendemail.xhtml">sendemail</a>()
+                    </li><li>protected void <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/includeGoogleAnalyticsCode.xhtml">includeGoogleAnalyticsCode</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="CartPage_Controller">CartPage_Controller</span></li><li>public static void <a title="CartPage_Controller" href="../classes/CartPage_Controller/set_message.xhtml">set_message</a>()
                         </li><li>public void <a title="CartPage_Controller" href="../classes/CartPage_Controller/init.xhtml">init</a>()
                         </li><li>public void <a title="CartPage_Controller" href="../classes/CartPage_Controller/showorder.xhtml">showorder</a>()
@@ -110,16 +118,16 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/CartPage_Controller.xhtml">CartPage_Controller</a>
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller.xhtml">CartPage_Controller</a>
             </li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="allowed_actions">
@@ -130,22 +138,25 @@
           <ul class="members">
             <li id="actionLinks"><strong>$actionLinks</strong>
                 —
-                <a href="#">ArraList</a><br/><span class="indent">This ArraList holds DataObjects with a Link and Title each....</span></li>
+                <a title="ArraList" href="../classes/ArraList.xhtml">ArraList</a><br/><span class="indent">This ArraList holds DataObjects with a Link and Title each....</span></li>
             <li id="currentOrder"><strong>$currentOrder</strong>
                 —
-                <a href="#">$order</a><br/><span class="indent">order currently being shown on this page</span></li>
+                <a title="$order" href="../classes/$order.xhtml">$order</a><br/><span class="indent">order currently being shown on this page</span></li>
             <li id="showCreateAccountForm"><strong>$showCreateAccountForm</strong>
                 —
-                <a href="#">Boolean</a></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a></li>
             <li id="workedOutMessagesAndActions"><strong>$workedOutMessagesAndActions</strong>
                 —
-                <a href="#">$workedOutMessagesAndActions</a><br/><span class="indent">to ensure messages and actions links are only worked out once...</span></li>
+                <a title="$workedOutMessagesAndActions" href="../classes/$workedOutMessagesAndActions.xhtml">$workedOutMessagesAndActions</a><br/><span class="indent">to ensure messages and actions links are only worked out once...</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
+            <li id="includeGoogleAnalyticsCode">
+              <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/includeGoogleAnalyticsCode.xhtml">includeGoogleAnalyticsCode()</a>
+            </li>
             <li id="onlyShowSubmittedOrders"><a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/onlyShowSubmittedOrders.xhtml">onlyShowSubmittedOrders()</a>
                 — Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?</li>
             <li id="onlyShowUnsubmittedOrders"><a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/onlyShowUnsubmittedOrders.xhtml">onlyShowUnsubmittedOrders()</a>
@@ -159,10 +170,19 @@
                 — Returns a dataobject set of the checkout steps if the OrderConfirmationPage is shown as part of the checkout process We repeat these here so that you can show the user that (s)he has reached the last step</li>
             <li id="IsPaid"><a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/IsPaid.xhtml">IsPaid()</a>
                 — Is the Order paid? This can be useful for choosing what header to show</li>
+            <li id="OrderIsCancelled">
+              <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/OrderIsCancelled.xhtml">OrderIsCancelled()</a>
+            </li>
             <li id="PaymentForm"><a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PaymentForm.xhtml">PaymentForm()</a>
                 — show the payment form</li>
+            <li id="PaymentHeader">
+              <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PaymentHeader.xhtml">PaymentHeader()</a>
+            </li>
             <li id="PaymentIsPending"><a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PaymentIsPending.xhtml">PaymentIsPending()</a>
                 — Are there any order Payments Pending This can be useful for choosing what header to show</li>
+            <li id="PaymentMessage">
+              <a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PaymentMessage.xhtml">PaymentMessage()</a>
+            </li>
             <li id="PercentageDone"><a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/PercentageDone.xhtml">PercentageDone()</a>
                 — returns the percentage of checkout steps done (0 - 100)</li>
             <li id="copyorder"><a title="OrderConfirmationPage_Controller" href="../classes/OrderConfirmationPage_Controller/copyorder.xhtml">copyorder()</a>
@@ -236,8 +256,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - CheckoutPage_Controller</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/CheckoutPage.php.xhtml#line331">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,9 +70,12 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class CheckoutPage_Controller
                 extends <a title="CartPage_Controller" href="../classes/CartPage_Controller.xhtml">CartPage_Controller</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$allowed_actions</a>;
-                    </li><li>protected string <a href="#members">$currentStep</a>;
-                    </li><li>protected array <a href="#members">$steps</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$allowed_actions</a> =
+                        ;
+                    </li><li>protected <span title="$currentStep">$currentStep</span> <a href="#members">$currentStep</a> =
+                        "";
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$steps</a> =
+                        ;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="CartPage_Controller">CartPage_Controller</span></li><li>protected <span title="ArraList">ArraList</span> <a href="#members">$actionLinks</a>;
                         </li><li>protected <span title="$workedOutMessagesAndActions">$workedOutMessagesAndActions</span> <a href="#members">$workedOutMessagesAndActions</a>;
                         </li><li>protected <span title="$order">$order</span> <a href="#members">$currentOrder</a>;
@@ -117,16 +123,16 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/CartPage_Controller.xhtml">CartPage_Controller</a>
+              <a title="CartPage_Controller" href="../classes/CartPage_Controller.xhtml">CartPage_Controller</a>
             </li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="allowed_actions">
@@ -137,30 +143,26 @@
           <ul class="members">
             <li id="actionLinks"><strong>$actionLinks</strong>
                 —
-                <a href="#">ArraList</a><br/><span class="indent">This ArraList holds DataObjects with a Link and Title each....</span></li>
+                <a title="ArraList" href="../classes/ArraList.xhtml">ArraList</a><br/><span class="indent">This ArraList holds DataObjects with a Link and Title each....</span></li>
             <li id="currentOrder"><strong>$currentOrder</strong>
                 —
-                <a href="#">$order</a><br/><span class="indent">order currently being shown on this page</span></li>
-            <li id="currentStep">
-              <strong>$currentStep</strong>
-              <br/>
-              <span class="indent">STEP STUFF ---------------------------------------------------------------------------</span>
-            </li>
+                <a title="$order" href="../classes/$order.xhtml">$order</a><br/><span class="indent">order currently being shown on this page</span></li>
+            <li id="currentStep"><strong>$currentStep</strong>
+                —
+                <a title="$currentStep" href="../classes/$currentStep.xhtml">$currentStep</a><br/><span class="indent">STEP STUFF ---------------------------------------------------------------------------</span></li>
             <li id="showCreateAccountForm"><strong>$showCreateAccountForm</strong>
                 —
-                <a href="#">Boolean</a></li>
-            <li id="steps">
-              <strong>$steps</strong>
-              <br/>
-              <span class="indent">var Array</span>
-            </li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a></li>
+            <li id="steps"><strong>$steps</strong>
+                —
+                <a title="Array" href="../classes/Array.xhtml">Array</a></li>
             <li id="workedOutMessagesAndActions"><strong>$workedOutMessagesAndActions</strong>
                 —
-                <a href="#">$workedOutMessagesAndActions</a><br/><span class="indent">to ensure messages and actions links are only worked out once...</span></li>
+                <a title="$workedOutMessagesAndActions" href="../classes/$workedOutMessagesAndActions.xhtml">$workedOutMessagesAndActions</a><br/><span class="indent">to ensure messages and actions links are only worked out once...</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="applyStepRules"><a title="CheckoutPage_Controller" href="../classes/CheckoutPage_Controller/applyStepRules.xhtml">applyStepRules()</a>
@@ -263,8 +265,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

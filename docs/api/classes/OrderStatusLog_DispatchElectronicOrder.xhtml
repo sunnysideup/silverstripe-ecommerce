@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - OrderStatusLog_DispatchElectronicOrder</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/process/OrderStatusLogs/OrderStatusLog_DispatchElectronicOrder.php.xhtml#line13">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -68,9 +71,12 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class OrderStatusLog_DispatchElectronicOrder
                 extends <a title="OrderStatusLog_Dispatch" href="../classes/OrderStatusLog_Dispatch.xhtml">OrderStatusLog_Dispatch</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$db</a>;
-                    </li><li>private string <a href="#members">$singular_name</a>;
-                    </li><li>private string <a href="#members">$plural_name</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static string <a href="#members">$singular_name</a> =
+                        "Order Log Electronic Dispatch Entry";
+                    </li><li>private static string <a href="#members">$plural_name</a> =
+                        "Order Log Electronic Dispatch Entries";
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="OrderStatusLog_DispatchElectronicOrder" href="../classes/OrderStatusLog_DispatchElectronicOrder/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="OrderStatusLog_DispatchElectronicOrder" href="../classes/OrderStatusLog_DispatchElectronicOrder/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="OrderStatusLog_Dispatch">OrderStatusLog_Dispatch</span></li><li>public void <a title="OrderStatusLog_Dispatch" href="../classes/OrderStatusLog_Dispatch/i18n_singular_name.xhtml">i18n_singular_name</a>()
@@ -84,13 +90,13 @@
                         </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/i18n_singular_name.xhtml">i18n_singular_name</a>()
                         </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/i18n_plural_name.xhtml">i18n_plural_name</a>()
                         </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/populateDefaults.xhtml">populateDefaults</a>()
-                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCMSFields.xhtml">getCMSFields</a>()
+                        </li><li>public FieldList <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCMSFields.xhtml">getCMSFields</a>()
                         </li><li>public String <a title="OrderStatusLog" href="../classes/OrderStatusLog/CMSEditLink.xhtml">CMSEditLink</a>()
                         </li><li>public String <a title="OrderStatusLog" href="../classes/OrderStatusLog/Type.xhtml">Type</a>()
                         </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/getType.xhtml">getType</a>()
                         </li><li>public FieldList <a title="OrderStatusLog" href="../classes/OrderStatusLog/scaffoldSearchFields.xhtml">scaffoldSearchFields</a>()
                         </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/onBeforeWrite.xhtml">onBeforeWrite</a>()
-                        </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/CustomerNote.xhtml">CustomerNote</a>()
+                        </li><li>public String <a title="OrderStatusLog" href="../classes/OrderStatusLog/CustomerNote.xhtml">CustomerNote</a>()
                         </li><li>public void <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCustomerNote.xhtml">getCustomerNote</a>()
                         </li><li>protected EcommerceDBConfig <a title="OrderStatusLog" href="../classes/OrderStatusLog/EcomConfig.xhtml">EcomConfig</a>()
                         </li><li>public String <a title="OrderStatusLog" href="../classes/OrderStatusLog/debug.xhtml">debug</a>()
@@ -98,16 +104,16 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/OrderStatusLog_Dispatch.xhtml">OrderStatusLog_Dispatch</a>
+              <a title="OrderStatusLog_Dispatch" href="../classes/OrderStatusLog_Dispatch.xhtml">OrderStatusLog_Dispatch</a>
             </li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="db">
@@ -122,7 +128,7 @@
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="i18n_plural_name">
@@ -152,8 +158,9 @@
           <ul>
             <li id="CMSEditLink"><a title="OrderStatusLog" href="../classes/OrderStatusLog/CMSEditLink.xhtml">CMSEditLink()</a>
                 — link to edit the record</li>
-            <li id="CustomerNote"><a title="OrderStatusLog" href="../classes/OrderStatusLog/CustomerNote.xhtml">CustomerNote()</a>
-                — return String</li>
+            <li id="CustomerNote">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/CustomerNote.xhtml">CustomerNote()</a>
+            </li>
             <li id="InternalUseOnlyNice"><a title="OrderStatusLog" href="../classes/OrderStatusLog/InternalUseOnlyNice.xhtml">InternalUseOnlyNice()</a>
                 — casted method</li>
             <li id="Type">
@@ -169,8 +176,9 @@
                 — Standard SS method</li>
             <li id="debug"><a title="OrderStatusLog" href="../classes/OrderStatusLog/debug.xhtml">debug()</a>
                 — Debug helper method.</li>
-            <li id="getCMSFields"><a title="OrderStatusLog" href="../classes/OrderStatusLog/getCMSFields.xhtml">getCMSFields()</a>
-                — return FieldList</li>
+            <li id="getCMSFields">
+              <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCMSFields.xhtml">getCMSFields()</a>
+            </li>
             <li id="getCustomerNote">
               <a title="OrderStatusLog" href="../classes/OrderStatusLog/getCustomerNote.xhtml">getCustomerNote()</a>
             </li>
@@ -196,8 +204,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

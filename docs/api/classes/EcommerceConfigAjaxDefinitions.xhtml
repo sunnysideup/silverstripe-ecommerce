@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommerceConfigAjaxDefinitions</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/config/EcommerceConfigAjaxDefinitions.php.xhtml#line13">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,9 +70,11 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceConfigAjaxDefinitions
-                extends <a title="ViewableData" href="../classes/ViewableData.xhtml">ViewableData</a>
-            {<br/><ul class="none"><li>// members</li><li>private <span title="Null">Null</span> <a href="#members">$prefix</a>;
-                    </li><li>protected <span title="DataObject">DataObject</span> <a href="#members">$requestor</a>;
+                extends ViewableData
+            {<br/><ul class="none"><li>// members</li><li>private static <span title="Null">Null</span> <a href="#members">$prefix</a> =
+                        null;
+                    </li><li>protected <span title="DataObject">DataObject</span> <a href="#members">$requestor</a> =
+                        null;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/setRequestor.xhtml">setRequestor</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/SideBarCartID.xhtml">SideBarCartID</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/SmallCartID.xhtml">SmallCartID</a>()
@@ -80,8 +85,8 @@
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/ProductListItemClassName.xhtml">ProductListItemClassName</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/ProductListItemInCartClassName.xhtml">ProductListItemInCartClassName</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/ProductListItemNotInCartClassName.xhtml">ProductListItemNotInCartClassName</a>()
-                    </li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableID.xhtml">TableID</a>()
-                    </li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTotalID.xhtml">TableTotalID</a>()
+                    </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableID.xhtml">TableID</a>()
+                    </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTotalID.xhtml">TableTotalID</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableMessageID.xhtml">TableMessageID</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableSubTotalID.xhtml">TableSubTotalID</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TotalItemsTimesQuantityClassName.xhtml">TotalItemsTimesQuantityClassName</a>()
@@ -89,10 +94,10 @@
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/ExpectedCountryClassName.xhtml">ExpectedCountryClassName</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CountryFieldID.xhtml">CountryFieldID</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/RegionFieldID.xhtml">RegionFieldID</a>()
-                    </li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTitleID.xhtml">TableTitleID</a>()
-                    </li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartTitleID.xhtml">CartTitleID</a>()
-                    </li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableSubTitleID.xhtml">TableSubTitleID</a>()
-                    </li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartSubTitleID.xhtml">CartSubTitleID</a>()
+                    </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTitleID.xhtml">TableTitleID</a>()
+                    </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartTitleID.xhtml">CartTitleID</a>()
+                    </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableSubTitleID.xhtml">TableSubTitleID</a>()
+                    </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartSubTitleID.xhtml">CartSubTitleID</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/QuantityFieldName.xhtml">QuantityFieldName</a>()
                     </li><li>public String <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/UniqueIdentifier.xhtml">UniqueIdentifier</a>()
                     </li><li>public void <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/Define.xhtml">Define</a>()
@@ -100,37 +105,37 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/ViewableData.xhtml">ViewableData</a>
-            </li>
+            <li>ViewableData</li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="prefix"><strong>$prefix</strong>
                 —
-                <a href="#">Null</a><br/><span class="indent">prefix used for all classes and IDs</span></li>
+                <a title="Null" href="../classes/Null.xhtml">Null</a><br/><span class="indent">prefix used for all classes and IDs</span></li>
           </ul>
           <h4>protected</h4>
           <ul class="members">
             <li id="requestor"><strong>$requestor</strong>
                 —
-                <a href="#">DataObject</a><br/><span class="indent">the class that is requesting the ajax definitions we provide the requestor so that we can dynamically change the ids and classes, using the requestor.</span></li>
+                <a title="DataObject" href="../classes/DataObject.xhtml">DataObject</a><br/><span class="indent">the class that is requesting the ajax definitions we provide the requestor so that we can dynamically change the ids and classes, using the requestor.</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
-            <li id="CartSubTitleID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartSubTitleID.xhtml">CartSubTitleID()</a>
-                — return String for use in the Templates</li>
-            <li id="CartTitleID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartTitleID.xhtml">CartTitleID()</a>
-                — return String for use in the Templates</li>
+            <li id="CartSubTitleID">
+              <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartSubTitleID.xhtml">CartSubTitleID()</a>
+            </li>
+            <li id="CartTitleID">
+              <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CartTitleID.xhtml">CartTitleID()</a>
+            </li>
             <li id="CountryFieldID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/CountryFieldID.xhtml">CountryFieldID()</a>
                 — class that is used in templates and in the JSON return @see CartResponse</li>
             <li id="Define">
@@ -161,18 +166,22 @@
                 — id that is used in templates and in the JSON return @see CartResponse The Side bar cart ID is used for populating a small cart on the side bar.</li>
             <li id="SmallCartID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/SmallCartID.xhtml">SmallCartID()</a>
                 — Small representation of cart</li>
-            <li id="TableID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableID.xhtml">TableID()</a>
-                — return String for use in the Templates</li>
+            <li id="TableID">
+              <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableID.xhtml">TableID()</a>
+            </li>
             <li id="TableMessageID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableMessageID.xhtml">TableMessageID()</a>
                 — id that is used in templates and in the JSON return @see CartResponse</li>
-            <li id="TableSubTitleID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableSubTitleID.xhtml">TableSubTitleID()</a>
-                — return String for use in the Templates</li>
+            <li id="TableSubTitleID">
+              <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableSubTitleID.xhtml">TableSubTitleID()</a>
+            </li>
             <li id="TableSubTotalID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableSubTotalID.xhtml">TableSubTotalID()</a>
                 — id that is used in templates and in the JSON return @see CartResponse</li>
-            <li id="TableTitleID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTitleID.xhtml">TableTitleID()</a>
-                — return String for use in the Templates</li>
-            <li id="TableTotalID"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTotalID.xhtml">TableTotalID()</a>
-                — return String for use in the Templates</li>
+            <li id="TableTitleID">
+              <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTitleID.xhtml">TableTitleID()</a>
+            </li>
+            <li id="TableTotalID">
+              <a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TableTotalID.xhtml">TableTotalID()</a>
+            </li>
             <li id="TinyCartClassName"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TinyCartClassName.xhtml">TinyCartClassName()</a>
                 — class that is used in templates and in the JSON return @see CartResponse The Menu Cart class is used for populating a tiny cart on your site (e.g. you have 3 items in your cart ($1343))</li>
             <li id="TotalItemsClassName"><a title="EcommerceConfigAjaxDefinitions" href="../classes/EcommerceConfigAjaxDefinitions/TotalItemsClassName.xhtml">TotalItemsClassName()</a>
@@ -187,8 +196,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

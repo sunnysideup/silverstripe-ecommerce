@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommerceRole</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/extensions/EcommerceRole.php.xhtml#line14">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -67,19 +70,26 @@
         <ul/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceRole
-                extends <a title="DataExtension" href="../classes/DataExtension.xhtml">DataExtension</a>
+                extends DataExtension
                 implements
-                <a title="PermissionProvider" href="../interfaces/PermissionProvider.xhtml">PermissionProvider</a>
-            {<br/><ul class="none"><li>// members</li><li>private integer <a href="#members">$max_count_of_members_in_array</a>;
-                    </li><li>private array <a href="#members">$api_access</a>;
-                    </li><li>private array <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$has_one</a>;
-                    </li><li>private array <a href="#members">$has_many</a>;
-                    </li></ul><ul class="none"><li>// methods</li><li>public static void <a title="EcommerceRole" href="../classes/EcommerceRole/get_customer_group.xhtml">get_customer_group</a>()
+                PermissionProvider
+            {<br/><ul class="none"><li>// members</li><li>private static integer <a href="#members">$max_count_of_members_in_array</a> =
+                        1500;
+                    </li><li>private static array <a href="#members">$api_access</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_one</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$has_many</a> =
+                        ;
+                    </li></ul><ul class="none"><li>// methods</li><li>public static DataObject <a title="EcommerceRole" href="../classes/EcommerceRole/get_customer_group.xhtml">get_customer_group</a>()
                     </li><li>public static Array <a title="EcommerceRole" href="../classes/EcommerceRole/list_of_customers.xhtml">list_of_customers</a>()
                     </li><li>public static Boolean <a title="EcommerceRole" href="../classes/EcommerceRole/current_member_is_shop_admin.xhtml">current_member_is_shop_admin</a>()
                     </li><li>public static DataObject <a title="EcommerceRole" href="../classes/EcommerceRole/get_admin_group.xhtml">get_admin_group</a>()
                     </li><li>public static DataObject <a title="EcommerceRole" href="../classes/EcommerceRole/get_default_shop_admin_user.xhtml">get_default_shop_admin_user</a>()
+                    </li><li>public null <a title="EcommerceRole" href="../classes/EcommerceRole/canDelete.xhtml">canDelete</a>()
+                    </li><li>public DataList <a title="EcommerceRole" href="../classes/EcommerceRole/getOrders.xhtml">getOrders</a>()
                     </li><li>public Array <a title="EcommerceRole" href="../classes/EcommerceRole/providePermissions.xhtml">providePermissions</a>()
                     </li><li>public FieldList <a title="EcommerceRole" href="../classes/EcommerceRole/updateCMSFields.xhtml">updateCMSFields</a>()
                     </li><li>public void <a title="EcommerceRole" href="../classes/EcommerceRole/SetPreferredCurrency.xhtml">SetPreferredCurrency</a>()
@@ -95,22 +105,18 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/DataExtension.xhtml">DataExtension</a>
-            </li>
+            <li>DataExtension</li>
           </ul>
           <h4>Implements</h4>
           <ul>
-            <li>
-              <a href="../interfaces/PermissionProvider.xhtml">PermissionProvider</a>
-            </li>
+            <li>PermissionProvider</li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="api_access">
@@ -133,7 +139,7 @@
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="IsShopAdmin"><a title="EcommerceRole" href="../classes/EcommerceRole/IsShopAdmin.xhtml">IsShopAdmin()</a>
@@ -142,6 +148,8 @@
                 — returns the last (submitted) order  by the member</li>
             <li id="SetPreferredCurrency"><a title="EcommerceRole" href="../classes/EcommerceRole/SetPreferredCurrency.xhtml">SetPreferredCurrency()</a>
                 — Save a preferred currency for a member.</li>
+            <li id="canDelete"><a title="EcommerceRole" href="../classes/EcommerceRole/canDelete.xhtml">canDelete()</a>
+                — you can't delete a Member with one or more orders.</li>
             <li id="current_member_is_shop_admin"><a title="EcommerceRole" href="../classes/EcommerceRole/current_member_is_shop_admin.xhtml">current_member_is_shop_admin()</a>
                 — tells us if the current member is in the Shop Administrators Group.</li>
             <li id="getEcommerceFields">
@@ -151,11 +159,14 @@
                 — get CMS fields describing the member in the CMS when viewing the order.</li>
             <li id="getEcommerceRequiredFields"><a title="EcommerceRole" href="../classes/EcommerceRole/getEcommerceRequiredFields.xhtml">getEcommerceRequiredFields()</a>
                 — Return which member fields should be required on {@link OrderForm} and {@link ShopAccountForm}.</li>
+            <li id="getOrders"><a title="EcommerceRole" href="../classes/EcommerceRole/getOrders.xhtml">getOrders()</a>
+                — we need this function because $this-&gt;Orders does not return anything that is probably because Order links the member twice (placed by and cancelled by)</li>
             <li id="get_admin_group">
               <a title="EcommerceRole" href="../classes/EcommerceRole/get_admin_group.xhtml">get_admin_group()</a>
             </li>
-            <li id="get_customer_group"><a title="EcommerceRole" href="../classes/EcommerceRole/get_customer_group.xhtml">get_customer_group()</a>
-                — return DataObject (Group) | NULL</li>
+            <li id="get_customer_group">
+              <a title="EcommerceRole" href="../classes/EcommerceRole/get_customer_group.xhtml">get_customer_group()</a>
+            </li>
             <li id="get_default_shop_admin_user">
               <a title="EcommerceRole" href="../classes/EcommerceRole/get_default_shop_admin_user.xhtml">get_default_shop_admin_user()</a>
             </li>
@@ -175,8 +186,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

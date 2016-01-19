@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - OrderItem</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -61,6 +61,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/model/OrderItem.php.xhtml#line14">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -71,21 +74,35 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class OrderItem
                 extends <a title="OrderAttribute" href="../classes/OrderAttribute.xhtml">OrderAttribute</a>
-            {<br/><ul class="none"><li>// members</li><li>private array <a href="#members">$api_access</a>;
-                    </li><li>private array <a href="#members">$db</a>;
-                    </li><li>private array <a href="#members">$indexes</a>;
-                    </li><li>private array <a href="#members">$casting</a>;
-                    </li><li>private array <a href="#members">$searchable_fields</a>;
-                    </li><li>private array <a href="#members">$field_labels</a>;
-                    </li><li>private array <a href="#members">$summary_fields</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$singular_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$plural_name</a>;
-                    </li><li>private <span title="String">String</span> <a href="#members">$description</a>;
-                    </li><li>protected array <a href="#members">$calculated_buyable_price</a>;
-                    </li><li>private <span title="Boolean">Boolean</span> <a href="#members">$price_has_been_fixed</a>;
-                    </li><li>protected <span title="Array">Array</span> <a href="#members">$tempBuyableStore</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static array <a href="#members">$api_access</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$db</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$indexes</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$casting</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$searchable_fields</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$field_labels</a> =
+                        ;
+                    </li><li>private static array <a href="#members">$summary_fields</a> =
+                        ;
+                    </li><li>private static <span title="String">String</span> <a href="#members">$singular_name</a> =
+                        "Order Item";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$plural_name</a> =
+                        "Order Items";
+                    </li><li>private static <span title="String">String</span> <a href="#members">$description</a> =
+                        "Any item that is added to an order and sits before the sub-total. ";
+                    </li><li>protected static array <a href="#members">$calculated_buyable_price</a> =
+                        ;
+                    </li><li>private static <span title="Boolean">Boolean</span> <a href="#members">$price_has_been_fixed</a> =
+                        ;
+                    </li><li>protected <span title="Array">Array</span> <a href="#members">$tempBuyableStore</a> =
+                        ;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="OrderAttribute">OrderAttribute</span></li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canEdit</a>;
                         </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$_canView</a>;
+                        </li><li>protected <span title="Boolean">Boolean</span> <a href="#members">$baseInitCalled</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="OrderItem" href="../classes/OrderItem/i18n_singular_name.xhtml">i18n_singular_name</a>()
                     </li><li>public void <a title="OrderItem" href="../classes/OrderItem/i18n_plural_name.xhtml">i18n_plural_name</a>()
                     </li><li>public static DataObject <a title="OrderItem" href="../classes/OrderItem/get_version.xhtml">get_version</a>()
@@ -144,7 +161,7 @@
                         </li><li>public EcommerceConfigAjax <a title="OrderAttribute" href="../classes/OrderAttribute/AJAXDefinitions.xhtml">AJAXDefinitions</a>()
                         </li><li>public EcommerceDBConfig <a title="OrderAttribute" href="../classes/OrderAttribute/EcomConfig.xhtml">EcomConfig</a>()
                         </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/ShowInTable.xhtml">ShowInTable</a>()
-                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/ShowInCart.xhtml">ShowInCart</a>()
+                        </li><li>public Boolean <a title="OrderAttribute" href="../classes/OrderAttribute/ShowInCart.xhtml">ShowInCart</a>()
                         </li><li>public string <a title="OrderAttribute" href="../classes/OrderAttribute/TableTitle.xhtml">TableTitle</a>()
                         </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getTableTitle.xhtml">getTableTitle</a>()
                         </li><li>public string <a title="OrderAttribute" href="../classes/OrderAttribute/CartTitle.xhtml">CartTitle</a>()
@@ -157,6 +174,7 @@
                         </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getCartSubTitle.xhtml">getCartSubTitle</a>()
                         </li><li>public Money <a title="OrderAttribute" href="../classes/OrderAttribute/CalculatedTotalAsMoney.xhtml">CalculatedTotalAsMoney</a>()
                         </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/getCalculatedTotalAsMoney.xhtml">getCalculatedTotalAsMoney</a>()
+                        </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/runUpdate.xhtml">runUpdate</a>()
                         </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/onBeforeWrite.xhtml">onBeforeWrite</a>()
                         </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/onAfterWrite.xhtml">onAfterWrite</a>()
                         </li><li>public void <a title="OrderAttribute" href="../classes/OrderAttribute/debug.xhtml">debug</a>()
@@ -164,22 +182,16 @@
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
             <li>
-              <a href="../classes/OrderAttribute.xhtml">OrderAttribute</a>
-            </li>
-          </ul>
-          <h4>Extended by</h4>
-          <ul>
-            <li>
-              <a href="../classes/Product_OrderItem.xhtml">Product_OrderItem</a>
+              <a title="OrderAttribute" href="../classes/OrderAttribute.xhtml">OrderAttribute</a>
             </li>
           </ul>
         </div>
         <h2 id="tasks">Tasks</h2>
-        <table xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <table class="styled">
           <thead>
             <tr>
               <th style="width:3em;">Line</th>
@@ -187,16 +199,12 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">605</td>
-            <td>check if the version exists?? - see sample below</td>
-          </tr>
-          <tr>
-            <td class="nummeric">769+</td>
+            <td class="nummeric">776+</td>
             <td>: do we still need this?</td>
           </tr>
         </table>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>private</h4>
           <ul class="members">
             <li id="api_access"><strong>$api_access</strong>
@@ -210,7 +218,7 @@
                 array<br/><span class="indent">stardard SS variable</span></li>
             <li id="description"><strong>$description</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">Standard SS variable.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">Standard SS variable.</span></li>
             <li id="field_labels"><strong>$field_labels</strong>
                 —
                 array</li>
@@ -219,16 +227,16 @@
                 array</li>
             <li id="plural_name"><strong>$plural_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">plural name of the object. it is recommended to override this in any extensions of this class.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">plural name of the object. it is recommended to override this in any extensions of this class.</span></li>
             <li id="price_has_been_fixed"><strong>$price_has_been_fixed</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">Helps in speeding up code.</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">Helps in speeding up code.</span></li>
             <li id="searchable_fields"><strong>$searchable_fields</strong>
                 —
                 array</li>
             <li id="singular_name"><strong>$singular_name</strong>
                 —
-                <a href="#">String</a><br/><span class="indent">singular name of the object. it is recommended to override this in any extensions of this class.</span></li>
+                <a title="String" href="../classes/String.xhtml">String</a><br/><span class="indent">singular name of the object. it is recommended to override this in any extensions of this class.</span></li>
             <li id="summary_fields"><strong>$summary_fields</strong>
                 —
                 array</li>
@@ -237,20 +245,23 @@
           <ul class="members">
             <li id="_canEdit"><strong>$_canEdit</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">save edit status for speed's sake</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">save edit status for speed's sake</span></li>
             <li id="_canView"><strong>$_canView</strong>
                 —
-                <a href="#">Boolean</a><br/><span class="indent">save view status for speed's sake</span></li>
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">save view status for speed's sake</span></li>
+            <li id="baseInitCalled"><strong>$baseInitCalled</strong>
+                —
+                <a title="Boolean" href="../classes/Boolean.xhtml">Boolean</a><br/><span class="indent">we use this variable to make sure that the parent::runUpdate() is called in all child classes this is similar to the checks run for parent::init in the controller class.</span></li>
             <li id="calculated_buyable_price">
               <strong>$calculated_buyable_price</strong>
             </li>
             <li id="tempBuyableStore"><strong>$tempBuyableStore</strong>
                 —
-                <a href="#">Array</a><br/><span class="indent">Store for buyables.</span></li>
+                <a title="Array" href="../classes/Array.xhtml">Array</a><br/><span class="indent">Store for buyables.</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>protected</h4>
           <ul>
             <li id="linkParameters">
@@ -399,9 +410,10 @@
             <li id="OrderAttributeType"><a title="OrderAttribute" href="../classes/OrderAttribute/OrderAttributeType.xhtml">OrderAttributeType()</a>
                 — This is a key function that returns the type of the object.  In principle anything can be returned but the intention is to only return a few options e.g. OrderItem, Tax, Delivery, etc... so that computations can be carried out based on the type of OrderAttribute we are looking at.</li>
             <li id="ShowInCart"><a title="OrderAttribute" href="../classes/OrderAttribute/ShowInCart.xhtml">ShowInCart()</a>
-                — hould this item be shown on in the cart (which is on other pages than the checkout page) return Boolean</li>
-            <li id="ShowInTable"><a title="OrderAttribute" href="../classes/OrderAttribute/ShowInTable.xhtml">ShowInTable()</a>
-                — hould this item be shown on check out page table? return Boolean</li>
+                — Should this item be shown on in the cart (which is on other pages than the checkout page)</li>
+            <li id="ShowInTable">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/ShowInTable.xhtml">ShowInTable()</a>
+            </li>
             <li id="TableSubTitle"><a title="OrderAttribute" href="../classes/OrderAttribute/TableSubTitle.xhtml">TableSubTitle()</a>
                 — the sub title for the order item or order modifier</li>
             <li id="TableSubTitleNOHTML"><a title="OrderAttribute" href="../classes/OrderAttribute/TableSubTitleNOHTML.xhtml">TableSubTitleNOHTML()</a>
@@ -448,12 +460,15 @@
                 — Standard SS method</li>
             <li id="onBeforeWrite"><a title="OrderAttribute" href="../classes/OrderAttribute/onBeforeWrite.xhtml">onBeforeWrite()</a>
                 — Standard SS method We add the Sort value from the OrderAttribute_Group to the OrderAttribute.</li>
+            <li id="runUpdate">
+              <a title="OrderAttribute" href="../classes/OrderAttribute/runUpdate.xhtml">runUpdate()</a>
+            </li>
           </ul>
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pdxf="http://xml.phpdox.net/functions" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
-  <head xmlns:git="http://xml.phpdox.net/gitlog#">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
     <title>phpDox - EcommerceSearchHistoryFormField</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
   <body>
-    <nav xmlns:git="http://xml.phpdox.net/gitlog#" class="topnav">
+    <nav class="topnav">
       <ul>
         <li>
           <div class="logo"><span>/**</span>phpDox</div>
@@ -25,7 +25,7 @@
           <a href="../classes.xhtml">Classes</a>
         </li>
         <li class="separator">
-          <a href="../reports/index.xhtml">Reports</a>
+          <a href="../source/index.xhtml">Source</a>
         </li>
       </ul>
     </nav>
@@ -58,6 +58,9 @@
           <li>
             <a href="#methods">Methods</a>
           </li>
+          <li>
+            <a href="../source/code/forms/fields/EcommerceSearchHistoryFormField.php.xhtml#line3">Source</a>
+          </li>
         </ul>
       </nav>
       <section>
@@ -66,47 +69,52 @@
         <p/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class EcommerceSearchHistoryFormField
-                extends <a title="LiteralField" href="../classes/LiteralField.xhtml">LiteralField</a>
-            {<br/><ul class="none"><li>// members</li><li>protected <span title="Int">Int</span> <a href="#members">$numberOfDays</a>;
-                    </li><li>protected <span title="Int">Int</span> <a href="#members">$endingDaysBack</a>;
-                    </li><li>protected <span title="Int">Int</span> <a href="#members">$minimumCount</a>;
+                extends LiteralField
+            {<br/><ul class="none"><li>// members</li><li>protected <span title="Int">Int</span> <a href="#members">$numberOfDays</a> =
+                        100;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$endingDaysBack</a> =
+                        0;
+                    </li><li>protected <span title="Int">Int</span> <a href="#members">$minimumCount</a> =
+                        1;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/__construct.xhtml">__construct</a>()
                     </li><li>public Field <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/setNumberOfDays.xhtml">setNumberOfDays</a>()
                     </li><li>public Field <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/setMinimumCount.xhtml">setMinimumCount</a>()
                     </li><li>public Field <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/setEndingDaysBack.xhtml">setEndingDaysBack</a>()
+                    </li><li>public void <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/Field.xhtml">Field</a>()
                     </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>Extends</h4>
           <ul>
-            <li>
-              <a href="../classes/LiteralField.xhtml">LiteralField</a>
-            </li>
+            <li>LiteralField</li>
           </ul>
         </div>
         <h2 id="members">Members</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled members">
+        <div class="styled members">
           <h4>protected</h4>
           <ul class="members">
             <li id="endingDaysBack"><strong>$endingDaysBack</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">how many days ago the data-analysis should end</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">how many days ago the data-analysis should end</span></li>
             <li id="minimumCount"><strong>$minimumCount</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">minimum number of searches for the data to show up</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">minimum number of searches for the data to show up</span></li>
             <li id="numberOfDays"><strong>$numberOfDays</strong>
                 —
-                <a href="#">Int</a><br/><span class="indent">total number days to search back</span></li>
+                <a title="Int" href="../classes/Int.xhtml">Int</a><br/><span class="indent">total number days to search back</span></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
-        <div xmlns:git="http://xml.phpdox.net/gitlog#" class="styled">
+        <div class="styled">
           <h4>public</h4>
           <ul>
             <li id="__construct">
               <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="Field">
+              <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/Field.xhtml">Field()</a>
             </li>
             <li id="setEndingDaysBack">
               <a title="EcommerceSearchHistoryFormField" href="../classes/EcommerceSearchHistoryFormField/setEndingDaysBack.xhtml">setEndingDaysBack()</a>
@@ -121,8 +129,8 @@
         </div>
       </section>
     </div>
-    <footer xmlns:git="http://xml.phpdox.net/gitlog#">
-      <span/>
+    <footer>
+      <span>Generated using phpDox 0.8.1.1 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>
