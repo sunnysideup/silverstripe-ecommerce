@@ -106,8 +106,7 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		}
 
 		//nothing to pay, always valid
-		if($order->TotalOutstanding() == 0 && $order->IsSubmitted()) {
-			$this->ID;
+		if(($order->TotalOutstanding() == 0 && $order->IsSubmitted()) || $order->IsPaid() || $order->Total() == 0) {
 			return true;
 		}
 		if(!$this->paymentObject) {
