@@ -233,7 +233,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 			$title = _t("OrderAddress.".strtoupper($nameWithoutID), "Region / Province / State");
 			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
 			$count = count($regionsForDropdown);
-			if($count< 1) {
+			if($count < 1) {
 				if(!$freeTextName) {
 					$freeTextName = $nameWithoutID."Code";
 				}
@@ -376,32 +376,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * @param String - $prefix = either "" or "Shipping"
-	 * @return Array of fields for an Order DataObject
-	 **/
-	protected function getFieldNameArray($fieldPrefix = '') {
-		$fieldNameArray = array(
-			"Email",
-			"Prefix",
-			"FirstName",
-			"Surname",
-			"Address",
-			"Address2",
-			"City",
-			"PostalCode",
-			"RegionID",
-			"Country",
-			"Phone"
-		);
-		if($fieldPrefix) {
-			foreach($fieldNameArray as $key => $value) {
-				$fieldNameArray[$key] = $fieldPrefix.$value;
-			}
-		}
-		return $fieldNameArray;
-	}
-
-	/**
 	 * returns the field prefix string for shipping addresses
 	 * @return String
 	 **/
@@ -441,7 +415,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 		if($member && $member->exists()) {
 			$oldAddress = $member->previousOrderAddress($this->baseClassLinkingToOrder(), $this->ID);
 			if($oldAddress) {
-				$fieldNameArray = $this->getFieldNameArray($fieldPrefix);
+				$fieldNameArray = array_keys($this->Config()->get("db")) + array_keys($this->Config()->get("has_one"));
 				foreach($fieldNameArray as $field) {
 					if(in_array($field, $excludedFields)) {
 						//do nothing

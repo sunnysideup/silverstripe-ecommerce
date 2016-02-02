@@ -381,13 +381,10 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		// this is only applicable when people submit order (start to pay)
 		// and then return back
 		if($checkoutPageCurrentOrderID = Session::get("CheckoutPageCurrentOrderID")) {
-			if((!$this->currentOrder) || ($this->currentOrder->ID != $checkoutPageCurrentOrderID)) {
-				if($order = Order::get_by_id_if_can_view(intval($checkoutPageCurrentOrderID))) {
-					Session::clear("CheckoutPageCurrentOrderID");
-					Session::set("CheckoutPageCurrentOrderID", 0);
-					Session::save();
-					return $this->redirect($order->Link());
-				}
+			if($this->currentOrder->ID != $checkoutPageCurrentOrderID) {
+				Session::clear("CheckoutPageCurrentOrderID");
+				Session::set("CheckoutPageCurrentOrderID", 0);
+				Session::save();
 			}
 		}
 		if($this->currentOrder) {
