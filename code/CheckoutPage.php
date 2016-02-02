@@ -392,7 +392,6 @@ class CheckoutPage_Controller extends CartPage_Controller {
 		}
 		if($this->currentOrder) {
 			//we make sure all the OrderModifiers are up to date....
-
 			Session::set("CheckoutPageCurrentOrderID", $this->currentOrder->ID);
 		}
 

@@ -11,7 +11,7 @@
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
 
-class EcommerceRole extends DataExtension implements PermissionProvider{
+class EcommerceRole extends DataExtension implements PermissionProvider {
 
 	private static $max_count_of_members_in_array = 1500;
 

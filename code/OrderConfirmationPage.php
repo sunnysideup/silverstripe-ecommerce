@@ -342,18 +342,27 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 	function init() {
 		//we retrieve the order in the parent page
 		//the parent page also takes care of the security
+		if($sessionOrderID = Session::get("CheckoutPageCurrentOrderID")) {
+			$this->currentOrder = Order::get()->byID($sessionOrderID);
+			if($this->currentOrder) {
+				$this->overrideCanView = true;
+				//more than an hour has passed...
+				if(strtotime($this->currentOrder->LastEdited) < (strtotime("Now") - 60 * 60)) {
+					Session::clear("CheckoutPageCurrentOrderID");
+					Session::clear("CheckoutPageCurrentOrderID");
+					Session::set("CheckoutPageCurrentOrderID", 0);
+					Session::save();
+					$this->overrideCanView = false;
+					$this->currentOrder = null;
+				}
+			}
+		}
 		parent::init();
 		Requirements::themedCSS('Order', 'ecommerce');
 		Requirements::themedCSS('Order_Print', 'ecommerce', "print");
 		Requirements::themedCSS('CheckoutPage', 'ecommerce');
 		Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 		Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
-		//clear steps from checkout page otherwise in the next order
-		//you go straight to the last step.
-		Session::clear("CheckoutPageCurrentOrderID");
-		Session::clear("CheckoutPageCurrentOrderID");
-		Session::set("CheckoutPageCurrentOrderID", 0);
-		Session::save();
 		$this->includeGoogleAnalyticsCode();
 	}
 

@@ -339,6 +339,12 @@ class CartPage_Controller extends Page_Controller{
 	}
 
 	/**
+	 * show the order even if canView returns false
+	 * @var boolean
+	 */
+	protected $overrideCanView = false;
+
+	/**
 	 *
 	 * @standard SS method
 	 */
@@ -347,7 +353,6 @@ class CartPage_Controller extends Page_Controller{
 		parent::init();
 		// find the current order if any
 		$orderID = 0;
-		$overrideCanView = false;
 		//WE HAVE THIS FOR SUBMITTING FORMS!
 		if(isset($_REQUEST['OrderID'])) {
 			$orderID = intval($_REQUEST['OrderID']);
@@ -371,7 +376,7 @@ class CartPage_Controller extends Page_Controller{
 					))
 					->First();
 				$this->currentOrder = $retrievedOrder;
-				$overrideCanView = true;
+				$this->overrideCanView = true;
 			}
 			elseif(intval($id) && in_array($action, $this->stat("allowed_actions"))){
 				$this->currentOrder = Order::get()->byID(intval($id));
@@ -381,7 +386,7 @@ class CartPage_Controller extends Page_Controller{
 			$this->currentOrder = ShoppingCart::current_order();
 			if($this->currentOrder) {
 				if($this->currentOrder->IsSubmitted()) {
-					$overrideCanView = true;
+					$this->overrideCanView = true;
 				}
 			}
 		}
@@ -389,7 +394,7 @@ class CartPage_Controller extends Page_Controller{
 		if($this->currentOrder) {
 
 			//IMPORTANT SECURITY QUESTION!
-			if($this->currentOrder->canView() || $overrideCanView) {
+			if($this->currentOrder->canView() || $this->overrideCanView) {
 				if($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
 					$this->redirect($this->currentOrder->Link());
 				}
