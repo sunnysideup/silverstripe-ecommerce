@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="Product_OrderItem" namespace="" name="Product_OrderItem" abstract="false" final="false" start="3" end="143">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model" file="Product_OrderItem.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/Product_OrderItem.php" size="3980" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="a4bd0c8f203cc9af0255690490bef73d050b7f6c" relative="code/model/Product_OrderItem.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model" file="Product_OrderItem.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/Product_OrderItem.php" size="3980" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="a4bd0c8f203cc9af0255690490bef73d050b7f6c" relative="code/model/Product_OrderItem.php"/>
   <extends full="OrderItem" namespace="" name="OrderItem"/>
   <member name="api_access" type="array" default="" visibility="private" static="true" line="9">
     <docblock>

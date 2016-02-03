@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="AccountPage" namespace="" name="AccountPage" abstract="false" final="false" start="14" end="224">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="AccountPage.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/AccountPage.php" size="6194" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="930cefdd3e2e326da3fb4b99729880e3cfa82f9a" relative="code/AccountPage.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="AccountPage.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/AccountPage.php" size="6194" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="930cefdd3e2e326da3fb4b99729880e3cfa82f9a" relative="code/AccountPage.php"/>
   <docblock>
     <description/>
     <description compact="The Account Page allows the user to update their details.">You do not need to be logged in to the account page in order to view it... If you are not logged in

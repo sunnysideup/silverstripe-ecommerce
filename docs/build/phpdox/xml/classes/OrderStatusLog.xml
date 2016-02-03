@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderStatusLog" namespace="" name="OrderStatusLog" abstract="false" final="false" start="12" end="302">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/process" file="OrderStatusLog.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderStatusLog.php" size="8215" time="2015-12-16T14:03:56+13:00" unixtime="1450227836" sha1="7cedbc0bc77de0df28b63d50fd158e3feecf4f88" relative="code/model/process/OrderStatusLog.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process" file="OrderStatusLog.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderStatusLog.php" size="8215" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="7cedbc0bc77de0df28b63d50fd158e3feecf4f88" relative="code/model/process/OrderStatusLog.php"/>
   <docblock>
     <description/>
     <description/>

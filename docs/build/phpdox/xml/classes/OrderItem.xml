@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderItem" namespace="" name="OrderItem" abstract="false" final="false" start="14" end="796">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model" file="OrderItem.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/OrderItem.php" size="22650" time="2015-12-22T19:04:19+13:00" unixtime="1450764259" sha1="b63610320c2e01feaed5e82aaae6980674f6c8b4" relative="code/model/OrderItem.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model" file="OrderItem.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/OrderItem.php" size="22650" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="b63610320c2e01feaed5e82aaae6980674f6c8b4" relative="code/model/OrderItem.php"/>
   <docblock>
     <description/>
     <description compact="An order item links to a Buyable (product) by class name That is, we only store the BuyableID and the ClassName"/>

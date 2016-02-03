@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="ProductSearchForm_Short" namespace="" name="ProductSearchForm_Short" abstract="false" final="false" start="3" end="14">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms" file="ProductSearchForm_Short.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/ProductSearchForm_Short.php" size="499" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="8c310b5d90c0aa88685e954779218e6ce6fdabdf" relative="code/forms/ProductSearchForm_Short.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms" file="ProductSearchForm_Short.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/ProductSearchForm_Short.php" size="499" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="8c310b5d90c0aa88685e954779218e6ce6fdabdf" relative="code/forms/ProductSearchForm_Short.php"/>
   <extends full="ProductSearchForm" namespace="" name="ProductSearchForm"/>
   <constructor name="__construct" start="5" end="12" abstract="false" final="false" static="false" visibility="public">
     <parameter name="controller" byreference="false" type="{unknown}"/>

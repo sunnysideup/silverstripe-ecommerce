@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="GridFieldConfigForOrderItems" namespace="" name="GridFieldConfigForOrderItems" abstract="false" final="false" start="7" end="27">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/gridfield" file="GridFieldConfigForOrderItems.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/gridfield/GridFieldConfigForOrderItems.php" size="1150" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="ae93d97871a01a76be136eb747f853e57bcc0b1b" relative="code/forms/gridfield/GridFieldConfigForOrderItems.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/gridfield" file="GridFieldConfigForOrderItems.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/gridfield/GridFieldConfigForOrderItems.php" size="1150" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="ae93d97871a01a76be136eb747f853e57bcc0b1b" relative="code/forms/gridfield/GridFieldConfigForOrderItems.php"/>
   <docblock>
     <description compact="ensures that order items can not be auto-linked or deleted but retains all the other features of the GridFieldConfig_RelationEditor settings."/>
   </docblock>

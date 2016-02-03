@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommercePayment_Failure" namespace="" name="EcommercePayment_Failure" abstract="false" final="false" start="3" end="12">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/money" file="EcommercePayment_Failure.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/money/EcommercePayment_Failure.php" size="165" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="a02dd75e27a1a77a4c9aa65672efd42aea2429de" relative="code/model/money/EcommercePayment_Failure.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/money" file="EcommercePayment_Failure.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/money/EcommercePayment_Failure.php" size="165" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="a02dd75e27a1a77a4c9aa65672efd42aea2429de" relative="code/model/money/EcommercePayment_Failure.php"/>
   <extends full="EcommercePayment_Result" namespace="" name="EcommercePayment_Result"/>
   <method name="isSuccess" start="5" end="7" abstract="false" final="false" static="false" visibility="public"/>
   <method name="isProcessing" start="9" end="11" abstract="false" final="false" static="false" visibility="public"/>

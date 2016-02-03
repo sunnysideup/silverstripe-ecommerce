@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskTryToFinaliseOrders_Mailer" namespace="" name="EcommerceTaskTryToFinaliseOrders_Mailer" abstract="false" final="false" start="115" end="133">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskTryToFinaliseOrders.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskTryToFinaliseOrders.php" size="4700" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="398b62830b18b4bf3762a476e4983caa35231dad" relative="code/tasks/EcommerceTaskTryToFinaliseOrders.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskTryToFinaliseOrders.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskTryToFinaliseOrders.php" size="4700" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="398b62830b18b4bf3762a476e4983caa35231dad" relative="code/tasks/EcommerceTaskTryToFinaliseOrders.php"/>
   <extends full="mailer" namespace="" name="mailer" unresolved="true"/>
   <method name="sendPlain" start="121" end="123" abstract="false" final="false" static="false" visibility="public">
     <docblock>

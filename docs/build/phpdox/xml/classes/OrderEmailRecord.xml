@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderEmailRecord" namespace="" name="OrderEmailRecord" abstract="false" final="false" start="16" end="218">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/process" file="OrderEmailRecord.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderEmailRecord.php" size="5389" time="2015-12-02T09:24:00+13:00" unixtime="1449001440" sha1="8e08b8f03201aca54ec94c5f37d880917d2f19f7" relative="code/model/process/OrderEmailRecord.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process" file="OrderEmailRecord.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderEmailRecord.php" size="5389" time="2015-12-07T13:39:57+13:00" unixtime="1449448797" sha1="8e08b8f03201aca54ec94c5f37d880917d2f19f7" relative="code/model/process/OrderEmailRecord.php"/>
   <docblock>
     <description/>
     <description value=": DataObject recording all order emails sent."/>

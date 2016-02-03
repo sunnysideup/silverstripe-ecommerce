@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderStatusLog_DispatchPhysicalOrder" namespace="" name="OrderStatusLog_DispatchPhysicalOrder" abstract="false" final="false" start="14" end="108">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderStatusLogs" file="OrderStatusLog_DispatchPhysicalOrder.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderStatusLogs/OrderStatusLog_DispatchPhysicalOrder.php" size="3129" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="39261002bd200d1935f57af3bec6bb323934d363" relative="code/model/process/OrderStatusLogs/OrderStatusLog_DispatchPhysicalOrder.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderStatusLogs" file="OrderStatusLog_DispatchPhysicalOrder.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderStatusLogs/OrderStatusLog_DispatchPhysicalOrder.php" size="3129" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="39261002bd200d1935f57af3bec6bb323934d363" relative="code/model/process/OrderStatusLogs/OrderStatusLog_DispatchPhysicalOrder.php"/>
   <docblock>
     <description/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>

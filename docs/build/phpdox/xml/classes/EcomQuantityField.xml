@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcomQuantityField" namespace="" name="EcomQuantityField" abstract="false" final="false" start="13" end="200">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/fields" file="EcomQuantityField.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/fields/EcomQuantityField.php" size="5018" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="4d88574274a78d4b42f52988876047e80387e96e" relative="code/forms/fields/EcomQuantityField.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/fields" file="EcomQuantityField.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/fields/EcomQuantityField.php" size="5018" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="4d88574274a78d4b42f52988876047e80387e96e" relative="code/forms/fields/EcomQuantityField.php"/>
   <docblock>
     <description/>
     <description value=": A links-based field for increasing, decreasing and setting a order item quantity"/>

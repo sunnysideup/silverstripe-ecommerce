@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommercePaymentSupportedMethodsProvider" namespace="" name="EcommercePaymentSupportedMethodsProvider" abstract="false" final="false" start="26" end="76">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/money" file="EcommercePaymentSupportedMethodsProvider.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/money/EcommercePaymentSupportedMethodsProvider.php" size="2010" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="f20c576f549b87b5e21dcce30b8d2a202a24f901" relative="code/money/EcommercePaymentSupportedMethodsProvider.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/money" file="EcommercePaymentSupportedMethodsProvider.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/money/EcommercePaymentSupportedMethodsProvider.php" size="2010" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="f20c576f549b87b5e21dcce30b8d2a202a24f901" relative="code/money/EcommercePaymentSupportedMethodsProvider.php"/>
   <docblock>
     <description compact="if you want to implement rules around selecting specific payment gateways for specific orders then you need to extend this class and add the following to mysite/_config/config.yml: &lt;code yml&gt;  Injector:    EcommercePaymentSupportedMethodsProvider:      class: MyCustom_EcommercePaymentSupportedMethodsProvider &lt;/code&gt;">in PHP you will have something like this:
 &lt;code php&gt;

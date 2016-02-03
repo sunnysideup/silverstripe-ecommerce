@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="Product_Image" namespace="" name="Product_Image" abstract="false" final="false" start="4" end="154">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/filesystem" file="Product_Image.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/filesystem/Product_Image.php" size="2826" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="28d4bba292d972171dec381fd6529bd20f81fbd6" relative="code/filesystem/Product_Image.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/filesystem" file="Product_Image.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/filesystem/Product_Image.php" size="2826" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="28d4bba292d972171dec381fd6529bd20f81fbd6" relative="code/filesystem/Product_Image.php"/>
   <extends full="Image" namespace="" name="Image" unresolved="true"/>
   <member name="casting" type="array" default="" visibility="private" static="true" line="6"/>
   <method name="summaryFields" start="14" end="19" abstract="false" final="false" static="false" visibility="public">

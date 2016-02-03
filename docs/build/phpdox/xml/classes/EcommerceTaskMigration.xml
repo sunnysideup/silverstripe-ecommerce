@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskMigration" namespace="" name="EcommerceTaskMigration" abstract="false" final="false" start="22" end="1743">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskMigration.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskMigration.php" size="64850" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="8c7d4bbeeefd022df70bfb1061c360308595bf82" relative="code/tasks/EcommerceTaskMigration.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskMigration.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskMigration.php" size="64850" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="8c7d4bbeeefd022df70bfb1061c360308595bf82" relative="code/tasks/EcommerceTaskMigration.php"/>
   <docblock>
     <description/>
     <description compact="This has been placed here rather than in the individual classes for the following reasons: - not to clog up individual classes - to get a complete overview in one class - to be able to run parts and older and newer version without having to go through several clases to retrieve them"/>

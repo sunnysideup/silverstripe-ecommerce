@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src" full="EcommercePaymentFormSetupAndValidation" namespace="" name="EcommercePaymentFormSetupAndValidation" abstract="false" final="false" start="12" end="373">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/validation" file="EcommercePaymentFormSetupAndValidation.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/validation/EcommercePaymentFormSetupAndValidation.php" size="11363" time="2016-01-06T13:19:48+13:00" unixtime="1452039588" sha1="74a88e19a4e0e2f2476ee1d1fea6b657f232370f" relative="code/forms/validation/EcommercePaymentFormSetupAndValidation.php"/>
+<class xmlns="http://xml.phpdox.net/src" full="EcommercePaymentFormSetupAndValidation" namespace="" name="EcommercePaymentFormSetupAndValidation" abstract="false" final="false" start="12" end="372">
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/validation" file="EcommercePaymentFormSetupAndValidation.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/validation/EcommercePaymentFormSetupAndValidation.php" size="11395" time="2016-02-02T15:26:04+13:00" unixtime="1454379964" sha1="91e5b620bd6a144430c91696c63391ad36fee316" relative="code/forms/validation/EcommercePaymentFormSetupAndValidation.php"/>
   <extends full="Object" namespace="" name="Object" unresolved="true"/>
   <member name="db_field_map" type="array" default="" visibility="private" static="true" line="25">
     <docblock>
@@ -31,7 +31,7 @@
   <method name="getCreditCardPaymentFormFieldsRequired" start="81" end="92" abstract="false" final="false" static="false" visibility="public">
     <parameter name="paymentObject" byreference="false" type="{unknown}" default="" constant="null"/>
   </method>
-  <method name="validatePayment" start="102" end="127" abstract="false" final="false" static="false" visibility="public">
+  <method name="validatePayment" start="102" end="126" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <param description="- the order that is being paid" type="object" variable="$order">
@@ -48,10 +48,10 @@
     <parameter name="form" byreference="false" type="{unknown}"/>
     <inline>
       <comment value="nothing to pay, always valid" line="108"/>
-      <comment value="Check payment, get the result back" line="125"/>
+      <comment value="Check payment, get the result back" line="124"/>
     </inline>
   </method>
-  <method name="validateAndSaveCreditCardInformation" start="142" end="224" abstract="false" final="false" static="false" visibility="public">
+  <method name="validateAndSaveCreditCardInformation" start="141" end="223" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="return false if there is an error and returns true if all is well.">If there are no errors, then the payment object will also be written...
 If there are errors, the errors will be added to the form.</description>
@@ -68,7 +68,7 @@ If there are errors, the errors will be added to the form.</description>
     <parameter name="form" byreference="false" type="{unknown}"/>
     <parameter name="paymentObject" byreference="false" type="{unknown}" default="" constant="null"/>
   </method>
-  <method name="processPaymentFormAndReturnNextStep" start="239" end="282" abstract="false" final="false" static="false" visibility="public">
+  <method name="processPaymentFormAndReturnNextStep" start="238" end="281" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Process payment form and return next step in the payment process.">Steps taken are:
 1. create new payment
@@ -89,12 +89,12 @@ If there are errors, the errors will be added to the form.</description>
     <parameter name="data" byreference="false" type="{unknown}"/>
     <parameter name="form" byreference="false" type="{unknown}"/>
     <inline>
-      <comment value="Save payment data from form and process payment" line="251"/>
-      <comment value="important to set the amount and currency (WE SET THEM BOTH AT THE SAME TIME!)" line="254"/>
-      <comment value="Process payment, get the result back" line="257"/>
+      <comment value="Save payment data from form and process payment" line="250"/>
+      <comment value="important to set the amount and currency (WE SET THEM BOTH AT THE SAME TIME!)" line="253"/>
+      <comment value="Process payment, get the result back" line="256"/>
     </inline>
   </method>
-  <method name="validateCardNumber" start="292" end="301" abstract="false" final="false" static="false" visibility="public">
+  <method name="validateCardNumber" start="291" end="300" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="checks if a credit card is a real credit card number"/>
       <reference value=": http://en.wikipedia.org/wiki/Luhn_algorithm"/>
@@ -107,7 +107,7 @@ If there are errors, the errors will be added to the form.</description>
     </docblock>
     <parameter name="cardNumber" byreference="false" type="{unknown}"/>
   </method>
-  <method name="validateExpiryMonth" start="309" end="325" abstract="false" final="false" static="false" visibility="public">
+  <method name="validateExpiryMonth" start="308" end="324" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <todo value=": finish!">valid expiry date</todo>
@@ -120,7 +120,7 @@ If there are errors, the errors will be added to the form.</description>
     </docblock>
     <parameter name="monthYear" byreference="false" type="{unknown}"/>
   </method>
-  <method name="validateCVV" start="335" end="370" abstract="false" final="false" static="false" visibility="public">
+  <method name="validateCVV" start="334" end="369" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
       <todo value=": TEST">valid CVC/CVV number?</todo>
@@ -133,7 +133,7 @@ If there are errors, the errors will be added to the form.</description>
     <parameter name="cardNumber" byreference="false" type="{unknown}"/>
     <parameter name="cvv" byreference="false" type="{unknown}"/>
     <inline>
-      <comment value="Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed)." line="339"/>
+      <comment value="Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed)." line="338"/>
     </inline>
   </method>
 </class>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<index xmlns="http://xml.phpdox.net/src" basedir="/var/www/bo.ihtf.us/ecommerce">
+<index xmlns="http://xml.phpdox.net/src" basedir="/var/www/3.2.photowarehouse.co.nz/ecommerce">
   <namespace name="Pelago">
     <class name="Emogrifier" src="thirdparty/Emogrifier.php" description="This class provides functions for converting CSS styles into inline style attributes in your HTML code." xml="classes/Pelago_Emogrifier.xml"/>
   </namespace>
@@ -84,6 +84,7 @@
     <class name="EcommercePayment_Result" src="code/model/money/EcommercePayment_Result.php" xml="classes/EcommercePayment_Result.xml"/>
     <class name="EcommerceCurrency" src="code/model/money/EcommerceCurrency.php" description="Object to manage currencies" xml="classes/EcommerceCurrency.xml"/>
     <class name="EcommercePayment_TestSuccess" src="code/model/money/EcommercePayment_TestSuccess.php" description="Payment object representing a TEST = SUCCESS" xml="classes/EcommercePayment_TestSuccess.xml"/>
+    <class name="BuyableFieldType" src="code/model/fieldtypes/BuyableFieldType.php" description="NOTE: this is not yet being used!!!" xml="classes/BuyableFieldType.xml"/>
     <class name="OrderAttribute" src="code/model/OrderAttribute.php" xml="classes/OrderAttribute.xml"/>
     <class name="OrderAttribute_Group" src="code/model/OrderAttribute.php" description="Allows you to group OrderAttributes" xml="classes/OrderAttribute_Group.xml"/>
     <class name="EcommerceCountry" src="code/model/address/EcommerceCountry.php" xml="classes/EcommerceCountry.xml"/>

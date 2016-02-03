@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="ProductConfigModelAdmin" namespace="" name="ProductConfigModelAdmin" abstract="false" final="false" start="15" end="30">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/cms" file="ProductsConfigModelAdmin.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/cms/ProductsConfigModelAdmin.php" size="618" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="262f6ac31895cfae9c9e02f043dcf0e955c6e11a" relative="code/cms/ProductsConfigModelAdmin.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms" file="ProductsConfigModelAdmin.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms/ProductsConfigModelAdmin.php" size="618" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="262f6ac31895cfae9c9e02f043dcf0e955c6e11a" relative="code/cms/ProductsConfigModelAdmin.php"/>
   <docblock>
     <description/>
     <description compact="but not the product (groups) themselves">Main example is product variations</description>

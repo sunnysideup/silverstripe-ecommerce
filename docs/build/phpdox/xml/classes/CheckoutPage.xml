@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="CheckoutPage" namespace="" name="CheckoutPage" abstract="false" final="false" start="37" end="329">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="CheckoutPage.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/CheckoutPage.php" size="18368" time="2015-10-16T14:28:14+13:00" unixtime="1444958894" sha1="05be7ab5e8687dce5f1c1c5ea25bb505e7479894" relative="code/CheckoutPage.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="CheckoutPage.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/CheckoutPage.php" size="18200" time="2016-02-03T11:59:26+13:00" unixtime="1454453966" sha1="95899c095fa3801696de5cba0529c4c87d29bb3e" relative="code/CheckoutPage.php"/>
   <docblock>
     <description compact="CheckoutPage is a CMS page-type that shows the order details to the customer for their current shopping cart on the site. It also lets the customer review the items in their cart, and manipulate them (add more, deduct or remove items completely). The most important thing is that the {@link CheckoutPage_Controller} handles the {@link OrderForm} form instance, allowing the customer to fill out their shipping details, confirming their order and making a payment."/>
     <see value="CheckoutPage_Controller-&gt;Order()"/>

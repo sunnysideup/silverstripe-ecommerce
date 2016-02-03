@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommercePaymentController" namespace="" name="EcommercePaymentController" abstract="false" final="false" start="12" end="135">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/control" file="EcommercePaymentController.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/control/EcommercePaymentController.php" size="2824" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="493820ca6edca502c123fa74e86f9374cb2c3367" relative="code/control/EcommercePaymentController.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/control" file="EcommercePaymentController.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/control/EcommercePaymentController.php" size="2824" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="493820ca6edca502c123fa74e86f9374cb2c3367" relative="code/control/EcommercePaymentController.php"/>
   <docblock>
     <description/>
     <description/>

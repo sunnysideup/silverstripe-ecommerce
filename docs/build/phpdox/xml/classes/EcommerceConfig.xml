@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceConfig" namespace="" name="EcommerceConfig" abstract="false" final="false" start="57" end="128">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/config" file="EcommerceConfig.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/config/EcommerceConfig.php" size="3753" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="06e81d003e178318ba9e112ce9edb4960b6db150" relative="code/config/EcommerceConfig.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/config" file="EcommerceConfig.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/config/EcommerceConfig.php" size="3753" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="06e81d003e178318ba9e112ce9edb4960b6db150" relative="code/config/EcommerceConfig.php"/>
   <docblock>
     <description compact="This Class creates an array of configurations for e-commerce.">This class replaces static variables in individual classes, such as Blog::$allow_wysiwyg_editing</description>
     <see value="http://en.wikipedia.org/wiki/YAML#Examples"/>

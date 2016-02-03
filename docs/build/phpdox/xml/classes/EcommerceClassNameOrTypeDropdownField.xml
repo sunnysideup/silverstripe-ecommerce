@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceClassNameOrTypeDropdownField" namespace="" name="EcommerceClassNameOrTypeDropdownField" abstract="false" final="false" start="9" end="103">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/fields" file="EcommerceClassNameOrTypeDropdownField.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/fields/EcommerceClassNameOrTypeDropdownField.php" size="2507" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="ca22bcdcdf2124387eccb95e57a818331a570ee4" relative="code/forms/fields/EcommerceClassNameOrTypeDropdownField.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/fields" file="EcommerceClassNameOrTypeDropdownField.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/fields/EcommerceClassNameOrTypeDropdownField.php" size="2507" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="ca22bcdcdf2124387eccb95e57a818331a570ee4" relative="code/forms/fields/EcommerceClassNameOrTypeDropdownField.php"/>
   <docblock>
     <description compact="this is a dropdown field just for selecting the right classname"/>
   </docblock>

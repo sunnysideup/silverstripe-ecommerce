@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="Product" namespace="" name="Product" abstract="false" final="false" start="23" end="1037">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="Product.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/Product.php" size="37400" time="2016-01-08T12:06:30+13:00" unixtime="1452207990" sha1="b5eb2d21291055791222294f729eae8a3cf31522" relative="code/Product.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="Product.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/Product.php" size="37400" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="b5eb2d21291055791222294f729eae8a3cf31522" relative="code/Product.php"/>
   <docblock>
     <description compact="This is a standard Product page-type with fields like Price, Weight, Model and basic management of groups.">It also has an associated Product_OrderItem class,
 an extension of OrderItem, which is the mechanism

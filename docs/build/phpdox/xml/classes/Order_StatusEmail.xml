@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="Order_StatusEmail" namespace="" name="Order_StatusEmail" abstract="false" final="false" start="14" end="22">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/email" file="Order_StatusEmail.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/email/Order_StatusEmail.php" size="508" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="78be5789829d2a9025f0abb3d22fccb87d8fe46a" relative="code/email/Order_StatusEmail.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/email" file="Order_StatusEmail.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/email/Order_StatusEmail.php" size="508" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="78be5789829d2a9025f0abb3d22fccb87d8fe46a" relative="code/email/Order_StatusEmail.php"/>
   <docblock>
     <description/>
     <description value=": This class handles the status email which can be sent">after a status update has been made (if told to do so ;-))</description>

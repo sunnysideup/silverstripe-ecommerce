@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface xmlns="http://xml.phpdox.net/src" full="EcommerceGEOipProvider" namespace="" name="EcommerceGEOipProvider" abstract="false" final="false" start="4" end="18">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/interfaces" file="EcommerceGEOipProvider.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/interfaces/EcommerceGEOipProvider.php" size="263" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="352037ff70136b856a20e1a9bcf591c59cd1d6da" relative="code/interfaces/EcommerceGEOipProvider.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/interfaces" file="EcommerceGEOipProvider.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/interfaces/EcommerceGEOipProvider.php" size="263" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="352037ff70136b856a20e1a9bcf591c59cd1d6da" relative="code/interfaces/EcommerceGEOipProvider.php"/>
   <method name="getCountry" start="10" end="10" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="returns a country code of the current user..."/>

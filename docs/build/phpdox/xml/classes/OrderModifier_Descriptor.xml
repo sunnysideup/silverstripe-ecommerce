@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderModifier_Descriptor" namespace="" name="OrderModifier_Descriptor" abstract="false" final="false" start="770" end="959">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model" file="OrderModifier.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/OrderModifier.php" size="26081" time="2015-11-12T13:06:13+13:00" unixtime="1447286773" sha1="581a837a8fa8fdb8dfb4c31d568ba1408053283f" relative="code/model/OrderModifier.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model" file="OrderModifier.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/OrderModifier.php" size="26081" time="2015-11-16T14:48:46+13:00" unixtime="1447638526" sha1="581a837a8fa8fdb8dfb4c31d568ba1408053283f" relative="code/model/OrderModifier.php"/>
   <extends full="DataObject" namespace="" name="DataObject" unresolved="true"/>
   <implements full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject"/>
   <member name="db" type="array" default="" visibility="private" static="true" line="776">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceDatabaseAdmin" namespace="" name="EcommerceDatabaseAdmin" abstract="false" final="false" start="78" end="440">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/cms/dev" file="EcommerceDatabaseAdmin.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/cms/dev/EcommerceDatabaseAdmin.php" size="10496" time="2016-01-08T12:06:30+13:00" unixtime="1452207990" sha1="2728cb820999c08fbd251b6326d25dd8736ae213" relative="code/cms/dev/EcommerceDatabaseAdmin.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms/dev" file="EcommerceDatabaseAdmin.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms/dev/EcommerceDatabaseAdmin.php" size="10496" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="2728cb820999c08fbd251b6326d25dd8736ae213" relative="code/cms/dev/EcommerceDatabaseAdmin.php"/>
   <docblock>
     <description compact="One stop shop for massaging e-commerce related data AND running tests.">You can customise this menu by "decorating" this class
 and adding the method: "updateEcommerceDevMenu".

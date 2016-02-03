@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskTemplateTest" namespace="" name="EcommerceTaskTemplateTest" abstract="false" final="false" start="11" end="21">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskTemplateTest.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskTemplateTest.php" size="672" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="385e05c58b9061f36a2fb1332daf9e19b172be88" relative="code/tasks/EcommerceTaskTemplateTest.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskTemplateTest.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskTemplateTest.php" size="672" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="385e05c58b9061f36a2fb1332daf9e19b172be88" relative="code/tasks/EcommerceTaskTemplateTest.php"/>
   <docblock>
     <description compact="Get examples for building templates."/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>

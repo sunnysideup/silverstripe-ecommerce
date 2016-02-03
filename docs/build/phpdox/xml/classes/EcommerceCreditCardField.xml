@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceCreditCardField" namespace="" name="EcommerceCreditCardField" abstract="false" final="false" start="11" end="97">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/fields" file="EcommerceCreditCardField.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/fields/EcommerceCreditCardField.php" size="2441" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="ad96716e19f403b3b3eb8088e289b7cbf5b6add7" relative="code/forms/fields/EcommerceCreditCardField.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/fields" file="EcommerceCreditCardField.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/fields/EcommerceCreditCardField.php" size="2441" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="ad96716e19f403b3b3eb8088e289b7cbf5b6add7" relative="code/forms/fields/EcommerceCreditCardField.php"/>
   <docblock>
     <description compact="Allows input of credit card numbers via four separate form fields, including generic validation of its numeric values."/>
     <todo value="Validate"/>

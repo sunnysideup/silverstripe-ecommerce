@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceRole" namespace="" name="EcommerceRole" abstract="false" final="false" start="14" end="475">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/extensions" file="EcommerceRole.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/extensions/EcommerceRole.php" size="15089" time="2015-12-31T18:35:23+13:00" unixtime="1451540123" sha1="1fc2fba9d5575dfa42d7652ad56e5d195dfc6274" relative="code/model/extensions/EcommerceRole.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/extensions" file="EcommerceRole.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/extensions/EcommerceRole.php" size="15090" time="2016-02-02T17:14:31+13:00" unixtime="1454386471" sha1="46720a6af15e43b6564715494f722d40bc1402a9" relative="code/model/extensions/EcommerceRole.php"/>
   <docblock>
     <description/>
     <description compact="class for the ecommerce module."/>

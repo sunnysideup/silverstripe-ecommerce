@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskAPIandMore" namespace="" name="EcommerceTaskAPIandMore" abstract="false" final="false" start="19" end="49">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskAPIandMore.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskAPIandMore.php" size="1363" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="4b9490b8518b06451b886ef67f27afe3bb05edf7" relative="code/tasks/EcommerceTaskAPIandMore.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskAPIandMore.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskAPIandMore.php" size="1363" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="4b9490b8518b06451b886ef67f27afe3bb05edf7" relative="code/tasks/EcommerceTaskAPIandMore.php"/>
   <docblock>
     <description compact="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs"/>
     <todo value=": compare to default">shows you the link to remove the current cart</todo>

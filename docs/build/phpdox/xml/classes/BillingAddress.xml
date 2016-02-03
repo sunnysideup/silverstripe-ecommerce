@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="BillingAddress" namespace="" name="BillingAddress" abstract="false" final="false" start="14" end="252">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/address" file="BillingAddress.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/address/BillingAddress.php" size="7528" time="2016-01-06T13:57:37+13:00" unixtime="1452041857" sha1="7295af5411d1105c00fdbde8b9cee3324c8780b9" relative="code/model/address/BillingAddress.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/address" file="BillingAddress.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/address/BillingAddress.php" size="7528" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="7295af5411d1105c00fdbde8b9cee3324c8780b9" relative="code/model/address/BillingAddress.php"/>
   <docblock>
     <description/>
     <description/>
@@ -375,19 +375,7 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="getFieldNameArray" start="382" end="402" abstract="false" final="false" static="false" visibility="protected">
-      <docblock>
-        <description/>
-        <param description="- $prefix = either &quot;&quot; or &quot;Shipping&quot;" type="object">
-          <type full="String" namespace="" name="String"/>
-        </param>
-        <return description="of fields for an Order DataObject" type="object">
-          <type full="Array" namespace="" name="Array"/>
-        </return>
-      </docblock>
-      <parameter name="fieldPrefix" byreference="false" type="string" default="''"/>
-    </method>
-    <method name="baseClassLinkingToOrder" start="408" end="415" abstract="false" final="false" static="false" visibility="protected">
+    <method name="baseClassLinkingToOrder" start="382" end="389" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the field prefix string for shipping addresses"/>
         <return type="object">
@@ -395,7 +383,7 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="fieldPrefix" start="421" end="428" abstract="false" final="false" static="false" visibility="protected">
+    <method name="fieldPrefix" start="395" end="402" abstract="false" final="false" static="false" visibility="protected">
       <docblock>
         <description compact="returns the field prefix string for shipping addresses"/>
         <return type="object">
@@ -403,7 +391,7 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="FillWithLastAddressFromMember" start="438" end="473" abstract="false" final="false" static="false" visibility="public">
+    <method name="FillWithLastAddressFromMember" start="412" end="447" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description/>
         <todo value=": are there times when the Shipping rather than the Billing address should be linked?">Copies the last address used by the member.</todo>
@@ -422,7 +410,7 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
       </parameter>
       <parameter name="write" byreference="false" type="boolean" default="false"/>
     </method>
-    <method name="getMemberFromOrder" start="483" end="493" abstract="false" final="false" static="false" visibility="public">
+    <method name="getMemberFromOrder" start="457" end="467" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="find the member associated with the current Order and address."/>
         <note value=": this needs to be public to give DODS (extensions access to this)"/>
@@ -432,7 +420,7 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="MakeObsolete" start="499" end="512" abstract="false" final="false" static="false" visibility="public">
+    <method name="MakeObsolete" start="473" end="486" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="make an address obsolete and include all the addresses that are identical."/>
         <param type="object" variable="$member">
@@ -443,12 +431,12 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         <type full="Member" namespace="" name="Member"/>
       </parameter>
     </method>
-    <method name="onAfterWrite" start="520" end="531" abstract="false" final="false" static="false" visibility="public">
+    <method name="onAfterWrite" start="494" end="505" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS method We &quot;hackishly&quot; ensure that the OrderID is set to the right value."/>
       </docblock>
     </method>
-    <method name="RemoveLink" start="537" end="539" abstract="false" final="false" static="false" visibility="public">
+    <method name="RemoveLink" start="511" end="513" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns the link that can be used to remove (make Obsolete) an address."/>
         <return type="object">
@@ -456,7 +444,7 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="getJSONData" start="545" end="545" abstract="false" final="false" static="false" visibility="public">
+    <method name="getJSONData" start="519" end="519" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="converts an address into JSON"/>
         <return description="(JSON)" type="object">
@@ -464,8 +452,8 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="JSONData" start="546" end="559" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="EcomConfig" start="567" end="569" abstract="false" final="false" static="false" visibility="public">
+    <method name="JSONData" start="520" end="533" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="EcomConfig" start="541" end="543" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="returns the instance of EcommerceDBConfig"/>
         <return type="object">
@@ -473,12 +461,12 @@ Used by <link xmlns="http://xml.phpdox.net/src" value="SearchContext"/>.
         </return>
       </docblock>
     </method>
-    <method name="onBeforeWrite" start="575" end="586" abstract="false" final="false" static="false" visibility="public">
+    <method name="onBeforeWrite" start="549" end="560" abstract="false" final="false" static="false" visibility="public">
       <docblock>
         <description compact="standard SS Method saves the region code"/>
       </docblock>
     </method>
-    <method name="debug" start="588" end="590" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="debug" start="562" end="564" abstract="false" final="false" static="false" visibility="public"/>
   </parent>
   <interface full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject">
     <method name="CMSEditLink" start="18" end="18" abstract="false" final="false" static="false" visibility="public">

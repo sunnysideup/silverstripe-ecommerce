@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderAttribute_Group" namespace="" name="OrderAttribute_Group" abstract="false" final="false" start="409" end="478">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model" file="OrderAttribute.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/OrderAttribute.php" size="10804" time="2015-11-12T13:05:03+13:00" unixtime="1447286703" sha1="0de95d145c029ed0dbb92f51202f86d355450f18" relative="code/model/OrderAttribute.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model" file="OrderAttribute.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/OrderAttribute.php" size="10804" time="2015-11-16T14:48:46+13:00" unixtime="1447638526" sha1="0de95d145c029ed0dbb92f51202f86d355450f18" relative="code/model/OrderAttribute.php"/>
   <docblock>
     <description compact="Allows you to group OrderAttributes"/>
   </docblock>

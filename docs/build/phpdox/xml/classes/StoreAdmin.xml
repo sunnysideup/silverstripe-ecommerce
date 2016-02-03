@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="StoreAdmin" namespace="" name="StoreAdmin" abstract="false" final="false" start="13" end="70">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/cms" file="StoreAdmin.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/cms/StoreAdmin.php" size="1427" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="512e3fbf006571ac63665d1838786dd4600f1e9a" relative="code/cms/StoreAdmin.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms" file="StoreAdmin.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms/StoreAdmin.php" size="1427" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="512e3fbf006571ac63665d1838786dd4600f1e9a" relative="code/cms/StoreAdmin.php"/>
   <docblock>
     <description/>
     <description/>

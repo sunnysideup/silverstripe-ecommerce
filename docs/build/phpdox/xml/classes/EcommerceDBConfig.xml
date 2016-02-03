@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceDBConfig" namespace="" name="EcommerceDBConfig" abstract="false" final="false" start="14" end="626">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/config" file="EcommerceDBConfig.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/config/EcommerceDBConfig.php" size="22111" time="2015-12-22T19:04:19+13:00" unixtime="1450764259" sha1="a6f8ea509324b7d4fd56a97a3ea4102b0b5d0a31" relative="code/model/config/EcommerceDBConfig.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/config" file="EcommerceDBConfig.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/config/EcommerceDBConfig.php" size="22111" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="a6f8ea509324b7d4fd56a97a3ea4102b0b5d0a31" relative="code/model/config/EcommerceDBConfig.php"/>
   <docblock>
     <description compact="Database Settings for E-commerce Similar to SiteConfig but then for E-commerce To access a singleton here, use: EcommerceDBConfig::current_ecommerce_db_config()"/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <source xmlns="http://xml.phpdox.net/token">
-  <file xmlns="http://xml.phpdox.net/src" path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskCheckConfiguration.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskCheckConfiguration.php" size="28672" time="2015-10-16T14:28:14+13:00" unixtime="1444958894" sha1="d743e7ba92c7f8accd48e11a8df943f9395c4c81" relative="code/tasks/EcommerceTaskCheckConfiguration.php"/>
+  <file xmlns="http://xml.phpdox.net/src" path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskCheckConfiguration.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskCheckConfiguration.php" size="28672" time="2015-10-05T17:45:02+13:00" unixtime="1444020302" sha1="d743e7ba92c7f8accd48e11a8df943f9395c4c81" relative="code/tasks/EcommerceTaskCheckConfiguration.php"/>
   <line no="1">
     <token name="T_OPEN_TAG">&lt;?php</token>
   </line>

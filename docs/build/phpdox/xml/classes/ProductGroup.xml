@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="ProductGroup" namespace="" name="ProductGroup" abstract="false" final="false" start="81" end="1439">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="ProductGroup.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/ProductGroup.php" size="79210" time="2015-11-25T11:50:42+13:00" unixtime="1448405442" sha1="d6e963997712abcc1dfd951ab70713bc45ff1f76" relative="code/ProductGroup.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="ProductGroup.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/ProductGroup.php" size="79210" time="2015-11-24T14:48:34+13:00" unixtime="1448329714" sha1="d6e963997712abcc1dfd951ab70713bc45ff1f76" relative="code/ProductGroup.php"/>
   <docblock>
     <description compact="Product Group is a 'holder' for Products within the CMS It contains functions for versioning child products">The way the products are selected:
 

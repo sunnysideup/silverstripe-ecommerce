@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="CMSPageAddController_Products" namespace="" name="CMSPageAddController_Products" abstract="false" final="false" start="4" end="54">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/cms" file="CMSPageAddController_Products.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/cms/CMSPageAddController_Products.php" size="1359" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="b924db1f0b8ca4d8e2642b768bb8da058e1815ff" relative="code/cms/CMSPageAddController_Products.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms" file="CMSPageAddController_Products.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms/CMSPageAddController_Products.php" size="1359" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="b924db1f0b8ca4d8e2642b768bb8da058e1815ff" relative="code/cms/CMSPageAddController_Products.php"/>
   <extends full="CMSPageAddController" namespace="" name="CMSPageAddController" unresolved="true"/>
   <member name="url_segment" type="string" default="'product/add'" visibility="private" static="true" line="6"/>
   <member name="url_rule" type="string" default="'/$Action/$ID/$OtherID'" visibility="private" static="true" line="7"/>

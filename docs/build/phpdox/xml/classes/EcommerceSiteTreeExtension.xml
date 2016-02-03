@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceSiteTreeExtension" namespace="" name="EcommerceSiteTreeExtension" abstract="false" final="false" start="16" end="60">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/extensions" file="EcommerceSiteTreeExtension.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/extensions/EcommerceSiteTreeExtension.php" size="5248" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="8a01fe2955201babc436df7385716f85f0fdb6fb" relative="code/model/extensions/EcommerceSiteTreeExtension.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/extensions" file="EcommerceSiteTreeExtension.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/extensions/EcommerceSiteTreeExtension.php" size="5248" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="8a01fe2955201babc436df7385716f85f0fdb6fb" relative="code/model/extensions/EcommerceSiteTreeExtension.php"/>
   <docblock>
     <description/>
     <description compact="some e-commerce related functionality."/>

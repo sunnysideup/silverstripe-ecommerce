@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskCheckConfiguration" namespace="" name="EcommerceTaskCheckConfiguration" abstract="false" final="false" start="19" end="759">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskCheckConfiguration.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskCheckConfiguration.php" size="28672" time="2015-10-16T14:28:14+13:00" unixtime="1444958894" sha1="d743e7ba92c7f8accd48e11a8df943f9395c4c81" relative="code/tasks/EcommerceTaskCheckConfiguration.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskCheckConfiguration.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskCheckConfiguration.php" size="28672" time="2015-10-05T17:45:02+13:00" unixtime="1444020302" sha1="d743e7ba92c7f8accd48e11a8df943f9395c4c81" relative="code/tasks/EcommerceTaskCheckConfiguration.php"/>
   <docblock>
     <description compact="This class reviews all of the static configurations in e-commerce for review (a) which configs are set, but not required (b) which configs are required, but not set (c) review of set configs"/>
     <todo value=": compare to default">shows you the link to remove the current cart</todo>

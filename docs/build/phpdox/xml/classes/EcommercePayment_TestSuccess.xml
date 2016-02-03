@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommercePayment_TestSuccess" namespace="" name="EcommercePayment_TestSuccess" abstract="false" final="false" start="10" end="34">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/money" file="EcommercePayment_TestSuccess.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/money/EcommercePayment_TestSuccess.php" size="740" time="2015-12-29T14:11:44+13:00" unixtime="1451351504" sha1="91f29e5e0e7abf2e54dc9d161a6db1f31f28bc64" relative="code/model/money/EcommercePayment_TestSuccess.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/money" file="EcommercePayment_TestSuccess.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/money/EcommercePayment_TestSuccess.php" size="740" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="91f29e5e0e7abf2e54dc9d161a6db1f31f28bc64" relative="code/model/money/EcommercePayment_TestSuccess.php"/>
   <docblock>
     <description compact="Payment object representing a TEST = SUCCESS"/>
     <package value="ecommerce"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderStep" namespace="" name="OrderStep" abstract="false" final="false" start="13" end="897">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/process" file="OrderStep.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderStep.php" size="25548" time="2015-12-31T19:34:54+13:00" unixtime="1451543694" sha1="2c631df7f0d23fbefb043f6af672d92c9ea84514" relative="code/model/process/OrderStep.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process" file="OrderStep.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderStep.php" size="25548" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="2c631df7f0d23fbefb043f6af672d92c9ea84514" relative="code/model/process/OrderStep.php"/>
   <docblock>
     <description/>
     <description/>

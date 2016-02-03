@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="ShopAccountForm_Validator" namespace="" name="ShopAccountForm_Validator" abstract="false" final="false" start="4" end="117">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/forms/validation" file="ShopAccountForm_Validator.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/forms/validation/ShopAccountForm_Validator.php" size="3515" time="2015-12-15T17:14:39+13:00" unixtime="1450152879" sha1="3cb1b0fa35aa9ede555191df5be59b57e1ea354d" relative="code/forms/validation/ShopAccountForm_Validator.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/validation" file="ShopAccountForm_Validator.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/forms/validation/ShopAccountForm_Validator.php" size="3515" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="3cb1b0fa35aa9ede555191df5be59b57e1ea354d" relative="code/forms/validation/ShopAccountForm_Validator.php"/>
   <extends full="RequiredFields" namespace="" name="RequiredFields" unresolved="true"/>
   <method name="php" start="12" end="113" abstract="false" final="false" static="false" visibility="public">
     <docblock>

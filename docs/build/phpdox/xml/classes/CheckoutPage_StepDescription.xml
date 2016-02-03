@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="CheckoutPage_StepDescription" namespace="" name="CheckoutPage_StepDescription" abstract="false" final="false" start="10" end="228">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/process" file="CheckoutPage_StepDescription.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/CheckoutPage_StepDescription.php" size="5635" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="f13bcb7d70ca91bc0daaea067c64c2780d686125" relative="code/model/process/CheckoutPage_StepDescription.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process" file="CheckoutPage_StepDescription.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/CheckoutPage_StepDescription.php" size="5635" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="f13bcb7d70ca91bc0daaea067c64c2780d686125" relative="code/model/process/CheckoutPage_StepDescription.php"/>
   <extends full="DataObject" namespace="" name="DataObject" unresolved="true"/>
   <implements full="EditableEcommerceObject" namespace="" name="EditableEcommerceObject"/>
   <member name="db" type="array" default="" visibility="private" static="true" line="16">

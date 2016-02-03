@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderStatusLog_PaymentCheck" namespace="" name="OrderStatusLog_PaymentCheck" abstract="false" final="false" start="20" end="95">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderStatusLogs" file="OrderStatusLog_PaymentCheck.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderStatusLogs/OrderStatusLog_PaymentCheck.php" size="2763" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="c0db301475ae8cbadcd6efef620512373b83010e" relative="code/model/process/OrderStatusLogs/OrderStatusLog_PaymentCheck.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderStatusLogs" file="OrderStatusLog_PaymentCheck.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderStatusLogs/OrderStatusLog_PaymentCheck.php" size="2763" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="c0db301475ae8cbadcd6efef620512373b83010e" relative="code/model/process/OrderStatusLogs/OrderStatusLog_PaymentCheck.php"/>
   <docblock>
     <description/>
     <description value=": We use this payment check class to double check that payment has arrived against">the order placed.  We do this independently of Order as a double-check.  It is important

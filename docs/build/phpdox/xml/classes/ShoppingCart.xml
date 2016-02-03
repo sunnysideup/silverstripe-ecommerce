@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="ShoppingCart" namespace="" name="ShoppingCart" abstract="false" final="false" start="37" end="987">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/api" file="ShoppingCart.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/api/ShoppingCart.php" size="31532" time="2015-12-31T19:26:36+13:00" unixtime="1451543196" sha1="4c8ab836add340c31ee6e54fa5dbd9ed8cfcd2ee" relative="code/api/ShoppingCart.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/api" file="ShoppingCart.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/api/ShoppingCart.php" size="31532" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="4c8ab836add340c31ee6e54fa5dbd9ed8cfcd2ee" relative="code/api/ShoppingCart.php"/>
   <docblock>
     <description compact="ShoppingCart - provides a global way to interface with the cart (current order).">This can be used in other code by calling $cart = ShoppingCart::singleton();
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderConfirmationPage" namespace="" name="OrderConfirmationPage" abstract="false" final="false" start="18" end="314">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="OrderConfirmationPage.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/OrderConfirmationPage.php" size="24134" time="2016-01-08T12:06:30+13:00" unixtime="1452207990" sha1="ae95c89d4d54cdfbcb5d7601d9a55028be079cb3" relative="code/OrderConfirmationPage.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="OrderConfirmationPage.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/OrderConfirmationPage.php" size="24456" time="2016-02-02T20:08:18+13:00" unixtime="1454396898" sha1="95f0d3bb78fd54535734740d87866c7b2d406759" relative="code/OrderConfirmationPage.php"/>
   <docblock>
     <description/>
     <description compact="The Order Confirmation page shows order history.">It also serves as the end point for the current order...

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="Order_Email" namespace="" name="Order_Email" abstract="true" final="false" start="14" end="205">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/email" file="Order_Email.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/email/Order_Email.php" size="6018" time="2015-12-01T16:52:35+13:00" unixtime="1448941955" sha1="14229db118ff4aa8b42327e3ae3ca278dc1871df" relative="code/email/Order_Email.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/email" file="Order_Email.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/email/Order_Email.php" size="6018" time="2015-12-07T13:39:57+13:00" unixtime="1449448797" sha1="14229db118ff4aa8b42327e3ae3ca278dc1871df" relative="code/email/Order_Email.php"/>
   <docblock>
     <description/>
     <description value=": Email specifically for communicating with customer about order."/>

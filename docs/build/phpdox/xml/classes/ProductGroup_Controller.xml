@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="ProductGroup_Controller" namespace="" name="ProductGroup_Controller" abstract="false" final="false" start="1443" end="2562">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="ProductGroup.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/ProductGroup.php" size="79210" time="2015-11-25T11:50:42+13:00" unixtime="1448405442" sha1="d6e963997712abcc1dfd951ab70713bc45ff1f76" relative="code/ProductGroup.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="ProductGroup.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/ProductGroup.php" size="79210" time="2015-11-24T14:48:34+13:00" unixtime="1448329714" sha1="d6e963997712abcc1dfd951ab70713bc45ff1f76" relative="code/ProductGroup.php"/>
   <extends full="Page_Controller" namespace="" name="Page_Controller" unresolved="true"/>
   <member name="allowed_actions" type="array" default="" visibility="private" static="true" line="1449">
     <docblock>

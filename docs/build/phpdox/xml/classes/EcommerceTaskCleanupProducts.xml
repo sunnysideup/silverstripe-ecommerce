@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskCleanupProducts" namespace="" name="EcommerceTaskCleanupProducts" abstract="false" final="false" start="12" end="90">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskCleanupProducts.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskCleanupProducts.php" size="3561" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="4f08403ac43f8a0b90e8de9202a244f2753fcc1d" relative="code/tasks/EcommerceTaskCleanupProducts.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskCleanupProducts.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskCleanupProducts.php" size="3561" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="4f08403ac43f8a0b90e8de9202a244f2753fcc1d" relative="code/tasks/EcommerceTaskCleanupProducts.php"/>
   <docblock>
     <description/>
     <description/>

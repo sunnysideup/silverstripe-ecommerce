@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="OrderStep_SentInvoice" namespace="" name="OrderStep_SentInvoice" abstract="false" final="false" start="12" end="105">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderSteps" file="OrderStep_SentInvoice.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderSteps/OrderStep_SentInvoice.php" size="3429" time="2015-12-01T15:51:28+13:00" unixtime="1448938288" sha1="870569068129f9e3f1f4897bae29f10b11e79d37" relative="code/model/process/OrderSteps/OrderStep_SentInvoice.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderSteps" file="OrderStep_SentInvoice.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderSteps/OrderStep_SentInvoice.php" size="3429" time="2015-12-01T15:10:53+13:00" unixtime="1448935853" sha1="870569068129f9e3f1f4897bae29f10b11e79d37" relative="code/model/process/OrderSteps/OrderStep_SentInvoice.php"/>
   <docblock>
     <description/>
     <authors value=": Nicolaas [at] Sunny Side Up .co.nz"/>

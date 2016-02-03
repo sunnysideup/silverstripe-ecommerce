@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommerceTaskDebugCart" namespace="" name="EcommerceTaskDebugCart" abstract="false" final="false" start="4" end="84">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/tasks" file="EcommerceTaskDebugCart.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/tasks/EcommerceTaskDebugCart.php" size="1960" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="34a4561a72795a1a6d84ff0bd1d572b462738f88" relative="code/tasks/EcommerceTaskDebugCart.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks" file="EcommerceTaskDebugCart.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/tasks/EcommerceTaskDebugCart.php" size="1960" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="34a4561a72795a1a6d84ff0bd1d572b462738f88" relative="code/tasks/EcommerceTaskDebugCart.php"/>
   <extends full="BuildTask" namespace="" name="BuildTask" unresolved="true"/>
   <member name="title" type="string" default="&quot;Debug your cart&quot;" visibility="protected" static="false" line="6"/>
   <member name="description" type="string" default="&quot;Check all the values in your cart to find any potential errors.&quot;" visibility="protected" static="false" line="8"/>

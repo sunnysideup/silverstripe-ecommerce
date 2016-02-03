@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="ProductsAndGroupsModelAdmin" namespace="" name="ProductsAndGroupsModelAdmin" abstract="false" final="false" start="13" end="55">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/cms" file="ProductsAndGroupsModelAdmin.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/cms/ProductsAndGroupsModelAdmin.php" size="1493" time="2015-11-25T11:50:42+13:00" unixtime="1448405442" sha1="7610e62d3e796e9dd0ea2ca262b10fb4067afad0" relative="code/cms/ProductsAndGroupsModelAdmin.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms" file="ProductsAndGroupsModelAdmin.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/cms/ProductsAndGroupsModelAdmin.php" size="1493" time="2015-11-16T14:49:28+13:00" unixtime="1447638568" sha1="7610e62d3e796e9dd0ea2ca262b10fb4067afad0" relative="code/cms/ProductsAndGroupsModelAdmin.php"/>
   <docblock>
     <description/>
     <description/>

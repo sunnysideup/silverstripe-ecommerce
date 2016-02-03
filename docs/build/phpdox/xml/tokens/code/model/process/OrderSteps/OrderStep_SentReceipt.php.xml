@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <source xmlns="http://xml.phpdox.net/token">
-  <file xmlns="http://xml.phpdox.net/src" path="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderSteps" file="OrderStep_SentReceipt.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/process/OrderSteps/OrderStep_SentReceipt.php" size="3115" time="2015-12-01T15:51:28+13:00" unixtime="1448938288" sha1="e99aa23c55f89b95a5c047c7d07224926a876119" relative="code/model/process/OrderSteps/OrderStep_SentReceipt.php"/>
+  <file xmlns="http://xml.phpdox.net/src" path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderSteps" file="OrderStep_SentReceipt.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/process/OrderSteps/OrderStep_SentReceipt.php" size="3115" time="2015-12-01T15:14:28+13:00" unixtime="1448936068" sha1="e99aa23c55f89b95a5c047c7d07224926a876119" relative="code/model/process/OrderSteps/OrderStep_SentReceipt.php"/>
   <line no="1">
     <token name="T_OPEN_TAG">&lt;?php</token>
   </line>

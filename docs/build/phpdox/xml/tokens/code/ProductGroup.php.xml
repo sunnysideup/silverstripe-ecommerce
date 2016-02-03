@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <source xmlns="http://xml.phpdox.net/token">
-  <file xmlns="http://xml.phpdox.net/src" path="/var/www/bo.ihtf.us/ecommerce/code" file="ProductGroup.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/ProductGroup.php" size="79210" time="2015-11-25T11:50:42+13:00" unixtime="1448405442" sha1="d6e963997712abcc1dfd951ab70713bc45ff1f76" relative="code/ProductGroup.php"/>
+  <file xmlns="http://xml.phpdox.net/src" path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="ProductGroup.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/ProductGroup.php" size="79210" time="2015-11-24T14:48:34+13:00" unixtime="1448329714" sha1="d6e963997712abcc1dfd951ab70713bc45ff1f76" relative="code/ProductGroup.php"/>
   <line no="1">
     <token name="T_OPEN_TAG">&lt;?php</token>
   </line>

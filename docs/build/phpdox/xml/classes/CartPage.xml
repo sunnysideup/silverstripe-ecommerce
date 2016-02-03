@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="CartPage" namespace="" name="CartPage" abstract="false" final="false" start="17" end="290">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code" file="CartPage.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/CartPage.php" size="24215" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="1a0e7a82d2c16dab8349563ab4dc852fb8a91daf" relative="code/CartPage.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code" file="CartPage.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/CartPage.php" size="24319" time="2016-02-02T18:54:44+13:00" unixtime="1454392484" sha1="70723780be18175a4f9bf38edc02ebaaee12c23a" relative="code/CartPage.php"/>
   <docblock>
     <description/>
     <description compact="without &quot;leading to&quot; checking out. That is, there is no &quot;next step&quot; functionality or a way to submit the order.">NOTE: both the Account and the Checkout Page extend from this class as they

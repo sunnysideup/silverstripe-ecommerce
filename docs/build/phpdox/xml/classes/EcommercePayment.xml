@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="EcommercePayment" namespace="" name="EcommercePayment" abstract="false" final="false" start="12" end="450">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model/money" file="EcommercePayment.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/money/EcommercePayment.php" size="12329" time="2016-01-06T13:19:37+13:00" unixtime="1452039577" sha1="cbfd8f242509efc2347f93a4f54c69fa7822411e" relative="code/model/money/EcommercePayment.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/money" file="EcommercePayment.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/money/EcommercePayment.php" size="12329" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="cbfd8f242509efc2347f93a4f54c69fa7822411e" relative="code/model/money/EcommercePayment.php"/>
   <docblock>
     <description compact="&quot;Abstract&quot; class for a number of different payment types allowing a user to pay for something on a site.">This can't be an abstract class because sapphire doesn't
 support abstract DataObject classes.</description>

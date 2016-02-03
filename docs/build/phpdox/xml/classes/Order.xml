@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="Order" namespace="" name="Order" abstract="false" final="false" start="33" end="2971">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/model" file="Order.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/model/Order.php" size="90046" time="2016-01-18T20:33:03+13:00" unixtime="1453102383" sha1="97595bd3c276fca2a6ea6ef826cc637c23aab12e" relative="code/model/Order.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model" file="Order.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/model/Order.php" size="90046" time="2016-01-22T13:03:11+13:00" unixtime="1453420991" sha1="97595bd3c276fca2a6ea6ef826cc637c23aab12e" relative="code/model/Order.php"/>
   <docblock>
     <description/>
     <description compact="The order class is a databound object for handling Orders within SilverStripe.">Note that it works closely with the ShoppingCart class, which accompanies the Order

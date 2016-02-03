@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class xmlns="http://xml.phpdox.net/src" full="SearchReplacement" namespace="" name="SearchReplacement" abstract="false" final="false" start="13" end="103">
-  <file path="/var/www/bo.ihtf.us/ecommerce/code/search" file="SearchReplacement.php" realpath="/var/www/bo.ihtf.us/ecommerce/code/search/SearchReplacement.php" size="2621" time="2015-09-18T12:39:57+12:00" unixtime="1442536797" sha1="00236e69049341546c56c7d2033b60cdfe87879a" relative="code/search/SearchReplacement.php"/>
+  <file path="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/search" file="SearchReplacement.php" realpath="/var/www/3.2.photowarehouse.co.nz/ecommerce/code/search/SearchReplacement.php" size="2621" time="2015-09-16T15:45:38+12:00" unixtime="1442375138" sha1="00236e69049341546c56c7d2033b60cdfe87879a" relative="code/search/SearchReplacement.php"/>
   <docblock>
     <description compact="This dataobject saves search replacements as in Smoogle will be replaced by Google"/>
   </docblock>
