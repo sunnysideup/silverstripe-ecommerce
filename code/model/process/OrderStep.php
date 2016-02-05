@@ -521,7 +521,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 			if(!$emailClassName) {
 				$emailClassName = $this->getEmailClassName();
 			}
-			if($this->SendDetailsToCustomer){
+			if($this->hasCustomerMessage()){
 				return $order->sendEmail(
 					$subject,
 					$message,
