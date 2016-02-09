@@ -75,7 +75,15 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
-		if($this->sendEmailForStep($order, $subject = $this->EmailSubject, $message = "", $resend = false, $adminOnly = false, $this->getEmailClassName())) {
+		if($this->sendEmailForStep(
+			$order,
+			$subject = $this->EmailSubject,
+			$message = "",
+			$resend = false,
+			$adminOnlyOrToEmail = false,
+			$this->getEmailClassName()
+		))
+		{
 			return parent::nextStep($order);
 		}
 		return null;

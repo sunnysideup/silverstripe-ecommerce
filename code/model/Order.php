@@ -1300,12 +1300,24 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @param String $subject - subject for the email
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
-	 * @param Boolean $adminOnly - do not send to customer, only send to shop admin
+	 * @param boolean | string $toAdminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
 	 * @param String $emailClassName - class used to send email
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
-	function sendEmail($subject = "", $message = "", $resend = false, $adminOnly = false, $emailClassName = 'Order_InvoiceEmail') {
-		return $this->prepareEmail($emailClassName, $subject, $message, $resend, $adminOnly);
+	function sendEmail(
+		$subject = "",
+		$message = "",
+		$resend = false,
+		$toAdminOnlyOrToEmail = false,
+		$emailClassName = 'Order_InvoiceEmail'
+	) {
+		return $this->prepareEmail(
+			$emailClassName,
+			$subject,
+			$message,
+			$resend,
+			$toAdminOnlyOrToEmail
+		);
 	}
 
 	/**
@@ -1343,7 +1355,13 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail($emailClassName, $subject, $message, $resend = false, $toAdminOnlyOrToEmail = false) {
+	protected function prepareEmail(
+		$emailClassName,
+		$subject,
+		$message,
+		$resend = false,
+		$toAdminOnlyOrToEmail = false
+	) {
 		$arrayData = $this->createReplacementArrayForEmail($message, $subject);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?

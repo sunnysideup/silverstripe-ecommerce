@@ -656,7 +656,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller{
 				if($email = $this->currentOrder->getOrderEmail()) {
 					$subject = _t("Account.COPYONLY", "--- COPY ONLY ---");
 					$message = _t("Account.COPYONLY", "--- COPY ONLY ---");
-					if($this->currentOrder->sendEmail($subject, $message, $resend = true, $adminOnly = false, $emailClassName)) {
+					if($this->currentOrder->sendEmail($subject, $message, $resend = true, $toAdminOnlyOrToEmail = false, $emailClassName)) {
 						$this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
 					}
 					else {

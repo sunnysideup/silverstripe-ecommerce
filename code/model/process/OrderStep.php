@@ -513,8 +513,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return boolean;
 	 */
-	protected function sendEmailForStep($order, $subject, $message = "", $resend = false, $adminOnlyOrToEmail = false, $emailClassName = ""){
-		if(!$this->hasBeenSent($order)) {
+	protected function sendEmailForStep(
+		$order,
+		$subject,
+		$message = "",
+		$resend = false,
+		$adminOnlyOrToEmail = false,
+		$emailClassName = ""
+	){
+		if(!$this->hasBeenSent($order) || $resend) {
 			if(!$subject) {
 				$subject = $this->EmailSubject;
 			}
@@ -691,11 +698,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @param Order $order
 	 *
-	 * @return OrderStatusLog | Null
+	 * @return OrderStatusLog | null
 	 */
 	public function RelevantLogEntry(Order $order){
 		if($className = $this->getRelevantLogEntryClassName()) {
-			return $className::get()->filter(array("OrderID" => $order->ID))->First();
+			return $this->RelevantLogEntries()->Last();
+		}
+	}
+
+	/**
+	 * returns the OrderStatusLogs that are relevant to this step.
+	 *
+	 * @param Order $order
+	 *
+	 * @return DataObjectSet | null
+	 */
+	public function RelevantLogEntries(Order $order){
+		if($className = $this->getRelevantLogEntryClassName()) {
+			return $className::get()->filter(array("OrderID" => $order->ID));
 		}
 	}
 

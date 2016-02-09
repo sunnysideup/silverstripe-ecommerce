@@ -189,14 +189,20 @@ class EcommerceRole extends DataExtension implements PermissionProvider {
 			Director::baseURL(),
 			Config::inst()->get("ShoppingCart_Controller", "url_segment")."/loginas/".$this->owner->ID."/"
 		);
-		$loginAsField = new LiteralField("LoginAsThisCustomer", "<a href=\"$link\" target=\"_blank\">Login as this customer</a>");
+		$loginAsField = new LiteralField("LoginAsThisCustomer", "<p><a href=\"$link\" target=\"_blank\">Login as this customer</a></p>");
+		$link =  Controller::join_links(
+			Director::baseURL(),
+			Config::inst()->get("ShoppingCart_Controller", "url_segment")."/placeorderformember/".$this->owner->ID."/"
+		);
+		$orderForLink = new LiteralField("OrderForCustomerLink", "<p><a href=\"$link\" target=\"_blank\">Place order for customer</a></p>");
 		$fields->addFieldsToTab(
 			"Root.Orders",
 			array(
 				$orderField,
 				$preferredCurrencyField,
 				$notesFields,
-				$loginAsField
+				$loginAsField,
+				$orderForLink
 			)
 		);
 

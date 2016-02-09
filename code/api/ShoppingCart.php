@@ -586,6 +586,7 @@ class ShoppingCart extends Object{
 	/**
 	 * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
 	 * @param Int | Order $order
+	 * 
 	 * @return DataObject(Order)
 	 **/
 	public function copyOrder($oldOrder) {
