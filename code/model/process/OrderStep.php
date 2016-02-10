@@ -533,7 +533,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 					$subject,
 					$message,
 					$resend,
-					$toAdminOnlyOrToEmail,
+					$adminOnlyOrToEmail,
 					$emailClassName
 				);
 			}

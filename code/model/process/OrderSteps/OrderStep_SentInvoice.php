@@ -59,7 +59,14 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 	 * @return Boolean
 	 **/
 	public function doStep(Order $order) {
-		return $this->sendEmailForStep($order, $subject = $this->EmailSubject, $message = "", $resend = false, $adminOnly = false, $this->getEmailClassName());
+		return $this->sendEmailForStep(
+			$order,
+			$subject = $this->EmailSubject,
+			$message = "",
+			$resend = false,
+			$adminOnly = false,
+			$this->getEmailClassName()
+		);
 	}
 
 	/**
