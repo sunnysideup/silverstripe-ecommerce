@@ -49,7 +49,7 @@ class ShoppingCart extends Object{
 	 * This is where we hold the (singleton) Shoppingcart
 	 * @var Object (ShoppingCart)
 	 */
-	private static $singletoncart = null;
+	private static $_singletoncart = null;
 
 	/**
 	 * Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).
@@ -74,10 +74,10 @@ class ShoppingCart extends Object{
 	 * @return ShoppingCart Object
 	 */
 	public static function singleton(){
-		if(!self::$singletoncart){
-			self::$singletoncart = ShoppingCart::create();
+		if(!self::$_singletoncart){
+			self::$_singletoncart = Injector::inst()->get("ShoppingCart");
 		}
-		return self::$singletoncart;
+		return self::$_singletoncart;
 	}
 
 	/**
@@ -469,7 +469,7 @@ class ShoppingCart extends Object{
 	public function clear(){
 		//we keep this here so that a flush can be added...
 		set_time_limit(1200);
-		self::$singletoncart = null;
+		self::$_singletoncart = null;
 		$this->order = null;
 		$this->messages = array();
 		foreach(self::$session_variable_names as $name){
@@ -587,7 +587,7 @@ class ShoppingCart extends Object{
 	 * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
 	 * @param Int | Order $order
 	 * 
-	 * @return DataObject(Order)
+	 * @return Order | false
 	 **/
 	public function copyOrder($oldOrder) {
 		if(is_numeric($oldOrder)) {
@@ -600,7 +600,7 @@ class ShoppingCart extends Object{
 			user_error("Bad order provided as parameter to ShoppingCart::loadOrder()");
 		}
 		if($oldOrder){
-			if($oldOrder->canView()) {
+			if($oldOrder->canView() && $oldOrder->IsSubmitted()) {
 				$newOrder = Order::create();
 				//copying fields.
 				$newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
@@ -624,7 +624,7 @@ class ShoppingCart extends Object{
 				$newOrder->CreateOrReturnExistingAddress("ShippingAddress");
 				$newOrder->write();
 				$this->addMessage(_t("Order.ORDERCOPIED", "Order has been copied."),'good');
-				return true;
+				return $newOrder;
 			}
 			else {
 				$this->addMessage(_t("Order.NOPERMISSION", "You do not have permission to view this order."),'bad');
