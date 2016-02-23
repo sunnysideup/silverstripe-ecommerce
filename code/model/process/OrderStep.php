@@ -513,7 +513,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return boolean;
 	 */
-	protected function sendEmailForStep($order, $subject, $message = "", $resend = false, $adminOnlyOrToEmail = false, $emailClassName = ""){
+	protected function sendEmailForStep(
+		$order,
+		$subject,
+		$message = "",
+		$resend = false,
+		$adminOnlyOrToEmail = false,
+		$emailClassName = ""
+	){
 		if(!$this->hasBeenSent($order)) {
 			if(!$subject) {
 				$subject = $this->EmailSubject;
@@ -526,7 +533,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 					$subject,
 					$message,
 					$resend,
-					$toAdminOnlyOrToEmail,
+					$adminOnlyOrToEmail,
 					$emailClassName
 				);
 			}
