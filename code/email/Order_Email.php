@@ -153,7 +153,7 @@ Abstract class Order_Email extends Email {
 		$orderEmailRecord->OrderID = $this->order->ID;
 		$orderEmailRecord->OrderStepID = $this->order->StatusID;
 		if($sendAllEmailsTo = Config::inst()->get("Email","send_all_emails_to")) {
-			$orderEmailRecord->To = $sendAllEmailsTo." - (Email::send_all_emails_to setting)";
+			$orderEmailRecord->To .= $sendAllEmailsTo." - (Email::send_all_emails_to setting)";
 		}
 		$orderEmailRecord->write();
 		return $orderEmailRecord;
