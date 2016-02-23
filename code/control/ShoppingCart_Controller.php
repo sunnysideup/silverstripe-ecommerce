@@ -97,6 +97,7 @@ class ShoppingCart_Controller extends Controller implements Flushable {
 		'copyorder',
 		'removeaddress',
 		'submittedbuyable',
+		'placeorderformember',
 		'loginas',
 		'debug', // no need to set to  => 'ADMIN',
 		'ajaxtest' // no need to set to  => 'ADMIN',
@@ -566,6 +567,33 @@ class ShoppingCart_Controller extends Controller implements Flushable {
 		return null;
 	}
 
+	/**
+	 * This can be used by admins to log in as customers
+	 * to place orders on their behalf...
+	 * @param SS_HTTPRequest
+	 * @return REDIRECT
+	 */
+	function placeorderformember(SS_HTTPRequest $request){
+		if(Permission::check("ADMIN") || Permission::check(EcommerceConfig::get("EcommerceRole", "admin_group_code"))){
+			$member = Member::get()->byID(intval($request->param("ID")));
+			if($member) {
+				$newOrder = Order::create();
+				//copying fields.
+				$newOrder->MemberID = $member->ID;
+				//load the order
+				$newOrder->write();
+				$this->cart->loadOrder($newOrder);
+				return $this->redirect($newOrder->Link());
+			}
+			else {
+				user_error( "Can not find this member." );
+			}
+		}
+		else {
+			//echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/placeorderformember/".$request->param("ID")."/")."\">log in</a> first.";
+			return Security::permissionFailure($this);
+		}
+	}
 
 	/**
 	 * This can be used by admins to log in as customers
@@ -589,17 +617,17 @@ class ShoppingCart_Controller extends Controller implements Flushable {
 					}
 				}
 				else {
-					echo "Another error occurred.";
+					user_error( "Another error occurred." );
 				}
 			}
 			else {
-				echo "Can not find this member.";
+				user_error( "Can not find this member." );
 			}
 		}
 		else {
-			echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/debug/")."\">log in</a> first.";
+			return Security::permissionFailure($this);
+			//echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/loginas/".$request->param("ID")."/")."\">log in</a> first.";
 		}
-
 	}
 
 	/**
@@ -677,7 +705,8 @@ class ShoppingCart_Controller extends Controller implements Flushable {
 			return $this->cart->debug();
 		}
 		else {
-			echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/debug/")."\">log in</a> first.";
+			return Security::permissionFailure($this);
+			//echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/debug/")."\">log in</a> first.";
 		}
 	}
 
