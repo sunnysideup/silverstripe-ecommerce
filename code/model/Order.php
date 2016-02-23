@@ -1300,7 +1300,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @param String $subject - subject for the email
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
-	 * @param boolean | string $toAdminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+	 * @param Boolean $adminOnlyOrToEmail - do not send to customer, only send to shop admin
 	 * @param String $emailClassName - class used to send email
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
@@ -1308,7 +1308,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$subject = "",
 		$message = "",
 		$resend = false,
-		$toAdminOnlyOrToEmail = false,
+		$adminOnlyOrToEmail = false,
 		$emailClassName = 'Order_InvoiceEmail'
 	) {
 		return $this->prepareEmail(
@@ -1316,7 +1316,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$subject,
 			$message,
 			$resend,
-			$toAdminOnlyOrToEmail
+			$adminOnlyOrToEmail
 		);
 	}
 
@@ -1351,7 +1351,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @param String $subject - email subject
 	 * @param boolean $copyToAdmin - true by default, whether it should send a copy to the admin
 	 * @param boolean $resend - sends the email even it has been sent before.
-	 * @param boolean | string $toAdminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+	 * @param boolean | string $adminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
@@ -1360,15 +1360,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$subject,
 		$message,
 		$resend = false,
-		$toAdminOnlyOrToEmail = false
+		$adminOnlyOrToEmail = false
 	) {
 		$arrayData = $this->createReplacementArrayForEmail($message, $subject);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
-		if($toAdminOnlyOrToEmail) {
-			if (filter_var($toAdminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
-				$to = $toAdminOnlyOrToEmail;
+		if($adminOnlyOrToEmail) {
+			if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
+				$to = $adminOnlyOrToEmail;
 				// invalid e-mail address
 			}
 			else {

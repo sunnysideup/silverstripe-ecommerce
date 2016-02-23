@@ -508,7 +508,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @param string $subject
 	 * @param string $message
 	 * @param boolean $resend
-	 * @param boolean | string $toAdminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
+	 * @param boolean | string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
 	 * @param string $emailClassName
 	 *
 	 * @return boolean;
@@ -521,7 +521,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 		$adminOnlyOrToEmail = false,
 		$emailClassName = ""
 	){
-		if(!$this->hasBeenSent($order) || $resend) {
+		if(!$this->hasBeenSent($order)) {
 			if(!$subject) {
 				$subject = $this->EmailSubject;
 			}
@@ -529,7 +529,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 				$emailClassName = $this->getEmailClassName();
 			}
 			if($this->hasCustomerMessage()){
-				$outcome = $order->sendEmail(
+				return $order->sendEmail(
 					$subject,
 					$message,
 					$resend,
@@ -722,7 +722,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 			return $className::get()->filter(array("OrderID" => $order->ID));
 		}
 	}
-
 
 
 
