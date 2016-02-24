@@ -154,7 +154,9 @@ Abstract class Order_Email extends Email {
 		$orderEmailRecord->OrderStepID = $this->order->StatusID;
 		if($sendAllEmailsTo = Config::inst()->get("Email","send_all_emails_to")) {
 			$orderEmailRecord->To .=
-				_t("Order_Email.ACTUALLY_SENT_TO", " | actually sent to: ").$sendAllEmailsTo." - (Email::send_all_emails_to)";
+				_t("Order_Email.ACTUALLY_SENT_TO", " | actually sent to: ")
+				.$sendAllEmailsTo
+				._t("Order_Email.CONFIG_EXPLANATION", " - (Email::send_all_emails_to)");
 		}
 		$orderEmailRecord->write();
 		return $orderEmailRecord;
