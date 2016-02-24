@@ -706,7 +706,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 */
 	public function RelevantLogEntry(Order $order){
 		if($className = $this->getRelevantLogEntryClassName()) {
-			return $this->RelevantLogEntries()->Last();
+			return $this->RelevantLogEntries($order)->Last();
 		}
 	}
 
