@@ -144,7 +144,7 @@ Abstract class Order_Email extends Email {
 		if(!$result) {
 			if(Director::isDev()) {
 				$result = true;
-				$this->Subject .= _t("Order_Email.FAKELY_RECORDED_AS_SENT", " - FAKELY RECORDED AS SENT ").;
+				$this->Subject .= _t("Order_Email.FAKELY_RECORDED_AS_SENT", " - FAKELY RECORDED AS SENT ");
 			}
 		}
 		$orderEmailRecord->Subject = $this->subject;
