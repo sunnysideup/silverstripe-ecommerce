@@ -1405,7 +1405,12 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$email->setResend($resend);
 			$result = $email->send(null);
 			Config::unnest();
-			return $result;
+			if(Director::isDev()) {
+				return true;
+			}
+			else {
+				return $result;
+			}
 		}
 		return false;
 	}
