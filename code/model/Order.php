@@ -840,7 +840,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * Goes through the order steps and tries to "apply" the next
+	 * Goes through the order steps and tries to "apply" the next step
+	 * Step is updated after the other one is completed...
 	 * @return Integer (StatusID or false if the next status can not be "applied")
 	 **/
 	public function doNextStatus() {
@@ -914,6 +915,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 *******************************************************/
 
 	/**
+	 * Avoids caching of $this->Status()
 	 * @return DataObject (current OrderStep)
 	 */
 	public function MyStep() {
@@ -928,7 +930,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$step = OrderStep_Created::create();
 		}
 		if(!$step) {
-			user_error("each order needs a status");
+			user_error("You need an order step in your Database.");
 		}
 		return $step;
 	}
