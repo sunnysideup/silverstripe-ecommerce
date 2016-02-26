@@ -141,19 +141,22 @@ Abstract class Order_Email extends Email {
 			$orderEmailRecord->To .= ", BCC: ".$this->emailToVarchar($this->bcc);
 		}
 		//always set result to try if
+		$orderEmailRecord->Subject = $this->subject;
 		if(!$result) {
 			if(Director::isDev()) {
 				$result = true;
-				$this->Subject .= " -- FAKELY RECORDED AS SENT";
+				$orderEmailRecord->Subject .= _t("Order_Email.FAKELY_RECORDED_AS_SENT", " - FAKELY RECORDED AS SENT ");
 			}
 		}
-		$orderEmailRecord->Subject = $this->subject;
 		$orderEmailRecord->Content = $this->body;
 		$orderEmailRecord->Result = $result ? 1 : 0;
 		$orderEmailRecord->OrderID = $this->order->ID;
 		$orderEmailRecord->OrderStepID = $this->order->StatusID;
 		if($sendAllEmailsTo = Config::inst()->get("Email","send_all_emails_to")) {
-			$orderEmailRecord->To = $sendAllEmailsTo." - (Email::send_all_emails_to setting)";
+			$orderEmailRecord->To .=
+				_t("Order_Email.ACTUALLY_SENT_TO", " | actually sent to: ")
+				.$sendAllEmailsTo
+				._t("Order_Email.CONFIG_EXPLANATION", " - (Email::send_all_emails_to)");
 		}
 		$orderEmailRecord->write();
 		return $orderEmailRecord;

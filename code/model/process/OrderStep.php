@@ -508,7 +508,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @param string $subject
 	 * @param string $message
 	 * @param boolean $resend
-	 * @param boolean | string $toAdminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
+	 * @param boolean | string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
 	 * @param string $emailClassName
 	 *
 	 * @return boolean;
@@ -521,7 +521,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 		$adminOnlyOrToEmail = false,
 		$emailClassName = ""
 	){
-		if(!$this->hasBeenSent($order) || $resend) {
+		if(!$this->hasBeenSent($order)) {
 			if(!$subject) {
 				$subject = $this->EmailSubject;
 			}
@@ -538,10 +538,22 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 				);
 			}
 			else {
+				if(!$emailClassName){
+					$emailClassName = 'Order_ErrorEmail';
+				}
 				//looks like we are sending an error, but we are just using this for notification
 				$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-				return $order->sendAdminNotification($subject, $message);
+				$outcome = $order->sendAdminNotification(
+					$subject,
+					$message,
+					$resend,
+					$emailClassName
+				);
 			}
+			if($outcome || Director::isDev()) {
+				return true;
+			}
+			return false;
 		}
 		return true;
 	}
@@ -702,7 +714,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 */
 	public function RelevantLogEntry(Order $order){
 		if($className = $this->getRelevantLogEntryClassName()) {
-			return $this->RelevantLogEntries()->Last();
+			return $this->RelevantLogEntries($order)->Last();
 		}
 	}
 
@@ -718,7 +730,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 			return $className::get()->filter(array("OrderID" => $order->ID));
 		}
 	}
-
 
 
 

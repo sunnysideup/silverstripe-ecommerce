@@ -1302,7 +1302,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @param String $subject - subject for the email
 	 * @param String $message - the main message in the email
 	 * @param Boolean $resend - send the email even if it has been sent before
-	 * @param boolean | string $toAdminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+	 * @param Boolean $adminOnlyOrToEmail - do not send to customer, only send to shop admin
 	 * @param String $emailClassName - class used to send email
 	 * @return Boolean TRUE on success, FALSE on failure (in theory)
 	 */
@@ -1310,15 +1310,15 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$subject = "",
 		$message = "",
 		$resend = false,
-		$toAdminOnlyOrToEmail = false,
+		$adminOnlyOrToEmail = false,
 		$emailClassName = 'Order_InvoiceEmail'
 	) {
-		return $this->prepareEmail(
+		return $this->prepareAndSendEmail(
 			$emailClassName,
 			$subject,
 			$message,
 			$resend,
-			$toAdminOnlyOrToEmail
+			$adminOnlyOrToEmail
 		);
 	}
 
@@ -1331,19 +1331,27 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
+		return $this->prepareAndSendEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
 	}
 
 	/**
 	 * Sends a message to the shop admin ONLY and not to the customer
 	 * This can be used by ordersteps and orderlogs to notify the admin of any potential problems.
 	 *
-	 * @param String $subject - subject for the email
-	 * @param String $message - message to be added with the email
+	 * @param string $subject - subject for the email
+	 * @param string $message - message to be added with the email
+	 * @param boolean $resend - can it be sent twice?
+	 * @param string $emailClassName - template to be used ...
+	 * 
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	public function sendAdminNotification($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', $subject, $message, $resend = false, $adminOnly = true);
+	public function sendAdminNotification(
+		$subject = "",
+		$message = "",
+		$resend = false,
+		$emailClassName = 'Order_ErrorEmail'
+	) {
+		return $this->prepareAndSendEmail($emailClassName, $subject, $message, $resend, $adminOnly = true);
 	}
 
 	/**
@@ -1353,24 +1361,24 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @param String $subject - email subject
 	 * @param boolean $copyToAdmin - true by default, whether it should send a copy to the admin
 	 * @param boolean $resend - sends the email even it has been sent before.
-	 * @param boolean | string $toAdminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+	 * @param boolean | string $adminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail(
+	protected function prepareAndSendEmail(
 		$emailClassName,
 		$subject,
 		$message,
 		$resend = false,
-		$toAdminOnlyOrToEmail = false
+		$adminOnlyOrToEmail = false
 	) {
 		$arrayData = $this->createReplacementArrayForEmail($message, $subject);
  		$from = Order_Email::get_from_email();
  		//why are we using this email and NOT the member.EMAIL?
  		//for historical reasons????
-		if($toAdminOnlyOrToEmail) {
-			if (filter_var($toAdminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
-				$to = $toAdminOnlyOrToEmail;
+		if($adminOnlyOrToEmail) {
+			if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
+				$to = $adminOnlyOrToEmail;
 				// invalid e-mail address
 			}
 			else {
@@ -1407,7 +1415,12 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$email->setResend($resend);
 			$result = $email->send(null);
 			Config::unnest();
-			return $result;
+			if(Director::isDev()) {
+				return true;
+			}
+			else {
+				return $result;
+			}
 		}
 		return false;
 	}
