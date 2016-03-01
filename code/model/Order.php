@@ -1745,14 +1745,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canCreate($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canCreate', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if($member->exists()) {
 			return $member->IsShopAdmin();
@@ -1770,15 +1765,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		$member = $this->getMemberForCanFunctions($member);
 		//check if this has been "altered" in any DataExtension
-		$extendedArray = $this->extendedCan('canView', $member);
-		//if this method has been extended in a data object decorator then use this
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		//is the member is a shop admin they can always view it
 		if(EcommerceRole::current_member_is_shop_admin($member)) {
@@ -1878,14 +1867,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canEdit($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canEdit', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
 			return true;
@@ -1949,14 +1933,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canDelete($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canDelete', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if($this->IsSubmitted()){
 			return false;
