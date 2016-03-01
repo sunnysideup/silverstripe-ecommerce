@@ -108,12 +108,20 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canCreate($member);
 	}
 
 
 	function canView($member = null){
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canCreate($member);
 	}
@@ -125,8 +133,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 */
 	function canEdit($member = null) {
 		if($this->Status == "Pending" || $this->Status == "Incomplete") {
+			$extended = $this->extendedCan(__FUNCTION__, $member);
+			if($extended !== null) {
+				return $extended;
+			}
 			if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-			return parent::canCreate($member);
+			return parent::canEdit($member);
 		}
 		return false;
 	}
