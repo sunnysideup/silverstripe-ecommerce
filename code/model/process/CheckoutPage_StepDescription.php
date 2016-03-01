@@ -96,6 +96,10 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
 	 * @return Boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -106,6 +110,10 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
 	 * @return Boolean
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -119,6 +127,10 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
 		$array = EcommerceConfig::get("CheckoutPage_Controller", "checkout_steps");
 		if(in_array($this->getCode, $array)) {
 			return false;
+		}
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
