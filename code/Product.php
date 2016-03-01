@@ -949,6 +949,10 @@ class Product extends Page implements BuyableModel {
 	}
 
 	function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canCreate($member);
 	}
@@ -960,6 +964,10 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
