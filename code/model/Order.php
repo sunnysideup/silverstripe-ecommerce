@@ -840,7 +840,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * Goes through the order steps and tries to "apply" the next
+	 * Goes through the order steps and tries to "apply" the next step
+	 * Step is updated after the other one is completed...
 	 * @return Integer (StatusID or false if the next status can not be "applied")
 	 **/
 	public function doNextStatus() {
@@ -914,6 +915,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 *******************************************************/
 
 	/**
+	 * Avoids caching of $this->Status()
 	 * @return DataObject (current OrderStep)
 	 */
 	public function MyStep() {
@@ -928,7 +930,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$step = OrderStep_Created::create();
 		}
 		if(!$step) {
-			user_error("each order needs a status");
+			user_error("You need an order step in your Database.");
 		}
 		return $step;
 	}
@@ -1311,7 +1313,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$adminOnlyOrToEmail = false,
 		$emailClassName = 'Order_InvoiceEmail'
 	) {
-		return $this->prepareEmail(
+		return $this->prepareAndSendEmail(
 			$emailClassName,
 			$subject,
 			$message,
@@ -1329,19 +1331,27 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
+		return $this->prepareAndSendEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
 	}
 
 	/**
 	 * Sends a message to the shop admin ONLY and not to the customer
 	 * This can be used by ordersteps and orderlogs to notify the admin of any potential problems.
 	 *
-	 * @param String $subject - subject for the email
-	 * @param String $message - message to be added with the email
+	 * @param string $subject - subject for the email
+	 * @param string $message - message to be added with the email
+	 * @param boolean $resend - can it be sent twice?
+	 * @param string $emailClassName - template to be used ...
+	 * 
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	public function sendAdminNotification($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', $subject, $message, $resend = false, $adminOnly = true);
+	public function sendAdminNotification(
+		$subject = "",
+		$message = "",
+		$resend = false,
+		$emailClassName = 'Order_ErrorEmail'
+	) {
+		return $this->prepareAndSendEmail($emailClassName, $subject, $message, $resend, $adminOnly = true);
 	}
 
 	/**
@@ -1355,7 +1365,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail(
+	protected function prepareAndSendEmail(
 		$emailClassName,
 		$subject,
 		$message,
@@ -1405,7 +1415,12 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$email->setResend($resend);
 			$result = $email->send(null);
 			Config::unnest();
-			return $result;
+			if(Director::isDev()) {
+				return true;
+			}
+			else {
+				return $result;
+			}
 		}
 		return false;
 	}
