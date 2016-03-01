@@ -59,15 +59,6 @@ class AccountPage extends Page {
 		return AccountPage::get()->filter(array("ClassName" => "AccountPage"))->Count() ? false : $this->canEdit($member);
 	}
 
-	/**
-	 * Shop Admins can view
-	 * @param Member $member
-	 * @return Boolean
-	 */
-	function canView($member = null) {
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canView($member);
-	}
 
 	/**
 	 * Shop Admins can edit
