@@ -113,6 +113,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -123,6 +127,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -133,6 +141,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -144,6 +156,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 	 */
 	function canDelete($member = null){
 		if( ! $this->InUse && EcommerceCurrency::get()->Count() > 1) {
+			$extended = $this->extendedCan(__FUNCTION__, $member);
+			if($extended !== null) {
+				return $extended;
+			}
 			if(
 				Permission::checkMember(
 					$member,
