@@ -747,6 +747,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -757,6 +761,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canEdit($member = null){
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -785,6 +793,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 		}
 		if(in_array($this->Code, self::get_codes_for_order_steps_to_include())) {
 			return false;
+		}
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
