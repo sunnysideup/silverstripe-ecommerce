@@ -167,6 +167,10 @@ class ProductGroup extends Page {
 	private static $description = "A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)";
 
 	function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -177,6 +181,10 @@ class ProductGroup extends Page {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -190,6 +198,10 @@ class ProductGroup extends Page {
 	public function canDelete($member = null) {
 		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 			return false;
+		}
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
@@ -1418,20 +1430,20 @@ class ProductGroup extends Page {
 	/**
 	 * cache for result array
 	 * @var array
-	 */ 
+	 */
 	private static $_result_array = array();
 
 	/**
 	 *
 	 * @return array
-	 */ 
+	 */
 	public function searchResultsArrayFromSession(){
 		if(!isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
 			self::$_result_array[$this->ID] = explode(",", Session::get($this->SearchResultsSessionVariable(false)));
 		}
 		if(!is_array(self::$_result_array[$this->ID]) || !count(self::$_result_array[$this->ID])) {
 			self::$_result_array[$this->ID] = array(0 => 0);
-		}		
+		}
 		return self::$_result_array[$this->ID];
 	}
 
@@ -1746,7 +1758,7 @@ class ProductGroup_Controller extends Page_Controller {
 	/**
 	 * title without additions
 	 * @return string
-	 */ 
+	 */
 	public function OriginalTitle(){
 		return $this->originalTitle;
 	}
