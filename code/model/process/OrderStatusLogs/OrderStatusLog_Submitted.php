@@ -65,6 +65,10 @@ class OrderStatusLog_Submitted extends OrderStatusLog {
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return true;
 	}
 
