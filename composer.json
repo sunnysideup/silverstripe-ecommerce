@@ -21,7 +21,9 @@
 	"suggest": {
 		"silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this work on your server, before installing it - otherwise it is useless.",
 		"sunnysideup/cloudflaregeoip": "Extends Geoip if you are using cloudflare",
-		"silverstripe/restfulserver": "Adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)"
+		"silverstripe/restfulserver": "Adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)",
+		"silverstripe-australia/grouped-cms-menu": "merge e-commerce cms menu items for into one",
+		"micmania1/silverstripe-lumberjack": "great way to take product and product groups out of the sitetree"
 	},
 	"support":{
 		"issues" : "http://code.google.com/p/silverstripe-ecommerce/issues/list"
