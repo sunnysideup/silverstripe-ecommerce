@@ -176,6 +176,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	 * standard SS method
 	 * try to finalise order if payment has been made.
 	 */
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		$this->PaidByID = Member::currentUserID();
+	}
+
+	/**
+	 * standard SS method
+	 * try to finalise order if payment has been made.
+	 */
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		$order = $this->Order();
