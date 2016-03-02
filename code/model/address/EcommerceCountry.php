@@ -116,6 +116,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return $this->canEdit($member);
 	}
 
@@ -125,6 +129,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -135,6 +143,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -145,6 +157,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	function canDelete($member = null){
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if( ShippingAddress::get()->filter(array("ShippingCountry" => $this->Code))->count() ) {return false;}
 		if( BillingAddress::get()->filter(array("Country" => $this->Code))->count() ) {return false;}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}

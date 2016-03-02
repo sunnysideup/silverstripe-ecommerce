@@ -949,8 +949,12 @@ class Product extends Page implements BuyableModel {
 	}
 
 	function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canEdit($member);
+		return parent::canCreate($member);
 	}
 
 
@@ -960,6 +964,10 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -972,6 +980,10 @@ class Product extends Page implements BuyableModel {
 	public function canDelete($member = null) {
 		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 			return false;
+		}
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		return $this->canEdit($member);
 	}

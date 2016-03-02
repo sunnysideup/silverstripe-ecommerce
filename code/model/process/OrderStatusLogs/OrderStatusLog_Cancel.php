@@ -34,6 +34,10 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 
@@ -43,6 +47,10 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
 	 * @return Boolean
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 
@@ -52,6 +60,10 @@ class OrderStatusLog_Cancel extends OrderStatusLog {
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 

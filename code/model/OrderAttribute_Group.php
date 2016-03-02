@@ -1,57 +1,32 @@
 <?php
+
+
+
 /**
- * This dataobject
- * saves search replacements
- * as in Smoogle will be replaced by Google
- *
- *
+ * Allows you to group OrderAttributes
  *
  *
  */
-
-
-class SearchReplacement extends DataObject implements EditableEcommerceObject {
+class OrderAttribute_Group extends DataObject implements EditableEcommerceObject {
 
 	private static $db = array(
-		'Search' => 'Text',
-		'Replace' => 'Varchar'
+		"Name" => "Varchar",
+		"Sort" => "Int"
 	);
-
-	private static $summary_fields = array(
-		'Search' => 'Aliases (e.g. Biike)',
-		'Replace' => 'Proper name (e.g. Bike)'
-	);
-
-	private static $field_labels = array(
-		'Search' => 'Aliases',
-		'Replace' => 'Proper Name'
-	);
-
-	private static $separator = ',';
-
-	function fieldLabels($includerelations = true) {
-		return array(
-			'Search' => 'When someone searches for ... (separate searches by '.$this->Config()->get("separator").") - aliases",
-			'Replace' => 'It is replaced by - proper name ...'
-		);
-	}
-
-	function onBeforeWrite() {
-		parent::onBeforeWrite();
-		//all lower case and make replace double spaces
-		$this->Search = trim(preg_replace('!\s+!', ' ', strtolower($this->Search)));
-		$searchArray = array();
-		foreach(explode(",", $this->Search) as $term ) {
-			$searchArray[] = trim($term);
-		}
-		$this->Search = implode(",",$searchArray);
-		$this->Replace = strtolower($this->Replace);
-	}
 
 	/**
-	 * standard SS method
+	 * Standard SS variable
+	 * @var Array
+	 */
+	private static $indexes = array(
+		"Sort" => true
+	);
+
+
+	/**
+	 * Standard SS Method
 	 * @param Member $member
-	 * @return Boolean
+	 * @var Boolean
 	 */
 	public function canCreate($member = null) {
 		$extended = $this->extendedCan(__FUNCTION__, $member);
@@ -63,9 +38,9 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * standard SS method
+	 * Standard SS Method
 	 * @param Member $member
-	 * @return Boolean
+	 * @var Boolean
 	 */
 	public function canView($member = null) {
 		$extended = $this->extendedCan(__FUNCTION__, $member);
@@ -77,9 +52,9 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * standard SS method
+	 * Standard SS Method
 	 * @param Member $member
-	 * @return Boolean
+	 * @var Boolean
 	 */
 	public function canEdit($member = null) {
 		$extended = $this->extendedCan(__FUNCTION__, $member);
@@ -91,9 +66,9 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * standard SS method
+	 * Standard SS Method
 	 * @param Member $member
-	 * @return Boolean
+	 * @var Boolean
 	 */
 	public function canDelete($member = null) {
 		$extended = $this->extendedCan(__FUNCTION__, $member);
@@ -116,4 +91,5 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject {
 			$action
 		);
 	}
+
 }
