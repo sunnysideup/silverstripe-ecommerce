@@ -39,3 +39,4 @@ EcommerceDatabaseAdmin:
 LeftAndMain:
   extra_requirements_css:
     - ecommerce/css/ecommercecmsfixes.css
+
