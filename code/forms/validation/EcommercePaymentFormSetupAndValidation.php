@@ -139,6 +139,10 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 *
 	 */
 	public function validateAndSaveCreditCardInformation($data, $form, $paymentObject = null) {
+		//check if there is a credit card at all:
+		if(!isset($data["CardNumber"][0])) {
+			return true;
+		}
 		$errors = false;
 		if($paymentObject) {
 			$this->paymentObject = $paymentObject;
