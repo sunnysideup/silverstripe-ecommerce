@@ -85,6 +85,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject {
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->replaceField("OrderID", new ReadonlyField("OrderID", "Order ID"));
+		$fields->replaceField("PaidByID", new ReadonlyField("PaidByID", "Payment made by"));
 		return $fields;
 	}
 
