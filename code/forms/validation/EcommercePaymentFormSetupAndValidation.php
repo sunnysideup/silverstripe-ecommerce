@@ -139,10 +139,6 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 	 *
 	 */
 	public function validateAndSaveCreditCardInformation($data, $form, $paymentObject = null) {
-		//check if there is a credit card at all:
-		if(!isset($data["CardNumber"][0])) {
-			return true;
-		}
 		$errors = false;
 		if($paymentObject) {
 			$this->paymentObject = $paymentObject;
@@ -157,6 +153,10 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		);
 		foreach($cardNumberFormFields as $dbFieldName) {
 			$formFieldName = $paymentClassName."_".$dbFieldName;
+			//check if there is a credit card at all:
+			if(!isset($data[$formFieldName])) {
+				return true;
+			}
 			switch ($dbFieldName) {
 				case "CardNumber":
 					if(isset($dbFieldMap[$paymentClassName]["CardNumber"])) {
