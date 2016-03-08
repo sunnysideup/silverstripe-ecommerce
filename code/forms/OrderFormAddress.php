@@ -18,7 +18,7 @@ class OrderFormAddress extends Form {
 	/**
 	 * @var boolean
 	 */
-	protected $debug = true;
+	protected $debug = false;
 
 
 	/**
