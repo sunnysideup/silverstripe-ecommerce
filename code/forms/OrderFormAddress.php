@@ -16,6 +16,17 @@ class OrderFormAddress extends Form {
 
 
 	/**
+	 * @var boolean
+	 */
+	protected $debug = true;
+
+
+	/**
+	 * @var array
+	 */
+	protected $debugArray = array();
+
+	/**
 	 * the member attached to the order
 	 * this is not always the same as the loggedInMember
 	 * @var Object (Member)
@@ -293,6 +304,7 @@ class OrderFormAddress extends Form {
 
 		//MEMBER
 		$this->orderMember = $this->createOrFindMember($data);
+		if($this->debug) {debug::log(implode("\r\n<hr />", $this->debugArray));}
 
 		if($this->orderMember && is_object($this->orderMember)) {
 			if($this->memberShouldBeSaved($data)) {
@@ -307,7 +319,7 @@ class OrderFormAddress extends Form {
 				$this->orderMember->LogIn();
 			}
 			//this causes ERRORS ....
-			//$this->order->MemberID = $this->orderMember->ID;
+			$this->order->MemberID = $this->orderMember->ID;
 			Session::set("Ecommerce_Member_For_Order", $this->orderMember->ID);
 		}
 
@@ -385,25 +397,25 @@ class OrderFormAddress extends Form {
 	protected function createOrFindMember(Array $data) {
 		//get the best available from order.
 		$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-
+		$orderPlacedByShopAdmin = ($this->loggedInMember && $this->loggedInMember->IsShopAdmin()) ? true : false;
 		//1. does the order already have a member
-		if($this->orderMember->exists() && !$this->orderMember->IsShopAdmin()) {
-			if(!$this->debug) {$this->debugString .= "1. the order already has a member";}
+		if($this->orderMember->exists() && !$orderPlacedByShopAdmin) {
+			if($this->debug) {$this->debugArray[] = "1. the order already has a member";}
 		}
 		else {
 			//special shop admin situation:
-			if($this->orderMember->IsShopAdmin()) {
-				if(!$this->debug) {$this->debug .= "A1. shop admin places order ";}
+			if($orderPlacedByShopAdmin) {
+				if($this->debug) {$this->debugArray[] = "A1. shop admin places order ";}
 				//2. does email match shopadmin email
 				if($newEmail = $this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
 					$this->orderMember = null;
-					if(!$this->debug) {$this->debug .= "A2. email does not match shopadmin email - reset orderMember";}
+					if($this->debug) {$this->debugArray[] = "A2. email does not match shopadmin email - reset orderMember";}
 					$this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
 					if($this->orderMember) {
-						if(!$this->debug) {$this->debug .= "A3. the other member already exists";}
+						if($this->debug) {$this->debugArray[] = "A3. the other member already exists";}
 					}
 					elseif($this->memberShouldBeCreated($data)) {
-						if(!$this->debug) {$this->debug .= "A4. No other member found - creating new one";}
+						if($this->debug) {$this->debugArray[] = "A4. No other member found - creating new one";}
 						$this->orderMember = new Member();
 						$this->orderMember->Email = Convert::raw2sql($newEmail);
 						$this->orderMember->write($forceCreation = true);
@@ -412,33 +424,33 @@ class OrderFormAddress extends Form {
 				}
 			}
 			else {
-				if(!$this->debug) {$this->debug .= "2. shop allows creation of member";}
+				if($this->debug) {$this->debugArray[] = "2. shop allows creation of member";}
 				$this->orderMember = null;
 
 				//3. can the entered data be used?
 				//member that will be added does not exist somewhere else.
 				if($this->uniqueMemberFieldCanBeUsed($data)) {
 
-					if(!$this->debug) {$this->debug .= "3. can the entered data be used?";}
+					if($this->debug) {$this->debugArray[] = "3. can the entered data be used?";}
 					// 4. is there no member logged in yet?
 					//no logged in member
 					if(!$this->loggedInMember) {
 
-						if(!$this->debug) {$this->debug .= "4. is there no member logged in yet?";}
+						if($this->debug) {$this->debugArray[] = "4. is there no member logged in yet?";}
 						//5. find member from data entered (even if not logged in)
 						//another member with the same email?
 
-						if(!$this->debug) {$this->debug .= "5. find member from data entered (even if not logged in)";}
+						if($this->debug) {$this->debugArray[] = "5. find member from data entered (even if not logged in)";}
 						$this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
 
 						//6. At this stage, if we dont have a member, we will create one!
 						//in case we still dont have a member AND we should create a member for every customer, then we do this below...
 						if(!$this->orderMember) {
-							if(!$this->debug) {$this->debug .= "6. No other member found";}
+							if($this->debug) {$this->debugArray[] = "6. No other member found";}
 							// 7. We do one last check to see if we are allowed to create one
 							//are we allowed to create a member?
 							if($this->memberShouldBeCreated($data)) {
-								if(!$this->debug) {$this->debug .= "7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER";}
+								if($this->debug) {$this->debugArray[] = "7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER";}
 								$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
 								$this->orderMember->write($forceCreation = true);
 								$this->newlyCreatedMemberID = $this->orderMember->ID;
