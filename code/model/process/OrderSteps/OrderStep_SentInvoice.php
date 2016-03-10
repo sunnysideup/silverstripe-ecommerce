@@ -27,7 +27,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 		"Name" => "Send invoice",
 		"Code" => "INVOICED",
 		"ShowAsInProcessOrder" => 1,
-		"SendInvoiceToCustomer" => 0
+		"SendInvoiceToCustomer" => 1
 	);
 
 	public function getCMSFields() {
