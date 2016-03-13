@@ -1793,24 +1793,14 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return true;
 		}
 		//it is the current order
-		$currentOrder = ShoppingCart::current_order();
-		if($currentOrder && $currentOrder->ID == $this->ID){
+		if($this->IsInSession()){
 			//we do some additional CHECKS for session hackings!
-			if($member->exists()) {
-				//must be the same member!
-				if($this->MemberID == $member->ID) {
-					return true;
-				}
-				//order belongs to another member!
-				elseif($this->MemberID) {
+			if($member->exists() && $this->MemberID) {
+				//can't view the order of another member!
+				//shop admin exemption is already captured.
+				//this is always true
+				if($this->MemberID != $member->ID) {
 					return false;
-				}
-				//order does not belong to anyone yet! ADD IT NOW.
-				else{
-					//we do NOT add the member here, because this is done in shopping cart
-					//$this->MemberID = $member->ID;
-					//$this->write();
-					return true;
 				}
 			}
 			else{
@@ -1818,31 +1808,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 				//this is allowed!
 				//the reason it is allowed is because we want to be able to
 				//add order to non-existing member
-				if($this->MemberID) {
-					if($this->IsInSession()) {
-						return true;
-					}
-					else {
-						return false;
-					}
-				}
-				//no-one is logged in and order does not belong to anyone
-				else {
-					return true;
-				}
+				return true;
 			}
-		}
-		//if the session ID matches, we can always view it.
-		//SECURITYL RISK: if you know someone else his/her session
-		//OR you can view the sessions on the server
-		//OR you can guess the session
-		//THEN you can view the order.
-		//by viewing the order you can also access some of the member details.
-		//NB: this MUST be the last resort! If all other methods fail.
-		//That is, if we are working with the current order then it is a good idea
-		//to deny non-matching members.
-		if( $this->IsInSession()) {
-			return true;
 		}
 		return false;
 	}
@@ -1853,8 +1820,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function IsInSession(){
-		$sessionVariableName = EcommerceConfig::get("ShoppingCart", "session_code")."_OrderID";
-		return ($this->ID && $this->ID == Session::get($sessionVariableName)) ? true : false;
+		$orderInSession = ShoppingCart::session_order();
+		return ($orderInSession && $this->ID && $this->ID == $orderInSession->ID);
 	}
 
 	/**
