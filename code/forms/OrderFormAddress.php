@@ -416,7 +416,7 @@ class OrderFormAddress extends Form {
 					}
 					elseif($this->memberShouldBeCreated($data)) {
 						if($this->debug) {$this->debugArray[] = "A4. No other member found - creating new one";}
-						$this->orderMember = new Member();
+						$this->orderMember = Member::create();
 						$this->orderMember->Email = Convert::raw2sql($newEmail);
 						$this->orderMember->write($forceCreation = true);
 						$this->newlyCreatedMemberID = $this->orderMember->ID;
@@ -453,6 +453,7 @@ class OrderFormAddress extends Form {
 								if($this->debug) {$this->debugArray[] = "7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER";}
 								$this->orderMember = $this->order->CreateOrReturnExistingMember(false);
 								$this->orderMember->write($forceCreation = true);
+								//this is safe because it is memberShouldBeCreated ... 
 								$this->newlyCreatedMemberID = $this->orderMember->ID;
 							}
 						}
@@ -477,13 +478,16 @@ class OrderFormAddress extends Form {
 		//data entered does not match existing member...
 		//TRUE!
 		if($this->loggedInMember && $this->loggedInMember->IsShopAdmin()) {
-			if($newEmail = $this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
-				if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
+			if($this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
+				if($this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
+					return false;
+				}
+				else {
 					return true;
 				}
 			}
 		}
-		// already logged in or already create...
+		// already logged in or already created...
 		// FALSE!
 		elseif($this->loggedInMember || $this->newlyCreatedMemberID) {
 			return false;
@@ -491,8 +495,11 @@ class OrderFormAddress extends Form {
 		// no other user exists with the email...
 		// TRUE!
 		else {
-			if(!$this->anotherExistingMemberWithSameUniqueFieldValue($data)){
-			 return true;
+			if($this->anotherExistingMemberWithSameUniqueFieldValue($data)){
+				return false;
+			}
+			else {
+				return true;
 			}
 		}
 		//defaults to FALSE...
