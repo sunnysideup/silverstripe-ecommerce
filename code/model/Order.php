@@ -1902,14 +1902,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canPay(Member $member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canPay', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if( $this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending() ) {
 			return false;
@@ -1928,14 +1923,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return false;
 		}
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canCancel', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return $this->MyStep()->CustomerCanCancel && $this->canView($member);
