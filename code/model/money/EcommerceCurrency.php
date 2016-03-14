@@ -160,12 +160,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject {
 			if($extended !== null) {
 				return $extended;
 			}
-			if(
-				Permission::checkMember(
-					$member,
-					Config::inst()->get("EcommerceRole", "admin_permission_code")
-				)
-			) {return true;}
+			if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 			return parent::canEdit($member);
 		}
 		return false;
