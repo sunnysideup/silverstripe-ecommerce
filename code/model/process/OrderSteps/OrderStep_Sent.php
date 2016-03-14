@@ -62,7 +62,14 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 **/
 	public function doStep(Order $order) {
 		if($this->RelevantLogEntry($order)) {
-			return true;
+			return $this->sendEmailForStep(
+				$order,
+				$subject = $this->EmailSubject,
+				$message = "",
+				$resend = false,
+				$this->SendDetailsToCustomer ? false : true,
+				$this->getEmailClassName()
+			);
 		}
 	}
 
@@ -75,15 +82,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface  {
 	 * @return OrderStep | Null (next step OrderStep object)
 	 **/
 	public function nextStep(Order $order) {
-		if($this->sendEmailForStep(
-			$order,
-			$subject = $this->EmailSubject,
-			$message = "",
-			$resend = false,
-			$adminOnlyOrToEmail = false,
-			$this->getEmailClassName()
-		))
-		{
+		if(!$this->SendDetailsToCustomer || $this->hasBeenSent($order)) {
 			return parent::nextStep($order);
 		}
 		return null;

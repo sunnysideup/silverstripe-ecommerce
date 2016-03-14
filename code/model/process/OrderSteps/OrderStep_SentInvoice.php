@@ -64,7 +64,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface  {
 			$subject = $this->EmailSubject,
 			$message = "",
 			$resend = false,
-			$adminOnly = false,
+			$this->SendInvoiceToCustomer ? false : true,
 			$this->getEmailClassName()
 		);
 	}
