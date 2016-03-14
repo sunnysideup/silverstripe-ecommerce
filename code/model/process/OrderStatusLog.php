@@ -72,6 +72,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -82,6 +86,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		if(!$this->InternalUseOnly) {
 			if($this->Order()) {
@@ -100,6 +108,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if($order = $this->Order()) {
 			return $order->canEdit($member);
 		}
@@ -113,6 +125,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canDelete($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 

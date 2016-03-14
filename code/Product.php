@@ -922,35 +922,33 @@ class Product extends Page implements BuyableModel {
 			return false;
 		}
 		//check country
-		$extendedArray = $this->extendedCan('canPurchaseByCountry', $member);
-		if($extendedArray === null) {
-			if(! EcommerceCountry::allow_sales()) {
-				return false;
-			}
+		$extended = $this->extendedCan('canPurchaseByCountry', $member);
+		if($extended !== null) {
+			return $extended;
 		}
-		else {
+		if(! EcommerceCountry::allow_sales()) {
 			return false;
 		}
+
 		$price = $this->getCalculatedPrice();
 		if($price == 0 && ! $config->AllowFreeProductPurchase) {
 			return false;
 		}
 		// Standard mechanism for accepting permission changes from decorators
-		$extendedArray = $this->extendedCan('canPurchase', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		return $allowpurchase;
 	}
 
 	function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canEdit($member);
+		return parent::canCreate($member);
 	}
 
 
@@ -960,6 +958,10 @@ class Product extends Page implements BuyableModel {
 	 * @return Boolean
 	 */
 	function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -972,6 +974,10 @@ class Product extends Page implements BuyableModel {
 	public function canDelete($member = null) {
 		if(is_a(Controller::curr(), Object::getCustomClass("ProductsAndGroupsModelAdmin"))) {
 			return false;
+		}
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		return $this->canEdit($member);
 	}

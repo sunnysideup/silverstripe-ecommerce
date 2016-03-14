@@ -538,9 +538,17 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 				);
 			}
 			else {
+				if(!$emailClassName){
+					$emailClassName = 'Order_ErrorEmail';
+				}
 				//looks like we are sending an error, but we are just using this for notification
 				$message = _t("OrderStep.THISMESSAGENOTSENTTOCUSTOMER", "NOTE: This message was not sent to the customer.")."<br /><br /><br /><br />".$message;
-				$outcome = $order->sendAdminNotification($subject, $message);
+				$outcome = $order->sendAdminNotification(
+					$subject,
+					$message,
+					$resend,
+					$emailClassName
+				);
 			}
 			if($outcome || Director::isDev()) {
 				return true;
@@ -706,7 +714,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 */
 	public function RelevantLogEntry(Order $order){
 		if($className = $this->getRelevantLogEntryClassName()) {
-			return $this->RelevantLogEntries()->Last();
+			return $this->RelevantLogEntries($order)->Last();
 		}
 	}
 
@@ -747,6 +755,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -757,6 +769,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function canEdit($member = null){
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -785,6 +801,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 		}
 		if(in_array($this->Code, self::get_codes_for_order_steps_to_include())) {
 			return false;
+		}
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);

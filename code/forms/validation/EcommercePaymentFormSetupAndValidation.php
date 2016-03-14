@@ -153,6 +153,10 @@ class EcommercePaymentFormSetupAndValidation extends Object {
 		);
 		foreach($cardNumberFormFields as $dbFieldName) {
 			$formFieldName = $paymentClassName."_".$dbFieldName;
+			//check if there is a credit card at all:
+			if(!isset($data[$formFieldName])) {
+				return true;
+			}
 			switch ($dbFieldName) {
 				case "CardNumber":
 					if(isset($dbFieldMap[$paymentClassName]["CardNumber"])) {

@@ -840,7 +840,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * Goes through the order steps and tries to "apply" the next
+	 * Goes through the order steps and tries to "apply" the next step
+	 * Step is updated after the other one is completed...
 	 * @return Integer (StatusID or false if the next status can not be "applied")
 	 **/
 	public function doNextStatus() {
@@ -914,6 +915,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 *******************************************************/
 
 	/**
+	 * Avoids caching of $this->Status()
 	 * @return DataObject (current OrderStep)
 	 */
 	public function MyStep() {
@@ -928,7 +930,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$step = OrderStep_Created::create();
 		}
 		if(!$step) {
-			user_error("each order needs a status");
+			user_error("You need an order step in your Database.");
 		}
 		return $step;
 	}
@@ -1311,7 +1313,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 		$adminOnlyOrToEmail = false,
 		$emailClassName = 'Order_InvoiceEmail'
 	) {
-		return $this->prepareEmail(
+		return $this->prepareAndSendEmail(
 			$emailClassName,
 			$subject,
 			$message,
@@ -1329,19 +1331,27 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendError($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
+		return $this->prepareAndSendEmail('Order_ErrorEmail', _t("Order.ERROR", "ERROR")." ".$subject, $message, $resend = true, $adminOnly = true);
 	}
 
 	/**
 	 * Sends a message to the shop admin ONLY and not to the customer
 	 * This can be used by ordersteps and orderlogs to notify the admin of any potential problems.
 	 *
-	 * @param String $subject - subject for the email
-	 * @param String $message - message to be added with the email
+	 * @param string $subject - subject for the email
+	 * @param string $message - message to be added with the email
+	 * @param boolean $resend - can it be sent twice?
+	 * @param string $emailClassName - template to be used ...
+	 * 
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	public function sendAdminNotification($subject = "", $message = "") {
-		return $this->prepareEmail('Order_ErrorEmail', $subject, $message, $resend = false, $adminOnly = true);
+	public function sendAdminNotification(
+		$subject = "",
+		$message = "",
+		$resend = false,
+		$emailClassName = 'Order_ErrorEmail'
+	) {
+		return $this->prepareAndSendEmail($emailClassName, $subject, $message, $resend, $adminOnly = true);
 	}
 
 	/**
@@ -1355,7 +1365,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
-	protected function prepareEmail(
+	protected function prepareAndSendEmail(
 		$emailClassName,
 		$subject,
 		$message,
@@ -1405,7 +1415,12 @@ class Order extends DataObject implements EditableEcommerceObject {
 			$email->setResend($resend);
 			$result = $email->send(null);
 			Config::unnest();
-			return $result;
+			if(Director::isDev()) {
+				return true;
+			}
+			else {
+				return $result;
+			}
 		}
 		return false;
 	}
@@ -1745,14 +1760,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canCreate($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canCreate', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if($member->exists()) {
 			return $member->IsShopAdmin();
@@ -1770,15 +1780,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 		}
 		$member = $this->getMemberForCanFunctions($member);
 		//check if this has been "altered" in any DataExtension
-		$extendedArray = $this->extendedCan('canView', $member);
-		//if this method has been extended in a data object decorator then use this
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		//is the member is a shop admin they can always view it
 		if(EcommerceRole::current_member_is_shop_admin($member)) {
@@ -1789,24 +1793,14 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return true;
 		}
 		//it is the current order
-		$currentOrder = ShoppingCart::current_order();
-		if($currentOrder && $currentOrder->ID == $this->ID){
+		if($this->IsInSession()){
 			//we do some additional CHECKS for session hackings!
-			if($member->exists()) {
-				//must be the same member!
-				if($this->MemberID == $member->ID) {
-					return true;
-				}
-				//order belongs to another member!
-				elseif($this->MemberID) {
+			if($member->exists() && $this->MemberID) {
+				//can't view the order of another member!
+				//shop admin exemption is already captured.
+				//this is always true
+				if($this->MemberID != $member->ID) {
 					return false;
-				}
-				//order does not belong to anyone yet! ADD IT NOW.
-				else{
-					//we do NOT add the member here, because this is done in shopping cart
-					//$this->MemberID = $member->ID;
-					//$this->write();
-					return true;
 				}
 			}
 			else{
@@ -1814,31 +1808,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 				//this is allowed!
 				//the reason it is allowed is because we want to be able to
 				//add order to non-existing member
-				if($this->MemberID) {
-					if($this->IsInSession()) {
-						return true;
-					}
-					else {
-						return false;
-					}
-				}
-				//no-one is logged in and order does not belong to anyone
-				else {
-					return true;
-				}
+				return true;
 			}
-		}
-		//if the session ID matches, we can always view it.
-		//SECURITYL RISK: if you know someone else his/her session
-		//OR you can view the sessions on the server
-		//OR you can guess the session
-		//THEN you can view the order.
-		//by viewing the order you can also access some of the member details.
-		//NB: this MUST be the last resort! If all other methods fail.
-		//That is, if we are working with the current order then it is a good idea
-		//to deny non-matching members.
-		if( $this->IsInSession()) {
-			return true;
 		}
 		return false;
 	}
@@ -1849,8 +1820,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 */
 	public function IsInSession(){
-		$sessionVariableName = EcommerceConfig::get("ShoppingCart", "session_code")."_OrderID";
-		return ($this->ID && $this->ID == Session::get($sessionVariableName)) ? true : false;
+		$orderInSession = ShoppingCart::session_order();
+		return ($orderInSession && $this->ID && $this->ID == $orderInSession->ID);
 	}
 
 	/**
@@ -1878,14 +1849,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canEdit($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canEdit', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
 			return true;
@@ -1903,14 +1869,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	function canPay(Member $member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canPay', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if( $this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending() ) {
 			return false;
@@ -1929,14 +1890,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return false;
 		}
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canCancel', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return $this->MyStep()->CustomerCanCancel && $this->canView($member);
@@ -1949,14 +1905,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function canDelete($member = null) {
 		$member = $this->getMemberForCanFunctions($member);
-		$extendedArray = $this->extendedCan('canDelete', $member);
-		if($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-			foreach($extendedArray as $extendedResult) {
-				if($extendedResult === false) {
-					return false;
-				}
-			}
-			return true;
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
 		}
 		if($this->IsSubmitted()){
 			return false;

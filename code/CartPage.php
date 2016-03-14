@@ -105,11 +105,6 @@ class CartPage extends Page{
 		return CartPage::get()->Filter(array("ClassName" => "CartPage"))->Count() ? false : $this->canEdit($member);
 	}
 
-	function caView($member = null) {
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canEdit($member);
-	}
-
 	/**
 	 * Shop Admins can edit
 	 * @param Member $member

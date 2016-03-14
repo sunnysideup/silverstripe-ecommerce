@@ -52,5 +52,13 @@ ShippingAddress:
     ShippingPostalCode:
       postal_code: long_name
 
+# requires silverstripe-australia/grouped-cms-menu module ...
+LeftAndMain:
+  menu_groups:
+    Shop:
+      - SalesAdmin
+      - ProductsAndGroupsModelAdmin
+      - ProductConfigModelAdmin
+      - StoreAdmin
 
 

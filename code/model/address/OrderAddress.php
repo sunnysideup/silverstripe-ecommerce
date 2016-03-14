@@ -119,6 +119,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 
 
 	function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -130,6 +134,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 **/
 	function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(!$this->exists()) {
 			return $this->canCreate($member);
 		}
@@ -153,6 +161,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	 * @return Boolean
 	 **/
 	function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(!$this->exists()) {
 			return $this->canCreate($member);
 		}
@@ -170,6 +182,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	}
 
 	function canDelete($member = null){
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return false;
 	}
 

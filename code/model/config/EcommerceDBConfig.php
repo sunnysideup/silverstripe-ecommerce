@@ -99,6 +99,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return $this->canEdit($member);
 	}
 
@@ -108,6 +112,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return $this->canEdit($member);
 	}
 
@@ -117,6 +125,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	 * @var Boolean
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 		return parent::canEdit($member);
 	}
@@ -131,6 +143,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 			return false;
 		}
 		else {
+			$extended = $this->extendedCan(__FUNCTION__, $member);
+			if($extended !== null) {
+				return $extended;
+			}
 			if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
 			return parent::canEdit($member);
 		}
@@ -414,7 +430,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 					}
 				}
 				Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
-				if (strnatcmp(phpversion(),'5.5.1') >= 0) { 
+				if (strnatcmp(phpversion(),'5.5.1') >= 0) {
 					$fields->addFieldToTab('Root.ProductImages', new Product_ProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"));
 				}
 			}

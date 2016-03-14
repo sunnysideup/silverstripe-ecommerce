@@ -82,10 +82,21 @@ class ShoppingCart extends Object{
 
 	/**
 	 * Allows access to the current order from anywhere in the code..
-	 * @return ShoppingCart Object
+	 * @return Order
 	 */
 	public static function current_order() {
 		return self::singleton()->currentOrder();
+	}
+
+
+	/**
+	 * Allows access to the current order from anywhere in the code..
+	 * @return Order
+	 */
+	public static function session_order() {
+		$sessionVariableName = self::singleton()->sessionVariableName("OrderID");
+		$orderIDFromSession = intval(Session::get($sessionVariableName)) - 0;
+		return Order::get()->byID($orderIDFromSession);
 	}
 
 
@@ -94,16 +105,12 @@ class ShoppingCart extends Object{
 	 * Based on the session ONLY!
 	 * IMPORTANT FUNCTION!
 	 * @todo - does this need to be public????
-	 * @return void
+	 * @return Order
 	 */
 	public function currentOrder($recurseCount = 0){
 		if(!$this->order) {
-			$sessionVariableName = $this->sessionVariableName("OrderID");
-			$orderIDFromSession = intval(Session::get($sessionVariableName));
-			if($orderIDFromSession > 0) {
-				$this->order = Order::get()->byID($orderIDFromSession);
-			}
-			$member = Member::currentUser();
+			$this->order = self::session_order();
+			$loggedInMember = Member::currentUser();
 			if($this->order) {
 				//first reason to set to null: it is already submitted
 				if($this->order->IsSubmitted()) {
@@ -114,17 +121,17 @@ class ShoppingCart extends Object{
 					$this->order = null;
 				}
 				//logged in, add Member.ID to order->MemberID
-				elseif($member && $member->exists()) {
-					if($this->order->MemberID != $member->ID) {
+				elseif($loggedInMember && $loggedInMember->exists()) {
+					if($this->order->MemberID != $loggedInMember->ID) {
 						$updateMember = false;
 						if(!$this->order->MemberID) {
 							$updateMember = true;
 						}
-						if(!$member->IsShopAdmin()) {
+						if(!$loggedInMember->IsShopAdmin()) {
 							$updateMember = true;
 						}
 						if($updateMember) {
-							$this->order->MemberID = $member->ID;
+							$this->order->MemberID = $loggedInMember->ID;
 							$this->order->write();
 						}
 					}
@@ -142,7 +149,7 @@ class ShoppingCart extends Object{
 							$firstStep &&
 							$previousOrderFromMember = Order::get()
 								->where("
-									\"MemberID\" = ".$member->ID."
+									\"MemberID\" = ".$loggedInMember->ID."
 									AND (\"StatusID\" = ".$firstStep->ID. " OR \"StatusID\" = 0)
 									AND \"Order\".\"ID\" <> ".$this->order->ID
 								)
@@ -168,12 +175,13 @@ class ShoppingCart extends Object{
 				}
 			}
 			if(!$this->order) {
-				if($member) {
+				if($loggedInMember) {
+					//find previour order...
 					$firstStep = OrderStep::get()->First();
 					if($firstStep) {
 						$previousOrderFromMember = Order::get()
 							->filter(array(
-								"MemberID" => $member->ID,
+								"MemberID" => $loggedInMember->ID,
 								"StatusID" => array($firstStep->ID, 0)
 							))
 							->First();
@@ -196,19 +204,13 @@ class ShoppingCart extends Object{
 					}
 					//create new order
 					$this->order = Order::create();
-					if($member) {
-						$this->order->MemberID = $member->ID;
+					if($loggedInMember) {
+						$this->order->MemberID = $loggedInMember->ID;
 					}
 					$this->order->write();
 				}
-				Session::set($sessionVariableName,intval($this->order->ID));
-			}
-			//member just logged in and is not associated with order yet
-			//if you are not logged in but the order belongs to a member then clear the cart.
-			// THIS MAY NOT BE CORRECT, BECAUSE THIS MEANS YOU CAN NOT CREATE AN ORDER FOR A USER AND NOT BE LOGGED IN!!!
-			elseif($this->order->MemberID && !$member) {
-				$this->clear();
-				$this->order = null;
+				$sessionVariableName = $this->sessionVariableName("OrderID");
+				Session::set($sessionVariableName, intval($this->order->ID));
 			}
 			if($this->order && $this->order->exists()) {
 				$this->order->calculateOrderAttributes($force = false);
@@ -218,6 +220,8 @@ class ShoppingCart extends Object{
 				$this->order->write();
 			}
 		}
+		//try it again
+		//but limit to three, just in case ...
 		//just in case ...
 		if(!$this->order && $recurseCount < 3) {
 			$recurseCount++;
@@ -565,9 +569,11 @@ class ShoppingCart extends Object{
 			user_error("Bad order provided as parameter to ShoppingCart::loadOrder()");
 		}
 		if($this->order){
+			//first can view and then, if can view, set as session...
 			if($this->order->canView()) {
 				$this->order->init(true);
 				$sessionVariableName = $this->sessionVariableName("OrderID");
+				//we set session ID after can view check ...
 				Session::set($sessionVariableName, $this->order->ID);
 				$this->addMessage(_t("Order.LOADEDEXISTING", "Order loaded."),'good');
 				return true;

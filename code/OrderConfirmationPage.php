@@ -91,10 +91,6 @@ class OrderConfirmationPage extends CartPage{
 		return OrderConfirmationPage::get()->filter(array("ClassName" => "OrderConfirmationPage"))->Count() ? false : $this->canEdit($member);
 	}
 
-	function caView($member = null) {
-		if(Permission::checkMember($member, Config::inst()->get("EcommerceRole", "admin_permission_code"))) {return true;}
-		return parent::canEdit($member);
-	}
 
 	/**
 	 * Shop Admins can edit
