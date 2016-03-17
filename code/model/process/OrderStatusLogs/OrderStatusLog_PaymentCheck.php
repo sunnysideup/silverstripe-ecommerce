@@ -76,18 +76,17 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog {
 
 
 	/**
-	*
-	*@return String
-	**/
+	 *
+	 * @return String
+	 **/
 	function CustomerNote(){return $this->getCustomerNote();}
 	function getCustomerNote() {
 		if($this->Author()) {
-			if($this->PaymentConfirmed) {
-				return _t("OrderStatusLog.PAYMENTCONFIRMEDBY", "Payment Confirmed by: ").$this->Author()->getTitle()." | ".$this->Created;
-			}
-			else {
-				return _t("OrderStatusLog.PAYMENTDECLINEDBY", "Payment DECLINED by: ").$this->Author()->getTitle()." | ".$this->Created;
-			}
+			Config::nest();
+			Config::inst()->update('SSViewer', 'theme_enabled', true);
+			$html = $this->renderWith("Order_CustomerNote_PaymentCheck");
+			Config::unnest();
+			return $html;
 		}
 	}
 
