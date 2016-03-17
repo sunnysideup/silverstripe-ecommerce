@@ -477,7 +477,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			//$htmlSummary = $this->renderWith("Order");
 			//Config::unnest();
 
-			$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<iframe src="'.$this->PrintLink().'" width="100%" height="500"></iframe>'));
+			$fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<iframe src="'.$this->PrintLink().'" width="100%" height="500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>'));
 			$fields->insertAfter(
 				new Tab(
 					"Emails",
@@ -1342,7 +1342,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @param string $message - message to be added with the email
 	 * @param boolean $resend - can it be sent twice?
 	 * @param string $emailClassName - template to be used ...
-	 * 
+	 *
 	 * @return Boolean TRUE for success, FALSE for failure (not tested)
 	 */
 	public function sendAdminNotification(

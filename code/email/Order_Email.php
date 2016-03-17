@@ -68,10 +68,10 @@ Abstract class Order_Email extends Email {
 	public static function get_subject() {
 		$siteConfig = SiteConfig::current_site_config();
 		if($siteConfig && $siteConfig->Title) {
-			return _t("Order_Email.SALEUPDATE", "Sale Update [OrderNumber] from ").$siteConfig->Title;
+			return _t("Order_Email.SALEUPDATE", "Sale Update for Order #[OrderNumber] from ").$siteConfig->Title;
 		}
 		else {
-			return _t("Order_Email.SALEUPDATE", "Sale Update [OrderNumber] ");
+			return _t("Order_Email.SALEUPDATE", "Sale Update for Order #[OrderNumber] ");
 		}
 	}
 
