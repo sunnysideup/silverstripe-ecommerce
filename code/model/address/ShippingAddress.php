@@ -175,7 +175,7 @@ class ShippingAddress extends OrderAddress {
 		if(EcommerceConfig::get("OrderAddress", "use_separate_shipping_address")) {
 			$shippingFieldsHeader = new CompositeField(
 				new HeaderField('SendGoodsToADifferentAddress', _t('OrderAddress.SENDGOODSTODIFFERENTADDRESS','Send goods to different address'), 3),
-				new LiteralField('ShippingNote', '<p class="message warning">'._t('OrderAddress.SHIPPINGNOTE','Your goods will be sent to the address below.').'</p>')
+				new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">'._t('OrderAddress.SHIPPINGNOTE','Your goods will be sent to the address below.').'</p>')
 			);
 
 			if($member) {
