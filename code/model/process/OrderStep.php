@@ -284,6 +284,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject {
 			}
 		}
 		else {
+			$fields->removeFieldFromTab("Root", "OrderEmailRecords");
 			$fields->removeFieldFromTab("Root.Main", "EmailSubject");
 			$fields->removeFieldFromTab("Root.Main", "CustomerMessage");
 		}
