@@ -53,3 +53,5 @@
 #Checkout #ContentHolder {color: #999;}
 
 #Checkout tr.even, #Checkout tr.odd {background-color: transparent}
+
+#OrderFormHolder .Actions {min-height: 10em;}
