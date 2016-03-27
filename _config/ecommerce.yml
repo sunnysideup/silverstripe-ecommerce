@@ -150,8 +150,8 @@ BillingAddress:
     - Address
     - City
     - PostalCode
-    - RegionCode
-    - RegionID
+#   - RegionCode
+#   - RegionID
 
 ShippingAddress:
   required_fields:
@@ -159,8 +159,8 @@ ShippingAddress:
     - ShippingAddress
     - ShippingCity
     - ShippingPostalCode
-    - ShippingRegionCode
-    - ShippingRegionID
+#   - ShippingRegionCode
+#   - ShippingRegionID
     - ShippingCountry
 
 EcommerceCountry:
