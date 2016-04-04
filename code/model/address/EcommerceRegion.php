@@ -279,7 +279,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject {
 	 * @param array $a
 	 * @param int $orderID
 	 */
-	public static function set_for_current_order_do_not_show_regions(Array $a, $orderID = 0, ) {
+	public static function set_for_current_order_do_not_show_regions(Array $a, $orderID = 0) {
 		//We MERGE here because several modifiers may limit the countries
 		$previousArray = self::get_for_current_order_do_not_show_regions($orderID);
 		self::$_for_current_order_do_not_show_regions[$orderID] = array_merge($a, $previousArray);
