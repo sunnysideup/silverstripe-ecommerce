@@ -96,7 +96,7 @@ class ShoppingCart extends Object{
 	 *
 	 * @return int;
 	 */
-	private static function current_order_id($orderID = 0) {
+	public static function current_order_id($orderID = 0) {
 		if(!$orderID) {
 			$order = self::current_order();
 			if($order && $order->exists()) {

@@ -187,7 +187,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @return boolean
 	 */
 	public static function get_needs_recalculating($orderID = 0){
-		return self::$_needs_recalculating[$orderID] ? self::$_needs_recalculating[$orderID] : false;
+		return isset(self::$_needs_recalculating[$orderID]) ? self::$_needs_recalculating[$orderID] : false;
 	}
 
 

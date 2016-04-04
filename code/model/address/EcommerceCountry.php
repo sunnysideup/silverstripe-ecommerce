@@ -377,8 +377,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * Memory for allow country to check
 	 * @var Null | Boolean
 	 */
-	private static $_allow_sales_cache = null;
-		
+	private static $_allow_sales_cache = array();
+
 	public static function reset_allow_sales_cache() {self::$_allow_sales_cache = null;}
 
 
@@ -388,10 +388,11 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 *
 	 * @return Boolean
 	 */
-	public static function allow_sales() {
-		if(self::$_allow_sales_cache === null) {
-			self::$_allow_sales_cache = true;
-			$countryCode = EcommerceCountry::get_country(false, ShoppingCart::current_order_id($orderID));
+	public static function allow_sales($orderID = 0) {
+		$orderID = ShoppingCart::current_order_id($orderID);
+		if(!isset(self::$_allow_sales_cache[$orderID])) {
+			self::$_allow_sales_cache[$orderID] = true;
+			$countryCode = EcommerceCountry::get_country(false, $orderID);
 			if($countryCode) {
 				$countries = EcommerceCountry::get()
 					->filter(array(
@@ -399,11 +400,11 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 						"Code" => $countryCode
 					));
 				if($countries->count()) {
-					self::$_allow_sales_cache = false;
+					self::$_allow_sales_cache[$orderID] = false;
 				}
 			}
 		}
-		return self::$_allow_sales_cache;
+		return self::$_allow_sales_cache[$orderID];
 	}
 
 	/**
