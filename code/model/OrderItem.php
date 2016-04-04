@@ -570,7 +570,7 @@ class OrderItem extends OrderAttribute {
 				}
 			}
 		}
-		return self::$price_has_been_fixed[$this->OrderID];
+		return self::$_price_has_been_fixed[$this->OrderID];
 	}
 
 
