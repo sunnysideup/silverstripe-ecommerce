@@ -210,8 +210,8 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject {
 	 **/
 	public static function list_of_allowed_entries_for_dropdown() {
 		$defaultArray = self::get_default_array();
-		$onlyShow = self::$for_current_order_only_show_regions;
-		$doNotShow = self::$for_current_order_do_not_show_regions;
+		$onlyShow = self::get_for_current_order_only_show_regions();
+		$doNotShow = self::get_for_current_order_do_not_show_regions();
 		if(is_array($onlyShow) && count($onlyShow)) {
 			foreach($defaultArray as $id => $value) {
 				if(!in_array($id, $onlyShow)) {
@@ -236,28 +236,54 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject {
 	 * NOTE: these methods / variables below are IMPORTANT, because they allow the dropdown for the region to be limited for just that order
 	 * @var Array of regions codes, e.g. ("NSW", "WA", "VIC");
 	**/
-	protected static $for_current_order_only_show_regions = array();
-		public static function get_for_current_order_only_show_regions(){return self::$for_current_order_only_show_regions;}
-		public static function set_for_current_order_only_show_regions(Array $a) {
-			if(count(self::$for_current_order_only_show_regions)) {
-				//we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
-				self::$for_current_order_only_show_regions = array_intersect($a, self::$for_current_order_only_show_regions);
-			}
-			else {
-				self::$for_current_order_only_show_regions = $a;
-			}
-		}
+	protected static $_for_current_order_only_show_regions = array();
+
+
+	/**
+	 * @param int $orderID
+	 * @return array
+	 */
+	public static function get_for_current_order_only_show_regions($orderID = 0){
+		$orderID = ShoppingCart::current_order_id($orderID);
+		return isset(self::$_for_current_order_only_show_regions[$orderID]) ? self::$_for_current_order_only_show_regions[$orderID] : array();
+	}
+
+	/**
+	 * merges arrays...
+	 * @param array $a
+	 * @param int $orderID
+	 */
+	public static function set_for_current_order_only_show_regions(Array $a, $orderID = 0, ) {
+		//We MERGE here because several modifiers may limit the countries
+		$previousArray = self::get_for_current_order_only_show_regions($orderID);
+		self::$_for_current_order_only_show_regions[$orderID] = array_intersect($a, $previousArray);
+	}
 
 	/**
 	 *
 	 * @var Array
 	 */
-	private static $for_current_order_do_not_show_regions = array();
-		public static function get_for_current_order_do_not_show_regions(){return self::$for_current_order_do_not_show_regions;}
-		public static function set_for_current_order_do_not_show_regions(Array $a) {
-			//We MERGE here because several modifiers may limit the countries
-			self::$for_current_order_do_not_show_regions = array_merge($a, self::$for_current_order_do_not_show_regions);
-		}
+	private static $_for_current_order_do_not_show_regions = array();
+
+	/**
+	 * @param int $orderID
+	 * @return array
+	 */
+	public static function get_for_current_order_do_not_show_regions($orderID = 0){
+		$orderID = ShoppingCart::current_order_id($orderID);
+		return isset(self::$_for_current_order_do_not_show_regions[$orderID]) ? self::$_for_current_order_do_not_show_regions[$orderID] : array();
+	}
+
+	/**
+	 * merges arrays...
+	 * @param array $a
+	 * @param int $orderID
+	 */
+	public static function set_for_current_order_do_not_show_regions(Array $a, $orderID = 0, ) {
+		//We MERGE here because several modifiers may limit the countries
+		$previousArray = self::get_for_current_order_do_not_show_regions($orderID);
+		self::$_for_current_order_do_not_show_regions[$orderID] = array_merge($a, $previousArray);
+	}
 
 	/**
 	 * This function works out the most likely region for the current order

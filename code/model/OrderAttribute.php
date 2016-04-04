@@ -64,15 +64,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * Standard SS variable
-	 * @var Array
-	 */
-	private static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=InnoDB'
-	);
-
-
-	/**
-	 * Standard SS variable
 	 * @var String
 	 **/
 	private static $default_sort = "\"OrderAttribute\".\"GroupSort\" ASC, \"OrderAttribute\".\"Sort\" ASC, \"OrderAttribute\".\"Created\" ASC";
@@ -399,7 +390,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		//crucial!
-		Order::set_needs_recalculating(true);
+		Order::set_needs_recalculating(true, $this->OrderID);
 	}
 
 	/**

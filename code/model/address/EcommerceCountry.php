@@ -263,21 +263,49 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
-	 * Memory for the customer's country.
-	 * @var Null | String
+	 * Memory for the order's country
+	 * @var array
 	 */
-	private static $get_country_cache = null;
-		public static function reset_get_country_cache() {self::$get_country_cache = null;}
+	private static $_country_cache = array();
+
+	/**
+	 * @param int (optional) $orderID
+	 */
+	public static function reset_get_country_cache($orderID = 0) {
+		$orderID = ShoppingCart::current_order_id($orderID);
+		unset(self::$_country_cache[$orderID]);
+	}
+
+	/**
+	 * @param int (optional) $orderID
+	 * @return null | string
+	 */
+	public static function get_country_cache($orderID = 0) {
+		$orderID = ShoppingCart::current_order_id($orderID);
+		return isset(self::$_country_cache[$orderID]) ? self::$_country_cache[$orderID] : null;
+	}
+
+	/**
+	 * @param string $countryCode
+	 * @param int (optional) $orderID
+	 */
+	public static function set_country_cache($countryCode, $orderID = 0) {
+		$orderID = ShoppingCart::current_order_id($orderID);
+		self::$_country_cache[$orderID] = $countryCode;
+	}
 
 	/**
 	 * This function works out the most likely country for the current order.
 	 *
-	 * @param Boolean $recalculate
+	 * @param boolean (optional) $recalculate
+	 * @param int (optional) $orderID
 	 *
 	 * @return String - Country Code - e.g. NZ
 	 **/
-	public static function get_country($recalculate = false) {
-		if(self::$get_country_cache === null || $recalculate) {
+	public static function get_country($recalculate = false, $orderID = 0) {
+		$orderID = ShoppingCart::current_order_id($orderID);
+		$countryCode = self::get_country_cache($orderID);
+		if($countryCode === null || $recalculate) {
 			$countryCode = '';
 			//1. fixed country is first
 			$countryCode = self::get_fixed_country_code();
@@ -305,9 +333,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 					}
 				}
 			}
-			self::$get_country_cache = $countryCode;
+			self::set_country_cache($countryCode, $orderID);
 		}
-		return self::$get_country_cache;
+		return $countryCode;
 	}
 
 	/**
@@ -349,18 +377,21 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 	 * Memory for allow country to check
 	 * @var Null | Boolean
 	 */
-	private static $allow_sales_cache = null;
-		public static function reset_allow_sales_cache() {self::$allow_sales_cache = null;}
+	private static $_allow_sales_cache = null;
+		
+	public static function reset_allow_sales_cache() {self::$_allow_sales_cache = null;}
 
 
 	/**
 	 * Checks if we are allowed to sell to the current country.
+	 * @param int (optional) $orderID
+	 *
 	 * @return Boolean
 	 */
 	public static function allow_sales() {
-		if(self::$allow_sales_cache === null) {
-			self::$allow_sales_cache = true;
-			$countryCode = EcommerceCountry::get_country();
+		if(self::$_allow_sales_cache === null) {
+			self::$_allow_sales_cache = true;
+			$countryCode = EcommerceCountry::get_country(false, ShoppingCart::current_order_id($orderID));
 			if($countryCode) {
 				$countries = EcommerceCountry::get()
 					->filter(array(
@@ -368,16 +399,17 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject {
 						"Code" => $countryCode
 					));
 				if($countries->count()) {
-					self::$allow_sales_cache = false;
+					self::$_allow_sales_cache = false;
 				}
 			}
 		}
-		return self::$allow_sales_cache;
+		return self::$_allow_sales_cache;
 	}
 
 	/**
 	 * returns an array of Codes => Names of all countries that can be used.
 	 * Use "list_of_allowed_entries_for_dropdown" to get the list.
+	 * @todo add caching
 	 * @return Array
 	 **/
 	protected static function get_default_array() {

@@ -22,9 +22,9 @@ class ExchangeRateProvider extends Object {
 
 	/**
 	 * cache of exchange rates
-	 *
+	 * @var array
 	 */
-	private static $memory_cache = array();
+	private static $_memory_cache = array();
 
 
 	/**
@@ -44,20 +44,20 @@ class ExchangeRateProvider extends Object {
 		$fromCode = strtoupper($fromCode);
 		$toCode = strtoupper($toCode);
 		$cacheCode = $fromCode."_".$toCode;
-		if(isset(self::$memory_cache[$cacheCode])) {
-			return self::$memory_cache[$cacheCode];
+		if(isset(self::$_memory_cache[$cacheCode])) {
+			return self::$_memory_cache[$cacheCode];
 		}
 		else {
 			if($value = Session::get($cacheCode)) {
-				self::$memory_cache[$cacheCode] = $value;
+				self::$_memory_cache[$cacheCode] = $value;
 			}
 			else {
 				$value = $this->getRate($fromCode, $toCode);
-				self::$memory_cache[$cacheCode] = $value;
+				self::$_memory_cache[$cacheCode] = $value;
 				Session::set($cacheCode, $value);
 			}
 		}
-		return self::$memory_cache[$cacheCode];
+		return self::$_memory_cache[$cacheCode];
 	}
 
 	/**

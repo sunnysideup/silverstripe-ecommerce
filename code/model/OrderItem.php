@@ -536,10 +536,17 @@ class OrderItem extends OrderAttribute {
 	/**
 	 * Helps in speeding up code.
 	 * This can be a static variable as it is the same for all OrderItems for an Order.
-	 * @var Boolean
+	 * @var array
 	 */
-	private static $price_has_been_fixed = array();
-		public static function reset_price_has_been_fixed() {self::$price_has_been_fixed = array(); }
+	private static $_price_has_been_fixed = array();
+
+	/**
+	 * @param int $orderID
+	 */
+	public static function reset_price_has_been_fixed($orderID = 0) {
+		$orderID = ShoppingCart::current_order_id($orderID);
+		self::$_price_has_been_fixed[$orderID] = array();
+	}
 
 	/**
 	 * @description - tells you if an order item price has been "fixed"
@@ -552,11 +559,11 @@ class OrderItem extends OrderAttribute {
 	 * @return Boolean
 	 **/
 	protected function priceHasBeenFixed($recalculate = false){
-		if(!isset(self::$price_has_been_fixed[$this->OrderID]) || $recalculate) {
-			self::$price_has_been_fixed[$this->OrderID] = false;
+		if(empty(self::$_price_has_been_fixed[$this->OrderID]) || $recalculate) {
+			self::$_price_has_been_fixed[$this->OrderID] = false;
 			if($order = $this->Order()) {
 				if( $order->IsSubmitted()) {
-					self::$price_has_been_fixed[$this->OrderID] = true;
+					self::$_price_has_been_fixed[$this->OrderID] = true;
 					if($recalculate) {
 						user_error("You are trying to recalculate an order that is already submitted.", E_USER_NOTICE);
 					}

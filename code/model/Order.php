@@ -147,14 +147,6 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * standard SS variable
-	 * @var Array
-	 */
-	private static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=InnoDB'
-	);
-
-	/**
-	 * standard SS variable
 	 * @var String
 	 */
 	private static $singular_name = "Order";
@@ -175,13 +167,28 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * Tells us if an order needs to be recalculated
-	 * @var Boolean
+	 * can save one for each order...
+	 * @var array
 	 */
-	private static $needs_recalculating = false;
-		public static function set_needs_recalculating($b = true){
-			self::$needs_recalculating = $b;
-		}
-		public static function get_needs_recalculating(){ return self::$needs_recalculating;}
+	private static $_needs_recalculating = array();
+
+
+	/**
+	 * @param boolean (optional) $b
+	 * @param int (optional) $orderID
+	 * @return boolean
+	 */
+	public static function set_needs_recalculating($b = true, $orderID = 0){
+		self::$_needs_recalculating[$orderID] = $b;
+	}
+
+	/**
+	 * @param int (optional) $orderID
+	 * @return boolean
+	 */
+	public static function get_needs_recalculating($orderID = 0){
+		return self::$_needs_recalculating[$orderID] ? self::$_needs_recalculating[$orderID] : false;
+	}
 
 
 	/**
@@ -810,9 +817,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 *
-	 * @var boolean
+	 * @var array
 	 */
-	private static $_try_to_finalise_order_is_running = false;
+	private static $_try_to_finalise_order_is_running = array();
 
 	/**
 	 * Goes through the order steps and tries to "apply" the next status to the order.
@@ -820,8 +827,8 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 * @param boolean $runAgain
 	 **/
 	public function tryToFinaliseOrder($runAgain = false) {
-		if(!self::$_try_to_finalise_order_is_running || $runAgain) {
-			self::$_try_to_finalise_order_is_running = true;
+		if(empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
+			self::$_try_to_finalise_order_is_running[$this->ID] = true;
 			if($this->CancelledByID) {
 				$this->Archive(true);
 				return;
@@ -835,7 +842,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 			}
 			while ($nextStatusID);
 			//release ... to run again ...
-			self::$_try_to_finalise_order_is_running = false;
+			self::$_try_to_finalise_order_is_running[$this->ID] = false;
 		}
 	}
 
@@ -1624,15 +1631,14 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 	/**
 	 * Calculates and updates all the order attributes.
-	 * @param Bool $recalculate - run it, even if it has run already
-	 *
+	 * @param boolean $recalculate - run it, even if it has run already
 	 */
 	public function calculateOrderAttributes($recalculate = false) {
 		if($this->IsSubmitted()) {
 			//submitted orders are NEVER recalculated.
 			//they are set in stone.
 		}
-		elseif(Order::get_needs_recalculating() || $recalculate) {
+		elseif(Order::get_needs_recalculating($this->ID) || $recalculate) {
 			if($this->StatusID || $this->TotalItems()) {
 				$this->ensureCorrectExchangeRate();
 				$this->calculateOrderItems($recalculate);
@@ -2423,7 +2429,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	 **/
 	public function ExpectedCountryName() {return $this->getExpectedCountryName();}
 	public function getExpectedCountryName() {
-		return EcommerceCountry::find_title(EcommerceCountry::get_country());
+		return EcommerceCountry::find_title(EcommerceCountry::get_country(false, $this->ID));
 	}
 
 	/**
@@ -2848,7 +2854,7 @@ class Order extends DataObject implements EditableEcommerceObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 		//crucial!
-		Order::set_needs_recalculating(true);
+		Order::set_needs_recalculating(true, $this->ID);
 		if($this->IsSubmitted($recalculate = true)) {
 			//do nothing
 		}

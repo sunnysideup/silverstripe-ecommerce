@@ -284,7 +284,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	protected function getCountryField($name) {
 		$countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
 		$title = _t("OrderAddress.".strtoupper($name), "Country");
-		$countryField = new DropdownField($name, $title, $countriesForDropdown, EcommerceCountry::get_country());
+		$countryField = new DropdownField($name, $title, $countriesForDropdown, EcommerceCountry::get_country(false, $this->OrderID));
 		$countryField->setRightTitle(_t("OrderAddress.".strtoupper($name)."_RIGHT", ""));
 		if(count($countriesForDropdown) < 2) {
 			$countryField = $countryField->performReadonlyTransformation();
@@ -295,7 +295,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 		$prefix = EcommerceConfig::get("OrderAddress", "field_class_and_id_prefix");
 		$countryField->addExtraClass($prefix.'ajaxCountryField');
 		//important, otherwise loadData will override the default value....
-		$this->$name = EcommerceCountry::get_country();
+		$this->$name = EcommerceCountry::get_country(false, $this->OrderID);
 		return $countryField;
 	}
 

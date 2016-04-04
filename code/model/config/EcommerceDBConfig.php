@@ -219,8 +219,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	 * static holder for its own (or other EcommerceDBConfig) class.
 	 * @var String | NULL
 	 */
-	private static $my_current_one = null;
-		public static function reset_my_current_one() {self::$my_current_one = null;}
+	private static $_my_current_one = null;
+		public static function reset_my_current_one() {self::$_my_current_one = null;}
 
 	/**
 	 * implements singleton pattern.
@@ -228,19 +228,19 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject {
 	 * @return EcommerceDBConfig | Object
 	 */
 	public static function current_ecommerce_db_config(){
-		if(!self::$my_current_one) {
+		if(!self::$_my_current_one) {
 			$className =  EcommerceConfig::get("EcommerceDBConfig", "ecommerce_db_config_class_name");
 			if(!class_exists("EcommerceDBConfig")) {
 				$class = "EcommerceDBConfig";
 			}
-			if(self::$my_current_one = $className::get()->filter(array("UseThisOne" => 1))->first()) {
+			if(self::$_my_current_one = $className::get()->filter(array("UseThisOne" => 1))->first()) {
 				 //do nothing
 			}
 			else {
-				self::$my_current_one = new $className();
+				self::$_my_current_one = new $className();
 			}
 		}
-		return self::$my_current_one;
+		return self::$_my_current_one;
 	}
 
 	/**

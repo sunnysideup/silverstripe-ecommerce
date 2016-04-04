@@ -88,6 +88,25 @@ class ShoppingCart extends Object{
 		return self::singleton()->currentOrder();
 	}
 
+	/**
+	 * looks up current order id.
+	 * you may supply an ID here, so that it looks up the current order ID
+	 * only when none is supplied
+	 * @param int (optional) $orderID
+	 *
+	 * @return int;
+	 */
+	private static current_order_id($orderID = 0) {
+		if(!$orderID) {
+			$order = self::current_order();
+			if($order && $order->exists()) {
+				$orderID = $order->ID;
+			}
+		}
+		return $orderID;
+	}
+
+
 
 	/**
 	 * Allows access to the current order from anywhere in the code..
@@ -451,7 +470,7 @@ class ShoppingCart extends Object{
 		$this->currentOrder()->tryToFinaliseOrder();
 		$this->clear();
 		//little hack to clear static memory
-		OrderItem::reset_price_has_been_fixed();
+		OrderItem::reset_price_has_been_fixed($this->currentOrder()->ID);
 		//we cleanup the old orders here so that we immediately know if there is a problem.
 		return true;
 	}
@@ -592,7 +611,7 @@ class ShoppingCart extends Object{
 	/**
 	 * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
 	 * @param Int | Order $order
-	 * 
+	 *
 	 * @return Order | false
 	 **/
 	public function copyOrder($oldOrder) {

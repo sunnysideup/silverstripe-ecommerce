@@ -57,8 +57,6 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface  {
 		return (bool) $order->TotalItems($recalculate = true);
 	}
 
-
-	private static $test = 0;
 	/**
 	 * Add a member to the order - in case he / she is not a shop admin.
 	 *
