@@ -41,6 +41,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject{
 	 * @var Array
 	 */
 	private static $casting = array(
+		"Title" => "Varchar",
 		"OrderStepNice" => "Varchar",
 		"ResultNice" => "Varchar"
 	);
@@ -70,6 +71,10 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject{
 		"From" => "PartialMatchFilter",
 		"To" => "PartialMatchFilter",
 		"Subject" => "PartialMatchFilter",
+		//make sure to keep the item below, otherwise they do not show in form
+		'OrderStepID' => array(
+			'filter' => 'OrderEmailRecordFilters_MultiOptionsetStatusIDFilter'
+		),
 		"Result" => true
 	);
 
@@ -190,9 +195,57 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject{
 	 * @return FieldList
 	 */
 	public function scaffoldSearchFields($_params = null) {
-		$fields = parent::scaffoldSearchFields($_params);
-		$fields->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
-		return $fields;
+		$fieldList = parent::scaffoldSearchFields($_params);
+		$fieldList->replaceField("OrderID", new NumericField("OrderID", "Order Number"));
+		$statusOptions = OrderStep::get();
+		if($statusOptions && $statusOptions->count()) {
+			$createdOrderStatusID = 0;
+			$preSelected = array();
+			$createdOrderStatus = $statusOptions->First();
+			if($createdOrderStatus) {
+				$createdOrderStatusID = $createdOrderStatus->ID;
+			}
+			$arrayOfStatusOptions = clone ($statusOptions->map("ID", "Title"));
+			$arrayOfStatusOptionsFinal = array();
+			if(count($arrayOfStatusOptions)) {
+				foreach($arrayOfStatusOptions as $key => $value) {
+					if(isset($_GET["q"]["OrderStepID"][$key])) {
+						$preSelected[$key] = $key;
+					}
+					$count = OrderEmailRecord::get()
+						->Filter(array("OrderStepID" => intval($key)))
+						->count();
+					if($count < 1) {
+						//do nothing
+					}
+					else {
+						$arrayOfStatusOptionsFinal[$key] = $value . " ($count)";
+					}
+				}
+			}
+			$statusField = new CheckboxSetField(
+				"OrderStepID",
+				Injector::inst()->get("OrderStep")->i18n_singular_name(),
+				$arrayOfStatusOptionsFinal,
+				$preSelected
+			);
+			$fieldList->push($statusField);
+		}
+		return $fieldList;
+	}
+
+	/**
+	 * casted variable
+	 *@ return String
+	 **/
+	function Title() {return $this->getTitle();}
+	function getTitle() {
+		$str = "TO: ".$this->To;
+		if($order = $this->Order()) {
+			$str .= " - ".$this->Order()->getTitle();
+			$str .= " - ".$this->OrderStepNice();
+		}
+		return $str;
 	}
 
 	/**

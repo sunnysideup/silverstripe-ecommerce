@@ -401,7 +401,12 @@ class Order extends DataObject implements EditableEcommerceObject {
 					}
 				}
 			}
-			$statusField = new CheckboxSetField("StatusID", "Status", $arrayOfStatusOptionsFinal, $preSelected);
+			$statusField = new CheckboxSetField(
+				"StatusID",
+				Injector::inst()->get("OrderStep")->i18n_singular_name(),
+				$arrayOfStatusOptionsFinal,
+				$preSelected
+			);
 			$fieldList->push($statusField);
 		}
 		$fieldList->push(new DropdownField("CancelledByID", "Cancelled", array(-1 => "(Any)", 1 => "yes", 0 => "no")));
