@@ -10,7 +10,7 @@
  * CONTENTS:
  * ----------------------------------------------
  * 1. CMS STUFF
- * 2. MAIN TRANSITION FUNCTIONS:
+ * 2. MAIN TRANSITION FUNCTIONS
  * 3. STATUS RELATED FUNCTIONS / SHORTCUTS
  * 4. LINKING ORDER WITH MEMBER AND ADDRESS
  * 5. CUSTOMER COMMUNICATION
@@ -1304,6 +1304,9 @@ class Order extends DataObject implements EditableEcommerceObject {
 
 
 
+
+
+
 /*******************************************************
    * 5. CUSTOMER COMMUNICATION
 *******************************************************/
@@ -1747,6 +1750,11 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 
+
+
+
+
+
 /*******************************************************
    * 7. CRUD METHODS (e.g. canView, canEdit, canDelete, etc...)
 *******************************************************/
@@ -1871,6 +1879,27 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Can the order be submitted?
+	 * this method can be used to stop an order from being submitted
+	 * due to something not being completed or done.
+	 * @see Order::SubmitErrors
+	 * 
+	 * @param Member $member
+	 * @return Boolean
+	 **/
+	function canSubmit(Member $member = null) {
+		$member = $this->getMemberForCanFunctions($member);
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+		if( $this->IsSubmitted()) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -2041,7 +2070,6 @@ class Order extends DataObject implements EditableEcommerceObject {
 			}
 		}
 	}
-
 
 	/**
 	 * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
@@ -2574,6 +2602,22 @@ class Order extends DataObject implements EditableEcommerceObject {
 			->First();
 	}
 
+	/**
+	 * if the order can not be submitted,
+	 * then the reasons why it can not be submitted
+	 * will be returned by this method
+	 * @see Order::canSubmit
+	 * 
+	 * @return array
+	 */ 
+	function SubmitErrors(){
+		$extendedSubmitErrors = $this->extend('updateSubmitErrors');
+		if($extendedSubmitErrors !== null && is_array($extendedSubmitErrors) && count($extendedSubmitErrors)) {
+			return $extendedSubmitErrors;
+		}
+		return array();
+	}
+	
 	/**
 	 * Casted variable - has the order been submitted?
 	 * @param Boolean $withDetail

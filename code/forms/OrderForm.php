@@ -83,8 +83,15 @@ class OrderForm extends Form {
 
 		//  ________________  6) Actions and required fields creation + Final Form construction
 
-
-		$actions = new FieldList(new FormAction('processOrder', _t('OrderForm.PROCESSORDER','Place order and make payment')));
+		$actions = FieldList::create();
+		if(!$order->canSubmit()) {
+			$submitErrors = $order->SubmitErrors();
+			if(count($submitErrors)) {
+				$message = '<div class="submitErrors"><p class="message bad">'._t("OrderForm.KNOWN_ISSUES", "This order can not be completed, because: ").'</p><ul><li>'.implode("</li><li>", $submitErrors).'</li></ul></div>';
+			}
+			$actions->push(LiteralField::create("SubmitErrors", $message));
+		}
+		$actions->push(new FormAction('processOrder', _t('OrderForm.PROCESSORDER','Place order and make payment')));
 		$validator = OrderForm_Validator::create($requiredFields);
 		//we stick with standard validation here, because of the complexity and
 		//hard-coded payment validation that is required
@@ -128,6 +135,12 @@ class OrderForm extends Form {
 		if($order && $order->TotalItems($recalculate = true) < 1) {
 			// WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
 			$form->sessionMessage(_t('Order.NOITEMSINCART','Please add some items to your cart.'), 'bad');
+			$this->controller->redirectBack();
+			return false;
+		}
+		if(!$order->canSubmit()) {
+			$message = _t("OrderForm.ORDER_CAN_NOT_BE_COMPLETED", "Order can not be completed.  For more details see below.");
+			$form->sessionMessage($message, 'bad');
 			$this->controller->redirectBack();
 			return false;
 		}
