@@ -302,10 +302,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject {
 	/**
 	 * makes selected fields into read only using the $this->readOnlyFields array
 	 *
-	 * @param FieldList $fields
+	 * @param FieldList | Composite $fields
+	 *
 	 * @return FieldList
 	 */
-	protected function makeSelectedFieldsReadOnly(FieldList $fields) {
+	protected function makeSelectedFieldsReadOnly($fields) {
 		$this->extend("augmentMakeSelectedFieldsReadOnly", $fields);
 		if(is_array($this->readOnlyFields) && count($this->readOnlyFields) ) {
 			foreach($this->readOnlyFields as $readOnlyField) {

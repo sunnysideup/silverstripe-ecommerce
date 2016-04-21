@@ -30,7 +30,7 @@ class EcomQuantityField extends NumericField {
 	/**
 	 *@var $parameters Array();???
 	 **/
-	protected $parameters = null;
+	protected $parameters = array();
 
 	/**
 	 *@var $classes Array()
@@ -57,12 +57,13 @@ class EcomQuantityField extends NumericField {
 
 
 	/**
-	 *@param $object - the buyable / OrderItem
+	 * @param buyable $object - the buyable / OrderItem
+	 * @param array | null $object - parameters
 	 **/
-	function __construct($object, $parameters = null){
+	function __construct($object, $parameters = array()){
 		Requirements::javascript("ecommerce/javascript/EcomQuantityField.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 		if($object instanceof BuyableModel){
-			$this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object,$parameters);
+			$this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
 			 //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
 			if(!$this->orderItem) {
 				$className = $object->classNameForOrderItem();
@@ -75,7 +76,9 @@ class EcomQuantityField extends NumericField {
 		else{
 			user_error("EcomQuantityField: no/bad order item or buyable passed to constructor.", E_USER_WARNING);
 		}
-		$this->parameters = $parameters;
+		if($parameters) {
+			$this->parameters = $parameters;
+		}
 	}
 
 	/**
