@@ -1882,6 +1882,30 @@ class Order extends DataObject implements EditableEcommerceObject {
 	}
 
 	/**
+	 * is the order ready to go through to the
+	 * checkout process.
+	 *
+	 * This method checks all the order items and order modifiers
+	 * If any of them need immediate attention then this is done
+	 * first after which it will go through to the checkout page.
+	 * 
+	 * @param Member (optional) $member
+	 * @return Boolean
+	 **/
+	function canCheckout(Member $member = null) {
+		$member = $this->getMemberForCanFunctions($member);
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
+		$submitErrors = $this->SubmitErrors();
+		if(count($submitErrors)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Can the order be submitted?
 	 * this method can be used to stop an order from being submitted
 	 * due to something not being completed or done.
@@ -1897,6 +1921,10 @@ class Order extends DataObject implements EditableEcommerceObject {
 			return $extended;
 		}
 		if( $this->IsSubmitted()) {
+			return false;
+		}
+		$submitErrors = $this->SubmitErrors();
+		if(count($submitErrors)) {
 			return false;
 		}
 		return true;
