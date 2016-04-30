@@ -9,195 +9,206 @@
  * @sub-package: forms
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
+class EcomQuantityField extends NumericField
+{
+    /**
+     * the tabindex for the form field
+     * we use this so that you can tab through all the
+     * quantity fields without disruption.
+     * It is saved like this: "FieldName (String)" => tabposition (int).
+     *
+     * @var array
+     **/
+    private static $tabindex = array();
 
-class EcomQuantityField extends NumericField {
+    /**
+     *@var order OrderItem DataObject
+     **/
+    protected $orderItem = null;
 
+    /**
+     *@var Array();???
+     **/
+    protected $parameters = array();
 
-	/**
-	 * the tabindex for the form field
-	 * we use this so that you can tab through all the
-	 * quantity fields without disruption.
-	 * It is saved like this: "FieldName (String)" => tabposition (int)
-	 * @var Array
-	 **/
-	private static $tabindex = array();
+    /**
+     *@var Array()
+     **/
+    protected $classes = array('ajaxQuantityField');
 
-	/**
-	 *@var order OrderItem DataObject
-	 **/
-	protected $orderItem = null;
+    /**
+     * max length in digits.
+     *
+     *@var int
+     **/
+    protected $maxLength = 3;
 
-	/**
-	 *@var $parameters Array();???
-	 **/
-	protected $parameters = array();
+    /**
+     * max length in digits.
+     *
+     *@var int
+     **/
+    protected $fieldSize = 3;
 
-	/**
-	 *@var $classes Array()
-	 **/
-	protected $classes = array('ajaxQuantityField');
+    /**
+     *@var String
+     **/
+    protected $template = 'EcomQuantityField';
 
-	/**
-	 * max length in digits
-	 *@var Integer
-	 **/
-	protected $maxLength = 3;
+    /**
+     * @param buyable      $object - the buyable / OrderItem
+     * @param array | null $object - parameters
+     **/
+    public function __construct($object, $parameters = array())
+    {
+        Requirements::javascript('ecommerce/javascript/EcomQuantityField.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        if ($object instanceof BuyableModel) {
+            $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
+             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
+            if (!$this->orderItem) {
+                $className = $object->classNameForOrderItem();
+                $this->orderItem = new $className($object->dataRecord, 0);
+            }
+        } elseif (is_a($object, Object::getCustomClass('OrderItem')) && $object->BuyableID) {
+            $this->orderItem = $object;
+        } else {
+            user_error('EcomQuantityField: no/bad order item or buyable passed to constructor.', E_USER_WARNING);
+        }
+        if ($parameters) {
+            $this->parameters = $parameters;
+        }
+    }
 
+    /**
+     * set classes for field.  you can add or "overwrite".
+     *
+     * @param array $newClasses
+     * @param bool  $overwrite
+     */
+    public function setClasses(array $newClasses, $overwrite = false)
+    {
+        if ($overwrite) {
+            $this->classes = array_merge($this->classes, $newClasses);
+        } else {
+            $this->classes = $newclasses;
+        }
+    }
 
-	/**
-	 * max length in digits
-	 *@var Integer
-	 **/
-	protected $fieldSize = 3;
+    /**
+     * @param string
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
 
-	/**
-	 *@var $template String
-	 **/
-	protected $template = 'EcomQuantityField';
+    /**
+     * alias of OrderItem.
+     *
+     * @return OrderItem
+     **/
+    public function Item()
+    {
+        return $this->OrderItem();
+    }
 
+    /**
+     * @return OrderItem
+     **/
+    public function OrderItem()
+    {
+        return $this->orderItem;
+    }
 
-	/**
-	 * @param buyable $object - the buyable / OrderItem
-	 * @param array | null $object - parameters
-	 **/
-	function __construct($object, $parameters = array()){
-		Requirements::javascript("ecommerce/javascript/EcomQuantityField.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		if($object instanceof BuyableModel){
-			$this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
-			 //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
-			if(!$this->orderItem) {
-				$className = $object->classNameForOrderItem();
-				$this->orderItem = new $className($object->dataRecord,0);
-			}
-		}
-		elseif(is_a($object, Object::getCustomClass("OrderItem")) && $object->BuyableID){
-			$this->orderItem = $object;
-		}
-		else{
-			user_error("EcomQuantityField: no/bad order item or buyable passed to constructor.", E_USER_WARNING);
-		}
-		if($parameters) {
-			$this->parameters = $parameters;
-		}
-	}
+    /**
+     * @param properties
+     *
+     * @return string (HTML)
+     **/
+    public function Field($properties = array())
+    {
+        $name = $this->orderItem->AJAXDefinitions()->TableID().'_Quantity_SetQuantityLink';
+        if (!isset(self::$tabindex[$name])) {
+            self::$tabindex[$name] = count(self::$tabindex) + 1;
+        }
+        $attributes = array(
+            'type' => 'text',
+            'class' => implode(' ', $this->classes),
+            'name' => $name,
+            'value' => ($this->orderItem->Quantity) ? $this->orderItem->Quantity : 0,
+            'maxlength' => $this->maxLength,
+            'size' => $this->fieldSize,
+            'data-quantity-link' => $this->getQuantityLink(),
+            'tabindex' => self::$tabindex[$name],
+            'disabled' => 'disabled',
+        );
+        $formfield = new FormField($name);
 
-	/**
-	 * set classes for field.  you can add or "overwrite"
-	 * @param Array $newClasses
-	 * @param Boolean $overwrite
-	 */
-	function setClasses(Array $newClasses, $overwrite = false){
-		if($overwrite) {
-			$this->classes = array_merge($this->classes,$newClasses);
-		}
-		else {
-			$this->classes = $newclasses;
-		}
-	}
+        return $formfield->createTag('input', $attributes);
+    }
 
-	/**
-	 *
-	 * @param String
-	 */
-	function setTemplate($template){
-		$this->template = $template;
-	}
+    /**
+     * Used for storing the quantity update link for ajax use.
+     *
+     * @return string (HTML)
+     */
+    public function AJAXLinkHiddenField()
+    {
+        $name = $this->orderItem->AJAXDefinitions()->TableID().'_Quantity_SetQuantityLink';
+        if ($quantitylink = $this->getQuantityLink()) {
+            $attributes = array(
+                'type' => 'hidden',
+                'class' => 'ajaxQuantityField_qtylink',
+                'name' => $name,
+                'value' => $quantitylink,
+            );
+            $formfield = new FormField($name);
 
-	/**
-	 * alias of OrderItem
-	 * @return OrderItem
-	 **/
-	function Item(){
-		return $this->OrderItem();
-	}
+            return $formfield->createTag('input', $attributes);
+        }
+    }
 
-	/**
-	 * @return OrderItem
-	 **/
-	function OrderItem(){
-		return $this->orderItem;
-	}
+    /**
+     * @return string (URLSegment)
+     **/
+    public function IncrementLink()
+    {
+        return ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
+    }
 
-	/**
-	 * @param properties
-	 * @return String (HTML)
-	 **/
-	public function Field($properties = array()) {
-		$name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
-		if(!isset(self::$tabindex[$name])) {
-			self::$tabindex[$name] = count(self::$tabindex) + 1;
-		}
-		$attributes = array(
-			'type' => 'text',
-			'class' => implode(' ',$this->classes),
-			'name' => $name,
-			'value' => ($this->orderItem->Quantity) ? $this->orderItem->Quantity : 0,
-			'maxlength' => $this->maxLength,
-			'size' => $this->fieldSize,
-			'data-quantity-link' => $this->getQuantityLink(),
-			'tabindex' => self::$tabindex[$name],
-			'disabled' => 'disabled'
-		);
-		$formfield = new FormField($name);
-		return $formfield->createTag('input', $attributes);
-	}
+    /**
+     * @return string (URLSegment)
+     **/
+    public function DecrementLink()
+    {
+        return ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
+    }
 
-	/**
-	 * Used for storing the quantity update link for ajax use.
-	 * @return String (HTML)
-	 */
-	function AJAXLinkHiddenField(){
-		$name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
-		if($quantitylink = $this->getQuantityLink()){
-			$attributes = array(
-				'type' => 'hidden',
-				'class' => 'ajaxQuantityField_qtylink',
-				'name' => $name,
-				'value' => $quantitylink
-			);
-			$formfield = new FormField($name);
-			return $formfield->createTag('input', $attributes);
-		}
-	}
+    /**
+     * @return string (HTML)
+     **/
+    public function forTemplate()
+    {
+        return $this->renderWith($this->template);
+    }
 
-	/**
-	 * @return String (URLSegment)
-	 **/
-	function IncrementLink(){
-		return ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
-	}
+    /**
+     * @return string
+     */
+    protected function getQuantityLink()
+    {
+        return ShoppingCart_Controller::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
+    }
 
-	/**
-	 * @return String (URLSegment)
-	 **/
-	function DecrementLink(){
-		return ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
-	}
+    /**
+     * @return float
+     */
+    protected function Quantity()
+    {
+        if ($this->orderItem) {
+            return floatval($this->orderItem->Quantity) - 0;
+        }
 
-	/**
-	 * @return String (HTML)
-	 **/
-	function forTemplate(){
-		return $this->renderWith($this->template);
-	}
-
-	/**
-	 *
-	 * @return String
-	 */
-	protected function getQuantityLink(){
-		return ShoppingCart_Controller::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName,$this->parameters);
-	}
-
-	/**
-	 *
-	 * @return Float
-	 */
-	protected function Quantity() {
-		if($this->orderItem) {
-			return floatval($this->orderItem->Quantity)-0;
-		}
-		return 0;
-	}
-
+        return 0;
+    }
 }

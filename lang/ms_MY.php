@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Malay (Malaysia) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Malay (Malaysia) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('ms_MY', $lang) && is_array($lang['ms_MY'])) {
-	$lang['ms_MY'] = array_merge($lang['en_US'], $lang['ms_MY']);
+if (array_key_exists('ms_MY', $lang) && is_array($lang['ms_MY'])) {
+    $lang['ms_MY'] = array_merge($lang['en_US'], $lang['ms_MY']);
 } else {
-	$lang['ms_MY'] = $lang['en_US'];
+    $lang['ms_MY'] = $lang['en_US'];
 }
 
 $lang['ms_MY']['AccountPage_order.ss']['EMAILDETAILS'] = 'Salinan maklumat ini telah dihantar ke alamat emel anda untuk pengesahan perincian pesanan.';
@@ -132,5 +129,3 @@ $lang['ms_MY']['SSReport']['ALLCLICKHERE'] = 'Klik sini untuk memandang semua pr
 $lang['ms_MY']['SSReport']['INVOICE'] = 'Invois';
 $lang['ms_MY']['SSReport']['PRINT'] = 'Cetak';
 $lang['ms_MY']['SSReport']['VIEW'] = 'Pandang';
-
-?>

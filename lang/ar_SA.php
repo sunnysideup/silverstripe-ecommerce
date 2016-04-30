@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Arabic (Saudi Arabia) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Arabic (Saudi Arabia) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('ar_SA', $lang) && is_array($lang['ar_SA'])) {
-	$lang['ar_SA'] = array_merge($lang['en_US'], $lang['ar_SA']);
+if (array_key_exists('ar_SA', $lang) && is_array($lang['ar_SA'])) {
+    $lang['ar_SA'] = array_merge($lang['en_US'], $lang['ar_SA']);
 } else {
-	$lang['ar_SA'] = $lang['en_US'];
+    $lang['ar_SA'] = $lang['en_US'];
 }
 
 $lang['ar_SA']['AccountPage']['Message'] = 'يجب عليك التسجيل قبل الدخول لصفحة الحساب, وإذا لم تكن مسجلاً من قبل فلا يمكنك الدخولحتى ترسل طلبك الأول ,, إذا كنت تغرب في التسجيل فملأ المطلوب بالأسفل';
@@ -229,5 +226,3 @@ $lang['ar_SA']['ViewAllProducts.ss']['NOSUBJECTS'] = 'لايوجد مجموعة 
 $lang['ar_SA']['ViewAllProducts.ss']['PRICE'] = 'السعر';
 $lang['ar_SA']['ViewAllProducts.ss']['PRODUCTID'] = 'رقم المنتج';
 $lang['ar_SA']['ViewAllProducts.ss']['WEIGHT'] = 'الوزن';
-
-?>

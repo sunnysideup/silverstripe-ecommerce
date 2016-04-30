@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Chinese (Taiwan) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Chinese (Taiwan) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('zh_TW', $lang) && is_array($lang['zh_TW'])) {
-	$lang['zh_TW'] = array_merge($lang['en_US'], $lang['zh_TW']);
+if (array_key_exists('zh_TW', $lang) && is_array($lang['zh_TW'])) {
+    $lang['zh_TW'] = array_merge($lang['en_US'], $lang['zh_TW']);
 } else {
-	$lang['zh_TW'] = $lang['en_US'];
+    $lang['zh_TW'] = $lang['en_US'];
 }
 
 $lang['zh_TW']['AccountPage.ss']['COMPLETED'] = '已完成的訂單';
@@ -178,5 +175,3 @@ $lang['zh_TW']['ViewAllProducts.ss']['NOSUBJECTS'] = '沒有主題';
 $lang['zh_TW']['ViewAllProducts.ss']['PRICE'] = '單價';
 $lang['zh_TW']['ViewAllProducts.ss']['PRODUCTID'] = '產品ID';
 $lang['zh_TW']['ViewAllProducts.ss']['WEIGHT'] = '重量';
-
-?>

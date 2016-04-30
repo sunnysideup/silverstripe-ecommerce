@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Spanish (Spain) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Spanish (Spain) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('es_ES', $lang) && is_array($lang['es_ES'])) {
-	$lang['es_ES'] = array_merge($lang['en_US'], $lang['es_ES']);
+if (array_key_exists('es_ES', $lang) && is_array($lang['es_ES'])) {
+    $lang['es_ES'] = array_merge($lang['en_US'], $lang['es_ES']);
 } else {
-	$lang['es_ES'] = $lang['en_US'];
+    $lang['es_ES'] = $lang['en_US'];
 }
 
 $lang['es_ES']['AccountPage.ss']['COMPLETED'] = 'Ordenes Completadas';
@@ -208,5 +205,3 @@ $lang['es_ES']['ViewAllProducts.ss']['NOSUBJECTS'] = 'No hay asunto';
 $lang['es_ES']['ViewAllProducts.ss']['PRICE'] = 'Precio';
 $lang['es_ES']['ViewAllProducts.ss']['PRODUCTID'] = 'ID del Producto';
 $lang['es_ES']['ViewAllProducts.ss']['WEIGHT'] = 'Peso';
-
-?>
