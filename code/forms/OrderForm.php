@@ -74,8 +74,12 @@ class OrderForm extends Form
         $actions = FieldList::create();
         if (!$order->canSubmit()) {
             $submitErrors = $order->SubmitErrors();
-            if (count($submitErrors)) {
-                $message = '<div class="submitErrors"><p class="message bad">'._t('OrderForm.KNOWN_ISSUES', 'This order can not be completed, because: ').'</p><ul><li>'.implode('</li><li>', $submitErrors).'</li></ul></div>';
+            if ($submitErrors->count()) {
+                $submitErrorsString = "";
+                foreach($submitErrors as $error) {
+                    $submitErrorsString .= "<li>".$error->Title."</li>";
+                }
+                $message = '<div class="submitErrors"><p class="message bad">'._t('OrderForm.KNOWN_ISSUES', 'This order can not be completed, because: ').'</p><ul>'.$submitErrorsString.'</ul></div>';
             }
             $actions->push(LiteralField::create('SubmitErrors', $message));
         }

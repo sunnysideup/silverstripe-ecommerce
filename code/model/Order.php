@@ -2002,7 +2002,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return $extended;
         }
         $submitErrors = $this->SubmitErrors();
-        if (count($submitErrors)) {
+        if ($submitErrors->count()) {
             return false;
         }
 
@@ -2031,7 +2031,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return false;
         }
         $submitErrors = $this->SubmitErrors();
-        if (count($submitErrors)) {
+        if ($submitErrors->count()) {
             return false;
         }
 
@@ -2869,21 +2869,23 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @see Order::canSubmit
      * 
-     * @return array
+     * @return ArrayList
      */
     public function SubmitErrors()
     {
-        $finalArray = array();
+        $al = ArrayList::create();
         $extendedSubmitErrors = $this->extend('updateSubmitErrors');
         if ($extendedSubmitErrors !== null && is_array($extendedSubmitErrors) && count($extendedSubmitErrors)) {
             foreach ($extendedSubmitErrors as $returnResultArray) {
                 foreach ($returnResultArray as $item) {
-                    $finalArray[] = $item;
+                    if($item) {
+                        $al->push(ArrayData::create(array("Title" =>$item)));
+                    }
                 }
             }
         }
 
-        return $finalArray;
+        return $al;
     }
 
     /**
