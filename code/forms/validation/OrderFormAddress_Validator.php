@@ -9,6 +9,36 @@
  **/
 class OrderFormAddress_Validator extends ShopAccountForm_Validator
 {
+
+
+    /**
+     * we remove the shipping fields
+     * if they are not required....
+     * 
+     */
+    public function __construct() {
+        $required = func_get_args();
+        if(isset($required[0]) && is_array($required[0])) {
+            $required = $required[0];
+        }
+        if(!empty($required)) {
+            $required = ArrayLib::valuekey($required);
+            if(!isset($_REQUEST["UseShippingAddress"])) {
+                //die("OK");
+                foreach($required as $key => $value) {
+                    if(substr($key, 0, 7) === "Shipping") {
+                        unset($required[$key]);
+                    }
+                }
+            }
+            $this->required = $required;
+        } else {
+            $this->required = array();
+        }
+
+        parent::__construct($required);
+    }
+
     /**
      * Ensures member unique id stays unique and other basic stuff...
      *
