@@ -232,13 +232,24 @@ class Product extends Page implements BuyableModel
         if ($this->EcomConfig()->ProductsHaveQuantifiers) {
             $fields->addFieldToTab('Root.Details', new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
         }
-        $fields->addFieldToTab(
-            'Root.Main',
-            new LiteralField(
-                'AddToCartLink',
-                '<p class="message good"><a href="'.$this->AddLink().'">'._t('Product.ADD_TO_CART', 'add to cart').'</a></p>'
-            )
-        );
+        if($this->canPurchase()) {
+            $fields->addFieldToTab(
+                'Root.Main',
+                new LiteralField(
+                    'AddToCartLink',
+                    '<p class="message good"><a href="'.$this->AddLink().'">'._t('Product.ADD_TO_CART', 'add to cart').'</a></p>'
+                )
+            );
+        }
+        else {
+            $fields->addFieldToTab(
+                'Root.Main',
+                new LiteralField(
+                    'AddToCartLink',
+                    '<p class="message warning">'._t('Product.CAN_NOT_BE_ADDED_TO_CART', 'this product can not be added to cart').'</p>'
+                )
+            );
+        }
         if ($this->EcomConfig()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.AlsoShowHere',
