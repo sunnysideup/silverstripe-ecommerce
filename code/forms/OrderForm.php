@@ -74,7 +74,7 @@ class OrderForm extends Form
         $actions = FieldList::create();
         if (!$order->canSubmit()) {
             $submitErrors = $order->SubmitErrors();
-            if ($submitErrors->count()) {
+            if ($submitErrors && $submitErrors->count()) {
                 $submitErrorsString = "";
                 foreach($submitErrors as $error) {
                     $submitErrorsString .= "<li>".$error->Title."</li>";

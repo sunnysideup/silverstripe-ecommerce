@@ -100,7 +100,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function canCreate($member = null)
     {
-        return self::get()->filter(array('ClassName' => 'OrderConfirmationPage'))->Count() ? false : $this->canEdit($member);
+        return OrderConfirmationPage::get()->filter(array('ClassName' => 'OrderConfirmationPage'))->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -227,9 +227,9 @@ class OrderConfirmationPage extends CartPage
      */
     public static function find_link()
     {
-        if ($page = self::get()->filter(array('ClassName' => 'OrderConfirmationPage'))->First()) {
+        if ($page = OrderConfirmationPage::get()->filter(array('ClassName' => 'OrderConfirmationPage'))->First()) {
             return $page->Link();
-        } elseif ($page = self::get()->First()) {
+        } elseif ($page = OrderConfirmationPage::get()->First()) {
             return $page->Link();
         }
 
@@ -245,7 +245,7 @@ class OrderConfirmationPage extends CartPage
      */
     public static function get_order_link($orderID)
     {
-        return self::find_link().'showorder/'.$orderID.'/';
+        return OrderConfirmationPage::find_link().'showorder/'.$orderID.'/';
     }
 
     /**
@@ -262,7 +262,7 @@ class OrderConfirmationPage extends CartPage
      */
     public static function get_email_link($orderID, $emailClassName = 'Order_StatusEmail', $actuallySendEmail = false, $alternativeOrderStepID = 0)
     {
-        $link = self::find_link().'sendemail/'.$orderID.'/'.$emailClassName;
+        $link = OrderConfirmationPage::find_link().'sendemail/'.$orderID.'/'.$emailClassName;
         if ($actuallySendEmail) {
             $link .= '?send=1';
         } elseif ($alternativeOrderStepID) {
@@ -281,7 +281,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function getOrderLink($orderID)
     {
-        return self::get_order_link($orderID);
+        return OrderConfirmationPage::get_order_link($orderID);
     }
 
     /**
@@ -345,9 +345,9 @@ class OrderConfirmationPage extends CartPage
         parent::requireDefaultRecords();
         $checkoutPage = CheckoutPage::get()->first();
         if ($checkoutPage) {
-            $orderConfirmationPage = self::get()->first();
+            $orderConfirmationPage = OrderConfirmationPage::get()->first();
             if (!$orderConfirmationPage) {
-                $orderConfirmationPage = self::create();
+                $orderConfirmationPage = OrderConfirmationPage::create();
                 $orderConfirmationPage->Title = 'Order Confirmation';
                 $orderConfirmationPage->MenuTitle = 'Order Confirmation';
                 $orderConfirmationPage->URLSegment = 'order-confirmation';

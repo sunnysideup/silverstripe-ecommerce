@@ -50,7 +50,7 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public function canCreate($member = null)
     {
-        return self::get()->filter(array('ClassName' => 'ProductGroupSearchPage'))->Count() ? false : $this->canEdit($member);
+        return ProductGroupSearchPage::get()->filter(array('ClassName' => 'ProductGroupSearchPage'))->Count() ? false : $this->canEdit($member);
     }
 
     /**

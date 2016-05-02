@@ -519,7 +519,7 @@ class Product extends Page implements BuyableModel
                 $extension = '_Live';
             }
 
-            return self::get()
+            return Product::get()
                 ->filter(array(
                     'ShowInMenus' => 1,
                     'ParentID' => $this->ParentID,
@@ -544,8 +544,8 @@ class Product extends Page implements BuyableModel
      */
     public function BestAvailableImage()
     {
-        $obj = self::get()->byID($this->ID);
-        if ($obj->ImageID) {
+        $product = Product::get()->byID($this->ID);
+        if ($product && $obj->ImageID) {
             $image = Image::get()->byID($obj->ImageID);
             if ($image) {
                 if (file_exists($image->getFullPath())) {

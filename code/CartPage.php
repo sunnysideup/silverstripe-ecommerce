@@ -115,7 +115,7 @@ class CartPage extends Page
      */
     public function canCreate($member = null)
     {
-        return self::get()->Filter(array('ClassName' => 'CartPage'))->Count() ? false : $this->canEdit($member);
+        return CartPage::get()->Filter(array('ClassName' => 'CartPage'))->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -201,7 +201,7 @@ class CartPage extends Page
      */
     public static function find_link()
     {
-        $page = self::get()->Filter(array('ClassName' => 'CartPage'))->First();
+        $page = CartPage::get()->Filter(array('ClassName' => 'CartPage'))->First();
         if ($page) {
             return $page->Link();
         } else {

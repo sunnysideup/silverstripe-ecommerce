@@ -671,7 +671,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function onAfterWrite()
     {
         if ($this->UseThisOne) {
-            $configs = self::get()
+            $configs = EcommerceDBConfig::get()
                 ->Filter(array('UseThisOne' => 1))
                 ->Exclude(array('ID' => $this->ID));
             if ($configs->count()) {
@@ -681,7 +681,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-        $configs = self::get()
+        $configs = EcommerceDBConfig::get()
             ->Filter(array('Title' => $this->Title))
             ->Exclude(array('ID' => $this->ID));
         if ($configs->count()) {

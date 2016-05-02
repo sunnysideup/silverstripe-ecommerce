@@ -276,7 +276,7 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public static function get_by_id_if_can_view($id)
     {
-        $order = self::get()->byID($id);
+        $order = Order::get()->byID($id);
         if ($order && $order->canView()) {
             if ($order->IsSubmitted()) {
                 // LITTLE HACK TO MAKE SURE WE SHOW THE LATEST INFORMATION!
@@ -301,7 +301,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = false)
     {
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
-        $list = self::get()
+        $list = Order::get()
             ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
             ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "'.$submittedOrderStatusLogClassName.'"."ID"')
             ->Sort('OrderStatusLog.Created', 'ASC');
@@ -413,7 +413,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     if (isset($_GET['q']['StatusID'][$key])) {
                         $preSelected[$key] = $key;
                     }
-                    $count = self::get()
+                    $count = Order::get()
                         ->Filter(array('StatusID' => intval($key)))
                         ->count();
                     if ($count < 1) {
@@ -1989,7 +1989,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * This method checks all the order items and order modifiers
      * If any of them need immediate attention then this is done
      * first after which it will go through to the checkout page.
-     * 
+     *
      * @param Member (optional) $member
      *
      * @return bool
@@ -2002,7 +2002,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return $extended;
         }
         $submitErrors = $this->SubmitErrors();
-        if ($submitErrors->count()) {
+        if ($submitErrors && $submitErrors->count()) {
             return false;
         }
 
@@ -2015,7 +2015,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * due to something not being completed or done.
      *
      * @see Order::SubmitErrors
-     * 
+     *
      * @param Member $member
      *
      * @return bool
@@ -2031,7 +2031,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return false;
         }
         $submitErrors = $this->SubmitErrors();
-        if ($submitErrors->count()) {
+        if ($submitErrors && $submitErrors->count()) {
             return false;
         }
 
@@ -2868,14 +2868,15 @@ class Order extends DataObject implements EditableEcommerceObject
      * will be returned by this method.
      *
      * @see Order::canSubmit
-     * 
-     * @return ArrayList
+     *
+     * @return ArrayList | null
      */
     public function SubmitErrors()
     {
-        $al = ArrayList::create();
+        $al = null;
         $extendedSubmitErrors = $this->extend('updateSubmitErrors');
         if ($extendedSubmitErrors !== null && is_array($extendedSubmitErrors) && count($extendedSubmitErrors)) {
+            $al = ArrayList::create();
             foreach ($extendedSubmitErrors as $returnResultArray) {
                 foreach ($returnResultArray as $item) {
                     if($item) {
@@ -2884,7 +2885,6 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-
         return $al;
     }
 

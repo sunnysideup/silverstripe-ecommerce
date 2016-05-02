@@ -254,9 +254,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return Geoip::getCountryDropDown();
         }
         if ($showAllCountries) {
-            $objects = self::get();
+            $objects = EcommerceCountry::get();
         } else {
-            $objects = self::get()->filter(array('DoNotAllowSales' => 0));
+            $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
         }
         if ($objects && $objects->count()) {
             return $objects->map('Code', 'Name')->toArray();
@@ -408,7 +408,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         $code = self::get_country($recalculate);
 
-        return self::get()->filter(array('Code' => $code))->First();
+        return EcommerceCountry::get()->filter(array('Code' => $code))->First();
     }
 
     /**
@@ -424,7 +424,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (!$countryCode) {
             $countryCode = self::get_country($recalculate);
         }
-        $country = self::get()
+        $country = EcommerceCountry::get()
             ->filter(array('Code' => $countryCode))
             ->first();
         if ($country) {
@@ -460,7 +460,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             self::$_allow_sales_cache[$orderID] = true;
             $countryCode = self::get_country(false, $orderID);
             if ($countryCode) {
-                $countries = self::get()
+                $countries = EcommerceCountry::get()
                     ->filter(array(
                         'DoNotAllowSales' => 1,
                         'Code' => $countryCode,
@@ -491,7 +491,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
             return $defaultArray;
         }
-        $countries = self::get()->exclude(array('DoNotAllowSales' => 1));
+        $countries = EcommerceCountry::get()->exclude(array('DoNotAllowSales' => 1));
         if ($countries && $countries->count()) {
             foreach ($countries as $country) {
                 $defaultArray[$country->Code] = $country->Name;
@@ -540,7 +540,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        if ((!self::get()->count()) || isset($_REQUEST['resetecommercecountries'])) {
+        if (( ! EcommerceCountry::get()->count()) || isset($_REQUEST['resetecommercecountries'])) {
             $task = new EcommerceTaskCountryAndRegion();
             $task->run(null);
         }

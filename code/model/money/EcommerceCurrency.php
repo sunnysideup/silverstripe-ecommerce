@@ -215,7 +215,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function ecommerce_currency_list()
     {
-        $dos = self::get()
+        $dos = EcommerceCurrency::get()
             ->Filter(array('InUse' => 1))
             ->Sort(
                 array(
@@ -233,7 +233,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
 
     public static function get_list()
     {
-        return self::get()
+        return EcommerceCurrency::get()
             ->filter(array('InUse' => 1))
             ->sort(
                 array(
@@ -276,7 +276,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function default_currency()
     {
-        return self::get()
+        return EcommerceCurrency::get()
             ->Filter(
                 array(
                     'Code' => trim(strtolower(EcommerceConfig::get('EcommerceCurrency', 'default_currency'))),
@@ -326,7 +326,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function get_one_from_code($currencyCode)
     {
-        return self::get()
+        return EcommerceCurrency::get()
             ->Filter(
                 array(
                     'Code' => trim(strtoupper($currencyCode)),

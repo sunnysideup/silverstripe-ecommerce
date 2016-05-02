@@ -250,7 +250,7 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
             foreach ($steps as $id => $code) {
                 $newID = $id + 1;
                 $idArray[$newID] = $newID;
-                if ($obj = self::get()->byID($newID)) {
+                if ($obj = CheckoutPage_StepDescription::get()->byID($newID)) {
                     //do nothing
                 } else {
                     $obj = self::create();
@@ -260,7 +260,7 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
                     DB::alteration_message("Creating CheckoutPage_StepDescription $code", 'created');
                 }
             }
-            $toDeleteObjects = self::get()->exclude(array('ID' => $idArray));
+            $toDeleteObjects = CheckoutPage_StepDescription::get()->exclude(array('ID' => $idArray));
             if ($toDeleteObjects->count()) {
                 foreach ($toDeleteObjects as $toDeleteObject) {
                     DB::alteration_message('Deleting CheckoutPage_StepDescription '.$toDeleteObject->ID, 'deleted');

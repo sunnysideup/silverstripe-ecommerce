@@ -132,8 +132,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if (Config::inst()->get('EcommerceRegion', 'show_freetext_region_field')) {
             return true;
         }
-
-        return self::get()->First() ? true : false;
+        return EcommerceRegion::get()->First() ? true : false;
     }
 
     /**
@@ -175,7 +174,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      */
     public static function code_allowed($code)
     {
-        $region = self::get()->filter('Code', $code)->First();
+        $region = EcommerceRegion::get()->filter('Code', $code)->First();
         if ($region) {
             return self::regionid_allowed($region->ID);
         }
@@ -221,7 +220,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     protected static function get_default_array()
     {
         $defaultArray = array();
-        $regions = self::get()
+        $regions = EcommerceRegion::get()
             ->Exclude(array('DoNotAllowSales' => 1));
         $defaultRegion = EcommerceCountry::get_country_id();
         if ($defaultRegion) {
@@ -345,7 +344,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         }
         //3. check GEOIP information
         if (!$regionID) {
-            $regions = self::get()->filter(array('IsDefault' => 1));
+            $regions = EcommerceRegion::get()->filter(array('IsDefault' => 1));
             if ($regions) {
                 $regionArray = self::list_of_allowed_entries_for_dropdown();
                 foreach ($regions as $region) {

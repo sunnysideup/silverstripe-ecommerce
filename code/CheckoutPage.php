@@ -110,7 +110,7 @@ class CheckoutPage extends CartPage
      */
     public static function find_terms_and_conditions_page()
     {
-        $checkoutPage = self::get()->First();
+        $checkoutPage = CheckoutPage::get()->First();
         if ($checkoutPage && $checkoutPage->TermsPageID) {
             return Page::get()->byID($checkoutPage->TermsPageID);
         }
@@ -125,7 +125,7 @@ class CheckoutPage extends CartPage
      */
     public static function find_link($action = '')
     {
-        $page = self::get()->First();
+        $page = CheckoutPage::get()->First();
         if ($page) {
             return $page->Link($action);
         }
@@ -227,7 +227,7 @@ class CheckoutPage extends CartPage
      **/
     public function canCreate($member = null)
     {
-        return self::get()->Filter(array('ClassName' => 'CheckoutPage'))->Count() ? false : $this->canEdit($member);
+        return CheckoutPage::get()->Filter(array('ClassName' => 'CheckoutPage'))->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -355,7 +355,7 @@ class CheckoutPage extends CartPage
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $checkoutPage = self::get()->first();
+        $checkoutPage = CheckoutPage::get()->first();
         if (!$checkoutPage) {
             $checkoutPage = self::create();
             $checkoutPage->Title = 'Checkout';
@@ -504,8 +504,8 @@ class CheckoutPage_Controller extends CartPage_Controller
     /**
      * STEP STUFF ---------------------------------------------------------------------------.
      *
-     
-     
+
+
      /**
      *@var String
      **/

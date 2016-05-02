@@ -261,7 +261,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                     if (isset($_GET['q']['OrderStepID'][$key])) {
                         $preSelected[$key] = $key;
                     }
-                    $count = self::get()
+                    $count = OrderEmailRecord::get()
                         ->Filter(array('OrderStepID' => intval($key)))
                         ->count();
                     if ($count < 1) {

@@ -19,44 +19,44 @@ var EcomOrderFormWithShippingAddress = {
     /**
      * array of field names
      * @var array
-     */ 
+     */
     fieldArray: [],
 
     /**
      * array of selectors to select shipping fields
      * @var string
-     */ 
+     */
     shippingFieldSelectors: "",
 
     /**
      * array of selectors to select billing fields
      * @var string
-     */ 
+     */
     billingFieldSelectors: "",
 
     /**
-     * selector for form 
+     * selector for form
      * @var string
-     */ 
+     */
     formSelector: "#OrderFormAddress_OrderFormAddress",
 
     /**
-     * selector for shipping form section 
+     * selector for shipping form section
      * @var string
-     */ 
+     */
     shippingSectionSelector: ".shippingFieldsHeader, .shippingFields",
 
     /**
      * selector for the checkbox that shows wheter or not
      * the shipping address is different
-     * 
+     *
      * @var string
-     */ 
+     */
     useShippingDetailsSelector: "input[name='UseShippingAddress']",
 
     /**
      * Geocoding field ...
-     * 
+     *
      * @var string
      */
     shippingGeoCodingFieldSelector: "input[name='ShippingEcommerceGeocodingField']",
@@ -64,7 +64,7 @@ var EcomOrderFormWithShippingAddress = {
     /**
      * is the shipping field closed...
      *
-     */ 
+     */
     closed: false,
 
     //hides shipping fields
@@ -86,9 +86,10 @@ var EcomOrderFormWithShippingAddress = {
                 EcomOrderFormWithShippingAddress.shippingFieldSelectors += EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
                 EcomOrderFormWithShippingAddress.billingFieldSelectors  += EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
             }
-            //turn on listeners... 
+            //turn on listeners...
             if(i > 0) {
                 EcomOrderFormWithShippingAddress.turnOnListeners();
+                jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change();
             }
         }
         //why this????
@@ -98,7 +99,7 @@ var EcomOrderFormWithShippingAddress = {
     /**
      * copy Billing to Shipping
      *
-     */ 
+     */
     updateFields: function() {
         //copy the billing address details to the shipping address details
         if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
@@ -149,11 +150,11 @@ var EcomOrderFormWithShippingAddress = {
             //do nothing
         }
     },
-    
+
     /**
      *
      * get a list of fields that is potentially shared.
-     */ 
+     */
     getListOfSharedFields: function(){
 
         jQuery(this.formSelector+' input, '+this.formSelector+", select"+this.formSelector+" textarea").each(
@@ -177,23 +178,13 @@ var EcomOrderFormWithShippingAddress = {
             }
         );
 
-        //on focus of the shipping fields, look for update... 
+        //on focus of the shipping fields, look for update...
         jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).focus(
             function() {
                 EcomOrderFormWithShippingAddress.updateFields();
             }
         );
-        
-        //show or hide ... 
-        if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
-            jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).show();
-            EcomOrderFormWithShippingAddress.closed = false;
-        }
-        else {
-            jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).hide();
-            EcomOrderFormWithShippingAddress.closed = true;
-        }
-        
+
         //turn-on shipping details toggle
         jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change(
             function(){
@@ -219,7 +210,7 @@ var EcomOrderFormWithShippingAddress = {
                         }
                     );
 
-                    //copy fields ... 
+                    //copy fields ...
                     EcomOrderFormWithShippingAddress.updateFields();
 
                     //save setting
@@ -230,7 +221,7 @@ var EcomOrderFormWithShippingAddress = {
                     //slide up
                     jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideUp();
 
-                    //make not required 
+                    //make not required
                     jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
                         function(i, el) {
                             if(jQuery(el).hasClass("required")) {
@@ -246,6 +237,7 @@ var EcomOrderFormWithShippingAddress = {
                     //save answer
                     EcomOrderFormWithShippingAddress.closed = true;
                 }
+                EcomOrderFormWithShippingAddress.updateFields();
             }
         );
     }

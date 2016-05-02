@@ -212,7 +212,8 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
         }
         if (count($arrayOfModifiers)) {
             foreach ($arrayOfModifiers as $className) {
-                $orderModifier_Descriptor = self::get()->Filter(array('ModifierClassName' => $className))->First();
+                $orderModifier_Descriptor = OrderModifier_Descriptor::get()
+                    ->Filter(array('ModifierClassName' => $className))->First();
                 if (!$orderModifier_Descriptor) {
                     $modifier = singleton($className);
                     $orderModifier_Descriptor = self::create();
@@ -224,7 +225,7 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
             }
         }
         //delete the ones that are not relevant
-        $orderModifierDescriptors = self::get();
+        $orderModifierDescriptors = OrderModifier_Descriptor::get();
         if ($orderModifierDescriptors && $orderModifierDescriptors->count()) {
             foreach ($orderModifierDescriptors as $orderModifierDescriptor) {
                 if (!in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers)) {

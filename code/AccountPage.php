@@ -60,7 +60,7 @@ class AccountPage extends Page
      **/
     public function canCreate($member = null)
     {
-        return self::get()->filter(array('ClassName' => 'AccountPage'))->Count() ? false : $this->canEdit($member);
+        return AccountPage::get()->filter(array('ClassName' => 'AccountPage'))->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -139,7 +139,7 @@ class AccountPage extends Page
      */
     public static function find_link()
     {
-        $page = self::get()
+        $page = AccountPage::get()
             ->filter(array('ClassName' => 'AccountPage'))
             ->First();
         if ($page) {

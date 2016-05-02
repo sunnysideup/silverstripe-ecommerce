@@ -291,7 +291,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function get_status_id_from_code($code)
     {
-        $otherStatus = self::get()->filter(array('Code' => $code))->First();
+        $otherStatus = OrderStep::get()
+            ->filter(array('Code' => $code))
+            ->First();
         if ($otherStatus) {
             return $otherStatus->ID;
         }
@@ -465,7 +467,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function validate()
     {
         $result = parent::validate();
-        $anotherOrderStepWithSameNameOrCode = self::get()
+        $anotherOrderStepWithSameNameOrCode = OrderStep::get()
             ->filter(
                 array(
                     'Name' => $this->Name,
@@ -533,7 +535,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function nextStep(Order $order)
     {
-        $nextOrderStepObject = self::get()
+        $nextOrderStepObject = OrderStep::get()
             ->filter(array('Sort:GreaterThan' => $this->Sort))
             ->First();
         if ($nextOrderStepObject) {
@@ -557,7 +559,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function hasPassed($code, $orIsEqualTo = false)
     {
-        $otherStatus = self::get()
+        $otherStatus = OrderStep::get()
             ->filter(array('Code' => $code))
             ->First();
         if ($otherStatus) {
@@ -1022,14 +1024,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     protected function NextOrderStep()
     {
-        return self::get()
+        return OrderStep::get()
             ->filter(array('Sort:GreaterThan' => $this->Sort))
             ->First();
     }
 
     protected function PreviousOrderStep()
     {
-        return self::get()
+        return OrderStep::get()
             ->filter(array('Sort:LessThan' => $this->Sort))
             ->First();
     }
@@ -1061,13 +1063,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $obj->write();
                         }
                     } else {
-                        $obj = new $className();
+                        $obj = $className::create();
                         $obj->Code = strtoupper($obj->Code);
                         $obj->Description = $obj->myDescription();
                         $obj->write();
                         DB::alteration_message("Created \"$code\" as $className.", 'created');
                     }
-                    $obj = self::get()
+                    $obj = OrderStep::get()
                         ->filter(array('Code' => strtoupper($code)))
                         ->First();
                     if ($obj) {
@@ -1081,7 +1083,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-        $steps = self::get();
+        $steps = OrderStep::get();
         foreach ($steps as $step) {
             if (!$step->Description) {
                 $step->Description = $step->myDescription();

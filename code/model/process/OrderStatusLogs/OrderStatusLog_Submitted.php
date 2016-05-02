@@ -128,7 +128,7 @@ class OrderStatusLog_Submitted extends OrderStatusLog
             } else {
                 $id = 0;
             }
-            $lastOne = self::get()
+            $lastOne = OrderStatusLog_Submitted::get()
                 ->Exclude(array('ID' => $id))
                 ->Sort('SequentialOrderNumber', 'DESC')
                 ->First();

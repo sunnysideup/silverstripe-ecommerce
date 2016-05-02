@@ -1220,12 +1220,12 @@ class ProductGroup extends Page
             if ($filter && is_string($filter)) {
                 $filterWithAND = " AND $filter";
                 $where = "\"ParentID\" = '$this->ID' $filterWithAND";
-                $children = self::get()->where($where);
+                $children = ProductGroup::get()->where($where);
             } elseif (is_array($filter) && count($filter)) {
                 $filter = $filter + array('ParentID' => $this->ID);
-                $children = self::get()->filter($filter);
+                $children = ProductGroup::get()->filter($filter);
             } else {
-                $children = self::get()->filter(array('ParentID' => $this->ID));
+                $children = ProductGroup::get()->filter(array('ParentID' => $this->ID));
             }
 
             if ($children->count()) {
@@ -1288,7 +1288,7 @@ class ProductGroup extends Page
     public function ParentGroup()
     {
         if ($this->ParentID) {
-            return self::get()->byID($this->ParentID);
+            return ProductGroup::get()->byID($this->ParentID);
         }
     }
 
@@ -1377,7 +1377,7 @@ class ProductGroup extends Page
             $parentIDs += array(0 => 0);
         }
 
-        return self::get()->filter(array('ID' => $parentIDs, 'ShowInSearch' => 1));
+        return ProductGroup::get()->filter(array('ID' => $parentIDs, 'ShowInSearch' => 1));
     }
 
     /**
@@ -1419,7 +1419,7 @@ class ProductGroup extends Page
             $parentIDs += array(0 => 0);
         }
 
-        return self::get()->filter(array('ID' => $parentIDs, 'ShowInSearch' => 1));
+        return ProductGroup::get()->filter(array('ID' => $parentIDs, 'ShowInSearch' => 1));
     }
 
     /**
