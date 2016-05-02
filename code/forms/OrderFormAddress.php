@@ -108,9 +108,7 @@ class OrderFormAddress extends Form
             //now we can add the shipping fields
             $shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress');
             $shippingAddressFields = $shippingAddress->getFields($this->orderMember);
-            //we have left this out for now as it was giving a lot of grief...
-            //$requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
-            //finalise left fields
+            $requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
             $addressFieldsShipping->merge($shippingAddressFields);
         }
         $leftFields = new CompositeField($addressFieldsBilling);
@@ -474,7 +472,7 @@ class OrderFormAddress extends Form
                                 }
                                 $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
                                 $this->orderMember->write($forceCreation = true);
-                                //this is safe because it is memberShouldBeCreated ... 
+                                //this is safe because it is memberShouldBeCreated ...
                                 $this->newlyCreatedMemberID = $this->orderMember->ID;
                             }
                         }

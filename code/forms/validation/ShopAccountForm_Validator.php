@@ -3,6 +3,7 @@
 
 class ShopAccountForm_Validator extends RequiredFields
 {
+
     /**
      * Ensures member unique id stays unique and other basic stuff...
      *
