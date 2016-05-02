@@ -192,7 +192,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function canDelete($member = null)
     {
-        if (!$this->InUse && self::get()->Count() > 1) {
+        if (!$this->InUse && EcommerceCurrency::get()->Count() > 1) {
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if ($extended !== null) {
                 return $extended;
@@ -559,7 +559,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $this->Code = strtoupper($this->Code);
             // Check that there are no 2 same code currencies in use
             if ($this->isChanged('Code')) {
-                if (self::get()->where("UPPER(\"Code\") = '".$this->Code."'")->exclude('ID', intval($this->ID) - 0)->count()) {
+                if (EcommerceCurrency::get()->where("UPPER(\"Code\") = '".$this->Code."'")->exclude('ID', intval($this->ID) - 0)->count()) {
                     $errors[] = "There is alreay another currency in use which code is '$this->Code'.";
                 }
             }
@@ -625,7 +625,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
         $name = ucwords($name);
-        if ($currency = self::get()->filter(array('Code' => $code))->first()) {
+        if ($currency = EcommerceCurrency::get()->filter(array('Code' => $code))->first()) {
             $currency->Name = $name;
             $currency->InUse = true;
         } else {

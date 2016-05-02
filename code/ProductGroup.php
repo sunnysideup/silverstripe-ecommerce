@@ -1277,7 +1277,7 @@ class ProductGroup extends Page
             }
         }
 
-        return self::get()->where("\"ProductGroup$stage\".\"ID\" IN (".implode(',', $ids).')'.$filterWithAND);
+        return ProductGroup::get()->where("\"ProductGroup$stage\".\"ID\" IN (".implode(',', $ids).')'.$filterWithAND);
     }
 
     /**
@@ -1400,7 +1400,7 @@ class ProductGroup extends Page
             $parentIDs += array(0 => 0);
         }
 
-        return self::get()->filter(array('ID' => $parentIDs, 'ShowInMenus' => 1));
+        return ProductGroup::get()->filter(array('ID' => $parentIDs, 'ShowInMenus' => 1));
     }
 
     /**
