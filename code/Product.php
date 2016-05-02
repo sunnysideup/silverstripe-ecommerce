@@ -490,6 +490,16 @@ class Product extends Page implements BuyableModel
     }
 
     /**
+     * @return Product ...
+     * we have this so that Variations can link to products
+     * and products link to themselves...
+     */
+    public function getProduct()
+    {
+        return $this;
+    }
+
+    /**
      * Returns the direct parent group for the product.
      *
      * @return ProductGroup | NULL
@@ -556,7 +566,7 @@ class Product extends Page implements BuyableModel
     public function BestAvailableImage()
     {
         $product = Product::get()->byID($this->ID);
-        if ($product && $obj->ImageID) {
+        if ($product && $product->ImageID) {
             $image = Image::get()->byID($obj->ImageID);
             if ($image) {
                 if (file_exists($image->getFullPath())) {
@@ -1036,7 +1046,6 @@ class Product extends Page implements BuyableModel
         if ($extended !== null) {
             return $extended;
         }
-
         return $allowpurchase;
     }
 
