@@ -2,17 +2,12 @@
 
 
 /**
- * Payment object representing a generic test payment
- *
- * @package ecommerce
- * @subpackage payment
+ * Payment object representing a generic test payment.
  */
-class EcommercePayment_Test extends EcommercePayment {
-
-	function getPaymentFormRequirements() {
-		return null;
-	}
+class EcommercePayment_Test extends EcommercePayment
+{
+    public function getPaymentFormRequirements()
+    {
+        return;
+    }
 }
-
-
-

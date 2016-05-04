@@ -1,12 +1,14 @@
 <?php
 
-class EcommercePayment_Failure extends EcommercePayment_Result {
+class EcommercePayment_Failure extends EcommercePayment_Result
+{
+    public function isSuccess()
+    {
+        return false;
+    }
 
-	function isSuccess() {
-		return false;
-	}
-
-	function isProcessing() {
-		return false;
-	}
+    public function isProcessing()
+    {
+        return false;
+    }
 }

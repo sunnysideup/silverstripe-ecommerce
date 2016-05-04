@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Russian (Russia) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Russian (Russia) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('ru_RU', $lang) && is_array($lang['ru_RU'])) {
-	$lang['ru_RU'] = array_merge($lang['en_US'], $lang['ru_RU']);
+if (array_key_exists('ru_RU', $lang) && is_array($lang['ru_RU'])) {
+    $lang['ru_RU'] = array_merge($lang['en_US'], $lang['ru_RU']);
 } else {
-	$lang['ru_RU'] = $lang['en_US'];
+    $lang['ru_RU'] = $lang['en_US'];
 }
 
 $lang['ru_RU']['AccountPage']['Message'] = 'Вы должны авторизоваться до того, как получите доступ к странице счета. Если вы не зарегистрированы, то сможете зайти на нее только после того, как сделаете ваш первый заказ. Если зарегистрированы, введите ваши данные ниже.';
@@ -229,5 +226,3 @@ $lang['ru_RU']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Объекты не зад
 $lang['ru_RU']['ViewAllProducts.ss']['PRICE'] = 'Стоимость';
 $lang['ru_RU']['ViewAllProducts.ss']['PRODUCTID'] = 'Идентификатор продукта';
 $lang['ru_RU']['ViewAllProducts.ss']['WEIGHT'] = 'Вес';
-
-?>

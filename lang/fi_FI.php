@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Finnish (Finland) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Finnish (Finland) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('fi_FI', $lang) && is_array($lang['fi_FI'])) {
-	$lang['fi_FI'] = array_merge($lang['en_US'], $lang['fi_FI']);
+if (array_key_exists('fi_FI', $lang) && is_array($lang['fi_FI'])) {
+    $lang['fi_FI'] = array_merge($lang['en_US'], $lang['fi_FI']);
 } else {
-	$lang['fi_FI'] = $lang['en_US'];
+    $lang['fi_FI'] = $lang['en_US'];
 }
 
 $lang['fi_FI']['AccountPage.ss']['COMPLETED'] = 'Suoritetut tilaukset';
@@ -165,5 +162,3 @@ $lang['fi_FI']['ViewAllProducts.ss']['NOIMAGE'] = 'Valitettavasti &quot;%s&quot;
 $lang['fi_FI']['ViewAllProducts.ss']['PRICE'] = 'Hinta';
 $lang['fi_FI']['ViewAllProducts.ss']['PRODUCTID'] = 'Tuotetunnus';
 $lang['fi_FI']['ViewAllProducts.ss']['WEIGHT'] = 'Paino';
-
-?>

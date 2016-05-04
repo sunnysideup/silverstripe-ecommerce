@@ -8,17 +8,16 @@
  * @sub-package: widgets
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
+class CartWidget extends Widget
+{
+    private static $title = 'Shopping Cart';
 
-class CartWidget extends Widget{
+    private static $cmsTitle = 'Shopping Cart';
 
-	private static $title = "Shopping Cart";
+    private static $description = "Displays the current contents of the user's cart.";
 
-	private static $cmsTitle = "Shopping Cart";
-
-	private static $description = "Displays the current contents of the user's cart.";
-
-	function Cart(){
-		return ShoppingCart::current_order();
-	}
-
+    public function Cart()
+    {
+        return ShoppingCart::current_order();
+    }
 }

@@ -8,7 +8,7 @@
  * //ORDER ITEM
  * //LINKS
  * //TEMPLATE STUFF
- * //CRUD SETTINGS
+ * //CRUD SETTINGS.
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -16,247 +16,244 @@
  * @sub-package: buyables
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
+interface BuyableModel
+{
+    //GROUPS AND SIBLINGS
 
-interface BuyableModel {
+    /**
+     * Returns the direct parent (group) for the product.
+     **/
+    public function MainParentGroup();
 
+    /**
+     * Returns Buybales in the same group.
+     *
+     * @return DataList (Products)
+     **/
+    public function Siblings();
 
+    //IMAGES
+    /**
+     * returns a "BestAvailable" image if the current one is not available
+     * In some cases this is appropriate and in some cases this is not.
+     * For example, consider the following setup
+     * - product A with three variations
+     * - Product A has an image, but the variations have no images
+     * With this scenario, you want to show ONLY the product image
+     * on the product page, but if one of the variations is added to the
+     * cart, then you want to show the product image.
+     * This can be achieved bu using the BestAvailable image.
+     *
+     * @return Image | Null
+     */
+    public function BestAvailableImage();
 
-	//GROUPS AND SIBLINGS
+    /**
+     * Little hack to show thumbnail in summary fields in modeladmin in CMS.
+     *
+     * @return string (HTML = formatted image)
+     */
+    public function CMSThumbnail();
 
-	/**
-	 * Returns the direct parent (group) for the product.
-	 *
-	 * @return Null | DataObject(ProductGroup)
-	 **/
-	function MainParentGroup();
+    /**
+     * returns a link to the standard image.
+     *
+     * @return string
+     */
+    public function DefaultImageLink();
 
-	/**
-	 * Returns Buybales in the same group
-	 * @return DataList (Products)
-	 **/
-	function Siblings();
+    /**
+     * returns a product image for use in templates
+     * e.g. $DummyImage.Width();.
+     *
+     * @return Product_Image
+     */
+    public function DummyImage();
 
+    // VERSIONING
 
+    /**
+     * Action to return specific version of a product.
+     * This can be any product to enable the retrieval of deleted products.
+     * This is really useful for sold products where you want to retrieve the actual version that you sold.
+     *
+     * @param int $id
+     * @param int $version
+     *
+     * @return DataObject | Null
+     */
+    public function getVersionOfBuyable($id = 0, $version = 0);
 
+    //ORDER ITEM
 
-	//IMAGES
-	/**
-	 * returns a "BestAvailable" image if the current one is not available
-	 * In some cases this is appropriate and in some cases this is not.
-	 * For example, consider the following setup
-	 * - product A with three variations
-	 * - Product A has an image, but the variations have no images
-	 * With this scenario, you want to show ONLY the product image
-	 * on the product page, but if one of the variations is added to the
-	 * cart, then you want to show the product image.
-	 * This can be achieved bu using the BestAvailable image.
-	 * @return Image | Null
-	 */
-	public function BestAvailableImage();
+    /**
+     * returns the order item associated with the buyable.
+     * ALWAYS returns one, even if there is none in the cart.
+     * Does not write to database.
+     *
+     * @return OrderItem (no kidding)
+     **/
+    public function OrderItem();
 
-	/**
-	 * Little hack to show thumbnail in summary fields in modeladmin in CMS.
-	 * @return String (HTML = formatted image)
-	 */
-	function CMSThumbnail();
+    /**
+     * @var string
+     */
+    //protected $defaultClassNameForOrderItem;
 
-	/**
-	 * returns a link to the standard image
-	 * @return String
-	 */
-	public function DefaultImageLink();
+    /**
+     * you can overwrite this function in your buyable items (such as Product).
+     *
+     * @return string
+     **/
+    public function classNameForOrderItem();
 
-	/**
-	 * returns a product image for use in templates
-	 * e.g. $DummyImage.Width();
-	 * @return Product_Image
-	 */
-	public function DummyImage();
+    /**
+     * You can set an alternative class name for order item using this method.
+     *
+     * @param string $ClassName
+     **/
+    public function setAlternativeClassNameForOrderItem($className);
 
+    /**
+     * This is used when you add a product to your cart
+     * if you set it to 1 then you can add 0.1 product to cart.
+     * If you set it to -1 then you can add 10, 20, 30, etc.. products to cart.
+     *
+     * @return int
+     **/
+    public function QuantityDecimals();
 
+    /**
+     * Has it been sold?
+     *
+     * @return bool
+     */
+    public function HasBeenSold();
 
+    //LINKS
 
-	// VERSIONING
+    /**
+     * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
+     *
+     * @return string
+     */
+    public function AddLink();
 
-	/**
-	 * Action to return specific version of a product.
-	 * This can be any product to enable the retrieval of deleted products.
-	 * This is really useful for sold products where you want to retrieve the actual version that you sold.
-	 * @param Int $id
-	 * @param Int $version
-	 * @return DataObject | Null
-	 */
-	function getVersionOfBuyable($id = 0, $version = 0);
+    /**
+     * link use to add (one) to cart.
+     *
+     *@return string
+     */
+    public function IncrementLink();
 
+    /**
+     * Link used to remove one from cart
+     * we can do this, because by default remove link removes one.
+     *
+     * @return string
+     */
+    public function DecrementLink();
 
+    /**
+     * remove one buyable's orderitem from cart.
+     *
+     * @return string (Link)
+     */
+    public function RemoveLink();
 
+    /**
+     * remove all of this buyable's orderitem from cart.
+     *
+     * @return string (Link)
+     */
+    public function RemoveAllLink();
 
-	//ORDER ITEM
+    /**
+     * remove all of this buyable's orderitem from cart and go through to this buyble to add alternative selection.
+     *
+     * @return string (Link)
+     */
+    public function RemoveAllAndEditLink();
 
-	/**
-	 * returns the order item associated with the buyable.
-	 * ALWAYS returns one, even if there is none in the cart.
-	 * Does not write to database.
-	 * @return OrderItem (no kidding)
-	 **/
-	public function OrderItem();
+    /**
+     * set new specific new quantity for buyable's orderitem.
+     *
+     * @param float
+     *
+     * @return string (Link)
+     */
+    public function SetSpecificQuantityItemLink($quantity);
 
-	/**
-	 *
-	 * @var String
-	 */
-	//protected $defaultClassNameForOrderItem;
+    /**
+     * @return string
+     */
+    public function AddToCartAndGoToCheckoutLink();
 
-	/**
-	 * you can overwrite this function in your buyable items (such as Product)
-	 * @return String
-	 **/
-	public function classNameForOrderItem();
+    //TEMPLATE STUFF
 
-	/**
-	 * You can set an alternative class name for order item using this method
-	 * @param String $ClassName
-	 **/
-	public function setAlternativeClassNameForOrderItem($className);
+    /**
+     * @return bool
+     */
+    public function IsInCart();
 
-	/**
-	 * This is used when you add a product to your cart
-	 * if you set it to 1 then you can add 0.1 product to cart.
-	 * If you set it to -1 then you can add 10, 20, 30, etc.. products to cart.
-	 *
-	 * @return Int
-	 **/
-	function QuantityDecimals();
+    /**
+     * @return EcomQuantityField
+     */
+    public function EcomQuantityField();
 
-	/**
-	 * Has it been sold?
-	 * @return Boolean
-	 */
-	function HasBeenSold();
+    /**
+     * returns the instance of EcommerceConfigAjax for use in templates.
+     * In templates, it is used like this:
+     * $EcommerceConfigAjax.TableID.
+     *
+     * @return EcommerceConfigAjax
+     **/
+    public function AJAXDefinitions();
 
+    /**
+     * returns the instance of EcommerceDBConfig.
+     *
+     * @return EcommerceDBConfig
+     **/
+    public function EcomConfig();
 
+    /**
+     * Is it a variation?
+     *
+     * @return bool
+     */
+    public function IsProductVariation();
 
+    /**
+     * Turn AllowPurchase into Yes or no.
+     *
+     * @return string
+     */
+    public function AllowPurchaseNice();
 
-	//LINKS
+    /**
+     * Products have a standard price, but for specific situations they have a calculated price.
+     * The Price can be changed for specific member discounts, a different currency, etc...
+     *
+     * @return float (casted variable)
+     */
+    public function CalculatedPrice();
+    public function getCalculatedPrice();
 
-	/**
-	 * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
-	 * @return String
-	 */
-	function AddLink();
+    /**
+     * How do we display the price?
+     *
+     * @return Money
+     */
+    public function CalculatedPriceAsMoney();
+    public function getCalculatedPriceAsMoney();
 
-	/**
-	 * link use to add (one) to cart
-	 *@return String
-	 */
-	function IncrementLink();
+    //CRUD SETTINGS
 
-	/**
-	 * Link used to remove one from cart
-	 * we can do this, because by default remove link removes one
-	 * @return String
-	 */
-	function DecrementLink();
-
-	/**
-	 * remove one buyable's orderitem from cart
-	 * @return String (Link)
-	 */
-	function RemoveLink();
-
-	/**
-	 * remove all of this buyable's orderitem from cart
-	 * @return String (Link)
-	 */
-	function RemoveAllLink();
-
-	/**
-	 * remove all of this buyable's orderitem from cart and go through to this buyble to add alternative selection.
-	 * @return String (Link)
-	 */
-	function RemoveAllAndEditLink();
-
-	/**
-	 * set new specific new quantity for buyable's orderitem
-	 * @param double
-	 * @return String (Link)
-	 */
-	function SetSpecificQuantityItemLink($quantity);
-
-	/**
-	 *
-	 * @return String
-	 */
-	function AddToCartAndGoToCheckoutLink();
-
-
-
-	//TEMPLATE STUFF
-
-	/**
-	 *
-	 * @return boolean
-	 */
-	function IsInCart();
-
-	/**
-	 *
-	 * @return EcomQuantityField
-	 */
-	function EcomQuantityField();
-
-	/**
-	 * returns the instance of EcommerceConfigAjax for use in templates.
-	 * In templates, it is used like this:
-	 * $EcommerceConfigAjax.TableID
-	 *
-	 * @return EcommerceConfigAjax
-	 **/
-	public function AJAXDefinitions();
-
-	/**
-	 * returns the instance of EcommerceDBConfig
-	 *
-	 * @return EcommerceDBConfig
-	 **/
-	public function EcomConfig();
-
-	/**
-	 * Is it a variation?
-	 * @return Boolean
-	 */
-	function IsProductVariation();
-
-
-	/**
-	 * Turn AllowPurchase into Yes or no
-	 * @return String
-	 */
-	function AllowPurchaseNice();
-
-	/**
-	 * Products have a standard price, but for specific situations they have a calculated price.
-	 * The Price can be changed for specific member discounts, a different currency, etc...
-	 * @return Float (casted variable)
-	 */
-	function CalculatedPrice();
-	function getCalculatedPrice();
-
-	/**
-	 * How do we display the price?
-	 * @return Money
-	 */
-	function CalculatedPriceAsMoney();
-	function getCalculatedPriceAsMoney();
-
-	//CRUD SETTINGS
-
-	/**
-	 * Is the product for sale?
-	 * @return Boolean
-	 */
-	function canPurchase(Member $member = null, $checkPrice = true);
-
-
-
+    /**
+     * Is the product for sale?
+     *
+     * @return bool
+     */
+    public function canPurchase(Member $member = null, $checkPrice = true);
 }

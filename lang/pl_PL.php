@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Polish (Poland) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Polish (Poland) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('pl_PL', $lang) && is_array($lang['pl_PL'])) {
-	$lang['pl_PL'] = array_merge($lang['en_US'], $lang['pl_PL']);
+if (array_key_exists('pl_PL', $lang) && is_array($lang['pl_PL'])) {
+    $lang['pl_PL'] = array_merge($lang['en_US'], $lang['pl_PL']);
 } else {
-	$lang['pl_PL'] = $lang['en_US'];
+    $lang['pl_PL'] = $lang['en_US'];
 }
 
 $lang['pl_PL']['AccountPage']['Message'] = 'Musisz się najpierw zalogować aby uzyskać dostęp do strony profilu. Jeśli nie jesteś zarejestrowany, nie możesz się do niej dostać przed złożeniem pierwszego zamówienia. W przeciwnym przypadku, wpisz poniżej dane potrzebne do logowania.';
@@ -229,5 +226,3 @@ $lang['pl_PL']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Brak tematów.';
 $lang['pl_PL']['ViewAllProducts.ss']['PRICE'] = 'Cena';
 $lang['pl_PL']['ViewAllProducts.ss']['PRODUCTID'] = 'ID Produktu';
 $lang['pl_PL']['ViewAllProducts.ss']['WEIGHT'] = 'Waga';
-
-?>

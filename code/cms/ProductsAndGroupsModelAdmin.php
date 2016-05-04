@@ -9,47 +9,47 @@
  * @package: ecommerce
  * @sub-package: cms
  **/
+class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
+{
+    private static $menu_priority = 3.2;
 
-class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass {
+    private static $url_segment = 'products';
 
-	private static $menu_priority = 3.2;
+    private static $menu_title = 'Products';
 
-	private static $url_segment = 'products';
+    private static $allowed_actions = array(
+        'editinsitetree',
+        'ItemEditForm',
+    );
 
-	private static $menu_title = 'Products';
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $menu_icon = 'ecommerce/images/icons/product-file.gif';
 
-	private static $allowed_actions = array(
-		"editinsitetree",
-		"ItemEditForm"
-	);
+    public function init()
+    {
+        parent::init();
+        //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+    }
 
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	private static $menu_icon = "ecommerce/images/icons/product-file.gif";
+    public function getEditForm($id = null, $fields = null)
+    {
+        $form = parent::getEditForm();
+        if (singleton($this->modelClass) instanceof SiteTree) {
+            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                if ($gridField instanceof GridField) {
+                    $gridField->setConfig(GridFieldEditOriginalPageConfig::create());
+                }
+            }
+        } elseif ($this->modelClass == 'SearchHistory') {
+            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                $form->Fields()->replaceField($gridField->getName(), EcommerceSearchHistoryFormField::create('SearchHistoryTable'));
+            }
+        }
 
-
-	function init() {
-		parent::init();
-		//Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-	}
-
-	function getEditForm($id = null, $fields = null){
-		$form = parent::getEditForm();
-		if(singleton($this->modelClass) instanceof SiteTree) {
-			if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
-				if($gridField instanceof GridField) {
-					$gridField->setConfig(GridFieldEditOriginalPageConfig::create());
-				}
-			}
-		}
-		elseif($this->modelClass == "SearchHistory") {
-			if($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
-				$form->Fields()->replaceField($gridField->getName(), EcommerceSearchHistoryFormField::create("SearchHistoryTable"));
-			}
-		}
-		return $form;
-	}
-
+        return $form;
+    }
 }

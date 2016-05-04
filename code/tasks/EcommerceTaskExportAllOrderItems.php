@@ -8,110 +8,105 @@
  * @sub-package: tasks
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class EcommerceTaskExportAllOrderItems extends BuildTask{
+class EcommerceTaskExportAllOrderItems extends BuildTask
+{
+    protected $title = 'Export all order items to CSV';
 
+    protected $description = 'Allows download of all sales items with all details as CSV. Excludes sales made by Admins';
 
-	protected $title = "Export all order items to CSV";
+    public function run($request)
+    {
+        //reset time limit
+        set_time_limit(1200);
 
-	protected $description = "Allows download of all sales items with all details as CSV. Excludes sales made by Admins";
+        //file data
+        $now = Date('d-m-Y-H-i');
+        $fileName = "export-$now.csv";
 
-	function run($request){
-		//reset time limit
-		set_time_limit(1200);
+        //data object variables
+        $orderStatusSubmissionLog = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        $fileData = '';
+        $offset = 0;
+        $count = 50;
+        while (
+            $orders = Order::get()
+                ->sort('"Order"."ID" ASC')
+                ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->innerJoin($orderStatusSubmissionLog, "\"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+                ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+                ->limit($count, $offset) &&
+            $ordersCount = $orders->count()
 
-		//file data
-		$now = Date("d-m-Y-H-i");
-		$fileName = "export-$now.csv";
+        ) {
+            $offset = $offset + $count;
+            foreach ($orders as $order) {
+                if ($order->IsSubmitted()) {
+                    $memberIsOK = false;
+                    if (!$order->MemberID) {
+                        $memberIsOK = true;
+                    } elseif (!$order->Member()) {
+                        $memberIsOK = true;
+                    } elseif ($member = $order->Member()) {
+                        $memberIsOK = true;
+                        if ($member->IsShopAdmin()) {
+                            $memberIsOK = false;
+                        }
+                    }
+                    if ($memberIsOK) {
+                        $items = OrderItem::get()->filter(array('OrderID' => $order->ID));
+                        if ($items && $items->count()) {
+                            $fileData .= $this->generateExportFileData($order->getOrderEmail(), $order->SubmissionLog()->Created, $items);
+                        }
+                    }
+                }
+            }
+            unset($orders);
+        }
+        if ($fileData) {
+            SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+        } else {
+            user_error('No records found', E_USER_ERROR);
+        }
+    }
 
-		//data object variables
-		$orderStatusSubmissionLog = EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order");
-		$fileData = "";
-		$offset = 0;
-		$count = 50;
-		while(
-			$orders = Order::get()
-				->sort("\"Order\".\"ID\" ASC")
-				->innerJoin("OrderStatusLog", "\"Order\".\"ID\" = \"OrderStatusLog\".\"OrderID\"")
-				->innerJoin($orderStatusSubmissionLog, "\"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-				->leftJoin("Member", "\"Member\".\"ID\" = \"Order\".\"MemberID\"")
-				->limit($count, $offset) &&
-			$ordersCount = $orders->count()
+    public function generateExportFileData($email, $date, $orderItems)
+    {
+        $separator = ',';
+        $fileData = '';
+        $columnData = array();
+        $exportFields = array(
+            'Email',
+            'OrderID',
+            'InternalItemID',
+            'TableTitle',
+            'TableSubTitleNOHTML',
+            'UnitPrice',
+            'Quantity',
+            'CalculatedTotal',
+        );
 
-		) {
-			$offset = $offset + $count;
-			foreach($orders as $order) {
-				if($order->IsSubmitted()) {
-					$memberIsOK = false;
-					if(!$order->MemberID) {
-						$memberIsOK = true;
-					}
-					elseif(!$order->Member()) {
-						$memberIsOK = true;
-					}
-					elseif($member = $order->Member()) {
-						$memberIsOK = true;
-						if($member->IsShopAdmin()) {
-							$memberIsOK = false;
-						}
-					}
-					if($memberIsOK) {
-						$items = OrderItem::get()->filter(array("OrderID" => $order->ID));
-						if($items && $items->count()) {
-							$fileData .= $this->generateExportFileData($order->getOrderEmail(), $order->SubmissionLog()->Created, $items);
-						}
-					}
-				}
-			}
-			unset($orders);
-		}
-		if($fileData){
-			SS_HTTPRequest::send_file($fileData, $fileName, "text/csv");
-		}
-		else{
-			user_error("No records found", E_USER_ERROR);
-		}
-	}
+        if ($orderItems) {
+            foreach ($orderItems as $item) {
+                $columnData = array();
+                $columnData[] = '"'.$email.'"';
+                $columnData[] = '"'.$date.'"';
+                foreach ($exportFields as $field) {
+                    $value = $item->$field;
+                    $value = preg_replace('/\s+/', ' ', $value);
+                    $value = str_replace(array("\r", "\n"), "\n", $value);
+                    $tmpColumnData = '"'.str_replace('"', '\"', $value).'"';
+                    $columnData[] = $tmpColumnData;
+                }
+                $fileData .= implode($separator, $columnData);
+                $fileData .= "\n";
+                $item->destroy();
+                unset($item);
+                unset($columnData);
+            }
 
-
-	function generateExportFileData($email, $date, $orderItems) {
-		$separator = ",";
-		$fileData = '';
-		$columnData = array();
-		$exportFields = array(
-			'Email',
-			'OrderID',
-			'InternalItemID',
-			'TableTitle',
-			'TableSubTitleNOHTML',
-			'UnitPrice',
-			'Quantity',
-			'CalculatedTotal',
-		);
-
-		if($orderItems) {
-			foreach($orderItems as $item) {
-				$columnData = array();
-				$columnData[] = '"'.$email.'"';
-				$columnData[] = '"'.$date.'"';
-				foreach($exportFields as $field) {
-					$value = $item->$field;
-					$value = preg_replace( '/\s+/', ' ', $value );
-					$value = str_replace(array("\r", "\n"), "\n", $value);
-					$tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
-					$columnData[] = $tmpColumnData;
-				}
-				$fileData .= implode($separator, $columnData);
-				$fileData .= "\n";
-				$item->destroy();
-				unset($item);
-				unset($columnData);
-			}
-			return $fileData;
-		}
-		else {
-			return "";
-		}
-	}
-
-
+            return $fileData;
+        } else {
+            return '';
+        }
+    }
 }

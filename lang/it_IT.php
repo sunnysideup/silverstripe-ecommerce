@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Italian (Italy) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Italian (Italy) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('it_IT', $lang) && is_array($lang['it_IT'])) {
-	$lang['it_IT'] = array_merge($lang['en_US'], $lang['it_IT']);
+if (array_key_exists('it_IT', $lang) && is_array($lang['it_IT'])) {
+    $lang['it_IT'] = array_merge($lang['en_US'], $lang['it_IT']);
 } else {
-	$lang['it_IT'] = $lang['en_US'];
+    $lang['it_IT'] = $lang['en_US'];
 }
 
 $lang['it_IT']['AccountPage']['Message'] = 'Avrai bisogno di fare il login prima di poter accedere alla pagina di account. Se non sei ancora registrato, non sarai in grado di accedere fino a quando non avrai fatto il tuo primo ordine, altrimenti inserisci i tuoi dati qui di seguito.';
@@ -229,5 +226,3 @@ $lang['it_IT']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Nessun soggetto impostato'
 $lang['it_IT']['ViewAllProducts.ss']['PRICE'] = 'Prezzo';
 $lang['it_IT']['ViewAllProducts.ss']['PRODUCTID'] = 'ID del Prodotto';
 $lang['it_IT']['ViewAllProducts.ss']['WEIGHT'] = 'Peso';
-
-?>

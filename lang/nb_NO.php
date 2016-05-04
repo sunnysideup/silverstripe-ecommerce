@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Norwegian Bokmal (Norway) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Norwegian Bokmal (Norway) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('nb_NO', $lang) && is_array($lang['nb_NO'])) {
-	$lang['nb_NO'] = array_merge($lang['en_US'], $lang['nb_NO']);
+if (array_key_exists('nb_NO', $lang) && is_array($lang['nb_NO'])) {
+    $lang['nb_NO'] = array_merge($lang['en_US'], $lang['nb_NO']);
 } else {
-	$lang['nb_NO'] = $lang['en_US'];
+    $lang['nb_NO'] = $lang['en_US'];
 }
 
 $lang['nb_NO']['AccountPage']['Message'] = 'Du må logge inn for å få tilgang til denne kontosiden. Hvis du er registrert, vil du ikke kunne få tilgang til denne før du har opprettet din første ordre. Ellers tast inn detaljene nedenunder.';
@@ -230,5 +227,3 @@ $lang['nb_NO']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Ingen emner satt';
 $lang['nb_NO']['ViewAllProducts.ss']['PRICE'] = 'Pris';
 $lang['nb_NO']['ViewAllProducts.ss']['PRODUCTID'] = 'Produkt-ID';
 $lang['nb_NO']['ViewAllProducts.ss']['WEIGHT'] = 'Vekt';
-
-?>

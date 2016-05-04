@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Bulgarian (Bulgaria) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Bulgarian (Bulgaria) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('bg_BG', $lang) && is_array($lang['bg_BG'])) {
-	$lang['bg_BG'] = array_merge($lang['en_US'], $lang['bg_BG']);
+if (array_key_exists('bg_BG', $lang) && is_array($lang['bg_BG'])) {
+    $lang['bg_BG'] = array_merge($lang['en_US'], $lang['bg_BG']);
 } else {
-	$lang['bg_BG'] = $lang['en_US'];
+    $lang['bg_BG'] = $lang['en_US'];
 }
 
 $lang['bg_BG']['AccountPage']['Message'] = 'Ще трябва да влезнете в система преди да влезнете в профила си. Ако не сте регистриран, няма да може да влезните преди да направите първата си покупка, по друг начин можете да въведете данните си по-долу.';
@@ -217,5 +214,3 @@ $lang['bg_BG']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Няма нагласен�
 $lang['bg_BG']['ViewAllProducts.ss']['PRICE'] = 'Цена';
 $lang['bg_BG']['ViewAllProducts.ss']['PRODUCTID'] = 'Продукт ID';
 $lang['bg_BG']['ViewAllProducts.ss']['WEIGHT'] = 'Тежаст';
-
-?>
