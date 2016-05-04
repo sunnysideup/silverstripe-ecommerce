@@ -567,7 +567,7 @@ class Product extends Page implements BuyableModel
     {
         $product = Product::get()->byID($this->ID);
         if ($product && $product->ImageID) {
-            $image = Image::get()->byID($obj->ImageID);
+            $image = Image::get()->byID($product->ImageID);
             if ($image) {
                 if (file_exists($image->getFullPath())) {
                     return $image;
