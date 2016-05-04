@@ -19,9 +19,9 @@ var EcomPasswordField = {
 
 	chars : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
 
-	passwordFieldInputSelectors: "#PasswordCheck1, #PasswordCheck2",
+	passwordFieldInputSelectors: "#OrderFormAddress_OrderFormAddress_PasswordCheck1_Holder, #OrderFormAddress_OrderFormAddress_PasswordCheck2_Holder",
 
-	errorMessageSelector: "#PasswordCheck1 span.message, #PasswordCheck2 span.message",
+	errorMessageSelector: "#OrderFormAddress_OrderFormAddress_PasswordCheck1_Holder span.message, #OrderFormAddress_OrderFormAddress_PasswordCheck2_Holder span.message",
 
 	choosePasswordLinkSelector: ".choosePassword, .updatePasswordLink",
 
