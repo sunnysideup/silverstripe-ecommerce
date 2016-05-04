@@ -1262,9 +1262,9 @@ class ProductGroup extends Page
             $j = $i + 1;
             $select .= ", P$j.ID AS ID$j, S$j.ParentID";
             $join .= "
-				LEFT JOIN ProductGroup$stage AS P$j ON P$j.ID = S$i.ParentID
-				LEFT JOIN SiteTree$stage AS S$j ON P$j.ID = S$j.ID
-			";
+                LEFT JOIN ProductGroup$stage AS P$j ON P$j.ID = S$i.ParentID
+                LEFT JOIN SiteTree$stage AS S$j ON P$j.ID = S$j.ID
+            ";
         }
         $rows = DB::Query(' SELECT '.$select.' FROM '.$from.$join.' WHERE '.$where);
         if ($rows) {
@@ -1362,11 +1362,11 @@ class ProductGroup extends Page
         $rows = array();
         if (count($myProductsArray)) {
             $rows = DB::query('
-				SELECT "ProductGroupID"
-				FROM "Product_ProductGroups"
-				WHERE "ProductID" IN ('.implode(',', $myProductsArray).')
-				GROUP BY "ProductGroupID";
-			');
+                SELECT "ProductGroupID"
+                FROM "Product_ProductGroups"
+                WHERE "ProductID" IN ('.implode(',', $myProductsArray).')
+                GROUP BY "ProductGroupID";
+            ');
         }
         foreach ($rows as $row) {
             $parentIDs[$row['ProductGroupID']] = $row['ProductGroupID'];
@@ -1815,11 +1815,11 @@ class ProductGroup_Controller extends Page_Controller
     {
         if ($this->ProductGroupListAreAjaxified()) {
             Requirements::customScript("
-					EcomCart.set_ajaxifyProductList(true);
-					EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
-					EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
-					EcomCart.set_hiddenPageTitleID('#".$this->AjaxDefinitions()->HiddenPageTitleID()."');
-				",
+                    EcomCart.set_ajaxifyProductList(true);
+                    EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
+                    EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
+                    EcomCart.set_hiddenPageTitleID('#".$this->AjaxDefinitions()->HiddenPageTitleID()."');
+                ",
                 'cachingRelatedJavascript_AJAXlist'
             );
         } else {
@@ -1832,8 +1832,8 @@ class ProductGroup_Controller extends Page_Controller
             $obj->setIncludeHeaders(false);
             $json = $obj->ReturnCartData();
             Requirements::customScript('
-					EcomCart.set_initialData('.$json.');
-				',
+                    EcomCart.set_initialData('.$json.');
+                ',
                 'cachingRelatedJavascript_JSON'
             );
         }

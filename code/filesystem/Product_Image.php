@@ -75,11 +75,11 @@ class Product_Image extends Image
      *
      * @return GD
      **/
-    public function generateThumbnail(GD $gd)
+    public function generateThumbnail($gd)
     {
-        $gd->setQuality(90);
+        $gd->setQuality(65);
 
-        return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
+        return $gd->paddedResize($this->ThumbWidth() * 2, $this->ThumbHeight() * 2);
     }
 
     public function Thumbnail()
@@ -92,11 +92,11 @@ class Product_Image extends Image
      *
      * @return GD
      **/
-    public function generateSmallImage(GD $gd)
+    public function generateSmallImage($gd)
     {
-        $gd->setQuality(90);
+        $gd->setQuality(65);
 
-        return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
+        return $gd->paddedResize($this->SmallWidth() * 2, $this->SmallHeight() * 2);
     }
 
     public function SmallImage()
@@ -109,11 +109,11 @@ class Product_Image extends Image
      *
      * @return GD
      **/
-    public function generateContentImage(GD $gd)
+    public function generateContentImage($gd)
     {
-        $gd->setQuality(90);
+        $gd->setQuality(65);
 
-        return $gd->resizeByWidth($this->ContentWidth());
+        return $gd->resizeByWidth($this->ContentWidth() * 2);
     }
 
     public function LargeImage()
@@ -125,11 +125,11 @@ class Product_Image extends Image
      *
      * @return GD
      **/
-    public function generateLargeImage(GD $gd)
+    public function generateLargeImage($gd)
     {
-        $gd->setQuality(90);
+        $gd->setQuality(65);
 
-        return $gd->resizeByWidth($this->LargeWidth());
+        return $gd->resizeByWidth($this->LargeWidth() * 2);
     }
 
     public function exists()
