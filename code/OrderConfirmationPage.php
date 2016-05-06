@@ -199,22 +199,19 @@ class OrderConfirmationPage extends CartPage
         $fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
         $fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
         $fields->addFieldsToTab('Root.Messages.Messages.Payment', array(
-            new HeaderField('Successful'),
-            new TextField('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
-            $htmlEditorField1 = new HTMLEditorField('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage']),
-            new HeaderField('Unsuccessful'),
-            new TextField('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
-            $htmlEditorField2 = new HTMLEditorField('PaymentNotSuccessfulMessage', $fieldLabels['PaymentNotSuccessfulMessage']),
-            new HeaderField('Pending'),
-            new TextField('PaymentPendingHeader', $fieldLabels['PaymentPendingHeader']),
-            $htmlEditorField3 = new HTMLEditorField('PaymentPendingMessage', $fieldLabels['PaymentPendingMessage']),
-            new HeaderField('Cancelled'),
-            new TextField('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
-            $htmlEditorField3 = new HTMLEditorField('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage']),
+            HeaderField::create('Successful'),
+            TextField::create('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
+            HTMLEditorField::create('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage'])->setRows(3),
+            HeaderField::create('Unsuccessful'),
+            TextField::create('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
+            HTMLEditorField::create('PaymentNotSuccessfulMessage', $fieldLabels['PaymentNotSuccessfulMessage'])->setRows(3),
+            HeaderField::create('Pending'),
+            TextField::create('PaymentPendingHeader', $fieldLabels['PaymentPendingHeader']),
+            HTMLEditorField::create('PaymentPendingMessage', $fieldLabels['PaymentPendingMessage'])->setRows(3),
+            HeaderField::create('Cancelled'),
+            TextField::create('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
+            HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
         ));
-        $htmlEditorField1->setRows(3);
-        $htmlEditorField2->setRows(3);
-        $htmlEditorField3->setRows(3);
         $fields->addFieldToTab('Root.Analytics', new CheckboxField('EnableGoogleAnalytics', $fieldLabels['EnableGoogleAnalytics']));
 
         return $fields;
