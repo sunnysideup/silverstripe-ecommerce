@@ -78,13 +78,9 @@ abstract class OrderStepController extends Controller
      *
      * @return string
      */
-    protected function Content()
+    public function Content()
     {
-        if ($this->AlternativeContent) {
-            return $this->AlternativeContent;
-        }
-
-        return $this->Content;
+        return $this->AlternativeContent;
     }
 
     /**

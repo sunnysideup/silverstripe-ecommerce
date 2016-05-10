@@ -763,16 +763,16 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 $currencyUsedString = EcommerceCurrency::default_currency_code();
             }
             $js = '
-				ga(\'require\', \'ecommerce\');
-				ga(
-					\'ecommerce:addTransaction\',
-					{
-						\'id\': \''.$this->currentOrder->ID.'\',
-						\'revenue\': \''.$this->currentOrder->getSubTotal().'\',
-						\'currency\': \''.$currencyUsedString.'\'
-					}
-				);
-				ga(\'ecommerce:send\');';
+                ga(\'require\', \'ecommerce\');
+                ga(
+                    \'ecommerce:addTransaction\',
+                    {
+                        \'id\': \''.$this->currentOrder->ID.'\',
+                        \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
+                        \'currency\': \''.$currencyUsedString.'\'
+                    }
+                );
+                ga(\'ecommerce:send\');';
             Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
         }
     }
