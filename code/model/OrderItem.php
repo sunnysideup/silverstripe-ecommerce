@@ -69,6 +69,7 @@ class OrderItem extends OrderAttribute
         'InternalItemID' => 'Varchar',
         'Link' => 'Varchar',
         'AbsoluteLink' => 'Varchar',
+        'BuyableLink' => 'Varchar'
     );
 
     ######################
@@ -186,13 +187,15 @@ class OrderItem extends OrderAttribute
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('VersionCheck', 'Version', $this->Version));
 
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('Link', 'Link', $this->Link()));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('AbsoluteLink', 'AbsoluteLink', $this->AbsoluteLink()));
+            $fields->addFieldToTab('Root.Debug', new ReadonlyField('BuyableLink', 'Buyable Link', $this->BuyableLink()));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('TableTitle', 'TableTitle', $this->TableTitle));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('InternalItemID', 'InternalItemID', $this->InternalItemID()));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('Name', 'Name', $this->Name));
 
             $fields->addFieldToTab('Root.Debug', new HeaderField('OrderItemHeading', 'Order Item'));
+            $fields->addFieldToTab('Root.Debug', new ReadonlyField('Link', 'Link', $this->Link()));
+            $fields->addFieldToTab('Root.Debug', new ReadonlyField('AbsoluteLink', 'Absolute Link', $this->AbsoluteLink()));
+
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('ClassName'));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('Created'));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('LastEdited'));
@@ -201,9 +204,9 @@ class OrderItem extends OrderAttribute
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('QuantityCheck', 'Quantity', $this->Quantity));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('UnitPrice', 'UnitPrice', $this->UnitPrice));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('CalculatedTotal', 'Total', $this->CalculatedTotal));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('TableValue', 'TableValue', $this->TableValue));
+            $fields->addFieldToTab('Root.Debug', new ReadonlyField('TableValue', 'Table Value', $this->TableValue));
             $fields->addFieldToTab('Root.Debug', new ReadonlyField('Total', 'Total', $this->Total));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('TotalAsMoney', 'TotalAsMoney', $this->TotalAsMoney()->Nice()));
+            $fields->addFieldToTab('Root.Debug', new ReadonlyField('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice()));
         } else {
             $fields->replaceField('OrderID', new NumericField('OrderID', _t('Order.SINGULARNAME', 'Order')));
         }
@@ -637,6 +640,16 @@ class OrderItem extends OrderAttribute
      **/
     public function Buyable($current = false)
     {
+        return $this->getBuyable($current);
+    }
+
+    /**
+     * @param bool $current - is this a current one, or an older VERSION ?
+     *
+     * @return DataObject (Any type of Data Object that is buyable)
+     **/
+    public function getBuyable($current = false)
+    {
         $tempBuyableStoreType = $current ? 'current' : 'version';
         if (!isset($this->tempBuyableStore[$tempBuyableStoreType])) {
             if (!$this->BuyableID) {
@@ -691,7 +704,7 @@ class OrderItem extends OrderAttribute
             }
             $this->tempBuyableStore[$tempBuyableStoreType] = $obj;
         }
-
+        //check for data integrity
         return $this->tempBuyableStore[$tempBuyableStoreType];
     }
 
@@ -711,15 +724,29 @@ class OrderItem extends OrderAttribute
     }
 
     /**
+     *
      * @return string
-     **/
-    public function ProductTitle()
+     */
+    function BuyableLink()
     {
-        user_error('This function has been replaced by BuyableTitle', E_USER_NOTICE);
-
-        return $this->BuyableTitle();
+        return $this->getBuyableLink();
     }
 
+    /**
+     *
+     * @return string
+     */
+    function getBuyableLink(){
+        $buyable = $this->Buyable();
+        $order = $this->Order();
+        if ($buyable && $buyable->exists()) {
+            if ($order && $order->IsSubmitted()) {
+                return  Director::absoluteURL($buyable->VersionedLink());
+            }
+            return  Director::absoluteURL($buyable->Link());
+        }
+        return  Director::absoluteURL("buyable-could-not-be-found");
+    }
     ##########################
     ## LINKS                ##
     ##########################
@@ -731,31 +758,34 @@ class OrderItem extends OrderAttribute
     {
         return $this->getLink();
     }
+
+    /**
+     * @return string (URLSegment)
+     **/
     public function getLink()
     {
-        $item = $this->Buyable();
-        if ($item) {
+        $buyable = $this->Buyable();
+        if ($buyable && $buyable->exists()) {
             $order = $this->Order();
-            if ($order && $order->IsSubmitted()) {
-                return
-                    Controller::join_links(Director::baseURL(), EcommerceConfig::get('ShoppingCart_Controller', 'url_segment')).
-                    '/submittedbuyable'.
-                    '/'.$item->ClassName.
-                    '/'.$item->ID.
-                    '/'.$item->Version.'/';
-            } else {
-                return $item->Link();
+            if ($order) {
+                return $order->Link();
             }
         }
+        return "error-in-finding-order";
     }
 
     /**
+     * alias
      * @return string
      */
     public function AbsoluteLink()
     {
         return $this->getAbsoluteLink();
     }
+
+    /**
+     * @return string
+     */
     public function getAbsoluteLink()
     {
         return Director::absoluteURL($this->getLink());

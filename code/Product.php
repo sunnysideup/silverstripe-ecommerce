@@ -295,13 +295,13 @@ class Product extends Page implements BuyableModel
             $findImagesLink = $findImagesTask->Link();
             $findImagesLinkOne = $findImagesLink.'?productid='.$this->ID;
             $msg .= '<p>
-				To upload additional images and files, please go to the <a href="/admin/assets">Files section</a>, and upload them there.
-				Files need to be named in the following way:
-				An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image:
-				<strong>'.$this->InternalItemID."_08.jpg</strong>.
-				<br /><br />You can <a href=\"$findImagesLinkOne\" target='_blank'>find images for <i>".$this->Title."</i></a> or
-				<a href=\"$findImagesLink\" target='_blank'>images for all products</a> ...
-			</p>";
+                To upload additional images and files, please go to the <a href="/admin/assets">Files section</a>, and upload them there.
+                Files need to be named in the following way:
+                An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image:
+                <strong>'.$this->InternalItemID."_08.jpg</strong>.
+                <br /><br />You can <a href=\"$findImagesLinkOne\" target='_blank'>find images for <i>".$this->Title."</i></a> or
+                <a href=\"$findImagesLink\" target='_blank'>images for all products</a> ...
+            </p>";
         } else {
             $msg .= '<p>For additional images and files, you must first specify a product code.</p>';
         }
@@ -767,14 +767,14 @@ class Product extends Page implements BuyableModel
     public function getHasBeenSold()
     {
         return DB::query("
-			SELECT COUNT(*)
-			FROM \"OrderItem\"
-				INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"ID\" = \"OrderItem\".\"ID\"
-			WHERE
-				\"BuyableID\" = '".$this->ID."' AND
-				\"buyableClassName\" = '".$this->ClassName."'
-			LIMIT 1
-			"
+            SELECT COUNT(*)
+            FROM \"OrderItem\"
+                INNER JOIN \"OrderAttribute\" ON \"OrderAttribute\".\"ID\" = \"OrderItem\".\"ID\"
+            WHERE
+                \"BuyableID\" = '".$this->ID."' AND
+                \"buyableClassName\" = '".$this->ClassName."'
+            LIMIT 1
+            "
         )->value();
     }
 
@@ -879,6 +879,22 @@ class Product extends Page implements BuyableModel
         $array['BackURL'] = urlencode(CheckoutPage::find_link());
 
         return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $array);
+    }
+
+    /**
+     *
+     *
+     * @return string
+     */
+     function VersionedLink(){
+         return Controller::join_links(
+             Director::baseURL(),
+             EcommerceConfig::get('ShoppingCart_Controller', 'url_segment'),
+             'submittedbuyable',
+             $this->ClassName,
+             $this->ID,
+             $this->Version
+         );
     }
 
     /**

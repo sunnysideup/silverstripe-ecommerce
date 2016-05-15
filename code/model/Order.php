@@ -522,6 +522,25 @@ class Order extends DataObject implements EditableEcommerceObject
                 ),
                 'Next'
             );
+            $fields->addFieldToTab(
+                "Root.Items",
+                GridField::create(
+                    'Items_Sold',
+                    'Items Sold',
+                    $this->Items(),
+                    new GridFieldConfig_RecordViewer
+                )
+            );
+            $fields->addFieldToTab(
+                "Root.Modifiers",
+                GridField::create(
+                    'Modifications',
+                    'Price (and other) adjustments',
+                    $this->Modifiers(),
+                    new GridFieldConfig_RecordViewer
+                )
+            );
+
             $fields->addFieldToTab('Root.Payments', $this->getPaymentsField());
             $fields->addFieldToTab('Root.Payments', new ReadOnlyField('TotalPaid', _t('Order.TOTALPAID', 'Total Paid'), $this->getTotalPaid()));
             $fields->addFieldToTab('Root.Payments', new ReadOnlyField('TotalOutstanding', _t('Order.TOTALOUTSTANDING', 'Total Outstanding'), $this->getTotalOutstanding()));
@@ -939,11 +958,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($lastOrderStep) {
             if ($avoidWrites) {
                 DB::query('
-					UPDATE "Order"
-					SET "Order"."StatusID" = '.$lastOrderStep->ID.'
-					WHERE "Order"."ID" = '.$this->ID.'
-					LIMIT 1
-				');
+                    UPDATE "Order"
+                    SET "Order"."StatusID" = '.$lastOrderStep->ID.'
+                    WHERE "Order"."ID" = '.$this->ID.'
+                    LIMIT 1
+                ');
 
                 return true;
             } else {
@@ -2618,12 +2637,12 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->totalItemsTimesQuantity === null || $recalculate) {
             //to do, why do we check if you can edit ????
             $this->totalItemsTimesQuantity = DB::query('
-				SELECT SUM("OrderItem"."Quantity")
-				FROM "OrderItem"
-					INNER JOIN "OrderAttribute" ON "OrderAttribute"."ID" = "OrderItem"."ID"
-				WHERE
-					"OrderAttribute"."OrderID" = '.$this->ID.'
-					AND "OrderItem"."Quantity" > 0'
+                SELECT SUM("OrderItem"."Quantity")
+                FROM "OrderItem"
+                    INNER JOIN "OrderAttribute" ON "OrderAttribute"."ID" = "OrderItem"."ID"
+                WHERE
+                    "OrderAttribute"."OrderID" = '.$this->ID.'
+                    AND "OrderItem"."Quantity" > 0'
             )->value();
         }
 
@@ -2878,9 +2897,9 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($extendedSubmitErrors !== null && is_array($extendedSubmitErrors) && count($extendedSubmitErrors)) {
             $al = ArrayList::create();
             foreach ($extendedSubmitErrors as $returnResultArray) {
-                foreach ($returnResultArray as $item) {
-                    if($item) {
-                        $al->push(ArrayData::create(array("Title" =>$item)));
+                foreach ($returnResultArray as $issue) {
+                    if($issue) {
+                        $al->push( ArrayData::create( array("Title" => $issue)));
                     }
                 }
             }
