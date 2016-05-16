@@ -522,6 +522,25 @@ class Order extends DataObject implements EditableEcommerceObject
                 ),
                 'Next'
             );
+            $fields->addFieldToTab(
+                "Root.Items",
+                GridField::create(
+                    'Items_Sold',
+                    'Items Sold',
+                    $this->Items(),
+                    new GridFieldConfig_RecordViewer
+                )
+            );
+            $fields->addFieldToTab(
+                "Root.Modifiers",
+                GridField::create(
+                    'Modifications',
+                    'Price (and other) adjustments',
+                    $this->Modifiers(),
+                    new GridFieldConfig_RecordViewer
+                )
+            );
+
             $fields->addFieldToTab('Root.Payments', $this->getPaymentsField());
             $fields->addFieldToTab('Root.Payments', new ReadOnlyField('TotalPaid', _t('Order.TOTALPAID', 'Total Paid'), $this->getTotalPaid()));
             $fields->addFieldToTab('Root.Payments', new ReadOnlyField('TotalOutstanding', _t('Order.TOTALOUTSTANDING', 'Total Outstanding'), $this->getTotalOutstanding()));

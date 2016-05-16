@@ -18,12 +18,17 @@ abstract class OrderStepController extends Controller
     );
 
     /**
+     * @var string
+     */
+    protected $alternativeContent = "";
+
+    /**
      * when no action is selected
      * this action runs...
      */
     public function index($request)
     {
-        $this->AlternativeContent = '<p class="message bad">Sorry, we can not find the page you are looking for.</p>';
+        $this->alternativeContent = '<p class="message bad">Sorry, we can not find the page you are looking for.</p>';
 
         return $this->renderWith('Page');
     }
@@ -33,7 +38,7 @@ abstract class OrderStepController extends Controller
      */
     public function error($request)
     {
-        $this->AlternativeContent = '<p class="message bad">Sorry, an error occurred, please contact us for more information....</p>';
+        $this->alternativeContent = '<p class="message bad">Sorry, an error occurred, please contact us for more information....</p>';
 
         return $this->renderWith('Page');
     }
@@ -78,9 +83,19 @@ abstract class OrderStepController extends Controller
      *
      * @return string
      */
-    public function Content()
+    public function Content($order = null)
     {
-        return $this->AlternativeContent;
+        if($this->alternativeContent) {
+            return $this->alternativeContent;
+        }
+        return $this->standardContent($order);
+    }
+
+    /**
+     * @return string ($html)
+     */
+    protected function standardContent($order = null){
+        user_error("Make sure to put some content here in classes that extend ".$this->class);
     }
 
     /**
