@@ -30,7 +30,7 @@ class EcommercePaymentSupportedMethodsProvider extends Object
     {
         $hideTestPaymentMethods = false;
         if (Director::isLive()) {
-            $hideTestPaymentMethods = false;
+            $hideTestPaymentMethods = true;
         }
         $supportedMethods = EcommerceConfig::get('EcommercePayment', 'supported_methods');
         if (ArrayLib::is_associative($supportedMethods)) {
@@ -46,15 +46,15 @@ class EcommercePaymentSupportedMethodsProvider extends Object
         } else {
             user_error('EcommercePayment::$supported_methods() requires an associative array. Right now the supported payments methods are: '.print_r($supportedMethods, 1), E_USER_NOTICE);
         }
-
         return $supportedMethods;
     }
 
     /**
-     * returns the order to use.... You can provide one
+     * returns the order to use....
+     * You can provide one as a param, 
      * which basically just checks that it is a real order.
      *
-     * @param Order | Int
+     * @param Order (optional) | Int
      *
      * @return Order
      */
