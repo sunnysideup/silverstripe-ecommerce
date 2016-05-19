@@ -46,14 +46,16 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     );
 
     private static $summary_fields = array(
-        'Order.Title',
-        'Type' => 'ClassName',
-        'Date' => 'Created',
-        'AmountValue' => 'Amount',
+        'Created' => 'Created',
+        'Order.Title' => "Order",
+        'Title' => 'Type',
+        'AmountCurrency' => 'Amount',
+        'Amount.Nice' => 'Amount',
         'Status' => 'Status',
     );
 
     private static $casting = array(
+        'Title' => 'Varchar',
         'AmountValue' => 'Currency',
         'AmountCurrency' => 'Varchar',
     );
@@ -193,24 +195,49 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * alias
+     * @return string
+     */
+    function Title(){
+        return $this->getTitle();
+    }
+
+    /**
+     * @return string
+     */
+    function getTitle(){
+        return $this->i18n_singular_name();
+    }
+
+    /**
+     * alias for getAmountValue
      * @return float
-     **/
+     */
     public function AmountValue()
     {
         return $this->getAmountValue();
     }
+
+    /**
+     * @return float
+     */
     public function getAmountValue()
     {
         return $this->Amount->getAmount();
     }
 
     /**
+     * alias for getAmountCurrency
      * @return string
-     **/
+     */
     public function AmountCurrency()
     {
         return $this->getAmountCurrency();
     }
+
+    /**
+     * @return string
+     */
     public function getAmountCurrency()
     {
         return $this->Amount->getCurrency();
