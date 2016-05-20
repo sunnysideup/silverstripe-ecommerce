@@ -621,7 +621,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             } elseif ($this->IsPaid()) {
                 return "good";
             } else {
-                return "warning";
+                return "bad";
             }
         }
     }
