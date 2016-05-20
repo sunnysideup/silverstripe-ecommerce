@@ -63,7 +63,8 @@ class OrderConfirmationPage extends CartPage
 
     private static $casting = array(
         "PaymentMessage" => "HTMLText"
-    )
+    );
+    
     /**
      * standard SS variable.
      *
