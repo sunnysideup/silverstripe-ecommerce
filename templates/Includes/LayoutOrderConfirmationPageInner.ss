@@ -1,5 +1,5 @@
 <h1 class="pagetitle">$Title</h1>
-<div class="paymentMessage" class="$PaymentMessageType">
+<div class="paymentMessage $PaymentMessageType">
     <h2 class="paymentHeader">$PaymentHeader</h2>
     <div class="paymentMessageInner">$PaymentMessage</div>
 </div>
