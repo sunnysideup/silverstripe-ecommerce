@@ -101,15 +101,3 @@ class ExchangeRateProvider extends Object
         return $rate;
     }
 }
-
-class ExchangeRateProvider_Dummy extends ExchangeRateProvider
-{
-    /**
-     * @param string $fromCode
-     * @param string $toCode
-     */
-    public function ExchangeRate($fromCode, $toCode)
-    {
-        return 1;
-    }
-}

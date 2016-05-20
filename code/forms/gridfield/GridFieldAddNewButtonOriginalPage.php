@@ -23,7 +23,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         if (!$this->buttonName) {
             // provide a default button name, can be changed by calling {@link setButtonName()} on this component
             $objectName = $singleton->i18n_singular_name();
-            $this->buttonName = _t('GridField.Add_USING_PAGES_SECTION', 'Add {name} using pages section', array('name' => $objectName));
+            $this->buttonName = _t('GridField.Add_USING_PAGES_SECTION', 'Add {name}', array('name' => $objectName));
         }
 
         $getSegment = '';

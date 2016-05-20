@@ -20,9 +20,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     private static $api_access = array(
         'view' => array(
-                'Code',
-                'Name',
-            ),
+            'Code',
+            'Name',
+        )
      );
 
     /**
@@ -507,12 +507,12 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         $fields->addFieldToTab('Root.Main', new LiteralField(
             'Add Add Countries',
             '
-				<h3>Short-Cuts</h3>
-				<h6>
-					<a href="/dev/tasks/EcommerceTaskCountryAndRegion_DisallowAllCountries" target="_blank">'._t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries').'</a> |||
-					<a href="/dev/tasks/EcommerceTaskCountryAndRegion_AllowAllCountries" target="_blank">'._t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries').'</a>
-				</h6>
-			')
+                <h3>Short-Cuts</h3>
+                <h6>
+                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_DisallowAllCountries" target="_blank">'._t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries').'</a> |||
+                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_AllowAllCountries" target="_blank">'._t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries').'</a>
+                </h6>
+            ')
         );
 
         return $fields;

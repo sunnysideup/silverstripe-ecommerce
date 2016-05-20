@@ -61,6 +61,10 @@ class OrderConfirmationPage extends CartPage
         'PaymentPendingMessage' => '<p>Please complete your payment before the order can be processed.</p>',
     );
 
+    private static $casting = array(
+        "PaymentMessage" => "HTMLText"
+    );
+    
     /**
      * standard SS variable.
      *
@@ -590,6 +594,9 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         }
     }
 
+    /**
+     * @return string | null
+     */
     public function PaymentMessage()
     {
         if ($order = $this->Order()) {
@@ -601,6 +608,24 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 return $this->PaymentSuccessfulMessage;
             } else {
                 return $this->PaymentNotSuccessfulMessage;
+            }
+        }
+    }
+
+    /**
+     * @return string | null
+     */
+    public function PaymentMessageType()
+    {
+        if ($order = $this->Order()) {
+            if ($this->OrderIsCancelled()) {
+                return "bad";
+            } elseif ($this->PaymentIsPending()) {
+                return "warning";
+            } elseif ($this->IsPaid()) {
+                return "good";
+            } else {
+                return "bad";
             }
         }
     }
