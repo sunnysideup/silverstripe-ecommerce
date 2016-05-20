@@ -590,6 +590,9 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         }
     }
 
+    /**
+     * @return string (html)
+     */
     public function PaymentMessage()
     {
         if ($order = $this->Order()) {
@@ -601,6 +604,24 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 return $this->PaymentSuccessfulMessage;
             } else {
                 return $this->PaymentNotSuccessfulMessage;
+            }
+        }
+    }
+
+    /**
+     * @return string (html)
+     */
+    public function PaymentMessageType()
+    {
+        if ($order = $this->Order()) {
+            if ($this->OrderIsCancelled()) {
+                return "bad";
+            } elseif ($this->PaymentIsPending()) {
+                return "warning";
+            } elseif ($this->IsPaid()) {
+                return "good";
+            } else {
+                return "warning";
             }
         }
     }
