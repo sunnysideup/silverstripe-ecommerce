@@ -180,9 +180,9 @@ class ShoppingCart extends Object
                             $firstStep &&
                             $previousOrderFromMember = Order::get()
                                 ->where('
-									"MemberID" = '.$loggedInMember->ID.'
-									AND ("StatusID" = '.$firstStep->ID.' OR "StatusID" = 0)
-									AND "Order"."ID" <> '.$this->order->ID
+                                    "MemberID" = '.$loggedInMember->ID.'
+                                    AND ("StatusID" = '.$firstStep->ID.' OR "StatusID" = 0)
+                                    AND "Order"."ID" <> '.$this->order->ID
                                 )
                                 ->First()
                         ) {
@@ -282,7 +282,7 @@ class ShoppingCart extends Object
      * @param DataObject $buyable    - the buyable (generally a product) being added to the cart
      * @param float      $quantity   - number of items add.
      * @param mixed      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
-     *                               if you make it a form, it will save the form into the orderitem
+     *                                 if you make it a form, it will save the form into the orderitem
      *
      * @return false | DataObject (OrderItem)
      */
@@ -409,20 +409,27 @@ class ShoppingCart extends Object
     /**
      * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
      *
-     * @param DataObject $buyable             - the buyable (generally a product) being added to the cart
-     * @param float      $quantity            - number of items add.
-     * @param bool       $mustBeExistingItems - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
-     * @param array      $parameters          - array of parameters to target a specific order item. eg: group=1, length=5*
+     * @param DataObject    $buyable             - the buyable (generally a product) being added to the cart
+     * @param float         $quantity            - number of items add.
+     * @param bool          $mustBeExistingItems - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
+     * @param array | Form  $parameters          - array of parameters to target a specific order item. eg: group=1, length=5*
+     *                                           - form saved into item...
      *
      * @return bool | DataObject ($orderItem)
      */
     protected function prepareOrderItem(BuyableModel $buyable, $parameters = array(), $mustBeExistingItem = true)
     {
+        $parametersArray = $parameters;
+        $form = null;
+        if($parameters instanceof Form) {
+            $parametersArray = array();
+            $form = $parameters;
+        }
         if (!$buyable) {
             user_error('No buyable was provided', E_USER_WARNING);
         }
         if (!$buyable->canPurchase()) {
-            $item = $this->getExistingItem($buyable, $parameters);
+            $item = $this->getExistingItem($buyable, $parametersArray);
             if ($item && $item->exists()) {
                 $item->delete();
                 $item->destroy();
@@ -432,13 +439,16 @@ class ShoppingCart extends Object
         }
         $item = null;
         if ($mustBeExistingItem) {
-            $item = $this->getExistingItem($buyable, $parameters);
+            $item = $this->getExistingItem($buyable, $parametersArray);
         } else {
-            $item = $this->findOrMakeItem($buyable, $parameters); //find existing order item or make one
+            $item = $this->findOrMakeItem($buyable, $parametersArray); //find existing order item or make one
         }
         if (!$item) {
             //check for existence of item
             return false;
+        }
+        if($form) {
+            $form->saveInto($item);
         }
 
         return $item;
@@ -922,7 +932,7 @@ class ShoppingCart extends Object
      * @param DataObject $buyable
      * @param array      $parameters
      *
-     * @return OrderItem or null
+     * @return OrderItem | null
      */
     protected function getExistingItem(BuyableModel $buyable, array $parameters = array())
     {
@@ -932,8 +942,8 @@ class ShoppingCart extends Object
             $obj = OrderItem::get()
                 ->where(
                     " \"BuyableClassName\" = '".$buyable->ClassName."' AND
-					\"BuyableID\" = ".$buyable->ID.' AND
-					"OrderID" = '.$orderID.' '.
+                    \"BuyableID\" = ".$buyable->ID.' AND
+                    "OrderID" = '.$orderID.' '.
                     $filterString
                 )
                 ->First();
