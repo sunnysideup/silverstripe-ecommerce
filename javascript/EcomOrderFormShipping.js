@@ -95,9 +95,11 @@ if(
                     EcomOrderFormWithShippingAddress.turnOnListeners();
                     jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change();
                 }
+                  
             }
             //why this????
             jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).removeAttr("required");
+            //update one more time ... 
         },
 
         /**
@@ -105,6 +107,7 @@ if(
          *
          */
         updateFields: function() {
+            
             //copy the billing address details to the shipping address details
             if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
                 var billingFieldSelector = "";
@@ -123,6 +126,21 @@ if(
                         jQuery(shippingFieldSelector).val(billingFieldValue).change();
                     }
                 }
+            }
+            else {
+                jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
+                    function(i, el) {
+                        if(jQuery(el).hasClass("required")) {
+                            jQuery(el)
+                                .removeAttr("required")
+                                .removeAttr("aria-required")
+                                .removeAttr("data-has-required");
+                        }
+                        else {
+                            //do nothing...
+                        }
+                    }
+                );
             }
         },
 
@@ -175,9 +193,11 @@ if(
         },
 
         turnOnListeners: function(){
+
             //if the billing updates, the shipping updates
             jQuery(EcomOrderFormWithShippingAddress.billingFieldSelectors).change(
                 function() {
+                    //important ... 
                     EcomOrderFormWithShippingAddress.updateFields();
                 }
             );
@@ -192,7 +212,8 @@ if(
             //turn-on shipping details toggle
             jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change(
                 function(){
-                    if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
+                    if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked") === true) {
+
 
                         //slidedown
                         jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideDown();
@@ -205,8 +226,11 @@ if(
                         jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
                             function(i, el) {
                                 if(jQuery(el).hasClass("required")) {
-                                    jQuery(el).attr("required", "required");
-                                    jQuery(el).attr("aria-required", true);
+                                    jQuery(el)
+                                        .attr("required", "required")
+                                        .attr("aria-required", true)
+                                        .attr("aria-required", true)
+                                        .attr("data-has-required", "yes");
                                 }
                                 else {
 
@@ -229,8 +253,10 @@ if(
                         jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
                             function(i, el) {
                                 if(jQuery(el).hasClass("required")) {
-                                    jQuery(el).removeAttr("required");
-                                    jQuery(el).removeAttr("aria-required");
+                                    jQuery(el)
+                                        .removeAttr("required")
+                                        .removeAttr("aria-required")
+                                        .removeAttr("data-has-required");
                                 }
                                 else {
                                     //do nothing...
