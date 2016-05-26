@@ -113,16 +113,6 @@ class Order extends DataObject implements EditableEcommerceObject
     );
 
     /**
-     * This is important for the form
-     * to be work properly....
-     * 
-     * @var array
-     */
-    private static $defaults = array(
-        'UseShippingAddress' => true,
-    );
-
-    /**
      * standard SS variable.
      *
      * @var string
