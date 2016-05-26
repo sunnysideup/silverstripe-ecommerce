@@ -3204,6 +3204,9 @@ class Order extends DataObject implements EditableEcommerceObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+        if( ! $this->getCanHaveShippingAddress()) {
+            $this->UseShippingAddress = false;
+        }
         if (!$this->CurrencyUsedID) {
             $this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
         }
