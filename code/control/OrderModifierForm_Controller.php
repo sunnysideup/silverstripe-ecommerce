@@ -7,6 +7,12 @@
  */
 class OrderModifierForm_Controller extends Controller
 {
+
+    /**
+     * @var string
+     */
+    private static $url_segment = "ecommercemodifierformcontroller";
+
     /**
      * @var Order
      */
