@@ -139,7 +139,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return $extended;
         }
 
-        return $this->canEdit($member);
+        return false;
     }
 
     /**
@@ -195,6 +195,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
+        return false;
         if (ShippingAddress::get()->filter(array('ShippingCountry' => $this->Code))->count()) {
             return false;
         }
