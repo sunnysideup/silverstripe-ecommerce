@@ -50,7 +50,7 @@
     );
 })(jQuery);
 
-var EcomCart = {
+export var EcomCart = {
 
     /**
      * Set to TRUE to see debug info.
@@ -717,7 +717,7 @@ var EcomCart = {
                         }
                         if(selector == ".number_of_items") {
                             if(EcomCart.debug) {console.debug("doing .number_of_items");}
-                            numericValue = parseFloat(value);
+                            var numericValue = parseFloat(value);
                             if(EcomCart.debug) {console.debug("value "+numericValue);}
                             EcomCart.cartHasItems = (numericValue > 0 ? true : false);
                             //update cart menu items
@@ -727,7 +727,7 @@ var EcomCart = {
                                     if( ! jQuery(el).is("a")) {
                                         myElement = jQuery(el).find("a");
                                     }
-                                    innerText = jQuery(myElement).html();
+                                    var innerText = jQuery(myElement).html();
                                     var numbersOnlyRE = new RegExp('(\\d+)', "g");
                                     var newInnerText = innerText.replace(numbersOnlyRE, value);
                                     jQuery(myElement).html(newInnerText);
