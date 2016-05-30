@@ -230,7 +230,11 @@ class Product extends Page implements BuyableModel
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
         }
         if ($this->EcomConfig()->ProductsHaveQuantifiers) {
-            $fields->addFieldToTab('Root.Details', new TextField('Quantifier', _t('Product.QUANTIFIER', 'Quantifier (e.g. per kilo, per month, per dozen, each)')));
+            $fields->addFieldToTab(
+                'Root.Details',
+                TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
+                    ->setRightTitle(_t('Product.QUANTIFIER_EXPLANATION', 'e.g. per kilo, per month, per dozen, each'))
+            );
         }
         if($this->canPurchase()) {
             $fields->addFieldToTab(
