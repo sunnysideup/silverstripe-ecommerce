@@ -1845,7 +1845,7 @@ class ProductGroup_Controller extends Page_Controller
                     if(typeof EcomCartOptions === 'undefined') {
                         var EcomCartOptions = {};
                     }
-                    EcomCart.initialData('.$json.');
+                    EcomCartOptions.initialData= ".$json.";
                 ",
                 'cachingRelatedJavascript_JSON'
             );
