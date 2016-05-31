@@ -373,6 +373,13 @@ export var EcomCart = {
      * initialises all the ajax functionality
      */
     init: function () {
+        if(typeof EcomCartOptions !== "undefined") {
+            for (var key in EcomCartOptions){
+                if (target.hasOwnProperty(key)) {
+                     this[key] = EcomCartOptions[key];
+                }
+            }
+        }
         //make sure that country and region changes are applied to Shopping Cart
         EcomCart.countryAndRegionUpdates();
         //setup an area where the user can change their country / region
