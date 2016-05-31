@@ -298,8 +298,10 @@ class Product extends Page implements BuyableModel
             $findImagesTask = EcommerceTaskLinkProductWithImages::create();
             $findImagesLink = $findImagesTask->Link();
             $findImagesLinkOne = $findImagesLink.'?productid='.$this->ID;
-            $msg .= '<p>
-                To upload additional images and files, please go to the <a href="/admin/assets">Files section</a>, and upload them there.
+            $msg .= '
+                <h3>Batch Upload</h3>
+                <p>
+                To batch upload additional images and files, please go to the <a href="/admin/assets">Files section</a>, and upload them there.
                 Files need to be named in the following way:
                 An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image:
                 <strong>'.$this->InternalItemID."_08.jpg</strong>.
@@ -307,7 +309,9 @@ class Product extends Page implements BuyableModel
                 <a href=\"$findImagesLink\" target='_blank'>images for all products</a> ...
             </p>";
         } else {
-            $msg .= '<p>For additional images and files, you must first specify a product code.</p>';
+            $msg .= '
+            <h3>Batch Upload</h3>
+            <p>To batch upload additional images and files, you must first specify a product code.</p>';
         }
         $field = new LiteralField('ImageFileNote', $msg);
 
@@ -321,21 +325,12 @@ class Product extends Page implements BuyableModel
      **/
     protected function getAdditionalImagesField()
     {
-        $gridField = new GridField(
+        $uploadField = new UploadFIeld(
             'AdditionalFiles',
-            _t('Product.ADDITIONALIMAGES', 'Additional files and images'),
-            $this->AdditionalFiles(),
-            GridFieldConfig_RelationEditor::create()
+            'More files and images'
         );
-        $config = $gridField->getConfig()
-            ->removeComponentsByType('GridFieldAddNewButton')
-            ->removeComponentsByType('GridFieldAddExistingAutocompleter');
-        $gridField->setConfig($config);
-        //var_dump($components->items);
-
-        $gridField->setModelClass('Product_Image');
-
-        return $gridField;
+        $uploadField->setAllowedMaxFileNumber(12);
+        return $uploadField;
     }
 
     /**
@@ -581,6 +576,21 @@ class Product extends Page implements BuyableModel
         if ($parent = $this->MainParentGroup()) {
             return $parent->BestAvailableImage();
         }
+    }
+
+    /**
+     * @return ArrayList
+     */
+    function AdditionalImages()
+    {
+        $al = ArrayList::create();
+        $files = $this->AdditionalFiles();
+        foreach($files as $file) {
+            if($file && $file->exists() && $file instanceof Image) {
+                $al->push($file);
+            }
+        }
+        return $al;
     }
 
     /**
