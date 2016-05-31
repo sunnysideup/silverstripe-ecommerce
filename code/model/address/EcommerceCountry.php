@@ -249,21 +249,27 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      *               "NZ" => "New Zealand"
      * @return array
      */
-    public static function get_country_dropdown($showAllCountries = true)
+    public static function get_country_dropdown($showAllCountries = true, $addEmptyString = false)
     {
+        $array = array();
+        $objects = null;
         if (class_exists('Geoip') && $showAllCountries) {
-            return Geoip::getCountryDropDown();
+            $array = Geoip::getCountryDropDown();
         }
-        if ($showAllCountries) {
+        elseif ($showAllCountries) {
             $objects = EcommerceCountry::get();
         } else {
             $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
         }
         if ($objects && $objects->count()) {
-            return $objects->map('Code', 'Name')->toArray();
+            $array = $objects->map('Code', 'Name')->toArray();
         }
-
-        return array();
+        if(count($array)) {
+            if($addEmptyString) {
+                $array = array("", " -- please select -- ") + $array;
+            }
+        }
+        return $array;
     }
 
     /**
