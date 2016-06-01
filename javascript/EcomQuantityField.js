@@ -44,6 +44,7 @@ var EcomQuantityField = {
     init: function (){
         var EcomCart = require("./EcomCart");
         this.EcomCart = EcomCart.EcomCart;
+        this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
         //make sure it only runs if needed...
         if(jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
             jQuery(EcomQuantityField.delegateRootSelector).on(

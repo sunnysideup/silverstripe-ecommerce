@@ -95,6 +95,12 @@ export var EcomCart = {
     initialData: [],
         set_initialData: function(a) {this.initialData = a;},
 
+    /**
+     *  array of callbacks to call after update
+     *
+     * @type Array
+     */
+    reinitCallbacks: [],
 
     //#################################
     // COUNTRY + REGION SELECTION
@@ -415,12 +421,13 @@ export var EcomCart = {
      */
     reinit: function(changesApplied){
         //hide or show "zero items" information
-        if (typeof EcomQuantityField  != 'undefined') {
-            EcomQuantityField.reinit();
-        }
         if(changesApplied) {
             EcomCart.updateForZeroVSOneOrMoreRows();
         }
+        for(var i = 0; i < EcomCart.reinitCallbacks.length; i++) {
+            EcomCart.reinitCallbacks[i]();
+        }
+
     },
 
 
