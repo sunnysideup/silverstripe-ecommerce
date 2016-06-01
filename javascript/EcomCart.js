@@ -375,7 +375,7 @@ export var EcomCart = {
     init: function () {
         if(typeof EcomCartOptions !== "undefined") {
             for (var key in EcomCartOptions){
-                if (target.hasOwnProperty(key)) {
+                if (EcomCartOptions.hasOwnProperty(key)) {
                      this[key] = EcomCartOptions[key];
                 }
             }
