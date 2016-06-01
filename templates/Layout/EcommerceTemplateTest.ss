@@ -169,6 +169,23 @@ CartResponse:
     </table>
 
     <h5>without context, ajaxified product list</h5>
+    <p>
+        The way this works is as follows:
+    </p>
+    <pre>
+        &lt;div class="&#36;AJAXDefinitions.ProductListItemClassName" id="&#36;AJAXDefinitions.UniqueIdentifier"&gt;
+            <br /> &nbsp; &nbsp; &nbsp; ... add to cart button goes here
+            <br /> &nbsp; &nbsp; &nbsp; ... remove from cart butto goes here
+            <br /> &nbsp; &nbsp; &nbsp; ... etc
+        <br />&lt;/div&gt;
+    </pre>
+    <p>
+        When an item is added to cart, it will look at all the <em>.productActions</em> elements and
+        add the <em>in cart</em> OR <em>not in cart</em> class.
+        You can then hide / show the right buttons.
+    </p>
+
+
     <table style="width: 95%;" border="1" cellspacing="5">
         <tr>
             <th scope="row" width="40%">&#36;AJAXDefinitions.HiddenPageTitleID</th>
@@ -182,6 +199,12 @@ CartResponse:
             <th scope="row" width="40%">&#36;AJAXDefinitions.ProductListAjaxifiedLinkClassName</th>
             <td width="60%">$AJAXDefinitions.ProductListAjaxifiedLinkClassName<br /><i>$AJAXDefinitions.Define(ProductListAjaxifiedLinkClassName)</i></td>
         </tr>
+        <% with $RandomProduct %>
+        <tr>
+            <th scope="row" width="40%">&#36;AJAXDefinitions.UniqueIdentifier</th>
+            <td width="60%">$AJAXDefinitions.UniqueIdentifier<br /><i>$AJAXDefinitions.Define(UniqueIdentifier)</i></td>
+        </tr>
+        <% end_with %>
         <tr>
             <th scope="row" width="40%">&#36;AJAXDefinitions.ProductListItemClassName</th>
             <td width="60%">$AJAXDefinitions.ProductListItemClassName<br /><i>$AJAXDefinitions.Define(ProductListItemClassName)</i></td>
@@ -190,30 +213,9 @@ CartResponse:
 
     <h5>without context, products in cart (or not in cart)</h5>
 
-    <p>
-        The way this works is as follows:
-    </p>
-    <pre>
-        &lt;div class="productActions" id="&#36;AJAXDefinitions.UniqueIdentifier"&gt;
-            <br /> &nbsp; &nbsp; &nbsp; ... add to cart button goes here
-            <br /> &nbsp; &nbsp; &nbsp; ... remove from cart butto goes here
-            <br /> &nbsp; &nbsp; &nbsp; ... etc
-        <br />&lt;/div&gt;
-    </pre>
-    <p>
-        When an item is added to cart, it will look at all the <em>.productActions</em> elements and
-        add the <em>in cart</em> OR <em>not in cart</em> class.
-        You can then hide / show the right buttons.
-    </p>
-
     <table style="width: 95%;" border="1" cellspacing="5">
 
-        <% with $RandomProduct %>
-        <tr>
-            <th scope="row" width="40%">&#36;AJAXDefinitions.UniqueIdentifier</th>
-            <td width="60%">$AJAXDefinitions.UniqueIdentifier<br /><i>$AJAXDefinitions.Define(UniqueIdentifier)</i></td>
-        </tr>
-        <% end_with %>
+
 
         <tr>
             <th scope="row" width="40%">&#36;AJAXDefinitions.ProductListItemInCartClassName</th>
@@ -353,38 +355,46 @@ CartResponse:
 
 <script type="text/javascript">
 
-var ToC =
-    "<nav role='navigation' class='table-of-contents'>" +
-        "<h2>On this page:</h2>" +
-        "<ul>";
 
-var newLine, el, title, link, id, basehref;
-basehref = window.location.href;
-jQuery("#EcommerceTaskTemplateTest h2").each(
-    function() {
-        el = jQuery(this);
-        title = el.text();
-        id = title.replace(/[^a-z0-9]/gmi, "");
-        id = "TOCGoTo"+id;
-        el.attr("id", id);
-        link = basehref + "#" + id;
 
-        newLine =
-            "<li>" +
-                "<a href='" + link + "'>" +
-                    title +
-                "</a>" +
-            "</li>";
 
-        ToC += newLine;
+window.setTimeout(
+    function(){
+        var ToC =
+            "<nav role='navigation' class='table-of-contents'>" +
+                "<h2>On this page:</h2>" +
+                "<ul>";        
+        var newLine, el, title, link, id, basehref;
+        basehref = window.location.href;
 
-    }
-);
+        jQuery("#EcommerceTaskTemplateTest h2").each(
+            function() {
+                el = jQuery(this);
+                title = el.text();
+                id = title.replace(/[^a-z0-9]/gmi, "");
+                id = "TOCGoTo"+id;
+                el.attr("id", id);
+                link = basehref + "#" + id;
 
-ToC +=
-     "</ul>" +
-    "</nav>";
+                newLine =
+                    "<li>" +
+                        "<a href='" + link + "'>" +
+                            title +
+                        "</a>" +
+                    "</li>";
 
-jQuery("#TOCGoesHere").html(ToC);
+                ToC += newLine;
+
+            }
+        );
+
+        ToC +=
+             "</ul>" +
+            "</nav>";
+
+        jQuery("#TOCGoesHere").html(ToC);
+    },
+    2000
+)
 
 </script>
