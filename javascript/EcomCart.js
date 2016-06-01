@@ -786,7 +786,7 @@ export var EcomCart = {
                         //we go through all the ones that are marked as 'inCart' already
                         //as part of this we check if they are still incart
                         //and as part of this process, we add the "inCart" where needed
-                        if(EcomCart.debug) {console.debug("starting process");}
+                        if(EcomCart.debug) {console.debug("starting replaceclass process");}
                         jQuery("."+parameter).each(
                             function(i, el) {
                                 var id = jQuery(el).attr("id");
