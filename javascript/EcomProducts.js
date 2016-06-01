@@ -25,6 +25,8 @@ EcomProducts = {
         iframe: false,
         model: true,
         onComplete: function (event) {
+            var EcomCart = require("./EcomCart");
+            var EcomCart = EcomCart.EcomCart;            
             EcomCart.reinit();
             EcomQuantityField.set_delegateRootSelector("#colorbox");
             EcomQuantityField.init();
