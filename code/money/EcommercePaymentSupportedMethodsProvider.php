@@ -18,7 +18,7 @@
  * }
  * </code>
  */
-class EcommercePaymentSupportedMethodsProvider extends Object
+class EcommercePaymentSupportedMethodsProvider extends Object implements EcommercePaymentSupportedMethodsProviderInterface
 {
     /**
      * this method returns an associative array of payment methods
@@ -51,7 +51,7 @@ class EcommercePaymentSupportedMethodsProvider extends Object
 
     /**
      * returns the order to use....
-     * You can provide one as a param, 
+     * You can provide one as a param,
      * which basically just checks that it is a real order.
      *
      * @param Order (optional) | Int
@@ -60,7 +60,7 @@ class EcommercePaymentSupportedMethodsProvider extends Object
      */
     protected function orderToUse($order = null)
     {
-        if ($order && $order instanceof $order) {
+        if ($order && $order instanceof Order) {
             return $order;
         }
         if (intval($order)) {

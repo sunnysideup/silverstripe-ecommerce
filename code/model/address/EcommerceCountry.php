@@ -407,26 +407,29 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * This function works out the most likely country for the current order
      * and returns the Country Object, if any.
      *
-     * @param bool $recalculate
+     * @param bool    (optional)   $recalculate
+     * @param string  (optional)   $countryCode
      *
      * @return EcommerceCountry | Null
      **/
-    public static function get_country_object($recalculate = false)
+    public static function get_country_object($recalculate = false, $countryCode = null)
     {
-        $code = self::get_country($recalculate);
+        if( ! $countryCode) {
+            $countryCode = self::get_country($recalculate);
+        }
 
-        return EcommerceCountry::get()->filter(array('Code' => $code))->First();
+        return EcommerceCountry::get()->filter(array('Code' => $countryCode))->First();
     }
 
     /**
      * returns the ID of the country or 0.
      *
-     * @param string $countryCode
-     * @param bool   $recalculate
+     * @param string (optional)   $countryCode
+     * @param bool   (optional)   $recalculate
      *
      * @return int
      **/
-    public static function get_country_id($countryCode = '', $recalculate = false)
+    public static function get_country_id($countryCode = null, $recalculate = false)
     {
         if (!$countryCode) {
             $countryCode = self::get_country($recalculate);
