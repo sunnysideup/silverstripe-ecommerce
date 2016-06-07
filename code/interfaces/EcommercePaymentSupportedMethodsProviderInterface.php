@@ -11,8 +11,9 @@ interface EcommercePaymentSupportedMethodsProviderInterface
     function SupportedMethods($order);
 
     /**
-     * force one particular gateway.
+     * assign the right payment gateways for the user
+     * @param string (optional) $gateway
      */
-    public static function set_payment_gateway($gateway = "");
+    public static function assign_payment_gateway($gateway = "");
 
 }

@@ -49,7 +49,7 @@ class EcommercePaymentSupportedMethodsProvider extends Object implements Ecommer
         return $supportedMethods;
     }
 
-    public static function set_payment_gateway($gateway = "")
+    public static function assign_payment_gateway($gateway = "")
     {
         user_error("
             This function has not been implemented on this class.
