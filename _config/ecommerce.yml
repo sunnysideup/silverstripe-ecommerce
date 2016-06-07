@@ -1,7 +1,7 @@
 ---
 Name: ecommerce_default_settings
 Before: 'mysite/*'
-After: 'framework/*','cms/*', 'ecommerce/*'
+After: 'framework/*','cms/*'
 ---
 
 

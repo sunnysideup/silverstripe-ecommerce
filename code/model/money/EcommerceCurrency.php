@@ -464,15 +464,19 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
 
     /**
      * casted variable.
+     * @alias for getExchangeRate
      *
      * @return float
-     *
-     * @todo $className is not used at all here
      */
     public function ExchangeRate()
     {
         return $this->getExchangeRate();
     }
+
+    /**
+     *
+     * @return float
+     */
     public function getExchangeRate()
     {
         $exchangeRateProviderClassName = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
@@ -490,6 +494,12 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         return $this->getExchangeRateExplanation();
     }
+
+    /**
+     *
+     *
+     * @return string
+     */
     public function getExchangeRateExplanation()
     {
         $string = '1 '.EcommerceConfig::get('EcommerceCurrency', 'default_currency').' = '.round($this->getExchangeRate(), 3).' '.$this->Code;

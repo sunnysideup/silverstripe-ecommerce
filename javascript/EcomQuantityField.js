@@ -39,7 +39,12 @@ var EcomQuantityField = {
 
     lastValue: [],
 
+    EcomCart: {},
+
     init: function (){
+        var EcomCart = require("./EcomCart");
+        this.EcomCart = EcomCart.EcomCart;
+        this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
         //make sure it only runs if needed...
         if(jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
             jQuery(EcomQuantityField.delegateRootSelector).on(
@@ -113,7 +118,7 @@ var EcomQuantityField = {
                             }
                             var url = jQuery('base').attr('href') + URLSegment + 'quantity=' + this.value;
                             url = url.replace("&amp;", "&");
-                            EcomCart.getChanges(url, null, this);
+                            EcomQuantityField.EcomCart.getChanges(url, null, this);
                         }
                     }
                 }

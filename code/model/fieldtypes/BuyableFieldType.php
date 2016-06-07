@@ -4,307 +4,48 @@
 /**
  * NOTE: this is not yet being used!!!
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @sub-package: model
+ * @subpackage: model
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class BuyableFieldType extends DBField implements CompositeDBField
+class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
 {
-    /**
-     * @var string
-     */
-    protected $BuyableClassName;
 
-    /**
-     * @var int
-     */
-    protected $BuyableID;
-
-    /**
-     * @var bool
-     */
-    protected $isChanged = false;
-
-    /**
-     * @param array
-     */
-    private static $composite_db = array(
-        'BuyableID' => 'Int',
-        'BuyableClassName' => 'Varchar(60)',
-    );
-
-    public function __construct($name = null)
-    {
-        parent::__construct($name);
+    public function scaffoldFormField($title = null, $params = null) {
+        // Opt-out of form field generation - Scaffolding should be performed on
+        // the has_many end, or set programatically.
+        // @todo - Investigate suitable FormField
+        return new BuyableSelectField($this->name, $title);
     }
 
-    public function compositeDatabaseFields()
-    {
-        return $this->config()->get('composite_db');
-    }
+    public function compositeDatabaseFields() {
 
-    public function requireField()
-    {
-        $fields = $this->compositeDatabaseFields();
-        if ($fields);
-        foreach ($fields as $name => $type) {
-            DB::requireField($this->tableName, $name, $type);
+        // Ensure the table level cache exists
+        if(empty(self::$classname_spec_cache[$this->tableName])) {
+            self::$classname_spec_cache[$this->tableName] = array();
         }
-    }
 
-    public function writeToManipulation(&$manipulation)
-    {
-        if ($this->getBuyableClassName()) {
-            $manipulation['fields']['BuyableClassName'] = $this->prepValueForDB($this->getBuyableClassName());
-        } else {
-            $manipulation['fields']['BuyableClassName'] = DBField::create_field('Varchar', $this->getBuyableClassName())->nullValue();
-        }
-        if ($this->getBuyableID()) {
-            $manipulation['fields']['BuyableID'] = $this->getBuyableID();
-        } else {
-            $manipulation['fields']['BuyableID'] = DBField::create_field('Decimal', $this->getBuyableID())->nullValue();
-        }
-    }
+        // Ensure the field level cache exists
+        if(empty(self::$classname_spec_cache[$this->tableName][$this->name])) {
 
-    public function setValue($value, $record = null, $markChanged = true)
-    {
-        // @todo Allow resetting value to NULL through Money $value field
-        if (is_a($value, Object::getCustomClass('Money')) && $value->hasValue()) {
-            $this->setBuyableClassName($value->getBuyableClassName(), $markChanged);
-            $this->setBuyableID($value->getBuyableID(), $markChanged);
-            if ($markChanged) {
-                $this->isChanged = true;
+            // Get all class names
+            $classNames = ClassInfo::implementorsOf('BuyableModel');
+
+            $schema = DB::get_schema();
+            if($schema->hasField($this->tableName, "{$this->name}Class")) {
+                $existing = DB::query("SELECT DISTINCT \"{$this->name}Class\" FROM \"{$this->tableName}\"")->column();
+                $classNames = array_unique(array_merge($classNames, $existing));
             }
-        } elseif ($record && isset($record[$this->Name.'BuyableClassName']) && isset($record[$this->Name.'BuyableID'])) {
-            if ($record[$this->Name.'BuyableClassName'] && $record[$this->Name.'BuyableID']) {
-                $this->setBuyableClassName($record[$this->Name.'BuyableClassName'], $markChanged);
-                $this->setBuyableID($record[$this->Name.'BuyableID'], $markChanged);
-            } else {
-                $this->value = $this->nullValue();
-            }
-            if ($markChanged) {
-                $this->isChanged = true;
-            }
-        } elseif (is_array($value)) {
-            if (array_key_exists('BuyableClassName', $value)) {
-                $this->setBuyableClassName($value['BuyableClassName'], $markChanged);
-            }
-            if (array_key_exists('BuyableID', $value)) {
-                $this->setBuyableID($value['BuyableID'], $markChanged);
-            }
-            if ($markChanged) {
-                $this->isChanged = true;
-            }
-        } else {
-            // @todo Allow to reset a money value by passing in NULL
-            //user_error('Invalid value in Money->setValue()', E_USER_ERROR);
-        }
-    }
 
-    /**
-     * @return string
-     */
-    public function Nice($options = array())
-    {
-        $BuyableID = $this->getBuyableID();
-        if (!isset($options['display'])) {
-            $options['display'] = Zend_BuyableClassName::USE_SYMBOL;
-        }
-        if (!isset($options['buyableClassName'])) {
-            $options['buyableClassName'] = $this->getBuyableClassName();
-        }
-        if (!isset($options['symbol'])) {
-            $options['symbol'] = $this->buyableClassNameLib->getSymbol($this->getBuyableClassName(), $this->getLocale());
+            self::$classname_spec_cache[$this->tableName][$this->name]
+                = "Enum(array('" . implode("', '", array_filter($classNames)) . "'))";
         }
 
-        return (is_numeric($BuyableID)) ? $this->buyableClassNameLib->toBuyableClassName($BuyableID, $options) : '';
+        return array(
+            'ID' => 'Int',
+            'Class' => self::$classname_spec_cache[$this->tableName][$this->name]
+        );
     }
 
-    /**
-     * @return string
-     */
-    public function NiceWithShortname($options = array())
-    {
-        $options['display'] = Zend_BuyableClassName::USE_SHORTNAME;
-
-        return $this->Nice($options);
-    }
-
-    /**
-     * @return string
-     */
-    public function NiceWithName($options = array())
-    {
-        $options['display'] = Zend_BuyableClassName::USE_NAME;
-
-        return $this->Nice($options);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBuyableClassName()
-    {
-        return $this->buyableClassName;
-    }
-
-    /**
-     * @param string
-     */
-    public function setBuyableClassName($buyableClassName, $markChanged = true)
-    {
-        $this->buyableClassName = $buyableClassName;
-        if ($markChanged) {
-            $this->isChanged = true;
-        }
-    }
-
-    /**
-     * @todo Return casted Float DBField?
-     *
-     * @return float
-     */
-    public function getBuyableID()
-    {
-        return $this->BuyableID;
-    }
-
-    /**
-     * @param float $BuyableID
-     */
-    public function setBuyableID($BuyableID, $markChanged = true)
-    {
-        $this->BuyableID = (float) $BuyableID;
-        if ($markChanged) {
-            $this->isChanged = true;
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasValue()
-    {
-        return $this->getBuyableClassName() && is_numeric($this->getBuyableID());
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasBuyableID()
-    {
-        return (int) $this->getBuyableID() != '0';
-    }
-
-    public function isChanged()
-    {
-        return $this->isChanged;
-    }
-
-    /**
-     * @param string $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-        $this->buyableClassNameLib->setLocale($locale);
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocale()
-    {
-        return ($this->locale) ? $this->locale : i18n::get_locale();
-    }
-
-    /**
-     * @return string
-     */
-    public function getSymbol($buyableClassName = null, $locale = null)
-    {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-        if ($buyableClassName === null) {
-            $buyableClassName = $this->getBuyableClassName();
-        }
-
-        return $this->buyableClassNameLib->getSymbol($buyableClassName, $locale);
-    }
-
-    /**
-     * @return string
-     */
-    public function getShortName($buyableClassName = null, $locale = null)
-    {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-        if ($buyableClassName === null) {
-            $buyableClassName = $this->getBuyableClassName();
-        }
-
-        return $this->buyableClassNameLib->getShortName($buyableClassName, $locale);
-    }
-
-    /**
-     * @return string
-     */
-    public function getName($buyableClassName = null, $locale = null)
-    {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-        if ($buyableClassName === null) {
-            $buyableClassName = $this->getBuyableClassName();
-        }
-
-        return $this->buyableClassNameLib->getName($buyableClassName, $locale);
-    }
-
-    /**
-     * @param array $arr
-     */
-    public function setAllowedCurrencies($arr)
-    {
-        $this->allowedCurrencies = $arr;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllowedCurrencies()
-    {
-        return $this->allowedCurrencies;
-    }
-
-    /**
-     * Returns a CompositeField instance used as a default
-     * for form scaffolding.
-     *
-     * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
-     *
-     * @param string $title Optional. Localized title of the generated instance
-     *
-     * @return FormField
-     */
-    public function scaffoldFormField($title = null)
-    {
-        $field = self::create($this->Name);
-
-        return $field;
-    }
-
-    /**
-     * For backwards compatibility reasons
-     * (mainly with ecommerce module),
-     * this returns the BuyableID value of the field,
-     * rather than a {@link Nice()} formatting.
-     */
-    public function __toString()
-    {
-        return (string) $this->getBuyableID();
-    }
 }

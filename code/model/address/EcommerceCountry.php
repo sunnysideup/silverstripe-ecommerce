@@ -139,7 +139,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return $extended;
         }
 
-        return $this->canEdit($member);
+        return false;
     }
 
     /**
@@ -195,6 +195,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
+        return false;
         if (ShippingAddress::get()->filter(array('ShippingCountry' => $this->Code))->count()) {
             return false;
         }
@@ -248,21 +249,27 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      *               "NZ" => "New Zealand"
      * @return array
      */
-    public static function get_country_dropdown($showAllCountries = true)
+    public static function get_country_dropdown($showAllCountries = true, $addEmptyString = false)
     {
+        $array = array();
+        $objects = null;
         if (class_exists('Geoip') && $showAllCountries) {
-            return Geoip::getCountryDropDown();
+            $array = Geoip::getCountryDropDown();
         }
-        if ($showAllCountries) {
+        elseif ($showAllCountries) {
             $objects = EcommerceCountry::get();
         } else {
             $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
         }
         if ($objects && $objects->count()) {
-            return $objects->map('Code', 'Name')->toArray();
+            $array = $objects->map('Code', 'Name')->toArray();
         }
-
-        return array();
+        if(count($array)) {
+            if($addEmptyString) {
+                $array = array("", " -- please select -- ") + $array;
+            }
+        }
+        return $array;
     }
 
     /**
@@ -400,26 +407,29 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * This function works out the most likely country for the current order
      * and returns the Country Object, if any.
      *
-     * @param bool $recalculate
+     * @param bool    (optional)   $recalculate
+     * @param string  (optional)   $countryCode
      *
      * @return EcommerceCountry | Null
      **/
-    public static function get_country_object($recalculate = false)
+    public static function get_country_object($recalculate = false, $countryCode = null)
     {
-        $code = self::get_country($recalculate);
+        if( ! $countryCode) {
+            $countryCode = self::get_country($recalculate);
+        }
 
-        return EcommerceCountry::get()->filter(array('Code' => $code))->First();
+        return EcommerceCountry::get()->filter(array('Code' => $countryCode))->First();
     }
 
     /**
      * returns the ID of the country or 0.
      *
-     * @param string $countryCode
-     * @param bool   $recalculate
+     * @param string (optional)   $countryCode
+     * @param bool   (optional)   $recalculate
      *
      * @return int
      **/
-    public static function get_country_id($countryCode = '', $recalculate = false)
+    public static function get_country_id($countryCode = null, $recalculate = false)
     {
         if (!$countryCode) {
             $countryCode = self::get_country($recalculate);

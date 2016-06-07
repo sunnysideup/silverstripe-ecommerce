@@ -113,16 +113,6 @@ class Order extends DataObject implements EditableEcommerceObject
     );
 
     /**
-     * This is important for the form
-     * to be work properly....
-     * 
-     * @var array
-     */
-    private static $defaults = array(
-        'UseShippingAddress' => true,
-    );
-
-    /**
      * standard SS variable.
      *
      * @var string
@@ -1376,13 +1366,13 @@ class Order extends DataObject implements EditableEcommerceObject
     public function UpdateCurrency($newCurrency)
     {
         if ($this->IsSubmitted()) {
-            user_error('Can not set the exchange rate after the order has been submitted', E_USER_NOTICE);
+            user_error('Can not set the currency after the order has been submitted', E_USER_NOTICE);
         } else {
-            if (!is_a($newCurrency, Object::getCustomClass('EcommerceCurrency'))) {
+            if ( ! is_a($newCurrency, Object::getCustomClass('EcommerceCurrency'))) {
                 $newCurrency = EcommerceCurrency::default_currency();
             }
             $this->CurrencyUsedID = $newCurrency->ID;
-            $this->ExchangeRate = $newCurrency->ExchangeRate();
+            $this->ExchangeRate = $newCurrency->getExchangeRate();
             $this->write();
         }
     }
@@ -2660,8 +2650,6 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * Returns the country code for the country that applies to the order.
-     * It only takes into account what has actually been saved.
      *
      * @return string (country code)
      **/
@@ -2669,6 +2657,13 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         return $this->getCountry();
     }
+
+    /**
+    * Returns the country code for the country that applies to the order.
+    * @alias  for getCountry
+    *
+    * @return string - country code e.g. NZ
+     */
     public function getCountry()
     {
         $countryCodes = array(
@@ -2705,7 +2700,7 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * returns name of coutry.
+     * @alias for getFullNameCountry
      *
      * @return string - country name
      **/
@@ -2713,9 +2708,24 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         return $this->getFullNameCountry();
     }
+
+    /**
+     * returns name of coutry.
+     *
+     * @return string - country name
+     **/
     public function getFullNameCountry()
     {
         return EcommerceCountry::find_title($this->Country());
+    }
+
+    /**
+     * @alis for getExpectedCountryName
+     * @return string - country name
+     **/
+    public function ExpectedCountryName()
+    {
+        return $this->getExpectedCountryName();
     }
 
     /**
@@ -2727,10 +2737,6 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return string - country name
      **/
-    public function ExpectedCountryName()
-    {
-        return $this->getExpectedCountryName();
-    }
     public function getExpectedCountryName()
     {
         return EcommerceCountry::find_title(EcommerceCountry::get_country(false, $this->ID));
@@ -3214,6 +3220,9 @@ class Order extends DataObject implements EditableEcommerceObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+        if( ! $this->getCanHaveShippingAddress()) {
+            $this->UseShippingAddress = false;
+        }
         if (!$this->CurrencyUsedID) {
             $this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
         }

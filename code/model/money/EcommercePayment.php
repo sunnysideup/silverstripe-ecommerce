@@ -364,11 +364,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * the current user is a ShopAdmin.
      *
      * @return array
+     *     [Code] => "Description",
+     *     [Code] => "Description",
+     *     [Code] => "Description"
      */
     public static function get_supported_methods($order = null)
     {
         $obj = self::create();
-
         return $obj->supportedMethodsProvider->SupportedMethods($order);
     }
 

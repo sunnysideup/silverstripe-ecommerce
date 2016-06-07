@@ -34,7 +34,7 @@ OrderEmailRecord_Review:
 
 EcommerceDatabaseAdmin:
   allowed_actions:
-    - runTask
+    runTask: ADMIN
 
 LeftAndMain:
   extra_requirements_css:

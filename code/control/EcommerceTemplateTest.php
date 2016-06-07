@@ -10,6 +10,11 @@
  **/
 class EcommerceTemplateTest extends Page_Controller
 {
+
+    function index()
+    {
+        return $this->renderWith(array("EcommerceTemplateTest", "Page"));
+    }
     /**
      * Goes through all products and find one that
      * "canPurchase".

@@ -1815,15 +1815,25 @@ class ProductGroup_Controller extends Page_Controller
     {
         if ($this->ProductGroupListAreAjaxified()) {
             Requirements::customScript("
-                    EcomCart.set_ajaxifyProductList(true);
-                    EcomCart.set_ajaxifiedListHolderSelector('#".$this->AjaxDefinitions()->ProductListHolderID()."');
-                    EcomCart.set_ajaxifiedListAdjusterSelectors('.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."');
-                    EcomCart.set_hiddenPageTitleID('#".$this->AjaxDefinitions()->HiddenPageTitleID()."');
+                    if(typeof EcomCartOptions === 'undefined') {
+                        var EcomCartOptions = {};
+                    }
+                    EcomCartOptions.ajaxifyProductList = true;
+                    EcomCartOptions.ajaxifiedListHolderSelector = '#".$this->AjaxDefinitions()->ProductListHolderID()."';
+                    EcomCartOptions.ajaxifiedListAdjusterSelectors = '.".$this->AjaxDefinitions()->ProductListAjaxifiedLinkClassName()."';
+                    EcomCartOptions.hiddenPageTitleID = '#".$this->AjaxDefinitions()->HiddenPageTitleID()."';
                 ",
                 'cachingRelatedJavascript_AJAXlist'
             );
         } else {
-            Requirements::customScript('EcomCart.set_ajaxifyProductList(false);', 'cachingRelatedJavascript_AJAXlist');
+            Requirements::customScript("
+                    if(typeof EcomCartOptions === 'undefined') {
+                        var EcomCartOptions = {};
+                    }
+                    EcomCartOptions.ajaxifyProductList = false;
+                ",
+                'cachingRelatedJavascript_AJAXlist'
+            );
         }
         $currentOrder = ShoppingCart::current_order();
         if ($currentOrder->TotalItems(true)) {
@@ -1831,9 +1841,12 @@ class ProductGroup_Controller extends Page_Controller
             $obj = new $responseClass();
             $obj->setIncludeHeaders(false);
             $json = $obj->ReturnCartData();
-            Requirements::customScript('
-                    EcomCart.set_initialData('.$json.');
-                ',
+            Requirements::customScript("
+                    if(typeof EcomCartOptions === 'undefined') {
+                        var EcomCartOptions = {};
+                    }
+                    EcomCartOptions.initialData= ".$json.";
+                ",
                 'cachingRelatedJavascript_JSON'
             );
         }

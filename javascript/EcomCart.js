@@ -50,7 +50,7 @@
     );
 })(jQuery);
 
-var EcomCart = {
+export var EcomCart = {
 
     /**
      * Set to TRUE to see debug info.
@@ -95,6 +95,12 @@ var EcomCart = {
     initialData: [],
         set_initialData: function(a) {this.initialData = a;},
 
+    /**
+     *  array of callbacks to call after update
+     *
+     * @type Array
+     */
+    reinitCallbacks: [],
 
     //#################################
     // COUNTRY + REGION SELECTION
@@ -373,6 +379,13 @@ var EcomCart = {
      * initialises all the ajax functionality
      */
     init: function () {
+        if(typeof EcomCartOptions !== "undefined") {
+            for (var key in EcomCartOptions){
+                if (EcomCartOptions.hasOwnProperty(key)) {
+                     this[key] = EcomCartOptions[key];
+                }
+            }
+        }
         //make sure that country and region changes are applied to Shopping Cart
         EcomCart.countryAndRegionUpdates();
         //setup an area where the user can change their country / region
@@ -408,12 +421,13 @@ var EcomCart = {
      */
     reinit: function(changesApplied){
         //hide or show "zero items" information
-        if (typeof EcomQuantityField  != 'undefined') {
-            EcomQuantityField.reinit();
-        }
         if(changesApplied) {
             EcomCart.updateForZeroVSOneOrMoreRows();
         }
+        for(var i = 0; i < EcomCart.reinitCallbacks.length; i++) {
+            EcomCart.reinitCallbacks[i]();
+        }
+
     },
 
 
@@ -717,7 +731,7 @@ var EcomCart = {
                         }
                         if(selector == ".number_of_items") {
                             if(EcomCart.debug) {console.debug("doing .number_of_items");}
-                            numericValue = parseFloat(value);
+                            var numericValue = parseFloat(value);
                             if(EcomCart.debug) {console.debug("value "+numericValue);}
                             EcomCart.cartHasItems = (numericValue > 0 ? true : false);
                             //update cart menu items
@@ -727,7 +741,7 @@ var EcomCart = {
                                     if( ! jQuery(el).is("a")) {
                                         myElement = jQuery(el).find("a");
                                     }
-                                    innerText = jQuery(myElement).html();
+                                    var innerText = jQuery(myElement).html();
                                     var numbersOnlyRE = new RegExp('(\\d+)', "g");
                                     var newInnerText = innerText.replace(numbersOnlyRE, value);
                                     jQuery(myElement).html(newInnerText);
@@ -779,7 +793,7 @@ var EcomCart = {
                         //we go through all the ones that are marked as 'inCart' already
                         //as part of this we check if they are still incart
                         //and as part of this process, we add the "inCart" where needed
-                        if(EcomCart.debug) {console.debug("starting process");}
+                        if(EcomCart.debug) {console.debug("starting replaceclass process");}
                         jQuery("."+parameter).each(
                             function(i, el) {
                                 var id = jQuery(el).attr("id");
