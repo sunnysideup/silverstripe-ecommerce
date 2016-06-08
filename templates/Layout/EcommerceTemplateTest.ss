@@ -325,6 +325,7 @@ CartResponse:
     <tr><th scope="row" style="width: 40%;">&#36;RemoveAllLink</th><td width="60%"><a href="$RemoveAllLink">$RemoveAllLink</a></td></tr>
     <tr><th scope="row" style="width: 40%;">&#36;RemoveAllAndEditLink</th><td width="60%"><a href="$RemoveAllLink">$RemoveAllAndEditLink</a></td></tr>
     <tr><th scope="row" style="width: 40%;">&#36;SetSpecificQuantityItemLink - adding eleven here</th><td width="60%"><a href="$SetSpecificQuantityItemLink(11)">$SetSpecificQuantityItemLink(11)</a></td></tr>
+    <tr><th scope="row" style="width: 40%;">&#36;EcomConfig.NotForSaleMessage</th><td width="60%">$EcomConfig.NotForSaleMessage</td></tr>
 </table>
 
 <h4>Status and Price</h4>
@@ -363,7 +364,7 @@ window.setTimeout(
         var ToC =
             "<nav role='navigation' class='table-of-contents'>" +
                 "<h2>On this page:</h2>" +
-                "<ul>";        
+                "<ul>";
         var newLine, el, title, link, id, basehref;
         basehref = window.location.href;
 

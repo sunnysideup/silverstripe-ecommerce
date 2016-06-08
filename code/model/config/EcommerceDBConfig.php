@@ -433,19 +433,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         $self->getOrderStepsField()
                     ),
                     new Tab('Advanced',
-                        new HeaderField('EcommerceVersionHeading', 'Version'),
-                        new LiteralField('EcommerceVersion', '<p><strong>E-commerce</strong>: '.$versionInfo->Version().'</p>'),
-                        new LiteralField('SVNVersion', '<p><strong>SVN</strong>: '.$versionInfo->SvnVersion().'</p>'),
-                        new LiteralField('GITVersion', '<p><strong>GIT</strong>: not available yet.</p>'),
-                        new HeaderField('ReviewHardcodedSettingsHeading', 'Hard-coded settings'),
                         new LiteralField(
                             'ReviewHardcodedSettings',
                             '<p>
-								Your developer has pre-set some configurations for you.  You can
-								<a href="/dev/ecommerce/ecommercetaskcheckconfiguration" data-popup="true">review these settings</a>
-								but you will need to ask your developer to change them if they are not right.
-								The reason they can not be set is that changing them can potentially break your application.
-							</p>'
+                                Your developer has pre-set some configurations for you.
+                                You can
+                                <a href="/dev/ecommerce/ecommercetaskcheckconfiguration" data-popup="true">review these settings</a>
+                                but you will need to ask your developer to change them if they are not right.
+                                The reason they can not be set is that changing them can break your application.
+                            </p>'
                         )
                     ),
                     /*$processtab = new Tab('OrderProcess',
@@ -703,9 +699,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $obj->write();
         }
         DB::alteration_message('
-			<hr /><hr /><hr /><hr /><hr />
-			<h1 style="color: darkRed">Please make sure to review your <a href="/dev/ecommerce/">e-commerce settings</a>.</h1>
-			<hr /><hr /><hr /><hr /><hr />',
+            <hr /><hr /><hr /><hr /><hr />
+            <h1 style="color: darkRed">Please make sure to review your <a href="/dev/ecommerce/">e-commerce settings</a>.</h1>
+            <hr /><hr /><hr /><hr /><hr />',
             'edited'
         );
     }
