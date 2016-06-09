@@ -60,5 +60,3 @@ LeftAndMain:
       - ProductsAndGroupsModelAdmin
       - ProductConfigModelAdmin
       - StoreAdmin
-
-

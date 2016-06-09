@@ -66,7 +66,8 @@ class Product extends Page implements BuyableModel
      */
     private static $many_many = array(
         'ProductGroups' => 'ProductGroup',
-        'AdditionalFiles' => 'File', //this may include images, pdfs, videos, etc...
+        'AdditionalImages' => 'Images',
+        'AdditionalFiles' => 'File',
     );
 
     /**
@@ -204,6 +205,7 @@ class Product extends Page implements BuyableModel
         $uploadField->setCallingClass('Product');
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
+        $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
         $fields->addFieldToTab('Root.Details', new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
@@ -326,8 +328,23 @@ class Product extends Page implements BuyableModel
     protected function getAdditionalImagesField()
     {
         $uploadField = new UploadFIeld(
+            'AdditionalImages',
+            'More images'
+        );
+        $uploadField->setAllowedMaxFileNumber(12);
+        return $uploadField;
+    }
+
+    /**
+     * Used in getCSMFields.
+     *
+     * @return GridField
+     **/
+    protected function getAdditionalFilesField()
+    {
+        $uploadField = new UploadFIeld(
             'AdditionalFiles',
-            'More files and images'
+            'Additional Files'
         );
         $uploadField->setAllowedMaxFileNumber(12);
         return $uploadField;
@@ -576,21 +593,6 @@ class Product extends Page implements BuyableModel
         if ($parent = $this->MainParentGroup()) {
             return $parent->BestAvailableImage();
         }
-    }
-
-    /**
-     * @return ArrayList
-     */
-    function AdditionalImages()
-    {
-        $al = ArrayList::create();
-        $files = $this->AdditionalFiles();
-        foreach($files as $file) {
-            if($file && $file->exists() && $file instanceof Image) {
-                $al->push($file);
-            }
-        }
-        return $al;
     }
 
     /**
