@@ -66,7 +66,7 @@ class Product extends Page implements BuyableModel
      */
     private static $many_many = array(
         'ProductGroups' => 'ProductGroup',
-        'AdditionalImages' => 'Images',
+        'AdditionalImages' => 'Image',
         'AdditionalFiles' => 'File',
     );
 
