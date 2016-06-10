@@ -83,7 +83,7 @@ if(
 
                 var i;
                 for (i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
-                    if((i  + 1) < EcomOrderFormWithShippingAddress.fieldArray.length) {
+                    if(i > 0) {
                         EcomOrderFormWithShippingAddress.shippingFieldSelectors += ", ";
                         EcomOrderFormWithShippingAddress.billingFieldSelectors += ", ";
                     }
@@ -114,7 +114,7 @@ if(
                 var shippingFieldSelector = "";
                 var billingFieldValue = "";
                 var shippingFieldValue = "";
-                for (i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
+                for (var i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
                     billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
                     shippingFieldSelector = EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
                     billingFieldValue = jQuery(billingFieldSelector).val();
@@ -144,20 +144,30 @@ if(
             }
         },
 
-
+        /**
+         * return the billing field selector
+         * @param string
+         * @return string
+         */ 
         billingFieldSelector: function(name) {
-            return ""+
+            name = name.replace("Shipping", "");
+            return " "+
                 EcomOrderFormWithShippingAddress.formSelector+" input[name='"+name+"'], "+
                 EcomOrderFormWithShippingAddress.formSelector+" select[name='"+name+"'], "+
                 EcomOrderFormWithShippingAddress.formSelector+" textarea[name='"+name+"']";
         },
 
+        /**
+         * return the shipping field selector
+         * @param string
+         * @return string
+         */ 
         shippingFieldSelector: function(name) {
-            name = name.replace("Billing", "");
-            return ""+
-                EcomOrderFormWithShippingAddress.formSelector+" input[name='Shipping"+name+"'], "+
-                EcomOrderFormWithShippingAddress.formSelector+" select[name='Shipping"+name+"'], "+
-                EcomOrderFormWithShippingAddress.formSelector+" textarea[name='Shipping"+name+"']";
+            name = "Shipping"+name.replace("Billing", "");
+            return " "+
+                EcomOrderFormWithShippingAddress.formSelector+" input[name='"+name+"'], "+
+                EcomOrderFormWithShippingAddress.formSelector+" select[name='"+name+"'], "+
+                EcomOrderFormWithShippingAddress.formSelector+" textarea[name='"+name+"']";
         },
 
         //this function exists, because FF was auto-completing
@@ -178,14 +188,20 @@ if(
          * get a list of fields that is potentially shared.
          */
         getListOfSharedFields: function(){
-
-            jQuery(this.formSelector+' input, '+this.formSelector+", select"+this.formSelector+" textarea").each(
+            jQuery(this.formSelector+' input, '+this.formSelector+" select, "+this.formSelector+" textarea").each(
                 function(i, el){
                     var name = jQuery(el).attr("name");
                     if(typeof name !== 'undefined') {
-                        var billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(name);
-                        if(jQuery(billingFieldSelector).length > 0) {
-                            EcomOrderFormWithShippingAddress.fieldArray.push(name);
+                        var type = jQuery(el).attr("type");
+                        if(typeof type !== 'undefined') {
+                            if(type !== 'submit') {
+                                if(type !== 'hidden') {
+                                    var billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(name);
+                                    if(jQuery(billingFieldSelector).length > 0) {
+                                        EcomOrderFormWithShippingAddress.fieldArray.push(name);
+                                    }
+                                }
+                            }
                         }
                     }
                     //your code here
@@ -193,7 +209,6 @@ if(
         },
 
         turnOnListeners: function(){
-
             //if the billing updates, the shipping updates
             jQuery(EcomOrderFormWithShippingAddress.billingFieldSelectors).change(
                 function() {
