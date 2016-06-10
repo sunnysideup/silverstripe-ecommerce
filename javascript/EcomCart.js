@@ -51,7 +51,7 @@
 })(jQuery);
 
 
-var EcomCart = {
+export var EcomCart = {
 
     /**
      * Set to TRUE to see debug info.
@@ -921,9 +921,4 @@ var EcomCart = {
 
 
 
-}
-
-
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    eval("export EcomCart");
-}
+};
