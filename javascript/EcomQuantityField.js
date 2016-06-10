@@ -14,6 +14,9 @@
     );
 })(jQuery);
 
+
+
+
 var EcomQuantityField = {
 
     //todo: make more specific! some selector that holds true for all cart holders.
@@ -42,8 +45,10 @@ var EcomQuantityField = {
     EcomCart: {},
 
     init: function (){
-        var EcomCart = require("./EcomCart");
-        this.EcomCart = EcomCart.EcomCart;
+        if(typeof require !== "undefined") {
+            var EcomCart = require("./EcomCart");
+            this.EcomCart = EcomCart.EcomCart;
+        }
         this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
         //make sure it only runs if needed...
         if(jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
@@ -166,4 +171,9 @@ var EcomQuantityField = {
         jQuery(EcomQuantityField.removeSelector).css("border", "3px solid red");
         jQuery(EcomQuantityField.quantityFieldSelector).css("border", "3px solid red");
     }
+}
+
+
+if(typeof EcomCart !== "undefined") {
+    EcomQuantityField.EcomCart = EcomCart;
 }

@@ -50,7 +50,8 @@
     );
 })(jQuery);
 
-export var EcomCart = {
+
+var EcomCart = {
 
     /**
      * Set to TRUE to see debug info.
@@ -920,4 +921,9 @@ export var EcomCart = {
 
 
 
+}
+
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    eval("export EcomCart");
 }
