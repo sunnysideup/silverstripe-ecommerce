@@ -243,26 +243,33 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         return $visitorCountryProvider->getIP();
     }
 
+    private static $_countries_from_db_cache = array();
+
     /**
-     * @return array
      *               e.g.
      *               "NZ" => "New Zealand"
      * @return array
      */
     public static function get_country_dropdown($showAllCountries = true, $addEmptyString = false)
     {
-        $array = array();
-        $objects = null;
-        if (class_exists('Geoip') && $showAllCountries) {
-            $array = Geoip::getCountryDropDown();
-        }
-        elseif ($showAllCountries) {
-            $objects = EcommerceCountry::get();
+        $key = ($showAllCountries ? "all" : "notall");
+        if(isset(self::$_countries_from_db_cache[$key])) {
+            $array = self::$_countries_from_db_cache[$key];
         } else {
-            $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
-        }
-        if ($objects && $objects->count()) {
-            $array = $objects->map('Code', 'Name')->toArray();
+            $array = array();
+            $objects = null;
+            if (class_exists('Geoip') && $showAllCountries) {
+                $array = Geoip::getCountryDropDown();
+            }
+            elseif ($showAllCountries) {
+                $objects = EcommerceCountry::get();
+            } else {
+                $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
+            }
+            if ($objects && $objects->count()) {
+                $array = $objects->map('Code', 'Name')->toArray();
+            }
+            self::$_countries_from_db_cache[$key] = $array;
         }
         if(count($array)) {
             if($addEmptyString) {
