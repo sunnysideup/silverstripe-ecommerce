@@ -1065,17 +1065,24 @@ class Product extends Page implements BuyableModel
         if ($extended !== null) {
             return $extended;
         }
-        if (!EcommerceCountry::allow_sales()) {
+        if ( ! EcommerceCountry::allow_sales()) {
+            print_r($extended);
+            die("asdfdseeeee");
+
             return false;
         }
 
         $price = $this->getCalculatedPrice();
         if ($price == 0 && !$config->AllowFreeProductPurchase) {
+            print_r($extended);
+            die("asdfdseeeeeaseeeeeeeeeee");
             return false;
         }
         // Standard mechanism for accepting permission changes from decorators
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
+            print_r($extended);
+            die("asdfdseeeeeooooooooooooooo");
             return $extended;
         }
         return $allowpurchase;
