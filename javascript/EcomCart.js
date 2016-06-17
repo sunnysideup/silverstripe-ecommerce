@@ -51,7 +51,7 @@
 })(jQuery);
 
 
-export var EcomCart = {
+var EcomCart = {
 
     /**
      * Set to TRUE to see debug info.

@@ -48,6 +48,11 @@ var EcomQuantityField = {
         if(typeof require !== "undefined") {
             var EcomCart = require("./EcomCart");
             this.EcomCart = EcomCart.EcomCart;
+
+        }
+        else {
+            this.EcomCart = EcomCart;
+            EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
         }
         this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
         //make sure it only runs if needed...
