@@ -9,7 +9,7 @@
 (function($){
     $(document).ready(
         function() {
-            EcomQuantityField.init(EcomCart);
+            EcomQuantityField.init();
         }
     );
 })(jQuery);
@@ -54,7 +54,7 @@ var EcomQuantityField = {
                 this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
             }
             else if(typeof EcomCart !== "undefined") {
-                this.reinitCallbacks.push(EcomQuantityField.reinit);
+                EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
             }
         }
         //make sure it only runs if needed...
