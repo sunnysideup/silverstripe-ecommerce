@@ -52,9 +52,8 @@ var EcomQuantityField = {
         }
         else {
             this.EcomCart = EcomCart;
-            EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
+            EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
         }
-        this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
         //make sure it only runs if needed...
         if(jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
             jQuery(EcomQuantityField.delegateRootSelector).on(
