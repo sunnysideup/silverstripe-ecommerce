@@ -9,11 +9,10 @@
 (function($){
     $(document).ready(
         function() {
-            EcomQuantityField.init();
+            EcomQuantityField.init(EcomCart);
         }
     );
 })(jQuery);
-
 
 
 
@@ -51,8 +50,12 @@ var EcomQuantityField = {
 
         }
         else {
-            this.EcomCart = EcomCart;
-            EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
+            if(typeof EcomQuantityField.EcomCart !== "undefined") {
+                this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
+            }
+            else if(typeof EcomCart !== "undefined") {
+                this.reinitCallbacks.push(EcomQuantityField.reinit);
+            }
         }
         //make sure it only runs if needed...
         if(jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
