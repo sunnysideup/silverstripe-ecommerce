@@ -1061,6 +1061,9 @@ class Product extends Page implements BuyableModel
             return false;
         }
         //check country
+        if( ! $member) {
+            $member = Member::currentUser();
+        }        
         $extended = $this->extendedCan('canPurchaseByCountry', $member);
         if ($extended !== null) {
             return $extended;
@@ -1075,6 +1078,9 @@ class Product extends Page implements BuyableModel
             return false;
         }
         // Standard mechanism for accepting permission changes from decorators
+        if( ! $member) {
+            $member = Member::currentUser();
+        }        
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1084,6 +1090,9 @@ class Product extends Page implements BuyableModel
 
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1104,6 +1113,9 @@ class Product extends Page implements BuyableModel
      */
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }        
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1126,6 +1138,9 @@ class Product extends Page implements BuyableModel
     {
         if (is_a(Controller::curr(), Object::getCustomClass('ProductsAndGroupsModelAdmin'))) {
             return false;
+        }
+        if( ! $member) {
+            $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

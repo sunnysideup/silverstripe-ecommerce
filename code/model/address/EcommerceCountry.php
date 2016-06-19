@@ -134,6 +134,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -151,6 +154,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -171,6 +177,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -191,6 +200,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canDelete($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -260,8 +272,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             $objects = null;
             if (class_exists('Geoip') && $showAllCountries) {
                 $array = Geoip::getCountryDropDown();
-            }
-            elseif ($showAllCountries) {
+            } elseif ($showAllCountries) {
                 $objects = EcommerceCountry::get();
             } else {
                 $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
@@ -284,7 +295,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * If there is only ONE allowed country code
      * then a lot of checking of countries can be avoided.
      *
-     * @return string - countrycode
+     * @return string | null - countrycode
      **/
     public static function get_fixed_country_code()
     {
@@ -293,7 +304,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return array_shift($a);
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -322,6 +333,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (isset($options[$code])) {
             return $options[$code];
         } elseif ($code) {
+            $obj = EcommerceCountry::get()->filter(array('Code' => $code))->first();
+            if($obj) {
+                return $obj->Name;
+            }
             return $code;
         } else {
             return _t('Ecommerce.COUNTRY_NOT_FOUND', '[COUNTRY NOT FOUND]');

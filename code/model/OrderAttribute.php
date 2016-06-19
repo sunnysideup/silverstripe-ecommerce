@@ -153,6 +153,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      **/
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -174,6 +177,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      **/
     public function canView($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -207,6 +213,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      **/
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;

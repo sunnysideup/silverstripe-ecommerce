@@ -514,7 +514,28 @@ class Order extends DataObject implements EditableEcommerceObject
             //$htmlSummary = $this->renderWith("Order");
             //Config::unnest();
 
-            $fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<iframe src="'.$this->PrintLink().'" width="100%" height="500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>'));
+            //links
+            $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
+            $link = $this->getPrintLink();
+            $label = _t('Order.PRINT_INVOICE', 'invoice');
+            $linkHTML = '<a href="'.$link.'" onclick="'.$js.'">'.$label.'</a>';
+            $linkHTML .= ' | ';
+            $link = $this->getPackingSlipLink();
+            $label = _t('Order.PRINT_PACKING_SLIP', 'packing slip');
+            $linkHTML .= '<a href="'.$link.'" onclick="'.$js.'">'.$label.'</a>';
+            $linkHTML = '<h3>Print: '.$linkHTML.'</h3>';
+            $fields->addFieldToTab(
+                'Root.Main',
+                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $linkHTML)
+            );
+
+            //add order here as well.
+            $fields->addFieldToTab(
+                'Root.Main',
+                new LiteralField(
+                    'MainDetails',
+                    '<iframe src="'.$this->getPrintLink().'" width="100%" height="500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>')
+            );
             $fields->insertAfter(
                 new Tab(
                     'Emails',
@@ -577,11 +598,14 @@ class Order extends DataObject implements EditableEcommerceObject
             $shopAdminArray += array(
                 $currentMember->ID => $currentMember->getName(),
             );
-            $fields->addFieldToTab('Root.Cancellation', DropdownField::create(
-                'CancelledByID',
-                $cancelledField->Title(),
-                $shopAdminArray
-            ));
+            $fields->addFieldToTab(
+                'Root.Cancellation',
+                DropdownField::create(
+                    'CancelledByID',
+                    $cancelledField->Title(),
+                    $shopAdminArray
+                )
+            );
             $fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());
             $submissionLog = $this->SubmissionLog();
             if ($submissionLog) {
@@ -637,7 +661,10 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($currencies && $currencies->count()) {
             $currencies = $currencies->map()->toArray();
             $fields->addFieldToTab('Root.Currency', new ReadOnlyField('ExchangeRate ', _t('Order.EXCHANGERATE', 'Exchange Rate'), $this->ExchangeRate));
-            $fields->addFieldToTab('Root.Currency', new DropdownField('CurrencyUsedID', _t('Order.CurrencyUsed', 'Currency Used'), $currencies));
+            $fields->addFieldToTab('Root.Currency', $currencyField = new DropdownField('CurrencyUsedID', _t('Order.CurrencyUsed', 'Currency Used'), $currencies));
+            if($this->IsSubmitted()) {
+                $fields->replaceField('CurrencyUsedID', $fields->dataFieldByName('CurrencyUsedID')->performReadonlyTransformation());
+            }
         } else {
             $fields->addFieldToTab('Root.Currency', new LiteralField('CurrencyInfo', '<p>You can not change currencies, because no currencies have been created.</p>'));
             $fields->replaceField('CurrencyUsedID', $fields->dataFieldByName('CurrencyUsedID')->performReadonlyTransformation());
@@ -1863,11 +1890,11 @@ class Order extends DataObject implements EditableEcommerceObject
    * 7. CRUD METHODS (e.g. canView, canEdit, canDelete, etc...)
 *******************************************************/
 
-/**
- * @param Member $member
- *
- * @return DataObject (Member)
- **/
+    /**
+     * @param Member $member
+     *
+     * @return DataObject (Member)
+     **/
      //TODO: please comment why we make use of this function
     protected function getMemberForCanFunctions(Member $member = null)
     {
@@ -1972,6 +1999,22 @@ class Order extends DataObject implements EditableEcommerceObject
 
         return substr($this->SessionID, $start, $size);
     }
+    /**
+     *
+     * @param Member (optional) $member
+     *
+     * @return bool
+     **/
+    public function canViewAdminStuff($member = null) {
+        $member = $this->getMemberForCanFunctions($member);
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
+        }
+        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+            return true;
+        }
+    }
 
     /**
      * if we set canEdit to false then we
@@ -1986,6 +2029,9 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public function canEdit($member = null)
     {
+        if( $this->IsArchived() ) {
+            return false;
+        }
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -2253,10 +2299,8 @@ class Order extends DataObject implements EditableEcommerceObject
     }
     public function getPackingSlipLink()
     {
-        if (Permission::check(Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
-            if ($this->IsSubmitted()) {
-                return Director::AbsoluteURL(OrderConfirmationPage::get_order_link($this->ID)).'?packingslip=1';
-            }
+        if ($this->IsSubmitted()) {
+            return Director::AbsoluteURL(OrderConfirmationPage::get_order_link($this->ID)).'?packingslip=1';
         }
     }
 
@@ -2861,7 +2905,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * Casted variable - has the order been submitted?
-     *
+     * alias
      * @param bool $recalculate
      *
      * @return bool
@@ -2870,9 +2914,17 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         return $this->getIsSubmitted($recalculate);
     }
+
+    /**
+     * Casted variable - has the order been submitted?
+     *
+     * @param bool $recalculate
+     *
+     * @return bool
+     **/
     public function getIsSubmitted($recalculate = false)
     {
-        if ($this->isSubmittedTempVar == -1 || $recalculate) {
+        if ($this->isSubmittedTempVar === -1 || $recalculate) {
             if ($this->SubmissionLog()) {
                 $this->isSubmittedTempVar = true;
             } else {
@@ -2881,6 +2933,22 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return $this->isSubmittedTempVar;
+    }
+
+    /**
+     *
+     *
+     * @return bool
+     */
+    function IsArchived()
+    {
+        $lastStep = OrderStep::get()->Last();
+        if($lastStep) {
+            if($lastStep->ID == $this->StatusID) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

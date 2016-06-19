@@ -108,6 +108,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -125,6 +128,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -142,6 +148,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -165,6 +174,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($this->UseThisOne) {
             return false;
         } else {
+            if( ! $member) {
+                $member = Member::currentUser();
+            }
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if ($extended !== null) {
                 return $extended;

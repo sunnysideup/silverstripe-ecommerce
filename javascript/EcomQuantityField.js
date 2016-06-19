@@ -44,19 +44,14 @@ var EcomQuantityField = {
     EcomCart: {},
 
     init: function (){
-        if(typeof require !== "undefined") {
-            var EcomCart = require("./EcomCart");
+        if(typeof EcomCart === "undefined" ) {
+            var EcomCart = require("./EcomCartWebPack");
             this.EcomCart = EcomCart.EcomCart;
-
         }
         else {
-            if(typeof EcomQuantityField.EcomCart !== "undefined") {
-                this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
-            }
-            else if(typeof EcomCart !== "undefined") {
-                EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
-            }
+            EcomQuantityField.EcomCart = EcomCart;
         }
+        EcomQuantityField.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
         //make sure it only runs if needed...
         if(jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
             jQuery(EcomQuantityField.delegateRootSelector).on(
@@ -130,7 +125,14 @@ var EcomQuantityField = {
                             }
                             var url = jQuery('base').attr('href') + URLSegment + 'quantity=' + this.value;
                             url = url.replace("&amp;", "&");
-                            EcomQuantityField.EcomCart.getChanges(url, null, this);
+                            if(typeof EcomQuantityField.EcomCart !== 'undefined') {
+                                EcomQuantityField.EcomCart.getChanges(url, null, this);
+                            } else if(typeof EcomCart !== "undefined") {
+                                EcomCart.getChanges(url, null, this);
+                            } else {
+                                alert("Sorry, changes could not be saved.");
+                                window.location = url;
+                            }
                         }
                     }
                 }
@@ -178,9 +180,4 @@ var EcomQuantityField = {
         jQuery(EcomQuantityField.removeSelector).css("border", "3px solid red");
         jQuery(EcomQuantityField.quantityFieldSelector).css("border", "3px solid red");
     }
-}
-
-
-if(typeof EcomCart !== "undefined") {
-    EcomQuantityField.EcomCart = EcomCart;
 }

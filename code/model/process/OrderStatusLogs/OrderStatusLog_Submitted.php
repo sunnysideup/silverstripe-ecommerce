@@ -80,6 +80,9 @@ class OrderStatusLog_Submitted extends OrderStatusLog
      */
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
