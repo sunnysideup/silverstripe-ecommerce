@@ -386,7 +386,6 @@ class OrderItem extends OrderAttribute
             //if it can not be purchased or it does not exist
             //then we do not accept it!!!!
             $this->delete();
-            user_error('Product added to cart can not be purchased. It has been deleted.');
         }
 
         return parent::runUpdate($recalculate);
