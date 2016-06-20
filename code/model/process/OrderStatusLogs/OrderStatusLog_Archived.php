@@ -45,6 +45,9 @@ class OrderStatusLog_Archived extends OrderStatusLog
      */
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;

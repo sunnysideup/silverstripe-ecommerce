@@ -174,6 +174,9 @@ class ProductGroup extends Page
 
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -194,6 +197,9 @@ class ProductGroup extends Page
      */
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -216,6 +222,9 @@ class ProductGroup extends Page
     {
         if (is_a(Controller::curr(), Object::getCustomClass('ProductsAndGroupsModelAdmin'))) {
             return false;
+        }
+        if( ! $member) {
+            $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1178,10 +1187,10 @@ class ProductGroup extends Page
             $this->canBePurchasedArray = array();
             if ($this->config()->get('actively_check_for_can_purchase')) {
                 foreach ($this->allProducts as $buyable) {
-                    if (!$buyable->canPurchase()) {
-                        $this->canNOTbePurchasedArray[$buyable->ID] = $buyable->ID;
-                    } else {
+                    if ($buyable->canPurchase()) {
                         $this->canBePurchasedArray[$buyable->ID] = $buyable->ID;
+                    } else {
+                        $this->canNOTbePurchasedArray[$buyable->ID] = $buyable->ID;
                     }
                 }
             } else {
@@ -1859,7 +1868,7 @@ class ProductGroup_Controller extends Page_Controller
      */
     protected function productListsHTMLCanBeCached()
     {
-        return true;
+        return Config::inst()->get('ProductGroup', 'actively_check_for_can_purchase');
     }
 
     /*****************************************************

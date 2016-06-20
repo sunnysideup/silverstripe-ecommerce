@@ -134,6 +134,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -155,6 +158,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      **/
     public function canView($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -186,11 +192,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      **/
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
         }
-        if (!$this->exists()) {
+        if ( ! $this->exists()) {
             return $this->canCreate($member);
         }
         if ($this->_canEdit === null) {
@@ -209,6 +218,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     public function canDelete($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;

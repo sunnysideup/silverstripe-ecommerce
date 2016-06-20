@@ -118,6 +118,9 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
      */
     public function canView($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -138,6 +141,9 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
      */
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -161,6 +167,9 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         $array = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         if (in_array($this->getCode, $array)) {
             return false;
+        }
+        if( ! $member) {
+            $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

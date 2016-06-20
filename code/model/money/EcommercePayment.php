@@ -118,6 +118,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -131,10 +134,17 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     public function canView($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
         }
+        $order = $this->Order();
+        if($order && $order->exists()) {
+            return $order->canView();
+        }        
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
         }
@@ -151,6 +161,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
+        if( ! $member) {
+            $member = Member::currentUser();
+        }
         if ($this->Status == 'Pending' || $this->Status == 'Incomplete') {
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if ($extended !== null) {

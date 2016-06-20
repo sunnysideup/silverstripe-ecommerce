@@ -15,6 +15,8 @@
 
 EcomProducts = {
 
+    EcomCart: null,
+
     //see: http://www.jacklmoore.com/colorbox/
     colorboxDialogOptions_addVariations: {
         height: "95%",
@@ -25,12 +27,13 @@ EcomProducts = {
         iframe: false,
         model: true,
         onComplete: function (event) {
-            var EcomCart = require("./EcomCart");
-            var EcomCart = EcomCart.EcomCart;            
-            EcomCart.reinit();
-            EcomQuantityField.set_delegateRootSelector("#colorbox");
-            EcomQuantityField.init();
-            EcomQuantityField.unset_delegateRootSelector();
+            if(typeof EcomCart === "undefined" ) {
+                var EcomCart = require("./EcomCartWebPack");
+                EcomProducts.EcomCart = EcomCart.EcomCart;
+            } else {
+                EcomProducts.EcomCart = EcomCart;
+            }
+            EcomProducts.EcomCart.reinit();
         }
     },
 

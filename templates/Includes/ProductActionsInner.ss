@@ -1,5 +1,5 @@
 <% if HasVariations %>
-<ul class="$AJAXDefinitions.ProductListItemClassName <% if VariationIsInCart %>inCart<% else %>notInCart<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
+<ul class="$AJAXDefinitions.ProductListItemClassName <% if VariationIsInCart %>$AjaxDefinitons.ProductListItemInCartClassName<% else %>$AjaxDefinitons.ProductListItemNotInCartClassName<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
     <li class="variationsLink">
         <a class="selectVariation btn action ajaxAddToCartLink" href="{$AddVariationsLink}" rel="VariationsTable{$ID}" title="<% _t("Product.UPDATECART","update cart for") %> $Title.ATT">
             <span class="removeLink"><% _t("Product.INCART","In Cart") %></span>
@@ -8,7 +8,7 @@
     </li>
 </ul>
 <% else %>
-<ul class="$AJAXDefinitions.ProductListItemClassName <% if IsInCart %>inCart<% else %>notInCart<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
+<ul class="$AJAXDefinitions.ProductListItemClassName <% if IsInCart %>$AJAXDefinitions.ProductListItemInCartClassName<% else %>$AJAXDefinitions.ProductListItemNotInCartClassName<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
     <li class="removeLink">
         <a class="goToCartLink btn action" href="$EcomConfig.CheckoutLink" title="<% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %>">
             <span class="removeLink goToCartLink"><% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %></span>
