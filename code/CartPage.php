@@ -716,10 +716,14 @@ class CartPage_Controller extends Page_Controller
                     if ($this->isCartPage()) {
                         $continueLink = $this->ContinueShoppingLink();
                         if ($continueLink) {
-                            $this->actionLinks->push(new ArrayData(array(
-                                'Title' => $this->ContinueShoppingLabel,
-                                'Link' => $continueLink,
-                            )));
+                            $this->actionLinks->push(
+                                ArrayData::create(
+                                    array(
+                                        'Title' => $this->ContinueShoppingLabel,
+                                        'Link' => $continueLink,
+                                    )
+                                )
+                            );
                         }
                     }
                 }
