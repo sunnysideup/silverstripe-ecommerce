@@ -25,9 +25,6 @@
         </a>
     </li>
     <% end_if %>
-    <li>
-        <a href="/Security/logout">log-out</a>
-    </li>
 </ul>
 </div>
 <% end_if %>

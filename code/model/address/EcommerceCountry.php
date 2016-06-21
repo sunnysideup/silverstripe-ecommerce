@@ -444,6 +444,14 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * maps like this
+     *     NZ => 1
+     *     AU => 2
+     *     etc...
+     * @var array
+     */
+    private static $_code_to_id_map = array();
+    /**
      * returns the ID of the country or 0.
      *
      * @param string (optional)   $countryCode
@@ -456,10 +464,15 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (!$countryCode) {
             $countryCode = self::get_country($recalculate);
         }
+        if(isset(self::$_code_to_id_map[$countryCode])) {
+            return self::$_code_to_id_map[$countryCode];
+        }
+        self::$_code_to_id_map[$countryCode] = 0;
         $country = EcommerceCountry::get()
             ->filter(array('Code' => $countryCode))
             ->first();
         if ($country) {
+            self::$_code_to_id_map[$countryCode] = $country->ID;
             return $country->ID;
         }
 
