@@ -1575,12 +1575,14 @@ class Order extends DataObject implements EditableEcommerceObject
         $step = $this->MyStep();
         $config = $this->EcomConfig();
         $replacementArray = array();
+        //set subject
         if ($subject) {
             $subject = $subject;
         } else {
             $subject = $step->EmailSubject;
         }
         $subject = str_replace('[OrderNumber]', $this->ID, $subject);
+        //set other variables
         $replacementArray['Subject'] = $subject;
         $replacementArray['To'] = '';
         $replacementArray['CC'] = '';
