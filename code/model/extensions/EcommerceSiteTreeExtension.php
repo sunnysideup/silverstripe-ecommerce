@@ -107,15 +107,6 @@ class EcommerceSiteTreeExtension_Controller extends Extension
     }
 
     /**
-     *
-     * @return AccountPage
-     */
-    function AccountPage()
-    {
-        return AccountPage::get()->first();
-    }
-
-    /**
      * returns the current order.
      *
      * @return Order
