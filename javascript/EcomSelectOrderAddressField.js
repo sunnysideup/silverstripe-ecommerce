@@ -10,7 +10,11 @@
  *
  *
  */
-
+if(typeof EcomSelectOrderAddressFieldOptions !== 'undefined') {
+    for(var i = 0; $i < EcomSelectOrderAddressFieldOptions.length; i++) {
+        EcomSelectOrderAddressField.set_data(EcomSelectOrderAddressFieldOptions[i].id, EcomSelectOrderAddressFieldOptions[i].address)
+    }
+}
 ;(function($) {
     $(document).ready(
         function() {
