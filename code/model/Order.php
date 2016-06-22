@@ -2718,6 +2718,7 @@ class Order extends DataObject implements EditableEcommerceObject
             'Billing' => '',
             'Shipping' => '',
         );
+        $code = null;
         if ($this->BillingAddressID) {
             $billingAddress = BillingAddress::get()->byID($this->BillingAddressID);
             if ($billingAddress) {
@@ -2727,7 +2728,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
         if ($this->ShippingAddressID && $this->UseShippingAddress) {
-            $shippingAddress = BillingAddress::get()->byID($this->ShippingAddressID);
+            $shippingAddress = ShippingAddress::get()->byID($this->ShippingAddressID);
             if ($shippingAddress) {
                 if ($shippingAddress->ShippingCountry) {
                     $countryCodes['Shipping'] = $shippingAddress->ShippingCountry;
@@ -2739,12 +2740,14 @@ class Order extends DataObject implements EditableEcommerceObject
             ||
             (!$countryCodes['Billing'] && $countryCodes['Shipping'])
         ) {
-            return $countryCodes['Shipping'];
+            $code = $countryCodes['Shipping'];
         } elseif ($countryCodes['Billing']) {
-            return $countryCodes['Billing'];
+            $code = $countryCodes['Billing'];
         } else {
-            return EcommerceCountry::get_country_from_ip();
+            $code = EcommerceCountry::get_country_from_ip();
         }
+        return $code;
+
     }
 
     /**

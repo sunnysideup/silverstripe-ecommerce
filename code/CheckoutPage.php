@@ -393,6 +393,7 @@ class CheckoutPage_Controller extends CartPage_Controller
     public function init()
     {
         parent::init();
+
         Requirements::themedCSS('CheckoutPage', 'ecommerce');
         $ajaxifyArray = EcommerceConfig::get('CheckoutPage_Controller', 'ajaxify_steps');
         if (count($ajaxifyArray)) {
@@ -402,9 +403,9 @@ class CheckoutPage_Controller extends CartPage_Controller
         }
         Requirements::javascript('ecommerce/javascript/EcomPayment.js');
         Requirements::customScript('
-			if (typeof EcomOrderForm != "undefined") {
-				EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
-			}',
+            if (typeof EcomOrderForm != "undefined") {
+                EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
+            }',
             'TermsAndConditionsMessage'
         );
         $this->steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
