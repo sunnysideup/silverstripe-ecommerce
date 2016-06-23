@@ -396,7 +396,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             //1. fixed country is first
             $countryCode = self::get_fixed_country_code();
             if (!$countryCode) {
-                //2. check order / shipping address
+                //2. check order / shipping address / ip address
                 if ($o = ShoppingCart::current_order()) {
                     $countryCode = $o->Country();
                 }
