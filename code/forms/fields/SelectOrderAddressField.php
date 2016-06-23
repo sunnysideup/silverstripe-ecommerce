@@ -54,7 +54,7 @@ class SelectOrderAddressField extends OptionsetField
         if ($this->addresses) {
             foreach ($this->addresses as $address) {
                 $js .= '
-            EcomSelectOrderAddressFieldOptions.push(id: '.$address->ID.', address: '.$address->JSONData().');
+            EcomSelectOrderAddressFieldOptions.push({id: '.$address->ID.', address: '.$address->JSONData().'});
                 ';
             }
         }
