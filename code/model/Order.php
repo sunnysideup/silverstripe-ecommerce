@@ -2033,9 +2033,6 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public function canEdit($member = null)
     {
-        if( $this->IsArchived() ) {
-            return false;
-        }
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -2047,7 +2044,6 @@ class Order extends DataObject implements EditableEcommerceObject
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
         }
-
         return false;
     }
 
