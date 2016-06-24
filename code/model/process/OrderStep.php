@@ -112,6 +112,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     );
 
     /**
+     * returns all the order steps
+     * that the admin should / can edit....
+     *
+     * @return DataList
+     */
+    public static function admin_manageable_steps()
+    {
+        $lastStep = OrderStep::get()->Last();
+        return OrderStep::get()->filter(array('CustomerCanEdit' => 0))->exclude(array('ID' => $lastStep->ID));
+    }
+
+    /**
      * casted variable.
      *
      * @return string
