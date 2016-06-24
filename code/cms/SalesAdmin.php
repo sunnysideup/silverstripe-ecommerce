@@ -69,9 +69,8 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     {
         $list = parent::getList();
         if (singleton($this->modelClass) instanceof Order) {
-            $list = $list->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"');
+            $list = $list->filter(array("StatusID" => OrderStep::admin_manageable_steps()->column('ID')));
         }
-
         return $list;
     }
 }

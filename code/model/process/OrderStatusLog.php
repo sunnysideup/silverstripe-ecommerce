@@ -123,9 +123,12 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
         }
-        if (!$this->InternalUseOnly) {
+        if ($this->InternalUseOnly) {
+            //only Shop Administrators can see it ...
+            return false;
+        } else {
             if ($this->Order()) {
-                if ($this->Order()->MemberID == $member->ID) {
+                if ($this->Order()->canView($member)) {
                     return true;
                 }
             }

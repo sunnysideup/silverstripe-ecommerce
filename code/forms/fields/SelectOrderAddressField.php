@@ -45,11 +45,17 @@ class SelectOrderAddressField extends OptionsetField
     public function Field($properties = array())
     {
         $jsArray = array();
-        $js = '';
+        $js = '
+            if(typeof EcomSelectOrderAddressFieldOptions === "undefined") {
+                EcomSelectOrderAddressFieldOptions = [];
+            }
+        ';
         $jsonCompare = array();
         if ($this->addresses) {
             foreach ($this->addresses as $address) {
-                $js .= ' EcomSelectOrderAddressField.set_data('.$address->ID.', '.$address->JSONData().");\r\n";
+                $js .= '
+            EcomSelectOrderAddressFieldOptions.push({id: '.$address->ID.', address: '.$address->JSONData().'});
+                ';
             }
         }
         Requirements::javascript('ecommerce/javascript/EcomSelectOrderAddressField.js');
