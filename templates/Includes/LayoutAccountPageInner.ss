@@ -14,7 +14,9 @@
 	</div>
 <% end_if %>
 
-<div id="PastOrderHolder">
-	<h3><% _t("Account.PreviousOrders","Previous Orders") %></h3>
-	<% include AccountPastOrders %>
-</div>
+<% if CurrentMember  %>
+    <div id="PastOrderHolder">
+    	<h3><% _t("Account.PreviousOrders","Previous Orders") %></h3>
+    	<% include AccountPastOrders %>
+    </div>
+<% end_if %>
