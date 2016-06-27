@@ -345,8 +345,11 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     private static $summary_fields = array(
         'Title' => 'Title',
-        'Member.Email' => 'Customer',
         'Status.Title' => 'Next Step',
+        'Member.Surname' => 'Name',
+        'Member.Email' => 'Email',
+        'TotalAsMoney.Nice' => 'Total',
+        'TotalItemsTimesQuantity' => 'Units'
     );
 
     /**
@@ -491,20 +494,26 @@ class Order extends DataObject implements EditableEcommerceObject
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
-        $fields->insertAfter(
-            new Tab(
-                'Next',
-                new HeaderField('MyOrderStepHeader', _t('Order.CURRENTSTATUS', '1. Current Status')),
+        $fields->addFieldsToTab(
+            'Root.Main',
+            array(
+                new GridField('OrderSummary', 'Summary', ArrayList::create(array($this)))
+            )
+        );
+
+        $fields->addFieldsToTab(
+            'Root.Next',
+            array(
+                new HeaderField('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
                 $this->OrderStepField(),
-                new HeaderField('OrderStepNextStepHeader', _t('Order.ACTIONNEXTSTEP', '2. Action Next Step')),
+                new HeaderField('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
                 new LiteralField('OrderStepNextStepHeaderExtra', '<p><strong>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to see up-to-date options here.').'</strong></p>'),
-                new HeaderField('ActionNextStepManually', _t('Order.MANUALSTATUSCHANGE', '3. Move Order Along')),
+                new HeaderField('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along')),
                 new LiteralField(
                     'StatusIDExplanation',
                     '<h3><a href="'.$this->CMSEditLink().'" class="action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">'._t('Order.REFRESH', 'refresh now').'</span></a></h3>'
                 )
-            ),
-            'Main'
+            )
         );
         $this->MyStep()->addOrderStepFields($fields, $this);
 
@@ -525,13 +534,13 @@ class Order extends DataObject implements EditableEcommerceObject
             $linkHTML .= '<a href="'.$link.'" onclick="'.$js.'">'.$label.'</a>';
             $linkHTML = '<h3>Print: '.$linkHTML.'</h3>';
             $fields->addFieldToTab(
-                'Root.Main',
+                'Root.Print',
                 LiteralField::create('getPrintLinkANDgetPackingSlipLink', $linkHTML)
             );
 
             //add order here as well.
             $fields->addFieldToTab(
-                'Root.Main',
+                'Root.Print',
                 new LiteralField(
                     'MainDetails',
                     '<iframe src="'.$this->getPrintLink().'" width="100%" height="500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>')
@@ -541,7 +550,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     'Emails',
                     $this->getEmailsTableField()
                 ),
-                'Next'
+                'Print'
             );
             $fields->addFieldToTab(
                 "Root.Items",
@@ -562,9 +571,14 @@ class Order extends DataObject implements EditableEcommerceObject
                 )
             );
 
-            $fields->addFieldToTab('Root.Payments', $this->getPaymentsField());
-            $fields->addFieldToTab('Root.Payments', new ReadOnlyField('TotalPaid', _t('Order.TOTALPAID', 'Total Paid'), $this->getTotalPaid()));
-            $fields->addFieldToTab('Root.Payments', new ReadOnlyField('TotalOutstanding', _t('Order.TOTALOUTSTANDING', 'Total Outstanding'), $this->getTotalOutstanding()));
+            $fields->addFieldsToTab(
+                'Root.Payments',
+                array(
+                    $this->getPaymentsField(),
+                    new ReadOnlyField('TotalPaidNice', _t('Order.TOTALPAID', 'Total Paid'), $this->TotalPaidAsCurrencyObject()->Nice()),
+                    new ReadOnlyField('TotalOutstandingNice', _t('Order.TOTALOUTSTANDING', 'Total Outstanding'), $this->getTotalOutstandingAsMoney()->Nice())
+                )
+            );
             if ($this->canPay()) {
                 $link = EcommercePaymentController::make_payment_link($this->ID);
                 $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
@@ -627,7 +641,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 'No details are shown here as this order has not been submitted yet. You can {link} to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .',
                 array('link' => '<a href="'.$this->RetrieveLink().'" data-popup="true">'.$linkText.'</a>')
             );
-            $fields->addFieldToTab('Root.Main', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
+            $fields->addFieldToTab('Root.Next', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
             $fields->addFieldToTab('Root.Items', $this->getOrderItemsField());
             $fields->addFieldToTab('Root.Extras', $this->getModifierTableField());
 
@@ -643,7 +657,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             //MEMBER FIELD!!!!!!!
             $memberArray = $specialOptionsArray + EcommerceRole::list_of_customers();
-            $fields->addFieldToTab('Root.Main', new DropdownField('MemberID', _t('Order.SELECTCUSTOMER', 'Select Customer'), $memberArray), 'CustomerOrderNote');
+            $fields->addFieldToTab('Root.Next', new DropdownField('MemberID', _t('Order.SELECTCUSTOMER', 'Select Customer'), $memberArray), 'CustomerOrderNote');
             $memberArray = null;
         }
         $fields->addFieldToTab('Root.Addresses', new HeaderField('BillingAddressHeader', _t('Order.BILLINGADDRESS', 'Billing Address')));
@@ -671,7 +685,7 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         $fields->addFieldToTab('Root.Log', new ReadonlyField('Created', _t('Root.CREATED', 'Created')));
         $fields->addFieldToTab('Root.Log', new ReadonlyField('LastEdited', _t('Root.LASTEDITED', 'Last saved')));
-        $this->extend('updateSettingsFields', $fields);
+        $this->extend('updateCMSFields', $fields);
 
         return $fields;
     }
