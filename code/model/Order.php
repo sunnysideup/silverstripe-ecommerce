@@ -494,16 +494,14 @@ class Order extends DataObject implements EditableEcommerceObject
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
-        $fields->addFieldsToTab(
-            'Root.Main',
-            array(
-                new GridField('OrderSummary', 'Summary', ArrayList::create(array($this)))
-            )
+        $fields->insertBefore(
+            new Tab('Next'),
+            'Main'
         );
-
         $fields->addFieldsToTab(
             'Root.Next',
             array(
+                new GridField('OrderSummary', 'Summary', ArrayList::create(array($this))),
                 new HeaderField('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
                 $this->OrderStepField(),
                 new HeaderField('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
@@ -534,13 +532,13 @@ class Order extends DataObject implements EditableEcommerceObject
             $linkHTML .= '<a href="'.$link.'" onclick="'.$js.'">'.$label.'</a>';
             $linkHTML = '<h3>Print: '.$linkHTML.'</h3>';
             $fields->addFieldToTab(
-                'Root.Print',
+                'Root.Main',
                 LiteralField::create('getPrintLinkANDgetPackingSlipLink', $linkHTML)
             );
 
             //add order here as well.
             $fields->addFieldToTab(
-                'Root.Print',
+                'Root.Main',
                 new LiteralField(
                     'MainDetails',
                     '<iframe src="'.$this->getPrintLink().'" width="100%" height="500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>')
