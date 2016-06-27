@@ -268,12 +268,26 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', _t('OrderStatusLog.TYPE', 'Type'), 'OrderStatusLog', $availableLogs);
         $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
         $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
-        if ($this->exists()) {
+        if ($this->exists() || $this->limitedToOneClassName()) {
             $classNameField = $fields->dataFieldByName('ClassName');
             $fields->replaceField('ClassName', $classNameField->performReadonlyTransformation());
         }
-
+        $typeIDField = $fields->fieldByName('TypeID');
         return $fields;
+    }
+
+    /**
+     * when being created, can the user choose the type of log?
+     *
+     *
+     * @return bool
+     */
+    protected function limitedToOneClassName()
+    {
+        if($this->ClassName == 'OrderStatusLog') {
+            return false;
+        }
+        return true;
     }
 
     /**

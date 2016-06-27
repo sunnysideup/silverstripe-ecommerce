@@ -17,7 +17,7 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
 
     private static $url_segment = 'product-config';
 
-    private static $menu_title = 'Products Settings';
+    private static $menu_title = 'Product Details';
 
     /**
      * standard SS variable.

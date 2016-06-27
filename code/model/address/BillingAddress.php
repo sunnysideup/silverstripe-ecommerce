@@ -122,8 +122,12 @@ class BillingAddress extends OrderAddress
      */
     private static $summary_fields = array(
         'Order.Title',
+        'FirstName',
         'Surname',
         'City',
+        'PostalCode',
+        'Country',
+        'Phone'
     );
 
     /**
@@ -134,6 +138,7 @@ class BillingAddress extends OrderAddress
     private static $field_labels = array(
         'Order.Title' => 'Order',
         'Obsolete' => 'Do not use for future transactions',
+        'Email' => 'Email'
     );
 
     /**

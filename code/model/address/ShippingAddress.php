@@ -114,19 +114,31 @@ class ShippingAddress extends OrderAddress
      */
     private static $summary_fields = array(
         'Order.Title',
-        'Surname',
-        'City',
+        'ShippingFirstName',
+        'ShippingSurname',
+        'ShippingCity',
+        'ShippingPostalCode',
+        'ShippingCountry',
+        'ShippingPhone'
     );
 
-    /**
-     * standard SS variable.
-     *
-     * @return array
-     */
-    private static $field_labels = array(
-        'Order.Title' => 'Order',
-        'Obsolete' => 'Do not use for future transactions',
-    );
+    function fieldLabels($includerelations = true)
+    {
+        $billingAddress = Injector::inst()->get('BillingAddress');
+        $shippingLabels = parent::fieldLabels($includerelations);
+        $billingLabels = $billingAddress->fieldLabels($includerelations);
+        $summaryFields = $this->stat('field_labels');
+        foreach($shippingLabels as $shippingKey => $shippingLabel) {
+            if( ! isset($summaryFields[$shippingKey])) {
+                $billingKey = str_replace('Shipping', '', $shippingKey);
+                if(isset($billingLabels[$billingKey])) {
+                    $shippingLabels[$shippingKey] = $billingLabels[$billingKey];
+                }
+            }
+        }
+
+        return $shippingLabels;
+    }
 
     /**
      * standard SS variable.

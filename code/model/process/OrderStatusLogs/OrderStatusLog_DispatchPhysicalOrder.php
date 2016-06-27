@@ -82,7 +82,6 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch
         $dispatchLinkField = $fields->dataFieldByName('Note');
         $dispatchLinkField->setTitle(_t('OrderStatusLog.NOTE_NEW_TITLE', 'Customer Message (*)'));
         $dispatchLinkField->setRightTitle(_t('OrderStatusLog.NOTE_NOTE', 'This field is required'));
-
         return $fields;
     }
 

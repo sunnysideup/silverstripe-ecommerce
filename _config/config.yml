@@ -51,4 +51,5 @@ LeftAndMain:
       - ProductsAndGroupsModelAdmin
       - ProductConfigModelAdmin
       - SalesAdmin
+      - SalesAdminExtras
       - refresh

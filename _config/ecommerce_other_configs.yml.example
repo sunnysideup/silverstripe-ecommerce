@@ -57,6 +57,7 @@ LeftAndMain:
   menu_groups:
     Shop:
       - SalesAdmin
+      - SalesAdminExtras
       - ProductsAndGroupsModelAdmin
       - ProductConfigModelAdmin
       - StoreAdmin

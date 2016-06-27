@@ -9,28 +9,28 @@
  * @sub-package: cms
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class SalesAdmin extends ModelAdminEcommerceBaseClass
+class SalesAdminExtras extends ModelAdminEcommerceBaseClass
 {
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $url_segment = 'sales';
+    private static $url_segment = 'sales-advanced';
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $menu_title = 'Sales to Action';
+    private static $menu_title = 'Sales Details';
 
     /**
      * standard SS variable.
      *
      * @var int
      */
-    private static $menu_priority = 3.1;
+    private static $menu_priority = 3.11;
 
     /**
      * Change this variable if you don't want the Import from CSV form to appear.
@@ -57,21 +57,4 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
     }
 
-    public function urlSegmenter()
-    {
-        return $this->config()->get('url_segment');
-    }
-
-    /**
-     * @return DataList
-     */
-    public function getList()
-    {
-        $list = parent::getList();
-        if (singleton($this->modelClass) instanceof Order) {
-            $list = $list->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"');
-        }
-
-        return $list;
-    }
 }
