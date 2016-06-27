@@ -181,32 +181,37 @@ class OrderItem extends OrderAttribute
         if ($this->OrderID && $this->exists()) {
             $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
 
-            $fields->addFieldToTab('Root.Debug', new HeaderField('BuyableHeading', 'Buyable'));
+            $fields->addFieldsToTab(
+                'Root.Advanced',
+                array(
+                    new HeaderField('BuyableHeading', 'Buyable'),
 
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('BuyableIDCheck', 'BuyableID', $this->BuyableID));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('VersionCheck', 'Version', $this->Version));
+                    new ReadonlyField('BuyableIDCheck', 'BuyableID', $this->BuyableID),
+                    new ReadonlyField('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName),
+                    new ReadonlyField('VersionCheck', 'Version', $this->Version),
 
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('BuyableLink', 'Buyable Link', $this->BuyableLink()));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('TableTitle', 'TableTitle', $this->TableTitle));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('InternalItemID', 'InternalItemID', $this->InternalItemID()));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('Name', 'Name', $this->Name));
+                    new ReadonlyField('BuyableLink', 'Buyable Link', $this->BuyableLink()),
+                    new ReadonlyField('TableTitle', 'TableTitle', $this->TableTitle),
+                    new ReadonlyField('InternalItemID', 'InternalItemID', $this->InternalItemID()),
+                    new ReadonlyField('Name', 'Name', $this->Name),
 
-            $fields->addFieldToTab('Root.Debug', new HeaderField('OrderItemHeading', 'Order Item'));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('Link', 'Link', $this->Link()));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('AbsoluteLink', 'Absolute Link', $this->AbsoluteLink()));
+                    new HeaderField('OrderItemHeading', 'Order Item'),
+                    new ReadonlyField('Link', 'Link', $this->Link()),
+                    new ReadonlyField('AbsoluteLink', 'Absolute Link', $this->AbsoluteLink()),
 
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('ClassName'));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('Created'));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('LastEdited'));
+                    new ReadonlyField('ClassName'),
+                    new ReadonlyField('Created'),
+                    new ReadonlyField('LastEdited'),
 
-            $fields->addFieldToTab('Root.Debug', new HeaderField('PricingHeading', 'Pricing'));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('QuantityCheck', 'Quantity', $this->Quantity));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('UnitPrice', 'UnitPrice', $this->UnitPrice));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('CalculatedTotal', 'Total', $this->CalculatedTotal));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('TableValue', 'Table Value', $this->TableValue));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('Total', 'Total', $this->Total));
-            $fields->addFieldToTab('Root.Debug', new ReadonlyField('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice()));
+                    new HeaderField('PricingHeading', 'Pricing'),
+                    new ReadonlyField('QuantityCheck', 'Quantity', $this->Quantity),
+                    new ReadonlyField('UnitPrice', 'UnitPrice', $this->UnitPrice),
+                    new ReadonlyField('CalculatedTotal', 'Total', $this->CalculatedTotal),
+                    new ReadonlyField('TableValue', 'Table Value', $this->TableValue),
+                    new ReadonlyField('Total', 'Total', $this->Total),
+                    new ReadonlyField('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice())
+                )
+            );
         } else {
             $fields->replaceField('OrderID', new NumericField('OrderID', _t('Order.SINGULARNAME', 'Order')));
         }
