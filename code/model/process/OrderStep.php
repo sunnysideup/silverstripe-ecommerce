@@ -111,17 +111,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         ),
     );
 
-    /**
-     * returns all the order steps
-     * that the admin should / can edit....
-     *
-     * @return DataList
-     */
-    public static function admin_manageable_steps()
-    {
-        $lastStep = OrderStep::get()->Last();
-        return OrderStep::get()->filter(array('CustomerCanEdit' => 0))->exclude(array('ID' => $lastStep->ID));
-    }
 
     /**
      * casted variable.
@@ -295,6 +284,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     private static $default_sort = '"Sort" ASC';
 
+    /**
+     * returns all the order steps
+     * that the admin should / can edit....
+     *
+     * @return DataList
+     */
+    public static function admin_manageable_steps()
+    {
+        $lastStep = OrderStep::get()->Last();
+        return OrderStep::get()->filter(array('CustomerCanEdit' => 0))->exclude(array('ID' => $lastStep->ID));
+    }
+    
     /**
      * turns code into ID.
      *

@@ -541,7 +541,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 'Root.Main',
                 new LiteralField(
                     'MainDetails',
-                    '<iframe src="'.$this->getPrintLink().'" width="100%" height="500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>')
+                    '<iframe src="'.$this->getPrintLink().'" width="100%" height="2500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>')
             );
             $fields->insertAfter(
                 new Tab(

@@ -50,11 +50,18 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     {
         parent::init();
         Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
-        //Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //Requirements::themedCSS("OrderStepField",'ecommerce'); // LEAVE HERE
-        //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+    }
+
+    /**
+     * @return DataList
+     */
+    public function getList()
+    {
+        $list = parent::getList();
+        if (singleton($this->modelClass) instanceof Order) {
+            $list = $list->exclude(array("StatusID" => 0));
+        }
+        return $list;
     }
 
 }
