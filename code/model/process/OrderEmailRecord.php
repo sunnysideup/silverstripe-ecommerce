@@ -55,7 +55,21 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      */
     private static $summary_fields = array(
         'Created' => 'Send',
-        'OrderStepNice' => 'What',
+        'OrderStepNice' => 'Order Step',
+        'From' => 'From',
+        'To' => 'To',
+        'Subject' => 'Subject',
+        'ResultNice' => 'Sent Succesfully',
+    );
+    
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $field_labels = array(
+        'Created' => 'Send',
+        'OrderStepNice' => 'Order Step',
         'From' => 'From',
         'To' => 'To',
         'Subject' => 'Subject',
@@ -209,10 +223,21 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $fields->addFieldsToTab(
+            'Root.Details',
+            array(
+                $fields->dataFieldByName("To"),
+                $fields->dataFieldByName("Subject"),
+                $fields->dataFieldByName("From"),
+                $fields->dataFieldByName("Result"),
+                $fields->dataFieldByName("OrderID"),
+                $fields->dataFieldByName("OrderStepID")
+            )
+        );
         $emailLink = OrderEmailRecord_Review::review_link($this);
-        $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"$emailLink\" width=\"100%\" height=\"300\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
+        $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"$emailLink\" width=\"100%\" height=\"700\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
         $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
-        $fields->replaceField('OrderStep', new ReadonlyField('OrderStepNice', 'Order Step', $this->OrderStepNice()));
+        $fields->replaceField('OrderStepID', new ReadonlyField('OrderStepNice', 'Order Step', $this->OrderStepNice()));
 
         return $fields;
     }

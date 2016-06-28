@@ -548,7 +548,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     'Emails',
                     $this->getEmailsTableField()
                 ),
-                'Print'
+                'Main'
             );
             $fields->addFieldToTab(
                 "Root.Items",
@@ -971,7 +971,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $this->CancelledByID = $member->ID;
         //archive and write
-        $this->Archive();
+        $this->Archive($avoidWrites = true);
         //create log ...
         $log = OrderStatusLog_Cancel::create();
         $log->AuthorID = $member->ID;
@@ -991,7 +991,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function Archive($avoidWrites = false)
+    public function Archive($avoidWrites = true)
     {
         $lastOrderStep = OrderStep::get()->Last();
         if ($lastOrderStep) {
@@ -3325,6 +3325,10 @@ class Order extends DataObject implements EditableEcommerceObject
         parent::onAfterWrite();
         //crucial!
         self::set_needs_recalculating(true, $this->ID);
+        // quick double-check
+        if($this->IsCancelled() && ! $this->IsArchived()) {
+            $this->Archive($avoidWrites = true);
+        }
         if ($this->IsSubmitted($recalculate = true)) {
             //do nothing
         } else {
