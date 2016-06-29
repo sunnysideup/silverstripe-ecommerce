@@ -6,7 +6,7 @@
  **/
 ;
 if(
-     (document.getElementById("OrderFormAddress_OrderFormAddress_PasswordCheck1_Holder") !== null && typeof document.getElementById("OrderFormAddress_OrderFormAddress_PasswordCheck1_Holder") !== "undefined")
+     (document.getElementsByClassName("div.password.field.text") !== null && typeof document.getElementsByClassName("div.password.field.text") !== "undefined")
 ) {
 
     (function($) {
@@ -23,11 +23,11 @@ if(
 
         chars : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
 
-        passwordFieldInputSelectors: "#OrderFormAddress_OrderFormAddress_PasswordCheck1_Holder, #OrderFormAddress_OrderFormAddress_PasswordCheck2_Holder",
+        passwordFieldInputSelectors: "div.password.field.text",
 
-        errorMessageSelector: "#OrderFormAddress_OrderFormAddress_PasswordCheck1_Holder span.message, #OrderFormAddress_OrderFormAddress_PasswordCheck2_Holder span.message",
+        errorMessageSelector: "div.password.field.text span.message",
 
-        choosePasswordLinkSelector: ".choosePassword, .updatePasswordLink",
+        choosePasswordLinkSelector: ".passwordToggleLink",
 
         stringLength : 14,
 

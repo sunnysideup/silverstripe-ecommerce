@@ -1063,7 +1063,7 @@ class Product extends Page implements BuyableModel
         //check country
         if( ! $member) {
             $member = Member::currentUser();
-        }        
+        }
         $extended = $this->extendedCan('canPurchaseByCountry', $member);
         if ($extended !== null) {
             return $extended;
@@ -1080,7 +1080,7 @@ class Product extends Page implements BuyableModel
         // Standard mechanism for accepting permission changes from decorators
         if( ! $member) {
             $member = Member::currentUser();
-        }        
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1115,7 +1115,7 @@ class Product extends Page implements BuyableModel
     {
         if( ! $member) {
             $member = Member::currentUser();
-        }        
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1161,6 +1161,7 @@ class Product extends Page implements BuyableModel
     {
         return $this->canEdit($member);
     }
+
 
     public function debug()
     {
@@ -1212,6 +1213,7 @@ class Product extends Page implements BuyableModel
 
         return $html;
     }
+
 }
 
 class Product_Controller extends Page_Controller
