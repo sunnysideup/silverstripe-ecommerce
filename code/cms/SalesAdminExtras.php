@@ -64,4 +64,14 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         return $list;
     }
 
+    public function getEditForm($id = null, $fields = null){
+        $form = parent::getEditForm($id, $fields);
+        $field = $form->Fields()->fieldByName($this->sanitiseClassName($this->modelClass));
+        $config = $field->getConfig();
+        $exportButton = new GridFieldExportSalesButton('buttons-before-left');
+        $exportButton->setExportColumns($this->getExportFields());
+        $config->addComponent($exportButton);
+        return $form;
+    }
+
 }
