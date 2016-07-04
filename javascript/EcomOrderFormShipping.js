@@ -24,6 +24,11 @@ if(
          * array of field names
          * @var array
          */
+        copy_billing_to_shipping: false,
+        /**
+         * array of field names
+         * @var array
+         */
         fieldArray: [],
 
         /**
@@ -95,11 +100,11 @@ if(
                     EcomOrderFormWithShippingAddress.turnOnListeners();
                     jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change();
                 }
-                  
+
             }
             //why this????
             jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).removeAttr("required");
-            //update one more time ... 
+            //update one more time ...
         },
 
         /**
@@ -107,7 +112,7 @@ if(
          *
          */
         updateFields: function() {
-            
+
             //copy the billing address details to the shipping address details
             if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
                 var billingFieldSelector = "";
@@ -148,7 +153,7 @@ if(
          * return the billing field selector
          * @param string
          * @return string
-         */ 
+         */
         billingFieldSelector: function(name) {
             name = name.replace("Shipping", "");
             return " "+
@@ -161,7 +166,7 @@ if(
          * return the shipping field selector
          * @param string
          * @return string
-         */ 
+         */
         shippingFieldSelector: function(name) {
             name = "Shipping"+name.replace("Billing", "");
             return " "+
@@ -188,31 +193,36 @@ if(
          * get a list of fields that is potentially shared.
          */
         getListOfSharedFields: function(){
-            jQuery(this.formSelector+' input, '+this.formSelector+" select, "+this.formSelector+" textarea").each(
-                function(i, el){
-                    var name = jQuery(el).attr("name");
-                    if(typeof name !== 'undefined') {
-                        var type = jQuery(el).attr("type");
-                        if(typeof type !== 'undefined') {
-                            if(type !== 'submit') {
-                                if(type !== 'hidden') {
-                                    var billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(name);
-                                    if(jQuery(billingFieldSelector).length > 0) {
-                                        EcomOrderFormWithShippingAddress.fieldArray.push(name);
+            if(this.copy_billing_to_shipping) {
+                jQuery(this.formSelector+' input, '+this.formSelector+" select, "+this.formSelector+" textarea").each(
+                    function(i, el){
+                        var name = jQuery(el).attr("name");
+                        if(typeof name !== 'undefined') {
+                            var type = jQuery(el).attr("type");
+                            if(typeof type !== 'undefined') {
+                                if(type !== 'submit') {
+                                    if(type !== 'hidden') {
+                                        var billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(name);
+                                        if(jQuery(billingFieldSelector).length > 0) {
+                                            EcomOrderFormWithShippingAddress.fieldArray.push(name);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    //your code here
-            });
+                );
+            }
+            else {
+                return [];
+            }
         },
 
         turnOnListeners: function(){
             //if the billing updates, the shipping updates
             jQuery(EcomOrderFormWithShippingAddress.billingFieldSelectors).change(
                 function() {
-                    //important ... 
+                    //important ...
                     EcomOrderFormWithShippingAddress.updateFields();
                 }
             );
