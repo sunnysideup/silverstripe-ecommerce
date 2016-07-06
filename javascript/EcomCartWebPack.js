@@ -41,7 +41,6 @@
   * http://www.yourseite.com/shoppingcart/showcart/
   *
   **/
-
 (function($){
     $(document).ready(
         function() {
@@ -724,7 +723,11 @@ export var EcomCart = {
                         }
                         //inner html
                         else if(parameter == 'innerHTML'){
-                            jQuery(selector).html(value);
+                            jQuery(selector).each(
+                                function(i, el) {
+                                    jQuery(el).html(value);
+                                }
+                            );
                         }
                         //attribute
                         else{

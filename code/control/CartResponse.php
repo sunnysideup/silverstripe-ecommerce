@@ -160,12 +160,12 @@ class CartResponse extends EcommerceResponse
         foreach ($templates as $idMethod => $template) {
             $selector = $ajaxObject->$idMethod();
             $classOrID = 'id';
-            if (strpos($selector, 'ID') === null || strpos($selector, 'ClassName') !== null) {
-                $selector = 'class';
+            if (strpos($selector, 'ID') === false || strpos($selector, '_class') !== false) {
+                $classOrID = 'class';
             }
             $js[] = array(
                 't' => $classOrID,
-                's' => $ajaxObject->$idMethod(),
+                's' => $selector,
                 'p' => 'innerHTML',
                 //note the space is a hack to return something!
                 'v' => ' '.$currentOrder->renderWith($template),
