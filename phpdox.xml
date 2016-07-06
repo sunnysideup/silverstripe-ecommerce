@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpdox xmlns="http://xml.phpdox.net/config" silent="false">
+    <bootstrap />
+    <project name="Sunny Side Up Development" source="${basedir}" workdir="${basedir}/docs/build/phpdox/xml">
+        <collector publiconly="false" backend="parser" encoding="auto">
+            <include mask="*.php" />
+            <exclude mask="CampaignMonitorAPIConnector_TestController.php" />
+            <inheritance resolve="true" />
+        </collector>
+        <generator output="${basedir}/docs">
+            <enrich base="${basedir}/build" />
+            <build engine="html" enabled="true" output="api">
+                <template dir="${phpDox.home}/templates/html" />
+                <file extension="xhtml" />
+            </build>
+        </generator>
+    </project>
+</phpdox>
