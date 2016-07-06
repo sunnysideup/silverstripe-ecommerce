@@ -1,155 +1,168 @@
 <?php
 
 
-class Product_Image extends Image {
+class Product_Image extends Image
+{
+    private static $casting = array(
+        'CMSThumbnail' => 'HTMLText',
+    );
 
-	private static $casting = array(
-		"CMSThumbnail" => "HTMLText"
-	);
+    /**
+     * Fields.
+     *
+     * @return array
+     */
+    public function summaryFields()
+    {
+        return array(
+            'CMSThumbnail' => 'Preview',
+            'Title' => 'Title',
+        );
+    }
 
-	/**
-	 * Fields
-	 * @return Array
-	 */
-	function summaryFields(){
-		return array(
-			"CMSThumbnail" => "Preview",
-			"Title" => "Title"
-		);
-	}
+    /**
+     * @return int
+     */
+    public function ThumbWidth()
+    {
+        return EcommerceConfig::get('Product_Image', 'thumbnail_width');
+    }
 
-	/**
-	 *
-	 * @return Int
-	 */
-	public function ThumbWidth() {
-		return EcommerceConfig::get("Product_Image", "thumbnail_width");
-	}
+    /**
+     * @return int
+     */
+    public function ThumbHeight()
+    {
+        return EcommerceConfig::get('Product_Image', 'thumbnail_height');
+    }
 
-	/**
-	 *
-	 * @return Int
-	 */
-	public function ThumbHeight() {
-		return EcommerceConfig::get("Product_Image", "thumbnail_height");
-	}
+    /**
+     * @return int
+     */
+    public function SmallWidth()
+    {
+        return EcommerceConfig::get('Product_Image', 'small_image_width');
+    }
 
-	/**
-	 *
-	 * @return Int
-	 */
-	public function SmallWidth() {
-		return EcommerceConfig::get("Product_Image", "small_image_width");
-	}
+    /**
+     * @return int
+     */
+    public function SmallHeight()
+    {
+        return EcommerceConfig::get('Product_Image', 'small_image_height');
+    }
 
-	/**
-	 *
-	 * @return Int
-	 */
-	public function SmallHeight() {
-		return EcommerceConfig::get("Product_Image", "small_image_height");
-	}
+    /**
+     * @return int
+     */
+    public function ContentWidth()
+    {
+        return EcommerceConfig::get('Product_Image', 'content_image_width');
+    }
 
-	/**
-	 *
-	 * @return Int
-	 */
-	public function ContentWidth() {
-		return EcommerceConfig::get("Product_Image", "content_image_width");
-	}
+    /**
+     * @return int
+     */
+    public function LargeWidth()
+    {
+        return EcommerceConfig::get('Product_Image', 'large_image_width');
+    }
 
-	/**
-	 *
-	 * @return Int
-	 */
-	public function LargeWidth() {
-		return EcommerceConfig::get("Product_Image", "large_image_width");
-	}
+    /**
+     * @usage can be used in a template like this $Image.Thumbnail.Link
+     *
+     * @param GD $gd
+     *
+     * @return GD
+     **/
+    public function generateThumbnail($gd)
+    {
+        $gd->setQuality(65);
 
-	/**
-	 * @usage can be used in a template like this $Image.Thumbnail.Link
-	 * @param GD $gd
-	 * @return GD
-	 **/
-	function generateThumbnail(GD $gd) {
-		$gd->setQuality(90);
-		return $gd->paddedResize($this->ThumbWidth(), $this->ThumbHeight());
-	}
+        return $gd->paddedResize($this->ThumbWidth() * 2, $this->ThumbHeight() * 2);
+    }
 
-	public function Thumbnail() {
-		return $this->getFormattedImage('Thumbnail');
-	}
+    public function Thumbnail()
+    {
+        return $this->getFormattedImage('Thumbnail');
+    }
 
-	/**
-	 * @usage can be used in a template like this $Image.SmallImage.Link
-	 * @return GD
-	 **/
-	function generateSmallImage(GD $gd) {
-		$gd->setQuality(90);
-		return $gd->paddedResize($this->SmallWidth(), $this->SmallHeight());
-	}
+    /**
+     * @usage can be used in a template like this $Image.SmallImage.Link
+     *
+     * @return GD
+     **/
+    public function generateSmallImage($gd)
+    {
+        $gd->setQuality(65);
 
-	public function SmallImage() {
-		return $this->getFormattedImage('SmallImage');
-	}
+        return $gd->paddedResize($this->SmallWidth() * 2, $this->SmallHeight() * 2);
+    }
 
-	/**
-	 * @usage can be used in a template like this $Image.ContentImage.Link
-	 * @return GD
-	 **/
-	function generateContentImage(GD $gd) {
-		$gd->setQuality(90);
-		return $gd->resizeByWidth($this->ContentWidth());
-	}
+    public function SmallImage()
+    {
+        return $this->getFormattedImage('SmallImage');
+    }
 
+    /**
+     * @usage can be used in a template like this $Image.ContentImage.Link
+     *
+     * @return GD
+     **/
+    public function generateContentImage($gd)
+    {
+        $gd->setQuality(65);
 
-	public function LargeImage() {
-		return $this->getFormattedImage('LargeImage');
-	}
-	/**
-	 * @usage can be used in a template like this $Image.LargeImage.Link
-	 * @return GD
-	 **/
-	function generateLargeImage(GD $gd) {
-		$gd->setQuality(90);
-		return $gd->resizeByWidth($this->LargeWidth());
-	}
+        return $gd->resizeByWidth($this->ContentWidth() * 2);
+    }
 
+    public function LargeImage()
+    {
+        return $this->getFormattedImage('LargeImage');
+    }
+    /**
+     * @usage can be used in a template like this $Image.LargeImage.Link
+     *
+     * @return GD
+     **/
+    public function generateLargeImage($gd)
+    {
+        $gd->setQuality(65);
 
-	function exists(){
-		if(isset($this->ID)) {
-			if($this->ID) {
-				if(file_exists($this->getFullPath())) {
-					return true;
-				}
-			}
-		}
-	}
+        return $gd->resizeByWidth($this->LargeWidth() * 2);
+    }
 
-	/**
-	 *
-	 * @return String HTML
-	 */
-	function CMSThumbnail(){
-		return $this->getCMSThumbnail();
-	}
+    public function exists()
+    {
+        if (isset($this->ID)) {
+            if ($this->ID) {
+                if (file_exists($this->getFullPath())) {
+                    return true;
+                }
+            }
+        }
+    }
 
+    /**
+     * @return string HTML
+     */
+    public function CMSThumbnail()
+    {
+        return $this->getCMSThumbnail();
+    }
 
-	/**
-	 *
-	 * @return String HTML
-	 */
-	function getCMSThumbnail(){
-		$smallImage = $this->SmallImage();
-		if($smallImage) {
-			$icon = "<img src=\"".$smallImage->FileName."\" style=\"border: 1px solid black; height: 100px; \" />";
-		}
-		else {
-			$icon = "[MISSING IMAGE]";
-		}
-		return DBField::create_field("HTMLText", $icon);
-	}
+    /**
+     * @return string HTML
+     */
+    public function getCMSThumbnail()
+    {
+        $smallImage = $this->SmallImage();
+        if ($smallImage) {
+            $icon = '<img src="'.$smallImage->FileName.'" style="border: 1px solid black; height: 100px; " />';
+        } else {
+            $icon = '[MISSING IMAGE]';
+        }
 
-
+        return DBField::create_field('HTMLText', $icon);
+    }
 }
-

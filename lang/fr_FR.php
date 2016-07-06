@@ -1,19 +1,16 @@
 <?php
 
 /**
- * French (France) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * French (France) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('fr_FR', $lang) && is_array($lang['fr_FR'])) {
-	$lang['fr_FR'] = array_merge($lang['en_US'], $lang['fr_FR']);
+if (array_key_exists('fr_FR', $lang) && is_array($lang['fr_FR'])) {
+    $lang['fr_FR'] = array_merge($lang['en_US'], $lang['fr_FR']);
 } else {
-	$lang['fr_FR'] = $lang['en_US'];
+    $lang['fr_FR'] = $lang['en_US'];
 }
 
 $lang['fr_FR']['AccountPage']['Message'] = 'Vous devez avoir un login avant d\'avoir accès à votre page de profile. Si vous n\'êtes pas enregistré, vous ne pourrez avoir accès qu\'à partir du moment ou vous ferez votre première commande, sinon veuillez écrire vos renseignements ci-dessous.';
@@ -228,5 +225,3 @@ $lang['fr_FR']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Pas de sujets définis';
 $lang['fr_FR']['ViewAllProducts.ss']['PRICE'] = 'Prix';
 $lang['fr_FR']['ViewAllProducts.ss']['PRODUCTID'] = 'ID du Produit';
 $lang['fr_FR']['ViewAllProducts.ss']['WEIGHT'] = 'Poids';
-
-?>

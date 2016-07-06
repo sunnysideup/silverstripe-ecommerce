@@ -10,198 +10,216 @@
  * 2. make sure the class has a $url_segment static var
  * 3. create content and/or form for page
  * 4. make sure you set up route (route.yml) to get to the
- *
- *
- *
  */
+abstract class OrderStepController extends Controller
+{
+    private static $allowed_actions = array(
+        'error' => true,
+    );
 
-abstract class OrderStepController extends Controller {
+    /**
+     * @var string
+     */
+    protected $alternativeContent = "";
 
-	private static $allowed_actions = array(
-		"error" => true
-	);
+    /**
+     * when no action is selected
+     * this action runs...
+     */
+    public function index($request)
+    {
+        $this->alternativeContent = '<p class="message bad">Sorry, we can not find the page you are looking for.</p>';
 
-	/**
-	 * when no action is selected
-	 * this action runs...
-	 *
-	 */
-	function index($request) {
-		$this->AlternativeContent = "<p class=\"message bad\">Sorry, we can not find the page you are looking for.</p>";
-		return $this->renderWith("Page");
-	}
+        return $this->renderWith('Page');
+    }
 
-	/**
-	 * there is an error ...
-	 *
-	 */
-	function error($request) {
-		$this->AlternativeContent = "<p class=\"message bad\">Sorry, an error occurred, please contact us for more information....</p>";
-		return $this->renderWith("Page");
-	}
+    /**
+     * there is an error ...
+     */
+    public function error($request)
+    {
+        $this->alternativeContent = '<p class="message bad">Sorry, an error occurred, please contact us for more information....</p>';
 
-	/**
-	 *
-	 * @return string
-	 */
-	protected static function name_of_controller_class() {
-		return get_called_class();
-	}
+        return $this->renderWith('Page');
+    }
 
-	/**
-	 * @param Order $order
-	 * @return string
-	 */
-	protected static function secure_hash($order) {
-		$obj = Injector::inst()->get(self::name_of_controller_class());
-		return $obj->secureHash($order);
-	}
+    /**
+     * @return string
+     */
+    protected static function name_of_controller_class()
+    {
+        return get_called_class();
+    }
 
+    /**
+     * @param Order $order
+     *
+     * @return string
+     */
+    protected static function secure_hash($order)
+    {
+        $obj = Injector::inst()->get(self::name_of_controller_class());
 
-	/**
-	 *
-	 * @return string
-	 */
-	protected function nameOfControllerClass() {
-		return self::name_of_controller_class();
-	}
+        return $obj->secureHash($order);
+    }
 
-	/**
-	 * related OrderStatusLog class
-	 * @return string
-	 */
-	abstract protected function nameOfLogClass();
+    /**
+     * @return string
+     */
+    protected function nameOfControllerClass()
+    {
+        return self::name_of_controller_class();
+    }
 
-	/**
-	 * main content ...
-	 * @return string
-	 */
-	protected function Content() {
-		if($this->AlternativeContent) {
-			return $this->AlternativeContent;
-		}
-		return $this->Content;
-	}
+    /**
+     * related OrderStatusLog class.
+     *
+     * @return string
+     */
+    abstract protected function nameOfLogClass();
 
-	/**
-	 * the form on the field
-	 * @return Form
-	 */
-	protected function Form() {
-		return $this->Form;
-	}
+    /**
+     * main content ...
+     *
+     * @return string
+     */
+    public function Content($order = null)
+    {
+        if($this->alternativeContent) {
+            return $this->alternativeContent;
+        }
+        return $this->standardContent($order);
+    }
 
-	/**
-	 * code of related order step
-	 * @return string
-	 */
-	abstract protected function codeOfRelevantOrderStep();
+    /**
+     * @return string ($html)
+     */
+    protected function standardContent($order = null){
+        user_error("Make sure to put some content here in classes that extend ".$this->class);
+    }
 
-	/**
-	 * used to secure page
-	 * @param Order $order
-	 *
-	 * @return string
-	 */
-	abstract protected function secureHash($order);
+    /**
+     * the form on the field.
+     *
+     * @return Form
+     */
+    protected function Form()
+    {
+        return $this->Form;
+    }
 
+    /**
+     * code of related order step.
+     *
+     * @return string
+     */
+    abstract protected function codeOfRelevantOrderStep();
 
-	/**
-	 * @oaram string $action
-	 * @return string
-	 */
-	function Link($action = null){
-		$link = "/".Config::inst()->get($this->nameOfControllerClass(), "url_segment")."/";
-		if($action) {
-			$link = $link.$action."/";
-		}
-		return $link.$this->getOrderGetParams()	;
-	}
+    /**
+     * used to secure page.
+     *
+     * @param Order $order
+     *
+     * @return string
+     */
+    abstract protected function secureHash($order);
 
-	function errorLink(){
-		return $this->Link("error");
-	}
+    /**
+     * @oaram string $action
+     *
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        $link = '/'.Config::inst()->get($this->nameOfControllerClass(), 'url_segment').'/';
+        if ($action) {
+            $link = $link.$action.'/';
+        }
 
-	/**
-	 * is the order valid?
-	 * @return boolean
-	 */
-	protected function checkOrder($dataOrRequest = null){
-		$order = $this->Order($dataOrRequest);
-		if($order && $order->exists()) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
+        return $link.$this->getOrderGetParams();
+    }
 
+    public function errorLink()
+    {
+        return $this->Link('error');
+    }
 
-	/**
-	 *
-	 * @var Order
-	 */
-	private static $_order = null;
+    /**
+     * is the order valid?
+     *
+     * @return bool
+     */
+    protected function checkOrder($dataOrRequest = null)
+    {
+        $order = $this->Order($dataOrRequest);
+        if ($order && $order->exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * finds the order ...
-	 * @param mixed
-	 *
-	 * @return Order
-	 */
-	protected function Order($dataOrRequest = null){
-		if(!self::$_order) {
-			if(
-				is_array($dataOrRequest) &&
-				isset($dataOrRequest["OrderID"]) &&
-				isset($dataOrRequest["OrderSessionID"])
-			) {
-				$id = intval($dataOrRequest["OrderID"]);
-				$sessionID = Convert::raw2sql($dataOrRequest["OrderSessionID"]);
-			}
-			elseif(isset($_POST["OrderID"]) && isset($_POST["OrderSessionID"])) {
-				$id = intval($_POST["OrderID"]);
-				$sessionID = Convert::raw2sql($_POST["OrderSessionID"]);
-			}
-			elseif(isset($_GET["OrderID"]) && isset($_GET["OrderSessionID"])) {
-				$id = intval($_GET["OrderID"]);
-				$sessionID = Convert::raw2sql($_GET["OrderSessionID"]);
-			}
-			elseif($dataOrRequest instanceof SS_HTTPRequest) {
-				$id = intval($dataOrRequest->param("ID"));
-				$sessionID = Convert::raw2sql($dataOrRequest->param("OtherID"));
-			}
-			else {
-				$id = intval($this->request->param("ID"));
-				$sessionID = Convert::raw2sql($this->request->param("OtherID"));
-			}
-			self::$_order = Order::get()->byID($id);
-			if(self::$_order) {
-				if($this->secureHash(self::$_order) != $sessionID) {
-					self::$_order = null;
-				}
-			}
-		}
-		return self::$_order;
-	}
+    /**
+     * @var Order
+     */
+    private static $_order = null;
 
+    /**
+     * finds the order ...
+     *
+     * @param mixed
+     *
+     * @return Order
+     */
+    protected function Order($dataOrRequest = null)
+    {
+        if (!self::$_order) {
+            if (
+                is_array($dataOrRequest) &&
+                isset($dataOrRequest['OrderID']) &&
+                isset($dataOrRequest['OrderSessionID'])
+            ) {
+                $id = intval($dataOrRequest['OrderID']);
+                $sessionID = Convert::raw2sql($dataOrRequest['OrderSessionID']);
+            } elseif (isset($_POST['OrderID']) && isset($_POST['OrderSessionID'])) {
+                $id = intval($_POST['OrderID']);
+                $sessionID = Convert::raw2sql($_POST['OrderSessionID']);
+            } elseif (isset($_GET['OrderID']) && isset($_GET['OrderSessionID'])) {
+                $id = intval($_GET['OrderID']);
+                $sessionID = Convert::raw2sql($_GET['OrderSessionID']);
+            } elseif ($dataOrRequest instanceof SS_HTTPRequest) {
+                $id = intval($dataOrRequest->param('ID'));
+                $sessionID = Convert::raw2sql($dataOrRequest->param('OtherID'));
+            } else {
+                $id = intval($this->request->param('ID'));
+                $sessionID = Convert::raw2sql($this->request->param('OtherID'));
+            }
+            self::$_order = Order::get()->byID($id);
+            if (self::$_order) {
+                if ($this->secureHash(self::$_order) != $sessionID) {
+                    self::$_order = null;
+                }
+            }
+        }
 
-	/**
-	 *
-	 * @return string
-	 */
-	protected function getOrderGetParams(){
-		if($order = $this->Order()) {
-			return "?OrderID=".$order->ID."&OrderSessionID=".self::secure_hash($order);
-		}
-	}
+        return self::$_order;
+    }
 
-	/**
-	 * @return OrderStep
-	 */
-	protected function orderStep(){
-		return OrderStep::get()->filter(array("Code" => $this->codeOfRelevantOrderStep()))->First();
-	}
+    /**
+     * @return string
+     */
+    protected function getOrderGetParams()
+    {
+        if ($order = $this->Order()) {
+            return '?OrderID='.$order->ID.'&OrderSessionID='.self::secure_hash($order);
+        }
+    }
 
-
+    /**
+     * @return OrderStep
+     */
+    protected function orderStep()
+    {
+        return OrderStep::get()->filter(array('Code' => $this->codeOfRelevantOrderStep()))->First();
+    }
 }

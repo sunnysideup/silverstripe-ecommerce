@@ -34,8 +34,22 @@ OrderEmailRecord_Review:
 
 EcommerceDatabaseAdmin:
   allowed_actions:
-    - runTask
+    runTask: ADMIN
 
 LeftAndMain:
   extra_requirements_css:
     - ecommerce/css/ecommercecmsfixes.css
+
+---
+Only:
+  moduleexists: 'grouped-cms-menu'
+---
+LeftAndMain:
+  menu_groups:
+    Shop:
+      - StoreAdmin
+      - ProductsAndGroupsModelAdmin
+      - ProductConfigModelAdmin
+      - SalesAdmin
+      - SalesAdminExtras
+      - refresh

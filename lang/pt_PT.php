@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Portuguese (Portugal) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Portuguese (Portugal) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('pt_PT', $lang) && is_array($lang['pt_PT'])) {
-	$lang['pt_PT'] = array_merge($lang['en_US'], $lang['pt_PT']);
+if (array_key_exists('pt_PT', $lang) && is_array($lang['pt_PT'])) {
+    $lang['pt_PT'] = array_merge($lang['en_US'], $lang['pt_PT']);
 } else {
-	$lang['pt_PT'] = $lang['en_US'];
+    $lang['pt_PT'] = $lang['en_US'];
 }
 
 $lang['pt_PT']['AccountPage.ss']['HISTORY'] = 'Histórico de pedidos';
@@ -137,5 +134,3 @@ $lang['pt_PT']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Sem assunto definido';
 $lang['pt_PT']['ViewAllProducts.ss']['PRICE'] = 'Preço';
 $lang['pt_PT']['ViewAllProducts.ss']['PRODUCTID'] = 'ID do Produto';
 $lang['pt_PT']['ViewAllProducts.ss']['WEIGHT'] = 'Peso';
-
-?>

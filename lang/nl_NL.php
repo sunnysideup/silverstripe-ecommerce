@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Dutch (Netherlands) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Dutch (Netherlands) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('nl_NL', $lang) && is_array($lang['nl_NL'])) {
-	$lang['nl_NL'] = array_merge($lang['en_US'], $lang['nl_NL']);
+if (array_key_exists('nl_NL', $lang) && is_array($lang['nl_NL'])) {
+    $lang['nl_NL'] = array_merge($lang['en_US'], $lang['nl_NL']);
 } else {
-	$lang['nl_NL'] = $lang['en_US'];
+    $lang['nl_NL'] = $lang['en_US'];
 }
 
 $lang['nl_NL']['AccountPage']['Message'] = 'U dient zich in te loggen voordat u toegang krijgt tot de account pagina. Als u niet geregistreerd bent, zult u niet in staat zijn om deze te openen totdat u uw eerste bestelling maakt, vul anders hieronder je gegevens in.';
@@ -229,5 +226,3 @@ $lang['nl_NL']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Geen onderwerp ingesteld';
 $lang['nl_NL']['ViewAllProducts.ss']['PRICE'] = 'Prijs';
 $lang['nl_NL']['ViewAllProducts.ss']['PRODUCTID'] = 'Product ID';
 $lang['nl_NL']['ViewAllProducts.ss']['WEIGHT'] = 'Gewicht';
-
-?>

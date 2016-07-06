@@ -1,7 +1,7 @@
 ---
 Name: ecommerce_default_settings
 Before: 'mysite/*'
-After: 'framework/*','cms/*', 'ecommerce/*'
+After: 'framework/*','cms/*'
 ---
 
 
@@ -150,8 +150,8 @@ BillingAddress:
     - Address
     - City
     - PostalCode
-    - RegionCode
-    - RegionID
+#   - RegionCode
+#   - RegionID
 
 ShippingAddress:
   required_fields:
@@ -159,8 +159,8 @@ ShippingAddress:
     - ShippingAddress
     - ShippingCity
     - ShippingPostalCode
-    - ShippingRegionCode
-    - ShippingRegionID
+#   - ShippingRegionCode
+#   - ShippingRegionID
     - ShippingCountry
 
 EcommerceCountry:
@@ -202,6 +202,7 @@ EcommerceRole:
     - CMS_ACCESS_ProductsAndGroupsModelAdmin
     - CMS_ACCESS_ProductConfigModelAdmin
     - CMS_ACCESS_SalesAdmin
+    - CMS_ACCESS_SalesAdminExtras
     - CMS_ACCESS_StoreAdmin
     - CMS_ACCESS_AssetAdmin
     - CMS_ACCESS_CMSMain
@@ -305,6 +306,10 @@ ProductConfigModelAdmin:
     - SearchHistory
 
 SalesAdmin:
+  managed_models:
+    - Order
+
+SalesAdminExtras:
   managed_models:
     - Order
     - OrderStatusLog

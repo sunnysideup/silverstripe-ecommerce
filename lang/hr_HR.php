@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Croatian (Croatia) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Croatian (Croatia) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('hr_HR', $lang) && is_array($lang['hr_HR'])) {
-	$lang['hr_HR'] = array_merge($lang['en_US'], $lang['hr_HR']);
+if (array_key_exists('hr_HR', $lang) && is_array($lang['hr_HR'])) {
+    $lang['hr_HR'] = array_merge($lang['en_US'], $lang['hr_HR']);
 } else {
-	$lang['hr_HR'] = $lang['en_US'];
+    $lang['hr_HR'] = $lang['en_US'];
 }
 
 $lang['hr_HR']['AccountPage.ss']['COMPLETED'] = 'Realizirane narudžbe';
@@ -139,5 +136,3 @@ $lang['hr_HR']['ViewAllProducts.ss']['NOIMAGE'] = 'Nažalst nema slike &quot;%s&
 $lang['hr_HR']['ViewAllProducts.ss']['PRICE'] = 'Cijena';
 $lang['hr_HR']['ViewAllProducts.ss']['PRODUCTID'] = 'ID proizvoda';
 $lang['hr_HR']['ViewAllProducts.ss']['WEIGHT'] = 'Težina';
-
-?>

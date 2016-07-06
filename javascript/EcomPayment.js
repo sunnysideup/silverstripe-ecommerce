@@ -2,53 +2,60 @@
  * helps in EcommercePayment Selection
  *
  **/
-(function(jQuery){
-	jQuery(window).load(function() {
-		EcomPayment.init();
-	});
-})(jQuery);
+
+;
+if(
+    (document.getElementById("PaymentMethod") !== null && typeof document.getElementById("PaymentMethod") !== "undefined")
+) {
+    (function(jQuery){
+        jQuery(window).load(function() {
+            EcomPayment.init();
+        });
+    })(jQuery);
 
 
 
-var EcomPayment = {
+    var EcomPayment = {
 
-	paymentInputsSelectorParent: '#PaymentMethod',
+        paymentInputsSelectorParent: '#PaymentMethod',
 
-	paymentInputsSelector: '#PaymentMethod input[type=radio]',
+        paymentInputsSelector: '#PaymentMethod input[type=radio]',
 
-	paymentFieldSelector: 'div.paymentfields',
+        paymentFieldSelector: 'div.paymentfields',
 
-	paymentMethodPrefix: '.methodFields_',
+        paymentMethodPrefix: '.methodFields_',
 
-	init: function () {
-		var paymentInputs = jQuery(EcomPayment.paymentInputsSelector);
-		var methodFields = jQuery(EcomPayment.paymentFieldSelector);
+        init: function () {
+            var paymentInputs = jQuery(EcomPayment.paymentInputsSelector);
+            var methodFields = jQuery(EcomPayment.paymentFieldSelector);
 
-		methodFields.hide();
+            methodFields.hide();
 
-		paymentInputs.each(
-			function(e) {
-				if(jQuery(this).attr('checked') == true) {
-					jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
-				}
-			}
-		);
+            paymentInputs.each(
+                function(e) {
+                    if(jQuery(this).attr('checked') == true) {
+                        jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
+                    }
+                }
+            );
 
-		paymentInputs.click(
-			function(e) {
-				methodFields.hide();
-				jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
-			}
-		);
+            paymentInputs.click(
+                function(e) {
+                    methodFields.hide();
+                    jQuery(EcomPayment.paymentMethodPrefix + jQuery(this).attr('value')).show();
+                }
+            );
 
-		jQuery(EcomPayment.paymentInputsSelector).first().click();
-		if(jQuery(EcomPayment.paymentInputsSelector).length == 1) {
-			jQuery(EcomPayment.paymentInputsSelectorParent).hide();
-		}
+            jQuery(EcomPayment.paymentInputsSelector).first().click();
+            if(jQuery(EcomPayment.paymentInputsSelector).length == 1) {
+                jQuery(EcomPayment.paymentInputsSelectorParent).hide();
+            }
 
-	}
+        }
 
+
+    }
+
+    jQuery(EcomPayment.paymentFieldSelector).hide();
 
 }
-
-jQuery(EcomPayment.paymentFieldSelector).hide();

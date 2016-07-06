@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Turkish (Turkey) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Turkish (Turkey) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('tr_TR', $lang) && is_array($lang['tr_TR'])) {
-	$lang['tr_TR'] = array_merge($lang['en_US'], $lang['tr_TR']);
+if (array_key_exists('tr_TR', $lang) && is_array($lang['tr_TR'])) {
+    $lang['tr_TR'] = array_merge($lang['en_US'], $lang['tr_TR']);
 } else {
-	$lang['tr_TR'] = $lang['en_US'];
+    $lang['tr_TR'] = $lang['en_US'];
 }
 
 $lang['tr_TR']['AccountPage']['Message'] = 'Hesap sayfasına ulaşabilmek icin oturum açmalısınız. Henüz kayıt olmadıysanız, ilk siparişinizi verene kadar erişemeyeceksiniz, kayıtlı iseniz, lütfen detaylarınızı aşagıya giriniz.';
@@ -229,5 +226,3 @@ $lang['tr_TR']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Konu eklenmedi.';
 $lang['tr_TR']['ViewAllProducts.ss']['PRICE'] = 'Fiyat';
 $lang['tr_TR']['ViewAllProducts.ss']['PRODUCTID'] = 'Ürün ID';
 $lang['tr_TR']['ViewAllProducts.ss']['WEIGHT'] = 'Ağırlık';
-
-?>

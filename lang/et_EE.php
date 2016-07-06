@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Estonian (Estonia) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Estonian (Estonia) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('et_EE', $lang) && is_array($lang['et_EE'])) {
-	$lang['et_EE'] = array_merge($lang['en_US'], $lang['et_EE']);
+if (array_key_exists('et_EE', $lang) && is_array($lang['et_EE'])) {
+    $lang['et_EE'] = array_merge($lang['en_US'], $lang['et_EE']);
 } else {
-	$lang['et_EE'] = $lang['en_US'];
+    $lang['et_EE'] = $lang['en_US'];
 }
 
 $lang['et_EE']['AccountPage']['Message'] = 'Te peate sisse logima, enne kui saate tutvuda konto lehega. Kui olete siin esimest korda sisestage andmed allool';
@@ -230,5 +227,3 @@ $lang['et_EE']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Pealkiri puudub';
 $lang['et_EE']['ViewAllProducts.ss']['PRICE'] = 'Hind';
 $lang['et_EE']['ViewAllProducts.ss']['PRODUCTID'] = 'Toote ID';
 $lang['et_EE']['ViewAllProducts.ss']['WEIGHT'] = 'Kaal';
-
-?>

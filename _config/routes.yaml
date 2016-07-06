@@ -1,5 +1,5 @@
 ---
-Name: ecommerceroutes
+Name: ecommerce_routes
 After: framework/routes#coreroutes
 ---
 Director:
@@ -9,4 +9,4 @@ Director:
     'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTemplateTest'
     'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
     'ecommerce-email-preview//$Action/$ID/$OtherID' : 'OrderEmailRecord_Review'
-
+    'ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version' : 'OrderModifierForm_Controller'

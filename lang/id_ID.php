@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Indonesian (Indonesia) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Indonesian (Indonesia) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('id_ID', $lang) && is_array($lang['id_ID'])) {
-	$lang['id_ID'] = array_merge($lang['en_US'], $lang['id_ID']);
+if (array_key_exists('id_ID', $lang) && is_array($lang['id_ID'])) {
+    $lang['id_ID'] = array_merge($lang['en_US'], $lang['id_ID']);
 } else {
-	$lang['id_ID'] = $lang['en_US'];
+    $lang['id_ID'] = $lang['en_US'];
 }
 
 $lang['id_ID']['AccountPage']['Message'] = 'Anda perlu login sebelon dapat mengakses halaman account. Jika anda tidak terdaftar, anda tidak akan dapat mengakses halaman tersebut sampai anda membuat pesanan pertama anda, atau anda bisa masukkan perincian anda di bawah ini.';
@@ -210,5 +207,3 @@ $lang['id_ID']['ViewAllProducts.ss']['NOSUBJECTS'] = 'Tidak Ada Subyek yang Dite
 $lang['id_ID']['ViewAllProducts.ss']['PRICE'] = 'Harga';
 $lang['id_ID']['ViewAllProducts.ss']['PRODUCTID'] = 'ID Produk';
 $lang['id_ID']['ViewAllProducts.ss']['WEIGHT'] = 'Berat';
-
-?>

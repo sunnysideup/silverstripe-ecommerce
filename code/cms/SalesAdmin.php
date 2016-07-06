@@ -9,66 +9,73 @@
  * @sub-package: cms
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
+class SalesAdmin extends ModelAdminEcommerceBaseClass
+{
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $url_segment = 'sales';
 
-class SalesAdmin extends ModelAdminEcommerceBaseClass{
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $menu_title = 'Sales to Action';
 
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	private static $url_segment = 'sales';
+    /**
+     * standard SS variable.
+     *
+     * @var int
+     */
+    private static $menu_priority = 3.1;
 
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	private static $menu_title = 'Sales';
+    /**
+     * Change this variable if you don't want the Import from CSV form to appear.
+     * This variable can be a boolean or an array.
+     * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
+     */
+    public $showImportForm = false;
 
-	/**
-	 * standard SS variable
-	 * @var Int
-	 */
-	private static $menu_priority = 3.1;
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $menu_icon = 'ecommerce/images/icons/money-file.gif';
 
-	/**
-	 * Change this variable if you don't want the Import from CSV form to appear.
-	 * This variable can be a boolean or an array.
-	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')
-	 */
-	public $showImportForm = false;
+    public function init()
+    {
+        parent::init();
+        Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
+        //Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        //Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        //Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        //Requirements::themedCSS("OrderStepField",'ecommerce'); // LEAVE HERE
+        //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+    }
 
-	/**
-	 * standard SS variable
-	 * @var String
-	 */
-	private static $menu_icon = "ecommerce/images/icons/money-file.gif";
+    public function urlSegmenter()
+    {
+        return $this->config()->get('url_segment');
+    }
 
-	function init() {
-		parent::init();
-		Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
-		//Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		//Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		//Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-		//Requirements::themedCSS("OrderStepField",'ecommerce'); // LEAVE HERE
-		//Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-	}
-
-
-	function urlSegmenter() {
-		return $this->config()->get("url_segment");
-	}
-	
-	/**
-	 * @return DataList
-	 */
-	function getList(){
-		$list = parent::getList();
-		if(singleton($this->modelClass) instanceof Order) {
-			$list = $list->innerJoin("OrderStep", "\"OrderStep\".\"ID\" = \"Order\".\"StatusID\"");
-		}
-		return $list;
-	}
-
-
+    /**
+     * @return DataList
+     */
+    public function getList()
+    {
+        $list = parent::getList();
+        if (singleton($this->modelClass) instanceof Order) {
+            $list = $list->filter(
+                array(
+                    "StatusID" => OrderStep::admin_manageable_steps()->column('ID'),
+                    "CancelledByID" => 0
+                )
+            );
+        }
+        return $list;
+    }
 }
-

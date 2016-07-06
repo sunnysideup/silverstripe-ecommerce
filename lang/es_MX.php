@@ -1,19 +1,16 @@
 <?php
 
 /**
- * Spanish (Mexico) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * Spanish (Mexico) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('es_MX', $lang) && is_array($lang['es_MX'])) {
-	$lang['es_MX'] = array_merge($lang['en_US'], $lang['es_MX']);
+if (array_key_exists('es_MX', $lang) && is_array($lang['es_MX'])) {
+    $lang['es_MX'] = array_merge($lang['en_US'], $lang['es_MX']);
 } else {
-	$lang['es_MX'] = $lang['en_US'];
+    $lang['es_MX'] = $lang['en_US'];
 }
 
 $lang['es_MX']['AccountPage']['Message'] = 'Es necesario ingresar antes para poder ver la página de tu cuenta. Si no te has registrado, no puedes verla hasta que hayas realizado tu primer pedido, de otro modo, por favor, introduce tus generales abajo.';
@@ -229,5 +226,3 @@ $lang['es_MX']['ViewAllProducts.ss']['NOSUBJECTS'] = 'No se ha establecido un su
 $lang['es_MX']['ViewAllProducts.ss']['PRICE'] = 'Precio';
 $lang['es_MX']['ViewAllProducts.ss']['PRODUCTID'] = 'ID del Producto';
 $lang['es_MX']['ViewAllProducts.ss']['WEIGHT'] = 'Peso';
-
-?>

@@ -1,19 +1,16 @@
 <?php
 
 /**
- * English (United Kingdom) language pack
- * @package modules: ecommerce
- * @subpackage i18n
+ * English (United Kingdom) language pack.
  */
-
 i18n::include_locale_file('modules: ecommerce', 'en_US');
 
 global $lang;
 
-if(array_key_exists('en_GB', $lang) && is_array($lang['en_GB'])) {
-	$lang['en_GB'] = array_merge($lang['en_US'], $lang['en_GB']);
+if (array_key_exists('en_GB', $lang) && is_array($lang['en_GB'])) {
+    $lang['en_GB'] = array_merge($lang['en_US'], $lang['en_GB']);
 } else {
-	$lang['en_GB'] = $lang['en_US'];
+    $lang['en_GB'] = $lang['en_US'];
 }
 
 $lang['en_GB']['AccountPage']['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you\'ll place your first order, otherwise please enter your details below.';
@@ -201,5 +198,3 @@ $lang['en_GB']['ViewAllProducts.ss']['NOSUBJECTS'] = 'No Subjects Set';
 $lang['en_GB']['ViewAllProducts.ss']['PRICE'] = 'Price';
 $lang['en_GB']['ViewAllProducts.ss']['PRODUCTID'] = 'Product ID';
 $lang['en_GB']['ViewAllProducts.ss']['WEIGHT'] = 'Weight';
-
-?>
