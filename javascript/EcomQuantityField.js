@@ -8,13 +8,15 @@
 ;
 (function($){
     $(document).ready(
-        function() {
+        function () {
             EcomQuantityField.init();
         }
     );
 })(jQuery);
 
-
+if(typeof require === 'undefined') {
+    var MyEcomCart = EcomCart;
+}
 
 var EcomQuantityField = {
 
@@ -44,14 +46,14 @@ var EcomQuantityField = {
     EcomCart: {},
 
     init: function (){
-        if(typeof EcomCart === "undefined" ) {
+        if(typeof EcomCart === "undefined" && typeof require !== 'undefined') {
             var EcomCart = require("./EcomCartWebPack");
             this.EcomCart = EcomCart.EcomCart;
         }
         else {
-            EcomQuantityField.EcomCart = EcomCart;
+            this.EcomCart = MyEcomCart;
         }
-        EcomQuantityField.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
+        this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
         //make sure it only runs if needed...
         if(jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
             jQuery(EcomQuantityField.delegateRootSelector).on(
