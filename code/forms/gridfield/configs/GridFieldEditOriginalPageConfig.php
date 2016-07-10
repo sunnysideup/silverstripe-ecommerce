@@ -4,7 +4,7 @@
 /**
  * @author nicolaas <github@sunnysideup.co.nz>
  */
-class GridFieldEditOriginalPageConfig extends GridFieldConfig_RelationEditor
+class GridFieldEditOriginalPageConfig extends GridFieldConfig_RecordEditor
 {
     /**
      * @param int $itemsPerPage - How many items per page should show up

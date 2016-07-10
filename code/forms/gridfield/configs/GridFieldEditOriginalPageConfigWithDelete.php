@@ -1,7 +1,7 @@
 <?php
 
 
-class GridFieldEditOriginalPageConfigWithDelete extends GridFieldConfig_RelationEditor
+class GridFieldEditOriginalPageConfigWithDelete extends GridFieldConfig_RecordEditor
 {
     /**
      * @param int $itemsPerPage - How many items per page should show up
