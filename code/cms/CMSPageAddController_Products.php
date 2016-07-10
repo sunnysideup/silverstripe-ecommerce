@@ -38,12 +38,15 @@ class CMSPageAddController_Products extends CMSPageAddController
         $pageTypes = parent::PageTypes();
         $result = new ArrayList();
         $productClass = Object::getCustomClass('Product');
-        $productGroupClass = Object::getCustomClass('Product');
-        $acceptedClasses1 = ClassInfo::subclassesFor('ProductGroup');
+        $productGroupClass = Object::getCustomClass('ProductGroup');
+
+        $acceptedClasses1 = ClassInfo::subclassesFor($productClass);
         $acceptedClasses1[$productClass] = $productClass;
+
         $acceptedClasses2 = ClassInfo::subclassesFor($productGroupClass);
         $acceptedClasses2[$productGroupClass] = $productGroupClass;
-        $acceptedClasses = $acceptedClasses1 + $acceptedClasses2;
+
+        $acceptedClasses = array_merge($acceptedClasses1, $acceptedClasses2);
         foreach ($pageTypes as $type) {
             if (in_array($type->ClassName, $acceptedClasses)) {
                 $result->push($type);

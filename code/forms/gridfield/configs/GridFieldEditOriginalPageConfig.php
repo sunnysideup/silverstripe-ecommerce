@@ -16,6 +16,7 @@ class GridFieldEditOriginalPageConfig extends GridFieldConfig_RelationEditor
             ->removeComponentsByType('GridFieldEditButton')
             ->removeComponentsByType('GridFieldDeleteAction')
             ->removeComponentsByType('GridFieldAddNewButton')
+            ->removeComponentsByType('GridFieldAddExistingAutocompleter')
             ->addComponent(new GridFieldAddNewButtonOriginalPage())
             ->addComponent(new GridFieldEditButtonOriginalPage());
     }
