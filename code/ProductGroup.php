@@ -1383,7 +1383,7 @@ class ProductGroup extends Page
         //just in case
         unset($parentIDs[$this->ID]);
         if (!count($parentIDs)) {
-            $parentIDs += array(0 => 0);
+            $parentIDs = array(0 => 0);
         }
 
         return ProductGroup::get()->filter(array('ID' => $parentIDs, 'ShowInSearch' => 1));
@@ -1405,8 +1405,8 @@ class ProductGroup extends Page
         $parentIDs = Product::get()->filter(array('ID' => $alsoShowProductsArray))->map('ParentID', 'ParentID')->toArray();
         //just in case
         unset($parentIDs[$this->ID]);
-        if (!count($parentIDs)) {
-            $parentIDs += array(0 => 0);
+        if ( ! count($parentIDs)) {
+            $parentIDs = array(0 => 0);
         }
 
         return ProductGroup::get()->filter(array('ID' => $parentIDs, 'ShowInMenus' => 1));
@@ -1424,8 +1424,8 @@ class ProductGroup extends Page
         $parentIDs = Product::get()->filter(array('ID' => $arrayOfIDs))->map('ParentID', 'ParentID')->toArray();
         //just in case
         unset($parentIDs[$this->ID]);
-        if (!count($parentIDs)) {
-            $parentIDs += array(0 => 0);
+        if ( ! count($parentIDs)) {
+            $parentIDs = array(0 => 0);
         }
 
         return ProductGroup::get()->filter(array('ID' => $parentIDs, 'ShowInSearch' => 1));
@@ -2272,13 +2272,13 @@ class ProductGroup_Controller extends Page_Controller
             $baseArray = $this->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault('FILTER'));
 
             $items = $this->ProductGroupsFromAlsoShowProducts();
-            $arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+            $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
             $items = $this->ProductGroupsFromAlsoShowProductsInverse();
-            $arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+            $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
             $items = $this->ProductGroupsParentGroups();
-            $arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+            $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
             $items = $this->MenuChildGroups();
-            $arrayOfItems += $this->productGroupFilterLinksCount($items, $baseArray, true);
+            $arrayOfItems = array_merge($arrayOfItems,  $this->productGroupFilterLinksCount($items, $baseArray, true));
             ksort($arrayOfItems);
             $this->saveObjectStore($arrayOfItems, $cacheKey);
         }

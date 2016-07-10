@@ -872,7 +872,7 @@ class OrderItem extends OrderAttribute
         $updatedLinkParameters = $this->extend('updateLinkParameters', $array);
         if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
-                $array += $updatedLinkParametersUpdate;
+                $array = array_merge($array, $updatedLinkParametersUpdate);
             }
         }
 

@@ -621,15 +621,15 @@ class OrderModifier extends OrderAttribute
      **/
     public function AddLink()
     {
-        $param = array();
-        $updatedLinkParameters = $this->extend('ModifierAddLinkUpdate', $param);
+        $params = array();
+        $updatedLinkParameters = $this->extend('ModifierAddLinkUpdate', $params);
         if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
-                $param += $updatedLinkParametersUpdate;
+                $params = array_merge($params, $updatedLinkParametersUpdate);
             }
         }
 
-        return ShoppingCart_Controller::add_modifier_link($this->ID, $param, $this->ClassName);
+        return ShoppingCart_Controller::add_modifier_link($this->ID, $params, $this->ClassName);
     }
 
     /**
@@ -643,7 +643,7 @@ class OrderModifier extends OrderAttribute
         $updatedLinkParameters = $this->extend('ModifierRemoveLinkUpdate', $param);
         if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
-                $param += $updatedLinkParametersUpdate;
+                $param = array_merge($param, $updatedLinkParametersUpdate);
             }
         }
 

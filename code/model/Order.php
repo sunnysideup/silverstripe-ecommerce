@@ -604,11 +604,12 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($group = EcommerceRole::get_admin_group()) {
                 $shopAdmins = $group->Members();
                 if ($shopAdmins->count()) {
-                    $shopAdminArray += $shopAdmins->map('ID', 'Name')->toArray();
+                    $shopAdminArray = array_merge($shopAdminArray, $shopAdmins->map('ID', 'Name')->toArray());
                 }
             }
-            $shopAdminArray += array(
-                $currentMember->ID => $currentMember->getName(),
+            $shopAdminArray = array_merge(
+                $shopAdminArray,
+                array($currentMember->ID => $currentMember->getName())
             );
             $fields->addFieldToTab(
                 'Root.Cancellation',
