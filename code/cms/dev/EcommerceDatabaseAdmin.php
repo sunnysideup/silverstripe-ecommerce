@@ -357,7 +357,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         $extendedArray = $this->extend('updateEcommerceDevMenu'.$type, $buildTasksArray);
         if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedBuildTasks) {
-                $buildTasksArray += $extendedBuildTasks;
+                $buildTasksArray = array_merge($buildTasksArray, $extendedBuildTasks);
             }
         }
         $arrayList = new ArrayList();

@@ -64,7 +64,7 @@ class OrderConfirmationPage extends CartPage
     private static $casting = array(
         "PaymentMessage" => "HTMLText"
     );
-    
+
     /**
      * standard SS variable.
      *
@@ -181,7 +181,7 @@ class OrderConfirmationPage extends CartPage
         $extendedArray = $this->extend('updateFieldLabels', $labels);
         if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedResult) {
-                return $labels += $extendedResult;
+                $labels = array_merge($labels, $extendedResult);
             }
         }
 
@@ -788,20 +788,20 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 $currencyUsedString = EcommerceCurrency::default_currency_code();
             }
             $js = '
-		    jQuery(document).ready(
-			    function(){
-				    _gaq(\'require\', \'ecommerce\');
-				    _gaq(
-					    \'ecommerce:addTransaction\',
-					    {
-						    \'id\': \''.$this->currentOrder->ID.'\',
-						    \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
-						    \'currency\': \''.$currencyUsedString.'\'
-					    }
-				    );
-				    _gaq(\'ecommerce:send\');
-			    }
-		    );
+            jQuery(document).ready(
+                function(){
+                    _gaq(\'require\', \'ecommerce\');
+                    _gaq(
+                        \'ecommerce:addTransaction\',
+                        {
+                            \'id\': \''.$this->currentOrder->ID.'\',
+                            \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
+                            \'currency\': \''.$currencyUsedString.'\'
+                        }
+                    );
+                    _gaq(\'ecommerce:send\');
+                }
+            );
 ';
             Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
         }

@@ -933,7 +933,7 @@ class Product extends Page implements BuyableModel
         $extendedArray = $this->extend('updateLinkParameters', $array, $type);
         if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedArrayUpdate) {
-                $array += $extendedArrayUpdate;
+                $array = array_merge($array, $extendedArrayUpdate);
             }
         }
 

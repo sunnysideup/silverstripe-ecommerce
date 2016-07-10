@@ -385,7 +385,7 @@ class EcommerceConfigDefinitions extends Object
         $extendedArray = $this->extend('moreDefinitions', $array);
         if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedLabelsUpdate) {
-                $array += $extendedLabelsUpdate;
+                $array = array_merge($array, $extendedLabelsUpdate);
             }
         }
         //add more stuff through child classes
