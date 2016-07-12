@@ -114,7 +114,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public static function get_admin_group()
     {
         $adminCode = EcommerceConfig::get('EcommerceRole', 'admin_group_code');
-        $adminName = EcommerceConfig::get('EcommerceRole', 'admin_group_name');
 
         return Group::get()->Filter(array('Code' => $adminCode))->First();
     }

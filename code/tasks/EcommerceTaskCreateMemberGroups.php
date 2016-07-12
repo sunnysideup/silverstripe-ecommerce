@@ -29,12 +29,16 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         );
 
         db::alteration_message('========================== <br />creating sales manager', 'created');
+        //work out email
         $email = EcommerceConfig::get('EcommerceRole', 'admin_group_user_email');
         if (!$email) {
             $email = 'websales@'.$_SERVER['HTTP_HOST'];
         }
+        //create member
+        $filter = array('Email' => $email);
+        $member = Member::get()->filter($filter)->first();
         if (!$member) {
-            $member = Member::create();
+            $member = Member::create($filter);
         }
         $firstName = EcommerceConfig::get('EcommerceRole', 'admin_group_user_first_name');
         if (!$firstName) {
@@ -44,17 +48,9 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         if (!$surname) {
             $surname = 'Sales';
         }
-        $member = Member::get()->filter(array('Email' => $email))->first();
-        if (!$member) {
-            $member = Member::create();
-        }
+
         $member->FirstName = $firstName;
         $member->Surname = $surname;
-        $member->Email = $email;
-        if (!$member->Password) {
-            $password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!@#$%^&*()_+<>?:"{}|[]|'), 0, 16);
-            $member->Password = $password;
-        }
         $member->write();
         db::alteration_message('================================<br />creating shop admin group ', 'created');
 
@@ -153,6 +149,7 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         }
         //we unset it here to avoid confusion with the
         //other codes we use later on
+        $permissionArray[] = $permissionCode;
         unset($permissionCode);
         if ($roleTitle) {
             $permissionRole = PermissionRole::get()

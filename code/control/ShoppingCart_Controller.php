@@ -671,7 +671,8 @@ class ShoppingCart_Controller extends Controller implements Flushable
      */
     public function placeorderformember(SS_HTTPRequest $request)
     {
-        if (Permission::check('ADMIN') || Permission::check(EcommerceConfig::get('EcommerceRole', 'admin_group_code'))) {
+        $memberToTest = Member::currentMember();
+        if ($memberToTest->IsShopAdmin()) {
             $member = Member::get()->byID(intval($request->param('ID')));
             if ($member) {
                 $newOrder = Order::create();
@@ -701,7 +702,8 @@ class ShoppingCart_Controller extends Controller implements Flushable
      */
     public function loginas(SS_HTTPRequest $request)
     {
-        if (Permission::check('ADMIN') || Permission::check(EcommerceConfig::get('EcommerceRole', 'admin_group_code'))) {
+        $memberToTest = Member::currentMember();
+        if ($memberToTest->IsShopAdmin()) {
             $newMember = Member::get()->byID(intval($request->param('ID')));
             if ($newMember) {
                 $oldMember = Member::currentUser();
