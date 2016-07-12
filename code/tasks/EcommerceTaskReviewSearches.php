@@ -73,24 +73,28 @@ class EcommerceTaskReviewSearches extends BuildTask
             NumericField::create(
                 'days',
                 'Number of days',
-                isset($_GET['days']) ? $_GET['days'] : 30
-            ),
+                isset($_GET['days']) ? $_GET['days'] : $this->defaultDays
+            )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
             NumericField::create(
                 'ago',
-                'Starting how many days go',
-                isset($_GET['ago']) ? $_GET['ago'] : 30
-            ),
+                'Up to how many days go',
+                isset($_GET['ago']) ? $_GET['ago'] : $this->endingDaysBack
+            )->setRightTitle('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
             NumericField::create(
                 'min',
                 'Count treshold',
-                isset($_GET['min']) ? $_GET['min'] : 5
-            )
+                isset($_GET['min']) ? $_GET['min'] : $this->defaultMinimum
+            )->setRightTitle('Minimum number of searches for it to show up in the statistics. For example, enter five to show only phrases that were searched for at least five times during the specified period.')
         );
         $actions = FieldList::create( FormAction::create("run")->setTitle("show results"));
         $form = Form::create($this, "SearchFields", $fields, $actions, null );
         $form->setAttribute('method','get');
         $form->setAttribute('action',$this->Link());
         echo $form->forTemplate();
+        echo '<style>
+            div.field {margin-bottom: 20px;}
+            .right {font-style:italics; color: #555;}
+        </style>';
     }
 
     function Link($action = null)
