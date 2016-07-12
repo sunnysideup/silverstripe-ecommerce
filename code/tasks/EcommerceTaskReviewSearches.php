@@ -42,7 +42,7 @@ class EcommerceTaskReviewSearches extends BuildTask
      * @var string
      */
     protected $description = '
-		What did people search for on the website, you can use the days, min and ago GET variables to query different sets.';
+        What did people search for on the website, you can use the days, min and ago GET variables to query different sets.';
 
     public function run($request)
     {
@@ -64,12 +64,37 @@ class EcommerceTaskReviewSearches extends BuildTask
             ->setEndingDaysBack($endingDaysBack);
         echo $field->forTemplate();
         $arrayNumberOfDays = array(30, 365);
-        $link = '/dev/tasks/EcommerceTaskReviewSearches/';
-        for ($months = 0; ++$months; $months < 36) {
-            foreach ($arrayNumberOfDays as $numberOfDays) {
-                $myLink = $link.'?ago='.floor($months * 30.5).'&amp;days='.$numberOfDays;
-                DB::alteration_message('<a href="'.$myLink."\">$months months ago, last $numberOfDays days</a>");
-            }
-        }
+
+        $fields = FieldList::create(
+            HeaderField::create(
+                'ShowResultsFor',
+                'Show results for ...'
+            ),
+            NumericField::create(
+                'days',
+                'Number of days',
+                isset($_GET['days']) ? $_GET['days'] : 30
+            ),
+            NumericField::create(
+                'ago',
+                'Starting how many days go',
+                isset($_GET['ago']) ? $_GET['ago'] : 30
+            ),
+            NumericField::create(
+                'min',
+                'Count treshold',
+                isset($_GET['min']) ? $_GET['min'] : 5
+            )
+        );
+        $actions = FieldList::create( FormAction::create("run")->setTitle("show results"));
+        $form = Form::create($this, "SearchFields", $fields, $actions, null );
+        $form->setAttribute('method','get');
+        $form->setAttribute('action',$this->Link());
+        echo $form->forTemplate();
+    }
+
+    function Link($action = null)
+    {
+        return '/dev/tasks/EcommerceTaskReviewSearches/';
     }
 }

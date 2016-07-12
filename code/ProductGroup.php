@@ -702,6 +702,15 @@ class ProductGroup extends Page
     }
 
     /**
+     * used if you install lumberjack
+     * @return string
+     */
+    public function getLumberjackTitle()
+    {
+        return 'Products';
+    }
+
+    /**
      * Used in getCSMFields.
      *
      * @return GridField
@@ -712,7 +721,7 @@ class ProductGroup extends Page
             'AlsoShowProducts',
             _t('ProductGroup.OTHER_PRODUCTS_SHOWN_IN_THIS_GROUP', 'Other products shown in this group ...'),
             $this->AlsoShowProducts(),
-            GridFieldEditOriginalPageConfigWithDelete::create()
+            GridFieldBasicPageRelationConfig::create()
         );
         //make sure edits are done in the right place ...
         return $gridField;

@@ -44,11 +44,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
                     $gridField->setConfig(GridFieldEditOriginalPageConfig::create());
                 }
             }
-        } elseif ($this->modelClass == 'SearchHistory') {
-            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
-                $form->Fields()->replaceField($gridField->getName(), EcommerceSearchHistoryFormField::create('SearchHistoryTable'));
-            }
-        }
+        } 
 
         return $form;
     }

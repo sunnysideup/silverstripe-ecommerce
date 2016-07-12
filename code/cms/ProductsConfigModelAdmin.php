@@ -25,4 +25,22 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
      * @var string
      */
     private static $menu_icon = 'ecommerce/images/icons/product-file.gif';
+
+    public function getEditForm($id = null, $fields = null)
+    {
+        $form = parent::getEditForm();
+        if ($this->modelClass == 'SearchHistory') {
+            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                $form->Fields()->replaceField(
+                    $gridField->getName(),
+                    EcommerceSearchHistoryFormField::create('SearchHistoryTable')
+                        ->setShowMoreLink(true)
+                );
+            }
+        }
+
+        return $form;
+    }
+
+
 }

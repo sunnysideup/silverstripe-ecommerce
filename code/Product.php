@@ -282,7 +282,7 @@ class Product extends Page implements BuyableModel
             'ProductGroups',
             _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'),
             $this->ProductGroups(),
-            GridFieldEditOriginalPageConfigWithDelete::create()
+            GridFieldBasicPageRelationConfig::create()
         );
 
         return $gridField;
