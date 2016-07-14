@@ -297,7 +297,7 @@ class AccountPage_Controller extends Page_Controller
      */
     public function MemberForm()
     {
-        return ShopAccountForm::create($this, 'MemberForm');
+        return ShopAccountForm::create($this, 'MemberForm', $mustCreateAccount = true);
     }
 
     /**
