@@ -209,7 +209,13 @@ class BillingAddress extends OrderAddress
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();
-        $fields->push(new HeaderField('BillingDetails', _t('OrderAddress.BILLINGDETAILS', 'Billing Address'), 3));
+        $fields->push(
+            HeaderField::create(
+                'BillingDetails',
+                _t('OrderAddress.ADDRESS', 'Billing and Delivery Address'),
+                3
+            )->setAttribute('data-title-with-shipping-address', _t('OrderAddress.BILLING_ADDRESS_ONLY', 'Billing Address Only'))
+        );
         $fields->push(new TextField('Phone', _t('OrderAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
         $hasPreviousAddresses = false;

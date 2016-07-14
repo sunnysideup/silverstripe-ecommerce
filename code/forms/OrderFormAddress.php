@@ -103,7 +103,11 @@ class OrderFormAddress extends Form
         if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
             $addressFieldsShipping = new FieldList();
             //add the important CHECKBOX
-            $useShippingAddressField = new FieldList(new CheckboxField('UseShippingAddress', _t('OrderForm.USESHIPPINGADDRESS', 'Use an alternative shipping address')));
+            $useShippingAddressField = new FieldList(
+                CheckboxField::create(
+                    'UseShippingAddress',
+                    _t('OrderForm.USESHIPPINGADDRESS', 'Deliver this order somewhere else'))
+            );
             $addressFieldsShipping->merge($useShippingAddressField);
             //now we can add the shipping fields
             $shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress');
