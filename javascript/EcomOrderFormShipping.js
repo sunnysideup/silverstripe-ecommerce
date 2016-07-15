@@ -64,6 +64,13 @@ if(
         useShippingDetailsSelector: "input[name='UseShippingAddress']",
 
         /**
+         * where do we save the alternative header title
+         * for the billing address when the billing address has been selected
+         * @var string
+         */
+        billingHeaderAttributeTitleAlternative: "data-title-with-shipping-address",
+
+        /**
          * Geocoding field ...
          *
          * @var string
@@ -112,9 +119,9 @@ if(
          *
          */
         updateFields: function() {
-
+            var hasShippingAddress = jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked");
             //copy the billing address details to the shipping address details
-            if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")) {
+            if(hasShippingAddress === true) {
                 var billingFieldSelector = "";
                 var shippingFieldSelector = "";
                 var billingFieldValue = "";
@@ -148,7 +155,9 @@ if(
                         }
                     }
                 );
+
             }
+            this.swapBillingHeader(hasShippingAddress);
         },
 
         /**
@@ -236,7 +245,6 @@ if(
                 function(){
                     if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked") === true) {
 
-
                         //slidedown
                         jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideDown();
 
@@ -292,6 +300,25 @@ if(
                     EcomOrderFormWithShippingAddress.updateFields();
                 }
             );
+        },
+
+        swapBillingHeader: function(hasShippingAddress) {
+
+            var billingHeader = jQuery(this.formSelector + "_BillingDetails");
+            if(hasShippingAddress) {
+                var oldHeaderAttr = this.billingHeaderAttributeTitleAlternative + '_default';
+                var newHeaderAttr = this.billingHeaderAttributeTitleAlternative;
+            } else {
+                var oldHeaderAttr = this.billingHeaderAttributeTitleAlternative;
+                var newHeaderAttr = this.billingHeaderAttributeTitleAlternative + '_default';
+            }
+            var newHeader = billingHeader.attr(newHeaderAttr);
+            if( ! billingHeader.attr(oldHeaderAttr)) {
+                var oldHeader = billingHeader.text();
+                billingHeader.attr(oldHeaderAttr, oldHeader)
+            }
+            billingHeader.text(newHeader);
         }
     }
+
 }
