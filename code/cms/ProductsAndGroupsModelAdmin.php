@@ -29,11 +29,6 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
      */
     private static $menu_icon = 'ecommerce/images/icons/product-file.gif';
 
-    public function init()
-    {
-        parent::init();
-        //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-    }
 
     public function getEditForm($id = null, $fields = null)
     {
@@ -44,7 +39,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
                     $gridField->setConfig(GridFieldEditOriginalPageConfig::create());
                 }
             }
-        } 
+        }
 
         return $form;
     }

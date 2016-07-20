@@ -3,10 +3,14 @@
 
 class CMSPageAddController_Products extends CMSPageAddController
 {
-    private static $url_segment = 'product/add';
+    private static $url_segment = 'addproductorproductgroup';
+
     private static $url_rule = '/$Action/$ID/$OtherID';
+
     private static $url_priority = 41;
+
     private static $menu_title = 'Add Product';
+
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
     private static $allowed_actions = array(
@@ -15,6 +19,7 @@ class CMSPageAddController_Products extends CMSPageAddController
         'doCancel',
     );
 
+
     /**
      * the class of the page that is the root parent for the shop.
      *
@@ -22,13 +27,11 @@ class CMSPageAddController_Products extends CMSPageAddController
      */
     private static $root_parent_class_for_adding_page = 'ProductGroupSearchPage';
 
-    /**
-     * @return Form
-     */
-    public function AddForm()
-    {
-        return parent::AddForm();
+
+    public function doCancel($data, $form) {
+        return $this->redirect(singleton('ProductsAndGroupsModelAdmin')->Link());
     }
+
 
     /**
      * @return ArrayList
@@ -55,4 +58,6 @@ class CMSPageAddController_Products extends CMSPageAddController
 
         return $result;
     }
+
+
 }
