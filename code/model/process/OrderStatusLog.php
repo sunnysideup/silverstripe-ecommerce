@@ -254,7 +254,22 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         $fields = parent::getCMSFields();
         $fields->dataFieldByName('Note')->setRows(3);
         $fields->dataFieldByName('Title')->setTitle('Subject');
-        $fields->replaceField('AuthorID', $fields->dataFieldByName('AuthorID')->performReadonlyTransformation());
+        $fields->addFieldToTab(
+            'Root.Main',
+            DropdownField::create(
+                'AuthorID',
+                _t('OrderStatusLog.AUTHOR', 'Author'),
+                EcommerceRole::list_of_admins(true)
+            )
+        );
+        if($this->AuthorID) {
+            if($this->Author() && $this->Author()->exists()) {
+                $fields->addFieldToTab(
+                    'Root.Main',
+                    $fields->dataFieldByName('AuthorID')->performReadonlyTransformation()
+                );
+            }
+        }
 
         //OrderID Field
         $fields->removeByName('OrderID');
@@ -265,14 +280,40 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         //ClassName Field
         $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, array(EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')));
-        $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', _t('OrderStatusLog.TYPE', 'Type'), 'OrderStatusLog', $availableLogs);
-        $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
-        $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
-        if ($this->exists() || $this->limitedToOneClassName()) {
-            $classNameField = $fields->dataFieldByName('ClassName');
-            $fields->replaceField('ClassName', $classNameField->performReadonlyTransformation());
+        $availableLogsAssociative = array();
+        foreach($availableLogs as $className) {
+            $availableLogsAssociative[$className] = Injector::inst()->get($className)->singular_name();
         }
-        $typeIDField = $fields->fieldByName('TypeID');
+        $title = _t('OrderStatusLog.TYPE', 'Type');
+        if (
+                ($this->exists() || $this->limitedToOneClassName())
+                && $this->ClassName &&
+                isset($availableLogsAssociative[$this->ClassName])
+        ) {
+            $fields->removeByName('ClassName');
+            $fields->addFieldsToTab(
+                'Root.Main',
+                array(
+                    HiddenField::create('ClassName'),
+                    ReadonlyField::create(
+                        'ClassNameTitle',
+                        $title,
+                        $availableLogsAssociative[$this->ClassName]
+                    )
+                ),
+                'Title'
+            );
+        } else {
+            $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create(
+                'ClassName',
+                _t('OrderStatusLog.TYPE', 'Type'),
+                'OrderStatusLog',
+                $availableLogsAssociative
+            );
+            $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
+            $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
+
+        }
         return $fields;
     }
 

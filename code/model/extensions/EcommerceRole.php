@@ -66,9 +66,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         }
         //get customer group
         $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
-        $group = Group::get()
-            ->Filter(array('Code' => $customerCode))
-            ->First();
+        $group = self::get_customer_group();
         //fill array
         if ($group) {
             $members = $group->Members();
@@ -81,6 +79,57 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 }
             } else {
                 return $array;
+            }
+        }
+        //sort in a natural order
+        natcasesort($array);
+
+        return $array;
+    }
+
+    /**
+     * returns an aray of customers
+     * The unselect option shows an extra line, basically allowing you to deselect the
+     * current option.
+     *
+     * @param bool $showUnselectedOption
+     *
+     * @return array ( ID => Email (member.title) )
+     */
+    public static function list_of_admins($showUnselectedOption = false)
+    {
+        //start array
+        $array = array();
+        if ($showUnselectedOption) {
+            $array[0] = _t('Member.SELECT_ECOMMERCE_ADMIN', ' --- SELECT ADMIN ---');
+        }
+        //get customer group
+        $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
+        $group = self::get_admin_group();
+        //fill array
+        if ($group) {
+            $members = $group->Members();
+            $membersCount = $members->count();
+            if ($membersCount > 0) {
+                foreach ($members as $member) {
+                    if ($member->Email) {
+                        $array[$member->ID] = $member->Email.' ('.$member->getTitle().')';
+                    }
+                }
+            }
+        }
+        $group = Group::get()
+            ->Filter(array('Code' => 'administrators'))->First();
+        //fill array
+        if ($group) {
+            $members = $group->Members();
+            $membersCount = $members->count();
+            if ($membersCount > 0) {
+                foreach ($members as $member) {
+                    if ($member->Email) {
+                        $array[$member->ID] = $member->Email.' ('.$member->getTitle().')';
+                    }
+                }
             }
         }
         //sort in a natural order
@@ -292,9 +341,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @return FieldList
      */
-    public function getEcommerceFields()
+    public function getEcommerceFields($mustCreateAccount = false)
     {
-        if (!EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
+        if ( ! EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
             //if no accounts are made then we simply return the basics....
             $fields = new FieldList(
                 new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION', 'Personal Information'), 3),
@@ -326,7 +375,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 );
             } else {
                 //login invite right on the top
-                if (EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase')) {
+                if (EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase') || $mustCreateAccount) {
                     $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT', 'Create an account'), 3);
                     //dont allow people to purchase without creating a password
                     $loginDetailsDescription = new LiteralField(
