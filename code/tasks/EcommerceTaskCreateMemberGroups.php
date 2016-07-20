@@ -149,7 +149,12 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         }
         //we unset it here to avoid confusion with the
         //other codes we use later on
-        $permissionArray[] = $permissionCode;
+        if($permissionArray) {
+            if( is_string($permissionArray)) {
+                $permissionArray = array($permissionArray);
+            }
+            $permissionArray[] = $permissionCode;
+        }
         unset($permissionCode);
         if ($roleTitle) {
             $permissionRole = PermissionRole::get()

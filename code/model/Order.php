@@ -597,26 +597,16 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
-            $shopAdminArray = array(
-                0 => '--- '._t('Order.NOT_CANCELLED', 'Not Cancelled').' ---',
-                $member->ID => $member->getName(),
-            );
-            if ($group = EcommerceRole::get_admin_group()) {
-                $shopAdmins = $group->Members();
-                if ($shopAdmins->count()) {
-                    $shopAdminArray = array_merge($shopAdminArray, $shopAdmins->map('ID', 'Name')->toArray());
-                }
-            }
-            $shopAdminArray = array_merge(
-                $shopAdminArray,
-                array($currentMember->ID => $currentMember->getName())
+            $shopAdminAndCurrentCustomerArray = array_merge(
+                EcommerceRole::list_of_admins(true),
+                array($member->ID => $member->getName())
             );
             $fields->addFieldToTab(
                 'Root.Cancellation',
                 DropdownField::create(
                     'CancelledByID',
                     $cancelledField->Title(),
-                    $shopAdminArray
+                    $shopAdminAndCurrentCustomerArray
                 )
             );
             $fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());
@@ -655,7 +645,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $specialOptionsArray[$currentMemberID] = _t('Order.ASSIGNTHISORDERTOME', '- Assign this order to me: ').$currentMember->getTitle();
             }
             //MEMBER FIELD!!!!!!!
-            $memberArray = $specialOptionsArray + EcommerceRole::list_of_customers();
+            $memberArray = $specialOptionsArray + EcommerceRole::list_of_customers(true);
             $fields->addFieldToTab('Root.Next', new DropdownField('MemberID', _t('Order.SELECTCUSTOMER', 'Select Customer'), $memberArray), 'CustomerOrderNote');
             $memberArray = null;
         }
@@ -760,16 +750,12 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param string    $sourceClass
      * @param string    $title
-     * @param FieldList $fieldList          (Optional)
-     * @param FieldList $detailedFormFields (Optional)
      *
      * @return GridField
      **/
     public function getOrderStatusLogsTableField(
         $sourceClass = 'OrderStatusLog',
-        $title = '',
-        FieldList $fieldList = null,
-        FieldList $detailedFormFields = null
+        $title = ''
     ) {
         $gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
             new GridFieldAddNewButton('toolbar-header-right'),
@@ -780,6 +766,25 @@ class Order extends DataObject implements EditableEcommerceObject
         $gf = new GridField($sourceClass, $title, $source, $gridFieldConfig);
         $gf->setModelClass($sourceClass);
 
+        return $gf;
+    }
+
+    /**
+     * Needs to be public because the OrderStep::getCMSFIelds accesses it.
+     *
+     * @param string    $sourceClass
+     * @param string    $title
+     *
+     * @return GridField
+     **/
+    public function getOrderStatusLogsTableFieldEditable(
+        $sourceClass = 'OrderStatusLog',
+        $title = ''
+    ) {
+        $gf = $this->getOrderStatusLogsTableField($sourceClass, $title);
+        $gf->getConfig()->addComponents(
+            new GridFieldEditButton()
+        );
         return $gf;
     }
 

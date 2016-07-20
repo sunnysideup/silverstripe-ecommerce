@@ -66,9 +66,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         }
         //get customer group
         $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
-        $group = Group::get()
-            ->Filter(array('Code' => $customerCode))
-            ->First();
+        $group = self::get_customer_group();
         //fill array
         if ($group) {
             $members = $group->Members();
@@ -81,6 +79,57 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 }
             } else {
                 return $array;
+            }
+        }
+        //sort in a natural order
+        natcasesort($array);
+
+        return $array;
+    }
+
+    /**
+     * returns an aray of customers
+     * The unselect option shows an extra line, basically allowing you to deselect the
+     * current option.
+     *
+     * @param bool $showUnselectedOption
+     *
+     * @return array ( ID => Email (member.title) )
+     */
+    public static function list_of_admins($showUnselectedOption = false)
+    {
+        //start array
+        $array = array();
+        if ($showUnselectedOption) {
+            $array[0] = _t('Member.SELECT_ECOMMERCE_ADMIN', ' --- SELECT ADMIN ---');
+        }
+        //get customer group
+        $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
+        $group = self::get_admin_group();
+        //fill array
+        if ($group) {
+            $members = $group->Members();
+            $membersCount = $members->count();
+            if ($membersCount > 0) {
+                foreach ($members as $member) {
+                    if ($member->Email) {
+                        $array[$member->ID] = $member->Email.' ('.$member->getTitle().')';
+                    }
+                }
+            }
+        }
+        $group = Group::get()
+            ->Filter(array('Code' => 'administrators'))->First();
+        //fill array
+        if ($group) {
+            $members = $group->Members();
+            $membersCount = $members->count();
+            if ($membersCount > 0) {
+                foreach ($members as $member) {
+                    if ($member->Email) {
+                        $array[$member->ID] = $member->Email.' ('.$member->getTitle().')';
+                    }
+                }
             }
         }
         //sort in a natural order
