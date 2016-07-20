@@ -51,7 +51,7 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         );
         db::alteration_message('================================<br />creating shop admin group ', 'created');
 
-        $obj->CreateGroup(
+        $permissionProviderFactory->CreateGroup(
             $code = EcommerceConfig::get('EcommerceRole', 'admin_group_code'),
             $name = EcommerceConfig::get('EcommerceRole', 'admin_group_name'),
             $parentGroup = null,
