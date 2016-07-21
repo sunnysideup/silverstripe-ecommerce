@@ -135,7 +135,7 @@ if(
                         jQuery(shippingFieldSelector).val("");
                     }
                     else if( ! shippingFieldValue && billingFieldValue) {
-                        if(this.copy_billing_to_shipping) {
+                        if(EcomOrderFormWithShippingAddress.copy_billing_to_shipping) {
                             jQuery(shippingFieldSelector).val(billingFieldValue).change();
                         }
                     }
