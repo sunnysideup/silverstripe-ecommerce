@@ -1975,6 +1975,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if (EcommerceRole::current_member_is_shop_admin($member)) {
             return true;
         }
+
+        //is the member is a shop assistant they can always view it
+        if (EcommerceRole::current_member_is_shop_assistant($member)) {
+            return true;
+        }
         //if the current member OWNS the order, (s)he can always view it.
         if ($member->exists() && $this->MemberID == $member->ID) {
             return true;

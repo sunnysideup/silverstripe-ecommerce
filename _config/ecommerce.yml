@@ -206,6 +206,16 @@ EcommerceRole:
     - CMS_ACCESS_StoreAdmin
     - CMS_ACCESS_AssetAdmin
     - CMS_ACCESS_CMSMain
+  assistant_group_code: "shopassitants"
+  assistant_group_name: "Shop Assitants"
+  assistant_group_user_first_name: ""
+  assistant_group_user_surname: ""
+  assistant_group_user_email: ""
+  assistant_permission_code: "SHOPASSITANTS"
+  assistant_role_title: "Store Assitant"
+  assistant_role_permission_codes:
+    - CMS_ACCESS_SalesAdmin
+    - CMS_ACCESS_SalesAdminExtras
 
 
 

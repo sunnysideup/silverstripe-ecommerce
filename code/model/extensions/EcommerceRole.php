@@ -158,6 +158,25 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
+     * tells us if the current member is in the Shop Administrators Group.
+     *
+     * @param Member | Null $member
+     *
+     * @return bool
+     */
+    public static function current_member_is_shop_assistant(Member $member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
+        if ($member) {
+            return $member->IsShopAssitant();
+        }
+
+        return false;
+    }
+
+    /**
      * @return DataObject (Group) | NULL
      **/
     public static function get_admin_group()
@@ -217,6 +236,12 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             'name' => EcommerceConfig::get('EcommerceRole', 'admin_role_title'),
             'category' => 'E-commerce',
             'help' => 'Shop Manager - can edit everything to do with the e-commerce application.',
+            'sort' => 99,
+        );
+        $perms[EcommerceConfig::get('EcommerceRole', 'assistant_permission_code')] = array(
+            'name' => EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
+            'category' => 'E-commerce',
+            'help' => 'Shop Assitant - can only view sales details',
             'sort' => 99,
         );
 
@@ -466,6 +491,16 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         } else {
             return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'admin_permission_code'));
         }
+    }
+
+    /**
+     * Is the member a member of the SHOPASSISTANTS Group.
+     *
+     * @return bool
+     **/
+    public function IsShopAssitant()
+    {
+        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));;
     }
 
     /**

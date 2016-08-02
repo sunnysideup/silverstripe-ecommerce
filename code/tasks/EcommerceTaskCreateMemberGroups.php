@@ -60,6 +60,37 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             $permissionArray = EcommerceConfig::get('EcommerceRole', 'admin_role_permission_codes'),
             $member
         );
+
+        //work out email
+        $email = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_email');
+        if (!$email) {
+            $email = 'assistant@'.$_SERVER['HTTP_HOST'];
+        }
+        $firstName = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_first_name');
+        if (!$firstName) {
+            $firstName = 'Web';
+        }
+        $surname = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_surname');
+        if (!$surname) {
+            $surname = 'Asssistant';
+        }
+
+        $member = $permissionProviderFactory->CreateDefaultMember(
+            $email,
+            $firstName,
+            $surname
+        );
+        db::alteration_message('================================<br />creating shop assistant group ', 'created');
+
+        $permissionProviderFactory->CreateGroup(
+            $code = EcommerceConfig::get('EcommerceRole', 'assistant_group_code'),
+            $name = EcommerceConfig::get('EcommerceRole', 'assistant_group_name'),
+            $parentGroup = null,
+            $permissionCode = EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'),
+            $roleTitle = EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
+            $permissionArray = EcommerceConfig::get('EcommerceRole', 'assistant_role_permission_codes'),
+            $member
+        );
     }
 
 }
