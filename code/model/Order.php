@@ -501,18 +501,23 @@ class Order extends DataObject implements EditableEcommerceObject
         $fields->addFieldsToTab(
             'Root.Next',
             array(
-                new GridField('OrderSummary', 'Summary', ArrayList::create(array($this))),
-                new HeaderField('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
+                GridField::create('OrderSummary', 'Summary', ArrayList::create(array($this)), $config = GridFieldConfig_Base::create()),
+                HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
                 $this->OrderStepField(),
-                new HeaderField('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
-                new LiteralField('OrderStepNextStepHeaderExtra', '<p><strong>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to see up-to-date options here.').'</strong></p>'),
-                new HeaderField('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along')),
-                new LiteralField(
+                HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
+                LiteralField::create('OrderStepNextStepHeaderExtra', '<p><strong>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to see up-to-date options here.').'</strong></p>'),
+                HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along')),
+                LiteralField::create(
                     'StatusIDExplanation',
                     '<h3><a href="'.$this->CMSEditLink().'" class="action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">'._t('Order.REFRESH', 'refresh now').'</span></a></h3>'
                 )
             )
         );
+        $config->removeComponentsByType('GridFieldToolbarHeader');
+        //$config->removeComponentsByType('GridFieldSortableHeader');
+        $config->removeComponentsByType('GridFieldFilterHeader');
+        $config->removeComponentsByType('GridFieldPageCount');
+        $config->removeComponentsByType('GridFieldPaginator');
         $this->MyStep()->addOrderStepFields($fields, $this);
 
         if ($submitted) {
@@ -2247,7 +2252,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->BillingAddressID && $this->BillingAddress()) {
             $email = $this->BillingAddress()->Email;
         }
-        if (!$email) {
+        if ( ! $email) {
             if ($this->MemberID && $this->Member()) {
                 $email = $this->Member()->Email;
             }

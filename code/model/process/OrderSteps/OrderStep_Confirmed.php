@@ -15,6 +15,7 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
         'Name' => 'Confirm',
         'Code' => 'CONFIRMED',
         'ShowAsInProcessOrder' => 1,
+        'HideStepFromCustomer' => 1
     );
 
     /**

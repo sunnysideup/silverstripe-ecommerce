@@ -2726,7 +2726,7 @@ class ProductGroup_Controller extends Page_Controller
         $html .= '<li><b>allProducts:</b> '.print_r(str_replace('"', '`', $this->allProducts->sql()), 1).' </li>';
 
         $html .= '<li><hr /><h3>Search</h3><hr /></li>';
-        $resultArray = explode(',', $this->searchResultsArrayFromSession());
+        $resultArray = $this->searchResultsArrayFromSession();
         $productGroupArray = explode(',', Session::get($this->SearchResultsSessionVariable(true)));
         $html .= '<li><b>Is Search Results:</b> '.($this->IsSearchResults() ? 'YES' : 'NO').' </li>';
         $html .= '<li><b>Products In Search (session variable : '.$this->SearchResultsSessionVariable(false).'):</b> '.print_r($resultArray, 1).' </li>';
