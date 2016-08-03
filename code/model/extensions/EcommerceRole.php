@@ -186,12 +186,33 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         return Group::get()->Filter(array('Code' => $adminCode))->First();
     }
 
+     /**
+     * @return DataObject (Group) | NULL
+     **/
+    public static function get_assistant_group()
+    {
+        $assistantCode = EcommerceConfig::get('EcommerceRole', 'assistant_group_code');
+
+        return Group::get()->Filter(array('Code' => $assistantCode))->First();
+    }
+
     /**
      * @return DataObject (Member) | NULL
      **/
     public static function get_default_shop_admin_user()
     {
         $group = self::get_admin_group();
+        if ($group) {
+            return $group->Members()->First();
+        }
+    }
+
+    /**
+     * @return DataObject (Member) | NULL
+     **/
+    public static function get_default_shop_assistant_user()
+    {
+        $group = self::get_assistant_group();
         if ($group) {
             return $group->Members()->First();
         }

@@ -59,8 +59,8 @@ class CartResponse extends EcommerceResponse
         if ($this->includeHeaders) {
             $this->addHeader('Content-Type', 'application/json');
         }
-        SSViewer::set_source_file_comments(false);
 
+        SSViewer::set_source_file_comments(false);
         //merge messages
         $messagesImploded = '';
         if (is_array($messages) && count($messages)) {
