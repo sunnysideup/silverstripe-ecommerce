@@ -76,9 +76,7 @@
  **/
 class EcommerceDatabaseAdmin extends TaskRunner
 {
-    private static $allowed_actions = array(
-        'runTask' => true,
-    );
+
 
     //##############################
     // BASIC FUNCTIONS
