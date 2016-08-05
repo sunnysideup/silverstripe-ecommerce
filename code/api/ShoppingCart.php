@@ -290,12 +290,10 @@ class ShoppingCart extends Object
     {
         if (!$buyable) {
             $this->addMessage(_t('Order.ITEMCOULDNOTBEFOUND', 'This item could not be found.'), 'bad');
-
             return false;
         }
         if (!$buyable->canPurchase()) {
             $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'This item is not for sale.'), 'bad');
-
             return false;
         }
         $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);

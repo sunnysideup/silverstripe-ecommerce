@@ -293,11 +293,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         }
         $preferredCurrencyField = $fields->dataFieldByName('PreferredCurrencyID');
         $notesFields = $fields->dataFieldByName('Notes');
-        $link = Controller::join_links(
-            Director::baseURL(),
-            Config::inst()->get('ShoppingCart_Controller', 'url_segment').'/loginas/'.$this->owner->ID.'/'
+        $loginAsField = new LiteralField(
+            'LoginAsThisCustomer',
+            "<p class=\"actionInCMS\"><a href=\"".$this->owner->LoginAsLink()."\" target=\"_blank\">Login as this customer</a></p>"
         );
-        $loginAsField = new LiteralField('LoginAsThisCustomer', "<p class=\"actionInCMS\"><a href=\"$link\" target=\"_blank\">Login as this customer</a></p>");
         $link = Controller::join_links(
             Director::baseURL(),
             Config::inst()->get('ShoppingCart_Controller', 'url_segment').'/placeorderformember/'.$this->owner->ID.'/'
@@ -622,4 +621,22 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             return $addresses->First();
         }
     }
+
+    public function LoginAsLink()
+    {
+        return Controller::join_links(
+            Director::baseURL(),
+            Config::inst()->get('ShoppingCart_Controller', 'url_segment').
+            '/loginas/'.$this->owner->ID.'/'
+        );
+    }
+
+    public function CMSEditLink()
+    {
+        return Controller::join_links(
+            Director::baseURL(),
+            'admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit'
+        );
+    }
+
 }

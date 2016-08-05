@@ -702,14 +702,13 @@ class ShoppingCart_Controller extends Controller implements Flushable
      */
     public function loginas(SS_HTTPRequest $request)
     {
-        $memberToTest = Member::currentMember();
-        if ($memberToTest->IsShopAdmin()) {
+        $memberToTest = Member::currentUser();
+        if (Permission::check('ADMIN')) {
             $newMember = Member::get()->byID(intval($request->param('ID')));
             if ($newMember) {
-                $oldMember = Member::currentUser();
-                if ($oldMember) {
-                    $oldMember->logout();
-                    $newMember->login();
+                if ($memberToTest) {
+                    //$memberToTest->logout();
+                    $newMember->logIn();
                     if ($accountPage = AccountPage::get()->first()) {
                         return $this->redirect($accountPage->Link());
                     } else {
@@ -723,7 +722,6 @@ class ShoppingCart_Controller extends Controller implements Flushable
             }
         } else {
             return Security::permissionFailure($this);
-            //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/loginas/".$request->param("ID")."/")."\">log in</a> first.";
         }
     }
 
