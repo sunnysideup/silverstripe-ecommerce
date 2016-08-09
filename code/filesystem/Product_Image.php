@@ -3,6 +3,30 @@
 
 class Product_Image extends Image
 {
+
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Product Image';
+    public function i18n_singular_name()
+    {
+        return _t('Product_Image.SINGULARNAME', 'Product Image');
+    }
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Product Images';
+    public function i18n_plural_name()
+    {
+        return _t('Product_Image.PLURALNAME', 'Product Images');
+    }
+
     private static $casting = array(
         'CMSThumbnail' => 'HTMLText',
     );
