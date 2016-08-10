@@ -182,7 +182,7 @@ class Product_Image extends Image
     {
         $smallImage = $this->SmallImage();
         if ($smallImage) {
-            $icon = '<img src="'.$smallImage->FileName.'" style="border: 1px solid black; height: 100px; " />';
+            $icon = '<img src="'.$smallImage->FileName.'" style="border: 1px solid #555; height: 100px; " />';
         } else {
             $icon = '[MISSING IMAGE]';
         }
