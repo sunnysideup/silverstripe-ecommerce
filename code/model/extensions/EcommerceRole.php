@@ -170,7 +170,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $member = Member::currentUser();
         }
         if ($member) {
-            return $member->IsShopAssitant();
+            return $member->IsShopAssistant();
         }
 
         return false;
@@ -262,7 +262,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $perms[EcommerceConfig::get('EcommerceRole', 'assistant_permission_code')] = array(
             'name' => EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
             'category' => 'E-commerce',
-            'help' => 'Shop Assitant - can only view sales details',
+            'help' => 'Shop Assistant - can only view sales details',
             'sort' => 99,
         );
 
@@ -518,7 +518,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @return bool
      **/
-    public function IsShopAssitant()
+    public function IsShopAssistant()
     {
         return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));;
     }

@@ -94,13 +94,13 @@ class BuyableSelectField extends FormField
     protected function getJavascript()
     {
         return '
-		EcomBuyableSelectField.set_nothingFound("'._t('BuyableSelectField.NOTHINGFOUND', 'no products found - please try again').'");
-		EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->getName()).'");
-		EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->FormName()).'");
-		EcomBuyableSelectField.set_countOfSuggestions('.$this->countOfSuggestions.');
-		EcomBuyableSelectField.set_selectedBuyableFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->getName()).'");
-		EcomBuyableSelectField.set_selectedBuyableFieldID("'.Convert::raw2js($this->fieldSelectedBuyable->id()).'");
-		';
+        EcomBuyableSelectField.set_nothingFound("'._t('BuyableSelectField.NOTHINGFOUND', 'no products found - please try again').'");
+        EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->getName()).'");
+        EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->FormName()).'");
+        EcomBuyableSelectField.set_countOfSuggestions('.$this->countOfSuggestions.');
+        EcomBuyableSelectField.set_selectedBuyableFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->getName()).'");
+        EcomBuyableSelectField.set_selectedBuyableFieldID("'.Convert::raw2js($this->fieldSelectedBuyable->id()).'");
+        ';
     }
 
     /**
@@ -243,8 +243,8 @@ class BuyableSelectField_DataList extends Controller
                     }
                     if ($singleton->hasDatabaseField($fieldName)) {
                         $where = "\"$fieldName\" LIKE '%$term%'
-								AND \"".$tableName.'"."ID" NOT IN
-								AND "AllowPurchase" = 1';
+                                AND \"".$tableName.'"."ID" NOT IN
+                                AND "AllowPurchase" = 1';
                         $obj = $className::get()
                             ->filter(array(
                                 $fieldName.':PartialMatch' => $term,

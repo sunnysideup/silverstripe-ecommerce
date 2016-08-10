@@ -133,6 +133,15 @@ class ProductGroup extends Page
         'DisplayStyle' => true,
     );
 
+    private static $summary_fields = array(
+        'Title' => 'Category',
+        'NumberOfProducts' => 'Direct Product Count'
+    );
+
+    private static $casting = array(
+        'NumberOfProducts' => 'Int'
+    );
+
     /**
      * standard SS variable.
      *
@@ -294,8 +303,8 @@ class ProductGroup extends Page
      */
     protected $showProductLevels = array(
         99 => 'All Child Products (default)',
-     -2 => 'None',
-     -1 => 'All products',
+        -2 => 'None',
+        -1 => 'All products',
         1 => 'Direct Child Products',
         2 => 'Direct Child Products + Grand Child Products',
         3 => 'Direct Child Products + Grand Child Products + Great Grand Child Products',
@@ -1563,6 +1572,11 @@ class ProductGroup extends Page
         }
 
         return self::$_result_array[$this->ID];
+    }
+
+    function getNumberOfProducts()
+    {
+        return Product::get()->filter(array('ParentID' => $this->ID))->count();
     }
 }
 
