@@ -134,6 +134,7 @@ class ProductGroup extends Page
     );
 
     private static $summary_fields = array(
+        'Image.CMSThumbnail' => 'Image',        
         'Title' => 'Category',
         'NumberOfProducts' => 'Direct Product Count'
     );

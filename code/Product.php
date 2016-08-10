@@ -105,7 +105,7 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $summary_fields = array(
-        'CMSThumbnail' => 'Image',
+        'Image.CMSThumbnail' => 'Image',
         'FullName' => 'Description',
         'Price' => 'Price',
         'AllowPurchaseNice' => 'For Sale',
