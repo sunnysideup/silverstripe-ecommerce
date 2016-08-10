@@ -318,7 +318,8 @@ class ProductSearchForm extends Form
                     $list1 = $baseList->filter(array('InternalItemID' => $keywordPhrase));
                     $count = $list1->count();
                     if ($count == 1) {
-                        $immediateRedirectLink = $this->controller->redirect($list1->First()->Link());
+                        $immediateRedirectLink = $list1->First()->Link();
+                        $this->controller->redirect($immediateRedirectLink);
                         $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: '.$immediateRedirectLink.'</p>');
                     }
                     if ($count > 0) {
@@ -344,10 +345,10 @@ class ProductSearchForm extends Form
                             }
                             $replacements = SearchReplacement::get()
                                 ->where("
-									LOWER(\"Search\") = '$word' OR
-									LOWER(\"Search\") LIKE '%,$word' OR
-									LOWER(\"Search\") LIKE '$word,%' OR
-									LOWER(\"Search\") LIKE '%,$word,%'"
+                                    LOWER(\"Search\") = '$word' OR
+                                    LOWER(\"Search\") LIKE '%,$word' OR
+                                    LOWER(\"Search\") LIKE '$word,%' OR
+                                    LOWER(\"Search\") LIKE '%,$word,%'"
                                 );
                             if ($replacements->count()) {
                                 $replacementsArray = $replacements->map('ID', 'Replace')->toArray();
