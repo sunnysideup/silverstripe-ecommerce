@@ -23,7 +23,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
      *
      * @var string
      */
-    private static $menu_title = 'Sales Details';
+    private static $menu_title = 'All Sales';
 
     /**
      * standard SS variable.
