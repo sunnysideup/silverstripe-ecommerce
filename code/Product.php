@@ -1056,8 +1056,7 @@ class Product extends Page implements BuyableModel
             return false;
         }
         //not sold at all
-        $allowpurchase = $this->AllowPurchase;
-        if (!$allowpurchase) {
+        if ( ! $this->AllowPurchase) {
             return false;
         }
         //check country
@@ -1073,19 +1072,18 @@ class Product extends Page implements BuyableModel
             return false;
         }
 
-        $price = $this->getCalculatedPrice();
-        if ($price == 0 && !$config->AllowFreeProductPurchase) {
-            return false;
+        if($checkPrice) {
+            $price = $this->getCalculatedPrice();
+            if ($price == 0 && !$config->AllowFreeProductPurchase) {
+                return false;
+            }
         }
         // Standard mechanism for accepting permission changes from decorators
-        if( ! $member) {
-            $member = Member::currentUser();
-        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
         }
-        return $allowpurchase;
+        return $this->AllowPurchase;
     }
 
     public function canCreate($member = null)

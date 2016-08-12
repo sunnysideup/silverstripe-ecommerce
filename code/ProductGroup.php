@@ -134,7 +134,7 @@ class ProductGroup extends Page
     );
 
     private static $summary_fields = array(
-        'Image.CMSThumbnail' => 'Image',        
+        'Image.CMSThumbnail' => 'Image',
         'Title' => 'Category',
         'NumberOfProducts' => 'Direct Product Count'
     );
@@ -2130,6 +2130,36 @@ class ProductGroup_Controller extends Page_Controller
     }
 
     /**
+     * Is there a special sort operating at the moment?
+     * Is the current sort the default one (return inverse!)?
+     *
+     * @return bool
+     */
+    public function HasSort()
+    {
+        $sort = $this->getCurrentUserPreferences('SORT');
+        if ($sort != $this->getMyUserPreferencesDefault('SORT')) {
+            return true;
+        }
+    }
+
+    /**
+     * @return boolean
+     */
+    function HasFilterOrSort()
+    {
+        return $this->HasFilter() || $this->HasSort();
+    }
+
+    /**
+     * @return boolean
+     */
+    function HasFilterOrSortFullList()
+    {
+        return $this->HasFilterOrSort() || $this->IsShowFullList();
+    }
+
+    /**
      * are filters available?
      * we check one at the time so that we do the least
      * amount of DB queries.
@@ -2676,8 +2706,7 @@ class ProductGroup_Controller extends Page_Controller
             if ($filter != $this->getMyUserPreferencesDefault('FILTER')) {
                 $secondaryTitle .= $pipe.$this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
             }
-            $sort = $this->getCurrentUserPreferences('SORT');
-            if ($sort != $this->getMyUserPreferencesDefault('SORT')) {
+            if($this->HasSort()) {
                 $secondaryTitle .= $pipe.$this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
             }
             if ($secondaryTitle) {

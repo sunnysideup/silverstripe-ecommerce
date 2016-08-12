@@ -57,7 +57,7 @@
         <% end_if %>
     <% end_loop %>
 
-        <tr class="gap summary hideOnZeroItems">
+        <tr class="gap summary hideOnZeroItems subTotal">
             <th colspan="3" scope="row" class="firstThreeCols"><% _t("Order.SUBTOTAL","Sub-total") %></th>
             <td class="right totalCol" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
             <td class="emptyCell deleteCol">&nbsp;</td>

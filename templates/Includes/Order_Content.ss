@@ -35,7 +35,7 @@
         </tr>
         <% end_loop %>
 
-        <tr class="gap summary" id="SubTotal">
+        <tr class="gap summary subTotal">
             <th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
             <td class="right subTotal">$SubTotalAsMoney.NiceDefaultFormat</td>
         </tr>
