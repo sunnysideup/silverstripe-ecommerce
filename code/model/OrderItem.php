@@ -749,7 +749,9 @@ class OrderItem extends OrderAttribute
             }
             return  Director::absoluteURL($buyable->Link());
         }
-        return  Director::absoluteURL("buyable-could-not-be-found");
+        else {
+            return $this->getLink();
+        }
     }
     ##########################
     ## LINKS                ##
@@ -768,14 +770,12 @@ class OrderItem extends OrderAttribute
      **/
     public function getLink()
     {
-        $buyable = $this->Buyable();
-        if ($buyable && $buyable->exists()) {
-            $order = $this->Order();
-            if ($order) {
-                return $order->Link();
-            }
+        $order = $this->Order();
+        if ($order) {
+            return $order->Link();
+        } else {
+            return  Director::absoluteURL("order-link-could-not-be-found");
         }
-        return "error-in-finding-order";
     }
 
     /**
