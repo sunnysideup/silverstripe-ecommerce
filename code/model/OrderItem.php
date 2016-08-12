@@ -657,7 +657,7 @@ class OrderItem extends OrderAttribute
         $tempBuyableStoreType = $current ? 'current' : 'version';
         if (!isset($this->tempBuyableStore[$tempBuyableStoreType])) {
             if (!$this->BuyableID) {
-                //debug::log('There was an error retrieving the product');
+                debug::log('There was an error retrieving the product');
                 return Product::create();
                 return;
             }
