@@ -2684,30 +2684,39 @@ class ProductGroup_Controller extends Page_Controller
     protected function addSecondaryTitle($secondaryTitle = '')
     {
         $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
-        if (!$this->secondaryTitleHasBeenAdded) {
-            if ($secondaryTitle) {
+        if ( ! $this->secondaryTitleHasBeenAdded) {
+            if (trim($secondaryTitle)) {
                 $secondaryTitle = $pipe.$secondaryTitle;
             }
             if ($this->IsSearchResults()) {
                 if ($array = $this->searchResultsArrayFromSession()) {
+                    //we remove 1 item here, because the array starts with 0 => 0
                     $count = count($array) - 1;
-                    $secondaryTitle .= $pipe.$count.' '._t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                    if($count > 3) {
+                        $toAdd = $count. ' '._t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                        $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                    }
                 } else {
-                    $secondaryTitle .= $pipe._t('ProductGroup.SEARCH_RESULTS', 'Search Results');
+                    $toAdd = _t('ProductGroup.SEARCH_RESULTS', 'Search Results');
+                    $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
                 }
             }
             if (is_object($this->filterForGroupObject)) {
-                $secondaryTitle .= $pipe.$this->filterForGroupObject->Title;
+                $toAdd = $this->filterForGroupObject->Title;
+                $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
             if ($this->IsShowFullList()) {
-                $secondaryTitle .= $pipe._t('ProductGroup.LIST_VIEW', 'List View');
+                $toAdd = _t('ProductGroup.LIST_VIEW', 'List View');
+                $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
             $filter = $this->getCurrentUserPreferences('FILTER');
             if ($filter != $this->getMyUserPreferencesDefault('FILTER')) {
-                $secondaryTitle .= $pipe.$this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
+                $toAdd = $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
+                $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
             if($this->HasSort()) {
-                $secondaryTitle .= $pipe.$this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
+                $toAdd = $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
+                $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
             if ($secondaryTitle) {
                 $this->Title .= $secondaryTitle;
@@ -2720,6 +2729,24 @@ class ProductGroup_Controller extends Page_Controller
             //page (in some cases).
             $this->secondaryTitleHasBeenAdded = true;
         }
+    }
+
+    /**
+     * removes any spaces from the 'toAdd' bit and adds the pipe if there is
+     * anything to add at all.  Through the lang files, you can change the pipe
+     * symbol to anything you like.
+     *
+     * @param  string $pipe
+     * @param  string $toAdd
+     * @return string
+     */
+    protected function cleanSecondaryTitleForAddition($pipe, $toAdd) {
+        $toAdd = trim($toAdd);
+        $length = strlen($toAdd);
+        if($length > 0) {
+            $toAdd = $pipe.$toAdd;
+        }
+        return $toAdd;
     }
 
     /****************************************************
