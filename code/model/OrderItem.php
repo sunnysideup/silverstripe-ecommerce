@@ -474,9 +474,8 @@ class OrderItem extends OrderAttribute
     }
     public function getUnitPrice($recalculate = false)
     {
-        //to do: what is the logic here???
         if ($this->priceHasBeenFixed($recalculate) && !$recalculate) {
-            if (!$this->Quantity) {
+            if ( ! $this->Quantity) {
                 $this->Quantity = 1;
             }
 
@@ -489,10 +488,10 @@ class OrderItem extends OrderAttribute
         } else {
             $unitPrice = 0;
         }
-        $updatedUnitPrice = $this->extend('updateUnitPrice', $price);
-        if ($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
-            $unitPrice = $updatedUnitPrice[0];
-        }
+        //$updatedUnitPrice = $this->extend('updateUnitPrice', $price);
+        //if ($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
+        //    $unitPrice = $updatedUnitPrice[0];
+        //}
 
         return $unitPrice;
     }

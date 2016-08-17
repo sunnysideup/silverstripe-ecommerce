@@ -1013,15 +1013,20 @@ class Product extends Page implements BuyableModel
     {
         return $this->getCalculatedPrice();
     }
+
+    private static $_calculated_price_cache = array();
+
     public function getCalculatedPrice()
     {
-        $price = $this->Price;
-        $updatedPrice = $this->extend('updateCalculatedPrice', $price);
-        if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
-            $price = $updatedPrice[0];
+        if( ! isset(self::$_calculated_price_cache[$this->ID])) {
+            $price = $this->Price;
+            $updatedPrice = $this->extend('updateCalculatedPrice', $price);
+            if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
+            self::$_calculated_price_cache[$this->ID] = $price;
         }
-
-        return $price;
+        return self::$_calculated_price_cache[$this->ID];
     }
 
     /**
