@@ -102,7 +102,7 @@ class OrderFormAddress extends Form
             if($billingAddressFields) {
                 if($phoneField = $billingAddressFields->dataFieldByName('Phone')) {
                     $billingAddressFields->removeByName('Phone');
-                    $addressFieldsBilling->insertAfter('Email', $phoneField);
+                    $addressFieldsBilling->insertBefore('Email', $phoneField);
                 }
             }
         }
