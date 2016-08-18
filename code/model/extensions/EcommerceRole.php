@@ -352,31 +352,21 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         if (!$group) {
             $group = new Group();
         }
-        $linkField = new LiteralField(
+        $headerField = HeaderField::create('MemberLinkFieldHeader', _t('Member.EDIT_CUSTOMER', 'Edit Customer'));
+        $linkField1 = EcommerceCMSButtonField::create(
             'MemberLinkField',
-            '
-            <h3>'._t('Member.EDIT_CUSTOMER', 'Edit Customer').'</h3>
-            <ul>
-                <li>
-                    <h3>
-                        <a href="/admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit" data-popup="true" class="action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
-                            <span class="ui-button-text">'._t('Member.EDIT', 'Edit').' <i>'.$this->owner->getTitle().'</i></span>
-                        </a>
-
-                    </h3>
-                </li>
-                <li>
-                    <h3>
-                        <a href="/admin/security/show/'.$group->ID.'/" data-popup="true" class="action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
-                            <span class="ui-button-text">'._t('Member.EDIT_ALL_CUSTOMERS', 'Edit All Customers').'</span>
-                        </a>
-                    </h3>
-                </li>
-            </ul>
-            '
+            '/admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit',
+            _t('Member.EDIT', 'Edit').' <i>'.$this->owner->getTitle().'</i>'
+        );
+        $linkField2 = EcommerceCMSButtonField::create(
+            'MemberLinkField',
+            '/admin/security/show/'.$group->ID.'/',
+            _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All Customers')
         );
 
-        $fields->push($linkField);
+        $fields->push($headerField);
+        $fields->push($linkField1);
+        $fields->push($linkField2);
 
         return $fields;
     }

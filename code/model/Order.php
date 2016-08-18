@@ -501,15 +501,23 @@ class Order extends DataObject implements EditableEcommerceObject
         $fields->addFieldsToTab(
             'Root.Next',
             array(
-                GridField::create('OrderSummary', 'Summary', ArrayList::create(array($this)), $config = GridFieldConfig_Base::create()),
+                LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
+                HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'This Order')),
+                GridField::create(
+                    'OrderSummary',
+                    _t('Order.CURRENT_STATUS', 'Summary'),
+                    ArrayList::create(array($this)),
+                    $config = GridFieldConfig_Base::create()
+                ),
                 HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
                 $this->OrderStepField(),
                 HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
-                LiteralField::create('OrderStepNextStepHeaderExtra', '<p><strong>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to see up-to-date options here.').'</strong></p>'),
                 HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along')),
-                LiteralField::create(
+                LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to move it along.').'</p>'),
+                EcommerceCMSButtonField::create(
                     'StatusIDExplanation',
-                    '<h3><a href="'.$this->CMSEditLink().'" class="action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">'._t('Order.REFRESH', 'refresh now').'</span></a></h3>'
+                    $this->CMSEditLink(),
+                    _t('Order.REFRESH', 'refresh now')
                 )
             )
         );

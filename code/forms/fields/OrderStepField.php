@@ -42,8 +42,8 @@ class OrderStepField extends DatalessField
         }
         $future = false;
         $html = '
-		<div class="orderStepField">
-			<ol>';
+        <div class="orderStepField">
+            <ol>';
         if ($orderSteps->count()) {
             foreach ($orderSteps as $orderStep) {
                 $description = '';
@@ -69,10 +69,8 @@ class OrderStepField extends DatalessField
         $html .= '</ol><div class="clear"></div></div>';
         if ($currentStep->Description) {
             $html .= '
-				<p>'.
-                '<strong>'.$currentStep->Title.'</strong> '.
-                _t('OrderStepField.STEP', 'step').
-                ': '.
+                <p>'.
+                _t('OrderStepField.NEXT', 'NEXT: ').
                 '<i>'.$currentStep->Description.'</i>'.
                 '</p>';
         }
