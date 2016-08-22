@@ -311,7 +311,7 @@ class ShoppingCart_Controller extends Controller implements Flushable
      * @param  string $className
      * @return string
      */
-    public function remove_from_sale_link($id, $className)
+    public static function remove_from_sale_link($id, $className)
     {
         return self::create_link('removefromsale/'.$className.'/'.$id .'/');
     }
@@ -495,10 +495,10 @@ class ShoppingCart_Controller extends Controller implements Flushable
     public function removefromsale(SS_HTTPRequest $request)
     {
         $className = Convert::raw2sql($request->param('ID'));
-        $currencyCode = intval($request->param('OtherID'));
+        $id = intval($request->param('OtherID'));
         if(class_exists($className)) {
             $obj = $className::get()->byID($id);
-            $obj->AllowPurchase = 1;
+            $obj->AllowPurchase = 0;
             if($obj instanceof SiteTree) {
                 $obj->writeToStage('Stage');
                 $obj->doPublish();
