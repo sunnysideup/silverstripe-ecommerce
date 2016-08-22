@@ -1565,10 +1565,10 @@ class ProductGroup extends Page
      */
     public function searchResultsArrayFromSession()
     {
-        if (!isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
+        if ( ! isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
             self::$_result_array[$this->ID] = explode(',', Session::get($this->SearchResultsSessionVariable(false)));
         }
-        if (!is_array(self::$_result_array[$this->ID]) || !count(self::$_result_array[$this->ID])) {
+        if ( ! is_array(self::$_result_array[$this->ID]) || ! count(self::$_result_array[$this->ID])) {
             self::$_result_array[$this->ID] = array(0 => 0);
         }
 
