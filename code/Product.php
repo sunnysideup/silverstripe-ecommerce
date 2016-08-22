@@ -902,7 +902,8 @@ class Product extends Page implements BuyableModel
      *
      * @return string
      */
-     function VersionedLink(){
+     function VersionedLink()
+     {
          return Controller::join_links(
              Director::baseURL(),
              EcommerceConfig::get('ShoppingCart_Controller', 'url_segment'),
@@ -911,6 +912,11 @@ class Product extends Page implements BuyableModel
              $this->ID,
              $this->Version
          );
+    }
+
+    function RemoveFromSaleLink()
+    {
+        return ShoppingCart_Controller::remove_from_sale_link($this->ID, $this->ClassName);
     }
 
     /**

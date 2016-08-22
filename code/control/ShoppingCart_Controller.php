@@ -87,6 +87,7 @@ class ShoppingCart_Controller extends Controller implements Flushable
         'setcountry',
         'setregion',
         'setcurrency',
+        'removefromsale',
         'setquantityitem',
         'clear',
         'clearandlogout',
@@ -139,7 +140,7 @@ class ShoppingCart_Controller extends Controller implements Flushable
 
     /**
      * returns ABSOLUTE link to the shopping cart controller.
-     *
+     * @param null | array | string $actionAndOtherLinkVariables
      * @return string
      */
     protected static function create_link($actionAndOtherLinkVariables = null)
@@ -301,6 +302,18 @@ class ShoppingCart_Controller extends Controller implements Flushable
     public static function set_currency_link($code, array $parameters = array())
     {
         return self::create_link('setcurrency/'.$code.'/'.self::params_to_get_string($parameters));
+    }
+
+    /**
+     *
+     *
+     * @param  int    $id
+     * @param  string $className
+     * @return string
+     */
+    public function remove_from_sale_link($id, $className)
+    {
+        return self::create_link('removefromsale/'.$className.'/'.$id .'/');
     }
 
     /**
@@ -469,6 +482,30 @@ class ShoppingCart_Controller extends Controller implements Flushable
     {
         $currencyCode = Convert::raw2sql($request->param('ID'));
         $this->cart->setCurrency($currencyCode);
+
+        return $this->cart->setMessageAndReturn();
+    }
+
+    /**
+     * @param SS_HTTPRequest
+     *
+     * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+     *               If it is not AJAX it redirects back to requesting page.
+     **/
+    public function removefromsale(SS_HTTPRequest $request)
+    {
+        $className = Convert::raw2sql($request->param('ID'));
+        $currencyCode = intval($request->param('OtherID'));
+        if(class_exists($className)) {
+            $obj = $className::get()->byID($id);
+            $obj->AllowPurchase = 1;
+            if($obj instanceof SiteTree) {
+                $obj->writeToStage('Stage');
+                $obj->doPublish();
+            } else {
+                $obj->write();
+            }
+        }
 
         return $this->cart->setMessageAndReturn();
     }
