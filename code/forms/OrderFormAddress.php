@@ -95,8 +95,22 @@ class OrderFormAddress extends Form
         //billing address field
         $billingAddress = $this->order->CreateOrReturnExistingAddress('BillingAddress');
         $billingAddressFields = $billingAddress->getFields($this->orderMember);
+
+
+        //HACK: move phone to member fields ..
+        if($addressFieldsBilling) {
+            if($billingAddressFields) {
+                if($phoneField = $billingAddressFields->dataFieldByName('Phone')) {
+                    $billingAddressFields->removeByName('Phone');
+                    $addressFieldsBilling->insertAfter('Email', $phoneField);
+                }
+            }
+        }
+
         $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
         $addressFieldsBilling->merge($billingAddressFields);
+
+
 
         //shipping address field
         $addressFieldsShipping = null;

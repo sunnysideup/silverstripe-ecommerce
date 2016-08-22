@@ -59,36 +59,6 @@ class Product_OrderItem extends OrderItem
     }
 
     /**
-     * @param bool $recalculate
-     *
-     * @return float
-     **/
-    public function UnitPrice($recalculate = false)
-    {
-        return $this->getUnitPrice($recalculate);
-    }
-    public function getUnitPrice($recalculate = false)
-    {
-        $unitPrice = 0;
-        if ($this->priceHasBeenFixed($recalculate) && !$recalculate) {
-            $unitPrice = parent::getUnitPrice($recalculate);
-        } elseif ($product = $this->Product()) {
-            if (!isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
-                self::$calculated_buyable_price[$this->ID] = $product->getCalculatedPrice();
-            }
-            $unitPrice = self::$calculated_buyable_price[$this->ID];
-        } else {
-            $unitPrice = 0;
-        }
-        $updatedUnitPrice = $this->extend('updateUnitPrice', $unitPrice);
-        if ($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
-            $unitPrice = $updatedUnitPrice[0];
-        }
-
-        return $unitPrice;
-    }
-
-    /**
      *@return string
      **/
     public function TableTitle()
@@ -145,12 +115,12 @@ class Product_OrderItem extends OrderItem
         $productID = $this->BuyableID;
         $productVersion = $this->Version;
         $html = parent::debug().<<<HTML
-			<h3>Product_OrderItem class details</h3>
-			<p>
-				<b>Title : </b>$title<br/>
-				<b>Product ID : </b>$productID<br/>
-				<b>Product Version : </b>$productVersion
-			</p>
+            <h3>Product_OrderItem class details</h3>
+            <p>
+                <b>Title : </b>$title<br/>
+                <b>Product ID : </b>$productID<br/>
+                <b>Product Version : </b>$productVersion
+            </p>
 HTML;
         $updatedHTML = $this->extend('updateDebug', $html);
         if ($updatedHTML !== null && is_array($updatedHTML) && count($updatedHTML)) {
