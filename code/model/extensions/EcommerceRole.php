@@ -520,6 +520,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      **/
     public function IsShopAssistant()
     {
+        if($this->owner->IsShopAdmin()) {
+            return true;
+        }
         return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));;
     }
 
