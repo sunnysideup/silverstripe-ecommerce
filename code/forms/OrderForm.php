@@ -121,6 +121,7 @@ class OrderForm extends Form
     {
         $this->saveDataToSession($data); //save for later if necessary
         $order = ShoppingCart::current_order();
+        $this->extend('onRawSubmit', $data, $form, $order);
         //check for cart items
         if (!$order) {
             $form->sessionMessage(_t('OrderForm.ORDERNOTFOUND', 'Your order could not be found.'), 'bad');
