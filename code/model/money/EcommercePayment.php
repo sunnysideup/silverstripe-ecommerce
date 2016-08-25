@@ -78,6 +78,18 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     );
 
     /**
+     * CRUCIAL
+     * makes sure all the relevant payment methods are available ...
+     *
+     * @return this | EcommercePayment
+     */
+    public function init()
+    {
+        self::get_supported_methods($this->Order());
+        return $this;
+    }
+
+    /**
      * standard SS variable.
      *
      * @var string
@@ -144,7 +156,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         $order = $this->Order();
         if($order && $order->exists()) {
             return $order->canView();
-        }        
+        }
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
         }
