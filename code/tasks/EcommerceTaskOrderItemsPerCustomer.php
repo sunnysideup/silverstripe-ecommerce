@@ -48,7 +48,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                         $memberIsOK = true;
                     } elseif ($member = $order->Member()) {
                         $memberIsOK = true;
-                        if ($member->IsShopAdmin()) {
+                        if ($member->IsShopAssistant()) {
                             $memberIsOK = false;
                         }
                     }
