@@ -61,8 +61,8 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report
     public function columns()
     {
         return array(
-            'Title' => array(
-                'title' => 'FullName',
+            'FullName' => array(
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
                 'link' => true,
             ),
         );
