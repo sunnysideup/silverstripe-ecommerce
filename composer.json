@@ -2,18 +2,30 @@
     "name": "sunnysideup/ecommerce",
     "type": "silverstripe-module",
     "description": "Silverstripe E-commerce Application",
-    "homepage": "http://www.silverstripe-ecommerce.com/",
-    "keywords": ["e-commerce", "ecommerce", "payment", "shop", "sales", "silverstripe", "webshop", "cart", "sales", "products", "selling stuff", "online payment", "services"],
+    "keywords": [
+        "e-commerce",
+        "ecommerce",
+        "payment",
+        "shop",
+        "sales",
+        "silverstripe",
+        "webshop",
+        "cart",
+        "sales",
+        "products",
+        "selling stuff",
+        "online payment",
+        "services"
+    ],
     "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
-    "authors":[
+    "authors": [
         {
             "name": "Nicolaas Francken",
-            "homepage": "https://github.com/sunnysideup",
-            "email" : "modules@sunnysideup.co.nz",
-            "role" : "lead developer"
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
         }
     ],
-    "require":{
+    "require": {
         "silverstripe/framework": "^3",
         "silverstripe/cms": "^3",
         "sunnysideup/google_address_field": "*"
@@ -29,5 +41,4 @@
     "extra": {
         "installer-name": "ecommerce"
     }
-
 }
