@@ -2,18 +2,30 @@
     "name": "sunnysideup/ecommerce",
     "type": "silverstripe-module",
     "description": "Silverstripe E-commerce Application",
-    "homepage": "http://www.silverstripe-ecommerce.com/",
-    "keywords": ["e-commerce", "ecommerce", "payment", "shop", "sales", "silverstripe", "webshop", "cart", "sales", "products", "selling stuff", "online payment", "services"],
+    "keywords": [
+        "e-commerce",
+        "ecommerce",
+        "payment",
+        "shop",
+        "sales",
+        "silverstripe",
+        "webshop",
+        "cart",
+        "sales",
+        "products",
+        "selling stuff",
+        "online payment",
+        "services"
+    ],
     "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
-    "authors":[
+    "authors": [
         {
             "name": "Nicolaas Francken",
-            "homepage": "https://github.com/sunnysideup",
-            "email" : "modules@sunnysideup.co.nz",
-            "role" : "lead developer"
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
         }
     ],
-    "require":{
+    "require": {
         "silverstripe/framework": "^3",
         "silverstripe/cms": "^3",
         "sunnysideup/google_address_field": "*"
@@ -22,12 +34,11 @@
         "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this work on your server, before installing it - otherwise it is useless.",
         "sunnysideup/cloudflaregeoip": "Extends Geoip if you are using cloudflare",
         "silverstripe/restfulserver": "Adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)",
-        "silverstripe-australia/grouped-cms-menu": "merge e-commerce cms menu items for into one",
+        "silverstripe-australia/grouped-cms-menu": "HIGHLY RECOMMENDED! merge e-commerce cms menu items into one section.",
         "micmania1/silverstripe-lumberjack": "great way to take product and product groups out of the sitetree",
         "sunnysideup/cmseditlink": "easier ways to link through within ecommerce objects and other objects that have the CMSEditLink"
     },
     "extra": {
         "installer-name": "ecommerce"
     }
-
 }

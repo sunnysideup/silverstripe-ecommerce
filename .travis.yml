@@ -4,7 +4,7 @@ php:
   - 5.3
 
 env:
-  - DB=MYSQL CORE_RELEASE=3.1
+  - DB=MYSQL CORE_RELEASE=3.4
 
 before_script:
   - composer self-update
