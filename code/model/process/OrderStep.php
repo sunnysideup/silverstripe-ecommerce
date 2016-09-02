@@ -295,7 +295,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $lastStep = OrderStep::get()->Last();
         return OrderStep::get()->filter(array('CustomerCanEdit' => 0))->exclude(array('ID' => $lastStep->ID));
     }
-    
+
     /**
      * turns code into ID.
      *
