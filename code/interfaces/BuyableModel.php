@@ -24,7 +24,7 @@ interface BuyableModel
      * @param  Order $order [description]
      * @return null
      */
-    function onBeforeSubmit($order)
+    function onBeforeSubmit($order);
 
     /**
      * do something after the order is submitted
