@@ -26,8 +26,8 @@
         }
     ],
     "require": {
-        "silverstripe/framework": "^3",
-        "silverstripe/cms": "^3",
+        "silverstripe/framework": "~3.1",
+        "silverstripe/cms": "~3.1",
         "sunnysideup/google_address_field": "*"
     },
     "suggest": {

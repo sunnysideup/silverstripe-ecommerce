@@ -7,8 +7,13 @@
 class SearchReplacement extends DataObject implements EditableEcommerceObject
 {
     private static $db = array(
-        'Search' => 'Text',
-        'Replace' => 'Varchar',
+        'Search' => 'Varchar(255)',
+        'Replace' => 'Varchar(255)',
+    );
+
+    private static $indexes = array(
+        'Search' => 'unique("Search")',
+        'Replace' => true
     );
 
     private static $summary_fields = array(
@@ -17,8 +22,8 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     );
 
     private static $field_labels = array(
-        'Search' => 'Aliases',
-        'Replace' => 'Proper Name',
+        'Search' => 'Aliases (e.g. Biike)',
+        'Replace' => 'Proper Name (e.g. Bike)',
     );
 
     private static $separator = ',';
@@ -55,7 +60,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     {
         if( ! $member) {
             $member = Member::currentUser();
-        }        
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -78,7 +83,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     {
         if( ! $member) {
             $member = Member::currentUser();
-        }        
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -101,7 +106,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     {
         if( ! $member) {
             $member = Member::currentUser();
-        }        
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -124,7 +129,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     {
         if( ! $member) {
             $member = Member::currentUser();
-        }        
+        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
