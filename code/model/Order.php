@@ -950,7 +950,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $nextStatusID = $this->doNextStatus();
                 //a little hack to make sure we do not rely on a stored value
                 //of "isSubmitted"
-                $this->isSubmittedTempVar = -1;
+                $this->_isSubmittedTempVar = -1;
             } while ($nextStatusID);
             //release ... to run again ...
             self::$_try_to_finalise_order_is_running[$this->ID] = false;
@@ -2940,7 +2940,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    protected $isSubmittedTempVar = -1;
+    protected $_isSubmittedTempVar = -1;
 
     /**
      * Casted variable - has the order been submitted?
@@ -2963,15 +2963,15 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public function getIsSubmitted($recalculate = false)
     {
-        if ($this->isSubmittedTempVar === -1 || $recalculate) {
+        if ($this->_isSubmittedTempVar === -1 || $recalculate) {
             if ($this->SubmissionLog()) {
-                $this->isSubmittedTempVar = true;
+                $this->_isSubmittedTempVar = true;
             } else {
-                $this->isSubmittedTempVar = false;
+                $this->_isSubmittedTempVar = false;
             }
         }
 
-        return $this->isSubmittedTempVar;
+        return $this->_isSubmittedTempVar;
     }
 
     /**

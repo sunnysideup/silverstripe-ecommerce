@@ -77,9 +77,11 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
              $className = $this->getRelevantLogEntryClassName();
              if (class_exists($className)) {
 
-                //add currency if needed.
-                $order->getHasAlternativeCurrency();
-
+                 //add currency if needed.
+                 $order->getHasAlternativeCurrency();
+                 foreach($order->Attributes() as $attribute) {
+                     $attribute->onBeforeSubmit();
+                 }
                  $obj = $className::create();
                  if (is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
                      $obj->OrderID = $order->ID;
@@ -133,6 +135,9 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
     public function nextStep(Order $order)
     {
         if ($order->IsSubmitted()) {
+            foreach($order->Attributes() as $attribute) {
+                $attribute->onAfterSubmit();
+            }
             return parent::nextStep($order);
         }
 

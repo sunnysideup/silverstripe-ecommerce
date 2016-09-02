@@ -18,6 +18,21 @@
  **/
 interface BuyableModel
 {
+
+    /**
+     * do something before the order is submitted
+     * @param  Order $order [description]
+     * @return null
+     */
+    function onBeforeSubmit($order)
+
+    /**
+     * do something after the order is submitted
+     * @param  Order $order [description]
+     * @return null
+     */
+    function onAferSubmit($order);
+
     //GROUPS AND SIBLINGS
 
     /**
