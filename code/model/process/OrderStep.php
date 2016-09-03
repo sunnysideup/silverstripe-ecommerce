@@ -73,7 +73,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @return array
      */
     private static $summary_fields = array(
-        'Name' => 'Name',
+        'NameAndDescription' => 'Step',
         'ShowAsSummary' => 'Phase',
     );
 
@@ -93,6 +93,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         'HideStepFromCustomerNice' => 'Varchar',
         'HasCustomerMessageNice' => 'Varchar',
         'ShowAsSummary' => 'HTMLText',
+        'NameAndDescription' => 'HTMLText'
     );
 
     /**
@@ -820,6 +821,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         return $this->getShowAsSummary();
     }
+
     public function getShowAsSummary()
     {
         $v = '<strong>';
@@ -847,6 +849,23 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($this->hasCustomerMessage()) {
             $v .= '<br />'._t('OrderStep.CUSTOMER_MESSAGES', 'Includes message to customer');
         }
+
+        return DBField::create_field('HTMLText', $v);
+    }
+
+    /**
+     * Formatted answer for "hasCustomerMessage".
+     *
+     * @return string
+     */
+    public function NameAndDescription()
+    {
+        return $this->getNameAndDescription();
+    }
+
+    public function getNameAndDescription()
+    {
+        $v = '<strong>'.$this->Name.'</strong><br /><em>'.$this->Description.'</em>';
 
         return DBField::create_field('HTMLText', $v);
     }
