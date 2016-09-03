@@ -46,7 +46,7 @@ class OrderStepField extends DatalessField
             <ol>';
         if ($orderSteps->count()) {
             foreach ($orderSteps as $orderStep) {
-                if($this->HideFromEveryone()) {
+                if($orderStep->HideFromEveryone()) {
                     continue;
                 }
                 $description = '';
