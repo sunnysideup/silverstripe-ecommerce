@@ -1690,6 +1690,10 @@ class Order extends DataObject implements EditableEcommerceObject
      * Returns the items of the order.
      * Items are the order items (products) and NOT the modifiers (discount, tax, etc...).
      *
+     * N. B. this method returns Order Items
+     * also see Buaybles
+
+     *
      * @param string filter - where statement to exclude certain items OR ClassName (e.g. 'TaxModifier')
      *
      * @return DataList (OrderItems)
@@ -1706,8 +1710,11 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * @alias function of Items
      *
-     * @param string filter - where statement to exclude certain items.
+     * N. B. this method returns Order Items
+     * also see Buaybles
      *
+     * @param string filter - where statement to exclude certain items.
+     * @alias for Items
      * @return DataList (OrderItems)
      */
     public function OrderItems($filterOrClassName = '')
@@ -1718,13 +1725,21 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * returns the buyables asscoiated with the order items.
      *
+     * NB. this method retursn buyables
+     *
      * @param string filter - where statement to exclude certain items.
      *
      * @return ArrayList (Buyables)
      */
     public function Buyables($filterOrClassName = '')
     {
-        return $this->Items($filterOrClassName);
+        $items = $this->Items($filterOrClassName);
+        $arrayList = new ArrayList();
+        foreach ($items as $item) {
+            $arrayList->push($item->Buyable());
+        }
+
+        return $arrayList;
     }
 
     /**
