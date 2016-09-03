@@ -230,6 +230,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * do not show in steps at all.
+     * @return boolean
+     */
+    public function HideFromEveryone()
+    {
+        return false;
+    }
+
+    /**
      * casted variable.
      *
      * @return string
@@ -238,6 +247,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         return $this->getHideStepFromCustomerNice();
     }
+
     public function getHideStepFromCustomerNice()
     {
         if ($this->HideStepFromCustomer) {
