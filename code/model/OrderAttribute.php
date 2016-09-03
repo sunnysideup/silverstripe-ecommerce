@@ -484,22 +484,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * do something before the order is submitted
-     * @return null
-     */
-    function onBeforeSubmit()
-    {
-    }
-
-    /**
-     * do something after the order is submitted
-     * @return null
-     */
-    function onAfterSubmit()
-    {
-    }
-
-    /**
      * Debug helper method.
      * Access through : /shoppingcart/debug/.
      */

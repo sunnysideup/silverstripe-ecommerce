@@ -418,23 +418,6 @@ class Product extends Page implements BuyableModel
         }
     }
 
-    /**
-     * do something before the order is submitted
-     * @param  Order $order [description]
-     * @return null
-     */
-    function onBeforeSubmit($order){
-        parent::onBeforeSubmit($order);
-    }
-
-    /**
-     * do something after the order is submitted
-     * @param  Order $order [description]
-     * @return null
-     */
-    function onAferSubmit($order){
-        parent::onAferSubmit($order);
-    }
 
     /**
      * sets the FullName and FullSiteTreeField to the latest values

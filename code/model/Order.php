@@ -1724,13 +1724,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function Buyables($filterOrClassName = '')
     {
-        $items = $this->Items($filterOrClassName);
-        $arrayList = new ArrayList();
-        foreach ($items as $item) {
-            $arrayList->push($item->Buyable());
-        }
-
-        return $arrayList;
+        return $this->Items($filterOrClassName);
     }
 
     /**

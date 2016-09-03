@@ -396,29 +396,6 @@ class OrderItem extends OrderAttribute
         return parent::runUpdate($recalculate);
     }
 
-    /**
-     * do something before the order is submitted
-     * @return null
-     */
-    function onBeforeSubmit()
-    {
-        parent::onBeforeSubmit();
-        if($buyable = $this->getBuyable(true)) {
-            $buyable->onBeforeSubmit($this->Order());
-        }
-    }
-
-    /**
-     * do something after the order is submitted
-     * @return null
-     */
-    function onAfterSubmit()
-    {
-        parent::onAfterSubmit();
-        if($buyable = $this->getBuyable(true)) {
-            $buyable->onAfterSubmit($this->Order());
-        }
-    }
 
     /**
      * Standard SS method.
