@@ -130,7 +130,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -146,7 +146,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     public function canView($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -154,7 +154,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             return $extended;
         }
         $order = $this->Order();
-        if($order && $order->exists()) {
+        if ($order && $order->exists()) {
             return $order->canView();
         }
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
@@ -173,7 +173,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         if ($this->Status == 'Pending' || $this->Status == 'Incomplete') {
@@ -223,14 +223,16 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * alias
      * @return string
      */
-    function Title(){
+    public function Title()
+    {
         return $this->getTitle();
     }
 
     /**
      * @return string
      */
-    function getTitle(){
+    public function getTitle()
+    {
         return $this->i18n_singular_name();
     }
 

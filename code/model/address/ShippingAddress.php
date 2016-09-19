@@ -122,16 +122,16 @@ class ShippingAddress extends OrderAddress
         'ShippingPhone'
     );
 
-    function fieldLabels($includerelations = true)
+    public function fieldLabels($includerelations = true)
     {
         $billingAddress = Injector::inst()->get('BillingAddress');
         $shippingLabels = parent::fieldLabels($includerelations);
         $billingLabels = $billingAddress->fieldLabels($includerelations);
         $summaryFields = $this->stat('field_labels');
-        foreach($shippingLabels as $shippingKey => $shippingLabel) {
-            if( ! isset($summaryFields[$shippingKey])) {
+        foreach ($shippingLabels as $shippingKey => $shippingLabel) {
+            if (! isset($summaryFields[$shippingKey])) {
                 $billingKey = str_replace('Shipping', '', $shippingKey);
-                if(isset($billingLabels[$billingKey])) {
+                if (isset($billingLabels[$billingKey])) {
                     $shippingLabels[$shippingKey] = $billingLabels[$billingKey];
                 }
             }

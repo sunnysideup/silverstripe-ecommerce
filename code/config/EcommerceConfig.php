@@ -41,7 +41,7 @@
  * <code>
  * EcommerceConfig::get("MyClassName", "include_bla_bla_widget");
  * </code>
- 
+
  * Even though there is no direct connection, we keep linking statics to invidual classes.
  * We do this to (a) group configs (b) make it more interchangeable with other config systems.
  * One of the problems now is to know what "configs" are used by individual classes.

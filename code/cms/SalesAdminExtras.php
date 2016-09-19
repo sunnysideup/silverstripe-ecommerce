@@ -64,7 +64,8 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         return $list;
     }
 
-    public function getEditForm($id = null, $fields = null){
+    public function getEditForm($id = null, $fields = null)
+    {
         $form = parent::getEditForm($id, $fields);
         $field = $form->Fields()->fieldByName($this->sanitiseClassName($this->modelClass));
         $config = $field->getConfig();
@@ -73,5 +74,4 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         $config->addComponent($exportButton);
         return $form;
     }
-
 }

@@ -476,7 +476,7 @@ class OrderItem extends OrderAttribute
     public function getUnitPrice($recalculate = false)
     {
         if ($this->priceHasBeenFixed($recalculate) && !$recalculate) {
-            if ( ! $this->Quantity) {
+            if (! $this->Quantity) {
                 $this->Quantity = 1;
             }
 
@@ -731,7 +731,7 @@ class OrderItem extends OrderAttribute
      *
      * @return string
      */
-    function BuyableLink()
+    public function BuyableLink()
     {
         return $this->getBuyableLink();
     }
@@ -740,7 +740,8 @@ class OrderItem extends OrderAttribute
      *
      * @return string
      */
-    function getBuyableLink(){
+    public function getBuyableLink()
+    {
         $buyable = $this->Buyable();
         $order = $this->Order();
         if ($buyable && $buyable->exists()) {
@@ -748,8 +749,7 @@ class OrderItem extends OrderAttribute
                 return  Director::absoluteURL($buyable->VersionedLink());
             }
             return  Director::absoluteURL($buyable->Link());
-        }
-        else {
+        } else {
             return $this->getLink();
         }
     }

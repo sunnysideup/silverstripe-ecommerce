@@ -58,7 +58,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -81,7 +81,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -104,7 +104,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -127,7 +127,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      */
     public function canDelete($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);

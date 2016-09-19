@@ -164,7 +164,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -172,7 +172,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
             return $extended;
         }
         $order = $this->Order();
-        if($order && $order->exists()) {
+        if ($order && $order->exists()) {
             return $order->canView();
         }
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {

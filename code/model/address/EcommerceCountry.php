@@ -134,7 +134,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -154,7 +154,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -177,7 +177,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -200,7 +200,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canDelete($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -265,7 +265,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_country_dropdown($showAllCountries = true, $addEmptyString = false, $useIDNotCode = false)
     {
         $key = ($showAllCountries ? "all" : "notall");
-        if(isset(self::$_countries_from_db_cache[$key])) {
+        if (isset(self::$_countries_from_db_cache[$key])) {
             $array = self::$_countries_from_db_cache[$key];
         } else {
             $array = array();
@@ -278,7 +278,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                 $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
             }
             if ($objects && $objects->count()) {
-                if($useIDNotCode) {
+                if ($useIDNotCode) {
                     $idField = 'ID';
                 } else {
                     $idField = 'Code';
@@ -287,8 +287,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             }
             self::$_countries_from_db_cache[$key] = $array;
         }
-        if(count($array)) {
-            if($addEmptyString) {
+        if (count($array)) {
+            if ($addEmptyString) {
                 $array = array("", " -- please select -- ") + $array;
             }
         }
@@ -339,7 +339,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return $options[$code];
         } elseif ($code) {
             $obj = EcommerceCountry::get()->filter(array('Code' => $code))->first();
-            if($obj) {
+            if ($obj) {
                 return $obj->Name;
             }
             return $code;
@@ -441,7 +441,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function get_country_object($recalculate = false, $countryCode = null)
     {
-        if( ! $countryCode) {
+        if (! $countryCode) {
             $countryCode = self::get_country($recalculate);
         }
 
@@ -469,7 +469,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (!$countryCode) {
             $countryCode = self::get_country($recalculate);
         }
-        if(isset(self::$_code_to_id_map[$countryCode])) {
+        if (isset(self::$_code_to_id_map[$countryCode])) {
             return self::$_code_to_id_map[$countryCode];
         }
         self::$_code_to_id_map[$countryCode] = 0;
@@ -590,7 +590,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        if (( ! EcommerceCountry::get()->count()) || isset($_REQUEST['resetecommercecountries'])) {
+        if ((! EcommerceCountry::get()->count()) || isset($_REQUEST['resetecommercecountries'])) {
             $task = new EcommerceTaskCountryAndRegion();
             $task->run(null);
         }

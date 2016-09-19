@@ -98,9 +98,9 @@ class OrderFormAddress extends Form
 
 
         //HACK: move phone to member fields ..
-        if($addressFieldsBilling) {
-            if($billingAddressFields) {
-                if($phoneField = $billingAddressFields->dataFieldByName('Phone')) {
+        if ($addressFieldsBilling) {
+            if ($billingAddressFields) {
+                if ($phoneField = $billingAddressFields->dataFieldByName('Phone')) {
                     $billingAddressFields->removeByName('Phone');
                     $addressFieldsBilling->insertAfter('Email', $phoneField);
                 }

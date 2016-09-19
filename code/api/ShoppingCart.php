@@ -419,7 +419,7 @@ class ShoppingCart extends Object
     {
         $parametersArray = $parameters;
         $form = null;
-        if($parameters instanceof Form) {
+        if ($parameters instanceof Form) {
             $parametersArray = array();
             $form = $parameters;
         }
@@ -445,7 +445,7 @@ class ShoppingCart extends Object
             //check for existence of item
             return false;
         }
-        if($form) {
+        if ($form) {
             $form->saveInto($item);
         }
 

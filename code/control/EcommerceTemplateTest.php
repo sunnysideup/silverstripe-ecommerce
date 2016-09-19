@@ -10,8 +10,7 @@
  **/
 class EcommerceTemplateTest extends Page_Controller
 {
-
-    function index()
+    public function index()
     {
         return $this->renderWith(array("EcommerceTemplateTest", "Page"));
     }

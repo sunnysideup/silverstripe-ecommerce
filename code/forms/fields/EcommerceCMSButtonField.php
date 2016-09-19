@@ -3,11 +3,10 @@
 
 class EcommerceCMSButtonField extends LiteralField
 {
-
-    function __construct($name, $link, $title, $newWindow = false)
+    public function __construct($name, $link, $title, $newWindow = false)
     {
         $target = '';
-        if($newWindow) {
+        if ($newWindow) {
             $target = 'target="_blank"';
         }
         return parent::__construct(
@@ -23,5 +22,4 @@ class EcommerceCMSButtonField extends LiteralField
 
         ');
     }
-
 }

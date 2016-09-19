@@ -139,7 +139,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
 
-    public function  FieldHolder($properties = Array())
+    public function FieldHolder($properties = array())
     {
         return $this->Field($properties);
     }
@@ -175,7 +175,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 .' between '.date('j-M-Y', strtotime('-'.$totalNumberOfDaysBack.' days')).' and '.date('j-M-Y', strtotime('-'.$this->endingDaysBack.' days')).'
             </h3>';
         $count = 0;
-        if($data && count($data)) {
+        if ($data && count($data)) {
             $tableContent .= '
                 <table class="highToLow" style="widht: 100%">';
             $list = array();
@@ -197,7 +197,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
             }
             $tableContent .= '
                 </table>';
-            if($count && $this->addAtoZ) {
+            if ($count && $this->addAtoZ) {
                 asort($list);
                 $tableContent .= '
                     <h3>A - Z</h3>
@@ -217,18 +217,17 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     </table>';
             }
         }
-        if($count === 0) {
+        if ($count === 0) {
             //we replace table content here...
             $tableContent = '<p class="warning message">No searches found.</p>';
         }
         $content .= $tableContent;
-        if($this->showMoreLink) {
+        if ($this->showMoreLink) {
             $content .= '
             <p>
                 <a href="/dev/tasks/EcommerceTaskReviewSearches/">Query more resuts</a>
             </p>';
         } else {
-
         }
         $content .= '
         </div>';

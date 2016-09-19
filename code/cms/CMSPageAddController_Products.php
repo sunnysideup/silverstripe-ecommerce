@@ -28,7 +28,8 @@ class CMSPageAddController_Products extends CMSPageAddController
     private static $root_parent_class_for_adding_page = 'ProductGroupSearchPage';
 
 
-    public function doCancel($data, $form) {
+    public function doCancel($data, $form)
+    {
         return $this->redirect(singleton('ProductsAndGroupsModelAdmin')->Link());
     }
 
@@ -58,6 +59,4 @@ class CMSPageAddController_Products extends CMSPageAddController
 
         return $result;
     }
-
-
 }
