@@ -90,7 +90,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -113,7 +113,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -146,7 +146,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -170,7 +170,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     public function canDelete($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -262,8 +262,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 EcommerceRole::list_of_admins(true)
             )
         );
-        if($this->AuthorID) {
-            if($this->Author() && $this->Author()->exists()) {
+        if ($this->AuthorID) {
+            if ($this->Author() && $this->Author()->exists()) {
                 $fields->addFieldToTab(
                     'Root.Main',
                     $fields->dataFieldByName('AuthorID')->performReadonlyTransformation()
@@ -281,7 +281,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, array(EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')));
         $availableLogsAssociative = array();
-        foreach($availableLogs as $className) {
+        foreach ($availableLogs as $className) {
             $availableLogsAssociative[$className] = Injector::inst()->get($className)->singular_name();
         }
         $title = _t('OrderStatusLog.TYPE', 'Type');
@@ -312,7 +312,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             );
             $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
-
         }
         return $fields;
     }
@@ -325,7 +324,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     protected function limitedToOneClassName()
     {
-        if($this->ClassName == 'OrderStatusLog') {
+        if ($this->ClassName == 'OrderStatusLog') {
             return false;
         }
         return true;

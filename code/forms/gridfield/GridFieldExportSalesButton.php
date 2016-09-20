@@ -7,7 +7,8 @@
  * @subpackage fields-gridfield
  */
 
-class GridFieldExportSalesButton extends GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
+class GridFieldExportSalesButton extends GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
+{
 
 
 
@@ -16,12 +17,14 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     /**
      * export is an action button
      */
-    public function getActions($gridField) {
+    public function getActions($gridField)
+    {
         return array('exportsales');
     }
 
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
-        if($actionName == 'exportsales') {
+    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    {
+        if ($actionName == 'exportsales') {
             return $this->handleSales($gridField);
         }
     }
@@ -29,7 +32,8 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     /**
      * it is also a URL
      */
-    public function getURLHandlers($gridField) {
+    public function getURLHandlers($gridField)
+    {
         return array(
             'exportsales' => 'handleSales',
         );
@@ -38,11 +42,12 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     /**
      * Handle the export, for both the action button and the URL
       */
-    public function handleSales($gridField, $request = null) {
+    public function handleSales($gridField, $request = null)
+    {
         $now = Date("d-m-Y-H-i");
         $fileName = "sales-$now.csv";
 
-        if($fileData = $this->generateExportFileData($gridField)){
+        if ($fileData = $this->generateExportFileData($gridField)) {
             return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         }
     }
@@ -51,7 +56,8 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         /**
          * Place the export button in a <p> tag below the field
          */
-        public function getHTMLFragments($gridField) {
+        public function getHTMLFragments($gridField)
+        {
             $button = new GridField_FormAction(
                 $gridField,
                 'exportsales',
@@ -73,7 +79,8 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      * @param GridField $gridField
      * @return array
      */
-    public function generateExportFileData($gridField) {
+    public function generateExportFileData($gridField)
+    {
         //reset time limit
         set_time_limit(1200);
 

@@ -76,7 +76,7 @@ class OrderForm extends Form
             $submitErrors = $order->SubmitErrors();
             if ($submitErrors && $submitErrors->count()) {
                 $submitErrorsString = "";
-                foreach($submitErrors as $error) {
+                foreach ($submitErrors as $error) {
                     $submitErrorsString .= "<li>".$error->Title."</li>";
                 }
                 $message = '<div class="submitErrors"><p class="message bad">'._t('OrderForm.KNOWN_ISSUES', 'This order can not be completed, because: ').'</p><ul>'.$submitErrorsString.'</ul></div>';

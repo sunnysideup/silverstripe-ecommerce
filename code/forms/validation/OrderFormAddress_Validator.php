@@ -25,9 +25,9 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator
         } else {
             $allowExistingEmail = true;
         }
-        if( ! isset($data["UseShippingAddress"]) || ! $data["UseShippingAddress"] ) {
-            foreach($this->required as $key => $value) {
-                if(substr($key, 0, 8) == "Shipping") {
+        if (! isset($data["UseShippingAddress"]) || ! $data["UseShippingAddress"]) {
+            foreach ($this->required as $key => $value) {
+                if (substr($key, 0, 8) == "Shipping") {
                     unset($this->required[$key]);
                 }
             }

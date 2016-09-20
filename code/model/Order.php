@@ -678,7 +678,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $currencies = $currencies->map()->toArray();
             $fields->addFieldToTab('Root.Currency', new ReadOnlyField('ExchangeRate ', _t('Order.EXCHANGERATE', 'Exchange Rate'), $this->ExchangeRate));
             $fields->addFieldToTab('Root.Currency', $currencyField = new DropdownField('CurrencyUsedID', _t('Order.CurrencyUsed', 'Currency Used'), $currencies));
-            if($this->IsSubmitted()) {
+            if ($this->IsSubmitted()) {
                 $fields->replaceField('CurrencyUsedID', $fields->dataFieldByName('CurrencyUsedID')->performReadonlyTransformation());
             }
         } else {
@@ -1426,7 +1426,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             user_error('Can not set the currency after the order has been submitted', E_USER_NOTICE);
         } else {
-            if ( ! is_a($newCurrency, Object::getCustomClass('EcommerceCurrency'))) {
+            if (! is_a($newCurrency, Object::getCustomClass('EcommerceCurrency'))) {
                 $newCurrency = EcommerceCurrency::default_currency();
             }
             $this->CurrencyUsedID = $newCurrency->ID;
@@ -2054,7 +2054,8 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function canViewAdminStuff($member = null) {
+    public function canViewAdminStuff($member = null)
+    {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -2274,7 +2275,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->BillingAddressID && $this->BillingAddress()) {
             $email = $this->BillingAddress()->Email;
         }
-        if ( ! $email) {
+        if (! $email) {
             if ($this->MemberID && $this->Member()) {
                 $email = $this->Member()->Email;
             }
@@ -2788,7 +2789,6 @@ class Order extends DataObject implements EditableEcommerceObject
             $code = EcommerceCountry::get_country_from_ip();
         }
         return $code;
-
     }
 
     /**
@@ -2988,11 +2988,11 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    function IsArchived()
+    public function IsArchived()
     {
         $lastStep = OrderStep::get()->Last();
-        if($lastStep) {
-            if($lastStep->ID == $this->StatusID) {
+        if ($lastStep) {
+            if ($lastStep->ID == $this->StatusID) {
                 return true;
             }
         }
@@ -3030,8 +3030,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $al = ArrayList::create();
             foreach ($extendedSubmitErrors as $returnResultArray) {
                 foreach ($returnResultArray as $issue) {
-                    if($issue) {
-                        $al->push( ArrayData::create( array("Title" => $issue)));
+                    if ($issue) {
+                        $al->push(ArrayData::create(array("Title" => $issue)));
                     }
                 }
             }
@@ -3336,7 +3336,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if( ! $this->getCanHaveShippingAddress()) {
+        if (! $this->getCanHaveShippingAddress()) {
             $this->UseShippingAddress = false;
         }
         if (!$this->CurrencyUsedID) {
@@ -3359,7 +3359,7 @@ class Order extends DataObject implements EditableEcommerceObject
         //crucial!
         self::set_needs_recalculating(true, $this->ID);
         // quick double-check
-        if($this->IsCancelled() && ! $this->IsArchived()) {
+        if ($this->IsCancelled() && ! $this->IsArchived()) {
             $this->Archive($avoidWrites = true);
         }
         if ($this->IsSubmitted($recalculate = true)) {

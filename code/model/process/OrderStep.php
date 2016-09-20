@@ -951,7 +951,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -974,7 +974,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1015,7 +1015,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if (in_array($this->Code, self::get_codes_for_order_steps_to_include())) {
             return false;
         }
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);

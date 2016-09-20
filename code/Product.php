@@ -238,7 +238,7 @@ class Product extends Page implements BuyableModel
                     ->setRightTitle(_t('Product.QUANTIFIER_EXPLANATION', 'e.g. per kilo, per month, per dozen, each'))
             );
         }
-        if($this->canPurchase()) {
+        if ($this->canPurchase()) {
             $fields->addFieldToTab(
                 'Root.Main',
                 new LiteralField(
@@ -246,8 +246,7 @@ class Product extends Page implements BuyableModel
                     '<p class="message good"><a href="'.$this->AddLink().'">'._t('Product.ADD_TO_CART', 'add to cart').'</a></p>'
                 )
             );
-        }
-        else {
+        } else {
             $fields->addFieldToTab(
                 'Root.Main',
                 new LiteralField(
@@ -903,7 +902,7 @@ class Product extends Page implements BuyableModel
      *
      * @return string
      */
-     function VersionedLink()
+     public function VersionedLink()
      {
          return Controller::join_links(
              Director::baseURL(),
@@ -913,9 +912,9 @@ class Product extends Page implements BuyableModel
              $this->ID,
              $this->Version
          );
-    }
+     }
 
-    function RemoveFromSaleLink()
+    public function RemoveFromSaleLink()
     {
         return ShoppingCart_Controller::remove_from_sale_link($this->ID, $this->ClassName);
     }
@@ -1025,7 +1024,7 @@ class Product extends Page implements BuyableModel
 
     public function getCalculatedPrice()
     {
-        if( ! isset(self::$_calculated_price_cache[$this->ID])) {
+        if (! isset(self::$_calculated_price_cache[$this->ID])) {
             $price = $this->Price;
             $updatedPrice = $this->extend('updateCalculatedPrice', $price);
             if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
@@ -1068,23 +1067,22 @@ class Product extends Page implements BuyableModel
             return false;
         }
         //not sold at all
-        if ( ! $this->AllowPurchase) {
+        if (! $this->AllowPurchase) {
             return false;
         }
         //check country
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan('canPurchaseByCountry', $member);
         if ($extended !== null) {
             return $extended;
         }
-        if ( ! EcommerceCountry::allow_sales()) {
-
+        if (! EcommerceCountry::allow_sales()) {
             return false;
         }
 
-        if($checkPrice) {
+        if ($checkPrice) {
             $price = $this->getCalculatedPrice();
             if ($price == 0 && !$config->AllowFreeProductPurchase) {
                 return false;
@@ -1100,7 +1098,7 @@ class Product extends Page implements BuyableModel
 
     public function canCreate($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1123,7 +1121,7 @@ class Product extends Page implements BuyableModel
      */
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1149,7 +1147,7 @@ class Product extends Page implements BuyableModel
         if (is_a(Controller::curr(), Object::getCustomClass('ProductsAndGroupsModelAdmin'))) {
             return false;
         }
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1223,7 +1221,6 @@ class Product extends Page implements BuyableModel
 
         return $html;
     }
-
 }
 
 class Product_Controller extends Page_Controller

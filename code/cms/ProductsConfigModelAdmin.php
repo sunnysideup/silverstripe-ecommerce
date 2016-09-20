@@ -41,6 +41,4 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
 
         return $form;
     }
-
-
 }

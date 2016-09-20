@@ -496,10 +496,10 @@ class ShoppingCart_Controller extends Controller implements Flushable
     {
         $className = Convert::raw2sql($request->param('ID'));
         $id = intval($request->param('OtherID'));
-        if(class_exists($className)) {
+        if (class_exists($className)) {
             $obj = $className::get()->byID($id);
             $obj->AllowPurchase = 0;
-            if($obj instanceof SiteTree) {
+            if ($obj instanceof SiteTree) {
                 $obj->writeToStage('Stage');
                 $obj->doPublish();
             } else {

@@ -114,7 +114,7 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
      **/
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);

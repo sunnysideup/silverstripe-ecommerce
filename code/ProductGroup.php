@@ -184,7 +184,7 @@ class ProductGroup extends Page
 
     public function canCreate($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -207,7 +207,7 @@ class ProductGroup extends Page
      */
     public function canEdit($member = null)
     {
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -233,7 +233,7 @@ class ProductGroup extends Page
         if (is_a(Controller::curr(), Object::getCustomClass('ProductsAndGroupsModelAdmin'))) {
             return false;
         }
-        if( ! $member) {
+        if (! $member) {
             $member = Member::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1424,7 +1424,7 @@ class ProductGroup extends Page
         $parentIDs = Product::get()->filter(array('ID' => $alsoShowProductsArray))->map('ParentID', 'ParentID')->toArray();
         //just in case
         unset($parentIDs[$this->ID]);
-        if ( ! count($parentIDs)) {
+        if (! count($parentIDs)) {
             $parentIDs = array(0 => 0);
         }
 
@@ -1443,7 +1443,7 @@ class ProductGroup extends Page
         $parentIDs = Product::get()->filter(array('ID' => $arrayOfIDs))->map('ParentID', 'ParentID')->toArray();
         //just in case
         unset($parentIDs[$this->ID]);
-        if ( ! count($parentIDs)) {
+        if (! count($parentIDs)) {
             $parentIDs = array(0 => 0);
         }
 
@@ -1565,17 +1565,17 @@ class ProductGroup extends Page
      */
     public function searchResultsArrayFromSession()
     {
-        if ( ! isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
+        if (! isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
             self::$_result_array[$this->ID] = explode(',', Session::get($this->SearchResultsSessionVariable(false)));
         }
-        if ( ! is_array(self::$_result_array[$this->ID]) || ! count(self::$_result_array[$this->ID])) {
+        if (! is_array(self::$_result_array[$this->ID]) || ! count(self::$_result_array[$this->ID])) {
             self::$_result_array[$this->ID] = array(0 => 0);
         }
 
         return self::$_result_array[$this->ID];
     }
 
-    function getNumberOfProducts()
+    public function getNumberOfProducts()
     {
         return Product::get()->filter(array('ParentID' => $this->ID))->count();
     }
@@ -2146,7 +2146,7 @@ class ProductGroup_Controller extends Page_Controller
     /**
      * @return boolean
      */
-    function HasFilterOrSort()
+    public function HasFilterOrSort()
     {
         return $this->HasFilter() || $this->HasSort();
     }
@@ -2154,7 +2154,7 @@ class ProductGroup_Controller extends Page_Controller
     /**
      * @return boolean
      */
-    function HasFilterOrSortFullList()
+    public function HasFilterOrSortFullList()
     {
         return $this->HasFilterOrSort() || $this->IsShowFullList();
     }
@@ -2684,7 +2684,7 @@ class ProductGroup_Controller extends Page_Controller
     protected function addSecondaryTitle($secondaryTitle = '')
     {
         $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
-        if ( ! $this->secondaryTitleHasBeenAdded) {
+        if (! $this->secondaryTitleHasBeenAdded) {
             if (trim($secondaryTitle)) {
                 $secondaryTitle = $pipe.$secondaryTitle;
             }
@@ -2692,7 +2692,7 @@ class ProductGroup_Controller extends Page_Controller
                 if ($array = $this->searchResultsArrayFromSession()) {
                     //we remove 1 item here, because the array starts with 0 => 0
                     $count = count($array) - 1;
-                    if($count > 3) {
+                    if ($count > 3) {
                         $toAdd = $count. ' '._t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
                         $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
                     }
@@ -2714,7 +2714,7 @@ class ProductGroup_Controller extends Page_Controller
                 $toAdd = $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
-            if($this->HasSort()) {
+            if ($this->HasSort()) {
                 $toAdd = $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
@@ -2740,10 +2740,11 @@ class ProductGroup_Controller extends Page_Controller
      * @param  string $toAdd
      * @return string
      */
-    protected function cleanSecondaryTitleForAddition($pipe, $toAdd) {
+    protected function cleanSecondaryTitleForAddition($pipe, $toAdd)
+    {
         $toAdd = trim($toAdd);
         $length = strlen($toAdd);
-        if($length > 0) {
+        if ($length > 0) {
             $toAdd = $pipe.$toAdd;
         }
         return $toAdd;

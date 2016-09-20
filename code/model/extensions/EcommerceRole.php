@@ -378,7 +378,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function getEcommerceFields($mustCreateAccount = false)
     {
-        if ( ! EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
+        if (! EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
             //if no accounts are made then we simply return the basics....
             $fields = new FieldList(
                 new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION', 'Personal Information'), 3),
@@ -386,9 +386,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
                 new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email'))
             );
-
         } else {
-
             Requirements::javascript('ecommerce/javascript/EcomPasswordField.js');
 
             if ($this->owner->exists()) {
@@ -510,10 +508,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      **/
     public function IsShopAssistant()
     {
-        if($this->owner->IsShopAdmin()) {
+        if ($this->owner->IsShopAdmin()) {
             return true;
         }
-        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));;
+        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));
+        ;
     }
 
     /**
@@ -631,5 +630,4 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             'admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit'
         );
     }
-
 }

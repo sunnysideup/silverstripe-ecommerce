@@ -1736,7 +1736,7 @@ class EcommerceTaskMigration extends BuildTask
         $this->DBAlterationMessageNow('Merging Mobile Phone and Phone in Shipping Address', 'created');
         DB::query("UPDATE ShippingAddress SET ShippingPhone = CONCAT(ShippingPhone, ' ', ShippingMobilePhone) WHERE ShippingPhone <> '' AND ShippingPhone IS NOT NULL AND ShippingMobilePhone <> '' AND ShippingMobilePhone IS NOT NULL;");
 
-        //remove fields		
+        //remove fields
         $this->DBAlterationMessageNow('Making obsolete: BillingAddress.MobilePhone', 'deleted');
         $this->makeFieldObsolete('BillingAddress', 'MobilePhone');
 

@@ -38,8 +38,7 @@ class ShopAccountForm extends Form
             if ($order = ShoppingCart::current_order()) {
                 if ($order->getTotalItems()) {
                     $actions->push(new FormAction('proceed', _t('Account.SAVE_AND_PROCEED', 'Save changes and proceed to checkout')));
-                }
-                else {
+                } else {
                     $actions->push(new FormAction('submit', _t('Account.SAVE', 'Save Changes')));
                 }
             }

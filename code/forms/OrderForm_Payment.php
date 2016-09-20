@@ -58,7 +58,7 @@ class OrderForm_Payment extends Form
     /**
      * @param array $data
      * @param Form  $form
-     * 
+     *
      * @return mixed
      */
     public function dopayment($data, $form)

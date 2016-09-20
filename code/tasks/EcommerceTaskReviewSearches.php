@@ -86,10 +86,10 @@ class EcommerceTaskReviewSearches extends BuildTask
                 isset($_GET['min']) ? $_GET['min'] : $this->defaultMinimum
             )->setRightTitle('Minimum number of searches for it to show up in the statistics. For example, enter five to show only phrases that were searched for at least five times during the specified period.')
         );
-        $actions = FieldList::create( FormAction::create("run")->setTitle("show results"));
-        $form = Form::create($this, "SearchFields", $fields, $actions, null );
-        $form->setAttribute('method','get');
-        $form->setAttribute('action',$this->Link());
+        $actions = FieldList::create(FormAction::create("run")->setTitle("show results"));
+        $form = Form::create($this, "SearchFields", $fields, $actions, null);
+        $form->setAttribute('method', 'get');
+        $form->setAttribute('action', $this->Link());
         echo $form->forTemplate();
         echo '<style>
             div.field {margin-bottom: 20px;}
@@ -97,7 +97,7 @@ class EcommerceTaskReviewSearches extends BuildTask
         </style>';
     }
 
-    function Link($action = null)
+    public function Link($action = null)
     {
         return '/dev/tasks/EcommerceTaskReviewSearches/';
     }
