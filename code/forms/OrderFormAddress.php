@@ -67,6 +67,7 @@ class OrderFormAddress extends Form
             Requirements::javascript('ecommerce/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         }
 
+
         //  ________________ 1) Order + Member + Address fields
 
         //find member
@@ -83,43 +84,61 @@ class OrderFormAddress extends Form
             }
         }
 
+        // define field lists ...
+        $addressFieldsMember = FieldList::create();
         $addressFieldsBilling = FieldList::create();
+        $addressFieldsShipping = null;
+        $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
 
         //member fields
         if ($this->orderMember) {
             $memberFields = $this->orderMember->getEcommerceFields();
             $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
-            $addressFieldsBilling->merge($memberFields);
+            $addressFieldsMember->merge($memberFields);
         }
 
         //billing address field
         $billingAddress = $this->order->CreateOrReturnExistingAddress('BillingAddress');
         $billingAddressFields = $billingAddress->getFields($this->orderMember);
+        $addressFieldsBilling->merge($billingAddressFields);
 
+        $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
 
         //HACK: move phone to member fields ..
-        if ($addressFieldsBilling) {
-            if ($billingAddressFields) {
-                if ($phoneField = $billingAddressFields->dataFieldByName('Phone')) {
-                    $billingAddressFields->removeByName('Phone');
-                    $addressFieldsBilling->insertAfter('Email', $phoneField);
+        if ($addressFieldsMember) {
+            if ($addressFieldsBilling) {
+                if ($phoneField = $addressFieldsBilling->dataFieldByName('Phone')) {
+                    $addressFieldsBilling->removeByName('Phone');
+                    $addressFieldsMember->insertAfter('Email', $phoneField);
                 }
             }
         }
 
-        $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
-        $addressFieldsBilling->merge($billingAddressFields);
 
         //shipping address field
-        $addressFieldsShipping = null;
+
         if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
             $addressFieldsShipping = FieldList::create();
             //add the important CHECKBOX
-            $useShippingAddressField = FieldList::create(
-                CheckboxField::create(
-                    'UseShippingAddress',
-                    _t('OrderForm.USESHIPPINGADDRESS', 'Deliver this order somewhere else'))
-            );
+            if($shippingAddressFirst) {
+                $useShippingAddressField = FieldList::create(
+                    array(
+                        CheckboxField::create(
+                            'DoNotUseShippingAddress',
+                            _t('OrderForm.DO_NOT_USESHIPPINGADDRESS', 'Shipping and Billing Address are the same'),
+                            1
+                        ),
+                        HiddenField::create('UseShippingAddress', 'UseShippingAddress', 0)
+                    )
+                );
+            } else {
+                $useShippingAddressField = FieldList::create(
+                    CheckboxField::create(
+                        'UseShippingAddress',
+                        _t('OrderForm.USESHIPPINGADDRESS', 'Use separate shipping address')
+                    )
+                );
+            }
             $addressFieldsShipping->merge($useShippingAddressField);
             //now we can add the shipping fields
             $shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress');
@@ -128,13 +147,24 @@ class OrderFormAddress extends Form
             $addressFieldsShipping->merge($shippingAddressFields);
         }
 
+        //create holder
         $allLeftFields = CompositeField::create();
         $allLeftFields->addExtraClass('leftOrder');
+
+        //member fields holder
+        $leftFieldsMember = CompositeField::create($addressFieldsMember);
+        $leftFieldsMember->addExtraClass('leftOrderMember');
+
+        //creating shipping fields holder
         $leftFieldsShipping = CompositeField::create($addressFieldsShipping);
         $leftFieldsShipping->addExtraClass('leftOrderShipping');
+
+        //creating billing fields holder
         $leftFieldsBilling = CompositeField::create($addressFieldsBilling);
         $leftFieldsBilling->addExtraClass('leftOrderBilling');
-        $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
+
+        //adding member fields ...
+        $allLeftFields->push($leftFieldsMember);
         if($shippingAddressFirst) {
             if ($addressFieldsShipping) {
                 $allLeftFields->push($leftFieldsShipping);
