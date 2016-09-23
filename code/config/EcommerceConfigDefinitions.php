@@ -135,6 +135,7 @@ class EcommerceConfigDefinitions extends Object
             'ShopAccountForm_Validator',
             'OrderModifierForm',
             'EcommercePaymentController',
+            'OrderFormAddress'
         ),
         'POST SALE PROCESSING' => array(
             'OrderConfirmationPage_Controller',
@@ -269,6 +270,10 @@ class EcommerceConfigDefinitions extends Object
             ),
             'EcommercePaymentController' => array(
                 'url_segment' => 'URL Segment used for the payment process.',
+            ),
+
+            'OrderFormAddress' => array(
+                'shipping_address_first': 'Show the shipping address before the billing address. This is a better option if it is likely that you have a billing address that is not the same as the shipping address.'
             ),
 
         ################### POST SALE PROCESSING #####################

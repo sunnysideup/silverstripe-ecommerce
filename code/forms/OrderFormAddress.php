@@ -83,7 +83,7 @@ class OrderFormAddress extends Form
             }
         }
 
-        $addressFieldsBilling = new FieldList();
+        $addressFieldsBilling = FieldList::create();
 
         //member fields
         if ($this->orderMember) {
@@ -110,14 +110,12 @@ class OrderFormAddress extends Form
         $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
         $addressFieldsBilling->merge($billingAddressFields);
 
-
-
         //shipping address field
         $addressFieldsShipping = null;
         if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
-            $addressFieldsShipping = new FieldList();
+            $addressFieldsShipping = FieldList::create();
             //add the important CHECKBOX
-            $useShippingAddressField = new FieldList(
+            $useShippingAddressField = FieldList::create(
                 CheckboxField::create(
                     'UseShippingAddress',
                     _t('OrderForm.USESHIPPINGADDRESS', 'Deliver this order somewhere else'))
@@ -129,19 +127,29 @@ class OrderFormAddress extends Form
             $requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
             $addressFieldsShipping->merge($shippingAddressFields);
         }
-        $leftFields = new CompositeField($addressFieldsBilling);
-        $leftFields->addExtraClass('leftOrderBilling');
-        $allLeftFields = new CompositeField($leftFields);
+
+        $allLeftFields = CompositeField::create();
         $allLeftFields->addExtraClass('leftOrder');
-        if ($addressFieldsShipping) {
-            $leftFieldsShipping = new CompositeField($addressFieldsShipping);
-            $leftFieldsShipping->addExtraClass('leftOrderShipping');
-            $allLeftFields->push($leftFieldsShipping);
+        $leftFieldsShipping = CompositeField::create($addressFieldsShipping);
+        $leftFieldsShipping->addExtraClass('leftOrderShipping');
+        $leftFieldsBilling = CompositeField::create($addressFieldsBilling);
+        $leftFieldsBilling->addExtraClass('leftOrderBilling');
+        $shippingAddressFirst = EcomConfig::get('OrderFormAddress', 'shipping_address_first');
+        if($shippingAddressFirst) {
+            if ($addressFieldsShipping) {
+                $allLeftFields->push($leftFieldsShipping);
+            }
+            $allLeftFields->push($leftFieldsBilling);
+        } else {
+            $allLeftFields->push($leftFieldsBilling);
+            if ($addressFieldsShipping) {
+                $allLeftFields->push($leftFieldsShipping);
+            }
         }
 
         //  ________________  2) Log in / vs Create Account fields - RIGHT-HAND-SIDE fields
 
-        $rightFields = new CompositeField();
+        $rightFields = CompositeField::create();
         $rightFields->addExtraClass('rightOrder');
         //to do: simplify
         if (EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
@@ -191,13 +199,13 @@ class OrderFormAddress extends Form
 
         //  ________________  5) Put all the fields in one FieldList
 
-        $fields = new FieldList($rightFields, $allLeftFields);
+        $fields = FieldList::create($rightFields, $allLeftFields);
 
         //  ________________  6) Actions and required fields creation + Final Form construction
 
         $nextButton = new FormAction('saveAddress', _t('OrderForm.NEXT', 'Next'));
         $nextButton->addExtraClass('next');
-        $actions = new FieldList($nextButton);
+        $actions = FieldList::create($nextButton);
 
         $validator = OrderFormAddress_Validator::create($requiredFields);
 

@@ -221,6 +221,10 @@ EcommerceRole:
 
 
 ################### FORMS AND FIELDS #####################
+
+OrderFormAddress:
+  shipping_address_first: true
+
 ProductSearchForm:
   form_data_session_variable: "ProductGroupSearchResultsFormData"
   include_price_filters: false
