@@ -1627,7 +1627,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $replacementArray['BaseURL'] = Director::baseURL();
         $arrayData = new ArrayData($replacementArray);
         $this->extend('updateReplacementArrayForEmail', $arrayData);
-
+        debug::log(print_r($arrayData, 1));
         return $arrayData;
     }
 
