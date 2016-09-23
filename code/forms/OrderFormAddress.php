@@ -134,7 +134,7 @@ class OrderFormAddress extends Form
         $leftFieldsShipping->addExtraClass('leftOrderShipping');
         $leftFieldsBilling = CompositeField::create($addressFieldsBilling);
         $leftFieldsBilling->addExtraClass('leftOrderBilling');
-        $shippingAddressFirst = EcomConfig::get('OrderFormAddress', 'shipping_address_first');
+        $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
         if($shippingAddressFirst) {
             if ($addressFieldsShipping) {
                 $allLeftFields->push($leftFieldsShipping);
