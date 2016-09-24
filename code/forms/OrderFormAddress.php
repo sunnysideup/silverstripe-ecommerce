@@ -67,8 +67,15 @@ class OrderFormAddress extends Form
             Requirements::javascript('ecommerce/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         }
 
-
         //  ________________ 1) Order + Member + Address fields
+
+
+        // define field lists ...
+        $addressFieldsMember = FieldList::create();
+        $addressFieldsBilling = FieldList::create();
+        $addressFieldsShipping = null;
+        $useShippingAddressField = null;
+        $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
 
         //find member
         $this->order = ShoppingCart::current_order();
@@ -83,12 +90,6 @@ class OrderFormAddress extends Form
                 }
             }
         }
-
-        // define field lists ...
-        $addressFieldsMember = FieldList::create();
-        $addressFieldsBilling = FieldList::create();
-        $addressFieldsShipping = null;
-        $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
 
         //member fields
         if ($this->orderMember) {
@@ -118,28 +119,37 @@ class OrderFormAddress extends Form
         //shipping address field
 
         if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
-            $addressFieldsShipping = FieldList::create();
             //add the important CHECKBOX
+            $useShippingAddressField = FieldList::create(
+                HeaderField::create(
+                    'HasShippingAddressHeader',
+                    _t('OrderFormAddress.HAS_SHIPPING_ADDRESS_HEADER', 'Delivery Option'),
+                    3
+                )
+            );
             if($shippingAddressFirst) {
-                $useShippingAddressField = FieldList::create(
-                    array(
-                        CheckboxField::create(
-                            'DoNotUseShippingAddress',
-                            _t('OrderForm.DO_NOT_USESHIPPINGADDRESS', 'Shipping and Billing Address are the same'),
-                            1
-                        ),
-                        HiddenField::create('UseShippingAddress', 'UseShippingAddress', 0)
+                $useShippingAddressField->push(
+                    CheckboxField::create(
+                        'DoNotUseShippingAddress',
+                        _t('OrderForm.DO_NOT_USESHIPPINGADDRESS', 'Shipping and Billing Address are the same'),
+                        1
                     )
                 );
+                $useShippingAddressField->push(
+                    HiddenField::create('UseShippingAddress', 'UseShippingAddress', 0)
+                );
             } else {
-                $useShippingAddressField = FieldList::create(
+                $useShippingAddressField->push(
                     CheckboxField::create(
                         'UseShippingAddress',
                         _t('OrderForm.USESHIPPINGADDRESS', 'Use separate shipping address')
                     )
                 );
             }
-            $addressFieldsShipping->merge($useShippingAddressField);
+
+            $addressFieldsShipping = FieldList::create();
+
+            //$addressFieldsShipping->merge($useShippingAddressField);
             //now we can add the shipping fields
             $shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress');
             $shippingAddressFields = $shippingAddress->getFields($this->orderMember);
@@ -165,6 +175,11 @@ class OrderFormAddress extends Form
 
         //adding member fields ...
         $allLeftFields->push($leftFieldsMember);
+        if($useShippingAddressField) {
+            $leftFieldsShippingOptions = CompositeField::create($useShippingAddressField);
+            $leftFieldsShippingOptions->addExtraClass('leftOrderShippingOptions');
+            $allLeftFields->push($leftFieldsShippingOptions);
+        }
         if($shippingAddressFirst) {
             if ($addressFieldsShipping) {
                 $allLeftFields->push($leftFieldsShipping);

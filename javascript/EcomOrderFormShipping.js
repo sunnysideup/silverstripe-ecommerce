@@ -5,7 +5,8 @@
  **/
 ;
 if(
-      (document.getElementById("OrderFormAddress_OrderFormAddress") !== null && typeof document.getElementById("OrderFormAddress_OrderFormAddress") !== "undefined")
+    (document.getElementById("OrderFormAddress_OrderFormAddress") !== null &&
+    typeof document.getElementById("OrderFormAddress_OrderFormAddress") !== "undefined")
 ) {
     (function($) {
         $(document).ready(
@@ -96,9 +97,6 @@ if(
         //update shipping fields, when billing fields are changed.
         init: function(){
 
-            if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).length > 0) {
-                EcomOrderFormWithShippingAddress.useShippingDetailsSelector = 'input[type="hidden"][name="UseShippingAddress"]';
-            }
 
             if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length > 0) {
                 this.getListOfSharedFields();
@@ -133,7 +131,7 @@ if(
          *
          */
         updateFields: function() {
-            var hasShippingAddress = jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked");
+            var hasShippingAddress = this.hasShippingAddress();
             //copy the billing address details to the shipping address details
             if(hasShippingAddress === true) {
                 var billingFieldSelector = "";
@@ -171,7 +169,7 @@ if(
                 );
 
             }
-            this.swapBillingHeader(hasShippingAddress);
+            this.swapBillingHeader();
         },
 
         /**
@@ -258,11 +256,7 @@ if(
             jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change(
                 function(){
                     if(
-                        jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked") === true ||
-                        (
-                            jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":hidden") &&
-                            jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).val() == '1'
-                        )
+                        EcomOrderFormWithShippingAddress.hasShippingAddress()
                     ) {
 
                         //slidedown
@@ -335,23 +329,29 @@ if(
 
         },
 
-        swapBillingHeader: function(hasShippingAddress) {
-
+        swapBillingHeader: function() {
             var billingHeader = jQuery(this.formSelector + "_BillingDetails");
+            var hasShippingAddress = this.hasShippingAddress();
             if(hasShippingAddress) {
-                var oldHeaderAttr = this.billingHeaderAttributeTitleAlternative + '_default';
                 var newHeaderAttr = this.billingHeaderAttributeTitleAlternative;
             } else {
-                var oldHeaderAttr = this.billingHeaderAttributeTitleAlternative;
                 var newHeaderAttr = this.billingHeaderAttributeTitleAlternative + '_default';
             }
             var newHeader = billingHeader.attr(newHeaderAttr);
-            if( ! billingHeader.attr(oldHeaderAttr)) {
-                var oldHeader = billingHeader.text();
-                billingHeader.attr(oldHeaderAttr, oldHeader)
-            }
             billingHeader.text(newHeader);
+        },
+
+        hasShippingAddress: function() {
+            var isHidden = jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector+'[type="hidden"]');
+            if(isHidden) {
+                var isOne = jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).val() == '1'
+                return isOne;
+            } else {
+                var isChecked = jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked");
+                return isChecked;
+            }
         }
+
     }
 
 }
