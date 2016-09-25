@@ -58,10 +58,10 @@ ProductGroup:
   sort_options:
     default:
       Title: 'Default Order'
-      SQL: "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"Title\" ASC"
+      SQL: "\"Sort\" ASC, \"Title\" ASC"
     price:
       Title: 'Lowest Price'
-      SQL: "\"Price\" ASC, \"Title\" ASC"
+      SQL: "\"Price\" ASC, \"Sort\" ASC", \"Title\" ASC"
   filter_options:
     default:
       Title: 'All Products (default)'
