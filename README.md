@@ -3,18 +3,6 @@
 [![Build Status](https://travis-ci.org/sunnysideup/silverstripe-ecommerce.svg?branch=master)](https://travis-ci.org/sunnysideup/silverstripe-ecommerce)
 
 
-## Need Help? ##
-
-This Silverstripe Module is available for you free of charge.  In addition, I am happy to provide anyone who is keen to use
-this module  with up to two hours of free support to get it working and/or ask some basic questions.
-
-## Can Help? ##
-
-Of course, you are also welcome to provide any feedback or bug reports and so on.
-Especially real user experience feedback is immensely valuable.
-Developers who provide significant patches will be listed below.
-Contributors are welcome.
-
 ## Requirements ##
 
 see composer.json
