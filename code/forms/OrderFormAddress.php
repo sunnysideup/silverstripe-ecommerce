@@ -127,7 +127,7 @@ class OrderFormAddress extends Form
                     3
                 )
             );
-            if($shippingAddressFirst) {
+            if ($shippingAddressFirst) {
                 $useShippingAddressField->push(
                     CheckboxField::create(
                         'DoNotUseShippingAddress',
@@ -175,12 +175,12 @@ class OrderFormAddress extends Form
 
         //adding member fields ...
         $allLeftFields->push($leftFieldsMember);
-        if($useShippingAddressField) {
+        if ($useShippingAddressField) {
             $leftFieldsShippingOptions = CompositeField::create($useShippingAddressField);
             $leftFieldsShippingOptions->addExtraClass('leftOrderShippingOptions');
             $allLeftFields->push($leftFieldsShippingOptions);
         }
-        if($shippingAddressFirst) {
+        if ($shippingAddressFirst) {
             if ($addressFieldsShipping) {
                 $allLeftFields->push($leftFieldsShipping);
             }
