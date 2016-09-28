@@ -282,8 +282,7 @@ if(
                             }
                         );
 
-                        //copy fields ...
-                        EcomOrderFormWithShippingAddress.updateFields();
+
 
                         //save setting
                         EcomOrderFormWithShippingAddress.closed = false;
@@ -311,6 +310,8 @@ if(
                         //save answer
                         EcomOrderFormWithShippingAddress.closed = true;
                     }
+                    EcomOrderFormWithShippingAddress.makeSureOnlyTheRightCountriesCanBeSelected();
+                    //copy fields ...
                     EcomOrderFormWithShippingAddress.updateFields();
                 }
             );
@@ -350,7 +351,49 @@ if(
                 var isChecked = jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked");
                 return isChecked;
             }
+        },
+
+        /**
+         * Swapping out the available countries 
+         * for the Billing Address depending on whether the Billing address
+         * is also the Shipping address or that the shipping address is separate
+         *
+         */
+        makeSureOnlyTheRightCountriesCanBeSelected: function() {
+             if(
+               typeof CountryPrice_SetCountriesForDelivery_New !== "undefined" &&
+               typeof CountryPrice_SetCountriesForDelivery_Original !== 'undefined'
+             ) {
+                 if(this.hasShippingAddress()) {
+                     var options = CountryPrice_SetCountriesForDelivery_Original;
+                 } else {
+                     var options = CountryPrice_SetCountriesForDelivery_New;
+                 }
+                 var el = jQuery("select[name='Country']");
+                 CountryPrice_SetCountriesForDelivery.swappingOptions(
+                     el,
+                     options
+                 );
+             }
+         },
+
+        /**
+         * update a select with new options
+         * @var jQuery Object
+         * @var array
+         */
+        swappingOptions: function(el, newOptions) {
+            var oldValue = jQuery(el).val();
+            jQuery(el).empty();
+            $.each(
+                newOptions,
+                function(key,value) {
+                    el.append($("<option></option>")
+                        .attr("value", key).text(value));
+            });
+            jQuery(el).val(oldValue);
         }
+
 
     }
 
