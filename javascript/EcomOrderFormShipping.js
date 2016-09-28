@@ -381,6 +381,7 @@ if(
          */
         swappingOptions: function(el, newOptions) {
             var oldValue = jQuery(el).val();
+            jQuery(el).empty();
             $.each(
                 newOptions,
                 function(key,value) {
