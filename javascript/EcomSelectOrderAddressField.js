@@ -10,14 +10,16 @@
  *
  *
  */
-if(typeof EcomSelectOrderAddressFieldOptions !== 'undefined') {
+
     ;(function($) {
         $(document).ready(
             function() {
-                for(var i = 0; i < EcomSelectOrderAddressFieldOptions.length; i++) {
-                    EcomSelectOrderAddressField.set_data(EcomSelectOrderAddressFieldOptions[i].id, EcomSelectOrderAddressFieldOptions[i].address)
+                if(typeof EcomSelectOrderAddressFieldOptions !== 'undefined') {
+                    for(var i = 0; i < EcomSelectOrderAddressFieldOptions.length; i++) {
+                        EcomSelectOrderAddressField.set_data(EcomSelectOrderAddressFieldOptions[i].id, EcomSelectOrderAddressFieldOptions[i].address)
+                    }
+                    EcomSelectOrderAddressField.init();
                 }
-                EcomSelectOrderAddressField.init();
             }
         );
     })(jQuery);
@@ -132,4 +134,4 @@ if(typeof EcomSelectOrderAddressFieldOptions !== 'undefined') {
 
 
     }
-}
+

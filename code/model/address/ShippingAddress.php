@@ -211,7 +211,7 @@ class ShippingAddress extends OrderAddress
                 new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">'._t('OrderAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.').'</p>')
             );
 
-            if ($member) {
+            if ($member && Member::currentUser()) {
                 if ($member->exists() && !$member->IsShopAdmin()) {
                     $this->FillWithLastAddressFromMember($member, true);
                     $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);

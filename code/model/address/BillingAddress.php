@@ -222,7 +222,7 @@ class BillingAddress extends OrderAddress
         $fields->push(new TextField('Phone', _t('OrderAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
         $hasPreviousAddresses = false;
-        if ($member) {
+        if ($member && Member::currentUser()) {
             if ($member->exists() && !$member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
                 $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
