@@ -358,7 +358,7 @@ if(
          */
         makeSureOnlyTheRightCountriesCanBeSelected: function() {
              if(
-               typeof CountryPrice_SetCountriesForDelivery_New !== "undefined"
+               typeof CountryPrice_SetCountriesForDelivery_New !== "undefined" &&
                typeof CountryPrice_SetCountriesForDelivery_Original !== 'undefined'
              ) {
                  if(this.hasShippingAddress()) {
@@ -367,7 +367,7 @@ if(
                      var options = CountryPrice_SetCountriesForDelivery_New;
                  }
                  var el = jQuery("select[name='Country']");
-                 CountryPrice_SetCountriesForDelivery.swappingOptions(
+                 EcomOrderFormWithShippingAddress.swappingOptions(
                      el,
                      options
                  );
@@ -381,7 +381,6 @@ if(
          */
         swappingOptions: function(el, newOptions) {
             var oldValue = jQuery(el).val();
-            jQuery(el).empty();
             $.each(
                 newOptions,
                 function(key,value) {
