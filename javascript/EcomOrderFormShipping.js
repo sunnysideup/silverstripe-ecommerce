@@ -282,8 +282,6 @@ if(
                             }
                         );
 
-
-
                         //save setting
                         EcomOrderFormWithShippingAddress.closed = false;
                     }
@@ -357,11 +355,10 @@ if(
          * Swapping out the available countries 
          * for the Billing Address depending on whether the Billing address
          * is also the Shipping address or that the shipping address is separate
-         *
          */
         makeSureOnlyTheRightCountriesCanBeSelected: function() {
              if(
-               typeof CountryPrice_SetCountriesForDelivery_New !== "undefined" &&
+               typeof CountryPrice_SetCountriesForDelivery_New !== "undefined"
                typeof CountryPrice_SetCountriesForDelivery_Original !== 'undefined'
              ) {
                  if(this.hasShippingAddress()) {
