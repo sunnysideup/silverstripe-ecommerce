@@ -273,7 +273,7 @@ class EcommerceConfigDefinitions extends Object
             ),
 
             'OrderFormAddress' => array(
-                'shipping_address_first': 'Show the shipping address before the billing address. This is a better option if it is likely that you have a billing address that is not the same as the shipping address.'
+                'shipping_address_first' => 'Show the shipping address before the billing address. This is a better option if it is likely that you have a billing address that is not the same as the shipping address.'
             ),
 
         ################### POST SALE PROCESSING #####################
