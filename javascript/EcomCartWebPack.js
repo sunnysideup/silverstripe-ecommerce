@@ -504,11 +504,16 @@ export var EcomCart = {
 
                                 //create history
                                 var pageTitle = jQuery(EcomCart.hiddenPageTitleID).text();
+                                //create history
+                                var pageTitle = escape(jQuery(EcomCart.hiddenPageTitleID).text());
                                 window.history.pushState(
-                                    {"html":data,"pageTitle":pageTitle},
+                                    {
+                                        "pageTitle":pageTitle
+                                    },
                                     pageTitle,
                                     url
                                 );
+
                                 document.title = pageTitle;
                                 //update changes
                                 //set changes also does the reinit

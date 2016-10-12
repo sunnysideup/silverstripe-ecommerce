@@ -506,7 +506,7 @@ var EcomCart = {
                                 //create history
                                 var pageTitle = jQuery(EcomCart.hiddenPageTitleID).text();
                                 window.history.pushState(
-                                    {"html":data,"pageTitle":pageTitle},
+                                    {"pageTitle":pageTitle},
                                     pageTitle,
                                     url
                                 );
