@@ -53,7 +53,7 @@ class OrderStatusLog_Archived extends OrderStatusLog
             return $extended;
         }
 
-        return true;
+        return parent::canEdit($member);
     }
 
     /**

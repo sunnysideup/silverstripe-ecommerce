@@ -498,29 +498,42 @@ class Order extends DataObject implements EditableEcommerceObject
             new Tab('Next'),
             'Main'
         );
+        
+        $nextFieldArray = array(
+            LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
+            HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'This Order')),
+            GridField::create(
+                'OrderSummary',
+                _t('Order.CURRENT_STATUS', 'Summary'),
+                ArrayList::create(array($this)),
+                $config = GridFieldConfig_Base::create()
+            ),
+            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
+            $this->OrderStepField()
+        );
+        
+         //is the member is a shop admin they can always view it
+        if (EcommerceRole::current_member_is_shop_admin(Member::currentUser())) {
+            $nextFieldArray = array_merge(
+                $nextFieldArray,
+                array(
+                    HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
+                    HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along')),
+                    LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to move it along.').'</p>'),
+                    EcommerceCMSButtonField::create(
+                        'StatusIDExplanation',
+                        $this->CMSEditLink(),
+                        _t('Order.REFRESH', 'refresh now')
+                    )
+                )
+            );
+        }
+
         $fields->addFieldsToTab(
             'Root.Next',
-            array(
-                LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
-                HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'This Order')),
-                GridField::create(
-                    'OrderSummary',
-                    _t('Order.CURRENT_STATUS', 'Summary'),
-                    ArrayList::create(array($this)),
-                    $config = GridFieldConfig_Base::create()
-                ),
-                HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
-                $this->OrderStepField(),
-                HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
-                HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along')),
-                LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to move it along.').'</p>'),
-                EcommerceCMSButtonField::create(
-                    'StatusIDExplanation',
-                    $this->CMSEditLink(),
-                    _t('Order.REFRESH', 'refresh now')
-                )
-            )
+            $nextFieldArray
         );
+        
         $config->removeComponentsByType('GridFieldToolbarHeader');
         //$config->removeComponentsByType('GridFieldSortableHeader');
         $config->removeComponentsByType('GridFieldFilterHeader');
@@ -811,13 +824,15 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     protected function getOrderStatusLogsTableField_Archived($sourceClass = 'OrderStatusLog', $title = '', FieldList $fieldList = null, FieldList $detailedFormFields = null)
     {
-        $gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
-            new GridFieldDetailForm()
-        );
+//        $gridFieldConfig = GridFieldConfig_RecordEditor::create()->addComponents(
+//            new GridFieldDetailForm()
+//        );
         $title ? $title : $title = _t('OrderItem.PLURALNAME', 'Order Log');
-        $source = $this->OrderStatusLogs();
+        
+//        $source = $this->OrderStatusLogs();
+        $source = OrderStatusLog::get();
 
-        return new GridField($sourceClass, $title, $source, $gridFieldConfig);
+        return new GridField("test", $title, $source, GridFieldConfig_RecordEditor::create());
     }
 
     /**
@@ -2087,6 +2102,10 @@ class Order extends DataObject implements EditableEcommerceObject
             return true;
         }
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+            return true;
+        }
+        //is the member is a shop assistant they can always view it
+        if (EcommerceRole::current_member_is_shop_assistant($member)) {
             return true;
         }
         return false;

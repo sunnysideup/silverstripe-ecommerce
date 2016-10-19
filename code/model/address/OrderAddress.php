@@ -207,7 +207,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             if ($this->Order()) {
                 if ($this->Order()->exists()) {
                     if ($this->Order()->canEdit($member)) {
-                        $this->_canEdit = true;
+                        if(! $this->Order()->IsSubmitted()) {
+                            $this->_canEdit = true;
+                        }
                     }
                 }
             }

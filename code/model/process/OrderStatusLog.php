@@ -100,6 +100,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
         }
+        //is the member is a shop assistant they can always view it
+        if (EcommerceRole::current_member_is_shop_assistant($member)) {
+            return true;
+        }
 
         return parent::canEdit($member);
     }
@@ -121,6 +125,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+            return true;
+        }
+        //is the member is a shop assistant they can always view it
+        if (EcommerceRole::current_member_is_shop_assistant($member)) {
             return true;
         }
         if ($this->InternalUseOnly) {
@@ -153,10 +161,21 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
+        
         if ($order = $this->Order()) {
-            return $order->canEdit($member);
+            //Order Status Logs are so basic, anyone can edit them
+            if($this->ClassName=='OrderStatusLog'){
+                return $order->canView($member);
+            }
+        
+            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+                return $order->canEdit($member);
+            }
+            
         }
 
+
+        
         return false;
     }
 
