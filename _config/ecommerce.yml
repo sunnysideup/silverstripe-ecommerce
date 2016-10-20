@@ -142,6 +142,7 @@ OrderStatusLog:
   order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
 
 BillingAddress:
+  allow_selection_of_previous_addresses_in_checkout: false
   required_fields:
     - Phone
     - Email
@@ -154,6 +155,7 @@ BillingAddress:
 #   - RegionID
 
 ShippingAddress:
+  allow_selection_of_previous_addresses_in_checkout: false
   required_fields:
     - ShippingPhone
     - ShippingAddress

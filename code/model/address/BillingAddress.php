@@ -85,6 +85,7 @@ class BillingAddress extends OrderAddress
     private static $indexes = array(
         'Obsolete' => true,
         'OrderID' => true,
+        'Country' => true
     );
 
     /**
@@ -225,11 +226,18 @@ class BillingAddress extends OrderAddress
         if ($member && Member::currentUser()) {
             if ($member->exists() && !$member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
-                $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
-                //we want MORE than one here not just one.
-                if ($addresses->count() > 1) {
-                    $fields->push(SelectOrderAddressField::create('SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS', 'Select Billing Address'), $addresses));
-                    $hasPreviousAddresses = true;
+                if(EcommerceConfig::get('BillingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
+                    $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+                    //we want MORE than one here not just one.
+                    if ($addresses->count() > 1) {
+                        $fields->push(
+                            SelectOrderAddressField::create(
+                                'SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS', 'Select Billing Address'),
+                                $addresses
+                            )
+                        );
+                        $hasPreviousAddresses = true;
+                    }
                 }
             }
         }
@@ -241,7 +249,7 @@ class BillingAddress extends OrderAddress
                 user_error('You must install the Sunny Side Up google_address_field module OR remove entries from: BillingAddress.fields_to_google_geocode_conversion');
             }
             $billingFields->push(
-                $billingEcommerceGeocodingField = new GoogleAddressField(
+                $billingEcommerceGeocodingField = GoogleAddressField::create(
                     'BillingEcommerceGeocodingField',
                     _t('OrderAddress.FIND_ADDRESS', 'Find address'),
                     Session::get('BillingEcommerceGeocodingFieldValue')

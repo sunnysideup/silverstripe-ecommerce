@@ -494,7 +494,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @param object (Member) $member
      * @param bool            $write  - should the address be written
      *
-     * @return DataObject (OrderAddress / ShippingAddress / BillingAddress)
+     * @return OrderAddress | ShippingAddress | BillingAddress
      **/
     public function FillWithLastAddressFromMember(Member $member, $write = false)
     {

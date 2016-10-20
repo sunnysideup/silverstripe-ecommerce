@@ -350,10 +350,12 @@ class EcommerceConfigDefinitions extends Object
                 'assistant_role_permission_codes' => 'Permission codes for the shop assistant member group.',
             ),
             'BillingAddress' => array(
+                'allow_selection_of_previous_addresses_in_checkout' => 'In the checkout, allow a customer to select from previously used addresses.',
                 'required_fields' => 'List of fields that is required to be entered.',
                 'fields_to_google_geocode_conversion' => 'This variable tells us how Billing Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.',
             ),
             'ShippingAddress' => array(
+                'allow_selection_of_previous_addresses_in_checkout' => 'In the checkout, allow a customer to select from previously used addresses.',
                 'required_fields' => 'List of fields that is required to be entered.',
                 'fields_to_google_geocode_conversion' => 'This variable tells us how Shipping Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.',
             ),
