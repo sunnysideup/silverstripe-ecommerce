@@ -498,7 +498,7 @@ class Order extends DataObject implements EditableEcommerceObject
             new Tab('Next'),
             'Main'
         );
-        
+
         $nextFieldArray = array(
             LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
             HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'This Order')),
@@ -511,7 +511,7 @@ class Order extends DataObject implements EditableEcommerceObject
             HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
             $this->OrderStepField()
         );
-        
+
          //is the member is a shop admin they can always view it
         if (EcommerceRole::current_member_is_shop_admin(Member::currentUser())) {
             $nextFieldArray = array_merge(
@@ -533,7 +533,7 @@ class Order extends DataObject implements EditableEcommerceObject
             'Root.Next',
             $nextFieldArray
         );
-        
+
         $config->removeComponentsByType('GridFieldToolbarHeader');
         //$config->removeComponentsByType('GridFieldSortableHeader');
         $config->removeComponentsByType('GridFieldFilterHeader');
@@ -828,11 +828,11 @@ class Order extends DataObject implements EditableEcommerceObject
 //            new GridFieldDetailForm()
 //        );
         $title ? $title : $title = _t('OrderItem.PLURALNAME', 'Order Log');
-        
+
 //        $source = $this->OrderStatusLogs();
         $source = OrderStatusLog::get();
 
-        return new GridField("test", $title, $source, GridFieldConfig_RecordEditor::create());
+        return new GridField($sourceClass, $title, $source, GridFieldConfig_RecordEditor::create());
     }
 
     /**
