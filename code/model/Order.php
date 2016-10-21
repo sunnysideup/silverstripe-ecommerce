@@ -508,7 +508,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 ArrayList::create(array($this)),
                 $config = GridFieldConfig_Base::create()
             ),
-            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status')),
+            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
             $this->OrderStepField()
         );
 
@@ -517,8 +517,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(
-                    HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step')),
-                    HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along')),
+                    HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', '2. Action Next Step')),
+                    HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', '3. Move Order Along')),
                     LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to move it along.').'</p>'),
                     EcommerceCMSButtonField::create(
                         'StatusIDExplanation',
@@ -641,7 +641,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $fields->addFieldToTab('Root.Log',
                     new ReadonlyField(
                         'SequentialOrderNumber',
-                        _t('Order.SEQUENTIALORDERNUMBER', 'Sequential order number for submitted orders (e.g. 1,2,3,4,5...)'),
+                        _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number for submitted orders (e.g. 1,2,3,4,5...)'),
                         $submissionLog->SequentialOrderNumber
                     )
                 );
