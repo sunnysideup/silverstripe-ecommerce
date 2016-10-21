@@ -70,13 +70,6 @@ class OrderStepField extends DatalessField
             $html .= 'no steps';
         }
         $html .= '</ol><div class="clear"></div></div>';
-        if ($currentStep->Description) {
-            $html .= '
-                <p>'.
-                _t('OrderStepField.NEXT', 'NEXT: ').
-                '<i>'.$currentStep->Description.'</i>'.
-                '</p>';
-        }
         $this->content = $html;
         Requirements::themedCSS('OrderStepField', 'ecommerce');
         parent::__construct($name);
