@@ -326,6 +326,7 @@ class EcommerceConfigDefinitions extends Object
                 'field_class_and_id_prefix' => 'In case you have some conflicts in the class / IDs for formfields then you can use this variable to add a few characters in front of the classes / IDs',
             ),
             'EcommerceRole' => array(
+                'permission_category' => 'E-commerce permission group name.'
                 'allow_customers_to_setup_accounts' => "Allow customers to become 'members' when they purchase items. If this is false then customers can never setup an account. Orders will still get a member assigned to them but the member does not log in and they are not prompted for a password.",
                 'must_have_account_to_purchase' => 'When this is set to TRUE, any purchasers must log in or create an account. When set to false, customers still get added as a member, but they can purchase without logging in or choosing a password.',
                 'automatically_update_member_details' => 'When set to true, the member fields (e.g. email, surname, first name) will be automatically updated from the billing address.  That is, if the customers enters a different email or surname in the billing field then the member record will be updated based on these new values.',
@@ -348,6 +349,7 @@ class EcommerceConfigDefinitions extends Object
                 'assistant_permission_code' => 'Permission code for the shop assistant member group.',
                 'assistant_role_title' => 'Role title for the shop assistant member group.',
                 'assistant_role_permission_codes' => 'Permission codes for the shop assistant member group.',
+                'process_orders_permission_code' => 'Permission code for being allowed to process orders. This code is separate from admins and assistants to make it easier to apply separate codes to groups.'
             ),
             'BillingAddress' => array(
                 'allow_selection_of_previous_addresses_in_checkout' => 'In the checkout, allow a customer to select from previously used addresses.',

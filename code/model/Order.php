@@ -513,7 +513,7 @@ class Order extends DataObject implements EditableEcommerceObject
         );
 
          //is the member is a shop admin they can always view it
-        if (EcommerceRole::current_member_is_shop_admin(Member::currentUser())) {
+        if (EcommerceRole::current_member_can_process_orders($currentMember)) {
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(

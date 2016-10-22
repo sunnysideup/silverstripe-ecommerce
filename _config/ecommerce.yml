@@ -187,6 +187,7 @@ OrderAddress:
 
 
 EcommerceRole:
+  permission_category: 'E-commerce'
   allow_customers_to_setup_accounts: 1
   must_have_account_to_purchase: false
   automatically_update_member_details: true
@@ -208,6 +209,7 @@ EcommerceRole:
     - CMS_ACCESS_StoreAdmin
     - CMS_ACCESS_AssetAdmin
     - CMS_ACCESS_CMSMain
+    - CMS_ACCESS_SalesAdmin_PROCESS
   assistant_group_code: "shopassistants"
   assistant_group_name: "Shop Assistants"
   assistant_group_user_first_name: ""
@@ -218,7 +220,7 @@ EcommerceRole:
   assistant_role_permission_codes:
     - CMS_ACCESS_SalesAdmin
     - CMS_ACCESS_SalesAdminExtras
-
+  process_orders_permission_code: CMS_ACCESS_SalesAdmin_PROCESS
 
 
 

@@ -145,7 +145,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @return bool
      */
-    public static function current_member_is_shop_admin(Member $member = null)
+    public static function current_member_is_shop_admin($member = null)
     {
         if (!$member) {
             $member = Member::currentUser();
@@ -164,13 +164,32 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @return bool
      */
-    public static function current_member_is_shop_assistant(Member $member = null)
+    public static function current_member_is_shop_assistant($member = null)
     {
         if (!$member) {
             $member = Member::currentUser();
         }
         if ($member) {
             return $member->IsShopAssistant();
+        }
+
+        return false;
+    }
+
+    /**
+     * tells us if the current member can process the orders
+     *
+     * @param Member | Null $member
+     *
+     * @return bool
+     */
+    public static function current_member_can_process_orders($member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
+        if ($member) {
+            return $member->CanProcessOrders();
         }
 
         return false;
@@ -247,25 +266,47 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function providePermissions()
     {
+        $category = EcommerceConfig::get('EcommerceRole', 'permission_category');
         $perms[EcommerceConfig::get('EcommerceRole', 'customer_permission_code')] = array(
-            'name' => 'Customers',
-            'category' => 'E-commerce',
-            'help' => 'Customers - usually dont have CMS access.',
+            'name' => 'name' => _t(
+                'EcommerceRole.CUSTOMER_PERMISSION_ANME',
+                'Customers'
+            ),
+            'category' => $category,
+            'help' => _t(
+                'EcommerceRole.CUSTOMERS_HELP'
+                'Customer Permissions (usually very little)',
             'sort' => 98,
         );
         $perms[EcommerceConfig::get('EcommerceRole', 'admin_permission_code')] = array(
             'name' => EcommerceConfig::get('EcommerceRole', 'admin_role_title'),
-            'category' => 'E-commerce',
-            'help' => 'Shop Manager - can edit everything to do with the e-commerce application.',
+            'category' => $category,
+            'help' => _t(
+                'EcommerceRole.ADMINISTRATORS_HELP'
+                'Store Manager - can edit everything to do with the e-commerce application.',
             'sort' => 99,
         );
         $perms[EcommerceConfig::get('EcommerceRole', 'assistant_permission_code')] = array(
             'name' => EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
-            'category' => 'E-commerce',
-            'help' => 'Shop Assistant - can only view sales details',
-            'sort' => 99,
+            'category' => $category,
+            'help' => _t(
+                'EcommerceRole.STORE_ASSISTANTS_HELP'
+                'Store Assistant - can only view sales details and makes notes about orders',
+            'sort' => 100,
         );
-
+        $perms[EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code')] => array(
+               'name' => _t(
+                   'EcommerceRole.PROCESS_ORDERS_PERMISSION_NAME',
+                   'Can process orders'
+               ),
+               'category' => $category,
+               'help' => _t(
+                   'EcommerceRole.PROCESS_ORDERS_PERMISSION_HELP',
+                   'Can the user progress orders through the order steps (e.g. dispatch orders)'
+               ),
+               'sort' => 101
+           )
+       );
         return $perms;
     }
 
@@ -511,8 +552,22 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         if ($this->owner->IsShopAdmin()) {
             return true;
         }
+
         return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));
-        ;
+    }
+
+    /**
+     * Is the member a member of the SHOPASSISTANTS Group.
+     *
+     * @return bool
+     **/
+    public function CanProcessOrders()
+    {
+        if ($this->owner->IsShopAdmin()) {
+            return true;
+        }
+
+        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code'));
     }
 
     /**
