@@ -268,45 +268,47 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $category = EcommerceConfig::get('EcommerceRole', 'permission_category');
         $perms[EcommerceConfig::get('EcommerceRole', 'customer_permission_code')] = array(
-            'name' => 'name' => _t(
+            'name' => _t(
                 'EcommerceRole.CUSTOMER_PERMISSION_ANME',
                 'Customers'
             ),
             'category' => $category,
             'help' => _t(
-                'EcommerceRole.CUSTOMERS_HELP'
-                'Customer Permissions (usually very little)',
+                'EcommerceRole.CUSTOMERS_HELP',
+                'Customer Permissions (usually very little)'
+            ),
             'sort' => 98,
         );
         $perms[EcommerceConfig::get('EcommerceRole', 'admin_permission_code')] = array(
             'name' => EcommerceConfig::get('EcommerceRole', 'admin_role_title'),
             'category' => $category,
             'help' => _t(
-                'EcommerceRole.ADMINISTRATORS_HELP'
-                'Store Manager - can edit everything to do with the e-commerce application.',
+                'EcommerceRole.ADMINISTRATORS_HELP',
+                'Store Manager - can edit everything to do with the e-commerce application.'
+            ),
             'sort' => 99,
         );
         $perms[EcommerceConfig::get('EcommerceRole', 'assistant_permission_code')] = array(
             'name' => EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
             'category' => $category,
             'help' => _t(
-                'EcommerceRole.STORE_ASSISTANTS_HELP'
-                'Store Assistant - can only view sales details and makes notes about orders',
+                'EcommerceRole.STORE_ASSISTANTS_HELP',
+                'Store Assistant - can only view sales details and makes notes about orders'
+            ),
             'sort' => 100,
         );
-        $perms[EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code')] => array(
-               'name' => _t(
-                   'EcommerceRole.PROCESS_ORDERS_PERMISSION_NAME',
-                   'Can process orders'
-               ),
-               'category' => $category,
-               'help' => _t(
-                   'EcommerceRole.PROCESS_ORDERS_PERMISSION_HELP',
-                   'Can the user progress orders through the order steps (e.g. dispatch orders)'
-               ),
-               'sort' => 101
-           )
-       );
+        $perms[EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code')] = array(
+           'name' => _t(
+               'EcommerceRole.PROCESS_ORDERS_PERMISSION_NAME',
+               'Can process orders'
+           ),
+           'category' => $category,
+           'help' => _t(
+               'EcommerceRole.PROCESS_ORDERS_PERMISSION_HELP',
+               'Can the user progress orders through the order steps (e.g. dispatch orders)'
+           ),
+           'sort' => 101
+        );
         return $perms;
     }
 
