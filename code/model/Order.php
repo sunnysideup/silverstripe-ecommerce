@@ -501,7 +501,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
         $nextFieldArray = array(
             LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
-            HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'This Order')),
+            HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'Order Summary')),
             GridField::create(
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
