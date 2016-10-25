@@ -61,6 +61,15 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         if (singleton($this->modelClass) instanceof Order) {
             $list = $list->exclude(array("StatusID" => 0));
         }
+        $newLists = $this->extend('updateGetList', $list);
+        if(is_array($newLists) && count($newLists)) {
+            foreach($newLists as $newList) {
+                if($newList instanceof DataList) {
+                    $list = $newList;
+                }
+            }
+        }
+                
         return $list;
     }
 
@@ -72,6 +81,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         $exportButton = new GridFieldExportSalesButton('buttons-before-left');
         $exportButton->setExportColumns($this->getExportFields());
         $config->addComponent($exportButton);
+
         return $form;
     }
 }
