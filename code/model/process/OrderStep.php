@@ -1014,9 +1014,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($this->isDefaultStatusOption()) {
             return false;
         }
-        if (in_array($this->Code, self::get_codes_for_order_steps_to_include())) {
-            return false;
-        }
         if (! $member) {
             $member = Member::currentUser();
         }
