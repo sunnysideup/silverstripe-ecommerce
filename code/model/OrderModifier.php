@@ -156,8 +156,9 @@ class OrderModifier extends OrderAttribute
         $fields->removeByName('HasBeenRemoved');
         $fields->addFieldToTab(
             'Root',
-            new Tab(
+            Tab::create(
                 'Debug',
+                _t('OrderModifier.DEBUG', 'Debug'),
                 new ReadonlyField('CreatedShown', 'Created', $this->Created),
                 new ReadonlyField('LastEditedShown', 'Last Edited', $this->LastEdited),
                 new ReadonlyField('TableValueShown', 'Table Value', $this->TableValue),

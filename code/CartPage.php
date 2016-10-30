@@ -169,8 +169,9 @@ class CartPage extends Page
             array(
                 new TabSet(
                     'Messages',
-                    new Tab(
+                    Tab::create(
                         'Actions',
+                        _t('CartPage.ACTIONS', 'Actions'),
                         new TextField('ContinueShoppingLabel', _t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping')),
                         new TextField('ProceedToCheckoutLabel', _t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order')),
                         new TextField('ShowAccountLabel', _t('CartPage.SHOWACCOUNTLABEL', 'Label on the link \'view account details\' - e.g. click here to view your account details')),
@@ -180,8 +181,9 @@ class CartPage extends Page
                         new TextField('LoadOrderLinkLabel', _t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order')),
                         new TextField('DeleteOrderLinkLabel', _t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'))
                     ),
-                    new Tab(
+                    Tab::create(
                         'Errors',
+                        _t('CartPage.ERRORS', 'Errors'),
                         $htmlEditorField1 = new HTMLEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE', 'No items in order - shown when the customer tries to view an order without items.')),
                         $htmlEditorField2 = new HTMLEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE', 'Non-existing Order - shown when the customer tries to load a non-existing order.'))
                     )
