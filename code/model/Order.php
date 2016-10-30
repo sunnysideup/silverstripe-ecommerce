@@ -872,15 +872,15 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return GridField
      **/
-    protected function getOrderStatusLogsTableField_Archived($sourceClass = 'OrderStatusLog', $title = '', FieldList $fieldList = null, FieldList $detailedFormFields = null)
+    protected function getOrderStatusLogsTableField_Archived(
+        $sourceClass = 'OrderStatusLog',
+        $title = '',
+        FieldList $fieldList = null,
+        FieldList $detailedFormFields = null
+    )
     {
-//        $gridFieldConfig = GridFieldConfig_RecordEditor::create()->addComponents(
-//            new GridFieldDetailForm()
-//        );
-        $title ? $title : $title = _t('OrderItem.PLURALNAME', 'Order Log');
-
-//        $source = $this->OrderStatusLogs();
-        $source = OrderStatusLog::get();
+        $title ? $title : $title = _t('OrderLog.PLURALNAME', 'Order Log');
+        $source = OrderStatusLog::get()->filter(array('OrderID' => $this->ID));
 
         return new GridField($sourceClass, $title, $source, GridFieldConfig_RecordEditor::create());
     }
