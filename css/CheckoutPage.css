@@ -23,7 +23,6 @@
 		#Checkout form .paymentfields input.text { width: 145px; }
 		#Checkout form .paymentfields input.text.maxlength { width: 37px !important; }
 	#Checkout form .paymentfields img { border: 0; margin-right: 7px; }
-}
 
 .productImage {float: right; }
 

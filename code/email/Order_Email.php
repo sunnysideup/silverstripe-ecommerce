@@ -115,7 +115,9 @@ abstract class Order_Email extends Email
         $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
         if ((!$this->hasBeenSent()) || ($this->resend)) {
             if (EcommerceConfig::get('Order_Email', 'copy_to_admin_for_all_emails') && ($this->to != self::get_from_email())) {
-                $this->setBcc(self::get_from_email());
+                if($memberEmail = self::get_from_email()) {
+                    $this->setBcc(implode(", ", array($this->bcc(), $memberEmail)));
+                }
             }
             //last chance to adjust
             $this->extend('adjustOrderEmailSending', $this, $order);
