@@ -462,6 +462,54 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $fields->insertBefore(
+            Tab::create(
+                'Next',
+                _t('Order.NEXT_TAB', 'Action ...')
+            ),
+            'Main'
+        );
+        $fields->addFieldsToTab(
+            'Root',
+            array(
+                Tab::create(
+                    "Items",
+                    _t('Order.ITEMS_TAB', 'Items')
+                ),
+                Tab::create(
+                    "Extras",
+                    _t('Order.MODIFIERS_TAB', 'Adjustments')
+                ),
+                Tab::create(
+                    'Emails',
+                    _t('Order.EMAILS_TAB', 'Emails')
+                ),
+                Tab::create(
+                    'Payments',
+                    _t('Order.PAYMENTS_TAB', 'Payment')
+                ),
+                Tab::create(
+                    'Account',
+                    _t('Order.ACCOUNT_TAB', 'Account')
+                ),
+                Tab::create(
+                    'Currency',
+                    _t('Order.CURRENCY_TAB', 'Currency')
+                ),
+                Tab::create(
+                    'Addresses',
+                    _t('Order.ADDRESSES_TAB', 'Addresses')
+                ),
+                Tab::create(
+                    'Log',
+                    _t('Order.LOG_TAB', 'Notes')
+                ),
+                Tab::create(
+                    'Cancellations',
+                    _t('Order.CANCELLATION_TAB', 'Cancel')
+                ),
+            )
+        );
         $currentMember = Member::currentUser();
         if (!$this->exists() || !$this->StatusID) {
             $firstStep = OrderStep::get()->First();
@@ -494,10 +542,6 @@ class Order extends DataObject implements EditableEcommerceObject
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
-        $fields->insertBefore(
-            new Tab('Next'),
-            'Main'
-        );
 
         $nextFieldArray = array(
             LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
@@ -515,7 +559,7 @@ class Order extends DataObject implements EditableEcommerceObject
          //is the member is a shop admin they can always view it
         if (
             EcommerceRole::current_member_can_process_orders(Member::currentUser())
-        ) {            
+        ) {
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(
@@ -571,32 +615,34 @@ class Order extends DataObject implements EditableEcommerceObject
                     'MainDetails',
                     '<iframe src="'.$this->getPrintLink().'" width="100%" height="2500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>')
             );
-            $fields->insertAfter(
-                new Tab(
-                    'Emails',
+            $fields->addFieldsToTab(
+                'Root.Items',
+                array(
+                    GridField::create(
+                        'Items_Sold',
+                        'Items Sold',
+                        $this->Items(),
+                        new GridFieldConfig_RecordViewer
+                    )
+                )
+            );
+            $fields->addFieldsToTab(
+                'Root.Extras',
+                array(
+                    GridField::create(
+                        'Modifications',
+                        'Price (and other) adjustments',
+                        $this->Modifiers(),
+                        new GridFieldConfig_RecordViewer
+                    )
+                )
+            );
+            $fields->addFieldsToTab(
+                'Root.Emails',
+                array(
                     $this->getEmailsTableField()
-                ),
-                'Main'
-            );
-            $fields->addFieldToTab(
-                "Root.Items",
-                GridField::create(
-                    'Items_Sold',
-                    'Items Sold',
-                    $this->Items(),
-                    new GridFieldConfig_RecordViewer
                 )
             );
-            $fields->addFieldToTab(
-                "Root.Modifiers",
-                GridField::create(
-                    'Modifications',
-                    'Price (and other) adjustments',
-                    $this->Modifiers(),
-                    new GridFieldConfig_RecordViewer
-                )
-            );
-
             $fields->addFieldsToTab(
                 'Root.Payments',
                 array(
@@ -619,7 +665,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($member && $member->exists()) {
                 $fields->addFieldToTab('Root.Account', new LiteralField('MemberDetails', $member->getEcommerceFieldsForCMS()));
             } else {
-                $fields->addFieldToTab('Root.Customer', new LiteralField('MemberDetails',
+                $fields->addFieldToTab('Root.Account', new LiteralField('MemberDetails',
                     '<p>'._t('Order.NO_ACCOUNT', 'There is no --- account --- associated with this order').'</p>'
                 ));
             }
@@ -629,12 +675,14 @@ class Order extends DataObject implements EditableEcommerceObject
                 EcommerceRole::list_of_admins(true),
                 array($member->ID => $member->getName())
             );
-            $fields->addFieldToTab(
-                'Root.Cancellation',
-                DropdownField::create(
-                    'CancelledByID',
-                    $cancelledField->Title(),
-                    $shopAdminAndCurrentCustomerArray
+            $fields->addFieldsToTab(
+                'Root.Cancellations',
+                array(
+                    DropdownField::create(
+                        'CancelledByID',
+                        $cancelledField->Title(),
+                        $shopAdminAndCurrentCustomerArray
+                    )
                 )
             );
             $fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());

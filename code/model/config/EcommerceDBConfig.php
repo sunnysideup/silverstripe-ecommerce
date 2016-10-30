@@ -407,12 +407,16 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $versionInfo = EcommerceConfigDefinitions::create();
                 $fields->addFieldToTab('Root.Main', new TextField('Title', $fieldLabels['Title']));
                 $fields->addFieldsToTab('Root', array(
-                    new Tab('Pricing',
+                    Tab::create(
+                        'Pricing',
+                        _t('EcommerceDBConfig.PRICING', 'Pricing'),
                         new CheckboxField('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
                         new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
                         $htmlEditorField1 = new HTMLEditorField('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation'])
                     ),
-                    new Tab('Products',
+                    Tab::create(
+                        'Products',
+                        _t('EcommerceDBConfig.PRODUCTS', 'Products'),
                         new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
                         new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
                         new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
@@ -422,29 +426,39 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         new CheckboxField('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers'])
                         //new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
                     ),
-                    new Tab('ProductImages',
+                    Tab::create(
+                        'ProductImages',
+                        _t('EcommerceDBConfig.PRODUCT_IMAGES', 'Product Images'),
                         //new Product_ProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
                         new ReadonlyField('DefaultThumbnailImageSize', $fieldLabels['DefaultThumbnailImageSize'], $productImage->ThumbWidth().'px x '.$productImage->ThumbHeight().'px '),
                         new ReadonlyField('DefaultSmallImageSize', $fieldLabels['DefaultSmallImageSize'], $productImage->SmallWidth().'px x '.$productImage->SmallHeight().'px '),
                         new ReadonlyField('DefaultContentImageSize', $fieldLabels['DefaultContentImageSize'], $productImage->ContentWidth().'px wide'),
                         new ReadonlyField('DefaultLargeImageSize', $fieldLabels['DefaultLargeImageSize'], $productImage->LargeWidth().'px wide')
                     ),
-                    new Tab('AddressAndDelivery',
+                    Tab::create(
+                        'AddressAndDelivery',
+                        _t('EcommerceDBConfig.ADDRESS_AND_DELIVERY', 'Address and Delivery'),
                         new TextField('PostalCodeURL', $fieldLabels['PostalCodeURL']),
                         new TextField('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
                         $htmlEditorField3 = new HTMLEditorField('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
                         new TextField('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
                         $htmlEditorField4 = new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote'])
                     ),
-                    new Tab('Emails',
+                    Tab::create(
+                        'Emails',
+                        _t('EcommerceDBConfig.EMAILS', 'Emails'),
                         new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
                         new UploadField('EmailLogo', $fieldLabels['EmailLogo'],  null, null, null, 'logos'),
                         new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle'])
                     ),
-                    new Tab('Process',
+                    Tab::create(
+                        'Process',
+                        _t('EcommerceDBConfig.PROCESS', 'Process'),
                         $self->getOrderStepsField()
                     ),
-                    new Tab('Advanced',
+                    Tab::create(
+                        'Advanced',
+                        _t('EcommerceDBConfig.ADVANCED', 'Advanced'),
                         new LiteralField(
                             'ReviewHardcodedSettings',
                             '<p>
@@ -455,10 +469,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                                 The reason they can not be set is that changing them can break your application.
                             </p>'
                         )
-                    ),
-                    /*$processtab = new Tab('OrderProcess',
-                        new LiteralField('op','Include a drag-and-drop interface for customising order steps (Like WidgetArea)')
-                    )*/
+                    )
                 ));
                 $mappingArray = Config::inst()->get('BillingAddress', 'fields_to_google_geocode_conversion');
                 if (is_array($mappingArray) && count($mappingArray)) {
