@@ -292,7 +292,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             if (self::$_my_current_one = $className::get()->filter(array('UseThisOne' => 1))->first()) {
                 //do nothing
             } else {
-                self::$_my_current_one = new $className();
+                self::$_my_current_one = $className::create();
             }
         }
 
