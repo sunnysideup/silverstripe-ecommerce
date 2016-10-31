@@ -1,5 +1,7 @@
 inherit: true
 filter:
+filter:
+  paths: ["code/*", "tests/*"]
   excluded_paths:
     - thirdparty/*
     - parsers/*
