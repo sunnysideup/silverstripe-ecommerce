@@ -10,6 +10,19 @@
 class GridFieldExportSalesButton extends GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
 
+    /**
+     * Array of fields to be exporoted
+     * @var array
+     */
+    private static $fields_and_methods_to_be_exported = array(
+        'OrderID',
+        'InternalItemID',
+        'TableTitle',
+        'TableSubTitleNOHTML',
+        'UnitPrice',
+        'Quantity',
+        'CalculatedTotal',
+    );
 
 
 
@@ -61,7 +74,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             $button = new GridField_FormAction(
                 $gridField,
                 'exportsales',
-                _t('TableListField.CSVEXPORT_SALES', 'Export Detailed Sales to CSV'),
+                _t('TableListField.CSVEXPORT_SALES', 'Export Sales Row Items'),
                 'exportsales',
                 null
             );
@@ -84,6 +97,19 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         //reset time limit
         set_time_limit(1200);
 
+        $idArray = array();
+
+        //Remove GridFieldPaginator as we're going to export the entire list.
+        $gridField->getConfig()->removeComponentsByType('GridFieldPaginator');
+
+        $items = $gridField->getManipulatedList();
+
+        foreach($items->limit(null) as $item) {
+            if(!$item->hasMethod('canView') || $item->canView()) {
+                $idArray[$item->ID] = $item->ID;
+            }
+        }
+
         //file data
         $now = Date('d-m-Y-H-i');
         $fileName = "export-$now.csv";
@@ -93,16 +119,10 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $fileData = '';
         $offset = 0;
         $count = 50;
-        $orders = Order::get()
-            ->sort('"Order"."ID" ASC')
-            ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-            ->innerJoin($orderStatusSubmissionLog, "\"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
-            ->limit($count, $offset);
+        $orders = $this->getMyOrders($idArray, $count, $offset);
 
         while (
             $orders->count()
-
         ) {
             $offset = $offset + $count;
             foreach ($orders as $order) {
@@ -127,12 +147,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                 }
             }
             unset($orders);
-            $orders = Order::get()
-                ->sort('"Order"."ID" ASC')
-                ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->innerJoin($orderStatusSubmissionLog, "\"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-                ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
-                ->limit($count, $offset);
+            $orders = $this->getMyOrders($idArray, $count, $offset);
         }
         if ($fileData) {
             return $fileData;
@@ -141,30 +156,49 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         }
     }
 
+    /**
+     *
+     *
+     * @param  array    $idArray Order IDs
+     * @param  int      $count
+     * @param  int      $offset
+     * @return DataList
+     */
+    protected function getMyOrders($idArray, $count, $offset)
+    {
+        return  Order::get()
+            ->sort('"Order"."ID" ASC')
+            ->filter(array('ID' => $idArray))
+            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+            ->limit($count, $offset);
+    }
+
+    private $isFirstRow = true;
+
     public function generateExportFileDataDetails($email, $date, $orderItems)
     {
-        $separator = ',';
+        $separator = $this->csvSeparator;
         $fileData = '';
         $columnData = array();
-        $exportFields = array(
-            'Email',
-            'OrderID',
-            'InternalItemID',
-            'TableTitle',
-            'TableSubTitleNOHTML',
-            'UnitPrice',
-            'Quantity',
-            'CalculatedTotal',
-        );
-
+        $exportFields = Config::inst()->get('GridFieldExportSalesButton', 'fields_and_methods_to_be_exported');
+        if($this->isFirstRow) {
+            $fileData = '"Email"'.$separator.'"SubmittedDate"'.$separator.'"'.implode('"'.$separator.'"', $exportFields).'"'."\n";
+            $this->isFirstRow = false;
+        }
         if ($orderItems) {
             foreach ($orderItems as $item) {
                 $columnData = array();
                 $columnData[] = '"'.$email.'"';
                 $columnData[] = '"'.$date.'"';
                 foreach ($exportFields as $field) {
-                    $value = $item->$field;
+                    if($item->hasMethod($field)) {
+                        $value = $item->$field();
+                    } else {
+                        $value = $item->$field;
+                    }
                     $value = preg_replace('/\s+/', ' ', $value);
+                    $value = preg_replace('/\s+/', ' ', $value);
+                    $value = str_replace(array("\r", "\n"), "\n", $value);
                     $value = str_replace(array("\r", "\n"), "\n", $value);
                     $tmpColumnData = '"'.str_replace('"', '\"', $value).'"';
                     $columnData[] = $tmpColumnData;
