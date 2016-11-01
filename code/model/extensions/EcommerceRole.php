@@ -385,7 +385,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $memberTitle = new ReadonlyField('MemberTitle', _t('Member.TITLE', 'Name'), '<p>'._t('Member.TITLE', 'Name').': '.$this->owner->getTitle().'</p>');
         $memberTitle->dontEscape = true;
         $fields->push($memberTitle);
-        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', 'Email'), '<p>'._t('Member.EMAIL', 'Email').': '.$this->owner->Email.'</p>');
+        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', 'Email'), '<p>'._t('Member.EMAIL', 'Email').': <a href="mailto:'.$this->owner->Email.'">'.$this->owner->Email.'</a></p>');
         $memberEmail->dontEscape = true;
         $fields->push($memberEmail);
         $lastLogin = new ReadonlyField('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>'._t('Member.LASTLOGIN', 'Last Login').': '.$this->owner->dbObject('LastVisited')->Nice().'</p>');
@@ -397,20 +397,21 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         }
         $headerField = HeaderField::create('MemberLinkFieldHeader', _t('Member.EDIT_CUSTOMER', 'Edit Customer'));
         $linkField1 = EcommerceCMSButtonField::create(
-            'MemberLinkField',
+            'MemberLinkFieldEditThisCustomer',
             '/admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit',
             _t('Member.EDIT', 'Edit').' <i>'.$this->owner->getTitle().'</i>'
         );
-        $linkField2 = EcommerceCMSButtonField::create(
-            'MemberLinkField',
-            '/admin/security/show/'.$group->ID.'/',
-            _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All Customers')
-        );
-
         $fields->push($headerField);
         $fields->push($linkField1);
-        $fields->push($linkField2);
-
+        
+        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())){
+            $linkField2 = EcommerceCMSButtonField::create(
+                'MemberLinkFieldEditAllCustomers',
+                '/admin/security/show/'.$group->ID.'/',
+                _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All Customers')
+            );
+            $fields->push($linkField2);
+        }
         return $fields;
     }
 
