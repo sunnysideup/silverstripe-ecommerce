@@ -603,8 +603,6 @@ class Order extends DataObject implements EditableEcommerceObject
             );
         }
 
-        
-        
         $fields->addFieldsToTab(
             'Root.Next',
             $nextFieldArray
