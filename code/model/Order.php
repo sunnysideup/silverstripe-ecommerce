@@ -698,16 +698,29 @@ class Order extends DataObject implements EditableEcommerceObject
                 EcommerceRole::list_of_admins(true),
                 array($member->ID => $member->getName())
             );
-            $fields->addFieldsToTab(
-                'Root.Cancellations',
-                array(
-                    DropdownField::create(
-                        'CancelledByID',
-                        $cancelledField->Title(),
-                        $shopAdminAndCurrentCustomerArray
+            if ($this->canCancel()){
+                $fields->addFieldsToTab(
+                    'Root.Cancellations',
+                    array(
+                        DropdownField::create(
+                            'CancelledByID',
+                            $cancelledField->Title(),
+                            $shopAdminAndCurrentCustomerArray
+                        )
                     )
-                )
-            );
+                );
+            }else{
+                $cancelledBy = isset($shopAdminAndCurrentCustomerArray[$this->CancelledByID]) && $this->CancelledByID ? $shopAdminAndCurrentCustomerArray[$this->CancelledByID] : _t('Order.NOT_CANCELLED', 'not cancelled');
+                $fields->addFieldsToTab(
+                    'Root.Cancellations',                
+                    ReadonlyField::create(
+                        'CancelledByDisplay',
+                        $cancelledField->Title(),
+                        $cancelledBy
+
+                    )
+                );
+            }
             $fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());
             $submissionLog = $this->SubmissionLog();
             if ($submissionLog) {
