@@ -550,16 +550,44 @@ class Order extends DataObject implements EditableEcommerceObject
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
                 ArrayList::create(array($this)),
-                $config = GridFieldConfig_Base::create()
+                $orderSummaryConfig = GridFieldConfig_Base::create()
+            ),
+            HeaderField::create('KeyNotesHeader', _t('Order.KEY_NOTES_HEADER', 'Key Notes')),
+            GridField::create(
+                        'OrderStatusLogSummary',
+                        _t('Order.CURRENT_KEY_NOTES', 'Key Notes'),
+                        OrderStatusLog::get()->filter(array(
+                            'OrderID'=>$this->ID,
+                            'ClassName'=>'OrderStatusLog'
+                            )
+                        ),
+                        $notesSummaryConfig = GridFieldConfig_RecordViewer::create()
+                    ),
+            EcommerceCMSButtonField::create(
+                'AddNoteButton',
+                $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
+                _t('Order.ADD_NOTE', 'Add Note')
             ),
             HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
             $this->OrderStepField()
         );
+        
+        $orderSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
+        //$orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
+        $orderSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
+        $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
+        $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
+        
+        
+        $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
+        $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
+        $notesSummaryConfig->removeComponentsByType('GridFieldPageCount');
+        $notesSummaryConfig->removeComponentsByType('GridFieldPaginator');
 
+        
+        
          //is the member is a shop admin they can always view it
-        if (
-            EcommerceRole::current_member_can_process_orders(Member::currentUser())
-        ) {
+        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(
@@ -575,16 +603,13 @@ class Order extends DataObject implements EditableEcommerceObject
             );
         }
 
+        
+        
         $fields->addFieldsToTab(
             'Root.Next',
             $nextFieldArray
         );
 
-        $config->removeComponentsByType('GridFieldToolbarHeader');
-        //$config->removeComponentsByType('GridFieldSortableHeader');
-        $config->removeComponentsByType('GridFieldFilterHeader');
-        $config->removeComponentsByType('GridFieldPageCount');
-        $config->removeComponentsByType('GridFieldPaginator');
         $this->MyStep()->addOrderStepFields($fields, $this);
 
         if ($submitted) {
@@ -880,9 +905,15 @@ class Order extends DataObject implements EditableEcommerceObject
     )
     {
         $title ? $title : $title = _t('OrderLog.PLURALNAME', 'Order Log');
-        $source = OrderStatusLog::get()->filter(array('OrderID' => $this->ID));
-
-        return new GridField($sourceClass, $title, $source, GridFieldConfig_RecordEditor::create());
+        $source = $this->OrderStatusLogs();
+        if($sourceClass != 'OrderStatusLog' && class_exists($sourceClass)) {
+            $source = $source->filter(array('ClassName' => ClassInfo::subclassesFor($sourceClass)));
+        }
+        $gridField = GridField::create($sourceClass, $title, $source, $config = GridFieldConfig_RelationEditor::create());
+        $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
+        $config->removeComponentsByType('GridFieldDeleteAction');
+        
+        return $gridField;
     }
 
     /**
