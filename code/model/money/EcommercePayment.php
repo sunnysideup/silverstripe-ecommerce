@@ -35,8 +35,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
         'Amount' => 'Money',
         'Message' => 'Text',
-        'IP' => 'Varchar',
-        'ProxyIP' => 'Varchar',
+        'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
+        'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
     );
 
@@ -334,27 +334,18 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function setClientIP()
     {
         $proxy = null;
-        $ip = null;
-
-        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        } else {
-            $ip = null;
-        }
+        $ip = Controller::curr()->getRequest()->getIP();
 
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             //swapsies
             $proxy = $ip;
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
 
         // Only set the IP and ProxyIP if none currently set
-        if (!$this->IP) {
+        if ( ! $this->IP) {
             $this->IP = $ip;
         }
-        if (!$this->ProxyIP) {
+        if ( ! $this->ProxyIP) {
             $this->ProxyIP = $proxy;
         }
     }
