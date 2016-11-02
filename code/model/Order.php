@@ -515,6 +515,9 @@ class Order extends DataObject implements EditableEcommerceObject
                 ),
             )
         );
+        //as we are no longer using the parent:;getCMSFields
+        // we had to add the updateCMSFields hook.
+        $this->extend('updateCMSFields', $fields);
         $currentMember = Member::currentUser();
         if (!$this->exists() || !$this->StatusID) {
             $firstStep = OrderStep::get()->First();
@@ -547,7 +550,12 @@ class Order extends DataObject implements EditableEcommerceObject
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
-
+        $orderSummaryConfig = GridFieldConfig_Base::create();
+        $orderSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
+        // $orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
+        $orderSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
+        $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
+        $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
         $nextFieldArray = array(
             LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
             HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'Order Summary')),
@@ -555,7 +563,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
                 ArrayList::create(array($this)),
-                $orderSummaryConfig = GridFieldConfig_Base::create()
+                $orderSummaryConfig
             ),
         );
         $keyNotes = OrderStatusLog::get()->filter(
@@ -565,6 +573,12 @@ class Order extends DataObject implements EditableEcommerceObject
             )
         );
         if($keyNotes->count()) {
+            $notesSummaryConfig = GridFieldConfig_RecordViewer::create();
+            $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
+            $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
+            // $orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
+            $notesSummaryConfig->removeComponentsByType('GridFieldPageCount');
+            $notesSummaryConfig->removeComponentsByType('GridFieldPaginator');
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(
@@ -573,7 +587,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         'OrderStatusLogSummary',
                         _t('Order.CURRENT_KEY_NOTES', 'Key Notes'),
                         $keyNotes,
-                        $notesSummaryConfig = GridFieldConfig_RecordViewer::create()
+                        $notesSummaryConfig
                     )
                 )
             );
@@ -581,29 +595,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $nextFieldArray = array_merge(
             $nextFieldArray,
             array(
-                EcommerceCMSButtonField::create(
-                    'AddNoteButton',
-                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
-                    _t('Order.ADD_NOTE', 'Add Note')
-                ),
                 HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
                 $this->OrderStepField()
             )
         );
-
-        $orderSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
-        //$orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
-        $orderSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
-        $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
-        $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
-
-
-        $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
-        $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
-        $notesSummaryConfig->removeComponentsByType('GridFieldPageCount');
-        $notesSummaryConfig->removeComponentsByType('GridFieldPaginator');
-
-
 
          //is the member is a shop admin they can always view it
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
@@ -621,7 +616,16 @@ class Order extends DataObject implements EditableEcommerceObject
                 )
             );
         }
-
+        $nextFieldArray = array_merge(
+            $nextFieldArray,
+            array(
+                EcommerceCMSButtonField::create(
+                    'AddNoteButton',
+                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
+                    _t('Order.ADD_NOTE', 'Add Note')
+                )
+            )
+        );
         $fields->addFieldsToTab(
             'Root.Next',
             $nextFieldArray
