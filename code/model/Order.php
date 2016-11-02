@@ -461,11 +461,16 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
+        $fields = $this->scaffoldFormFields(array(
+            // Don't allow has_many/many_many relationship editing before the record is first saved
+            'includeRelations' => false,
+            'tabbed' => true,
+            'ajaxSafe' => true
+        ));
         $fields->insertBefore(
             Tab::create(
                 'Next',
-                _t('Order.NEXT_TAB', 'Action ...')
+                _t('Order.NEXT_TAB', 'Action')
             ),
             'Main'
         );
@@ -552,40 +557,54 @@ class Order extends DataObject implements EditableEcommerceObject
                 ArrayList::create(array($this)),
                 $orderSummaryConfig = GridFieldConfig_Base::create()
             ),
-            HeaderField::create('KeyNotesHeader', _t('Order.KEY_NOTES_HEADER', 'Key Notes')),
-            GridField::create(
+        );
+        $keyNotes = OrderStatusLog::get()->filter(
+            array(
+                'OrderID' => $this->ID,
+                'ClassName' => 'OrderStatusLog'
+            )
+        );
+        if($keyNotes->count()) {
+            $nextFieldArray = array_merge(
+                $nextFieldArray,
+                array(
+                    HeaderField::create('KeyNotesHeader', _t('Order.KEY_NOTES_HEADER', 'Key Notes')),
+                    GridField::create(
                         'OrderStatusLogSummary',
                         _t('Order.CURRENT_KEY_NOTES', 'Key Notes'),
-                        OrderStatusLog::get()->filter(array(
-                            'OrderID'=>$this->ID,
-                            'ClassName'=>'OrderStatusLog'
-                            )
-                        ),
+                        $keyNotes,
                         $notesSummaryConfig = GridFieldConfig_RecordViewer::create()
-                    ),
-            EcommerceCMSButtonField::create(
-                'AddNoteButton',
-                $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
-                _t('Order.ADD_NOTE', 'Add Note')
-            ),
-            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
-            $this->OrderStepField()
+                    )
+                )
+            );
+        }
+        $nextFieldArray = array_merge(
+            $nextFieldArray,
+            array(
+                EcommerceCMSButtonField::create(
+                    'AddNoteButton',
+                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
+                    _t('Order.ADD_NOTE', 'Add Note')
+                ),
+                HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
+                $this->OrderStepField()
+            )
         );
-        
+
         $orderSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
         //$orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
         $orderSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
         $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
         $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
-        
-        
+
+
         $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
         $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
         $notesSummaryConfig->removeComponentsByType('GridFieldPageCount');
         $notesSummaryConfig->removeComponentsByType('GridFieldPaginator');
 
-        
-        
+
+
          //is the member is a shop admin they can always view it
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $nextFieldArray = array_merge(
@@ -712,7 +731,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }else{
                 $cancelledBy = isset($shopAdminAndCurrentCustomerArray[$this->CancelledByID]) && $this->CancelledByID ? $shopAdminAndCurrentCustomerArray[$this->CancelledByID] : _t('Order.NOT_CANCELLED', 'not cancelled');
                 $fields->addFieldsToTab(
-                    'Root.Cancellations',                
+                    'Root.Cancellations',
                     ReadonlyField::create(
                         'CancelledByDisplay',
                         $cancelledField->Title(),
@@ -923,7 +942,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $gridField = GridField::create($sourceClass, $title, $source, $config = GridFieldConfig_RelationEditor::create());
         $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
         $config->removeComponentsByType('GridFieldDeleteAction');
-        
+
         return $gridField;
     }
 
