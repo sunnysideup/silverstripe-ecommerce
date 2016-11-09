@@ -778,6 +778,7 @@ class ProductGroup extends Page
         $this->allProducts = $this->getGroupFilter();
 
         // STANDARD FILTER (INCLUDES USER PREFERENCE)
+        $this->allProducts = $this->allProducts->filter($this->allowPurchaseWhereStatement());
         $this->allProducts = $this->getStandardFilter($alternativeFilterKey);
 
         // EXTRA FILTER (ON THE FLY FROM CONTROLLER)

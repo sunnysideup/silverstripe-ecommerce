@@ -682,14 +682,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $adminOnlyOrToEmail = false,
         $emailClassName = ''
     ) {
-        if (!$this->hasBeenSent($order)) {
+        if (!$this->hasBeenSent($order) || $resend) {
             if (!$subject) {
                 $subject = $this->EmailSubject;
             }
             if (!$emailClassName) {
                 $emailClassName = $this->getEmailClassName();
             }
-            if ($this->hasCustomerMessage()) {
+            $adminOnlyOrToEmailIsEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
+            if ($this->hasCustomerMessage() || $adminOnlyOrToEmailIsEmail) {
                 return $order->sendEmail(
                     $subject,
                     $message,
