@@ -69,19 +69,31 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
                 }
             }
         }
-                
+
         return $list;
     }
+
 
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        $field = $form->Fields()->fieldByName($this->sanitiseClassName($this->modelClass));
-        $config = $field->getConfig();
-        $exportButton = new GridFieldExportSalesButton('buttons-before-left');
-        $exportButton->setExportColumns($this->getExportFields());
-        $config->addComponent($exportButton);
-
+        if (singleton($this->modelClass) instanceof Order) {
+            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                if ($gridField instanceof GridField) {
+                    $config = $gridField->getConfig();
+                    $exportButton = new GridFieldExportSalesButton('buttons-before-left');
+                    $exportButton->setExportColumns($this->getExportFields());
+                    $config->addComponent($exportButton);
+                    $printAllInvoices = new GridFieldPrintAllInvoicesButton('buttons-before-left');
+                    $config->addComponent($printAllInvoices);
+                    $printAllPackingSlips = new GridFieldPrintAllPackingSlipsButton('buttons-before-left');
+                    $config->addComponent($printAllPackingSlips);
+                    //per row ...
+                    $config->addComponent(new GridFieldPrintInvoiceButton());
+                    // $config->addComponent(new GridFieldPrintPackingSlipButton());
+                }
+            }
+        }
         return $form;
     }
 }

@@ -66,25 +66,25 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     }
 
 
-        /**
-         * Place the export button in a <p> tag below the field
-         */
-        public function getHTMLFragments($gridField)
-        {
-            $button = new GridField_FormAction(
-                $gridField,
-                'exportsales',
-                _t('TableListField.CSVEXPORT_SALES', 'Export Sales Row Items'),
-                'exportsales',
-                null
-            );
-            $button->setAttribute('data-icon', 'download-csv');
-            $button->addExtraClass('no-ajax action_export');
-            $button->setForm($gridField->getForm());
-            return array(
-                $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
-            );
-        }
+    /**
+     * Place the export button in a <p> tag below the field
+     */
+    public function getHTMLFragments($gridField)
+    {
+        $button = new GridField_FormAction(
+            $gridField,
+            'exportsales',
+            _t('TableListField.CSVEXPORT_SALES', 'Export Row Items'),
+            'exportsales',
+            null
+        );
+        $button->setAttribute('data-icon', 'download-csv');
+        $button->addExtraClass('no-ajax action_export');
+        $button->setForm($gridField->getForm());
+        return array(
+            $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
+        );
+    }
 
     /**
      * Generate export fields for CSV.
