@@ -3360,7 +3360,7 @@ class Order extends DataObject implements EditableEcommerceObject
 /*******************************************************
    * 9. TEMPLATE RELATED STUFF
 *******************************************************/
-
+    
     /**
      * returns the instance of EcommerceConfigAjax for use in templates.
      * In templates, it is used like this:

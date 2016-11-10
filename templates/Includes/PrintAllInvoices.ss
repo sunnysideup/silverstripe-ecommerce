@@ -7,6 +7,7 @@
 </head>
 <body>
     <% loop $Me %>
+    <% with $Order %>
         <div style="page-break-after: always;">
             <% with EcomConfig %>
                 <div id="ShopInfo">
@@ -22,8 +23,8 @@
             <% include Order %>
         </div>
         <hr class="multi-print-separator"/>
+    <% end_with %>
     <% end_loop %>
     <script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 </body>
 </html>
-

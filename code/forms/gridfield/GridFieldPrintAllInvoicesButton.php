@@ -71,12 +71,16 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
     public function handlePrint($gridField, $request = null) {
         $list = $gridField->getList();
         $gridField->setList($list);
+        $al = ArrayList::create();
+        foreach($list as $order) {
+            $al->push(ArrayData::create(array('Order' => $order)));
+        }
         Requirements::clear();
         Config::inst()->update('SSViewer', 'theme_enabled', true);
         Requirements::themedCSS('OrderReport', 'ecommerce');
         Requirements::themedCSS('Order_Invoice', 'ecommerce');
         Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print');
-        echo $list->renderWith('PrintAllInvoices');
+        echo $al->renderWith('PrintAllInvoices');
         exit();
     }
 
