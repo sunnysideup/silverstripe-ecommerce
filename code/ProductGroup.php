@@ -1894,7 +1894,7 @@ class ProductGroup_Controller extends Page_Controller
      */
     protected function productListsHTMLCanBeCached()
     {
-        return Config::inst()->get('ProductGroup', 'actively_check_for_can_purchase');
+        return Config::inst()->get('ProductGroup', 'actively_check_for_can_purchase') ? false : true;
     }
 
     /*****************************************************
