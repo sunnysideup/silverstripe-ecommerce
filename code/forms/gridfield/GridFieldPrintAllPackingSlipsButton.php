@@ -71,6 +71,11 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     public function handlePrintAllPackingSlips($gridField, $request = null) {
         $list = $gridField->getList();
         $gridField->setList($list);
+        isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
+        Requirements::clear();
+        Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         echo $list->renderWith('PrintAllPackingSlips');
         exit();
     }

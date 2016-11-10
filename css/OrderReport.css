@@ -69,3 +69,14 @@ table.infotable { border: 1px solid #CDDDDD; border-collapse: collapse; width: 1
 
 #OutstandingTable tbody td.right {width: 20%;}
 
+.multi-print-separator {
+    margin: 100px 0;
+    border-top: 3px double black;
+    border-bottom: 3px double black;
+}
+
+@media print {
+    .multi-print-separator {
+        display: none;
+    }
+}
