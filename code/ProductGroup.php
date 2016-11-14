@@ -645,7 +645,7 @@ class ProductGroup extends Page
             'Root',
             Tab::create(
                 'ProductDisplay',
-                _t('ProductGroup.ACTIONS', 'Actions'),
+                _t('ProductGroup.DISPLAY', 'Display'),
                 $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->showProductLevels),
                 HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
                 $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
@@ -718,8 +718,17 @@ class ProductGroup extends Page
      */
     public function getLumberjackTitle()
     {
-        return 'Products';
+        return _t('ProductGroup.BUYABLES', 'Products');
     }
+
+    // /**
+    //  * used if you install lumberjack
+    //  * @return string
+    //  */
+    // public function getLumberjackGridFieldConfig()
+    // {
+    //     return GridFieldConfig_RelationEditor::create();
+    // }
 
     /**
      * Used in getCSMFields.
