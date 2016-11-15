@@ -68,11 +68,14 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report
         );
     }
 
-    /**
-     * @return FieldList
-     */
-    public function getParameterFields()
+
+    function getReportField()
     {
-        return new FieldList();
+        $field = parent::getReportField();
+        $config = $field->getConfig();
+        $exportButton = $config->getComponentByType('GridFieldExportButton');
+        $exportButton->setExportColumns($field->getColumns());
+        
+        return $field;
     }
 }
