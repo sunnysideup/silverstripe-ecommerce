@@ -2153,6 +2153,32 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * @param Member $member optional
+     * @return bool
+     */
+    public function canOverrideCanView($member = null)
+    {
+        if($this->canView($member)) {
+            //can view overrides any concerns
+            return true;
+        } else {
+            $tsOrder = strtotime($order->LastEdited);
+            $tsNow = time();
+            $minutes = EcommerceConfig::get('Order', 'minutes_an_order_can_be_viewed_without_logging_in');
+            if($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
+
+                //has the order been edited recently?
+                return true;
+            } elseif ($orderStep = $this->Status()) {
+
+                // order is being processed ... 
+                return $orderStep->canOverrideCanViewForOrder($order, $member);
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function IsInSession()
@@ -3360,7 +3386,7 @@ class Order extends DataObject implements EditableEcommerceObject
 /*******************************************************
    * 9. TEMPLATE RELATED STUFF
 *******************************************************/
-    
+
     /**
      * returns the instance of EcommerceConfigAjax for use in templates.
      * In templates, it is used like this:
