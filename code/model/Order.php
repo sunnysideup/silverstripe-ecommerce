@@ -295,21 +295,29 @@ class Order extends DataObject implements EditableEcommerceObject
      * You can retrieve this list and then add more to it (e.g. additional filters, additional joins, etc...).
      *
      * @param bool $onlySubmittedOrders - only include Orders that have already been submitted.
+     * @param bool $includeCancelledOrders - only include Orders that have already been submitted.
      *
      * @return DataList (Orders)
      */
-    public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = false)
+    public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false)
     {
-        $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
-        $list = Order::get()
-            ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-            ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "'.$submittedOrderStatusLogClassName.'"."ID"')
-            ->Sort('OrderStatusLog.Created', 'ASC');
         if ($onlySubmittedOrders) {
-            $list = $list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName'");
+            $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+            $list = Order::get()
+                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "'.$submittedOrderStatusLogClassName.'"."ID"')
+                ->Sort('OrderStatusLog.Created', 'ASC');
+            $where = ' ("OrderStatusLog"."ClassName" = \''.$submittedOrderStatusLogClassName.'\') ';
         } else {
-            $list = $list->Where("\"OrderStatusLog\".\"ClassName\" = '$submittedOrderStatusLogClassName' OR \"OrderStatusLog\".\"ClassName\" IS NULL");
+            $list = Order::get();
+            $where = ' ("StatusID" > 0) ';
         }
+        if($includeCancelledOrders) {
+            //do nothing...
+        } else {
+            $where .= ' AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)';
+        }
+        $list = $list->where($where);
 
         return $list;
     }
@@ -1203,13 +1211,13 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return DataObject (current OrderStep that can be seen by customer)
+     * @return OrderStep (current OrderStep that can be seen by customer)
      */
     public function CurrentStepVisibleToCustomer()
     {
         $obj = $this->MyStep();
         if ($obj->HideStepFromCustomer) {
-            $obj = OrderStep::get()->where('"OrderStep"."Sort" < '.$obj->Sort.' AND "HideStepFromCustomer" = 0')->First();
+            $obj = OrderStep::get()->where('"OrderStep"."Sort" < '.$obj->Sort.' AND "HideStepFromCustomer" = 0')->Last();
             if (!$obj) {
                 $obj = OrderStep::get()->First();
             }

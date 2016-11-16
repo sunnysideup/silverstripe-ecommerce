@@ -59,7 +59,11 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     {
         $list = parent::getList();
         if (singleton($this->modelClass) instanceof Order) {
-            $list = $list->exclude(array("StatusID" => 0));
+            $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+            $list = $list
+                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "'.$submittedOrderStatusLogClassName.'"."ID"')
+                ->where('"OrderStatusLog"."ClassName" = \''.$submittedOrderStatusLogClassName.'\'');
         }
         $newLists = $this->extend('updateGetList', $list);
         if(is_array($newLists) && count($newLists)) {

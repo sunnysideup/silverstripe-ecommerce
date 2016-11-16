@@ -802,7 +802,7 @@ class ProductGroup extends Page
 
         return $this->allProducts;
     }
-
+    
     /**
      * this method can be used quickly current initial products
      * whenever you write:
@@ -817,7 +817,10 @@ class ProductGroup extends Page
      */
     public function currentInitialProductsAsCachedArray($filterKey)
     {
-        $cacheKey = 'ProductGroup_CurrentInitialProductsArray_'.$this->ID.'_'.$filterKey;
+        $cacheKey = $this->cacheKey(
+            'CurrentInitialProductsArray',
+             $filterKey
+        );
         if ($array = $this->retrieveObjectStore($cacheKey)) {
             //do nothing
         } else {
@@ -864,7 +867,10 @@ class ProductGroup extends Page
     protected function getGroupFilter()
     {
         $levelToShow = $this->MyLevelOfProductsToShow();
-        $cacheKey = 'ProductGroup_GroupFilter_'.$this->ID.'_'.abs(intval($levelToShow + 999));
+        $cacheKey = $this->cacheKey(
+            'GroupFilter', 
+            abs(intval($levelToShow + 999))
+        );
         if ($groupFilter = $this->retrieveObjectStore($cacheKey)) {
             $this->allProducts = $this->allProducts->where($groupFilter);
         } else {
@@ -1504,11 +1510,53 @@ class ProductGroup extends Page
     /*****************************************************
      * CACHING
      *****************************************************/
+    /**
+     * 
+     * @return bool
+     */
     public function AllowCaching()
     {
         return $this->allowCaching;
     }
 
+    /**
+     * keeps a cache of the common caching key element
+     * @var string
+     */
+    private static $_product_group_cache_key_cache = null;
+    
+    /**
+     * 
+     * @param string $name
+     * @param string $filterKey
+     * 
+     * @return string
+     */
+    public function cacheKey($name, $filterKey = '') 
+    {
+        $cacheKey = 'ProductGroup_'.$name.'_'.$this->ID;
+        if($filterKey){
+            $cacheKey .= '_'.$filterKey;
+        }
+        if(self::$_product_group_cache_key_cache === null) {
+            self::$_product_group_cache_key_cache = "PR_"
+                .strtotime(Product::get()->max('LastEdited')). "_"
+                .Product::get()->count();
+          self::$_product_group_cache_key_cache .= "PG_"
+                .strtotime(ProductGroup::get()->max('LastEdited')). "_"
+                .ProductGroup::get()->count();   
+          if(class_exists('ProductVariation')) {
+            self::$_product_group_cache_key_cache .= "PV_"
+                  .strtotime(ProductVariation::get()->max('LastEdited')). "_"
+                  .ProductVariation::get()->count();   
+              
+          }
+        }
+        $cacheKey .= self::$_product_group_cache_key_cache;
+
+        return $cacheKey;
+    }
+    
     /**
      * saving an object to the.
      *
@@ -1827,7 +1875,6 @@ class ProductGroup_Controller extends Page_Controller
     public function ProductGroupListCachingKey()
     {
         if ($this->ProductGroupListAreCacheable()) {
-            $pageID = $this->ID;
             $displayKey = $this->getCurrentUserPreferences('DISPLAY');
             $filterKey = $this->getCurrentUserPreferences('FILTER');
             $filterForGroupKey = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
@@ -1835,16 +1882,17 @@ class ProductGroup_Controller extends Page_Controller
             $pageStart = isset($_GET['start']) ? intval($_GET['start']) : 0;
             $isFullList = $this->IsShowFullList() ? 'Y' : 'N';
 
-            return implode(
-                '_',
-                array(
-                    $pageID,
-                    $displayKey,
-                    $filterKey,
-                    $filterForGroupKey,
-                    $sortKey,
-                    $pageStart,
-                    $isFullList,
+            $this->cacheKey(
+                implode(
+                    '_',
+                    array(
+                        $displayKey,
+                        $filterKey,
+                        $filterForGroupKey,
+                        $sortKey,
+                        $pageStart,
+                        $isFullList,
+                    )
                 )
             );
         }
@@ -2285,10 +2333,10 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function FilterLinks()
     {
-        $cacheKey = 'ProductGroup_FilterLinks_'.$this->ID;
-        if ($this->filterForGroupObject) {
-            $cacheKey .= '_'.$this->filterForGroupObject->ID;
-        }
+        $cacheKey = $this->cacheKey(
+            'FilterLinks', 
+            $this->filterForGroupObject ? $this->filterForGroupObject->ID : null
+        );
         if ($list = $this->retrieveObjectStore($cacheKey)) {
             //do nothing
         } else {
@@ -2328,7 +2376,7 @@ class ProductGroup_Controller extends Page_Controller
     public function ProductGroupFilterLinks()
     {
         $arrayList = ArrayList::create();
-        $cacheKey = 'ProductGroup_ProductGroupFilterLinks_'.$this->ID;
+        $cacheKey = $this->cacheKey('ProductGroupFilterLinks');
         if ($arrayOfItems = $this->retrieveObjectStore($cacheKey)) {
             //do nothing
         } else {
