@@ -1211,13 +1211,13 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return DataObject (current OrderStep that can be seen by customer)
+     * @return OrderStep (current OrderStep that can be seen by customer)
      */
     public function CurrentStepVisibleToCustomer()
     {
         $obj = $this->MyStep();
         if ($obj->HideStepFromCustomer) {
-            $obj = OrderStep::get()->where('"OrderStep"."Sort" < '.$obj->Sort.' AND "HideStepFromCustomer" = 0')->First();
+            $obj = OrderStep::get()->where('"OrderStep"."Sort" < '.$obj->Sort.' AND "HideStepFromCustomer" = 0')->Last();
             if (!$obj) {
                 $obj = OrderStep::get()->First();
             }
