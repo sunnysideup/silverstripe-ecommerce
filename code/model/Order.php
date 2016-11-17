@@ -2177,7 +2177,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 //has the order been edited recently?
                 return true;
-            } elseif ($orderStep = $this->Status()) {
+            } elseif ($orderStep = $this->MyStep()) {
 
                 // order is being processed ...
                 return $orderStep->canOverrideCanViewForOrder($this, $member);
