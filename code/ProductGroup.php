@@ -794,6 +794,7 @@ class ProductGroup extends Page
             } elseif(is_string($filterStatement)) {
                 $this->allProducts = $this->allProducts->where($filterStatement);
             }
+        }
         $this->allProducts = $this->getStandardFilter($alternativeFilterKey);
 
         // EXTRA FILTER (ON THE FLY FROM CONTROLLER)
