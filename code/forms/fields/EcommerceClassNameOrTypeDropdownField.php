@@ -3,6 +3,9 @@
 /**
  * this is a dropdown field just for selecting the right
  * classname.
+ * usage:
+ * EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type or so', 'MyBaseClass');
+ )
  */
 class EcommerceClassNameOrTypeDropdownField extends DropdownField
 {
@@ -29,11 +32,19 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
      *
      * @return EcommerceClassNameOrTypeDropdownField
      */
-    public function __construct($name = 'ClassName', $title = 'Type', $sourceClass, array $availableClasses = array(), $value = '', $form = null)
+    public function __construct(
+            $name = 'ClassName',
+            $title = 'Type',
+            $sourceClass,
+            array $availableClasses = array(),
+            $value = '',
+            $form = null
+        )
     {
         $this->sourceClass = $sourceClass;
         $this->availableClasses = $availableClasses;
         parent::__construct($name, $title, array(), $value, $form);
+        $this->addExtraClass('dropdown');
     }
 
     public function getSource()
