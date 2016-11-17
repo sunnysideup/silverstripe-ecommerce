@@ -969,6 +969,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * the default for this is TRUE, but for completed order steps
+     *
+     * we do not allow this.
+     *
+     * @param  Order $order
+     * @param  Member $member optional
+     * @return bool
+     */
+    function canOverrideCanViewForOrder($order, $member = null)
+    {
+        //return true if the order can have customer input
+        // orders recently saved can also be views
+        return
+            $this->CustomerCanEdit ||
+            $this->CustomerCanCancel ||
+            $this->CustomerCanPay;
+    }
+
+    /**
      * standard SS method.
      *
      * @param Member | NULL
@@ -1035,6 +1054,17 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+        //make sure only one of three conditions applies ...
+        if($this->ShowAsUncompletedOrder) {
+            $this->ShowAsInProcessOrder = false;
+            $this->ShowAsCompletedOrder = false;
+        } elseif($this->ShowAsInProcessOrder) {
+            $this->ShowAsUncompletedOrder = false;
+            $this->ShowAsCompletedOrder = false;
+        } elseif($this->ShowAsCompletedOrder) {
+            $this->ShowAsUncompletedOrder = false;
+            $this->ShowAsInProcessOrder = false;
+        }
         $this->Code = strtoupper($this->Code);
     }
 
