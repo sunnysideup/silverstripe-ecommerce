@@ -1122,7 +1122,8 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param Member $member - the user cancelling the order
      * @param string $reason - the reason the order is cancelled
-     * @returns OrderStatusLog_Cancel
+     *
+     * @return OrderStatusLog_Cancel
      */
     public function Cancel(Member $member, $reason = '')
     {
