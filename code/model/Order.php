@@ -2171,7 +2171,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //can view overrides any concerns
             return true;
         } else {
-            $tsOrder = strtotime($order->LastEdited);
+            $tsOrder = strtotime($this->LastEdited);
             $tsNow = time();
             $minutes = EcommerceConfig::get('Order', 'minutes_an_order_can_be_viewed_without_logging_in');
             if($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
@@ -2354,11 +2354,9 @@ class Order extends DataObject implements EditableEcommerceObject
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
-
             return $extended;
         }
-        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
-
+        if (EcommerceRole::current_member_can_process_orders($member)) {
             return true;
         }
 
