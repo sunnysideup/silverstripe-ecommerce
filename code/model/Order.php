@@ -740,7 +740,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         )
                     )
                 );
-            }else{
+            } else {
                 $cancelledBy = isset($shopAdminAndCurrentCustomerArray[$this->CancelledByID]) && $this->CancelledByID ? $shopAdminAndCurrentCustomerArray[$this->CancelledByID] : _t('Order.NOT_CANCELLED', 'not cancelled');
                 $fields->addFieldsToTab(
                     'Root.Cancellations',
@@ -2347,16 +2347,18 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public function canCancel(Member $member = null)
     {
-        //if it is already cancelled it can be cancelled again
+        //if it is already cancelled it can not be cancelled again
         if ($this->CancelledByID) {
             return false;
         }
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
+
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
+
             return true;
         }
 
