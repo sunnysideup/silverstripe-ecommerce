@@ -105,8 +105,9 @@ class OrderItem extends OrderAttribute
      */
     private static $summary_fields = array(
         'OrderID' => 'Order ID',
+        'Buyable.InternalItemID' => 'Code',
         'TableTitle' => 'Title',
-        'TableSubTitleNOHTML' => '',
+        'TableSubTitleNOHTML' => 'More ... ',
         'UnitPrice' => 'Unit Price',
         'Quantity' => 'Quantity',
         'Total' => 'Total Price',
@@ -657,9 +658,8 @@ class OrderItem extends OrderAttribute
         $tempBuyableStoreType = $current ? 'current' : 'version';
         if (!isset($this->tempBuyableStore[$tempBuyableStoreType])) {
             if (!$this->BuyableID) {
-                debug::log('There was an error retrieving the product');
+                //debug::log('There was an error retrieving the product');
                 return Product::create();
-                return;
             }
             //start hack
             if (!$this->BuyableClassName) {
