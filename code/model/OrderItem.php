@@ -101,7 +101,7 @@ class OrderItem extends OrderAttribute
 
     /**
      * @var array
-     *            stardard SS definition
+     * stardard SS definition
      */
     private static $summary_fields = array(
         'OrderID' => 'Order ID',
