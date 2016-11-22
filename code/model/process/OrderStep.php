@@ -1159,10 +1159,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($orderStepsToInclude && count($orderStepsToInclude)) {
             if ($codesToInclude && count($codesToInclude)) {
                 foreach ($codesToInclude as $className => $code) {
+                    $code = strtoupper($code);
+                    $filter = array('ClassName' => $className);
                     $indexNumber += 10;
-                    $itemCount = $className::get()->Count();
+                    $itemCount = OrderStep::get()->filter($filter)->Count();
                     if ($itemCount) {
-                        $obj = $className::get()->First();
+                        $obj = OrderStep::get()->filter($filter)->First();
                         if ($obj->Code != $code) {
                             $obj->Code = $code;
                             $obj->write();
@@ -1174,7 +1176,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         }
                     } else {
                         $obj = $className::create();
-                        $obj->Code = strtoupper($obj->Code);
+                        $obj->Code = $code;
                         $obj->Description = $obj->myDescription();
                         $obj->write();
                         DB::alteration_message("Created \"$code\" as $className.", 'created');
