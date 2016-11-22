@@ -1089,11 +1089,11 @@ class Order extends DataObject implements EditableEcommerceObject
                 return;
             }
             do {
-                //status of order is being progressed
-                $nextStatusID = $this->doNextStatus();
                 //a little hack to make sure we do not rely on a stored value
                 //of "isSubmitted"
                 $this->_isSubmittedTempVar = -1;
+                //status of order is being progressed
+                $nextStatusID = $this->doNextStatus();
             } while ($nextStatusID);
             //release ... to run again ...
             self::$_try_to_finalise_order_is_running[$this->ID] = false;
@@ -2536,7 +2536,8 @@ class Order extends DataObject implements EditableEcommerceObject
     }
     public function getRetrieveLink()
     {
-        if ($this->IsSubmitted()) {
+        //important to recalculate!
+        if ($this->IsSubmitted($recalculate = true)) {
             //add session ID if not added yet...
             if (!$this->SessionID) {
                 $this->write();
@@ -3131,7 +3132,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function IsSubmitted($recalculate = false)
+    public function IsSubmitted($recalculate = true)
     {
         return $this->getIsSubmitted($recalculate);
     }
