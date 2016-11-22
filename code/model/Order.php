@@ -725,10 +725,15 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
-            $shopAdminAndCurrentCustomerArray = array_merge(
-                EcommerceRole::list_of_admins(true),
-                array($member->ID => $member->getName())
-            );
+            $shopAdminAndCurrentCustomerArray = EcommerceRole::list_of_admins(true);
+            if($member && $member->exists()) {
+                $shopAdminAndCurrentCustomerArray[$member->ID] = $member->getName();
+            }
+            if($this->CancelledByID) {
+                if($cancellingMember = $this->CancelledBy()) {
+                    $shopAdminAndCurrentCustomerArray[$this->CancelledByID] = $cancellingMember->getName();
+                }
+            }
             if ($this->canCancel()){
                 $fields->addFieldsToTab(
                     'Root.Cancellations',
