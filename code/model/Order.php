@@ -642,12 +642,8 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->MyStep()->addOrderStepFields($fields, $this);
 
         if ($submitted) {
-            //Config::nest();
-            //Config::inst()->update('SSViewer', 'theme_enabled', true);
-            //$htmlSummary = $this->renderWith("Order");
-            //Config::unnest();
-
-            //links
+            $permaLinkLabel = _t('Order.PERMANENT_LINK', 'link to order that can be used by the customer');
+            $html = $permaLinkLabel.': <a href="'.$this->RetrieveLink().'">'.$this->RetrieveLink().'</a>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
             $label = _t('Order.PRINT_INVOICE', 'invoice');
@@ -655,11 +651,15 @@ class Order extends DataObject implements EditableEcommerceObject
             $linkHTML .= ' | ';
             $link = $this->getPackingSlipLink();
             $label = _t('Order.PRINT_PACKING_SLIP', 'packing slip');
+            $labelPrint = _t('Order.PRINT', 'Print');
             $linkHTML .= '<a href="'.$link.'" onclick="'.$js.'">'.$label.'</a>';
-            $linkHTML = '<h3>Print: '.$linkHTML.'</h3>';
+            $html .= '<h3>';
+            $html .= $labelPrint.': '.$linkHTML;
+            $html .= '</h3>';
+
             $fields->addFieldToTab(
                 'Root.Main',
-                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $linkHTML)
+                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html)
             );
 
             //add order here as well.
