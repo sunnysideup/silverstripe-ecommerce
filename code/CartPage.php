@@ -440,7 +440,7 @@ class CartPage_Controller extends Page_Controller
         }
         //redirect if we are viewing the order with the wrong page!
         if ($this->currentOrder) {
-            if($this->overrideCanView) {
+            if ($this->overrideCanView) {
                 $canView = $this->currentOrder->canOverrideCanView();
             } else {
                 $canView = $this->currentOrder->canView();

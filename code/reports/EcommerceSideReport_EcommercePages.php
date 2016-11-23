@@ -74,7 +74,7 @@ class EcommerceSideReport_EcommercePages extends SS_Report
         );
     }
 
-    function getReportField()
+    public function getReportField()
     {
         $field = parent::getReportField();
         $config = $field->getConfig();

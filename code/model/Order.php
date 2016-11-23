@@ -312,7 +312,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $list = Order::get();
             $where = ' ("StatusID" > 0) ';
         }
-        if($includeCancelledOrders) {
+        if ($includeCancelledOrders) {
             //do nothing...
         } else {
             $where .= ' AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)';
@@ -580,7 +580,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 'ClassName' => 'OrderStatusLog'
             )
         );
-        if($keyNotes->count()) {
+        if ($keyNotes->count()) {
             $notesSummaryConfig = GridFieldConfig_RecordViewer::create();
             $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
             $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
@@ -642,12 +642,8 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->MyStep()->addOrderStepFields($fields, $this);
 
         if ($submitted) {
-            //Config::nest();
-            //Config::inst()->update('SSViewer', 'theme_enabled', true);
-            //$htmlSummary = $this->renderWith("Order");
-            //Config::unnest();
-
-            //links
+            $permaLinkLabel = _t('Order.PERMANENT_LINK', 'link to order that can be used by the customer');
+            $html = $permaLinkLabel.': <a href="'.$this->RetrieveLink().'">'.$this->RetrieveLink().'</a>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
             $label = _t('Order.PRINT_INVOICE', 'invoice');
@@ -655,11 +651,15 @@ class Order extends DataObject implements EditableEcommerceObject
             $linkHTML .= ' | ';
             $link = $this->getPackingSlipLink();
             $label = _t('Order.PRINT_PACKING_SLIP', 'packing slip');
+            $labelPrint = _t('Order.PRINT', 'Print');
             $linkHTML .= '<a href="'.$link.'" onclick="'.$js.'">'.$label.'</a>';
-            $linkHTML = '<h3>Print: '.$linkHTML.'</h3>';
+            $html .= '<h3>';
+            $html .= $labelPrint.': '.$linkHTML;
+            $html .= '</h3>';
+
             $fields->addFieldToTab(
                 'Root.Main',
-                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $linkHTML)
+                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html)
             );
 
             //add order here as well.
@@ -726,15 +726,15 @@ class Order extends DataObject implements EditableEcommerceObject
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
             $shopAdminAndCurrentCustomerArray = EcommerceRole::list_of_admins(true);
-            if($member && $member->exists()) {
+            if ($member && $member->exists()) {
                 $shopAdminAndCurrentCustomerArray[$member->ID] = $member->getName();
             }
-            if($this->CancelledByID) {
-                if($cancellingMember = $this->CancelledBy()) {
+            if ($this->CancelledByID) {
+                if ($cancellingMember = $this->CancelledBy()) {
                     $shopAdminAndCurrentCustomerArray[$this->CancelledByID] = $cancellingMember->getName();
                 }
             }
-            if ($this->canCancel()){
+            if ($this->canCancel()) {
                 $fields->addFieldsToTab(
                     'Root.Cancellations',
                     array(
@@ -949,11 +949,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $title = '',
         FieldList $fieldList = null,
         FieldList $detailedFormFields = null
-    )
-    {
+    ) {
         $title ? $title : $title = _t('OrderLog.PLURALNAME', 'Order Log');
         $source = $this->OrderStatusLogs();
-        if($sourceClass != 'OrderStatusLog' && class_exists($sourceClass)) {
+        if ($sourceClass != 'OrderStatusLog' && class_exists($sourceClass)) {
             $source = $source->filter(array('ClassName' => ClassInfo::subclassesFor($sourceClass)));
         }
         $gridField = GridField::create($sourceClass, $title, $source, $config = GridFieldConfig_RelationEditor::create());
@@ -1089,11 +1088,11 @@ class Order extends DataObject implements EditableEcommerceObject
                 return;
             }
             do {
-                //status of order is being progressed
-                $nextStatusID = $this->doNextStatus();
                 //a little hack to make sure we do not rely on a stored value
                 //of "isSubmitted"
                 $this->_isSubmittedTempVar = -1;
+                //status of order is being progressed
+                $nextStatusID = $this->doNextStatus();
             } while ($nextStatusID);
             //release ... to run again ...
             self::$_try_to_finalise_order_is_running[$this->ID] = false;
@@ -2172,14 +2171,14 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function canOverrideCanView($member = null)
     {
-        if($this->canView($member)) {
+        if ($this->canView($member)) {
             //can view overrides any concerns
             return true;
         } else {
             $tsOrder = strtotime($this->LastEdited);
             $tsNow = time();
             $minutes = EcommerceConfig::get('Order', 'minutes_an_order_can_be_viewed_without_logging_in');
-            if($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
+            if ($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
 
                 //has the order been edited recently?
                 return true;
@@ -2536,7 +2535,8 @@ class Order extends DataObject implements EditableEcommerceObject
     }
     public function getRetrieveLink()
     {
-        if ($this->IsSubmitted()) {
+        //important to recalculate!
+        if ($this->IsSubmitted($recalculate = true)) {
             //add session ID if not added yet...
             if (!$this->SessionID) {
                 $this->write();
@@ -3131,7 +3131,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function IsSubmitted($recalculate = false)
+    public function IsSubmitted($recalculate = true)
     {
         return $this->getIsSubmitted($recalculate);
     }

@@ -70,7 +70,7 @@ class EcommerceSideReport_NoImageProducts extends SS_Report
     }
 
 
-    function getReportField()
+    public function getReportField()
     {
         $field = parent::getReportField();
         $config = $field->getConfig();
