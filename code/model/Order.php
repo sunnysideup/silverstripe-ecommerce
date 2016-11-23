@@ -312,7 +312,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $list = Order::get();
             $where = ' ("StatusID" > 0) ';
         }
-        if($includeCancelledOrders) {
+        if ($includeCancelledOrders) {
             //do nothing...
         } else {
             $where .= ' AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)';
@@ -580,7 +580,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 'ClassName' => 'OrderStatusLog'
             )
         );
-        if($keyNotes->count()) {
+        if ($keyNotes->count()) {
             $notesSummaryConfig = GridFieldConfig_RecordViewer::create();
             $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
             $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
@@ -726,15 +726,15 @@ class Order extends DataObject implements EditableEcommerceObject
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
             $shopAdminAndCurrentCustomerArray = EcommerceRole::list_of_admins(true);
-            if($member && $member->exists()) {
+            if ($member && $member->exists()) {
                 $shopAdminAndCurrentCustomerArray[$member->ID] = $member->getName();
             }
-            if($this->CancelledByID) {
-                if($cancellingMember = $this->CancelledBy()) {
+            if ($this->CancelledByID) {
+                if ($cancellingMember = $this->CancelledBy()) {
                     $shopAdminAndCurrentCustomerArray[$this->CancelledByID] = $cancellingMember->getName();
                 }
             }
-            if ($this->canCancel()){
+            if ($this->canCancel()) {
                 $fields->addFieldsToTab(
                     'Root.Cancellations',
                     array(
@@ -949,11 +949,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $title = '',
         FieldList $fieldList = null,
         FieldList $detailedFormFields = null
-    )
-    {
+    ) {
         $title ? $title : $title = _t('OrderLog.PLURALNAME', 'Order Log');
         $source = $this->OrderStatusLogs();
-        if($sourceClass != 'OrderStatusLog' && class_exists($sourceClass)) {
+        if ($sourceClass != 'OrderStatusLog' && class_exists($sourceClass)) {
             $source = $source->filter(array('ClassName' => ClassInfo::subclassesFor($sourceClass)));
         }
         $gridField = GridField::create($sourceClass, $title, $source, $config = GridFieldConfig_RelationEditor::create());
@@ -2172,14 +2171,14 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function canOverrideCanView($member = null)
     {
-        if($this->canView($member)) {
+        if ($this->canView($member)) {
             //can view overrides any concerns
             return true;
         } else {
             $tsOrder = strtotime($this->LastEdited);
             $tsNow = time();
             $minutes = EcommerceConfig::get('Order', 'minutes_an_order_can_be_viewed_without_logging_in');
-            if($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
+            if ($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
 
                 //has the order been edited recently?
                 return true;

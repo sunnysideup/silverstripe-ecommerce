@@ -66,7 +66,7 @@ class EcommerceSideReport_AllProducts extends SS_Report
         );
     }
 
-    function getReportField()
+    public function getReportField()
     {
         $field = parent::getReportField();
         $config = $field->getConfig();
@@ -75,6 +75,4 @@ class EcommerceSideReport_AllProducts extends SS_Report
         
         return $field;
     }
-    
-    
 }

@@ -70,7 +70,7 @@ class EcommerceSideReport_NoInternalIDProducts extends SS_Report
     }
 
 
-    function getReportField()
+    public function getReportField()
     {
         $field = parent::getReportField();
         $config = $field->getConfig();

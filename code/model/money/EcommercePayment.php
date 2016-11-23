@@ -342,10 +342,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         // Only set the IP and ProxyIP if none currently set
-        if ( ! $this->IP) {
+        if (! $this->IP) {
             $this->IP = $ip;
         }
-        if ( ! $this->ProxyIP) {
+        if (! $this->ProxyIP) {
             $this->ProxyIP = $proxy;
         }
     }
