@@ -787,7 +787,14 @@ class ProductGroup extends Page
         $this->allProducts = $this->getGroupFilter();
 
         // STANDARD FILTER (INCLUDES USER PREFERENCE)
-        $this->allProducts = $this->allProducts->filter($this->allowPurchaseWhereStatement());
+        $filterStatement = $this->allowPurchaseWhereStatement();
+        if ($filterStatement) {
+            if (is_array($filterStatement)) {
+                $this->allProducts = $this->allProducts->filter($filterStatement);
+            } elseif (is_string($filterStatement)) {
+                $this->allProducts = $this->allProducts->where($filterStatement);
+            }
+        }
         $this->allProducts = $this->getStandardFilter($alternativeFilterKey);
 
         // EXTRA FILTER (ON THE FLY FROM CONTROLLER)
@@ -802,7 +809,7 @@ class ProductGroup extends Page
 
         return $this->allProducts;
     }
-    
+
     /**
      * this method can be used quickly current initial products
      * whenever you write:
@@ -868,7 +875,7 @@ class ProductGroup extends Page
     {
         $levelToShow = $this->MyLevelOfProductsToShow();
         $cacheKey = $this->cacheKey(
-            'GroupFilter', 
+            'GroupFilter',
             abs(intval($levelToShow + 999))
         );
         if ($groupFilter = $this->retrieveObjectStore($cacheKey)) {
@@ -1511,7 +1518,7 @@ class ProductGroup extends Page
      * CACHING
      *****************************************************/
     /**
-     * 
+     *
      * @return bool
      */
     public function AllowCaching()
@@ -1524,39 +1531,38 @@ class ProductGroup extends Page
      * @var string
      */
     private static $_product_group_cache_key_cache = null;
-    
+
     /**
-     * 
+     *
      * @param string $name
      * @param string $filterKey
-     * 
+     *
      * @return string
      */
-    public function cacheKey($name, $filterKey = '') 
+    public function cacheKey($name, $filterKey = '')
     {
         $cacheKey = 'ProductGroup_'.$name.'_'.$this->ID;
-        if($filterKey){
+        if ($filterKey) {
             $cacheKey .= '_'.$filterKey;
         }
-        if(self::$_product_group_cache_key_cache === null) {
+        if (self::$_product_group_cache_key_cache === null) {
             self::$_product_group_cache_key_cache = "PR_"
                 .strtotime(Product::get()->max('LastEdited')). "_"
                 .Product::get()->count();
-          self::$_product_group_cache_key_cache .= "PG_"
+            self::$_product_group_cache_key_cache .= "PG_"
                 .strtotime(ProductGroup::get()->max('LastEdited')). "_"
-                .ProductGroup::get()->count();   
-          if(class_exists('ProductVariation')) {
-            self::$_product_group_cache_key_cache .= "PV_"
+                .ProductGroup::get()->count();
+            if (class_exists('ProductVariation')) {
+                self::$_product_group_cache_key_cache .= "PV_"
                   .strtotime(ProductVariation::get()->max('LastEdited')). "_"
-                  .ProductVariation::get()->count();   
-              
-          }
+                  .ProductVariation::get()->count();
+            }
         }
         $cacheKey .= self::$_product_group_cache_key_cache;
 
         return $cacheKey;
     }
-    
+
     /**
      * saving an object to the.
      *
@@ -2334,7 +2340,7 @@ class ProductGroup_Controller extends Page_Controller
     public function FilterLinks()
     {
         $cacheKey = $this->cacheKey(
-            'FilterLinks', 
+            'FilterLinks',
             $this->filterForGroupObject ? $this->filterForGroupObject->ID : null
         );
         if ($list = $this->retrieveObjectStore($cacheKey)) {

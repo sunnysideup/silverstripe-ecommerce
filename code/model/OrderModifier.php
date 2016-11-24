@@ -98,7 +98,9 @@ class OrderModifier extends OrderAttribute
     private static $summary_fields = array(
         'OrderID' => 'Order ID',
         'TableTitle' => 'Table Title',
+        'TableSubTitle' => 'More ...',
         'TableValue' => 'Value Shown',
+        'CalculatedTotal' => 'Calculation Total',
     );
 
     /**

@@ -304,6 +304,7 @@ class EcommerceConfigDefinitions extends Object
         ################### ORDER DETAILS #####################
             'Order' => array(
                 'modifiers' => 'This is the single most important setting.  here you determine what modifiers are being added to every order.  You can just add them as a non-associative array.  However, their order is important!',
+                'minutes_an_order_can_be_viewed_without_logging_in' => "Orders can be viewed with the special retrieve link (without the need for the user to log in) for xxx number of minutes.",
                 'maximum_ignorable_sales_payments_difference' => "The maximum allowable difference between the Order Total and the Payment Total. 	If this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered 'paid'",
                 'order_id_start_number' => 'The starting number for the order number. For example, if you enter 1000 here then the first order will have number 1000, the next one 1001 and so on.',
                 'template_id_prefix' => 'If you end up with conflicts in your templates (e.g. having the same ID twice) then you can use this variable to set an prefix to all PHP generated IDs in all templates. We use these PHP generated IDs for AJAX templates - where HTML, JS and PHP need to work together.',

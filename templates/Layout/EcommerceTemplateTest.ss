@@ -75,6 +75,7 @@
     <tr><th scope="row" style="width: 40%;">Link for submitted order that can be used in Emails<br />&#36;SubmittedOrder.EmailLink</th><td width="60%">$EmailLink</td></tr>
     <tr><th scope="row" style="width: 40%;">Link for submitted order for printing<br />&#36;SubmittedOrder.PrintLink</th><td width="60%">$PrintLink</td></tr>
     <tr><th scope="row" style="width: 40%;">Link for submitted order for packing slip<br />&#36;SubmittedOrder.PackingSlipLink</th><td width="60%">$PackingSlipLink</td></tr>
+    <tr><th scope="row" style="width: 40%;">Link for submitted order for sharing<br />&#36;SubmittedOrder.ShareLink</th><td width="60%">$ShareLink</td></tr>
     <tr><th scope="row" style="width: 40%;">Link for submitted order to delete it<br />&#36;SubmittedOrder.DeleteLink</th><td width="60%">$DeleteLink</td></tr>
     <tr><th scope="row" style="width: 40%;">Link for submitted order to copy it<br />&#36;SubmittedOrder.CopyOrderLink</th><td width="60%">$CopyOrderLink</td></tr>
     <tr><th scope="row" style="width: 40%;">Current Step<br />e.g. &#36;SubmittedOrder.MyStep.Title</th><td width="60%">$MyStep.Title</td></tr>

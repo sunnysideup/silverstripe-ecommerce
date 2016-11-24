@@ -41,6 +41,7 @@ class Order extends DataObject implements EditableEcommerceObject
             'EmailLink',
             'PrintLink',
             'RetrieveLink',
+            'ShareLink',
             'Title',
             'Total',
             'SubTotal',
@@ -128,6 +129,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'OrderEmail' => 'Text',
         'EmailLink' => 'Text',
         'PrintLink' => 'Text',
+        'ShareLink' => 'Text',
         'RetrieveLink' => 'Text',
         'Title' => 'Text',
         'Total' => 'Currency',
@@ -312,7 +314,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $list = Order::get();
             $where = ' ("StatusID" > 0) ';
         }
-        if($includeCancelledOrders) {
+        if ($includeCancelledOrders) {
             //do nothing...
         } else {
             $where .= ' AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)';
@@ -580,7 +582,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 'ClassName' => 'OrderStatusLog'
             )
         );
-        if($keyNotes->count()) {
+        if ($keyNotes->count()) {
             $notesSummaryConfig = GridFieldConfig_RecordViewer::create();
             $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
             $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
@@ -642,12 +644,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->MyStep()->addOrderStepFields($fields, $this);
 
         if ($submitted) {
-            //Config::nest();
-            //Config::inst()->update('SSViewer', 'theme_enabled', true);
-            //$htmlSummary = $this->renderWith("Order");
-            //Config::unnest();
-
-            //links
+            $permaLinkLabel = _t('Order.PERMANENT_LINK', 'Customer Link');
+            $html = '<p>'.$permaLinkLabel.': <a href="'.$this->getRetrieveLink().'">'.$this->getRetrieveLink().'</a></p>';
+            $shareLinkLabel = _t('Order.SHARE_LINK', 'Share Link');
+            $html .= '<p>'.$shareLinkLabel.': <a href="'.$this->getShareLink().'">'.$this->getShareLink().'</a></p>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
             $label = _t('Order.PRINT_INVOICE', 'invoice');
@@ -655,11 +655,15 @@ class Order extends DataObject implements EditableEcommerceObject
             $linkHTML .= ' | ';
             $link = $this->getPackingSlipLink();
             $label = _t('Order.PRINT_PACKING_SLIP', 'packing slip');
+            $labelPrint = _t('Order.PRINT', 'Print');
             $linkHTML .= '<a href="'.$link.'" onclick="'.$js.'">'.$label.'</a>';
-            $linkHTML = '<h3>Print: '.$linkHTML.'</h3>';
+            $html .= '<h3>';
+            $html .= $labelPrint.': '.$linkHTML;
+            $html .= '</h3>';
+
             $fields->addFieldToTab(
                 'Root.Main',
-                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $linkHTML)
+                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html)
             );
 
             //add order here as well.
@@ -725,11 +729,16 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
-            $shopAdminAndCurrentCustomerArray = array_merge(
-                EcommerceRole::list_of_admins(true),
-                array($member->ID => $member->getName())
-            );
-            if ($this->canCancel()){
+            $shopAdminAndCurrentCustomerArray = EcommerceRole::list_of_admins(true);
+            if ($member && $member->exists()) {
+                $shopAdminAndCurrentCustomerArray[$member->ID] = $member->getName();
+            }
+            if ($this->CancelledByID) {
+                if ($cancellingMember = $this->CancelledBy()) {
+                    $shopAdminAndCurrentCustomerArray[$this->CancelledByID] = $cancellingMember->getName();
+                }
+            }
+            if ($this->canCancel()) {
                 $fields->addFieldsToTab(
                     'Root.Cancellations',
                     array(
@@ -740,7 +749,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         )
                     )
                 );
-            }else{
+            } else {
                 $cancelledBy = isset($shopAdminAndCurrentCustomerArray[$this->CancelledByID]) && $this->CancelledByID ? $shopAdminAndCurrentCustomerArray[$this->CancelledByID] : _t('Order.NOT_CANCELLED', 'not cancelled');
                 $fields->addFieldsToTab(
                     'Root.Cancellations',
@@ -771,7 +780,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $message = _t(
                 'Order.NOSUBMITTEDYET',
                 'No details are shown here as this order has not been submitted yet. You can {link} to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .',
-                array('link' => '<a href="'.$this->RetrieveLink().'" data-popup="true">'.$linkText.'</a>')
+                array('link' => '<a href="'.$this->getRetrieveLink().'" data-popup="true">'.$linkText.'</a>')
             );
             $fields->addFieldToTab('Root.Next', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
             $fields->addFieldToTab('Root.Items', $this->getOrderItemsField());
@@ -944,11 +953,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $title = '',
         FieldList $fieldList = null,
         FieldList $detailedFormFields = null
-    )
-    {
+    ) {
         $title ? $title : $title = _t('OrderLog.PLURALNAME', 'Order Log');
         $source = $this->OrderStatusLogs();
-        if($sourceClass != 'OrderStatusLog' && class_exists($sourceClass)) {
+        if ($sourceClass != 'OrderStatusLog' && class_exists($sourceClass)) {
             $source = $source->filter(array('ClassName' => ClassInfo::subclassesFor($sourceClass)));
         }
         $gridField = GridField::create($sourceClass, $title, $source, $config = GridFieldConfig_RelationEditor::create());
@@ -1084,11 +1092,11 @@ class Order extends DataObject implements EditableEcommerceObject
                 return;
             }
             do {
-                //status of order is being progressed
-                $nextStatusID = $this->doNextStatus();
                 //a little hack to make sure we do not rely on a stored value
                 //of "isSubmitted"
                 $this->_isSubmittedTempVar = -1;
+                //status of order is being progressed
+                $nextStatusID = $this->doNextStatus();
             } while ($nextStatusID);
             //release ... to run again ...
             self::$_try_to_finalise_order_is_running[$this->ID] = false;
@@ -1122,7 +1130,8 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param Member $member - the user cancelling the order
      * @param string $reason - the reason the order is cancelled
-     * @returns OrderStatusLog_Cancel
+     *
+     * @return OrderStatusLog_Cancel
      */
     public function Cancel(Member $member, $reason = '')
     {
@@ -2161,6 +2170,32 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * @param Member $member optional
+     * @return bool
+     */
+    public function canOverrideCanView($member = null)
+    {
+        if ($this->canView($member)) {
+            //can view overrides any concerns
+            return true;
+        } else {
+            $tsOrder = strtotime($this->LastEdited);
+            $tsNow = time();
+            $minutes = EcommerceConfig::get('Order', 'minutes_an_order_can_be_viewed_without_logging_in');
+            if ($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
+
+                //has the order been edited recently?
+                return true;
+            } elseif ($orderStep = $this->MyStep()) {
+
+                // order is being processed ...
+                return $orderStep->canOverrideCanViewForOrder($this, $member);
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function IsInSession()
@@ -2320,7 +2355,7 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public function canCancel(Member $member = null)
     {
-        //if it is already cancelled it can be cancelled again
+        //if it is already cancelled it can not be cancelled again
         if ($this->CancelledByID) {
             return false;
         }
@@ -2329,7 +2364,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (EcommerceRole::current_member_can_process_orders($member)) {
             return true;
         }
 
@@ -2494,17 +2529,17 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
      *
-     * @todo: is this a security risk?
-     *
      * @return string
      */
     public function RetrieveLink()
     {
         return $this->getRetrieveLink();
     }
+
     public function getRetrieveLink()
     {
-        if ($this->IsSubmitted()) {
+        //important to recalculate!
+        if ($this->IsSubmitted($recalculate = true)) {
             //add session ID if not added yet...
             if (!$this->SessionID) {
                 $this->write();
@@ -2514,6 +2549,30 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             return Director::AbsoluteURL('/shoppingcart/loadorder/'.$this->ID.'/');
         }
+    }
+
+    function ShareLink()
+    {
+        return $this->getShareLink();
+    }
+
+    function getShareLink()
+    {
+        $orderItems = $this->itemsFromDatabase();
+        $action = 'share';
+        $array = array();
+        foreach($orderItems as $orderItem) {
+            $array[] = implode(
+                ',',
+                array(
+                    $orderItem->BuyableClassName,
+                    $orderItem->BuyableID,
+                    $orderItem->Quantity
+                )
+            );
+        }
+
+        return Director::AbsoluteURL(CheckoutPage::find_link($action.'/'.implode('-', $array)));
     }
 
     /**
@@ -3099,7 +3158,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function IsSubmitted($recalculate = false)
+    public function IsSubmitted($recalculate = true)
     {
         return $this->getIsSubmitted($recalculate);
     }

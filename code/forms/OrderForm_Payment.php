@@ -66,7 +66,7 @@ class OrderForm_Payment extends Form
         $SQLData = Convert::raw2sql($data);
         if (isset($SQLData['OrderID'])) {
             if ($orderID = intval($SQLData['OrderID'])) {
-                $order = Order::get_by_id_if_can_view($orderID);
+                $order = Order::get()->byID($orderID);
                 if ($order && $order->canPay()) {
                     $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
                     if ($formHelper->validatePayment($order, $data, $form)) {

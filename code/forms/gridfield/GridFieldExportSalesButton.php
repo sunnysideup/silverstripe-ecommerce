@@ -104,8 +104,8 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
 
         $items = $gridField->getManipulatedList();
 
-        foreach($items->limit(null) as $item) {
-            if(!$item->hasMethod('canView') || $item->canView()) {
+        foreach ($items->limit(null) as $item) {
+            if (!$item->hasMethod('canView') || $item->canView()) {
                 $idArray[$item->ID] = $item->ID;
             }
         }
@@ -181,7 +181,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $fileData = '';
         $columnData = array();
         $exportFields = Config::inst()->get('GridFieldExportSalesButton', 'fields_and_methods_to_be_exported');
-        if($this->isFirstRow) {
+        if ($this->isFirstRow) {
             $fileData = '"Email"'.$separator.'"SubmittedDate"'.$separator.'"'.implode('"'.$separator.'"', $exportFields).'"'."\n";
             $this->isFirstRow = false;
         }
@@ -191,7 +191,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                 $columnData[] = '"'.$email.'"';
                 $columnData[] = '"'.$date.'"';
                 foreach ($exportFields as $field) {
-                    if($item->hasMethod($field)) {
+                    if ($item->hasMethod($field)) {
                         $value = $item->$field();
                     } else {
                         $value = $item->$field;
