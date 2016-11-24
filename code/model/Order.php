@@ -644,9 +644,9 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->MyStep()->addOrderStepFields($fields, $this);
 
         if ($submitted) {
-            $permaLinkLabel = _t('Order.PERMANENT_LINK', 'link to order that can be used by the customer');
+            $permaLinkLabel = _t('Order.PERMANENT_LINK', 'Customer Link');
             $html = '<p>'.$permaLinkLabel.': <a href="'.$this->getRetrieveLink().'">'.$this->getRetrieveLink().'</a></p>';
-            $shareLinkLabel = _t('Order.SHARE_LINK', 'Link used to share an order (without copying personal details)');
+            $shareLinkLabel = _t('Order.SHARE_LINK', 'Share Link');
             $html .= '<p>'.$shareLinkLabel.': <a href="'.$this->getShareLink().'">'.$this->getShareLink().'</a></p>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
@@ -2571,7 +2571,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 )
             );
         }
-        
+
         return Director::AbsoluteURL(CheckoutPage::find_link($action.'/'.implode('-', $array)));
     }
 
