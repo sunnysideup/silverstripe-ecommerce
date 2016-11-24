@@ -539,7 +539,7 @@ class CartPage_Controller extends Page_Controller
                 }
             }
             $order->calculateOrderAttributes(false);
-            if( ! isset($_GET['done'])) {
+            if( ! $request->getVar('done')) {
                 return $this->redirect($this->Link('share/'.$codes).'?done=1');
             }
         }
