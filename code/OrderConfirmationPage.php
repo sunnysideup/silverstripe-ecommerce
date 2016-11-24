@@ -475,9 +475,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
     {
         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
         ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
-        $this->redirect(CheckoutPage::find_last_step_link());
-
-        return array();
+        
+        return $this->redirect(CheckoutPage::find_link());
     }
 
     /**
