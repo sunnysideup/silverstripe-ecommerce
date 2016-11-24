@@ -71,7 +71,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         if (singleton($this->modelClass) instanceof Order) {
             $list = $list->filter(
                 array(
-                    "StatusID" => array_merge(OrderStep::admin_manageable_steps()->column('ID') , OrderStep::bad_order_step_ids()),
+                    "StatusID" => array_merge(OrderStep::admin_manageable_steps()->column('ID')),
                     "CancelledByID" => 0
                 )
             );

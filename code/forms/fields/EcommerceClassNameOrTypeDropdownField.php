@@ -39,8 +39,7 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
             array $availableClasses = array(),
             $value = '',
             $form = null
-        )
-    {
+        ) {
         $this->sourceClass = $sourceClass;
         $this->availableClasses = $availableClasses;
         parent::__construct($name, $title, array(), $value, $form);

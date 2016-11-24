@@ -20,14 +20,16 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $exportColumns The columns to include in the export
      */
-    public function __construct($targetFragment = "after") {
+    public function __construct($targetFragment = "after")
+    {
         $this->targetFragment = $targetFragment;
     }
 
     /**
      * Place the export button in a <p> tag below the field
      */
-    public function getHTMLFragments($gridField) {
+    public function getHTMLFragments($gridField)
+    {
         $button = new GridField_FormAction(
             $gridField,
             'printallpackingslips',
@@ -46,11 +48,13 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     /**
      * export is an action button
      */
-    public function getActions($gridField) {
+    public function getActions($gridField)
+    {
         return array('printallpackingslips');
     }
 
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    {
         if ($actionName == 'printallpackingslips') {
             return $this->handlePrintAllPackingSlips($gridField);
         }
@@ -59,7 +63,8 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     /**
      * it is also a URL
      */
-    public function getURLHandlers($gridField) {
+    public function getURLHandlers($gridField)
+    {
         return array(
             'printallpackingslips' => 'handlePrintAllPackingSlips',
         );
@@ -68,11 +73,12 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     /**
      * Handle the print, for both the action button and the URL
       */
-    public function handlePrintAllPackingSlips($gridField, $request = null) {
+    public function handlePrintAllPackingSlips($gridField, $request = null)
+    {
         $list = $gridField->getList();
         $gridField->setList($list);
         $al = ArrayList::create();
-        foreach($list as $order) {
+        foreach ($list as $order) {
             $al->push(ArrayData::create(array('Order' => $order)));
         }
         Requirements::clear();
@@ -82,8 +88,4 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
         echo $al->renderWith('PrintAllPackingSlips');
         exit();
     }
-
-
-
-
 }

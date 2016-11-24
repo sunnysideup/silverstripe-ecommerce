@@ -350,7 +350,8 @@ class CartPage_Controller extends Page_Controller
         'deleteorder',
         'startneworder',
         'showorder',
-        'LoginForm',
+        'share',
+        'LoginForm'
     );
 
     /**
@@ -440,7 +441,7 @@ class CartPage_Controller extends Page_Controller
         }
         //redirect if we are viewing the order with the wrong page!
         if ($this->currentOrder) {
-            if($this->overrideCanView) {
+            if ($this->overrideCanView) {
                 $canView = $this->currentOrder->canOverrideCanView();
             } else {
                 $canView = $this->currentOrder->canView();
@@ -502,6 +503,44 @@ class CartPage_Controller extends Page_Controller
                         $this->message = _t('CartPage.ORDERNOTLOADED', 'Order could not be loaded.');
                     }
                 }
+            }
+        }
+
+        return array();
+    }
+
+    /**
+     * share an order ...
+     * @todo: do we still need loadorder controller method????
+     * @param SS_HTTPRequest
+     * @return array just so that template shows
+     **/
+    public function share(SS_HTTPRequest $request)
+    {
+        $codes = Convert::raw2sql($request->param('ID'));
+        $buyables = explode('-', $codes);
+        if (count($buyables)) {
+            $sc = ShoppingCart::singleton();
+            $order = $sc->currentOrder();
+            foreach ($buyables as $buyable) {
+                $details = explode(",", $buyable);
+                if(count($details) == 3) {
+                    $className = $details[0];
+                    $className = class_exists($className) ? $className : null;
+                    $id = intval($details[1]);
+                    $quantity = floatval($details[2]);
+                    if($className && $id && $quantity) {
+                        $buyable = $className::get()->byID($id);
+                        if ($buyable && $buyable->canPurchase()) {
+                            $sc->addBuyable($buyable, $quantity);
+                            $sc->setQuantity($buyable, $quantity);
+                        }
+                    }
+                }
+            }
+            $order->calculateOrderAttributes(false);
+            if( ! $request->getVar('done')) {
+                return $this->redirect($this->Link('share/'.$codes).'?done=1');
             }
         }
 
