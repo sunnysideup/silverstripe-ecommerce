@@ -41,6 +41,7 @@ class Order extends DataObject implements EditableEcommerceObject
             'EmailLink',
             'PrintLink',
             'RetrieveLink',
+            'ShareLink',
             'Title',
             'Total',
             'SubTotal',
@@ -128,6 +129,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'OrderEmail' => 'Text',
         'EmailLink' => 'Text',
         'PrintLink' => 'Text',
+        'ShareLink' => 'Text',
         'RetrieveLink' => 'Text',
         'Title' => 'Text',
         'Total' => 'Currency',
@@ -643,7 +645,9 @@ class Order extends DataObject implements EditableEcommerceObject
 
         if ($submitted) {
             $permaLinkLabel = _t('Order.PERMANENT_LINK', 'link to order that can be used by the customer');
-            $html = $permaLinkLabel.': <a href="'.$this->RetrieveLink().'">'.$this->RetrieveLink().'</a>';
+            $html = '<p>'.$permaLinkLabel.': <a href="'.$this->getRetrieveLink().'">'.$this->getRetrieveLink().'</a></p>';
+            $shareLinkLabel = _t('Order.SHARE_LINK', 'Link used to share an order (without copying personal details)');
+            $html .= '<p>'.$shareLinkLabel.': <a href="'.$this->getShareLink().'">'.$this->getShareLink().'</a></p>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
             $label = _t('Order.PRINT_INVOICE', 'invoice');
@@ -776,7 +780,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $message = _t(
                 'Order.NOSUBMITTEDYET',
                 'No details are shown here as this order has not been submitted yet. You can {link} to submit it... NOTE: For this, you will be logged in as the customer and logged out as (shop)admin .',
-                array('link' => '<a href="'.$this->RetrieveLink().'" data-popup="true">'.$linkText.'</a>')
+                array('link' => '<a href="'.$this->getRetrieveLink().'" data-popup="true">'.$linkText.'</a>')
             );
             $fields->addFieldToTab('Root.Next', new LiteralField('MainDetails', '<p>'.$message.'</p>'));
             $fields->addFieldToTab('Root.Items', $this->getOrderItemsField());
@@ -2525,14 +2529,13 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * returns the absolute link that the customer can use to retrieve the email WITHOUT logging in.
      *
-     * @todo: is this a security risk?
-     *
      * @return string
      */
     public function RetrieveLink()
     {
         return $this->getRetrieveLink();
     }
+
     public function getRetrieveLink()
     {
         //important to recalculate!
@@ -2546,6 +2549,30 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             return Director::AbsoluteURL('/shoppingcart/loadorder/'.$this->ID.'/');
         }
+    }
+
+    function ShareLink()
+    {
+        return $this->getShareLink();
+    }
+
+    function getShareLink()
+    {
+        $orderItems = $this->itemsFromDatabase();
+        $action = 'share';
+        $array = array();
+        foreach($orderItems as $orderItem) {
+            $array[] = implode(
+                ',',
+                array(
+                    $orderItem->BuyableClassName,
+                    $orderItem->BuyableID,
+                    $orderItem->Quantity
+                )
+            );
+        }
+        
+        return Director::AbsoluteURL(CheckoutPage::find_link($action.'/'.implode('-', $array)));
     }
 
     /**
