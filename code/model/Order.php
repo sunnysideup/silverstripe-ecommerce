@@ -2551,17 +2551,17 @@ class Order extends DataObject implements EditableEcommerceObject
         }
     }
 
-    function ShareLink()
+    public function ShareLink()
     {
         return $this->getShareLink();
     }
 
-    function getShareLink()
+    public function getShareLink()
     {
         $orderItems = $this->itemsFromDatabase();
         $action = 'share';
         $array = array();
-        foreach($orderItems as $orderItem) {
+        foreach ($orderItems as $orderItem) {
             $array[] = implode(
                 ',',
                 array(
