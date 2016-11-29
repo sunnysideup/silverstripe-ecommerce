@@ -1,8 +1,12 @@
 ---
 Name: ecommerce
 Before: 'mysite/*'
-After: 'framework/*','cms/*'
+After:
+   - 'framework/*'
+   - 'cms/*'
 ---
+
+
 
 DevelopmentAdmin:
   extensions:
@@ -20,6 +24,9 @@ Member:
 SiteTree:
   extensions:
     - EcommerceSiteTreeExtension
+  #we add this index to make caching faster ....
+  indexes:
+    LastEdited: true
 
 Page_Controller:
   extensions:
