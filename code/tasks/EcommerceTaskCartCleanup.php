@@ -65,8 +65,12 @@ class EcommerceTaskCartCleanup extends BuildTask
         //ABANDONNED CARTS
         $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes');
         $maximumNumberOfObjectsDeleted = EcommerceConfig::get('EcommerceTaskCartCleanup', 'maximum_number_of_objects_deleted');
-        if ($this->verbose && $request && $limit = $request->getVar('limit')) {
-            $maximumNumberOfObjectsDeleted = intval($limit);
+
+        if ($this->verbose && $request) {
+            $limitFromGetVar = $request->getVar('limit');
+            if($limitFromGetVar) {
+                $maximumNumberOfObjectsDeleted = intval($limitFromGetVar);
+            }
         }
         $time = strtotime('-'.$clearMinutes.' minutes');
         $where = '"StatusID" = '.OrderStep::get_status_id_from_code('CREATED')." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
@@ -95,12 +99,12 @@ class EcommerceTaskCartCleanup extends BuildTask
                 $totalToDeleteSQLObject = DB::query("SELECT COUNT(*) FROM \"Order\" $leftMemberJoin WHERE $where");
                 $totalToDelete = $totalToDeleteSQLObject->value();
                 DB::alteration_message('
-					<h2>Total number of abandonned carts: '.$totalToDelete.'</h2>
-					<br /><b>number of records deleted at one time:</b> '.$maximumNumberOfObjectsDeleted.'
-					<br /><b>Criteria:</b> last edited '.$clearMinutes.' (~'.round($clearMinutes / 60 / 24, 2)." days) minutes ago or more $memberDeleteNote", 'created');
+                    <h2>Total number of abandonned carts: '.$totalToDelete.'</h2>
+                    <br /><b>number of records deleted at one time:</b> '.$maximumNumberOfObjectsDeleted.'
+                    <br /><b>Criteria:</b> last edited '.$clearMinutes.' (~'.round($clearMinutes / 60 / 24, 2)." days) minutes ago or more $memberDeleteNote", 'created');
             }
             foreach ($oldCarts as $oldCart) {
-                ++$count;
+                $count++;
                 if ($this->verbose) {
                     $this->flush();
                     DB::alteration_message("$count ... deleting abandonned order #".$oldCart->ID, 'deleted');
@@ -144,9 +148,9 @@ class EcommerceTaskCartCleanup extends BuildTask
                 $this->flush();
                 $totalToDelete = DB::query("SELECT COUNT(*) FROM \"Order\" $leftMemberJoin WHERE $where")->value();
                 DB::alteration_message('
-					<h2>Total number of empty carts: '.$totalToDelete.'</h2>
-					<br /><b>number of records deleted at one time:</b> '.$maximumNumberOfObjectsDeleted."
-					<br /><b>Criteria:</b> there are no order items and the order was last edited $clearMinutes minutes ago $memberDeleteNote", 'created');
+                    <h2>Total number of empty carts: '.$totalToDelete.'</h2>
+                    <br /><b>number of records deleted at one time:</b> '.$maximumNumberOfObjectsDeleted."
+                    <br /><b>Criteria:</b> there are no order items and the order was last edited $clearMinutes minutes ago $memberDeleteNote", 'created');
             }
             foreach ($oldCarts as $oldCart) {
                 ++$count;
@@ -193,12 +197,12 @@ class EcommerceTaskCartCleanup extends BuildTask
                         DB::alteration_message("looking for $className objects without link to order.");
                     }
                     $rows = DB::query("
-						SELECT \"$className\".\"ID\"
-						FROM \"$className\"
-							LEFT JOIN \"Order\"
-								ON \"Order\".\"$orderFieldName\" = \"$className\".\"ID\"
-						WHERE \"Order\".\"ID\" IS NULL
-						LIMIT 0, ".$maximumNumberOfObjectsDeleted);
+                        SELECT \"$className\".\"ID\"
+                        FROM \"$className\"
+                            LEFT JOIN \"Order\"
+                                ON \"Order\".\"$orderFieldName\" = \"$className\".\"ID\"
+                        WHERE \"Order\".\"ID\" IS NULL
+                        LIMIT 0, ".$maximumNumberOfObjectsDeleted);
                     //the code below is a bit of a hack, but because of the one-to-one relationship we
                     //want to check both sides....
                     $oneToOneIDArray = array();
@@ -256,12 +260,12 @@ class EcommerceTaskCartCleanup extends BuildTask
                         DB::alteration_message("looking for $classWithOrderID objects without link to order.");
                     }
                     $rows = DB::query("
-						SELECT \"$classWithOrderID\".\"ID\"
-						FROM \"$classWithOrderID\"
-							LEFT JOIN \"Order\"
-								ON \"Order\".\"ID\" = \"$classWithOrderID\".\"OrderID\"
-						WHERE \"Order\".\"ID\" IS NULL
-						LIMIT 0, ".$maximumNumberOfObjectsDeleted);
+                        SELECT \"$classWithOrderID\".\"ID\"
+                        FROM \"$classWithOrderID\"
+                            LEFT JOIN \"Order\"
+                                ON \"Order\".\"ID\" = \"$classWithOrderID\".\"OrderID\"
+                        WHERE \"Order\".\"ID\" IS NULL
+                        LIMIT 0, ".$maximumNumberOfObjectsDeleted);
                     $oneToManyIDArray = array();
                     if ($rows) {
                         foreach ($rows as $row) {
