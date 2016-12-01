@@ -321,13 +321,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
             ->where('"OrderStep"."ID" IS NULL AND "StatusID" > 0')
             ->column('StatusID');
-        if(is_array($badorderStatus)){
-            return array_unique( array_values($badorderStatus));
+        if (is_array($badorderStatus)) {
+            return array_unique(array_values($badorderStatus));
         } else {
             return array(-1);
         }
-
-
     }
 
     /**
@@ -1006,7 +1004,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param  Member $member optional
      * @return bool
      */
-    function canOverrideCanViewForOrder($order, $member = null)
+    public function canOverrideCanViewForOrder($order, $member = null)
     {
         //return true if the order can have customer input
         // orders recently saved can also be views
@@ -1084,13 +1082,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         parent::onBeforeWrite();
         //make sure only one of three conditions applies ...
-        if($this->ShowAsUncompletedOrder) {
+        if ($this->ShowAsUncompletedOrder) {
             $this->ShowAsInProcessOrder = false;
             $this->ShowAsCompletedOrder = false;
-        } elseif($this->ShowAsInProcessOrder) {
+        } elseif ($this->ShowAsInProcessOrder) {
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsCompletedOrder = false;
-        } elseif($this->ShowAsCompletedOrder) {
+        } elseif ($this->ShowAsCompletedOrder) {
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsInProcessOrder = false;
         }

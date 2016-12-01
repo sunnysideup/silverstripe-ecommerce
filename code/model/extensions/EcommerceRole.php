@@ -404,7 +404,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $fields->push($headerField);
         $fields->push($linkField1);
         
-        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())){
+        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $linkField2 = EcommerceCMSButtonField::create(
                 'MemberLinkFieldEditAllCustomers',
                 '/admin/security/show/'.$group->ID.'/',

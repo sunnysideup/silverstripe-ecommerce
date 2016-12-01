@@ -224,8 +224,8 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('OrderAttribute_GroupID');
         if ($order = $this->Order()) {
             if ($order->IsSubmitted()) {
-                if($buyable = $this->Buyable()) {
-                    if($this->BuyableExists()) {
+                if ($buyable = $this->Buyable()) {
+                    if ($this->BuyableExists()) {
                         $buyableLink = '<a href="'.$buyable->CMSEditLink().'">'.$this->getBuyableFullName().'</a>';
                     } else {
                         $buyableLink = $this->getBuyableFullName()
@@ -796,7 +796,7 @@ class OrderItem extends OrderAttribute
      */
     public function getBuyableExists()
     {
-        if($buyable = $this->Buyable(true)) {
+        if ($buyable = $this->Buyable(true)) {
             $className = $buyable->ClassName;
             $id = $buyable->ID;
             return $className::get()->byID($id) ? true : false;
@@ -842,12 +842,12 @@ class OrderItem extends OrderAttribute
      */
     public function getBuyableMoreDetails()
     {
-        if($subtitle = $this->TableSubTitleNOHTML) {
+        if ($subtitle = $this->TableSubTitleNOHTML) {
             return $subtitle;
         }
         $buyable = $this->Buyable();
         if ($buyable && $buyable->exists()) {
-            if($buyable->ShortDescription) {
+            if ($buyable->ShortDescription) {
                 return $buyable->ShortDescription;
             }
         }

@@ -286,9 +286,16 @@ class ShoppingCart_Controller extends Controller implements Flushable
         return self::create_link('deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters));
     }
 
+    /**
+     *
+     * @return null | string
+     */
     public static function copy_order_link($orderID, $parameters = array())
     {
-        return self::create_link('copyorder/'.$orderID.'/'.self::params_to_get_string($parameters));
+        $order = Order::get()->byID($orderID);
+        if ($order && $order->IsSubmitted()) {
+            return self::create_link('copyorder/'.$orderID.'/'.self::params_to_get_string($parameters));
+        }
     }
 
     /**

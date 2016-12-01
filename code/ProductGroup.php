@@ -788,10 +788,10 @@ class ProductGroup extends Page
 
         // STANDARD FILTER (INCLUDES USER PREFERENCE)
         $filterStatement = $this->allowPurchaseWhereStatement();
-        if($filterStatement) {
-            if(is_array($filterStatement)) {
+        if ($filterStatement) {
+            if (is_array($filterStatement)) {
                 $this->allProducts = $this->allProducts->filter($filterStatement);
-            } elseif(is_string($filterStatement)) {
+            } elseif (is_string($filterStatement)) {
                 $this->allProducts = $this->allProducts->where($filterStatement);
             }
         }
@@ -1542,22 +1542,21 @@ class ProductGroup extends Page
     public function cacheKey($name, $filterKey = '')
     {
         $cacheKey = 'ProductGroup_'.$name.'_'.$this->ID;
-        if($filterKey){
+        if ($filterKey) {
             $cacheKey .= '_'.$filterKey;
         }
-        if(self::$_product_group_cache_key_cache === null) {
+        if (self::$_product_group_cache_key_cache === null) {
             self::$_product_group_cache_key_cache = "PR_"
                 .strtotime(Product::get()->max('LastEdited')). "_"
                 .Product::get()->count();
-          self::$_product_group_cache_key_cache .= "PG_"
+            self::$_product_group_cache_key_cache .= "PG_"
                 .strtotime(ProductGroup::get()->max('LastEdited')). "_"
                 .ProductGroup::get()->count();
-          if(class_exists('ProductVariation')) {
-            self::$_product_group_cache_key_cache .= "PV_"
+            if (class_exists('ProductVariation')) {
+                self::$_product_group_cache_key_cache .= "PV_"
                   .strtotime(ProductVariation::get()->max('LastEdited')). "_"
                   .ProductVariation::get()->count();
-
-          }
+            }
         }
         $cacheKey .= self::$_product_group_cache_key_cache;
 
