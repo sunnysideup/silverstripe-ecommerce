@@ -1,24 +1,12 @@
 <?php
 
 
-/**
- * @description: cleans up old (abandonned) carts...
- *
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
- **/
 class EcommerceTaskCacheTest extends BuildTask
 {
     protected $title = 'Test Silverstripe Cache';
 
-    protected $description = 'Basic test for the silverstripe cache.It will show a time and date that determines how old the cache is.';
+    protected $description = 'Basic test for the silverstripe cache. It will show the date and time the cache was made.';
 
-    /**
-     *@return int - number of carts destroyed
-     **/
     public function run($request)
     {
         $cachekey = 'foo';
