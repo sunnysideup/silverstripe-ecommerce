@@ -11,9 +11,13 @@ class EcommerceTaskCacheTest extends BuildTask
     {
         $cachekey = 'foo';
         $cache = SS_Cache::factory($cachekey);
-        if (!($result = $cache->load($cachekey))) {
+        $result = $cache->load($cachekey);
+        if (!$result) {
+            echo 'not from cache: ';
             $result = date('Y-m-d H:i:s');;
             $cache->save($result, $cachekey);
+        } else {
+            echo 'from cache: ';
         }
         echo $result;
     }
