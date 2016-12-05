@@ -4,15 +4,15 @@
 class EcommerceCache extends Object implements flushable
 {
 
-    private static $enabled = true;
-
-    private static $in_mysql_tables = array(
+    private static $cache_in_mysql_tables = array(
         'ProductGroup'
     );
 
     public static function flush()
     {
-        $tables = Config::inst()->get('EcommerceCache', 'in_mysql_tables');
+        $cache = SS_Cache::factory('any');
+        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);        
+        $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
         foreach($tables as $table) {
             $table = self::make_mysql_table_name($table);
             DB::query(
@@ -50,7 +50,7 @@ class EcommerceCache extends Object implements flushable
      */
     public static function load($table, $id, $key)
     {
-        $tables = Config::inst()->get('EcommerceCache', 'in_mysql_tables');
+        $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
         if(in_array($table, $tables)) {
             $table = self::make_mysql_table_name($table);
             $id = (int)$id;
@@ -101,7 +101,7 @@ class EcommerceCache extends Object implements flushable
      */
     public static function save($table, $id, $key, $data)
     {
-        $tables = Config::inst()->get('EcommerceCache', 'in_mysql_tables');
+        $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
         if(in_array($table, $tables)) {
             $table = self::make_mysql_table_name($table);
             $id = (int)$id;

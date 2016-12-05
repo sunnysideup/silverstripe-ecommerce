@@ -1565,11 +1565,7 @@ class ProductGroup extends Page
     {
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            $time_start = microtime(true);
-            $data = EcommerceCache::load('ProductGroup', $this->ID, $cacheKey);
-            $time_end = microtime(true);
-            debug::log(round(($time_end - $time_start) * 100000));
-            return $data;
+            return EcommerceCache::load('ProductGroup', $this->ID, $cacheKey);
         }
 
         return;
