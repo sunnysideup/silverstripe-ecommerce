@@ -13,13 +13,8 @@
  *@todo supply links for adding, removing, and clearing cart items
  *@todo link for removing modifier(s)
  */
-class ShoppingCart_Controller extends Controller implements Flushable
+class ShoppingCart_Controller extends Controller
 {
-    public static function flush()
-    {
-        $cache = SS_Cache::factory('any');
-        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-    }
 
     /**
      * Default URL handlers - (Action)/(ID)/(OtherID).

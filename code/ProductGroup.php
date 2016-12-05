@@ -824,10 +824,7 @@ class ProductGroup extends Page
      */
     public function currentInitialProductsAsCachedArray($filterKey)
     {
-        $cacheKey = $this->cacheKey(
-            'CurrentInitialProductsArray',
-             $filterKey
-        );
+        $cacheKey = 'CurrentInitialProductsArray'.$filterKey;
         if ($array = $this->retrieveObjectStore($cacheKey)) {
             //do nothing
         } else {
@@ -874,10 +871,7 @@ class ProductGroup extends Page
     protected function getGroupFilter()
     {
         $levelToShow = $this->MyLevelOfProductsToShow();
-        $cacheKey = $this->cacheKey(
-            'GroupFilter',
-            abs(intval($levelToShow + 999))
-        );
+        $cacheKey = 'GroupFilter_'.abs(intval($levelToShow + 999));
         if ($groupFilter = $this->retrieveObjectStore($cacheKey)) {
             $this->allProducts = $this->allProducts->where($groupFilter);
         } else {
@@ -1512,6 +1506,7 @@ class ProductGroup extends Page
                 $normalImage->write();
             }
         }
+        EcommerceCache::clean();
     }
 
     /*****************************************************
@@ -1539,26 +1534,23 @@ class ProductGroup extends Page
      *
      * @return string
      */
-    public function cacheKey($name, $filterKey = '')
+    public function cacheKey($cacheKey)
     {
-        $cacheKey = 'ProductGroup_'.$name.'_'.$this->ID;
-        if ($filterKey) {
-            $cacheKey .= '_'.$filterKey;
-        }
-        if (self::$_product_group_cache_key_cache === null) {
-            self::$_product_group_cache_key_cache = "PR_"
-                .strtotime(Product::get()->max('LastEdited')). "_"
-                .Product::get()->count();
-            self::$_product_group_cache_key_cache .= "PG_"
-                .strtotime(ProductGroup::get()->max('LastEdited')). "_"
-                .ProductGroup::get()->count();
-            if (class_exists('ProductVariation')) {
-                self::$_product_group_cache_key_cache .= "PV_"
-                  .strtotime(ProductVariation::get()->max('LastEdited')). "_"
-                  .ProductVariation::get()->count();
-            }
-        }
-        $cacheKey .= self::$_product_group_cache_key_cache;
+        // $cacheKey = $key.'_'.$this->ID;
+        // if (self::$_product_group_cache_key_cache === null) {
+        //     self::$_product_group_cache_key_cache = "PR_"
+        //         .strtotime(Product::get()->max('LastEdited')). "_"
+        //         .Product::get()->count();
+        //     self::$_product_group_cache_key_cache .= "PG_"
+        //         .strtotime(ProductGroup::get()->max('LastEdited')). "_"
+        //         .ProductGroup::get()->count();
+        //     if (class_exists('ProductVariation')) {
+        //         self::$_product_group_cache_key_cache .= "PV_"
+        //           .strtotime(ProductVariation::get()->max('LastEdited')). "_"
+        //           .ProductVariation::get()->count();
+        //     }
+        // }
+        // $cacheKey .= self::$_product_group_cache_key_cache;
 
         return $cacheKey;
     }
@@ -1566,21 +1558,15 @@ class ProductGroup extends Page
     /**
      * saving an object to the.
      *
-     * @param bool $otherGroups
+     * @param string $cacheKey
      *
      * @return mixed
      */
     protected function retrieveObjectStore($cacheKey)
     {
-        $cacheKey = str_replace('-', '_', $cacheKey);
+        $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            $cache = SS_Cache::factory($cacheKey);
-            $data = $cache->load($cacheKey);
-            if (!$data) {
-                return;
-            }
-
-            return unserialize($data);
+            return EcommerceCache::load('ProductGroup', $this->ID, $cacheKey);
         }
 
         return;
@@ -1596,13 +1582,9 @@ class ProductGroup extends Page
      */
     protected function saveObjectStore($data, $cacheKey)
     {
-        $cacheKey = str_replace('-', '_', $cacheKey);
+        $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            $data = serialize($data);
-            $cache = SS_Cache::factory($cacheKey);
-            $cache->save($data, $cacheKey);
-
-            return true;
+            EcommerceCache::save('ProductGroup', $this->ID, $cacheKey, $data);
         }
 
         return false;
@@ -2339,10 +2321,7 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function FilterLinks()
     {
-        $cacheKey = $this->cacheKey(
-            'FilterLinks',
-            $this->filterForGroupObject ? $this->filterForGroupObject->ID : null
-        );
+        $cacheKey = 'FilterLinks_'.($this->filterForGroupObject ? $this->filterForGroupObject->ID : 0);
         if ($list = $this->retrieveObjectStore($cacheKey)) {
             //do nothing
         } else {
@@ -2381,30 +2360,40 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function ProductGroupFilterLinks()
     {
-        $arrayList = ArrayList::create();
-        $cacheKey = $this->cacheKey('ProductGroupFilterLinks');
-        if ($arrayOfItems = $this->retrieveObjectStore($cacheKey)) {
+
+        if ($array = $this->retrieveObjectStore('ProductGroupFilterLinks')) {
             //do nothing
         } else {
             $arrayOfItems = array();
 
             $baseArray = $this->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault('FILTER'));
 
+            //also show
             $items = $this->ProductGroupsFromAlsoShowProducts();
             $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
+            //also show inverse
             $items = $this->ProductGroupsFromAlsoShowProductsInverse();
             $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
+
+            //parent groups
             $items = $this->ProductGroupsParentGroups();
             $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
+
+            //child groups
             $items = $this->MenuChildGroups();
             $arrayOfItems = array_merge($arrayOfItems,  $this->productGroupFilterLinksCount($items, $baseArray, true));
-            ksort($arrayOfItems);
-            $this->saveObjectStore($arrayOfItems, $cacheKey);
-        }
-        foreach ($arrayOfItems as $arrayOfItem) {
-            $arrayList->push($this->makeArrayItem($arrayOfItem));
-        }
 
+            ksort($arrayOfItems);
+            $array = array();
+            foreach ($arrayOfItems as $arrayOfItem) {
+                $array[] = $this->makeArrayItem($arrayOfItem);
+            }
+            $this->saveObjectStore($array, 'ProductGroupFilterLinks');
+        }
+        $arrayList = ArrayList::create();
+        foreach($array as $item) {
+            $arrayList->push(ArrayData::create($item));
+        }
         return $arrayList;
     }
 
@@ -2457,17 +2446,14 @@ class ProductGroup_Controller extends Page_Controller
         } else {
             $link = $item->Link();
         }
-
-        return ArrayData::create(
-            array(
-                'Title' => $item->Title,
-                'Count' => $count,
-                'SelectKey' => $item->URLSegment,
-                'Current' => $isCurrent ? true : false,
-                'MyLinkingMode' => $isCurrent ? 'current' : 'link',
-                'FilterLink' => $link,
-                'Ajaxify' => $ajaxify ? true : false,
-            )
+        return array(
+            'Title' => $item->Title,
+            'Count' => $count,
+            'SelectKey' => $item->URLSegment,
+            'Current' => $isCurrent ? true : false,
+            'MyLinkingMode' => $isCurrent ? 'current' : 'link',
+            'FilterLink' => $link,
+            'Ajaxify' => $ajaxify ? true : false,
         );
     }
 
