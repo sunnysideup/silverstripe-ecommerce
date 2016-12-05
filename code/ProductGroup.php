@@ -1506,6 +1506,7 @@ class ProductGroup extends Page
                 $normalImage->write();
             }
         }
+        EcommerceCache::clean();
     }
 
     /*****************************************************
@@ -1557,7 +1558,7 @@ class ProductGroup extends Page
     /**
      * saving an object to the.
      *
-     * @param bool $otherGroups
+     * @param string $cacheKey
      *
      * @return mixed
      */
