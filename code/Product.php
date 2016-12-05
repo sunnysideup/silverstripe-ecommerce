@@ -415,6 +415,7 @@ class Product extends Page implements BuyableModel
                 $normalImage->write();
             }
         }
+        EcommerceCache::clean();
     }
 
 

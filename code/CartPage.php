@@ -524,12 +524,12 @@ class CartPage_Controller extends Page_Controller
             $order = $sc->currentOrder();
             foreach ($buyables as $buyable) {
                 $details = explode(",", $buyable);
-                if(count($details) == 3) {
+                if (count($details) == 3) {
                     $className = $details[0];
                     $className = class_exists($className) ? $className : null;
                     $id = intval($details[1]);
                     $quantity = floatval($details[2]);
-                    if($className && $id && $quantity) {
+                    if ($className && $id && $quantity) {
                         $buyable = $className::get()->byID($id);
                         if ($buyable && $buyable->canPurchase()) {
                             $sc->addBuyable($buyable, $quantity);
@@ -539,7 +539,7 @@ class CartPage_Controller extends Page_Controller
                 }
             }
             $order->calculateOrderAttributes(false);
-            if( ! $request->getVar('done')) {
+            if (! $request->getVar('done')) {
                 return $this->redirect($this->Link('share/'.$codes).'?done=1');
             }
         }

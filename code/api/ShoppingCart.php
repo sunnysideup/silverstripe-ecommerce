@@ -548,7 +548,7 @@ class ShoppingCart extends Object
     public function clear()
     {
         //we keep this here so that a flush can be added...
-        set_time_limit(1200);
+        set_time_limit(1 * 60);
         self::$_singletoncart = null;
         $this->order = null;
         $this->messages = array();

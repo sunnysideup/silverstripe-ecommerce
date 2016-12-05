@@ -13,13 +13,8 @@
  *@todo supply links for adding, removing, and clearing cart items
  *@todo link for removing modifier(s)
  */
-class ShoppingCart_Controller extends Controller implements Flushable
+class ShoppingCart_Controller extends Controller
 {
-    public static function flush()
-    {
-        $cache = SS_Cache::factory('any');
-        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-    }
 
     /**
      * Default URL handlers - (Action)/(ID)/(OtherID).
@@ -293,7 +288,7 @@ class ShoppingCart_Controller extends Controller implements Flushable
     public static function copy_order_link($orderID, $parameters = array())
     {
         $order = Order::get()->byID($orderID);
-        if($order && $order->IsSubmitted() ) {
+        if ($order && $order->IsSubmitted()) {
             return self::create_link('copyorder/'.$orderID.'/'.self::params_to_get_string($parameters));
         }
     }
