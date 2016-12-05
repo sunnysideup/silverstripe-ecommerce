@@ -12,14 +12,17 @@ class EcommerceTaskCacheTest extends BuildTask
         $cachekey = 'foo';
         $cache = SS_Cache::factory($cachekey);
         $result = $cache->load($cachekey);
-        if (!$result) {
-            echo 'not from cache: ';
+        if (!$result || isset($_GET['reload'])) {
+            $time = time();
+            for($i = 1; $i < $time; $i = $i + 75) {
+                $temp = $time / $time - rand(0,10);
+            }
             $result = date('Y-m-d H:i:s');;
+            DB::alteration_message('not from cache: '.$result, 'deleted');
             $cache->save($result, $cachekey);
         } else {
-            echo 'from cache: ';
+            DB::alteration_message('from cache: '.$result, 'created');
         }
-        echo $result;
     }
 
 }
