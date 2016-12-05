@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * to do: separate into MEMORY and NON-MEMORY
+ *
+ */
 
 class EcommerceCache extends Object implements flushable
 {
@@ -11,7 +14,7 @@ class EcommerceCache extends Object implements flushable
     public static function flush()
     {
         $cache = SS_Cache::factory('any');
-        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);        
+        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
         foreach($tables as $table) {
             $table = self::make_mysql_table_name($table);
@@ -24,7 +27,7 @@ class EcommerceCache extends Object implements flushable
                 '
                 CREATE TABLE "'.$table.'" (
                   "PAGEID" int(11) NOT NULL,
-                  "KEY" CHAR(50) NOT NULL,
+                  "CACHEKEY" CHAR(50) NOT NULL,
                   "DATA" TEXT
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
                 '
@@ -33,8 +36,21 @@ class EcommerceCache extends Object implements flushable
             DB::query(
                 '
                 ALTER TABLE "'.$table.'"
-                  ADD PRIMARY KEY ("PAGEID","KEY"),
-                  ADD KEY "KEY" ("KEY");
+                  ADD PRIMARY KEY ("PAGEID","CACHEKEY"),
+                  ADD KEY "CACHEKEY" ("CACHEKEY");
+                '
+            );
+        }
+    }
+
+    private static function clean()
+    {
+        $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
+        foreach($tables as $table) {
+            $table = self::make_mysql_table_name($table);
+            DB::query(
+                '
+                DELETE FROM "'.$table.'";
                 '
             );
         }
@@ -45,10 +61,10 @@ class EcommerceCache extends Object implements flushable
     /**
      * @param string           $table
      * @param int              $id
-     * @param string           $key
+     * @param string           $cacheKey
      * @return mixed
      */
-    public static function load($table, $id, $key)
+    public static function load($table, $id, $cacheKey)
     {
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
         if(in_array($table, $tables)) {
@@ -56,9 +72,9 @@ class EcommerceCache extends Object implements flushable
             $id = (int)$id;
             if(isset(self::$_items[$table])) {
                 if(isset(self::$_items[$table][$id])) {
-                    if(isset(self::$_items[$table][$id][$key])) {
-                        if(self::$_items[$table][$id][$key] !== null) {
-                            return @unserialize(self::$_items[$table][$id][$key]);
+                    if(isset(self::$_items[$table][$id][$cacheKey])) {
+                        if(self::$_items[$table][$id][$cacheKey] !== null) {
+                            return @unserialize(self::$_items[$table][$id][$cacheKey]);
                         }
                     }
                 }
@@ -70,20 +86,20 @@ class EcommerceCache extends Object implements flushable
             }
             if( ! isset(self::$_items[$table][$id])) {
                 self::$_items[$table][$id] = array();
-                $rows = DB::query('SELECT "KEY", "DATA" FROM "'.$table.'" WHERE "PAGEID" = '.$id.' ;');
+                $rows = DB::query('SELECT "CACHEKEY", "DATA" FROM "'.$table.'" WHERE "PAGEID" = '.$id.' ;');
                 foreach($rows as $row) {
-                    self::$_items[$table][$id][$row['KEY']] = $row['DATA'];
+                    self::$_items[$table][$id][$row['CACHEKEY']] = $row['DATA'];
                 }
                 //return the value, if there is one.
                 if(isset(self::$_items[$table][$id])) {
-                    if(isset(self::$_items[$table][$id][$key])) {
-                        return @unserialize(self::$_items[$table][$id][$key]);
+                    if(isset(self::$_items[$table][$id][$cacheKey])) {
+                        return @unserialize(self::$_items[$table][$id][$cacheKey]);
                     }
                 }
             }
         } else {
             $cache = SS_Cache::factory($table.'_'.$id);
-            $data = $cache->load($key);
+            $data = $cache->load($cacheKey);
             if (!$data) {
                 return;
             }
@@ -95,18 +111,18 @@ class EcommerceCache extends Object implements flushable
     /**
      * @param string           $table
      * @param int              $id
-     * @param string           $key
+     * @param string           $cacheKey
      * @param mixed            $data
      *
      */
-    public static function save($table, $id, $key, $data)
+    public static function save($table, $id, $cacheKey, $data)
     {
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
         if(in_array($table, $tables)) {
             $table = self::make_mysql_table_name($table);
             $id = (int)$id;
-            if(strlen($key) > 50) {
-                user_error('ERROR: key longer than 50 characters: '.$key);
+            if(strlen($cacheKey) > 50) {
+                user_error('ERROR: CACHEKEY longer than 50 characters: '.$cacheKey);
             }
             $data = Convert::raw2sql(serialize($data));
             if(!isset(self::$_items[$table])) {
@@ -115,29 +131,29 @@ class EcommerceCache extends Object implements flushable
             if(isset(self::$_items[$table][$id])) {
                 self::$_items[$table][$id] = array();
             }
-            self::$_items[$table][$id][$key] = $data;
+            self::$_items[$table][$id][$cacheKey] = $data;
             DB::query('
-                INSERT INTO "'.$table.'" ("PAGEID", "KEY", "DATA")
-                VALUES ('.$id.', \''.$key.'\', \''.$data.'\')
+                INSERT INTO "'.$table.'" ("PAGEID", "CACHEKEY", "DATA")
+                VALUES ('.$id.', \''.$cacheKey.'\', \''.$data.'\')
                 ON DUPLICATE KEY UPDATE DATA = \''.$data.'\';
             ');
         } else {
             $cache = SS_Cache::factory($table."_".$id);
             $data = serialize($data);
-            $cache->save($data, $key);
+            $cache->save($data, $cacheKey);
         }
     }
 
     /**
      * @param string           $table
      * @param int              $id
-     * @param string           $key
+     * @param string           $cacheKey
      * @param mixed            $data
      */
-    public static function touch($table, $id, $key, $data)
+    public static function touch($table, $id, $cacheKey, $data)
     {
-        $data = self::load($table, $inty, $key);
-        self::save($table, $id, $key, $data);
+        $data = self::load($table, $inty, $cacheKey);
+        self::save($table, $id, $cacheKey, $data);
     }
 
     private static function make_mysql_table_name($table)
