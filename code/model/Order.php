@@ -2572,7 +2572,7 @@ class Order extends DataObject implements EditableEcommerceObject
             );
         }
 
-        return Director::AbsoluteURL(CheckoutPage::find_link($action.'/'.implode('-', $array)));
+        return Director::AbsoluteURL(CartPage::find_link($action.'/'.implode('-', $array)));
     }
 
     /**
