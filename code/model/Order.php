@@ -2572,7 +2572,7 @@ class Order extends DataObject implements EditableEcommerceObject
             );
         }
 
-        return Director::AbsoluteURL(CheckoutPage::find_link($action.'/'.implode('-', $array)));
+        return Director::AbsoluteURL(CartPage::find_link($action.'/'.implode('-', $array)));
     }
 
     /**
@@ -2988,6 +2988,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $code = EcommerceCountry::get_country_from_ip();
         }
+        
         return $code;
     }
 
