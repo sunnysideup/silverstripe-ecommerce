@@ -425,7 +425,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function get_country_default()
+    public static function get_country_default()
     {
         $countryCode = EcommerceConfig::get('EcommerceCountry', 'default_country_code');
         //5. take the FIRST country from the get_allowed_country_codes
