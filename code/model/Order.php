@@ -2988,6 +2988,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $code = EcommerceCountry::get_country_from_ip();
         }
+        
         return $code;
     }
 

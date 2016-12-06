@@ -402,29 +402,41 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             $countryCode = self::get_fixed_country_code();
             if (!$countryCode) {
                 //2. check order / shipping address / ip address
+                //include $countryCode = self::get_country_from_ip();
                 if ($o = ShoppingCart::current_order()) {
-                    $countryCode = $o->Country();
-                }
-                //3. check GEOIP information
-                if (!$countryCode) {
+                    $countryCode = $o->getCountry();
+                //3 ... if there is no shopping cart, then we still want it from IP
+                } else {
                     $countryCode = self::get_country_from_ip();
-                    //4 check default country set in GEO IP....
-                    if (!$countryCode) {
-                        $countryCode = EcommerceConfig::get('EcommerceCountry', 'default_country_code');
-                        //5. take the FIRST country from the get_allowed_country_codes
-                        if (!$countryCode) {
-                            $countryArray = self::list_of_allowed_entries_for_dropdown();
-                            if (is_array($countryArray) && count($countryArray)) {
-                                foreach ($countryArray as $countryCode => $countryName) {
-                                    //we stop at the first one... as we have no idea which one is the best.
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                }
+                //4 check default country set in GEO IP....
+                if (!$countryCode) {
+                    $countryCode = self::get_country_default();
                 }
             }
             self::set_country_cache($countryCode, $orderID);
+        }
+
+        return $countryCode;
+    }
+
+    /**
+     * A bling guess at the best country!
+     *
+     * @return string
+     */
+    public function get_country_default()
+    {
+        $countryCode = EcommerceConfig::get('EcommerceCountry', 'default_country_code');
+        //5. take the FIRST country from the get_allowed_country_codes
+        if (!$countryCode) {
+            $countryArray = self::list_of_allowed_entries_for_dropdown();
+            if (is_array($countryArray) && count($countryArray)) {
+                foreach ($countryArray as $countryCode => $countryName) {
+                    //we stop at the first one... as we have no idea which one is the best.
+                    break;
+                }
+            }
         }
 
         return $countryCode;
