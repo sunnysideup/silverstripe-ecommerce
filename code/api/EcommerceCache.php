@@ -37,7 +37,8 @@ class EcommerceCache extends Object implements flushable
                 '
                 ALTER TABLE "'.$table.'"
                   ADD PRIMARY KEY ("PAGEID","CACHEKEY"),
-                  ADD KEY "CACHEKEY" ("CACHEKEY");
+                  ADD KEY "CACHEKEY" ("CACHEKEY"),
+                  ADD KEY "PAGEID" ("PAGEID");
                 '
             );
         }
