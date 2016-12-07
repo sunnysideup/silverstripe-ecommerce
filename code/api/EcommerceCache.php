@@ -45,7 +45,7 @@ class EcommerceCache extends Object implements flushable
         }
     }
 
-    private static function clean()
+    public static function clean()
     {
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
         if(is_array($tables)) {
