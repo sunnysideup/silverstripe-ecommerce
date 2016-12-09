@@ -7,9 +7,7 @@
 class EcommerceCache extends Object implements flushable
 {
 
-    private static $cache_in_mysql_tables = array(
-        'ProductGroup'
-    );
+    private static $cache_in_mysql_tables = array();
 
     public static function flush()
     {
