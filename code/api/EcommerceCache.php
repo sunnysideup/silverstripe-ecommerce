@@ -7,50 +7,56 @@
 class EcommerceCache extends Object implements flushable
 {
 
-    private static $cache_in_mysql_tables = array();
+    private static $cache_in_mysql_tables = array(
+    );
 
     public static function flush()
     {
         $cache = SS_Cache::factory('any');
         $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
-        foreach($tables as $table) {
-            $table = self::make_mysql_table_name($table);
-            DB::query(
-                '
-                DROP TABLE IF EXISTS "'.$table.'";
-                '
-            );
-            DB::query(
-                '
-                CREATE TABLE "'.$table.'" (
-                  "PAGEID" int(11) NOT NULL,
-                  "CACHEKEY" CHAR(50) NOT NULL,
-                  "DATA" TEXT
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-                '
-            );
+        if(is_array($tables)) {
+            foreach($tables as $table) {
+                $table = self::make_mysql_table_name($table);
+                DB::query(
+                    '
+                    DROP TABLE IF EXISTS "'.$table.'";
+                    '
+                );
+                DB::query(
+                    '
+                    CREATE TABLE "'.$table.'" (
+                      "PAGEID" int(11) NOT NULL,
+                      "CACHEKEY" CHAR(50) NOT NULL,
+                      "DATA" TEXT
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+                    '
+                );
 
-            DB::query(
-                '
-                ALTER TABLE "'.$table.'"
-                  ADD PRIMARY KEY ("PAGEID","CACHEKEY"),
-                  ADD KEY "CACHEKEY" ("CACHEKEY");
-                '
-            );
+                DB::query(
+                    '
+                    ALTER TABLE "'.$table.'"
+                      ADD PRIMARY KEY ("PAGEID","CACHEKEY"),
+                      ADD KEY "CACHEKEY" ("CACHEKEY"),
+                      ADD KEY "PAGEID" ("PAGEID");
+                    '
+                );
+            }
         }
     }
 
-    private static function clean()
+    public static function clean()
     {
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
-        foreach($tables as $table) {
-            $table = self::make_mysql_table_name($table);
-            DB::query(
-                '
-                DELETE FROM "'.$table.'";
-                '
-            );
+        if(is_array($tables)) {
+            foreach($tables as $table) {
+                $table = self::make_mysql_table_name($table);
+                DB::query(
+                    '
+                    DELETE FROM "'.$table.'";
+                    '
+                );
+            }
         }
     }
 
@@ -65,7 +71,7 @@ class EcommerceCache extends Object implements flushable
     public static function load($table, $id, $cacheKey)
     {
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
-        if(in_array($table, $tables)) {
+        if(is_array($tables) && in_array($table, $tables)) {
             $table = self::make_mysql_table_name($table);
             $id = (int)$id;
             if(isset(self::$_items[$table])) {
@@ -116,7 +122,7 @@ class EcommerceCache extends Object implements flushable
     public static function save($table, $id, $cacheKey, $data)
     {
         $tables = Config::inst()->get('EcommerceCache', 'cache_in_mysql_tables');
-        if(in_array($table, $tables)) {
+        if(is_array($tables) && in_array($table, $tables)) {
             $table = self::make_mysql_table_name($table);
             $id = (int)$id;
             if(strlen($cacheKey) > 50) {
