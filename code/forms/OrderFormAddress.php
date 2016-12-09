@@ -370,7 +370,7 @@ class OrderFormAddress extends Form
         //MEMBER
         $this->orderMember = $this->createOrFindMember($data);
         if ($this->debug) {
-            debug::log(implode("\r\n<hr />", $this->debugArray));
+            debug::log('debug array from OrderFormAddress:'.implode("\r\n<hr />", $this->debugArray));
         }
 
         if ($this->orderMember && is_object($this->orderMember)) {
