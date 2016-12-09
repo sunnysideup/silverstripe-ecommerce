@@ -1506,7 +1506,6 @@ class ProductGroup extends Page
                 $normalImage->write();
             }
         }
-        EcommerceCache::clean();
     }
 
     /*****************************************************
@@ -1555,6 +1554,11 @@ class ProductGroup extends Page
         return $cacheKey;
     }
 
+    protected function cacheFactoryName()
+    {
+        return 'EcomPG_'.$this->ID;
+    }
+
     /**
      * saving an object to the.
      *
@@ -1566,7 +1570,15 @@ class ProductGroup extends Page
     {
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            return EcommerceCache::load('ProductGroup', $this->ID, $cacheKey);
+            $cache = SS_Cache::factory($this->cacheFactoryName());
+            $data = $cache->load($cacheKey);
+            if (!$data) {
+                return;
+            }
+            if( ! $cache->getOption('automatic_serialization')) {
+                $data = @unserialize($data);
+            }
+            return $data;
         }
 
         return;
@@ -1584,7 +1596,12 @@ class ProductGroup extends Page
     {
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            EcommerceCache::save('ProductGroup', $this->ID, $cacheKey, $data);
+            $cache = SS_Cache::factory($this->cacheFactoryName());
+            if( ! $cache->getOption('automatic_serialization')) {
+                $data = serialize($data);
+            }
+            $cache->save($data, $cacheKey);
+            return true;
         }
 
         return false;
