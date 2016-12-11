@@ -3,11 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <title><% _t("Order.PACKING_SLIP", "Packing Slip") %> $Order.Title</title>
+    <title><% _t('PRINT_ALL_PACKING_SLIPS', 'Print Packing Slips for Selected Orders') %></title>
 </head>
 <body>
-    <% loop $Me %>
-        <% with Order %>
+    <% loop $Orders %>
         <div style="page-break-after: always;" id="Wrapper">
             <h1 class="title">
                 <% if PackingSlipTitle %>
@@ -39,7 +38,6 @@
             <div id="PackingSlipNote">$PackingSlipNote</div>
         </div>
         <hr class="multi-print-separator"/>
-    <% end_with %>
     <% end_loop %>
     <script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 </body>
