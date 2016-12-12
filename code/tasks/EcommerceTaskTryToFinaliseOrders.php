@@ -16,7 +16,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
     protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS';
 
-    protected $description = 'This task can be useful in moving a bunch of orders through the latest order step. It will only move orders if they can be moved through order steps.  You may need to run this task several times to move all orders.';
+    protected $description = '
+        This task can be useful in moving a bunch of orders through the latest order step.
+        It will only move orders if they can be moved through order steps.
+        You may need to run this task several times to move all orders.';
 
     /**
      *@return int - number of carts destroyed

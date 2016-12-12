@@ -1091,15 +1091,37 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
-            do {
-                //a little hack to make sure we do not rely on a stored value
-                //of "isSubmitted"
-                $this->_isSubmittedTempVar = -1;
-                //status of order is being progressed
-                $nextStatusID = $this->doNextStatus();
-            } while ($nextStatusID);
+            //a little hack to make sure we do not rely on a stored value
+            //of "isSubmitted"
+            $this->_isSubmittedTempVar = -1;
+            //status of order is being progressed
+            $nextStatusID = $this->doNextStatus();
+            if($nextStatusID) {
+                self::$_try_to_finalise_order_is_running[$this->ID] = false;
+                $nextOrderStep = OrderStep::get()->byID($nextStatusID);
+                if($nextOrderStep) {
+                    if($nextOrderStep->mustRunOnNewInstance()) {
+                        //register_shutdown_function(array('Order', 'finalise_order_from_register_shutdown_function'), $this->ID);
+                    } else {
+                        $this->tryToFinaliseOrder();
+                    }
+                }
+            }
             //release ... to run again ...
-            self::$_try_to_finalise_order_is_running[$this->ID] = false;
+        }
+    }
+
+    /**
+     *
+     *
+     * @param  int  $id [description]
+     * @return boolean     [description]
+     */
+    public static function finalise_order_from_register_shutdown_function($id)
+    {
+        $order = Order::get()->byID($id);
+        if($order) {
+            $order->tryToFinaliseOrder();
         }
     }
 
@@ -2988,7 +3010,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $code = EcommerceCountry::get_country_from_ip();
         }
-        
+
         return $code;
     }
 
