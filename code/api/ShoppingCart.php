@@ -1070,10 +1070,10 @@ class ShoppingCart extends Object
                 $form->sessionMessage($message, $status);
                 //let the form controller do the redirectback or whatever else is needed.
             } else {
-                if (empty($_REQUEST['BackURL'])) {
+                if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
                     Controller::curr()->redirectBack();
                 } else {
-                    Controller::cur()->redirect(urldecode($_REQUEST['BackURL']));
+                    Controller::curr()->redirect(urldecode($_REQUEST['BackURL']));
                 }
             }
 
