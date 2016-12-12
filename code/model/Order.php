@@ -1091,15 +1091,36 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
-            do {
-                //a little hack to make sure we do not rely on a stored value
-                //of "isSubmitted"
-                $this->_isSubmittedTempVar = -1;
-                //status of order is being progressed
-                $nextStatusID = $this->doNextStatus();
-            } while ($nextStatusID);
-            //release ... to run again ...
-            self::$_try_to_finalise_order_is_running[$this->ID] = false;
+            $queueObject = Injector::inst()->get('OrderProcessQueue');
+            if($queueObject->alreadyInQueue($this)) {
+                $partOfReadyItems = $queueObject->OrdersToBeProcessed->filter(array('OrderID' => $this->ID));
+                //not ready to go yet, so lets get out of here ...
+                if($partOfReadyItems->count() === 0) {
+                    
+                    return;
+                }
+            }
+            //a little hack to make sure we do not rely on a stored value
+            //of "isSubmitted"
+            $this->_isSubmittedTempVar = -1;
+            //status of order is being progressed
+            $nextStatusID = $this->doNextStatus();
+            if($nextStatusID) {
+                $nextStatusObject = OrderStep::get()->byID($nextStatusID);
+                if($nextStatusObject) {
+                    if($nextStatusObject->DeferTimeInSeconds > 0) {
+                        $queueObject->AddOrderToQueue(
+                            $this,
+                            $nextStatusObject->DeferTimeInSeconds
+                        );
+                    }
+                    else {
+                        //status has been completed, so it can be released
+                        self::$_try_to_finalise_order_is_running[$this->ID] = false;
+                        $this->tryToFinaliseOrder($runAgain);
+                    }
+                }
+            }
         }
     }
 
@@ -2988,7 +3009,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $code = EcommerceCountry::get_country_from_ip();
         }
-        
+
         return $code;
     }
 
