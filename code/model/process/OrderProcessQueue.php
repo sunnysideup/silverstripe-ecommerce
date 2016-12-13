@@ -8,7 +8,8 @@
 class OrderProcessQueue extends DataObject
 {
     private static $db = array(
-        'DeferTimeInSeconds' => 'Int'
+        'DeferTimeInSeconds' => 'Int',
+        'InProcess' => 'Boolean'
     );
 
     private static $has_one = array(
@@ -36,7 +37,8 @@ class OrderProcessQueue extends DataObject
     private static $summary_fields = array(
         'Order.Title' => 'Order',
         'ToBeProcessedAt.Nice' => 'To be processed at',
-        'ToBeProcessedAt.Ago' => 'That is'
+        'ToBeProcessedAt.Ago' => 'That is ...',
+        'InProcess.Nice' => 'Currently Running'
     );
 
     /**
@@ -173,6 +175,25 @@ class OrderProcessQueue extends DataObject
         return $existingEntry;
     }
 
+    /**
+     * processes the order ...
+     *
+     * @param  Order $order
+     */
+    public function process($order)
+    {
+        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $myQueueObject = $queueObjectSingleton->getQueueObject($order);
+        if($myQueueObject->isReadyToGo()) {
+            $myQueueObject->InProcess = true;
+            $myQueueObject->write();
+            $order->tryToFinaliseOrder(
+                $tryAgain = false,
+                $fromOrderQueue = true
+            );
+            $myQueueObject->delete();
+        }
+    }
 
     /**
      * META METHOD: returns the queue object if it exists
@@ -214,7 +235,10 @@ class OrderProcessQueue extends DataObject
         $sql = '
             SELECT "OrderID"
             FROM "OrderProcessQueue"
-            WHERE (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time();
+            WHERE 
+                "InProcess" = 0 
+                AND
+                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time();
         $rows = DB::query($sql);
         $orderIDs = array(0 => 0);
         foreach($rows as $row) {
