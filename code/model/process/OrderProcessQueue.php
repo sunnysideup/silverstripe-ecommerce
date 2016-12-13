@@ -146,13 +146,6 @@ class OrderProcessQueue extends DataObject
         return _t('OrderProcessQueue.PLURAL_NAME', 'Orders to be Processed');
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $default_sort = '"Created" DESC';
-
 
     /**
      * META METHOD: Add an order to the job list.
