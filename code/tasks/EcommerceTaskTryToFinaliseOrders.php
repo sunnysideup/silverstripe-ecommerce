@@ -71,8 +71,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         ->where($whereSQL)
                         ->sort('ID', 'ASC')
                         ->exclude(array('ID' => $ordersinQueue->column('ID')))
-                        ->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
-                    $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt)
+                        ->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"");
+                    $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
                     DB::alteration_message('NO  order step.', 'deleted');
                 }

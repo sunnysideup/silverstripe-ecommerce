@@ -26,23 +26,30 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
      **/
     public function run($request)
     {
+        //as this may run every minute, we have to limit it to fifty seconds.
+        set_time_limit(50);
+        echo 'start at: '.microtime();
         //IMPORTANT!
         if ($this->doNotSendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new EcommerceTaskTryToFinaliseOrders_Mailer());
         }
-
-        $ordersinQueue = OrderProcessQueue::OrdersToBeProcessed()->limit($this->limit);
+        $queueObject = Injector::inst()->get('OrderProcessQueue');
+        $ordersinQueue = $queueObject->OrdersToBeProcessed();
 
         $this->tryToFinaliseOrders($ordersinQueue);
+        echo '<hr />';
+        echo 'stop at: '.microtime();
 
     }
 
 
-    protected function tryToFinaliseOrders($orders, $limit, $startAt) {
+    protected function tryToFinaliseOrders($orders) {
         $queueObject = Injector::inst()->get('OrderProcessQueue');
+        $ordersinQueue = $queueObject->OrdersToBeProcessed()->limit($this->limit);
         foreach($orders as $order) {
-            $order->tryToFinaliseOrders();
+            echo '<hr />'.$order->ID;
+            $order->tryToFinaliseOrder();
             $queueObject->removeOrderFromQueue($order);
 
         }
