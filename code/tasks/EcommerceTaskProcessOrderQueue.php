@@ -15,7 +15,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
     protected $doNotSendEmails = true;
 
-    protected $limit = 5;
+    protected $limit = 1;
 
     protected $title = 'Process The Order Queue';
 
@@ -28,7 +28,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
     {
         //as this may run every minute, we have to limit it to fifty seconds.
         set_time_limit(50);
-        echo 'start at: '.microtime();
+        $now = microtime(true);
         //IMPORTANT!
         if ($this->doNotSendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
@@ -39,8 +39,8 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
         $this->tryToFinaliseOrders($ordersinQueue);
         echo '<hr />';
-        echo 'stop at: '.microtime();
-
+        echo '<hr />';
+        echo 'PROCECESSED IN: '.round(((microtime(true) - $now) / 1), 5).' seconds';
     }
 
 

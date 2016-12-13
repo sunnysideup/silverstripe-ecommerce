@@ -1081,6 +1081,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * Goes through the order steps and tries to "apply" the next status to the order.
      *
      * @param bool $runAgain
+     * @param bool $fromOrderQueue - is it being called from the OrderProcessQueue (or similar)
      **/
     public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
@@ -1093,7 +1094,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             //does a queue object already exist
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-            if($myQueueObject->getQueueObject($this)) {
+            if($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
                 if($myQueueObject->InProcess) {
                     if(! $fromOrderQueue) {
 
@@ -1118,7 +1119,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     else {
                         //status has been completed, so it can be released
                         self::$_try_to_finalise_order_is_running[$this->ID] = false;
-                        $this->tryToFinaliseOrder($runAgain);
+                        $this->tryToFinaliseOrder($runAgain, $fromOrderQueue);
                     }
                 }
             }
