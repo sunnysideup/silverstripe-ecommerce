@@ -438,10 +438,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         );
         if($this->DeferTimeInSeconds) {
             $deferTimeInSecondsField->setRightTitle(
-                $rightTitle = _t(
+                _t(
                     'OrderStep.MUST_SET_UP_CRON_JOB',
                     'Make sure your developer has set up a <em>cron job</em> to process the order queue.'
-                );
+                )
             );
         }
         if ($this->hasCustomerMessage()) {
