@@ -34,8 +34,8 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new EcommerceTaskTryToFinaliseOrders_Mailer());
         }
-        $queueObject = Injector::inst()->get('OrderProcessQueue');
-        $ordersinQueue = $queueObject->OrdersToBeProcessed();
+        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed();
 
         $this->tryToFinaliseOrders($ordersinQueue);
         echo '<hr />';
@@ -45,13 +45,11 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
 
     protected function tryToFinaliseOrders($orders) {
-        $queueObject = Injector::inst()->get('OrderProcessQueue');
-        $ordersinQueue = $queueObject->OrdersToBeProcessed()->limit($this->limit);
+        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed()->limit($this->limit);
         foreach($orders as $order) {
             echo '<hr />'.$order->ID;
-            $order->tryToFinaliseOrder();
-            $queueObject->removeOrderFromQueue($order);
-
+            $queueObjectSingleton->process($order);
         }
     }
 
