@@ -1082,7 +1082,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param bool $runAgain
      **/
-    public function tryToFinaliseOrder($runAgain = false)
+    public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
         if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
@@ -1092,15 +1092,14 @@ class Order extends DataObject implements EditableEcommerceObject
                 return;
             }
             //does a queue object already exist
-            $queueObject = Injector::inst()->get('OrderProcessQueue');
-            if($queueObject->getQueueObject($this)) {
-                // $partOfReadyItems = $queueObject->OrdersToBeProcessed()->filter(array('ID' => $this->ID));
-                // //not ready to go yet, so lets get out of here ...
-                // if($partOfReadyItems->count() === 0) {
-                //
-                //     return;
-                // }
-                return;
+            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+            if($myQueueObject->getQueueObject($this)) {
+                if($myQueueObject->InProcess) {
+                    if(! $fromOrderQueue) {
+
+                        return;
+                    }
+                }
             }
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
@@ -1111,7 +1110,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $nextStatusObject = OrderStep::get()->byID($nextStatusID);
                 if($nextStatusObject) {
                     if($nextStatusObject->DeferTimeInSeconds > 0) {
-                        $queueObject->AddOrderToQueue(
+                        $queueObjectSingleton->AddOrderToQueue(
                             $this,
                             $nextStatusObject->DeferTimeInSeconds
                         );
