@@ -36,7 +36,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         }
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed();
-        echo '<h3>There are '.$ordersinQueue->count().' in the queue, processing '.$this->limit.' now</h3>'
+        echo '<h3>There are '.$ordersinQueue->count().' in the queue, processing '.$this->limit.' now</h3>';
         $this->tryToFinaliseOrders($ordersinQueue);
         echo '<hr />';
         echo '<hr />';
