@@ -1091,14 +1091,16 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
+            //does a queue object already exist
             $queueObject = Injector::inst()->get('OrderProcessQueue');
-            if($queueObject->alreadyInQueue($this)) {
-                $partOfReadyItems = $queueObject->OrdersToBeProcessed->filter(array('OrderID' => $this->ID));
-                //not ready to go yet, so lets get out of here ...
-                if($partOfReadyItems->count() === 0) {
-                    
-                    return;
-                }
+            if($queueObject->getQueueObject($this)) {
+                // $partOfReadyItems = $queueObject->OrdersToBeProcessed()->filter(array('ID' => $this->ID));
+                // //not ready to go yet, so lets get out of here ...
+                // if($partOfReadyItems->count() === 0) {
+                //
+                //     return;
+                // }
+                return;
             }
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
@@ -3009,7 +3011,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $code = EcommerceCountry::get_country_from_ip();
         }
-        
+
         return $code;
     }
 
