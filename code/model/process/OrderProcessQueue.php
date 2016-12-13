@@ -35,7 +35,8 @@ class OrderProcessQueue extends DataObject
      */
     private static $summary_fields = array(
         'Order.Title' => 'Order',
-        'ToBeProcessedAt.Nice' => 'When'
+        'ToBeProcessedAt.Nice' => 'To be processed at',
+        'ToBeProcessedAt.Ago' => 'That is'
     );
 
     /**
@@ -213,7 +214,7 @@ class OrderProcessQueue extends DataObject
         $sql = '
             SELECT "OrderID"
             FROM "OrderProcessQueue"
-            WHERE (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < "'.time();
+            WHERE (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time();
         $rows = DB::query($sql);
         $orderIDs = array(0 => 0);
         foreach($rows as $row) {
@@ -234,6 +235,21 @@ class OrderProcessQueue extends DataObject
         return (strtotime($this->Created) + $this->DeferTimeInSeconds) < time();
     }
 
+    /**
+     *
+     * casted variable
+     * @return SS_DateTime
+     */
+    function ToBeProcessedAt()
+    {
+        return $this->getToBeProcessedAt();
+    }
+
+    /**
+     *
+     * casted variable
+     * @return SS_DateTime
+     */
     function getToBeProcessedAt()
     {
         return DBField::create_field('SS_Datetime', (strtotime($this->Created) + $this->DeferTimeInSeconds));
