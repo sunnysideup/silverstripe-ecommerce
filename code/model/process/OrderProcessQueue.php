@@ -29,6 +29,10 @@ class OrderProcessQueue extends DataObject
         'ToBeProcessedAt' => 'SS_Datetime'
     );
 
+    private static $default_sort = array(
+        'Created' => 'DESC'
+    );
+
     /**
      * standard SS variable.
      *
@@ -235,10 +239,12 @@ class OrderProcessQueue extends DataObject
         $sql = '
             SELECT "OrderID"
             FROM "OrderProcessQueue"
-            WHERE 
-                "InProcess" = 0 
+            WHERE
+                "InProcess" = 0
                 AND
-                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time();
+                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time().'
+            ORDER BY "Created" DESC;
+        ';
         $rows = DB::query($sql);
         $orderIDs = array(0 => 0);
         foreach($rows as $row) {
