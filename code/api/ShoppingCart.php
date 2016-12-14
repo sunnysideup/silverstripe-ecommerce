@@ -524,7 +524,7 @@ class ShoppingCart extends Object
         $this->clear();
         //little hack to clear static memory
         OrderItem::reset_price_has_been_fixed($this->currentOrder()->ID);
-        //we cleanup the old orders here so that we immediately know if there is a problem.
+
         return true;
     }
 
