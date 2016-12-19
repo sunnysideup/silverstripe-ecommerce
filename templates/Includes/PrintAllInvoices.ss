@@ -4,10 +4,10 @@
     <% base_tag %>
     $MetaTags
     <link rel="shortcut icon" href="/favicon.ico" />
+    <title><% _t('PRINT_ALL_INVOICES', 'Print Invoices for Selected Orders') %></title>
 </head>
 <body>
-    <% loop $Me %>
-    <% with $Order %>
+    <% loop $Orders %>
         <div style="page-break-after: always;">
             <% with EcomConfig %>
                 <div id="ShopInfo">
@@ -23,7 +23,6 @@
             <% include Order %>
         </div>
         <hr class="multi-print-separator"/>
-    <% end_with %>
     <% end_loop %>
     <script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 </body>

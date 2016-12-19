@@ -22,6 +22,13 @@ See http://www.silverstripe-ecommerce.com
 There are no special tricks to install this module. Install like any
 other Silverstripe Module module.
 
+### Cronjobs
+If you need to defer any of the OrderSteps (delay by x seconds) then you
+need to set up a cron job as follows:
+
+```bash
+* * * * * php /root/folder/of/website/framework/cli-script.php  dev/tasks/EcommerceTaskProcessOrderQueue
+```
 To use SSL on some pages only, you can define:
 
 DEFINE('_SECURE_URL', "https://www.mysite.co.nz");
@@ -30,7 +37,7 @@ DEFINE('_STANDARD_URL', "http://www.mysite.co.nz");
 
 ## Development Philosophy and Version Management ##
 
-This flavour of Silvertripe E-commerce aims to be a polished, one click install solution for basic e-commerce websites. 
+This flavour of Silvertripe E-commerce aims to be a polished, one click install solution for basic e-commerce websites.
 
 We are in the process of moving towards semantic versioning.
 
@@ -45,7 +52,7 @@ We are in the process of moving towards semantic versioning.
   - example front-end template showing nearly all variables available and how to use them
   - javascript code included (e.g. ajaxifies cart)
   - basic customisation guide: http://www.silverstripe-ecommerce.com/home/customisation-guide/
-  - lots of helpful maintenance and debug scripts 
+  - lots of helpful maintenance and debug scripts
   - add /debug to the end of a product / product category URL (e.g. www.mysite.co.nz/my-product/debug/ to get all the coding info you may need for that object - e.g. SQL to select products in product category)
 
  * cart responses are easily customised / ajaxified and will update all identified areas on any page view
@@ -91,7 +98,7 @@ We are in the process of moving towards semantic versioning.
  * we are super happy to help anyone to get started with version of e-commerce
 
  * we would welcome financial support and other help to add
-  (a) translations 
+  (a) translations
   (b) test suite
 
 

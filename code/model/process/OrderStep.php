@@ -33,6 +33,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         'HideStepFromCustomer' => 'Boolean',
         //sorting index
         'Sort' => 'Int',
+        'DeferTimeInSeconds' => 'Int'
     );
 
 
@@ -310,6 +311,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * return StatusIDs (orderstep IDs) from orders that are bad....
+     * (basically StatusID values that do not exist)
+     *
+     * @return array
+     */
+    public static function bad_order_step_ids()
+    {
+        $badorderStatus = Order::get()
+            ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
+            ->where('"OrderStep"."ID" IS NULL AND "StatusID" > 0')
+            ->column('StatusID');
+        if (is_array($badorderStatus)) {
+            return array_unique(array_values($badorderStatus));
+        } else {
+            return array(-1);
+        }
+    }
+
+    /**
      * turns code into ID.
      *
      * @param string $code
@@ -409,8 +429,31 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
+        $fields->addFieldToTab(
+            'Root.Queue',
+            $deferTimeInSecondsField = NumericField::create(
+                'DeferTimeInSeconds',
+                'Seconds in hold queue'
+            )
+        );
+        if($this->DeferTimeInSeconds) {
+            $deferTimeInSecondsField->setRightTitle(
+                _t(
+                    'OrderStep.MUST_SET_UP_CRON_JOB',
+                    'Make sure your developer has set up a <em>cron job</em> to process the order queue.'
+                )
+            );
+        }
         if ($this->hasCustomerMessage()) {
-            $fields->addFieldToTab('Root.CustomerMessage', new TextField('EmailSubject', _t('OrderStep.EMAILSUBJECT', 'Email Subject (if any), you can use [OrderNumber] as a tag that will be replaced with the actual Order Number.')));
+            $rightTitle = _t(
+                'OrderStep.EXPLAIN_ORDER_NUMBER_IN_SUBJECT',
+                'You can use [OrderNumber] as a tag that will be replaced with the actual Order Number.'
+            );
+            $fields->addFieldToTab(
+                'Root.CustomerMessage',
+                TextField::create('EmailSubject', _t('OrderStep.EMAILSUBJECT', 'Email Subject'))
+                    ->setRightTitle($rightTitle)
+            );
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
             if ($testEmailLink = $this->testEmailLink()) {
                 $fields->addFieldToTab('Root.CustomerMessage', new LiteralField('testEmailLink', '<p><a href="'.$testEmailLink.'" data-popup="true">'._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'</a></p>'));
@@ -977,7 +1020,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param  Member $member optional
      * @return bool
      */
-    function canOverrideCanViewForOrder($order, $member = null)
+    public function canOverrideCanViewForOrder($order, $member = null)
     {
         //return true if the order can have customer input
         // orders recently saved can also be views
@@ -1055,13 +1098,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         parent::onBeforeWrite();
         //make sure only one of three conditions applies ...
-        if($this->ShowAsUncompletedOrder) {
+        if ($this->ShowAsUncompletedOrder) {
             $this->ShowAsInProcessOrder = false;
             $this->ShowAsCompletedOrder = false;
-        } elseif($this->ShowAsInProcessOrder) {
+        } elseif ($this->ShowAsInProcessOrder) {
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsCompletedOrder = false;
-        } elseif($this->ShowAsCompletedOrder) {
+        } elseif ($this->ShowAsCompletedOrder) {
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsInProcessOrder = false;
         }
@@ -1130,10 +1173,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($orderStepsToInclude && count($orderStepsToInclude)) {
             if ($codesToInclude && count($codesToInclude)) {
                 foreach ($codesToInclude as $className => $code) {
+                    $code = strtoupper($code);
+                    $filter = array('ClassName' => $className);
                     $indexNumber += 10;
-                    $itemCount = $className::get()->Count();
+                    $itemCount = OrderStep::get()->filter($filter)->Count();
                     if ($itemCount) {
-                        $obj = $className::get()->First();
+                        $obj = OrderStep::get()->filter($filter)->First();
                         if ($obj->Code != $code) {
                             $obj->Code = $code;
                             $obj->write();
@@ -1145,7 +1190,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         }
                     } else {
                         $obj = $className::create();
-                        $obj->Code = strtoupper($obj->Code);
+                        $obj->Code = $code;
                         $obj->Description = $obj->myDescription();
                         $obj->write();
                         DB::alteration_message("Created \"$code\" as $className.", 'created');

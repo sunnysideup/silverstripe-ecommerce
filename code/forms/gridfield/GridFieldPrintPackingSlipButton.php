@@ -1,7 +1,7 @@
 <?php
 
 
-class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, GridField_ActionProvider
+class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridField_ActionProvider
 {
 
     /**
@@ -10,8 +10,9 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
      * @param GridField $gridField
      * @param array $columns
      */
-    public function augmentColumns($gridField, &$columns) {
-        if(!in_array('Packing Slip', $columns)) {
+    public function augmentColumns($gridField, &$columns)
+    {
+        if (!in_array('Packing Slip', $columns)) {
             $columns[] = 'Packing Slip';
         }
     }
@@ -24,7 +25,8 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
      * @param string $columnName
      * @return array
      */
-    public function getColumnAttributes($gridField, $record, $columnName) {
+    public function getColumnAttributes($gridField, $record, $columnName)
+    {
         return array('class' => 'col-buttons print');
     }
 
@@ -35,8 +37,9 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
      * @param string $columnName
      * @return array
      */
-    public function getColumnMetadata($gridField, $columnName) {
-        if($columnName == 'Packing Slip') {
+    public function getColumnMetadata($gridField, $columnName)
+    {
+        if ($columnName == 'Packing Slip') {
             return array('title' => 'Packing Slip');
         }
     }
@@ -49,7 +52,8 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
      *
      * @return string - the HTML for the column
      */
-    public function getColumnContent($gridField, $record, $columnName) {
+    public function getColumnContent($gridField, $record, $columnName)
+    {
         // No permission checks, handled through GridFieldDetailForm,
         // which can make the form readonly if no edit permissions are available.
         $onclickStatement =
@@ -70,7 +74,7 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
             ->setAttribute('title', _t('GridPacking Slip.PRINT_PACKING_SLIP', "Packing Slip"))
             ->setAttribute('data-icon', 'download-csv')
             ->setAttribute('onclick', $onclickStatement)
-            ->setDescription(_t('GridPacking Slip.PRINT_PACKING_SLIP_DESCRIPTION','Print Packing Slip'));
+            ->setDescription(_t('GridPacking Slip.PRINT_PACKING_SLIP_DESCRIPTION', 'Print Packing Slip'));
         return $field->FIeld();
     }
 
@@ -81,7 +85,8 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
      * @param GridField $gridField
      * @return array
      */
-    public function getColumnsHandled($gridField) {
+    public function getColumnsHandled($gridField)
+    {
         return array('Packing Slip');
     }
 
@@ -93,7 +98,8 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
      * @param GridField $gridField
      * @return array
      */
-    public function getActions($gridField) {
+    public function getActions($gridField)
+    {
         return array('printpackingslip');
     }
 
@@ -107,10 +113,11 @@ class GridFieldPrintPackingSlipButton implements  GridField_ColumnProvider, Grid
      * @param array $data - form data
      * @return void
      */
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
-        if($actionName == 'printpackingslip') {
+    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    {
+        if ($actionName == 'printpackingslip') {
             $itemID =  intval($arguments['RecordID']);
-            if(!$itemID) {
+            if (!$itemID) {
                 return;
             }
             // $list = $gridField->getList();

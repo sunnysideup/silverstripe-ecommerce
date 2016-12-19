@@ -69,7 +69,10 @@ class OrderItem extends OrderAttribute
         'InternalItemID' => 'Varchar',
         'Link' => 'Varchar',
         'AbsoluteLink' => 'Varchar',
-        'BuyableLink' => 'Varchar'
+        'BuyableLink' => 'Varchar',
+        'BuyableExists' => 'Boolean',
+        'BuyableFullName' => 'Varchar',
+        'BuyableMoreDetails' => 'Varchar'
     );
 
     ######################
@@ -101,12 +104,12 @@ class OrderItem extends OrderAttribute
 
     /**
      * @var array
-     *            stardard SS definition
+     * stardard SS definition
      */
     private static $summary_fields = array(
         'OrderID' => 'Order ID',
-        'TableTitle' => 'Title',
-        'TableSubTitleNOHTML' => '',
+        'BuyableFullName' => 'Item',
+        'BuyableMoreDetails' => 'Details ... ',
         'UnitPrice' => 'Unit Price',
         'Quantity' => 'Quantity',
         'Total' => 'Total Price',
@@ -175,64 +178,80 @@ class OrderItem extends OrderAttribute
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('BuyableID', new HiddenField('BuyableID'));
-        $fields->replaceField('BuyableClassName', new HiddenField('BuyableClassName'));
-        $fields->replaceField('Version', new HiddenField('Version'));
+        $fields->replaceField('BuyableID', HiddenField::create('BuyableID'));
+        $fields->replaceField('BuyableClassName', HiddenField::create('BuyableClassName'));
+        $fields->replaceField('Version', HiddenField::create('Version'));
         if ($this->OrderID && $this->exists()) {
             $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
-
             $fields->addFieldsToTab(
                 'Root.Advanced',
                 array(
-                    new HeaderField('BuyableHeading', 'Buyable'),
+                    HeaderField::create('BuyableHeading', 'Buyable'),
 
-                    new ReadonlyField('BuyableIDCheck', 'BuyableID', $this->BuyableID),
-                    new ReadonlyField('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName),
-                    new ReadonlyField('VersionCheck', 'Version', $this->Version),
+                    ReadonlyField::create('BuyableIDCheck', 'BuyableID', $this->BuyableID),
+                    ReadonlyField::create('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName),
+                    ReadonlyField::create('VersionCheck', 'Version', $this->Version),
+                    $linkField1 = ReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="'.$this->BuyableLink().'">'.$this->BuyableLink().'</a>'),
+                    ReadonlyField::create('TableTitle', 'TableTitle', $this->TableTitle),
+                    ReadonlyField::create('Subtitle', 'Table SubTitle', $this->TableSubTitleNOHTML()),
+                    ReadonlyField::create('InternalItemID', 'InternalItemID', $this->InternalItemID()),
+                    ReadonlyField::create('Name', 'Name', $this->Name),
 
-                    new ReadonlyField('BuyableLink', 'Buyable Link', $this->BuyableLink()),
-                    new ReadonlyField('TableTitle', 'TableTitle', $this->TableTitle),
-                    new ReadonlyField('InternalItemID', 'InternalItemID', $this->InternalItemID()),
-                    new ReadonlyField('Name', 'Name', $this->Name),
+                    HeaderField::create('OrderItemHeading', 'Order Item'),
+                    $linkField2 = ReadonlyField::create('LinkExample', 'Link', '<a href="'.$this->Link().'">'.$this->Link().'</a>'),
 
-                    new HeaderField('OrderItemHeading', 'Order Item'),
-                    new ReadonlyField('Link', 'Link', $this->Link()),
-                    new ReadonlyField('AbsoluteLink', 'Absolute Link', $this->AbsoluteLink()),
+                    ReadonlyField::create('ClassName'),
+                    ReadonlyField::create('Created'),
+                    ReadonlyField::create('LastEdited'),
 
-                    new ReadonlyField('ClassName'),
-                    new ReadonlyField('Created'),
-                    new ReadonlyField('LastEdited'),
-
-                    new HeaderField('PricingHeading', 'Pricing'),
-                    new ReadonlyField('QuantityCheck', 'Quantity', $this->Quantity),
-                    new ReadonlyField('UnitPrice', 'UnitPrice', $this->UnitPrice),
-                    new ReadonlyField('CalculatedTotal', 'Total', $this->CalculatedTotal),
-                    new ReadonlyField('TableValue', 'Table Value', $this->TableValue),
-                    new ReadonlyField('Total', 'Total', $this->Total),
-                    new ReadonlyField('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice())
+                    HeaderField::create('PricingHeading', 'Pricing'),
+                    ReadonlyField::create('QuantityCheck', 'Quantity', $this->Quantity),
+                    ReadonlyField::create('UnitPrice', 'UnitPrice', $this->UnitPrice),
+                    ReadonlyField::create('CalculatedTotal', 'Total', $this->CalculatedTotal),
+                    ReadonlyField::create('TableValue', 'Table Value', $this->TableValue),
+                    ReadonlyField::create('Total', 'Total', $this->Total),
+                    ReadonlyField::create('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice())
                 )
             );
+            $linkField1->dontEscape = true;
+            $linkField2->dontEscape = true;
         } else {
-            $fields->replaceField('OrderID', new NumericField('OrderID', _t('Order.SINGULARNAME', 'Order')));
+            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', 'Order')));
         }
         $fields->removeByName('Sort');
         $fields->removeByName('CalculatedTotal');
         $fields->removeByName('GroupSort');
         $fields->removeByName('OrderAttribute_GroupID');
         if ($order = $this->Order()) {
-            if (!$order->IsSubmitted()) {
-                $fields->addFieldToTab('Root.Main', BuyableSelectField::create('FindBuyable', _t('OrderItem.SELECITEM', 'Select Item'), $this->Buyable()));
+            if ($order->IsSubmitted()) {
+                if ($buyable = $this->Buyable()) {
+                    if ($this->BuyableExists()) {
+                        $buyableLink = '<a href="'.$buyable->CMSEditLink().'">'.$this->getBuyableFullName().'</a>';
+                    } else {
+                        $buyableLink = $this->getBuyableFullName()
+                        . _t('OrderItem.NO_LONGER_AVAILABLE', ' - NO LONGER AVAILABLE');
+                    }
+                } else {
+                    $buyableLink = _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
+                }
+                $fields->addFieldToTab(
+                    'Root.Main',
+                    HeaderField::create('buyableLink',  $buyableLink),
+                    'Quantity'
+                );
+
+                $fields->addFieldToTab(
+                    'Root.Main',
+                    ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->TableTitle()),
+                    'Quantity'
+                );
+                $fields->addFieldToTab(
+                    'Root.Main',
+                    ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->BuyableMoreDetails()),
+                    'Quantity'
+                );
             } else {
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    new ReadonlyField('TableTitle', _t('OrderItem.TITLE', 'Title'), $this->TableSubTitle()),
-                    'Quantity'
-                );
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    new ReadonlyField('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->TableSubTitleNOHTML()),
-                    'Quantity'
-                );
+                $fields->addFieldToTab('Root.Main', BuyableSelectField::create('FindBuyable', _t('OrderItem.SELECITEM', 'Select Item'), $this->Buyable()));
             }
         } else {
             $fields->addFieldToTab('Root.Main', BuyableSelectField::create('FindBuyable', _t('OrderItem.SELECITEM', 'Select Item'), $this->Buyable()));
@@ -712,12 +731,21 @@ class OrderItem extends OrderAttribute
     }
 
     /**
+     * @alias for getBuyableTitle
      * @return string
      **/
     public function BuyableTitle()
     {
-        if ($item = $this->Buyable()) {
-            if ($title = $item->Title) {
+        return $this->getBuyableTitle();
+    }
+
+    /**
+     * @return string
+     **/
+    public function getBuyableTitle()
+    {
+        if ($buyable = $this->Buyable()) {
+            if ($title = $buyable->Title) {
                 return $title;
             }
             //This should work in all cases, because ultimately, it will return #ID - see DataObject
@@ -727,7 +755,7 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     *
+     * @alias for getBuyableLink
      * @return string
      */
     public function BuyableLink()
@@ -742,8 +770,8 @@ class OrderItem extends OrderAttribute
     public function getBuyableLink()
     {
         $buyable = $this->Buyable();
-        $order = $this->Order();
         if ($buyable && $buyable->exists()) {
+            $order = $this->Order();
             if ($order && $order->IsSubmitted()) {
                 return  Director::absoluteURL($buyable->VersionedLink());
             }
@@ -752,6 +780,81 @@ class OrderItem extends OrderAttribute
             return $this->getLink();
         }
     }
+
+    /**
+     * @alias for getBuyableExists
+     * @return bool
+     */
+    public function BuyableExists()
+    {
+        return $this->getBuyableExists();
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function getBuyableExists()
+    {
+        if ($buyable = $this->Buyable(true)) {
+            $className = $buyable->ClassName;
+            $id = $buyable->ID;
+            return $className::get()->byID($id) ? true : false;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @alias for getBuyableFullName
+     * @return String
+     */
+    public function BuyableFullName()
+    {
+        return $this->getBuyableFullName();
+    }
+
+    /**
+     * @return String
+     */
+    public function getBuyableFullName()
+    {
+        $buyable = $this->Buyable();
+        if ($buyable && $buyable->exists()) {
+            return $buyable->FullName;
+        } else {
+            return $this->getBuyableTitle();
+        }
+    }
+
+    /**
+     * @alias for getBuyableMoreDetails
+     * @return String
+     */
+    public function BuyableMoreDetails()
+    {
+        return $this->getBuyableMoreDetails();
+    }
+
+    /**
+     * @return String
+     */
+    public function getBuyableMoreDetails()
+    {
+        if ($subtitle = $this->TableSubTitleNOHTML) {
+            return $subtitle;
+        }
+        $buyable = $this->Buyable();
+        if ($buyable && $buyable->exists()) {
+            if ($buyable->ShortDescription) {
+                return $buyable->ShortDescription;
+            }
+        }
+
+        return _t('OrderItem.NA', 'n/a');
+    }
+
     ##########################
     ## LINKS                ##
     ##########################

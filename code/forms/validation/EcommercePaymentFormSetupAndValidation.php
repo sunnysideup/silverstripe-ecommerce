@@ -256,6 +256,7 @@ class EcommercePaymentFormSetupAndValidation extends Object
             }
         }
         if (!$this->paymentObject) {
+            
             return false;
         }
         // Save payment data from form and process payment

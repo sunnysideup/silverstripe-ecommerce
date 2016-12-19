@@ -334,7 +334,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function setClientIP()
     {
         $proxy = null;
-        $ip = Controller::curr()->getRequest()->getIP();
+        $ip = null;
+        if(Controller::has_curr()) {
+            $ip = Controller::curr()->getRequest()->getIP();
+        }
 
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             //swapsies
@@ -342,10 +345,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         // Only set the IP and ProxyIP if none currently set
-        if ( ! $this->IP) {
+        if (! $this->IP) {
             $this->IP = $ip;
         }
-        if ( ! $this->ProxyIP) {
+        if (! $this->ProxyIP) {
             $this->ProxyIP = $proxy;
         }
     }

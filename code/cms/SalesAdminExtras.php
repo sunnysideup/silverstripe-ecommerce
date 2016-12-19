@@ -66,9 +66,9 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
                 ->where('"OrderStatusLog"."ClassName" = \''.$submittedOrderStatusLogClassName.'\'');
         }
         $newLists = $this->extend('updateGetList', $list);
-        if(is_array($newLists) && count($newLists)) {
-            foreach($newLists as $newList) {
-                if($newList instanceof DataList) {
+        if (is_array($newLists) && count($newLists)) {
+            foreach ($newLists as $newList) {
+                if ($newList instanceof DataList) {
                     $list = $newList;
                 }
             }

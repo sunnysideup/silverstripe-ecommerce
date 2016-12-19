@@ -46,7 +46,7 @@ ORDER STATUS LOG:
 ---------------------
 
 @description:
-Data class that records events for an order like "Payment Checked", "Cheque Cleared", "Goods dispatched", etc...
+Data class that records events for an order like "Payment Reminder", "Cheque Cleared", "Goods dispatched", etc...
 Order Status Logs describe the history of each Order.
 They are different from the OrderSteps which guide the Order through the ordering process.
 
@@ -90,12 +90,12 @@ Defines the Order Status Options. Basically OrderSteps guide the Order from ince
 Each project can have its own unique order steps - to match the requirements of the shop at hand.
 The Order Step typically has (some) of the following functions:
 a. a method move the order along
-		- email the customer?
-		- create a log entry?
+        - email the customer?
+        - create a log entry?
 b. describe what can be done to the order (edit, view, delete, etc...) and by whom
 c. describe the status of the order
 d. describe what needs to happen for the order to move along (via CMS fields)
-		e.g. for the Order to move to the next step it needs to be paid in full
+        e.g. for the Order to move to the next step it needs to be paid in full
 
 To make your own order steps, take an OrderStep from the classes listed below (one that is similar in purpose)
 and customise it to your needs.
