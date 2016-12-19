@@ -96,7 +96,7 @@ Product_Image:
 
 Order:
   modifiers: []
-  minutes_an_order_can_be_viewed_without_logging_in: 4320 #three day default 
+  minutes_an_order_can_be_viewed_without_logging_in: 4320 #three day default
   maximum_ignorable_sales_payments_difference: 0.01
   order_id_start_number: 0
   template_id_prefix: ""
@@ -327,6 +327,7 @@ ProductConfigModelAdmin:
 SalesAdmin:
   managed_models:
     - Order
+    - OrderProcessQueue
 
 SalesAdminExtras:
   managed_models:

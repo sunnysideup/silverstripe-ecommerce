@@ -33,6 +33,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         'HideStepFromCustomer' => 'Boolean',
         //sorting index
         'Sort' => 'Int',
+        'DeferTimeInSeconds' => 'Int'
     );
 
 
@@ -428,6 +429,21 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
+        $fields->addFieldToTab(
+            'Root.Queue',
+            $deferTimeInSecondsField = NumericField::create(
+                'DeferTimeInSeconds',
+                'Seconds in hold queue'
+            )
+        );
+        if($this->DeferTimeInSeconds) {
+            $deferTimeInSecondsField->setRightTitle(
+                _t(
+                    'OrderStep.MUST_SET_UP_CRON_JOB',
+                    'Make sure your developer has set up a <em>cron job</em> to process the order queue.'
+                )
+            );
+        }
         if ($this->hasCustomerMessage()) {
             $rightTitle = _t(
                 'OrderStep.EXPLAIN_ORDER_NUMBER_IN_SUBJECT',

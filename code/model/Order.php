@@ -1081,8 +1081,9 @@ class Order extends DataObject implements EditableEcommerceObject
      * Goes through the order steps and tries to "apply" the next status to the order.
      *
      * @param bool $runAgain
+     * @param bool $fromOrderQueue - is it being called from the OrderProcessQueue (or similar)
      **/
-    public function tryToFinaliseOrder($runAgain = false)
+    public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
         if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
@@ -1091,24 +1092,38 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
+            //does a queue object already exist
+            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+            if($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+                if($myQueueObject->InProcess) {
+                    if(! $fromOrderQueue) {
+
+                        return;
+                    }
+                }
+            }
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
             $this->_isSubmittedTempVar = -1;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
             if($nextStatusID) {
-                sleep(1);
-                register_shutdown_function('Order', "try_to_finalise_this_order", $this->ID);
+                $nextStatusObject = OrderStep::get()->byID($nextStatusID);
+                if($nextStatusObject) {
+                    if($nextStatusObject->DeferTimeInSeconds > 0) {
+                        $queueObjectSingleton->AddOrderToQueue(
+                            $this,
+                            $nextStatusObject->DeferTimeInSeconds
+                        );
+                    }
+                    else {
+                        //status has been completed, so it can be released
+                        self::$_try_to_finalise_order_is_running[$this->ID] = false;
+                        $this->tryToFinaliseOrder($runAgain, $fromOrderQueue);
+                    }
+                }
             }
-            //release ... to run again ...
-            self::$_try_to_finalise_order_is_running[$this->ID] = false;
         }
-    }
-
-    public static function try_to_finalise_this_order($id)
-    {
-        $order = Order::get()->byID($id);
-        $order->tryToFinaliseOrder();
     }
 
     /**

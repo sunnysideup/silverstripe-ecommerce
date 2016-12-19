@@ -12,11 +12,17 @@
  **/
 class EcommerceTaskTryToFinaliseOrders extends BuildTask
 {
+
     protected $doNotSendEmails = true;
+
+    protected $limit = 100;
 
     protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS';
 
-    protected $description = 'This task can be useful in moving a bunch of orders through the latest order step. It will only move orders if they can be moved through order steps.  You may need to run this task several times to move all orders.';
+    protected $description = '
+        This task can be useful in moving a bunch of orders through the latest order step.
+        It will only move orders if they can be moved through order steps.
+        You may need to run this task several times to move all orders.';
 
     /**
      *@return int - number of carts destroyed
@@ -28,66 +34,47 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new EcommerceTaskTryToFinaliseOrders_Mailer());
         }
+
+        //get limits
+        $limit = null;
+        if (isset($_GET['limit'])) {
+            $limit = intval($_GET['limit']);
+        }
+        if (!intval($limit)) {
+            $limit = $this->limit;
+        }
+        $startAt = null;
+        if (isset($_GET['startat'])) {
+            $startAt = intval($_GET['startat']);
+        }
+        if (!intval($startAt)) {
+            $startAt = intval(Session::get('EcommerceTaskTryToFinaliseOrders'));
+            if (!$startAt) {
+                $startAt = 0;
+            }
+        }
+
+
+        $this->tryToFinaliseOrders($ordersinQueue, $limit, $startAt);
+
+        //find any other order that may need help ...
         $orderStatusLogClassName = 'OrderStatusLog';
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = $submittedOrderStatusLogClassName::get()->First();
             if ($submittedStatusLog) {
-                $orderSteps = OrderStep::get()->sort('Sort', 'DESC')->limit(1);
-                $lastOrderStep = $orderSteps->First();
-                if ($lastOrderStep) {
+                $startAtOrderStep = OrderStep::get()->sort('Sort', 'DESC')->First();
+                if ($startAtOrderStep) {
                     $joinSQL = 'INNER JOIN "" ON ';
-                    $whereSQL = '"StatusID" <> '.$lastOrderStep->ID.'';
-                    $count = null;
-                    if (isset($_GET['count'])) {
-                        $count = intval($_GET['count']);
-                    }
-                    if (!intval($count)) {
-                        $count = 50;
-                    }
-                    $last = null;
-                    if (isset($_GET['last'])) {
-                        $last = intval($_GET['last']);
-                    }
-                    if (!intval($last)) {
-                        $last = intval(Session::get('EcommerceTaskTryToFinaliseOrders'));
-                        if (!$last) {
-                            $last = 0;
-                        }
-                    }
+                    $whereSQL = '"StatusID" <> '.$startAtOrderStep->ID.'';
                     $orders = Order::get()
                         ->where($whereSQL)
                         ->sort('ID', 'ASC')
-                        ->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
-                        ->limit($count, $last);
-                    if ($orders->count()) {
-                        DB::alteration_message("<h1>Moving $count Orders (starting from $last)</h1>");
-                        foreach ($orders as $order) {
-                            ++$last;
-                            Session::set('EcommerceTaskTryToFinaliseOrders', $last);
-                            $stepBefore = OrderStep::get()->byID($order->StatusID);
-                            try {
-                                $order->tryToFinaliseOrder();
-                            } catch (Exception $e) {
-                                DB::alteration_message($e, 'deleted');
-                            }
-                            $stepAfter = OrderStep::get()->byID($order->StatusID);
-                            if ($stepBefore) {
-                                if ($stepBefore->ID == $stepAfter->ID) {
-                                    DB::alteration_message('could not move Order '.$order->getTitle().', remains at <strong>'.$stepBefore->Name.'</strong>');
-                                } else {
-                                    DB::alteration_message('Moving Order #'.$order->getTitle().' from <strong>'.$stepBefore->Name.'</strong> to <strong>'.$stepAfter->Name.'</strong>', 'created');
-                                }
-                            } else {
-                                DB::alteration_message('Moving Order '.$order->getTitle().' from <strong>unknown step</strong> to <strong>'.$stepAfter->Name.'</strong>', 'created');
-                            }
-                        }
-                    } else {
-                        Session::clear('EcommerceTaskTryToFinaliseOrders');
-                        DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
-                    }
+                        ->exclude(array('ID' => $ordersinQueue->column('ID')))
+                        ->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"");
+                    $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
-                    DB::alteration_message('NO last order step.', 'deleted');
+                    DB::alteration_message('NO  order step.', 'deleted');
                 }
             } else {
                 DB::alteration_message('NO submitted order status log.', 'deleted');
@@ -101,10 +88,49 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
     }
 
-    public function sendEmails()
+    protected function sendEmails()
     {
         $this->doNotSendEmails = false;
     }
+
+    protected function tryToFinaliseOrders($orders, $limit, $startAt) {
+        $orders = $orders->limit($limit, $startAt);
+        if ($orders->limit()) {
+            DB::alteration_message("<h1>Moving $limit Orders (starting from $startAt)</h1>");
+            foreach ($orders as $order) {
+                ++$startAt;
+                Session::set('EcommerceTaskTryToFinaliseOrders', $startAt);
+                $stepBefore = OrderStep::get()->byID($order->StatusID);
+                try {
+                    $order->tryToFinaliseOrder();
+                } catch (Exception $e) {
+                    DB::alteration_message($e, 'deleted');
+                }
+                $stepAfter = OrderStep::get()->byID($order->StatusID);
+                if ($stepBefore) {
+                    if($stepAfter){
+                        if ($stepBefore->ID == $stepAfter->ID) {
+                            DB::alteration_message('could not move Order '.$order->getTitle().', remains at <strong>'.$stepBefore->Name.'</strong>');
+                        } else {
+                            DB::alteration_message('Moving Order #'.$order->getTitle().' from <strong>'.$stepBefore->Name.'</strong> to <strong>'.$stepAfter->Name.'</strong>', 'created');
+                        }
+                    } else {
+                        DB::alteration_message('Moving Order '.$order->getTitle().' from  <strong>'.$stepBefore->Name.'</strong> to <strong>unknown step</strong>', 'deleted');
+                    }
+                } elseif($stepAfter) {
+                    DB::alteration_message('Moving Order '.$order->getTitle().' from <strong>unknown step</strong> to <strong>'.$stepAfter->Name.'</strong>', 'deleted');
+                } else {
+                    DB::alteration_message('Moving Order '.$order->getTitle().' from <strong>unknown step</strong> to <strong>unknown step</strong>', 'deleted');
+                }
+            }
+        } else {
+            Session::clear('EcommerceTaskTryToFinaliseOrders');
+            DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
+        }
+
+        return $startAt;
+    }
+
 }
 
 class EcommerceTaskTryToFinaliseOrders_Mailer extends mailer
