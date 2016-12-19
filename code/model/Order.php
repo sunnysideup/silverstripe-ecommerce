@@ -1091,16 +1091,24 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
-            do {
-                //a little hack to make sure we do not rely on a stored value
-                //of "isSubmitted"
-                $this->_isSubmittedTempVar = -1;
-                //status of order is being progressed
-                $nextStatusID = $this->doNextStatus();
-            } while ($nextStatusID);
+            //a little hack to make sure we do not rely on a stored value
+            //of "isSubmitted"
+            $this->_isSubmittedTempVar = -1;
+            //status of order is being progressed
+            $nextStatusID = $this->doNextStatus();
+            if($nextStatusID) {
+                sleep(1);
+                register_shutdown_function('Order', "try_to_finalise_this_order", $this->ID);
+            }
             //release ... to run again ...
             self::$_try_to_finalise_order_is_running[$this->ID] = false;
         }
+    }
+
+    public static function try_to_finalise_this_order($id)
+    {
+        $order = Order::get()->byID($id);
+        $order->tryToFinaliseOrder();
     }
 
     /**
@@ -2988,7 +2996,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $code = EcommerceCountry::get_country_from_ip();
         }
-        
+
         return $code;
     }
 
