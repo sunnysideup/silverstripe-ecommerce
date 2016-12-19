@@ -1554,9 +1554,23 @@ class ProductGroup extends Page
         return $cacheKey;
     }
 
-    protected function cacheFactoryName()
+    /**
+     * Set the cache object to use when storing / retrieving partial cache blocks.
+     *
+     * @param Zend_Cache_Core $cache
+     */
+    public function setSilverstripeCoreCache($silverstripeCoreCache) {
+        $this->silverstripeCoreCache = $silverstripeCoreCache;
+    }
+
+    /**
+     * Get the cache object to use when storing / retrieving stuff in the Silverstripe Cache
+     *
+     * @return Zend_Cache_Core
+     */
+    protected function getSilverstripeCoreCache()
     {
-        return 'EcomPG_'.$this->ID;
+        return $this->silverstripeCoreCache ? return $this->silverstripeCoreCache : SS_Cache::factory('EcomPG_'.$this->ID);
     }
 
     /**
@@ -1570,7 +1584,7 @@ class ProductGroup extends Page
     {
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            $cache = SS_Cache::factory($this->cacheFactoryName());
+            $cache = $this->getSilverstripeCoreCache();
             $data = $cache->load($cacheKey);
             if (!$data) {
                 return;
@@ -1596,7 +1610,7 @@ class ProductGroup extends Page
     {
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            $cache = SS_Cache::factory($this->cacheFactoryName());
+            $cache = $this->getSilverstripeCoreCache();
             if( ! $cache->getOption('automatic_serialization')) {
                 $data = serialize($data);
             }
