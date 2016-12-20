@@ -1110,10 +1110,17 @@ class Order extends DataObject implements EditableEcommerceObject
             if($nextStatusID) {
                 $nextStatusObject = OrderStep::get()->byID($nextStatusID);
                 if($nextStatusObject) {
-                    if($nextStatusObject->DeferTimeInSeconds > 0) {
+                    $delay = $nextStatusObject->CalculatedDeferTimeInSeconds($this);
+                    if($delay > 0) {
+                        if($nextStatusObject->DeferFromSubmitTime ) {
+                            $delay = $delay - $this->SecondsSinceBeingSubmitted();
+                            if($delay < 0) {
+                                $delay = 0;
+                            }
+                        }
                         $queueObjectSingleton->AddOrderToQueue(
                             $this,
-                            $nextStatusObject->DeferTimeInSeconds
+                            $delay
                         );
                     }
                     else {
@@ -3234,7 +3241,20 @@ class Order extends DataObject implements EditableEcommerceObject
 
         return $className::get()
             ->Filter(array('OrderID' => $this->ID))
-            ->First();
+            ->Last();
+    }
+
+    /**
+     * @return int
+     */
+    public function SecondsSinceBeingSubmitted()
+    {
+        if ($submissionLog = $this->SubmissionLog()) {
+            return time() - strtotime($submissionLog->Created);
+        } else {
+            return 0;
+        }
+
     }
 
     /**
