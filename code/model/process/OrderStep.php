@@ -33,7 +33,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         'HideStepFromCustomer' => 'Boolean',
         //sorting index
         'Sort' => 'Int',
-        'DeferTimeInSeconds' => 'Int'
+        'DeferTimeInSeconds' => 'Int',
+        'DeferFromSubmitTime' => 'Boolean'
     );
 
 
@@ -429,20 +430,46 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
-        $fields->addFieldToTab(
-            'Root.Queue',
-            $deferTimeInSecondsField = NumericField::create(
-                'DeferTimeInSeconds',
-                'Seconds in hold queue'
-            )
-        );
-        if($this->DeferTimeInSeconds) {
-            $deferTimeInSecondsField->setRightTitle(
-                _t(
-                    'OrderStep.MUST_SET_UP_CRON_JOB',
-                    'Make sure your developer has set up a <em>cron job</em> to process the order queue.'
+        if($this->canBeDefered()) {
+            if($this->DeferTimeInSeconds) {
+                $fields->addFieldToTab(
+                    'Root.Queue',
+                    HeaderField::create(
+                        'WhenWillThisRun',
+                        $this->humanReadeableDeferTimeInSeconds()
+                    )
+                );
+            }
+            $fields->addFieldToTab(
+                'Root.Queue',
+                $deferTimeInSecondsField = TextField::create(
+                    'DeferTimeInSeconds',
+                    _t('OrderStep.DeferTimeInSeconds','Seconds in queue')
+                )
+                ->setRightTitle(
+                    _t(
+                        'OrderStep.TIME_EXPLANATION',
+                        '86,400 seconds is one day ...
+                        <br />To make it easier, you can also enter things like <em>1 week</em>, <em>3 hours</em>, or <em>7 minutes</em>.
+                        <br />Non-second entries will automatically be converted to seconds.'
+                    )
                 )
             );
+            if($this->DeferTimeInSeconds) {
+                $fields->addFieldToTab(
+                    'Root.Queue',
+                    $deferTimeInSecondsField = CheckboxField::create(
+                        'DeferFromSubmitTime',
+                        _t('OrderStep.DeferFromSubmitTime','Calculated from submit time?')
+                    )
+                    ->setDescription(
+                        _t(
+                            'OrderStep.DeferFromSubmitTime_HELP',
+                            'The time in the queue can be calculated from the moment the current ordersteps starts or from the moment the order was submitted (in this case, check the box above) '
+                            )
+                        )
+                );
+            }
         }
         if ($this->hasCustomerMessage()) {
             $rightTitle = _t(
@@ -845,6 +872,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * can this order step be delayed?
+     * @return bool
+     **/
+    protected function canBeDefered()
+    {
+        return $this->hasCustomerMessage();
+    }
+
+    /**
      * Formatted answer for "hasCustomerMessage".
      *
      * @return string
@@ -868,6 +904,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $this->getShowAsSummary();
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     public function getShowAsSummary()
     {
         $v = '<strong>';
@@ -895,8 +936,32 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($this->hasCustomerMessage()) {
             $v .= '<br />'._t('OrderStep.CUSTOMER_MESSAGES', 'Includes message to customer');
         }
+        if ($this->DeferTimeInSeconds) {
+            $v .= '<br />'.$this->humanReadeableDeferTimeInSeconds();
+        }
 
         return DBField::create_field('HTMLText', $v);
+    }
+
+    /**
+     * @return string
+     */
+    protected function humanReadeableDeferTimeInSeconds()
+    {
+        if($this->canBeDefered()) {
+            $field = DBField::create_field('SS_DateTime', strtotime('+ '.$this->DeferTimeInSeconds.' seconds'));
+            $descr0 = _t('OrderStep.THE', 'The').' '.'<span style="color: #338DC1">'.$this->getTitle().'</span>';
+            $descr1 = _t('OrderStep.DELAY_VALUE', 'Order Step, for any order, will run');
+            $descr2 = $field->ago();
+            $descr3 = $this->DeferFromSubmitTime ?
+                    _t('OrderStep.FROM_ORDER_SUBMIT_TIME', 'from the order being submitted') :
+                    _t('OrderStep.FROM_START_OF_ORDSTEP', 'from the order arriving on this step');
+            return $descr0. ' ' . $descr1.' <span style="color: #338DC1">'.$descr2.'</span> '.$descr3.'.';
+        }
+        // $dtF = new \DateTime('@0');
+        // $dtT = new \DateTime("@".$this->DeferTimeInSeconds);
+        //
+        // return $dtF->diff($dtT)->format('%a days, %h hours, %i minutes and %s seconds');
     }
 
     /**
@@ -1107,6 +1172,19 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         } elseif ($this->ShowAsCompletedOrder) {
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsInProcessOrder = false;
+        }
+        if( ! $this->canBeDefered()) {
+            $this->DeferTimeInSeconds = 0;
+            $this->DeferFromSubmitTime = 0;
+        } else {
+            if(is_numeric($this->DeferTimeInSeconds)) {
+                $this->DeferTimeInSeconds = intval($this->DeferTimeInSeconds);
+            } else {
+                $this->DeferTimeInSeconds = strtotime('+'.$this->DeferTimeInSeconds);
+                if($this->DeferTimeInSeconds > 0) {
+                    $this->DeferTimeInSeconds = $this->DeferTimeInSeconds - time();
+                }
+            }
         }
         $this->Code = strtoupper($this->Code);
     }
