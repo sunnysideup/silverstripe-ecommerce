@@ -11,6 +11,10 @@
  **/
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
+	function calculateddefertimeinseconds(){
+		return $this->DeferTimeInSeconds;
+	}
+
     /**
      * standard SS variable.
      *
