@@ -1535,21 +1535,21 @@ class ProductGroup extends Page
      */
     public function cacheKey($cacheKey)
     {
-        // $cacheKey = $key.'_'.$this->ID;
-        // if (self::$_product_group_cache_key_cache === null) {
-        //     self::$_product_group_cache_key_cache = "PR_"
-        //         .strtotime(Product::get()->max('LastEdited')). "_"
-        //         .Product::get()->count();
-        //     self::$_product_group_cache_key_cache .= "PG_"
-        //         .strtotime(ProductGroup::get()->max('LastEdited')). "_"
-        //         .ProductGroup::get()->count();
-        //     if (class_exists('ProductVariation')) {
-        //         self::$_product_group_cache_key_cache .= "PV_"
-        //           .strtotime(ProductVariation::get()->max('LastEdited')). "_"
-        //           .ProductVariation::get()->count();
-        //     }
-        // }
-        // $cacheKey .= self::$_product_group_cache_key_cache;
+        $cacheKey = $key.'_'.$this->ID;
+        if (self::$_product_group_cache_key_cache === null) {
+            self::$_product_group_cache_key_cache = "_PR_"
+                .strtotime(Product::get()->max('LastEdited')). "_"
+                .Product::get()->count();
+            self::$_product_group_cache_key_cache .= "PG_"
+                .strtotime(ProductGroup::get()->max('LastEdited')). "_"
+                .ProductGroup::get()->count();
+            if (class_exists('ProductVariation')) {
+                self::$_product_group_cache_key_cache .= "PV_"
+                  .strtotime(ProductVariation::get()->max('LastEdited')). "_"
+                  .ProductVariation::get()->count();
+            }
+        }
+        $cacheKey .= self::$_product_group_cache_key_cache;
 
         return $cacheKey;
     }
@@ -1570,7 +1570,7 @@ class ProductGroup extends Page
      */
     protected function getSilverstripeCoreCache()
     {
-        return $this->silverstripeCoreCache ? return $this->silverstripeCoreCache : SS_Cache::factory('EcomPG_'.$this->ID);
+        return $this->silverstripeCoreCache ? $this->silverstripeCoreCache : SS_Cache::factory('EcomPG');
     }
 
     /**
