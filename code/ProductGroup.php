@@ -1535,7 +1535,7 @@ class ProductGroup extends Page
      */
     public function cacheKey($cacheKey)
     {
-        $cacheKey = $key.'_'.$this->ID;
+        $cacheKey = $cacheKey.'_'.$this->ID;
         if (self::$_product_group_cache_key_cache === null) {
             self::$_product_group_cache_key_cache = "_PR_"
                 .strtotime(Product::get()->max('LastEdited')). "_"
