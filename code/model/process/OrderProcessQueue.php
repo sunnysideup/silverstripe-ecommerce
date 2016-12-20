@@ -106,7 +106,6 @@ class OrderProcessQueue extends DataObject
      */
     public function canEdit($member = null)
     {
-
         return false;
     }
 
@@ -120,7 +119,6 @@ class OrderProcessQueue extends DataObject
      */
     public function canDelete($member = null)
     {
-
         return false;
     }
 
@@ -160,10 +158,10 @@ class OrderProcessQueue extends DataObject
         $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
         $filter['Created'] = SS_Datetime::now()->Rfc2822();
         $filter['DeferTimeInSeconds'] = $deferTimeInSeconds;
-        if( ! $existingEntry) {
+        if (! $existingEntry) {
             $existingEntry = OrderProcessQueue::create($filter);
         } else {
-            foreach($filter as $field => $value) {
+            foreach ($filter as $field => $value) {
                 $existingEntry->$field = $value;
             }
         }
@@ -181,7 +179,7 @@ class OrderProcessQueue extends DataObject
     {
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $myQueueObject = $queueObjectSingleton->getQueueObject($order);
-        if($myQueueObject->isReadyToGo()) {
+        if ($myQueueObject->isReadyToGo()) {
             $myQueueObject->InProcess = true;
             $myQueueObject->write();
             $order->tryToFinaliseOrder(
@@ -203,7 +201,7 @@ class OrderProcessQueue extends DataObject
     {
         $filter = array('OrderID' => $order->ID);
         $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
-        if($existingEntry) {
+        if ($existingEntry) {
             return $existingEntry;
         }
 
@@ -240,7 +238,7 @@ class OrderProcessQueue extends DataObject
         ';
         $rows = DB::query($sql);
         $orderIDs = array(0 => 0);
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
 
@@ -253,7 +251,7 @@ class OrderProcessQueue extends DataObject
      *
      * @return bool
      */
-    function isReadyToGo()
+    public function isReadyToGo()
     {
         return (strtotime($this->Created) + $this->DeferTimeInSeconds) < time();
     }
@@ -263,7 +261,7 @@ class OrderProcessQueue extends DataObject
      * casted variable
      * @return SS_DateTime
      */
-    function ToBeProcessedAt()
+    public function ToBeProcessedAt()
     {
         return $this->getToBeProcessedAt();
     }
@@ -273,9 +271,8 @@ class OrderProcessQueue extends DataObject
      * casted variable
      * @return SS_DateTime
      */
-    function getToBeProcessedAt()
+    public function getToBeProcessedAt()
     {
         return DBField::create_field('SS_Datetime', (strtotime($this->Created) + $this->DeferTimeInSeconds));
     }
-
 }

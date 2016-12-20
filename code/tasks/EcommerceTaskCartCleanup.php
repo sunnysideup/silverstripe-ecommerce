@@ -68,7 +68,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         //LIMITS ...
         if ($this->verbose && $request) {
             $limitFromGetVar = $request->getVar('limit');
-            if($limitFromGetVar) {
+            if ($limitFromGetVar) {
                 $maximumNumberOfObjectsDeleted = intval($limitFromGetVar);
             }
         }
@@ -122,8 +122,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         <h2>Total number of abandonned carts: '.$totalToDelete.'</h2>
                         <br /><b>number of records deleted at one time:</b> '.$maximumNumberOfObjectsDeleted.'
                         <br /><b>Criteria:</b> last edited '.$clearMinutes.' (~'.round($clearMinutes / 60 / 24, 2)." days)
-                        minutes ago or more $memberDeleteNote"
-                    , 'created');
+                        minutes ago or more $memberDeleteNote", 'created');
             }
             foreach ($oldCarts as $oldCart) {
                 $count++;
@@ -152,8 +151,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message("
                     $countCart Orders are still in the CREATED cart state (not submitted),
                     $countCartWithinTimeLimit of them are within the time limit (last edited after $timeLegible)
-                    ".$userStatement." so they are not deleted."
-                ,
+                    ".$userStatement." so they are not deleted.",
                 'created'
             );
         }
@@ -184,8 +182,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         <h2>Total number of empty carts: '.$totalToDelete.'</h2>
                         <br /><b>number of records deleted at one time:</b> '.$maximumNumberOfObjectsDeleted."
                         <br /><b>Criteria:</b> there are no order items and
-                        the order was last edited $clearMinutes minutes ago $memberDeleteNote"
-                    , 'created');
+                        the order was last edited $clearMinutes minutes ago $memberDeleteNote", 'created');
             }
             foreach ($oldCarts as $oldCart) {
                 ++$count;
@@ -218,8 +215,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message("
                     $countCart Orders are without status at all,
                     $countCartWithinTimeLimit are within the time limit (last edited after $timeLegible)
-                    ".$userStatement."so they are not deleted yet."
-                ,
+                    ".$userStatement."so they are not deleted yet.",
                 'created'
             );
         }
@@ -361,7 +357,7 @@ class EcommerceTaskCartCleanup extends BuildTask
 
     private function flush()
     {
-        if((php_sapi_name() === 'cli')) {
+        if ((php_sapi_name() === 'cli')) {
             echo "\n";
         } else {
             ob_flush();

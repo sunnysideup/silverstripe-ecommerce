@@ -11,9 +11,10 @@
  **/
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
-	function calculateddefertimeinseconds(){
-		return $this->DeferTimeInSeconds;
-	}
+    public function calculateddefertimeinseconds()
+    {
+        return $this->DeferTimeInSeconds;
+    }
 
     /**
      * standard SS variable.
@@ -434,8 +435,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
-        if($this->canBeDefered()) {
-            if($this->DeferTimeInSeconds) {
+        if ($this->canBeDefered()) {
+            if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
                     'Root.Queue',
                     HeaderField::create(
@@ -448,7 +449,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 'Root.Queue',
                 $deferTimeInSecondsField = TextField::create(
                     'DeferTimeInSeconds',
-                    _t('OrderStep.DeferTimeInSeconds','Seconds in queue')
+                    _t('OrderStep.DeferTimeInSeconds', 'Seconds in queue')
                 )
                 ->setRightTitle(
                     _t(
@@ -459,12 +460,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     )
                 )
             );
-            if($this->DeferTimeInSeconds) {
+            if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
                     'Root.Queue',
                     $deferTimeInSecondsField = CheckboxField::create(
                         'DeferFromSubmitTime',
-                        _t('OrderStep.DeferFromSubmitTime','Calculated from submit time?')
+                        _t('OrderStep.DeferFromSubmitTime', 'Calculated from submit time?')
                     )
                     ->setDescription(
                         _t(
@@ -952,7 +953,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     protected function humanReadeableDeferTimeInSeconds()
     {
-        if($this->canBeDefered()) {
+        if ($this->canBeDefered()) {
             $field = DBField::create_field('SS_DateTime', strtotime('+ '.$this->DeferTimeInSeconds.' seconds'));
             $descr0 = _t('OrderStep.THE', 'The').' '.'<span style="color: #338DC1">'.$this->getTitle().'</span>';
             $descr1 = _t('OrderStep.DELAY_VALUE', 'Order Step, for any order, will run');
@@ -1177,15 +1178,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsInProcessOrder = false;
         }
-        if( ! $this->canBeDefered()) {
+        if (! $this->canBeDefered()) {
             $this->DeferTimeInSeconds = 0;
             $this->DeferFromSubmitTime = 0;
         } else {
-            if(is_numeric($this->DeferTimeInSeconds)) {
+            if (is_numeric($this->DeferTimeInSeconds)) {
                 $this->DeferTimeInSeconds = intval($this->DeferTimeInSeconds);
             } else {
                 $this->DeferTimeInSeconds = strtotime('+'.$this->DeferTimeInSeconds);
-                if($this->DeferTimeInSeconds > 0) {
+                if ($this->DeferTimeInSeconds > 0) {
                     $this->DeferTimeInSeconds = $this->DeferTimeInSeconds - time();
                 }
             }
