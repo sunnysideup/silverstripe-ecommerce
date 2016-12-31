@@ -8,7 +8,8 @@
 class OrderProcessQueue extends DataObject
 {
     private static $db = array(
-        'DeferTimeInSeconds' => 'Int'
+        'DeferTimeInSeconds' => 'Int',
+        'InProcess' => 'Boolean'
     );
 
     private static $has_one = array(
@@ -28,6 +29,10 @@ class OrderProcessQueue extends DataObject
         'ToBeProcessedAt' => 'SS_Datetime'
     );
 
+    private static $default_sort = array(
+        'Created' => 'DESC'
+    );
+
     /**
      * standard SS variable.
      *
@@ -35,7 +40,9 @@ class OrderProcessQueue extends DataObject
      */
     private static $summary_fields = array(
         'Order.Title' => 'Order',
-        'ToBeProcessedAt.Nice' => 'When'
+        'ToBeProcessedAt.Nice' => 'To be processed at',
+        'ToBeProcessedAt.Ago' => 'That is ...',
+        'InProcess.Nice' => 'Currently Running'
     );
 
     /**
@@ -99,7 +106,6 @@ class OrderProcessQueue extends DataObject
      */
     public function canEdit($member = null)
     {
-
         return false;
     }
 
@@ -113,7 +119,6 @@ class OrderProcessQueue extends DataObject
      */
     public function canDelete($member = null)
     {
-
         return false;
     }
 
@@ -139,13 +144,6 @@ class OrderProcessQueue extends DataObject
         return _t('OrderProcessQueue.PLURAL_NAME', 'Orders to be Processed');
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $default_sort = '"Created" DESC';
-
 
     /**
      * META METHOD: Add an order to the job list.
@@ -160,10 +158,10 @@ class OrderProcessQueue extends DataObject
         $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
         $filter['Created'] = SS_Datetime::now()->Rfc2822();
         $filter['DeferTimeInSeconds'] = $deferTimeInSeconds;
-        if( ! $existingEntry) {
+        if (! $existingEntry) {
             $existingEntry = OrderProcessQueue::create($filter);
         } else {
-            foreach($filter as $field => $value) {
+            foreach ($filter as $field => $value) {
                 $existingEntry->$field = $value;
             }
         }
@@ -172,6 +170,25 @@ class OrderProcessQueue extends DataObject
         return $existingEntry;
     }
 
+    /**
+     * processes the order ...
+     *
+     * @param  Order $order
+     */
+    public function process($order)
+    {
+        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $myQueueObject = $queueObjectSingleton->getQueueObject($order);
+        if ($myQueueObject->isReadyToGo()) {
+            $myQueueObject->InProcess = true;
+            $myQueueObject->write();
+            $order->tryToFinaliseOrder(
+                $tryAgain = false,
+                $fromOrderQueue = true
+            );
+            $myQueueObject->delete();
+        }
+    }
 
     /**
      * META METHOD: returns the queue object if it exists
@@ -184,7 +201,7 @@ class OrderProcessQueue extends DataObject
     {
         $filter = array('OrderID' => $order->ID);
         $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
-        if($existingEntry) {
+        if ($existingEntry) {
             return $existingEntry;
         }
 
@@ -213,10 +230,15 @@ class OrderProcessQueue extends DataObject
         $sql = '
             SELECT "OrderID"
             FROM "OrderProcessQueue"
-            WHERE (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < "'.time();
+            WHERE
+                "InProcess" = 0
+                AND
+                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time().'
+            ORDER BY "Created" DESC;
+        ';
         $rows = DB::query($sql);
         $orderIDs = array(0 => 0);
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
 
@@ -229,14 +251,28 @@ class OrderProcessQueue extends DataObject
      *
      * @return bool
      */
-    function isReadyToGo()
+    public function isReadyToGo()
     {
         return (strtotime($this->Created) + $this->DeferTimeInSeconds) < time();
     }
 
-    function getToBeProcessedAt()
+    /**
+     *
+     * casted variable
+     * @return SS_DateTime
+     */
+    public function ToBeProcessedAt()
+    {
+        return $this->getToBeProcessedAt();
+    }
+
+    /**
+     *
+     * casted variable
+     * @return SS_DateTime
+     */
+    public function getToBeProcessedAt()
     {
         return DBField::create_field('SS_Datetime', (strtotime($this->Created) + $this->DeferTimeInSeconds));
     }
-
 }

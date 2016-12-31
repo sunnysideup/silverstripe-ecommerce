@@ -334,7 +334,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function setClientIP()
     {
         $proxy = null;
-        $ip = Controller::curr()->getRequest()->getIP();
+        $ip = null;
+        if (Controller::has_curr()) {
+            $ip = Controller::curr()->getRequest()->getIP();
+        }
 
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             //swapsies

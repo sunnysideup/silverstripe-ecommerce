@@ -12,14 +12,16 @@
  **/
 class EcommerceTaskTryToFinaliseOrders extends BuildTask
 {
-
     protected $doNotSendEmails = true;
 
     protected $limit = 100;
 
     protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS';
 
-    protected $description = 'This task can be useful in moving a bunch of orders through the latest order step. It will only move orders if they can be moved through order steps.  You may need to run this task several times to move all orders.';
+    protected $description = '
+        This task can be useful in moving a bunch of orders through the latest order step.
+        It will only move orders if they can be moved through order steps.
+        You may need to run this task several times to move all orders.';
 
     /**
      *@return int - number of carts destroyed
@@ -68,8 +70,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         ->where($whereSQL)
                         ->sort('ID', 'ASC')
                         ->exclude(array('ID' => $ordersinQueue->column('ID')))
-                        ->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
-                    $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt)
+                        ->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"");
+                    $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
                     DB::alteration_message('NO  order step.', 'deleted');
                 }
@@ -90,7 +92,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         $this->doNotSendEmails = false;
     }
 
-    protected function tryToFinaliseOrders($orders, $limit, $startAt) {
+    protected function tryToFinaliseOrders($orders, $limit, $startAt)
+    {
         $orders = $orders->limit($limit, $startAt);
         if ($orders->limit()) {
             DB::alteration_message("<h1>Moving $limit Orders (starting from $startAt)</h1>");
@@ -105,7 +108,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 }
                 $stepAfter = OrderStep::get()->byID($order->StatusID);
                 if ($stepBefore) {
-                    if($stepAfter){
+                    if ($stepAfter) {
                         if ($stepBefore->ID == $stepAfter->ID) {
                             DB::alteration_message('could not move Order '.$order->getTitle().', remains at <strong>'.$stepBefore->Name.'</strong>');
                         } else {
@@ -114,7 +117,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     } else {
                         DB::alteration_message('Moving Order '.$order->getTitle().' from  <strong>'.$stepBefore->Name.'</strong> to <strong>unknown step</strong>', 'deleted');
                     }
-                } elseif($stepAfter) {
+                } elseif ($stepAfter) {
                     DB::alteration_message('Moving Order '.$order->getTitle().' from <strong>unknown step</strong> to <strong>'.$stepAfter->Name.'</strong>', 'deleted');
                 } else {
                     DB::alteration_message('Moving Order '.$order->getTitle().' from <strong>unknown step</strong> to <strong>unknown step</strong>', 'deleted');
@@ -127,7 +130,6 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
         return $startAt;
     }
-
 }
 
 class EcommerceTaskTryToFinaliseOrders_Mailer extends mailer

@@ -524,7 +524,7 @@ class ShoppingCart extends Object
         $this->clear();
         //little hack to clear static memory
         OrderItem::reset_price_has_been_fixed($this->currentOrder()->ID);
-        //we cleanup the old orders here so that we immediately know if there is a problem.
+
         return true;
     }
 
@@ -1070,10 +1070,10 @@ class ShoppingCart extends Object
                 $form->sessionMessage($message, $status);
                 //let the form controller do the redirectback or whatever else is needed.
             } else {
-                if (empty($_REQUEST['BackURL'])) {
+                if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
                     Controller::curr()->redirectBack();
                 } else {
-                    Controller::cur()->redirect(urldecode($_REQUEST['BackURL']));
+                    Controller::curr()->redirect(urldecode($_REQUEST['BackURL']));
                 }
             }
 

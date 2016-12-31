@@ -1535,28 +1535,48 @@ class ProductGroup extends Page
      */
     public function cacheKey($cacheKey)
     {
-        // $cacheKey = $key.'_'.$this->ID;
-        // if (self::$_product_group_cache_key_cache === null) {
-        //     self::$_product_group_cache_key_cache = "PR_"
-        //         .strtotime(Product::get()->max('LastEdited')). "_"
-        //         .Product::get()->count();
-        //     self::$_product_group_cache_key_cache .= "PG_"
-        //         .strtotime(ProductGroup::get()->max('LastEdited')). "_"
-        //         .ProductGroup::get()->count();
-        //     if (class_exists('ProductVariation')) {
-        //         self::$_product_group_cache_key_cache .= "PV_"
-        //           .strtotime(ProductVariation::get()->max('LastEdited')). "_"
-        //           .ProductVariation::get()->count();
-        //     }
-        // }
-        // $cacheKey .= self::$_product_group_cache_key_cache;
+        $cacheKey = $cacheKey.'_'.$this->ID;
+        if (self::$_product_group_cache_key_cache === null) {
+            self::$_product_group_cache_key_cache = "_PR_"
+                .strtotime(Product::get()->max('LastEdited')). "_"
+                .Product::get()->count();
+            self::$_product_group_cache_key_cache .= "PG_"
+                .strtotime(ProductGroup::get()->max('LastEdited')). "_"
+                .ProductGroup::get()->count();
+            if (class_exists('ProductVariation')) {
+                self::$_product_group_cache_key_cache .= "PV_"
+                  .strtotime(ProductVariation::get()->max('LastEdited')). "_"
+                  .ProductVariation::get()->count();
+            }
+        }
+        $cacheKey .= self::$_product_group_cache_key_cache;
 
         return $cacheKey;
     }
 
-    protected function cacheFactoryName()
+    /**
+     * @var Zend_Cache_Core
+     */
+    protected $silverstripeCoreCache = null;
+
+    /**
+     * Set the cache object to use when storing / retrieving partial cache blocks.
+     *
+     * @param Zend_Cache_Core $silverstripeCoreCache
+     */
+    public function setSilverstripeCoreCache($silverstripeCoreCache)
     {
-        return 'EcomPG_'.$this->ID;
+        $this->silverstripeCoreCache = $silverstripeCoreCache;
+    }
+
+    /**
+     * Get the cache object to use when storing / retrieving stuff in the Silverstripe Cache
+     *
+     * @return Zend_Cache_Core
+     */
+    protected function getSilverstripeCoreCache()
+    {
+        return $this->silverstripeCoreCache ? $this->silverstripeCoreCache : SS_Cache::factory('EcomPG');
     }
 
     /**
@@ -1570,12 +1590,12 @@ class ProductGroup extends Page
     {
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            $cache = SS_Cache::factory($this->cacheFactoryName());
+            $cache = $this->getSilverstripeCoreCache();
             $data = $cache->load($cacheKey);
             if (!$data) {
                 return;
             }
-            if( ! $cache->getOption('automatic_serialization')) {
+            if (! $cache->getOption('automatic_serialization')) {
                 $data = @unserialize($data);
             }
             return $data;
@@ -1596,8 +1616,8 @@ class ProductGroup extends Page
     {
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
-            $cache = SS_Cache::factory($this->cacheFactoryName());
-            if( ! $cache->getOption('automatic_serialization')) {
+            $cache = $this->getSilverstripeCoreCache();
+            if (! $cache->getOption('automatic_serialization')) {
                 $data = serialize($data);
             }
             $cache->save($data, $cacheKey);
@@ -2377,7 +2397,6 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function ProductGroupFilterLinks()
     {
-
         if ($array = $this->retrieveObjectStore('ProductGroupFilterLinks')) {
             //do nothing
         } else {
@@ -2408,7 +2427,7 @@ class ProductGroup_Controller extends Page_Controller
             $this->saveObjectStore($array, 'ProductGroupFilterLinks');
         }
         $arrayList = ArrayList::create();
-        foreach($array as $item) {
+        foreach ($array as $item) {
             $arrayList->push(ArrayData::create($item));
         }
         return $arrayList;

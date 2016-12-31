@@ -1081,8 +1081,9 @@ class Order extends DataObject implements EditableEcommerceObject
      * Goes through the order steps and tries to "apply" the next status to the order.
      *
      * @param bool $runAgain
+     * @param bool $fromOrderQueue - is it being called from the OrderProcessQueue (or similar)
      **/
-    public function tryToFinaliseOrder($runAgain = false)
+    public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
         if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
@@ -1091,13 +1092,13 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
-            $queueObject = Injector::inst()->get('OrderProcessQueue');
-            if($queueObject->alreadyInQueue($this)) {
-                $partOfReadyItems = $queueObject->OrdersToBeProcessed->filter(array('OrderID' => $this->ID));
-                //not ready to go yet, so lets get out of here ...
-                if($partOfReadyItems->count() === 0) {
-                    
-                    return;
+            //does a queue object already exist
+            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+            if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+                if ($myQueueObject->InProcess) {
+                    if (! $fromOrderQueue) {
+                        return;
+                    }
                 }
             }
             //a little hack to make sure we do not rely on a stored value
@@ -1105,19 +1106,25 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->_isSubmittedTempVar = -1;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
-            if($nextStatusID) {
+            if ($nextStatusID) {
                 $nextStatusObject = OrderStep::get()->byID($nextStatusID);
-                if($nextStatusObject) {
-                    if($nextStatusObject->DeferTimeInSeconds > 0) {
-                        $queueObject->AddOrderToQueue(
+                if ($nextStatusObject) {
+                    $delay = $nextStatusObject->CalculatedDeferTimeInSeconds($this);
+                    if ($delay > 0) {
+                        if ($nextStatusObject->DeferFromSubmitTime) {
+                            $delay = $delay - $this->SecondsSinceBeingSubmitted();
+                            if ($delay < 0) {
+                                $delay = 0;
+                            }
+                        }
+                        $queueObjectSingleton->AddOrderToQueue(
                             $this,
-                            $nextStatusObject->DeferTimeInSeconds
+                            $delay
                         );
-                    }
-                    else {
+                    } else {
                         //status has been completed, so it can be released
                         self::$_try_to_finalise_order_is_running[$this->ID] = false;
-                        $this->tryToFinaliseOrder($runAgain);
+                        $this->tryToFinaliseOrder($runAgain, $fromOrderQueue);
                     }
                 }
             }
@@ -3232,7 +3239,19 @@ class Order extends DataObject implements EditableEcommerceObject
 
         return $className::get()
             ->Filter(array('OrderID' => $this->ID))
-            ->First();
+            ->Last();
+    }
+
+    /**
+     * @return int
+     */
+    public function SecondsSinceBeingSubmitted()
+    {
+        if ($submissionLog = $this->SubmissionLog()) {
+            return time() - strtotime($submissionLog->Created);
+        } else {
+            return 0;
+        }
     }
 
     /**
