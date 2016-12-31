@@ -2,7 +2,7 @@
 
 
 /**
- * @description: cleans up old (abandonned) carts...
+ * @description: 
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -13,9 +13,9 @@
 class EcommerceTaskProcessOrderQueue extends BuildTask
 {
 
-    protected $doNotSendEmails = true;
+    protected $doNotSendEmails = false;
 
-    protected $limit = 5;
+    protected $limit = 1;
 
     protected $title = 'Process The Order Queue';
 
