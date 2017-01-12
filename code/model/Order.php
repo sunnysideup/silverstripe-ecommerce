@@ -765,11 +765,11 @@ class Order extends DataObject implements EditableEcommerceObject
             $submissionLog = $this->SubmissionLog();
             if ($submissionLog) {
                 $fields->addFieldToTab('Root.Log',
-                    new ReadonlyField(
+                    ReadonlyField::create(
                         'SequentialOrderNumber',
-                        _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number for submitted orders (e.g. 1,2,3,4,5...)'),
+                        _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number'),
                         $submissionLog->SequentialOrderNumber
-                    )
+                    )->setRightTitle('e.g. 1,2,3,4,5...')
                 );
             }
         } else {
@@ -2660,7 +2660,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($includeName === null) {
                 $includeName = EcommerceConfig::get('Order', 'include_customer_name_in_title');
             }
-            $title = $this->i18n_singular_name()." #$this->ID";
+            $title = $this->i18n_singular_name()." #".number_format($this->ID);
             if ($dateFormat) {
                 if ($submissionLog = $this->SubmissionLog()) {
                     $dateObject = $submissionLog->dbObject('Created');
@@ -2669,7 +2669,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     $dateObject = $this->dbObject('Created');
                     $placed = _t('Order.STARTED', 'started');
                 }
-                $title .= ', '.$placed.' '.$dateObject->Format($dateFormat);
+                $title .= ' - '.$placed.' '.$dateObject->Format($dateFormat);
             }
             $name = '';
             if ($this->CancelledByID) {

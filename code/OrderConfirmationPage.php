@@ -223,15 +223,15 @@ class OrderConfirmationPage extends CartPage
 
     /**
      * Returns the link or the Link to the OrderConfirmationPage page on this site.
-     *
+     * @param string $action [optional]
      * @return string (URLSegment)
      */
-    public static function find_link()
+    public static function find_link($action = null)
     {
         if ($page = OrderConfirmationPage::get()->filter(array('ClassName' => 'OrderConfirmationPage'))->First()) {
-            return $page->Link();
+            return $page->Link($action);
         } elseif ($page = OrderConfirmationPage::get()->First()) {
-            return $page->Link();
+            return $page->Link($action);
         }
 
         return CartPage::find_link();
@@ -475,7 +475,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
     {
         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
         ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
-        
+
         return $this->redirect(CheckoutPage::find_link());
     }
 

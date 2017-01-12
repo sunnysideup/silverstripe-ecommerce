@@ -872,14 +872,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return false;
     }
 
-    /**
-     * can this order step be delayed?
-     * @return bool
-     **/
-    protected function canBeDefered()
-    {
-        return $this->hasCustomerMessage();
-    }
 
     /**
      * Formatted answer for "hasCustomerMessage".
@@ -990,13 +982,17 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return int
      */
-    public function CalculatedDeferedTimeInSeconds($order)
+    public function CalculatedDeferTimeInSeconds($order)
     {
         return $this->DeferTimeInSeconds;
     }
 
     /**
      * can this order step be delayed?
+     * in general, if there is a customer message
+     * we should be able to delay it
+     *
+     * This method can be overridden in any orderstep
      * @return bool
      **/
     protected function canBeDefered()

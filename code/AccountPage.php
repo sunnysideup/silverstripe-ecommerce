@@ -134,16 +134,16 @@ class AccountPage extends Page
 
     /**
      * Returns the link to the AccountPage on this site.
-     *
+     * @param string $action [optional]
      * @return string (URLSegment)
      */
-    public static function find_link()
+    public static function find_link($action = null)
     {
         $page = AccountPage::get()
             ->filter(array('ClassName' => 'AccountPage'))
             ->First();
         if ($page) {
-            return $page->Link();
+            return $page->Link($action);
         }
     }
 
@@ -246,7 +246,7 @@ class AccountPage extends Page
             return Order::get()
                 ->where(
                     '"Order"."MemberID" = '.$memberID.'
-					AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)')
+                    AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)')
                 ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"');
         }
 
