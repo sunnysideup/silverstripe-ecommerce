@@ -11,9 +11,7 @@
  **/
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
-	function calculateddefertimeinseconds(){
-		return $this->DeferTimeInSeconds;
-	}
+
 
     /**
      * standard SS variable.
@@ -876,15 +874,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * can this order step be delayed?
-     * @return bool
-     **/
-    protected function canBeDefered()
-    {
-        return $this->hasCustomerMessage();
-    }
-
-    /**
      * Formatted answer for "hasCustomerMessage".
      *
      * @return string
@@ -897,6 +886,19 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         return $this->hasCustomerMessage() ?  _t('OrderStep.YES', 'Yes') :  _t('OrderStep.NO', 'No');
     }
+
+    /**
+     * Other calculated values
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
 
     /**
      * Formatted answer for "hasCustomerMessage".
@@ -984,6 +986,29 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
         return DBField::create_field('HTMLText', $v);
     }
+
+    /**
+     * This allows you to set the time to something other than the standard DeferTimeInSeconds
+     * value based on the order provided.
+     *
+     * @param Order
+     *
+     * @return int
+     */
+    public function CalculatedDeferedTimeInSeconds($order)
+    {
+        return $this->DeferTimeInSeconds;
+    }
+
+    /**
+     * can this order step be delayed?
+     * @return bool
+     **/
+    protected function canBeDefered()
+    {
+        return $this->hasCustomerMessage();
+    }
+
 
 /**************************************************
 * Order Status Logs
