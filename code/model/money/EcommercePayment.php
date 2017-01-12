@@ -335,7 +335,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $proxy = null;
         $ip = null;
-        if(Controller::has_curr()) {
+        if (Controller::has_curr()) {
             $ip = Controller::curr()->getRequest()->getIP();
         }
 

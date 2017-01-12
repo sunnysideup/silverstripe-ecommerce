@@ -10,7 +10,7 @@ class GridFieldConfigForOrderItems extends GridFieldConfig_RelationEditor
      */
     public function __construct($itemsPerPage = null)
     {
-        parent::__construct(10000);
+        parent::__construct(100);
         $this->removeComponentsByType('GridFieldAddExistingAutocompleter');
         //$this->removeComponentsByType("GridFieldButtonRow");
         //$this->removeComponentsByType("GridFieldAddNewButton");

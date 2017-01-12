@@ -1564,7 +1564,8 @@ class ProductGroup extends Page
      *
      * @param Zend_Cache_Core $silverstripeCoreCache
      */
-    public function setSilverstripeCoreCache($silverstripeCoreCache) {
+    public function setSilverstripeCoreCache($silverstripeCoreCache)
+    {
         $this->silverstripeCoreCache = $silverstripeCoreCache;
     }
 
@@ -1594,7 +1595,7 @@ class ProductGroup extends Page
             if (!$data) {
                 return;
             }
-            if( ! $cache->getOption('automatic_serialization')) {
+            if (! $cache->getOption('automatic_serialization')) {
                 $data = @unserialize($data);
             }
             return $data;
@@ -1616,7 +1617,7 @@ class ProductGroup extends Page
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
             $cache = $this->getSilverstripeCoreCache();
-            if( ! $cache->getOption('automatic_serialization')) {
+            if (! $cache->getOption('automatic_serialization')) {
                 $data = serialize($data);
             }
             $cache->save($data, $cacheKey);
@@ -2396,7 +2397,6 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function ProductGroupFilterLinks()
     {
-
         if ($array = $this->retrieveObjectStore('ProductGroupFilterLinks')) {
             //do nothing
         } else {
@@ -2427,7 +2427,7 @@ class ProductGroup_Controller extends Page_Controller
             $this->saveObjectStore($array, 'ProductGroupFilterLinks');
         }
         $arrayList = ArrayList::create();
-        foreach($array as $item) {
+        foreach ($array as $item) {
             $arrayList->push(ArrayData::create($item));
         }
         return $arrayList;
