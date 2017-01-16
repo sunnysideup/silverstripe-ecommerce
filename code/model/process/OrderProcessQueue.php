@@ -223,9 +223,10 @@ class OrderProcessQueue extends DataObject
     /**
      * META METHOD: returns a list of orders to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
+     * @param int $id force this Order to be processed
      * @return DataList (of orders)
      */
-    public function OrdersToBeProcessed()
+    public function OrdersToBeProcessed($limit = 9999, $id = 0)
     {
         $sql = '
             SELECT "OrderID"
@@ -234,10 +235,11 @@ class OrderProcessQueue extends DataObject
                 "InProcess" = 0
                 AND
                 (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time().'
-            ORDER BY "Created" DESC;
+            ORDER BY "Created" DESC
+            LIMIT = '.$limit.';
         ';
         $rows = DB::query($sql);
-        $orderIDs = array(0 => 0);
+        $orderIDs = array($id => $id);
         foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
@@ -274,5 +276,25 @@ class OrderProcessQueue extends DataObject
     public function getToBeProcessedAt()
     {
         return DBField::create_field('SS_Datetime', (strtotime($this->Created) + $this->DeferTimeInSeconds));
+    }
+
+
+    /**
+     * CMS Fields
+     * @return FieldList
+     */
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        if($this->exists()) {
+            $fields->addFieldToTab(
+                'Root.main',
+                LiteralField::create(
+                    'processQueueNow',
+                    '<h2><a href="/dev/tasks/EcommerceTaskProcessOrderQueue/?id='.$this->ID.'" target="_blank">'._t('OrderProcessQueue.PROCESS', 'Process now').'</a></h2>'
+                )
+            );
+        }
+        return $fields;
     }
 }

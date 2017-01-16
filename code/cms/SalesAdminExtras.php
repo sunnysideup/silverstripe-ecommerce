@@ -58,7 +58,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     public function getList()
     {
         $list = parent::getList();
-        if (singleton($this->modelClass) instanceof Order) {
+        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
             $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
             $list = $list
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
@@ -81,7 +81,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if (singleton($this->modelClass) instanceof Order) {
+        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();

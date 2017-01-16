@@ -33,7 +33,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();
-        if (singleton($this->modelClass) instanceof SiteTree) {
+        if (is_subclass_of($this->modelClass, 'SiteTree') || $this->modelClass === 'SiteTree') {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $gridField->setConfig(GridFieldEditOriginalPageConfig::create());
