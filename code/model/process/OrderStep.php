@@ -11,12 +11,7 @@
  **/
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
-<<<<<<< HEAD
-    function calculateddefertimeinseconds(){
-        return $this->DeferTimeInSeconds;
-    }
-=======
->>>>>>> f490c01eeb47f01d8bc83cd8d7a32172c433e06b
+
 
     /**
      * standard SS variable.
@@ -491,7 +486,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if ($testEmailLink = $this->testEmailLink()) {
                 $fields->addFieldToTab('Root.CustomerMessage', new LiteralField('testEmailLink', '<h3><a href="'.$testEmailLink.'" data-popup="true" target="_blank">'._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'</a></h3>'));
             }
-            
+
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
         } else {
             $fields->removeFieldFromTab('Root', 'OrderEmailRecords');
