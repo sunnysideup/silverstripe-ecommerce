@@ -12,6 +12,7 @@
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
 
+
     /**
      * standard SS variable.
      *
@@ -466,7 +467,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     ->setDescription(
                         _t(
                             'OrderStep.DeferFromSubmitTime_HELP',
-                            'The time in the queue can be calculated from the moment the current ordersteps starts or from the moment the order was submitted (in this case, check the box above) '
+                            'The time in the queue can be calculated from the moment the current orderstep starts or from the moment the order was submitted (in this case, check the box above) '
                             )
                         )
                 );
@@ -482,10 +483,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 TextField::create('EmailSubject', _t('OrderStep.EMAILSUBJECT', 'Email Subject'))
                     ->setRightTitle($rightTitle)
             );
-            $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
             if ($testEmailLink = $this->testEmailLink()) {
-                $fields->addFieldToTab('Root.CustomerMessage', new LiteralField('testEmailLink', '<p><a href="'.$testEmailLink.'" data-popup="true">'._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'</a></p>'));
+                $fields->addFieldToTab('Root.CustomerMessage', new LiteralField('testEmailLink', '<h3><a href="'.$testEmailLink.'" data-popup="true" target="_blank">'._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'</a></h3>'));
             }
+
+            $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
         } else {
             $fields->removeFieldFromTab('Root', 'OrderEmailRecords');
             $fields->removeFieldFromTab('Root.Main', 'EmailSubject');
