@@ -40,6 +40,7 @@ class OrderProcessQueue extends DataObject
      */
     private static $summary_fields = array(
         'Order.Title' => 'Order',
+        'Order.Status.Title' => 'Current Step',
         'ToBeProcessedAt.Nice' => 'To be processed at',
         'ToBeProcessedAt.Ago' => 'That is ...',
         'InProcess.Nice' => 'Currently Running'
