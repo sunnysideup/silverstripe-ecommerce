@@ -2,7 +2,7 @@
 
 
 /**
- * @description: cleans up old (abandonned) carts...
+ * @description:
  *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -12,7 +12,6 @@
  **/
 class EcommerceTaskProcessOrderQueue extends BuildTask
 {
-
     protected $doNotSendEmails = true;
 
     protected $limit = 1;
@@ -44,14 +43,14 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
     }
 
 
-    protected function tryToFinaliseOrders($orders) {
+    protected function tryToFinaliseOrders($orders)
+    {
         //limit orders
         $orders = $orders->limit($this->limit);
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-        foreach($orders as $order) {
+        foreach ($orders as $order) {
             echo '<hr />Processing order: '.$order->ID;
             $queueObjectSingleton->process($order);
         }
     }
-
 }

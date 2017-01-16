@@ -765,11 +765,11 @@ class Order extends DataObject implements EditableEcommerceObject
             $submissionLog = $this->SubmissionLog();
             if ($submissionLog) {
                 $fields->addFieldToTab('Root.Log',
-                    new ReadonlyField(
+                    ReadonlyField::create(
                         'SequentialOrderNumber',
-                        _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number for submitted orders (e.g. 1,2,3,4,5...)'),
+                        _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number'),
                         $submissionLog->SequentialOrderNumber
-                    )
+                    )->setRightTitle('e.g. 1,2,3,4,5...')
                 );
             }
         } else {
@@ -1094,10 +1094,9 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             //does a queue object already exist
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-            if($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
-                if($myQueueObject->InProcess) {
-                    if(! $fromOrderQueue) {
-
+            if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+                if ($myQueueObject->InProcess) {
+                    if (! $fromOrderQueue) {
                         return;
                     }
                 }
@@ -1107,14 +1106,14 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->_isSubmittedTempVar = -1;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
-            if($nextStatusID) {
+            if ($nextStatusID) {
                 $nextStatusObject = OrderStep::get()->byID($nextStatusID);
-                if($nextStatusObject) {
+                if ($nextStatusObject) {
                     $delay = $nextStatusObject->CalculatedDeferTimeInSeconds($this);
-                    if($delay > 0) {
-                        if($nextStatusObject->DeferFromSubmitTime ) {
+                    if ($delay > 0) {
+                        if ($nextStatusObject->DeferFromSubmitTime) {
                             $delay = $delay - $this->SecondsSinceBeingSubmitted();
-                            if($delay < 0) {
+                            if ($delay < 0) {
                                 $delay = 0;
                             }
                         }
@@ -1122,8 +1121,7 @@ class Order extends DataObject implements EditableEcommerceObject
                             $this,
                             $delay
                         );
-                    }
-                    else {
+                    } else {
                         //status has been completed, so it can be released
                         self::$_try_to_finalise_order_is_running[$this->ID] = false;
                         $this->tryToFinaliseOrder($runAgain, $fromOrderQueue);
@@ -2662,7 +2660,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($includeName === null) {
                 $includeName = EcommerceConfig::get('Order', 'include_customer_name_in_title');
             }
-            $title = $this->i18n_singular_name()." #$this->ID";
+            $title = $this->i18n_singular_name()." #".number_format($this->ID);
             if ($dateFormat) {
                 if ($submissionLog = $this->SubmissionLog()) {
                     $dateObject = $submissionLog->dbObject('Created');
@@ -2671,7 +2669,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     $dateObject = $this->dbObject('Created');
                     $placed = _t('Order.STARTED', 'started');
                 }
-                $title .= ', '.$placed.' '.$dateObject->Format($dateFormat);
+                $title .= ' - '.$placed.' '.$dateObject->Format($dateFormat);
             }
             $name = '';
             if ($this->CancelledByID) {
@@ -3254,7 +3252,6 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             return 0;
         }
-
     }
 
     /**

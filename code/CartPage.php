@@ -198,16 +198,16 @@ class CartPage extends Page
 
     /**
      * Returns the Link to the CartPage on this site.
-     *
+     * @param string $action [optional]
      * @return string (URLSegment)
      */
-    public static function find_link()
+    public static function find_link($action = null)
     {
         $page = CartPage::get()->Filter(array('ClassName' => 'CartPage'))->First();
         if ($page) {
-            return $page->Link();
+            return $page->Link($action);
         } else {
-            return CheckoutPage::find_link();
+            return CheckoutPage::find_link($action);
         }
     }
 
@@ -518,6 +518,9 @@ class CartPage_Controller extends Page_Controller
     public function share(SS_HTTPRequest $request)
     {
         $codes = Convert::raw2sql($request->param('ID'));
+        if (! $request->getVar('ready') && ! $request->getVar('done')) {
+            return $this->redirect($this->Link('share/'.$codes).'?ready=1');
+        }
         $buyables = explode('-', $codes);
         if (count($buyables)) {
             $sc = ShoppingCart::singleton();

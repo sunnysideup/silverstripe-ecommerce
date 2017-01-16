@@ -119,11 +119,11 @@ class CheckoutPage extends CartPage
     /**
      * Returns the link or the Link to the Checkout page on this site.
      *
-     * @param string $action
+     * @param string $action [optional]
      *
      * @return string (URLSegment)
      */
-    public static function find_link($action = '')
+    public static function find_link($action = null)
     {
         $page = CheckoutPage::get()->First();
         if ($page) {
