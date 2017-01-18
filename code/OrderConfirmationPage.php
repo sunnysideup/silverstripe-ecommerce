@@ -696,6 +696,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             }
             if ($statusID = intval($request->getVar('use'))) {
                 $subject = _t('Account.TEST_ONLY', '--- TEST ONLY ---');
+                $message = _t('Account.TEST_ONLY', '--- TEST ONLY ---');
                 $step = OrderStep::get()->byID($statusID);
                 if ($step) {
                     $emailClassName = $step->getEmailClassName();
@@ -716,8 +717,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             }
             if ($request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
-                    $subject = _t('Account.COPYONLY', '--- COPY ONLY ---');
-                    $message = _t('Account.COPYONLY', '--- COPY ONLY ---');
+                    $subject = _t('Account.COPY_ONLY', '--- COPY ONLY ---');
+                    $message = _t('Account.COPY_ONLY', '--- COPY ONLY ---');
                     if (
                         $this->currentOrder->sendEmail(
                             $subject,
