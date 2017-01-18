@@ -271,7 +271,7 @@ class OrderConfirmationPage extends CartPage
         }
         $getParams = http_build_query($getParams);
         $link .= '?'.$getParams;
-        
+
         return $link;
     }
 
@@ -370,7 +370,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
      */
     private static $allowed_actions = array(
         'saveorder',
-        'sendreceipt',
         'CreateAccountForm',
         'retrieveorder',
         'loadorder',
@@ -479,54 +478,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
 
         return $this->redirect(CheckoutPage::find_link());
-    }
-
-    /**
-     * @param HTTPRequest
-     *
-     * @return array - just so the template is still displayed
-     **/
-    public function sendreceipt(SS_HTTPRequest $request)
-    {
-        if ($o = $this->currentOrder) {
-            if ($m = $o->Member()) {
-                if ($m->Email) {
-                    $subject = _t('Account.COPYONLY', '--- COPY ONLY ---');
-                    $message = _t('Account.COPYONLY', '--- COPY ONLY ---');
-                    $o->sendReceipt($subject, $message, true);
-                    $this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An order receipt has been sent to: ').$m->Email.'.';
-                } else {
-                    $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOTSENDING', 'Email could NOT be sent.');
-                }
-            } else {
-                $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No email could be found for sending this receipt.');
-            }
-        } else {
-            $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
-        }
-        $baseFolder = Director::baseFolder();
-        if (!class_exists('\Pelago\Emogrifier')) {
-            require_once Director::baseFolder().'/ecommerce/thirdparty/Emogrifier.php';
-        }
-        Requirements::clear();
-        isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
-        Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Requirements::themedCSS('Order_Invoice', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Config::nest();
-        Config::inst()->update('SSViewer', 'theme_enabled', true);
-        $html = $this->renderWith('Order_ReceiptEmail');
-        Config::unnest();
-        // if it's an html email, filter it through emogrifier
-        $cssFileLocation = $baseFolder.'/'.EcommerceConfig::get('Order_Email', 'css_file_location');
-        $html .= "\r\n\r\n<!-- CSS can be found here: $cssFileLocation -->";
-        $cssFileHandler = fopen($cssFileLocation, 'r');
-        $css = fread($cssFileHandler,  filesize($cssFileLocation));
-        fclose($cssFileHandler);
-        $emog = new \Pelago\Emogrifier($html, $css);
-        $html = $emog->emogrify();
-
-        return $html;
     }
 
     /**
