@@ -269,13 +269,9 @@ class OrderConfirmationPage extends CartPage
         if ($alternativeOrderStepID) {
             $getParams['use'] = $alternativeOrderStepID;
         }
-        $query = parse_url($url, PHP_URL_QUERY);
         $getParams = http_build_query($getParams);
-        if ($query) {
-            $link .= '&'.$getParams;
-        } else {
-            $link .= '?'.$getParams;
-        }
+        $link .= '?'.$getParams;
+        
         return $link;
     }
 
