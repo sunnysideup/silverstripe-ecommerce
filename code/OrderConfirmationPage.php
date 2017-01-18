@@ -267,7 +267,7 @@ class OrderConfirmationPage extends CartPage
             $getParams['send'] = 1;
         }
         if ($alternativeOrderStepID) {
-            $getParams['use'] = $alternativeOrderStepID;
+            $getParams['test'] = $alternativeOrderStepID;
         }
         $getParams = http_build_query($getParams);
         $link .= '?'.$getParams;
@@ -694,10 +694,10 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                     $emailClassName = $request->param('OtherID');
                 }
             }
-            if ($statusID = intval($request->getVar('use'))) {
-                $subject = _t('Account.TEST_ONLY', '--- TEST ONLY ---');
-                $message = _t('Account.TEST_ONLY', '--- TEST ONLY ---');
+            if ($statusID = intval($request->getVar('test'))) {
                 $step = OrderStep::get()->byID($statusID);
+                $subject = _t('Account.TEST_ONLY', '--- TEST ONLY ---') .  ' '.$step->EmailSubject;
+                $message = _t('Account.TEST_ONLY', '--- TEST ONLY ---') .  ' '.$step->CustomerMessage;
                 if ($step) {
                     $emailClassName = $step->getEmailClassName();
                 }
@@ -715,10 +715,11 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                     );
                 }
             }
-            if ($request->getVar('send')) {
+            elseif ($request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
-                    $subject = _t('Account.COPY_ONLY', '--- COPY ONLY ---');
-                    $message = _t('Account.COPY_ONLY', '--- COPY ONLY ---');
+                    $step = OrderStep::get()->byID($this->currentOrder->StatusID);
+                    $subject = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$step->EmailSubject;;
+                    $message = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$step->CustomerMessage;;
                     if (
                         $this->currentOrder->sendEmail(
                             $subject,
