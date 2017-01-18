@@ -272,9 +272,9 @@ class OrderConfirmationPage extends CartPage
         $query = parse_url($url, PHP_URL_QUERY);
         $getParams = http_build_query($getParams);
         if ($query) {
-            $url .= '&'.$getParams
+            $link .= '&'.$getParams;
         } else {
-            $url .= '?'.$getParams;
+            $link .= '?'.$getParams;
         }
         return $link;
     }
@@ -755,7 +755,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 }
                 if ($request->getVar('send')) {
                     $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
-                    if(! $email) { 
+                    if(! $email) {
                         $email = true;
                     }
                     $this->currentOrder->sendEmail(
@@ -787,7 +787,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 } else {
                     $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
                 }
-            } 
+            }
             //display same data...
             Requirements::clear();
 
