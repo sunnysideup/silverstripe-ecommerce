@@ -257,19 +257,25 @@ class OrderConfirmationPage extends CartPage
      * @param bool       $actuallySendEmail      - do we actually send the email
      * @param int        $alternativeOrderStepID - OrderStep to use
      *
-     * NOTE: you can not ActuallySendEmail and have an AlternativeOrderStepID
-     *
      * @return string (URLSegment)
      */
     public static function get_email_link($orderID, $emailClassName = 'Order_StatusEmail', $actuallySendEmail = false, $alternativeOrderStepID = 0)
     {
         $link = OrderConfirmationPage::find_link().'sendemail/'.$orderID.'/'.$emailClassName;
+        $getParams = array();
         if ($actuallySendEmail) {
-            $link .= '?send=1';
-        } elseif ($alternativeOrderStepID) {
-            $link .= '?use='.$alternativeOrderStepID;
+            $getParams['send'] = 1;
         }
-
+        if ($alternativeOrderStepID) {
+            $getParams['use'] = $alternativeOrderStepID;
+        }
+        $query = parse_url($url, PHP_URL_QUERY);
+        $getParams = http_build_query($getParams);
+        if ($query) {
+            $url .= '&'.$getParams
+        } else {
+            $url .= '?'.$getParams;
+        }
         return $link;
     }
 
@@ -741,6 +747,26 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                     $emailClassName = $request->param('OtherID');
                 }
             }
+            if ($statusID = intval($request->getVar('use'))) {
+                $subject = _t('Account.TEST_ONLY', '--- TEST ONLY ---');
+                $step = OrderStep::get()->byID($statusID);
+                if ($step) {
+                    $emailClassName = $step->getEmailClassName();
+                }
+                if ($request->getVar('send')) {
+                    $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
+                    if(! $email) { 
+                        $email = true;
+                    }
+                    $this->currentOrder->sendEmail(
+                        $subject,
+                        $message,
+                        $resend = true,
+                        $adminOnlyOrToEmail = $email,
+                        $emailClassName
+                    );
+                }
+            }
             if ($request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
                     $subject = _t('Account.COPYONLY', '--- COPY ONLY ---');
@@ -761,12 +787,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 } else {
                     $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
                 }
-            } elseif ($statusID = intval($request->getVar('use'))) {
-                $step = OrderStep::get()->byID($statusID);
-                if ($step) {
-                    $emailClassName = $step->getEmailClassName();
-                }
-            }
+            } 
             //display same data...
             Requirements::clear();
 
