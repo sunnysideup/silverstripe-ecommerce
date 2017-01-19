@@ -688,6 +688,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
     public function sendemail(SS_HTTPRequest $request)
     {
         if ($this->currentOrder) {
+            $subject = '';
+            $message = '';
             $emailClassName = 'Order_ReceiptEmail';
             if (class_exists($request->param('OtherID'))) {
                 if (is_a(singleton($request->param('OtherID')), Object::getCustomClass('Order_Email'))) {
@@ -696,8 +698,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             }
             if ($statusID = intval($request->getVar('test'))) {
                 $step = OrderStep::get()->byID($statusID);
-                $subject = _t('Account.TEST_ONLY', '--- TEST ONLY ---') .  ' '.$step->EmailSubject;
-                $message = _t('Account.TEST_ONLY', '--- TEST ONLY ---') .  ' '.$step->CustomerMessage;
+                $subject = $step->EmailSubject;
+                $message = $step->CustomerMessage;
                 if ($step) {
                     $emailClassName = $step->getEmailClassName();
                 }
@@ -707,7 +709,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                         $email = true;
                     }
                     $this->currentOrder->sendEmail(
-                        $subject,
+                        _t('Account.TEST_ONLY', '--- TEST ONLY ---') . ' ' . $subject,
                         $message,
                         $resend = true,
                         $adminOnlyOrToEmail = $email,
@@ -732,18 +734,17 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                             $emailClassName
                         )
                     ) {
-                        $this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
+                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
                     } else {
-                        $this->message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ').$email;
+                        $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ').$email;
                     }
                 } else {
-                    $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
+                    $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
                 }
             }
             //display same data...
             Requirements::clear();
-
-            return $this->currentOrder->renderOrderInEmailFormat($this->message, $emailClassName);
+            return $this->currentOrder->renderOrderInEmailFormat($subject, $message, $emailClassName);
         } else {
             return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
         }

@@ -36,6 +36,10 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $id = intval($request->getVar('id')) - 0;
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
+        if($ordersinQueue->count() == 0) {
+            echo 'No orders in queue';
+            return;
+        }
         echo '<h3>There are '.$ordersinQueue->count().' in the queue, processing '.$this->limit.' now</h3>';
         if($id) {
             echo '<h3>FORCING Order with ID</h3>';

@@ -576,7 +576,8 @@ class ShoppingCart_Controller extends Controller
         if ($order = Order::get_by_id_if_can_view($orderID)) {
             $this->cart->copyOrder($order);
         }
-        $this->redirectBack();
+        $link = CheckoutPage::find_link();
+        return $this->redirect($link);
     }
 
     /**

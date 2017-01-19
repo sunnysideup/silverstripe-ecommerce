@@ -131,7 +131,7 @@ class OrderProcessQueue extends DataObject
     private static $singular_name = 'Order To Be Processed';
     public function i18n_singular_name()
     {
-        return _t('OrderProcessQueue.SINGULAR_NAME', 'Order To Be Processed');
+        return _t('OrderProcessQueue.SINGULAR_NAME', 'Order In Queue');
     }
 
     /**
@@ -142,7 +142,7 @@ class OrderProcessQueue extends DataObject
     private static $plural_name = 'Orders to be Processed';
     public function i18n_plural_name()
     {
-        return _t('OrderProcessQueue.PLURAL_NAME', 'Orders to be Processed');
+        return _t('OrderProcessQueue.PLURAL_NAME', 'Orders In Queue');
     }
 
 

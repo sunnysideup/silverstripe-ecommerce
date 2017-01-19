@@ -1703,7 +1703,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $resend = false,
         $adminOnlyOrToEmail = false
     ) {
-        $arrayData = $this->createReplacementArrayForEmail($message, $subject);
+        $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         $from = Order_Email::get_from_email();
         //why are we using this email and NOT the member.EMAIL?
         //for historical reasons????
@@ -1761,8 +1761,8 @@ class Order extends DataObject implements EditableEcommerceObject
      * we add the subject here so that the subject, for example, can be added to the <title>
      * of the email template.
      *
-     * @param string $message - the additional message
      * @param string $subject - subject for email -
+     * @param string $message - the additional message
      *
      * @return ArrayData
      *                   - Subject - EmailSubject
@@ -1776,16 +1776,18 @@ class Order extends DataObject implements EditableEcommerceObject
      *                   - CC
      *                   - BCC
      */
-    public function createReplacementArrayForEmail($message = '', $subject = '')
+    public function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
         $config = $this->EcomConfig();
         $replacementArray = array();
         //set subject
-        if ($subject) {
-            $subject = $subject;
-        } else {
+        if (! $subject) {
             $subject = $step->EmailSubject;
+        }
+        //set message
+        if (! $message) {
+            $message = $step->CustomerMessage;
         }
         $subject = str_replace('[OrderNumber]', $this->ID, $subject);
         //set other variables
@@ -1793,8 +1795,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $replacementArray['To'] = '';
         $replacementArray['CC'] = '';
         $replacementArray['BCC'] = '';
-        $replacementArray['Message'] = $message;
-        $replacementArray['OrderStepMessage'] = $step->CustomerMessage;
+        $replacementArray['OrderStepMessage'] = $message;
         $replacementArray['Order'] = $this;
         $replacementArray['EmailLogo'] = $config->EmailLogo();
         $replacementArray['ShopPhysicalAddress'] = $config->ShopPhysicalAddress;
@@ -1808,14 +1809,15 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * returns the order formatted as an email.
      *
+     * @param string $subject        - the email subject / page title
      * @param string $message        - the additional message
      * @param string $emailClassName - template to use.
      *
      * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
      */
-    public function renderOrderInEmailFormat($message = '', $emailClassName)
+    public function renderOrderInEmailFormat($subject = '', $message = '', $emailClassName)
     {
-        $arrayData = $this->createReplacementArrayForEmail($message);
+        $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         Config::nest();
         Config::inst()->update('SSViewer', 'theme_enabled', true);
         $html = $arrayData->renderWith($emailClassName);

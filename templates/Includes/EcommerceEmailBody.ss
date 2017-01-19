@@ -19,7 +19,6 @@
             <tr class="message">
                 <td class="left">
                     <h1 class="title">$Subject</h1>
-                    <% if Message %><div class="message">$Message</div><% end_if %>
                     <% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage</div><% end_if %>
                 </td>
             </tr>
