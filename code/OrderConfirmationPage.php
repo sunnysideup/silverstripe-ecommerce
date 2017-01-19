@@ -718,8 +718,11 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             elseif ($request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
                     $step = OrderStep::get()->byID($this->currentOrder->StatusID);
-                    $subject = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$step->EmailSubject;;
-                    $message = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$step->CustomerMessage;;
+                    $subject = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$step->EmailSubject;
+                    $message = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$step->CustomerMessage;
+                    if ($step) {
+                        $emailClassName = $step->getEmailClassName();
+                    }
                     if (
                         $this->currentOrder->sendEmail(
                             $subject,
@@ -731,7 +734,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                     ) {
                         $this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
                     } else {
-                        $this->message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email sent unsuccesfully to: ').$email.'. EMAIL NOT SENT.';
+                        $this->message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ').$email;
                     }
                 } else {
                     $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
