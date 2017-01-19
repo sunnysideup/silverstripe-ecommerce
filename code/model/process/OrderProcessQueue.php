@@ -237,7 +237,7 @@ class OrderProcessQueue extends DataObject
                 AND
                 (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time().'
             ORDER BY "Created" DESC
-            LIMIT = '.$limit.';
+            LIMIT '.$limit.';
         ';
         $rows = DB::query($sql);
         $orderIDs = array($id => $id);
