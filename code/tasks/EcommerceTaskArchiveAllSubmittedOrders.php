@@ -15,13 +15,13 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
     protected $title = 'Archive all submitted orders';
 
     protected $description = "
-	This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
+    This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
 
     public function run($request)
     {
         //IMPORTANT!
         Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
-        Email::set_mailer(new EcommerceTaskTryToFinaliseOrders_Mailer());
+        Email::set_mailer(new Ecommerce_Dummy_Mailer());
         $orderStatusLogClassName = 'OrderStatusLog';
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
@@ -33,17 +33,17 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
                     $joinSQL = "INNER JOIN \"$orderStatusLogClassName\" ON \"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"";
                     $whereSQL = 'WHERE "StatusID" <> '.$lastOrderStep->ID." AND \"$orderStatusLogClassName\".ClassName = '$submittedOrderStatusLogClassName'";
                     $count = DB::query("
-						SELECT COUNT (\"Order\".\"ID\")
-						FROM \"Order\"
-						$joinSQL
-						$whereSQL
-					")->value();
+                        SELECT COUNT (\"Order\".\"ID\")
+                        FROM \"Order\"
+                        $joinSQL
+                        $whereSQL
+                    ")->value();
                     $do = DB::query("
-						UPDATE \"Order\"
-						$joinSQL
-						SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
-						$whereSQL
-					");
+                        UPDATE \"Order\"
+                        $joinSQL
+                        SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
+                        $whereSQL
+                    ");
                     if ($count) {
                         DB::alteration_message("NOTE: $count records were updated.", 'created');
                     } else {

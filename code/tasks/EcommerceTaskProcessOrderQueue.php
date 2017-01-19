@@ -12,7 +12,7 @@
  **/
 class EcommerceTaskProcessOrderQueue extends BuildTask
 {
-    protected $doNotSendEmails = true;
+    protected $sendEmails = true;
 
     protected $limit = 1;
 
@@ -29,9 +29,9 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         set_time_limit(50);
         $now = microtime(true);
         //IMPORTANT!
-        if ($this->doNotSendEmails) {
+        if ( ! $this->sendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
-            Email::set_mailer(new EcommerceTaskTryToFinaliseOrders_Mailer());
+            Email::set_mailer(new Ecommerce_Dummy_Mailer());
         }
         $id = intval($request->getVar('id')) - 0;
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');

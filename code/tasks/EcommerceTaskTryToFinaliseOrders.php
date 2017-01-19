@@ -12,11 +12,11 @@
  **/
 class EcommerceTaskTryToFinaliseOrders extends BuildTask
 {
-    protected $doNotSendEmails = true;
+    protected $sendEmails = true;
 
     protected $limit = 100;
 
-    protected $title = 'Try to finalise all orders WITHOUT SENDING EMAILS';
+    protected $title = 'Try to finalise all orders - WILL SEND EMAILS';
 
     protected $description = '
         This task can be useful in moving a bunch of orders through the latest order step.
@@ -24,14 +24,14 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         You may need to run this task several times to move all orders.';
 
     /**
-     *@return int - number of carts destroyed
+     * @param SS_Request $request
      **/
     public function run($request)
     {
         //IMPORTANT!
-        if ($this->doNotSendEmails) {
+        if ( ! $this->sendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
-            Email::set_mailer(new EcommerceTaskTryToFinaliseOrders_Mailer());
+            Email::set_mailer(new Ecommerce_Dummy_Mailer());
         }
 
         //get limits
@@ -87,9 +87,9 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
     }
 
-    protected function sendEmails()
+    protected function setSendEmails()
     {
-        $this->doNotSendEmails = false;
+        $this->sendEmails = true;
     }
 
     protected function tryToFinaliseOrders($orders, $limit, $startAt)
@@ -129,28 +129,5 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
 
         return $startAt;
-    }
-}
-
-class EcommerceTaskTryToFinaliseOrders_Mailer extends mailer
-{
-    /**
-     * FAKE Send a plain-text email.
-     *
-     * @return bool
-     */
-    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false)
-    {
-        return true;
-    }
-
-    /**
-     * FAKE Send a multi-part HTML email.
-     *
-     * @return bool
-     */
-    public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false)
-    {
-        return true;
     }
 }
