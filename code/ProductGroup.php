@@ -921,9 +921,7 @@ class ProductGroup extends Page
             $array = $this->AlsoShowProducts()->map('ID', 'ID')->toArray();
         }
         if (count($array)) {
-            $stage = $this->getStage();
-
-            return " OR (\"Product$stage\".\"ID\" IN (".implode(',', $array).')) ';
+            return " OR (\"Product\".\"ID\" IN (".implode(',', $array).')) ';
         }
 
         return '';

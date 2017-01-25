@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title>$Subject</title>
 </head>
 <body>
@@ -19,7 +18,6 @@
             <tr class="message">
                 <td class="left">
                     <h1 class="title">$Subject</h1>
-                    <% if Message %><div class="message">$Message</div><% end_if %>
                     <% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage</div><% end_if %>
                 </td>
             </tr>

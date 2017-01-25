@@ -12,7 +12,7 @@
  **/
 class EcommerceTaskProcessOrderQueue extends BuildTask
 {
-    protected $doNotSendEmails = true;
+    protected $sendEmails = true;
 
     protected $limit = 1;
 
@@ -29,13 +29,22 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         set_time_limit(50);
         $now = microtime(true);
         //IMPORTANT!
-        if ($this->doNotSendEmails) {
+        if ( ! $this->sendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
-            Email::set_mailer(new EcommerceTaskTryToFinaliseOrders_Mailer());
+            Email::set_mailer(new Ecommerce_Dummy_Mailer());
         }
+        $id = intval($request->getVar('id')) - 0;
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-        $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed();
+        $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
+        if($ordersinQueue->count() == 0) {
+            echo 'No orders in queue';
+            return;
+        }
         echo '<h3>There are '.$ordersinQueue->count().' in the queue, processing '.$this->limit.' now</h3>';
+        if($id) {
+            echo '<h3>FORCING Order with ID</h3>';
+            $ordersinQueue = $ordersinQueue->filter(array('ID' => $id));
+        }
         $this->tryToFinaliseOrders($ordersinQueue);
         echo '<hr />';
         echo '<hr />';

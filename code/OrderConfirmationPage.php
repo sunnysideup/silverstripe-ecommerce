@@ -257,18 +257,20 @@ class OrderConfirmationPage extends CartPage
      * @param bool       $actuallySendEmail      - do we actually send the email
      * @param int        $alternativeOrderStepID - OrderStep to use
      *
-     * NOTE: you can not ActuallySendEmail and have an AlternativeOrderStepID
-     *
      * @return string (URLSegment)
      */
     public static function get_email_link($orderID, $emailClassName = 'Order_StatusEmail', $actuallySendEmail = false, $alternativeOrderStepID = 0)
     {
         $link = OrderConfirmationPage::find_link().'sendemail/'.$orderID.'/'.$emailClassName;
+        $getParams = array();
         if ($actuallySendEmail) {
-            $link .= '?send=1';
-        } elseif ($alternativeOrderStepID) {
-            $link .= '?use='.$alternativeOrderStepID;
+            $getParams['send'] = 1;
         }
+        if ($alternativeOrderStepID) {
+            $getParams['test'] = $alternativeOrderStepID;
+        }
+        $getParams = http_build_query($getParams);
+        $link .= '?'.$getParams;
 
         return $link;
     }
@@ -368,7 +370,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
      */
     private static $allowed_actions = array(
         'saveorder',
-        'sendreceipt',
         'CreateAccountForm',
         'retrieveorder',
         'loadorder',
@@ -477,54 +478,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
 
         return $this->redirect(CheckoutPage::find_link());
-    }
-
-    /**
-     * @param HTTPRequest
-     *
-     * @return array - just so the template is still displayed
-     **/
-    public function sendreceipt(SS_HTTPRequest $request)
-    {
-        if ($o = $this->currentOrder) {
-            if ($m = $o->Member()) {
-                if ($m->Email) {
-                    $subject = _t('Account.COPYONLY', '--- COPY ONLY ---');
-                    $message = _t('Account.COPYONLY', '--- COPY ONLY ---');
-                    $o->sendReceipt($subject, $message, true);
-                    $this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An order receipt has been sent to: ').$m->Email.'.';
-                } else {
-                    $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOTSENDING', 'Email could NOT be sent.');
-                }
-            } else {
-                $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No email could be found for sending this receipt.');
-            }
-        } else {
-            $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
-        }
-        $baseFolder = Director::baseFolder();
-        if (!class_exists('\Pelago\Emogrifier')) {
-            require_once Director::baseFolder().'/ecommerce/thirdparty/Emogrifier.php';
-        }
-        Requirements::clear();
-        isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
-        Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Requirements::themedCSS('Order_Invoice', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Config::nest();
-        Config::inst()->update('SSViewer', 'theme_enabled', true);
-        $html = $this->renderWith('Order_ReceiptEmail');
-        Config::unnest();
-        // if it's an html email, filter it through emogrifier
-        $cssFileLocation = $baseFolder.'/'.EcommerceConfig::get('Order_Email', 'css_file_location');
-        $html .= "\r\n\r\n<!-- CSS can be found here: $cssFileLocation -->";
-        $cssFileHandler = fopen($cssFileLocation, 'r');
-        $css = fread($cssFileHandler,  filesize($cssFileLocation));
-        fclose($cssFileHandler);
-        $emog = new \Pelago\Emogrifier($html, $css);
-        $html = $emog->emogrify();
-
-        return $html;
     }
 
     /**
@@ -735,16 +688,41 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
     public function sendemail(SS_HTTPRequest $request)
     {
         if ($this->currentOrder) {
+            $subject = '';
+            $message = '';
             $emailClassName = 'Order_ReceiptEmail';
             if (class_exists($request->param('OtherID'))) {
                 if (is_a(singleton($request->param('OtherID')), Object::getCustomClass('Order_Email'))) {
                     $emailClassName = $request->param('OtherID');
                 }
             }
-            if ($request->getVar('send')) {
+            if ($statusID = intval($request->getVar('test'))) {
+                $step = OrderStep::get()->byID($statusID);
+                $subject = $step->EmailSubject;
+                $message = $step->CustomerMessage;
+                if ($step) {
+                    $emailClassName = $step->getEmailClassName();
+                }
+                if ($request->getVar('send')) {
+                    $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
+                    if(! $email) {
+                        $email = true;
+                    }
+                    $this->currentOrder->sendEmail(
+                        _t('Account.TEST_ONLY', '--- TEST ONLY ---') . ' ' . $subject,
+                        $message,
+                        $resend = true,
+                        $adminOnlyOrToEmail = $email,
+                        $emailClassName
+                    );
+                }
+            }
+            elseif ($request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
-                    $subject = _t('Account.COPYONLY', '--- COPY ONLY ---');
-                    $message = _t('Account.COPYONLY', '--- COPY ONLY ---');
+                    $step = OrderStep::get()->byID($this->currentOrder->StatusID);
+                    $subject = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$this->EcomConfig()->InvoiceTitle;
+                    $message = $this->EcomConfig()->InvoiceMessage;
+                    $emailClassName = 'Order_ReceiptEmail';
                     if (
                         $this->currentOrder->sendEmail(
                             $subject,
@@ -754,23 +732,17 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                             $emailClassName
                         )
                     ) {
-                        $this->message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
+                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
                     } else {
-                        $this->message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email sent unsuccesfully to: ').$email.'. EMAIL NOT SENT.';
+                        $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ').$email;
                     }
                 } else {
-                    $this->message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
-                }
-            } elseif ($statusID = intval($request->getVar('use'))) {
-                $step = OrderStep::get()->byID($statusID);
-                if ($step) {
-                    $emailClassName = $step->getEmailClassName();
+                    $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
                 }
             }
             //display same data...
             Requirements::clear();
-
-            return $this->currentOrder->renderOrderInEmailFormat($this->message, $emailClassName);
+            return $this->currentOrder->renderOrderInEmailFormat($subject, $message, $emailClassName);
         } else {
             return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
         }

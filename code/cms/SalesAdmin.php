@@ -68,7 +68,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     public function getList()
     {
         $list = parent::getList();
-        if (singleton($this->modelClass) instanceof Order) {
+        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
             $list = $list->filter(
                 array(
                     "StatusID" => array_merge(OrderStep::admin_manageable_steps()->column('ID')),
@@ -91,7 +91,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if (singleton($this->modelClass) instanceof Order) {
+        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();
@@ -107,7 +107,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                     // $config->addComponent(new GridFieldPrintPackingSlipButton());
                 }
             }
-        }
+        } 
         return $form;
     }
 }

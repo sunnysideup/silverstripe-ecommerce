@@ -23,6 +23,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'ShopClosed' => 'Boolean',
         'ShopPricesAreTaxExclusive' => 'Boolean',
         'InvoiceTitle' => 'Varchar(200)',
+        'InvoiceMessage' => 'HTMLText',
         'PackingSlipTitle' => 'Varchar(200)',
         'PackingSlipNote' => 'HTMLText',
         'ShopPhysicalAddress' => 'HTMLText',
@@ -207,6 +208,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'ShopClosed' => false,
         'ShopPricesAreTaxExclusive' => false,
         'InvoiceTitle' => 'Invoice',
+        'InvoiceMessage' => '<p>Thank you for your order</p>',
         'PackingSlipTitle' => 'Package Contents',
         'PackingSlipNote' => 'Please make sure that all items are contained in this package.',
         'ShopPhysicalAddress' => '<p>Enter your shop address here.</p>',
@@ -335,6 +337,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'ShopClosed' => _t('EcommerceDBConfig.SHOPCLOSED', 'Shop Closed'),
             'ShopPricesAreTaxExclusive' => _t('EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE', 'Shop prices are tax exclusive'),
             'InvoiceTitle' => _t('EcommerceDBConfig.INVOICETITLE', 'Default Email title'),
+            'InvoiceMessage' => _t('EcommerceDBConfig.INVOICEMESSAGE', 'Default Email Message'),
             'PackingSlipTitle' => _t('EcommerceDBConfig.PACKING_SLIP_TITLE', 'Packing slip title'),
             'PackingSlipNote' => _t('EcommerceDBConfig.PACKING_SLIP_NOTE', 'Packing slip notes'),
             'ShopPhysicalAddress' => _t('EcommerceDBConfig.SHOPPHYSICALADDRESS', 'Shop physical address'),
@@ -377,9 +380,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'ReceiptEmail' => _t('EcommerceDBConfig.RECEIPTEMAIL_DESCRIPTION_DESCRIPTION', 'e.g. sales@mysite.com, you can also use something like: "Our Shop Name Goes Here" &lt;sales@mysite.com&gt;'),
             'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE_DESCRIPTION', 'This is basically a protection to disallow sales of products that do not have a price entered yet. '),
             'CurrenciesExplanation' => _t('EcommerceDBConfig.CURRENCIESEXPLANATION_DESCRIPTION', 'Explain how the user can switch between currencies and how the exchange rates are worked out.'),
-            'PackingSlipTitle' => _t('EcommerceDBConfig.PACKINGSLIPTITLE', 'e.g. Package Contents'),
-            'PackingSlipNote' => _t('EcommerceDBConfig.PACKING_SLIP_NOTE', 'e.g. a disclaimer'),
-            'InvoiceTitle' => _t('EcommerceDBConfig.INVOICETITLE', 'e.g. Tax Invoice or Update for your recent order on www.yoursite.co.nz'),
+            'PackingSlipTitle' => _t('EcommerceDBConfig.PACKINGSLIPTITLE_DESCRIPTION', 'e.g. Package Contents'),
+            'PackingSlipNote' => _t('EcommerceDBConfig.PACKING_SLIP_NOTE_DESCRIPTION', 'e.g. a disclaimer'),
+            'InvoiceTitle' => _t('EcommerceDBConfig.INVOICETITLE_DESCRIPTION', 'e.g. Tax Invoice or Update for your recent order on www.yoursite.co.nz'),
+            'InvoiceMessage' => _t('EcommerceDBConfig.INVOICEMESSAGE_DESCRIPTION', 'e.g. Thank you for your order.'),
         );
 
         return $newLabels;
@@ -449,7 +453,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         _t('EcommerceDBConfig.EMAILS', 'Emails'),
                         new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
                         new UploadField('EmailLogo', $fieldLabels['EmailLogo'],  null, null, null, 'logos'),
-                        new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle'])
+                        new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle']),
+                        $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage'])
                     ),
                     Tab::create(
                         'Process',
@@ -483,6 +488,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $htmlEditorField2->setRows(3);
                 $htmlEditorField3->setRows(3);
                 $htmlEditorField4->setRows(3);
+                $htmlEditorField5->setRows(3);
                 $fields->addFieldsToTab(
                     'Root.Main',
                     array(

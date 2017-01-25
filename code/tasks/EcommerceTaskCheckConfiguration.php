@@ -163,8 +163,8 @@ class EcommerceTaskCheckConfiguration extends BuildTask
         $fullFilePath = $baseFolder.'/'.$projectFolderAndFile;
         $defaultFileFullPath = Director::baseFolder().'/'.$this->defaultLocation;
         DB::alteration_message('
-			Current files used: <strong style="color: darkRed">'.$files.'</strong>,
-			unless stated otherwise, all settings can be edited in these file(s).',
+            Current files used: <strong style="color: darkRed">'.$files.'</strong>,
+            unless stated otherwise, all settings can be edited in these file(s).',
             'created'
         );
         if (!file_exists($baseAndProjectFolder)) {
@@ -280,75 +280,75 @@ EcommerceConfig:
     protected function definedConfigs()
     {
         $htmlHeader = "
-		<style>
-			body {margin-left: 300px!important;}
-			h2 {padding-top: 2em;margin-bottom: 0; padding-bottom: 0;}
-			th[scope='col'] {text-align: left; border-bottom: 3px solid #ccdef3;padding-top: 40px;}
-			td {vertical-align: top; border-left: 1px solid #d7d7d7; border-bottom: 1px solid #d7d7d7; padding: 10px; width: 47%;}
-			/** headings **/
-			td span.spanTitle {color: #002137; font-weight: 900; display: block; padding-left: 10px; padding-bottom: 5px;}
-			.ecommerceConfigHeadings th, h2 {
-				font-size: 1.2em;
-				padding-bottom: 5px;
-				color: #002137;
-			}
-			td span {color: #000; font-size: 0.8em; display: block; padding-left: 10px; }
-			.sameConfig {color: #000;}
-			.newConfig pre:first-of-type{color: #000; background-color: yellow;}
-			.newConfig pre:first-of-type { }
-			.newConfig pre:nth-of-type(2) { }
-			#TOC {
-				position: fixed;
-				top: -15px;
-				bottom: -20px;
-				color: #fff;
-				background-color: #000;
-				width: 270px;
-				left: 0px;
-				padding-top: 15px;
-				z-index: 10000;
-				overflow: auto;
-				padding-bottom: 20px;
-			}
-			#TOC ul {
-				list-style-type: none;
-			}
-			#TOC li {
-				line-height: 1.3;
-				font-size: 80%;
-				font-weight: 900;
-				height: auto;
-				list-style-type: none;
-			}
-			#TOC a {
-				color: #fff;
-				text-decoration: none;
-				font-size: 85%;
-				font-weight: 900;
-				margin-left: -10px;
-			}
-			#TOC a:hover {
-				color: #7da4be;
-			}
-			/* not sure why we needed this ...
-			#TaskHolder, #EcommerceDatabaseAdmin, .info h1, .info h3, .info a:first-of-type  {
-				margin-left: 280px !important;
-			}
-			*/
-			.info h1, .info h3, .info a {
-				padding-left: 30px;
-			}
-			a.backToTop {display: block; font-size: 0.7em; float: right;}
-			td.newConfig {}
-			table td pre, table td sub {white-space:pre-wrap; font-size: 1em; font-weight: bold;margin: 3px; padding: 3px;}
-			table td sub {font-weight: normal; font-size: 77%;}
+        <style>
+            body {margin-left: 300px!important;}
+            h2 {padding-top: 2em;margin-bottom: 0; padding-bottom: 0;}
+            th[scope='col'] {text-align: left; border-bottom: 3px solid #ccdef3;padding-top: 40px;}
+            td {vertical-align: top; border-left: 1px solid #d7d7d7; border-bottom: 1px solid #d7d7d7; padding: 10px; width: 47%;}
+            /** headings **/
+            td span.spanTitle {color: #002137; font-weight: 900; display: block; padding-left: 10px; padding-bottom: 5px;}
+            .ecommerceConfigHeadings th, h2 {
+                font-size: 1.2em;
+                padding-bottom: 5px;
+                color: #002137;
+            }
+            td span {color: #000; font-size: 0.8em; display: block; padding-left: 10px; }
+            .sameConfig {color: #000;}
+            .newConfig pre:first-of-type{color: #000; background-color: yellow;}
+            .newConfig pre:first-of-type { }
+            .newConfig pre:nth-of-type(2) { }
+            #TOC {
+                position: fixed;
+                top: -15px;
+                bottom: -20px;
+                color: #fff;
+                background-color: #000;
+                width: 270px;
+                left: 0px;
+                padding-top: 15px;
+                z-index: 10000;
+                overflow: auto;
+                padding-bottom: 20px;
+            }
+            #TOC ul {
+                list-style-type: none;
+            }
+            #TOC li {
+                line-height: 1.3;
+                font-size: 80%;
+                font-weight: 900;
+                height: auto;
+                list-style-type: none;
+            }
+            #TOC a {
+                color: #fff;
+                text-decoration: none;
+                font-size: 85%;
+                font-weight: 900;
+                margin-left: -10px;
+            }
+            #TOC a:hover {
+                color: #7da4be;
+            }
+            /* not sure why we needed this ...
+            #TaskHolder, #EcommerceDatabaseAdmin, .info h1, .info h3, .info a:first-of-type  {
+                margin-left: 280px !important;
+            }
+            */
+            .info h1, .info h3, .info a {
+                padding-left: 30px;
+            }
+            a.backToTop {display: block; font-size: 0.7em; float: right;}
+            td.newConfig {}
+            table td pre, table td sub {white-space:pre-wrap; font-size: 1em; font-weight: bold;margin: 3px; padding: 3px;}
+            table td sub {font-weight: normal; font-size: 77%;}
 
-			li pre {width: auto;}
-		</style>
-		";
+            li pre {width: auto;}
+        </style>
+        ";
         $htmlTable = '
-		<table summary="list of configs">
-		';
+        <table summary="list of configs">
+        ';
         $oldClassName = '';
         $htmlTOC = '<div id="TOC"><ul>';
         $count = 0;
@@ -377,9 +377,9 @@ EcommerceConfig:
                 $htmlTOC .= "<li><a href=\"#$className\">$count. $className</a></li>";
                 if ($className != $oldClassName) {
                     $htmlTable .= "<tr  class='ecommerceConfigHeadings' id=\"$className\"><th colspan=\"2\" scope=\"col\">
-					$count. $className ($newHeader)
-					<a class=\"backToTop\" href=\"#TaskHolder\">top</a>
-					</th></tr>";
+                    $count. $className ($newHeader)
+                    <a class=\"backToTop\" href=\"#TaskHolder\">top</a>
+                    </th></tr>";
                     $oldClassName = $className;
                 }
                 if (is_array($settings)) {
@@ -387,17 +387,24 @@ EcommerceConfig:
                         $configError = '';
                         $class = '';
                         $hasDefaultvalue = false;
+                        $showActualValue = true;
                         $isDatabaseValues = isset($this->databaseValues[$className][$key]) ? $this->databaseValues[$className][$key] : false;
                         $isOtherConfigs = isset($this->otherConfigs[$className][$key]) ? $this->otherConfigs[$className][$key] : false;
                         $isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
                         if (!isset($this->defaults[$className][$key])) {
+                            $defaultValueRaw = false;
                             //DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
                         } else {
-                            $defaultValue = print_r($this->defaults[$className][$key], 1);
+                            $defaultValueRaw = $this->defaults[$className][$key];
                             $hasDefaultvalue = true;
                         }
+                        $defaultValue = print_r($defaultValueRaw, 1);
                         $manuallyAddedValue = print_r($this->configs[$className][$key], 1);
-                        $actualValueRaw = EcommerceConfig::get($className, $key);
+                        if($isDatabaseValues || $isOtherConfigs) {
+                            $actualValueRaw = $this->configs[$className][$key];
+                        } else {
+                            $actualValueRaw = EcommerceConfig::get($className, $key);
+                        }
                         //if(!$actualValueRaw && $manuallyAddedValue) {
                         //	$actualValueRaw = $manuallyAddedValue;
                         //}
@@ -406,11 +413,11 @@ EcommerceConfig:
                         if ($defaultValue === $manuallyAddedValue && $isCustomisedValues) {
                             $configError .= 'This is a superfluous entry in your custom config as the default value is the same.';
                         }
-                        $hasDefaultvalue = true;
-                        if ($defaultValue === $actualValue) {
+                        if (($defaultValueRaw == $actualValueRaw) || ( ! $hasDefaultvalue) ) {
                             $class .= 'sameConfig';
-                            $defaultValue = '';
-                            $hasDefaultvalue = false;
+                            if($defaultValueRaw == $actualValueRaw) {
+                                $showActualValue = false;
+                            }
                         } else {
                             $class .= ' newConfig';
                         }
@@ -426,7 +433,7 @@ EcommerceConfig:
                             $description .= $this->specialCases($className, $key, $actualValue);
                         }
                         $defaultValueHTML = '';
-                        if ($defaultValue && !$isOtherConfigs) {
+                        if ($defaultValue && !$isOtherConfigs && $showActualValue) {
                             $defaultValueHTML = "<sub>default:</sub><pre>$defaultValue</pre>";
                         }
                         if ($configError) {
@@ -437,25 +444,25 @@ EcommerceConfig:
                             $sourceNote = '<span>Values are set in the database using the CMS.</span>';
                         }
                         $htmlTable .= "<tr>
-				<td>
-					<span class='spanTitle'>$key</span>
-					<span>$description</span>
-					$sourceNote
-				</td>
-				<td class=\"$class\">
-					<pre>$actualValue</pre>
-					$defaultValueHTML
-					$configError
-				</td>
-			</tr>";
+                <td>
+                    <span class='spanTitle'>$key</span>
+                    <span>$description</span>
+                    $sourceNote
+                </td>
+                <td class=\"$class\">
+                    <pre>$actualValue</pre>
+                    $defaultValueHTML
+                    $configError
+                </td>
+            </tr>";
                     }
                 }
             }
         }
         $htmlEnd = '
-		</table>
-		<h2>--- THE END ---</h2>
-		';
+        </table>
+        <h2>--- THE END ---</h2>
+        ';
         $htmlTOC .= '</ul></div>';
         echo $htmlHeader.$htmlTOC.$htmlTable.$htmlEnd;
     }
@@ -674,11 +681,11 @@ EcommerceConfig:
                     $selector = 'id';
                 }
                 $note = "
-					This variable can be used like this: <pre>&lt;div $selector=\"\$AJAXDefinitions.".$method.'"&gt;&lt;/div&gt;</pre>
-					<a href="/shoppingcart/ajaxtest/?ajax=1">AJAX</a> will then use this selector to put the following content: ';
+                    This variable can be used like this: <pre>&lt;div $selector=\"\$AJAXDefinitions.".$method.'"&gt;&lt;/div&gt;</pre>
+                    <a href="/shoppingcart/ajaxtest/?ajax=1">AJAX</a> will then use this selector to put the following content: ';
                 $this->definitions['Templates']["AJAXDefinitions_$method"] = $note.'<br />'.$description;
                 $this->configs['Templates']["AJAXDefinitions_$method"] = $obj->$method();
-                $this->defaults['Templates']["AJAXDefinitions_$method"] = '';
+                $this->defaults['Templates']["AJAXDefinitions_$method"] = $obj->$method();
                 $this->otherConfigs['Templates']["AJAXDefinitions_$method"] = true;
             }
         }
@@ -743,14 +750,14 @@ EcommerceConfig:
     {
         if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') == 'EcommerceCountry_VisitorCountryProvider' && !class_exists('Geoip')) {
             user_error("
-				You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
-				Alternatively you can set the following config EcommerceCountry.visitor_country_provider to something like MyGEOipProvider.
-				You then create a class MyGEOipProvider with a method getCountry().",
+                You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
+                Alternatively you can set the following config EcommerceCountry.visitor_country_provider to something like MyGEOipProvider.
+                You then create a class MyGEOipProvider with a method getCountry().",
                 E_USER_NOTICE
             );
         } elseif (Director::isLive() && !EcommerceCountry::get_country_from_ip()) {
             user_error("
-				Please make sure that '".$this->Config()->get('visitor_country_provider')."' (visitor_country_provider) is working on your server (see the GEOIP module for details).",
+                Please make sure that '".$this->Config()->get('visitor_country_provider')."' (visitor_country_provider) is working on your server (see the GEOIP module for details).",
                 E_USER_NOTICE
             );
         }
