@@ -25,13 +25,5 @@ class OrderEmailRecordFilters_MultiOptionsetStatusIDFilter extends ExactMatchFil
         return $query;
     }
 
-    /**
-     *@return bool
-     **/
-    public function isEmpty()
-    {
-        $val = $this->getValue();
 
-        return $val == null || $val == '' || $val === 0 || $val === array();
-    }
 }

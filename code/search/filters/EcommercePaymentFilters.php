@@ -58,11 +58,4 @@ class EcommercePaymentFilters_AroundDateFilter extends ExactMatchFilter
         return $query;
     }
 
-    /**
-     *@return bool
-     **/
-    public function isEmpty()
-    {
-        return $this->getValue() == null || $this->getValue() == '';
-    }
 }
