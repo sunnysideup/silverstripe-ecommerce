@@ -817,14 +817,21 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     protected function testEmailLink()
     {
         if ($this->getEmailClassName()) {
-            $orders = Order::get()
-                ->where('"OrderStep"."Sort" >= '.$this->Sort)
-                ->sort('IF("OrderStep"."Sort" > '.$this->Sort.', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
-                ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"');
-            if ($orders->count()) {
-                if ($order = $orders->First()) {
-                    return OrderConfirmationPage::get_email_link($order->ID, $this->getEmailClassName(), $actuallySendEmail = false, $alternativeOrderStepID = $this->ID);
-                }
+            $order = Order::get()->filter(array('StatusID' => $this->ID))->first();
+            if(! $order) {
+                $order = Order::get()
+                    ->where('"OrderStep"."Sort" >= '.$this->Sort)
+                    ->sort('IF("OrderStep"."Sort" > '.$this->Sort.', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
+                    ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
+                    ->first();
+            }
+            if ($order) {
+                return OrderConfirmationPage::get_email_link(
+                    $order->ID,
+                    $this->getEmailClassName(),
+                    $actuallySendEmail = false,
+                    $alternativeOrderStepID = $this->ID
+                );
             }
         }
     }
