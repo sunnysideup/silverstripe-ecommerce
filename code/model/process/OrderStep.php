@@ -488,6 +488,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             }
 
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
+            $htmlEditorField->setRows(3);
+
         } else {
             $fields->removeFieldFromTab('Root', 'OrderEmailRecords');
             $fields->removeFieldFromTab('Root.Main', 'EmailSubject');
@@ -817,7 +819,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     protected function testEmailLink()
     {
         if ($this->getEmailClassName()) {
-            $order = Order::get()->filter(array('StatusID' => $this->ID))->first();
+            $order = Order::get()->filter(array('StatusID' => $this->ID))
+                ->sort('RAND() ASC')
+                ->first();
             if(! $order) {
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= '.$this->Sort)
