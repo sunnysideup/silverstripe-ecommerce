@@ -1023,11 +1023,28 @@ class Product extends Page implements BuyableModel
 
     private static $_calculated_price_cache = array();
 
+    /**
+     * Products have a standard price, but for specific situations they have a calculated price.
+     * The Price can be changed for specific member discounts, etc...
+     *
+     * We add three "hooks" / "extensions" here... so that you can update prices
+     * in a logical order (e.g. firstly change to forex and then apply discount)
+     *
+     * @return float
+     */
     public function getCalculatedPrice()
     {
         if (! isset(self::$_calculated_price_cache[$this->ID])) {
             $price = $this->Price;
+            $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
+            if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
             $updatedPrice = $this->extend('updateCalculatedPrice', $price);
+            if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
+            $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
             if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
