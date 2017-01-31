@@ -1776,7 +1776,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *                   - CC
      *                   - BCC
      */
-    public function createReplacementArrayForEmail($message = '', $subject = '')
+    public function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
         $config = $this->EcomConfig();
@@ -1805,7 +1805,7 @@ class Order extends DataObject implements EditableEcommerceObject
         return $arrayData;
     }
 
-    /**/var/www/photo.co.nz/ecommerce/code/OrderConfirmationPage.php
+    /**
      * returns the order formatted as an email.
      *
      * @param string $message        - the additional message
@@ -1815,7 +1815,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function renderOrderInEmailFormat($subject = '', $message = '', $emailClassName)
     {
-        $arrayData = $this->createReplacementArrayForEmail($message, $subject = '');
+        $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         Config::nest();
         Config::inst()->update('SSViewer', 'theme_enabled', true);
         $html = $arrayData->renderWith($emailClassName);
