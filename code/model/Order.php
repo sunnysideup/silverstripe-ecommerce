@@ -1627,20 +1627,20 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Send the invoice of the order by email.
      *
-     * @param string $subject            - subject for the email
-     * @param string $message            - the main message in the email
-     * @param bool   $resend             - send the email even if it has been sent before
-     * @param bool   $adminOnlyOrToEmail - do not send to customer, only send to shop admin
-     * @param string $emailClassName     - class used to send email
+     * @param string $emailClassName     (optional) class used to send email
+     * @param string $subject            (optional) subject for the email
+     * @param string $message            (optional) the main message in the email
+     * @param bool   $resend             (optional) send the email even if it has been sent before
+     * @param bool   $adminOnlyOrToEmail (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
      *
-     * @return bool TRUE on success, FALSE on failure (in theory)
+     * @return bool TRUE on success, FALSE on failure
      */
     public function sendEmail(
+        $emailClassName = 'Order_InvoiceEmail'
         $subject = '',
         $message = '',
         $resend = false,
         $adminOnlyOrToEmail = false,
-        $emailClassName = 'Order_InvoiceEmail'
     ) {
         return $this->prepareAndSendEmail(
             $emailClassName,
@@ -1655,44 +1655,62 @@ class Order extends DataObject implements EditableEcommerceObject
      * Sends a message to the shop admin ONLY and not to the customer
      * This can be used by ordersteps and orderlogs to notify the admin of any potential problems.
      *
-     * @param string $subject - subject for the email
-     * @param string $message - message to be added with the email
-     *
-     * @return bool TRUE for success, FALSE for failure (not tested)
-     */
-    public function sendError($subject = '', $message = '')
-    {
-        return $this->prepareAndSendEmail('Order_ErrorEmail', _t('Order.ERROR', 'ERROR').' '.$subject, $message, $resend = true, $adminOnly = true);
-    }
-
-    /**
-     * Sends a message to the shop admin ONLY and not to the customer
-     * This can be used by ordersteps and orderlogs to notify the admin of any potential problems.
-     *
-     * @param string $subject        - subject for the email
-     * @param string $message        - message to be added with the email
-     * @param bool   $resend         - can it be sent twice?
-     * @param string $emailClassName - template to be used ...
+     * @param string         $emailClassName       - (optional) template to be used ...
+     * @param string         $subject              - (optional) subject for the email
+     * @param string         $message              - (optional) message to be added with the email
+     * @param bool           $resend               - (optional) can it be sent twice?
+     * @param bool | string  $adminOnlyOrToEmail   - (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
      *
      * @return bool TRUE for success, FALSE for failure (not tested)
      */
     public function sendAdminNotification(
+        $emailClassName = 'Order_ErrorEmail',
         $subject = '',
         $message = '',
         $resend = false,
-        $emailClassName = 'Order_ErrorEmail'
+        $adminOnlyOrToEmail = true
     ) {
-        return $this->prepareAndSendEmail($emailClassName, $subject, $message, $resend, $adminOnly = true);
+        return $this->prepareAndSendEmail(
+            $emailClassName,
+            $subject,
+            $message,
+            $resend,
+            $adminOnlyOrToEmail
+        );
+    }
+
+    /**
+     * returns the order formatted as an email.
+     *
+     * @param string $emailClassName - template to use.
+     * @param string $subject        - (optional) the subject (which can be used as title in email)
+     * @param string $message        - (optional) the additional message
+     *
+     * @return string (html)
+     */
+    public function renderOrderInEmailFormat(
+        $emailClassName,
+        $subject = '',
+        $message = '',
+    )
+    {
+        $arrayData = $this->createReplacementArrayForEmail($subject, $message);
+        Config::nest();
+        Config::inst()->update('SSViewer', 'theme_enabled', true);
+        $html = $arrayData->renderWith($emailClassName);
+        Config::unnest();
+
+        return Order_Email::emogrify_html($html);
     }
 
     /**
      * Send a mail of the order to the client (and another to the admin).
      *
-     * @param string        $emailClassName     - the class name of the email you wish to send
-     * @param string        $subject            - email subject
-     * @param bool          $copyToAdmin        - true by default, whether it should send a copy to the admin
-     * @param bool          $resend             - sends the email even it has been sent before.
-     * @param bool | string $adminOnlyOrToEmail - sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+     * @param string         $emailClassName       - (optional) template to be used ...
+     * @param string         $subject              - (optional) subject for the email
+     * @param string         $message              - (optional) message to be added with the email
+     * @param bool           $resend               - (optional) can it be sent twice?
+     * @param bool | string  $adminOnlyOrToEmail   - (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
      *
      * @return bool TRUE for success, FALSE for failure (not tested)
      */
@@ -1703,7 +1721,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $resend = false,
         $adminOnlyOrToEmail = false
     ) {
-        $arrayData = $this->createReplacementArrayForEmail($message, $subject);
+        $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         $from = Order_Email::get_from_email();
         //why are we using this email and NOT the member.EMAIL?
         //for historical reasons????
@@ -1761,12 +1779,13 @@ class Order extends DataObject implements EditableEcommerceObject
      * we add the subject here so that the subject, for example, can be added to the <title>
      * of the email template.
      *
-     * @param string $message - the additional message
-     * @param string $subject - subject for email -
+     * @param string $subject  - (optional) subject for email
+     * @param string $message  - (optional) the additional message
      *
      * @return ArrayData
      *                   - Subject - EmailSubject
      *                   - Message - specific message for this order
+     *                   - Message - custom message
      *                   - OrderStepMessage - generic message for step
      *                   - Order
      *                   - EmailLogo
@@ -1776,7 +1795,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *                   - CC
      *                   - BCC
      */
-    public function createReplacementArrayForEmail($subject = '', $message = '')
+    protected function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
         $config = $this->EcomConfig();
@@ -1803,25 +1822,6 @@ class Order extends DataObject implements EditableEcommerceObject
         $arrayData = new ArrayData($replacementArray);
         $this->extend('updateReplacementArrayForEmail', $arrayData);
         return $arrayData;
-    }
-
-    /**
-     * returns the order formatted as an email.
-     *
-     * @param string $message        - the additional message
-     * @param string $emailClassName - template to use.
-     *
-     * @return array (Message, Order, EmailLogo, ShopPhysicalAddress)
-     */
-    public function renderOrderInEmailFormat($subject = '', $message = '', $emailClassName)
-    {
-        $arrayData = $this->createReplacementArrayForEmail($subject, $message);
-        Config::nest();
-        Config::inst()->update('SSViewer', 'theme_enabled', true);
-        $html = $arrayData->renderWith($emailClassName);
-        Config::unnest();
-
-        return Order_Email::emogrify_html($html);
     }
 
 /*******************************************************

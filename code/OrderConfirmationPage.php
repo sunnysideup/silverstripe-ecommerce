@@ -709,11 +709,11 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                         $email = true;
                     }
                     $this->currentOrder->sendEmail(
+                        $emailClassName,
                         _t('Account.TEST_ONLY', '--- TEST ONLY ---') . ' ' . $subject,
                         $message,
                         $resend = true,
-                        $adminOnlyOrToEmail = $email,
-                        $emailClassName
+                        $adminOnlyOrToEmail = $email
                     );
                 }
             }
@@ -726,11 +726,11 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                     $emailClassName = 'Order_ReceiptEmail';
                     if (
                         $this->currentOrder->sendEmail(
+                            $emailClassName,
                             $subject,
                             $message,
                             $resend = true,
-                            $adminOnlyOrToEmail = false,
-                            $emailClassName
+                            $adminOnlyOrToEmail = false
                         )
                     ) {
                         $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
@@ -743,7 +743,11 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             }
             //display same data...
             Requirements::clear();
-            return $this->currentOrder->renderOrderInEmailFormat($subject, $message, $emailClassName);
+            return $this->currentOrder->renderOrderInEmailFormat(
+                $emailClassName, 
+                $subject, 
+                $message
+            );
         } else {
             return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
         }
