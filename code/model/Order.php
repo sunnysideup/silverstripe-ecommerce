@@ -1636,11 +1636,11 @@ class Order extends DataObject implements EditableEcommerceObject
      * @return bool TRUE on success, FALSE on failure
      */
     public function sendEmail(
-        $emailClassName = 'Order_InvoiceEmail'
+        $emailClassName = 'Order_InvoiceEmail',
         $subject = '',
         $message = '',
         $resend = false,
-        $adminOnlyOrToEmail = false,
+        $adminOnlyOrToEmail = false
     ) {
         return $this->prepareAndSendEmail(
             $emailClassName,
@@ -1801,10 +1801,11 @@ class Order extends DataObject implements EditableEcommerceObject
         $config = $this->EcomConfig();
         $replacementArray = array();
         //set subject
-        if ($subject) {
-            $subject = $subject;
-        } else {
+        if ( ! $subject) {
             $subject = $step->EmailSubject;
+        }
+        if( ! $message) {
+            $message = $step->CustomerMessage;
         }
         $subject = str_replace('[OrderNumber]', $this->ID, $subject);
         //set other variables
@@ -1812,15 +1813,15 @@ class Order extends DataObject implements EditableEcommerceObject
         $replacementArray['To'] = '';
         $replacementArray['CC'] = '';
         $replacementArray['BCC'] = '';
-        $replacementArray['Message'] = $message;
-        $replacementArray['OrderStepMessage'] = $step->CustomerMessage;
+        $replacementArray['OrderStepMessage'] = $message;
         $replacementArray['Order'] = $this;
         $replacementArray['EmailLogo'] = $config->EmailLogo();
         $replacementArray['ShopPhysicalAddress'] = $config->ShopPhysicalAddress;
         $replacementArray['CurrentDateAndTime'] = DBField::create_field('SS_Datetime', 'Now');
         $replacementArray['BaseURL'] = Director::baseURL();
-        $arrayData = new ArrayData($replacementArray);
+        $arrayData = ArrayData::create($replacementArray);
         $this->extend('updateReplacementArrayForEmail', $arrayData);
+
         return $arrayData;
     }
 

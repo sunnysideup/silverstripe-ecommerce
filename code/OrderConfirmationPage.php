@@ -721,9 +721,9 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 if ($email = $this->currentOrder->getOrderEmail()) {
                     $step = OrderStep::get()->byID($this->currentOrder->StatusID);
                     $ecomConfig = $this->EcomConfig();
-                    $subject = _t('Account.COPY_ONLY', '--- COPY ONLY ---') . ' '.$ecomConfig->InvoiceTitle;
-                    $message = $ecomConfig->InvoiceMessage;
-                    $emailClassName = 'Order_ReceiptEmail';
+                    $subject = $ecomConfig->InvoiceTitle ? $ecomConfig->InvoiceTitle : _t('OrderConfirmationPage.INVOICE', 'Invoice');
+                    $message = $ecomConfig->InvoiceMessage ? $ecomConfig->InvoiceMessage : _t('OrderConfirmationPage.MESSAGE', '<p>Thank you for your order.</p>');
+                    $emailClassName = 'Order_InvoiceEmail';
                     if (
                         $this->currentOrder->sendEmail(
                             $emailClassName,
@@ -744,8 +744,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             //display same data...
             Requirements::clear();
             return $this->currentOrder->renderOrderInEmailFormat(
-                $emailClassName, 
-                $subject, 
+                $emailClassName,
+                $subject,
                 $message
             );
         } else {
