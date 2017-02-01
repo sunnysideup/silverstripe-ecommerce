@@ -767,11 +767,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $adminOnlyOrToEmailIsEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
             if ($this->hasCustomerMessage() || $adminOnlyOrToEmailIsEmail) {
                 return $order->sendEmail(
+                    $emailClassName,
                     $subject,
                     $message,
                     $resend,
-                    $adminOnlyOrToEmail,
-                    $emailClassName
+                    $adminOnlyOrToEmail
                 );
             } else {
                 if (!$emailClassName) {
@@ -780,10 +780,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 //looks like we are sending an error, but we are just using this for notification
                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.').'<br /><br /><br /><br />'.$message;
                 $outcome = $order->sendAdminNotification(
-                    $emailClassName
+                    $emailClassName,
                     $subject,
                     $message,
-                    $resend,
+                    $resend
                 );
             }
             if ($outcome || Director::isDev()) {
