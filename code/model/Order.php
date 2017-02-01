@@ -1691,7 +1691,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function renderOrderInEmailFormat(
         $emailClassName,
         $subject = '',
-        $message = '',
+        $message = ''
     )
     {
         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
