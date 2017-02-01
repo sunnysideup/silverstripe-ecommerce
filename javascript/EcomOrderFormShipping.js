@@ -70,7 +70,7 @@ if(
          *
          * @var string
          */
-        useShippingDetailsAlternativeSelector: "input[name='DoNotUseShippingAddress']",
+        useShippingDetailsAlternativeSelector: "input[name='UseDifferentShippingAddress']",
 
         /**
          * where do we save the alternative header title
@@ -317,9 +317,9 @@ if(
                 jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).change(
                     function(event) {
                         if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).is(":checked") === true) {
-                            jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).removeAttr('checked', 'checked').val('0');
-                        } else {
                             jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).attr('checked', 'checked').val('1');
+                        } else {
+                            jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).removeAttr('checked', 'checked').val('0');
                         }
                         jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change();
                     }
@@ -352,7 +352,7 @@ if(
         },
 
         /**
-         * Swapping out the available countries 
+         * Swapping out the available countries
          * for the Billing Address depending on whether the Billing address
          * is also the Shipping address or that the shipping address is separate
          */
