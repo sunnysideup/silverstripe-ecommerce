@@ -411,7 +411,13 @@ class Order extends DataObject implements EditableEcommerceObject
     public function scaffoldSearchFields($_params = null)
     {
         $fieldList = parent::scaffoldSearchFields($_params);
-        $statusOptions = OrderStep::get();
+
+        //for sales to action only show relevant ones ...
+        if(Controller::curr() && Controller::curr()->class === 'SalesAdmin') {
+            $statusOptions = OrderStep::admin_manageable_steps();
+        } else {
+            $statusOptions = OrderStep::get();
+        }
         if ($statusOptions && $statusOptions->count()) {
             $createdOrderStatusID = 0;
             $preSelected = array();
@@ -445,6 +451,9 @@ class Order extends DataObject implements EditableEcommerceObject
             $fieldList->push($statusField);
         }
         $fieldList->push(new DropdownField('CancelledByID', 'Cancelled', array(-1 => '(Any)', 1 => 'yes', 0 => 'no')));
+
+        //allow changes
+        $this->extend('scaffoldSearchFields', $fieldList, $_params);
 
         return $fieldList;
     }
