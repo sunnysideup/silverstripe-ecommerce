@@ -83,10 +83,10 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
                  if (is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
                      $obj->OrderID = $order->ID;
                      $obj->Title = $this->Name;
-                    //it is important we add this here so that we can save the 'submitted' version.
-                    //this is particular important for the Order Item Links.
-                    //order write will also update all the OrderAttributes!
-                    $obj->write();
+                     //it is important we add this here so that we can save the 'submitted' version.
+                     //this is particular important for the Order Item Links.
+                     //order write will also update all the OrderAttributes!
+                     $obj->write();
                      $obj = OrderStatusLog::get()->byID($obj->ID);
                      $saved = false;
                      if ($this->SaveOrderAsSerializedObject) {
@@ -105,20 +105,20 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
              }
              $order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
 
-            //add member if needed...
-            if (!$order->MemberID) {
-                //lets see if we can find a member
-                $memberOrderID = Session::get('Ecommerce_Member_For_Order');
-                Session::clear('Ecommerce_Member_For_Order');
-                Session::set('Ecommerce_Member_For_Order', 0);
-                Session::save();
-                if ($memberOrderID) {
-                    $order->MemberID = $memberOrderID;
-                }
-            }
+             //add member if needed...
+             if (!$order->MemberID) {
+                 //lets see if we can find a member
+                 $memberOrderID = Session::get('Ecommerce_Member_For_Order');
+                 Session::clear('Ecommerce_Member_For_Order');
+                 Session::set('Ecommerce_Member_For_Order', 0);
+                 Session::save();
+                 if ($memberOrderID) {
+                     $order->MemberID = $memberOrderID;
+                 }
+             }
              $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
          }
-
+         
          return true;
      }
 
