@@ -485,7 +485,28 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     ->setRightTitle($rightTitle)
             );
             if ($testEmailLink = $this->testEmailLink()) {
-                $fields->addFieldToTab('Root.CustomerMessage', new LiteralField('testEmailLink', '<h3><a href="'.$testEmailLink.'" data-popup="true" target="_blank">'._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'</a></h3>'));
+                $fields->addFieldToTab(
+                    'Root.CustomerMessage',
+                    new LiteralField(
+                        'testEmailLink',
+                        '<h3>
+                            <a href="'.$testEmailLink.'" data-popup="true" target"_blank" onclick="emailPrompt(this, event);">
+                                '._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'
+                            </a>
+                        </h3>
+                        <script language="javascript">
+                            function emailPrompt(caller, event) {
+                                event.preventDefault();
+                                var href = jQuery(caller).attr("href");
+                                var email = prompt("Enter an email address to receive a copy of this example in your inbox, leave blank to view in the browser");
+                                if (email) {
+                                    href += "&send=" + email;
+                                }
+                                window.open(href);
+                            };
+                        </script>'
+                    )
+                );
             }
 
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
