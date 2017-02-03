@@ -77,6 +77,13 @@ class OrderFormAddress extends Form
         $useShippingAddressField = null;
         $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
 
+        $addressFieldsMember->push(
+            HeaderField::create(
+                'AddressFieldsMemberHeading',
+                _t('OrderFormAddress.Address_Fields_Member_Heading', 'Personal Details'),
+                3
+            )
+        );
         //find member
         $this->order = ShoppingCart::current_order();
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
@@ -130,9 +137,9 @@ class OrderFormAddress extends Form
             if ($shippingAddressFirst) {
                 $useShippingAddressField->push(
                     CheckboxField::create(
-                        'DoNotUseShippingAddress',
-                        _t('OrderForm.DO_NOT_USESHIPPINGADDRESS', 'Shipping and Billing Address are the same'),
-                        1
+                        'UseDifferentShippingAddress',
+                        _t('OrderForm.USE_DIFFERENT_SHIPPING_ADDRESS', 'Use different billing address'),
+                        0
                     )
                 );
                 $useShippingAddressField->push(
