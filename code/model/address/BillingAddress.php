@@ -210,7 +210,7 @@ class BillingAddress extends OrderAddress
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();
-        $headerTitle = _t('OrderAddress.ADDRESS', 'Billing and Delivery Address');
+        $headerTitle = _t('OrderAddress.DELIVERY_AND_BILLING_ADDRESS', 'Delivery and Billing Address');
         $fields->push(
             HeaderField::create(
                 'BillingDetails',
