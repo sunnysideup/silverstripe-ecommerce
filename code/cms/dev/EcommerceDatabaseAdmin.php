@@ -358,6 +358,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 $buildTasksArray = array_merge($buildTasksArray, $extendedBuildTasks);
             }
         }
+        $buildTasksArray = array_unique($buildTasksArray);
         $arrayList = new ArrayList();
         foreach ($buildTasksArray as $buildTask) {
             $obj = new $buildTask();
