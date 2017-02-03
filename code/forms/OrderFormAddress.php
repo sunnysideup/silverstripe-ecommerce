@@ -138,7 +138,7 @@ class OrderFormAddress extends Form
                 $useShippingAddressField->push(
                     CheckboxField::create(
                         'UseDifferentShippingAddress',
-                        _t('OrderForm.USE_DIFFERENT_SHIPPING_ADDRESS', 'Use different billing address'),
+                        _t('OrderForm.USE_DIFFERENT_SHIPPING_ADDRESS', 'I need to enter a separate billing address'),
                         0
                     )
                 );
