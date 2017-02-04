@@ -14,7 +14,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 {
     protected $sendEmails = true;
 
-    protected $limit = 100;
+    protected $limit = 1;
 
     protected $title = 'Try to finalise all orders - WILL SEND EMAILS';
 
@@ -52,25 +52,33 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 $startAt = 0;
             }
         }
-
-
-        $this->tryToFinaliseOrders($ordersinQueue, $limit, $startAt);
-
+        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed(0);
         //find any other order that may need help ...
-        $orderStatusLogClassName = 'OrderStatusLog';
+
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = $submittedOrderStatusLogClassName::get()->First();
             if ($submittedStatusLog) {
-                $startAtOrderStep = OrderStep::get()->sort('Sort', 'DESC')->First();
-                if ($startAtOrderStep) {
-                    $joinSQL = 'INNER JOIN "" ON ';
-                    $whereSQL = '"StatusID" <> '.$startAtOrderStep->ID.'';
+                $lastOrderStep = OrderStep::get()->Last();
+                if ($lastOrderStep) {
+                    if($this->IsCli()) {
+                        $sort = 'RAND()';
+                    } else {
+                        $sort = array('ID' => 'ASC');
+                    }
                     $orders = Order::get()
-                        ->where($whereSQL)
-                        ->sort('ID', 'ASC')
+                        ->sort($sort)
+                        ->where('StatusID <> ' . $lastOrderStep->ID)
                         ->exclude(array('ID' => $ordersinQueue->column('ID')))
-                        ->innerJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"");
+                        ->innerJoin(
+                            'OrderStatusLog',
+                            "\"OrderStatusLog\".\"OrderID\" = \"Order\".\"ID\""
+                        )
+                        ->innerJoin(
+                            $submittedOrderStatusLogClassName,
+                            "\"$submittedOrderStatusLogClassName\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                        );
                     $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
                     DB::alteration_message('NO  order step.', 'deleted');
@@ -87,15 +95,11 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
     }
 
-    protected function setSendEmails()
-    {
-        $this->sendEmails = true;
-    }
 
     protected function tryToFinaliseOrders($orders, $limit, $startAt)
     {
         $orders = $orders->limit($limit, $startAt);
-        if ($orders->limit()) {
+        if ($orders->count()) {
             DB::alteration_message("<h1>Moving $limit Orders (starting from $startAt)</h1>");
             foreach ($orders as $order) {
                 ++$startAt;
@@ -130,4 +134,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
         return $startAt;
     }
+
+    protected function IsCli()
+    {
+        return php_sapi_name() == 'cli';
+    }
+
 }
