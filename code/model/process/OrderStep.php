@@ -310,7 +310,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function admin_manageable_steps()
     {
         $lastStep = OrderStep::get()->Last();
-        return OrderStep::get()->filter(array('CustomerCanEdit' => 0))->exclude(array('ID' => $lastStep->ID));
+        
+        return OrderStep::get()->filter(array('ShowAsInProcessOrder' => 1))->exclude(array('ID' => $lastStep->ID));
     }
 
     /**
@@ -484,7 +485,28 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     ->setRightTitle($rightTitle)
             );
             if ($testEmailLink = $this->testEmailLink()) {
-                $fields->addFieldToTab('Root.CustomerMessage', new LiteralField('testEmailLink', '<h3><a href="'.$testEmailLink.'" data-popup="true" target="_blank">'._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'</a></h3>'));
+                $fields->addFieldToTab(
+                    'Root.CustomerMessage',
+                    new LiteralField(
+                        'testEmailLink',
+                        '<h3>
+                            <a href="'.$testEmailLink.'" data-popup="true" target"_blank" onclick="emailPrompt(this, event);">
+                                '._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'
+                            </a>
+                        </h3>
+                        <script language="javascript">
+                            function emailPrompt(caller, event) {
+                                event.preventDefault();
+                                var href = jQuery(caller).attr("href");
+                                var email = prompt("Enter an email address to receive a copy of this example in your inbox, leave blank to view in the browser");
+                                if (email) {
+                                    href += "&send=" + email;
+                                }
+                                window.open(href);
+                            };
+                        </script>'
+                    )
+                );
             }
 
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
@@ -767,11 +789,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $adminOnlyOrToEmailIsEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
             if ($this->hasCustomerMessage() || $adminOnlyOrToEmailIsEmail) {
                 return $order->sendEmail(
+                    $emailClassName,
                     $subject,
                     $message,
                     $resend,
-                    $adminOnlyOrToEmail,
-                    $emailClassName
+                    $adminOnlyOrToEmail
                 );
             } else {
                 if (!$emailClassName) {
@@ -780,10 +802,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 //looks like we are sending an error, but we are just using this for notification
                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.').'<br /><br /><br /><br />'.$message;
                 $outcome = $order->sendAdminNotification(
+                    $emailClassName,
                     $subject,
                     $message,
-                    $resend,
-                    $emailClassName
+                    $resend
                 );
             }
             if ($outcome || Director::isDev()) {
@@ -1057,6 +1079,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * returns the OrderStatusLogs that are relevant to this step.
+     * It is important that getRelevantLogEntryClassName returns
+     * a specific enough ClassName and not a base class name.
      *
      * @param Order $order
      *
@@ -1065,7 +1089,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function RelevantLogEntries(Order $order)
     {
         if ($className = $this->getRelevantLogEntryClassName()) {
-            return $className::get()->filter(array('OrderID' => $order->ID));
+            return $className::get()->filter(
+                array(
+                    'OrderID' => $order->ID
+                )
+            );
         }
     }
 
