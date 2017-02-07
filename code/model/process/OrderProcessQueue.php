@@ -112,7 +112,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * Standard SS method
-     * logs can never be deleted...
+     * Queues can be deleted if needed.
      *
      * @param Member $member
      *
@@ -120,7 +120,7 @@ class OrderProcessQueue extends DataObject
      */
     public function canDelete($member = null)
     {
-        return false;
+        return parent::canDelete($member);
     }
 
     /**
