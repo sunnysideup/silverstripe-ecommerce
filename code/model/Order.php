@@ -102,6 +102,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'OrderStatusLogs' => 'OrderStatusLog',
         'Payments' => 'EcommercePayment',
         'Emails' => 'OrderEmailRecord',
+        'OrderProcessQueue' => 'OrderProcessQueue' //there is usually only one.
     );
 
     /**
@@ -621,10 +622,22 @@ class Order extends DataObject implements EditableEcommerceObject
 
          //is the member is a shop admin they can always view it
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
+            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+            if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+                $myQueueObjectField = GridField::create(
+                    'MyQueueObjectField',
+                    _t('Order.QUEUE_DETAILS', 'Queue Details'),
+                    $this->OrderProcessQueue(),
+                    GridFieldConfig_RecordViewer::create()
+                );
+            } else {
+                $myQueueObjectField = HiddenField('MyQueueObjectField');
+            }
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(
                     HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', '2. Action Next Step')),
+                    $myQueueObjectField,
                     HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', '3. Move Order Along')),
                     LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to move it along.').'</p>'),
                     EcommerceCMSButtonField::create(
@@ -1103,7 +1116,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
-            // if it is in the queue it has to run from the queue tasks 
+            // if it is in the queue it has to run from the queue tasks
             // if it ruins from the queue tasks then it has to be one currently processing.
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
             if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
