@@ -631,7 +631,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     GridFieldConfig_RecordViewer::create()
                 );
             } else {
-                $myQueueObjectField = HiddenField('MyQueueObjectField');
+                $myQueueObjectField = HiddenField::create('MyQueueObjectField');
             }
             $nextFieldArray = array_merge(
                 $nextFieldArray,
