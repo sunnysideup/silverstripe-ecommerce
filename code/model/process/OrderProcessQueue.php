@@ -180,7 +180,7 @@ class OrderProcessQueue extends DataObject
     {
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $myQueueObject = $queueObjectSingleton->getQueueObject($order);
-        if ($myQueueObject->isReadyToGo()) {
+        if ($myQueueObject && $myQueueObject->isReadyToGo()) {
             $myQueueObject->InProcess = true;
             $myQueueObject->write();
             $order->tryToFinaliseOrder(
@@ -201,12 +201,8 @@ class OrderProcessQueue extends DataObject
     public function getQueueObject($order)
     {
         $filter = array('OrderID' => $order->ID);
-        $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
-        if ($existingEntry) {
-            return $existingEntry;
-        }
 
-        return false;
+        return OrderProcessQueue::get()->filter($filter)->first();
     }
 
     /**
@@ -289,10 +285,23 @@ class OrderProcessQueue extends DataObject
         $fields = parent::getCMSFields();
         if($this->exists()) {
             $fields->addFieldToTab(
-                'Root.main',
+                'Root.Main',
+                ReadonlyField::create(
+                    'ToBeProcessedAtCompilations',
+                    _t('OrderProcessQueue.TO_BE_PROCESSED', 'To Be Processed'),
+                    $this->ToBeProcessedAt->Nice() . ' - ' . $this->getToBeProcessedAt()->Ago()
+                ),
+                'InProcess'
+            );
+            $fields->addFieldToTab(
+                'Root.Main',
                 LiteralField::create(
                     'processQueueNow',
-                    '<h2><a href="/dev/tasks/EcommerceTaskProcessOrderQueue/?id='.$this->ID.'" target="_blank">'._t('OrderProcessQueue.PROCESS', 'Process now').'</a></h2>'
+                    '<h2>
+                        <a href="/dev/tasks/EcommerceTaskProcessOrderQueue/?id='.$this->OrderID.'" target="_blank">'.
+                            _t('OrderProcessQueue.PROCESS', 'Process now').
+                        '</a>
+                    </h2>'
                 )
             );
         }

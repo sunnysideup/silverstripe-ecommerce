@@ -1096,18 +1096,23 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
+
+            //if the order has been cancelled then we do not process it ...
             if ($this->CancelledByID) {
                 $this->Archive(true);
 
                 return;
             }
-            //does a queue object already exist
+            // if it is in the queue it has to run from the queue tasks 
+            // if it ruins from the queue tasks then it has to be one currently processing.
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
             if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
-                if ($myQueueObject->InProcess) {
-                    if (! $fromOrderQueue) {
+                if($fromOrderQueue) {
+                    if ( ! $myQueueObject->InProcess) {
                         return;
                     }
+                } else {
+                    return;
                 }
             }
             //a little hack to make sure we do not rely on a stored value

@@ -42,13 +42,13 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         }
         echo '<h3>There are '.$ordersinQueue->count().' in the queue, processing '.$this->limit.' now</h3>';
         if($id) {
-            echo '<h3>FORCING Order with ID</h3>';
+            echo '<h3>FORCING Order with ID: '.$id.'</h3>';
             $ordersinQueue = $ordersinQueue->filter(array('ID' => $id));
         }
         $this->tryToFinaliseOrders($ordersinQueue);
         echo '<hr />';
         echo '<hr />';
-        echo 'PROCECESSED IN: '.round(((microtime(true) - $now) / 1), 5).' seconds';
+        echo 'PROCESSED IN: '.round(((microtime(true) - $now) / 1), 5).' seconds';
     }
 
 
