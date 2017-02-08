@@ -1205,8 +1205,8 @@ class Order extends DataObject implements EditableEcommerceObject
                 $log->InternalUseOnly = true;
             }
             $log->write();
-            $this->extends('doCancel', $member, $log);
-            
+            $this->extend('doCancel', $member, $log);
+
             return $log;
         }
     }
