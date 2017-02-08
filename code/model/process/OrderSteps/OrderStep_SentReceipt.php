@@ -21,7 +21,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
-        'Name' => 'Send receipt',
+        'Name' => 'Send Receipt',
         'Code' => 'RECEIPTED',
         'ShowAsInProcessOrder' => 1,
         'SendReceiptToCustomer' => 1,

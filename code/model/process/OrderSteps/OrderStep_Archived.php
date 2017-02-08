@@ -12,7 +12,7 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
-        'Name' => 'Archived order',
+        'Name' => 'Archived Order',
         'Code' => 'ARCHIVED',
         'ShowAsCompletedOrder' => 1,
     );
