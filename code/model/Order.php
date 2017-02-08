@@ -631,7 +631,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     GridFieldConfig_RecordViewer::create()
                 );
             } else {
-                $myQueueObjectField = HiddenField('MyQueueObjectField');
+                $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>'._t('Order.NOT_QUEUED'.'This order is not queued for future processing.').'</p>');
             }
             $nextFieldArray = array_merge(
                 $nextFieldArray,
