@@ -470,7 +470,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         return Controller::join_links(
             Director::baseURL(),
-            '/admin/sales/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
+            '/admin/sales-advanced/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
             $action
         );
     }
@@ -1182,26 +1182,33 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * cancel an order.
      *
-     * @param Member $member - the user cancelling the order
-     * @param string $reason - the reason the order is cancelled
+     * @param Member $member - (optional) the user cancelling the order
+     * @param string $reason - (optional) the reason the order is cancelled
      *
      * @return OrderStatusLog_Cancel
      */
-    public function Cancel(Member $member, $reason = '')
+    public function Cancel($member = null, $reason = '')
     {
-        $this->CancelledByID = $member->ID;
-        //archive and write
-        $this->Archive($avoidWrites = true);
-        //create log ...
-        $log = OrderStatusLog_Cancel::create();
-        $log->AuthorID = $member->ID;
-        $log->OrderID = $this->ID;
-        $log->Note = $reason;
-        if ($member->IsShopAdmin()) {
-            $log->InternalUseOnly = true;
+        if(!$member || ! $member instanceof Member) {
+            $member = EcommerceRole::get_default_shop_admin_user();
         }
-
-        return $log->write();
+        if($member) {
+            $this->CancelledByID = $member->ID;
+            //archive and write
+            $this->Archive($avoidWrites = true);
+            //create log ...
+            $log = OrderStatusLog_Cancel::create();
+            $log->AuthorID = $member->ID;
+            $log->OrderID = $this->ID;
+            $log->Note = $reason;
+            if ($member->IsShopAdmin()) {
+                $log->InternalUseOnly = true;
+            }
+            $log->write();
+            $this->extends('doCancel', $member, $log);
+            
+            return $log;
+        }
     }
 
     /**
