@@ -615,6 +615,16 @@ class Order extends DataObject implements EditableEcommerceObject
         $nextFieldArray = array_merge(
             $nextFieldArray,
             array(
+                EcommerceCMSButtonField::create(
+                    'AddNoteButton',
+                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
+                    _t('Order.ADD_NOTE', 'Add Note')
+                )
+            )
+        );
+        $nextFieldArray = array_merge(
+            $nextFieldArray,
+            array(
                 $this->OrderStepField()
             )
         );
@@ -630,7 +640,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     GridFieldConfig_RecordViewer::create()
                 );
             } else {
-                $myQueueObjectField = HiddenField::create('MyQueueObjectField');
+                $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>'._t('Order.NOT_QUEUED'.'This order is not queued for future processing.').'</p>');
             }
             $nextFieldArray = array_merge(
                 $nextFieldArray,
@@ -647,16 +657,6 @@ class Order extends DataObject implements EditableEcommerceObject
                 )
             );
         }
-        $nextFieldArray = array_merge(
-            $nextFieldArray,
-            array(
-                EcommerceCMSButtonField::create(
-                    'AddNoteButton',
-                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
-                    _t('Order.ADD_NOTE', 'Add Note')
-                )
-            )
-        );
         $fields->addFieldsToTab(
             'Root.Next',
             $nextFieldArray
