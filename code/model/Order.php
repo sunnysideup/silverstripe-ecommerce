@@ -578,7 +578,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
         $nextFieldArray = array(
             LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
-            HeaderField::create('OrderSummaryHeader', _t('Order.THIS_ORDER_HEADER', 'Order Summary')),
+            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
             GridField::create(
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
@@ -615,7 +615,6 @@ class Order extends DataObject implements EditableEcommerceObject
         $nextFieldArray = array_merge(
             $nextFieldArray,
             array(
-                HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
                 $this->OrderStepField()
             )
         );
