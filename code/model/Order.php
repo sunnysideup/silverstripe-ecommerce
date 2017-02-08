@@ -615,6 +615,16 @@ class Order extends DataObject implements EditableEcommerceObject
         $nextFieldArray = array_merge(
             $nextFieldArray,
             array(
+                EcommerceCMSButtonField::create(
+                    'AddNoteButton',
+                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
+                    _t('Order.ADD_NOTE', 'Add Note')
+                )
+            )
+        );
+        $nextFieldArray = array_merge(
+            $nextFieldArray,
+            array(
                 HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
                 $this->OrderStepField()
             )
@@ -648,16 +658,6 @@ class Order extends DataObject implements EditableEcommerceObject
                 )
             );
         }
-        $nextFieldArray = array_merge(
-            $nextFieldArray,
-            array(
-                EcommerceCMSButtonField::create(
-                    'AddNoteButton',
-                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
-                    _t('Order.ADD_NOTE', 'Add Note')
-                )
-            )
-        );
         $fields->addFieldsToTab(
             'Root.Next',
             $nextFieldArray

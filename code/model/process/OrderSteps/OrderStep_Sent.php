@@ -21,7 +21,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
-        'Name' => 'Send order',
+        'Name' => 'Send Order',
         'Code' => 'SENT',
         'ShowAsInProcessOrder' => 1,
     );
