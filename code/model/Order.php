@@ -577,14 +577,15 @@ class Order extends DataObject implements EditableEcommerceObject
         $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
         $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
         $nextFieldArray = array(
-            LiteralField::create('CssFix', '<style>#Root_Next h2 {padding: 0!important; margin: 0!important; margin-top: 2em!important;}</style>'),
+            LiteralField::create('CssFix', '<style>#Root_Next h2.form-control {padding: 0!important; margin: 0!important; padding-top: 4em!important;}</style>'),
             HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
+            $this->OrderStepField(),
             GridField::create(
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
                 ArrayList::create(array($this)),
                 $orderSummaryConfig
-            ),
+            )
         );
         $keyNotes = OrderStatusLog::get()->filter(
             array(
@@ -625,37 +626,41 @@ class Order extends DataObject implements EditableEcommerceObject
         $nextFieldArray = array_merge(
             $nextFieldArray,
             array(
-                $this->OrderStepField()
+
             )
         );
 
          //is the member is a shop admin they can always view it
+        
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
-            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-            if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
-                $myQueueObjectField = GridField::create(
-                    'MyQueueObjectField',
-                    _t('Order.QUEUE_DETAILS', 'Queue Details'),
-                    $this->OrderProcessQueue(),
-                    GridFieldConfig_RecordViewer::create()
-                );
-            } else {
-                $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>'._t('Order.NOT_QUEUED'.'This order is not queued for future processing.').'</p>');
-            }
-            $nextFieldArray = array_merge(
-                $nextFieldArray,
-                array(
-                    HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', '2. Action Next Step')),
-                    $myQueueObjectField,
-                    HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', '3. Move Order Along')),
-                    LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'If you have made any changes to the order then you will have to refresh or save this record to move it along.').'</p>'),
-                    EcommerceCMSButtonField::create(
-                        'StatusIDExplanation',
-                        $this->CMSEditLink(),
-                        _t('Order.REFRESH', 'refresh now')
+            $lastStep = OrderStep::get()->Last();
+            if($this->StatusID != $lastStep->ID) {
+                $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+                if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+                    $myQueueObjectField = GridField::create(
+                        'MyQueueObjectField',
+                        _t('Order.QUEUE_DETAILS', 'Queue Details'),
+                        $this->OrderProcessQueue(),
+                        GridFieldConfig_RecordEditor::create()
+                    );
+                } else {
+                    $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>'._t('Order.NOT_QUEUED','This order is not queued for future processing.').'</p>');
+                }
+                $nextFieldArray = array_merge(
+                    $nextFieldArray,
+                    array(
+                        HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', '2. Action Next Step')),
+                        $myQueueObjectField,
+                        HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', '3. Move Order Along')),
+                        LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'Once you have made any changes to the order then you will have to refresh below or save it to move it along.').'</p>'),
+                        EcommerceCMSButtonField::create(
+                            'StatusIDExplanation',
+                            $this->CMSEditLink(),
+                            _t('Order.REFRESH', 'refresh now')
+                        )
                     )
-                )
-            );
+                );
+            }
         }
         $fields->addFieldsToTab(
             'Root.Next',
@@ -1189,13 +1194,20 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function Cancel($member = null, $reason = '')
     {
-        if(!$member || ! $member instanceof Member) {
+        if($member && $member instanceof Member) {
+            //we have a valid member
+        } else {
             $member = EcommerceRole::get_default_shop_admin_user();
         }
         if($member) {
-            $this->CancelledByID = $member->ID;
             //archive and write
             $this->Archive($avoidWrites = true);
+            if($avoidWrites) {
+                DB::query('Update "Order" SET CancelledByID = '.$member->ID.' WHERE ID = '.$this->ID.' LIMIT 1;');
+            } else {
+                $this->CancelledByID = $member->ID;
+                $this->write();
+            }
             //create log ...
             $log = OrderStatusLog_Cancel::create();
             $log->AuthorID = $member->ID;
