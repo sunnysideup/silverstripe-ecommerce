@@ -113,7 +113,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
-        $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step you enter the dispatch details in the logs.');
+        $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step please enter dispatch details.');
         $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog_DispatchPhysicalOrder', $title), 'ActionNextStepManually');
 
         return $fields;
