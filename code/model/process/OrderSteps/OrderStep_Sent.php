@@ -21,7 +21,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
-        'Name' => 'Send order',
+        'Name' => 'Send Order',
         'Code' => 'SENT',
         'ShowAsInProcessOrder' => 1,
     );
@@ -113,7 +113,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
-        $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step you enter the dispatch details in the logs.');
+        $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step please enter dispatch details.');
         $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog_DispatchPhysicalOrder', $title), 'ActionNextStepManually');
 
         return $fields;

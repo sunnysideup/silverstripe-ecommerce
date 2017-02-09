@@ -52,6 +52,10 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
     }
 
 
+    /**
+     *
+     * @param  DataList $orders orders to be processsed.
+     */
     protected function tryToFinaliseOrders($orders)
     {
         //limit orders

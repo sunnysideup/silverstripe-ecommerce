@@ -22,7 +22,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 1,
-        'Name' => 'Send invoice',
+        'Name' => 'Send Invoice',
         'Code' => 'INVOICED',
         'ShowAsInProcessOrder' => 1,
         'SendInvoiceToCustomer' => 1,

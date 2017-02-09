@@ -12,7 +12,7 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
-        'Name' => 'Archived order',
+        'Name' => 'Archived Order',
         'Code' => 'ARCHIVED',
         'ShowAsCompletedOrder' => 1,
     );
@@ -78,8 +78,6 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
-        $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this order then do this here ...');
-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog_Archived', $title), 'ActionNextStepManually');
 
         return $fields;
     }

@@ -304,6 +304,14 @@ class OrderProcessQueue extends DataObject
                     </h2>'
                 )
             );
+            $fields->replaceField(
+                'OrderID',
+                CMSEditLinkField::create(
+                    'OrderID',
+                    'Order',
+                    $this->Order()
+                )
+            );
         }
         return $fields;
     }

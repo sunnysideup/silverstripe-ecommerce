@@ -213,6 +213,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         'ecommercetaskarchiveallsubmittedorders',
         'ecommercetasklinkorderaddressesatbothends',
         'EcommerceTaskCleanupProducts',
+        'EcommerceTaskOrdersWithoutOrderSteps'
     );
 
     /**

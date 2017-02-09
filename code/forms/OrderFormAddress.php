@@ -80,7 +80,7 @@ class OrderFormAddress extends Form
         $addressFieldsMember->push(
             HeaderField::create(
                 'AddressFieldsMemberHeading',
-                _t('OrderFormAddress.Address_Fields_Member_Heading', 'Personal Details'),
+                _t('OrderFormAddress.Address_Fields_Member_Heading', 'Your Personal Details'),
                 3
             )
         );
