@@ -313,6 +313,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
         return OrderStep::get()->filter(array('ShowAsInProcessOrder' => 1))->exclude(array('ID' => $lastStep->ID));
     }
+    /**
+     * returns all the order steps
+     * that the admin should / can edit....
+     *
+     * @return DataList
+     */
+    public static function non_admin_manageable_steps()
+    {
+        $lastStep = OrderStep::get()->Last();
+
+        return OrderStep::get()->filterAny(array('ShowAsInProcessOrder' => 0, 'ID' => $lastStep->ID));
+    }
 
     /**
      * return StatusIDs (orderstep IDs) from orders that are bad....
