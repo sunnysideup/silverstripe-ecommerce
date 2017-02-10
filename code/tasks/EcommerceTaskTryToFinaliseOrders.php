@@ -62,7 +62,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             if ($submittedStatusLog) {
                 $lastOrderStep = OrderStep::get()->Last();
                 if ($lastOrderStep) {
-                    if($this->IsCli()) {
+                    if($this->isCli()) {
                         $sort = 'RAND()';
                     } else {
                         $sort = array('ID' => 'ASC');
@@ -90,8 +90,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
         if (Session::get('EcommerceTaskTryToFinaliseOrders')) {
-            DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
-            echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
+            if(! $this->isCli()) {
+                DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
+                echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
+            }
         }
     }
 
@@ -135,9 +137,9 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         return $startAt;
     }
 
-    protected function IsCli()
+    protected function isCli()
     {
-        return php_sapi_name() == 'cli';
+        return Director::is_cli();
     }
 
 }
