@@ -116,7 +116,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-
+        if(EcommerceDBConfig::get()->count() > 0) {
+            return false;
+        }
         return $this->canEdit($member);
     }
 
