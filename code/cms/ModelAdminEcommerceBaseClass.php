@@ -32,4 +32,21 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
      */
     public $showImportForm = false;
+
+    /**
+     *
+     * @param DataObject $record
+     *
+     * @return Form
+     */
+    function oneItemForm($record)
+    {
+        Config::inst()->update('LeftAndMain', 'tree_class', $record->ClassName);
+        $idField = HiddenField::create('ID')->setValue($record->ID);
+        $form = LeftAndMain::getEditForm($record);
+        $form->Fields()->push($idField);
+        return $form;
+    }
+
+
 }
