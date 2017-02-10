@@ -69,12 +69,26 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     {
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
-            $list = $list->filter(
-                array(
-                    "StatusID" => array_merge(OrderStep::admin_manageable_steps()->column('ID')),
-                    "CancelledByID" => 0
+            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+            $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed(0);
+            $list = $list
+                ->filter(
+                    array(
+                        "CancelledByID" => 0,
+                        "StatusID:greaterThan" => 0
+                    )
                 )
-            );
+                ->exclude(
+                    array(
+                        'ID' => $ordersinQueue->column('ID'),
+                    )
+                );
+            $list = $list
+                ->exclude(
+                    array(
+                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID')
+                    )
+                );
         }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
@@ -107,7 +121,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                     // $config->addComponent(new GridFieldPrintPackingSlipButton());
                 }
             }
-        } 
+        }
         return $form;
     }
 }
