@@ -42,9 +42,25 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     function oneItemForm($record)
     {
         Config::inst()->update('LeftAndMain', 'tree_class', $record->ClassName);
-        $idField = HiddenField::create('ID')->setValue($record->ID);
         $form = LeftAndMain::getEditForm($record);
+        $idField = HiddenField::create('ID')->setValue($record->ID);
+        $cssField = LiteralField::create(
+            'oneItemFormCSS',
+            '
+                <style>
+                    .cms-content-view .ui-tabs-nav {
+                        margin-left: 0!important;
+                    }
+                    .cms-content-view .Actions {
+                        position: fixed;
+                        bottom: 16px;
+                        right:  16px;
+                    }
+                </style>
+            '
+        );
         $form->Fields()->push($idField);
+        $form->Fields()->push($cssField);
         return $form;
     }
 
