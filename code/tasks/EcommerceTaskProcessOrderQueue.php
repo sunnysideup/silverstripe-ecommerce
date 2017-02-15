@@ -60,6 +60,8 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
     {
         //limit orders
         $orders = $orders->limit($this->limit);
+        //we sort randomly so it is less likely we get stuck with the same ones
+        $orders = $orders->sort('RAND()');
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         foreach ($orders as $order) {
             echo '<hr />Processing order: '.$order->ID;
