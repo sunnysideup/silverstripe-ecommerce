@@ -233,6 +233,9 @@ class OrderProcessQueue extends DataObject
      */
     public function OrdersToBeProcessed($id = 0, $limit = 9999)
     {
+
+        //we sort the order randomly so that we get a nice mixture
+        //not always the same ones holding up the process
         $sql = '
             SELECT "OrderID"
             FROM "OrderProcessQueue"
@@ -240,7 +243,7 @@ class OrderProcessQueue extends DataObject
                 "InProcess" = 0
                 AND
                 (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time().'
-            ORDER BY "Created" DESC
+            ORDER BY RAND() DESC
             LIMIT '.$limit.';
         ';
         $rows = DB::query($sql);
@@ -250,7 +253,8 @@ class OrderProcessQueue extends DataObject
         }
 
         return Order::get()
-            ->filter(array('ID' => $orderIDs));
+            ->filter(array('ID' => $orderIDs))
+            ->sort('RAND()');
     }
 
     /**
