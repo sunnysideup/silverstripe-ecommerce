@@ -181,13 +181,20 @@ class OrderProcessQueue extends DataObject
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $myQueueObject = $queueObjectSingleton->getQueueObject($order);
         if ($myQueueObject && $myQueueObject->isReadyToGo()) {
+            $oldOrderStatusID = $order->StatusID;
             $myQueueObject->InProcess = true;
             $myQueueObject->write();
             $order->tryToFinaliseOrder(
                 $tryAgain = false,
                 $fromOrderQueue = true
             );
-            $myQueueObject->delete();
+            $newOrderStatusID = $order->StatusID;
+            if($oldOrderStatusID != $newOrderStatusID) {
+                $myQueueObject->delete();
+            } else {
+                $myQueueObject->InProcess = false;
+                $myQueueObject->write();
+            }
         }
     }
 
@@ -221,7 +228,7 @@ class OrderProcessQueue extends DataObject
      * META METHOD: returns a list of orders to be processed
      * @param int $id force this Order to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
-     * 
+     *
      * @return DataList (of orders)
      */
     public function OrdersToBeProcessed($id = 0, $limit = 9999)
