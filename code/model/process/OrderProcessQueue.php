@@ -219,10 +219,9 @@ class OrderProcessQueue extends DataObject
      */
     public function removeOrderFromQueue($order)
     {
-        $filter = array('OrderID' => $order->ID);
-        $existingEntries = OrderProcessQueue::get()->filter($filter);
-        foreach($existingEntries as $existingEntry) {
-            $existingEntry->delete();
+        $queueEntries = OrderProcessQueue::get()->filter(array('OrderID' => $order->ID));
+        foreach($queueEntries as $queueEntry) {
+            $queueEntry->delete();
         }
     }
 
