@@ -221,7 +221,9 @@ class OrderProcessQueue extends DataObject
     {
         $filter = array('OrderID' => $order->ID);
         $existingEntries = OrderProcessQueue::get()->filter($filter);
-        $existingEntries->removeAll();
+        foreach($existingEntries as $existingEntry) {
+            $existingEntry->delete();
+        }
     }
 
     /**
@@ -248,6 +250,52 @@ class OrderProcessQueue extends DataObject
         ';
         $rows = DB::query($sql);
         $orderIDs = array($id => $id);
+        foreach ($rows as $row) {
+            $orderIDs[$row['OrderID']] = $row['OrderID'];
+        }
+
+        return Order::get()
+            ->filter(array('ID' => $orderIDs))
+            ->sort('RAND()');
+    }
+
+    /**
+     * META METHOD: all orders with a queue object
+     * @param int $id force this Order to be processed
+     * @param int $limit total number of orders that can be retrieved at any one time
+     *
+     * @return DataList (of orders)
+     */
+    public function AllOrdersInQueue($limit = 9999)
+    {
+
+        return Order::get()
+            ->filter(array('ID' => OrderProcessQueue::get()->column('OrderID')))
+            ->sort('RAND()')
+            ->limit($limit);
+    }
+
+    /**
+     * META METHOD: returns a list of orders NOT YET to be processed
+     * @param int $limit total number of orders that can be retrieved at any one time
+     *
+     * @return DataList (of orders)
+     */
+    public function OrdersInQueueThatAreNotReady($limit = 9999)
+    {
+
+        //we sort the order randomly so that we get a nice mixture
+        //not always the same ones holding up the process
+        $sql = '
+            SELECT "OrderID"
+            FROM "OrderProcessQueue"
+            WHERE
+                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") >= '.time().'
+            ORDER BY RAND() DESC
+            LIMIT '.$limit.';
+        ';
+        $rows = DB::query($sql);
+        $orderIDs = array(0 => 0);
         foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
