@@ -145,6 +145,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalItems' => 'Double',
         'TotalItemsTimesQuantity' => 'Double',
         'IsCancelled' => 'Boolean',
+        'IsPaidNice' => 'Boolean',
         'Country' => 'Varchar(3)', //This is the applicable country for the order - for tax purposes, etc....
         'FullNameCountry' => 'Varchar',
         'IsSubmitted' => 'Boolean',
@@ -360,7 +361,8 @@ class Order extends DataObject implements EditableEcommerceObject
         'Member.Surname' => 'Name',
         'Member.Email' => 'Email',
         'TotalAsMoney.Nice' => 'Total',
-        'TotalItemsTimesQuantity' => 'Units'
+        'TotalItemsTimesQuantity' => 'Units',
+        'IsPaidNice' => 'Paid'
     );
 
     /**
@@ -631,7 +633,7 @@ class Order extends DataObject implements EditableEcommerceObject
         );
 
          //is the member is a shop admin they can always view it
-        
+
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $lastStep = OrderStep::get()->Last();
             if($this->StatusID != $lastStep->ID) {
@@ -1389,6 +1391,16 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return false;
+    }
+    /**
+     * Has the order been paid?
+     * TODO: why do we check if there is a total at all?
+     *
+     * @return Boolean (object)
+     */
+    public function IsPaidNice()
+    {
+        return  DBField::create_field('Boolean', $this->IsPaid());
     }
 
     /**
