@@ -1219,6 +1219,9 @@ class Order extends DataObject implements EditableEcommerceObject
                 $log->InternalUseOnly = true;
             }
             $log->write();
+            //remove from queue ... 
+            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+            $ordersinQueue = $queueObjectSingleton->removeOrderFromQueue($this);
             $this->extend('doCancel', $member, $log);
 
             return $log;
