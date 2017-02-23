@@ -64,5 +64,19 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
         return $form;
     }
 
+    /**
+     * Define which fields are used in the {@link getEditForm} GridField export.
+     * By default, it uses the summary fields from the model definition.
+     *
+     * @return array
+     */
+    public function getExportFields() {
+        $obj = singleton($this->modelClass);
+        if($obj->hasMethod('getExportFields')) {
+            return $obj->getExportFields();
+        }
+        return $obj->summaryFields();
+    }
+
 
 }

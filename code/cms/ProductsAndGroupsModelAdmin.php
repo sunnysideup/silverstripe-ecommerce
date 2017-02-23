@@ -36,7 +36,11 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
         if (is_subclass_of($this->modelClass, 'SiteTree') || $this->modelClass === 'SiteTree') {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
-                    $gridField->setConfig(GridFieldEditOriginalPageConfig::create());
+                    $config = GridFieldEditOriginalPageConfig::create();
+                    $exportButton = new GridFieldExportButton('buttons-before-left');
+                    $exportButton->setExportColumns($this->getExportFields());
+                    $config->addComponent($exportButton);
+                    $gridField->setConfig($config);
                 }
             }
         }
