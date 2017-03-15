@@ -67,7 +67,6 @@ class OrderConfirmationPage extends CartPage
         'PaymentSuccessfulMessage' => '<p>Your order will be processed.</p>',
         'PaymentNotSuccessfulMessage' => '<p>Your order will not be processed until your payment has been completed.</p>',
         'PaymentPendingMessage' => '<p>Please complete your payment before the order can be processed.</p>',
-        'FeedbackFormLinkText' => 'Do have any feedback about the order process? Let us know ... ',
         'FeedbackHeader' => 'Feedback',
         'FeedbackValuesFieldLabel' => 'How likely are you to recommend us to your friends?',
         'FeedbackValuesOptions' => 'Not At All, Not Likely, Not Sure, Likely, Very Likely',
@@ -177,7 +176,6 @@ class OrderConfirmationPage extends CartPage
             'PaymentPendingMessage' => _t('OrderConfirmationPage.PAYMENTPENDINGMESSAGE', 'Message showing when the order has not been paid in full - but the payment is pending.'),
             'EnableGoogleAnalytics' => _t('OrderConfirmationPage.ENABLEGOOGLEANALYTICS', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.'),
             'IsFeedbackEnabled' => _t('OrderConfirmationPage.ISFEEDBACKENABLED', 'Enable Feedback Form'),
-            'FeedbackFormLinkText' => _t('OrderConfirmationPage.FEEDBACKFORMLINKTEXT', 'Email Link Text'),
             'FeedbackHeader' => _t('OrderConfirmationPage.FEEDBACKHEADER', 'Feedback Form Header'),
             'FeedbackValuesFieldLabel' => _t('OrderConfirmationPage.FEEDBACKVALUESFIELDLABEL', 'Feedback Form Options Label'),
             'FeedbackValuesOptions' => _t('OrderConfirmationPage.FEEDBACKVALUESOPTIONS', 'Feedback Form Options'),
@@ -256,9 +254,7 @@ class OrderConfirmationPage extends CartPage
                 TextField::create('FeedbackFormSubmitLabel', $fieldLabels['FeedbackFormSubmitLabel'])
                     ->setRightTitle('Text shown on the feedback form submit button'),
                 TextField::create('FeedbackFormThankYou', $fieldLabels['FeedbackFormThankYou'])
-                    ->setRightTitle('Thank you message displayed to user after submitting the feedback form'),
-                TextField::create('FeedbackFormLinkText', $fieldLabels['FeedbackFormLinkText'])
-                    ->setRightTitle('This is the text shown for the <strong>request feedback link</strong> included in order emails')
+                    ->setRightTitle('Thank you message displayed to user after submitting the feedback form')
             )
         );
         return $fields;
