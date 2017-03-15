@@ -403,7 +403,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
         $fields->push($headerField);
         $fields->push($linkField1);
-        
+
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $linkField2 = EcommerceCMSButtonField::create(
                 'MemberLinkFieldEditAllCustomers',
@@ -681,11 +681,15 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
     }
 
-    public function CMSEditLink()
+    /**
+     * link to edit the record.
+     *
+     * @param string | Null $action - e.g. edit
+     *
+     * @return string
+     */
+    public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            'admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit'
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this->owner, $action);
     }
 }

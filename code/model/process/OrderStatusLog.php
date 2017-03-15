@@ -161,20 +161,20 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        
+
         if ($order = $this->Order()) {
             //Order Status Logs are so basic, anyone can edit them
             if ($this->ClassName=='OrderStatusLog') {
                 return $order->canView($member);
             }
-        
+
             if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
                 return $order->canEdit($member);
             }
         }
 
 
-        
+
         return false;
     }
 
@@ -357,11 +357,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/sales/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
