@@ -328,7 +328,8 @@ SalesAdmin:
   managed_models:
     - Order
     - OrderProcessQueue
-
+    - OrderFeedback
+    
 SalesAdminExtras:
   managed_models:
     - Order
@@ -336,7 +337,7 @@ SalesAdminExtras:
     - OrderItem
     - OrderModifier
     - OrderEmailRecord
-    - OrderFeedback
+
     - BillingAddress
     - ShippingAddress
     - EcommercePayment
