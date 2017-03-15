@@ -91,6 +91,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                     )
                 );
         }
+
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
             foreach ($newLists as $newList) {
