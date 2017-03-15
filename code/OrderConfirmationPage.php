@@ -421,6 +421,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         'copyorder',
         'sendemail',
         'CancelForm',
+        'FeedbackForm',
         'PaymentForm',
     );
 
@@ -678,6 +679,22 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         //once cancelled, you will be redirected to main page - hence we need this...
         if ($this->orderID) {
             return array();
+        }
+    }
+
+    /**
+     * Returns the form for providing feedback about current order,
+     * checking to see if IsFeedbackEnabled is true
+     * first of all.
+     *
+     * @return OrderForm_Feedback
+     */
+    public function FeedbackForm()
+    {
+        if ($this->Order()) {
+            if ($this->IsFeedbackEnabled) {
+                return OrderForm_Feedback::create($this, 'FeedbackForm', $this->currentOrder);
+            }
         }
     }
 
