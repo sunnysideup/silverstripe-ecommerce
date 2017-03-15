@@ -755,6 +755,17 @@ class Order extends DataObject implements EditableEcommerceObject
                     '<p>'._t('Order.NO_ACCOUNT', 'There is no --- account --- associated with this order').'</p>'
                 ));
             }
+            if($this->getFeedbackLink()) {
+                $fields->addFieldToTab(
+                    'Root.Account',
+                    GridField::create(
+                        'OrderFeedback',
+                        Injector::inst()->get('OrderFeedback')->singular_name(),
+                        OrderFeedback::get()->filter(array('OrderID' => $this->ID)),
+                        GridFieldConfig_RecordViewer::create()
+                    )
+                );
+            }
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
             $shopAdminAndCurrentCustomerArray = EcommerceRole::list_of_admins(true);
