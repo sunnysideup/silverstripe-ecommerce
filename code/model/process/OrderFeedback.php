@@ -216,7 +216,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         foreach($array as $field) {
             if($this->$field) {
                 if($string) {
-                    $string .= ' - '
+                    $string .= ' - ';
                 }
                 $string .= $this->$field;
             }
