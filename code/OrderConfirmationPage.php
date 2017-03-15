@@ -43,7 +43,7 @@ class OrderConfirmationPage extends CartPage
         'FeedbackFormLinkText' => 'Varchar(255)',
         'FeedbackHeader' => 'Varchar(255)',
         'FeedbackValuesFieldLabel' => 'Varchar(255)',
-        'FeedbackValuesOptions' => 'Varchar(255)',
+        'FeedbackValuesOptions' => 'Text',
         'FeedbackNotesFieldLabel' => 'Varchar(255)',
         'FeedbackFormSubmitLabel' => 'Varchar(255)',
         'FeedbackFormThankYou' => 'Varchar(255)'
@@ -238,25 +238,35 @@ class OrderConfirmationPage extends CartPage
             HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
         ));
         $fields->addFieldToTab('Root.Analytics', new CheckboxField('EnableGoogleAnalytics', $fieldLabels['EnableGoogleAnalytics']));
-        $fields->addFieldsToTab(
-            'Root.FeedbackForm',
-            array(
-                CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
-                    ->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails'),
-                TextField::create('FeedbackHeader', $fieldLabels['FeedbackHeader'])
-                    ->setRightTitle('Heading text shown above the form on the order confirmation page'),
-                TextField::create('FeedbackValuesFieldLabel', $fieldLabels['FeedbackValuesFieldLabel'])
-                    ->setRightTitle('Text for feedback options field label'),
-                TextField::create('FeedbackValuesOptions', $fieldLabels['FeedbackValuesOptions'])
-                    ->setRightTitle('Comma separated list of feedback rating options (eg Good, Neutral, Bad)'),
-                TextField::create('FeedbackNotesFieldLabel', $fieldLabels['FeedbackNotesFieldLabel'])
-                    ->setRightTitle('Text for feedback notes field label'),
-                TextField::create('FeedbackFormSubmitLabel', $fieldLabels['FeedbackFormSubmitLabel'])
-                    ->setRightTitle('Text shown on the feedback form submit button'),
-                TextField::create('FeedbackFormThankYou', $fieldLabels['FeedbackFormThankYou'])
-                    ->setRightTitle('Thank you message displayed to user after submitting the feedback form')
-            )
-        );
+        if($this->IsFeedbackEnabled) {
+            $fields->addFieldsToTab(
+                'Root.FeedbackForm',
+                array(
+                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
+                        ->setDescription(_t('OrderConfirmationPage.IsFeedbackEnabled_RIGHT', 'Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')),
+                    TextField::create('FeedbackHeader', $fieldLabels['FeedbackHeader'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackHeader_RIGHT', 'e.g. Please let us know what you think')),
+                    TextField::create('FeedbackValuesFieldLabel', $fieldLabels['FeedbackValuesFieldLabel'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackValuesFieldLabel_RIGHT', 'e.g. Please rate our service')),
+                    TextField::create('FeedbackValuesOptions', $fieldLabels['FeedbackValuesOptions'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackValuesOptions_RIGHT', 'Comma separated list of feedback rating options (eg Good, Neutral, Bad)')),
+                    TextField::create('FeedbackNotesFieldLabel', $fieldLabels['FeedbackNotesFieldLabel'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackNotesFieldLabel_RIGHT', 'e.g. Please add any comments')),
+                    TextField::create('FeedbackFormSubmitLabel', $fieldLabels['FeedbackFormSubmitLabel'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackFormSubmitLabel_RIGHT', 'e.g. Submit Feedback Now')),
+                    TextField::create('FeedbackFormThankYou', $fieldLabels['FeedbackFormThankYou'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form'))
+                )
+            );
+        } else {
+            $fields->addFieldsToTab(
+                'Root.FeedbackForm',
+                array(
+                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
+                        ->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')
+                )
+            );
+        }
         return $fields;
     }
 
