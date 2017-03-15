@@ -166,16 +166,7 @@ class OrderProcessQueue extends DataObject
                 $existingEntry->$field = $value;
             }
         }
-        if($existingEntry->OrderID > 0) {
-            $existingEntry->write();
-        } else {
-            //hacky backup ... just in case!
-            if(!$order->ID) {
-                $order->write();
-            }
-            $existingEntry->OrderID = $order->ID;
-            $existingEntry->write();
-        }
+        $existingEntry->write();
 
         return $existingEntry;
     }
@@ -383,4 +374,15 @@ class OrderProcessQueue extends DataObject
         }
         return $fields;
     }
+
+    public function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+        $errors = OrderProcessQueue::get()->filter(array('OrderID' => 0));
+        foreach($errors as $error) {
+            DB::alteration_message(' DELETING ROGUE OrderProcessQueue', 'deleted');
+            $error->delete();
+        }
+    }
+
 }
