@@ -166,7 +166,16 @@ class OrderProcessQueue extends DataObject
                 $existingEntry->$field = $value;
             }
         }
-        $existingEntry->write();
+        if($existingEntry->OrderID > 0) {
+            $existingEntry->write();
+        } else {
+            //hacky backup ... just in case!
+            if(!$order->ID) {
+                $order->write();
+            }
+            $existingEntry->OrderID = $order->ID;
+            $existingEntry->write();
+        }
 
         return $existingEntry;
     }
