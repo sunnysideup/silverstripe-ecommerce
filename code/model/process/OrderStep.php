@@ -310,8 +310,20 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function admin_manageable_steps()
     {
         $lastStep = OrderStep::get()->Last();
-        
+
         return OrderStep::get()->filter(array('ShowAsInProcessOrder' => 1))->exclude(array('ID' => $lastStep->ID));
+    }
+    /**
+     * returns all the order steps
+     * that the admin should / can edit....
+     *
+     * @return DataList
+     */
+    public static function non_admin_manageable_steps()
+    {
+        $lastStep = OrderStep::get()->Last();
+
+        return OrderStep::get()->filterAny(array('ShowAsInProcessOrder' => 0, 'ID' => $lastStep->ID));
     }
 
     /**
@@ -1256,24 +1268,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function onBeforeDelete()
     {
-        parent::onBeforeDelete();
-        $previousOrderStepObject = null;
-        $nextOrderStepObject = $this->NextOrderStep();
-        //backup
-        if ($nextOrderStepObject) {
-            //do nothing
-        } else {
-            $previousOrderStepObject = $this->PreviousOrderStep();
-        }
-        if ($previousOrderStepObject) {
-            $ordersWithThisStatus = Order::get()->filter(array('StatusID' => $this->ID));
-            if ($ordersWithThisStatus && $ordersWithThisStatus->count()) {
+        $ordersWithThisStatus = Order::get()->filter(array('StatusID' => $this->ID));
+        if ($ordersWithThisStatus->count()) {
+            $previousOrderStepObject = null;
+            $bestOrderStep = $this->NextOrderStep();
+            //backup
+            if ($bestOrderStep && $bestOrderStep->exists()) {
+                //do nothing
+            } else {
+                $bestOrderStep = $this->PreviousOrderStep();
+            }
+            if ($bestOrderStep) {
                 foreach ($ordersWithThisStatus as $orderWithThisStatus) {
-                    $orderWithThisStatus->StatusID = $previousOrderStepObject->ID;
+                    $orderWithThisStatus->StatusID = $bestOrderStep->ID;
                     $orderWithThisStatus->write();
                 }
             }
         }
+        parent::onBeforeDelete();
     }
 
     /**
@@ -1317,32 +1329,35 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $indexNumber += 10;
                     $itemCount = OrderStep::get()->filter($filter)->Count();
                     if ($itemCount) {
+                        //always reset code
                         $obj = OrderStep::get()->filter($filter)->First();
                         if ($obj->Code != $code) {
                             $obj->Code = $code;
                             $obj->write();
                         }
+                        //replace default description
                         $parentObj = singleton('OrderStep');
                         if ($obj->Description == $parentObj->myDescription()) {
                             $obj->Description = $obj->myDescription();
                             $obj->write();
                         }
-                    } else {
-                        $obj = $className::create();
-                        $obj->Code = $code;
-                        $obj->Description = $obj->myDescription();
-                        $obj->write();
-                        DB::alteration_message("Created \"$code\" as $className.", 'created');
-                    }
-                    $obj = OrderStep::get()
-                        ->filter(array('Code' => strtoupper($code)))
-                        ->First();
-                    if ($obj) {
+                        //check sorting order
                         if ($obj->Sort != $indexNumber) {
                             $obj->Sort = $indexNumber;
                             $obj->write();
                         }
                     } else {
+                        $obj = $className::create($filter);
+                        $obj->Code = $code;
+                        $obj->Description = $obj->myDescription();
+                        $obj->Sort = $indexNumber;
+                        $obj->write();
+                        DB::alteration_message("Created \"$code\" as $className.", 'created');
+                    }
+                    $obj = OrderStep::get()
+                        ->filter($filter)
+                        ->First();
+                    if (! $obj) {
                         user_error("There was an error in creating the $code OrderStep");
                     }
                 }

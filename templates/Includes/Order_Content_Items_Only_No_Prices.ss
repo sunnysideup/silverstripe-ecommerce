@@ -5,16 +5,6 @@
 			<th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
 		</tr>
 	</thead>
-	<tfoot>
-		<tr class="cartMessage">
-			<td colspan="2" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
-		</tr>
-		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
-			<td colspan="2" class="center">
-				<% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
-			</td>
-		</tr>
-	</tfoot>
 	<tbody>
 <% if Items %>
 	<% loop Items %>
@@ -34,5 +24,14 @@
 	<% end_loop %>
 <% end_if %>
 	</tbody>
+    <tfoot>
+		<tr class="cartMessage">
+			<td colspan="2" class="center $CartStatusClass" id="$AJAXDefinitions.TableMessageID">$CartStatusMessage</td>
+		</tr>
+		<tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
+			<td colspan="2" class="center">
+				<% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
+			</td>
+		</tr>
+	</tfoot>
 </table>
-

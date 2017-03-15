@@ -181,13 +181,20 @@ class OrderProcessQueue extends DataObject
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $myQueueObject = $queueObjectSingleton->getQueueObject($order);
         if ($myQueueObject && $myQueueObject->isReadyToGo()) {
+            $oldOrderStatusID = $order->StatusID;
             $myQueueObject->InProcess = true;
             $myQueueObject->write();
             $order->tryToFinaliseOrder(
                 $tryAgain = false,
                 $fromOrderQueue = true
             );
-            $myQueueObject->delete();
+            $newOrderStatusID = $order->StatusID;
+            if($oldOrderStatusID != $newOrderStatusID) {
+                $myQueueObject->delete();
+            } else {
+                $myQueueObject->InProcess = false;
+                $myQueueObject->write();
+            }
         }
     }
 
@@ -212,19 +219,24 @@ class OrderProcessQueue extends DataObject
      */
     public function removeOrderFromQueue($order)
     {
-        $filter = array('OrderID' => $order->ID);
-        $existingEntries = OrderProcessQueue::get()->filter($filter);
-        $existingEntries->removeAll();
+        $queueEntries = OrderProcessQueue::get()->filter(array('OrderID' => $order->ID));
+        foreach($queueEntries as $queueEntry) {
+            $queueEntry->delete();
+        }
     }
 
     /**
      * META METHOD: returns a list of orders to be processed
      * @param int $id force this Order to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
+     *
      * @return DataList (of orders)
      */
     public function OrdersToBeProcessed($id = 0, $limit = 9999)
     {
+
+        //we sort the order randomly so that we get a nice mixture
+        //not always the same ones holding up the process
         $sql = '
             SELECT "OrderID"
             FROM "OrderProcessQueue"
@@ -232,7 +244,7 @@ class OrderProcessQueue extends DataObject
                 "InProcess" = 0
                 AND
                 (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time().'
-            ORDER BY "Created" DESC
+            ORDER BY RAND() DESC
             LIMIT '.$limit.';
         ';
         $rows = DB::query($sql);
@@ -242,7 +254,54 @@ class OrderProcessQueue extends DataObject
         }
 
         return Order::get()
-            ->filter(array('ID' => $orderIDs));
+            ->filter(array('ID' => $orderIDs))
+            ->sort('RAND()');
+    }
+
+    /**
+     * META METHOD: all orders with a queue object
+     * @param int $id force this Order to be processed
+     * @param int $limit total number of orders that can be retrieved at any one time
+     *
+     * @return DataList (of orders)
+     */
+    public function AllOrdersInQueue($limit = 9999)
+    {
+
+        return Order::get()
+            ->filter(array('ID' => OrderProcessQueue::get()->column('OrderID')))
+            ->sort('RAND()')
+            ->limit($limit);
+    }
+
+    /**
+     * META METHOD: returns a list of orders NOT YET to be processed
+     * @param int $limit total number of orders that can be retrieved at any one time
+     *
+     * @return DataList (of orders)
+     */
+    public function OrdersInQueueThatAreNotReady($limit = 9999)
+    {
+
+        //we sort the order randomly so that we get a nice mixture
+        //not always the same ones holding up the process
+        $sql = '
+            SELECT "OrderID"
+            FROM "OrderProcessQueue"
+            WHERE
+                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") >= '.time().'
+            ORDER BY RAND() DESC
+            LIMIT '.$limit.';
+        ';
+        $rows = DB::query($sql);
+        $orderIDs = array(0 => 0);
+        foreach ($rows as $row) {
+            $orderIDs[$row['OrderID']] = $row['OrderID'];
+        }
+
+        return Order::get()
+            ->filter(array('ID' => $orderIDs))
+            ->sort('RAND()');
     }
 
     /**

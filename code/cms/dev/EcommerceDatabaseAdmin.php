@@ -210,6 +210,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         'ecommercetaskproductvariationsfixes',
         'ecommercetaskproductimagereset',
         'ecommercetasktrytofinaliseorders',
+        'ecommercetaskprocessorderqueue',
         'ecommercetaskarchiveallsubmittedorders',
         'ecommercetasklinkorderaddressesatbothends',
         'EcommerceTaskCleanupProducts',

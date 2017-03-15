@@ -68,4 +68,27 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
 
         return $models;
     }
+
+
+    public function getEditForm($id = null, $fields = null)
+    {
+        $form = parent::getEditForm($id, $fields);
+        if (is_subclass_of($this->modelClass, 'EcommerceDBConfig') || $this->modelClass === 'EcommerceDBConfig') {
+            $record = EcommerceDBConfig::get()->first();
+            if($record && $record->exists()) {
+                return $this->oneItemForm($record);
+            }
+            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                if ($gridField instanceof GridField) {
+                    $config = $gridField->getConfig();
+                    $config->removeComponentsByType('GridFieldExportButton');
+                    $config->removeComponentsByType('GridFieldPrintButton');
+                }
+            }
+        }
+
+        return $form;
+    }
+
+
 }
