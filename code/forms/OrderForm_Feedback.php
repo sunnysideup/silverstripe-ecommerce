@@ -18,7 +18,6 @@ class OrderForm_Feedback extends Form
         }
         $fields = FieldList::create(
             array(
-                HeaderField::create('FeedbackHeading', $this->getValueFromOrderConfirmationPage('FeedbackHeader'), 3),
                 OptionsetField::create(
                     'Rating',
                     $this->getValueFromOrderConfirmationPage('FeedbackValuesFieldLabel'),
