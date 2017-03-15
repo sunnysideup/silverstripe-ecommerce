@@ -2678,14 +2678,14 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return string
+     * @return string | null
      */
     public function getFeedbackLink()
     {
         $orderConfirmationPage = OrderConfirmationPage::get()->first();
         if($orderConfirmationPage->IsFeedbackEnabled) {
 
-            return Director::AbsoluteURL($orderConfirmationPage->Link('feedback'));
+            return Director::AbsoluteURL($this->getRetrieveLink()).'#OrderForm_Feedback_FeedbackForm';
         }
     }
 

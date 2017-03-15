@@ -188,11 +188,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/sales-advanced/shop/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
@@ -206,20 +202,13 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     }
     public function getTitle()
     {
-        $string = '';
-        $array = array(
-            'Created',
-            'OrderID',
-            'Rating',
-            'Note'
-        );
-        foreach($array as $field) {
-            if($this->$field) {
-                if($string) {
-                    $string .= ' - '
-                }
-                $string .= $this->$field;
-            }
+        $string = $this->Created;
+        if($this->Order()) {
+            $string .= ' ('.$this->Order()->getTitle().')';
+        }
+        $string .= ' - '.$this->Rating;
+        if($this->Note) {
+            $string .= ' / '.$this->Note;
         }
         return $string;
     }
