@@ -54,13 +54,13 @@ class OrderForm_Feedback extends Form
         if ($this->order) {
             $object = OrderFeedback::create($SQLData);
             $object->OrderID = $this->order->ID;
-            $objet->write();
+            $object->write();
             $form->sessionMessage(
                 $this->getValueFromOrderConfirmationPage('FeedbackFormThankYou'),
                 'good'
             );
 
-            return $this->controller->redirectBack();
+            return $this->controller->redirect($this->order->FeedbackLink());
         }
         $form->sessionMessage(
             _t(
@@ -70,7 +70,7 @@ class OrderForm_Feedback extends Form
             'bad'
         );
 
-        return $this->controller->redirectBack();
+        return $this->controller->redirect($this->order->FeedbackLink());
 
     }
 
