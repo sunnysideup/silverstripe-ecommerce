@@ -140,7 +140,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
             return true;
         }
 
-        return parent::canEdit($member);
+        return parent::canView($member);
     }
 
     /**
@@ -175,7 +175,14 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderIDLink',
+                Injector::inst()->get('Order')->singular_name(),
+                $this->Order()
+            )
+        );
         return $fields;
     }
 
@@ -208,9 +215,21 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         }
         $string .= ' - '.$this->Rating;
         if($this->Note) {
-            $string .= ' / '.$this->Note;
+            $string .= ' / '. substr($this->Note, 0, 25);
         }
         return $string;
+    }
+
+    /**
+     * Event handler called before writing to the database.
+     */
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->Note = str_replace(array("\n", "\r"), ' ¶ ', $this->Note);
+        $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
+        $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
+        $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
     }
 
 }
