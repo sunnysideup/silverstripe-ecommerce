@@ -49,9 +49,10 @@ class OrderForm_Feedback extends Form
      */
     public function dofeedback(array $data, Form $form, SS_HTTPRequest $request)
     {
-        $SQLData = Convert::raw2sql($data);
         if ($this->order) {
-            $object = OrderFeedback::create($SQLData);
+            $object = OrderFeedback::create();
+            $object->Note = Convert::raw2sql($data['Note']);
+            $object->Rating = Convert::raw2sql($data['Rating']);
             $object->OrderID = $this->order->ID;
             $object->write();
             $form->sessionMessage(
@@ -104,6 +105,7 @@ class OrderForm_Feedback extends Form
         if(! $this->_orderConfirmationPage) {
             $this->_orderConfirmationPage = OrderConfirmationPage::get()->first();
         }
+        return $this->_orderConfirmationPage;
     }
 
 }
