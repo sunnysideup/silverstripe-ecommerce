@@ -37,6 +37,7 @@
                         <% include Order_Content %>
                         <% include Order_Payments %>
                         <% include Order_OutstandingTotal %>
+                        <% include Order_FeedbackFormLink %>
                     </div>
     <% end_with %>
 <% else %>

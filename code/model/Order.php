@@ -42,6 +42,7 @@ class Order extends DataObject implements EditableEcommerceObject
             'PrintLink',
             'RetrieveLink',
             'ShareLink',
+            'FeedbackLink',
             'Title',
             'Total',
             'SubTotal',
@@ -127,12 +128,13 @@ class Order extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $casting = array(
-        'OrderEmail' => 'Text',
-        'EmailLink' => 'Text',
-        'PrintLink' => 'Text',
-        'ShareLink' => 'Text',
-        'RetrieveLink' => 'Text',
-        'Title' => 'Text',
+        'OrderEmail' => 'Varchar',
+        'EmailLink' => 'Varchar',
+        'PrintLink' => 'Varchar',
+        'ShareLink' => 'Varchar',
+        'FeedbackLink' => 'Varchar',
+        'RetrieveLink' => 'Varchar',
+        'Title' => 'Varchar',
         'Total' => 'Currency',
         'TotalAsMoney' => 'Money',
         'SubTotal' => 'Currency',
@@ -470,11 +472,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/sales-advanced/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
@@ -676,6 +674,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $html = '<p>'.$permaLinkLabel.': <a href="'.$this->getRetrieveLink().'">'.$this->getRetrieveLink().'</a></p>';
             $shareLinkLabel = _t('Order.SHARE_LINK', 'Share Link');
             $html .= '<p>'.$shareLinkLabel.': <a href="'.$this->getShareLink().'">'.$this->getShareLink().'</a></p>';
+            $feedbackLinkLabel = _t('Order.FEEDBACK_LINK', 'Feedback Link');
+            $html .= '<p>'.$feedbackLinkLabel.': <a href="'.$this->getFeedbackLink().'">'.$this->getFeedbackLink().'</a></p>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
             $label = _t('Order.PRINT_INVOICE', 'invoice');
@@ -1219,7 +1219,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $log->InternalUseOnly = true;
             }
             $log->write();
-            //remove from queue ... 
+            //remove from queue ...
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
             $ordersinQueue = $queueObjectSingleton->removeOrderFromQueue($this);
             $this->extend('doCancel', $member, $log);
@@ -2662,6 +2662,27 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return Director::AbsoluteURL(CartPage::find_link($action.'/'.implode('-', $array)));
+    }
+
+    /**
+     * @alias for getFeedbackLink
+     * @return string
+     */
+    public function FeedbackLink()
+    {
+        return $this->getFeedbackLink();
+    }
+
+    /**
+     * @return string | null
+     */
+    public function getFeedbackLink()
+    {
+        $orderConfirmationPage = OrderConfirmationPage::get()->first();
+        if($orderConfirmationPage->IsFeedbackEnabled) {
+
+            return Director::AbsoluteURL($this->getRetrieveLink()).'#OrderForm_Feedback_FeedbackForm';
+        }
     }
 
     /**

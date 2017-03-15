@@ -336,6 +336,7 @@ SalesAdminExtras:
     - OrderItem
     - OrderModifier
     - OrderEmailRecord
+    - OrderFeedback
     - BillingAddress
     - ShippingAddress
     - EcommercePayment
