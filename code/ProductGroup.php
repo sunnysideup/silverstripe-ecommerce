@@ -1510,18 +1510,30 @@ class ProductGroup extends Page
     function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $rows = DB::query('SELECT URLSegment, COUNT(ID) AS C FROM SiteTree GROUP BY URLSegment HAVING COUNT(ID) > 1; ');
-        foreach($rows as $row) {
-            DB::alteration_message($row['URLSegment'].' '.$row['C']);
-            $checkForDuplicatesURLSegments = ProductGroup::get()
-                ->filter(array('URLSegment' => $this->URLSegment))
-            foreach($checkForDuplicatesURLSegments as $productGroup) {
-                $oldURLSegment = $productGroup->URLSegment;
-                DB::alteration_message('Correcting URLSegment for '.$productGroup->Title.' with ID: '.$productGroup->ID, 'deleted');
-                $productGroup->writeToStage('Stage');
-                $productGroup->publish('Stage', 'Live');
-                $newURLSegment = $productGroup->URLSegment;
-                DB::alteration_message(' ... from '.$oldURLSegment.' to '.$newURLSegment, 'created');
+        $urlSegments = ProductGroup::get()->column('URLSegment');
+        foreach($urlSegments as $urlSegment) {
+            $counts = array_count_values($urlSegments);
+            $hasDuplicates = $counts[$urlSegment]  > 1 ? true : false;
+            echo $urlSegment.'-'.print_r($hasDuplicates, 1).'<br />';
+
+            if($hasDuplicates) {
+                DB::alteration_message('found duplicates for '.$urlSegment, 'deleted');
+                $checkForDuplicatesURLSegments = ProductGroup::get()
+                    ->filter(array('URLSegment' => $urlSegment));
+                if($checkForDuplicatesURLSegments->count()){
+                    $count = 0;
+                    foreach($checkForDuplicatesURLSegments as $productGroup) {
+                        if($count > 0) {
+                            $oldURLSegment = $productGroup->URLSegment;
+                            DB::alteration_message(' ... Correcting URLSegment for '.$productGroup->Title.' with ID: '.$productGroup->ID, 'deleted');
+                            $productGroup->writeToStage('Stage');
+                            $productGroup->publish('Stage', 'Live');
+                            $newURLSegment = $productGroup->URLSegment;
+                            DB::alteration_message(' ... .... from '.$oldURLSegment.' to '.$newURLSegment, 'created');
+                        }
+                        $count++;
+                    }
+                }
             }
         }
     }
