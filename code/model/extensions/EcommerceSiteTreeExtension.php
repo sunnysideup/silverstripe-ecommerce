@@ -61,10 +61,10 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
 
     function augmentValidURLSegment()
     {
-        if($this->owner->IsEcommercePage()) {
-            $checkForDuplicatesURLSegments = SiteTree::get()
-                ->filter(array('URLSegment' => $this->URLSegment))
-                ->exclude(array('ID' => $this->ID));
+        if($this->owner instanceof ProductGroup) {
+            $checkForDuplicatesURLSegments = ProductGroup::get()
+                ->filter(array('URLSegment' => $this->owner->URLSegment))
+                ->exclude(array('ID' => $this->owner->ID));
             if($checkForDuplicatesURLSegments->count() > 0) {
                 return false;
             }
