@@ -1498,10 +1498,30 @@ class ProductGroup extends Page
     public function onAfterWrite()
     {
         parent::onAfterWrite();
+
         if ($this->ImageID) {
             if ($normalImage = Image::get()->exclude(array('ClassName' => 'Product_Image'))->byID($this->ImageID)) {
                 $normalImage = $normalImage->newClassInstance('Product_Image');
                 $normalImage->write();
+            }
+        }
+    }
+
+    function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+        $rows = DB::query('SELECT URLSegment, COUNT(ID) AS C FROM SiteTree GROUP BY URLSegment HAVING COUNT(ID) > 1; ');
+        foreach($rows as $row) {
+            DB::alteration_message($row['URLSegment'].' '.$row['C']);
+            $checkForDuplicatesURLSegments = ProductGroup::get()
+                ->filter(array('URLSegment' => $this->URLSegment))
+            foreach($checkForDuplicatesURLSegments as $productGroup) {
+                $oldURLSegment = $productGroup->URLSegment;
+                DB::alteration_message('Correcting URLSegment for '.$productGroup->Title.' with ID: '.$productGroup->ID, 'deleted');
+                $productGroup->writeToStage('Stage');
+                $productGroup->publish('Stage', 'Live');
+                $newURLSegment = $productGroup->URLSegment;
+                DB::alteration_message(' ... from '.$oldURLSegment.' to '.$newURLSegment, 'created');
             }
         }
     }
@@ -1742,7 +1762,6 @@ class ProductGroup_Controller extends Page_Controller
         if ($this->returnAjaxifiedProductList()) {
             return $this->renderWith('AjaxProductList');
         }
-
         return array();
     }
 
