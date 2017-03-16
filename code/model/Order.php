@@ -472,7 +472,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
+        return '/admin/sales/Order/EditForm/field/Order/item/'.$this->ID . '/edit';
     }
 
     /**
@@ -618,7 +618,7 @@ class Order extends DataObject implements EditableEcommerceObject
             array(
                 EcommerceCMSButtonField::create(
                     'AddNoteButton',
-                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
+                    '/admin/sales/Order/EditForm/field/Order/item/26870242/ItemEditForm/field/OrderStatusLog/item/new',
                     _t('Order.ADD_NOTE', 'Add Note')
                 )
             )
