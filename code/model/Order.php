@@ -618,7 +618,7 @@ class Order extends DataObject implements EditableEcommerceObject
             array(
                 EcommerceCMSButtonField::create(
                     'AddNoteButton',
-                    '/admin/sales/Order/EditForm/field/Order/item/26870242/ItemEditForm/field/OrderStatusLog/item/new',
+                    '/admin/sales/Order/EditForm/field/Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
                     _t('Order.ADD_NOTE', 'Add Note')
                 )
             )
