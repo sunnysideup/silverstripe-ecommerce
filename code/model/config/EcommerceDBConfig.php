@@ -536,7 +536,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
+        return '/admin/shop/EcommerceDBConfig/';
     }
 
     public function getOrderStepsField()
