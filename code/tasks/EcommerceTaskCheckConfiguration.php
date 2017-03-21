@@ -487,7 +487,7 @@ EcommerceConfig:
             foreach ($fields as $field => $description) {
                 if ($field != 'Title' && $field != 'UseThisOne') {
                     $defaultsDefaults = $ecommerceDBConfig->stat('defaults');
-                    $this->definitions['EcommerceDBConfig'][$field] = "$description. <br />see: <a href=\"/admin/shop/EcommerceDBConfig/EditForm/field/EcommerceDBConfig/item/".$ecommerceDBConfig->ID.'/edit">Ecommerce Configuration</a>';
+                    $this->definitions['EcommerceDBConfig'][$field] = "$description. <br />see: <a href=\"".$ecommerceDBConfig->CMSEditLink()."\">Ecommerce Configuration</a>";
                     $this->configs['EcommerceDBConfig'][$field] = $ecommerceDBConfig->$field;
                     $this->databaseValues['EcommerceDBConfig'][$field] = true;
                     $this->defaults['EcommerceDBConfig'][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : 'no default set';
@@ -600,7 +600,7 @@ EcommerceConfig:
                     }
                 }
                 $ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
-                $this->definitions['OrderStep'][$step->Code] = $step->Description.'<br />see: <a href="/admin/shop/OrderStep/EditForm/field/OrderStep/item/'.$step->ID.'/edit">Ecommerce Configuration</a>.';
+                $this->definitions['OrderStep'][$step->Code] = $step->Description.'<br />see: <a href="'.$step->CMSEditLink().'">Step Configuration</a>.';
                 $this->configs['OrderStep'][$step->Code] = $configArray;
                 $this->defaults['OrderStep'][$step->Code] = $defaultsArray;
                 $this->databaseValues['OrderStep'][$step->Code] = true;
