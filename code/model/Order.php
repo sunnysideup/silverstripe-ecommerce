@@ -472,7 +472,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return '/admin/sales/Order/EditForm/field/Order/item/'.$this->ID . '/edit';
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action, 'sales-advanced');
     }
 
     /**
