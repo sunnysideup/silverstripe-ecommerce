@@ -13,19 +13,9 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     public function getManagedModels()
     {
         if($this->class === 'ModelAdminEcommerceBaseClass') {
-            return parent::getManagedModels();
+            //never used
+            return array('Order' => array('title' => 'All Orders'));
         }
-        $models = EcommerceConfig::get($this->class, 'managed_models');
-        foreach ($models as $key => $model) {
-            if (is_array($model)) {
-                $model = $key;
-            }
-            if (!class_exists($model)) {
-                unset($models[$key]);
-            }
-        }
-        Config::inst()->update('ModelAdminEcommerceBaseClass', 'managed_models', $models);
-
         return parent::getManagedModels();
     }
 
