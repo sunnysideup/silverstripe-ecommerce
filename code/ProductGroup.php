@@ -1514,8 +1514,6 @@ class ProductGroup extends Page
         foreach($urlSegments as $urlSegment) {
             $counts = array_count_values($urlSegments);
             $hasDuplicates = $counts[$urlSegment]  > 1 ? true : false;
-            echo $urlSegment.'-'.print_r($hasDuplicates, 1).'<br />';
-
             if($hasDuplicates) {
                 DB::alteration_message('found duplicates for '.$urlSegment, 'deleted');
                 $checkForDuplicatesURLSegments = ProductGroup::get()
