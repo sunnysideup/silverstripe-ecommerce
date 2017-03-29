@@ -64,12 +64,11 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      * @return array
      */
     public function getExportFields() {
-        $obj = singleton($this->modelClass);
+        $obj = Injector::inst()->get($this->modelClass);
         if($obj->hasMethod('getExportFields')) {
             return $obj->getExportFields();
         }
         return $obj->summaryFields();
     }
-
 
 }
