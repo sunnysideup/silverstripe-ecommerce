@@ -559,11 +559,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/shop/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
@@ -1269,24 +1265,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function onBeforeDelete()
     {
-        parent::onBeforeDelete();
-        $previousOrderStepObject = null;
-        $nextOrderStepObject = $this->NextOrderStep();
-        //backup
-        if ($nextOrderStepObject) {
-            //do nothing
-        } else {
-            $previousOrderStepObject = $this->PreviousOrderStep();
-        }
-        if ($previousOrderStepObject) {
-            $ordersWithThisStatus = Order::get()->filter(array('StatusID' => $this->ID));
-            if ($ordersWithThisStatus && $ordersWithThisStatus->count()) {
+        $ordersWithThisStatus = Order::get()->filter(array('StatusID' => $this->ID));
+        if ($ordersWithThisStatus->count()) {
+            $previousOrderStepObject = null;
+            $bestOrderStep = $this->NextOrderStep();
+            //backup
+            if ($bestOrderStep && $bestOrderStep->exists()) {
+                //do nothing
+            } else {
+                $bestOrderStep = $this->PreviousOrderStep();
+            }
+            if ($bestOrderStep) {
                 foreach ($ordersWithThisStatus as $orderWithThisStatus) {
-                    $orderWithThisStatus->StatusID = $previousOrderStepObject->ID;
+                    $orderWithThisStatus->StatusID = $bestOrderStep->ID;
                     $orderWithThisStatus->write();
                 }
             }
         }
+        parent::onBeforeDelete();
     }
 
     /**

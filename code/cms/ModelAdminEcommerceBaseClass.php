@@ -12,17 +12,10 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      */
     public function getManagedModels()
     {
-        $models = EcommerceConfig::get($this->class, 'managed_models');
-        foreach ($models as $key => $model) {
-            if (is_array($model)) {
-                $model = $key;
-            }
-            if (!class_exists($model)) {
-                unset($models[$key]);
-            }
+        if($this->class === 'ModelAdminEcommerceBaseClass') {
+            //never used
+            return array('Order' => array('title' => 'All Orders'));
         }
-        Config::inst()->update('ModelAdminEcommerceBaseClass', 'managed_models', $models);
-
         return parent::getManagedModels();
     }
 
@@ -64,5 +57,18 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
         return $form;
     }
 
+    /**
+     * Define which fields are used in the {@link getEditForm} GridField export.
+     * By default, it uses the summary fields from the model definition.
+     *
+     * @return array
+     */
+    public function getExportFields() {
+        $obj = Injector::inst()->get($this->modelClass);
+        if($obj->hasMethod('getExportFields')) {
+            return $obj->getExportFields();
+        }
+        return $obj->summaryFields();
+    }
 
 }

@@ -39,6 +39,14 @@ class OrderConfirmationPage extends CartPage
         'PaymentNotSuccessfulMessage' => 'HTMLText',
         'PaymentPendingMessage' => 'HTMLText',
         'EnableGoogleAnalytics' => 'Boolean',
+        'IsFeedbackEnabled' => 'Boolean',
+        'FeedbackFormLinkText' => 'Varchar(255)',
+        'FeedbackHeader' => 'Varchar(255)',
+        'FeedbackValuesFieldLabel' => 'Varchar(255)',
+        'FeedbackValuesOptions' => 'Text',
+        'FeedbackNotesFieldLabel' => 'Varchar(255)',
+        'FeedbackFormSubmitLabel' => 'Varchar(255)',
+        'FeedbackFormThankYou' => 'Varchar(255)'
     );
 
     /**
@@ -59,6 +67,12 @@ class OrderConfirmationPage extends CartPage
         'PaymentSuccessfulMessage' => '<p>Your order will be processed.</p>',
         'PaymentNotSuccessfulMessage' => '<p>Your order will not be processed until your payment has been completed.</p>',
         'PaymentPendingMessage' => '<p>Please complete your payment before the order can be processed.</p>',
+        'FeedbackHeader' => 'Feedback',
+        'FeedbackValuesFieldLabel' => 'How likely are you to recommend us to your friends?',
+        'FeedbackValuesOptions' => 'Not At All, Not Likely, Not Sure, Likely, Very Likely',
+        'FeedbackNotesFieldLabel' => 'What can we do to improve the ordering experience?',
+        'FeedbackFormSubmitLabel' => 'Submit Your Feedback',
+        'FeedbackFormThankYou' => 'Thank you for taking the time to submit your feedback, we appreciate it!'
     );
 
     private static $casting = array(
@@ -161,6 +175,13 @@ class OrderConfirmationPage extends CartPage
             'PaymentNotSuccessfulMessage' => _t('OrderConfirmationPage.PAYMENTNOTSUCCESSFULMESSAGE', 'Message showing when the order has not been paid in full.'),
             'PaymentPendingMessage' => _t('OrderConfirmationPage.PAYMENTPENDINGMESSAGE', 'Message showing when the order has not been paid in full - but the payment is pending.'),
             'EnableGoogleAnalytics' => _t('OrderConfirmationPage.ENABLEGOOGLEANALYTICS', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.'),
+            'IsFeedbackEnabled' => _t('OrderConfirmationPage.ISFEEDBACKENABLED', 'Enable Feedback Form'),
+            'FeedbackHeader' => _t('OrderConfirmationPage.FEEDBACKHEADER', 'Feedback Form Header'),
+            'FeedbackValuesFieldLabel' => _t('OrderConfirmationPage.FEEDBACKVALUESFIELDLABEL', 'Feedback Form Options Label'),
+            'FeedbackValuesOptions' => _t('OrderConfirmationPage.FEEDBACKVALUESOPTIONS', 'Feedback Form Options'),
+            'FeedbackNotesFieldLabel' => _t('OrderConfirmationPage.FEEDBACKVALUESFIELDLABEL', 'Feedback Form Notes Label'),
+            'FeedbackFormSubmitLabel' => _t('OrderConfirmationPage.FEEDBACKFORMSUBMITLABEL', 'Feedback Form Submit Button Text'),
+            'FeedbackFormThankYou' => _t('OrderConfirmationPage.FEEDBACKFORMTHANKYOU', 'Feedback Form Thank you Message')
         );
 
         return $newLabels;
@@ -217,7 +238,35 @@ class OrderConfirmationPage extends CartPage
             HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
         ));
         $fields->addFieldToTab('Root.Analytics', new CheckboxField('EnableGoogleAnalytics', $fieldLabels['EnableGoogleAnalytics']));
-
+        if($this->IsFeedbackEnabled) {
+            $fields->addFieldsToTab(
+                'Root.FeedbackForm',
+                array(
+                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
+                        ->setDescription(_t('OrderConfirmationPage.IsFeedbackEnabled_RIGHT', 'Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')),
+                    TextField::create('FeedbackHeader', $fieldLabels['FeedbackHeader'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackHeader_RIGHT', 'e.g. Please let us know what you think')),
+                    TextField::create('FeedbackValuesFieldLabel', $fieldLabels['FeedbackValuesFieldLabel'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackValuesFieldLabel_RIGHT', 'e.g. Please rate our service')),
+                    TextField::create('FeedbackValuesOptions', $fieldLabels['FeedbackValuesOptions'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackValuesOptions_RIGHT', 'Comma separated list of feedback rating options (eg Good, Neutral, Bad)')),
+                    TextField::create('FeedbackNotesFieldLabel', $fieldLabels['FeedbackNotesFieldLabel'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackNotesFieldLabel_RIGHT', 'e.g. Please add any comments')),
+                    TextField::create('FeedbackFormSubmitLabel', $fieldLabels['FeedbackFormSubmitLabel'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackFormSubmitLabel_RIGHT', 'e.g. Submit Feedback Now')),
+                    TextField::create('FeedbackFormThankYou', $fieldLabels['FeedbackFormThankYou'])
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form'))
+                )
+            );
+        } else {
+            $fields->addFieldsToTab(
+                'Root.FeedbackForm',
+                array(
+                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
+                        ->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')
+                )
+            );
+        }
         return $fields;
     }
 
@@ -378,6 +427,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         'copyorder',
         'sendemail',
         'CancelForm',
+        'FeedbackForm',
         'PaymentForm',
     );
 
@@ -635,6 +685,22 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         //once cancelled, you will be redirected to main page - hence we need this...
         if ($this->orderID) {
             return array();
+        }
+    }
+
+    /**
+     * Returns the form for providing feedback about current order,
+     * checking to see if IsFeedbackEnabled is true
+     * first of all.
+     *
+     * @return OrderForm_Feedback
+     */
+    public function FeedbackForm()
+    {
+        if ($this->Order()) {
+            if ($this->IsFeedbackEnabled) {
+                return OrderForm_Feedback::create($this, 'FeedbackForm', $this->currentOrder);
+            }
         }
     }
 

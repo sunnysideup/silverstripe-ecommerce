@@ -52,8 +52,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 $startAt = 0;
             }
         }
+
+        //we exclude all orders that are in the queue
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-        $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed(0);
+        $ordersinQueue = $queueObjectSingleton->AllOrdersInQueue();
         //find any other order that may need help ...
 
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
