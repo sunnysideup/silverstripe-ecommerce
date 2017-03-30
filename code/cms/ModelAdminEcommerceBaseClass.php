@@ -7,6 +7,7 @@
  */
 class ModelAdminEcommerceBaseClass extends ModelAdmin
 {
+
     /**
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      */
@@ -14,7 +15,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     {
         if($this->class === 'ModelAdminEcommerceBaseClass') {
             //never used
-            return array('Order' => array('title' => 'All Orders'));
+            return array('NothingGoesHere' => array('title' => 'All Orders'));
         }
         return parent::getManagedModels();
     }
@@ -70,5 +71,6 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
         }
         return $obj->summaryFields();
     }
+
 
 }
