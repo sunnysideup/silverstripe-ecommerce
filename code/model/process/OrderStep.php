@@ -503,7 +503,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         'testEmailLink',
                         '<h3>
                             <a href="'.$testEmailLink.'" data-popup="true" target"_blank" onclick="emailPrompt(this, event);">
-                                '._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'
+                                '._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'Test Email').'
                             </a>
                         </h3>
                         <script language="javascript">
@@ -542,6 +542,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $fields->addFieldToTab('Root.Main', new HeaderField('WARNING2', _t('OrderStep.CUSTOMERCANCHANGE', 'What can be changed during this step?'), 3), 'CustomerCanEdit');
         $fields->addFieldToTab('Root.Main', new HeaderField('WARNING5', _t('OrderStep.ORDERGROUPS', 'Order groups for customer?'), 3), 'ShowAsUncompletedOrder');
         $fields->addFieldToTab('Root.Main', new HeaderField('HideStepFromCustomerHeader', _t('OrderStep.HIDE_STEP_FROM_CUSTOMER_HEADER', 'Customer Interaction'), 3), 'HideStepFromCustomer');
+        $fields->addFieldToTab('Root.Main', new HeaderField('DeferHeader', _t('OrderStep.DEFER_HEADER', 'Delay'), 3), 'DeferTimeInSeconds');
         //final cleanup
         $fields->removeFieldFromTab('Root.Main', 'Sort');
         $fields->addFieldToTab('Root.Main', new TextareaField('Description', _t('OrderStep.DESCRIPTION', 'Explanation for internal use only')), 'WARNING1');
