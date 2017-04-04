@@ -3336,6 +3336,23 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * Submission Log for this Order (if any).
+     *
+     * @return DateTime
+     **/
+    public function OrderDate()
+    {
+        $object = $this->SubmissionLog();
+        if($object) {
+            $created = $object->Created;
+        } else {
+            $created = $this->LastEdited;
+        }
+
+        return DBField::create_field('SS_Datetime', $created);
+    }
+
+    /**
      * @return int
      */
     public function SecondsSinceBeingSubmitted()
