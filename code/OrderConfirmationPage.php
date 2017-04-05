@@ -393,11 +393,9 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             if ($this->currentOrder) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...
-                if (strtotime($this->currentOrder->LastEdited) < (strtotime('Now') - 60 * 60)) {
-                    Session::clear('CheckoutPageCurrentOrderID');
-                    Session::clear('CheckoutPageCurrentOrderID');
-                    Session::set('CheckoutPageCurrentOrderID', 0);
-                    Session::save();
+                $validUntil = intval(Session::get('CheckoutPageCurrentRetrievalTime')) - 0;
+                if ($validUntil < time()) {
+                    $this->clearRetrievalOrderID();
                     $this->overrideCanView = false;
                     $this->currentOrder = null;
                 }

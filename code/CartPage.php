@@ -416,7 +416,7 @@ class CartPage_Controller extends Page_Controller
             $action = $this->request->param('Action');
             $otherID = intval($this->request->param('OtherID'));
             //the code below is for submitted orders, but we still put it here so
-            //we can do all the retrieval options in once.
+            //we can do all the retrieval options at once.
             if (($action == 'retrieveorder') && $id && $otherID) {
                 $sessionID = Convert::raw2sql($id);
                 $retrievedOrder = Order::get()
@@ -425,8 +425,11 @@ class CartPage_Controller extends Page_Controller
                         'ID' => $otherID,
                     ))
                     ->First();
-                $this->currentOrder = $retrievedOrder;
-                $this->overrideCanView = true;
+                if($retrievedOrder) {
+                    $this->currentOrder = $retrievedOrder;
+                    $this->overrideCanView = true;
+                    $this->setRetrievalOrderID($this->currentOrder->ID);
+                }
             } elseif (intval($id) && in_array($action, $this->stat('allowed_actions'))) {
                 $this->currentOrder = Order::get()->byID(intval($id));
             }
@@ -474,6 +477,34 @@ class CartPage_Controller extends Page_Controller
         } else {
             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
         }
+    }
+
+
+    /**
+     * We set sesssion ID for retrieval of order in non cart setting
+     * @param int $orderID
+     * @param int $validUntilTS timestamp (unix epoch) until which the current Order ID is valid
+     */
+    protected function setRetrievalOrderID($orderID, $validUntilTS = null)
+    {
+        if(! $validUntilTS) {
+            $validUntilTS = time() + 3600;
+        }
+        Session::set('CheckoutPageCurrentOrderID', $orderID);
+        Session::set('CheckoutPageCurrentRetrievalTime', $validUntilTS);
+        Session::save();
+    }
+
+    /**
+     * we clear the retrieval Order ID
+     */
+    protected function clearRetrievalOrderID()
+    {
+        Session::clear('CheckoutPageCurrentOrderID');
+        Session::set('CheckoutPageCurrentOrderID', 0);
+        Session::clear('CheckoutPageCurrentRetrievalTime');
+        Session::set('CheckoutPageCurrentRetrievalTime', 0);
+        Session::save();
     }
 
     /***********************
@@ -989,4 +1020,5 @@ class CartPage_Controller extends Page_Controller
     {
         return true;
     }
+
 }

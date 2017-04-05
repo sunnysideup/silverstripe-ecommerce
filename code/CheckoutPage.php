@@ -420,14 +420,11 @@ class CheckoutPage_Controller extends CartPage_Controller
         // and then return back
         if ($checkoutPageCurrentOrderID = Session::get('CheckoutPageCurrentOrderID')) {
             if ($this->currentOrder->ID != $checkoutPageCurrentOrderID) {
-                Session::clear('CheckoutPageCurrentOrderID');
-                Session::set('CheckoutPageCurrentOrderID', 0);
-                Session::save();
+                $this->clearRetrievalOrderID();
             }
         }
         if ($this->currentOrder) {
-            //we make sure all the OrderModifiers are up to date....
-            Session::set('CheckoutPageCurrentOrderID', $this->currentOrder->ID);
+            $this->setRetrievalOrderID($this->currentOrder->ID);
         }
     }
 
