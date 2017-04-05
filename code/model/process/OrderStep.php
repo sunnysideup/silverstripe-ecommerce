@@ -503,7 +503,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         'testEmailLink',
                         '<h3>
                             <a href="'.$testEmailLink.'" data-popup="true" target"_blank" onclick="emailPrompt(this, event);">
-                                '._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'View email example in browser').'
+                                '._t('OrderStep.VIEW_EMAIL_EXAMPLE', 'Test Email').'
                             </a>
                         </h3>
                         <script language="javascript">
@@ -542,6 +542,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $fields->addFieldToTab('Root.Main', new HeaderField('WARNING2', _t('OrderStep.CUSTOMERCANCHANGE', 'What can be changed during this step?'), 3), 'CustomerCanEdit');
         $fields->addFieldToTab('Root.Main', new HeaderField('WARNING5', _t('OrderStep.ORDERGROUPS', 'Order groups for customer?'), 3), 'ShowAsUncompletedOrder');
         $fields->addFieldToTab('Root.Main', new HeaderField('HideStepFromCustomerHeader', _t('OrderStep.HIDE_STEP_FROM_CUSTOMER_HEADER', 'Customer Interaction'), 3), 'HideStepFromCustomer');
+        $fields->addFieldToTab('Root.Main', new HeaderField('DeferHeader', _t('OrderStep.DEFER_HEADER', 'Delay'), 3), 'DeferTimeInSeconds');
         //final cleanup
         $fields->removeFieldFromTab('Root.Main', 'Sort');
         $fields->addFieldToTab('Root.Main', new TextareaField('Description', _t('OrderStep.DESCRIPTION', 'Explanation for internal use only')), 'WARNING1');
@@ -558,11 +559,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/shop/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
@@ -1268,24 +1265,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function onBeforeDelete()
     {
-        parent::onBeforeDelete();
-        $previousOrderStepObject = null;
-        $nextOrderStepObject = $this->NextOrderStep();
-        //backup
-        if ($nextOrderStepObject) {
-            //do nothing
-        } else {
-            $previousOrderStepObject = $this->PreviousOrderStep();
-        }
-        if ($previousOrderStepObject) {
-            $ordersWithThisStatus = Order::get()->filter(array('StatusID' => $this->ID));
-            if ($ordersWithThisStatus && $ordersWithThisStatus->count()) {
+        $ordersWithThisStatus = Order::get()->filter(array('StatusID' => $this->ID));
+        if ($ordersWithThisStatus->count()) {
+            $previousOrderStepObject = null;
+            $bestOrderStep = $this->NextOrderStep();
+            //backup
+            if ($bestOrderStep && $bestOrderStep->exists()) {
+                //do nothing
+            } else {
+                $bestOrderStep = $this->PreviousOrderStep();
+            }
+            if ($bestOrderStep) {
                 foreach ($ordersWithThisStatus as $orderWithThisStatus) {
-                    $orderWithThisStatus->StatusID = $previousOrderStepObject->ID;
+                    $orderWithThisStatus->StatusID = $bestOrderStep->ID;
                     $orderWithThisStatus->write();
                 }
             }
         }
+        parent::onBeforeDelete();
     }
 
     /**

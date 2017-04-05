@@ -37,7 +37,7 @@ class CartPage extends Page
         'LoadOrderLinkLabel' => 'Varchar(100)',
         'DeleteOrderLinkLabel' => 'Varchar(100)',
         'NoItemsInOrderMessage' => 'HTMLText',
-        'NonExistingOrderMessage' => 'HTMLText',
+        'NonExistingOrderMessage' => 'HTMLText'
     );
 
     /**
@@ -552,6 +552,7 @@ class CartPage_Controller extends Page_Controller
         if (! $request->getVar('ready') && ! $request->getVar('done')) {
             return $this->redirect($this->Link('share/'.$codes).'?ready=1');
         }
+        $titleAppendixArray = array();
         $buyables = explode('-', $codes);
         if (count($buyables)) {
             $sc = ShoppingCart::singleton();
@@ -568,6 +569,9 @@ class CartPage_Controller extends Page_Controller
                         if ($buyable && $buyable->canPurchase()) {
                             $sc->addBuyable($buyable, $quantity);
                             $sc->setQuantity($buyable, $quantity);
+                            if ($request->getVar('done')) {
+                                $titleAppendixArray[] = $buyable->getTitle();
+                            }
                         }
                     }
                 }
@@ -577,7 +581,10 @@ class CartPage_Controller extends Page_Controller
                 return $this->redirect($this->Link('share/'.$codes).'?done=1');
             }
         }
-
+        $this->Title .= ': '.  implode(', ', $titleAppendixArray);
+        if(strlen($this->Title) > 255 ) {
+            $this->Title = substr($this->Title, 0, 255). ' ...';
+        }
         return array();
     }
 

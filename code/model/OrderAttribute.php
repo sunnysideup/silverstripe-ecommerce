@@ -254,17 +254,13 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null
+     * @param string | Null $action - e.g. edit
      *
      * @return string
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/sales/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     ######################

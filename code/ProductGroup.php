@@ -1498,10 +1498,40 @@ class ProductGroup extends Page
     public function onAfterWrite()
     {
         parent::onAfterWrite();
+
         if ($this->ImageID) {
             if ($normalImage = Image::get()->exclude(array('ClassName' => 'Product_Image'))->byID($this->ImageID)) {
                 $normalImage = $normalImage->newClassInstance('Product_Image');
                 $normalImage->write();
+            }
+        }
+    }
+
+    function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+        $urlSegments = ProductGroup::get()->column('URLSegment');
+        foreach($urlSegments as $urlSegment) {
+            $counts = array_count_values($urlSegments);
+            $hasDuplicates = $counts[$urlSegment]  > 1 ? true : false;
+            if($hasDuplicates) {
+                DB::alteration_message('found duplicates for '.$urlSegment, 'deleted');
+                $checkForDuplicatesURLSegments = ProductGroup::get()
+                    ->filter(array('URLSegment' => $urlSegment));
+                if($checkForDuplicatesURLSegments->count()){
+                    $count = 0;
+                    foreach($checkForDuplicatesURLSegments as $productGroup) {
+                        if($count > 0) {
+                            $oldURLSegment = $productGroup->URLSegment;
+                            DB::alteration_message(' ... Correcting URLSegment for '.$productGroup->Title.' with ID: '.$productGroup->ID, 'deleted');
+                            $productGroup->writeToStage('Stage');
+                            $productGroup->publish('Stage', 'Live');
+                            $newURLSegment = $productGroup->URLSegment;
+                            DB::alteration_message(' ... .... from '.$oldURLSegment.' to '.$newURLSegment, 'created');
+                        }
+                        $count++;
+                    }
+                }
             }
         }
     }
@@ -1742,7 +1772,6 @@ class ProductGroup_Controller extends Page_Controller
         if ($this->returnAjaxifiedProductList()) {
             return $this->renderWith('AjaxProductList');
         }
-
         return array();
     }
 

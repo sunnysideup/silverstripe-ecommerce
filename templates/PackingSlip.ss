@@ -23,6 +23,7 @@
             <h3><% _t("Order.ITEMS", "Items:") %></h3>
             <% include Order_Content_Items_Only_No_Prices %>
         </div>
+        <% include Order_FeedbackFormLink %>
         <% end_with %>
     </div>
     <div id="PackingSlipNote">$PackingSlipNote</div>

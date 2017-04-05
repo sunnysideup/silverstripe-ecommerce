@@ -70,7 +70,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-            $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed(0);
+            $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
             $list = $list
                 ->filter(
                     array(
@@ -83,6 +83,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                         'ID' => $ordersinQueue->column('ID'),
                     )
                 );
+            //you can only do one exclude at the same time.
             $list = $list
                 ->exclude(
                     array(
@@ -90,6 +91,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                     )
                 );
         }
+
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
             foreach ($newLists as $newList) {
