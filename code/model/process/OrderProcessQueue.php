@@ -27,7 +27,8 @@ class OrderProcessQueue extends DataObject
     );
 
     private static $casting = array(
-        'ToBeProcessedAt' => 'SS_Datetime'
+        'ToBeProcessedAt' => 'SS_Datetime',
+        'HasBeenInQueueSince' => 'SS_Datetime'
     );
 
     private static $default_sort = array(
@@ -44,6 +45,7 @@ class OrderProcessQueue extends DataObject
         'Order.Status.Title' => 'Current Step',
         'ToBeProcessedAt.Nice' => 'To be processed at',
         'ToBeProcessedAt.Ago' => 'That is ...',
+        'HasBeenInQueueForSince.Nice' => 'Added to queue ...',
         'InProcess.Nice' => 'Currently Running'
     );
 
@@ -176,11 +178,11 @@ class OrderProcessQueue extends DataObject
     /**
      * META METHOD
      * processes the order ...
-     * returns TRUE if SUCCESSFUL and FALSE if it did not run for any reason ...
+     * returns TRUE if SUCCESSFUL and a message if unsuccessful ...
      *
      *
      * @param  Order $order optional
-     * @return boolean
+     * @return boolean | string
      */
     public function process($order = null)
     {
@@ -192,37 +194,46 @@ class OrderProcessQueue extends DataObject
             $myQueueObject = $this->getQueueObject($order);
         }
         //delete if order is gone ...
-        if(! $order) {
-            $myQueueObject->delete();
-        }
-        //if order has moved already ... delete
-        if(
-            $this->OrderStepID > 0
-            && (int)$order->StatusID !== (int)$this->OrderStepID
-        ) {
-            $myQueueObject->delete();
-        }
-        if($order && $myQueueObject) {
-            if ($myQueueObject->isReadyToGo()) {
-                $oldOrderStatusID = $order->StatusID;
-                $myQueueObject->InProcess = true;
-                $myQueueObject->write();
-                $order->tryToFinaliseOrder(
-                    $tryAgain = false,
-                    $fromOrderQueue = true
-                );
-                $newOrderStatusID = $order->StatusID;
-                if($oldOrderStatusID != $newOrderStatusID) {
-                    $myQueueObject->delete();
-                    return true;
+        if($order) {
+            //if order has moved already ... delete
+            if(
+                $this->OrderStepID > 0
+                && (int)$order->StatusID !== (int)$myQueueObject->OrderStepID
+            ) {
+                $message = 'Order has already moved on.';
+                $myQueueObject->delete();
+            } else {
+                if($myQueueObject) {
+                    if ($myQueueObject->isReadyToGo()) {
+                        $oldOrderStatusID = $order->StatusID;
+                        $myQueueObject->InProcess = true;
+                        $myQueueObject->write();
+                        $order->tryToFinaliseOrder(
+                            $tryAgain = false,
+                            $fromOrderQueue = true
+                        );
+                        $newOrderStatusID = $order->StatusID;
+                        if($oldOrderStatusID != $newOrderStatusID) {
+                            $myQueueObject->delete();
+                            return true;
+                        } else {
+                            $message = 'Attempt to move order was not successful.';
+                            $myQueueObject->InProcess = false;
+                            $myQueueObject->write();
+                        }
+                    } else  {
+                        $message = 'Minimum order queue time has not been passed.';
+                    }
+
                 } else {
-                    $myQueueObject->InProcess = false;
-                    $myQueueObject->write();
+                    $message = 'Could not find queue object.';
                 }
             }
+        } else {
+            $message = 'Can not find order.';
+            $myQueueObject->delete();
         }
-
-        return false;
+        return $message;
     }
 
     /**
@@ -363,6 +374,27 @@ class OrderProcessQueue extends DataObject
 
 
     /**
+     *
+     * casted variable
+     * @return SS_DateTime
+     */
+    public function HasBeenInQueueForSince()
+    {
+        return $this->getHasBeenInQueueForSince();
+    }
+
+    /**
+     *
+     * casted variable
+     * @return SS_DateTime
+     */
+    public function getHasBeenInQueueForSince()
+    {
+        return DBField::create_field('SS_Datetime', (strtotime($this->Created)));
+    }
+
+
+    /**
      * CMS Fields
      * @return FieldList
      */
@@ -373,9 +405,18 @@ class OrderProcessQueue extends DataObject
             $fields->addFieldToTab(
                 'Root.Main',
                 ReadonlyField::create(
+                    'HasBeenInQueueForSinceCompilations',
+                    _t('OrderProcessQueue.SINCE', 'In the queue since'),
+                    $this->getHasBeenInQueueForSince()->Nice() . ' - ' . $this->getHasBeenInQueueForSince()->Ago()
+                ),
+                'DeferTimeInSeconds'
+            );
+            $fields->addFieldToTab(
+                'Root.Main',
+                ReadonlyField::create(
                     'ToBeProcessedAtCompilations',
                     _t('OrderProcessQueue.TO_BE_PROCESSED', 'To Be Processed'),
-                    $this->ToBeProcessedAt->Nice() . ' - ' . $this->getToBeProcessedAt()->Ago()
+                    $this->getToBeProcessedAt()->Nice() . ' - ' . $this->getToBeProcessedAt()->Ago()
                 ),
                 'InProcess'
             );
