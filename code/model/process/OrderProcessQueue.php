@@ -13,7 +13,8 @@ class OrderProcessQueue extends DataObject
     );
 
     private static $has_one = array(
-        'Order' => 'Order'
+        'Order' => 'Order',
+        'OrderStep' => 'OrderStep'
     );
 
     private static $indexes = array(
@@ -150,8 +151,8 @@ class OrderProcessQueue extends DataObject
      * META METHOD: Add an order to the job list.
      * If the order already exists, it will update the seconds and the creation  time.
      *
-     * @param Order $order          [description]
-     * @param Int   $deferInSeconds [description]
+     * @param Order $order
+     * @param Int   $deferInSeconds
      */
     public function AddOrderToQueue($order, $deferTimeInSeconds)
     {
@@ -161,6 +162,7 @@ class OrderProcessQueue extends DataObject
         $filter['DeferTimeInSeconds'] = $deferTimeInSeconds;
         if (! $existingEntry) {
             $existingEntry = OrderProcessQueue::create($filter);
+            $existingEntry->OrderStepID = $order->StatusID;
         } else {
             foreach ($filter as $field => $value) {
                 $existingEntry->$field = $value;
@@ -172,30 +174,55 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
+     * META METHOD
      * processes the order ...
+     * returns TRUE if SUCCESSFUL and FALSE if it did not run for any reason ...
      *
-     * @param  Order $order
+     *
+     * @param  Order $order optional
+     * @return boolean
      */
-    public function process($order)
+    public function process($order = null)
     {
-        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-        $myQueueObject = $queueObjectSingleton->getQueueObject($order);
-        if ($myQueueObject && $myQueueObject->isReadyToGo()) {
-            $oldOrderStatusID = $order->StatusID;
-            $myQueueObject->InProcess = true;
-            $myQueueObject->write();
-            $order->tryToFinaliseOrder(
-                $tryAgain = false,
-                $fromOrderQueue = true
-            );
-            $newOrderStatusID = $order->StatusID;
-            if($oldOrderStatusID != $newOrderStatusID) {
-                $myQueueObject->delete();
-            } else {
-                $myQueueObject->InProcess = false;
+        //find variables
+        if( ! $order) {
+            $order = $this->Order();
+            $myQueueObject = $this;
+        } else {
+            $myQueueObject = $this->getQueueObject($order);
+        }
+        //delete if order is gone ...
+        if(! $order) {
+            $myQueueObject->delete();
+        }
+        //if order has moved already ... delete
+        if(
+            $this->OrderStepID > 0
+            && (int)$order->StatusID !== (int)$this->OrderStepID
+        ) {
+            $myQueueObject->delete();
+        }
+        if($order && $myQueueObject) {
+            if ($myQueueObject->isReadyToGo()) {
+                $oldOrderStatusID = $order->StatusID;
+                $myQueueObject->InProcess = true;
                 $myQueueObject->write();
+                $order->tryToFinaliseOrder(
+                    $tryAgain = false,
+                    $fromOrderQueue = true
+                );
+                $newOrderStatusID = $order->StatusID;
+                if($oldOrderStatusID != $newOrderStatusID) {
+                    $myQueueObject->delete();
+                    return true;
+                } else {
+                    $myQueueObject->InProcess = false;
+                    $myQueueObject->write();
+                }
             }
         }
+
+        return false;
     }
 
     /**
