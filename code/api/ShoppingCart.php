@@ -237,17 +237,21 @@ class ShoppingCart extends Object
                     if ($loggedInMember) {
                         $this->order->MemberID = $loggedInMember->ID;
                     }
-                    $this->order->write();
+                    if(session_status() == PHP_SESSION_ACTIVE) {
+                        $this->order->write();
+                    }
                 }
                 $sessionVariableName = $this->sessionVariableName('OrderID');
                 Session::set($sessionVariableName, intval($this->order->ID));
             }
-            if ($this->order && $this->order->exists()) {
-                $this->order->calculateOrderAttributes($force = false);
-            }
-            if ($this->order && !$this->order->SessionID) {
+            if ($this->order){
+                if($this->order->exists()) {
+                    $this->order->calculateOrderAttributes($force = false);
+                }
+                if (! $this->order->SessionID) {
+                    $this->order->write();
+                }
                 //add session ID...
-                $this->order->write();
             }
         }
         //try it again
