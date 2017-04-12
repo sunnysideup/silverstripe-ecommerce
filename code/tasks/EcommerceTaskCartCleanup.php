@@ -56,7 +56,7 @@ class EcommerceTaskCartCleanup extends BuildTask
      **/
     public function run($request)
     {
-        if ($this->verbose) {
+        if ($this->verbose || isset($_GET['verbose'])) {
             $this->flush();
             $countAll = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
             DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = $countAll)</h2>.");
@@ -66,7 +66,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $maximumNumberOfObjectsDeleted = EcommerceConfig::get('EcommerceTaskCartCleanup', 'maximum_number_of_objects_deleted');
 
         //LIMITS ...
-        if ($this->verbose && $request) {
+        if ($request) {
             $limitFromGetVar = $request->getVar('limit');
             if ($limitFromGetVar) {
                 $maximumNumberOfObjectsDeleted = intval($limitFromGetVar);
@@ -102,8 +102,6 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
         $oldCarts = $oldCarts->leftJoin('Member', $joinShort);
-        if ($neverDeleteIfLinkedToMember) {
-        }
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
