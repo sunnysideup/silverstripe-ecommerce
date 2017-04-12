@@ -553,6 +553,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function IsShopAssistant()
     {
         if ($this->owner->IsShopAdmin()) {
+
             return true;
         }
 

@@ -95,7 +95,7 @@ class ShoppingCart_Controller extends Controller
         'removeaddress',
         'submittedbuyable',
         'placeorderformember',
-        'loginas',
+        'loginas',// no need to set to  => 'ADMIN',
         'debug', // no need to set to  => 'ADMIN',
         'ajaxtest', // no need to set to  => 'ADMIN',
     );
@@ -496,20 +496,24 @@ class ShoppingCart_Controller extends Controller
      **/
     public function removefromsale(SS_HTTPRequest $request)
     {
-        $className = Convert::raw2sql($request->param('ID'));
-        $id = intval($request->param('OtherID'));
-        if (class_exists($className)) {
-            $obj = $className::get()->byID($id);
-            $obj->AllowPurchase = 0;
-            if ($obj instanceof SiteTree) {
-                $obj->writeToStage('Stage');
-                $obj->doPublish();
-            } else {
-                $obj->write();
+        if(EcommerceRole::current_member_is_shop_assistant()) {
+            $className = Convert::raw2sql($request->param('ID'));
+            $id = intval($request->param('OtherID'));
+            if (class_exists($className)) {
+                $obj = $className::get()->byID($id);
+                $obj->AllowPurchase = 0;
+                if ($obj instanceof SiteTree) {
+                    $obj->writeToStage('Stage');
+                    $obj->doPublish();
+                } else {
+                    $obj->write();
+                }
             }
-        }
 
-        return $this->cart->setMessageAndReturn();
+            return $this->cart->setMessageAndReturn();
+        } else {
+            return Security::permissionFailure($this);
+        }
     }
 
     /**
@@ -711,8 +715,7 @@ class ShoppingCart_Controller extends Controller
      */
     public function placeorderformember(SS_HTTPRequest $request)
     {
-        $memberToTest = Member::currentMember();
-        if ($memberToTest->IsShopAdmin()) {
+        if (EcommerceRole::current_member_is_shop_admin()) {
             $member = Member::get()->byID(intval($request->param('ID')));
             if ($member) {
                 $newOrder = Order::create();
@@ -742,20 +745,15 @@ class ShoppingCart_Controller extends Controller
      */
     public function loginas(SS_HTTPRequest $request)
     {
-        $memberToTest = Member::currentUser();
         if (Permission::check('ADMIN')) {
             $newMember = Member::get()->byID(intval($request->param('ID')));
             if ($newMember) {
-                if ($memberToTest) {
-                    //$memberToTest->logout();
-                    $newMember->logIn();
-                    if ($accountPage = AccountPage::get()->first()) {
-                        return $this->redirect($accountPage->Link());
-                    } else {
-                        return $this->redirect(Director::baseURL());
-                    }
+                //$memberToTest->logout();
+                $newMember->logIn();
+                if ($accountPage = AccountPage::get()->first()) {
+                    return $this->redirect($accountPage->Link());
                 } else {
-                    user_error('Another error occurred.');
+                    return $this->redirect(Director::baseURL());
                 }
             } else {
                 user_error('Can not find this member.');
@@ -848,7 +846,7 @@ class ShoppingCart_Controller extends Controller
      */
     public function debug()
     {
-        if (Director::isDev() || Permission::check('ADMIN')) {
+        if (Director::isDev() || EcommerceRole::current_member_is_shop_admin()) {
             return $this->cart->debug();
         } else {
             return Security::permissionFailure($this);
