@@ -329,7 +329,7 @@ SalesAdmin:
     - Order
     - OrderProcessQueue
     - OrderFeedback
-    
+
 SalesAdminExtras:
   managed_models:
     - Order
