@@ -311,18 +311,19 @@ class ShoppingCart extends Object
      */
     protected function allowWrites()
     {
-        if($this->order) {
-            return true;
-        }
         if(self::$_allow_writes_cache === null) {
-            if ( php_sapi_name() !== 'cli' ) {
-                if ( version_compare(phpversion(), '5.4.0', '>=') ) {
-                    self::$_allow_writes_cache = session_status() === PHP_SESSION_ACTIVE ? true : false;
-                } else {
-                    self::$_allow_writes_cache = session_id() === '' ? true : false;
-                }
+            if($this->order) {
+                self::$_allow_writes_cache = true;
             } else {
-                self::$_allow_writes_cache = false;
+                if ( php_sapi_name() !== 'cli' ) {
+                    if ( version_compare(phpversion(), '5.4.0', '>=') ) {
+                        self::$_allow_writes_cache = session_status() === PHP_SESSION_ACTIVE ? true : false;
+                    } else {
+                        self::$_allow_writes_cache = session_id() === '' ? true : false;
+                    }
+                } else {
+                    self::$_allow_writes_cache = false;
+                }
             }
         }
 
