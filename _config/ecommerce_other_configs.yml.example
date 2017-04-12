@@ -2,6 +2,9 @@
 #  extra_requirements_javascript:
 #    - ecommerce/javascript/EcomPrintAndMail.js
 
+# set session to two weeks so that people can keep their cart ...
+Session:
+  timeout: 1209600
 
 #Injector:
   #EcommercePaymentSupportedMethodsProvider:
