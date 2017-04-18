@@ -158,6 +158,9 @@ class OrderProcessQueue extends DataObject
      */
     public function AddOrderToQueue($order, $deferTimeInSeconds)
     {
+        if(!$order || ! $order->ID) {
+            user_error('No real order provided.')
+        }
         $filter = array('OrderID' => $order->ID);
         $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
         $filter['Created'] = SS_Datetime::now()->Rfc2822();
