@@ -1121,6 +1121,8 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param bool $runAgain
      * @param bool $fromOrderQueue - is it being called from the OrderProcessQueue (or similar)
+     *
+     * @return null
      **/
     public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
@@ -1139,9 +1141,11 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
                 if($fromOrderQueue) {
                     if ( ! $myQueueObject->InProcess) {
+
                         return;
                     }
                 } else {
+
                     return;
                 }
             }
@@ -1155,6 +1159,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 if ($nextStatusObject) {
                     $delay = $nextStatusObject->CalculatedDeferTimeInSeconds($this);
                     if ($delay > 0) {
+                        //adjust delay time from seconds since being submitted
                         if ($nextStatusObject->DeferFromSubmitTime) {
                             $delay = $delay - $this->SecondsSinceBeingSubmitted();
                             if ($delay < 0) {
