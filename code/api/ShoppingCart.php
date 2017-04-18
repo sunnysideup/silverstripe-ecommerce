@@ -94,7 +94,7 @@ class ShoppingCart extends Object
      *
      * @return Order
      */
-    public static function current_order($order = null;)
+    public static function current_order($order = null)
     {
         return self::singleton()->currentOrder(0, $order);
     }
