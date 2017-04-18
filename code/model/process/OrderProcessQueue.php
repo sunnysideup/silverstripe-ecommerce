@@ -18,10 +18,6 @@ class OrderProcessQueue extends DataObject
     );
 
     private static $indexes = array(
-        'OrderID' => array(
-            'type' => 'unique',
-            'value' => '"OrderID"'
-        ),
         'Created' => true,
         'DeferTimeInSeconds' => true
     );
