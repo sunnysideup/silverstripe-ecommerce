@@ -9,7 +9,8 @@ class OrderProcessQueue extends DataObject
 {
     private static $db = array(
         'DeferTimeInSeconds' => 'Int',
-        'InProcess' => 'Boolean'
+        'InProcess' => 'Boolean',
+        'ProcessAttempts' => 'Int'
     );
 
     private static $has_one = array(
@@ -19,7 +20,8 @@ class OrderProcessQueue extends DataObject
 
     private static $indexes = array(
         'Created' => true,
-        'DeferTimeInSeconds' => true
+        'DeferTimeInSeconds' => true,
+        'ProcessAttempts' => true
     );
 
     private static $casting = array(
@@ -39,6 +41,7 @@ class OrderProcessQueue extends DataObject
     private static $summary_fields = array(
         'Order.Title' => 'Order',
         'Order.Status.Title' => 'Current Step',
+        'ProcessAttempts' => 'Attempts',
         'ToBeProcessedAt.Nice' => 'To be processed at',
         'ToBeProcessedAt.Ago' => 'That is ...',
         'HasBeenInQueueForSince.Nice' => 'Added to queue ...',
@@ -146,8 +149,7 @@ class OrderProcessQueue extends DataObject
 
 
     /**
-     * META METHOD: Add an order to the job list.
-     * If the order already exists, it will update the seconds and the creation  time.
+     * META METHOD: Add an order to the job list if it does not exist already.
      *
      * @param Order $order
      * @param Int   $deferInSeconds
@@ -155,15 +157,16 @@ class OrderProcessQueue extends DataObject
     public function AddOrderToQueue($order, $deferTimeInSeconds)
     {
         if(!$order || ! $order->ID) {
-            user_error('No real order provided.')
+            user_error('No real order provided.');
         }
-        $filter = array('OrderID' => $order->ID);
+        $filter = array(
+            'OrderID' => $order->ID,
+            'OrderStepID' => $order->StatusID
+        );
         $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
-        $filter['Created'] = SS_Datetime::now()->Rfc2822();
         $filter['DeferTimeInSeconds'] = $deferTimeInSeconds;
         if (! $existingEntry) {
             $existingEntry = OrderProcessQueue::create($filter);
-            $existingEntry->OrderStepID = $order->StatusID;
         } else {
             foreach ($filter as $field => $value) {
                 $existingEntry->$field = $value;
@@ -206,6 +209,7 @@ class OrderProcessQueue extends DataObject
                     if ($myQueueObject->isReadyToGo()) {
                         $oldOrderStatusID = $order->StatusID;
                         $myQueueObject->InProcess = true;
+                        $myQueueObject->ProcessAttempts = $myQueueObject->ProcessAttempts + 1;
                         $myQueueObject->write();
                         $order->tryToFinaliseOrder(
                             $tryAgain = false,
@@ -280,8 +284,8 @@ class OrderProcessQueue extends DataObject
             WHERE
                 "InProcess" = 0
                 AND
-                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < '.time().'
-            ORDER BY RAND() DESC
+                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < UNIX_TIMESTAMP()
+            ORDER BY '.$this->sortPhrase().'
             LIMIT '.$limit.';
         ';
         $rows = DB::query($sql);
@@ -292,7 +296,7 @@ class OrderProcessQueue extends DataObject
 
         return Order::get()
             ->filter(array('ID' => $orderIDs))
-            ->sort('RAND()');
+            ->sort($this->sortPhraseForOrderIDs($orderIDs));
     }
 
     /**
@@ -304,10 +308,11 @@ class OrderProcessQueue extends DataObject
      */
     public function AllOrdersInQueue($limit = 9999)
     {
-
+        $orderIDs = OrderProcessQueue::get()->column('OrderID');
+        
         return Order::get()
-            ->filter(array('ID' => OrderProcessQueue::get()->column('OrderID')))
-            ->sort('RAND()')
+            ->filter(array('ID' => $orderIDs))
+            ->sort($this->sortPhraseForOrderIDs($orderIDs))
             ->limit($limit);
     }
 
@@ -326,8 +331,8 @@ class OrderProcessQueue extends DataObject
             SELECT "OrderID"
             FROM "OrderProcessQueue"
             WHERE
-                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") >= '.time().'
-            ORDER BY RAND() DESC
+                (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") >= UNIX_TIMESTAMP()
+            ORDER BY '.$this->sortPhrase().'
             LIMIT '.$limit.';
         ';
         $rows = DB::query($sql);
@@ -338,7 +343,7 @@ class OrderProcessQueue extends DataObject
 
         return Order::get()
             ->filter(array('ID' => $orderIDs))
-            ->sort('RAND()');
+            ->sort($this->sortPhraseForOrderIDs($orderIDs));
     }
 
     /**
@@ -450,6 +455,24 @@ class OrderProcessQueue extends DataObject
             DB::alteration_message(' DELETING ROGUE OrderProcessQueue', 'deleted');
             $error->delete();
         }
+    }
+
+    protected function sortPhrase()
+    {
+        return '
+            "ProcessAttempts" ASC,
+            (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") ASC
+        ';
+    }
+
+    /**
+     * sort phrase for orders, based in order IDs...
+     * @param  array $orderIds
+     * @return string
+     */
+    protected function sortPhraseForOrder($orderIds)
+    {
+        return 'FIELD("Order"."ID", '.implode(",", $orderIDs).')';
     }
 
 }
