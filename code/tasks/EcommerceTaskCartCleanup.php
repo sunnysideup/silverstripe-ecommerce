@@ -85,7 +85,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes');
         $createdStepID = OrderStep::get_status_id_from_code('CREATED');
         $time = strtotime('-'.$clearMinutes.' minutes');
-        $where = '"StatusID" = '.$createdStepID." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
+        $where = '"StatusID" = '.$createdStepID." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < $time ";
         if ($neverDeleteIfLinkedToMember) {
             $userStatement = 'or have a user associated with it';
             $withoutMemberWhere = ' AND "Member"."ID" IS NULL ';
@@ -157,7 +157,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         //EMPTY ORDERS
         $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes_empty_carts');
         $time = strtotime('-'.$clearMinutes.' minutes');
-        $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
+        $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < $time ";
         $oldCarts = Order::get()
             ->where($where)
             ->sort($sort)
