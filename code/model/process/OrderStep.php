@@ -59,6 +59,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     private static $has_many = array(
         'Orders' => 'Order',
         'OrderEmailRecords' => 'OrderEmailRecord',
+        'OrderProcessQueueEntries' => 'OrderProcessQueue'
     );
 
     /**
@@ -445,6 +446,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
+        $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
+        $config = $queueField->getConfig();
+        $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
+        $config->removeComponentsByType('GridFieldDeleteAction');
+        $fields->removeFieldFromTab('Root','OrderProcessQueueEntries');
         if ($this->canBeDefered()) {
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
@@ -485,6 +491,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         )
                 );
             }
+            $fields->addFieldToTab(
+                'Root.Queue',
+                $queueField
+            );
         }
         if ($this->hasCustomerMessage()) {
             $rightTitle = _t(
@@ -1022,11 +1032,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * This allows you to set the time to something other than the standard DeferTimeInSeconds
      * value based on the order provided.
      *
-     * @param Order
+     * @param Order (optional)
      *
      * @return int
      */
-    public function CalculatedDeferTimeInSeconds($order)
+    public function CalculatedDeferTimeInSeconds($order = null)
     {
         return $this->DeferTimeInSeconds;
     }
