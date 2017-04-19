@@ -17,7 +17,6 @@ class EcommerceTaskCartCleanup extends BuildTask
      * TODO: either remove or add to all tasks.
      */
     private static $allowed_actions = array(
-        '*' => 'ADMIN',
         '*' => 'SHOPADMIN',
     );
 
@@ -129,6 +128,11 @@ class EcommerceTaskCartCleanup extends BuildTask
                     DB::alteration_message("$count ... deleting abandonned order #".$oldCart->ID, 'deleted');
                 }
                 $this->deleteObject($oldCart);
+            }
+        } else {
+            if ($this->verbose) {
+                $this->flush();
+                DB::alteration_message('There are no old carts', 'created');
             }
         }
         if ($this->verbose) {
@@ -350,6 +354,10 @@ class EcommerceTaskCartCleanup extends BuildTask
                     }
                 }
             }
+        }
+        if ($this->verbose) {
+            $this->flush();
+            DB::alteration_message('---------------- DONE --------------------');
         }
     }
 
