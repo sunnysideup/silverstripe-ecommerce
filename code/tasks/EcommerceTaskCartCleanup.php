@@ -68,7 +68,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         //LIMITS ...
         if ($request) {
             $limitFromGetVar = $request->getVar('limit');
-            if ($limitFromGetVar) {
+            if ($limitFromGetVar && Permission::check('ADMIN')) {
                 $maximumNumberOfObjectsDeleted = intval($limitFromGetVar);
             }
         }
