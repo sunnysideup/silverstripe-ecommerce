@@ -309,7 +309,7 @@ class OrderProcessQueue extends DataObject
     public function AllOrdersInQueue($limit = 9999)
     {
         $orderIDs = OrderProcessQueue::get()->column('OrderID');
-        
+
         return Order::get()
             ->filter(array('ID' => $orderIDs))
             ->sort($this->sortPhraseForOrderIDs($orderIDs))
@@ -470,7 +470,7 @@ class OrderProcessQueue extends DataObject
      * @param  array $orderIds
      * @return string
      */
-    protected function sortPhraseForOrder($orderIds)
+    protected function sortPhraseForOrderIDs($orderIDs)
     {
         return 'FIELD("Order"."ID", '.implode(",", $orderIDs).')';
     }
