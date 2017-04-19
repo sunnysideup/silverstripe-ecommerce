@@ -55,7 +55,7 @@ class EcommerceTaskCartCleanup extends BuildTask
      **/
     public function run($request)
     {
-        if ($this->verbose || isset($_GET['verbose'])) {
+        if ($this->verbose || (isset($_GET['verbose']) && Permission::check('ADMIN'))) {
             $this->verbose = true;
             $this->flush();
             $countAll = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
@@ -372,6 +372,11 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
     }
 
+    /**
+     * delete an object
+     * @param  DataObject
+     * @return null
+     */
     private function deleteObject($objectToDelete)
     {
         $objectToDelete->delete();
