@@ -56,6 +56,7 @@ class EcommerceTaskCartCleanup extends BuildTask
     public function run($request)
     {
         if ($this->verbose || isset($_GET['verbose'])) {
+            $this->verbose = true;
             $this->flush();
             $countAll = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
             DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = $countAll)</h2>.");
