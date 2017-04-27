@@ -203,7 +203,7 @@ class CartPage extends Page
      */
     public static function find_link($action = null)
     {
-        $page = CartPage::get()->Filter(array('ClassName' => 'CartPage'))->First();
+        $page = DataObject::get_one('CartPage', array('ClassName' => 'CartPage'));
         if ($page) {
             return $page->Link($action);
         } else {
@@ -419,12 +419,13 @@ class CartPage_Controller extends Page_Controller
             //we can do all the retrieval options at once.
             if (($action == 'retrieveorder') && $id && $otherID) {
                 $sessionID = Convert::raw2sql($id);
-                $retrievedOrder = Order::get()
-                    ->Filter(array(
+                $retrievedOrder = DataObject::get_one(
+                    'Order',
+                    array(
                         'SessionID' => $sessionID,
                         'ID' => $otherID,
-                    ))
-                    ->First();
+                    )
+                );
                 if($retrievedOrder) {
                     $this->currentOrder = $retrievedOrder;
                     $this->overrideCanView = true;
