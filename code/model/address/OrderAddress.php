@@ -113,7 +113,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
-    
+
     /**
      * save edit status for speed's sake.
      *
@@ -579,9 +579,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         parent::onAfterWrite();
         if ($this->exists()) {
-            $order = Order::get()
-                ->filter(array($this->ClassName.'ID' => $this->ID))
-                ->First();
+            $order = DataObject::get_one(
+                'Order',
+                array($this->ClassName.'ID' => $this->ID)
+            );
             if ($order && $order->ID != $this->OrderID) {
                 $this->OrderID = $order->ID;
                 $this->write();

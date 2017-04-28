@@ -163,7 +163,7 @@ class OrderProcessQueue extends DataObject
             'OrderID' => $order->ID,
             'OrderStepID' => $order->StatusID
         );
-        $existingEntry = OrderProcessQueue::get()->filter($filter)->first();
+        $existingEntry = DataObject::get_one('OrderProcessQueue', $filter);
         $filter['DeferTimeInSeconds'] = $deferTimeInSeconds;
         if (! $existingEntry) {
             $existingEntry = OrderProcessQueue::create($filter);
@@ -250,7 +250,7 @@ class OrderProcessQueue extends DataObject
     {
         $filter = array('OrderID' => $order->ID);
 
-        return OrderProcessQueue::get()->filter($filter)->first();
+        return DataObject::get_one('OrderProcessQueue', $filter);
     }
 
     /**

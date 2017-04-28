@@ -103,7 +103,7 @@ class OrderForm_Feedback extends Form
     protected function getOrderConfirmationPage()
     {
         if(! $this->_orderConfirmationPage) {
-            $this->_orderConfirmationPage = OrderConfirmationPage::get()->first();
+            $this->_orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
         }
         return $this->_orderConfirmationPage;
     }

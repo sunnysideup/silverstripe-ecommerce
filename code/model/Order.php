@@ -540,7 +540,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->extend('updateCMSFields', $fields);
         $currentMember = Member::currentUser();
         if (!$this->exists() || !$this->StatusID) {
-            $firstStep = OrderStep::get()->First();
+            $firstStep = DataObject::get_one('OrderStep');
             $this->StatusID = $firstStep->ID;
             $this->write();
         }
@@ -1058,7 +1058,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //to do: check if shop is open....
             if ($this->StatusID || $recalculate) {
                 if (!$this->StatusID) {
-                    $createdOrderStatus = OrderStep::get()->First();
+                    $createdOrderStatus = DataObject::get_one('OrderStep');
                     if (!$createdOrderStatus) {
                         user_error('No ordersteps have been created', E_USER_WARNING);
                     }
@@ -1291,7 +1291,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $step = OrderStep::get()->byID($this->StatusID);
         }
         if (!$step) {
-            $step = OrderStep::get()->First(); //TODO: this could produce strange results
+            $step = DataObject::get_one('OrderStep'); //TODO: this could produce strange results
         }
         if (!$step) {
             $step = OrderStep_Created::create();
@@ -1322,7 +1322,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($obj->HideStepFromCustomer) {
             $obj = OrderStep::get()->where('"OrderStep"."Sort" < '.$obj->Sort.' AND "HideStepFromCustomer" = 0')->Last();
             if (!$obj) {
-                $obj = OrderStep::get()->First();
+                $obj = DataObject::get_one('OrderStep');
             }
         }
 
@@ -1336,7 +1336,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function IsFirstStep()
     {
-        $firstStep = OrderStep::get()->First();
+        $firstStep = DataObject::get_one('OrderStep');
         $currentStep = $this->MyStep();
         if ($firstStep && $currentStep) {
             if ($firstStep->ID == $currentStep->ID) {
@@ -2694,7 +2694,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function getFeedbackLink()
     {
-        $orderConfirmationPage = OrderConfirmationPage::get()->first();
+        $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
         if($orderConfirmationPage->IsFeedbackEnabled) {
 
             return Director::AbsoluteURL($this->getRetrieveLink()).'#OrderForm_Feedback_FeedbackForm';
@@ -3450,13 +3450,14 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->MyStep() && $this->MyStep()->AlternativeDisplayPage()) {
             $page = $this->MyStep()->AlternativeDisplayPage();
         } elseif ($this->IsSubmitted()) {
-            $page = OrderConfirmationPage::get()->First();
+            $page = DataObject::get_one('OrderConfirmationPage');
         } else {
-            $page = CartPage::get()
-                ->Filter(array('ClassName' => 'CartPage'))
-                ->First();
+            $page = DataObject::get_one(
+                'CartPage',
+                array('ClassName' => 'CartPage')
+            );
             if (!$page) {
-                $page = CheckoutPage::get()->First();
+                $page = DataObject::get_one('CheckoutPage');
             }
         }
 
@@ -3480,9 +3481,10 @@ class Order extends DataObject implements EditableEcommerceObject
             return $page->getOrderLink($this->ID, $action);
         } else {
             user_error('A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.', E_USER_NOTICE);
-            $page = ErrorPage::get()
-                ->Filter(array('ErrorCode' => '404'))
-                ->First();
+            $page = DataObject::get_one(
+                'ErrorPage',
+                array('ErrorCode' => '404')
+            );
             if ($page) {
                 return $page->Link();
             }
@@ -3509,13 +3511,14 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CheckoutLink()
     {
-        $page = CheckoutPage::get()->First();
+        $page = DataObject::get_one('CheckoutPage');
         if ($page) {
             return $page->Link();
         } else {
-            $page = ErrorPage::get()
-                ->Filter(array('ErrorCode' => '404'))
-                ->First();
+            $page = DataObject::get_one(
+                'ErrorPage',
+                array('ErrorCode' => '404')
+            );
             if ($page) {
                 return $page->Link();
             }

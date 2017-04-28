@@ -288,14 +288,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function default_currency()
     {
-        return EcommerceCurrency::get()
-            ->Filter(
-                array(
-                    'Code' => trim(strtolower(EcommerceConfig::get('EcommerceCurrency', 'default_currency'))),
-                    'InUse' => 1,
-                )
+        return DataObject::get_one(
+            'EcommerceCurrency',
+            array(
+                'Code' => trim(strtolower(EcommerceConfig::get('EcommerceCurrency', 'default_currency'))),
+                'InUse' => 1,
             )
-            ->First();
+        );
     }
 
     /**
@@ -338,14 +337,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function get_one_from_code($currencyCode)
     {
-        return EcommerceCurrency::get()
-            ->Filter(
-                array(
-                    'Code' => trim(strtoupper($currencyCode)),
-                    'InUse' => 1,
-                )
+        return DataObject::get(
+            'EcommerceCurrency',
+            array(
+                'Code' => trim(strtoupper($currencyCode)),
+                'InUse' => 1,
             )
-            ->First();
+        );
     }
 
     /**
@@ -643,7 +641,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
         $name = ucwords($name);
-        if ($currency = EcommerceCurrency::get()->filter(array('Code' => $code))->first()) {
+        if ($currency = DataObject::get_one('EcommerceCurrency', array('Code' => $code))) {
             $currency->Name = $name;
             $currency->InUse = true;
         } else {

@@ -15,10 +15,10 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
     protected $title = 'Archive all orders with order items and payment and add a submit record.';
 
     protected $description = "
-		This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.
-		NB: It also adds a submit record.
-		This task is basically for orders that never got archived.
-	";
+        This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.
+        NB: It also adds a submit record.
+        This task is basically for orders that never got archived.
+    ";
 
     private static $payment_table = 'EcommercePayment';
 
@@ -26,26 +26,31 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
     {
         set_time_limit(1200);
         //IMPORTANT!
-        $lastOrderStep = OrderStep::get()->sort('Sort', 'DESC')->First();
+        $lastOrderStep = DataObject::get_one(
+            'OrderStep',
+            '',
+            $cache = true,
+            array('Sort' => 'DESC')
+        );
         if ($lastOrderStep) {
             $joinSQL = '
-			INNER JOIN "OrderAttribute" ON "Order"."ID" = "OrderAttribute"."OrderID"
-			INNER JOIN "OrderItem" ON "OrderItem"."ID" = "OrderAttribute"."ID"
-			INNER JOIN "'.self::$payment_table.'" ON "'.self::$payment_table.'"."OrderID" = "Order"."ID"
-			';
+            INNER JOIN "OrderAttribute" ON "Order"."ID" = "OrderAttribute"."OrderID"
+            INNER JOIN "OrderItem" ON "OrderItem"."ID" = "OrderAttribute"."ID"
+            INNER JOIN "'.self::$payment_table.'" ON "'.self::$payment_table.'"."OrderID" = "Order"."ID"
+            ';
             $whereSQL = 'WHERE "StatusID" <> '.$lastOrderStep->ID.' ';
             $count = DB::query("
-				SELECT COUNT (\"Order\".\"ID\")
-				FROM \"Order\"
-				$joinSQL
-				$whereSQL
-			")->value();
+                SELECT COUNT (\"Order\".\"ID\")
+                FROM \"Order\"
+                $joinSQL
+                $whereSQL
+            ")->value();
             $do = DB::query("
-				UPDATE \"Order\"
-				$joinSQL
-				SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
-				$whereSQL
-			");
+                UPDATE \"Order\"
+                $joinSQL
+                SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
+                $whereSQL
+            ");
             if ($count) {
                 DB::alteration_message("NOTE: $count records were updated.", 'created');
             } else {
@@ -59,7 +64,12 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
 
     protected function createSubmissionLogForArchivedOrders()
     {
-        $lastOrderStep = OrderStep::get()->sort('Sort', 'DESC')->First();
+        $lastOrderStep = DataObject::get_one(
+            'OrderStep',
+            '',
+            $cache = true,
+            array('Sort' => 'DESC')
+        );
         $submissionLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         $obj = $submissionLogClassName::create();
         if (!is_a($obj, Object::getCustomClass('OrderStatusLog'))) {

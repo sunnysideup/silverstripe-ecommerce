@@ -132,7 +132,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if (Config::inst()->get('EcommerceRegion', 'show_freetext_region_field')) {
             return true;
         }
-        return EcommerceRegion::get()->First() ? true : false;
+        return DataObject::get_one('EcommerceRegion') ? true : false;
     }
 
     /**
@@ -170,7 +170,10 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      */
     public static function code_allowed($code)
     {
-        $region = EcommerceRegion::get()->filter('Code', $code)->First();
+        $region = DataObject::get_one(
+            'EcommerceRegion',
+            array('Code' => $code)
+        );
         if ($region) {
             return self::regionid_allowed($region->ID);
         }
@@ -403,7 +406,7 @@ class EcommerceRegion_VisitorRegionProvider extends Object
      */
     public function getRegion()
     {
-        $region = EcommerceRegion::get()->First();
+        $region = DataObject::get_one('EcommerceRegion');
         if ($region) {
             return $region->ID;
         }
