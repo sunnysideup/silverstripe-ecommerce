@@ -461,7 +461,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
 
         return DataObject::get_one(
-            'EcommerceCountry'
+            'EcommerceCountry',
             array('Code' => $countryCode)
         );
     }
