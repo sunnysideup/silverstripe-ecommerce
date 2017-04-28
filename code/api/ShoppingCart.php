@@ -241,13 +241,13 @@ class ShoppingCart extends Object
                         //find previour order...
                         $firstStep = DataObject::get_one('OrderStep');
                         if ($firstStep) {
-                            $previousOrderFromMember = DataObject::get_one(
-                                'Order',
-                                array(
-                                    'MemberID' => $loggedInMember->ID,
-                                    'StatusID' => array($firstStep->ID, 0),
-                                )
-                            );
+                            $previousOrderFromMember = Order::get()
+                                ->filter(
+                                    array(
+                                        'MemberID' => $loggedInMember->ID,
+                                        'StatusID' => array($firstStep->ID, 0),
+                                    )
+                                )->first();
                             if ($previousOrderFromMember) {
                                 if ($previousOrderFromMember->canView()) {
                                     $this->order = $previousOrderFromMember;

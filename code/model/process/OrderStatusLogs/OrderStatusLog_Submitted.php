@@ -133,7 +133,7 @@ class OrderStatusLog_Submitted extends OrderStatusLog
             }
             $lastOne = DataObject::get_one(
                 'OrderStatusLog_Submitted',
-                '\'ID\' != \''.$id.'\''
+                '\'ID\' != \''.$id.'\'',
                 $cache = true,
                 array('SequentialOrderNumber' => 'DESC')
             );
