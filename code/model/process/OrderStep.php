@@ -1312,18 +1312,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     protected function NextOrderStep()
     {
-        return DataObject::get_one(
-            'OrderStep',
-            array('Sort:GreaterThan' => $this->Sort)
-        );
+        return OrderStep::get()
+            ->filter(array('Sort:GreaterThan' => $this->Sort))
+            ->First();
     }
 
     protected function PreviousOrderStep()
     {
-        return DataObject::get_one(
-            'OrderStep',
-            array('Sort:LessThan' => $this->Sort)
-        );
+        return OrderStep::get()
+            ->filter(array('Sort:LessThan' => $this->Sort))
+            ->First();
     }
 
     /**
