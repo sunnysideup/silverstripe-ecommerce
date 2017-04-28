@@ -337,7 +337,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function get_one_from_code($currencyCode)
     {
-        return DataObject::get(
+        return DataObject::get_one(
             'EcommerceCurrency',
             array(
                 'Code' => trim(strtoupper($currencyCode)),
