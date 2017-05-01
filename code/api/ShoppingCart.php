@@ -261,7 +261,7 @@ class ShoppingCart extends Object
                         //here we cleanup old orders, because they should be
                         //cleaned at the same rate that they are created...
                         if (EcommerceConfig::get('ShoppingCart', 'cleanup_every_time')) {
-                            $cartCleanupTask = EcommerceTaskCartCleanup::create();
+                            $cartCleanupTask = Injector::inst()->get('EcommerceTaskCartCleanup');
                             $cartCleanupTask->runSilently();
                         }
                         //create new order
