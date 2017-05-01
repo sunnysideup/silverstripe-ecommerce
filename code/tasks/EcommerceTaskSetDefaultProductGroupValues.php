@@ -23,7 +23,7 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 
     public function run($request)
     {
-        $productGroup = ProductGroup::get()->First();
+        $productGroup = DataObject::get_one('ProductGroup');
         if ($productGroup) {
             foreach ($this->fieldsToCheck as $method => $fieldName) {
                 $acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));

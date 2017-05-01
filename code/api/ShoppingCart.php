@@ -204,19 +204,19 @@ class ShoppingCart extends Object
                         if ($this->order->StatusID || $this->order->TotalItems()) {
                             //do NOTHING!
                         } else {
-                            $firstStep = OrderStep::get()->First();
+                            $firstStep = DataObject::get_one('OrderStep');
                             //we assume the first step always exists.
                             //TODO: what sort order?
                             $count = 0;
                             while (
                                 $firstStep &&
-                                $previousOrderFromMember = Order::get()
-                                    ->where('
+                                $previousOrderFromMember = DataObject::get_one(
+                                    'Order',
+                                    '
                                         "MemberID" = '.$loggedInMember->ID.'
                                         AND ("StatusID" = '.$firstStep->ID.' OR "StatusID" = 0)
                                         AND "Order"."ID" <> '.$this->order->ID
-                                    )
-                                    ->First()
+                                )
                             ) {
                                 //arbritary 12 attempts ...
                                 if ($count > 12) {
@@ -239,14 +239,15 @@ class ShoppingCart extends Object
                 if (! $this->order) {
                     if ($loggedInMember) {
                         //find previour order...
-                        $firstStep = OrderStep::get()->First();
+                        $firstStep = DataObject::get_one('OrderStep');
                         if ($firstStep) {
                             $previousOrderFromMember = Order::get()
-                                ->filter(array(
-                                    'MemberID' => $loggedInMember->ID,
-                                    'StatusID' => array($firstStep->ID, 0),
-                                ))
-                                ->First();
+                                ->filter(
+                                    array(
+                                        'MemberID' => $loggedInMember->ID,
+                                        'StatusID' => array($firstStep->ID, 0),
+                                    )
+                                )->first();
                             if ($previousOrderFromMember) {
                                 if ($previousOrderFromMember->canView()) {
                                     $this->order = $previousOrderFromMember;
@@ -1057,15 +1058,13 @@ class ShoppingCart extends Object
         $filterString = $this->parametersToSQL($parameters);
         if ($order = $this->currentOrder()) {
             $orderID = $order->ID;
-            $obj = OrderItem::get()
-                ->where(
-                    " \"BuyableClassName\" = '".$buyable->ClassName."' AND
-                    \"BuyableID\" = ".$buyable->ID.' AND
-                    "OrderID" = '.$orderID.' '.
-                    $filterString
-                )
-                ->First();
-
+            $obj = DataObject::get_one(
+                'OrderItem',
+                " \"BuyableClassName\" = '".$buyable->ClassName."' AND
+                \"BuyableID\" = ".$buyable->ID.' AND
+                "OrderID" = '.$orderID.' '.
+                $filterString
+            );
             return $obj;
         }
     }

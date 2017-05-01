@@ -44,8 +44,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
 
-        return Group::get()
-            ->Filter(array('Code' => $customerCode))->First();
+        return DataObject::get_one(
+            'Group',
+            array('Code' => $customerCode)
+        );
     }
 
     /**
@@ -118,8 +120,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 }
             }
         }
-        $group = Group::get()
-            ->Filter(array('Code' => 'administrators'))->First();
+        $group = DataObject::get_one(
+            'Group',
+            array('Code' => 'administrators')
+        );
         //fill array
         if ($group) {
             $members = $group->Members();
@@ -202,7 +206,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $adminCode = EcommerceConfig::get('EcommerceRole', 'admin_group_code');
 
-        return Group::get()->Filter(array('Code' => $adminCode))->First();
+        return DataObject::get_one(
+            'Group',
+            array('Code' => $adminCode)
+        );
     }
 
      /**
@@ -212,7 +219,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $assistantCode = EcommerceConfig::get('EcommerceRole', 'assistant_group_code');
 
-        return Group::get()->Filter(array('Code' => $assistantCode))->First();
+        return DataObject::get_one(
+            'Group',
+            array('Code' => $assistantCode)
+        );
     }
 
     /**

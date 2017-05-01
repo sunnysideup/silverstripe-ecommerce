@@ -478,9 +478,10 @@ class OrderModifier extends OrderAttribute
     protected function getOrderModifier_Descriptor()
     {
         if ($this->orderModifier_Descriptor === null) {
-            $this->orderModifier_Descriptor = OrderModifier_Descriptor::get()
-                ->Filter(array('ModifierClassName' => $this->ClassName))
-                ->First();
+            $this->orderModifier_Descriptor = DataObject::get_one(
+                'OrderModifier_Descriptor',
+                array('ModifierClassName' => $this->ClassName)
+            );
         }
 
         return $this->orderModifier_Descriptor;

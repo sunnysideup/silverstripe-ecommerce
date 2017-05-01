@@ -277,9 +277,9 @@ class OrderConfirmationPage extends CartPage
      */
     public static function find_link($action = null)
     {
-        if ($page = OrderConfirmationPage::get()->filter(array('ClassName' => 'OrderConfirmationPage'))->First()) {
+        if ($page = DataObject::get_one('OrderConfirmationPage', array('ClassName' => 'OrderConfirmationPage'))) {
             return $page->Link($action);
-        } elseif ($page = OrderConfirmationPage::get()->First()) {
+        } elseif ($page = DataObject::get_one('OrderConfirmationPage')) {
             return $page->Link($action);
         }
 
@@ -395,9 +395,9 @@ class OrderConfirmationPage extends CartPage
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $checkoutPage = CheckoutPage::get()->first();
+        $checkoutPage = DataObject::get_one('CheckoutPage');
         if ($checkoutPage) {
-            $orderConfirmationPage = OrderConfirmationPage::get()->first();
+            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
             if (!$orderConfirmationPage) {
                 $orderConfirmationPage = OrderConfirmationPage::create();
                 $orderConfirmationPage->Title = 'Order Confirmation';

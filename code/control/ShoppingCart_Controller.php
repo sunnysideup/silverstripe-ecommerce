@@ -108,9 +108,10 @@ class ShoppingCart_Controller extends Controller
             return;
         }
         user_error(_t('Order.NOCARTINITIALISED', 'no cart initialised'), E_USER_NOTICE);
-        $errorPage404 = ErrorPage::get()
-            ->Filter(array('ErrorCode' => '404'))
-            ->First();
+        $errorPage404 = DataObject::get_one(
+            'ErrorPage',
+            array('ErrorCode' => '404')
+        );
         if ($errorPage404) {
             $this->redirect($errorPage404->Link());
 
@@ -695,9 +696,10 @@ class ShoppingCart_Controller extends Controller
                 }
             }
         }
-        $errorPage404 = ErrorPage::get()
-            ->Filter(array('ErrorCode' => '404'))
-            ->First();
+        $errorPage404 = DataObject::get_one(
+            'ErrorPage',
+            array('ErrorCode' => '404')
+        );
         if ($errorPage404) {
             return $this->redirect($errorPage404->Link());
         }
@@ -750,7 +752,7 @@ class ShoppingCart_Controller extends Controller
             if ($newMember) {
                 //$memberToTest->logout();
                 $newMember->logIn();
-                if ($accountPage = AccountPage::get()->first()) {
+                if ($accountPage = DataObject::get_one('AccountPage')) {
                     return $this->redirect($accountPage->Link());
                 } else {
                     return $this->redirect(Director::baseURL());

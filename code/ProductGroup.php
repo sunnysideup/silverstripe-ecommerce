@@ -1788,7 +1788,10 @@ class ProductGroup_Controller extends Page_Controller
         $otherGroupURLSegment = Convert::raw2sql($request->param('ID'));
         $arrayOfIDs = array(0 => 0);
         if ($otherGroupURLSegment) {
-            $otherProductGroup = ProductGroup::get()->filter(array('URLSegment' => $otherGroupURLSegment))->first();
+            $otherProductGroup = DataObject::get_one(
+                'ProductGroup',
+                array('URLSegment' => $otherGroupURLSegment)
+            );
             if ($otherProductGroup) {
                 $this->filterForGroupObject = $otherProductGroup;
                 $arrayOfIDs = $otherProductGroup->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault('FILTER'));
@@ -2939,7 +2942,10 @@ class ProductGroup_Controller extends Page_Controller
         $html .= '<li><b>all product parent groups:</b><pre> '.print_r($this->ProductGroupsParentGroups()->map('ID', 'Title')->toArray(), 1).' </pre></li>';
 
         $html .= '<li><hr /><h3>Product Example and Links</h3><hr /></li>';
-        $product = Product::get()->filter(array('ParentID' => $this->ID))->first();
+        $product = DataObject::get_one(
+            'Product',
+            array('ParentID' => $this->ID)
+        );
         if ($product) {
             $html .= '<li><b>Product View:</b> <a href="'.$product->Link().'">'.$product->Title.'</a> </li>';
             $html .= '<li><b>Product Debug:</b> <a href="'.$product->Link('debug').'">'.$product->Title.'</a> </li>';

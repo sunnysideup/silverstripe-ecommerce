@@ -26,9 +26,9 @@ class EcommerceTaskMigration extends BuildTask
     protected $title = 'Ecommerce Migration';
 
     protected $description = '
-		Migrates all the data from the oldest version of e-commerce to the current one.
-		Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.
-	';
+        Migrates all the data from the oldest version of e-commerce to the current one.
+        Any obsolete fields will be renamed like this: _obsolete_MyField, but not deleted.
+    ';
 
     protected $listOfMigrationTasks = array(
         'shopMemberToMemberTableMigration_10',
@@ -111,8 +111,8 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($createListOfActions) {
             $html .= '
-			<p>Always make a backup of your database before running any migration tasks.</p>
-			<ul>';
+            <p>Always make a backup of your database before running any migration tasks.</p>
+            <ul>';
         }
         foreach ($this->listOfMigrationTasks as $key => $task) {
             $explanation = $this->$task();
@@ -146,23 +146,23 @@ class EcommerceTaskMigration extends BuildTask
                 $nextLink .= '&fullmigration=1';
             }
             echo "
-				<hr style=\"margin-top: 50px;\"/>
-				<h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>";
+                <hr style=\"margin-top: 50px;\"/>
+                <h3><a href=\"$nextLink\">NEXT: $nextDescription</a></h3>";
             if ($currentMethod) {
                 echo "
-				<div style=\"width: 400px; height: 20px; padding-top: 20px; font-size: 11px; background: url(/ecommerce/images/loading.gif) no-repeat top left transparent\">
-					Next step, if any - will load automatically in ten seconds.
-				</div>
-				<script type=\"text/javascript\">
-					var t = window.setTimeout(
-						function(){
-							window.location = '$nextLink';
-						},
-						500
-					);
-				</script>
-				<hr style=\"margin-bottom: 500px;\"/>
-			";
+                <div style=\"width: 400px; height: 20px; padding-top: 20px; font-size: 11px; background: url(/ecommerce/images/loading.gif) no-repeat top left transparent\">
+                    Next step, if any - will load automatically in ten seconds.
+                </div>
+                <script type=\"text/javascript\">
+                    var t = window.setTimeout(
+                        function(){
+                            window.location = '$nextLink';
+                        },
+                        500
+                    );
+                </script>
+                <hr style=\"margin-bottom: 500px;\"/>
+            ";
             }
         }
         echo $html;
@@ -216,9 +216,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function shopMemberToMemberTableMigration_10()
     {
         $explanation = '
-			<h1>10. ShopMember to Member</h1>
-			<p>In the first version of e-commerce we had the ShopMember class, then we moved this data to Member.</p>
-		';
+            <h1>10. ShopMember to Member</h1>
+            <p>In the first version of e-commerce we had the ShopMember class, then we moved this data to Member.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -228,17 +228,17 @@ class EcommerceTaskMigration extends BuildTask
             $exist = DB::query("SHOW TABLES LIKE 'ShopMember'")->numRecords();
             if ($exist > 0) {
                 DB::query("
-					UPDATE \"Member\", \"ShopMember\"
-					SET
-						\"Member\".\"ClassName\" = 'Member',
-						\"Member\".\"Address\" = \"ShopMember\".\"Address\",
-						\"Member\".\"AddressLine2\" = \"ShopMember\".\"AddressLine2\",
-						\"Member\".\"City\" = \"ShopMember\".\"City\",
-						\"Member\".\"State\" = \"ShopMember\".\"State\",
-						\"Member\".\"Country\" = \"ShopMember\".\"Country\",
-						\"Member\".\"Notes\" = \"ShopMember\".\"Notes\"
-					WHERE \"Member\".\"ID\" = \"ShopMember\".\"ID\"
-				");
+                    UPDATE \"Member\", \"ShopMember\"
+                    SET
+                        \"Member\".\"ClassName\" = 'Member',
+                        \"Member\".\"Address\" = \"ShopMember\".\"Address\",
+                        \"Member\".\"AddressLine2\" = \"ShopMember\".\"AddressLine2\",
+                        \"Member\".\"City\" = \"ShopMember\".\"City\",
+                        \"Member\".\"State\" = \"ShopMember\".\"State\",
+                        \"Member\".\"Country\" = \"ShopMember\".\"Country\",
+                        \"Member\".\"Notes\" = \"ShopMember\".\"Notes\"
+                    WHERE \"Member\".\"ID\" = \"ShopMember\".\"ID\"
+                ");
                 $this->DBAlterationMessageNow('Successfully migrated ShopMember To Member.', 'created');
             } else {
                 $this->DBAlterationMessageNow('No need to migrate ShopMember To Member because it does not have any records.');
@@ -252,9 +252,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function moveItemToBuyable_20()
     {
         $explanation = '
-			<h1>20. Move ItemID to Buyable</h1>
-			<p>Move the Product ID in OrderItem as ItemID to a new field called BuyableID.</p>
-		';
+            <h1>20. Move ItemID to Buyable</h1>
+            <p>Move the Product ID in OrderItem as ItemID to a new field called BuyableID.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -262,10 +262,10 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($this->hasTableAndField('OrderItem', 'ItemID')) {
             DB::query('
-				UPDATE "OrderItem"
-				SET "OrderItem"."BuyableID" = "OrderItem"."ItemID"
-				WHERE "BuyableID" = 0 OR "BuyableID" IS NULL
-			');
+                UPDATE "OrderItem"
+                SET "OrderItem"."BuyableID" = "OrderItem"."ItemID"
+                WHERE "BuyableID" = 0 OR "BuyableID" IS NULL
+            ');
             $this->makeFieldObsolete('OrderItem', 'ItemID');
             $this->DBAlterationMessageNow('Moved ItemID to BuyableID in OrderItem', 'created');
         } else {
@@ -276,9 +276,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function productVersionToOrderItem_25()
     {
         $explanation = '
-			<h1>25. ProductVersion to Version</h1>
-			<p>Move the product version in the Product_OrderItem table to the OrderItem table.</p>
-		';
+            <h1>25. ProductVersion to Version</h1>
+            <p>Move the product version in the Product_OrderItem table to the OrderItem table.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -292,10 +292,10 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($this->hasTableAndField($table, 'ProductVersion')) {
             DB::query("
-				UPDATE \"OrderItem\", \"$table\"
-					SET \"OrderItem\".\"Version\" = \"$table\".\"ProductVersion\"
-				WHERE \"OrderItem\".\"ID\" = \"$table\".\"ID\"
-			");
+                UPDATE \"OrderItem\", \"$table\"
+                    SET \"OrderItem\".\"Version\" = \"$table\".\"ProductVersion\"
+                WHERE \"OrderItem\".\"ID\" = \"$table\".\"ID\"
+            ");
             $this->makeFieldObsolete('Product_OrderItem', 'ProductVersion');
             $this->DBAlterationMessageNow('Migrating Product_OrderItem.ProductVersion to OrderItem.Version.', 'created');
         } else {
@@ -306,9 +306,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function productIDToBuyableID_26()
     {
         $explanation = '
-			<h1>26. ProductID to to BuyableID</h1>
-			<p>Move the product ID saved as Product_OrderItem.ProductID to OrderItem.BuyableID.</p>
-		';
+            <h1>26. ProductID to to BuyableID</h1>
+            <p>Move the product ID saved as Product_OrderItem.ProductID to OrderItem.BuyableID.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -322,12 +322,12 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($this->hasTableAndField($table, 'ProductID')) {
             DB::query("
-				UPDATE \"OrderItem\"
-					INNER JOIN \"$table\"
-						ON \"OrderItem\".\"ID\" = \"$table\".\"ID\"
-				SET \"OrderItem\".\"BuyableID\" = \"$table\".\"ProductID\"
-				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
-			");
+                UPDATE \"OrderItem\"
+                    INNER JOIN \"$table\"
+                        ON \"OrderItem\".\"ID\" = \"$table\".\"ID\"
+                SET \"OrderItem\".\"BuyableID\" = \"$table\".\"ProductID\"
+                WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
+            ");
             $this->makeFieldObsolete('Product_OrderItem', 'ProductID');
             $this->DBAlterationMessageNow('Migrating Product_OrderItem.ProductID to OrderItem.BuyableID', 'created');
         } else {
@@ -335,12 +335,12 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($this->hasTableAndField($table, 'ProductVersion')) {
             DB::query("
-				UPDATE \"OrderItem\"
-					INNER JOIN \"$table\"
-						ON \"OrderItem\".\"ID\" = \"$table\".\"ID\"
-				SET \"OrderItem\".\"Version\" = \"$table\".\"ProductVersion\"
-				WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
-			");
+                UPDATE \"OrderItem\"
+                    INNER JOIN \"$table\"
+                        ON \"OrderItem\".\"ID\" = \"$table\".\"ID\"
+                SET \"OrderItem\".\"Version\" = \"$table\".\"ProductVersion\"
+                WHERE \"BuyableID\" = 0 OR \"BuyableID\" IS NULL
+            ");
             $this->makeFieldObsolete('Product_OrderItem', 'ProductID');
             $this->DBAlterationMessageNow('Migrating Product_OrderItem.ProductVersion to OrderItem.Version', 'created');
         } else {
@@ -350,10 +350,10 @@ class EcommerceTaskMigration extends BuildTask
         //can we use Table::has_field ???
         if ($this->hasTableAndField('ProductVariation_OrderItem', 'ProductVariationVersion')) {
             DB::query('
-				UPDATE "OrderItem", "ProductVariation_OrderItem"
-					SET "OrderItem"."Version" = "ProductVariation_OrderItem"."ProductVariationVersion"
-				WHERE "OrderItem"."ID" = "ProductVariation_OrderItem"."ID"
-			');
+                UPDATE "OrderItem", "ProductVariation_OrderItem"
+                    SET "OrderItem"."Version" = "ProductVariation_OrderItem"."ProductVariationVersion"
+                WHERE "OrderItem"."ID" = "ProductVariation_OrderItem"."ID"
+            ');
             $this->makeFieldObsolete('ProductVariation_OrderItem', 'ProductVariationVersion');
             $this->DBAlterationMessageNow('Migrating ProductVariation_OrderItem.ProductVariationVersion to OrderItem.Version', 'created');
         } else {
@@ -362,11 +362,11 @@ class EcommerceTaskMigration extends BuildTask
         if (class_exists('ProductVariation_OrderItem')) {
             if ($this->hasTableAndField('ProductVariation_OrderItem', 'ProductVariationID')) {
                 DB::query("
-					UPDATE \"OrderItem\", \"ProductVariation_OrderItem\"
-						SET \"OrderItem\".\"BuyableID\" = \"ProductVariation_OrderItem\".\"ProductVariationID\",
-								\"OrderItem\".\"BuyableClassName\" = 'ProductVariation'
-					WHERE \"OrderItem\".\"ID\" = \"ProductVariation_OrderItem\".\"ID\"
-				");
+                    UPDATE \"OrderItem\", \"ProductVariation_OrderItem\"
+                        SET \"OrderItem\".\"BuyableID\" = \"ProductVariation_OrderItem\".\"ProductVariationID\",
+                                \"OrderItem\".\"BuyableClassName\" = 'ProductVariation'
+                    WHERE \"OrderItem\".\"ID\" = \"ProductVariation_OrderItem\".\"ID\"
+                ");
                 $this->makeFieldObsolete('ProductVariation_OrderItem', 'ProductVariationID');
                 $this->DBAlterationMessageNow('Migrating ProductVariation_OrderItem.ProductVariationID to OrderItem.BuyableID and adding BuyableClassName = ProductVariation', 'created');
             } else {
@@ -380,9 +380,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function amountToCalculatedTotal_27()
     {
         $explanation = '
-			<h1>27. Move OrderModifier.Amount to OrderAttribute.CalculatedTotal</h1>
-			<p>Move the amount of the modifier in the OrderModifier.Amount field to the OrderAttribute.CalculatedTotal field.</p>
-		';
+            <h1>27. Move OrderModifier.Amount to OrderAttribute.CalculatedTotal</h1>
+            <p>Move the amount of the modifier in the OrderModifier.Amount field to the OrderAttribute.CalculatedTotal field.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -390,12 +390,12 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($this->hasTableAndField('OrderModifier', 'Amount')) {
             DB::query('
-				UPDATE "OrderModifier"
-					INNER JOIN "OrderAttribute"
-						ON "OrderAttribute"."ID" = "OrderModifier"."ID"
-				SET "OrderAttribute"."CalculatedTotal" = "OrderModifier"."Amount"
-				WHERE "OrderAttribute"."CalculatedTotal" IS NULL OR "OrderAttribute"."CalculatedTotal" = 0
-			');
+                UPDATE "OrderModifier"
+                    INNER JOIN "OrderAttribute"
+                        ON "OrderAttribute"."ID" = "OrderModifier"."ID"
+                SET "OrderAttribute"."CalculatedTotal" = "OrderModifier"."Amount"
+                WHERE "OrderAttribute"."CalculatedTotal" IS NULL OR "OrderAttribute"."CalculatedTotal" = 0
+            ');
             $this->makeFieldObsolete('OrderModifier', 'Amount');
             $this->DBAlterationMessageNow('Moved OrderModifier.Amount to OrderAttribute.CalculatedTotal', 'created');
         } else {
@@ -406,9 +406,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function currencyToMoneyFields_30()
     {
         $explanation = '
-			<h1>30. Currency to Money Fields</h1>
-			<p>Move the Payment Amount in the Amount field to a composite DB field (AmountAmount + AmountCurrency) </p>
-		';
+            <h1>30. Currency to Money Fields</h1>
+            <p>Move the Payment Amount in the Amount field to a composite DB field (AmountAmount + AmountCurrency) </p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -417,14 +417,14 @@ class EcommerceTaskMigration extends BuildTask
         if ($this->hasTableAndField('Payment', 'Amount')) {
             //ECOMMERCE PAYMENT *************************
             DB::query('
-				UPDATE "Payment"
-				SET "AmountAmount" = "Amount"
-				WHERE
-					"Amount" > 0
-					AND (
-						"AmountAmount" IS NULL OR "AmountAmount" = 0
-					)
-			');
+                UPDATE "Payment"
+                SET "AmountAmount" = "Amount"
+                WHERE
+                    "Amount" > 0
+                    AND (
+                        "AmountAmount" IS NULL OR "AmountAmount" = 0
+                    )
+            ');
             $countAmountChanges = DB::affectedRows();
             if ($countAmountChanges) {
                 $this->DBAlterationMessageNow("Updated Payment.Amount field to 2.4 - $countAmountChanges rows updated", 'edited');
@@ -434,16 +434,16 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($this->hasTableAndField('Payment', 'Currency')) {
             DB::query("
-				UPDATE \"Payment\"
-				SET \"AmountCurrency\" = \"Currency\"
-				WHERE
-					\"Currency\" <> ''
-					AND \"Currency\" IS NOT NULL
-					AND (
-						\"AmountCurrency\" IS NULL
-						OR \"AmountCurrency\" = ''
-					)
-			");
+                UPDATE \"Payment\"
+                SET \"AmountCurrency\" = \"Currency\"
+                WHERE
+                    \"Currency\" <> ''
+                    AND \"Currency\" IS NOT NULL
+                    AND (
+                        \"AmountCurrency\" IS NULL
+                        OR \"AmountCurrency\" = ''
+                    )
+            ");
             $countCurrencyChanges = DB::affectedRows();
             if ($countCurrencyChanges) {
                 $this->DBAlterationMessageNow("Updated Payment.Currency field to 2.4  - $countCurrencyChanges rows updated", 'edited');
@@ -459,9 +459,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function orderShippingCost_40()
     {
         $explanation = '
-			<h1>40. Order Shipping Cost</h1>
-			<p>Move the shipping cost in the order to its own modifier.</p>
-		';
+            <h1>40. Order Shipping Cost</h1>
+            <p>Move the shipping cost in the order to its own modifier.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -498,9 +498,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function orderTax_45()
     {
         $explanation = '
-			<h1>45. Order Added Tax</h1>
-			<p>Move the tax in the order to its own modifier.</p>
-		';
+            <h1>45. Order Added Tax</h1>
+            <p>Move the tax in the order to its own modifier.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -544,9 +544,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function orderShippingAddress_50()
     {
         $explanation = '
-			<h1>50. Order Shipping Address</h1>
-			<p>Move a shipping address from within Order to its own class.</p>
-		';
+            <h1>50. Order Shipping Address</h1>
+            <p>Move a shipping address from within Order to its own class.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -628,9 +628,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function orderBillingAddress_51()
     {
         $explanation = '
-			<h1>51. Order Billing Address</h1>
-			<p>Move the billing address from the order to its own class.</p>
-		';
+            <h1>51. Order Billing Address</h1>
+            <p>Move the billing address from the order to its own class.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -723,9 +723,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function memberBillingAddress_52()
     {
         $explanation = '
-			<h1>52. Member Billing Address</h1>
-			<p>Move address details in the member table to its own class (billingaddress)</p>
-		';
+            <h1>52. Member Billing Address</h1>
+            <p>Move address details in the member table to its own class (billingaddress)</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -810,9 +810,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function moveOrderStatus_60()
     {
         $explanation = '
-			<h1>60. Move Order Status</h1>
-			<p>Moving order status from the enum field to Order Step.</p>
-		';
+            <h1>60. Move Order Status</h1>
+            <p>Moving order status from the enum field to Order Step.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -846,9 +846,10 @@ class EcommerceTaskMigration extends BuildTask
                     switch ($row['Status']) {
                         case 'Cart':
                             if (!$cartObject) {
-                                $cartObject = OrderStep::get()
-                                    ->Filter(array('Code' => 'CREATED'))
-                                    ->First();
+                                $cartObject = DataObject::get_one(
+                                    'OrderStep',
+                                    array('Code' => 'CREATED')
+                                );
                                 if ($cartObject) {
                                     //do nothing
                                 } else {
@@ -856,9 +857,10 @@ class EcommerceTaskMigration extends BuildTask
                                     singleton('OrderStep')->requireDefaultRecords();
                                 }
                             }
-                            $cartObject = OrderStep::get()
-                                ->Filter(array('Code' => 'CREATED'))
-                                ->First();
+                            $cartObject = DataObject::get_one(
+                                'OrderStep',
+                                array('Code' => 'CREATED')
+                            );
                             if ($cartObject) {
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$cartObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
                             } else {
@@ -868,9 +870,10 @@ class EcommerceTaskMigration extends BuildTask
                         case 'Query':
                         case 'Unpaid':
                             if (!$unpaidObject) {
-                                $unpaidObject = OrderStep::get()
-                                    ->Filter(array('Code' => 'SUBMITTED'))
-                                    ->First();
+                                $unpaidObject = DataObject::get_one(
+                                    'OrderStep',
+                                    array('Code' => 'SUBMITTED')
+                                );
                                 if ($unpaidObject) {
                                     //do nothing
                                 } else {
@@ -878,9 +881,10 @@ class EcommerceTaskMigration extends BuildTask
                                     singleton('OrderStep')->requireDefaultRecords();
                                 }
                             }
-                            $unpaidObject = OrderStep::get()
-                                ->Filter(array('Code' => 'SUBMITTED'))
-                                ->First();
+                            $unpaidObject = DataObject::get_one(
+                                'OrderStep',
+                                array('Code' => 'SUBMITTED')
+                            );
                             if ($unpaidObject) {
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$unpaidObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
                             } else {
@@ -890,9 +894,10 @@ class EcommerceTaskMigration extends BuildTask
                         case 'Processing':
                         case 'Paid':
                             if (!$paidObject) {
-                                $paidObject = OrderStep::get()
-                                    ->Filter(array('Code' => 'PAID'))
-                                    ->First();
+                                $paidObject = DataObject::get_one(
+                                    'OrderStep',
+                                    array('Code' => 'PAID')
+                                );
                                 if ($paidObject) {
                                     //do nothing
                                 } else {
@@ -900,9 +905,10 @@ class EcommerceTaskMigration extends BuildTask
                                     singleton('OrderStep')->requireDefaultRecords();
                                 }
                             }
-                            $paidObject = OrderStep::get()
-                                ->Filter(array('Code' => 'PAID'))
-                                ->First();
+                            $paidObject = DataObject::get_one(
+                                'OrderStep',
+                                array('Code' => 'PAID')
+                            );
                             if ($paidObject) {
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$paidObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
                                 $this->DBAlterationMessageNow('Updating to PAID status', 'created');
@@ -914,9 +920,10 @@ class EcommerceTaskMigration extends BuildTask
                         case 'Complete':
                             //CHECK PAID VS SENT!
                             if (!$paidObject) {
-                                $sentObject = OrderStep::get()
-                                    ->Filter(array('Code' => 'SENT'))
-                                    ->First();
+                                $sentObject = DataObject::get_one(
+                                    'OrderStep',
+                                    array('Code' => 'SENT')
+                                );
                                 if ($sentObject) {
                                     //do nothing
                                 } else {
@@ -924,13 +931,14 @@ class EcommerceTaskMigration extends BuildTask
                                     singleton('OrderStep')->requireDefaultRecords();
                                 }
                             }
-                            $sentObject = OrderStep::get()
-                                ->Filter(array('Code' => 'SENT'))
-                                ->First();
+                            $sentObject = DataObject::get_one(
+                                'OrderStep',
+                                array('Code' => 'SENT')
+                            );
                             if ($sentObject) {
                                 $this->DBAlterationMessageNow('Updating to SENT status', 'created');
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$sentObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
-                            } elseif ($archivedObject = OrderStep::get()->Filter(array('Code' => 'ARCHIVED'))->First()) {
+                            } elseif ($archivedObject = DataObject::get_one('OrderStep', array('Code' => 'ARCHIVED'))) {
                                 $this->DBAlterationMessageNow('Updating to ARCHIVED status', 'created');
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$archivedObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
                             } else {
@@ -939,9 +947,10 @@ class EcommerceTaskMigration extends BuildTask
                             break;
                         case 'AdminCancelled':
                             if (!$adminCancelledObject) {
-                                $adminCancelledObject = OrderStep::get()
-                                    ->Filter(array('Code' => 'SENT'))
-                                    ->First();
+                                $adminCancelledObject = DataObject::get_one(
+                                    'OrderStep',
+                                    array('Code' => 'SENT')
+                                );
                                 if ($adminCancelledObject) {
                                     //do nothing
                                 } else {
@@ -957,9 +966,10 @@ class EcommerceTaskMigration extends BuildTask
                             break;
                         case 'MemberCancelled':
                             if (!$memberCancelledObject) {
-                                $memberCancelledObject = OrderStep::get()
-                                    ->Filter(array('Code' => 'SENT'))
-                                    ->First();
+                                $memberCancelledObject = DataObject::get_one(
+                                    'OrderStep',
+                                    array('Code' => 'SENT')
+                                );
                                 if ($memberCancelledObject) {
                                     //do nothing
                                 } else {
@@ -987,15 +997,15 @@ class EcommerceTaskMigration extends BuildTask
     protected function fixBadOrderStatus_68()
     {
         $explanation = '
-			<h1>68. Fix Bad Order Status</h1>
-			<p>Fixing any orders with an StatusID that is not in use...</p>
-		';
+            <h1>68. Fix Bad Order Status</h1>
+            <p>Fixing any orders with an StatusID that is not in use...</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
             echo $explanation;
         }
-        $firstOption = OrderStep::get()->First();
+        $firstOption = DataObject::get_one('OrderStep');
         if ($firstOption) {
             $badOrders = Order::get()
                 ->where('"StatusID" = 0 OR "StatusID" IS NULL OR "OrderStep"."ID" IS NULL')
@@ -1023,9 +1033,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function updateProductGroups_110()
     {
         $explanation = "
-			<h1>110. Update Product Groups: </h1>
-			<p>Set the product groups 'show products' to the default.</p>
-		";
+            <h1>110. Update Product Groups: </h1>
+            <p>Set the product groups 'show products' to the default.</p>
+        ";
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1036,38 +1046,38 @@ class EcommerceTaskMigration extends BuildTask
         if ($checkIfAnyLevelsAreSetAtAll == 0 && $productGroupDefaults['LevelOfProductsToShow'] != 0) {
             //level of products to show
             DB::query('
-				UPDATE "ProductGroup"
-				SET "LevelOfProductsToShow" = '.$productGroupDefaults['LevelOfProductsToShow'].'
-				WHERE "LevelOfProductsToShow" = 0 OR "LevelOfProductsToShow" IS NULL '
+                UPDATE "ProductGroup"
+                SET "LevelOfProductsToShow" = '.$productGroupDefaults['LevelOfProductsToShow'].'
+                WHERE "LevelOfProductsToShow" = 0 OR "LevelOfProductsToShow" IS NULL '
             );
             DB::query('
-				UPDATE "ProductGroup_Live"
-				SET "LevelOfProductsToShow" = '.$productGroupDefaults['LevelOfProductsToShow'].'
-				WHERE "LevelOfProductsToShow" = 0 OR "LevelOfProductsToShow"  IS NULL '
+                UPDATE "ProductGroup_Live"
+                SET "LevelOfProductsToShow" = '.$productGroupDefaults['LevelOfProductsToShow'].'
+                WHERE "LevelOfProductsToShow" = 0 OR "LevelOfProductsToShow"  IS NULL '
             );
             $this->DBAlterationMessageNow("resetting product 'show' levels", 'created');
             //default sort order
             DB::query('
-				UPDATE "ProductGroup"
-				SET "DefaultSortOrder" = '.$productGroupDefaults['DefaultSortOrder']."
-				WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
+                UPDATE "ProductGroup"
+                SET "DefaultSortOrder" = '.$productGroupDefaults['DefaultSortOrder']."
+                WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
             );
             DB::query('
-				UPDATE "ProductGroup_Live"
-				SET "DefaultSortOrder" = '.$productGroupDefaults['DefaultSortOrder']."
-				WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
+                UPDATE "ProductGroup_Live"
+                SET "DefaultSortOrder" = '.$productGroupDefaults['DefaultSortOrder']."
+                WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
             );
             $this->DBAlterationMessageNow('resetting product default sort order', 'created');
             //default filter
             DB::query('
-				UPDATE "ProductGroup"
-				SET "DefaultFilter" = '.$productGroupDefaults['DefaultFilter']."
-				WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
+                UPDATE "ProductGroup"
+                SET "DefaultFilter" = '.$productGroupDefaults['DefaultFilter']."
+                WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
             );
             DB::query('
-				UPDATE "ProductGroup_Live"
-				SET "DefaultFilter" = '.$productGroupDefaults['DefaultFilter']."
-				WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
+                UPDATE "ProductGroup_Live"
+                SET "DefaultFilter" = '.$productGroupDefaults['DefaultFilter']."
+                WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
             );
             $this->DBAlterationMessageNow('resetting product default filter', 'created');
         } else {
@@ -1080,9 +1090,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function setFixedPriceForSubmittedOrderItems_120()
     {
         $explanation = '
-			<h1>120. Set Fixed Price for Submitted Order Items: </h1>
-			<p>Migration task to fix the price for submitted order items.</p>
-		';
+            <h1>120. Set Fixed Price for Submitted Order Items: </h1>
+            <p>Migration task to fix the price for submitted order items.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1090,11 +1100,11 @@ class EcommerceTaskMigration extends BuildTask
         }
         if ($this->hasTableAndField('OrderModifier', 'CalculationValue')) {
             DB::query('
-				UPDATE "OrderAttribute"
-				INNER JOIN "OrderModifier"
-					ON "OrderAttribute"."ID" = "OrderModifier"."ID"
-				SET "OrderAttribute"."CalculatedTotal" = "OrderModifier"."CalculationValue"
-				WHERE "OrderAttribute"."CalculatedTotal" = 0'
+                UPDATE "OrderAttribute"
+                INNER JOIN "OrderModifier"
+                    ON "OrderAttribute"."ID" = "OrderModifier"."ID"
+                SET "OrderAttribute"."CalculatedTotal" = "OrderModifier"."CalculationValue"
+                WHERE "OrderAttribute"."CalculatedTotal" = 0'
             );
             $this->makeFieldObsolete('OrderModifier', 'CalculationValue');
             $this->DBAlterationMessageNow('Moving values from OrderModifier.CalculationValue to OrderAttribute.CalculatedTotal', 'created');
@@ -1144,9 +1154,9 @@ class EcommerceTaskMigration extends BuildTask
     protected function moveSiteConfigToEcommerceDBConfig_140()
     {
         $explanation = '
-			<h1>140. Move Site Config fields to Ecommerce DB Config</h1>
-			<p>Moving the general config fields from the SiteConfig to the EcommerceDBConfig.</p>
-		';
+            <h1>140. Move Site Config fields to Ecommerce DB Config</h1>
+            <p>Moving the general config fields from the SiteConfig to the EcommerceDBConfig.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1169,7 +1179,7 @@ class EcommerceTaskMigration extends BuildTask
             'EmailLogoID',
             'DefaultProductImageID',
         );
-        $ecomConfig = EcommerceDBConfig::get()->First();
+        $ecomConfig = DataObject::get_one('EcommerceDBConfig');
         if (!$ecomConfig) {
             $ecomConfig = EcommerceDBConfig::create();
             $ecomConfig->write();
@@ -1200,20 +1210,20 @@ class EcommerceTaskMigration extends BuildTask
     public function addClassNameToOrderItems_150()
     {
         $explanation = '
-			<h1>150. Add a class name to all buyables.</h1>
-			<p>ClassNames used to be implied, this is now saved as OrderItem.BuyableClassName.</p>
-		';
+            <h1>150. Add a class name to all buyables.</h1>
+            <p>ClassNames used to be implied, this is now saved as OrderItem.BuyableClassName.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
             echo $explanation;
         }
         $rows = DB::query("
-			SELECT \"OrderAttribute\".\"ID\", \"ClassName\"
-			FROM \"OrderAttribute\"
-				INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\"
-			WHERE \"BuyableClassName\" = '' OR \"BuyableClassName\" IS NULL;
-		");
+            SELECT \"OrderAttribute\".\"ID\", \"ClassName\"
+            FROM \"OrderAttribute\"
+                INNER JOIN \"OrderItem\" ON \"OrderItem\".\"ID\" = \"OrderAttribute\".\"ID\"
+            WHERE \"BuyableClassName\" = '' OR \"BuyableClassName\" IS NULL;
+        ");
         if ($rows) {
             foreach ($rows as $row) {
                 $orderItemPostFix = '_OrderItem';
@@ -1221,10 +1231,10 @@ class EcommerceTaskMigration extends BuildTask
                 $className = str_replace($orderItemPostFix, '', $row['ClassName']);
                 if (class_exists($className) && ClassInfo::is_subclass_of($className, 'DataObject')) {
                     DB::query("
-						UPDATE \"OrderItem\"
-						SET \"BuyableClassName\" = '$className'
-						WHERE \"ID\" = $id;
-					");
+                        UPDATE \"OrderItem\"
+                        SET \"BuyableClassName\" = '$className'
+                        WHERE \"ID\" = $id;
+                    ");
                     $this->DBAlterationMessageNow("Updating Order.BuyableClassName ( ID = $id ) to $className.", 'created');
                 } else {
                     $this->DBAlterationMessageNow("Order Item with ID = $id does not have a valid class name. This needs investigation.", 'deleted');
@@ -1240,15 +1250,15 @@ class EcommerceTaskMigration extends BuildTask
     public function addTermsAndConditionsMessage_160()
     {
         $explanation = '
-			<h1>160. Add checkout message TermsAndConditionsMessage message.</h1>
-			<p>Adds TermsAndConditionsMessage if there is a terms page.</p>
-		';
+            <h1>160. Add checkout message TermsAndConditionsMessage message.</h1>
+            <p>Adds TermsAndConditionsMessage if there is a terms page.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
             echo $explanation;
         }
-        $checkoutPage = CheckoutPage::get()->First();
+        $checkoutPage = DataObject::get_one('CheckoutPage');
         if ($checkoutPage) {
             if ($checkoutPage->TermsPageID) {
                 if (!$checkoutPage->TermsAndConditionsMessage) {
@@ -1273,9 +1283,9 @@ class EcommerceTaskMigration extends BuildTask
     public function mergeUncompletedOrderForOneMember_170()
     {
         $explanation = '
-			<h1>170. Merge uncompleted orders into one.</h1>
-			<p>Merges uncompleted orders by the same user into one.</p>
-		';
+            <h1>170. Merge uncompleted orders into one.</h1>
+            <p>Merges uncompleted orders by the same user into one.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1364,9 +1374,9 @@ class EcommerceTaskMigration extends BuildTask
     public function updateFullSiteTreeSortFieldForAllProducts_180()
     {
         $explanation = '
-			<h1>180. Set starting value Product.FullSiteTreeSort Field.</h1>
-			<p>Sets a starting value for a new field: FullSiteTreeSortField.</p>
-		';
+            <h1>180. Set starting value Product.FullSiteTreeSort Field.</h1>
+            <p>Sets a starting value for a new field: FullSiteTreeSortField.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1383,9 +1393,9 @@ class EcommerceTaskMigration extends BuildTask
     public function updateOrderStatusLogSequentialOrderNumber_190()
     {
         $explanation = '
-			<h1>190. Set sequential order numbers</h1>
-			<p>Prepopulates old orders for OrderStatusLog_Submitted.SequentialOrderNumber.</p>
-		';
+            <h1>190. Set sequential order numbers</h1>
+            <p>Prepopulates old orders for OrderStatusLog_Submitted.SequentialOrderNumber.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1420,9 +1430,9 @@ class EcommerceTaskMigration extends BuildTask
     public function resaveAllPRoducts_200()
     {
         $explanation = '
-			<h1>200. Resave All Products to update the FullName and FullSiteTreeSort Field</h1>
-			<p>Saves and PUBLISHES all the products on the site. You may need to run this task several times.</p>
-		';
+            <h1>200. Resave All Products to update the FullName and FullSiteTreeSort Field</h1>
+            <p>Saves and PUBLISHES all the products on the site. You may need to run this task several times.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1452,9 +1462,9 @@ class EcommerceTaskMigration extends BuildTask
     public function resaveAllPRoductsVariations_210()
     {
         $explanation = '
-			<h1>210. Resave All Product Variations to update the FullName and FullSiteTreeSort Field</h1>
-			<p>Saves all the product variations on the site. You may need to run this task several times.</p>
-		';
+            <h1>210. Resave All Product Variations to update the FullName and FullSiteTreeSort Field</h1>
+            <p>Saves all the product variations on the site. You may need to run this task several times.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1487,15 +1497,15 @@ class EcommerceTaskMigration extends BuildTask
     public function addConfirmationPage_250()
     {
         $explanation = '
-			<h1>250. Add Confirmation Page</h1>
-			<p>Creates a checkout page and order confirmation page in case they do not exist.</p>
-		';
+            <h1>250. Add Confirmation Page</h1>
+            <p>Creates a checkout page and order confirmation page in case they do not exist.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
             echo $explanation;
         }
-        $checkoutPage = CheckoutPage::get()->First();
+        $checkoutPage = DataObject::get_one('CheckoutPage');
         if (!$checkoutPage) {
             $checkoutPage = new CheckoutPage();
             $this->DBAlterationMessageNow('Creating a CheckoutPage', 'created');
@@ -1506,7 +1516,7 @@ class EcommerceTaskMigration extends BuildTask
             $checkoutPage->HasCheckoutSteps = 1;
             $checkoutPage->writeToStage('Stage');
             $checkoutPage->publish('Stage', 'Live');
-            $orderConfirmationPage = OrderConfirmationPage::get()->First();
+            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
             if ($orderConfirmationPage) {
                 $this->DBAlterationMessageNow('No need to create an Order Confirmation Page');
             } else {
@@ -1526,9 +1536,9 @@ class EcommerceTaskMigration extends BuildTask
     public function cleanupImages_260()
     {
         $explanation = '
-			<h1>260. Cleanup Images</h1>
-			<p>Checks the class name of all product images and makes sure they exist.</p>
-		';
+            <h1>260. Cleanup Images</h1>
+            <p>Checks the class name of all product images and makes sure they exist.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1543,9 +1553,9 @@ class EcommerceTaskMigration extends BuildTask
     public function addNewPopUpManager_280()
     {
         $explanation = '
-			<h1>280. Add new pop-up manager</h1>
-			<p>Replaces a link to a JS Library in the config file</p>
-		';
+            <h1>280. Add new pop-up manager</h1>
+            <p>Replaces a link to a JS Library in the config file</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1595,9 +1605,9 @@ class EcommerceTaskMigration extends BuildTask
     public function addCurrencyCodeIDToOrders_290()
     {
         $explanation = '
-			<h1>290. Add Curenccy to Orders</h1>
-			<p>Sets all currencies to the default currency for all orders without a currency.</p>
-		';
+            <h1>290. Add Curenccy to Orders</h1>
+            <p>Sets all currencies to the default currency for all orders without a currency.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1616,9 +1626,9 @@ class EcommerceTaskMigration extends BuildTask
     public function MovePaymentToEcommercePayment_300()
     {
         $explanation = '
-			<h1>300. Migrating Payment to EcommercePayment</h1>
-			<p>We move the data from Payment to EcommercePayment.</p>
-		';
+            <h1>300. Migrating Payment to EcommercePayment</h1>
+            <p>We move the data from Payment to EcommercePayment.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1631,36 +1641,36 @@ class EcommerceTaskMigration extends BuildTask
             $this->DBAlterationMessageNow('The table Payment has been moved to _obsolete_Payment. We are using _obsolete_Payment to fix things...', 'deleted');
         }
         DB::query('
-			INSERT IGNORE INTO EcommercePayment(
-				`ID`,
-				`ClassName`,
-				`Created`,
-				`LastEdited`,
-				`Status`,
-				`AmountAmount`,
-				`AmountCurrency`,
-				`Message`,
-				`IP`,
-				`ProxyIP`,
-				`OrderID`,
-				`ExceptionError`,
-				`PaidByID`
-			)
-			SELECT
-					`ID`,
-					`ClassName`,
-					`Created`,
-					`LastEdited`,
-					`Status`,
-					IF(`AmountAmount` > 0, `AmountAmount`, `Amount`),
-					IF(`AmountCurrency` <> \'\', `AmountCurrency`, `Currency`),
-					`Message`,
-					`IP`,
-					`ProxyIP`,
-					`OrderID`,
-					`ExceptionError`,
-					`PaidByID`
-				FROM '.$table.''
+            INSERT IGNORE INTO EcommercePayment(
+                `ID`,
+                `ClassName`,
+                `Created`,
+                `LastEdited`,
+                `Status`,
+                `AmountAmount`,
+                `AmountCurrency`,
+                `Message`,
+                `IP`,
+                `ProxyIP`,
+                `OrderID`,
+                `ExceptionError`,
+                `PaidByID`
+            )
+            SELECT
+                    `ID`,
+                    `ClassName`,
+                    `Created`,
+                    `LastEdited`,
+                    `Status`,
+                    IF(`AmountAmount` > 0, `AmountAmount`, `Amount`),
+                    IF(`AmountCurrency` <> \'\', `AmountCurrency`, `Currency`),
+                    `Message`,
+                    `IP`,
+                    `ProxyIP`,
+                    `OrderID`,
+                    `ExceptionError`,
+                    `PaidByID`
+                FROM '.$table.''
         );
         $this->DBAlterationMessageNow('Moving Payment to Ecommerce Payment', 'created');
 
@@ -1670,9 +1680,9 @@ class EcommerceTaskMigration extends BuildTask
     public function ecommercetaskupgradepickupordeliverymodifier_310()
     {
         $explanation = '
-			<h1>310.Upgrade Pick Up of Delivery Modifier</h1>
-			<p>Fixing data in this modifier if it exists.</p>
-		';
+            <h1>310.Upgrade Pick Up of Delivery Modifier</h1>
+            <p>Fixing data in this modifier if it exists.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1689,9 +1699,9 @@ class EcommerceTaskMigration extends BuildTask
     public function ecommercetaskupgradepickupordeliverymodifier_320()
     {
         $explanation = '
-			<h1>320. Removing empty Order Items</h1>
-			<p>Removes all the order items without a buyable.</p>
-		';
+            <h1>320. Removing empty Order Items</h1>
+            <p>Removes all the order items without a buyable.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1716,9 +1726,9 @@ class EcommerceTaskMigration extends BuildTask
     public function removemobilephones_330()
     {
         $explanation = '
-			<h1>323. Removing mobile phones</h1>
-			<p>Move all Billing and Shipping Address Mobile Phone Entries to Phone.</p>
-		';
+            <h1>323. Removing mobile phones</h1>
+            <p>Move all Billing and Shipping Address Mobile Phone Entries to Phone.</p>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {
@@ -1749,8 +1759,8 @@ class EcommerceTaskMigration extends BuildTask
     public function theEnd_9999()
     {
         $explanation = '
-			<h1>9999. Migration Completed</h1>
-		';
+            <h1>9999. Migration Completed</h1>
+        ';
         if ($this->retrieveInfoOnly) {
             return $explanation;
         } else {

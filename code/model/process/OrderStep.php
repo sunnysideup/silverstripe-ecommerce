@@ -354,9 +354,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function get_status_id_from_code($code)
     {
-        $otherStatus = OrderStep::get()
-            ->filter(array('Code' => $code))
-            ->First();
+        $otherStatus = DataObject::get_one(
+            'OrderStep',
+            array('Code' => $code)
+        );
         if ($otherStatus) {
             return $otherStatus->ID;
         }
@@ -391,7 +392,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $array = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
         if (is_array($array) && count($array)) {
             foreach ($array as $className) {
-                $obj = $className::get()->First();
+                $obj = DataObject::get_one($className);
                 if ($obj) {
                     unset($array[$className]);
                 }
@@ -677,9 +678,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function nextStep(Order $order)
     {
-        $nextOrderStepObject = OrderStep::get()
-            ->filter(array('Sort:GreaterThan' => $this->Sort))
-            ->First();
+        $nextOrderStepObject = DataObject::get_one(
+            'OrderStep',
+            array('Sort:GreaterThan' => $this->Sort)
+        );
         if ($nextOrderStepObject) {
             return $nextOrderStepObject;
         }
@@ -701,9 +703,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function hasPassed($code, $orIsEqualTo = false)
     {
-        $otherStatus = OrderStep::get()
-            ->filter(array('Code' => $code))
-            ->First();
+        $otherStatus = DataObject::get_one(
+            'OrderStep',
+            array('Code' => $code)
+        );
         if ($otherStatus) {
             if ($otherStatus->Sort < $this->Sort) {
                 return true;
@@ -860,9 +863,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     protected function testEmailLink()
     {
         if ($this->getEmailClassName()) {
-            $order = Order::get()->filter(array('StatusID' => $this->ID))
-                ->sort('RAND() ASC')
-                ->first();
+            $order = DataObject::get_one(
+                'Order',
+                array('StatusID' => $this->ID),
+                $cache = true,
+                'RAND() ASC'
+            );
             if(! $order) {
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= '.$this->Sort)
@@ -1337,7 +1343,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $itemCount = OrderStep::get()->filter($filter)->Count();
                     if ($itemCount) {
                         //always reset code
-                        $obj = OrderStep::get()->filter($filter)->First();
+                        $obj = DataObject::get_one(
+                            'OrderStep',
+                            $filter
+                        );
                         if ($obj->Code != $code) {
                             $obj->Code = $code;
                             $obj->write();
@@ -1361,9 +1370,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         $obj->write();
                         DB::alteration_message("Created \"$code\" as $className.", 'created');
                     }
-                    $obj = OrderStep::get()
-                        ->filter($filter)
-                        ->First();
+                    $obj = DataObject::get_one(
+                        'OrderStep',
+                        $filter
+                    );
                     if (! $obj) {
                         user_error("There was an error in creating the $code OrderStep");
                     }

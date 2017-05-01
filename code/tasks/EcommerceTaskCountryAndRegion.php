@@ -20,9 +20,10 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         $array = EcommerceCountry::get_country_dropdown();
         $allowedArray = EcommerceConfig::get('EcommerceCountry', 'allowed_country_codes');
         foreach ($array as $code => $name) {
-            $ecommerceCountry = EcommerceCountry::get()
-                ->Filter(array('Code' => Convert::raw2sql($code)))
-                ->First();
+            $ecommerceCountry = DataObject::get_one(
+                'EcommerceCountry',
+                array('Code' => Convert::raw2sql($code))
+            );
             if ($ecommerceCountry) {
                 //do nothing
                 ++$count;

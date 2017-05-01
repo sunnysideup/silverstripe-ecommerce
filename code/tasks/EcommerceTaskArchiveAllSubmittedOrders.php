@@ -25,10 +25,16 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
         $orderStatusLogClassName = 'OrderStatusLog';
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
-            $sampleSubmittedStatusLog = $submittedOrderStatusLogClassName::get()
-                ->First();
+            $sampleSubmittedStatusLog = DataObject::get_one(
+                $submittedOrderStatusLogClassName
+            );
             if ($sampleSubmittedStatusLog) {
-                $lastOrderStep = OrderStep::get()->sort('Sort', 'DESC')->First();
+                $lastOrderStep = DataObject::get_one(
+                    'OrderStep',
+                    '',
+                    $cache = true,
+                    array('Sort' => 'DESC')
+                );
                 if ($lastOrderStep) {
                     $joinSQL = "INNER JOIN \"$orderStatusLogClassName\" ON \"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"";
                     $whereSQL = 'WHERE "StatusID" <> '.$lastOrderStep->ID." AND \"$orderStatusLogClassName\".ClassName = '$submittedOrderStatusLogClassName'";
