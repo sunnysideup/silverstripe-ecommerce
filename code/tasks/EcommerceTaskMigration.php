@@ -848,7 +848,8 @@ class EcommerceTaskMigration extends BuildTask
                             if (!$cartObject) {
                                 $cartObject = DataObject::get_one(
                                     'OrderStep',
-                                    array('Code' => 'CREATED')
+                                    array('Code' => 'CREATED'),
+                                    $cacheDataObjectGetOne = false
                                 );
                                 if ($cartObject) {
                                     //do nothing
@@ -859,7 +860,8 @@ class EcommerceTaskMigration extends BuildTask
                             }
                             $cartObject = DataObject::get_one(
                                 'OrderStep',
-                                array('Code' => 'CREATED')
+                                array('Code' => 'CREATED'),
+                                $cacheDataObjectGetOne = false
                             );
                             if ($cartObject) {
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$cartObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
@@ -872,7 +874,8 @@ class EcommerceTaskMigration extends BuildTask
                             if (!$unpaidObject) {
                                 $unpaidObject = DataObject::get_one(
                                     'OrderStep',
-                                    array('Code' => 'SUBMITTED')
+                                    array('Code' => 'SUBMITTED'),
+                                    $cacheDataObjectGetOne = false
                                 );
                                 if ($unpaidObject) {
                                     //do nothing
@@ -883,7 +886,8 @@ class EcommerceTaskMigration extends BuildTask
                             }
                             $unpaidObject = DataObject::get_one(
                                 'OrderStep',
-                                array('Code' => 'SUBMITTED')
+                                array('Code' => 'SUBMITTED'),
+                                $cacheDataObjectGetOne = false
                             );
                             if ($unpaidObject) {
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$unpaidObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
@@ -896,7 +900,8 @@ class EcommerceTaskMigration extends BuildTask
                             if (!$paidObject) {
                                 $paidObject = DataObject::get_one(
                                     'OrderStep',
-                                    array('Code' => 'PAID')
+                                    array('Code' => 'PAID'),
+                                    $cacheDataObjectGetOne = false
                                 );
                                 if ($paidObject) {
                                     //do nothing
@@ -907,7 +912,8 @@ class EcommerceTaskMigration extends BuildTask
                             }
                             $paidObject = DataObject::get_one(
                                 'OrderStep',
-                                array('Code' => 'PAID')
+                                array('Code' => 'PAID'),
+                                $cacheDataObjectGetOne = false
                             );
                             if ($paidObject) {
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$paidObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
@@ -922,7 +928,8 @@ class EcommerceTaskMigration extends BuildTask
                             if (!$paidObject) {
                                 $sentObject = DataObject::get_one(
                                     'OrderStep',
-                                    array('Code' => 'SENT')
+                                    array('Code' => 'SENT'),
+                                    $cacheDataObjectGetOne = false
                                 );
                                 if ($sentObject) {
                                     //do nothing
@@ -933,12 +940,13 @@ class EcommerceTaskMigration extends BuildTask
                             }
                             $sentObject = DataObject::get_one(
                                 'OrderStep',
-                                array('Code' => 'SENT')
+                                array('Code' => 'SENT'),
+                                $cacheDataObjectGetOne = false
                             );
                             if ($sentObject) {
                                 $this->DBAlterationMessageNow('Updating to SENT status', 'created');
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$sentObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
-                            } elseif ($archivedObject = DataObject::get_one('OrderStep', array('Code' => 'ARCHIVED'))) {
+                            } elseif ($archivedObject = DataObject::get_one('OrderStep', array('Code' => 'ARCHIVED'),$cacheDataObjectGetOne = false)) {
                                 $this->DBAlterationMessageNow('Updating to ARCHIVED status', 'created');
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$archivedObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
                             } else {
@@ -949,7 +957,8 @@ class EcommerceTaskMigration extends BuildTask
                             if (!$adminCancelledObject) {
                                 $adminCancelledObject = DataObject::get_one(
                                     'OrderStep',
-                                    array('Code' => 'SENT')
+                                    array('Code' => 'SENT'),
+                                    $cacheDataObjectGetOne = false
                                 );
                                 if ($adminCancelledObject) {
                                     //do nothing
@@ -968,7 +977,8 @@ class EcommerceTaskMigration extends BuildTask
                             if (!$memberCancelledObject) {
                                 $memberCancelledObject = DataObject::get_one(
                                     'OrderStep',
-                                    array('Code' => 'SENT')
+                                    array('Code' => 'SENT'),
+                                    $cacheDataObjectGetOne = false
                                 );
                                 if ($memberCancelledObject) {
                                     //do nothing
@@ -1005,7 +1015,7 @@ class EcommerceTaskMigration extends BuildTask
         } else {
             echo $explanation;
         }
-        $firstOption = DataObject::get_one('OrderStep');
+        $firstOption = DataObject::get_one('OrderStep', null, $cacheDataObjectGetOne = false);
         if ($firstOption) {
             $badOrders = Order::get()
                 ->where('"StatusID" = 0 OR "StatusID" IS NULL OR "OrderStep"."ID" IS NULL')
@@ -1179,7 +1189,7 @@ class EcommerceTaskMigration extends BuildTask
             'EmailLogoID',
             'DefaultProductImageID',
         );
-        $ecomConfig = DataObject::get_one('EcommerceDBConfig');
+        $ecomConfig = DataObject::get_one('EcommerceDBConfig', null, $cacheDataObjectGetOne = false);
         if (!$ecomConfig) {
             $ecomConfig = EcommerceDBConfig::create();
             $ecomConfig->write();
@@ -1258,7 +1268,7 @@ class EcommerceTaskMigration extends BuildTask
         } else {
             echo $explanation;
         }
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one('CheckoutPage', null, $cacheDataObjectGetOne = false);
         if ($checkoutPage) {
             if ($checkoutPage->TermsPageID) {
                 if (!$checkoutPage->TermsAndConditionsMessage) {
@@ -1505,7 +1515,7 @@ class EcommerceTaskMigration extends BuildTask
         } else {
             echo $explanation;
         }
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one('CheckoutPage', null, $cacheDataObjectGetOne = false);
         if (!$checkoutPage) {
             $checkoutPage = new CheckoutPage();
             $this->DBAlterationMessageNow('Creating a CheckoutPage', 'created');
@@ -1516,7 +1526,7 @@ class EcommerceTaskMigration extends BuildTask
             $checkoutPage->HasCheckoutSteps = 1;
             $checkoutPage->writeToStage('Stage');
             $checkoutPage->publish('Stage', 'Live');
-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
+            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage', null, $cacheDataObjectGetOne = false);
             if ($orderConfirmationPage) {
                 $this->DBAlterationMessageNow('No need to create an Order Confirmation Page');
             } else {

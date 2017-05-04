@@ -22,7 +22,8 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         foreach ($array as $code => $name) {
             $ecommerceCountry = DataObject::get_one(
                 'EcommerceCountry',
-                array('Code' => Convert::raw2sql($code))
+                array('Code' => Convert::raw2sql($code)),
+                $cacheDataObjectGetOne = false
             );
             if ($ecommerceCountry) {
                 //do nothing

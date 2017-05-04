@@ -419,13 +419,12 @@ class CartPage_Controller extends Page_Controller
             //we can do all the retrieval options at once.
             if (($action == 'retrieveorder') && $id && $otherID) {
                 $sessionID = Convert::raw2sql($id);
-                $retrievedOrder = DataObject::get_one(
-                    'Order',
+                $retrievedOrder = Order::get()->filter(
                     array(
                         'SessionID' => $sessionID,
                         'ID' => $otherID,
                     )
-                );
+                )->first();
                 if($retrievedOrder) {
                     $this->currentOrder = $retrievedOrder;
                     $this->overrideCanView = true;

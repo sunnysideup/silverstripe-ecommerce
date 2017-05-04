@@ -1290,13 +1290,17 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->StatusID) {
             $step = OrderStep::get()->byID($this->StatusID);
         }
-        if (!$step) {
-            $step = DataObject::get_one('OrderStep'); //TODO: this could produce strange results
+        if (! $step) {
+            $step = DataObject::get_one(
+                'OrderStep',
+                null,
+                $cacheDataObjectGetOne = false
+            );
         }
-        if (!$step) {
+        if (! $step) {
             $step = OrderStep_Created::create();
         }
-        if (!$step) {
+        if (! $step) {
             user_error('You need an order step in your Database.');
         }
 

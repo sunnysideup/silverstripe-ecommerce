@@ -213,11 +213,12 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
                     'OrderModifier_Descriptor',
-                    array('ModifierClassName' => $className)
+                    array('ModifierClassName' => $className),
+                    $cacheDataObjectGetOne = false
                 );
                 if (!$orderModifier_Descriptor) {
                     $modifier = singleton($className);
-                    $orderModifier_Descriptor = self::create();
+                    $orderModifier_Descriptor = OrderModifier_Descriptor::create();
                     $orderModifier_Descriptor->ModifierClassName = $className;
                     $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
                     $orderModifier_Descriptor->write();

@@ -49,7 +49,7 @@ class EcommerceTemplateTest extends Page_Controller
             DataObject::get_one(
                 'Order',
                 array('StatusID' => $lastStatusOrder->ID),
-                $cache = true,
+                $cacheDataObjectGetOne = true,
                 'RAND()'
             );
         }

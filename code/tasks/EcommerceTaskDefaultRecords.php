@@ -32,7 +32,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         $orderStep = singleton('OrderStep');
         $orderStep->requireDefaultRecords();
         // ACCOUNT PAGE
-        $accountPage = DataObject::get_one('AccountPage');
+        $accountPage = DataObject::get_one('AccountPage', null, $cacheDataObjectGetOne = false);
         if (!$accountPage) {
             $accountPage = new AccountPage();
             $accountPage->Title = 'Account';
@@ -51,7 +51,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
 
         //CHECKOUT PAGE
 
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one('CheckoutPage', null, $cacheDataObjectGetOne = false);
         if (!$checkoutPage) {
             $checkoutPage = new CheckoutPage();
             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
@@ -71,7 +71,8 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 $checkoutPage->TermsPageID == 0 &&
                 $termsPage = DataObject::get_one(
                     'Page',
-                    array('URLSegment' => 'terms-and-conditions')
+                    array('URLSegment' => 'terms-and-conditions'),
+                    $cacheDataObjectGetOne = false
                 )
             ) {
                 $checkoutPage->TermsPageID = $termsPage->ID;
@@ -82,7 +83,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $checkoutPage->writeToStage('Stage');
             $checkoutPage->publish('Stage', 'Live');
             DB::alteration_message('Checkout page saved');
-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
+            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage', null, $cacheDataObjectGetOne = false);
             if ($orderConfirmationPage) {
                 DB::alteration_message('No need to create an Order Confirmation Page. It already exists.');
             } else {

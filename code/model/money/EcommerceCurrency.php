@@ -641,15 +641,22 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
         $name = ucwords($name);
-        if ($currency = DataObject::get_one('EcommerceCurrency', array('Code' => $code))) {
+        $currency = DataObject::get_one(
+            'EcommerceCurrency',
+            array('Code' => $code),
+            $cacheDataObjectGetOne = false
+        );
+        if ($currency) {
             $currency->Name = $name;
             $currency->InUse = true;
         } else {
-            $currency = self::create(array(
+            $currency = EcommerceCurrency::create(
+                array(
                 'Code' => $code,
                 'Name' => $name,
                 'InUse' => true,
-            ));
+                )
+            );
         }
         $valid = $currency->write();
         if ($valid) {

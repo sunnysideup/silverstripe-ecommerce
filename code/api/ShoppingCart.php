@@ -1063,7 +1063,8 @@ class ShoppingCart extends Object
                 " \"BuyableClassName\" = '".$buyable->ClassName."' AND
                 \"BuyableID\" = ".$buyable->ID.' AND
                 "OrderID" = '.$orderID.' '.
-                $filterString
+                $filterString,
+                $cacheDataObjectGetOne = false
             );
             return $obj;
         }

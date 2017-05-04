@@ -132,7 +132,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if (Config::inst()->get('EcommerceRegion', 'show_freetext_region_field')) {
             return true;
         }
-        return DataObject::get_one('EcommerceRegion') ? true : false;
+        return EcommerceRegion::get()->count() ? true : false;
     }
 
     /**
