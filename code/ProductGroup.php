@@ -2860,23 +2860,19 @@ class ProductGroup_Controller extends Page_Controller
                 $toAdd = $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
+            if($pagination) {
+                if($pageStart = intval($this->request->getVar('start'))) {
+                    if($pageStart > 0) {
+                        $page = ($pageStart / $this->MyNumberOfProductsPerPage()) + 1;
+                        $toAdd = _t('ProductGroup.PAGE', 'Page') . ' '.$page;
+                        $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                    }
+                }
+            }
             if ($secondaryTitle) {
                 $this->Title .= $secondaryTitle;
                 if (isset($this->MetaTitle)) {
                     $this->MetaTitle .= $secondaryTitle;
-                }
-            }
-            if($pagination) {
-                if($pageStart = intval($this->request->getVar('start')) {
-                    if($pageStart > 0) {
-                        $from = $this->MyNumberOfProductsPerPage() * $pageStart;
-                        $to = $from + $this->MyNumberOfProductsPerPage();
-                        if($to > $this->TotalCount()) {
-                            $to = $this->TotalCount();
-                        }
-                        $toAdd .= _t('ProductGroup.PAGE', 'page') . ' '.$pageStart.' ('.$from ._t('ProductGroup.HYPHEN_SPACE', ' - ').$to.')';
-                        $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
-                    }
                 }
             }
             //dont update menu title, because the entry in the menu
