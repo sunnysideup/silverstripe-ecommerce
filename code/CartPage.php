@@ -696,7 +696,10 @@ class CartPage_Controller extends Page_Controller
      */
     public function CanonicalLink()
     {
-        return $checkoutPageLink = CheckoutPage::find_link();
+        $link = $checkoutPageLink = CheckoutPage::find_link();
+        $this->extend('UpdateCanonicalLink', $link);
+        
+        return $link;
     }
 
 

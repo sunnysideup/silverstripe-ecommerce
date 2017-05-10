@@ -316,7 +316,10 @@ class AccountPage_Controller extends Page_Controller
      */
     public function CanonicalLink()
     {
-        return $this->Link();
+        $link = $this->Link();
+        $this->extend('UpdateCanonicalLink', $link);
+
+        return $link;
     }
 
 

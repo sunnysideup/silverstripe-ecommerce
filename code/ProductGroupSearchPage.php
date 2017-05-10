@@ -149,7 +149,10 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
      */
     public function CanonicalLink()
     {
-        return $this->Link();
+        $link = $this->Link();
+        $this->extend('UpdateCanonicalLink', $link);
+
+        return $link;
     }
 
 }

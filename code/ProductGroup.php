@@ -2565,7 +2565,10 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function CanonicalLink()
     {
-        return $this->ListAllLink();
+        $link = $this->ListAllLink();
+        $this->extend('UpdateCanonicalLink', $link);
+        
+        return $link;
     }
 
 
