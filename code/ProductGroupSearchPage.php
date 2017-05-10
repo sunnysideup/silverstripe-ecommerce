@@ -142,4 +142,14 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
     {
         return;
     }
+
+    /**
+     * The link that Google et al. need to index.
+     * @return string
+     */
+    public function CanonicalLink()
+    {
+        return $this->Link();
+    }
+
 }

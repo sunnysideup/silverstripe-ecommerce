@@ -2560,6 +2560,16 @@ class ProductGroup_Controller extends Page_Controller
     }
 
     /**
+     * The link that Google et al. need to index.
+     * @return string
+     */
+    public function CanonicalLink()
+    {
+        return $this->ListAllLink();
+    }
+
+
+    /**
      * Link that returns a list of all the products
      * for this product group as a simple list.
      *

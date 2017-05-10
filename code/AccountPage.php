@@ -308,4 +308,16 @@ class AccountPage_Controller extends Page_Controller
     {
         return Member::currentUser();
     }
+
+
+    /**
+     * The link that Google et al. need to index.
+     * @return string
+     */
+    public function CanonicalLink()
+    {
+        return $this->Link();
+    }
+
+
 }
