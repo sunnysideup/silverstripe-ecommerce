@@ -574,26 +574,34 @@ class ProductGroup extends Page
      *********************/
 
     /**
-     *@return int
+     * @return int
      **/
     public function ProductsPerPage()
     {
         return $this->MyNumberOfProductsPerPage();
     }
+
+    private $_numberOfProductsPerPage = null;
+
+    /**
+     * @return int
+     **/
     public function MyNumberOfProductsPerPage()
     {
-        $productsPagePage = 0;
-        if ($this->NumberOfProductsPerPage) {
-            $productsPagePage = $this->NumberOfProductsPerPage;
-        } else {
-            if ($parent = $this->ParentGroup()) {
-                $productsPagePage = $parent->MyNumberOfProductsPerPage();
+        if($this->_numberOfProductsPerPage === null) {
+            $productsPagePage = 0;
+            if ($this->NumberOfProductsPerPage) {
+                $productsPagePage = $this->NumberOfProductsPerPage;
             } else {
-                $productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
+                if ($parent = $this->ParentGroup()) {
+                    $productsPagePage = $parent->MyNumberOfProductsPerPage();
+                } else {
+                    $productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
+                }
             }
+            $this->_numberOfProductsPerPage = $productsPagePage;
         }
-
-        return $productsPagePage;
+        return $this->_numberOfProductsPerPage;
     }
 
     /*********************
@@ -1026,7 +1034,8 @@ class ProductGroup extends Page
     protected $canBePurchasedArray = null;
 
     /**
-     * returns the total numer of products (before pagination).
+     * returns the total numer of products
+     * (before pagination AND before MAX is applie).
      *
      * @return int
      **/
@@ -1036,7 +1045,8 @@ class ProductGroup extends Page
     }
 
     /**
-     * returns the total numer of products (before pagination).
+     * returns the total numer of products
+     * (before pagination but after MAX is applied).
      *
      * @return int
      **/
@@ -1934,7 +1944,7 @@ class ProductGroup_Controller extends Page_Controller
             $filterKey = $this->getCurrentUserPreferences('FILTER');
             $filterForGroupKey = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
             $sortKey = $this->getCurrentUserPreferences('SORT');
-            $pageStart = isset($_GET['start']) ? intval($_GET['start']) : 0;
+            $pageStart = $this->request->getVar('start') ? intval($this->request->getVar('start')) : 0;
             $isFullList = $this->IsShowFullList() ? 'Y' : 'N';
 
             $this->cacheKey(
@@ -2567,7 +2577,7 @@ class ProductGroup_Controller extends Page_Controller
     {
         $link = $this->ListAllLink();
         $this->extend('UpdateCanonicalLink', $link);
-        
+
         return $link;
     }
 
@@ -2835,9 +2845,11 @@ class ProductGroup_Controller extends Page_Controller
                 $toAdd = $this->filterForGroupObject->Title;
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
+            $pagination = true;
             if ($this->IsShowFullList()) {
                 $toAdd = _t('ProductGroup.LIST_VIEW', 'List View');
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                $pagination = false;
             }
             $filter = $this->getCurrentUserPreferences('FILTER');
             if ($filter != $this->getMyUserPreferencesDefault('FILTER')) {
@@ -2854,9 +2866,23 @@ class ProductGroup_Controller extends Page_Controller
                     $this->MetaTitle .= $secondaryTitle;
                 }
             }
+            if($pagination) {
+                if($pageStart = intval($this->request->getVar('start')) {
+                    if($pageStart > 0) {
+                        $from = $this->MyNumberOfProductsPerPage() * $pageStart;
+                        $to = $from + $this->MyNumberOfProductsPerPage();
+                        if($to > $this->TotalCount()) {
+                            $to = $this->TotalCount();
+                        }
+                        $toAdd .= _t('ProductGroup.PAGE', 'page') . ' '.$pageStart.' ('.$from ._t('ProductGroup.HYPHEN_SPACE', ' - ').$to.')';
+                        $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                    }
+                }
+            }
             //dont update menu title, because the entry in the menu
             //should stay the same as it links back to the unfiltered
             //page (in some cases).
+
             $this->secondaryTitleHasBeenAdded = true;
         }
     }
