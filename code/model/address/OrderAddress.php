@@ -581,7 +581,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($this->exists()) {
             $order = DataObject::get_one(
                 'Order',
-                array($this->ClassName.'ID' => $this->ID)
+                array($this->ClassName.'ID' => $this->ID),
+                $cacheDataObjectGetOne = false
             );
             if ($order && $order->ID != $this->OrderID) {
                 $this->OrderID = $order->ID;

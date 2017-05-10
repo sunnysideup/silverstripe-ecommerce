@@ -866,7 +866,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $order = DataObject::get_one(
                 'Order',
                 array('StatusID' => $this->ID),
-                $cache = true,
+                $cacheDataObjectGetOne = true,
                 'RAND() ASC'
             );
             if(! $order) {
@@ -1345,7 +1345,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         //always reset code
                         $obj = DataObject::get_one(
                             'OrderStep',
-                            $filter
+                            $filter,
+                            $cacheDataObjectGetOne = false
                         );
                         if ($obj->Code != $code) {
                             $obj->Code = $code;
@@ -1372,7 +1373,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     }
                     $obj = DataObject::get_one(
                         'OrderStep',
-                        $filter
+                        $filter,
+                        $cacheDataObjectGetOne = false
                     );
                     if (! $obj) {
                         user_error("There was an error in creating the $code OrderStep");

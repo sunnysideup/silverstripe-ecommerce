@@ -551,10 +551,7 @@ EcommerceConfig:
         }
 
         if (
-            $cartPage = DataObject::get_one(
-                'CartPage',
-                array('ClassName' => 'CartPage')
-            )
+            $cartPage = DataObject::get_one('CartPage',array('ClassName' => 'CartPage'))
         ) {
             $this->getPageDefinitions($cartPage);
             $this->definitions['Pages']['CartPage'] = 'Page where customers review their cart while shopping. This page is optional.<br />'.($cartPage ? '<a href="/admin/pages/edit/show/'.$cartPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
