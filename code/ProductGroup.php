@@ -2874,6 +2874,9 @@ class ProductGroup_Controller extends Page_Controller
                 if (isset($this->MetaTitle)) {
                     $this->MetaTitle .= $secondaryTitle;
                 }
+                if (isset($this->MetaDescription)) {
+                    $this->MetaDescription .= $secondaryTitle;
+                }
             }
             //dont update menu title, because the entry in the menu
             //should stay the same as it links back to the unfiltered
