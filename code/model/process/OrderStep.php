@@ -678,9 +678,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function nextStep(Order $order)
     {
+        $where = '"OrderStep"."Sort" >  '.$this->Sort;
         $nextOrderStepObject = DataObject::get_one(
             'OrderStep',
-            array('Sort:GreaterThan' => $this->Sort)
+            $where
         );
         if ($nextOrderStepObject) {
             return $nextOrderStepObject;
