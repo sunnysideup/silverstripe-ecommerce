@@ -574,26 +574,34 @@ class ProductGroup extends Page
      *********************/
 
     /**
-     *@return int
+     * @return int
      **/
     public function ProductsPerPage()
     {
         return $this->MyNumberOfProductsPerPage();
     }
+
+    private $_numberOfProductsPerPage = null;
+
+    /**
+     * @return int
+     **/
     public function MyNumberOfProductsPerPage()
     {
-        $productsPagePage = 0;
-        if ($this->NumberOfProductsPerPage) {
-            $productsPagePage = $this->NumberOfProductsPerPage;
-        } else {
-            if ($parent = $this->ParentGroup()) {
-                $productsPagePage = $parent->MyNumberOfProductsPerPage();
+        if($this->_numberOfProductsPerPage === null) {
+            $productsPagePage = 0;
+            if ($this->NumberOfProductsPerPage) {
+                $productsPagePage = $this->NumberOfProductsPerPage;
             } else {
-                $productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
+                if ($parent = $this->ParentGroup()) {
+                    $productsPagePage = $parent->MyNumberOfProductsPerPage();
+                } else {
+                    $productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
+                }
             }
+            $this->_numberOfProductsPerPage = $productsPagePage;
         }
-
-        return $productsPagePage;
+        return $this->_numberOfProductsPerPage;
     }
 
     /*********************
@@ -1026,7 +1034,8 @@ class ProductGroup extends Page
     protected $canBePurchasedArray = null;
 
     /**
-     * returns the total numer of products (before pagination).
+     * returns the total numer of products
+     * (before pagination AND before MAX is applie).
      *
      * @return int
      **/
@@ -1036,7 +1045,8 @@ class ProductGroup extends Page
     }
 
     /**
-     * returns the total numer of products (before pagination).
+     * returns the total numer of products
+     * (before pagination but after MAX is applied).
      *
      * @return int
      **/
@@ -1498,10 +1508,40 @@ class ProductGroup extends Page
     public function onAfterWrite()
     {
         parent::onAfterWrite();
+
         if ($this->ImageID) {
             if ($normalImage = Image::get()->exclude(array('ClassName' => 'Product_Image'))->byID($this->ImageID)) {
                 $normalImage = $normalImage->newClassInstance('Product_Image');
                 $normalImage->write();
+            }
+        }
+    }
+
+    function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+        $urlSegments = ProductGroup::get()->column('URLSegment');
+        foreach($urlSegments as $urlSegment) {
+            $counts = array_count_values($urlSegments);
+            $hasDuplicates = $counts[$urlSegment]  > 1 ? true : false;
+            if($hasDuplicates) {
+                DB::alteration_message('found duplicates for '.$urlSegment, 'deleted');
+                $checkForDuplicatesURLSegments = ProductGroup::get()
+                    ->filter(array('URLSegment' => $urlSegment));
+                if($checkForDuplicatesURLSegments->count()){
+                    $count = 0;
+                    foreach($checkForDuplicatesURLSegments as $productGroup) {
+                        if($count > 0) {
+                            $oldURLSegment = $productGroup->URLSegment;
+                            DB::alteration_message(' ... Correcting URLSegment for '.$productGroup->Title.' with ID: '.$productGroup->ID, 'deleted');
+                            $productGroup->writeToStage('Stage');
+                            $productGroup->publish('Stage', 'Live');
+                            $newURLSegment = $productGroup->URLSegment;
+                            DB::alteration_message(' ... .... from '.$oldURLSegment.' to '.$newURLSegment, 'created');
+                        }
+                        $count++;
+                    }
+                }
             }
         }
     }
@@ -1742,7 +1782,6 @@ class ProductGroup_Controller extends Page_Controller
         if ($this->returnAjaxifiedProductList()) {
             return $this->renderWith('AjaxProductList');
         }
-
         return array();
     }
 
@@ -1759,7 +1798,10 @@ class ProductGroup_Controller extends Page_Controller
         $otherGroupURLSegment = Convert::raw2sql($request->param('ID'));
         $arrayOfIDs = array(0 => 0);
         if ($otherGroupURLSegment) {
-            $otherProductGroup = ProductGroup::get()->filter(array('URLSegment' => $otherGroupURLSegment))->first();
+            $otherProductGroup = DataObject::get_one(
+                'ProductGroup',
+                array('URLSegment' => $otherGroupURLSegment)
+            );
             if ($otherProductGroup) {
                 $this->filterForGroupObject = $otherProductGroup;
                 $arrayOfIDs = $otherProductGroup->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault('FILTER'));
@@ -1902,7 +1944,7 @@ class ProductGroup_Controller extends Page_Controller
             $filterKey = $this->getCurrentUserPreferences('FILTER');
             $filterForGroupKey = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
             $sortKey = $this->getCurrentUserPreferences('SORT');
-            $pageStart = isset($_GET['start']) ? intval($_GET['start']) : 0;
+            $pageStart = $this->request->getVar('start') ? intval($this->request->getVar('start')) : 0;
             $isFullList = $this->IsShowFullList() ? 'Y' : 'N';
 
             $this->cacheKey(
@@ -2528,6 +2570,19 @@ class ProductGroup_Controller extends Page_Controller
     }
 
     /**
+     * The link that Google et al. need to index.
+     * @return string
+     */
+    public function CanonicalLink()
+    {
+        $link = $this->ListAllLink();
+        $this->extend('UpdateCanonicalLink', $link);
+
+        return $link;
+    }
+
+
+    /**
      * Link that returns a list of all the products
      * for this product group as a simple list.
      *
@@ -2790,9 +2845,11 @@ class ProductGroup_Controller extends Page_Controller
                 $toAdd = $this->filterForGroupObject->Title;
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
+            $pagination = true;
             if ($this->IsShowFullList()) {
                 $toAdd = _t('ProductGroup.LIST_VIEW', 'List View');
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                $pagination = false;
             }
             $filter = $this->getCurrentUserPreferences('FILTER');
             if ($filter != $this->getMyUserPreferencesDefault('FILTER')) {
@@ -2803,15 +2860,28 @@ class ProductGroup_Controller extends Page_Controller
                 $toAdd = $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
+            if($pagination) {
+                if($pageStart = intval($this->request->getVar('start'))) {
+                    if($pageStart > 0) {
+                        $page = ($pageStart / $this->MyNumberOfProductsPerPage()) + 1;
+                        $toAdd = _t('ProductGroup.PAGE', 'Page') . ' '.$page;
+                        $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                    }
+                }
+            }
             if ($secondaryTitle) {
                 $this->Title .= $secondaryTitle;
                 if (isset($this->MetaTitle)) {
                     $this->MetaTitle .= $secondaryTitle;
                 }
+                if (isset($this->MetaDescription)) {
+                    $this->MetaDescription .= $secondaryTitle;
+                }
             }
             //dont update menu title, because the entry in the menu
             //should stay the same as it links back to the unfiltered
             //page (in some cases).
+
             $this->secondaryTitleHasBeenAdded = true;
         }
     }
@@ -2910,7 +2980,10 @@ class ProductGroup_Controller extends Page_Controller
         $html .= '<li><b>all product parent groups:</b><pre> '.print_r($this->ProductGroupsParentGroups()->map('ID', 'Title')->toArray(), 1).' </pre></li>';
 
         $html .= '<li><hr /><h3>Product Example and Links</h3><hr /></li>';
-        $product = Product::get()->filter(array('ParentID' => $this->ID))->first();
+        $product = DataObject::get_one(
+            'Product',
+            array('ParentID' => $this->ID)
+        );
         if ($product) {
             $html .= '<li><b>Product View:</b> <a href="'.$product->Link().'">'.$product->Title.'</a> </li>';
             $html .= '<li><b>Product Debug:</b> <a href="'.$product->Link('debug').'">'.$product->Title.'</a> </li>';

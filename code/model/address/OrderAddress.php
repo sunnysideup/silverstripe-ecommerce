@@ -111,11 +111,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/sales/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
@@ -583,9 +579,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         parent::onAfterWrite();
         if ($this->exists()) {
-            $order = Order::get()
-                ->filter(array($this->ClassName.'ID' => $this->ID))
-                ->First();
+            $order = DataObject::get_one(
+                'Order',
+                array($this->ClassName.'ID' => $this->ID),
+                $cacheDataObjectGetOne = false
+            );
             if ($order && $order->ID != $this->OrderID) {
                 $this->OrderID = $order->ID;
                 $this->write();

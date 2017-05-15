@@ -164,11 +164,7 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/shop/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
@@ -215,11 +211,14 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
         }
         if (count($arrayOfModifiers)) {
             foreach ($arrayOfModifiers as $className) {
-                $orderModifier_Descriptor = OrderModifier_Descriptor::get()
-                    ->Filter(array('ModifierClassName' => $className))->First();
+                $orderModifier_Descriptor = DataObject::get_one(
+                    'OrderModifier_Descriptor',
+                    array('ModifierClassName' => $className),
+                    $cacheDataObjectGetOne = false
+                );
                 if (!$orderModifier_Descriptor) {
                     $modifier = singleton($className);
-                    $orderModifier_Descriptor = self::create();
+                    $orderModifier_Descriptor = OrderModifier_Descriptor::create();
                     $orderModifier_Descriptor->ModifierClassName = $className;
                     $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
                     $orderModifier_Descriptor->write();

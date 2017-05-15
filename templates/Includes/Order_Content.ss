@@ -7,16 +7,6 @@
             <th scope="col" class="right total"><% _t("Order.TOTALPRICE","Total Price") %> ($CurrencyUsed.Code)</th>
         </tr>
     </thead>
-    <% if Items %>
-    <tfoot>
-        <tr class="gap total summary">
-            <th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
-            <td class="right total grandTotal">
-                <span class="value">$TotalAsMoney.NiceDefaultFormat</span>
-            </td>
-        </tr>
-    </tfoot>
-    <% end_if %>
     <tbody>
     <% if Items %>
         <% loop Items %>
@@ -59,4 +49,14 @@
         </tr>
     <% end_if %>
     </tbody>
+    <% if Items %>
+    <tfoot>
+        <tr class="gap total summary">
+            <th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
+            <td class="right total grandTotal">
+                <span class="value">$TotalAsMoney.NiceDefaultFormat</span>
+            </td>
+        </tr>
+    </tfoot>
+    <% end_if %>
 </table>

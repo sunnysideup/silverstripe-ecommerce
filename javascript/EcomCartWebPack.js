@@ -505,7 +505,7 @@ export var EcomCart = {
                                 //create history
                                 var pageTitle = jQuery(EcomCart.hiddenPageTitleID).text();
                                 //create history
-                                var pageTitle = escape(jQuery(EcomCart.hiddenPageTitleID).text());
+                                var pageTitle = jQuery(EcomCart.hiddenPageTitleID).text();
                                 window.history.pushState(
                                     {
                                         "pageTitle":pageTitle
@@ -535,8 +535,6 @@ export var EcomCart = {
             )
         }
     },
-
-
 
     //#################################
     // SETUP PAGE

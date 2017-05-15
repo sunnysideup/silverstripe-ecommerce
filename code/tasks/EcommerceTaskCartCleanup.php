@@ -17,7 +17,6 @@ class EcommerceTaskCartCleanup extends BuildTask
      * TODO: either remove or add to all tasks.
      */
     private static $allowed_actions = array(
-        '*' => 'ADMIN',
         '*' => 'SHOPADMIN',
     );
 
@@ -56,7 +55,8 @@ class EcommerceTaskCartCleanup extends BuildTask
      **/
     public function run($request)
     {
-        if ($this->verbose) {
+        if ($this->verbose || (isset($_GET['verbose']) && Permission::check('ADMIN'))) {
+            $this->verbose = true;
             $this->flush();
             $countAll = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
             DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = $countAll)</h2>.");
@@ -66,9 +66,9 @@ class EcommerceTaskCartCleanup extends BuildTask
         $maximumNumberOfObjectsDeleted = EcommerceConfig::get('EcommerceTaskCartCleanup', 'maximum_number_of_objects_deleted');
 
         //LIMITS ...
-        if ($this->verbose && $request) {
+        if ($request) {
             $limitFromGetVar = $request->getVar('limit');
-            if ($limitFromGetVar) {
+            if ($limitFromGetVar && Permission::check('ADMIN')) {
                 $maximumNumberOfObjectsDeleted = intval($limitFromGetVar);
             }
         }
@@ -85,7 +85,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes');
         $createdStepID = OrderStep::get_status_id_from_code('CREATED');
         $time = strtotime('-'.$clearMinutes.' minutes');
-        $where = '"StatusID" = '.$createdStepID." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
+        $where = '"StatusID" = '.$createdStepID." AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < $time ";
         if ($neverDeleteIfLinkedToMember) {
             $userStatement = 'or have a user associated with it';
             $withoutMemberWhere = ' AND "Member"."ID" IS NULL ';
@@ -102,8 +102,6 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
         $oldCarts = $oldCarts->leftJoin('Member', $joinShort);
-        if ($neverDeleteIfLinkedToMember) {
-        }
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -132,6 +130,11 @@ class EcommerceTaskCartCleanup extends BuildTask
                 }
                 $this->deleteObject($oldCart);
             }
+        } else {
+            if ($this->verbose) {
+                $this->flush();
+                DB::alteration_message('There are no old carts', 'created');
+            }
         }
         if ($this->verbose) {
             $this->flush();
@@ -159,7 +162,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         //EMPTY ORDERS
         $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes_empty_carts');
         $time = strtotime('-'.$clearMinutes.' minutes');
-        $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < '$time'";
+        $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < $time ";
         $oldCarts = Order::get()
             ->where($where)
             ->sort($sort)
@@ -353,6 +356,10 @@ class EcommerceTaskCartCleanup extends BuildTask
                 }
             }
         }
+        if ($this->verbose) {
+            $this->flush();
+            DB::alteration_message('---------------- DONE --------------------');
+        }
     }
 
     private function flush()
@@ -365,6 +372,11 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
     }
 
+    /**
+     * delete an object
+     * @param  DataObject
+     * @return null
+     */
     private function deleteObject($objectToDelete)
     {
         $objectToDelete->delete();

@@ -131,10 +131,12 @@ class OrderStatusLog_Submitted extends OrderStatusLog
             } else {
                 $id = 0;
             }
-            $lastOne = OrderStatusLog_Submitted::get()
-                ->Exclude(array('ID' => $id))
-                ->Sort('SequentialOrderNumber', 'DESC')
-                ->First();
+            $lastOne = DataObject::get_one(
+                'OrderStatusLog_Submitted',
+                '\'ID\' != \''.$id.'\'',
+                $cacheDataObjectGetOne = true,
+                array('SequentialOrderNumber' => 'DESC')
+            );
             if ($lastOne) {
                 $this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
             }

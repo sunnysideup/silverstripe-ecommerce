@@ -61,7 +61,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         'Subject' => 'Subject',
         'ResultNice' => 'Sent Succesfully',
     );
-    
+
     /**
      * standard SS variable.
      *
@@ -251,11 +251,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/sales/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**

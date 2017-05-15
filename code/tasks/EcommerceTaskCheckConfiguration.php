@@ -487,7 +487,7 @@ EcommerceConfig:
             foreach ($fields as $field => $description) {
                 if ($field != 'Title' && $field != 'UseThisOne') {
                     $defaultsDefaults = $ecommerceDBConfig->stat('defaults');
-                    $this->definitions['EcommerceDBConfig'][$field] = "$description. <br />see: <a href=\"/admin/shop/EcommerceDBConfig/EditForm/field/EcommerceDBConfig/item/".$ecommerceDBConfig->ID.'/edit">Ecommerce Configuration</a>';
+                    $this->definitions['EcommerceDBConfig'][$field] = "$description. <br />see: <a href=\"".$ecommerceDBConfig->CMSEditLink()."\">Ecommerce Configuration</a>";
                     $this->configs['EcommerceDBConfig'][$field] = $ecommerceDBConfig->$field;
                     $this->databaseValues['EcommerceDBConfig'][$field] = true;
                     $this->defaults['EcommerceDBConfig'][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : 'no default set';
@@ -526,7 +526,7 @@ EcommerceConfig:
 
     protected function addPages()
     {
-        if ($checkoutPage = CheckoutPage::get()->First()) {
+        if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
             $this->getPageDefinitions($checkoutPage);
             $this->definitions['Pages']['CheckoutPage'] = 'Page where customers finalise (checkout) their order. This page is required.<br />'.($checkoutPage ? '<a href="/admin/pages/edit/show/'.$checkoutPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
             $this->configs['Pages']['CheckoutPage'] = $checkoutPage ? 'view: <a href="'.$checkoutPage->Link().'">'.$checkoutPage->Title.'</a><br />'.$checkoutPage->configArray : ' NOT CREATED!';
@@ -534,7 +534,7 @@ EcommerceConfig:
             $this->databaseValues['Pages']['CheckoutPage'] = true;
         }
 
-        if ($orderConfirmationPage = OrderConfirmationPage::get()->First()) {
+        if ($orderConfirmationPage = DataObject::get_one('OrderConfirmationPage')) {
             $this->getPageDefinitions($orderConfirmationPage);
             $this->definitions['Pages']['OrderConfirmationPage'] = 'Page where customers review their order after it has been placed. This page is required.<br />'.($orderConfirmationPage ? '<a href="/admin/pages/edit/show/'.$orderConfirmationPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
             $this->configs['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? 'view: <a href="'.$orderConfirmationPage->Link().'">'.$orderConfirmationPage->Title.'</a><br />'.$orderConfirmationPage->configArray : ' NOT CREATED!';
@@ -542,7 +542,7 @@ EcommerceConfig:
             $this->databaseValues['Pages']['OrderConfirmationPage'] = true;
         }
 
-        if ($accountPage = AccountPage::get()->First()) {
+        if ($accountPage = DataObject::get_one('AccountPage')) {
             $this->getPageDefinitions($accountPage);
             $this->definitions['Pages']['AccountPage'] = 'Page where customers can review their account. This page is required.<br />'.($accountPage ? '<a href="/admin/pages/edit/show/'.$accountPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
             $this->configs['Pages']['AccountPage'] = $accountPage ? 'view: <a href="'.$accountPage->Link().'">'.$accountPage->Title.'</a><br />'.$accountPage->configArray : ' NOT CREATED!';
@@ -551,9 +551,7 @@ EcommerceConfig:
         }
 
         if (
-            $cartPage = CartPage::get()
-                ->Filter(array('ClassName' => 'CartPage'))
-                ->First()
+            $cartPage = DataObject::get_one('CartPage',array('ClassName' => 'CartPage'))
         ) {
             $this->getPageDefinitions($cartPage);
             $this->definitions['Pages']['CartPage'] = 'Page where customers review their cart while shopping. This page is optional.<br />'.($cartPage ? '<a href="/admin/pages/edit/show/'.$cartPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
@@ -600,7 +598,7 @@ EcommerceConfig:
                     }
                 }
                 $ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
-                $this->definitions['OrderStep'][$step->Code] = $step->Description.'<br />see: <a href="/admin/shop/OrderStep/EditForm/field/OrderStep/item/'.$step->ID.'/edit">Ecommerce Configuration</a>.';
+                $this->definitions['OrderStep'][$step->Code] = $step->Description.'<br />see: <a href="'.$step->CMSEditLink().'">Step Configuration</a>.';
                 $this->configs['OrderStep'][$step->Code] = $configArray;
                 $this->defaults['OrderStep'][$step->Code] = $defaultsArray;
                 $this->databaseValues['OrderStep'][$step->Code] = true;
@@ -610,11 +608,11 @@ EcommerceConfig:
 
     public function checkoutAndModifierDetails()
     {
-        $checkoutPage = CheckoutPage::get()->First();
+        $checkoutPage = DataObject::get_one('CheckoutPage');
         if (!$checkoutPage) {
             $task = new EcommerceTaskDefaultRecords();
             $task->run(null);
-            $checkoutPage = CheckoutPage::get()->First();
+            $checkoutPage = DataObject::get_one('CheckoutPage');
             if (!$checkoutPage) {
                 user_error('There is no checkout page available and it seems impossible to create one.');
             }

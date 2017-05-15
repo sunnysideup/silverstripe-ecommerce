@@ -37,7 +37,7 @@ class CartPage extends Page
         'LoadOrderLinkLabel' => 'Varchar(100)',
         'DeleteOrderLinkLabel' => 'Varchar(100)',
         'NoItemsInOrderMessage' => 'HTMLText',
-        'NonExistingOrderMessage' => 'HTMLText',
+        'NonExistingOrderMessage' => 'HTMLText'
     );
 
     /**
@@ -203,7 +203,7 @@ class CartPage extends Page
      */
     public static function find_link($action = null)
     {
-        $page = CartPage::get()->Filter(array('ClassName' => 'CartPage'))->First();
+        $page = DataObject::get_one('CartPage', array('ClassName' => 'CartPage'));
         if ($page) {
             return $page->Link($action);
         } else {
@@ -416,17 +416,20 @@ class CartPage_Controller extends Page_Controller
             $action = $this->request->param('Action');
             $otherID = intval($this->request->param('OtherID'));
             //the code below is for submitted orders, but we still put it here so
-            //we can do all the retrieval options in once.
+            //we can do all the retrieval options at once.
             if (($action == 'retrieveorder') && $id && $otherID) {
                 $sessionID = Convert::raw2sql($id);
-                $retrievedOrder = Order::get()
-                    ->Filter(array(
+                $retrievedOrder = Order::get()->filter(
+                    array(
                         'SessionID' => $sessionID,
                         'ID' => $otherID,
-                    ))
-                    ->First();
-                $this->currentOrder = $retrievedOrder;
-                $this->overrideCanView = true;
+                    )
+                )->first();
+                if($retrievedOrder) {
+                    $this->currentOrder = $retrievedOrder;
+                    $this->overrideCanView = true;
+                    $this->setRetrievalOrderID($this->currentOrder->ID);
+                }
             } elseif (intval($id) && in_array($action, $this->stat('allowed_actions'))) {
                 $this->currentOrder = Order::get()->byID(intval($id));
             }
@@ -476,6 +479,34 @@ class CartPage_Controller extends Page_Controller
         }
     }
 
+
+    /**
+     * We set sesssion ID for retrieval of order in non cart setting
+     * @param int $orderID
+     * @param int $validUntilTS timestamp (unix epoch) until which the current Order ID is valid
+     */
+    protected function setRetrievalOrderID($orderID, $validUntilTS = null)
+    {
+        if(! $validUntilTS) {
+            $validUntilTS = time() + 3600;
+        }
+        Session::set('CheckoutPageCurrentOrderID', $orderID);
+        Session::set('CheckoutPageCurrentRetrievalTime', $validUntilTS);
+        Session::save();
+    }
+
+    /**
+     * we clear the retrieval Order ID
+     */
+    protected function clearRetrievalOrderID()
+    {
+        Session::clear('CheckoutPageCurrentOrderID');
+        Session::set('CheckoutPageCurrentOrderID', 0);
+        Session::clear('CheckoutPageCurrentRetrievalTime');
+        Session::set('CheckoutPageCurrentRetrievalTime', 0);
+        Session::save();
+    }
+
     /***********************
      * Actions
      ***********************
@@ -521,6 +552,7 @@ class CartPage_Controller extends Page_Controller
         if (! $request->getVar('ready') && ! $request->getVar('done')) {
             return $this->redirect($this->Link('share/'.$codes).'?ready=1');
         }
+        $titleAppendixArray = array();
         $buyables = explode('-', $codes);
         if (count($buyables)) {
             $sc = ShoppingCart::singleton();
@@ -537,6 +569,9 @@ class CartPage_Controller extends Page_Controller
                         if ($buyable && $buyable->canPurchase()) {
                             $sc->addBuyable($buyable, $quantity);
                             $sc->setQuantity($buyable, $quantity);
+                            if ($request->getVar('done')) {
+                                $titleAppendixArray[] = $buyable->getTitle();
+                            }
                         }
                     }
                 }
@@ -546,7 +581,10 @@ class CartPage_Controller extends Page_Controller
                 return $this->redirect($this->Link('share/'.$codes).'?done=1');
             }
         }
-
+        $this->Title .= ': '.  implode(', ', $titleAppendixArray);
+        if(strlen($this->Title) > 255 ) {
+            $this->Title = substr($this->Title, 0, 255). ' ...';
+        }
         return array();
     }
 
@@ -649,6 +687,20 @@ class CartPage_Controller extends Page_Controller
 
         return;
     }
+
+
+    /**
+     * The link that Google et al. need to index.
+     * @return string
+     */
+    public function CanonicalLink()
+    {
+        $link = $checkoutPageLink = CheckoutPage::find_link();
+        $this->extend('UpdateCanonicalLink', $link);
+        
+        return $link;
+    }
+
 
     /**
      * @return string
@@ -989,4 +1041,5 @@ class CartPage_Controller extends Page_Controller
     {
         return true;
     }
+
 }

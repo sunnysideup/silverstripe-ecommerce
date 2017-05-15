@@ -139,9 +139,10 @@ class AccountPage extends Page
      */
     public static function find_link($action = null)
     {
-        $page = AccountPage::get()
-            ->filter(array('ClassName' => 'AccountPage'))
-            ->First();
+        $page = DataObject::get_one(
+            'AccountPage',
+            array('ClassName' => 'AccountPage')
+        );
         if ($page) {
             return $page->Link($action);
         }
@@ -307,4 +308,19 @@ class AccountPage_Controller extends Page_Controller
     {
         return Member::currentUser();
     }
+
+
+    /**
+     * The link that Google et al. need to index.
+     * @return string
+     */
+    public function CanonicalLink()
+    {
+        $link = $this->Link();
+        $this->extend('UpdateCanonicalLink', $link);
+
+        return $link;
+    }
+
+
 }

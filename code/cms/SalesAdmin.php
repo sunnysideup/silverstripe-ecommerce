@@ -63,6 +63,24 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     }
 
     /**
+     * @return array Map of class name to an array of 'title' (see {@link $managed_models})
+     *               we make sure that the Order Admin is FIRST
+     */
+    public function getManagedModels()
+    {
+        $models = parent::getManagedModels();
+        $orderModelManagement = isset($models['Order']) ? $models['Order'] : null;
+        if ($orderModelManagement) {
+            unset($models['Order']);
+
+            return array('Order' => $orderModelManagement) + $models;
+        }
+
+        return $models;
+    }
+
+
+    /**
      * @return DataList
      */
     public function getList()
@@ -70,7 +88,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-            $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed(0);
+            $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
             $list = $list
                 ->filter(
                     array(
@@ -83,6 +101,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                         'ID' => $ordersinQueue->column('ID'),
                     )
                 );
+            //you can only do one exclude at the same time.
             $list = $list
                 ->exclude(
                     array(
@@ -90,6 +109,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                     )
                 );
         }
+
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
             foreach ($newLists as $newList) {

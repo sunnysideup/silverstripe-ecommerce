@@ -1,7 +1,10 @@
 ---
 Name: ecommerce_default_settings
-Before: 'mysite/*'
-After: 'framework/*','cms/*'
+Before:
+  - 'mysite/*'
+After:
+  - 'framework/*'
+  - 'cms/*'
 ---
 
 
@@ -328,6 +331,7 @@ SalesAdmin:
   managed_models:
     - Order
     - OrderProcessQueue
+    - OrderFeedback
 
 SalesAdminExtras:
   managed_models:
@@ -336,6 +340,7 @@ SalesAdminExtras:
     - OrderItem
     - OrderModifier
     - OrderEmailRecord
+
     - BillingAddress
     - ShippingAddress
     - EcommercePayment

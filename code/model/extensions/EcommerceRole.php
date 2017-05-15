@@ -44,8 +44,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
 
-        return Group::get()
-            ->Filter(array('Code' => $customerCode))->First();
+        return DataObject::get_one(
+            'Group',
+            array('Code' => $customerCode)
+        );
     }
 
     /**
@@ -118,8 +120,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 }
             }
         }
-        $group = Group::get()
-            ->Filter(array('Code' => 'administrators'))->First();
+        $group = DataObject::get_one(
+            'Group',
+            array('Code' => 'administrators')
+        );
         //fill array
         if ($group) {
             $members = $group->Members();
@@ -202,7 +206,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $adminCode = EcommerceConfig::get('EcommerceRole', 'admin_group_code');
 
-        return Group::get()->Filter(array('Code' => $adminCode))->First();
+        return DataObject::get_one(
+            'Group',
+            array('Code' => $adminCode)
+        );
     }
 
      /**
@@ -212,7 +219,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $assistantCode = EcommerceConfig::get('EcommerceRole', 'assistant_group_code');
 
-        return Group::get()->Filter(array('Code' => $assistantCode))->First();
+        return DataObject::get_one(
+            'Group',
+            array('Code' => $assistantCode)
+        );
     }
 
     /**
@@ -398,17 +408,17 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $headerField = HeaderField::create('MemberLinkFieldHeader', _t('Member.EDIT_CUSTOMER', 'Edit Customer'));
         $linkField1 = EcommerceCMSButtonField::create(
             'MemberLinkFieldEditThisCustomer',
-            '/admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit',
-            _t('Member.EDIT', 'Edit').' <i>'.$this->owner->getTitle().'</i>'
+            $this->owner->CMSEditLink(),
+            _t('Member.EDIT', 'Edit').' <i>'.$this->owner->getTitle().'d</i>'
         );
         $fields->push($headerField);
         $fields->push($linkField1);
-        
+
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $linkField2 = EcommerceCMSButtonField::create(
                 'MemberLinkFieldEditAllCustomers',
-                '/admin/security/show/'.$group->ID.'/',
-                _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All Customers')
+                CMSEditLinkAPI::find_edit_link_for_object($group),
+                _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All '.$group->Title)
             );
             $fields->push($linkField2);
         }
@@ -553,6 +563,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function IsShopAssistant()
     {
         if ($this->owner->IsShopAdmin()) {
+
             return true;
         }
 
@@ -681,11 +692,15 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
     }
 
-    public function CMSEditLink()
+    /**
+     * link to edit the record.
+     *
+     * @param string | Null $action - e.g. edit
+     *
+     * @return string
+     */
+    public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            'admin/security/EditForm/field/Members/item/'.$this->owner->ID.'/edit'
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this->owner);
     }
 }

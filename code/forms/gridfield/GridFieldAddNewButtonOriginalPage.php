@@ -51,7 +51,11 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         $defaultRootParentClass = Config::inst()->get('CMSPageAddController_Products', 'root_parent_class_for_adding_page');
         $rootParentClassArray = array($defaultRootParentClass, 'ProductGroup');
         foreach ($rootParentClassArray as $rootParentClass) {
-            if ($result = $rootParentClass::get()->filter('ParentID', 0)->First()) {
+            $result = DataObject::get_one(
+                $rootParentClass,
+                array('ParentID' => 0)
+            );
+            if ($result) {
                 return $result;
             }
             $stage = '';

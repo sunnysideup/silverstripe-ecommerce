@@ -45,7 +45,13 @@ class EcommerceTemplateTest extends Page_Controller
     {
         $lastStatusOrder = OrderStep::get()->Last();
         if ($lastStatusOrder) {
-            return Order::get()->Filter('StatusID', $lastStatusOrder->ID)->Sort('RAND()')->First();
+            return
+            DataObject::get_one(
+                'Order',
+                array('StatusID' => $lastStatusOrder->ID),
+                $cacheDataObjectGetOne = true,
+                'RAND()'
+            );
         }
     }
 
