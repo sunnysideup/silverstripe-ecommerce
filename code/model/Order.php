@@ -147,7 +147,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalItems' => 'Double',
         'TotalItemsTimesQuantity' => 'Double',
         'IsCancelled' => 'Boolean',
-        'IsPaidNice' => 'Boolean',
+        'IsPaidNice' => 'Varchar',
         'Country' => 'Varchar(3)', //This is the applicable country for the order - for tax purposes, etc....
         'FullNameCountry' => 'Varchar',
         'IsSubmitted' => 'Boolean',
@@ -360,7 +360,6 @@ class Order extends DataObject implements EditableEcommerceObject
     private static $summary_fields = array(
         'Title' => 'Title',
         'Status.Title' => 'Next Step',
-        'IsPaidNice' => 'Paid',
         'Member.Surname' => 'Name',
         'Member.Email' => 'Email',
         'TotalAsMoney.Nice' => 'Total',
@@ -1416,21 +1415,22 @@ class Order extends DataObject implements EditableEcommerceObject
 
         return false;
     }
+
     /**
-     * Has the order been paid?
-     * TODO: why do we check if there is a total at all?
-     *
-     * @return Boolean (object)
+     * @alias for getIsPaidNice
+     * @return string
      */
     public function IsPaidNice()
     {
-        return  DBField::create_field('Boolean', $this->IsPaid());
+        return $this->getIsPaidNice();
     }
 
-    public function IsPaidNice()
+
+    public function getIsPaidNice()
     {
         return $this->IsPaid() ? 'yes' : 'no';
     }
+
 
     /**
      * Has the order been paid?
