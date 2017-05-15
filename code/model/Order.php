@@ -357,6 +357,7 @@ class Order extends DataObject implements EditableEcommerceObject
     private static $summary_fields = array(
         'Title' => 'Title',
         'Status.Title' => 'Next Step',
+        'IsPaidNice' => 'Paid',
         'Member.Surname' => 'Name',
         'Member.Email' => 'Email',
         'TotalAsMoney.Nice' => 'Total',
@@ -631,7 +632,7 @@ class Order extends DataObject implements EditableEcommerceObject
         );
 
          //is the member is a shop admin they can always view it
-        
+
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $lastStep = OrderStep::get()->Last();
             if($this->StatusID != $lastStep->ID) {
@@ -1389,6 +1390,11 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return false;
+    }
+
+    public function IsPaidNice()
+    {
+        return $this->IsPaid() ? 'yes' : 'no';
     }
 
     /**
