@@ -1342,7 +1342,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $filter = array('ClassName' => $className);
                     $indexNumber += 10;
                     $itemCount = OrderStep::get()->filter($filter)->Count();
-                    if ($itemCount) {
+                    if ($itemCount > 0) {
                         //always reset code
                         $obj = DataObject::get_one(
                             'OrderStep',
@@ -1365,6 +1365,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $obj->write();
                         }
                     } else {
+                        $oldObjects = OrderStep::get()->filterAny(array('Code' => $code));
+                        foreach($oldObjects as $oldObject) {
+                            DB::alteration_message('DELETING '.$oldObject->Title.' as this now appears obsolete', 'deleted');
+                            $oldObject->delete();
+                        }
                         $obj = $className::create($filter);
                         $obj->Code = $code;
                         $obj->Description = $obj->myDescription();
