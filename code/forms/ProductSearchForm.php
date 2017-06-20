@@ -324,7 +324,7 @@ class ProductSearchForm extends Form
                     }
                     if ($count > 0) {
                         if ($this->addToResults($list1)) {
-                            break;
+                            //break;
                         }
                     }
                     if ($this->debug) {
