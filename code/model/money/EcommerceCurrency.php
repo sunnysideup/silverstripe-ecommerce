@@ -257,7 +257,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param float $price
+     * @param float | Currency $price
      * @param Order $order
      *
      * @return Money
@@ -280,7 +280,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return DBField::create_field('Money', array('Amount' => $price, 'Currency' => $currency->Code));
+        return DBField::create_field(
+            'Money',
+            array(
+                'Amount' => $price,
+                'Currency' => $currency->Code
+            )
+        );
     }
 
     /**
