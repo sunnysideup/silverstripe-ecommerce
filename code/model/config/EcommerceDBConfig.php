@@ -293,9 +293,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             if (!class_exists('EcommerceDBConfig')) {
                 $class = 'EcommerceDBConfig';
             }
-            if (self::$_my_current_one = $className::get()->filter(array('UseThisOne' => 1))->first()) {
-                //do nothing
-            } else {
+            self::$_my_current_one = DataObject::get_one(
+                $className,
+                array('UseThisOne' => 1),
+                $cacheDataObjectGetOne = false
+            );
+            if ( ! self::$_my_current_one) {
                 self::$_my_current_one = $className::create();
             }
         }
@@ -536,11 +539,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/shop/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return '/admin/shop/EcommerceDBConfig/';
     }
 
     public function getOrderStepsField()

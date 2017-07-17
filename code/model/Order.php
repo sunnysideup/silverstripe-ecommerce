@@ -42,6 +42,7 @@ class Order extends DataObject implements EditableEcommerceObject
             'PrintLink',
             'RetrieveLink',
             'ShareLink',
+            'FeedbackLink',
             'Title',
             'Total',
             'SubTotal',
@@ -127,12 +128,13 @@ class Order extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $casting = array(
-        'OrderEmail' => 'Text',
-        'EmailLink' => 'Text',
-        'PrintLink' => 'Text',
-        'ShareLink' => 'Text',
-        'RetrieveLink' => 'Text',
-        'Title' => 'Text',
+        'OrderEmail' => 'Varchar',
+        'EmailLink' => 'Varchar',
+        'PrintLink' => 'Varchar',
+        'ShareLink' => 'Varchar',
+        'FeedbackLink' => 'Varchar',
+        'RetrieveLink' => 'Varchar',
+        'Title' => 'Varchar',
         'Total' => 'Currency',
         'TotalAsMoney' => 'Money',
         'SubTotal' => 'Currency',
@@ -145,7 +147,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalItems' => 'Double',
         'TotalItemsTimesQuantity' => 'Double',
         'IsCancelled' => 'Boolean',
-        'IsPaidNice' => 'Boolean',
+        'IsPaidNice' => 'Varchar',
         'Country' => 'Varchar(3)', //This is the applicable country for the order - for tax purposes, etc....
         'FullNameCountry' => 'Varchar',
         'IsSubmitted' => 'Boolean',
@@ -470,11 +472,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/sales-advanced/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action, 'sales-advanced');
     }
 
     /**
@@ -542,7 +540,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->extend('updateCMSFields', $fields);
         $currentMember = Member::currentUser();
         if (!$this->exists() || !$this->StatusID) {
-            $firstStep = OrderStep::get()->First();
+            $firstStep = DataObject::get_one('OrderStep');
             $this->StatusID = $firstStep->ID;
             $this->write();
         }
@@ -620,7 +618,7 @@ class Order extends DataObject implements EditableEcommerceObject
             array(
                 EcommerceCMSButtonField::create(
                     'AddNoteButton',
-                    $this->CMSEditLink('ItemEditForm/field/OrderStatusLog/item/new'),
+                    '/admin/sales/Order/EditForm/field/Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
                     _t('Order.ADD_NOTE', 'Add Note')
                 )
             )
@@ -635,7 +633,7 @@ class Order extends DataObject implements EditableEcommerceObject
          //is the member is a shop admin they can always view it
 
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
-            $lastStep = OrderStep::get()->Last();
+            $lastStep = OrderStep::last_order_step();
             if($this->StatusID != $lastStep->ID) {
                 $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
                 if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
@@ -676,6 +674,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $html = '<p>'.$permaLinkLabel.': <a href="'.$this->getRetrieveLink().'">'.$this->getRetrieveLink().'</a></p>';
             $shareLinkLabel = _t('Order.SHARE_LINK', 'Share Link');
             $html .= '<p>'.$shareLinkLabel.': <a href="'.$this->getShareLink().'">'.$this->getShareLink().'</a></p>';
+            $feedbackLinkLabel = _t('Order.FEEDBACK_LINK', 'Feedback Link');
+            $html .= '<p>'.$feedbackLinkLabel.': <a href="'.$this->getFeedbackLink().'">'.$this->getFeedbackLink().'</a></p>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
             $label = _t('Order.PRINT_INVOICE', 'invoice');
@@ -754,6 +754,17 @@ class Order extends DataObject implements EditableEcommerceObject
                 $fields->addFieldToTab('Root.Account', new LiteralField('MemberDetails',
                     '<p>'._t('Order.NO_ACCOUNT', 'There is no --- account --- associated with this order').'</p>'
                 ));
+            }
+            if($this->getFeedbackLink()) {
+                $fields->addFieldToTab(
+                    'Root.Account',
+                    GridField::create(
+                        'OrderFeedback',
+                        Injector::inst()->get('OrderFeedback')->singular_name(),
+                        OrderFeedback::get()->filter(array('OrderID' => $this->ID)),
+                        GridFieldConfig_RecordViewer::create()
+                    )
+                );
             }
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
@@ -1047,7 +1058,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //to do: check if shop is open....
             if ($this->StatusID || $recalculate) {
                 if (!$this->StatusID) {
-                    $createdOrderStatus = OrderStep::get()->First();
+                    $createdOrderStatus = DataObject::get_one('OrderStep');
                     if (!$createdOrderStatus) {
                         user_error('No ordersteps have been created', E_USER_WARNING);
                     }
@@ -1110,6 +1121,8 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param bool $runAgain
      * @param bool $fromOrderQueue - is it being called from the OrderProcessQueue (or similar)
+     *
+     * @return null
      **/
     public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
@@ -1128,9 +1141,11 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
                 if($fromOrderQueue) {
                     if ( ! $myQueueObject->InProcess) {
+
                         return;
                     }
                 } else {
+
                     return;
                 }
             }
@@ -1144,6 +1159,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 if ($nextStatusObject) {
                     $delay = $nextStatusObject->CalculatedDeferTimeInSeconds($this);
                     if ($delay > 0) {
+                        //adjust delay time from seconds since being submitted
                         if ($nextStatusObject->DeferFromSubmitTime) {
                             $delay = $delay - $this->SecondsSinceBeingSubmitted();
                             if ($delay < 0) {
@@ -1219,7 +1235,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $log->InternalUseOnly = true;
             }
             $log->write();
-            //remove from queue ... 
+            //remove from queue ...
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
             $ordersinQueue = $queueObjectSingleton->removeOrderFromQueue($this);
             $this->extend('doCancel', $member, $log);
@@ -1237,7 +1253,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function Archive($avoidWrites = true)
     {
-        $lastOrderStep = OrderStep::get()->Last();
+        $lastOrderStep = OrderStep::last_order_step();
         if ($lastOrderStep) {
             if ($avoidWrites) {
                 DB::query('
@@ -1274,13 +1290,17 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->StatusID) {
             $step = OrderStep::get()->byID($this->StatusID);
         }
-        if (!$step) {
-            $step = OrderStep::get()->First(); //TODO: this could produce strange results
+        if (! $step) {
+            $step = DataObject::get_one(
+                'OrderStep',
+                null,
+                $cacheDataObjectGetOne = false
+            );
         }
-        if (!$step) {
+        if (! $step) {
             $step = OrderStep_Created::create();
         }
-        if (!$step) {
+        if (! $step) {
             user_error('You need an order step in your Database.');
         }
 
@@ -1306,7 +1326,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($obj->HideStepFromCustomer) {
             $obj = OrderStep::get()->where('"OrderStep"."Sort" < '.$obj->Sort.' AND "HideStepFromCustomer" = 0')->Last();
             if (!$obj) {
-                $obj = OrderStep::get()->First();
+                $obj = DataObject::get_one('OrderStep');
             }
         }
 
@@ -1320,7 +1340,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function IsFirstStep()
     {
-        $firstStep = OrderStep::get()->First();
+        $firstStep = DataObject::get_one('OrderStep');
         $currentStep = $this->MyStep();
         if ($firstStep && $currentStep) {
             if ($firstStep->ID == $currentStep->ID) {
@@ -1395,16 +1415,22 @@ class Order extends DataObject implements EditableEcommerceObject
 
         return false;
     }
+
     /**
-     * Has the order been paid?
-     * TODO: why do we check if there is a total at all?
-     *
-     * @return Boolean (object)
+     * @alias for getIsPaidNice
+     * @return string
      */
     public function IsPaidNice()
     {
-        return  DBField::create_field('Boolean', $this->IsPaid());
+        return $this->getIsPaidNice();
     }
+
+
+    public function getIsPaidNice()
+    {
+        return $this->IsPaid() ? 'yes' : 'no';
+    }
+
 
     /**
      * Has the order been paid?
@@ -1445,6 +1471,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return $this->Payments();
         }
     }
+
 
     /**
      * Has the order been cancelled?
@@ -2665,6 +2692,27 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * @alias for getFeedbackLink
+     * @return string
+     */
+    public function FeedbackLink()
+    {
+        return $this->getFeedbackLink();
+    }
+
+    /**
+     * @return string | null
+     */
+    public function getFeedbackLink()
+    {
+        $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
+        if($orderConfirmationPage->IsFeedbackEnabled) {
+
+            return Director::AbsoluteURL($this->getRetrieveLink()).'#OrderForm_Feedback_FeedbackForm';
+        }
+    }
+
+    /**
      * link to delete order.
      *
      * @return string
@@ -3280,7 +3328,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function IsArchived()
     {
-        $lastStep = OrderStep::get()->Last();
+        $lastStep = OrderStep::last_order_step();
         if ($lastStep) {
             if ($lastStep->ID == $this->StatusID) {
                 return true;
@@ -3301,6 +3349,23 @@ class Order extends DataObject implements EditableEcommerceObject
         return $className::get()
             ->Filter(array('OrderID' => $this->ID))
             ->Last();
+    }
+
+    /**
+     * Submission Log for this Order (if any).
+     *
+     * @return DateTime
+     **/
+    public function OrderDate()
+    {
+        $object = $this->SubmissionLog();
+        if($object) {
+            $created = $object->Created;
+        } else {
+            $created = $this->LastEdited;
+        }
+
+        return DBField::create_field('SS_Datetime', $created);
     }
 
     /**
@@ -3396,13 +3461,14 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->MyStep() && $this->MyStep()->AlternativeDisplayPage()) {
             $page = $this->MyStep()->AlternativeDisplayPage();
         } elseif ($this->IsSubmitted()) {
-            $page = OrderConfirmationPage::get()->First();
+            $page = DataObject::get_one('OrderConfirmationPage');
         } else {
-            $page = CartPage::get()
-                ->Filter(array('ClassName' => 'CartPage'))
-                ->First();
+            $page = DataObject::get_one(
+                'CartPage',
+                array('ClassName' => 'CartPage')
+            );
             if (!$page) {
-                $page = CheckoutPage::get()->First();
+                $page = DataObject::get_one('CheckoutPage');
             }
         }
 
@@ -3426,9 +3492,10 @@ class Order extends DataObject implements EditableEcommerceObject
             return $page->getOrderLink($this->ID, $action);
         } else {
             user_error('A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.', E_USER_NOTICE);
-            $page = ErrorPage::get()
-                ->Filter(array('ErrorCode' => '404'))
-                ->First();
+            $page = DataObject::get_one(
+                'ErrorPage',
+                array('ErrorCode' => '404')
+            );
             if ($page) {
                 return $page->Link();
             }
@@ -3455,13 +3522,14 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CheckoutLink()
     {
-        $page = CheckoutPage::get()->First();
+        $page = DataObject::get_one('CheckoutPage');
         if ($page) {
             return $page->Link();
         } else {
-            $page = ErrorPage::get()
-                ->Filter(array('ErrorCode' => '404'))
-                ->First();
+            $page = DataObject::get_one(
+                'ErrorPage',
+                array('ErrorCode' => '404')
+            );
             if ($page) {
                 return $page->Link();
             }

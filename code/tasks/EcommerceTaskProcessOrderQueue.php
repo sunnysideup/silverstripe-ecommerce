@@ -65,7 +65,12 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         foreach ($orders as $order) {
             echo '<hr />Processing order: '.$order->ID;
-            $queueObjectSingleton->process($order);
+            $outcome = $queueObjectSingleton->process($order);
+            if($outcome === true) {
+                echo '<br />... Order moved successfully.<hr />';
+            } else {
+                echo '<br />... '.$outcome.'<hr />';
+            }
         }
     }
 }

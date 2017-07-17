@@ -13,8 +13,8 @@ class EcommerceTaskCartManipulation_Current extends BuildTask
     protected $title = 'Clear the current Cart';
 
     protected $description = '
-		Removes the cart that is currently in memory (session) for the currrent user.
-		It does not delete the order itself.';
+        Removes the cart that is currently in memory (session) for the currrent user.
+        It does not delete the order itself.';
 
     public function run($request)
     {
@@ -38,23 +38,23 @@ class EcommerceTaskCartManipulation_Debug extends BuildTask
 
     public function run($request)
     {
-        $myProductGroup = ProductGroup::get()->first();
-        $myProduct = Product::get()->first();
+        $myProductGroup = DataObject::get_one('ProductGroup');
+        $myProduct = DataObject::get_one('Product');
         $html = '
-		Please use the links below:
-		<ul>
-			<li><a href="/shoppingcart/debug/" target="_debug">debug cart</a></li>
-			<li><a href="/shoppingcart/ajaxtest/?ajax=1" target="_debug">view cart response</a></li>';
+        Please use the links below:
+        <ul>
+            <li><a href="/shoppingcart/debug/" target="_debug">debug cart</a></li>
+            <li><a href="/shoppingcart/ajaxtest/?ajax=1" target="_debug">view cart response</a></li>';
         if ($myProductGroup) {
             $html .= '
-			<li><a href="'.$myProductGroup->Link('debug').'" target="_debug">debug product group</a></li>';
+            <li><a href="'.$myProductGroup->Link('debug').'" target="_debug">debug product group</a></li>';
         }
         if ($myProduct) {
             $html .= '
-			<li><a href="'.$myProduct->Link('debug').'" target="_debug">debug product</a></li>';
+            <li><a href="'.$myProduct->Link('debug').'" target="_debug">debug product</a></li>';
         }
         $html .= '
-		</ul>';
+        </ul>';
         DB::alteration_message("$html");
     }
 }

@@ -49,6 +49,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     private static $summary_fields = array(
         'Created' => 'Date',
+        'Order.Title' => 'Order',
         'Type' => 'Type',
         'Title' => 'Title',
         'InternalUseOnlyNice' => 'Internal use only',
@@ -161,20 +162,20 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        
+
         if ($order = $this->Order()) {
             //Order Status Logs are so basic, anyone can edit them
             if ($this->ClassName=='OrderStatusLog') {
                 return $order->canView($member);
             }
-        
+
             if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
                 return $order->canEdit($member);
             }
         }
 
 
-        
+
         return false;
     }
 
@@ -290,9 +291,15 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         }
 
         //OrderID Field
-        $fields->removeByName('OrderID');
-        if ($this->exists() && $this->OrderID && $this->Order()->exists()) {
-            $fields->addFieldToTab('Root.Main', new ReadOnlyField('OrderTitle', _t('OrderStatusLog.ORDER_TITLE', 'Order Title'), $this->Order()->Title()));
+        if ($this->exists() && $this->OrderID) {
+            $order = $this->Order();
+            if($order && $order->exists()) {
+                $fields->removeByName('OrderID');
+                $fields->addFieldToTab(
+                    'Root.Main',
+                    CMSEditLinkField::create('OrderID', $order->singular_name(), $order)
+                );
+            }
         }
 
         //ClassName Field
@@ -357,11 +364,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/sales/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**
@@ -395,7 +398,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-        $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
+        $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
         $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, array(EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')));
         $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', 'OrderStatusLog', $availableLogs);

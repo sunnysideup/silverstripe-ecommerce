@@ -257,7 +257,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param float $price
+     * @param float | Currency $price
      * @param Order $order
      *
      * @return Money
@@ -280,7 +280,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return DBField::create_field('Money', array('Amount' => $price, 'Currency' => $currency->Code));
+        return DBField::create_field(
+            'Money',
+            array(
+                'Amount' => $price,
+                'Currency' => $currency->Code
+            )
+        );
     }
 
     /**
@@ -288,14 +294,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function default_currency()
     {
-        return EcommerceCurrency::get()
-            ->Filter(
-                array(
-                    'Code' => trim(strtolower(EcommerceConfig::get('EcommerceCurrency', 'default_currency'))),
-                    'InUse' => 1,
-                )
+        return DataObject::get_one(
+            'EcommerceCurrency',
+            array(
+                'Code' => trim(strtolower(EcommerceConfig::get('EcommerceCurrency', 'default_currency'))),
+                'InUse' => 1,
             )
-            ->First();
+        );
     }
 
     /**
@@ -338,14 +343,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function get_one_from_code($currencyCode)
     {
-        return EcommerceCurrency::get()
-            ->Filter(
-                array(
-                    'Code' => trim(strtoupper($currencyCode)),
-                    'InUse' => 1,
-                )
+        return DataObject::get_one(
+            'EcommerceCurrency',
+            array(
+                'Code' => trim(strtoupper($currencyCode)),
+                'InUse' => 1,
             )
-            ->First();
+        );
     }
 
     /**
@@ -383,11 +387,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/shop/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     public function DefaultSymbol()
@@ -647,15 +647,22 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
         $name = ucwords($name);
-        if ($currency = EcommerceCurrency::get()->filter(array('Code' => $code))->first()) {
+        $currency = DataObject::get_one(
+            'EcommerceCurrency',
+            array('Code' => $code),
+            $cacheDataObjectGetOne = false
+        );
+        if ($currency) {
             $currency->Name = $name;
             $currency->InUse = true;
         } else {
-            $currency = self::create(array(
+            $currency = EcommerceCurrency::create(
+                array(
                 'Code' => $code,
                 'Name' => $name,
                 'InUse' => true,
-            ));
+                )
+            );
         }
         $valid = $currency->write();
         if ($valid) {

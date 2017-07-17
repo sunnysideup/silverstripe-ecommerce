@@ -99,9 +99,6 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
 
         $idArray = array();
 
-        //Remove GridFieldPaginator as we're going to export the entire list.
-        $gridField->getConfig()->removeComponentsByType('GridFieldPaginator');
-
         $items = $gridField->getManipulatedList();
 
         foreach ($items->limit(null) as $item) {

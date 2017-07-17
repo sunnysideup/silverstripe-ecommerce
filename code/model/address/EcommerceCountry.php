@@ -338,7 +338,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (isset($options[$code])) {
             return $options[$code];
         } elseif ($code) {
-            $obj = EcommerceCountry::get()->filter(array('Code' => $code))->first();
+            $obj = DataObject::get_one(
+                'EcommerceCountry',
+                array('Code' => $code)
+            );
             if ($obj) {
                 return $obj->Name;
             }
@@ -457,7 +460,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             $countryCode = self::get_country($recalculate);
         }
 
-        return EcommerceCountry::get()->filter(array('Code' => $countryCode))->First();
+        return DataObject::get_one(
+            'EcommerceCountry',
+            array('Code' => $countryCode)
+        );
     }
 
     /**
@@ -485,9 +491,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return self::$_code_to_id_map[$countryCode];
         }
         self::$_code_to_id_map[$countryCode] = 0;
-        $country = EcommerceCountry::get()
-            ->filter(array('Code' => $countryCode))
-            ->first();
+        $country = DataObject::get_one(
+            'EcommerceCountry',
+            array('Code' => $countryCode)
+        );
         if ($country) {
             self::$_code_to_id_map[$countryCode] = $country->ID;
             return $country->ID;
@@ -580,6 +587,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         return $fields;
     }
 
+
+
     /**
      * link to edit the record.
      *
@@ -589,11 +598,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            '/admin/shop/'.$this->ClassName.'/EditForm/field/'.$this->ClassName.'/item/'.$this->ID.'/',
-            $action
-        );
+        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
     /**

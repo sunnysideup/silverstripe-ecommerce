@@ -221,6 +221,9 @@ abstract class OrderStepController extends Controller
      */
     protected function orderStep()
     {
-        return OrderStep::get()->filter(array('Code' => $this->codeOfRelevantOrderStep()))->First();
+        return DataObject::get_one(
+            'OrderStep',
+            array('Code' => $this->codeOfRelevantOrderStep())
+        );
     }
 }

@@ -324,7 +324,7 @@ class ProductSearchForm extends Form
                     }
                     if ($count > 0) {
                         if ($this->addToResults($list1)) {
-                            break;
+                            //break;
                         }
                     }
                     if ($this->debug) {
@@ -443,7 +443,7 @@ class ProductSearchForm extends Form
         $redirectToPage = null;
         //if no specific section is being searched then we redirect to search page:
         if (!$limitToCurrentSection) {
-            $redirectToPage = ProductGroupSearchPage::get()->first();
+            $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
         }
         if (!$redirectToPage) {
             // for section specific search,

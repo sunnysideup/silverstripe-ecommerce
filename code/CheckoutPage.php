@@ -110,7 +110,7 @@ class CheckoutPage extends CartPage
      */
     public static function find_terms_and_conditions_page()
     {
-        $checkoutPage = CheckoutPage::get()->First();
+        $checkoutPage = DataObject::get_one('CheckoutPage');
         if ($checkoutPage && $checkoutPage->TermsPageID) {
             return Page::get()->byID($checkoutPage->TermsPageID);
         }
@@ -125,7 +125,7 @@ class CheckoutPage extends CartPage
      */
     public static function find_link($action = null)
     {
-        $page = CheckoutPage::get()->First();
+        $page = DataObject::get_one('CheckoutPage');
         if ($page) {
             return $page->Link($action);
         }
@@ -355,7 +355,7 @@ class CheckoutPage extends CartPage
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $checkoutPage = CheckoutPage::get()->first();
+        $checkoutPage = DataObject::get_one('CheckoutPage');
         if (!$checkoutPage) {
             $checkoutPage = self::create();
             $checkoutPage->Title = 'Checkout';
@@ -420,14 +420,11 @@ class CheckoutPage_Controller extends CartPage_Controller
         // and then return back
         if ($checkoutPageCurrentOrderID = Session::get('CheckoutPageCurrentOrderID')) {
             if ($this->currentOrder->ID != $checkoutPageCurrentOrderID) {
-                Session::clear('CheckoutPageCurrentOrderID');
-                Session::set('CheckoutPageCurrentOrderID', 0);
-                Session::save();
+                $this->clearRetrievalOrderID();
             }
         }
         if ($this->currentOrder) {
-            //we make sure all the OrderModifiers are up to date....
-            Session::set('CheckoutPageCurrentOrderID', $this->currentOrder->ID);
+            $this->setRetrievalOrderID($this->currentOrder->ID);
         }
     }
 
@@ -554,7 +551,7 @@ class CheckoutPage_Controller extends CartPage_Controller
             $returnData->push($do);
         }
         if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
-            $orderConfirmationPage = OrderConfirmationPage::get()->First();
+            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
             if ($orderConfirmationPage) {
                 $do = $orderConfirmationPage->CurrentCheckoutStep(false);
                 if ($do) {

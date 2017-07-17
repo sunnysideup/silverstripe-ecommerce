@@ -74,7 +74,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
     {
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, 'EcommerceDBConfig') || $this->modelClass === 'EcommerceDBConfig') {
-            $record = EcommerceDBConfig::get()->first();
+            $record = DataObject::get_one('EcommerceDBConfig');
             if($record && $record->exists()) {
                 return $this->oneItemForm($record);
             }

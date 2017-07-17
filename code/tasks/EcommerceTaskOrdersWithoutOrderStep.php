@@ -32,7 +32,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
         }
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
-            $submittedStatusLog = $submittedOrderStatusLogClassName::get()->First();
+            $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
             if ($submittedStatusLog) {
                 $orderStepsIDArray = OrderStep::get()->column('ID');
                 $orders = Order::get()

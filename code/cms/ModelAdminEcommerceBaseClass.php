@@ -7,22 +7,16 @@
  */
 class ModelAdminEcommerceBaseClass extends ModelAdmin
 {
+
     /**
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      */
     public function getManagedModels()
     {
-        $models = EcommerceConfig::get($this->class, 'managed_models');
-        foreach ($models as $key => $model) {
-            if (is_array($model)) {
-                $model = $key;
-            }
-            if (!class_exists($model)) {
-                unset($models[$key]);
-            }
+        if($this->class === 'ModelAdminEcommerceBaseClass') {
+            //never used
+            return array('NothingGoesHere' => array('title' => 'All Orders'));
         }
-        Config::inst()->update('ModelAdminEcommerceBaseClass', 'managed_models', $models);
-
         return parent::getManagedModels();
     }
 
@@ -71,7 +65,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      * @return array
      */
     public function getExportFields() {
-        $obj = singleton($this->modelClass);
+        $obj = Injector::inst()->get($this->modelClass);
         if($obj->hasMethod('getExportFields')) {
             return $obj->getExportFields();
         }

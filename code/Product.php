@@ -536,7 +536,10 @@ class Product extends Page implements BuyableModel
         $x = 0;
         while ($parent && $x < 100) {
             $returnValue = $parent;
-            $parent = ProductGroup::get()->filter(array('ID' => $parent->ParentID))->first();
+            $parent = DataObject::get_one(
+                'ProductGroup',
+                array('ID' => $parent->ParentID)
+            );
             ++$x;
         }
 

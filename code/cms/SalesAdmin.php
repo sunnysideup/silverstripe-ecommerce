@@ -63,6 +63,24 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     }
 
     /**
+     * @return array Map of class name to an array of 'title' (see {@link $managed_models})
+     *               we make sure that the Order Admin is FIRST
+     */
+    public function getManagedModels()
+    {
+        $models = parent::getManagedModels();
+        $orderModelManagement = isset($models['Order']) ? $models['Order'] : null;
+        if ($orderModelManagement) {
+            unset($models['Order']);
+
+            return array('Order' => $orderModelManagement) + $models;
+        }
+
+        return $models;
+    }
+
+
+    /**
      * @return DataList
      */
     public function getList()
@@ -91,6 +109,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                     )
                 );
         }
+
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
             foreach ($newLists as $newList) {
