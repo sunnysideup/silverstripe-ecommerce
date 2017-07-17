@@ -1676,6 +1676,12 @@ class ProductGroup extends Page
         return false;
     }
 
+    /**
+     *
+     * @param Boolean $isForGroups OPTIONAL
+     *
+     * @return string
+     */
     public function SearchResultsSessionVariable($isForGroups = false)
     {
         $idString = '_'.$this->ID;
@@ -1827,6 +1833,7 @@ class ProductGroup_Controller extends Page_Controller
         return array();
     }
 
+
     /**
      * get the search results.
      *
@@ -1841,14 +1848,12 @@ class ProductGroup_Controller extends Page_Controller
         if (!$resultArray || !count($resultArray)) {
             $resultArray = array(0 => 0);
         }
-        $defaultKeySort = $this->getMyUserPreferencesDefault('SORT');
-        $myKeySort = $this->getCurrentUserPreferences('SORT');
-        $searchArray = null;
-        if ($defaultKeySort == $myKeySort) {
-            $searchArray = $resultArray;
+        $title = ProductSearchForm::last_search_phrase();
+        if($title) {
+            $title = _t('Ecommerce.SEARCH_FOR', 'search for: ').substr($title, 0, 25);
         }
-        $this->addSecondaryTitle();
-        $this->products = $this->paginateList($this->ProductsShowable(array('ID' => $resultArray), $searchArray));
+        $this->addSecondaryTitle($title);
+        $this->products = $this->paginateList($this->ProductsShowable(array('ID' => $resultArray)));
 
         return array();
     }
@@ -2481,7 +2486,7 @@ class ProductGroup_Controller extends Page_Controller
         foreach ($array as $item) {
             $arrayList->push(ArrayData::create($item));
         }
-        
+
         return $arrayList;
     }
 
