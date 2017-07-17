@@ -78,6 +78,29 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     );
 
     /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Shop Payment';
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Shop Payments';
+    public function i18n_plural_name()
+    {
+        return $this->Config()->get('plural_name');
+    }
+
+
+    /**
      * CRUCIAL
      * makes sure all the relevant payment methods are available ...
      *
