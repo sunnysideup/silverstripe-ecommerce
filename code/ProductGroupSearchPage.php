@@ -76,10 +76,10 @@ class ProductGroupSearchPage extends ProductGroup
     protected function currentSortSQL()
     {
         $sortKey = $this->getCurrentUserPreferences('SORT');
-        $defaultSortKey = $this->getMyUserPreferencesDefault('FILTER');
+        $defaultSortKey = $this->getMyUserPreferencesDefault('SORT');
         if ($sortKey == $defaultSortKey) {
             $resultArray = $this->searchResultsArrayFromSession();
-
+            
             return $this->createSortStatementFromIDArray($resultArray);
         }
 
@@ -116,20 +116,6 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
         }
     }
 
-    /**
-     * get the search results.
-     *
-     * @param HTTPRequest
-     */
-    public function searchresults($request)
-    {
-        $this->isSearchResults = true;
-        //set the filter and the sort...
-        $this->addSecondaryTitle();
-        $this->products = $this->paginateList($this->ProductsShowable(null));
-
-        return array();
-    }
 
     /**
      * returns child product groups for use in
