@@ -203,11 +203,18 @@ class OrderProcessQueue extends DataObject
         if($order) {
             //if order has moved already ... delete
             if(
+                $order->IsCancelled() ||
+                $order->IsArchived()
+            ) {
+                $myQueueObject->delete();
+                $message = 'Order is archived already and/or cancelled.';
+            } elseif(
                 $this->OrderStepID > 0
                 && (int)$order->StatusID !== (int)$myQueueObject->OrderStepID
             ) {
                 $message = 'Order has already moved on.';
                 $myQueueObject->delete();
+
             } else {
                 if($myQueueObject) {
                     if ($myQueueObject->isReadyToGo()) {
@@ -240,6 +247,7 @@ class OrderProcessQueue extends DataObject
             $message = 'Can not find order.';
             $myQueueObject->delete();
         }
+        
         return $message;
     }
 

@@ -310,7 +310,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function admin_manageable_steps()
     {
-        $lastStep = OrderStep::get()->Last();
+        $lastStep = OrderStep::last_order_step();
 
         return OrderStep::get()->filter(array('ShowAsInProcessOrder' => 1))->exclude(array('ID' => $lastStep->ID));
     }
@@ -322,9 +322,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function non_admin_manageable_steps()
     {
-        $lastStep = OrderStep::get()->Last();
+        $lastStep = OrderStep::last_order_step();
 
         return OrderStep::get()->filterAny(array('ShowAsInProcessOrder' => 0, 'ID' => $lastStep->ID));
+    }
+
+    private static $_last_order_step_cache = null;
+
+    /**
+     * @param bool $noCacheValues
+     * @return OrderStep
+     */
+    public static function last_order_step($noCacheValues = false)
+    {
+        if( ! self::$_last_order_step_cache || $noCacheValues) {
+            self::$_last_order_step_cache = OrderStep::get()->Last();
+        }
+
+        return self::$_last_order_step_cache;
     }
 
     /**

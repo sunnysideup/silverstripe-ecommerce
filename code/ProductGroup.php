@@ -729,6 +729,17 @@ class ProductGroup extends Page
         return _t('ProductGroup.BUYABLES', 'Products');
     }
 
+    /**
+     * add this segment to the end of a Product Group
+     * link to create a cross-filter between the two categories.
+     *
+     * @return string
+     */
+    public function FilterForGroupLinkSegment()
+    {
+        return 'filterforgroup/'.$this->URLSegment.'/';
+    }
+
     // /**
     //  * used if you install lumberjack
     //  * @return string
@@ -2470,7 +2481,31 @@ class ProductGroup_Controller extends Page_Controller
         foreach ($array as $item) {
             $arrayList->push(ArrayData::create($item));
         }
+        
         return $arrayList;
+    }
+
+
+    /**
+     * @see ProductGroupFilterLinks
+     * same as ProductGroupFilterLinks, but with originating Object...
+     *
+     * @return ArrayList
+     */
+    public function ProductGroupFilterOriginalObjects() {
+        $links = $this->ProductGroupFilterLinks();
+        // /print_r($links);
+        foreach($links as $linkItem) {
+            $className = $linkItem->ClassName;
+            $id = $linkItem->ID;
+            if($className && $id) {
+                $object = $className::get()->byID($id);
+                $linkItem->Object = $object;
+            }
+        }
+
+
+        return $links;
     }
 
     /**
@@ -2516,13 +2551,15 @@ class ProductGroup_Controller extends Page_Controller
         $count = $itemInArray['Count'];
         $ajaxify = $itemInArray['Ajaxify'];
         $filterForGroupObjectID = $this->filterForGroupObject ? $this->filterForGroupObject->ID : 0;
-        $isCurrent = $item->ID == $filterForGroupObjectID;
+        $isCurrent = ($item->ID == $filterForGroupObjectID ? true : false);
         if ($ajaxify) {
-            $link = $this->Link('filterforgroup/'.$item->URLSegment);
+            $link = $this->Link($item->FilterForGroupLinkSegment());
         } else {
             $link = $item->Link();
         }
         return array(
+            'ID' => $item->ID,
+            'ClassName' => $item->ClassName,
             'Title' => $item->Title,
             'Count' => $count,
             'SelectKey' => $item->URLSegment,

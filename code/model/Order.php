@@ -633,7 +633,7 @@ class Order extends DataObject implements EditableEcommerceObject
          //is the member is a shop admin they can always view it
 
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
-            $lastStep = OrderStep::get()->Last();
+            $lastStep = OrderStep::last_order_step();
             if($this->StatusID != $lastStep->ID) {
                 $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
                 if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
@@ -1253,7 +1253,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function Archive($avoidWrites = true)
     {
-        $lastOrderStep = OrderStep::get()->Last();
+        $lastOrderStep = OrderStep::last_order_step();
         if ($lastOrderStep) {
             if ($avoidWrites) {
                 DB::query('
@@ -1471,6 +1471,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return $this->Payments();
         }
     }
+
 
     /**
      * Has the order been cancelled?
@@ -3327,7 +3328,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function IsArchived()
     {
-        $lastStep = OrderStep::get()->Last();
+        $lastStep = OrderStep::last_order_step();
         if ($lastStep) {
             if ($lastStep->ID == $this->StatusID) {
                 return true;
