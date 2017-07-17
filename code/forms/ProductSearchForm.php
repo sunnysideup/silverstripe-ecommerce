@@ -418,7 +418,7 @@ class ProductSearchForm extends Form
                             $count = $productGroups->count();
                             //redirect if we find exactly one match and we have no matches so far...
                             if ($count == 1 && !$this->resultArrayPos && !$limitToCurrentSection) {
-                                $immediateRedirectLink = $this->controller->redirect($productGroups->First()->Link());
+                                $immediateRedirectLink = $productGroups->First()->Link();
                                 $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: '.$immediateRedirectLink.'</p>');
                             }
                             if ($count > 0) {
