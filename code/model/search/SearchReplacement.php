@@ -25,9 +25,8 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     private static $field_labels = array(
         'Search' => 'Aliases (e.g. Biike)',
         'Replace' => 'Proper Name (e.g. Bike)',
-        'ReplaceWholePhrase' => 'Replace Whole Phrase'
+        'ReplaceWholePhrase' => 'Replace Whole Phrase Only'
     );
-
 
 
     /**

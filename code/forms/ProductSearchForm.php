@@ -5,6 +5,25 @@
  **/
 class ProductSearchForm extends Form
 {
+
+    /**
+     *
+     * @return string
+     */
+    public static function last_search_phrase()
+    {
+        $string = '';
+        $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+        if ($oldData && (is_array($oldData) || is_object($oldData))) {
+            if(isset($oldData['ShortKeyword'])) {
+                $string = $oldData['ShortKeyword'];
+            } elseif(isset($oldData['Keyword'])) {
+                $string = $oldData['Keyword'];
+            }
+        }
+        return trim($string);
+    }
+
     /**
      * set to TRUE to show the search logic.
      *
@@ -337,28 +356,11 @@ class ProductSearchForm extends Form
                         $this->debugOutput('<hr /><h3>FULL KEYWORD SEARCH</h3>');
                     }
                     if ($this->resultArrayPos <= $this->maximumNumberOfResults) {
+                        $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
                         //now we are going to look for synonyms
                         $words = explode(' ', trim(preg_replace('!\s+!', ' ', $keywordPhrase)));
                         foreach ($words as $wordKey => $word) {
-                            if ($this->debug) {
-                                $this->debugOutput("checking for aliases of $word");
-                            }
-                            $replacements = SearchReplacement::get()
-                                ->where("
-                                    LOWER(\"Search\") = '$word' OR
-                                    LOWER(\"Search\") LIKE '%,$word' OR
-                                    LOWER(\"Search\") LIKE '$word,%' OR
-                                    LOWER(\"Search\") LIKE '%,$word,%'"
-                                );
-                            if ($replacements->count()) {
-                                $replacementsArray = $replacements->map('ID', 'Replace')->toArray();
-                                if ($this->debug) {
-                                    $this->debugOutput("found alias for $word");
-                                }
-                                foreach ($replacementsArray as $replacementWord) {
-                                    $keywordPhrase = str_replace($word, $replacementWord, $keywordPhrase);
-                                }
-                            }
+                            $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
                         }
                         if ($this->debug) {
                             $this->debugOutput('<pre>WORD ARRAY: '.print_r($keywordPhrase, 1).'</pre>');
@@ -450,14 +452,18 @@ class ProductSearchForm extends Form
             // redirect to the specific section (basically where we came from)
             $redirectToPage = $this->controller->dataRecord;
         }
+
+        $sessionNameProducts = $redirectToPage->SearchResultsSessionVariable(false);
+        $sessionNameGroups = $redirectToPage->SearchResultsSessionVariable(true);
+
         if ($this->debug) {
             $this->debugOutput('<hr />'.
-                '<h3>Previous Search Products: '.$redirectToPage->SearchResultsSessionVariable(false).'</h3><p>'.print_r(Session::get($redirectToPage->SearchResultsSessionVariable(false)), 1).'</p>'.
-                '<h3>Previous Search Groups: '.$redirectToPage->SearchResultsSessionVariable(true).'</h3><p>'.print_r(Session::get($redirectToPage->SearchResultsSessionVariable(true)), 1).'</p>'
+                '<h3>Previous Search Products: '.$sessionNameProducts.'</h3><p>'.print_r(Session::get($sessionNameProducts), 1).'</p>'.
+                '<h3>Previous Search Groups: '.$sessionNameGroups.'</h3><p>'.print_r(Session::get($sessionNameGroups), 1).'</p>'
             );
         }
-        Session::set($redirectToPage->SearchResultsSessionVariable(false), implode(',', $this->resultArray));
-        Session::set($redirectToPage->SearchResultsSessionVariable(true), implode(',', $this->productGroupIDs));
+        Session::set($sessionNameProducts, implode(',', $this->resultArray));
+        Session::set($sessionNameGroups, implode(',', $this->productGroupIDs));
         Session::save();
         if ($searchHistoryObject) {
             $searchHistoryObject->ProductCount = count($this->resultArray);
@@ -466,8 +472,8 @@ class ProductSearchForm extends Form
         }
         if ($this->debug) {
             $this->debugOutput('<hr />'.
-                '<h3>SAVING Products to session: '.$redirectToPage->SearchResultsSessionVariable(false).'</h3><p>'.print_r(explode(',', Session::get($redirectToPage->SearchResultsSessionVariable(false))), 1).'</p>'.
-                '<h3>SAVING Groups to session: '.$redirectToPage->SearchResultsSessionVariable(true).'</h3><p>'.print_r(explode(',', Session::get($redirectToPage->SearchResultsSessionVariable(true))), 1).'</p>'
+                '<h3>SAVING Products to session: '.$sessionNameProducts.'</h3><p>'.print_r(explode(',', Session::get($sessionNameProducts)), 1).'</p>'.
+                '<h3>SAVING Groups to session: '.$sessionNameGroups.'</h3><p>'.print_r(explode(',', Session::get($sessionNameGroups)), 1).'</p>'
             );
         }
         if ($immediateRedirectLink) {
@@ -491,7 +497,7 @@ class ProductSearchForm extends Form
      *
      * @return array
      */
-    private function addToResults($listToAdd)
+    protected function addToResults($listToAdd)
     {
         $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
         foreach ($listToAdd as $page) {
@@ -553,11 +559,13 @@ class ProductSearchForm extends Form
     /**
      * saves the form into session.
      *
-     * @param array $data - data from form.
+     * @param array $data - data from form (OPTIONAL)
      */
-    public function saveDataToSession()
+    public function saveDataToSession($data = null)
     {
-        $data = $this->getData();
+        if(! is_array($data)) {
+            $data = $this->getData();
+        }
         if (isset($data['MinimumPrice']) && !$data['MinimumPrice']) {
             unset($data['MinimumPrice']);
         }
@@ -582,7 +590,7 @@ class ProductSearchForm extends Form
      * @var array
      *            List of words to be replaced.
      */
-    private $sqlWords = array(
+    protected $sqlWords = array(
         "\r\n SELECT" => 'SELECT',
         "\r\n FROM" => 'FROM',
         "\r\n WHERE" => 'WHERE',
@@ -592,4 +600,41 @@ class ProductSearchForm extends Form
         "\r\n INNER JOIN" => 'INNER JOIN',
         "\r\n LEFT JOIN" => 'LEFT JOIN',
     );
+
+    /**
+     *
+     * @param  string $keywordPhrase
+     * @param  string $word (optional word within keywordPhrase)
+     *
+     * @return string (updated Keyword Phrase)
+     */
+    protected function replaceSearchPhraseOrWord($keywordPhrase, $word = '')
+    {
+        if(! $word) {
+            $word = $keywordPhrase;
+        }
+        $replacements = SearchReplacement::get()
+            ->where("
+                LOWER(\"Search\") = '$word' OR
+                LOWER(\"Search\") LIKE '%,$word' OR
+                LOWER(\"Search\") LIKE '$word,%' OR
+                LOWER(\"Search\") LIKE '%,$word,%'"
+            );
+        //if it is a word replacement then we do not want replace whole phrase ones ...
+        if($keywordPhrase != $word) {
+            $replacements = $replacements->exclude(array('ReplaceWholePhrase' => 1));
+        }
+        if ($replacements->count()) {
+            $replacementsArray = $replacements->map('ID', 'Replace')->toArray();
+            if ($this->debug) {
+                $this->debugOutput("found alias for $word");
+            }
+            foreach ($replacementsArray as $replacementWord) {
+                $keywordPhrase = str_replace($word, $replacementWord, $keywordPhrase);
+            }
+        }
+
+        return $keywordPhrase;
+    }
+
 }
