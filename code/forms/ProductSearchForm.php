@@ -10,7 +10,7 @@ class ProductSearchForm extends Form
      *
      * @return string
      */
-    public static function last_search_phrase()
+    public static function get_last_search_phrase()
     {
         $string = '';
         $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
@@ -22,6 +22,20 @@ class ProductSearchForm extends Form
             }
         }
         return trim($string);
+    }
+
+    /**
+     *
+     * @param string $phrase
+     */
+    public static function set_last_search_phrase($phrase)
+    {
+        $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+        if ($oldData && (is_array($oldData) || is_object($oldData))) {
+            $oldData['ShortKeyword'] = $phrase;
+            $oldData['Keyword'] = $phrase;
+        }
+        Session::set(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'), $phrase);
     }
 
     /**
@@ -244,6 +258,7 @@ class ProductSearchForm extends Form
         $requiredFields = array();
         $validator = ProductSearchForm_Validator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
+        $this->setFormMethod('get');
         //extensions need to be set after __construct
         //extension point
         $this->extend('updateFields', $fields);
@@ -265,6 +280,7 @@ class ProductSearchForm extends Form
     public function doProductSearchForm($data, $form)
     {
         $searchHistoryObject = null;
+        $immediateRedirectLink = '';
         if (!$this->maximumNumberOfResults) {
             $this->maximumNumberOfResults = EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list');
         }
@@ -293,10 +309,19 @@ class ProductSearchForm extends Form
         $limitToCurrentSection = false;
         if (isset($data['SearchOnlyFieldsInThisSection']) && $data['SearchOnlyFieldsInThisSection']) {
             $limitToCurrentSection = true;
+            if(! $this->productsToSearch) {
+                $controller = Controller::curr();
+                if($controller) {
+                    $this->productsToSearch = $controller->Products();
+                }
+            }
             if ($this->productsToSearch instanceof DataList) {
                 $this->productsToSearch = $this->productsToSearch->map('ID', 'ID')->toArray();
             }
-            $baseList = $baseList->filter(array('ID' => $this->productsToSearch));
+            //last resort
+            if($this->productsToSearch) {
+                $baseList = $baseList->filter(array('ID' => $this->productsToSearch));
+            }
         }
         if (isset($data['MinimumPrice']) && $data['MinimumPrice']) {
             $baseList = $baseList->filter(array('Price:GreaterThanOrEqual' => floatval($data['MinimumPrice'])));
@@ -307,6 +332,9 @@ class ProductSearchForm extends Form
         //defining some variables
         $isKeywordSearch = false;
         if ($this->debug) {
+            if($this->productsToSearch) {
+                $this->debugOutput('<hr /><h3>PRODUCTS TO SEARCH</h3><pre>'.str_replace($this->sqlWords, array_flip($this->sqlWords), $this->productsToSearch->sql()).'</pre>');
+            }
             $this->debugOutput('<hr /><h3>BASE LIST</h3><pre>'.str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql()).'</pre>');
         }
         //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
@@ -314,6 +342,7 @@ class ProductSearchForm extends Form
             $data['Keyword'] = $data['ShortKeyword'];
         }
         if (isset($data['Keyword']) && $keywordPhrase = $data['Keyword']) {
+            echo 'AAAAAAAAAAA';
             if ($baseList->count()) {
                 if (strlen($keywordPhrase) > 1) {
                     $isKeywordSearch = true;
@@ -321,6 +350,7 @@ class ProductSearchForm extends Form
                     $this->resultArrayPos = 0;
                     $this->resultArray = array();
 
+                    $this->debugOutput('<hr /><h3>Raw Keyword '.$keywordPhrase.'</h3><pre>');
                     $keywordPhrase = Convert::raw2sql($keywordPhrase);
                     $keywordPhrase = strtolower($keywordPhrase);
 

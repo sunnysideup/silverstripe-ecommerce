@@ -1848,7 +1848,7 @@ class ProductGroup_Controller extends Page_Controller
         if (!$resultArray || !count($resultArray)) {
             $resultArray = array(0 => 0);
         }
-        $title = ProductSearchForm::last_search_phrase();
+        $title = ProductSearchForm::get_last_search_phrase();
         if($title) {
             $title = _t('Ecommerce.SEARCH_FOR', 'search for: ').substr($title, 0, 25);
         }
