@@ -150,7 +150,7 @@ class BillingAddress extends OrderAddress
     private static $singular_name = 'Billing Address';
     public function i18n_singular_name()
     {
-        return _t('OrderAddress.BILLINGADDRESS', 'Billing Address');
+        return _t('BillingAddress.BILLINGADDRESS', 'Billing Address');
     }
 
     /**
@@ -161,7 +161,7 @@ class BillingAddress extends OrderAddress
     private static $plural_name = 'Billing Addresses';
     public function i18n_plural_name()
     {
-        return _t('OrderAddress.BILLINGADDRESSES', 'Billing Addresses');
+        return _t('BillingAddress.BILLINGADDRESSES', 'Billing Addresses');
     }
 
     /**
@@ -191,8 +191,8 @@ class BillingAddress extends OrderAddress
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('OrderID', new ReadonlyField('OrderID', _t('OrderAddress.ORDERID', 'Order #')));
-        $fields->replaceField('Email', new EmailField('Email', _t('OrderAddress.EMAIL', 'Email')));
+        $fields->replaceField('OrderID', new ReadonlyField('OrderID', _t('BillingAddress.ORDERID', 'Order #')));
+        $fields->replaceField('Email', new EmailField('Email', _t('BillingAddress.EMAIL', 'Email')));
         //We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
         $fields->removeByName('RegionCode');
         $fields->removeByName('RegionID');
@@ -210,17 +210,17 @@ class BillingAddress extends OrderAddress
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();
-        $headerTitle = _t('OrderAddress.DELIVERY_AND_BILLING_ADDRESS', 'Delivery and Billing Address');
+        $headerTitle = _t('BillingAddress.DELIVERY_AND_BILLING_ADDRESS', 'Delivery and Billing Address');
         $fields->push(
             HeaderField::create(
                 'BillingDetails',
                 $headerTitle,
                 3
             )
-            ->setAttribute('data-title-with-shipping-address', _t('OrderAddress.BILLING_ADDRESS_ONLY', 'Billing Address Only'))
+            ->setAttribute('data-title-with-shipping-address', _t('BillingAddress.BILLING_ADDRESS_ONLY', 'Billing Address Only'))
             ->setAttribute('data-title-with-shipping-address_default', $headerTitle)
         );
-        $fields->push(new TextField('Phone', _t('OrderAddress.PHONE', 'Phone')));
+        $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
         $hasPreviousAddresses = false;
         if ($member && Member::currentUser()) {
@@ -232,7 +232,7 @@ class BillingAddress extends OrderAddress
                     if ($addresses->count() > 1) {
                         $fields->push(
                             SelectOrderAddressField::create(
-                                'SelectBillingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS', 'Select Billing Address'),
+                                'SelectBillingAddressField', _t('BillingAddress.SELECTBILLINGADDRESS', 'Select Billing Address'),
                                 $addresses
                             )
                         );
@@ -242,7 +242,6 @@ class BillingAddress extends OrderAddress
             }
         }
 
-        //$billingFields->push(new TextField('MobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
         $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
         if (is_array($mappingArray) && count($mappingArray)) {
             if (!class_exists('GoogleAddressField')) {
@@ -251,7 +250,7 @@ class BillingAddress extends OrderAddress
             $billingFields->push(
                 $billingEcommerceGeocodingField = GoogleAddressField::create(
                     'BillingEcommerceGeocodingField',
-                    _t('OrderAddress.FIND_ADDRESS', 'Find address'),
+                    _t('BillingAddress.FIND_ADDRESS', 'Find address'),
                     Session::get('BillingEcommerceGeocodingFieldValue')
                 )
             );
@@ -259,10 +258,9 @@ class BillingAddress extends OrderAddress
             //$billingFields->push(new HiddenField('Address2', "NOT SET", "NOT SET"));
             //$billingFields->push(new HiddenField('City', "NOT SET", "NOT SET"));
         }
-        //$billingFields->push(new TextField('Prefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
-        $billingFields->push(new TextField('Address', _t('OrderAddress.ADDRESS', 'Address')));
-        $billingFields->push(new TextField('Address2', _t('OrderAddress.ADDRESS2', '')));
-        $billingFields->push(new TextField('City', _t('OrderAddress.CITY', 'Town')));
+        $billingFields->push(new TextField('Address', _t('BillingAddress.ADDRESS', 'Address')));
+        $billingFields->push(new TextField('Address2', _t('BillingAddress.ADDRESS2', '')));
+        $billingFields->push(new TextField('City', _t('BillingAddress.CITY', 'Town')));
         $billingFields->push($this->getPostalCodeField('PostalCode'));
         $billingFields->push($this->getRegionField('RegionID', 'RegionCode'));
         $billingFields->push($this->getCountryField('Country'));
