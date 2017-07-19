@@ -9,6 +9,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     private static $db = array(
         'Search' => 'Varchar(255)',
         'Replace' => 'Varchar(255)',
+        'ReplaceWholePhrase' => 'Boolean'
     );
 
     private static $indexes = array(
@@ -24,7 +25,31 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     private static $field_labels = array(
         'Search' => 'Aliases (e.g. Biike)',
         'Replace' => 'Proper Name (e.g. Bike)',
+        'ReplaceWholePhrase' => 'Replace Whole Phrase Only'
     );
+
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Search Replacement';
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Search Replacements';
+    public function i18n_plural_name()
+    {
+        return $this->Config()->get('plural_name');
+    }
 
     private static $separator = ',';
 

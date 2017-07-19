@@ -43,7 +43,7 @@ class EcommerceTemplateTest extends Page_Controller
 
     public function SubmittedOrder()
     {
-        $lastStatusOrder = OrderStep::get()->Last();
+        $lastStatusOrder = OrderStep::last_order_step();
         if ($lastStatusOrder) {
             return
             DataObject::get_one(

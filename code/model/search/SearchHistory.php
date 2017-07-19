@@ -23,6 +23,29 @@ class SearchHistory extends DataObject
         'GroupCount' => 'Categories Found',
     );
 
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Search History Entry';
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Search History Entries';
+    public function i18n_plural_name()
+    {
+        return $this->Config()->get('plural_name');
+    }
+
     /**
      * creates a new entry if you are not a shop admin.
      *

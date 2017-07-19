@@ -62,7 +62,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
             if ($submittedStatusLog) {
-                $lastOrderStep = OrderStep::get()->Last();
+                $lastOrderStep = OrderStep::last_order_step();
                 if ($lastOrderStep) {
                     if($this->isCli()) {
                         $sort = 'RAND()';
