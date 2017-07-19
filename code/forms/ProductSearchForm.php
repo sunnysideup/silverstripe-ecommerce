@@ -258,7 +258,9 @@ class ProductSearchForm extends Form
         $requiredFields = array();
         $validator = ProductSearchForm_Validator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
+        //make it an easily accessible form  ...
         $this->setFormMethod('get');
+        $this->disableSecurityToken();
         //extensions need to be set after __construct
         //extension point
         $this->extend('updateFields', $fields);
@@ -342,15 +344,15 @@ class ProductSearchForm extends Form
             $data['Keyword'] = $data['ShortKeyword'];
         }
         if (isset($data['Keyword']) && $keywordPhrase = $data['Keyword']) {
-            echo 'AAAAAAAAAAA';
             if ($baseList->count()) {
                 if (strlen($keywordPhrase) > 1) {
                     $isKeywordSearch = true;
                     $immediateRedirectLink = '';
                     $this->resultArrayPos = 0;
                     $this->resultArray = array();
-
-                    $this->debugOutput('<hr /><h3>Raw Keyword '.$keywordPhrase.'</h3><pre>');
+                    if ($this->debug) {
+                        $this->debugOutput('<hr /><h3>Raw Keyword '.$keywordPhrase.'</h3><pre>');
+                    }
                     $keywordPhrase = Convert::raw2sql($keywordPhrase);
                     $keywordPhrase = strtolower($keywordPhrase);
 
