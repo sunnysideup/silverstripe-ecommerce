@@ -1845,7 +1845,9 @@ class ProductGroup_Controller extends Page_Controller
         $this->isSearchResults = true;
         //reset filter and sort
         $resultArray = $this->searchResultsArrayFromSession();
-        if (!$resultArray || !count($resultArray)) {
+        if (is_array($resultArray)  && count($resultArray)) {
+            //do nothing
+        } else {
             $resultArray = array(0 => 0);
         }
         $title = ProductSearchForm::get_last_search_phrase();
