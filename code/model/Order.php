@@ -1802,7 +1802,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @return bool TRUE for success, FALSE for failure (not tested)
      */
     protected function prepareAndSendEmail(
-        $emailClassName,
+        $emailClassName = 'Order_InvoiceEmail',
         $subject,
         $message,
         $resend = false,
@@ -1823,6 +1823,9 @@ class Order extends DataObject implements EditableEcommerceObject
             $to = $this->getOrderEmail();
         }
         if ($from && $to) {
+            if(! class_exists($emailClassName])) {
+                user_error('Invalid Email ClassName provided: '. $emailClassName, E_USER_ERROR);
+            }
             $email = new $emailClassName();
             if (!(is_a($email, Object::getCustomClass('Email')))) {
                 user_error('No correct email class provided.', E_USER_ERROR);

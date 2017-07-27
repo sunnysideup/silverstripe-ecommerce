@@ -784,7 +784,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * @var string
      */
-    protected $emailClassName = '';
+    protected $emailClassName = 'Order_InvoiceEmail';
 
     /**
      * returns the email class used for emailing the
@@ -821,11 +821,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if (!$subject) {
                 $subject = $this->EmailSubject;
             }
-            if (!$emailClassName) {
-                $emailClassName = $this->getEmailClassName();
-            }
-            $adminOnlyOrToEmailIsEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
-            if ($this->hasCustomerMessage() || $adminOnlyOrToEmailIsEmail) {
+            $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
+
+            //this is NOT an admin EMAIL
+            if ($this->hasCustomerMessage() || $useAlternativeEmail) {
+                if (! $emailClassName) {
+                    $emailClassName = $this->getEmailClassName();
+                }
                 return $order->sendEmail(
                     $emailClassName,
                     $subject,
@@ -833,8 +835,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $resend,
                     $adminOnlyOrToEmail
                 );
+            //ADMIN ONLY ....
             } else {
-                if (!$emailClassName) {
+                if (! $emailClassName) {
                     $emailClassName = 'Order_ErrorEmail';
                 }
                 //looks like we are sending an error, but we are just using this for notification
