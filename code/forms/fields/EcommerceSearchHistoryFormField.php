@@ -21,14 +21,14 @@ class EcommerceSearchHistoryFormField extends LiteralField
      *
      * @var int
      */
-    protected $minimumCount = 1;
+    protected $minimumCount = 30;
 
     /**
-     * minimum number of searches for the data to show up.
+     * maximum number of searches for the data to show up.
      *
      * @var int
      */
-    protected $maxRows = 999999;
+    protected $maxRows = 20;
 
     /**
      *
@@ -148,6 +148,10 @@ class EcommerceSearchHistoryFormField extends LiteralField
     {
         $title = $this->getContent();
         $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
+        $minCountSafety = SearchHistory::get()->count() / 500;
+        if($this->minimumCount < $minCountSafety) {
+            $this->minimumCount = $minCountSafety;
+        }
         $data = DB::query('
             SELECT COUNT(ID) myCount, "Title"
             FROM "SearchHistory"
