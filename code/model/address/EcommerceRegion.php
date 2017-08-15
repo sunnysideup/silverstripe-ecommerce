@@ -53,8 +53,9 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * @var string
      */
     private static $indexes = array(
+        'Name' => true,
         'Code' => true,
-        'DoNotAllowSales' => true,
+        'DoNotAllowSales' => true
     );
 
     /**
@@ -62,7 +63,10 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $default_sort = '"Name" ASC';
+    private static $default_sort = [
+        'Name' => 'ASC',
+        'ID' => 'ASC'
+    ];
 
     /**
      * standard SS variable.

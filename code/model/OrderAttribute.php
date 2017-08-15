@@ -70,7 +70,11 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @var string
      **/
-    private static $default_sort = '"OrderAttribute"."GroupSort" ASC, "OrderAttribute"."Sort" ASC, "OrderAttribute"."Created" ASC';
+    private static $default_sort = [
+        'OrderAttribute.GroupSort' => 'ASC',
+        'OrderAttribute.Sort' => 'ASC',
+        'OrderAttribute.ID' => 'ASC'
+    ];
 
     /**
      * Standard SS variable.
@@ -78,8 +82,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $indexes = array(
-        'Sort' => true,
         'GroupSort' => true,
+        'Sort' => true,
+        'ID' => true
     );
 
     /**

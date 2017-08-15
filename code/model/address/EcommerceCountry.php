@@ -46,16 +46,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     );
 
     /**
-     * Standard SS Variable.
-     *
-     * @var array
-     **/
-    private static $indexes = array(
-        'Code' => true,
-        'DoNotAllowSales' => true,
-    );
-
-    /**
      * standard SS variable.
      *
      * @var array
@@ -92,9 +82,24 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Variable.
      *
+     * @var array
+     **/
+    private static $indexes = array(
+        'DoNotAllowSales' => true,
+        'Name' => true,
+        'Code' => true
+    );
+
+    /**
+     * Standard SS Variable.
+     *
      * @var string
      **/
-    private static $default_sort = '"DoNotAllowSales" ASC, "Name" ASC';
+    private static $default_sort = [
+        'DoNotAllowSales' => 'ASC',
+        'Name' => 'ASC',
+        'ID' => 'ASC'
+    ];
 
     /**
      * Standard SS Variable.

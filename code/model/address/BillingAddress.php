@@ -75,7 +75,9 @@ class BillingAddress extends OrderAddress
     /**
      * standard SS static definition.
      */
-    private static $default_sort = '"BillingAddress"."ID" DESC';
+    private static $default_sort = [
+        'ID' => 'DESC'
+    ];
 
     /**
      * standard SS variable.

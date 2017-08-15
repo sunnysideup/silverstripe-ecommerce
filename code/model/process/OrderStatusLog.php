@@ -252,7 +252,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $default_sort = '"Created" DESC';
+    private static $default_sort = [
+        'ID' => 'DESC'
+    ];
+
+    private static $indexes = [
+        'Title' => true,
+        'InternalUseOnly' => true
+    ];
 
     /**
      * standard SS method.
