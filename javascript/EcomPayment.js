@@ -8,9 +8,11 @@ if(
     (document.getElementById("PaymentMethod") !== null && typeof document.getElementById("PaymentMethod") !== "undefined")
 ) {
     (function(jQuery){
-        jQuery(window).load(function() {
+        jQuery(document).ready(
+            function() {
             EcomPayment.init();
-        });
+            }
+        );
     })(jQuery);
 
 
