@@ -112,12 +112,20 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         return $this;
     }
 
+    private static $indexes = array(
+        'Status' => true,
+        'LastEdited' => true
+    );
+
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $default_sort = '"Created" DESC';
+    private static $default_sort = [
+        'LastEdited' => 'DESC',
+        'ID' => 'DESC'
+    ];
 
     public function getCMSFields()
     {

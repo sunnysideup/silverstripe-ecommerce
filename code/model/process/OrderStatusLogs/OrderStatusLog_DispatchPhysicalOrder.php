@@ -54,7 +54,10 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch
         return _t('OrderStatusLog.ORDERLOGPHYSICALDISPATCHENTRIES', 'Order Log Physical Dispatch Entries');
     }
 
-    private static $default_sort = '"DispatchedOn" DESC, "Created" DESC';
+    private static $default_sort = [
+        'DispatchedOn' =>  'DESC',
+        'ID' => 'DESC'
+    ];
 
     public function populateDefaults()
     {

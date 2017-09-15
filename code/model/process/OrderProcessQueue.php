@@ -19,7 +19,6 @@ class OrderProcessQueue extends DataObject
     );
 
     private static $indexes = array(
-        'Created' => true,
         'DeferTimeInSeconds' => true,
         'ProcessAttempts' => true
     );
@@ -29,9 +28,9 @@ class OrderProcessQueue extends DataObject
         'HasBeenInQueueSince' => 'SS_Datetime'
     );
 
-    private static $default_sort = array(
-        'Created' => 'DESC'
-    );
+    private static $default_sort = [
+        'ID' => 'DESC'
+    ];
 
     /**
      * standard SS variable.
@@ -247,7 +246,7 @@ class OrderProcessQueue extends DataObject
             $message = 'Can not find order.';
             $myQueueObject->delete();
         }
-        
+
         return $message;
     }
 

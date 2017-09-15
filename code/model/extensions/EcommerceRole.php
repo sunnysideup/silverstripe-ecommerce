@@ -35,6 +35,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     private static $has_many = array(
         'Orders' => 'Order',
+        'CancelledOrders' => 'Order',
     );
 
     /**
@@ -263,9 +264,24 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @return DataList
      */
+    public function Orders()
+    {
+        return $this->getOrders();
+    }
+
     public function getOrders()
     {
         return Order::get()->filter(array('MemberID' => $this->owner->ID));
+    }
+    
+    public function CancelledOrders()
+    {
+        return $this->getCancelledOrders();
+    }
+
+    public function getCancelledOrders()
+    {
+        return Order::get()->filter(array('CancelledByID' => $this->owner->ID));
     }
 
     /**

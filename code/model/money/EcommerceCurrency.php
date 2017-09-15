@@ -28,6 +28,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     private static $indexes = array(
         'Code' => true,
+        'InUse' => true,
+        'Name' => true
     );
 
     /**
@@ -112,7 +114,12 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $default_sort = '"InUse" DESC, "Name" ASC, "Code" ASC';
+    private static $default_sort = [
+        'InUse' => 'DESC',
+        'Name' => 'ASC',
+        'Code' => 'ASC',
+        'ID' => 'DESC'
+    ];
 
     /**
      * standard SS variable.
@@ -120,7 +127,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $defaults = array(
-        'InUse' => true,
+        'InUse' => true
     );
 
     /**

@@ -197,7 +197,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $default_sort = '"UseThisOne" DESC, "Created" ASC';
+    private static $default_sort = [
+        'UseThisOne' => 'DESC',
+        'ID' => 'ASC'
+    ];
 
     /**
      * Standard SS variable.

@@ -213,7 +213,15 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    private static $default_sort = '"Created" DESC';
+    private static $default_sort = [
+        'ID' => 'ASC'
+    ];
+
+    private static $indexes = [
+        'From' => true,
+        'To' => true,
+        'Result' => true
+    ];
 
     /**
      * standard SS method.

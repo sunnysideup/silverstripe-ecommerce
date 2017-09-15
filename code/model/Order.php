@@ -113,6 +113,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     private static $indexes = array(
         'SessionID' => true,
+        'LastEdited' => true
     );
 
     /**
@@ -120,7 +121,10 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $default_sort = '"LastEdited" DESC';
+    private static $default_sort = [
+        'LastEdited' => 'DESC',
+        'ID' => 'DESC'
+    ];
 
     /**
      * standard SS variable.
