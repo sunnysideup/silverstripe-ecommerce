@@ -388,6 +388,9 @@ class ShoppingCart_Controller extends Controller
     public function removeallitem(SS_HTTPRequest $request)
     {
         $this->cart->deleteBuyable($this->buyable(), $this->parameters());
+        //added this because cart was not updating correctly
+        $order = $this->cart->CurrentOrder();
+        $order->calculateOrderAttributes($force = true);
 
         return $this->cart->setMessageAndReturn();
     }
@@ -424,6 +427,8 @@ class ShoppingCart_Controller extends Controller
     {
         $modifierID = intval($request->param('ID'));
         $this->cart->removeModifier($modifierID);
+        $order = $this->cart->CurrentOrder();
+        $order->calculateOrderAttributes($force = true);
 
         return $this->cart->setMessageAndReturn();
     }
@@ -440,6 +445,8 @@ class ShoppingCart_Controller extends Controller
     {
         $modifierID = intval($request->param('ID'));
         $this->cart->addModifier($modifierID);
+        $order = $this->cart->CurrentOrder();
+        $order->calculateOrderAttributes($force = true);
 
         return $this->cart->setMessageAndReturn();
     }

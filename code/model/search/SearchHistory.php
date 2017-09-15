@@ -8,7 +8,9 @@ class SearchHistory extends DataObject
         'GroupCount' => 'Int',
     );
 
-    private static $default_sort = '"Created" DESC';
+    private static $default_sort = [
+        'Created' => 'DESC'
+    ];
 
     private static $searchable_fields = array(
         'Title' => 'PartialMatchFilter',
@@ -22,6 +24,11 @@ class SearchHistory extends DataObject
         'ProductCount' => 'Products Found',
         'GroupCount' => 'Categories Found',
     );
+
+    private static $indexes = [
+        'Title' => true,
+        'Created' => true
+    ];
 
 
     /**
