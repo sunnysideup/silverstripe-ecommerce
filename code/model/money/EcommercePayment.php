@@ -38,6 +38,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
+        'AlternativeEndPoint' => 'Varchar(255)'
     );
 
     private static $has_one = array(
@@ -132,6 +133,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         $fields = parent::getCMSFields();
         $fields->replaceField('OrderID', new ReadonlyField('OrderID', 'Order ID'));
         $fields->replaceField('PaidByID', new ReadonlyField('PaidByID', 'Payment made by'));
+        $fields->removeByName('AlternativeEndPoint');
 
         return $fields;
     }
@@ -232,18 +234,31 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * redirects to this link after order has been placed ....
+     * @param  string $link
+     */
+    public function addAlternativeEndPoint($link, $write = true)
+    {
+        $this->AlternativeEndPoint = $link;
+        if($write) {
+            $this->write();
+        }
+    }
+
+    /**
      * redirect to order action.
      */
     public function redirectToOrder()
     {
+        if($this->AlternativeEndPoint) {
+            return Controller::curr()->redirect(Director::absoluteBaseURL().$this->AlternativeEndPoint);
+        }
         $order = $this->Order();
         if ($order) {
-            Controller::curr()->redirect($order->Link());
+            return Controller::curr()->redirect($order->Link());
         } else {
             user_error('No order found with this payment: '.$this->ID, E_USER_NOTICE);
         }
-
-        return;
     }
 
     /**
