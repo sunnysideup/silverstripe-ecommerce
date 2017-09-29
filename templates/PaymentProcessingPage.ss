@@ -1,5 +1,5 @@
 <% include BasicPageHeader Title='Processing' %>
-
+<script type="text/javascript" src="/framework/thirdparty/jquery/jquery.js"></script>
 
 <div id="Outer">
     <div id="Inner">
@@ -38,7 +38,4 @@
         border: 0;
     }
 </style>
-<script type="text/javascript" src="/framework/thirdparty/jquery/jquery.js"></script>
-
-
 <% include BasicPageFooter %>
