@@ -12,6 +12,7 @@
  **/
 class AccountPage extends Page
 {
+
     /**
      * standard SS variable.
      *
@@ -321,6 +322,4 @@ class AccountPage_Controller extends Page_Controller
 
         return $link;
     }
-
-
 }
