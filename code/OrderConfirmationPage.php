@@ -762,8 +762,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             }
             if ($statusID = intval($request->getVar('test'))) {
                 $step = OrderStep::get()->byID($statusID);
-                $subject = $step->EmailSubject;
-                $message = $step->CustomerMessage;
+                $subject = $step->CalculatedEmailSubject($this->currentOrder);
+                $message = $step->CalculatedCustomerMessage($this->currentOrder);
                 if ($step) {
                     $emailClassName = $step->getEmailClassName();
                 }

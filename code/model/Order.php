@@ -1896,10 +1896,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $replacementArray = array();
         //set subject
         if ( ! $subject) {
-            $subject = $step->EmailSubject;
+            $subject = $step->CalculatedEmailSubject($this);
         }
         if( ! $message) {
-            $message = $step->CustomerMessage;
+            $message = $step->CalculatedCustomerMessage($this);
         }
         $subject = str_replace('[OrderNumber]', $this->ID, $subject);
         //set other variables
@@ -3113,7 +3113,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-        if ($this->ShippingAddressID && $this->UseShippingAddress) {
+        if ($this->IsSeparateShippingAddress()) {
             $shippingAddress = ShippingAddress::get()->byID($this->ShippingAddressID);
             if ($shippingAddress) {
                 if ($shippingAddress->ShippingCountry) {
@@ -3134,6 +3134,15 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return $code;
+    }
+
+    /**
+     * is this a gift / separate shippingAddress?
+     * @return Boolean
+     */
+    public function IsSeparateShippingAddress()
+    {
+        return $this->ShippingAddressID && $this->UseShippingAddress;
     }
 
     /**

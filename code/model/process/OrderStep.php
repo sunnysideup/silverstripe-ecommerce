@@ -819,7 +819,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     ) {
         if (!$this->hasBeenSent($order) || $resend) {
             if (!$subject) {
-                $subject = $this->EmailSubject;
+                $subject = $this->CalculatedEmailSubject($order);
             }
             $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
 
@@ -964,6 +964,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function getHasCustomerMessageNice()
     {
         return $this->hasCustomerMessage() ?  _t('OrderStep.YES', 'Yes') :  _t('OrderStep.NO', 'No');
+    }
+
+    public function CalculatedEmailSubject($order = null)
+    {
+        return $this->EmailSubject;
+    }
+
+    public function CalculatedCustomerMessage($order = null)
+    {
+        return $this->CustomerMessage;
     }
 
     /**
