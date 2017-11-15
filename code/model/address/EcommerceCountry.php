@@ -139,15 +139,19 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
+        $can = false;
         if (! $member) {
             $member = Member::currentUser();
+        }
+        if(EcommerceCountry::get()->count() < 220) {
+            $can = parent::canCreate($member);
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
         }
 
-        return false;
+        return $can;
     }
 
     /**
