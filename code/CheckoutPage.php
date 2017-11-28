@@ -501,7 +501,7 @@ class CheckoutPage_Controller extends CartPage_Controller
 
     /**
      * STEP STUFF ---------------------------------------------------------------------------.
-     *
+     */
 
 
      /**
@@ -652,10 +652,13 @@ class CheckoutPage_Controller extends CartPage_Controller
     public function CanShowStep($step)
     {
         if ($this->ShowOnlyCurrentStep()) {
-            return $step == $this->currentStep;
+            $outcome = $step == $this->currentStep;
         } else {
-            return in_array($step, $this->steps);
+            $outcome = in_array($step, $this->steps);
         }
+
+        // die($step.'sadf'.$outcome);
+        return $outcome;
     }
 
     /**
