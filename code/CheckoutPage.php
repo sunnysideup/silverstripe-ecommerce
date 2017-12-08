@@ -355,14 +355,16 @@ class CheckoutPage extends CartPage
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $checkoutPage = DataObject::get_one('CheckoutPage');
-        if (!$checkoutPage) {
-            $checkoutPage = self::create();
-            $checkoutPage->Title = 'Checkout';
-            $checkoutPage->MenuTitle = 'Checkout';
-            $checkoutPage->URLSegment = 'checkout';
-            $checkoutPage->writeToStage('Stage');
-            $checkoutPage->publish('Stage', 'Live');
+        if(SiteTree::config()->create_default_pages) {
+            $checkoutPage = DataObject::get_one('CheckoutPage');
+            if (! $checkoutPage) {
+                $checkoutPage = self::create();
+                $checkoutPage->Title = 'Checkout';
+                $checkoutPage->MenuTitle = 'Checkout';
+                $checkoutPage->URLSegment = 'checkout';
+                $checkoutPage->writeToStage('Stage');
+                $checkoutPage->publish('Stage', 'Live');
+            }
         }
     }
 }

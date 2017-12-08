@@ -630,8 +630,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $currency = self::default_currency();
-        if (!$currency) {
+        if (! self::default_currency()) {
             self::create_new(EcommerceConfig::get('EcommerceCurrency', 'default_currency'));
         }
     }
