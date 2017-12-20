@@ -502,8 +502,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     array(
                         new CheckboxField('UseThisOne', $fieldLabels['UseThisOne']),
                         new CheckboxField('ShopClosed', $fieldLabels['ShopClosed']),
+                        $clearField = ReadonlyField::create(
+                            'RefreshWebsite',
+                            'Update site',
+                            '<h2><a href="/shoppingcart/clear/?flush=all" target="_blank">Refresh website / clear caches</a></h2>'
+                        )
                     )
                 );
+                $clearField->dontEscape = true;
                 //set cols
                 if ($f = $fields->dataFieldByName('CurrenciesExplanation')) {
                     $f->setRows(2);
