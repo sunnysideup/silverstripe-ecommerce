@@ -1336,7 +1336,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function onAfterDelete()
     {
         parent::onAfterDelete();
-        $this->requireDefaultRecords();
+        $this->checkValidityOfOrderSteps();
     }
 
     protected function NextOrderStep()
@@ -1360,6 +1360,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
+        $this->checkValidityOfOrderSteps();
+    }
+
+    protected function checkValidityOfOrderSteps()
+    {
         $orderStepsToInclude = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
         $codesToInclude = self::get_codes_for_order_steps_to_include();
         $indexNumber = 0;
