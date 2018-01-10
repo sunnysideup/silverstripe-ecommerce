@@ -465,8 +465,6 @@ class OrderProcessQueue extends DataObject
         foreach($errors as $error) {
             DB::alteration_message(' DELETING ROGUE OrderProcessQueue', 'deleted');
             $error->delete();
-        } else {
-            DB::alteration_message(' There are no NO rogue Orders in the OrderProcessQueue');
         }
     }
 
