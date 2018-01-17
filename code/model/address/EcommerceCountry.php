@@ -406,29 +406,33 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function get_country($recalculate = false, $orderID = 0)
     {
+        //get order ID
         $orderID = ShoppingCart::current_order_id($orderID);
         $countryCode = self::get_country_cache($orderID);
         if ($countryCode === null || $recalculate) {
             $countryCode = '';
             //1. fixed country is first
             $countryCode = self::get_fixed_country_code();
-            if (!$countryCode) {
+            if (! $countryCode) {
                 //2. check order / shipping address / ip address
                 //include $countryCode = self::get_country_from_ip();
-                if ($o = ShoppingCart::current_order()) {
+                $o = ShoppingCart::current_order();
+                if($orderID && $orderID !== $o->ID) {
+                    $o = DataObject::get_one('Order', ['ID' => $orderID]);
+                }
+                if ($o && $o->exists()) {
                     $countryCode = $o->getCountry();
                 //3 ... if there is no shopping cart, then we still want it from IP
                 } else {
                     $countryCode = self::get_country_from_ip();
                 }
                 //4 check default country set in GEO IP....
-                if (!$countryCode) {
+                if (! $countryCode) {
                     $countryCode = self::get_country_default();
                 }
             }
             self::set_country_cache($countryCode, $orderID);
         }
-
         return $countryCode;
     }
 
