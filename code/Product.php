@@ -1035,9 +1035,9 @@ class Product extends Page implements BuyableModel
      *
      * @return float
      */
-    public function getCalculatedPrice()
+    public function getCalculatedPrice($forceRecalculation = false)
     {
-        if (! isset(self::$_calculated_price_cache[$this->ID])) {
+        if (! isset(self::$_calculated_price_cache[$this->ID]) || $forceRecalculation) {
             $price = $this->Price;
             $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
             if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
