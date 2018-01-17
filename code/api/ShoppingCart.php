@@ -100,6 +100,14 @@ class ShoppingCart extends Object
     }
 
     /**
+     * useful when the order has been updated ...
+     */
+    public static function reset_order_reference()
+    {
+        return self::singleton()->order = null;
+    }
+
+    /**
      * looks up current order id.
      * you may supply an ID here, so that it looks up the current order ID
      * only when none is supplied.
@@ -111,7 +119,7 @@ class ShoppingCart extends Object
     public static function current_order_id($orderOrOrderID = 0)
     {
         $orderID = 0;
-        if (!$orderOrOrderID) {
+        if (! $orderOrOrderID) {
             $order = self::current_order();
             if ($order && $order->exists()) {
                 $orderID = $order->ID;
@@ -318,9 +326,9 @@ class ShoppingCart extends Object
             } else {
                 if ( php_sapi_name() !== 'cli' ) {
                     if ( version_compare(phpversion(), '5.4.0', '>=') ) {
-                        self::$_allow_writes_cache = session_status() === PHP_SESSION_ACTIVE ? true : false;
+                        self::$_allow_writes_cache = (session_status() === PHP_SESSION_ACTIVE ? true : false);
                     } else {
-                        self::$_allow_writes_cache = session_id() === '' ? true : false;
+                        self::$_allow_writes_cache = (session_id() === '' ? false : true);
                     }
                 } else {
                     self::$_allow_writes_cache = false;
