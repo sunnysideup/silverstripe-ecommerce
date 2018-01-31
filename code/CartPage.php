@@ -425,7 +425,7 @@ class CartPage_Controller extends Page_Controller
                         'ID' => $otherID,
                     )
                 )->first();
-                if($retrievedOrder) {
+                if ($retrievedOrder) {
                     $this->currentOrder = $retrievedOrder;
                     $this->overrideCanView = true;
                     $this->setRetrievalOrderID($this->currentOrder->ID);
@@ -487,7 +487,7 @@ class CartPage_Controller extends Page_Controller
      */
     protected function setRetrievalOrderID($orderID, $validUntilTS = null)
     {
-        if(! $validUntilTS) {
+        if (! $validUntilTS) {
             $validUntilTS = time() + 3600;
         }
         Session::set('CheckoutPageCurrentOrderID', $orderID);
@@ -582,7 +582,7 @@ class CartPage_Controller extends Page_Controller
             }
         }
         $this->Title .= ': '.  implode(', ', $titleAppendixArray);
-        if(strlen($this->Title) > 255 ) {
+        if (strlen($this->Title) > 255) {
             $this->Title = substr($this->Title, 0, 255). ' ...';
         }
         return array();
@@ -1041,5 +1041,4 @@ class CartPage_Controller extends Page_Controller
     {
         return true;
     }
-
 }

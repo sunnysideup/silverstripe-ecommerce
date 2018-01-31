@@ -238,7 +238,7 @@ class OrderConfirmationPage extends CartPage
             HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
         ));
         $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', $fieldLabels['EnableGoogleAnalytics']));
-        if($this->IsFeedbackEnabled) {
+        if ($this->IsFeedbackEnabled) {
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
                 array(
@@ -769,7 +769,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 }
                 if ($request->getVar('send')) {
                     $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
-                    if(! $email) {
+                    if (! $email) {
                         $email = true;
                     }
                     $this->currentOrder->sendEmail(
@@ -780,8 +780,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                         $adminOnlyOrToEmail = $email
                     );
                 }
-            }
-            elseif ($request->getVar('send')) {
+            } elseif ($request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
                     $step = OrderStep::get()->byID($this->currentOrder->StatusID);
                     $ecomConfig = $this->EcomConfig();
@@ -821,7 +820,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
     {
         if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
             $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
-            if($var) {
+            if ($var) {
                 $currencyUsedObject = $this->currentOrder->CurrencyUsed();
                 if ($currencyUsedObject) {
                     $currencyUsedString = $currencyUsedObject->Code;

@@ -48,5 +48,4 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter
 
         return $query;
     }
-
 }

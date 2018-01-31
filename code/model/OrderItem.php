@@ -236,7 +236,7 @@ class OrderItem extends OrderAttribute
                 }
                 $fields->addFieldToTab(
                     'Root.Main',
-                    HeaderField::create('buyableLink',  $buyableLink),
+                    HeaderField::create('buyableLink', $buyableLink),
                     'Quantity'
                 );
 

@@ -166,10 +166,10 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
     public function CalculatedEmailSubject($order = null)
     {
         $v = null;
-        if($order && $order->IsSeparateShippingAddress()) {
+        if ($order && $order->IsSeparateShippingAddress()) {
             $v = $this->EmailSubjectGift;
         }
-        if(! $v) {
+        if (! $v) {
             $v = $this->EmailSubject;
         }
 
@@ -179,10 +179,10 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
     public function CalculatedCustomerMessage($order = null)
     {
         $v = null;
-        if($order && $order->IsSeparateShippingAddress()) {
+        if ($order && $order->IsSeparateShippingAddress()) {
             $v = $this->CustomerMessageGift;
         }
-        if(! $v) {
+        if (! $v) {
             $v = $this->CustomerMessage;
         }
 

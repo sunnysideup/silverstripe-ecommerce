@@ -240,7 +240,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function addAlternativeEndPoint($link, $write = true)
     {
         $this->AlternativeEndPoint = $link;
-        if($write) {
+        if ($write) {
             $this->write();
         }
     }
@@ -250,7 +250,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function redirectToOrder()
     {
-        if($this->AlternativeEndPoint) {
+        if ($this->AlternativeEndPoint) {
             return Controller::curr()->redirect(Director::absoluteBaseURL().$this->AlternativeEndPoint);
         }
         $order = $this->Order();

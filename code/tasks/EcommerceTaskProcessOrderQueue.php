@@ -29,19 +29,19 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         set_time_limit(50);
         $now = microtime(true);
         //IMPORTANT!
-        if ( ! $this->sendEmails) {
+        if (! $this->sendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new Ecommerce_Dummy_Mailer());
         }
         $id = intval($request->getVar('id')) - 0;
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
-        if($ordersinQueue->count() == 0) {
+        if ($ordersinQueue->count() == 0) {
             echo 'No orders in queue';
             return;
         }
         echo '<h3>There are '.$ordersinQueue->count().' in the queue, processing '.$this->limit.' now</h3>';
-        if($id) {
+        if ($id) {
             echo '<h3>FORCING Order with ID: '.$id.'</h3>';
             $ordersinQueue = $ordersinQueue->filter(array('ID' => $id));
         }
@@ -66,7 +66,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         foreach ($orders as $order) {
             echo '<hr />Processing order: '.$order->ID;
             $outcome = $queueObjectSingleton->process($order);
-            if($outcome === true) {
+            if ($outcome === true) {
                 echo '<br />... Order moved successfully.<hr />';
             } else {
                 echo '<br />... '.$outcome.'<hr />';
