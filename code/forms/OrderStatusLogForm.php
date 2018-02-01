@@ -32,7 +32,8 @@ class OrderStatusLogForm extends Form
      **/
     public function __construct(
         Controller $optionalController = null,
-        $name, FieldList $fields,
+        $name,
+        FieldList $fields,
         FieldList $actions,
         Validator $optionalValidator = null
     ) {

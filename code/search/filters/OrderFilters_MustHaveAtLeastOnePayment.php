@@ -27,5 +27,4 @@ class OrderFilters_MustHaveAtLeastOnePayment extends ExactMatchFilter
 
         return $query;
     }
-
 }

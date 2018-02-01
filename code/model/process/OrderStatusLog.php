@@ -300,7 +300,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         //OrderID Field
         if ($this->exists() && $this->OrderID) {
             $order = $this->Order();
-            if($order && $order->exists()) {
+            if ($order && $order->exists()) {
                 $fields->removeByName('OrderID');
                 $fields->addFieldToTab(
                     'Root.Main',

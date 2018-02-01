@@ -743,7 +743,7 @@ class EcommerceTaskMigration extends BuildTask
                         if ($member) {
                             if ($obj = $order->BillingAddress()) {
                                 $this->DBAlterationMessageNow('Order (id = '.$order->ID.') already has a billing address');
-                                //do nothing
+                            //do nothing
                             } else {
                                 $this->DBAlterationMessageNow('Order (id = '.$order->ID.') now gets its own billing address...');
                                 $obj = BillingAddress::create();
@@ -946,7 +946,7 @@ class EcommerceTaskMigration extends BuildTask
                             if ($sentObject) {
                                 $this->DBAlterationMessageNow('Updating to SENT status', 'created');
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$sentObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
-                            } elseif ($archivedObject = DataObject::get_one('OrderStep', array('Code' => 'ARCHIVED'),$cacheDataObjectGetOne = false)) {
+                            } elseif ($archivedObject = DataObject::get_one('OrderStep', array('Code' => 'ARCHIVED'), $cacheDataObjectGetOne = false)) {
                                 $this->DBAlterationMessageNow('Updating to ARCHIVED status', 'created');
                                 DB::query('UPDATE "Order" SET "StatusID" = '.$archivedObject->ID.' WHERE "Order"."ID" = '.$row['ID'].' AND ("StatusID" = 0 OR "StatusID" IS NULL)');
                             } else {
@@ -1055,36 +1055,42 @@ class EcommerceTaskMigration extends BuildTask
         $productGroupDefaults = Config::inst()->get('ProductGroup', 'defaults');
         if ($checkIfAnyLevelsAreSetAtAll == 0 && $productGroupDefaults['LevelOfProductsToShow'] != 0) {
             //level of products to show
-            DB::query('
+            DB::query(
+                '
                 UPDATE "ProductGroup"
                 SET "LevelOfProductsToShow" = '.$productGroupDefaults['LevelOfProductsToShow'].'
                 WHERE "LevelOfProductsToShow" = 0 OR "LevelOfProductsToShow" IS NULL '
             );
-            DB::query('
+            DB::query(
+                '
                 UPDATE "ProductGroup_Live"
                 SET "LevelOfProductsToShow" = '.$productGroupDefaults['LevelOfProductsToShow'].'
                 WHERE "LevelOfProductsToShow" = 0 OR "LevelOfProductsToShow"  IS NULL '
             );
             $this->DBAlterationMessageNow("resetting product 'show' levels", 'created');
             //default sort order
-            DB::query('
+            DB::query(
+                '
                 UPDATE "ProductGroup"
                 SET "DefaultSortOrder" = '.$productGroupDefaults['DefaultSortOrder']."
                 WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
             );
-            DB::query('
+            DB::query(
+                '
                 UPDATE "ProductGroup_Live"
                 SET "DefaultSortOrder" = '.$productGroupDefaults['DefaultSortOrder']."
                 WHERE \"DefaultSortOrder\" = 0 OR  \"DefaultSortOrder\" = '' OR  \"DefaultSortOrder\" IS NULL "
             );
             $this->DBAlterationMessageNow('resetting product default sort order', 'created');
             //default filter
-            DB::query('
+            DB::query(
+                '
                 UPDATE "ProductGroup"
                 SET "DefaultFilter" = '.$productGroupDefaults['DefaultFilter']."
                 WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
             );
-            DB::query('
+            DB::query(
+                '
                 UPDATE "ProductGroup_Live"
                 SET "DefaultFilter" = '.$productGroupDefaults['DefaultFilter']."
                 WHERE \"DefaultFilter\" = 0 OR  \"DefaultFilter\" = '' OR  \"DefaultFilter\" IS NULL "
@@ -1109,7 +1115,8 @@ class EcommerceTaskMigration extends BuildTask
             echo $explanation;
         }
         if ($this->hasTableAndField('OrderModifier', 'CalculationValue')) {
-            DB::query('
+            DB::query(
+                '
                 UPDATE "OrderAttribute"
                 INNER JOIN "OrderModifier"
                     ON "OrderAttribute"."ID" = "OrderModifier"."ID"
@@ -1650,7 +1657,8 @@ class EcommerceTaskMigration extends BuildTask
             $table = '_obsolete_Payment';
             $this->DBAlterationMessageNow('The table Payment has been moved to _obsolete_Payment. We are using _obsolete_Payment to fix things...', 'deleted');
         }
-        DB::query('
+        DB::query(
+            '
             INSERT IGNORE INTO EcommercePayment(
                 `ID`,
                 `ClassName`,

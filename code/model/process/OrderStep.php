@@ -335,7 +335,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function last_order_step($noCacheValues = false)
     {
-        if( ! self::$_last_order_step_cache || $noCacheValues) {
+        if (! self::$_last_order_step_cache || $noCacheValues) {
             self::$_last_order_step_cache = OrderStep::get()->Last();
         }
 
@@ -466,7 +466,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $config = $queueField->getConfig();
         $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
         $config->removeComponentsByType('GridFieldDeleteAction');
-        $fields->removeFieldFromTab('Root','OrderProcessQueueEntries');
+        $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         if ($this->canBeDefered()) {
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
@@ -549,7 +549,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
             $htmlEditorField->setRows(3);
-
         } else {
             $fields->removeFieldFromTab('Root', 'OrderEmailRecords');
             $fields->removeFieldFromTab('Root.Main', 'EmailSubject');
@@ -641,9 +640,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $result;
     }
 
-/**************************************************
-* moving between statusses...
-**************************************************/
+    /**************************************************
+    * moving between statusses...
+    **************************************************/
     /**
      *initStep:
      * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
@@ -705,9 +704,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return;
     }
 
-/**************************************************
-* Boolean checks
-**************************************************/
+    /**************************************************
+    * Boolean checks
+    **************************************************/
 
     /**
      * Checks if a step has passed (been completed) in comparison to the current step.
@@ -777,9 +776,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return in_array($this->Code, self::get_codes_for_order_steps_to_include());
     }
 
-/**************************************************
-* Email
-**************************************************/
+    /**************************************************
+    * Email
+    **************************************************/
 
     /**
      * @var string
@@ -888,7 +887,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $cacheDataObjectGetOne = true,
                 'RAND() ASC'
             );
-            if(! $order) {
+            if (! $order) {
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= '.$this->Sort)
                     ->sort('IF("OrderStep"."Sort" > '.$this->Sort.', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
@@ -1090,9 +1089,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
 
-/**************************************************
-* Order Status Logs
-**************************************************/
+    /**************************************************
+    * Order Status Logs
+    **************************************************/
 
     /**
      * The OrderStatusLog that is relevant to the particular step.
@@ -1151,9 +1150,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         }
     }
 
-/**************************************************
-* Silverstripe Standard Data Object Methods
-**************************************************/
+    /**************************************************
+    * Silverstripe Standard Data Object Methods
+    **************************************************/
 
     /**
      * Standard SS method
@@ -1399,7 +1398,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         }
                     } else {
                         $oldObjects = OrderStep::get()->filterAny(array('Code' => $code));
-                        foreach($oldObjects as $oldObject) {
+                        foreach ($oldObjects as $oldObject) {
                             DB::alteration_message('DELETING '.$oldObject->Title.' as this now appears obsolete', 'deleted');
                             $oldObject->delete();
                         }
