@@ -1964,8 +1964,7 @@ class ProductGroup_Controller extends Page_Controller
             $sortKey = $this->getCurrentUserPreferences('SORT');
             $pageStart = $this->request->getVar('start') ? intval($this->request->getVar('start')) : 0;
             $isFullList = $this->IsShowFullList() ? 'Y' : 'N';
-
-            $this->cacheKey(
+            return $this->cacheKey(
                 implode(
                     '_',
                     array(
