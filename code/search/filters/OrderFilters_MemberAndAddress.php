@@ -65,5 +65,4 @@ class OrderFilters_MemberAndAddress extends ExactMatchFilter
 
         return $query;
     }
-
 }

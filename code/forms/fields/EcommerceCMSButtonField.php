@@ -20,6 +20,7 @@ class EcommerceCMSButtonField extends LiteralField
                 </a>
             </h3>
 
-        ');
+        '
+        );
     }
 }

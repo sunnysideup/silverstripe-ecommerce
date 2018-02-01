@@ -23,5 +23,4 @@ class OrderFilters_HasBeenCancelled extends ExactMatchFilter
 
         return $query;
     }
-
 }

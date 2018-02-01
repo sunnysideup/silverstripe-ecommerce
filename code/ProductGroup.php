@@ -340,14 +340,14 @@ class ProductGroup extends Page
      */
     protected $totalCount = 0;
 
-     /**
-      * Can product list (and related) be cached at all?
-      * Set this to FALSE if the product details can be changed
-      * for an individual user.
-      *
-      * @var bool
-      */
-     protected $allowCaching = true;
+    /**
+     * Can product list (and related) be cached at all?
+     * Set this to FALSE if the product details can be changed
+     * for an individual user.
+     *
+     * @var bool
+     */
+    protected $allowCaching = true;
 
     /**
      * return the options for one type.
@@ -528,7 +528,7 @@ class ProductGroup extends Page
     protected function getUserSettingsOptionSQL($type, $key = '')
     {
         $options = $this->getConfigOptions($type);
-            //if we cant find the current one, use the default
+        //if we cant find the current one, use the default
         if (!$key || (!isset($options[$key]))) {
             $key = $this->getMyUserPreferencesDefault($type);
         }
@@ -588,7 +588,7 @@ class ProductGroup extends Page
      **/
     public function MyNumberOfProductsPerPage()
     {
-        if($this->_numberOfProductsPerPage === null) {
+        if ($this->_numberOfProductsPerPage === null) {
             $productsPagePage = 0;
             if ($this->NumberOfProductsPerPage) {
                 $productsPagePage = $this->NumberOfProductsPerPage;
@@ -1528,21 +1528,21 @@ class ProductGroup extends Page
         }
     }
 
-    function requireDefaultRecords()
+    public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
         $urlSegments = ProductGroup::get()->column('URLSegment');
-        foreach($urlSegments as $urlSegment) {
+        foreach ($urlSegments as $urlSegment) {
             $counts = array_count_values($urlSegments);
             $hasDuplicates = $counts[$urlSegment]  > 1 ? true : false;
-            if($hasDuplicates) {
+            if ($hasDuplicates) {
                 DB::alteration_message('found duplicates for '.$urlSegment, 'deleted');
                 $checkForDuplicatesURLSegments = ProductGroup::get()
                     ->filter(array('URLSegment' => $urlSegment));
-                if($checkForDuplicatesURLSegments->count()){
+                if ($checkForDuplicatesURLSegments->count()) {
                     $count = 0;
-                    foreach($checkForDuplicatesURLSegments as $productGroup) {
-                        if($count > 0) {
+                    foreach ($checkForDuplicatesURLSegments as $productGroup) {
+                        if ($count > 0) {
                             $oldURLSegment = $productGroup->URLSegment;
                             DB::alteration_message(' ... Correcting URLSegment for '.$productGroup->Title.' with ID: '.$productGroup->ID, 'deleted');
                             $productGroup->writeToStage('Stage');
@@ -1851,7 +1851,7 @@ class ProductGroup_Controller extends Page_Controller
             $resultArray = array(0 => 0);
         }
         $title = ProductSearchForm::get_last_search_phrase();
-        if($title) {
+        if ($title) {
             $title = _t('Ecommerce.SEARCH_FOR', 'search for: ').substr($title, 0, 25);
         }
         $this->addSecondaryTitle($title);
@@ -1988,7 +1988,8 @@ class ProductGroup_Controller extends Page_Controller
     public function CachingRelatedJavascript()
     {
         if ($this->ProductGroupListAreAjaxified()) {
-            Requirements::customScript("
+            Requirements::customScript(
+                "
                     if(typeof EcomCartOptions === 'undefined') {
                         var EcomCartOptions = {};
                     }
@@ -2000,7 +2001,8 @@ class ProductGroup_Controller extends Page_Controller
                 'cachingRelatedJavascript_AJAXlist'
             );
         } else {
-            Requirements::customScript("
+            Requirements::customScript(
+                "
                     if(typeof EcomCartOptions === 'undefined') {
                         var EcomCartOptions = {};
                     }
@@ -2015,7 +2017,8 @@ class ProductGroup_Controller extends Page_Controller
             $obj = new $responseClass();
             $obj->setIncludeHeaders(false);
             $json = $obj->ReturnCartData();
-            Requirements::customScript("
+            Requirements::customScript(
+                "
                     if(typeof EcomCartOptions === 'undefined') {
                         var EcomCartOptions = {};
                     }
@@ -2474,7 +2477,7 @@ class ProductGroup_Controller extends Page_Controller
 
             //child groups
             $items = $this->MenuChildGroups();
-            $arrayOfItems = array_merge($arrayOfItems,  $this->productGroupFilterLinksCount($items, $baseArray, true));
+            $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
 
             ksort($arrayOfItems);
             $array = array();
@@ -2498,13 +2501,14 @@ class ProductGroup_Controller extends Page_Controller
      *
      * @return ArrayList
      */
-    public function ProductGroupFilterOriginalObjects() {
+    public function ProductGroupFilterOriginalObjects()
+    {
         $links = $this->ProductGroupFilterLinks();
         // /print_r($links);
-        foreach($links as $linkItem) {
+        foreach ($links as $linkItem) {
             $className = $linkItem->ClassName;
             $id = $linkItem->ID;
-            if($className && $id) {
+            if ($className && $id) {
                 $object = $className::get()->byID($id);
                 $linkItem->Object = $object;
             }
@@ -2903,9 +2907,9 @@ class ProductGroup_Controller extends Page_Controller
                 $toAdd = $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }
-            if($pagination) {
-                if($pageStart = intval($this->request->getVar('start'))) {
-                    if($pageStart > 0) {
+            if ($pagination) {
+                if ($pageStart = intval($this->request->getVar('start'))) {
+                    if ($pageStart > 0) {
                         $page = ($pageStart / $this->MyNumberOfProductsPerPage()) + 1;
                         $toAdd = _t('ProductGroup.PAGE', 'Page') . ' '.$page;
                         $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
@@ -2989,9 +2993,9 @@ class ProductGroup_Controller extends Page_Controller
 
         $html .= '<li><hr /><h3>SQL Factors</h3><hr /></li>';
         $html .= '<li><b>Default sort SQL:</b> '.print_r($this->getUserSettingsOptionSQL('SORT'), 1).' </li>';
-        $html .= '<li><b>User sort SQL:</b> '.print_r($this->getUserSettingsOptionSQL('SORT',  $this->getCurrentUserPreferences('SORT')), 1).' </li>';
+        $html .= '<li><b>User sort SQL:</b> '.print_r($this->getUserSettingsOptionSQL('SORT', $this->getCurrentUserPreferences('SORT')), 1).' </li>';
         $html .= '<li><b>Default Filter SQL:</b> <pre>'.print_r($this->getUserSettingsOptionSQL('FILTER'), 1).'</pre> </li>';
-        $html .= '<li><b>User Filter SQL:</b> <pre>'.print_r($this->getUserSettingsOptionSQL('FILTER',  $this->getCurrentUserPreferences('FILTER')), 1).'</pre> </li>';
+        $html .= '<li><b>User Filter SQL:</b> <pre>'.print_r($this->getUserSettingsOptionSQL('FILTER', $this->getCurrentUserPreferences('FILTER')), 1).'</pre> </li>';
         $html .= '<li><b>Buyable Class name:</b> '.$this->getBuyableClassName().' </li>';
         $html .= '<li><b>allProducts:</b> '.print_r(str_replace('"', '`', $this->allProducts->sql()), 1).' </li>';
 

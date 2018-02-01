@@ -332,9 +332,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return $list;
     }
 
-/*******************************************************
-   * 1. CMS STUFF
-*******************************************************/
+    /*******************************************************
+       * 1. CMS STUFF
+    *******************************************************/
 
     /**
      * fields that we remove from the parent::getCMSFields object set.
@@ -422,7 +422,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $fieldList = parent::scaffoldSearchFields($_params);
 
         //for sales to action only show relevant ones ...
-        if(Controller::curr() && Controller::curr()->class === 'SalesAdmin') {
+        if (Controller::curr() && Controller::curr()->class === 'SalesAdmin') {
             $statusOptions = OrderStep::admin_manageable_steps();
         } else {
             $statusOptions = OrderStep::get();
@@ -634,11 +634,11 @@ class Order extends DataObject implements EditableEcommerceObject
             )
         );
 
-         //is the member is a shop admin they can always view it
+        //is the member is a shop admin they can always view it
 
         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
             $lastStep = OrderStep::last_order_step();
-            if($this->StatusID != $lastStep->ID) {
+            if ($this->StatusID != $lastStep->ID) {
                 $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
                 if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
                     $myQueueObjectField = GridField::create(
@@ -648,7 +648,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         GridFieldConfig_RecordEditor::create()
                     );
                 } else {
-                    $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>'._t('Order.NOT_QUEUED','This order is not queued for future processing.').'</p>');
+                    $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>'._t('Order.NOT_QUEUED', 'This order is not queued for future processing.').'</p>');
                 }
                 $nextFieldArray = array_merge(
                     $nextFieldArray,
@@ -703,7 +703,8 @@ class Order extends DataObject implements EditableEcommerceObject
                 'Root.Main',
                 new LiteralField(
                     'MainDetails',
-                    '<iframe src="'.$this->getPrintLink().'" width="100%" height="2500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>')
+                    '<iframe src="'.$this->getPrintLink().'" width="100%" height="2500" style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>'
+                )
             );
             $fields->addFieldsToTab(
                 'Root.Items',
@@ -755,11 +756,12 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($member && $member->exists()) {
                 $fields->addFieldToTab('Root.Account', new LiteralField('MemberDetails', $member->getEcommerceFieldsForCMS()));
             } else {
-                $fields->addFieldToTab('Root.Account', new LiteralField('MemberDetails',
+                $fields->addFieldToTab('Root.Account', new LiteralField(
+                    'MemberDetails',
                     '<p>'._t('Order.NO_ACCOUNT', 'There is no --- account --- associated with this order').'</p>'
                 ));
             }
-            if($this->getFeedbackLink()) {
+            if ($this->getFeedbackLink()) {
                 $fields->addFieldToTab(
                     'Root.Account',
                     GridField::create(
@@ -807,7 +809,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());
             $submissionLog = $this->SubmissionLog();
             if ($submissionLog) {
-                $fields->addFieldToTab('Root.Log',
+                $fields->addFieldToTab(
+                    'Root.Log',
                     ReadonlyField::create(
                         'SequentialOrderNumber',
                         _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number'),
@@ -1042,9 +1045,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return OrderStepField::create($name = 'MyOrderStep', $this, Member::currentUser());
     }
 
-/*******************************************************
-   * 2. MAIN TRANSITION FUNCTIONS
-*******************************************************/
+    /*******************************************************
+       * 2. MAIN TRANSITION FUNCTIONS
+    *******************************************************/
 
     /**
      * init runs on start of a new Order (@see onAfterWrite)
@@ -1143,13 +1146,11 @@ class Order extends DataObject implements EditableEcommerceObject
             // if it ruins from the queue tasks then it has to be one currently processing.
             $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
             if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
-                if($fromOrderQueue) {
-                    if ( ! $myQueueObject->InProcess) {
-
+                if ($fromOrderQueue) {
+                    if (! $myQueueObject->InProcess) {
                         return;
                     }
                 } else {
-
                     return;
                 }
             }
@@ -1216,15 +1217,15 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function Cancel($member = null, $reason = '')
     {
-        if($member && $member instanceof Member) {
+        if ($member && $member instanceof Member) {
             //we have a valid member
         } else {
             $member = EcommerceRole::get_default_shop_admin_user();
         }
-        if($member) {
+        if ($member) {
             //archive and write
             $this->Archive($avoidWrites = true);
-            if($avoidWrites) {
+            if ($avoidWrites) {
                 DB::query('Update "Order" SET CancelledByID = '.$member->ID.' WHERE ID = '.$this->ID.' LIMIT 1;');
             } else {
                 $this->CancelledByID = $member->ID;
@@ -1279,9 +1280,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return false;
     }
 
-/*******************************************************
-   * 3. STATUS RELATED FUNCTIONS / SHORTCUTS
-*******************************************************/
+    /*******************************************************
+       * 3. STATUS RELATED FUNCTIONS / SHORTCUTS
+    *******************************************************/
 
     /**
      * Avoids caching of $this->Status().
@@ -1469,7 +1470,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsPaid()) {
             return $this->Payments("\"Status\" = 'Success'");
-            //EcommercePayment::get()->
+        //EcommercePayment::get()->
             //	filter(array("OrderID" => $this->ID, "Status" => "Success"));
         } else {
             return $this->Payments();
@@ -1536,9 +1537,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return EcomConfig()->ShopClosed;
     }
 
-/*******************************************************
-   * 4. LINKING ORDER WITH MEMBER AND ADDRESS
-*******************************************************/
+    /*******************************************************
+       * 4. LINKING ORDER WITH MEMBER AND ADDRESS
+    *******************************************************/
 
     /**
      * Returns a member linked to the order.
@@ -1711,9 +1712,9 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->UpdateCurrency($currency);
     }
 
-/*******************************************************
-   * 5. CUSTOMER COMMUNICATION
-*******************************************************/
+    /*******************************************************
+       * 5. CUSTOMER COMMUNICATION
+    *******************************************************/
 
     /**
      * Send the invoice of the order by email.
@@ -1783,8 +1784,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $emailClassName,
         $subject = '',
         $message = ''
-    )
-    {
+    ) {
         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         Config::nest();
         Config::inst()->update('SSViewer', 'theme_enabled', true);
@@ -1819,7 +1819,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($adminOnlyOrToEmail) {
             if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
                 $to = $adminOnlyOrToEmail;
-                // invalid e-mail address
+            // invalid e-mail address
             } else {
                 $to = Order_Email::get_from_email();
             }
@@ -1827,7 +1827,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $to = $this->getOrderEmail();
         }
         if ($from && $to) {
-            if(! class_exists($emailClassName)) {
+            if (! class_exists($emailClassName)) {
                 user_error('Invalid Email ClassName provided: '. $emailClassName, E_USER_ERROR);
             }
             $email = new $emailClassName();
@@ -1895,10 +1895,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $config = $this->EcomConfig();
         $replacementArray = array();
         //set subject
-        if ( ! $subject) {
+        if (! $subject) {
             $subject = $step->CalculatedEmailSubject($this);
         }
-        if( ! $message) {
+        if (! $message) {
             $message = $step->CalculatedCustomerMessage($this);
         }
         $subject = str_replace('[OrderNumber]', $this->ID, $subject);
@@ -1919,9 +1919,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return $arrayData;
     }
 
-/*******************************************************
-   * 6. ITEM MANAGEMENT
-*******************************************************/
+    /*******************************************************
+       * 6. ITEM MANAGEMENT
+    *******************************************************/
 
     /**
      * returns a list of Order Attributes by type.
@@ -2199,16 +2199,16 @@ class Order extends DataObject implements EditableEcommerceObject
         }
     }
 
-/*******************************************************
-   * 7. CRUD METHODS (e.g. canView, canEdit, canDelete, etc...)
-*******************************************************/
+    /*******************************************************
+       * 7. CRUD METHODS (e.g. canView, canEdit, canDelete, etc...)
+    *******************************************************/
 
     /**
      * @param Member $member
      *
      * @return DataObject (Member)
      **/
-     //TODO: please comment why we make use of this function
+    //TODO: please comment why we make use of this function
     protected function getMemberForCanFunctions(Member $member = null)
     {
         if (!$member) {
@@ -2555,9 +2555,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return $customerViewableOrderStatusLogs;
     }
 
-/*******************************************************
-   * 8. GET METHODS (e.g. Total, SubTotal, Title, etc...)
-*******************************************************/
+    /*******************************************************
+       * 8. GET METHODS (e.g. Total, SubTotal, Title, etc...)
+    *******************************************************/
 
     /**
      * returns the email to be used for customer communication.
@@ -2713,8 +2713,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getFeedbackLink()
     {
         $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
-        if($orderConfirmationPage->IsFeedbackEnabled) {
-
+        if ($orderConfirmationPage->IsFeedbackEnabled) {
             return Director::AbsoluteURL($this->getRetrieveLink()).'#OrderForm_Feedback_FeedbackForm';
         }
     }
@@ -3070,7 +3069,8 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->totalItemsTimesQuantity === null || $recalculate) {
             //to do, why do we check if you can edit ????
-            $this->totalItemsTimesQuantity = DB::query('
+            $this->totalItemsTimesQuantity = DB::query(
+                '
                 SELECT SUM("OrderItem"."Quantity")
                 FROM "OrderItem"
                     INNER JOIN "OrderAttribute" ON "OrderAttribute"."ID" = "OrderItem"."ID"
@@ -3375,7 +3375,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function OrderDate()
     {
         $object = $this->SubmissionLog();
-        if($object) {
+        if ($object) {
             $created = $object->Created;
         } else {
             $created = $this->LastEdited;
@@ -3610,9 +3610,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return $object;
     }
 
-/*******************************************************
-   * 9. TEMPLATE RELATED STUFF
-*******************************************************/
+    /*******************************************************
+       * 9. TEMPLATE RELATED STUFF
+    *******************************************************/
 
     /**
      * returns the instance of EcommerceConfigAjax for use in templates.
@@ -3707,9 +3707,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return $this->SubTotal;
     }
 
-/*******************************************************
-   * 10. STANDARD SS METHODS (requireDefaultRecords, onBeforeDelete, etc...)
-*******************************************************/
+    /*******************************************************
+       * 10. STANDARD SS METHODS (requireDefaultRecords, onBeforeDelete, etc...)
+    *******************************************************/
 
     /**
      *standard SS method.
@@ -3816,9 +3816,9 @@ class Order extends DataObject implements EditableEcommerceObject
         */
     }
 
-/*******************************************************
-   * 11. DEBUG
-*******************************************************/
+    /*******************************************************
+       * 11. DEBUG
+    *******************************************************/
 
     /**
      * Debug helper method.

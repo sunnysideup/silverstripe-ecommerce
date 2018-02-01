@@ -162,7 +162,8 @@ class EcommerceTaskCheckConfiguration extends BuildTask
         $projectFolderAndFile = $projectFolder.'/'.$file;
         $fullFilePath = $baseFolder.'/'.$projectFolderAndFile;
         $defaultFileFullPath = Director::baseFolder().'/'.$this->defaultLocation;
-        DB::alteration_message('
+        DB::alteration_message(
+            '
             Current files used: <strong style="color: darkRed">'.$files.'</strong>,
             unless stated otherwise, all settings can be edited in these file(s).',
             'created'
@@ -251,7 +252,7 @@ EcommerceConfig:
                 foreach ($classConfigs as $key => $classConfig) {
                     if (!isset($this->configs[$className][$key])) {
                         $this->customisedValues[$className][$key] = false;
-                        //fallback to Configs...
+                    //fallback to Configs...
                     } else {
                         $this->customisedValues[$className][$key] = false;
                     }
@@ -393,14 +394,14 @@ EcommerceConfig:
                         $isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
                         if (!isset($this->defaults[$className][$key])) {
                             $defaultValueRaw = false;
-                            //DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
+                        //DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
                         } else {
                             $defaultValueRaw = $this->defaults[$className][$key];
                             $hasDefaultvalue = true;
                         }
                         $defaultValue = print_r($defaultValueRaw, 1);
                         $manuallyAddedValue = print_r($this->configs[$className][$key], 1);
-                        if($isDatabaseValues || $isOtherConfigs) {
+                        if ($isDatabaseValues || $isOtherConfigs) {
                             $actualValueRaw = $this->configs[$className][$key];
                         } else {
                             $actualValueRaw = EcommerceConfig::get($className, $key);
@@ -413,9 +414,9 @@ EcommerceConfig:
                         if ($defaultValue === $manuallyAddedValue && $isCustomisedValues) {
                             $configError .= 'This is a superfluous entry in your custom config as the default value is the same.';
                         }
-                        if (($defaultValueRaw == $actualValueRaw) || ( ! $hasDefaultvalue) ) {
+                        if (($defaultValueRaw == $actualValueRaw) || (! $hasDefaultvalue)) {
                             $class .= 'sameConfig';
-                            if($defaultValueRaw == $actualValueRaw) {
+                            if ($defaultValueRaw == $actualValueRaw) {
                                 $showActualValue = false;
                             }
                         } else {
@@ -551,7 +552,7 @@ EcommerceConfig:
         }
 
         if (
-            $cartPage = DataObject::get_one('CartPage',array('ClassName' => 'CartPage'))
+            $cartPage = DataObject::get_one('CartPage', array('ClassName' => 'CartPage'))
         ) {
             $this->getPageDefinitions($cartPage);
             $this->definitions['Pages']['CartPage'] = 'Page where customers review their cart while shopping. This page is optional.<br />'.($cartPage ? '<a href="/admin/pages/edit/show/'.$cartPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
@@ -747,14 +748,16 @@ EcommerceConfig:
     protected function checkGEOIP()
     {
         if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') == 'EcommerceCountry_VisitorCountryProvider' && !class_exists('Geoip')) {
-            user_error("
+            user_error(
+                "
                 You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
                 Alternatively you can set the following config EcommerceCountry.visitor_country_provider to something like MyGEOipProvider.
                 You then create a class MyGEOipProvider with a method getCountry().",
                 E_USER_NOTICE
             );
         } elseif (Director::isLive() && !EcommerceCountry::get_country_from_ip()) {
-            user_error("
+            user_error(
+                "
                 Please make sure that '".$this->Config()->get('visitor_country_provider')."' (visitor_country_provider) is working on your server (see the GEOIP module for details).",
                 E_USER_NOTICE
             );

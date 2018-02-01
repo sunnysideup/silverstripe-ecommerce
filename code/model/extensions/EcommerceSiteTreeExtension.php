@@ -59,18 +59,17 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         return '/Security/login?BackURL='.urlencode($link);
     }
 
-    function augmentValidURLSegment()
+    public function augmentValidURLSegment()
     {
-        if($this->owner instanceof ProductGroup) {
+        if ($this->owner instanceof ProductGroup) {
             $checkForDuplicatesURLSegments = ProductGroup::get()
                 ->filter(array('URLSegment' => $this->owner->URLSegment))
                 ->exclude(array('ID' => $this->owner->ID));
-            if($checkForDuplicatesURLSegments->count() > 0) {
+            if ($checkForDuplicatesURLSegments->count() > 0) {
                 return false;
             }
         }
     }
-
 }
 
 class EcommerceSiteTreeExtension_Controller extends Extension

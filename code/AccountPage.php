@@ -248,7 +248,8 @@ class AccountPage extends Page
             return Order::get()
                 ->where(
                     '"Order"."MemberID" = '.$memberID.'
-                    AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)')
+                    AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
+                )
                 ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"');
         }
 
