@@ -64,63 +64,63 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
         return (bool) $order->TotalItems($recalculate = true);
     }
 
-     /**
-      * Add a member to the order - in case he / she is not a shop admin.
-      *
-      * @param Order object
-      *
-      * @return bool - true if run correctly.
-      **/
-     public function doStep(Order $order)
-     {
-         if (!$order->IsSubmitted()) {
-             $className = $this->getRelevantLogEntryClassName();
-             if (class_exists($className)) {
+    /**
+     * Add a member to the order - in case he / she is not a shop admin.
+     *
+     * @param Order object
+     *
+     * @return bool - true if run correctly.
+     **/
+    public function doStep(Order $order)
+    {
+        if (!$order->IsSubmitted()) {
+            $className = $this->getRelevantLogEntryClassName();
+            if (class_exists($className)) {
 
                  //add currency if needed.
-                 $order->getHasAlternativeCurrency();
-                 $obj = $className::create();
-                 if (is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
-                     $obj->OrderID = $order->ID;
-                     $obj->Title = $this->Name;
-                     //it is important we add this here so that we can save the 'submitted' version.
-                     //this is particular important for the Order Item Links.
-                     //order write will also update all the OrderAttributes!
-                     $obj->write();
-                     $obj = OrderStatusLog::get()->byID($obj->ID);
-                     $saved = false;
-                     if ($this->SaveOrderAsSerializedObject) {
-                         $obj->OrderAsString = $order->ConvertToString();
-                         $saved = true;
-                     }
-                     if ($this->SaveOrderAsHTML || !$saved) {
-                         $obj->OrderAsHTML = Convert::raw2sql($order->ConvertToHTML());
-                     }
-                     $obj->write();
-                 } else {
-                     user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
-                 }
-             } else {
-                 user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
-             }
-             $order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
+                $order->getHasAlternativeCurrency();
+                $obj = $className::create();
+                if (is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
+                    $obj->OrderID = $order->ID;
+                    $obj->Title = $this->Name;
+                    //it is important we add this here so that we can save the 'submitted' version.
+                    //this is particular important for the Order Item Links.
+                    //order write will also update all the OrderAttributes!
+                    $obj->write();
+                    $obj = OrderStatusLog::get()->byID($obj->ID);
+                    $saved = false;
+                    if ($this->SaveOrderAsSerializedObject) {
+                        $obj->OrderAsString = $order->ConvertToString();
+                        $saved = true;
+                    }
+                    if ($this->SaveOrderAsHTML || !$saved) {
+                        $obj->OrderAsHTML = Convert::raw2sql($order->ConvertToHTML());
+                    }
+                    $obj->write();
+                } else {
+                    user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
+                }
+            } else {
+                user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
+            }
+            $order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
 
-             //add member if needed...
-             if (!$order->MemberID) {
-                 //lets see if we can find a member
-                 $memberOrderID = Session::get('Ecommerce_Member_For_Order');
-                 Session::clear('Ecommerce_Member_For_Order');
-                 Session::set('Ecommerce_Member_For_Order', 0);
-                 Session::save();
-                 if ($memberOrderID) {
-                     $order->MemberID = $memberOrderID;
-                 }
-             }
-             $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
-         }
+            //add member if needed...
+            if (!$order->MemberID) {
+                //lets see if we can find a member
+                $memberOrderID = Session::get('Ecommerce_Member_For_Order');
+                Session::clear('Ecommerce_Member_For_Order');
+                Session::set('Ecommerce_Member_For_Order', 0);
+                Session::save();
+                if ($memberOrderID) {
+                    $order->MemberID = $memberOrderID;
+                }
+            }
+            $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
+        }
          
-         return true;
-     }
+        return true;
+    }
 
     /**
      * go to next step if order has been submitted.

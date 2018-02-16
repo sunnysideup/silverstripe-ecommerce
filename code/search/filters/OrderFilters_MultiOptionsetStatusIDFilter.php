@@ -23,5 +23,4 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter
 
         return $query;
     }
-
 }

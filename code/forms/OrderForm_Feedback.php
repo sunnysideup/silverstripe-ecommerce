@@ -3,7 +3,6 @@
 
 class OrderForm_Feedback extends Form
 {
-
     protected $order = null;
 
     public function __construct(Controller $controller, $name, Order $order)
@@ -12,7 +11,7 @@ class OrderForm_Feedback extends Form
         $values = $this->getValueFromOrderConfirmationPage('FeedbackValuesOptions');
         $values = explode(',', $values);
         $newValues = array();
-        foreach($values as $value) {
+        foreach ($values as $value) {
             $value = trim($value);
             $newValues[Convert::raw2att($value)] = $value;
         }
@@ -71,7 +70,6 @@ class OrderForm_Feedback extends Form
         );
 
         return $this->controller->redirect($this->order->FeedbackLink());
-
     }
 
     /**
@@ -87,11 +85,11 @@ class OrderForm_Feedback extends Form
 
     protected function getValueFromOrderConfirmationPage($value)
     {
-        if($page = $this->getOrderConfirmationPage()) {
+        if ($page = $this->getOrderConfirmationPage()) {
             return $page->$value;
         } else {
             $defaults = Config::inst()->get('OrderConfirmationPage', 'defaults');
-            if($defaults && is_array($defaults) && isset($defaults[$value])) {
+            if ($defaults && is_array($defaults) && isset($defaults[$value])) {
                 return $defaults[$value];
             }
             return _t('OrderForm_Feedback.'.$value, 'OrderForm_Feedback.'.$value.' value not set in translations');
@@ -102,10 +100,9 @@ class OrderForm_Feedback extends Form
 
     protected function getOrderConfirmationPage()
     {
-        if(! $this->_orderConfirmationPage) {
+        if (! $this->_orderConfirmationPage) {
             $this->_orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
         }
         return $this->_orderConfirmationPage;
     }
-
 }

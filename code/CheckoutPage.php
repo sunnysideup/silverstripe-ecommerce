@@ -355,7 +355,7 @@ class CheckoutPage extends CartPage
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        if(SiteTree::config()->create_default_pages) {
+        if (SiteTree::config()->create_default_pages) {
             $checkoutPage = DataObject::get_one('CheckoutPage');
             if (! $checkoutPage) {
                 $checkoutPage = self::create();
@@ -404,7 +404,8 @@ class CheckoutPage_Controller extends CartPage_Controller
             }
         }
         Requirements::javascript('ecommerce/javascript/EcomPayment.js');
-        Requirements::customScript('
+        Requirements::customScript(
+            '
             if (typeof EcomOrderForm != "undefined") {
                 EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
             }',
@@ -506,9 +507,9 @@ class CheckoutPage_Controller extends CartPage_Controller
      */
 
 
-     /**
-     *@var String
-     **/
+    /**
+    *@var String
+    **/
     protected $currentStep = '';
 
     /**

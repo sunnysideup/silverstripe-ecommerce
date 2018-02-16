@@ -80,7 +80,8 @@ class OrderStatusLogForm_Controller extends Controller
         }
 
         return Controller::join_links(
-            Director::BaseURL(), $URLSegment,
+            Director::BaseURL(),
+            $URLSegment,
             $action
         );
     }
