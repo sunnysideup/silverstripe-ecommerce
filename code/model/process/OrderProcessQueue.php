@@ -155,7 +155,7 @@ class OrderProcessQueue extends DataObject
      */
     public function AddOrderToQueue($order, $deferTimeInSeconds)
     {
-        if(!$order || ! $order->ID) {
+        if (!$order || ! $order->ID) {
             user_error('No real order provided.');
         }
         $filter = array(
@@ -192,30 +192,29 @@ class OrderProcessQueue extends DataObject
     public function process($order = null)
     {
         //find variables
-        if( ! $order) {
+        if (! $order) {
             $order = $this->Order();
             $myQueueObject = $this;
         } else {
             $myQueueObject = $this->getQueueObject($order);
         }
         //delete if order is gone ...
-        if($order) {
+        if ($order) {
             //if order has moved already ... delete
-            if(
+            if (
                 $order->IsCancelled() ||
                 $order->IsArchived()
             ) {
                 $myQueueObject->delete();
                 $message = 'Order is archived already and/or cancelled.';
-            } elseif(
+            } elseif (
                 $this->OrderStepID > 0
                 && (int)$order->StatusID !== (int)$myQueueObject->OrderStepID
             ) {
                 $message = 'Order has already moved on.';
                 $myQueueObject->delete();
-
             } else {
-                if($myQueueObject) {
+                if ($myQueueObject) {
                     if ($myQueueObject->isReadyToGo()) {
                         $oldOrderStatusID = $order->StatusID;
                         $myQueueObject->InProcess = true;
@@ -226,7 +225,7 @@ class OrderProcessQueue extends DataObject
                             $fromOrderQueue = true
                         );
                         $newOrderStatusID = $order->StatusID;
-                        if($oldOrderStatusID != $newOrderStatusID) {
+                        if ($oldOrderStatusID != $newOrderStatusID) {
                             $myQueueObject->delete();
                             return true;
                         } else {
@@ -234,10 +233,9 @@ class OrderProcessQueue extends DataObject
                             $myQueueObject->InProcess = false;
                             $myQueueObject->write();
                         }
-                    } else  {
+                    } else {
                         $message = 'Minimum order queue time has not been passed.';
                     }
-
                 } else {
                     $message = 'Could not find queue object.';
                 }
@@ -272,7 +270,7 @@ class OrderProcessQueue extends DataObject
     public function removeOrderFromQueue($order)
     {
         $queueEntries = OrderProcessQueue::get()->filter(array('OrderID' => $order->ID));
-        foreach($queueEntries as $queueEntry) {
+        foreach ($queueEntries as $queueEntry) {
             $queueEntry->delete();
         }
     }
@@ -416,7 +414,7 @@ class OrderProcessQueue extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        if($this->exists()) {
+        if ($this->exists()) {
             $fields->addFieldToTab(
                 'Root.Main',
                 ReadonlyField::create(
@@ -462,7 +460,7 @@ class OrderProcessQueue extends DataObject
     {
         parent::requireDefaultRecords();
         $errors = OrderProcessQueue::get()->filter(array('OrderID' => 0));
-        foreach($errors as $error) {
+        foreach ($errors as $error) {
             DB::alteration_message(' DELETING ROGUE OrderProcessQueue', 'deleted');
             $error->delete();
         }
@@ -485,5 +483,4 @@ class OrderProcessQueue extends DataObject
     {
         return 'FIELD("Order"."ID", '.implode(",", $orderIDs).')';
     }
-
 }

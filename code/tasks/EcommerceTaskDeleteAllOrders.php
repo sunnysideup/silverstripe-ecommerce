@@ -45,9 +45,9 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
         'EcommercePayment',
     );
 
-/*******************************************************
-     * DELETE OLD SHOPPING CARTS
-*******************************************************/
+    /*******************************************************
+         * DELETE OLD SHOPPING CARTS
+    *******************************************************/
 
     /**
      *@return int - number of carts destroyed

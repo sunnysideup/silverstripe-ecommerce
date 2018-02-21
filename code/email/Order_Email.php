@@ -39,7 +39,7 @@ abstract class Order_Email extends Email
         }
         $cssFileLocation = Director::baseFolder().'/'.EcommerceConfig::get('Order_Email', 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
-        $css = fread($cssFileHandler,  filesize($cssFileLocation));
+        $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
         $emogrifier = new \Pelago\Emogrifier($html, $css);
         $html = $emogrifier->emogrify();
@@ -196,7 +196,7 @@ abstract class Order_Email extends Email
     public function hasBeenSent()
     {
         $orderStep = $this->order->Status();
-        if (is_a($orderStep,  Object::getCustomClass('OrderStep'))) {
+        if (is_a($orderStep, Object::getCustomClass('OrderStep'))) {
             return $orderStep->hasBeenSent($this->order);
         }
 

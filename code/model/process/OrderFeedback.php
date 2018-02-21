@@ -210,11 +210,11 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     public function getTitle()
     {
         $string = $this->Created;
-        if($this->Order()) {
+        if ($this->Order()) {
             $string .= ' ('.$this->Order()->getTitle().')';
         }
         $string .= ' - '.$this->Rating;
-        if($this->Note) {
+        if ($this->Note) {
             $string .= ' / '. substr($this->Note, 0, 25);
         }
         return $string;
@@ -231,5 +231,4 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
         $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
     }
-
 }

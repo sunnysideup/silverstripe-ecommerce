@@ -98,7 +98,7 @@ class OrderModifierForm extends Form
     public function submit(array $data, Form $form, $message = 'order updated', $status = 'good')
     {
         //to do - add other checks here...
-         return ShoppingCart::singleton()->setMessageAndReturn($message, $status);
+        return ShoppingCart::singleton()->setMessageAndReturn($message, $status);
     }
 
     /**

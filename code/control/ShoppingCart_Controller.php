@@ -504,7 +504,7 @@ class ShoppingCart_Controller extends Controller
      **/
     public function removefromsale(SS_HTTPRequest $request)
     {
-        if(EcommerceRole::current_member_is_shop_assistant()) {
+        if (EcommerceRole::current_member_is_shop_assistant()) {
             $className = Convert::raw2sql($request->param('ID'));
             $id = intval($request->param('OtherID'));
             if (class_exists($className)) {

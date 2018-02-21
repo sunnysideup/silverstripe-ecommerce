@@ -8,8 +8,6 @@
  **/
 class OrderStep_Archived extends OrderStep implements OrderStepInterface
 {
-
-        
     private static $defaults = array(
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,

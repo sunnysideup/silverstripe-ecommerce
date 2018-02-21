@@ -106,7 +106,8 @@ class EcommerceTaskCartCleanup extends BuildTask
             $count = 0;
             if ($this->verbose) {
                 $this->flush();
-                $totalToDeleteSQLObject = DB::query('
+                $totalToDeleteSQLObject = DB::query(
+                    '
                     SELECT COUNT(*)
                     FROM "Order"
                         '.$leftMemberJoin.'
@@ -151,7 +152,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                     '.$withMemberWhere.'
                 );
             ')->value();
-            DB::alteration_message("
+            DB::alteration_message(
+                "
                     $countCart Orders are still in the CREATED cart state (not submitted),
                     $countCartWithinTimeLimit of them are within the time limit (last edited after $timeLegible)
                     ".$userStatement." so they are not deleted.",
@@ -172,7 +174,8 @@ class EcommerceTaskCartCleanup extends BuildTask
             $count = 0;
             if ($this->verbose) {
                 $this->flush();
-                $totalToDelete = DB::query('
+                $totalToDelete = DB::query(
+                    '
                     SELECT COUNT(*)
                     FROM "Order"
                         '.$leftMemberJoin.'
@@ -199,13 +202,15 @@ class EcommerceTaskCartCleanup extends BuildTask
         if ($this->verbose) {
             $this->flush();
             $timeLegible = date('Y-m-d H:i:s', $time);
-            $countCart = DB::query('
+            $countCart = DB::query(
+                '
                 SELECT COUNT("Order"."ID")
                 FROM "Order"
                     '.$leftMemberJoin.'
                 WHERE "StatusID" = 0 '
             )->value();
-            $countCartWithinTimeLimit = DB::query('
+            $countCartWithinTimeLimit = DB::query(
+                '
                 SELECT COUNT("Order"."ID")
                 FROM "Order"
                     '.$leftMemberJoin.'
@@ -215,7 +220,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                     '.$withMemberWhere.'
                 )'
             )->value();
-            DB::alteration_message("
+            DB::alteration_message(
+                "
                     $countCart Orders are without status at all,
                     $countCartWithinTimeLimit are within the time limit (last edited after $timeLegible)
                     ".$userStatement."so they are not deleted yet.",

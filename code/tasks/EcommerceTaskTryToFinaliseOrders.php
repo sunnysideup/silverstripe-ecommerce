@@ -29,7 +29,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     public function run($request)
     {
         //IMPORTANT!
-        if ( ! $this->sendEmails) {
+        if (! $this->sendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new Ecommerce_Dummy_Mailer());
         }
@@ -64,7 +64,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             if ($submittedStatusLog) {
                 $lastOrderStep = OrderStep::last_order_step();
                 if ($lastOrderStep) {
-                    if($this->isCli()) {
+                    if ($this->isCli()) {
                         $sort = 'RAND()';
                     } else {
                         $sort = array('ID' => 'ASC');
@@ -92,7 +92,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
         if (Session::get('EcommerceTaskTryToFinaliseOrders')) {
-            if(! $this->isCli()) {
+            if (! $this->isCli()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
                 echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
             }
@@ -143,5 +143,4 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     {
         return Director::is_cli();
     }
-
 }

@@ -53,7 +53,7 @@ class EcommerceSideReport_NoImageProducts extends SS_Report
     {
         return Product::get()
             ->where('"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0')
-            ->sort('FullSiteTreeSort',  'ASC');
+            ->sort('FullSiteTreeSort', 'ASC');
     }
 
     /**
