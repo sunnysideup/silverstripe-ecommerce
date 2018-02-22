@@ -216,8 +216,8 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
                     array('ModifierClassName' => $className),
                     $cacheDataObjectGetOne = false
                 );
-                if (!$orderModifier_Descriptor) {
-                    $modifier = singleton($className);
+                if (! $orderModifier_Descriptor) {
+                    $modifier = Injector::inst()->get($className);
                     $orderModifier_Descriptor = OrderModifier_Descriptor::create();
                     $orderModifier_Descriptor->ModifierClassName = $className;
                     $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
@@ -232,7 +232,7 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
             foreach ($orderModifierDescriptors as $orderModifierDescriptor) {
                 if (!in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers)) {
                     $orderModifierDescriptor->delete();
-                    DB::alteration_message('Deleting description for '.$orderModifierDescriptor->ModifierClassName, 'created');
+                    DB::alteration_message('Deleting description for '.$orderModifierDescriptor->ModifierClassName, 'deleted');
                 }
             }
         }

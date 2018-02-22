@@ -51,7 +51,7 @@ class OrderModifier extends OrderAttribute
         ),
     );
 
-// ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
+    // ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
 
     /**
      * @var array
@@ -73,7 +73,7 @@ class OrderModifier extends OrderAttribute
         'Name' => 'Modifier', //making sure that you choose a different name for any class extensions.
     );
 
-// ########################################  *** 2. cms variables  + functions (e.g. getCMSFields, $searchableFields)
+    // ########################################  *** 2. cms variables  + functions (e.g. getCMSFields, $searchableFields)
 
     /**
      * stardard SS variable.
@@ -215,7 +215,7 @@ class OrderModifier extends OrderAttribute
         return $fields;
     }
 
-// ########################################  *** 3. other static variables (e.g. special_name_for_something)
+    // ########################################  *** 3. other static variables (e.g. special_name_for_something)
 
     /**
      * $doNotAddAutomatically Identifies whether a modifier is NOT automatically added
@@ -252,9 +252,9 @@ class OrderModifier extends OrderAttribute
      **/
     private $runningTotal = 0;
 
-// ######################################## *** 4. CRUD functions (e.g. canEdit)
+    // ######################################## *** 4. CRUD functions (e.g. canEdit)
 
-// ########################################  *** 5. init and update functions
+    // ########################################  *** 5. init and update functions
 
     /**
      *
@@ -361,7 +361,7 @@ class OrderModifier extends OrderAttribute
         return $this->CalculatedTotal;
     }
 
-// ########################################  *** 6. form functions (Showform and getform)
+    // ########################################  *** 6. form functions (Showform and getform)
 
     /**
      * This determines whether the OrderModifierForm is shown or not. {@link OrderModifier::get_form()}.
@@ -447,7 +447,7 @@ class OrderModifier extends OrderAttribute
         return new LiteralField($name, '<!-- EmptyDescription -->', '<!-- EmptyDescription -->');
     }
 
-// ######################################## *** 7. template functions (e.g. ShowInTable, TableTitle, etc...)
+    // ######################################## *** 7. template functions (e.g. ShowInTable, TableTitle, etc...)
 
     /**
      * Casted variable, returns the table title.
@@ -664,7 +664,7 @@ class OrderModifier extends OrderAttribute
         return array();
     }
 
-// ######################################## ***  8. inner calculations....
+    // ######################################## ***  8. inner calculations....
 
     /**
      * returns the running total variable.
@@ -678,7 +678,7 @@ class OrderModifier extends OrderAttribute
         return $this->runningTotal;
     }
 
-// ######################################## ***  9. calculate database fields ( = protected function Live[field name]() { ....}
+    // ######################################## ***  9. calculate database fields ( = protected function Live[field name]() { ....}
 
     protected function LiveName()
     {
@@ -705,7 +705,7 @@ class OrderModifier extends OrderAttribute
         return $this->CalculatedTotal;
     }
 
-// ######################################## ***  10. Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
+    // ######################################## ***  10. Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
 
     /**
      * should be extended if it is true in child class.
@@ -747,7 +747,7 @@ class OrderModifier extends OrderAttribute
         return $this->HasBeenRemoved;
     }
 
-// ######################################## ***  11. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
+    // ######################################## ***  11. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
     /**
      * standard SS method.
@@ -781,7 +781,7 @@ class OrderModifier extends OrderAttribute
         //you can add more stuff here in sub classes
     }
 
-// ######################################## ***  11. AJAX related functions
+    // ######################################## ***  11. AJAX related functions
 
     /**
      * @param array $js javascript array
@@ -850,7 +850,7 @@ class OrderModifier extends OrderAttribute
         return $js;
     }
 
-// ######################################## ***  12. debug functions
+    // ######################################## ***  12. debug functions
 
     /**
      * Debug helper method.

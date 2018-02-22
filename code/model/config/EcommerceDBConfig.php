@@ -116,7 +116,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if(EcommerceDBConfig::get()->count() > 0) {
+        if (EcommerceDBConfig::get()->count() > 0) {
             return false;
         }
         return $this->canEdit($member);
@@ -301,7 +301,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 array('UseThisOne' => 1),
                 $cacheDataObjectGetOne = false
             );
-            if ( ! self::$_my_current_one) {
+            if (! self::$_my_current_one) {
                 self::$_my_current_one = $className::create();
             }
         }
@@ -467,7 +467,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         'Emails',
                         _t('EcommerceDBConfig.EMAILS', 'Emails'),
                         new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
-                        new UploadField('EmailLogo', $fieldLabels['EmailLogo'],  null, null, null, 'logos'),
+                        new UploadField('EmailLogo', $fieldLabels['EmailLogo'], null, null, null, 'logos'),
                         new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle']),
                         $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage'])
                     ),
@@ -509,8 +509,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     array(
                         new CheckboxField('UseThisOne', $fieldLabels['UseThisOne']),
                         new CheckboxField('ShopClosed', $fieldLabels['ShopClosed']),
+                        $clearField = ReadonlyField::create(
+                            'RefreshWebsite',
+                            'Update site',
+                            '<h2><a href="/shoppingcart/clear/?flush=all" target="_blank">Refresh website / clear caches</a></h2>'
+                        )
                     )
                 );
+                $clearField->dontEscape = true;
                 //set cols
                 if ($f = $fields->dataFieldByName('CurrenciesExplanation')) {
                     $f->setRows(2);
@@ -738,7 +744,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $obj = self::create();
             $obj->write();
         }
-        DB::alteration_message('
+        DB::alteration_message(
+            '
             <hr /><hr /><hr /><hr /><hr />
             <h1 style="color: darkRed">Please make sure to review your <a href="/dev/ecommerce/">e-commerce settings</a>.</h1>
             <hr /><hr /><hr /><hr /><hr />',

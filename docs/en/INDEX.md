@@ -101,6 +101,10 @@ We are in the process of moving towards semantic versioning.
   (a) translations
   (b) test suite
 
+### The OrderProcessQueue
+  Important note: the code to process the order queue uss MySQL's UNIX_TIMESTAMP() function
+  To make sure that this works correctly it is important to set the database timezone in your environment file, eg:
+  define('SS_DATABASE_TIMEZONE',  'Pacific/Auckland');
 
 ## Now you mention it ... where the hell are the Unit Tests? ##
 

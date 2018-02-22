@@ -278,6 +278,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $order = ShoppingCart::current_order();
         }
         $currency = $order->CurrencyUsed();
+        $currencyCode = $currency->Code;
         if ($order) {
             if ($order->HasAlternativeCurrency()) {
                 $exchangeRate = $order->ExchangeRate;
@@ -287,11 +288,16 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
 
+        $updatedCurrencyCode = Injector::inst()->get('EcommerceCurrency')->extend('updateCurrencyCodeForMoneyObect', $currencyCode);
+        if ($updatedCurrencyCode !== null && is_array($updatedCurrencyCode) && count($updatedCurrencyCode)) {
+            $currencyCode = $updatedCurrencyCode[0];
+        }
+
         return DBField::create_field(
             'Money',
             array(
                 'Amount' => $price,
-                'Currency' => $currency->Code
+                'Currency' => $currencyCode
             )
         );
     }
@@ -630,8 +636,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $currency = self::default_currency();
-        if (!$currency) {
+        if (! self::default_currency()) {
             self::create_new(EcommerceConfig::get('EcommerceCurrency', 'default_currency'));
         }
     }

@@ -195,7 +195,7 @@ class Product extends Page implements BuyableModel
             $fields->removeByName('MetaDescription');
         }
         //if($siteTreeFieldExtensions) {
-            //$this->enableCMSFieldsExtensions();
+        //$this->enableCMSFieldsExtensions();
         //}
         $fields->replaceField('Root.Main', $htmlEditorField = new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description')));
         $htmlEditorField->setRows(3);
@@ -215,7 +215,8 @@ class Product extends Page implements BuyableModel
             if ($price == 0) {
                 $link = $config->CMSEditLink();
                 $allowPurchaseField->setDescription(
-                    _t('Product.DO_NOT_ALLOW_FREE_PRODUCTS_TO_BE_PURCHASED',
+                    _t(
+                        'Product.DO_NOT_ALLOW_FREE_PRODUCTS_TO_BE_PURCHASED',
                         "NB: Allow Purchase + zero price is not allowed.  Change the <a href=\"$link\">Shop Settings</a> to allow a zero price product purchases or set price on this product."
                     )
                 );
@@ -265,7 +266,7 @@ class Product extends Page implements BuyableModel
             );
         }
         //if($siteTreeFieldExtensions) {
-            //$this->extend('updateSettingsFields', $fields);
+        //$this->extend('updateSettingsFields', $fields);
         //}
         return $fields;
     }
@@ -906,9 +907,9 @@ class Product extends Page implements BuyableModel
      *
      * @return string
      */
-     public function VersionedLink()
-     {
-         return Controller::join_links(
+    public function VersionedLink()
+    {
+        return Controller::join_links(
              Director::baseURL(),
              EcommerceConfig::get('ShoppingCart_Controller', 'url_segment'),
              'submittedbuyable',
@@ -916,7 +917,7 @@ class Product extends Page implements BuyableModel
              $this->ID,
              $this->Version
          );
-     }
+    }
 
     public function RemoveFromSaleLink()
     {
@@ -1035,9 +1036,9 @@ class Product extends Page implements BuyableModel
      *
      * @return float
      */
-    public function getCalculatedPrice()
+    public function getCalculatedPrice($forceRecalculation = false)
     {
-        if (! isset(self::$_calculated_price_cache[$this->ID])) {
+        if (! isset(self::$_calculated_price_cache[$this->ID]) || $forceRecalculation) {
             $price = $this->Price;
             $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
             if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {

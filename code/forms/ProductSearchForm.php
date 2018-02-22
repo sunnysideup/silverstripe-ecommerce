@@ -15,9 +15,9 @@ class ProductSearchForm extends Form
         $string = '';
         $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
-            if(isset($oldData['ShortKeyword'])) {
+            if (isset($oldData['ShortKeyword'])) {
                 $string = $oldData['ShortKeyword'];
-            } elseif(isset($oldData['Keyword'])) {
+            } elseif (isset($oldData['Keyword'])) {
                 $string = $oldData['Keyword'];
             }
         }
@@ -233,13 +233,13 @@ class ProductSearchForm extends Form
         } else {
             if (Config::inst()->get('ProductSearchForm', 'include_price_filters')) {
                 $fields = FieldList::create(
-                    $keywordField = TextField::create('Keyword',  _t('ProductSearchForm.KEYWORDS', 'Keywords')),
+                    $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords')),
                     NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price')),
                     NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'))
                 );
             } else {
                 $fields = FieldList::create(
-                    $keywordField = TextField::create('Keyword',  _t('ProductSearchForm.KEYWORDS', 'Keywords'))
+                    $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'))
                 );
             }
             $actions = FieldList::create(
@@ -311,9 +311,9 @@ class ProductSearchForm extends Form
         $limitToCurrentSection = false;
         if (isset($data['SearchOnlyFieldsInThisSection']) && $data['SearchOnlyFieldsInThisSection']) {
             $limitToCurrentSection = true;
-            if(! $this->productsToSearch) {
+            if (! $this->productsToSearch) {
                 $controller = Controller::curr();
-                if($controller) {
+                if ($controller) {
                     $this->productsToSearch = $controller->Products();
                 }
             }
@@ -321,7 +321,7 @@ class ProductSearchForm extends Form
                 $this->productsToSearch = $this->productsToSearch->map('ID', 'ID')->toArray();
             }
             //last resort
-            if($this->productsToSearch) {
+            if ($this->productsToSearch) {
                 $baseList = $baseList->filter(array('ID' => $this->productsToSearch));
             }
         }
@@ -334,7 +334,7 @@ class ProductSearchForm extends Form
         //defining some variables
         $isKeywordSearch = false;
         if ($this->debug) {
-            if($this->productsToSearch) {
+            if ($this->productsToSearch) {
                 $this->debugOutput('<hr /><h3>PRODUCTS TO SEARCH</h3><pre>'.str_replace($this->sqlWords, array_flip($this->sqlWords), $this->productsToSearch->sql()).'</pre>');
             }
             $this->debugOutput('<hr /><h3>BASE LIST</h3><pre>'.str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql()).'</pre>');
@@ -489,7 +489,8 @@ class ProductSearchForm extends Form
         $sessionNameGroups = $redirectToPage->SearchResultsSessionVariable(true);
 
         if ($this->debug) {
-            $this->debugOutput('<hr />'.
+            $this->debugOutput(
+                '<hr />'.
                 '<h3>Previous Search Products: '.$sessionNameProducts.'</h3><p>'.print_r(Session::get($sessionNameProducts), 1).'</p>'.
                 '<h3>Previous Search Groups: '.$sessionNameGroups.'</h3><p>'.print_r(Session::get($sessionNameGroups), 1).'</p>'
             );
@@ -503,7 +504,8 @@ class ProductSearchForm extends Form
             $searchHistoryObject->write();
         }
         if ($this->debug) {
-            $this->debugOutput('<hr />'.
+            $this->debugOutput(
+                '<hr />'.
                 '<h3>SAVING Products to session: '.$sessionNameProducts.'</h3><p>'.print_r(explode(',', Session::get($sessionNameProducts)), 1).'</p>'.
                 '<h3>SAVING Groups to session: '.$sessionNameGroups.'</h3><p>'.print_r(explode(',', Session::get($sessionNameGroups)), 1).'</p>'
             );
@@ -595,7 +597,7 @@ class ProductSearchForm extends Form
      */
     public function saveDataToSession($data = null)
     {
-        if(! is_array($data)) {
+        if (! is_array($data)) {
             $data = $this->getData();
         }
         if (isset($data['MinimumPrice']) && !$data['MinimumPrice']) {
@@ -642,18 +644,19 @@ class ProductSearchForm extends Form
      */
     protected function replaceSearchPhraseOrWord($keywordPhrase, $word = '')
     {
-        if(! $word) {
+        if (! $word) {
             $word = $keywordPhrase;
         }
         $replacements = SearchReplacement::get()
-            ->where("
+            ->where(
+                "
                 LOWER(\"Search\") = '$word' OR
                 LOWER(\"Search\") LIKE '%,$word' OR
                 LOWER(\"Search\") LIKE '$word,%' OR
                 LOWER(\"Search\") LIKE '%,$word,%'"
             );
         //if it is a word replacement then we do not want replace whole phrase ones ...
-        if($keywordPhrase != $word) {
+        if ($keywordPhrase != $word) {
             $replacements = $replacements->exclude(array('ReplaceWholePhrase' => 1));
         }
         if ($replacements->count()) {
@@ -668,5 +671,4 @@ class ProductSearchForm extends Form
 
         return $keywordPhrase;
     }
-
 }

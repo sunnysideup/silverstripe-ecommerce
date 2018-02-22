@@ -213,9 +213,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
     }
 
-     /**
-     * @return DataObject (Group) | NULL
-     **/
+    /**
+    * @return DataObject (Group) | NULL
+    **/
     public static function get_assistant_group()
     {
         $assistantCode = EcommerceConfig::get('EcommerceRole', 'assistant_group_code');

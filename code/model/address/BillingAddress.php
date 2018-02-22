@@ -234,7 +234,8 @@ class BillingAddress extends OrderAddress
                     if ($addresses->count() > 1) {
                         $fields->push(
                             SelectOrderAddressField::create(
-                                'SelectBillingAddressField', _t('BillingAddress.SELECTBILLINGADDRESS', 'Select Billing Address'),
+                                'SelectBillingAddressField',
+                                _t('BillingAddress.SELECTBILLINGADDRESS', 'Select Billing Address'),
                                 $addresses
                             )
                         );

@@ -13,7 +13,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      */
     public function getManagedModels()
     {
-        if($this->class === 'ModelAdminEcommerceBaseClass') {
+        if ($this->class === 'ModelAdminEcommerceBaseClass') {
             //never used
             return array('NothingGoesHere' => array('title' => 'All Orders'));
         }
@@ -33,7 +33,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      *
      * @return Form
      */
-    function oneItemForm($record)
+    public function oneItemForm($record)
     {
         Config::inst()->update('LeftAndMain', 'tree_class', $record->ClassName);
         $form = LeftAndMain::getEditForm($record);
@@ -64,13 +64,12 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      *
      * @return array
      */
-    public function getExportFields() {
+    public function getExportFields()
+    {
         $obj = Injector::inst()->get($this->modelClass);
-        if($obj->hasMethod('getExportFields')) {
+        if ($obj->hasMethod('getExportFields')) {
             return $obj->getExportFields();
         }
         return $obj->summaryFields();
     }
-
-
 }

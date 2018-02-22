@@ -140,5 +140,4 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
 
         return $link;
     }
-
 }
