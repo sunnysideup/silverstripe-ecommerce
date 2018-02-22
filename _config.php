@@ -12,5 +12,5 @@
 //one week = 604800 (60 * 60 * 24 * 7)
 //last param is priority
 
-CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array('target' => '_blank'));
+//CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array('target' => '_blank'));
 CMSMenu::remove_menu_item('CMSPageAddController_Products');
