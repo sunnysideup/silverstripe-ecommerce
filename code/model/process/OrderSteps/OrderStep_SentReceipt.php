@@ -63,7 +63,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
     {
         return $this->sendEmailForStep(
             $order,
-            $subject = $this->EmailSubject,
+            $subject = $this->CalculatedEmailSubject($order),
             $message = '',
             $resend = false,
             $adminOnlyOrToEmail = false,

@@ -252,7 +252,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $default_sort = '"Created" DESC';
+    private static $default_sort = [
+        'ID' => 'DESC'
+    ];
+
+    private static $indexes = [
+        'Title' => true,
+        'InternalUseOnly' => true
+    ];
 
     /**
      * standard SS method.
@@ -293,7 +300,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         //OrderID Field
         if ($this->exists() && $this->OrderID) {
             $order = $this->Order();
-            if($order && $order->exists()) {
+            if ($order && $order->exists()) {
                 $fields->removeByName('OrderID');
                 $fields->addFieldToTab(
                     'Root.Main',

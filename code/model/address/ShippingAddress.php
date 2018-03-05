@@ -69,7 +69,9 @@ class ShippingAddress extends OrderAddress
     /**
      * standard SS static definition.
      */
-    private static $default_sort = '"ShippingAddress"."ID" DESC';
+    private static $default_sort = [
+        'ID' => 'DESC'
+    ];
 
     /**
      * standard SS variable.
@@ -149,7 +151,7 @@ class ShippingAddress extends OrderAddress
     private static $singular_name = 'Shipping Address';
     public function i18n_singular_name()
     {
-        return _t('OrderAddress.SHIPPINGADDRESS', 'Shipping Address');
+        return _t('ShippingAddress.SHIPPINGADDRESS', 'Shipping Address');
     }
 
     /**
@@ -160,7 +162,7 @@ class ShippingAddress extends OrderAddress
     private static $plural_name = 'Shipping Addresses';
     public function i18n_plural_name()
     {
-        return _t('OrderAddress.SHIPPINGADDRESSES', 'Shipping Addresses');
+        return _t('ShippingAddress.SHIPPINGADDRESSES', 'Shipping Addresses');
     }
 
     /**
@@ -208,8 +210,8 @@ class ShippingAddress extends OrderAddress
         $hasPreviousAddresses = false;
         if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
             $shippingFieldsHeader = new CompositeField(
-                new HeaderField('SendGoodsToADifferentAddress', _t('OrderAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 3),
-                new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">'._t('OrderAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.').'</p>')
+                new HeaderField('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 3),
+                new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">'._t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.').'</p>')
             );
 
             if ($member && Member::currentUser()) {
@@ -220,22 +222,21 @@ class ShippingAddress extends OrderAddress
                         //we want MORE than one here not just one.
                         if ($addresses->count() > 1) {
                             $hasPreviousAddresses = true;
-                            $shippingFieldsHeader->push(SelectOrderAddressField::create('SelectShippingAddressField', _t('OrderAddress.SELECTBILLINGADDRESS', 'Select Shipping Address'), $addresses));
+                            $shippingFieldsHeader->push(SelectOrderAddressField::create('SelectShippingAddressField', _t('ShippingAddress.SELECTBILLINGADDRESS', 'Select Shipping Address'), $addresses));
                         }
                     }
                 }
                 $shippingFields = new CompositeField(
-                    new TextField('ShippingFirstName', _t('OrderAddress.FIRSTNAME', 'First Name')),
-                    new TextField('ShippingSurname', _t('OrderAddress.SURNAME', 'Surname'))
+                    new TextField('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
+                    new TextField('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
                 );
             } else {
                 $shippingFields = new CompositeField(
-                    new TextField('ShippingFirstName', _t('OrderAddress.FIRSTNAME', 'First Name')),
-                    new TextField('ShippingSurname', _t('OrderAddress.SURNAME', 'Surname'))
+                    new TextField('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
+                    new TextField('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
                 );
             }
-            $shippingFields->push(new TextField('ShippingPhone', _t('OrderAddress.PHONE', 'Phone')));
-            //$shippingFields->push(new TextField('ShippingMobilePhone', _t('OrderAddress.MOBILEPHONE','Mobile Phone')));
+            $shippingFields->push(new TextField('ShippingPhone', _t('ShippingAddress.PHONE', 'Phone')));
             $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
             if (is_array($mappingArray) && count($mappingArray)) {
                 if (!class_exists('GoogleAddressField')) {
@@ -244,19 +245,18 @@ class ShippingAddress extends OrderAddress
                 $shippingFields->push(
                     $shippingEcommerceGeocodingField = new GoogleAddressField(
                         'ShippingEcommerceGeocodingField',
-                        _t('OrderAddress.Find_Address', 'Find address'),
+                        _t('ShippingAddress.Find_Address', 'Find address'),
                         Session::get('ShippingEcommerceGeocodingFieldValue')
                     )
                 );
                 $shippingEcommerceGeocodingField->setFieldMap($mappingArray);
-                //$shippingFields->push(new HiddenField('ShippingAddress2'));
+            //$shippingFields->push(new HiddenField('ShippingAddress2'));
                 //$shippingFields->push(new HiddenField('ShippingCity'));
             } else {
             }
-            //$shippingFields->push(new TextField('ShippingPrefix', _t('OrderAddress.PREFIX','Title (e.g. Ms)')));
-            $shippingFields->push(new TextField('ShippingAddress', _t('OrderAddress.ADDRESS', 'Address')));
-            $shippingFields->push(new TextField('ShippingAddress2', _t('OrderAddress.ADDRESS2', '')));
-            $shippingFields->push(new TextField('ShippingCity', _t('OrderAddress.CITY', 'Town')));
+            $shippingFields->push(new TextField('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
+            $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', '')));
+            $shippingFields->push(new TextField('ShippingCity', _t('ShippingAddress.CITY', 'Town')));
             $shippingFields->push($this->getRegionField('ShippingRegionID', 'ShippingRegionCode'));
             $shippingFields->push($this->getPostalCodeField('ShippingPostalCode'));
             $shippingFields->push($this->getCountryField('ShippingCountry'));

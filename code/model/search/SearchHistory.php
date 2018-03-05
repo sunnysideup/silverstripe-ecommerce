@@ -8,7 +8,9 @@ class SearchHistory extends DataObject
         'GroupCount' => 'Int',
     );
 
-    private static $default_sort = '"Created" DESC';
+    private static $default_sort = [
+        'Created' => 'DESC'
+    ];
 
     private static $searchable_fields = array(
         'Title' => 'PartialMatchFilter',
@@ -22,6 +24,34 @@ class SearchHistory extends DataObject
         'ProductCount' => 'Products Found',
         'GroupCount' => 'Categories Found',
     );
+
+    private static $indexes = [
+        'Title' => true,
+        'Created' => true
+    ];
+
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Search History Entry';
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Search History Entries';
+    public function i18n_plural_name()
+    {
+        return $this->Config()->get('plural_name');
+    }
 
     /**
      * creates a new entry if you are not a shop admin.

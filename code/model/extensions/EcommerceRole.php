@@ -35,6 +35,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     private static $has_many = array(
         'Orders' => 'Order',
+        'CancelledOrders' => 'Order',
     );
 
     /**
@@ -212,9 +213,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
     }
 
-     /**
-     * @return DataObject (Group) | NULL
-     **/
+    /**
+    * @return DataObject (Group) | NULL
+    **/
     public static function get_assistant_group()
     {
         $assistantCode = EcommerceConfig::get('EcommerceRole', 'assistant_group_code');
@@ -263,9 +264,24 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @return DataList
      */
+    public function Orders()
+    {
+        return $this->getOrders();
+    }
+
     public function getOrders()
     {
         return Order::get()->filter(array('MemberID' => $this->owner->ID));
+    }
+
+    public function CancelledOrders()
+    {
+        return $this->getCancelledOrders();
+    }
+
+    public function getCancelledOrders()
+    {
+        return Order::get()->filter(array('CancelledByID' => $this->owner->ID));
     }
 
     /**
@@ -435,7 +451,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         if (! EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
             //if no accounts are made then we simply return the basics....
             $fields = new FieldList(
-                new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION', 'Personal Information'), 3),
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
                 new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email'))
@@ -447,7 +462,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 if ($this->owner->Password) {
                     $passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD', 'New Password'));
                     $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD', 'Confirm New Password'));
-                    $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password"  datano="'.Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD', 'Do not update password')).'"  class="updatePasswordLink passwordToggleLink" rel="Password">'._t('Account.UPDATE_PASSWORD', 'Update Password').'</a>');
+                    $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password"  datano="'.Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD', 'Do not update password')).'"  class="updatePasswordLink passwordToggleLink secondary-button" rel="Password">'._t('Account.UPDATE_PASSWORD', 'Update Password').'</a>');
                 } else {
                     //if they dont have a password then we now force them to create one.
                     //the fields of which are added further down the line...
@@ -493,7 +508,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '');
             }
             $fields = new FieldList(
-                new HeaderField('PersonalInformation', _t('EcommerceRole.PERSONALINFORMATION', 'Personal Information'), 3),
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
                 new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email')),
@@ -563,7 +577,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function IsShopAssistant()
     {
         if ($this->owner->IsShopAdmin()) {
-
             return true;
         }
 

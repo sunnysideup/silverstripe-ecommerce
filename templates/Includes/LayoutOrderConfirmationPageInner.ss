@@ -1,6 +1,6 @@
 <h1 class="pagetitle">$Title</h1>
 <div class="paymentMessage $PaymentMessageType">
-    <h2 class="paymentHeader">$PaymentHeader</h2>
+    <h3 class="paymentHeader">$PaymentHeader</h3>
     <div class="paymentMessageInner">$PaymentMessage</div>
 </div>
 

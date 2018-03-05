@@ -2,7 +2,7 @@
 <table id="OrderPayment" class="infotable $Status.LowerCase">
     <thead>
         <tr class="gap mainHeader">
-            <th colspan="5" class="left" scope="col"><% _t("Order.PAYMENTS","Payment(s)") %></th>
+            <th colspan="5" class="left"><% _t("Order.PAYMENTS","Payment(s)") %></th>
         </tr>
         <tr>
             <th scope="col" class="center"><% _t("Order.DATE","Date") %></th>

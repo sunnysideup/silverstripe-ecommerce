@@ -160,7 +160,7 @@ class CartResponse extends EcommerceResponse
         foreach ($templates as $idMethod => $template) {
             $selector = $ajaxObject->$idMethod();
             $classOrID = 'id';
-            if (strpos($selector, 'ID') === false || strpos($selector, '_class') !== false) {
+            if (stripos($selector, 'class') !== false) {
                 $classOrID = 'class';
             }
             $js[] = array(

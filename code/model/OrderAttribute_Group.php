@@ -20,6 +20,29 @@ class OrderAttribute_Group extends DataObject implements EditableEcommerceObject
         'Sort' => true,
     );
 
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Order Modifier Group';
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Order Modifier Types';
+    public function i18n_plural_name()
+    {
+        return $this->Config()->get('plural_name');
+    }
+
     /**
      * Standard SS Method.
      *

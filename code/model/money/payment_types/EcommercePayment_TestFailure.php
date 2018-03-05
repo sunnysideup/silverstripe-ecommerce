@@ -6,6 +6,30 @@
  */
 class EcommercePayment_TestFailure extends EcommercePayment_Test
 {
+
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Ecommerce Test Failure Payment';
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Ecommerce Test Failuer Payments';
+    public function i18n_plural_name()
+    {
+        return $this->Config()->get('plural_name');
+    }
+
     /**
      * @param array     $data The form request data - see OrderForm
      * @param OrderForm $form The form object submitted on

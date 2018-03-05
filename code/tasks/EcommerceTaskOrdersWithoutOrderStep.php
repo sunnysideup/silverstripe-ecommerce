@@ -27,7 +27,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
     public function run($request)
     {
         $doCancel = $request->getVar('cancel');
-        if(! $doCancel) {
+        if (! $doCancel) {
             DB::alteration_message('You can add <strong>cancel</strong> as a getvar to cancel and archive all orders.', 'edited');
         }
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
@@ -45,10 +45,10 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                         $submittedOrderStatusLogClassName,
                         "\"$submittedOrderStatusLogClassName\".\"ID\" = \"OrderStatusLog\".\"ID\""
                     );
-                if($orders->count()) {
-                    foreach($orders as $order) {
+                if ($orders->count()) {
+                    foreach ($orders as $order) {
                         $archivingNow = 'Open order to rectify.';
-                        if($doCancel) {
+                        if ($doCancel) {
                             $archivingNow = 'This order has been cancelled and archived.';
                             $order->Cancel();
                         }
@@ -67,7 +67,4 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
     }
-
-
-
 }

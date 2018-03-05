@@ -388,6 +388,9 @@ class ShoppingCart_Controller extends Controller
     public function removeallitem(SS_HTTPRequest $request)
     {
         $this->cart->deleteBuyable($this->buyable(), $this->parameters());
+        //added this because cart was not updating correctly
+        $order = $this->cart->CurrentOrder();
+        $order->calculateOrderAttributes($force = true);
 
         return $this->cart->setMessageAndReturn();
     }
@@ -424,6 +427,8 @@ class ShoppingCart_Controller extends Controller
     {
         $modifierID = intval($request->param('ID'));
         $this->cart->removeModifier($modifierID);
+        $order = $this->cart->CurrentOrder();
+        $order->calculateOrderAttributes($force = true);
 
         return $this->cart->setMessageAndReturn();
     }
@@ -440,6 +445,8 @@ class ShoppingCart_Controller extends Controller
     {
         $modifierID = intval($request->param('ID'));
         $this->cart->addModifier($modifierID);
+        $order = $this->cart->CurrentOrder();
+        $order->calculateOrderAttributes($force = true);
 
         return $this->cart->setMessageAndReturn();
     }
@@ -497,7 +504,7 @@ class ShoppingCart_Controller extends Controller
      **/
     public function removefromsale(SS_HTTPRequest $request)
     {
-        if(EcommerceRole::current_member_is_shop_assistant()) {
+        if (EcommerceRole::current_member_is_shop_assistant()) {
             $className = Convert::raw2sql($request->param('ID'));
             $id = intval($request->param('OtherID'));
             if (class_exists($className)) {

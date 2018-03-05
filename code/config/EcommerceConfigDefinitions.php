@@ -279,6 +279,7 @@ class EcommerceConfigDefinitions extends Object
         ################### POST SALE PROCESSING #####################
             'OrderConfirmationPage_Controller' => array(
                 'include_as_checkout_step' => 'Include the order confirmation as one of the checkout steps, visually, in the list of steps shown.',
+                'google_analytics_variable' => 'The name of the Google Analytics variables (usually ga or _gaq).'
             ),
             'OrderStep' => array(
                 'order_steps_to_include' => 'Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.',

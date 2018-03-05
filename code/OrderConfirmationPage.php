@@ -221,8 +221,8 @@ class OrderConfirmationPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'SaveOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Errors', 'NoItemsInOrderMessage');
         $fieldLabels = $this->fieldLabels();
-        $fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
-        $fields->addFieldToTab('Root.Messages.Messages.Actions', new TextField('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
+        $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
+        $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
         $fields->addFieldsToTab('Root.Messages.Messages.Payment', array(
             HeaderField::create('Successful'),
             TextField::create('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
@@ -237,8 +237,8 @@ class OrderConfirmationPage extends CartPage
             TextField::create('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
             HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
         ));
-        $fields->addFieldToTab('Root.Analytics', new CheckboxField('EnableGoogleAnalytics', $fieldLabels['EnableGoogleAnalytics']));
-        if($this->IsFeedbackEnabled) {
+        $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', $fieldLabels['EnableGoogleAnalytics']));
+        if ($this->IsFeedbackEnabled) {
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
                 array(
@@ -762,14 +762,14 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             }
             if ($statusID = intval($request->getVar('test'))) {
                 $step = OrderStep::get()->byID($statusID);
-                $subject = $step->EmailSubject;
-                $message = $step->CustomerMessage;
+                $subject = $step->CalculatedEmailSubject($this->currentOrder);
+                $message = $step->CalculatedCustomerMessage($this->currentOrder);
                 if ($step) {
                     $emailClassName = $step->getEmailClassName();
                 }
                 if ($request->getVar('send')) {
                     $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
-                    if(! $email) {
+                    if (! $email) {
                         $email = true;
                     }
                     $this->currentOrder->sendEmail(
@@ -780,8 +780,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                         $adminOnlyOrToEmail = $email
                     );
                 }
-            }
-            elseif ($request->getVar('send')) {
+            } elseif ($request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
                     $step = OrderStep::get()->byID($this->currentOrder->StatusID);
                     $ecomConfig = $this->EcomConfig();
@@ -819,31 +818,34 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
 
     protected function includeGoogleAnalyticsCode()
     {
-        if ($this->EnableGoogleAnalytics && $this->currentOrder && Director::isLive()) {
-            $currencyUsedObject = $this->currentOrder->CurrencyUsed();
-            if ($currencyUsedObject) {
-                $currencyUsedString = $currencyUsedObject->Code;
-            }
-            if (empty($currencyUsedString)) {
-                $currencyUsedString = EcommerceCurrency::default_currency_code();
-            }
-            $js = '
-            jQuery(document).ready(
-                function(){
-                    _gaq(\'require\', \'ecommerce\');
-                    _gaq(
-                        \'ecommerce:addTransaction\',
-                        {
-                            \'id\': \''.$this->currentOrder->ID.'\',
-                            \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
-                            \'currency\': \''.$currencyUsedString.'\'
-                        }
-                    );
-                    _gaq(\'ecommerce:send\');
+        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
+            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
+            if ($var) {
+                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
+                if ($currencyUsedObject) {
+                    $currencyUsedString = $currencyUsedObject->Code;
                 }
-            );
-';
-            Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
+                if (empty($currencyUsedString)) {
+                    $currencyUsedString = EcommerceCurrency::default_currency_code();
+                }
+                $js = '
+                jQuery(document).ready(
+                    function(){
+                        '.$var.'(\'require\', \'ecommerce\');
+                        '.$var.'(
+                            \'ecommerce:addTransaction\',
+                            {
+                                \'id\': \''.$this->currentOrder->ID.'\',
+                                \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
+                                \'currency\': \''.$currencyUsedString.'\'
+                            }
+                        );
+                        '.$var.'(\'ecommerce:send\');
+                    }
+                );
+    ';
+                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
+            }
         }
     }
 }

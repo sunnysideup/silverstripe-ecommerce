@@ -310,7 +310,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function admin_manageable_steps()
     {
-        $lastStep = OrderStep::get()->Last();
+        $lastStep = OrderStep::last_order_step();
 
         return OrderStep::get()->filter(array('ShowAsInProcessOrder' => 1))->exclude(array('ID' => $lastStep->ID));
     }
@@ -322,9 +322,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function non_admin_manageable_steps()
     {
-        $lastStep = OrderStep::get()->Last();
+        $lastStep = OrderStep::last_order_step();
 
         return OrderStep::get()->filterAny(array('ShowAsInProcessOrder' => 0, 'ID' => $lastStep->ID));
+    }
+
+    private static $_last_order_step_cache = null;
+
+    /**
+     * @param bool $noCacheValues
+     * @return OrderStep
+     */
+    public static function last_order_step($noCacheValues = false)
+    {
+        if (! self::$_last_order_step_cache || $noCacheValues) {
+            self::$_last_order_step_cache = OrderStep::get()->Last();
+        }
+
+        return self::$_last_order_step_cache;
     }
 
     /**
@@ -451,7 +466,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $config = $queueField->getConfig();
         $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
         $config->removeComponentsByType('GridFieldDeleteAction');
-        $fields->removeFieldFromTab('Root','OrderProcessQueueEntries');
+        $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         if ($this->canBeDefered()) {
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
@@ -534,7 +549,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
             $htmlEditorField->setRows(3);
-
         } else {
             $fields->removeFieldFromTab('Root', 'OrderEmailRecords');
             $fields->removeFieldFromTab('Root.Main', 'EmailSubject');
@@ -626,9 +640,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $result;
     }
 
-/**************************************************
-* moving between statusses...
-**************************************************/
+    /**************************************************
+    * moving between statusses...
+    **************************************************/
     /**
      *initStep:
      * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
@@ -690,9 +704,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return;
     }
 
-/**************************************************
-* Boolean checks
-**************************************************/
+    /**************************************************
+    * Boolean checks
+    **************************************************/
 
     /**
      * Checks if a step has passed (been completed) in comparison to the current step.
@@ -762,14 +776,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return in_array($this->Code, self::get_codes_for_order_steps_to_include());
     }
 
-/**************************************************
-* Email
-**************************************************/
+    /**************************************************
+    * Email
+    **************************************************/
 
     /**
      * @var string
      */
-    protected $emailClassName = '';
+    protected $emailClassName = 'Order_InvoiceEmail';
 
     /**
      * returns the email class used for emailing the
@@ -804,13 +818,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     ) {
         if (!$this->hasBeenSent($order) || $resend) {
             if (!$subject) {
-                $subject = $this->EmailSubject;
+                $subject = $this->CalculatedEmailSubject($order);
             }
-            if (!$emailClassName) {
-                $emailClassName = $this->getEmailClassName();
-            }
-            $adminOnlyOrToEmailIsEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
-            if ($this->hasCustomerMessage() || $adminOnlyOrToEmailIsEmail) {
+            $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
+
+            //this is NOT an admin EMAIL
+            if ($this->hasCustomerMessage() || $useAlternativeEmail) {
+                if (! $emailClassName) {
+                    $emailClassName = $this->getEmailClassName();
+                }
                 return $order->sendEmail(
                     $emailClassName,
                     $subject,
@@ -818,8 +834,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $resend,
                     $adminOnlyOrToEmail
                 );
+            //ADMIN ONLY ....
             } else {
-                if (!$emailClassName) {
+                if (! $emailClassName) {
                     $emailClassName = 'Order_ErrorEmail';
                 }
                 //looks like we are sending an error, but we are just using this for notification
@@ -870,7 +887,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $cacheDataObjectGetOne = true,
                 'RAND() ASC'
             );
-            if(! $order) {
+            if (! $order) {
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= '.$this->Sort)
                     ->sort('IF("OrderStep"."Sort" > '.$this->Sort.', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
@@ -946,6 +963,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function getHasCustomerMessageNice()
     {
         return $this->hasCustomerMessage() ?  _t('OrderStep.YES', 'Yes') :  _t('OrderStep.NO', 'No');
+    }
+
+    public function CalculatedEmailSubject($order = null)
+    {
+        return $this->EmailSubject;
+    }
+
+    public function CalculatedCustomerMessage($order = null)
+    {
+        return $this->CustomerMessage;
     }
 
     /**
@@ -1062,9 +1089,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
 
-/**************************************************
-* Order Status Logs
-**************************************************/
+    /**************************************************
+    * Order Status Logs
+    **************************************************/
 
     /**
      * The OrderStatusLog that is relevant to the particular step.
@@ -1123,9 +1150,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         }
     }
 
-/**************************************************
-* Silverstripe Standard Data Object Methods
-**************************************************/
+    /**************************************************
+    * Silverstripe Standard Data Object Methods
+    **************************************************/
 
     /**
      * Standard SS method
@@ -1308,7 +1335,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function onAfterDelete()
     {
         parent::onAfterDelete();
-        $this->requireDefaultRecords();
+        $this->checkValidityOfOrderSteps();
     }
 
     protected function NextOrderStep()
@@ -1332,6 +1359,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
+        $this->checkValidityOfOrderSteps();
+    }
+
+    protected function checkValidityOfOrderSteps()
+    {
         $orderStepsToInclude = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
         $codesToInclude = self::get_codes_for_order_steps_to_include();
         $indexNumber = 0;
@@ -1366,7 +1398,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         }
                     } else {
                         $oldObjects = OrderStep::get()->filterAny(array('Code' => $code));
-                        foreach($oldObjects as $oldObject) {
+                        foreach ($oldObjects as $oldObject) {
                             DB::alteration_message('DELETING '.$oldObject->Title.' as this now appears obsolete', 'deleted');
                             $oldObject->delete();
                         }

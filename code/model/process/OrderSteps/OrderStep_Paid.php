@@ -88,7 +88,8 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
                     This order can not be completed, because it has not been paid.
                     You can either create a payment or change the status of any existing payment to <i>success</i>.
                     See Payments tab for more details.
-                ');
+                '
+            );
             $fields->addFieldToTab('Root.Next', new LiteralField('NotPaidMessage', '<p>'.$msg.'</p>'), 'ActionNextStepManually');
         }
 

@@ -36,23 +36,23 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
         return $fields;
     }
 
-     /**
-      * can run step once order has been submitted.
-      * NOTE: must have a payment (even if it is a fake payment).
-      * The reason for this is if people pay straight away then they want to see the payment shown on their invoice.
-      *
-      * @param Order object
-      *
-      * @return bool - true if the current step is ready to be run...
-      **/
-     public function initStep(Order $order)
-     {
-         if ($order->IsSubmitted()) {
-             return true;
-         }
+    /**
+     * can run step once order has been submitted.
+     * NOTE: must have a payment (even if it is a fake payment).
+     * The reason for this is if people pay straight away then they want to see the payment shown on their invoice.
+     *
+     * @param Order object
+     *
+     * @return bool - true if the current step is ready to be run...
+     **/
+    public function initStep(Order $order)
+    {
+        if ($order->IsSubmitted()) {
+            return true;
+        }
 
-         return false;
-     }
+        return false;
+    }
 
     /**
      * send invoice to customer

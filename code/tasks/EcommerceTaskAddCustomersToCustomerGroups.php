@@ -18,7 +18,8 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
     {
         $customerGroup = EcommerceRole::get_customer_group();
         if ($customerGroup) {
-            $allCombos = DB::query('
+            $allCombos = DB::query(
+                '
 				SELECT "Group_Members"."ID", "Group_Members"."MemberID", "Group_Members"."GroupID"
 				FROM "Group_Members"
 				WHERE "Group_Members"."GroupID" = '.$customerGroup->ID.';'

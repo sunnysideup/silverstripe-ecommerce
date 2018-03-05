@@ -28,7 +28,7 @@ class EcommerceTaskDeleteProducts extends BuildTask
                     DB::alteration_message('Deleting '.$product->ClassName.' ID = '.$product->ID, 'deleted');
                     if (is_a($product, Object::getCustomClass('SiteTree'))) {
                         $product->deleteFromStage('Live');
-                        $product->deleteFromStage('Stage');
+                        $product->deleteFromStage('Draft');
                     } else {
                         $product->delete();
                     }

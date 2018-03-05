@@ -46,16 +46,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     );
 
     /**
-     * Standard SS Variable.
-     *
-     * @var array
-     **/
-    private static $indexes = array(
-        'Code' => true,
-        'DoNotAllowSales' => true,
-    );
-
-    /**
      * standard SS variable.
      *
      * @var array
@@ -92,9 +82,24 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Variable.
      *
+     * @var array
+     **/
+    private static $indexes = array(
+        'DoNotAllowSales' => true,
+        'Name' => true,
+        'Code' => true
+    );
+
+    /**
+     * Standard SS Variable.
+     *
      * @var string
      **/
-    private static $default_sort = '"DoNotAllowSales" ASC, "Name" ASC';
+    private static $default_sort = [
+        'DoNotAllowSales' => 'ASC',
+        'Name' => 'ASC',
+        'ID' => 'ASC'
+    ];
 
     /**
      * Standard SS Variable.
@@ -134,15 +139,19 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null)
     {
+        $can = false;
         if (! $member) {
             $member = Member::currentUser();
+        }
+        if (EcommerceCountry::get()->count() < 220) {
+            $can = parent::canCreate($member);
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
         }
 
-        return false;
+        return $can;
     }
 
     /**
@@ -397,29 +406,33 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function get_country($recalculate = false, $orderID = 0)
     {
+        //get order ID
         $orderID = ShoppingCart::current_order_id($orderID);
         $countryCode = self::get_country_cache($orderID);
         if ($countryCode === null || $recalculate) {
             $countryCode = '';
             //1. fixed country is first
             $countryCode = self::get_fixed_country_code();
-            if (!$countryCode) {
+            if (! $countryCode) {
                 //2. check order / shipping address / ip address
                 //include $countryCode = self::get_country_from_ip();
-                if ($o = ShoppingCart::current_order()) {
+                $o = ShoppingCart::current_order();
+                if ($orderID && $orderID !== $o->ID) {
+                    $o = DataObject::get_one('Order', ['ID' => $orderID]);
+                }
+                if ($o && $o->exists()) {
                     $countryCode = $o->getCountry();
                 //3 ... if there is no shopping cart, then we still want it from IP
                 } else {
                     $countryCode = self::get_country_from_ip();
                 }
                 //4 check default country set in GEO IP....
-                if (!$countryCode) {
+                if (! $countryCode) {
                     $countryCode = self::get_country_default();
                 }
             }
             self::set_country_cache($countryCode, $orderID);
         }
-
         return $countryCode;
     }
 
@@ -573,7 +586,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldToTab('Root.Main', new LiteralField(
+        $fields->addFieldToTab(
+            'Root.Main',
+            new LiteralField(
             'Add Add Countries',
             '
                 <h3>Short-Cuts</h3>
@@ -581,7 +596,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                     <a href="/dev/tasks/EcommerceTaskCountryAndRegion_DisallowAllCountries" target="_blank">'._t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries').'</a> |||
                     <a href="/dev/tasks/EcommerceTaskCountryAndRegion_AllowAllCountries" target="_blank">'._t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries').'</a>
                 </h6>
-            ')
+            '
+        )
         );
 
         return $fields;
@@ -649,7 +665,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         if (count(self::$for_current_order_only_show_countries)) {
             //we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
-                self::$for_current_order_only_show_countries = array_intersect($a, self::$for_current_order_only_show_countries);
+            self::$for_current_order_only_show_countries = array_intersect($a, self::$for_current_order_only_show_countries);
         } else {
             self::$for_current_order_only_show_countries = $a;
         }
@@ -670,7 +686,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function set_for_current_order_do_not_show_countries(array $a)
     {
         //We MERGE here because several modifiers may limit the countries
-            self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);
+        self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);
     }
 
     /**

@@ -45,7 +45,7 @@ class EcommercePaymentFilters_AroundDateFilter extends ExactMatchFilter
 
         // changed for PostgreSQL compatability
         // NOTE - we may wish to add DATEDIFF function to PostgreSQL schema, it's just that this would be the FIRST function added for SilverStripe
-            // default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
+        // default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
         $db = DB::getConn();
         if ($db instanceof PostgreSQLDatabase) {
             // don't know whether functions should be used, hence the following code using an interval cast to an integer
@@ -57,5 +57,4 @@ class EcommercePaymentFilters_AroundDateFilter extends ExactMatchFilter
 
         return $query;
     }
-
 }

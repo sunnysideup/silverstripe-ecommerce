@@ -22,7 +22,7 @@ class ShopAccountForm extends Form
             $fields = $member->getEcommerceFields(false);
             $clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
             $loginMessage =
-                '<span class="customerName">'.Convert::raw2xml($member->FirstName).' '.Convert::raw2xml($member->Surname).'</span>, '
+                '<span class="customerName">'.trim(Convert::raw2xml($member->FirstName).' '.Convert::raw2xml($member->Surname)).'</span>, '
                 .'<a href="'.$clearCartAndLogoutLink.'">'._t('Account.LOGOUT', 'Log out now?').
                 '</a>';
             if ($loginMessage) {

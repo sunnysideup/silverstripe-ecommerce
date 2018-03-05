@@ -9,10 +9,6 @@
  **/
 
 
-.required label:before {content: "* ";}
-
-#PostalCode label.right:before {content: "";}
-
 /**
  * table general
  */
@@ -64,15 +60,15 @@ even when theme-ing ecommerce, these should not be themed
 
 
 .productActions.loading {
-	background-image: none;
+  background-image: none;
 }
 .productActions.loading a {
-	background-image: url(/ecommerce/images/loading.gif)!important;
-	background-repeat: no-repeat;
-	background-position: top left;
-	-moz-transition: color 0.25s ease-in-out;
-	-webkit-transition: color 0.25s ease-in-out;
-	transition: color 0.25s ease-in-out;
+  background-image: url(/ecommerce/images/loading.gif)!important;
+  background-repeat: no-repeat;
+  background-position: top left;
+  -moz-transition: color 0.25s ease-in-out;
+  -webkit-transition: color 0.25s ease-in-out;
+  transition: color 0.25s ease-in-out;
 }
 
 
@@ -84,21 +80,21 @@ even when theme-ing ecommerce, these should not be themed
  */
 #Checkout ol.steps, #OrderConfirmationPage ol.steps  {margin-top: 1em; margin-bottom: 1em; padding-bottom: 2em; margin-left: 0px;}
 #Checkout ol.steps li, #OrderConfirmationPage ol.steps li {
-	padding: 0px;
-	display: block;
-	float: left;
-	width: 24.5%;
-	height: 1em;
-	background-color: #EDEDED;
-	padding-top: 1em;
-	padding-bottom: 1em;
-	text-align: center;
-	color: #888888;
-	line-height: 1;
-	list-style-type: decimal;
-	margin: 0px;
-	margin-bottom: 10px;
-	border-bottom: 3px solid #000;
+  padding: 0px;
+  display: block;
+  float: left;
+  width: 24.5%;
+  height: 1em;
+  background-color: #EDEDED;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  text-align: center;
+  color: #888888;
+  line-height: 1;
+  list-style-type: decimal;
+  margin: 0px;
+  margin-bottom: 10px;
+  border-bottom: 3px solid #000;
 }
 #Checkout ol.steps li.link,  #OrderConfirmationPage ol.steps li.link {color: #000;}
 #Checkout ol.steps li.current,  #OrderConfirmationPage ol.steps li.current{color: green; border-bottom: 3px solid green;}
@@ -107,14 +103,14 @@ even when theme-ing ecommerce, these should not be themed
 #Checkout ol.steps li a:hover{border: none;}
 
 td.remove a img {
-	filter: url(/ecommerce/css/filters.svg#grayscale); /* Firefox 3.5+ */
-	filter: gray; /* IE6-9 */
-	-webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
-	background: none;
+  filter: url(/ecommerce/css/filters.svg#grayscale); /* Firefox 3.5+ */
+  filter: gray; /* IE6-9 */
+  -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+  background: none;
 }
 
 
 td.remove a:hover img {
-	filter: none;
-	-webkit-filter: grayscale(0);
+  filter: none;
+  -webkit-filter: grayscale(0);
 }

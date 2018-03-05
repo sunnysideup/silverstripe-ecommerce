@@ -100,6 +100,14 @@ class ShoppingCart extends Object
     }
 
     /**
+     * useful when the order has been updated ...
+     */
+    public static function reset_order_reference()
+    {
+        return self::singleton()->order = null;
+    }
+
+    /**
      * looks up current order id.
      * you may supply an ID here, so that it looks up the current order ID
      * only when none is supplied.
@@ -111,15 +119,15 @@ class ShoppingCart extends Object
     public static function current_order_id($orderOrOrderID = 0)
     {
         $orderID = 0;
-        if (!$orderOrOrderID) {
+        if (! $orderOrOrderID) {
             $order = self::current_order();
             if ($order && $order->exists()) {
                 $orderID = $order->ID;
             }
         }
-        if($orderOrOrderID instanceof Order) {
+        if ($orderOrOrderID instanceof Order) {
             $orderID = $orderOrOrderID->ID;
-        } elseif(intval($orderOrOrderID)) {
+        } elseif (intval($orderOrOrderID)) {
             $orderID = intval($orderOrOrderID);
         }
 
@@ -168,10 +176,10 @@ class ShoppingCart extends Object
      */
     public function currentOrder($recurseCount = 0, $order = null)
     {
-        if($order) {
+        if ($order) {
             $this->order = $order;
         }
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             if (!$this->order) {
                 $this->order = self::session_order();
                 $loggedInMember = Member::currentUser();
@@ -275,8 +283,8 @@ class ShoppingCart extends Object
                     $sessionVariableName = $this->sessionVariableName('OrderID');
                     Session::set($sessionVariableName, intval($this->order->ID));
                 }
-                if ($this->order){
-                    if($this->order->exists()) {
+                if ($this->order) {
+                    if ($this->order->exists()) {
                         $this->order->calculateOrderAttributes($force = false);
                     }
                     if (! $this->order->SessionID) {
@@ -312,15 +320,15 @@ class ShoppingCart extends Object
      */
     protected function allowWrites()
     {
-        if(self::$_allow_writes_cache === null) {
-            if($this->order) {
+        if (self::$_allow_writes_cache === null) {
+            if ($this->order) {
                 self::$_allow_writes_cache = true;
             } else {
-                if ( php_sapi_name() !== 'cli' ) {
-                    if ( version_compare(phpversion(), '5.4.0', '>=') ) {
-                        self::$_allow_writes_cache = session_status() === PHP_SESSION_ACTIVE ? true : false;
+                if (php_sapi_name() !== 'cli') {
+                    if (version_compare(phpversion(), '5.4.0', '>=')) {
+                        self::$_allow_writes_cache = (session_status() === PHP_SESSION_ACTIVE ? true : false);
                     } else {
-                        self::$_allow_writes_cache = session_id() === '' ? true : false;
+                        self::$_allow_writes_cache = (session_id() === '' ? false : true);
                     }
                 } else {
                     self::$_allow_writes_cache = false;
@@ -329,7 +337,6 @@ class ShoppingCart extends Object
         }
 
         return self::$_allow_writes_cache;
-
     }
 
     /**
@@ -361,7 +368,7 @@ class ShoppingCart extends Object
      */
     public function addBuyable(BuyableModel $buyable, $quantity = 1, $parameters = array())
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             if (!$buyable) {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEFOUND', 'This item could not be found.'), 'bad');
                 return false;
@@ -407,7 +414,7 @@ class ShoppingCart extends Object
      */
     public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = array())
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item) {
@@ -437,7 +444,7 @@ class ShoppingCart extends Object
      */
     public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = array())
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item) {
@@ -460,7 +467,6 @@ class ShoppingCart extends Object
 
             return false;
         }
-
     }
 
     /**
@@ -475,7 +481,7 @@ class ShoppingCart extends Object
      */
     public function deleteBuyable(BuyableModel $buyable, array $parameters = array())
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = true);
             if ($item) {
                 $this->currentOrder()->Attributes()->remove($item);
@@ -572,7 +578,7 @@ class ShoppingCart extends Object
      */
     public function findOrMakeItem(BuyableModel $buyable, array $parameters = array())
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             if ($item = $this->getExistingItem($buyable, $parameters)) {
                 //do nothing
             } else {
@@ -612,7 +618,7 @@ class ShoppingCart extends Object
      */
     public function submit()
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             $this->currentOrder()->tryToFinaliseOrder();
             $this->clear();
             //little hack to clear static memory
@@ -631,7 +637,7 @@ class ShoppingCart extends Object
      */
     public function save()
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             $this->currentOrder()->write();
             $this->addMessage(_t('Order.ORDERSAVED', 'Order Saved.'), 'good');
 
@@ -695,7 +701,7 @@ class ShoppingCart extends Object
      */
     public function removeModifier(OrderModifier $modifier)
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             $modifier = (is_numeric($modifier)) ? OrderModifier::get()->byID($modifier) : $modifier;
             if (!$modifier) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
@@ -728,7 +734,7 @@ class ShoppingCart extends Object
      */
     public function addModifier($modifier)
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             if (is_numeric($modifier)) {
                 $modifier = OrderModifier::get()->byID($modifier);
             } elseif (!(is_a($modifier, Object::getCustomClass('OrderModifier')))) {
@@ -756,7 +762,7 @@ class ShoppingCart extends Object
      */
     public function loadOrder($order)
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             //TODO: how to handle existing order
             //TODO: permission check - does this belong to another member? ...or should permission be assumed already?
             if (is_numeric($order)) {
@@ -791,7 +797,6 @@ class ShoppingCart extends Object
 
             return false;
         }
-
     }
 
     /**
@@ -805,7 +810,7 @@ class ShoppingCart extends Object
      **/
     public function copyOrder($oldOrder)
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             if (is_numeric($oldOrder)) {
                 $oldOrder = Order::get()->byID(intval($oldOrder));
             } elseif (is_a($oldOrder, Object::getCustomClass('Order'))) {
@@ -862,7 +867,7 @@ class ShoppingCart extends Object
      **/
     public function setCountry($countryCode)
     {
-        if($this->allowWrites()) {
+        if ($this->allowWrites()) {
             if (EcommerceCountry::code_allowed($countryCode)) {
                 $this->currentOrder()->SetCountryFields($countryCode);
                 $this->addMessage(_t('Order.UPDATEDCOUNTRY', 'Updated country.'), 'good');
@@ -1188,7 +1193,7 @@ class ShoppingCart extends Object
                 //nowe we can (re)calculate the order
                 $this->order->calculateOrderAttributes($force = false);
                 $form->sessionMessage($message, $status);
-                //let the form controller do the redirectback or whatever else is needed.
+            //let the form controller do the redirectback or whatever else is needed.
             } else {
                 if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
                     Controller::curr()->redirectBack();

@@ -55,7 +55,7 @@ ShippingAddress:
     ShippingPostalCode:
       postal_code: long_name
 
-# requires silverstripe-australia/grouped-cms-menu module ...
+# requires symbiote/silverstripe-grouped-cms-menu module ...
 LeftAndMain:
   menu_groups:
     Shop:
