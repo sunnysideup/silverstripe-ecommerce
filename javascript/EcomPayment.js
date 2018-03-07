@@ -28,6 +28,7 @@ if(
         paymentMethodPrefix: '.methodFields_',
 
         init: function () {
+            EcomPayment.ecomForm = jQuery(EcomPayment.paymentInputsSelector).closest('form');
             var paymentInputs = jQuery(EcomPayment.paymentInputsSelector);
             var methodFields = jQuery(EcomPayment.paymentFieldSelector);
 
@@ -48,7 +49,14 @@ if(
                 }
             );
 
-            jQuery(EcomPayment.paymentInputsSelector).first().click();
+            if(jQuery(EcomPayment.paymentInputsSelectorParent + ' input:checked').length){
+                //if an option has already been selected make sure it stays selected
+                jQuery(EcomPayment.paymentInputsSelectorParent + ' input:checked').click();
+            }
+            else {
+                jQuery(EcomPayment.paymentInputsSelector).first().click();
+            }
+
             if(jQuery(EcomPayment.paymentInputsSelector).length == 1) {
                 jQuery(EcomPayment.paymentInputsSelectorParent).hide();
             }
