@@ -673,8 +673,8 @@ class OrderItem extends OrderAttribute
      **/
     public function getBuyable($current = false)
     {
-        $tempBuyableStoreType = $current ? 'current' : 'version';
-        if (!isset($this->tempBuyableStore[$tempBuyableStoreType])) {
+        $currentOrVersion = $current ? 'current' : 'version';
+        if (!isset($this->tempBuyableStore[$currentOrVersion])) {
             if (!$this->BuyableID) {
                 user_error('There was an error retrieving the product', E_USER_NOTICE);
                 return Product::create();
@@ -724,10 +724,10 @@ class OrderItem extends OrderAttribute
             if ($turnTranslatableBackOn) {
                 Translatable::enable_locale_filter();
             }
-            $this->tempBuyableStore[$tempBuyableStoreType] = $obj;
+            $this->tempBuyableStore[$currentOrVersion] = $obj;
         }
         //check for data integrity
-        return $this->tempBuyableStore[$tempBuyableStoreType];
+        return $this->tempBuyableStore[$currentOrVersion];
     }
 
     /**
