@@ -87,6 +87,18 @@ if(
         shippingGeoCodingFieldSelector: "input[name='ShippingEcommerceGeocodingField']",
 
         /**
+         * country to
+         * @var string
+         */
+        countryToUpdateCartClass: 'ajaxCountryField',
+
+        /**
+         * country to
+         * @var string
+         */
+        regionToUpdateCartClass: 'ajaxRegionField',
+
+        /**
          * is the shipping field closed...
          *
          */
@@ -133,41 +145,55 @@ if(
         updateFields: function() {
             var hasShippingAddress = this.hasShippingAddress();
             //copy the billing address details to the shipping address details
-            if(hasShippingAddress === true) {
-                var billingFieldSelector = "";
-                var shippingFieldSelector = "";
-                var billingFieldValue = "";
-                var shippingFieldValue = "";
-                for (var i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
-                    billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
-                    shippingFieldSelector = EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
-                    billingFieldValue = jQuery(billingFieldSelector).val();
-                    shippingFieldValue = jQuery(shippingFieldSelector).val();
+            var billingFieldSelector = "";
+            var shippingFieldSelector = "";
+            var billingField = null;
+            var shippingField = null;
+            var billingFieldValue = "";
+            var shippingFieldValue = "";
+            for (var i = 0; i < EcomOrderFormWithShippingAddress.fieldArray.length; ++i) {
+                billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
+                shippingFieldSelector = EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[i]);
+                billingField = jQuery(billingFieldSelector);
+                shippingField = jQuery(shippingFieldSelector);
+                if(hasShippingAddress === true) {
+                    if(billingField.hasClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass)) {
+                        billingField.removeClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass);
+                        shippingField.addClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass);
+                    }
+                    if(billingField.hasClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass)) {
+                        billingField.removeClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass);
+                        shippingField.addClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass);
+                    }
+                    billingFieldValue = billingField.val();
+                    shippingFieldValue = shippingField.val();
                     if(EcomOrderFormWithShippingAddress.closed) {
-                        jQuery(shippingFieldSelector).val("");
+                        shippingField.val("");
                     }
                     else if( ! shippingFieldValue && billingFieldValue) {
                         if(EcomOrderFormWithShippingAddress.copy_billing_to_shipping) {
-                            jQuery(shippingFieldSelector).val(billingFieldValue).change();
+                            shippingField.val(billingFieldValue).change();
                         }
+                    }
+                } else {
+                    if(shippingField.hasClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass)) {
+                        shippingField.removeClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass);
+                        billingField.addClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass);
+                    }
+                    if(shippingField.hasClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass)) {
+                        shippingField.removeClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass);
+                        billingField.addClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass);
+                    }
+                    if(shippingField.hasClass("required")) {
+                        shippingField
+                            .removeAttr("required")
+                            .removeAttr("aria-required")
+                            .removeAttr("data-has-required");
+                    }
+                    else {
+                        //do nothing...
                     }
                 }
-            }
-            else {
-                jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
-                    function(i, el) {
-                        if(jQuery(el).hasClass("required")) {
-                            jQuery(el)
-                                .removeAttr("required")
-                                .removeAttr("aria-required")
-                                .removeAttr("data-has-required");
-                        }
-                        else {
-                            //do nothing...
-                        }
-                    }
-                );
-
             }
             this.swapBillingHeader();
         },

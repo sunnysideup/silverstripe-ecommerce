@@ -126,12 +126,6 @@ export var EcomCart = {
     ajaxRegionFieldSelector: "select.ajaxRegionField",
         set_ajaxRegionFieldSelector: function(s) {this.ajaxRegionFieldSelector = s;},
 
-    /**
-     * the selector of the main country field used to select the country of sale
-     */
-    selectorMainCountryField: "#Country",
-        set_selectorMainCountryField: function(s) {this.selectorMainCountryField = s;},
-
 
     //#################################
     // UPDATING THE CART - CLASSES USED
