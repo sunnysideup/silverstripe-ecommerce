@@ -1182,6 +1182,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+            self::$_try_to_finalise_order_is_running[$this->ID] = false;
         }
     }
 
