@@ -109,8 +109,6 @@ if(
         //update shipping fields, when billing fields are changed.
         init: function(){
 
-            alert('init');
-
             if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length > 0) {
                 this.getListOfSharedFields();
 
