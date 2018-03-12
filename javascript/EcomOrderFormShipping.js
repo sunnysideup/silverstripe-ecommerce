@@ -109,6 +109,7 @@ if(
         //update shipping fields, when billing fields are changed.
         init: function(){
 
+            alert('init');
 
             if(jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length > 0) {
                 this.getListOfSharedFields();
@@ -211,6 +212,11 @@ if(
                 EcomOrderFormWithShippingAddress.formSelector+" textarea[name='"+name+"']";
         },
 
+        isShippingField: function(name)
+        {
+            return name.indexOf('Shipping') > -1;
+        },
+
         /**
          * return the shipping field selector
          * @param string
@@ -244,14 +250,19 @@ if(
         getListOfSharedFields: function(){
             jQuery(this.formSelector+' input, '+this.formSelector+" select, "+this.formSelector+" textarea").each(
                 function(i, el){
-                    var name = jQuery(el).attr("name");
+                    el = jQuery(el);
+                    var name = el.attr("name");
                     if(typeof name !== 'undefined') {
-                        var type = jQuery(el).attr("type");
+                        var type = el.prop('nodeName');
+                        if(typeof type !== 'undefined' && type.toLowerCase() === 'input') {
+                            type = el.attr("type");
+                        }
                         if(typeof type !== 'undefined') {
-                            if(type !== 'submit') {
-                                if(type !== 'hidden') {
-                                    var billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(name);
-                                    if(jQuery(billingFieldSelector).length > 0) {
+                            if(type !== 'submit' && type !== 'hidden') {
+                                var billingFieldSelector = EcomOrderFormWithShippingAddress.billingFieldSelector(name);
+                                var shippingFieldSelector = EcomOrderFormWithShippingAddress.shippingFieldSelector(name);
+                                if(jQuery(billingFieldSelector).length > 0 && ! EcomOrderFormWithShippingAddress.isShippingField(name)) {
+                                    if(jQuery.inArray(name, EcomOrderFormWithShippingAddress.fieldArray )) {
                                         EcomOrderFormWithShippingAddress.fieldArray.push(name);
                                     }
                                 }
