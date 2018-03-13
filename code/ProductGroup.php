@@ -1300,8 +1300,8 @@ class ProductGroup extends Page
                 }
             }
         }
-        if (!$arrayList instanceof ArrayList) {
-            user_error('We expect an array list as output');
+        if (! ($arrayList instanceof SS_List)) {
+            user_error('We expect an SS_List as output');
         }
 
         return $arrayList;
