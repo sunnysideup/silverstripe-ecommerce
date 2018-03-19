@@ -28,8 +28,8 @@
         }
     ],
     "require": {
-        "silverstripe/framework": "~3.1",
-        "silverstripe/cms": "~3.1",
+        "silverstripe/framework": "~3.6",
+        "silverstripe/cms": "~3.6",
         "sunnysideup/google_address_field": "*",
         "sunnysideup/permission_provider": "*",
         "sunnysideup/cms_edit_link_field": "*"
