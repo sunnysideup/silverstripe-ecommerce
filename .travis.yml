@@ -1,6 +1,17 @@
 language: php
 
+dist: trusty
+
 sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+# configure notifications (email, IRC, campfire etc)
+notifications:
+  email: ssuerrors@gmail.com
+
 
 addons:
   apt:
@@ -12,29 +23,34 @@ addons:
 
 env:
   global:
-    - DB=MYSQL CORE_RELEASE=3.5.1
-    # Turn coverage off by default, as it's expensive time wise
-    - COVERAGE=0
+    - CORE_RELEASE=3.6.1
+    - COMPOSER_ROOT_VERSION=3.6.1
+    - DISPLAY=":99"
+    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
+    - SS_BASE_URL="http://localhost:8080/"
+    - SS_ENVIRONMENT_TYPE="dev"
 
 matrix:
+  fast_finish: true
   include:
-    - php: 5.6
-      env: DB=MYSQL
+    - php: 7.1
+      env:
+        - DB=MYSQL
+
+
+
+
 
 before_script:
+  - pecl channel-update pecl.php.net
   - phpenv rehash
+  - phpenv config-rm xdebug.ini || true
   - composer self-update || true
+  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
   - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
   - cd ~/builds/ss
-  
-#Execute tests
+
 script:
   # Execute tests with no coverage.  This is the fastest option
- - vendor/bin/phpunit ecommerce/tests/
- #- php framework/cli-script.php dev/build
-
-
-# configure notifications (email, IRC, campfire etc)
-notifications:
-  email: ssuerrors@gmail.com
+ - php framework/cli-script.php dev/build flush=all
