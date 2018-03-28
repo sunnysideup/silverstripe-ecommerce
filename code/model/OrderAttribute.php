@@ -229,16 +229,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             return true;
         }
         if ($this->_canEdit === null) {
-            $this->_canEdit = false;
-            if ($this->OrderID) {
-                if ($o = $this->Order()) {
-                    if ($o->exists()) {
-                        if (!$o->IsSubmitted()) {
-                            $this->_canEdit = true;
-                        }
-                    }
-                }
-            }
+            $this->_canEdit = $this->priceHasBeenFixed() ? false : true;
         }
 
         return $this->_canEdit;
@@ -266,6 +257,66 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
+    }
+
+
+    /**
+     * Helps in speeding up code.
+     * This can be a static variable as it is the same for all OrderItems for an Order.
+     *
+     * @var array
+     */
+    private static $_price_has_been_fixed = array();
+
+
+    /**
+     * @param int $orderID
+     * @param bool $value
+     */
+    public static function set_price_has_been_fixed($orderID = 0, $value = false)
+    {
+        $orderID = ShoppingCart::current_order_id($orderID);
+        self::$_price_has_been_fixed[$orderID] = $value;
+    }
+
+    /**
+     * @param int $orderID
+     * @return bool|null
+     */
+    public static function get_price_has_been_fixed($orderID = 0)
+    {
+        $orderID = ShoppingCart::current_order_id($orderID);
+
+        return isset(self::$_price_has_been_fixed[$orderID]) ? self::$_price_has_been_fixed[$orderID] : null;
+    }
+
+    /**
+     * @description - tells you if an order item price has been "fixed"
+     * meaning that is has been saved in the CalculatedTotal field so that
+     * it can not be altered.
+     *
+     * Default returns false; this is good for uncompleted orders
+     * but not so good for completed ones.
+     *
+     * We use direct calls to self::$_price_has_been_fixed to make the code simpler and faster.
+     *
+     * @return bool
+     **/
+    protected function priceHasBeenFixed($recalculate = false)
+    {
+        if (self::get_price_has_been_fixed($this->OrderID) === null || $recalculate) {
+            self::$_price_has_been_fixed[$this->OrderID] = false;
+            if ($order = $this->Order()) {
+                if ($order->IsSubmitted()) {
+                    self::$_price_has_been_fixed[$this->OrderID] = true;
+                    if ($recalculate) {
+                        user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
+                    }
+                }
+            }
+        }
+
+        return self::$_price_has_been_fixed[$this->OrderID];
     }
 
     ######################

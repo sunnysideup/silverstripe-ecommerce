@@ -600,48 +600,15 @@ class OrderItem extends OrderAttribute
     ##########################
 
     /**
-     * Helps in speeding up code.
-     * This can be a static variable as it is the same for all OrderItems for an Order.
-     *
-     * @var array
-     */
-    private static $_price_has_been_fixed = array();
-
-    /**
      * @param int $orderID
+     * 
      */
     public static function reset_price_has_been_fixed($orderID = 0)
     {
-        $orderID = ShoppingCart::current_order_id($orderID);
-        self::$_price_has_been_fixed[$orderID] = array();
+        self::set_price_has_been_fixed($orderID, false);
     }
 
-    /**
-     * @description - tells you if an order item price has been "fixed"
-     * meaning that is has been saved in the CalculatedTotal field so that
-     * it can not be altered.
-     *
-     * Default returns false; this is good for uncompleted orders
-     * but not so good for completed ones.
-     *
-     * @return bool
-     **/
-    protected function priceHasBeenFixed($recalculate = false)
-    {
-        if (empty(self::$_price_has_been_fixed[$this->OrderID]) || $recalculate) {
-            self::$_price_has_been_fixed[$this->OrderID] = false;
-            if ($order = $this->Order()) {
-                if ($order->IsSubmitted()) {
-                    self::$_price_has_been_fixed[$this->OrderID] = true;
-                    if ($recalculate) {
-                        user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
-                    }
-                }
-            }
-        }
 
-        return self::$_price_has_been_fixed[$this->OrderID];
-    }
 
     /**
      * Store for buyables.
