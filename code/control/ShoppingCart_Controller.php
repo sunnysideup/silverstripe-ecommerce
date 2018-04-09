@@ -108,15 +108,7 @@ class ShoppingCart_Controller extends Controller
             return;
         }
         user_error(_t('Order.NOCARTINITIALISED', 'no cart initialised'), E_USER_NOTICE);
-        $errorPage404 = DataObject::get_one(
-            'ErrorPage',
-            array('ErrorCode' => '404')
-        );
-        if ($errorPage404) {
-            $this->redirect($errorPage404->Link());
-
-            return;
-        }
+        return $this->goToErrorPage();
         user_error(_t('Order.NOCARTINITIALISED', 'no 404 page available'), E_USER_ERROR);
     }
 
@@ -341,9 +333,14 @@ class ShoppingCart_Controller extends Controller
      */
     public function additem(SS_HTTPRequest $request)
     {
-        $this->cart->addBuyable($this->buyable(), $this->quantity(), $this->parameters());
+        $buyable = $this->buyable();
+        if($buyable) {
+            $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters());
+            return $this->cart->setMessageAndReturn();
+        } else {
+            return $this->goToErrorPage();
+        }
 
-        return $this->cart->setMessageAndReturn();
     }
 
     /**
@@ -357,9 +354,14 @@ class ShoppingCart_Controller extends Controller
      */
     public function setquantityitem(SS_HTTPRequest $request)
     {
-        $this->cart->setQuantity($this->buyable(), $this->quantity(), $this->parameters());
+        $buyable = $this->buyable();
+        if($buyable) {
+            $this->cart->setQuantity($buyable, $this->quantity(), $this->parameters());
 
-        return $this->cart->setMessageAndReturn();
+            return $this->cart->setMessageAndReturn();
+        } else {
+            return $this->goToErrorPage();
+        }
     }
 
     /**
@@ -372,9 +374,14 @@ class ShoppingCart_Controller extends Controller
      */
     public function removeitem(SS_HTTPRequest $request)
     {
-        $this->cart->decrementBuyable($this->buyable(), $this->quantity(), $this->parameters());
+        $buyable = $this->buyable();
+        if($buyable) {
+            $this->cart->decrementBuyable($buyable, $this->quantity(), $this->parameters());
 
-        return $this->cart->setMessageAndReturn();
+            return $this->cart->setMessageAndReturn();
+        } else {
+            return $this->goToErrorPage()
+        }
     }
 
     /**
@@ -387,12 +394,17 @@ class ShoppingCart_Controller extends Controller
      */
     public function removeallitem(SS_HTTPRequest $request)
     {
-        $this->cart->deleteBuyable($this->buyable(), $this->parameters());
-        //added this because cart was not updating correctly
-        $order = $this->cart->CurrentOrder();
-        $order->calculateOrderAttributes($force = true);
+        $buyable = $this->buyable();
+        if($buyable)) {
+            $this->cart->deleteBuyable($buyable, $this->parameters());
+            //added this because cart was not updating correctly
+            $order = $this->cart->CurrentOrder();
+            $order->calculateOrderAttributes($force = true);
 
-        return $this->cart->setMessageAndReturn();
+            return $this->cart->setMessageAndReturn();
+        } else {
+            return $this->goToErrorPage();
+        }
     }
 
     /**
@@ -847,6 +859,18 @@ class ShoppingCart_Controller extends Controller
     protected function parameters($getpost = 'GET')
     {
         return ($getpost == 'GET') ? $this->getRequest()->getVars() : $_POST;
+    }
+
+    protected function goToErrorPage()
+    {
+        $errorPage404 = DataObject::get_one(
+            'ErrorPage',
+            array('ErrorCode' => '404')
+        );
+        if ($errorPage404) {
+            return $this->redirect($errorPage404->Link());
+        }
+        return $this->redirect('page-not-found');
     }
 
     /**
