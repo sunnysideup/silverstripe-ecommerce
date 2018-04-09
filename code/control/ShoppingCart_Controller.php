@@ -395,7 +395,7 @@ class ShoppingCart_Controller extends Controller
     public function removeallitem(SS_HTTPRequest $request)
     {
         $buyable = $this->buyable();
-        if($buyable)) {
+        if($buyable) {
             $this->cart->deleteBuyable($buyable, $this->parameters());
             //added this because cart was not updating correctly
             $order = $this->cart->CurrentOrder();
