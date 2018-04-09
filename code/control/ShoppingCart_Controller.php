@@ -380,7 +380,7 @@ class ShoppingCart_Controller extends Controller
 
             return $this->cart->setMessageAndReturn();
         } else {
-            return $this->goToErrorPage()
+            return $this->goToErrorPage();
         }
     }
 
