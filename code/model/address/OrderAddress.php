@@ -329,7 +329,18 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
         $title = _t('OrderAddress.'.strtoupper($name), 'Country');
-        $countryField = new DropdownField($name, $title, $countriesForDropdown, EcommerceCountry::get_country(false, $this->OrderID));
+        $order = $this->Order();
+
+        $countryCode = null;
+        if($order && $order->exists()) {
+            //if it is the billing country field and we use a shipping address then ignore Order Country
+            if($order->UseShippingAddress && ($this instanceof BillingAddress) ) {
+                //do nothing
+            } else {
+                $countryCode = EcommerceCountry::get_country(false, $this->OrderID);
+            }
+        }
+        $countryField = new DropdownField($name, $title, $countriesForDropdown, $countryCode);
         $countryField->setRightTitle(_t('OrderAddress.'.strtoupper($name).'_RIGHT', ''));
         if (count($countriesForDropdown) < 2) {
             $countryField = $countryField->performReadonlyTransformation();
@@ -340,7 +351,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
         $countryField->addExtraClass($prefix.'ajaxCountryField');
         //important, otherwise loadData will override the default value....
-        $this->$name = EcommerceCountry::get_country(false, $this->OrderID);
+        if($countryCode) {
+            $this->$name = $countryCode;
+        }
 
         return $countryField;
     }
