@@ -10,7 +10,7 @@ class GridFieldConfigForOrderItems extends GridFieldConfig_RelationEditor
      */
     public function __construct($itemsPerPage = null)
     {
-        if(! $itemsPerPage ) {
+        if (! $itemsPerPage) {
             $itemsPerPage = 100;
         }
         parent::__construct($itemsPerPage);

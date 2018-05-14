@@ -334,13 +334,12 @@ class ShoppingCart_Controller extends Controller
     public function additem(SS_HTTPRequest $request)
     {
         $buyable = $this->buyable();
-        if($buyable) {
+        if ($buyable) {
             $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters());
             return $this->cart->setMessageAndReturn();
         } else {
             return $this->goToErrorPage();
         }
-
     }
 
     /**
@@ -355,7 +354,7 @@ class ShoppingCart_Controller extends Controller
     public function setquantityitem(SS_HTTPRequest $request)
     {
         $buyable = $this->buyable();
-        if($buyable) {
+        if ($buyable) {
             $this->cart->setQuantity($buyable, $this->quantity(), $this->parameters());
 
             return $this->cart->setMessageAndReturn();
@@ -375,7 +374,7 @@ class ShoppingCart_Controller extends Controller
     public function removeitem(SS_HTTPRequest $request)
     {
         $buyable = $this->buyable();
-        if($buyable) {
+        if ($buyable) {
             $this->cart->decrementBuyable($buyable, $this->quantity(), $this->parameters());
 
             return $this->cart->setMessageAndReturn();
@@ -395,7 +394,7 @@ class ShoppingCart_Controller extends Controller
     public function removeallitem(SS_HTTPRequest $request)
     {
         $buyable = $this->buyable();
-        if($buyable) {
+        if ($buyable) {
             $this->cart->deleteBuyable($buyable, $this->parameters());
             //added this because cart was not updating correctly
             $order = $this->cart->CurrentOrder();
