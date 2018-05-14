@@ -601,7 +601,7 @@ class OrderItem extends OrderAttribute
 
     /**
      * @param int $orderID
-     * 
+     *
      */
     public static function reset_price_has_been_fixed($orderID = 0)
     {

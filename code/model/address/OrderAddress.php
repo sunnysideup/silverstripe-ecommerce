@@ -332,9 +332,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $order = $this->Order();
 
         $countryCode = null;
-        if($order && $order->exists()) {
+        if ($order && $order->exists()) {
             //if it is the billing country field and we use a shipping address then ignore Order Country
-            if($order->UseShippingAddress && ($this instanceof BillingAddress) ) {
+            if ($order->UseShippingAddress && ($this instanceof BillingAddress)) {
                 //do nothing
             } else {
                 $countryCode = EcommerceCountry::get_country(false, $this->OrderID);
@@ -351,7 +351,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
         $countryField->addExtraClass($prefix.'ajaxCountryField');
         //important, otherwise loadData will override the default value....
-        if($countryCode) {
+        if ($countryCode) {
             $this->$name = $countryCode;
         }
 

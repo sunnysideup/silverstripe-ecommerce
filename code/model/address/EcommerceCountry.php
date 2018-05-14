@@ -465,15 +465,15 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public static function get_country_from_mixed_var($var, $asCode = false)
     {
-        if(is_string($var)) {
+        if (is_string($var)) {
             $var = strtoupper($var);
             $var = DataObject::get_one('EcommerceCountry', ['Code' => $var]);
-        } elseif(is_numeric($var) && is_int($var)) {
+        } elseif (is_numeric($var) && is_int($var)) {
             $var = EcommerceCountry::get()->byID($var);
         }
         
-        if($var instanceof EcommerceCountry) {
-            if($asCode) {
+        if ($var instanceof EcommerceCountry) {
+            if ($asCode) {
                 return $var->Code;
             } else {
                 return $var;

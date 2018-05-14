@@ -693,7 +693,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function nextStep(Order $order)
     {
         $sort = (int) $this->Sort;
-        if(! $sort) {
+        if (! $sort) {
             $sort = 0;
         }
         $where = '"OrderStep"."Sort" >  '.$sort;
