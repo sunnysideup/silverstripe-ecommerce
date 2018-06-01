@@ -487,7 +487,8 @@ class Emogrifier
             '#@media\\s+(?:only\\s)?(?:[\\s{\(]|screen|all)\\s?[^{]+{.*}\\s*}\\s*#misU',
             function ($matches) use (&$media) {
                 $media .= $matches[0];
-            }, $css
+            },
+            $css
         );
 
         // filter the CSS
@@ -614,7 +615,8 @@ class Emogrifier
     private function translateCssToXpath($paramCssSelector)
     {
         $cssSelector = ' '.$paramCssSelector.' ';
-        $cssSelector = preg_replace_callback('/\s+\w+\s+/',
+        $cssSelector = preg_replace_callback(
+            '/\s+\w+\s+/',
             function (array $matches) {
                 return strtolower($matches[0]);
             },
@@ -662,11 +664,13 @@ class Emogrifier
             // When we required PHP 5.3, we could do this with closures.
             $cssSelector = preg_replace_callback(
                 '/([^\\/]+):nth-child\\(\s*(odd|even|[+\-]?\\d|[+\\-]?\\d?n(\\s*[+\\-]\\s*\\d)?)\\s*\\)/i',
-                array($this, 'translateNthChild'), $cssSelector
+                array($this, 'translateNthChild'),
+                $cssSelector
             );
             $cssSelector = preg_replace_callback(
                 '/([^\\/]+):nth-of-type\\(\s*(odd|even|[+\-]?\\d|[+\\-]?\\d?n(\\s*[+\\-]\\s*\\d)?)\\s*\\)/i',
-                array($this, 'translateNthOfType'), $cssSelector
+                array($this, 'translateNthOfType'),
+                $cssSelector
             );
 
             $this->caches[self::CACHE_KEY_SELECTOR][$xpathKey] = $cssSelector;
