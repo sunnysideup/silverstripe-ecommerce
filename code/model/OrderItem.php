@@ -718,7 +718,8 @@ class OrderItem extends OrderAttribute
             //This should work in all cases, because ultimately, it will return #ID - see DataObject
             return $item->getTitle();
         }
-        user_error('No Buyable could be found for OrderItem with ID: '.$this->ID, E_USER_WARNING);
+        return 'ERROR: product not found';
+        user_error('No Buyable could be found for OrderItem with ID: '.$this->ID, E_USER_NOTICE);
     }
 
     /**
