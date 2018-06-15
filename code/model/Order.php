@@ -2838,23 +2838,24 @@ class Order extends DataObject implements EditableEcommerceObject
         return DBField::create_field('HTMLText', $this->OrderItemsSummaryAsHTML());
     }
 
-    public function OrderItemsSummaryAsHTML(){
+    public function OrderItemsSummaryAsHTML()
+    {
         $html = '';
         $x = 0;
         $count = $this->owner->OrderItems()->count();
-        if($count > 0) {
+        if ($count > 0) {
             $html .= '<ul class="order-items-summary">';
-            foreach($this->owner->OrderItems() as $orderItem){
+            foreach ($this->owner->OrderItems() as $orderItem) {
                 $x++;
                 $buyable = $orderItem->Buyable();
                 $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433;">- '.$orderItem->Quantity.'x ';
-                if($buyable) {
+                if ($buyable) {
                     $html .= $buyable->InternalItemID .' '.$buyable->Title;
                 } else {
                     $html .= $orderItem->BuyableFullName;
                 }
                 $html .= '</li>';
-                if($x > 3) {
+                if ($x > 3) {
                     $html .= '<li style="font-family: monospace; font-size: 0.9em; color: black;">- open for more items</li>';
                     break;
                 }
