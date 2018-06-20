@@ -90,10 +90,10 @@ class ExchangeRateProvider extends Object
         }
 
         if ($record) {
-            $currencyData = json_decode( $record );
+            $currencyData = json_decode($record);
             $rate = $currencyData->$reference->val;
             if (!$rate) {
-                user_error( 'There was a problem retrieving the exchange rate.' );
+                user_error('There was a problem retrieving the exchange rate.');
             }
         }
         if ($rate != 1) {
