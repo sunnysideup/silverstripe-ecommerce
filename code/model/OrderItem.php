@@ -642,7 +642,7 @@ class OrderItem extends OrderAttribute
     {
         $currentOrVersion = $current ? 'current' : 'version';
         if(!is_null($this->Order()) && !$current){
-            if($this->Order()->IsSubmitted()){
+            if(! $this->Order()->IsSubmitted()){
                 $currentOrVersion = 'current';
             }
         }
