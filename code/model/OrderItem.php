@@ -634,13 +634,19 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @param bool $current - is this a current one, or an older VERSION ?
+     * @param string $current - is this a current one, or an older VERSION ?
      *
      * @return DataObject (Any type of Data Object that is buyable)
      **/
-    public function getBuyable($current = false)
+    public function getBuyable($current = '')
     {
         $currentOrVersion = $current ? 'current' : 'version';
+        if(!$this->Order()->IsSubmitted() && !$current){
+            $currentOrVersion = 'current';
+        }
+        else if($current === 'version'){
+            $currentOrVersion = 'version';
+        }
         if (!isset($this->tempBuyableStore[$currentOrVersion])) {
             if (!$this->BuyableID) {
                 user_error('There was an error retrieving the product', E_USER_NOTICE);
@@ -658,7 +664,7 @@ class OrderItem extends OrderAttribute
             }
             //end hack!
             $obj = null;
-            if ($current) {
+            if ($currentOrVersion == 'current') {
                 $obj = $className::get()->byID($this->BuyableID);
             }
             //run if current not available or current = false
