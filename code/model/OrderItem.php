@@ -641,12 +641,11 @@ class OrderItem extends OrderAttribute
     public function getBuyable($current = '')
     {
         $currentOrVersion = $current ? 'current' : 'version';
-        if(!is_null($this->Order()) && !$current){
-            if(! $this->Order()->IsSubmitted()){
+        if (!is_null($this->Order()) && !$current) {
+            if (! $this->Order()->IsSubmitted()) {
                 $currentOrVersion = 'current';
             }
-        }
-        else if($current === 'version'){
+        } elseif ($current === 'version') {
             $currentOrVersion = 'version';
         }
         if (!isset($this->tempBuyableStore[$currentOrVersion])) {
