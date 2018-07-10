@@ -63,7 +63,7 @@ class OrderStepField extends DatalessField
                 } else {
                     $class .= ' done';
                 }
-                $html .= '<li class="'.$class.'" '.$description.'>'.$orderStep->Title.'</li>';
+                $html .= '<li class="'.$class.'" '.$description.'><a href="'.$orderStep->CMSEditLink().'">'.$orderStep->Title.'</a></li>';
             }
         } else {
             $html .= 'no steps';

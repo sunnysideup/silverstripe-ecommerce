@@ -1188,12 +1188,12 @@ class ShoppingCart extends Object
             //TODO: handle passing a message back to a form->sessionMessage
             $this->StoreMessagesInSession();
             if ($form) {
-                //lets make sure that there is an order
+                // lets make sure that there is an order
                 $this->currentOrder();
-                //nowe we can (re)calculate the order
+                // now we can (re)calculate the order
                 $this->order->calculateOrderAttributes($force = false);
                 $form->sessionMessage($message, $status);
-                //let the form controller do the redirectback or whatever else is needed.
+                // let the form controller do the redirectback or whatever else is needed.
             } else {
                 if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
                     Controller::curr()->redirectBack();

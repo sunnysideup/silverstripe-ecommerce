@@ -541,9 +541,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 if (strnatcmp(phpversion(), '5.5.1') >= 0) {
                     $fields->addFieldToTab('Root.ProductImages', new Product_ProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage'], null, null, null, 'default-product-image'));
                 }
+                $fields->replaceField(
+                    'UseThisOne',
+                    HiddenField::create(
+                        'UseThisOne',
+                        'UseThisOne'
+                    )
+                );
             }
         );
-
         return parent::getCMSFields();
     }
 

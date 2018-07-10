@@ -584,15 +584,18 @@ class Order extends DataObject implements EditableEcommerceObject
         $nextFieldArray = array(
             LiteralField::create(
                 'CssFix',
-                '<style>#Root_Next h2.form-control {padding: 0!important; margin: 0!important; padding-top: 4em!important;}</style>'
+                '<style>
+                    #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
+                </style>'
             ),
+            HeaderField::create('OrderStepNextStepHeader', _t('Order.MAIN_DETAILS', 'Main Details'))->addExtraClass('section-heading-for-order'),
             GridField::create(
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
                 ArrayList::create(array($this)),
                 $orderSummaryConfig
             ),
-            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
+            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
             $this->OrderStepField(),
         );
         $keyNotes = OrderStatusLog::get()->filter(
@@ -657,9 +660,9 @@ class Order extends DataObject implements EditableEcommerceObject
                 $nextFieldArray = array_merge(
                     $nextFieldArray,
                     array(
-                        HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', '2. Action Next Step')),
+                        HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step'))->addExtraClass('section-heading-for-order'),
                         $myQueueObjectField,
-                        HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', '3. Move Order Along')),
+                        HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along'))->addExtraClass('section-heading-for-order'),
                         LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'Once you have made any changes to the order then you will have to refresh below or save it to move it along.').'</p>'),
                         EcommerceCMSButtonField::create(
                             'StatusIDExplanation',
@@ -1475,7 +1478,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsPaid()) {
             return $this->Payments("\"Status\" = 'Success'");
-            //EcommercePayment::get()->
+        //EcommercePayment::get()->
             //	filter(array("OrderID" => $this->ID, "Status" => "Success"));
         } else {
             return $this->Payments();
@@ -1824,7 +1827,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($adminOnlyOrToEmail) {
             if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
                 $to = $adminOnlyOrToEmail;
-                // invalid e-mail address
+            // invalid e-mail address
             } else {
                 $to = Order_Email::get_from_email();
             }
