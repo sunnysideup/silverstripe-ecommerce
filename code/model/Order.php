@@ -581,15 +581,18 @@ class Order extends DataObject implements EditableEcommerceObject
         $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
         $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
         $nextFieldArray = array(
-            LiteralField::create('CssFix', '<style>#Root_Next h2.form-control {padding: 0!important; margin: 0!important; padding-top: 4em!important;}</style>'),
-            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
-            $this->OrderStepField(),
+            LiteralField::create(
+                'CssFix',
+                '<style>#Root_Next h2.form-control {padding: 0!important; margin: 0!important; padding-top: 4em!important;}</style>'
+            ),
             GridField::create(
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
                 ArrayList::create(array($this)),
                 $orderSummaryConfig
-            )
+            ),
+            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
+            $this->OrderStepField(),
         );
         $keyNotes = OrderStatusLog::get()->filter(
             array(
@@ -607,7 +610,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(
-                    HeaderField::create('KeyNotesHeader', _t('Order.KEY_NOTES_HEADER', 'Key Notes')),
+                    HeaderField::create('KeyNotesHeader', _t('Order.KEY_NOTES_HEADER', 'Notes'), 4),
                     GridField::create(
                         'OrderStatusLogSummary',
                         _t('Order.CURRENT_KEY_NOTES', 'Key Notes'),
@@ -1471,7 +1474,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsPaid()) {
             return $this->Payments("\"Status\" = 'Success'");
-        //EcommercePayment::get()->
+            //EcommercePayment::get()->
             //	filter(array("OrderID" => $this->ID, "Status" => "Success"));
         } else {
             return $this->Payments();
@@ -1820,7 +1823,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($adminOnlyOrToEmail) {
             if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
                 $to = $adminOnlyOrToEmail;
-            // invalid e-mail address
+                // invalid e-mail address
             } else {
                 $to = Order_Email::get_from_email();
             }

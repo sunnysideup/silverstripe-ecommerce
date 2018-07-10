@@ -418,12 +418,13 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $productImage = new Product_Image();
                 $versionInfo = EcommerceConfigDefinitions::create();
                 $fields->addFieldToTab('Root.Main', new TextField('Title', $fieldLabels['Title']));
-                $fields->addFieldToTab(
+                $fields->InsertAfter(
                     'Root.Main',
                     LiteralField::create(
                         'RefreshWebsite',
                         '<h2><a href="/shoppingcart/clear/?flush=all">Refresh website, clear caches, and your cart</a></h2>'
-                    )
+                    ),
+                    'Root.Main.ShopClosed'
                 );
                 $fields->addFieldsToTab('Root', array(
                     Tab::create(

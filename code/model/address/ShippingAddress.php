@@ -250,7 +250,7 @@ class ShippingAddress extends OrderAddress
                     )
                 );
                 $shippingEcommerceGeocodingField->setFieldMap($mappingArray);
-            //$shippingFields->push(new HiddenField('ShippingAddress2'));
+                //$shippingFields->push(new HiddenField('ShippingAddress2'));
                 //$shippingFields->push(new HiddenField('ShippingCity'));
             } else {
             }
