@@ -134,22 +134,24 @@ class OrderFormAddress extends Form
                     3
                 )
             );
+            $useShippingAddress = $this->order ? $this->order->UseShippingAddress : 0;
             if ($shippingAddressFirst) {
                 $useShippingAddressField->push(
                     CheckboxField::create(
                         'UseDifferentShippingAddress',
                         _t('OrderForm.USE_DIFFERENT_SHIPPING_ADDRESS', 'I need to enter a separate billing address'),
-                        0
+                        $useShippingAddress
                     )
                 );
                 $useShippingAddressField->push(
-                    HiddenField::create('UseShippingAddress', 'UseShippingAddress', 0)
+                    HiddenField::create('UseShippingAddress', 'UseShippingAddress', $useShippingAddress)
                 );
             } else {
                 $useShippingAddressField->push(
                     CheckboxField::create(
                         'UseShippingAddress',
-                        _t('OrderForm.USESHIPPINGADDRESS', 'Use separate shipping address')
+                        _t('OrderForm.USESHIPPINGADDRESS', 'Use separate shipping address'),
+                        $useShippingAddress
                     )
                 );
             }
@@ -353,6 +355,7 @@ class OrderFormAddress extends Form
     {
         Session::set('BillingEcommerceGeocodingFieldValue', empty($data['BillingEcommerceGeocodingField']) ? null : $data['BillingEcommerceGeocodingField']);
         Session::set('ShippingEcommerceGeocodingFieldValue', empty($data['ShippingEcommerceGeocodingField']) ? null : $data['ShippingEcommerceGeocodingField']);
+        $this->saveDataToSession();
 
         $data = Convert::raw2sql($data);
         //check for cart items

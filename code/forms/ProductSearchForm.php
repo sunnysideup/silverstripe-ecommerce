@@ -529,17 +529,20 @@ class ProductSearchForm extends Form
      * can be executed one after the other, each
      * being less specific than the last...
      *
-     * @return array
+     * @return bool
      */
     protected function addToResults($listToAdd)
     {
         $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
         foreach ($listToAdd as $page) {
-            if (!in_array($page->ID, $this->resultArray)) {
-                ++$this->resultArrayPos;
-                $this->resultArray[$this->resultArrayPos] = $page->ID;
-                if ($this->resultArrayPos > $this->maximumNumberOfResults) {
-                    return true;
+            $id = $page->IDForSearchResults();
+            if ($id) {
+                if (!in_array($id, $this->resultArray)) {
+                    ++$this->resultArrayPos;
+                    $this->resultArray[$this->resultArrayPos] = $id;
+                    if ($this->resultArrayPos > $this->maximumNumberOfResults) {
+                        return true;
+                    }
                 }
             }
         }

@@ -798,9 +798,7 @@ class ProductGroup extends Page
     {
 
         //INIT ALLPRODUCTS
-        unset($this->allProducts);
-        $className = $this->getBuyableClassName();
-        $this->allProducts = $className::get();
+        $this->setProductBase();
 
         // GROUP FILTER (PRODUCTS FOR THIS GROUP)
         $this->allProducts = $this->getGroupFilter();
@@ -827,6 +825,13 @@ class ProductGroup extends Page
         $this->allProducts = $this->getGroupJoin();
 
         return $this->allProducts;
+    }
+
+    protected function setProductBase()
+    {
+        unset($this->allProducts);
+        $className = $this->getBuyableClassName();
+        $this->allProducts = $className::get();
     }
 
     /**

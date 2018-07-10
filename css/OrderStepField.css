@@ -8,8 +8,8 @@
  **/
 
 .orderStepField { background-color: #EEE; border-radius: 2px 7px 7px 7px; border: 1px solid grey; margin: 20px 0px;}
-	.orderStepField ol li {list-style: none; width: auto; float: left; display: block; padding-right: 10px;}
-		.orderStepField ol li.current {color: blue; font-weight: bold; font-style: italic;}
-		.orderStepField ol li.todo {color: grey;}
-		.orderStepField ol li.done {color: green; text-decoration: line-through;}
-	.orderStepField .clear {clear: left;}
+    .orderStepField ol li {list-style: none; width: auto; float: left; display: block; padding-right: 10px;}
+        .orderStepField ol li.current {color: blue; font-weight: bold; font-style: italic;}
+        .orderStepField ol li.todo {color: grey;}
+        .orderStepField ol li.done {color: #1F9433; text-decoration: line-through;}
+    .orderStepField .clear {clear: left;}

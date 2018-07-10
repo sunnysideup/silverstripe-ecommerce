@@ -942,7 +942,7 @@ class ShoppingCart extends Object
 
             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>';
             echo 'GEOIP Country: '.EcommerceCountry::get_country_from_ip().'<br />';
-            echo 'Calculated Country Country: '.EcommerceCountry::get_country().'<br />';
+            echo 'Calculated Country: '.EcommerceCountry::get_country().'<br />';
 
             echo '<blockquote><blockquote><blockquote><blockquote>';
 
