@@ -838,7 +838,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $resend,
                     $adminOnlyOrToEmail
                 );
-            //ADMIN ONLY ....
+                //ADMIN ONLY ....
             } else {
                 if (! $emailClassName) {
                     $emailClassName = 'Order_ErrorEmail';

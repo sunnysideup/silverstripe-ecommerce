@@ -252,7 +252,7 @@ EcommerceConfig:
                 foreach ($classConfigs as $key => $classConfig) {
                     if (!isset($this->configs[$className][$key])) {
                         $this->customisedValues[$className][$key] = false;
-                    //fallback to Configs...
+                        //fallback to Configs...
                     } else {
                         $this->customisedValues[$className][$key] = false;
                     }
@@ -394,7 +394,7 @@ EcommerceConfig:
                         $isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
                         if (!isset($this->defaults[$className][$key])) {
                             $defaultValueRaw = false;
-                        //DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
+                            //DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
                         } else {
                             $defaultValueRaw = $this->defaults[$className][$key];
                             $hasDefaultvalue = true;

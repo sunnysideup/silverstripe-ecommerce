@@ -743,7 +743,7 @@ class EcommerceTaskMigration extends BuildTask
                         if ($member) {
                             if ($obj = $order->BillingAddress()) {
                                 $this->DBAlterationMessageNow('Order (id = '.$order->ID.') already has a billing address');
-                            //do nothing
+                                //do nothing
                             } else {
                                 $this->DBAlterationMessageNow('Order (id = '.$order->ID.') now gets its own billing address...');
                                 $obj = BillingAddress::create();

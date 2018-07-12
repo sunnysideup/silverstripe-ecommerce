@@ -399,7 +399,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'CancelledByID' => array(
             'filter' => 'OrderFilters_HasBeenCancelled',
             'title' => 'Cancelled by ...',
-        ),
+        )
     );
 
     /**
@@ -1478,7 +1478,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsPaid()) {
             return $this->Payments("\"Status\" = 'Success'");
-        //EcommercePayment::get()->
+            //EcommercePayment::get()->
             //	filter(array("OrderID" => $this->ID, "Status" => "Success"));
         } else {
             return $this->Payments();
@@ -1827,7 +1827,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($adminOnlyOrToEmail) {
             if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
                 $to = $adminOnlyOrToEmail;
-            // invalid e-mail address
+                // invalid e-mail address
             } else {
                 $to = Order_Email::get_from_email();
             }
