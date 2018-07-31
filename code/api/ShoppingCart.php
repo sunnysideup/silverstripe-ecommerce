@@ -1193,7 +1193,7 @@ class ShoppingCart extends Object
                 // now we can (re)calculate the order
                 $this->order->calculateOrderAttributes($force = false);
                 $form->sessionMessage($message, $status);
-                // let the form controller do the redirectback or whatever else is needed.
+            // let the form controller do the redirectback or whatever else is needed.
             } else {
                 if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
                     Controller::curr()->redirectBack();
