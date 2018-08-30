@@ -471,7 +471,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         } elseif (is_numeric($var) && is_int($var)) {
             $var = EcommerceCountry::get()->byID($var);
         }
-        
         if ($var instanceof EcommerceCountry) {
             if ($asCode) {
                 return $var->Code;
@@ -633,7 +632,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */
