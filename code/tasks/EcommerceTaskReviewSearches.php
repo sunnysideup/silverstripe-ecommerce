@@ -27,7 +27,7 @@ class EcommerceTaskReviewSearches extends BuildTask
      *
      * @int
      */
-    protected $endingDaysBack = 0;
+    protected $startingDaysBack = 0;
 
     /**
      * Standard (required) SS variable for BuildTasks.
@@ -54,14 +54,14 @@ class EcommerceTaskReviewSearches extends BuildTask
         if (!$countMin) {
             $countMin = $this->defaultMinimum;
         }
-        $endingDaysBack = intval($request->getVar('ago') - 0);
-        if (!$endingDaysBack) {
-            $endingDaysBack = $this->endingDaysBack;
+        $startingDaysBack = intval($request->getVar('ago') - 0);
+        if (!$startingDaysBack) {
+            $startingDaysBack = $this->startingDaysBack;
         }
         $field = EcommerceSearchHistoryFormField::create('stats', $this->title)
             ->setNumberOfDays($days)
             ->setMinimumCount($countMin)
-            ->setEndingDaysBack($endingDaysBack);
+            ->setStartingDaysBack($startingDaysBack);
         echo $field->forTemplate();
         $arrayNumberOfDays = array(30, 365);
 
@@ -78,7 +78,7 @@ class EcommerceTaskReviewSearches extends BuildTask
             NumericField::create(
                 'ago',
                 'Up to how many days go',
-                isset($_GET['ago']) ? $_GET['ago'] : $this->endingDaysBack
+                isset($_GET['ago']) ? $_GET['ago'] : $this->startingDaysBack
             )->setRightTitle('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
             NumericField::create(
                 'min',

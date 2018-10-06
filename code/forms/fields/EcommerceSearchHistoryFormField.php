@@ -10,11 +10,11 @@ class EcommerceSearchHistoryFormField extends LiteralField
     protected $numberOfDays = 100;
 
     /**
-     * how many days ago the data-analysis should end.
+     * how many days ago the data-analysis should start.
      *
      * @var int
      */
-    protected $endingDaysBack = 0;
+    protected $startingDaysBack = 0;
 
     /**
      * minimum number of searches for the data to show up.
@@ -95,9 +95,9 @@ class EcommerceSearchHistoryFormField extends LiteralField
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setEndingDaysBack($count)
+    public function setStartingDaysBack($count)
     {
-        $this->endingDaysBack = intval($count);
+        $this->startingDaysBack = intval($count);
 
         return $this;
     }
@@ -146,13 +146,13 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function Field($properties = array())
     {
-        $title = $this->getContent();
-        $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
+        $title = $this->Title();
+        $totalNumberOfDaysBack = $this->numberOfDays + $this->startingDaysBack;
         $data = DB::query('
             SELECT COUNT(ID) myCount, "Title"
             FROM "SearchHistory"
             WHERE Created > ( NOW() - INTERVAL '.$totalNumberOfDaysBack.' DAY )
-                AND Created < ( NOW() - INTERVAL '.$this->endingDaysBack." DAY )
+                AND Created < ( NOW() - INTERVAL '.$this->startingDaysBack." DAY )
             GROUP BY \"Title\"
             HAVING COUNT(\"ID\") >= $this->minimumCount
             ORDER BY myCount DESC
@@ -172,7 +172,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 Search Phrases'
                 .($this->minimumCount > 1 ? ', entered at least '.$this->minimumCount.' times' : '')
                 .($this->maxRows < 1000 ? ', limited to '.$this->maxRows.' entries, ' : '')
-                .' between '.date('j-M-Y', strtotime('-'.$totalNumberOfDaysBack.' days')).' and '.date('j-M-Y', strtotime('-'.$this->endingDaysBack.' days')).'
+                .' between '.date('j-M-Y', strtotime('-'.$totalNumberOfDaysBack.' days')).' and '.date('j-M-Y', strtotime('-'.$this->startingDaysBack.' days')).'
             </h3>';
         $count = 0;
         if ($data && count($data)) {
