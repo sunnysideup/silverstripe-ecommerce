@@ -302,7 +302,8 @@ class ProductSearchForm extends Form
             user_error("Can not find $baseClassName (baseClassName)");
         }
         //basic get
-        $searchableFields = ($baseClassName::create()->stat('searchable_fields'));
+        $singleton = Injector::inst()->get($baseClassName);
+        $searchableFields = $singleton->stat('searchable_fields');
         $baseList = $baseClassName::get()->filter(array('ShowInSearch' => 1));
         $ecomConfig = EcommerceDBConfig::current_ecommerce_db_config();
         if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
@@ -382,7 +383,7 @@ class ProductSearchForm extends Form
                         $this->debugOutput("<h3>SEARCH BY CODE RESULT: $count</h3>");
                     }
 
-                    // 2) Search of the entire keyword phrase and its replacements
+                    // 2) Search for the entire keyword phrase and its replacements
                     $count = 0;
                     if ($this->debug) {
                         $this->debugOutput('<hr /><h3>FULL KEYWORD SEARCH</h3>');
@@ -399,7 +400,6 @@ class ProductSearchForm extends Form
                         }
 
                         //work out searches
-                        $singleton = $baseClassName::create();
                         foreach ($this->extraBuyableFieldsToSearchFullText as $tempClassName => $fieldArrayTemp) {
                             if ($singleton instanceof $tempClassName) {
                                 $fieldArray = $fieldArrayTemp;
@@ -504,6 +504,7 @@ class ProductSearchForm extends Form
             $searchHistoryObject->write();
         }
         if ($this->debug) {
+
             $this->debugOutput(
                 '<hr />'.
                 '<h3>SAVING Products to session: '.$sessionNameProducts.'</h3><p>'.print_r(explode(',', Session::get($sessionNameProducts)), 1).'</p>'.
