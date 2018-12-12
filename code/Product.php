@@ -1252,6 +1252,15 @@ class Product extends Page implements BuyableModel
     {
         return $this->ID;
     }
+
+    /**
+     *
+     * @string
+     */
+    public function InternalItemIDForSearchResults()
+    {
+        return $this->InternalItemID;
+    }
 }
 
 class Product_Controller extends Page_Controller

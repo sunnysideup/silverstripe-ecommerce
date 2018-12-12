@@ -65,7 +65,7 @@ class ProductSearchForm extends Form
      *
      * @var array
      */
-    protected $additionalFields = array();
+    protected $additionalFields = [];
 
     /**
      * list of products that need to be searched.
@@ -135,14 +135,21 @@ class ProductSearchForm extends Form
      *
      * @var array
      */
-    protected $resultArray = array();
+    protected $resultArray = [];
+
+    /**
+     * array of IDs of the results found so far.
+     *
+     * @var array
+     */
+    protected $resultArrayPerIternalItemID = [];
 
     /**
      * product groups found.
      *
      * @var array
      */
-    protected $productGroupIDs = array();
+    protected $productGroupIDs = [];
 
     /**
      * Number of results found so far.
@@ -255,7 +262,7 @@ class ProductSearchForm extends Form
             }
             $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
         }
-        $requiredFields = array();
+        $requiredFields = [];
         $validator = ProductSearchForm_Validator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
         //make it an easily accessible form  ...
@@ -350,7 +357,7 @@ class ProductSearchForm extends Form
                     $isKeywordSearch = true;
                     $immediateRedirectLink = '';
                     $this->resultArrayPos = 0;
-                    $this->resultArray = array();
+                    $this->resultArray = [];
                     if ($this->debug) {
                         $this->debugOutput('<hr /><h3>Raw Keyword '.$keywordPhrase.'</h3><pre>');
                     }
@@ -471,7 +478,7 @@ class ProductSearchForm extends Form
                 }
             }
         }
-        if (!$isKeywordSearch) {
+        if (! $isKeywordSearch) {
             $this->addToResults($baseList);
         }
         $redirectToPage = null;
@@ -508,7 +515,8 @@ class ProductSearchForm extends Form
             $this->debugOutput(
                 '<hr />'.
                 '<h3>SAVING Products to session: '.$sessionNameProducts.'</h3><p>'.print_r(explode(',', Session::get($sessionNameProducts)), 1).'</p>'.
-                '<h3>SAVING Groups to session: '.$sessionNameGroups.'</h3><p>'.print_r(explode(',', Session::get($sessionNameGroups)), 1).'</p>'
+                '<h3>SAVING Groups to session: '.$sessionNameGroups.'</h3><p>'.print_r(explode(',', Session::get($sessionNameGroups)), 1).'</p>'.
+                '<h3>Internal Item IDs for Products</h3><p>'.print_r($this->resultArrayPerIternalItemID, 1).'</p>'
             );
         }
         if ($immediateRedirectLink) {
@@ -520,7 +528,7 @@ class ProductSearchForm extends Form
             $link .= '?'.$this->additionalGetParameters;
         }
         if ($this->debug) {
-            die($link);
+            die('<a href="'.$link.'">see results</a>');
         }
         $this->controller->redirect($link);
     }
@@ -530,6 +538,8 @@ class ProductSearchForm extends Form
      * can be executed one after the other, each
      * being less specific than the last...
      *
+     * returns true when done and false when more are needed
+     *
      * @return bool
      */
     protected function addToResults($listToAdd)
@@ -537,10 +547,16 @@ class ProductSearchForm extends Form
         $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
         foreach ($listToAdd as $page) {
             $id = $page->IDForSearchResults();
+            if($this->debug) {
+                $internalItemID = $page->InternalItemIDForSearchResults();
+            }
             if ($id) {
                 if (!in_array($id, $this->resultArray)) {
                     ++$this->resultArrayPos;
                     $this->resultArray[$this->resultArrayPos] = $id;
+                    if($this->debug) {
+                        $this->resultArrayPerIternalItemID[$this->resultArrayPos] = $internalItemID;
+                    }
                     if ($this->resultArrayPos > $this->maximumNumberOfResults) {
                         return true;
                     }
@@ -564,7 +580,7 @@ class ProductSearchForm extends Form
     protected function getSearchArrays($keywordPhrase, $fields = array('Title', 'MenuTitle'))
     {
         //make three levels of search
-        $searches = array();
+        $searches = [];
         $wordsAsString = preg_replace('!\s+!', ' ', $keywordPhrase);
         $wordAsArray = explode(' ', $wordsAsString);
         $wordsAsLikeString = trim(implode('%', $wordAsArray));
@@ -586,7 +602,7 @@ class ProductSearchForm extends Form
             */
         }
         //$searches[3][] = DB::getconn()->fullTextSearchSQL($fields, $wordsAsString, true);
-        $returnArray = array();
+        $returnArray = [];
         foreach ($searches as $key => $search) {
             $returnArray[$key] = implode(' OR ', $search);
         }

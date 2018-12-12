@@ -146,6 +146,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function Field($properties = array())
     {
+        $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
         $title = $this->getContent();
         $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
         $data = DB::query('
@@ -187,11 +188,18 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 }
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
                 $list[$row['myCount'].'-'.$key] = $row['Title'];
+                $link = $redirectToPage->Link('ProductSearchForm').'?Keyword='.urlencode($row['Title']).'&action_doProductSearchForm=Search';
+                $debugLink = $link .'&DebugSearch=1';
                 $tableContent .= '
                     <tr>
-                        <td style="text-align: right; width: 30%; padding: 5px;">'.$row['Title'].'</td>
+                        <td style="text-align: right; width: 30%; padding: 5px;">
+                            <a href="'.$link.'">'.$row['Title'].'</a>
+                        </td>
                         <td style="background-color: silver;  padding: 5px; width: 70%;">
                             <div style="width: '.$multipliedWidthInPercentage.'%; background-color: #C51162; color: #fff;">'.$row['myCount'].'</div>
+                        </td>
+                        <td style="background-color: silver; width: 20px">
+                            <a href="'.$debugLink.'">☕</a>
                         </td>
                     </tr>';
             }
@@ -203,13 +211,20 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     <h3>A - Z</h3>
                     <table class="aToz" style="widht: 100%">';
                 foreach ($list as $key => $title) {
+                    $link = $redirectToPage->Link('ProductSearchForm').'?Keyword='.urlencode($row['Title']).'&action_doProductSearchForm=Search';
+                    $debugLink = $link .'&DebugSearch=1';
                     $array = explode('-', $key);
                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);
                     $tableContent .= '
                         <tr>
-                            <td style="text-align: right; width: 30%; padding: 5px;">'.$title.'</td>
+                            <td style="text-align: right; width: 30%; padding: 5px;">
+                                <a href="'.$link.'">'.$title.'</a>
+                            </td>
                             <td style="background-color: silver;  padding: 5px; width: 70%">
                                 <div style="width: '.$multipliedWidthInPercentage.'%; background-color: #004D40; color: #fff;">'.trim($array[0]).'</div>
+                            </td>
+                            <td style="background-color: silver; width: 20px">
+                                <a href="'.$debugLink.'">☕</a>
                             </td>
                         </tr>';
                 }
