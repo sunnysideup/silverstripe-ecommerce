@@ -290,8 +290,8 @@ class ProductSearchForm extends Form
     {
         $searchHistoryObject = null;
         $immediateRedirectLink = '';
-        if (!$this->maximumNumberOfResults) {
-            $this->maximumNumberOfResults = EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list');
+        if (! $this->maximumNumberOfResults) {
+            $this->maximumNumberOfResults = EcommerceConfig::get('ProductGroupSearchPage', 'maximum_number_of_products_to_list_for_search');
         }
         if (isset($data['DebugSearch'])) {
             $this->debug = $data['DebugSearch'] ? true : false;
@@ -343,7 +343,7 @@ class ProductSearchForm extends Form
         $isKeywordSearch = false;
         if ($this->debug) {
             if ($this->productsToSearch) {
-                $this->debugOutput('<hr /><h3>PRODUCTS TO SEARCH</h3><pre>'.str_replace($this->sqlWords, array_flip($this->sqlWords), $this->productsToSearch->sql()).'</pre>');
+                $this->debugOutput('<hr /><h3>PRODUCTS TO SEARCH</h3><pre>'.print_r($this->productsToSearch, 1).'</pre>');
             }
             $this->debugOutput('<hr /><h3>BASE LIST</h3><pre>'.str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql()).'</pre>');
         }
@@ -584,32 +584,55 @@ class ProductSearchForm extends Form
         $searches = [];
         $wordsAsString = preg_replace('!\s+!', ' ', $keywordPhrase);
         $wordAsArray = explode(' ', $wordsAsString);
+        $hasWordArray = false;
+        if(count($wordAsArray) > 1) {
+            $hasWordArray = true;
+            $searchStringArray =[];
+            foreach($wordAsArray as $word) {
+                $searchStringArray[] = "LOWER(\"FFFFFF\") LIKE '%$word%'";
+            }
+            $searchStringAND = '('.implode(' AND ', $searchStringArray).')';
+            $searchStringOR = '('.implode(' OR ', $searchStringArray).')';
+        }
         $wordsAsLikeString = trim(implode('%', $wordAsArray));
         $completed = [];
         $count = -1;
+
         if (in_array('Title', $fields)) {
             $searches[++$count][] = "LOWER(\"Title\") = '$wordsAsString'"; // a) Exact match
             $searches[++$count][] = "LOWER(\"Title\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            $searches[++$count][] = "LOWER(\"Title\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            if($hasWordArray) {
+                $searches[++$count][] = str_replace('FFFFFF', 'Title', $searchStringAND); // d) Words matched individually
+                $searches[++$count + 100][] = str_replace('FFFFFF', 'Title', $searchStringOR); // d) Words matched individually
+            }
             $completed['Title'] = 'Title';
         }
         if (in_array('MenuTitle', $fields)) {
             $searches[++$count][] = "LOWER(\"MenuTitle\") = '$wordsAsString'"; // a) Exact match
             $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            if($hasWordArray) {
+                $searches[++$count][] = str_replace('FFFFFF', 'MenuTitle', $searchStringAND); // d) Words matched individually
+                $searches[++$count + 100][] = str_replace('FFFFFF', 'MenuTitle', $searchStringOR); // d) Words matched individually
+            }
             $completed['MenuTitle'] = 'MenuTitle';
         }
         if (in_array('MetaTitle', $fields)) {
             $searches[++$count][] = "LOWER(\"MetaTitle\") = '$wordsAsString'"; // a) Exact match
             $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            if($hasWordArray) {
+                $searches[++$count][] = str_replace('FFFFFF', 'MetaTitle', $searchStringAND); // d) Words matched individually
+                $searches[++$count + 100][] = str_replace('FFFFFF', 'MetaTitle', $searchStringOR); // d) Words matched individually
+            }
             $completed['MetaTitle'] = 'MetaTitle';
         }
         foreach ($fields as $field) {
             if(! isset($completed[$field])) {
                 $searches[++$count][] = "LOWER(\"$field\") = '$wordsAsString'"; // a) Exact match
                 $searches[++$count][] = "LOWER(\"$field\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-                $searches[++$count][] = "LOWER(\"$field\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+                if($hasWordArray) {
+                    $searches[++$count][] = str_replace('FFFFFF', $field, $searchStringAND); // d) Words matched individually
+                    $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
+                }
             }
             /*
              * OR WORD SEARCH
@@ -620,6 +643,7 @@ class ProductSearchForm extends Form
             */
         }
         //$searches[3][] = DB::getconn()->fullTextSearchSQL($fields, $wordsAsString, true);
+        ksort($searches);
         $returnArray = [];
         foreach ($searches as $key => $search) {
             $returnArray[$key] = implode(' OR ', $search);

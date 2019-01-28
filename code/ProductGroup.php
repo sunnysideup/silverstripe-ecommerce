@@ -2156,8 +2156,9 @@ class ProductGroup_Controller extends Page_Controller
         );
         $filterGetVariable = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
         $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-        $additionalGetParameters = $filterGetVariable.'='.$this->getMyUserPreferencesDefault('FILTER').'&'.
-                                   $sortGetVariable.'='.$this->getMyUserPreferencesDefault('SORT');
+        $additionalGetParameters = 
+            $filterGetVariable.'='.$this->getMyUserPreferencesDefault('FILTER').'&'.
+            $sortGetVariable.'='.Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
         $form->setAdditionalGetParameters($additionalGetParameters);
 
         return $form;

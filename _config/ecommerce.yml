@@ -82,10 +82,12 @@ ProductGroup:
   session_name_for_product_array: ProductGroupProductIDs
 
 ProductGroupSearchPage:
+  maximum_number_of_products_to_list_for_search: 100
+  best_match_key: 'bestmatch'
   sort_options:
-    best_match:
+    bestmatch:
       Title: 'Best Match'
-      SQL: "n/a"
+      SQL: "\"Price\" DESC"
 
 Product:
   folder_name_for_images: "ProductImages"
