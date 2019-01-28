@@ -534,6 +534,7 @@ class ProductSearchForm extends Form
     protected function addToResults($listToAdd)
     {
         $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
+        $listToAdd = $listToAdd->sort('Price', 'DESC');
         foreach ($listToAdd as $page) {
             $id = $page->IDForSearchResults();
             if ($id) {
@@ -567,15 +568,32 @@ class ProductSearchForm extends Form
         $wordsAsString = preg_replace('!\s+!', ' ', $keywordPhrase);
         $wordAsArray = explode(' ', $wordsAsString);
         $wordsAsLikeString = trim(implode('%', $wordAsArray));
+        $completed = [];
+        $count = -1;
         if (in_array('Title', $fields)) {
-            $searches[0][] = "LOWER(\"Title\") = '$wordsAsString'"; // a) Exact match
-            $searches[1][] = "LOWER(\"Title\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            $searches[2][] = "LOWER(\"Title\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            $searches[++$count][] = "LOWER(\"Title\") = '$wordsAsString'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"Title\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
+            $searches[++$count][] = "LOWER(\"Title\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            $completed['Title'] = 'Title';
+        }
+        if (in_array('MenuTitle', $fields)) {
+            $searches[++$count][] = "LOWER(\"MenuTitle\") = '$wordsAsString'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
+            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            $completed['MenuTitle'] = 'MenuTitle';
+        }
+        if (in_array('MetaTitle', $fields)) {
+            $searches[++$count][] = "LOWER(\"MetaTitle\") = '$wordsAsString'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
+            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            $completed['MetaTitle'] = 'MetaTitle';
         }
         foreach ($fields as $field) {
-            $searches[3][] = "LOWER(\"$field\") = '$wordsAsString'"; // a) Exact match
-            $searches[4][] = "LOWER(\"$field\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            $searches[5][] = "LOWER(\"$field\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            if(! isset($completed[$field])) {
+                $searches[++$count][] = "LOWER(\"$field\") = '$wordsAsString'"; // a) Exact match
+                $searches[++$count][] = "LOWER(\"$field\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
+                $searches[++$count][] = "LOWER(\"$field\") LIKE '%$wordsAsLikeString%'"; // c) Words matched individually
+            }
             /*
              * OR WORD SEARCH
              * OFTEN leads to too many results, so we keep it simple...

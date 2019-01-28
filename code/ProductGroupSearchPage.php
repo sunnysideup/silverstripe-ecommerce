@@ -8,6 +8,7 @@
  **/
 class ProductGroupSearchPage extends ProductGroup
 {
+
     /**
      * standard SS variable.
      *
@@ -77,9 +78,9 @@ class ProductGroupSearchPage extends ProductGroup
     {
         $sortKey = $this->getCurrentUserPreferences('SORT');
         $defaultSortKey = $this->getMyUserPreferencesDefault('SORT');
-        if ($sortKey == $defaultSortKey) {
+        if ($sortKey === $this->Config()->get('best_match_key')) {
             $resultArray = $this->searchResultsArrayFromSession();
-            
+
             return $this->createSortStatementFromIDArray($resultArray);
         }
 

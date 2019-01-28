@@ -222,6 +222,10 @@ class EcommerceConfigDefinitions extends Object
                 'display_styles' => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
                 'session_name_for_product_array' => 'This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. ',
             ),
+            'ProductGroupSearchPage' => [
+                'best_match_key' => 'Sort key used to sort by relevance.'
+                'sort_options' => "Additional associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC') for searching. Include on with the best_match_key.",
+            ],
             'Product' => array(
                 'folder_name_for_images' => 'Default folder for uploading product images.',
                 'add_data_to_meta_description_for_search' => 'Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details',

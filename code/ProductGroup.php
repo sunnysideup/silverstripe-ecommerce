@@ -1847,6 +1847,17 @@ class ProductGroup_Controller extends Page_Controller
     public function searchresults($request)
     {
         $this->resetfilter();
+        $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+        if(! $this->request->getVar($sortGetVariable)) {
+            $key = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
+            if($key) {
+                $this->saveUserPreferences(
+                    [
+                        $sortGetVariable => $key
+                    ]
+                );
+            }
+        }
         $this->isSearchResults = true;
         //reset filter and sort
         $resultArray = $this->searchResultsArrayFromSession();
@@ -2590,6 +2601,7 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function SortLinks()
     {
+
         $list = $this->userPreferencesLinks('SORT');
         $selectedItem = $this->getCurrentUserPreferences('SORT');
         if ($list) {
@@ -2736,7 +2748,6 @@ class ProductGroup_Controller extends Page_Controller
      */
     protected function saveUserPreferences($overrideArray = array())
     {
-
         //save sort - filter - display
         $sortFilterDisplayNames = $this->getSortFilterDisplayNames();
         foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
@@ -2758,7 +2769,9 @@ class ProductGroup_Controller extends Page_Controller
                 $newPreference = Session::get('ProductGroup_'.$sessionName);
             }
             //save data in model...
-            $this->setCurrentUserPreference($type, $newPreference);
+            if($newPreference) {
+                $this->setCurrentUserPreference($type, $newPreference);
+            }
         }
         /* save URLSegments in model
         $this->setCurrentUserPreference(
