@@ -225,6 +225,7 @@ class EcommerceConfigDefinitions extends Object
             'ProductGroupSearchPage' => [
                 'best_match_key' => 'Sort key used to sort by relevance.'
                 'sort_options' => "Additional associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC') for searching. Include on with the best_match_key.",
+                'maximum_number_of_products_to_list_for_search' => "Maximum number of products returned in search.",
             ],
             'Product' => array(
                 'folder_name_for_images' => 'Default folder for uploading product images.',
