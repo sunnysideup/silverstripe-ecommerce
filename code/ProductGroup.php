@@ -505,8 +505,41 @@ class ProductGroup extends Page
     }
 
     /*********************
-     * SETTINGS: SQL
+     * SETTINGS
      *********************/
+
+    /**
+     * check if the key is valid.
+     *
+     * @param  string $type     e.g. SORT | FILTER
+     * @param  string $key      e.g. best_match | price | lastest
+     * @param  string $variable e.g. SQL | Title
+
+     * @return string - empty if not found
+     */
+    protected function getBestKeyAndValidateKey($type, $key = '', $variable = '')
+    {
+        $options = $this->getConfigOptions($type);
+        //check !!!
+        if($key && isset($options[$key])) {
+            //all good
+        } else {
+            //reset
+            $key = $this->getMyUserPreferencesDefault($type);
+            $myGetVariable = $this->getSortFilterDisplayNames($type, 'getVariable');
+            //clear bogus value from session ...
+            $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
+            Session::set('ProductGroup_'.$sessionName, '');
+        }
+        if($key) {
+            if($variable) {
+                return $options[$key][$variable];
+            }
+        }
+
+        return $key;
+    }
+
 
     /**
      * SORT:
@@ -527,13 +560,9 @@ class ProductGroup extends Page
      */
     protected function getUserSettingsOptionSQL($type, $key = '')
     {
-        $options = $this->getConfigOptions($type);
-        //if we cant find the current one, use the default
-        if (!$key || (!isset($options[$key]))) {
-            $key = $this->getMyUserPreferencesDefault($type);
-        }
-        if ($key) {
-            return $options[$key]['SQL'];
+        $value = $this->getBestKeyAndValidateKey($type, $key, 'SQL');
+        if($value) {
+            return $value;
         } else {
             if ($type == 'FILTER') {
                 return array('Sort' => 'ASC');
@@ -558,12 +587,9 @@ class ProductGroup extends Page
      */
     public function getUserPreferencesTitle($type, $key = '')
     {
-        $options = $this->getConfigOptions($type);
-        if (!$key || (!isset($options[$key]))) {
-            $key = $this->getMyUserPreferencesDefault($type);
-        }
-        if ($key && isset($options[$key]['Title'])) {
-            return $options[$key]['Title'];
+        $value = $this->getBestKeyAndValidateKey($type, $key, 'Title');
+        if($value) {
+            return $value;
         } else {
             return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
         }
@@ -1859,7 +1885,6 @@ class ProductGroup_Controller extends Page_Controller
             }
         }
         $this->isSearchResults = true;
-        //reset filter and sort
         $resultArray = $this->searchResultsArrayFromSession();
         if (is_array($resultArray)  && count($resultArray)) {
             //do nothing
@@ -1901,7 +1926,7 @@ class ProductGroup_Controller extends Page_Controller
      * This is the call that is made from the template...
      * The actual final products being shown.
      *
-     * @return PaginatedList
+     * @return DataList
      **/
     public function Products()
     {
@@ -2156,7 +2181,7 @@ class ProductGroup_Controller extends Page_Controller
         );
         $filterGetVariable = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
         $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-        $additionalGetParameters = 
+        $additionalGetParameters =
             $filterGetVariable.'='.$this->getMyUserPreferencesDefault('FILTER').'&'.
             $sortGetVariable.'='.Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
         $form->setAdditionalGetParameters($additionalGetParameters);
@@ -2818,6 +2843,7 @@ class ProductGroup_Controller extends Page_Controller
         } else {
             $key = $this->getMyUserPreferencesDefault($type);
         }
+        $key = $this->getBestKeyAndValidateKey($type, $key);
 
         return $key;
     }
@@ -2899,8 +2925,15 @@ class ProductGroup_Controller extends Page_Controller
                     //we remove 1 item here, because the array starts with 0 => 0
                     $count = count($array) - 1;
                     if ($count > 3) {
-                        $toAdd = $count. ' '._t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
-                        $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                        if($this->isSearchResults()) {
+                            $canDo = $count < EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list_for_search') ? true : false;
+                        } else {
+                            $canDo = $count < EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list') ? true : false;
+                        }
+                        if($canDo) {
+                            $toAdd = $count. ' '._t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                            $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                        }
                     }
                 } else {
                     $toAdd = _t('ProductGroup.SEARCH_RESULTS', 'Search Results');
