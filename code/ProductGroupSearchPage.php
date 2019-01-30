@@ -69,24 +69,6 @@ class ProductGroupSearchPage extends ProductGroup
         return $this->allProducts;
     }
 
-    /**
-     * returns the SORT part of the final selection of products.
-     *
-     * @return string | Array
-     */
-    protected function currentSortSQL()
-    {
-        $sortKey = $this->getCurrentUserPreferences('SORT');
-        $defaultSortKey = $this->getMyUserPreferencesDefault('SORT');
-        if ($sortKey === $this->Config()->get('best_match_key')) {
-            $resultArray = $this->searchResultsArrayFromSession();
-
-            return $this->createSortStatementFromIDArray($resultArray);
-        }
-
-        return $this->getUserSettingsOptionSQL('SORT', $sortKey);
-    }
-
     public function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
     {
         return ArrayList::create();

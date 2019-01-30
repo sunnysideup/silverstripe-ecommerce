@@ -1158,7 +1158,6 @@ class ProductGroup extends Page
     protected function currentFinalProducts($alternativeSort = null)
     {
         if ($this->allProducts) {
-
             //limit to maximum number of products for speed's sake
             $this->allProducts = $this->sortCurrentFinalProducts($alternativeSort);
             $this->allProducts = $this->limitCurrentFinalProducts();
@@ -1288,7 +1287,7 @@ class ProductGroup extends Page
                 }
             }
             if (count($this->canNOTbePurchasedArray)) {
-                $this->allProducts = $this->allProducts->Exclude(array('ID' => $this->canNOTbePurchasedArray));
+                $this->allProducts = $this->allProducts->exclude(array('ID' => $this->canNOTbePurchasedArray));
             }
         }
 
@@ -1813,6 +1812,13 @@ class ProductGroup_Controller extends Page_Controller
         Requirements::javascript('ecommerce/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();
+        //makes sure best match only applies to search -i.e. reset otherwise.
+        if($this->request->param('Action') !== 'searchresults') {
+            $sortKey = $this->getCurrentUserPreferences('SORT');
+            if ($sortKey === Config::inst()->get('ProductGroupSearchPage', 'best_match_key')) {
+                $this->resetsort();
+            }
+        }
     }
 
     /****************************************************
@@ -1872,8 +1878,14 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function searchresults($request)
     {
+        $this->isSearchResults = true;
+        //filters are irrelevant right now
         $this->resetfilter();
+        //get results array
+        $resultArray = $this->searchResultsArrayFromSession();
+        $hasResults =  (is_array($resultArray)  && count($resultArray)) ? true : false;
         $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+        $alternativeSort = null;
         if(! $this->request->getVar($sortGetVariable)) {
             $key = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
             if($key) {
@@ -1883,12 +1895,9 @@ class ProductGroup_Controller extends Page_Controller
                     ]
                 );
             }
+            $alternativeSort = $this->createSortStatementFromIDArray($resultArray);
         }
-        $this->isSearchResults = true;
-        $resultArray = $this->searchResultsArrayFromSession();
-        if (is_array($resultArray)  && count($resultArray)) {
-            //do nothing
-        } else {
+        if (! $hasResults) {
             $resultArray = array(0 => 0);
         }
         $title = ProductSearchForm::get_last_search_phrase();
@@ -1896,7 +1905,12 @@ class ProductGroup_Controller extends Page_Controller
             $title = _t('Ecommerce.SEARCH_FOR', 'search for: ').substr($title, 0, 25);
         }
         $this->addSecondaryTitle($title);
-        $this->products = $this->paginateList($this->ProductsShowable(array('ID' => $resultArray)));
+        $this->products = $this->paginateList(
+            $this->ProductsShowable(
+                ['ID' => $resultArray],
+                $alternativeSort
+            )
+        );
 
         return array();
     }
@@ -1911,6 +1925,21 @@ class ProductGroup_Controller extends Page_Controller
         $this->saveUserPreferences(
             array(
                 $filterGetVariable => $defaultKey,
+            )
+        );
+
+        return array();
+    }
+    /**
+     * resets the filter only.
+     */
+    public function resetsort()
+    {
+        $defaultKey = $this->getMyUserPreferencesDefault('SORT');
+        $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+        $this->saveUserPreferences(
+            array(
+                $sortGetVariable => $defaultKey,
             )
         );
 
