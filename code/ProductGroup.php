@@ -1883,11 +1883,22 @@ class ProductGroup_Controller extends Page_Controller
         $this->resetfilter();
         //get results array
         $resultArray = $this->searchResultsArrayFromSession();
-        $hasResults =  (is_array($resultArray)  && count($resultArray)) ? true : false;
-        $suggestion = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
-        $alternativeSort = $this->getAlternativeSort($suggestion);
-        if (! $hasResults) {
+        if ((is_array($resultArray)  && count($resultArray))) {
+            //all ok
+        } else {
             $resultArray = array(0 => 0);
+        }
+        $suggestion = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
+        $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+        if(! $this->request->getVar($sortGetVariable)) {
+            if($suggestion) {
+                $this->saveUserPreferences(
+                    [
+                        $sortGetVariable => $suggestion
+                    ]
+                );
+                $alternativeSort = $this->createSortStatementFromIDArray($resultArray);
+            }
         }
         $title = ProductSearchForm::get_last_search_phrase();
         if ($title) {
@@ -1906,18 +1917,7 @@ class ProductGroup_Controller extends Page_Controller
 
     protected function getAlternativeSort($suggestion = '')
     {
-        $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-        if(! $this->request->getVar($sortGetVariable)) {
-            if($suggestion) {
-                $this->saveUserPreferences(
-                    [
-                        $sortGetVariable => $suggestion
-                    ]
-                );
 
-                return $this->createSortStatementFromIDArray($resultArray);
-            }
-        }
     }
 
     /**
