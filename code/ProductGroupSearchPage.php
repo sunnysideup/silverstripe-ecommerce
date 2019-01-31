@@ -61,12 +61,29 @@ class ProductGroupSearchPage extends ProductGroup
      */
     protected $allowCaching = false;
 
+    /**
+     * This is a KEY method that overrides the standard method!
+     * @return [type] [description]
+     */
     public function getGroupFilter()
     {
         $resultArray = $this->searchResultsArrayFromSession();
         $this->allProducts = $this->allProducts->filter(array('ID' => $resultArray));
 
         return $this->allProducts;
+    }
+
+
+    /**
+     * returns the SORT part of the final selection of products.
+     *
+     * @return string | Array
+     */
+    protected function currentSortSQL()
+    {
+        $sortKey = $this->getCurrentUserPreferences('SORT');
+
+        return $this->getUserSettingsOptionSQL('SORT', $sortKey);
     }
 
     public function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
@@ -99,7 +116,6 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
         }
     }
 
-
     /**
      * returns child product groups for use in
      * 'in this section'. For example the vegetable Product Group
@@ -112,6 +128,14 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
         return;
     }
 
+    public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = '')
+    {
+        $alternativeSort = $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession(), $alternativeSort);
+
+        $this->allProducts = parent::ProductsShowable($extraFilter, $alternativeSort, $alternativeFilterKey);
+
+        return $this->allProducts;
+    }
     /**
      * The link that Google et al. need to index.
      * @return string

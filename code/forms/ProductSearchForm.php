@@ -395,7 +395,7 @@ class ProductSearchForm extends Form
                     if ($this->debug) {
                         $this->debugOutput('<hr /><h3>FULL KEYWORD SEARCH</h3>');
                     }
-                    if ($this->resultArrayPos <= $this->maximumNumberOfResults) {
+                    if ($this->resultArrayPos < $this->maximumNumberOfResults) {
                         $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
                         //now we are going to look for synonyms
                         $words = explode(' ', trim(preg_replace('!\s+!', ' ', $keywordPhrase)));
@@ -432,7 +432,7 @@ class ProductSearchForm extends Form
                                     break;
                                 }
                             }
-                            if ($this->resultArrayPos > $this->maximumNumberOfResults) {
+                            if ($this->resultArrayPos >= $this->maximumNumberOfResults) {
                                 break;
                             }
                         }

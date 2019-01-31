@@ -861,7 +861,7 @@ class ProductGroup extends Page
     }
 
     /**
-     * this method can be used quickly current initial products
+     * this method can be used quickly get current initial products
      * whenever you write:
      *  ```php
      *   currentInitialProducts->(null, $key)->map("ID", "ID")->toArray();
@@ -874,6 +874,7 @@ class ProductGroup extends Page
      */
     public function currentInitialProductsAsCachedArray($filterKey)
     {
+        //no need to add ID here ...
         $cacheKey = 'CurrentInitialProductsArray'.$filterKey;
         if ($array = $this->retrieveObjectStore($cacheKey)) {
             //do nothing
@@ -1245,7 +1246,7 @@ class ProductGroup extends Page
         $this->rawCount = $this->allProducts->count();
         $max = EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list');
         if ($this->rawCount > $max) {
-            $this->allProducts = $this->allProducts->limit($max);
+            $this->allProducts = $this->allProducts->limit($max - 1);
             $this->totalCount = $max;
         } else {
             $this->totalCount = $this->rawCount;
@@ -1677,6 +1678,7 @@ class ProductGroup extends Page
             if (! $cache->getOption('automatic_serialization')) {
                 $data = @unserialize($data);
             }
+
             return $data;
         }
 
@@ -1888,18 +1890,6 @@ class ProductGroup_Controller extends Page_Controller
         } else {
             $resultArray = array(0 => 0);
         }
-        $suggestion = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
-        $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-        if(! $this->request->getVar($sortGetVariable)) {
-            if($suggestion) {
-                $this->saveUserPreferences(
-                    [
-                        $sortGetVariable => $suggestion
-                    ]
-                );
-                $alternativeSort = $this->createSortStatementFromIDArray($resultArray);
-            }
-        }
         $title = ProductSearchForm::get_last_search_phrase();
         if ($title) {
             $title = _t('Ecommerce.SEARCH_FOR', 'search for: ').substr($title, 0, 25);
@@ -1908,16 +1898,30 @@ class ProductGroup_Controller extends Page_Controller
         $this->products = $this->paginateList(
             $this->ProductsShowable(
                 ['ID' => $resultArray],
-                $alternativeSort
+                $this->getSearchResultsDefaultSort($resultArray)
             )
         );
 
         return array();
     }
 
-    protected function getAlternativeSort($suggestion = '')
+    protected function getSearchResultsDefaultSort($idArray, $alternativeSort = null)
     {
-
+        if(! $alternativeSort) {
+            $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+            if(! $this->request->getVar($sortGetVariable)) {
+                $suggestion = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
+                if($suggestion) {
+                    $this->saveUserPreferences(
+                        [
+                            $sortGetVariable => $suggestion
+                        ]
+                    );
+                    $alternativeSort = $this->createSortStatementFromIDArray($idArray);
+                }
+            }
+        }
+        return $alternativeSort;
     }
 
     /**
@@ -2236,10 +2240,10 @@ class ProductGroup_Controller extends Page_Controller
         if ($resultArray) {
             $count = count($resultArray) - 1;
 
-            return $count ? $count : 0;
+            return $count ? $count : false;
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -2955,19 +2959,12 @@ class ProductGroup_Controller extends Page_Controller
                 $secondaryTitle = $pipe.$secondaryTitle;
             }
             if ($this->IsSearchResults()) {
-                if ($array = $this->searchResultsArrayFromSession()) {
-                    //we remove 1 item here, because the array starts with 0 => 0
-                    $count = count($array) - 1;
-                    if ($count > 3) {
-                        if($this->isSearchResults()) {
-                            $canDo = $count < EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list_for_search') ? true : false;
-                        } else {
-                            $canDo = $count < EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list') ? true : false;
-                        }
-                        if($canDo) {
-                            $toAdd = $count. ' '._t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
-                            $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
-                        }
+                $array = $this->searchResultsArrayFromSession();
+                $count = count($array);
+                if ($count > 4) {
+                    if($count < EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list_for_search')) {
+                        $toAdd = $count. ' '._t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                        $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
                     }
                 } else {
                     $toAdd = _t('ProductGroup.SEARCH_RESULTS', 'Search Results');
