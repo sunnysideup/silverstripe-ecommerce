@@ -2349,8 +2349,10 @@ class ProductGroup_Controller extends Page_Controller
      */
     public function HasFilter()
     {
-        return $this->getCurrentUserPreferences('FILTER') != $this->getMyUserPreferencesDefault('FILTER')
-        || $this->filterForGroupObject;
+        return
+            $this->getCurrentUserPreferences('FILTER') != $this->getMyUserPreferencesDefault('FILTER')
+            ||
+            $this->filterForGroupObject;
     }
 
     /**
