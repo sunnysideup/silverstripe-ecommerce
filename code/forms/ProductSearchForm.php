@@ -592,7 +592,7 @@ class ProductSearchForm extends Form
                 $searchStringArray[] = "LOWER(\"FFFFFF\") LIKE '%$word%'";
             }
             $searchStringAND = '('.implode(' AND ', $searchStringArray).')';
-            $searchStringOR = '('.implode(' OR ', $searchStringArray).')';
+            // $searchStringOR = '('.implode(' OR ', $searchStringArray).')';
         }
         $wordsAsLikeString = trim(implode('%', $wordAsArray));
         $completed = [];
@@ -631,7 +631,7 @@ class ProductSearchForm extends Form
                 $searches[++$count][] = "LOWER(\"$field\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
                 if($hasWordArray) {
                     $searches[++$count][] = str_replace('FFFFFF', $field, $searchStringAND); // d) Words matched individually
-                    $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
+                    // $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
                 }
             }
             /*
