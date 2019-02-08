@@ -603,7 +603,7 @@ class ProductSearchForm extends Form
             $searches[++$count][] = "LOWER(\"Title\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
             if($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'Title', $searchStringAND); // d) Words matched individually
-                $searches[++$count + 100][] = str_replace('FFFFFF', 'Title', $searchStringOR); // d) Words matched individually
+                // $searches[++$count + 100][] = str_replace('FFFFFF', 'Title', $searchStringOR); // d) Words matched individually
             }
             $completed['Title'] = 'Title';
         }
@@ -612,7 +612,7 @@ class ProductSearchForm extends Form
             $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
             if($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'MenuTitle', $searchStringAND); // d) Words matched individually
-                $searches[++$count + 100][] = str_replace('FFFFFF', 'MenuTitle', $searchStringOR); // d) Words matched individually
+                // $searches[++$count + 100][] = str_replace('FFFFFF', 'MenuTitle', $searchStringOR); // d) Words matched individually
             }
             $completed['MenuTitle'] = 'MenuTitle';
         }
@@ -621,7 +621,7 @@ class ProductSearchForm extends Form
             $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
             if($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'MetaTitle', $searchStringAND); // d) Words matched individually
-                $searches[++$count + 100][] = str_replace('FFFFFF', 'MetaTitle', $searchStringOR); // d) Words matched individually
+                // $searches[++$count + 100][] = str_replace('FFFFFF', 'MetaTitle', $searchStringOR); // d) Words matched individually
             }
             $completed['MetaTitle'] = 'MetaTitle';
         }
