@@ -223,7 +223,7 @@ class EcommerceConfigDefinitions extends Object
                 'session_name_for_product_array' => 'This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. ',
             ),
             'ProductGroupSearchPage' => [
-                'best_match_key' => 'Sort key used to sort by relevance.'
+                'best_match_key' => 'Sort key used to sort by relevance.',
                 'sort_options' => "Additional associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC') for searching. Include on with the best_match_key.",
                 'maximum_number_of_products_to_list_for_search' => "Maximum number of products returned in search.",
             ],
