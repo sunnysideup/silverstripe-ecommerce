@@ -81,6 +81,14 @@ ProductGroup:
       Title: default
   session_name_for_product_array: ProductGroupProductIDs
 
+ProductGroupSearchPage:
+  maximum_number_of_products_to_list_for_search: 100
+  best_match_key: 'bestmatch'
+  sort_options:
+    bestmatch:
+      Title: 'Best Match'
+      SQL: "\"Price\" DESC"
+
 Product:
   folder_name_for_images: "ProductImages"
   add_data_to_meta_description_for_search: false

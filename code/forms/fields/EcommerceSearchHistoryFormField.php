@@ -10,11 +10,11 @@ class EcommerceSearchHistoryFormField extends LiteralField
     protected $numberOfDays = 100;
 
     /**
-     * how many days ago the data-analysis should start.
+     * how many days ago the data-analysis should end.
      *
      * @var int
      */
-    protected $startingDaysBack = 0;
+    protected $endingDaysBack = 0;
 
     /**
      * minimum number of searches for the data to show up.
@@ -95,9 +95,9 @@ class EcommerceSearchHistoryFormField extends LiteralField
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setStartingDaysBack($count)
+    public function setEndingDaysBack($count)
     {
-        $this->startingDaysBack = intval($count);
+        $this->endingDaysBack = intval($count);
 
         return $this;
     }
@@ -146,13 +146,14 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function Field($properties = array())
     {
-        $title = $this->Title();
-        $totalNumberOfDaysBack = $this->numberOfDays + $this->startingDaysBack;
+        $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
+        $title = $this->getContent();
+        $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
         $data = DB::query('
             SELECT COUNT(ID) myCount, "Title"
             FROM "SearchHistory"
             WHERE Created > ( NOW() - INTERVAL '.$totalNumberOfDaysBack.' DAY )
-                AND Created < ( NOW() - INTERVAL '.$this->startingDaysBack." DAY )
+                AND Created < ( NOW() - INTERVAL '.$this->endingDaysBack." DAY )
             GROUP BY \"Title\"
             HAVING COUNT(\"ID\") >= $this->minimumCount
             ORDER BY myCount DESC
@@ -172,7 +173,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 Search Phrases'
                 .($this->minimumCount > 1 ? ', entered at least '.$this->minimumCount.' times' : '')
                 .($this->maxRows < 1000 ? ', limited to '.$this->maxRows.' entries, ' : '')
-                .' between '.date('j-M-Y', strtotime('-'.$totalNumberOfDaysBack.' days')).' and '.date('j-M-Y', strtotime('-'.$this->startingDaysBack.' days')).'
+                .' between '.date('j-M-Y', strtotime('-'.$totalNumberOfDaysBack.' days')).' and '.date('j-M-Y', strtotime('-'.$this->endingDaysBack.' days')).'
             </h3>';
         $count = 0;
         if ($data && count($data)) {
@@ -187,11 +188,18 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 }
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
                 $list[$row['myCount'].'-'.$key] = $row['Title'];
+                $link = $redirectToPage->Link('ProductSearchForm').'?Keyword='.urlencode($row['Title']).'&action_doProductSearchForm=Search';
+                $debugLink = $link .'&DebugSearch=1';
                 $tableContent .= '
                     <tr>
-                        <td style="text-align: right; width: 30%; padding: 5px;">'.$row['Title'].'</td>
+                        <td style="text-align: right; width: 30%; padding: 5px;">
+                            <a href="'.$link.'">'.$row['Title'].'</a>
+                        </td>
                         <td style="background-color: silver;  padding: 5px; width: 70%;">
                             <div style="width: '.$multipliedWidthInPercentage.'%; background-color: #C51162; color: #fff;">'.$row['myCount'].'</div>
+                        </td>
+                        <td style="background-color: silver; width: 20px">
+                            <a href="'.$debugLink.'">☕</a>
                         </td>
                     </tr>';
             }
@@ -203,13 +211,20 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     <h3>A - Z</h3>
                     <table class="aToz" style="widht: 100%">';
                 foreach ($list as $key => $title) {
+                    $link = $redirectToPage->Link('ProductSearchForm').'?Keyword='.urlencode($row['Title']).'&action_doProductSearchForm=Search';
+                    $debugLink = $link .'&DebugSearch=1';
                     $array = explode('-', $key);
                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);
                     $tableContent .= '
                         <tr>
-                            <td style="text-align: right; width: 30%; padding: 5px;">'.$title.'</td>
+                            <td style="text-align: right; width: 30%; padding: 5px;">
+                                <a href="'.$link.'">'.$title.'</a>
+                            </td>
                             <td style="background-color: silver;  padding: 5px; width: 70%">
                                 <div style="width: '.$multipliedWidthInPercentage.'%; background-color: #004D40; color: #fff;">'.trim($array[0]).'</div>
+                            </td>
+                            <td style="background-color: silver; width: 20px">
+                                <a href="'.$debugLink.'">☕</a>
                             </td>
                         </tr>';
                 }

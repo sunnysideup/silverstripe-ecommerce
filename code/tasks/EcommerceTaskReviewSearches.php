@@ -12,6 +12,12 @@ class EcommerceTaskReviewSearches extends BuildTask
      *
      * @int
      */
+    protected $defaultMaxRows = 999;
+    /**
+     * number of days shown.
+     *
+     * @int
+     */
     protected $defaultDays = 100;
 
     /**
@@ -27,7 +33,7 @@ class EcommerceTaskReviewSearches extends BuildTask
      *
      * @int
      */
-    protected $startingDaysBack = 0;
+    protected $endingDaysBack = 0;
 
     /**
      * Standard (required) SS variable for BuildTasks.
@@ -46,6 +52,11 @@ class EcommerceTaskReviewSearches extends BuildTask
 
     public function run($request)
     {
+        $maxRows = intval(preg_replace('/[^\d.]/', '', $request->getVar('maxrows')));
+        $maxRows = intval($maxRows - 0);
+        if (!$maxRows) {
+            $maxRows = $this->defaultMaxRows;
+        }
         $days = intval($request->getVar('days') - 0);
         if (!$days) {
             $days = $this->defaultDays;
@@ -54,14 +65,15 @@ class EcommerceTaskReviewSearches extends BuildTask
         if (!$countMin) {
             $countMin = $this->defaultMinimum;
         }
-        $startingDaysBack = intval($request->getVar('ago') - 0);
-        if (!$startingDaysBack) {
-            $startingDaysBack = $this->startingDaysBack;
+        $endingDaysBack = intval($request->getVar('ago') - 0);
+        if (!$endingDaysBack) {
+            $endingDaysBack = $this->endingDaysBack;
         }
         $field = EcommerceSearchHistoryFormField::create('stats', $this->title)
             ->setNumberOfDays($days)
             ->setMinimumCount($countMin)
-            ->setStartingDaysBack($startingDaysBack);
+            ->setMaxRows($maxRows)
+            ->setEndingDaysBack($endingDaysBack);
         echo $field->forTemplate();
         $arrayNumberOfDays = array(30, 365);
 
@@ -76,9 +88,14 @@ class EcommerceTaskReviewSearches extends BuildTask
                 isset($_GET['days']) ? $_GET['days'] : $this->defaultDays
             )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
             NumericField::create(
+                'maxrows',
+                'Maximum Number of Rows?',
+                isset($_GET['maxrows']) ? $_GET['maxrows'] : $this->defaultMaxRows
+            )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
+            NumericField::create(
                 'ago',
                 'Up to how many days go',
-                isset($_GET['ago']) ? $_GET['ago'] : $this->startingDaysBack
+                isset($_GET['ago']) ? $_GET['ago'] : $this->endingDaysBack
             )->setRightTitle('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
             NumericField::create(
                 'min',
