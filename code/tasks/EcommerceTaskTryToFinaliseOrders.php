@@ -65,14 +65,20 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 $lastOrderStep = OrderStep::last_order_step();
                 if ($lastOrderStep) {
                     if ($this->isCli()) {
-                        $sort = 'RAND()';
+                        $sort = 'RAND() ASC';
                     } else {
                         $sort = array('ID' => 'ASC');
+                    }
+                    $ordersInQueueArray = $ordersinQueue->column('ID');
+                    if(is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
+                        //do nothing...
+                    } else {
+                        $ordersInQueueArray = [-1 => -1];
                     }
                     $orders = Order::get()
                         ->sort($sort)
                         ->where('StatusID <> ' . $lastOrderStep->ID)
-                        ->exclude(array('ID' => $ordersinQueue->column('ID')))
+                        ->exclude(['ID' => $ordersInQueueArray])
                         ->innerJoin(
                             'OrderStatusLog',
                             "\"OrderStatusLog\".\"OrderID\" = \"Order\".\"ID\""
