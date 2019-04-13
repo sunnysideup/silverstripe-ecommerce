@@ -540,7 +540,7 @@ class CheckoutPage_Controller extends CartPage_Controller
         $completed = 1;
         $completedClass = 'completed';
         foreach ($dos as $do) {
-            if ($this->currentStep && $do->Code() == $this->currentStep) {
+            if ($this->currentStep && $do->Code == $this->currentStep) {
                 $do->LinkingMode = 'current';
                 $completed = 0;
                 $completedClass = 'notCompleted';
