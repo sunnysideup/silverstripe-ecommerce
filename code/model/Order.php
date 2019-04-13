@@ -3183,7 +3183,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * is this a gift / separate shippingAddress?
-     * @return Boolean
+     * @return bool
      */
     public function IsSeparateShippingAddress()
     {
