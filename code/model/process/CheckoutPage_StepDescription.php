@@ -197,6 +197,17 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         $fields->replaceField('Description', new TextareaField('Description', _t('Checkout.DESCRIPTION', 'Description')));
         $fields->replaceField('Above', new TextareaField('Above', _t('Checkout.ABOVE', 'Top of section note')));
         $fields->replaceField('Below', new TextareaField('Below', _t('Checkout.BELOW', 'Bottom of section note')));
+        $fields->replaceField(
+            'Code',
+            DropdownField::create(
+                'Code',
+                'Code',
+                array_combine(
+                    EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps'),
+                    EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps')
+                )
+            )
+        );
 
         return $fields;
     }
@@ -238,6 +249,17 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         if (is_array($steps) && count($steps)) {
             $idArray = [];
+            $addCodeSteps = CheckoutPage_StepDescription::get()
+                ->where('"Code" = \'\' OR "Code" IS NULL');
+
+            $stepsToAdd = $steps;
+            if ($addCodeSteps->count()) {
+                foreach ($addCodeSteps as $addCodeStep) {
+                    DB::alteration_message('Adding Code to Step ...'.$addCodeStep->Code, 'created');
+                    $addCodeStep->Code = array_shift($stepsToAdd);
+                    $addCodeStep->write();
+                }
+            }
             foreach ($steps as $id => $code) {
                 $filter = ['Code' => $code];
                 $obj = CheckoutPage_StepDescription::get()->filter($filter)->first();
