@@ -983,7 +983,7 @@ class CartPage_Controller extends Page_Controller
 
     /**
      * Is this a CartPage or is it another type (Checkout / OrderConfirmationPage)?
-     * @return Boolean
+     * @return bool
      */
     protected function isCartPage()
     {

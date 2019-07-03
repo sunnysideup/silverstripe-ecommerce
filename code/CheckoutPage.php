@@ -525,33 +525,35 @@ class CheckoutPage_Controller extends CartPage_Controller
      */
     public function CheckoutSteps($number = 0)
     {
-        $where = '';
-        $dos = CheckoutPage_StepDescription::get()
-            ->Sort('ID', 'ASC');
+        $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         if ($number) {
-            $dos = $dos->Filter(array('ID' => $number));
+            $code = $steps[$number - 1];
+
+            return CheckoutPage_StepDescription::get()->filter(['Code' => $code])->first();
         }
-        if ($number) {
-            if ($dos->count()) {
-                return $dos->First();
-            }
-        }
-        $returnData = new ArrayList(array());
+        $returnData = ArrayList::create();
         $completed = 1;
         $completedClass = 'completed';
-        foreach ($dos as $do) {
-            if ($this->currentStep && $do->Code() == $this->currentStep) {
-                $do->LinkingMode = 'current';
-                $completed = 0;
-                $completedClass = 'notCompleted';
-            } else {
-                if ($completed) {
-                    $do->Link = $this->Link('checkoutstep').'/'.$do->Code.'/';
+        $seenCodes = [];
+        foreach ($steps as $code) {
+            if(! in_array($code, $seenCodes)) {
+                $seenCodes[$code] = $code;
+                $do = CheckoutPage_StepDescription::get()->filter(['Code' => $code])->first();
+                if($do) {
+                    if ($this->currentStep && $do->Code == $this->currentStep) {
+                        $do->LinkingMode = 'current';
+                        $completed = 0;
+                        $completedClass = 'notCompleted';
+                    } else {
+                        if ($completed) {
+                            $do->Link = $this->Link('checkoutstep').'/'.$do->Code.'/';
+                        }
+                        $do->LinkingMode = "link $completedClass";
+                    }
+                    $do->Completed = $completed;
+                    $returnData->push($do);
                 }
-                $do->LinkingMode = "link $completedClass";
             }
-            $do->Completed = $completed;
-            $returnData->push($do);
         }
         if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
             $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');

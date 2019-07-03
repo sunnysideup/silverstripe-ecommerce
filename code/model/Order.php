@@ -363,8 +363,9 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     private static $summary_fields = array(
         'Title' => 'Title',
+        'OrderItemsSummaryNice' => 'Order Items',
         'Status.Title' => 'Next Step',
-        'Member.Surname' => 'Name',
+        'Member.Surname' => 'Last Name',
         'Member.Email' => 'Email',
         'TotalAsMoney.Nice' => 'Total',
         'TotalItemsTimesQuantity' => 'Units',
@@ -398,7 +399,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'CancelledByID' => array(
             'filter' => 'OrderFilters_HasBeenCancelled',
             'title' => 'Cancelled by ...',
-        ),
+        )
     );
 
     /**
@@ -581,15 +582,21 @@ class Order extends DataObject implements EditableEcommerceObject
         $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
         $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
         $nextFieldArray = array(
-            LiteralField::create('CssFix', '<style>#Root_Next h2.form-control {padding: 0!important; margin: 0!important; padding-top: 4em!important;}</style>'),
-            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', '1. Current Status')),
-            $this->OrderStepField(),
+            LiteralField::create(
+                'CssFix',
+                '<style>
+                    #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
+                </style>'
+            ),
+            HeaderField::create('OrderStepNextStepHeader', _t('Order.MAIN_DETAILS', 'Main Details'))->addExtraClass('section-heading-for-order'),
             GridField::create(
                 'OrderSummary',
                 _t('Order.CURRENT_STATUS', 'Summary'),
                 ArrayList::create(array($this)),
                 $orderSummaryConfig
-            )
+            ),
+            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
+            $this->OrderStepField(),
         );
         $keyNotes = OrderStatusLog::get()->filter(
             array(
@@ -607,7 +614,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $nextFieldArray = array_merge(
                 $nextFieldArray,
                 array(
-                    HeaderField::create('KeyNotesHeader', _t('Order.KEY_NOTES_HEADER', 'Key Notes')),
+                    HeaderField::create('KeyNotesHeader', _t('Order.KEY_NOTES_HEADER', 'Notes'), 4),
                     GridField::create(
                         'OrderStatusLogSummary',
                         _t('Order.CURRENT_KEY_NOTES', 'Key Notes'),
@@ -653,9 +660,9 @@ class Order extends DataObject implements EditableEcommerceObject
                 $nextFieldArray = array_merge(
                     $nextFieldArray,
                     array(
-                        HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', '2. Action Next Step')),
+                        HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step'))->addExtraClass('section-heading-for-order'),
                         $myQueueObjectField,
-                        HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', '3. Move Order Along')),
+                        HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along'))->addExtraClass('section-heading-for-order'),
                         LiteralField::create('OrderStepNextStepHeaderExtra', '<p>'._t('Order.NEEDTOREFRESH', 'Once you have made any changes to the order then you will have to refresh below or save it to move it along.').'</p>'),
                         EcommerceCMSButtonField::create(
                             'StatusIDExplanation',
@@ -2827,6 +2834,43 @@ class Order extends DataObject implements EditableEcommerceObject
         return $title;
     }
 
+    public function OrderItemsSummaryNice()
+    {
+        return $this->getOrderItemsSummaryNice();
+    }
+
+    public function getOrderItemsSummaryNice()
+    {
+        return DBField::create_field('HTMLText', $this->OrderItemsSummaryAsHTML());
+    }
+
+    public function OrderItemsSummaryAsHTML()
+    {
+        $html = '';
+        $x = 0;
+        $count = $this->owner->OrderItems()->count();
+        if ($count > 0) {
+            $html .= '<ul class="order-items-summary">';
+            foreach ($this->owner->OrderItems() as $orderItem) {
+                $x++;
+                $buyable = $orderItem->Buyable();
+                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433;">- '.$orderItem->Quantity.'x ';
+                if ($buyable) {
+                    $html .= $buyable->InternalItemID .' '.$buyable->Title;
+                } else {
+                    $html .= $orderItem->BuyableFullName;
+                }
+                $html .= '</li>';
+                if ($x > 3) {
+                    $html .= '<li style="font-family: monospace; font-size: 0.9em; color: black;">- open for more items</li>';
+                    break;
+                }
+            }
+            $html .= '</ul>';
+        }
+        return $html;
+    }
+
     /**
      * Returns the subtotal of the items for this order.
      *
@@ -3139,7 +3183,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * is this a gift / separate shippingAddress?
-     * @return Boolean
+     * @return bool
      */
     public function IsSeparateShippingAddress()
     {

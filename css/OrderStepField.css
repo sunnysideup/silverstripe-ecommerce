@@ -7,9 +7,12 @@
  *
  **/
 
-.orderStepField { background-color: #EEE; border-radius: 2px 7px 7px 7px; border: 1px solid grey; margin: 20px 0px;}
-	.orderStepField ol li {list-style: none; width: auto; float: left; display: block; padding-right: 10px;}
-		.orderStepField ol li.current {color: blue; font-weight: bold; font-style: italic;}
-		.orderStepField ol li.todo {color: grey;}
-		.orderStepField ol li.done {color: green; text-decoration: line-through;}
-	.orderStepField .clear {clear: left;}
+.orderStepField { background-color: #EEE; border-radius: 7px 7px 7px 7px; border: 1px solid grey; margin: 1em 0px; padding: 1em;}
+    .orderStepField ol {line-height: 2em;}
+    .orderStepField ol li {list-style: none; width: auto; float: left; display: block; padding-right: 0.5em;}
+        .orderStepField ol li.current {color: #0071c4; font-weight: bold; text-decoration: underline;;}
+        .orderStepField ol li.todo a {color: #333;}
+        .orderStepField ol li.todo:after {content: ' »';}
+        .orderStepField ol li.done a {color: #777; text-decoration: line-through;}
+        .orderStepField ol li.done:before {content '✔ ';}
+    .orderStepField .clear {clear: left;}

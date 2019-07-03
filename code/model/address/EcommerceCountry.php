@@ -459,6 +459,30 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * @param  int|string|EcommerceCountry
+     *
+     * @return EcommerceCountry|string|null
+     */
+    public static function get_country_from_mixed_var($var, $asCode = false)
+    {
+        if (is_string($var)) {
+            $var = strtoupper($var);
+            $var = DataObject::get_one('EcommerceCountry', ['Code' => $var]);
+        } elseif (is_numeric($var) && is_int($var)) {
+            $var = EcommerceCountry::get()->byID($var);
+        }
+        if ($var instanceof EcommerceCountry) {
+            if ($asCode) {
+                return $var->Code;
+            } else {
+                return $var;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * This function works out the most likely country for the current order
      * and returns the Country Object, if any.
      *
@@ -608,7 +632,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */

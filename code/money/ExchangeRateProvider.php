@@ -65,6 +65,7 @@ class ExchangeRateProvider extends Object
 
     /**
      * gets a rate from a FROM and a TO currency.
+     * see https://free.currencyconverterapi.com/ for limitations
      *
      * @param string $fromCode - UPPERCASE Code, e.g. NZD
      * @param string $toCode   - UPPERCASE Code, e.g. EUR
@@ -74,8 +75,8 @@ class ExchangeRateProvider extends Object
     protected function getRate($fromCode, $toCode)
     {
         $rate = 0;
-        //$url = http://finance.yahoo.com/currency/convert?amt=1&from=NZD&to=USD&submit=Convert
-        $url = 'http://download.finance.yahoo.com/d/quotes.csv?s='.$fromCode.$toCode.'=X&f=sl1d1t1ba&e=.csv';
+        $reference = $fromCode.'_'.$toCode;
+        $url = 'http://free.currencyconverterapi.com/api/v5/convert?q='.$reference.'&compact=y';
         if (($ch = @curl_init())) {
             $timeout = 5; // set to zero for no timeout
             curl_setopt($ch, CURLOPT_URL, "$url");
@@ -87,11 +88,12 @@ class ExchangeRateProvider extends Object
         if (!$record) {
             $record = file_get_contents($url);
         }
+
         if ($record) {
-            $currencyData = explode(',', $record);
-            $rate = $currencyData[1];
+            $currencyData = json_decode($record);
+            $rate = $currencyData->$reference->val;
             if (!$rate) {
-                $rate = $currencyData[2];
+                user_error('There was a problem retrieving the exchange rate.');
             }
         }
         if ($rate != 1) {

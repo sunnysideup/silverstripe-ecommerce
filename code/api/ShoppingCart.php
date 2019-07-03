@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ShoppingCart - provides a global way to interface with the cart (current order).
  *
@@ -316,7 +317,7 @@ class ShoppingCart extends Object
     /**
      * can the current user use sessions and therefore write to cart???
      * the method also returns if an order has explicitely been set
-     * @return Boolean
+     * @return bool
      */
     protected function allowWrites()
     {
@@ -509,7 +510,7 @@ class ShoppingCart extends Object
      *
      * @return bool | DataObject ($orderItem)
      */
-    protected function prepareOrderItem(BuyableModel $buyable, $parameters = array(), $mustBeExistingItem = true)
+    public function prepareOrderItem(BuyableModel $buyable, $parameters = array(), $mustBeExistingItem = true)
     {
         $parametersArray = $parameters;
         $form = null;
@@ -520,13 +521,7 @@ class ShoppingCart extends Object
         if (!$buyable) {
             user_error('No buyable was provided', E_USER_WARNING);
         }
-        if (!$buyable->canPurchase()) {
-            $item = $this->getExistingItem($buyable, $parametersArray);
-            if ($item && $item->exists()) {
-                $item->delete();
-                $item->destroy();
-            }
-
+        if (! $buyable->canPurchase()) {
             return false;
         }
         $item = null;
@@ -549,21 +544,24 @@ class ShoppingCart extends Object
     /**
      * @todo: what does this method do???
      *
-     * @return int
      *
      * @param DataObject ($buyable)
      * @param float $quantity
+     *
+     * @return int
      */
-    protected function prepareQuantity(BuyableModel $buyable, $quantity)
+    public function prepareQuantity(BuyableModel $buyable, $quantity)
     {
         $quantity = round($quantity, $buyable->QuantityDecimals());
-        if ($quantity < 0 || (!$quantity && $quantity !== 0)) {
+        if ($quantity > 0) {
+
+            return $quantity;
+        } else {
             $this->addMessage(_t('Order.INVALIDQUANTITY', 'Invalid quantity.'), 'warning');
 
-            return false;
+            return 0;
         }
 
-        return $quantity;
     }
 
     /**
@@ -820,31 +818,26 @@ class ShoppingCart extends Object
             }
             if ($oldOrder) {
                 if ($oldOrder->canView() && $oldOrder->IsSubmitted()) {
+
+                    $this->addMessage(_t('Order.ORDERCOPIED', 'Order has been copied.'), 'good');
                     $newOrder = Order::create();
-                    //copying fields.
-                    $newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
-                    //important to set it this way...
-                    $newOrder->setCurrency($oldOrder->CurrencyUsed());
-                    $newOrder->MemberID = $oldOrder->MemberID;
-                    //load the order
-                    $newOrder->write();
-                    $this->loadOrder($newOrder);
+                    $newOrder = $this->CopyOrderOnly($oldOrder, $newOrder);
+
+                    $buyables = [];
                     $items = OrderItem::get()
                         ->filter(array('OrderID' => $oldOrder->ID));
                     if ($items->count()) {
                         foreach ($items as $item) {
-                            $buyable = $item->Buyable($current = true);
-                            if ($buyable->canPurchase()) {
-                                $this->addBuyable($buyable, $item->Quantity);
-                            }
+                            $buyables[] = $item->Buyable($current = true);
                         }
                     }
-                    $newOrder->CreateOrReturnExistingAddress('BillingAddress');
-                    $newOrder->CreateOrReturnExistingAddress('ShippingAddress');
-                    $newOrder->write();
-                    $this->addMessage(_t('Order.ORDERCOPIED', 'Order has been copied.'), 'good');
+                    if(count($buyables)) {
+                        $newOrder = $this->CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = []);
+                    }
+                    $this->loadOrder($newOrder);
 
                     return $newOrder;
+
                 } else {
                     $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
 
@@ -856,6 +849,57 @@ class ShoppingCart extends Object
                 return false;
             }
         }
+    }
+
+    /**
+     *
+     * @param Order $oldOrder
+     * @param Order $newOrder
+     *
+     * @return Ordeer (the new order)
+     */
+    public function CopyOrderOnly($oldOrder, $newOrder)
+    {
+
+        //copying fields.
+        $newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
+        //important to set it this way...
+        $newOrder->setCurrency($oldOrder->CurrencyUsed());
+        $newOrder->MemberID = $oldOrder->MemberID;
+        //load the order
+        $newOrder->write();
+        $newOrder->CreateOrReturnExistingAddress('BillingAddress');
+        $newOrder->CreateOrReturnExistingAddress('ShippingAddress');
+        $newOrder->write();
+
+        return $newOrder;
+    }
+
+    /**
+     * add buyables into new Order
+     *
+     * @param  Order $newOrder
+     * @param  array $buyables   can also be another iterable object (e.g. ArrayList)
+     * @param  array  $parameters
+     *
+     * @return Order (same order as was passed)
+     */
+    public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = [])
+    {
+        foreach ($buyables as $buyable) {
+            if ($buyable && $buyable->canPurchase()) {
+                $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+                $quantity = $this->prepareQuantity($buyable, $quantity);
+                if ($item && $quantity) {
+                    $item->Quantity = $quantity;
+                    $item->write();
+                    $newOrder->Attributes()->add($item); //save to new order order
+                }
+            }
+            $newOrder->write();
+        }
+
+        return $newOrder;
     }
 
     /**
@@ -942,7 +986,7 @@ class ShoppingCart extends Object
 
             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>';
             echo 'GEOIP Country: '.EcommerceCountry::get_country_from_ip().'<br />';
-            echo 'Calculated Country Country: '.EcommerceCountry::get_country().'<br />';
+            echo 'Calculated Country: '.EcommerceCountry::get_country().'<br />';
 
             echo '<blockquote><blockquote><blockquote><blockquote>';
 
@@ -1188,12 +1232,12 @@ class ShoppingCart extends Object
             //TODO: handle passing a message back to a form->sessionMessage
             $this->StoreMessagesInSession();
             if ($form) {
-                //lets make sure that there is an order
+                // lets make sure that there is an order
                 $this->currentOrder();
-                //nowe we can (re)calculate the order
+                // now we can (re)calculate the order
                 $this->order->calculateOrderAttributes($force = false);
                 $form->sessionMessage($message, $status);
-            //let the form controller do the redirectback or whatever else is needed.
+            // let the form controller do the redirectback or whatever else is needed.
             } else {
                 if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
                     Controller::curr()->redirectBack();

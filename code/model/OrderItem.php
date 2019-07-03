@@ -601,7 +601,7 @@ class OrderItem extends OrderAttribute
 
     /**
      * @param int $orderID
-     * 
+     *
      */
     public static function reset_price_has_been_fixed($orderID = 0)
     {
@@ -634,13 +634,20 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @param bool $current - is this a current one, or an older VERSION ?
+     * @param string $current - is this a current one, or an older VERSION ?
      *
      * @return DataObject (Any type of Data Object that is buyable)
      **/
-    public function getBuyable($current = false)
+    public function getBuyable($current = '')
     {
         $currentOrVersion = $current ? 'current' : 'version';
+        if (!is_null($this->Order()) && !$current) {
+            if (! $this->Order()->IsSubmitted()) {
+                $currentOrVersion = 'current';
+            }
+        } elseif ($current === 'version') {
+            $currentOrVersion = 'version';
+        }
         if (!isset($this->tempBuyableStore[$currentOrVersion])) {
             if (!$this->BuyableID) {
                 user_error('There was an error retrieving the product', E_USER_NOTICE);
@@ -658,7 +665,7 @@ class OrderItem extends OrderAttribute
             }
             //end hack!
             $obj = null;
-            if ($current) {
+            if ($currentOrVersion === 'current') {
                 $obj = $className::get()->byID($this->BuyableID);
             }
             //run if current not available or current = false
@@ -718,7 +725,8 @@ class OrderItem extends OrderAttribute
             //This should work in all cases, because ultimately, it will return #ID - see DataObject
             return $item->getTitle();
         }
-        user_error('No Buyable could be found for OrderItem with ID: '.$this->ID, E_USER_WARNING);
+        return 'ERROR: product not found';
+        user_error('No Buyable could be found for OrderItem with ID: '.$this->ID, E_USER_NOTICE);
     }
 
     /**

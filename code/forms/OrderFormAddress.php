@@ -134,22 +134,24 @@ class OrderFormAddress extends Form
                     3
                 )
             );
+            $useShippingAddress = $this->order ? $this->order->UseShippingAddress : 0;
             if ($shippingAddressFirst) {
                 $useShippingAddressField->push(
                     CheckboxField::create(
                         'UseDifferentShippingAddress',
                         _t('OrderForm.USE_DIFFERENT_SHIPPING_ADDRESS', 'I need to enter a separate billing address'),
-                        0
+                        $useShippingAddress
                     )
                 );
                 $useShippingAddressField->push(
-                    HiddenField::create('UseShippingAddress', 'UseShippingAddress', 0)
+                    HiddenField::create('UseShippingAddress', 'UseShippingAddress', $useShippingAddress)
                 );
             } else {
                 $useShippingAddressField->push(
                     CheckboxField::create(
                         'UseShippingAddress',
-                        _t('OrderForm.USESHIPPINGADDRESS', 'Use separate shipping address')
+                        _t('OrderForm.USESHIPPINGADDRESS', 'Use separate shipping address'),
+                        $useShippingAddress
                     )
                 );
             }
@@ -351,8 +353,31 @@ class OrderFormAddress extends Form
      */
     public function saveAddress(array $data, Form $form, SS_HTTPRequest $request)
     {
+        $this->saveAddressDetails($data, $form, $request);
+
+        $nextStepLink = CheckoutPage::find_next_step_link('orderformaddress');
+        $this->controller->redirect($nextStepLink);
+
+        return true;
+    }
+
+    /**
+     * Process the items in the shopping cart from session,
+     * creating a new {@link Order} record, and updating the
+     * customer's details {@link Member} record.
+     *
+     * {@link Payment} instance is created, linked to the order,
+     * and payment is processed {@link Payment::processPayment()}
+     *
+     * @param array       $data    Form request data submitted from OrderForm
+     * @param Form        $form    Form object for this action
+     * @param HTTPRequest $request Request object for this action
+     */
+    public function saveAddressDetails(array $data, Form $form, SS_HTTPRequest $request)
+    {
         Session::set('BillingEcommerceGeocodingFieldValue', empty($data['BillingEcommerceGeocodingField']) ? null : $data['BillingEcommerceGeocodingField']);
         Session::set('ShippingEcommerceGeocodingFieldValue', empty($data['ShippingEcommerceGeocodingField']) ? null : $data['ShippingEcommerceGeocodingField']);
+        $this->saveDataToSession();
 
         $data = Convert::raw2sql($data);
         //check for cart items
@@ -423,10 +448,6 @@ class OrderFormAddress extends Form
         //----------------- CLEAR OLD DATA ------------------------------
         $this->clearSessionData(); //clears the stored session form data that might have been needed if validation failed
         //-----------------------------------------------
-
-        $nextStepLink = CheckoutPage::find_next_step_link('orderformaddress');
-        $this->controller->redirect($nextStepLink);
-
         return true;
     }
 

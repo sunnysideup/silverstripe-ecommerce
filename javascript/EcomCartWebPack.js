@@ -872,7 +872,7 @@ export var EcomCart = {
     /**
      * check if a particular variable is set
      * @param Mixed
-     * @return Boolean
+     * @return bool
      */
     variableIsSet: function(variable) {
         if(typeof(variable) == 'undefined' || variable == 'undefined') {
@@ -885,7 +885,7 @@ export var EcomCart = {
     /**
      * check if a particular variable is set AND has a value
      * @param Mixed
-     * @return Boolean
+     * @return bool
      */
     variableSetWithValue: function(variable) {
         if(EcomCart.variableIsSet(variable)) {

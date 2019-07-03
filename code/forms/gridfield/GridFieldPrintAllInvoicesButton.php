@@ -10,6 +10,13 @@
 class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
     /**
+     *
+     * @config
+     * @var int
+     */
+    private static $invoice_bulk_printing_limit = 30;
+
+    /**
      * HTML Fragment to render the field.
      *
      * @var string
@@ -75,7 +82,8 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
       */
     public function handlePrint($gridField, $request = null)
     {
-        $list = $gridField->getList();
+        $limit = Config::inst()->get('GridFieldPrintAllInvoicesButton', 'invoice_bulk_printing_limit');
+        $list = $gridField->getList()->limit($limit);
         $gridField->setList($list);
         $al = ArrayList::create();
         foreach ($list as $order) {

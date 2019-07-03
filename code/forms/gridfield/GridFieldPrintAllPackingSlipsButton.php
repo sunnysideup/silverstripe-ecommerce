@@ -9,6 +9,14 @@
 
 class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
+
+    /**
+     *
+     * @config
+     * @var int
+     */
+    private static $packing_slip_bulk_printing_limit = 30;
+
     /**
      * HTML Fragment to render the field.
      *
@@ -75,7 +83,8 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
       */
     public function handlePrintAllPackingSlips($gridField, $request = null)
     {
-        $list = $gridField->getList();
+        $limit = Config::inst()->get('GridFieldPrintAllPackingSlipsButton', 'packing_slip_bulk_printing_limit');
+        $list = $gridField->getList()->limit($limit);
         $gridField->setList($list);
         $al = ArrayList::create();
         foreach ($list as $order) {

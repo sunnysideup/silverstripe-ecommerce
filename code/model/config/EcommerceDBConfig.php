@@ -418,12 +418,13 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $productImage = new Product_Image();
                 $versionInfo = EcommerceConfigDefinitions::create();
                 $fields->addFieldToTab('Root.Main', new TextField('Title', $fieldLabels['Title']));
-                $fields->addFieldToTab(
+                $fields->InsertAfter(
                     'Root.Main',
                     LiteralField::create(
                         'RefreshWebsite',
                         '<h2><a href="/shoppingcart/clear/?flush=all">Refresh website, clear caches, and your cart</a></h2>'
-                    )
+                    ),
+                    'Root.Main.ShopClosed'
                 );
                 $fields->addFieldsToTab('Root', array(
                     Tab::create(
@@ -540,9 +541,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 if (strnatcmp(phpversion(), '5.5.1') >= 0) {
                     $fields->addFieldToTab('Root.ProductImages', new Product_ProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage'], null, null, null, 'default-product-image'));
                 }
+                $fields->replaceField(
+                    'UseThisOne',
+                    HiddenField::create(
+                        'UseThisOne',
+                        'UseThisOne'
+                    )
+                );
             }
         );
-
         return parent::getCMSFields();
     }
 
