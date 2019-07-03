@@ -58,10 +58,12 @@ abstract class Order_Email extends Email
     {
         $ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
         if ($ecommerceConfig && $ecommerceConfig->ReceiptEmail) {
-            return $ecommerceConfig->ReceiptEmail;
+            $email = $ecommerceConfig->ReceiptEmail;
         } else {
-            return Email::config()->admin_email;
+            $email = Email::config()->admin_email;
         }
+
+        return trim($email);
     }
 
     /**
@@ -116,7 +118,11 @@ abstract class Order_Email extends Email
         if ((!$this->hasBeenSent()) || ($this->resend)) {
             if (EcommerceConfig::get('Order_Email', 'copy_to_admin_for_all_emails') && ($this->to != self::get_from_email())) {
                 if ($memberEmail = self::get_from_email()) {
-                    $this->setBcc(implode(", ", array($this->bcc(), $memberEmail)));
+                    $array = [ $memberEmail ];
+                    if($bcc = $this->Bcc()) {
+                        $array[] = $bcc;
+                    }
+                    $this->setBcc(implode(", ", $array));
                 }
             }
             //last chance to adjust
@@ -145,11 +151,11 @@ abstract class Order_Email extends Email
         $orderEmailRecord = OrderEmailRecord::create();
         $orderEmailRecord->From = $this->emailToVarchar($this->from);
         $orderEmailRecord->To = $this->emailToVarchar($this->to);
-        if ($this->cc) {
-            $orderEmailRecord->To .= ', CC: '.$this->emailToVarchar($this->cc);
+        if ($this->Cc()) {
+            $orderEmailRecord->To .= ', CC: '.$this->emailToVarchar($this->Cc());
         }
-        if ($this->bcc) {
-            $orderEmailRecord->To .= ', BCC: '.$this->emailToVarchar($this->bcc);
+        if ($this->Bcc()) {
+            $orderEmailRecord->To .= ', BCC: '.$this->emailToVarchar($this->Bcc());
         }
         //always set result to try if
         $orderEmailRecord->Subject = $this->subject;
