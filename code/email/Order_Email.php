@@ -116,7 +116,7 @@ abstract class Order_Email extends Email
         }
         $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
         if ((!$this->hasBeenSent()) || ($this->resend)) {
-            if (EcommerceConfig::get('Order_Email', 'copy_to_admin_for_all_emails') && ($this->to != self::get_from_email())) {
+            if (EcommerceConfig::get('Order_Email', 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
                 if ($memberEmail = self::get_from_email()) {
                     $array = [ $memberEmail ];
                     if($bcc = $this->Bcc()) {
@@ -130,12 +130,14 @@ abstract class Order_Email extends Email
             if ($returnBodyOnly) {
                 return $this->Body();
             }
+            $orderEmailRecord = $this->createRecord($result);
             if (EcommerceConfig::get('Order_Email', 'send_all_emails_plain')) {
                 $result = parent::sendPlain($messageID);
             } else {
                 $result = parent::send($messageID);
             }
-            $this->createRecord($result);
+            $orderEmailRecord->Result = $result;
+            $orderEmailRecord->write();
 
             return $result;
         }

@@ -61,12 +61,17 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
      */
     public function doStep(Order $order)
     {
+        if($this->SendReceiptToCustomer) {
+            $adminOnlyOrToEmail = false;
+        } else {
+            $adminOnlyOrToEmail = true;
+        }
         return $this->sendEmailForStep(
             $order,
             $subject = $this->CalculatedEmailSubject($order),
             $message = '',
             $resend = false,
-            $adminOnlyOrToEmail = false,
+            $adminOnlyOrToEmail,
             $this->getEmailClassName()
         );
     }
@@ -80,7 +85,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
      **/
     public function nextStep(Order $order)
     {
-        if (!$this->SendReceiptToCustomer || $this->hasBeenSent($order)) {
+        if ($this->SendReceiptToCustomer == false || $this->hasBeenSent($order)) {
             return parent::nextStep($order);
         }
 
