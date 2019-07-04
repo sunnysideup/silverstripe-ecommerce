@@ -65,7 +65,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      **/
     public function doStep(Order $order)
     {
-        if($this->SendReceiptToCustomer) {
+        if($this->SendInvoiceToCustomer) {
             $adminOnlyOrToEmail = false;
         } else {
             $adminOnlyOrToEmail = true;
