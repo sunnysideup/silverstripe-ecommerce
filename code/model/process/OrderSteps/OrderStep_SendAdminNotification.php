@@ -7,7 +7,7 @@
  * @sub-package: model
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class OrderStep_SentAdminNotification extends OrderStep implements OrderStepInterface
+class OrderStep_SendAdminNotification extends OrderStep implements OrderStepInterface
 {
     /**
      * @var string
@@ -19,15 +19,12 @@ class OrderStep_SentAdminNotification extends OrderStep implements OrderStepInte
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 1,
         'Name' => 'Send Admin Notification',
-        'Code' => 'NOTIFIED',
+        'Code' => 'ADMINNOTIFIED',
         'ShowAsInProcessOrder' => 1,
-        'SendInvoiceToCustomer' => 1,
     );
 
     /**
      * can run step once order has been submitted.
-     * NOTE: must have a payment (even if it is a fake payment).
-     * The reason for this is if people pay straight away then they want to see the payment shown on their invoice.
      *
      * @param Order object
      *
@@ -64,7 +61,7 @@ class OrderStep_SentAdminNotification extends OrderStep implements OrderStepInte
     }
 
     /**
-     * can do next step once the invoice has been sent or in case the invoice does not need to be sent.
+     * can do next step once the admin notification has been sent
      *
      * @param Order $order
      *
@@ -114,7 +111,7 @@ class OrderStep_SentAdminNotification extends OrderStep implements OrderStepInte
     protected function myDescription()
     {
         return _t(
-            'OrderStep.SENTADMIN_NOTIFICATION',
+            'OrderStep.SENDADMIN_NOTIFICATION',
             'Admin notification to admin about order.'
         );
     }

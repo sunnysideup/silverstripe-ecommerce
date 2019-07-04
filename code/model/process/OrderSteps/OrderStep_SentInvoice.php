@@ -89,7 +89,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      **/
     public function nextStep(Order $order)
     {
-        if (!$this->SendInvoiceToCustomer || $this->hasBeenSent($order)) {
+        if ($this->hasBeenSent($order)) {
             return parent::nextStep($order);
         }
 
