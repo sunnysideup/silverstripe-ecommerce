@@ -470,7 +470,7 @@ EcommerceConfig:
 
     protected function getDefaultValues()
     {
-        require_once 'thirdparty/spyc/spyc.php';
+        require_once Director::baseFolder().'/vendor/mustangostang/spyc/Spyc.php';
         $fixtureFolderAndFile = Director::baseFolder().'/'.$this->defaultLocation;
         $parser = new Spyc();
 
