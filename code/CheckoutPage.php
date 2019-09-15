@@ -443,6 +443,7 @@ class CheckoutPage_Controller extends CartPage_Controller
         if ($this->currentOrder) {
             return $this->currentOrder->getModifierForms();
         }
+        return null;
     }
 
     /**
