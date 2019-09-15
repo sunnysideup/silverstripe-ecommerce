@@ -246,27 +246,36 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return ArrayList (ModifierForms) | Null
      **/
+
+    protected static $_modifier_form_cache = null;
+
     public function getModifierForms(Controller $optionalController = null, Validator $optionalValidator = null)
     {
-        $arrayList = new ArrayList();
-        $modifiers = $this->Modifiers();
-        if ($modifiers->count()) {
-            foreach ($modifiers as $modifier) {
-                if ($modifier->ShowForm()) {
-                    if ($form = $modifier->getModifierForm($optionalController, $optionalValidator)) {
-                        $form->ShowFormInEditableOrderTable = $modifier->ShowFormInEditableOrderTable();
-                        $form->ShowFormOutsideEditableOrderTable = $modifier->ShowFormOutsideEditableOrderTable();
-                        $form->ModifierName = $modifier->ClassName;
-                        $arrayList->push($form);
+        if(self::$_modifier_form_cache === null) {
+            $formsDone = [];
+            $arrayList = new ArrayList();
+            $modifiers = $this->Modifiers();
+            if ($modifiers->count()) {
+                foreach ($modifiers as $modifier) {
+                    if ($modifier->ShowForm()) {
+                        if(! isset($formsDone[$modifier->ClassName])) {
+                            $formsDone[$modifier->ClassName] = true;
+                            $form = $modifier->getModifierForm($optionalController, $optionalValidator);
+                            if ($form) {
+                                $form->ShowFormInEditableOrderTable = $modifier->ShowFormInEditableOrderTable();
+                                $form->ShowFormOutsideEditableOrderTable = $modifier->ShowFormOutsideEditableOrderTable();
+                                $form->ModifierName = $modifier->ClassName;
+                                //$Me is legacy
+                                $obj = ArrayData::create(['Form' => $form, 'Modifier' => $modifier, 'Me' => $form]);
+                                $arrayList->push($obj);
+                            }
+                        }
                     }
                 }
             }
+            self::$_modifier_form_cache = $arrayList;
         }
-        if ($arrayList->count()) {
-            return $arrayList;
-        } else {
-            return;
-        }
+        return self::$_modifier_form_cache;
     }
 
     /**
