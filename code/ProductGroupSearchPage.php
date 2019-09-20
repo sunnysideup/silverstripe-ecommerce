@@ -62,6 +62,14 @@ class ProductGroupSearchPage extends ProductGroup
     protected $allowCaching = false;
 
     /**
+     * Setter for all products
+     * @param DataList $dataList List of products
+     */
+    public function setAllProducts(DataList $dataList) {
+        $this->allProducts = $dataList;
+    }
+
+    /**
      * This is a KEY method that overrides the standard method!
      * @return [type] [description]
      */

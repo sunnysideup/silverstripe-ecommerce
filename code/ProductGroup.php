@@ -350,6 +350,14 @@ class ProductGroup extends Page
     protected $allowCaching = true;
 
     /**
+     * Setter for all products
+     * @param DataList $dataList List of products
+     */
+    public function setAllProducts(DataList $dataList) {
+        $this->allProducts = $dataList;
+    }
+
+    /**
      * return the options for one type.
      * This method solely exists to speed up processing.
      *
