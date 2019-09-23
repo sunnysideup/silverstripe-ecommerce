@@ -353,8 +353,11 @@ class ProductGroup extends Page
      * Setter for all products
      * @param DataList $dataList List of products
      */
-    public function setAllProducts(DataList $dataList) {
+    public function setAllProducts(DataList $dataList)
+    {
         $this->allProducts = $dataList;
+
+        return $this;
     }
 
     /**
