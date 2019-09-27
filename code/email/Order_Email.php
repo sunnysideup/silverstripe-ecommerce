@@ -130,12 +130,14 @@ abstract class Order_Email extends Email
             if ($returnBodyOnly) {
                 return $this->Body();
             }
-            $orderEmailRecord = $this->createRecord($result);
+
             if (EcommerceConfig::get('Order_Email', 'send_all_emails_plain')) {
                 $result = parent::sendPlain($messageID);
             } else {
                 $result = parent::send($messageID);
             }
+
+            $orderEmailRecord = $this->createRecord($result);
             $orderEmailRecord->Result = $result;
             $orderEmailRecord->write();
 

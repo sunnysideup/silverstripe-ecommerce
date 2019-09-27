@@ -54,6 +54,7 @@ class CheckoutPage extends CartPage
      */
     private static $db = array(
         'TermsAndConditionsMessage' => 'Varchar(200)',
+        'EnableGoogleAnalytics' => 'Boolean(1)',
     );
 
     /**
@@ -312,6 +313,7 @@ class CheckoutPage extends CartPage
         if (CheckoutPage_StepDescription::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps', $this->getCheckoutStepDescriptionField());
         }
+        $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account. BRUH'));
 
         return $fields;
     }
@@ -428,6 +430,42 @@ class CheckoutPage_Controller extends CartPage_Controller
         }
         if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);
+        }
+        $this->includeGoogleAnalyticsCode();
+    }
+
+    protected function includeGoogleAnalyticsCode()
+    {
+        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
+            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
+            if ($var) {
+                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
+                if ($currencyUsedObject) {
+                    $currencyUsedString = $currencyUsedObject->Code;
+                }
+                if (empty($currencyUsedString)) {
+                    $currencyUsedString = EcommerceCurrency::default_currency_code();
+                }
+                $js = '
+                jQuery("#OrderForm_OrderForm").on(
+                    "submit",
+                    function(){
+                        alert("made it");
+                        '.$var.'(\'require\', \'ecommerce\');
+                        '.$var.'(
+                            \'ecommerce:addTransaction\',
+                            {
+                                \'id\': \''.$this->currentOrder->ID.'\',
+                                \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
+                                \'currency\': \''.$currencyUsedString.'\'
+                            }
+                        );
+                        '.$var.'(\'ecommerce:send\');
+                    }
+                );
+    ';
+                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
+            }
         }
     }
 
