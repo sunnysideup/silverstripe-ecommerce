@@ -454,7 +454,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         Requirements::themedCSS('CheckoutPage', 'ecommerce');
         Requirements::javascript('ecommerce/javascript/EcomPayment.js');
         Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
-        $this->includeGoogleAnalyticsCode();
     }
 
     /**
