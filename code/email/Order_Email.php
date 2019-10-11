@@ -203,7 +203,7 @@ abstract class Order_Email extends Email
      *
      * @return bool
      **/
-    public function hasBeenSent() :bool
+    public function hasBeenSent()
     {
         $orderStep = $this->order->Status();
         if (is_a($orderStep, Object::getCustomClass('OrderStep'))) {

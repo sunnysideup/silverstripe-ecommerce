@@ -919,7 +919,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function hasBeenSent(Order $order, $checkDateOfOrder = true):bool
+    public function hasBeenSent(Order $order, $checkDateOfOrder = true)
     {
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
