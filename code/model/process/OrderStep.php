@@ -820,7 +820,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $adminOnlyOrToEmail = false,
         $emailClassName = ''
     ) {
-        if (!$this->hasBeenSent($order) || $resend) {
+        if ($this->hasBeenSent($order) === false || boolval($resend) === true) {
             if (!$subject) {
                 $subject = $this->CalculatedEmailSubject($order);
             }
@@ -831,7 +831,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 if (! $emailClassName) {
                     $emailClassName = $this->getEmailClassName();
                 }
-                return $order->sendEmail(
+                $outcome = $order->sendEmail(
                     $emailClassName,
                     $subject,
                     $message,
@@ -854,9 +854,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             }
             if ($outcome || Director::isDev()) {
                 return true;
+            } else {
+                return false;
             }
-
-            return false;
         }
 
         return true;
@@ -919,7 +919,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function hasBeenSent(Order $order, $checkDateOfOrder = true)
+    public function hasBeenSent(Order $order, $checkDateOfOrder = true):bool
     {
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
@@ -937,7 +937,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             ->Filter(array(
                 'OrderID' => $order->ID,
                 'OrderStepID' => $this->ID,
-                'Result' => 1,
+                // 'Result' => 1, TODO: basically, if it did not send sent successfully we just move on!
             ))
             ->count();
 
