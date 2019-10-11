@@ -450,7 +450,6 @@ class CheckoutPage_Controller extends CartPage_Controller
                 jQuery("#OrderForm_OrderForm").on(
                     "submit",
                     function(){
-                        alert("made it");
                         '.$var.'(\'require\', \'ecommerce\');
                         '.$var.'(
                             \'ecommerce:addTransaction\',
