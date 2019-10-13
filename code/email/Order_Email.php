@@ -138,6 +138,9 @@ abstract class Order_Email extends Email
             }
 
             $orderEmailRecord = $this->createRecord($result);
+            if(Director::isDev()) {
+                $result = true;
+            }
             $orderEmailRecord->Result = $result;
             $orderEmailRecord->write();
 
@@ -165,7 +168,6 @@ abstract class Order_Email extends Email
         $orderEmailRecord->Subject = $this->subject;
         if (!$result) {
             if (Director::isDev()) {
-                $result = true;
                 $orderEmailRecord->Subject .= _t('Order_Email.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
             }
         }
