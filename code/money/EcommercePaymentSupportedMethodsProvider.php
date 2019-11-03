@@ -33,9 +33,9 @@ class EcommercePaymentSupportedMethodsProvider extends Object implements Ecommer
             $hideTestPaymentMethods = true;
         }
         $supportedMethods = EcommerceConfig::get('EcommercePayment', 'supported_methods');
-        if (ArrayLib::is_associative($supportedMethods)) {
-            if ($hideTestPaymentMethods) {
-                if (count($supportedMethods)) {
+        if (count($supportedMethods)) {
+            if(ArrayLib::is_associative($supportedMethods)) {
+                if ($hideTestPaymentMethods) {
                     foreach ($supportedMethods as $methodClass => $methodTitle) {
                         if (is_subclass_of($methodClass, 'EcommercePayment_Test')) {
                             unset($supportedMethods[$methodClass]);
@@ -44,7 +44,9 @@ class EcommercePaymentSupportedMethodsProvider extends Object implements Ecommer
                 }
             }
         } else {
-            user_error('EcommercePayment::$supported_methods() requires an associative array. Right now the supported payments methods are: '.print_r($supportedMethods, 1), E_USER_NOTICE);
+            user_error('
+                EcommercePayment::$supported_methods() requires an associative array.
+                Right now the supported payments methods are: '.print_r($supportedMethods, 1), E_USER_NOTICE);
         }
         return $supportedMethods;
     }

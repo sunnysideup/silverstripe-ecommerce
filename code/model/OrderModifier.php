@@ -61,6 +61,7 @@ class OrderModifier extends OrderAttribute
         'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
         'TableValue' => 'Currency', //the $$ shown in the checkout table
         'HasBeenRemoved' => 'Boolean', // we add this so that we can see what modifiers have been removed
+        'Type' => 'Enum("Other,Discount,Tax,Delivery", "Other")'
     );
 
     /**
@@ -86,8 +87,9 @@ class OrderModifier extends OrderAttribute
             'title' => 'Order Number',
         ),
         //"TableTitle" => "PartialMatchFilter",
-        'TableValue',
-        'HasBeenRemoved',
+        'TableValue' => "PartialMatchFilter",
+        'HasBeenRemoved' => "ExactMatchFilter",
+        'Type' => "ExactMatchFilter",
     );
 
     /**
@@ -664,6 +666,15 @@ class OrderModifier extends OrderAttribute
         return array();
     }
 
+    /**
+     * what is the type of
+     * @return [type] [description]
+     */
+    public function getType()
+    {
+        return '';
+    }
+
     // ######################################## ***  8. inner calculations....
 
     /**
@@ -703,6 +714,11 @@ class OrderModifier extends OrderAttribute
     protected function LiveCalculatedTotal()
     {
         return $this->CalculatedTotal;
+    }
+
+    protected function LiveType()
+    {
+        return $this->Type;
     }
 
     // ######################################## ***  10. Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
@@ -746,6 +762,7 @@ class OrderModifier extends OrderAttribute
     {
         return $this->HasBeenRemoved;
     }
+
 
     // ######################################## ***  11. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 

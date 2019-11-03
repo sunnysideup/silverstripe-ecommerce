@@ -234,7 +234,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * redirects to this link after order has been placed ....
+     * redirects to this link after order has been placed ...
      * @param  string $link
      */
     public function addAlternativeEndPoint($link, $write = true)
@@ -568,43 +568,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         $html = EcommerceTaskDebugCart::debug_object($this);
 
         return $html;
-    }
-
-    /**
-     * LEGACY METHOD
-     * Process payment form and return next step in the payment process.
-     * Steps taken are:
-     * 1. create new payment
-     * 2. save form into payment
-     * 3. return payment result.
-     *
-     * @param Order $order - the order that is being paid
-     * @param Form  $form  - the form that is being submitted
-     * @param array $data  - Array of data that is submittted
-     *
-     * @return bool - if successful, this method will return TRUE
-     */
-    public static function process_payment_form_and_return_next_step($order, $data, $form)
-    {
-        $formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
-
-        return $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
-    }
-
-    /**
-     * LEGACY METHOD.
-     *
-     * @param Order $order - the order that is being paid
-     * @param array $data  - Array of data that is submittted
-     * @param Form  $form  - the form that is being submitted
-     *
-     * @return bool - true if the data is valid
-     */
-    public static function validate_payment($order, $data, $form)
-    {
-        $formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
-
-        return $formHelper->validatePayment($order, $data, $form);
     }
 
     private $ecommercePaymentFormSetupAndValidationObject = null;
