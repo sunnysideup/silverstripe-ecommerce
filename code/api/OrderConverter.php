@@ -40,7 +40,7 @@ abstract class OrderConverter extends Object
         if($this->order->IsSeparateShippingAddress()) {
             $this->shippingAddress = $this->order->ShippingAddress();
         } else {
-            $this->shippingAddress = $billing;
+            $this->shippingAddress = $this->billingAddress;
         }
     }
 
