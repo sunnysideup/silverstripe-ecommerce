@@ -668,6 +668,8 @@ class OrderItem extends OrderAttribute
             if ($currentOrVersion === 'current') {
                 $obj = $className::get()->byID($this->BuyableID);
             }
+
+
             //run if current not available or current = false
             if (!$obj || !$current) {
                 if (((!$obj) || (!$obj->exists())) && $this->Version) {

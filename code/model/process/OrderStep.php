@@ -921,7 +921,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function hasBeenSent(Order $order, $checkDateOfOrder = true)
     {
-        return false;
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
         if ($checkDateOfOrder) {
@@ -935,21 +934,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             }
         }
         $count = OrderEmailRecord::get()
-            ->Filter(array(
-                'OrderID' => $order->ID,
-                'OrderStepID' => $this->ID,
-                'Result' => 1, 
-            ))
+            ->filter(
+                [
+                    'OrderID' => $order->ID,
+                    'OrderStepID' => $this->ID,
+                    'Result' => 1,
+                ]
+            )
             ->count();
         if($count) {
             return true;
         }
         else {
             $count = OrderEmailRecord::get()
-                ->Filter(array(
-                    'OrderID' => $order->ID,
-                    'OrderStepID' => $this->ID,
-                ))
+                ->filter(
+                    [
+                        'OrderID' => $order->ID,
+                        'OrderStepID' => $this->ID,
+                    ]
+                )
                 ->count();
             //tried it twice - abandon to avoid being stuck in a loop!
             if($count >= 2) {
