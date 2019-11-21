@@ -291,6 +291,7 @@ class OrderModifier extends OrderAttribute
             $this->checkField('Name');
             $this->checkField('CalculatedTotal');
             $this->checkField('TableValue');
+            $this->checkField('Type');
             if ($this->mustUpdate && $this->canBeUpdated()) {
                 $this->write();
             }
