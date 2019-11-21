@@ -54,7 +54,7 @@ abstract class OrderConverter extends Object
 
     public function getAmountForModifierType($type)
     {
-        if(empty($this->amountsPerModifierType)) {
+        if(empty($this->amountsPerModifierType[$type])) {
             foreach($this->modifiers as $modifier) {
                 if($modifier->Type) {
                     if(! isset($this->amountsPerModifierType[$modifier->Type])) {
