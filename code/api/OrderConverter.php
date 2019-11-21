@@ -56,11 +56,11 @@ abstract class OrderConverter extends Object
     {
         if(empty($this->amountsPerModifierType[$type])) {
             foreach($this->modifiers as $modifier) {
-                if($modifier->Type) {
-                    if(! isset($this->amountsPerModifierType[$modifier->Type])) {
-                        $this->amountsPerModifierType[$modifier->Type] = 0;
+                if($modifier->Type === $type) {
+                    if(! isset($this->amountsPerModifierType[$type])) {
+                        $this->amountsPerModifierType[$type] = 0;
                     }
-                    $this->amountsPerModifierType[$modifier->Type] += $modifier->CalculatedTotal;
+                    $this->amountsPerModifierType[$type] += $modifier->CalculatedTotal;
                 }
             }
         }
