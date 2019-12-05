@@ -698,7 +698,7 @@ class ProductGroup extends Page
         );
         $numberOfProductsPerPageField->setRightTitle($numberOfProductsPerPageExplanation);
         if ($calculatedNumberOfProductsPerPage && !$this->NumberOfProductsPerPage) {
-            $this->NumberOfProductsPerPage = null;
+            $this->NumberOfProductsPerPage = 0;
             $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
         }
         //sort
