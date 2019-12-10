@@ -116,6 +116,8 @@ class EcommercePaymentFormSetupAndValidation extends Object
         if (!$this->paymentObject) {
             $paymentClass = (!empty($data['PaymentMethod'])) ? $data['PaymentMethod'] : null;
             if ($paymentClass) {
+                //important! convert back to PHP class
+                $paymentClass = EcommercePayment::html_class_to_php_class($paymentClass);
                 if (class_exists($paymentClass)) {
                     $this->paymentObject = $paymentClass::create();
                 }
