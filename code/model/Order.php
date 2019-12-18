@@ -244,7 +244,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @param Controller $optionalController
      * @param Validator  $optionalValidator
      *
-     * @return ArrayList (ModifierForms) | Null
+     * @return ArrayList (ArrayData) | Null
      **/
 
     protected static $_modifier_form_cache = null;
