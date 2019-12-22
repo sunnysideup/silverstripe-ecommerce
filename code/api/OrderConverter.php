@@ -55,12 +55,14 @@ abstract class OrderConverter extends Object
     public function getAmountForModifierType($type)
     {
         if(empty($this->amountsPerModifierType[$type])) {
+
             foreach($this->modifiers as $modifier) {
-                if($modifier->Type === $type) {
+                $myType = $modifier->Type ?? $modifier->getLiveType();
+                if($myType === $type) {
                     if(! isset($this->amountsPerModifierType[$type])) {
                         $this->amountsPerModifierType[$type] = 0;
                     }
-                    $this->amountsPerModifierType[$type] += $modifier->CalculatedTotal;
+                    $this->amountsPerModifierType[$type] += $modifier->TableValue;
                 }
             }
         }
@@ -69,5 +71,15 @@ abstract class OrderConverter extends Object
     }
 
     abstract public function convert();
+
+    protected function implodeAndTrim($fields, $glue = '')
+    {
+        return trim(
+            implode(
+                ' ',
+                $fields
+            )
+        );
+    }
 
 }

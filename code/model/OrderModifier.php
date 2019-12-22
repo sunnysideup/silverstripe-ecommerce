@@ -667,14 +667,6 @@ class OrderModifier extends OrderAttribute
         return array();
     }
 
-    /**
-     * what is the type of
-     * @return [type] [description]
-     */
-    public function getType()
-    {
-        return '';
-    }
 
     // ######################################## ***  8. inner calculations....
 
@@ -717,9 +709,14 @@ class OrderModifier extends OrderAttribute
         return $this->CalculatedTotal;
     }
 
+    public function getLiveType() : string
+    {
+        return $this->LiveType();
+    }
+
     protected function LiveType()
     {
-        return $this->Type;
+        return $this->Type ??  'Other';;
     }
 
     // ######################################## ***  10. Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)

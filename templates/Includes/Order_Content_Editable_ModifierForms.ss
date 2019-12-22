@@ -1,7 +1,7 @@
 <% if $ModifierForms %>
     <% loop $ModifierForms %>
-        <% if $ShowFormOutsideEditableOrderTable %>
-            <div class="modifierFormInner">$Form</div>
+        <% if $Modifier.ShowFormOutsideEditableOrderTable %>
+            <div class="products u-scf">$Form</div>
         <% end_if %>
     <% end_loop %>
 <% end_if %>
