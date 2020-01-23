@@ -45,7 +45,7 @@ class EcommercePayment_TestFailure extends EcommercePayment_Test
         return new EcommercePayment_Failure();
     }
 
-    public function getPaymentFormFields()
+    public function getPaymentFormFields($amount = 0, $order = null)
     {
         return new FieldList(
             new LiteralField('SuccessBlurb', '<div>FAILURE PAYMENT TEST</div>')

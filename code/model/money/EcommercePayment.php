@@ -502,7 +502,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return FieldList
      */
-    public function getPaymentFormFields()
+    public function getPaymentFormFields($amount = 0, $order = null)
     {
         user_error("Please implement getPaymentFormFields() on $this->class", E_USER_ERROR);
     }
