@@ -479,7 +479,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             $options[$htmlClassName] = $methodName;
             // Create a new CompositeField with method specific fields,
             // as defined on each payment method class using getPaymentFormFields()
-            $methodFields = new CompositeField($methodClass::create()->getPaymentFormFields());
+            $methodFields = new CompositeField(
+                $methodClass::create()->getPaymentFormFields($amount, $order)
+            );
             $methodFields->addExtraClass("methodFields_$htmlClassName");
             $methodFields->addExtraClass('paymentfields');
             // Add those fields to the initial FieldSet we first created
