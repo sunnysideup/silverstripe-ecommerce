@@ -84,7 +84,7 @@ class EcommerceConfig extends Object
      */
     private function loadData()
     {
-        require_once 'thirdparty/spyc/spyc.php';
+        require_once Director::baseFolder().'/vendor/mustangostang/spyc/Spyc.php';
         $filesArray = $this->fileLocations();
         foreach ($filesArray as $folderAndFileLocation) {
             $fixtureFolderAndFile = Director::baseFolder().'/'.$folderAndFileLocation;

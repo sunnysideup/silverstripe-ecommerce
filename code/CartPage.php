@@ -697,7 +697,7 @@ class CartPage_Controller extends Page_Controller
     {
         $link = $checkoutPageLink = CheckoutPage::find_link();
         $this->extend('UpdateCanonicalLink', $link);
-        
+
         return $link;
     }
 
@@ -857,6 +857,8 @@ class CartPage_Controller extends Page_Controller
                     }
                 }
             }
+
+
             //go to current order
             if (isset($this->CurrentOrderLinkLabel) && $this->CurrentOrderLinkLabel) {
                 if ($this->isCartPage()) {
@@ -966,7 +968,7 @@ class CartPage_Controller extends Page_Controller
             } else {
                 $this->message = $this->NonExistingOrderMessage;
             }
-
+            
             $this->workedOutMessagesAndActions = true;
             //does nothing at present....
         }
@@ -983,7 +985,7 @@ class CartPage_Controller extends Page_Controller
 
     /**
      * Is this a CartPage or is it another type (Checkout / OrderConfirmationPage)?
-     * @return Boolean
+     * @return bool
      */
     protected function isCartPage()
     {

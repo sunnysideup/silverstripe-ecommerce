@@ -820,7 +820,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $adminOnlyOrToEmail = false,
         $emailClassName = ''
     ) {
-        if (!$this->hasBeenSent($order) || $resend) {
+        if ($this->hasBeenSent($order) === false || boolval($resend) === true) {
             if (!$subject) {
                 $subject = $this->CalculatedEmailSubject($order);
             }
@@ -831,7 +831,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 if (! $emailClassName) {
                     $emailClassName = $this->getEmailClassName();
                 }
-                return $order->sendEmail(
+                $outcome = $order->sendEmail(
                     $emailClassName,
                     $subject,
                     $message,
@@ -854,9 +854,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             }
             if ($outcome || Director::isDev()) {
                 return true;
+            } else {
+                return false;
             }
-
-            return false;
         }
 
         return true;
@@ -934,14 +934,33 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             }
         }
         $count = OrderEmailRecord::get()
-            ->Filter(array(
-                'OrderID' => $order->ID,
-                'OrderStepID' => $this->ID,
-                'Result' => 1,
-            ))
+            ->filter(
+                [
+                    'OrderID' => $order->ID,
+                    'OrderStepID' => $this->ID,
+                    'Result' => 1,
+                ]
+            )
             ->count();
+        if($count) {
+            return true;
+        }
+        else {
+            $count = OrderEmailRecord::get()
+                ->filter(
+                    [
+                        'OrderID' => $order->ID,
+                        'OrderStepID' => $this->ID,
+                    ]
+                )
+                ->count();
+            //tried it twice - abandon to avoid being stuck in a loop!
+            if($count >= 2) {
+                return true;
+            }
+        }
 
-        return $count ? true : false;
+        return false;
     }
 
     /**

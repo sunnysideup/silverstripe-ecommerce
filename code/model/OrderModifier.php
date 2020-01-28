@@ -61,6 +61,7 @@ class OrderModifier extends OrderAttribute
         'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
         'TableValue' => 'Currency', //the $$ shown in the checkout table
         'HasBeenRemoved' => 'Boolean', // we add this so that we can see what modifiers have been removed
+        'Type' => 'Enum("Other,Discount,Tax,Delivery", "Other")'
     );
 
     /**
@@ -86,8 +87,9 @@ class OrderModifier extends OrderAttribute
             'title' => 'Order Number',
         ),
         //"TableTitle" => "PartialMatchFilter",
-        'TableValue',
-        'HasBeenRemoved',
+        'TableValue' => "PartialMatchFilter",
+        'HasBeenRemoved' => "ExactMatchFilter",
+        'Type' => "ExactMatchFilter",
     );
 
     /**
@@ -289,6 +291,7 @@ class OrderModifier extends OrderAttribute
             $this->checkField('Name');
             $this->checkField('CalculatedTotal');
             $this->checkField('TableValue');
+            $this->checkField('Type');
             if ($this->mustUpdate && $this->canBeUpdated()) {
                 $this->write();
             }
@@ -664,6 +667,7 @@ class OrderModifier extends OrderAttribute
         return array();
     }
 
+
     // ######################################## ***  8. inner calculations....
 
     /**
@@ -703,6 +707,16 @@ class OrderModifier extends OrderAttribute
     protected function LiveCalculatedTotal()
     {
         return $this->CalculatedTotal;
+    }
+
+    public function getLiveType() : string
+    {
+        return $this->LiveType();
+    }
+
+    protected function LiveType()
+    {
+        return $this->Type ??  'Other';;
     }
 
     // ######################################## ***  10. Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
@@ -746,6 +760,7 @@ class OrderModifier extends OrderAttribute
     {
         return $this->HasBeenRemoved;
     }
+
 
     // ######################################## ***  11. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 

@@ -668,6 +668,8 @@ class OrderItem extends OrderAttribute
             if ($currentOrVersion === 'current') {
                 $obj = $className::get()->byID($this->BuyableID);
             }
+
+
             //run if current not available or current = false
             if (!$obj || !$current) {
                 if (((!$obj) || (!$obj->exists())) && $this->Version) {
@@ -718,12 +720,17 @@ class OrderItem extends OrderAttribute
      **/
     public function getBuyableTitle()
     {
+        return $this->getTitle();
+    }
+
+    public function getTitle()
+    {
         if ($buyable = $this->Buyable()) {
             if ($title = $buyable->Title) {
                 return $title;
             }
             //This should work in all cases, because ultimately, it will return #ID - see DataObject
-            return $item->getTitle();
+            return parent::getTitle();
         }
         return 'ERROR: product not found';
         user_error('No Buyable could be found for OrderItem with ID: '.$this->ID, E_USER_NOTICE);

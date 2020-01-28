@@ -8,6 +8,7 @@
  **/
 class ProductGroupSearchPage extends ProductGroup
 {
+
     /**
      * standard SS variable.
      *
@@ -60,6 +61,21 @@ class ProductGroupSearchPage extends ProductGroup
      */
     protected $allowCaching = false;
 
+    /**
+     * Setter for all products
+     * @param DataList $dataList List of products
+     */
+    public function setAllProducts(DataList $dataList)
+    {
+        $this->allProducts = $dataList;
+
+        return $this;
+    }
+
+    /**
+     * This is a KEY method that overrides the standard method!
+     * @return [type] [description]
+     */
     public function getGroupFilter()
     {
         $resultArray = $this->searchResultsArrayFromSession();
@@ -67,6 +83,7 @@ class ProductGroupSearchPage extends ProductGroup
 
         return $this->allProducts;
     }
+
 
     /**
      * returns the SORT part of the final selection of products.
@@ -76,12 +93,6 @@ class ProductGroupSearchPage extends ProductGroup
     protected function currentSortSQL()
     {
         $sortKey = $this->getCurrentUserPreferences('SORT');
-        $defaultSortKey = $this->getMyUserPreferencesDefault('SORT');
-        if ($sortKey == $defaultSortKey) {
-            $resultArray = $this->searchResultsArrayFromSession();
-            
-            return $this->createSortStatementFromIDArray($resultArray);
-        }
 
         return $this->getUserSettingsOptionSQL('SORT', $sortKey);
     }
@@ -116,7 +127,6 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
         }
     }
 
-
     /**
      * returns child product groups for use in
      * 'in this section'. For example the vegetable Product Group
@@ -129,6 +139,14 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
         return;
     }
 
+    public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = '')
+    {
+        $alternativeSort = $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession(), $alternativeSort);
+
+        $this->allProducts = parent::ProductsShowable($extraFilter, $alternativeSort, $alternativeFilterKey);
+
+        return $this->allProducts;
+    }
     /**
      * The link that Google et al. need to index.
      * @return string

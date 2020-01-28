@@ -45,7 +45,7 @@ class EcommercePayment_TestSuccess extends EcommercePayment_Test
         return new EcommercePayment_Success();
     }
 
-    public function getPaymentFormFields()
+    public function getPaymentFormFields($amount = 0, $order = null)
     {
         return new FieldList(
             new LiteralField('SuccessBlurb', '<div>SUCCESSFUL PAYMENT TEST</div>')

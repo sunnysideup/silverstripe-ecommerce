@@ -38,7 +38,6 @@ class OrderConfirmationPage extends CartPage
         'PaymentSuccessfulMessage' => 'HTMLText',
         'PaymentNotSuccessfulMessage' => 'HTMLText',
         'PaymentPendingMessage' => 'HTMLText',
-        'EnableGoogleAnalytics' => 'Boolean',
         'IsFeedbackEnabled' => 'Boolean',
         'FeedbackFormLinkText' => 'Varchar(255)',
         'FeedbackHeader' => 'Varchar(255)',
@@ -174,7 +173,6 @@ class OrderConfirmationPage extends CartPage
             'PaymentSuccessfulMessage' => _t('OrderConfirmationPage.PAYMENTSUCCESSFULMESSAGE', 'Message showing when order has been paid in full.'),
             'PaymentNotSuccessfulMessage' => _t('OrderConfirmationPage.PAYMENTNOTSUCCESSFULMESSAGE', 'Message showing when the order has not been paid in full.'),
             'PaymentPendingMessage' => _t('OrderConfirmationPage.PAYMENTPENDINGMESSAGE', 'Message showing when the order has not been paid in full - but the payment is pending.'),
-            'EnableGoogleAnalytics' => _t('OrderConfirmationPage.ENABLEGOOGLEANALYTICS', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.'),
             'IsFeedbackEnabled' => _t('OrderConfirmationPage.ISFEEDBACKENABLED', 'Enable Feedback Form'),
             'FeedbackHeader' => _t('OrderConfirmationPage.FEEDBACKHEADER', 'Feedback Form Header'),
             'FeedbackValuesFieldLabel' => _t('OrderConfirmationPage.FEEDBACKVALUESFIELDLABEL', 'Feedback Form Options Label'),
@@ -237,7 +235,6 @@ class OrderConfirmationPage extends CartPage
             TextField::create('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
             HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
         ));
-        $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', $fieldLabels['EnableGoogleAnalytics']));
         if ($this->IsFeedbackEnabled) {
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
@@ -457,7 +454,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         Requirements::themedCSS('CheckoutPage', 'ecommerce');
         Requirements::javascript('ecommerce/javascript/EcomPayment.js');
         Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
-        $this->includeGoogleAnalyticsCode();
     }
 
     /**
@@ -813,39 +809,6 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             );
         } else {
             return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
-        }
-    }
-
-    protected function includeGoogleAnalyticsCode()
-    {
-        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
-            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
-            if ($var) {
-                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
-                if ($currencyUsedObject) {
-                    $currencyUsedString = $currencyUsedObject->Code;
-                }
-                if (empty($currencyUsedString)) {
-                    $currencyUsedString = EcommerceCurrency::default_currency_code();
-                }
-                $js = '
-                jQuery(document).ready(
-                    function(){
-                        '.$var.'(\'require\', \'ecommerce\');
-                        '.$var.'(
-                            \'ecommerce:addTransaction\',
-                            {
-                                \'id\': \''.$this->currentOrder->ID.'\',
-                                \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
-                                \'currency\': \''.$currencyUsedString.'\'
-                            }
-                        );
-                        '.$var.'(\'ecommerce:send\');
-                    }
-                );
-    ';
-                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
-            }
         }
     }
 }

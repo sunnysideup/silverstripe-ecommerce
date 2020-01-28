@@ -470,7 +470,7 @@ EcommerceConfig:
 
     protected function getDefaultValues()
     {
-        require_once 'thirdparty/spyc/spyc.php';
+        require_once Director::baseFolder().'/vendor/mustangostang/spyc/Spyc.php';
         $fixtureFolderAndFile = Director::baseFolder().'/'.$this->defaultLocation;
         $parser = new Spyc();
 
@@ -633,10 +633,10 @@ EcommerceConfig:
                         }
                     }
                 }
-                $this->definitions['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->getCode()] = $step->Description.'<br />see: <a href="/admin/pages/edit/show/'.$checkoutPage->ID.'/">checkout page</a>.';
-                $this->configs['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->getCode()] = $configArray;
-                $this->defaults['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->getCode()] = $defaultsArray;
-                $this->databaseValues['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->getCode()] = true;
+                $this->definitions['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = $step->Description.'<br />see: <a href="/admin/pages/edit/show/'.$checkoutPage->ID.'/">checkout page</a>.';
+                $this->configs['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = $configArray;
+                $this->defaults['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = $defaultsArray;
+                $this->databaseValues['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = true;
             }
         }
         $steps = OrderModifier_Descriptor::get();

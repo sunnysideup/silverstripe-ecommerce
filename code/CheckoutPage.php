@@ -54,6 +54,7 @@ class CheckoutPage extends CartPage
      */
     private static $db = array(
         'TermsAndConditionsMessage' => 'Varchar(200)',
+        'EnableGoogleAnalytics' => 'Boolean(1)',
     );
 
     /**
@@ -312,6 +313,7 @@ class CheckoutPage extends CartPage
         if (CheckoutPage_StepDescription::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps', $this->getCheckoutStepDescriptionField());
         }
+        $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account. BRUH'));
 
         return $fields;
     }
@@ -429,6 +431,41 @@ class CheckoutPage_Controller extends CartPage_Controller
         if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);
         }
+        $this->includeGoogleAnalyticsCode();
+    }
+
+    protected function includeGoogleAnalyticsCode()
+    {
+        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
+            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
+            if ($var) {
+                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
+                if ($currencyUsedObject) {
+                    $currencyUsedString = $currencyUsedObject->Code;
+                }
+                if (empty($currencyUsedString)) {
+                    $currencyUsedString = EcommerceCurrency::default_currency_code();
+                }
+                $js = '
+                jQuery("#OrderForm_OrderForm").on(
+                    "submit",
+                    function(){
+                        '.$var.'(\'require\', \'ecommerce\');
+                        '.$var.'(
+                            \'ecommerce:addTransaction\',
+                            {
+                                \'id\': \''.$this->currentOrder->ID.'\',
+                                \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
+                                \'currency\': \''.$currencyUsedString.'\'
+                            }
+                        );
+                        '.$var.'(\'ecommerce:send\');
+                    }
+                );
+    ';
+                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
+            }
+        }
     }
 
     /**
@@ -443,6 +480,7 @@ class CheckoutPage_Controller extends CartPage_Controller
         if ($this->currentOrder) {
             return $this->currentOrder->getModifierForms();
         }
+        return null;
     }
 
     /**
@@ -525,33 +563,35 @@ class CheckoutPage_Controller extends CartPage_Controller
      */
     public function CheckoutSteps($number = 0)
     {
-        $where = '';
-        $dos = CheckoutPage_StepDescription::get()
-            ->Sort('ID', 'ASC');
+        $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         if ($number) {
-            $dos = $dos->Filter(array('ID' => $number));
+            $code = $steps[$number - 1];
+
+            return CheckoutPage_StepDescription::get()->filter(['Code' => $code])->first();
         }
-        if ($number) {
-            if ($dos->count()) {
-                return $dos->First();
-            }
-        }
-        $returnData = new ArrayList(array());
+        $returnData = ArrayList::create();
         $completed = 1;
         $completedClass = 'completed';
-        foreach ($dos as $do) {
-            if ($this->currentStep && $do->Code() == $this->currentStep) {
-                $do->LinkingMode = 'current';
-                $completed = 0;
-                $completedClass = 'notCompleted';
-            } else {
-                if ($completed) {
-                    $do->Link = $this->Link('checkoutstep').'/'.$do->Code.'/';
+        $seenCodes = [];
+        foreach ($steps as $code) {
+            if(! in_array($code, $seenCodes)) {
+                $seenCodes[$code] = $code;
+                $do = CheckoutPage_StepDescription::get()->filter(['Code' => $code])->first();
+                if($do) {
+                    if ($this->currentStep && $do->Code == $this->currentStep) {
+                        $do->LinkingMode = 'current';
+                        $completed = 0;
+                        $completedClass = 'notCompleted';
+                    } else {
+                        if ($completed) {
+                            $do->Link = $this->Link('checkoutstep').'/'.$do->Code.'/';
+                        }
+                        $do->LinkingMode = "link $completedClass";
+                    }
+                    $do->Completed = $completed;
+                    $returnData->push($do);
                 }
-                $do->LinkingMode = "link $completedClass";
             }
-            $do->Completed = $completed;
-            $returnData->push($do);
         }
         if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
             $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');

@@ -17,6 +17,7 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         'Heading' => 'Varchar',
         'Above' => 'Text',
         'Below' => 'Text',
+        'Code' => 'Varchar(100)'
     );
 
     /**
@@ -50,13 +51,16 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         'Heading' => 'Heading',
     );
 
+    private static $indexes = [
+        'Code' => true
+    ];
+
     /**
      * standard SS variable.
      *
      * @Var Array
      */
     private static $casting = array(
-        'Code' => 'Varchar',
         'Title' => 'Varchar',
     );
 
@@ -193,6 +197,17 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         $fields->replaceField('Description', new TextareaField('Description', _t('Checkout.DESCRIPTION', 'Description')));
         $fields->replaceField('Above', new TextareaField('Above', _t('Checkout.ABOVE', 'Top of section note')));
         $fields->replaceField('Below', new TextareaField('Below', _t('Checkout.BELOW', 'Bottom of section note')));
+        $fields->replaceField(
+            'Code',
+            DropdownField::create(
+                'Code',
+                'Code',
+                array_combine(
+                    EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps'),
+                    EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps')
+                )
+            )
+        );
 
         return $fields;
     }
@@ -209,25 +224,6 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
-    /**
-     * casted variable.
-     *
-     * @return string
-     */
-    public function Code()
-    {
-        return $this->getCode();
-    }
-    public function getCode()
-    {
-        $array = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
-        $number = $this->ID - 1;
-        if (is_array($array) && isset($array[$number])) {
-            return $array[$number];
-        }
-
-        return _t('CheckoutPage.ERROR', 'Error');
-    }
 
     /**
      * casted variable.
@@ -238,6 +234,7 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
     {
         return $this->getTitle();
     }
+
     public function getTitle()
     {
         return $this->Heading;
@@ -251,24 +248,35 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         parent::requireDefaultRecords();
         $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         if (is_array($steps) && count($steps)) {
-            $idArray = array();
+            $idArray = [];
+            $addCodeSteps = CheckoutPage_StepDescription::get()
+                ->where('"Code" = \'\' OR "Code" IS NULL');
+
+            $stepsToAdd = $steps;
+            if ($addCodeSteps->count()) {
+                foreach ($addCodeSteps as $addCodeStep) {
+                    DB::alteration_message('Adding Code to Step ...'.$addCodeStep->Code, 'created');
+                    $addCodeStep->Code = array_shift($stepsToAdd);
+                    $addCodeStep->write();
+                }
+            }
             foreach ($steps as $id => $code) {
-                $newID = $id + 1;
-                $idArray[$newID] = $newID;
-                if ($obj = CheckoutPage_StepDescription::get()->byID($newID)) {
+                $filter = ['Code' => $code];
+                $obj = CheckoutPage_StepDescription::get()->filter($filter)->first();
+                if ($obj) {
                     //do nothing
                 } else {
-                    $obj = self::create();
-                    $obj->ID = $newID;
+                    $obj = CheckoutPage_StepDescription::create($filter);
                     $obj->Heading = $this->getDefaultTitle($code);
                     $obj->write();
                     DB::alteration_message("Creating CheckoutPage_StepDescription $code", 'created');
                 }
+                $idArray[$obj->ID] = $obj->ID;
             }
             $toDeleteObjects = CheckoutPage_StepDescription::get()->exclude(array('ID' => $idArray));
             if ($toDeleteObjects->count()) {
                 foreach ($toDeleteObjects as $toDeleteObject) {
-                    DB::alteration_message('Deleting CheckoutPage_StepDescription '.$toDeleteObject->ID, 'deleted');
+                    DB::alteration_message('Deleting CheckoutPage_StepDescription '.$toDeleteObject->Code, 'deleted');
                     $toDeleteObject->delete();
                 }
             }
