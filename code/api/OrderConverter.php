@@ -16,7 +16,7 @@ abstract class OrderConverter extends Object
 
     protected $orderItems = null;
 
-    public function __construct(?Order $order = null)
+    public function __construct($order = null)
     {
         parent::__construct();
         if($order === null) {
