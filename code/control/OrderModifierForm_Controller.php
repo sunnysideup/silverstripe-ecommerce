@@ -44,6 +44,9 @@ class OrderModifierForm_Controller extends Controller
         if ($this->currentOrder) {
             if ($forms = $this->currentOrder->getModifierForms($this)) {
                 foreach ($forms as $form) {
+                    if(!($form instanceof Form)) {
+                        $form = $form->Form;
+                    }
                     $this->addWrapperMethod($form->getName(), 'getOrderModifierForm');
                     self::$allowed_actions[] = $form->getName(); // add all these forms to the list of allowed actions also
                 }
@@ -63,6 +66,10 @@ class OrderModifierForm_Controller extends Controller
         if ($this->currentOrder) {
             if ($forms = $this->currentOrder->getModifierForms($this)) {
                 foreach ($forms as $form) {
+                    if(!($form instanceof Form)) {
+                        $form = $form->Form;
+                    }
+
                     if ($form->getName() == $name) {
                         return $form;
                     }

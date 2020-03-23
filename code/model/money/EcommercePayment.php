@@ -110,6 +110,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function init()
     {
         self::get_supported_methods($this->Order());
+
         return $this;
     }
 
@@ -431,9 +432,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *     [Code] => "Description",
      *     [Code] => "Description"
      */
-    public static function get_supported_methods($order = null)
+    public static function get_supported_methods($order = null) : array
     {
         $obj = self::create();
+
         return $obj->supportedMethodsProvider->SupportedMethods($order);
     }
 
@@ -465,21 +467,27 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         // allowing the user to choose which payment method to use.
         $supportedMethods = self::get_supported_methods($order);
         $fields = new FieldList(
-            new OptionsetField(
+            $optionsField = new OptionsetField(
                 'PaymentMethod',
                 '',
-                $supportedMethods
+                []
             )
         );
+        $options = [];
         foreach ($supportedMethods as $methodClass => $methodName) {
+            $htmlClassName = self::php_class_to_html_class($methodClass);
+            $options[$htmlClassName] = $methodName;
             // Create a new CompositeField with method specific fields,
             // as defined on each payment method class using getPaymentFormFields()
-            $methodFields = new CompositeField($methodClass::create()->getPaymentFormFields());
-            $methodFields->addExtraClass("methodFields_$methodClass");
+            $methodFields = new CompositeField(
+                $methodClass::create()->getPaymentFormFields($amount, $order)
+            );
+            $methodFields->addExtraClass("methodFields_$htmlClassName");
             $methodFields->addExtraClass('paymentfields');
             // Add those fields to the initial FieldSet we first created
             $fields->push($methodFields);
         }
+        $optionsField->setSource($options);
 
         // Add the amount and subtotal fields for the payment amount
         $fields->push(new HeaderField('Amount', _t('Payment.AMOUNT_COLON', 'Amount to be charged: ').'<u class="totalAmountToBeCharged">'.$amount.'</u>', 4));
@@ -496,7 +504,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return FieldList
      */
-    public function getPaymentFormFields()
+    public function getPaymentFormFields($amount = 0, $order = null)
     {
         user_error("Please implement getPaymentFormFields() on $this->class", E_USER_ERROR);
     }
@@ -591,4 +599,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         return Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
     }
+
+    public static function php_class_to_html_class(string $phpClass)  : string
+    {
+        return str_replace('\\', '-', $phpClass);
+    }
+    public static function html_class_to_php_class(string $htmlClass)  : string
+    {
+        return str_replace('-', '\\', $htmlClass);
+    }
+
 }

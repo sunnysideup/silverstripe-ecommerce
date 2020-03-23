@@ -16,7 +16,7 @@ abstract class OrderConverter extends Object
 
     protected $orderItems = null;
 
-    public function __construct(?Order $order = null)
+    public function __construct($order = null)
     {
         parent::__construct();
         if($order === null) {
@@ -54,13 +54,15 @@ abstract class OrderConverter extends Object
 
     public function getAmountForModifierType($type)
     {
-        if(empty($this->amountsPerModifierType)) {
+        if(empty($this->amountsPerModifierType[$type])) {
+
             foreach($this->modifiers as $modifier) {
-                if($modifier->Type) {
-                    if(! isset($this->amountsPerModifierType[$modifier->Type])) {
-                        $this->amountsPerModifierType[$modifier->Type] = 0;
+                $myType = $modifier->Type ?? $modifier->getLiveType();
+                if($myType === $type) {
+                    if(! isset($this->amountsPerModifierType[$type])) {
+                        $this->amountsPerModifierType[$type] = 0;
                     }
-                    $this->amountsPerModifierType[$modifier->Type] += $modifier->CalculatedTotal;
+                    $this->amountsPerModifierType[$type] += $modifier->TableValue;
                 }
             }
         }
@@ -69,5 +71,15 @@ abstract class OrderConverter extends Object
     }
 
     abstract public function convert();
+
+    protected function implodeAndTrim($fields, $glue = '')
+    {
+        return trim(
+            implode(
+                ' ',
+                $fields
+            )
+        );
+    }
 
 }

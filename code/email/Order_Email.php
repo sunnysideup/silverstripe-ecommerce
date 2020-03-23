@@ -141,7 +141,7 @@ abstract class Order_Email extends Email
             if(Director::isDev()) {
                 $result = true;
             }
-            $orderEmailRecord->Result = $result;
+            $orderEmailRecord->Result = $result ? true : false;
             $orderEmailRecord->write();
 
             return $result;
