@@ -14,10 +14,16 @@ abstract class ProductCollection
      */
     abstract public function getArrayList() : ArrayList;
 
+    
     /**
      * @return array
      */
-    public function getArray() : array
+    abstract public function getArrayFull() : array;
+      
+    /**
+     * @return array
+     */
+    public function getArrayBasic() : array
     {
         $array = [];
 
