@@ -5,22 +5,19 @@
  * This class is designed to be extended and allows you to retreive your desired product collection
  * using db query or whatever method you find to be most efficient.   
  **/
-class ProductCollection
+abstract class ProductCollection
 {
-    public static function getArrayList()
-    {
-        $arrayList = new ArrayList();
 
-        $productsArray = self::getArray();
+    /**
+     *
+     * @return ArrayList
+     */
+    abstract public function getArrayList() : ArrayList;
 
-        foreach($productsArray as $id => $className) {
-            $arrayList->push($className::get_custom_data($id));
-        }
-
-        return $arrayList;
-    }
-
-    public static function getArray() : array
+    /**
+     * @return array
+     */
+    public function getArray() : array
     {
         $array = [];
 
@@ -33,31 +30,24 @@ class ProductCollection
         return $array;    
     }
 
-    public static function getSQL() : string
+    public function getSQL() : string
     {
-       
+        $stage = '_Live';
         $sql = '
             SELECT
-                "SiteTree_Live"."ID" ProductID,
-                "SiteTree_Live"."ClassName" ClassName
+                "SiteTree'.$stage.'"."ID" ProductID,
+                "SiteTree'.$stage.'"."ClassName" ClassName
             FROM
-                "SiteTree_Live"
+                "SiteTree'.$stage.'"
             INNER JOIN
-                "Product_Live" ON "SiteTree_Live"."ID" = "Product_Live"."ID"
+                "Product'.$stage.'" ON "SiteTree'.$stage.'"."ID" = "Product'.$stage.'"."ID"
             WHERE
-                "Product_Live"."AllowPurchase" = 1
+                "Product'.$stage.'"."AllowPurchase" = 1
             ;
         ';
 
         return $sql;
     }
 
-    public static function checkForSemiColumn($item) : string
-    {
-        $item = str_replace(';', ',', $item);
-        $item = str_replace("\r", ' ', $item);
-        $item = str_replace("\n", ' ', $item);
-        $item = str_replace("\t", ' ', $item);
-        return $item;
-    }
+
 }
