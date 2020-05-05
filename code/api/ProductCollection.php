@@ -11,28 +11,53 @@ class ProductCollection
     {
         $arrayList = new ArrayList();
 
-        $products = Product::get();
+        $productsArray = self::getArray();
 
-        foreach($products as $product) {
-            $arrayList->push($product);
+        foreach($productsArray as $id => $className) {
+            $arrayList->push($className::get_custom_data($id));
         }
 
         return $arrayList;
     }
 
-    public static function getArray()
+    public static function getArray() : array
     {
         $array = [];
 
-        $products = Product::get();
+        $products = DB::query(self::getSQL());
 
         foreach ($products as $product) {
-            $array[] = [
-                'ID' => $product->ID,
-                'Title' => $product->Title
-            ]
+            $array[$product['ProductID']] =  $product['ClassName'];
         }
 
         return $array;    
+    }
+
+    public static function getSQL() : string
+    {
+       
+        $sql = '
+            SELECT
+                "SiteTree_Live"."ID" ProductID,
+                "SiteTree_Live"."ClassName" ClassName
+            FROM
+                "SiteTree_Live"
+            INNER JOIN
+                "Product_Live" ON "SiteTree_Live"."ID" = "Product_Live"."ID"
+            WHERE
+                "Product_Live"."AllowPurchase" = 1
+            ;
+        ';
+
+        return $sql;
+    }
+
+    public static function checkForSemiColumn($item) : string
+    {
+        $item = str_replace(';', ',', $item);
+        $item = str_replace("\r", ' ', $item);
+        $item = str_replace("\n", ' ', $item);
+        $item = str_replace("\t", ' ', $item);
+        return $item;
     }
 }
