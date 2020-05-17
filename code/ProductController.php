@@ -154,7 +154,6 @@ class ProductController extends Page_Controller
     public function NextProduct()
     {
         $array = $this->getListOfIDs();
-        $next = 0;
         foreach ($array as $key => $id) {
             $id = intval($id);
             if ($id === $this->ID) {
