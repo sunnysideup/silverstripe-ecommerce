@@ -24,7 +24,7 @@ class OrderForm_Cancel extends Form
             new FormAction('docancel', _t('OrderForm.CANCELORDER', 'Cancel this order'))
         );
         $requiredFields = [];
-        $validator = OrderForm_Cancel_Validator::create($requiredFields);
+        $validator = OrderFormCancelValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
         //extension point
         $this->extend('updateFields', $fields);

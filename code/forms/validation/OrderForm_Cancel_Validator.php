@@ -1,7 +1,7 @@
 <?php
 
 
-class OrderForm_Cancel_Validator extends RequiredFields
+class OrderFormCancelValidator extends RequiredFields
 {
     public function php($data)
     {
