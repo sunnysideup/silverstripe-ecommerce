@@ -32,7 +32,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         }
 
         $data = new ArrayData([
-            'NewLink' => '/admin/' . Config::inst()->get('CMSPageAddController_Products', 'url_segment') . '/' . $getSegment,
+            'NewLink' => '/admin/' . Config::inst()->get('CMSPageAddControllerProducts', 'url_segment') . '/' . $getSegment,
             'ButtonName' => $this->buttonName,
         ]);
 
@@ -48,7 +48,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
      */
     public function BestParentPage()
     {
-        $defaultRootParentClass = Config::inst()->get('CMSPageAddController_Products', 'root_parent_class_for_adding_page');
+        $defaultRootParentClass = Config::inst()->get('CMSPageAddControllerProducts', 'root_parent_class_for_adding_page');
         $rootParentClassArray = [$defaultRootParentClass, 'ProductGroup'];
         foreach ($rootParentClassArray as $rootParentClass) {
             $result = DataObject::get_one(
