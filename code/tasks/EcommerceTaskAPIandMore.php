@@ -13,7 +13,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceTaskAPIandMore extends BuildTask
 {

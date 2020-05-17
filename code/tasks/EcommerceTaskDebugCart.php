@@ -62,9 +62,8 @@ class EcommerceTaskDebugCart extends BuildTask
             }
         }
         //to do: has_many and many_many
-        $html .= '</ul>';
 
-        return $html;
+        return $html . '</ul>';
     }
 
     private static function cleanup_value($type, $value)

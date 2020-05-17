@@ -31,9 +31,10 @@
         "silverstripe/framework": "~3.6",
         "silverstripe/cms": "~3.6",
         "pelago/emogrifier": "3.1.0",
-        "sunnysideup/google_address_field": "*",
-        "sunnysideup/permission_provider": "*",
-        "sunnysideup/cms_edit_link_field": "*"
+        "sunnysideup/flush": "dev-master",
+        "sunnysideup/google_address_field": "dev-master",
+        "sunnysideup/permission_provider": "dev-master",
+        "sunnysideup/cms_edit_link_field": "dev-master"
     },
     "suggest": {
         "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this work on your server, before installing it - otherwise it is useless.",

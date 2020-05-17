@@ -7,7 +7,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceConfigAjaxDefinitions extends ViewableData
 {

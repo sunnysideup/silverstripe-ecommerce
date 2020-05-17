@@ -7,7 +7,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: extensions
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceSiteTreeExtension extends SiteTreeExtension
 {

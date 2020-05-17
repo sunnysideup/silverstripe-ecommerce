@@ -8,7 +8,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class OrderStatusLog_Submitted extends OrderStatusLog
 {

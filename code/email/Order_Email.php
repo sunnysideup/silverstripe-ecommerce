@@ -7,7 +7,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 abstract class Order_Email extends Email
 {

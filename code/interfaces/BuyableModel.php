@@ -13,7 +13,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: buyables
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 interface BuyableModel
 {

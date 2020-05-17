@@ -9,7 +9,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class OrderForm extends Form
 {
@@ -267,7 +267,7 @@ class OrderForm extends Form
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class OrderForm_Validator extends RequiredFields
 {

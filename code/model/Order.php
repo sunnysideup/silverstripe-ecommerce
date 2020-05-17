@@ -23,7 +23,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
- * @inspiration: Silverstripe Ltd, Jeremy
+
  *
  * NOTE: This is the SQL for selecting orders in sequence of
  **/

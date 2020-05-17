@@ -38,7 +38,7 @@
  * @authors: Romain [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: api
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceRestfulServer extends RestfulServer
 {

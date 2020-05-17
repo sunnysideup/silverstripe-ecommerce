@@ -13,7 +13,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceTaskCheckConfiguration extends BuildTask
 {
@@ -154,7 +154,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                 $fields = Config::inst()->get($step->ClassName, 'db');
                 $defaultsArray = $step->stat('defaults', true);
                 $configArray = [];
-                foreach ($fields as $fieldKey => $fieldType) {
+                foreach (array_keys($fields) as $fieldKey) {
                     if ($fields) {
                         $configArray[$fieldKey] = $step->{$fieldKey};
                         if (! isset($defaultsArray[$fieldKey])) {
@@ -189,7 +189,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                 $fields = Config::inst()->get($step->ClassName, 'db');
                 $defaultsArray = $step->stat('defaults', true);
                 $configArray = [];
-                foreach ($fields as $fieldKey => $fieldType) {
+                foreach (array_keys($fields) as $fieldKey) {
                     if ($fields) {
                         $configArray[$fieldKey] = $step->{$fieldKey};
                         if (! isset($defaultsArray[$fieldKey])) {
@@ -209,7 +209,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                 $fields = Config::inst()->get($step->ClassName, 'db');
                 $defaultsArray = $step->stat('defaults', true);
                 $configArray = [];
-                foreach ($fields as $fieldKey => $fieldType) {
+                foreach (array_keys($fields) as $fieldKey) {
                     if ($fields) {
                         $configArray[$fieldKey] = $step->{$fieldKey};
                         if (! isset($defaultsArray[$fieldKey])) {
@@ -666,7 +666,7 @@ EcommerceConfig:
             $defaultsArray = $page->stat('defaults', true);
             $configArray = [];
             if ($fields) {
-                foreach ($fields as $fieldKey => $fieldType) {
+                foreach (array_keys($fields) as $fieldKey) {
                     $configArray[$fieldKey] = $page->{$fieldKey};
                     if (! isset($defaultsArray[$fieldKey])) {
                         $defaultsArray[$fieldKey] = '[default not set]';

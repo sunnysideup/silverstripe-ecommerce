@@ -9,7 +9,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class Order_ErrorEmail extends Order_Email
 {

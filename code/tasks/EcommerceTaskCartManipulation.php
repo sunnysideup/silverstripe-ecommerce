@@ -6,7 +6,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceTaskCartManipulation_Current extends BuildTask
 {
@@ -28,7 +28,7 @@ class EcommerceTaskCartManipulation_Current extends BuildTask
  * @authors: Nicolaas
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceTaskCartManipulation_Debug extends BuildTask
 {

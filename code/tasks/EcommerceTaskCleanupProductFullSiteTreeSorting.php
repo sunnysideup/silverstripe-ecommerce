@@ -6,7 +6,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
 {
@@ -59,7 +59,7 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
 						WHERE \"Product${extension}\".\"FullSiteTreeSort\" IS NULL OR \"Product${extension}\".\"FullSiteTreeSort\" = '';";
                     DB::query($sql);
                     $outcome = DB::query($sql);
-                    echo '<p style="font-size: 10px; color: grey;">' . $sql . '</p>';
+                    echo '<p style="font-size: 10px; color: grey;">' . $sql . ': ' . ($outcome ? 'SUCCESS' : 'ERROR') . '</p>';
                 }
             }
         }

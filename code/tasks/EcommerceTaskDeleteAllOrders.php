@@ -7,7 +7,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceTaskDeleteAllOrders extends BuildTask
 {
@@ -107,7 +107,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                     DB::alteration_message("looking for ${classWithOrderID} objects without link to order.", 'deleted');
                 }
                 $where = '"Order"."ID" IS NULL ';
-                $join = ' LEFT JOIN "Order" ON ';
+                // $join = ' LEFT JOIN "Order" ON ';
                 //the code below is a bit of a hack, but because of the one-to-one relationship we
                 //want to check both sides....
                 $unlinkedObjects = $classWithLastEdited::get();

@@ -4,7 +4,7 @@
  * @authors: Nicolaas
  * @package: ecommerce
  * @sub-package: tasks
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceTaskBuilding_Extending extends BuildTask
 {

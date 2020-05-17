@@ -7,7 +7,7 @@
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @subpackage: model
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
 {

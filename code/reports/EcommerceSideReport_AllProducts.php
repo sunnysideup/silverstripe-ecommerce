@@ -7,7 +7,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommerceSideReport_AllProducts extends SS_Report
 {

@@ -7,7 +7,7 @@
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
- * @inspiration: Silverstripe Ltd, Jeremy
+
  **/
 class EcommercePaymentFilters_AroundDateFilter extends ExactMatchFilter
 {
