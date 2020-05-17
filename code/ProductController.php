@@ -174,7 +174,7 @@ class ProductController extends Page_Controller
     {
         $array = $this->getListOfIDs();
         $previousID = 0;
-        foreach ($array as $key => $id) {
+        foreach ($array as $id) {
             $id = intval($id);
             if ($id === $this->ID) {
                 return Product::get()->byID($previousID);
