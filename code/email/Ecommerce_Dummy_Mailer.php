@@ -2,7 +2,7 @@
 
 
 
-class Ecommerce_Dummy_Mailer extends mailer
+class EcommerceDummyMailer extends mailer
 {
     /**
      * FAKE Send a plain-text email.

@@ -30,7 +30,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         //IMPORTANT!
         if (! $this->sendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
-            Email::set_mailer(new Ecommerce_Dummy_Mailer());
+            Email::set_mailer(new EcommerceDummyMailer());
         }
 
         //get limits

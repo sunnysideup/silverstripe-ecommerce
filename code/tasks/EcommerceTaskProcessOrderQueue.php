@@ -30,7 +30,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         //IMPORTANT!
         if (! $this->sendEmails) {
             Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
-            Email::set_mailer(new Ecommerce_Dummy_Mailer());
+            Email::set_mailer(new EcommerceDummyMailer());
         }
         $id = intval($request->getVar('id')) - 0;
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');

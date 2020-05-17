@@ -21,7 +21,7 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
     {
         //IMPORTANT!
         Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
-        Email::set_mailer(new Ecommerce_Dummy_Mailer());
+        Email::set_mailer(new EcommerceDummyMailer());
         $orderStatusLogClassName = 'OrderStatusLog';
         $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
