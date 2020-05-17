@@ -89,7 +89,7 @@ class EcommerceConfig extends Object
             $this->loadData();
         }
         //remove reserved class-names
-        foreach ($this->fixtureDictionary as $className => $variables) {
+        foreach (array_keys($this->fixtureDictionary) as $className) {
             if (in_array(strtolower($className), ['only', 'except', 'name', 'before', 'after'], true)) {
                 unset($this->fixtureDictionary[$className]);
             }
