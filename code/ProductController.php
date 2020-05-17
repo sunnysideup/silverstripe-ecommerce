@@ -86,7 +86,7 @@ class ProductController extends Page_Controller
                 new FormAction('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart'))
             );
             $requiredFields = ['Quantity'];
-            $validator = new RequiredFields($requiredfields);
+            $validator = new RequiredFields($requiredFields);
             return new Form($this, 'AddProductForm', $fields, $actions, $validator);
         }
         return _t('Product.PRODUCTNOTFORSALE', 'Product not for sale');
