@@ -342,7 +342,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     public function runTask($request)
     {
         $taskName = $request->param('TaskName');
-        $renderer = new DebugView_EcommerceDatabaseAdmin();
+        $renderer = new EcommerceDatabaseAdminDebugView();
         $renderer->writeHeader();
         $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
         $renderer->writePreOutcome();
