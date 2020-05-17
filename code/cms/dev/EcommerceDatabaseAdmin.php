@@ -220,7 +220,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 echo " * {$task['title']}: sake dev/tasks/" . $task['class'] . "\n";
             }
         } else {
-            $renderer = new DebugView_EcommerceDatabaseAdmin();
+            $renderer = new EcommerceDatabaseAdminDebugView();
             $renderer->writeHeader();
             $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
             $renderer->writeContent($this);
