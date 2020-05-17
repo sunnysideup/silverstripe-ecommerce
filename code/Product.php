@@ -299,7 +299,7 @@ class Product extends Page implements BuyableModel
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $config = $this->EcomConfig();
+        // $config = $this->EcomConfig();
         //set allowpurchase to false IF
         //free products are not allowed to be purchased
 
