@@ -217,15 +217,15 @@ class ShoppingCart extends Object
                             //we assume the first step always exists.
                             //TODO: what sort order?
                             $count = 0;
-                            while ($firstStep &&
-                                $previousOrderFromMember = DataObject::get_one(
-                                    'Order',
-                                    '
-                                        "MemberID" = ' . $loggedInMember->ID . '
-                                        AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
-                                        AND "Order"."ID" <> ' . $this->order->ID
-                                )
-                            ) {
+                            $previousOrderFromMember = DataObject::get_one(
+                                'Order',
+                                '
+                                    "MemberID" = ' . $loggedInMember->ID . '
+                                    AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
+                                    AND "Order"."ID" <> ' . $this->order->ID
+                            );
+
+                            while ($firstStep && $previousOrderFromMember) {
                                 //arbritary 12 attempts ...
                                 if ($count > 12) {
                                     break;
