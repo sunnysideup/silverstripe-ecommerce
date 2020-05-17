@@ -1,7 +1,7 @@
 <?php
 
 
-class CMSPageAddController_Products extends CMSPageAddController
+class CMSPageAddControllerProducts extends CMSPageAddController
 {
     private static $url_segment = 'addproductorproductgroup';
 
