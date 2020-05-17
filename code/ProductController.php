@@ -80,13 +80,12 @@ class ProductController extends Page_Controller
     {
         if ($this->canPurchase()) {
             $farray = [];
-            $requiredFields = [];
+            $requiredFields = [ 'Quantity'];
             $fields = new FieldList($farray);
             $fields->push(new NumericField('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
             $actions = new FieldList(
                 new FormAction('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart'))
             );
-            $requiredfields[] = 'Quantity';
             $validator = new RequiredFields($requiredfields);
             return new Form($this, 'AddProductForm', $fields, $actions, $validator);
         }
