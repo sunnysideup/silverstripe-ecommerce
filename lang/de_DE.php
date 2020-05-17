@@ -138,11 +138,11 @@ $lang['de_DE']['Order']['TOTAL'] = 'Gesamt';
 $lang['de_DE']['Order']['TOTALPRICE'] = 'Gesamtpreis';
 $lang['de_DE']['Order']['TOTALOUTSTANDING'] = 'Gesamt ausstehend';
 $lang['de_DE']['Order']['USEDIFFERENTSHIPPINGADDRESS'] = 'andere Lieferadresse wählen';
-$lang['de_DE']['Order_ReceiptEmail.ss']['HEADLINE'] = 'Auftragsbestätigung';
-$lang['de_DE']['Order_ReceiptEmail.ss']['TITLE'] = 'Shop Empfangsbestätigung';
-$lang['de_DE']['Order_StatusEmail.ss']['HEADLINE'] = 'Shop-Status Änderung';
-$lang['de_DE']['Order_StatusEmail.ss']['STATUSCHANGE'] = 'Status geändert zu "%s" für Bestellung Nr.';
-$lang['de_DE']['Order_StatusEmail.ss']['TITLE'] = 'Shop-Status Änderung';
+$lang['de_DE']['OrderReceiptEmail.ss']['HEADLINE'] = 'Auftragsbestätigung';
+$lang['de_DE']['OrderReceiptEmail.ss']['TITLE'] = 'Shop Empfangsbestätigung';
+$lang['de_DE']['OrderStatusEmail.ss']['HEADLINE'] = 'Shop-Status Änderung';
+$lang['de_DE']['OrderStatusEmail.ss']['STATUSCHANGE'] = 'Status geändert zu "%s" für Bestellung Nr.';
+$lang['de_DE']['OrderStatusEmail.ss']['TITLE'] = 'Shop-Status Änderung';
 //TODO the Payment translation should actually go in the Payment module
 $lang['de_DE']['Payment']['AMOUNT'] = 'Gesamt';
 $lang['de_DE']['Payment']['Incomplete'] = 'Unvollständig';

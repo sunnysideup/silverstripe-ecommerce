@@ -263,7 +263,7 @@ ExpiryDateField:
 
 ################### EMAIL ################################
 
-Order_Email:
+OrderEmail:
   send_all_emails_plain: false
   css_file_location: "ecommerce/css/OrderReport.css"
   copy_to_admin_for_all_emails: true

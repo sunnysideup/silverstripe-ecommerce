@@ -93,7 +93,7 @@ class EcommerceConfigDefinitions extends Object
             'OrderStatusLog',
             'OrderStatusLogForm',
             'Email',
-            'Order_Email',
+            'OrderEmail',
         ],
         'CUSTOMERS' => [
             'OrderAddress',
@@ -301,7 +301,7 @@ class EcommerceConfigDefinitions extends Object
                 'controller_class' => 'The controller class is used for OrderStatusLogForm forms.',
                 'validator_class' => 'The validator class is used for OrderStatusLogForm forms.',
             ],
-            'Order_Email' => [
+            'OrderEmail' => [
                 'send_all_emails_plain' => 'Should all the emails be send as plain text?  Not recommended.',
                 'css_file_location' => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
                 'copy_to_admin_for_all_emails' => 'Send a copy to the shop administrator for every email sent?',

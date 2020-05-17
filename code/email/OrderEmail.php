@@ -9,7 +9,7 @@
  * @sub-package: email
 
  **/
-abstract class Order_Email extends Email
+abstract class OrderEmail extends Email
 {
     /**
      * @var Order
@@ -36,7 +36,7 @@ abstract class Order_Email extends Email
         if (! class_exists('\Pelago\Emogrifier')) {
             require_once $baseFolder . '/ecommerce/thirdparty/Emogrifier.php';
         }
-        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get('Order_Email', 'css_file_location');
+        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get('OrderEmail', 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
         $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
@@ -74,9 +74,9 @@ abstract class Order_Email extends Email
     {
         $siteConfig = SiteConfig::current_site_config();
         if ($siteConfig && $siteConfig->Title) {
-            return _t('Order_Email.SALEUPDATE', 'Sale Update for Order #[OrderNumber] from ') . $siteConfig->Title;
+            return _t('OrderEmail.SALEUPDATE', 'Sale Update for Order #[OrderNumber] from ') . $siteConfig->Title;
         }
-        return _t('Order_Email.SALEUPDATE', 'Sale Update for Order #[OrderNumber] ');
+        return _t('OrderEmail.SALEUPDATE', 'Sale Update for Order #[OrderNumber] ');
     }
 
     /**
@@ -107,14 +107,14 @@ abstract class Order_Email extends Email
     public function send($messageID = null, $returnBodyOnly = false)
     {
         if (! $this->order) {
-            user_error('Must set the order (Order_Email::setOrder()) before the message is sent (Order_Email::send()).', E_USER_NOTICE);
+            user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
         }
         if (! $this->subject) {
             $this->subject = self::get_subject();
         }
         $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
         if (! $this->hasBeenSent() || ($this->resend)) {
-            if (EcommerceConfig::get('Order_Email', 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
+            if (EcommerceConfig::get('OrderEmail', 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
                 if ($memberEmail = self::get_from_email()) {
                     $array = [$memberEmail];
                     if ($bcc = $this->Bcc()) {
@@ -129,7 +129,7 @@ abstract class Order_Email extends Email
                 return $this->Body();
             }
 
-            if (EcommerceConfig::get('Order_Email', 'send_all_emails_plain')) {
+            if (EcommerceConfig::get('OrderEmail', 'send_all_emails_plain')) {
                 $result = parent::sendPlain($messageID);
             } else {
                 $result = parent::send($messageID);
@@ -203,7 +203,7 @@ abstract class Order_Email extends Email
         $orderEmailRecord->Subject = $this->subject;
         if (! $result) {
             if (Director::isDev()) {
-                $orderEmailRecord->Subject .= _t('Order_Email.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
+                $orderEmailRecord->Subject .= _t('OrderEmail.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
             }
         }
         $orderEmailRecord->Content = $this->body;
@@ -212,9 +212,9 @@ abstract class Order_Email extends Email
         $orderEmailRecord->OrderStepID = $this->order->StatusID;
         if ($sendAllEmailsTo = Config::inst()->get('Email', 'send_all_emails_to')) {
             $orderEmailRecord->To .=
-                _t('Order_Email.ACTUALLY_SENT_TO', ' | actually sent to: ')
+                _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
                 . $sendAllEmailsTo
-                . _t('Order_Email.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
+                . _t('OrderEmail.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
         }
         $orderEmailRecord->write();
 

@@ -17,7 +17,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * @var string
      */
-    protected $emailClassName = 'Order_InvoiceEmail';
+    protected $emailClassName = 'OrderInvoiceEmail';
 
     /**************************************************
     * Order Status Logs
@@ -1271,7 +1271,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             //ADMIN ONLY ....
             } else {
                 if (! $emailClassName) {
-                    $emailClassName = 'Order_ErrorEmail';
+                    $emailClassName = 'OrderErrorEmail';
                 }
                 //looks like we are sending an error, but we are just using this for notification
                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.') . '<br /><br /><br /><br />' . $message;

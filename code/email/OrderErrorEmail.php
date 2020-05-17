@@ -11,10 +11,10 @@
  * @sub-package: email
 
  **/
-class Order_ErrorEmail extends Order_Email
+class OrderErrorEmail extends OrderEmail
 {
     /**
      * @param string $ss_template The name of the used template (without *.ss extension)
      */
-    protected $ss_template = 'Order_ErrorEmail';
+    protected $ss_template = 'OrderErrorEmail';
 }

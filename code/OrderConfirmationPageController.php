@@ -321,9 +321,9 @@ class OrderConfirmationPageController extends CartPageController
         if ($this->currentOrder) {
             $subject = '';
             $message = '';
-            $emailClassName = 'Order_ReceiptEmail';
+            $emailClassName = 'OrderReceiptEmail';
             if (class_exists($request->param('OtherID'))) {
-                if (is_a(singleton($request->param('OtherID')), Object::getCustomClass('Order_Email'))) {
+                if (is_a(singleton($request->param('OtherID')), Object::getCustomClass('OrderEmail'))) {
                     $emailClassName = $request->param('OtherID');
                 }
             }
@@ -352,7 +352,7 @@ class OrderConfirmationPageController extends CartPageController
                     $step = OrderStep::get()->byID($statusID);
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
-                    $emailClassName = 'Order_InvoiceEmail';
+                    $emailClassName = 'OrderInvoiceEmail';
                     if ($this->currentOrder->sendEmail(
                         $emailClassName,
                         $subject,

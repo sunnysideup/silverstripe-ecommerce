@@ -223,11 +223,11 @@ $lang['en_US']['Order_Member.ss']['EMAIL'] = 'Email';
 $lang['en_US']['Order_Member.ss']['MOBILE'] = 'Mobile';
 $lang['en_US']['Order_Member.ss']['NAME'] = 'Name';
 $lang['en_US']['Order_Member.ss']['PHONE'] = 'Phone';
-$lang['en_US']['Order_ReceiptEmail.ss']['HEADLINE'] = 'Shop Order Receipt';
-$lang['en_US']['Order_ReceiptEmail.ss']['TITLE'] = 'Shop Receipt';
-$lang['en_US']['Order_StatusEmail.ss']['HEADLINE'] = 'Shop Status Change';
-$lang['en_US']['Order_StatusEmail.ss']['STATUSCHANGE'] = 'Status changed to \"%s\" for Order #';
-$lang['en_US']['Order_StatusEmail.ss']['TITLE'] = 'Shop Status Change';
+$lang['en_US']['OrderReceiptEmail.ss']['HEADLINE'] = 'Shop Order Receipt';
+$lang['en_US']['OrderReceiptEmail.ss']['TITLE'] = 'Shop Receipt';
+$lang['en_US']['OrderStatusEmail.ss']['HEADLINE'] = 'Shop Status Change';
+$lang['en_US']['OrderStatusEmail.ss']['STATUSCHANGE'] = 'Status changed to \"%s\" for Order #';
+$lang['en_US']['OrderStatusEmail.ss']['TITLE'] = 'Shop Status Change';
 $lang['en_US']['PayPalPayment']['PLURALNAME'] = [
     'Pay Pal Payments',
     50,

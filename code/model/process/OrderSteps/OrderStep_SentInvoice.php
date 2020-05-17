@@ -12,7 +12,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
     /**
      * @var string
      */
-    protected $emailClassName = 'Order_InvoiceEmail';
+    protected $emailClassName = 'OrderInvoiceEmail';
 
     private static $db = [
         'SendInvoiceToCustomer' => 'Boolean',

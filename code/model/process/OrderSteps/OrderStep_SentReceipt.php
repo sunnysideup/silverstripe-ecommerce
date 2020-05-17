@@ -11,7 +11,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
     /**
      * @var string
      */
-    protected $emailClassName = 'Order_ReceiptEmail';
+    protected $emailClassName = 'OrderReceiptEmail';
 
     private static $db = [
         'SendReceiptToCustomer' => 'Boolean',

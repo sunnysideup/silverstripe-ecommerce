@@ -9,10 +9,10 @@
  * @sub-package: forms
 
  **/
-class Order_ReceiptEmail extends Order_Email
+class OrderReceiptEmail extends OrderEmail
 {
     /**
      * @param string $ss_template The name of the used template (without *.ss extension)
      */
-    protected $ss_template = 'Order_ReceiptEmail';
+    protected $ss_template = 'OrderReceiptEmail';
 }

@@ -713,7 +713,7 @@ EcommerceConfig:
     private function specialCases($className, $key, $actualValue)
     {
         switch ($className . '.' . $key) {
-            case 'Order_Email.css_file_location':
+            case 'OrderEmail.css_file_location':
                 if (! file_exists(Director::baseFolder() . "/${actualValue}")) {
                     return '<span style="color: red">ADDITIONAL CHECK: this file ' . Director::baseFolder() . '/' . $actualValue . ' does not exist! For proper functioning of e-commerce, please make sure to create this file.</span>';
                 }

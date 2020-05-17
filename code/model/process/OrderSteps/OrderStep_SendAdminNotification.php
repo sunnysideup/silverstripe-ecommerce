@@ -12,7 +12,7 @@ class OrderStep_SendAdminNotification extends OrderStep implements OrderStepInte
     /**
      * @var string
      */
-    protected $emailClassName = 'Order_ReceiptEmail';
+    protected $emailClassName = 'OrderReceiptEmail';
 
     private static $defaults = [
         'CustomerCanEdit' => 0,

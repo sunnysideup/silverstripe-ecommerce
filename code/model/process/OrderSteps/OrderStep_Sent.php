@@ -11,7 +11,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
     /**
      * @var string
      */
-    protected $emailClassName = 'Order_StatusEmail';
+    protected $emailClassName = 'OrderStatusEmail';
 
     /**
      * The OrderStatusLog that is relevant to the particular step.

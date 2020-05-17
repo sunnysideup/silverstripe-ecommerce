@@ -1653,7 +1653,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @return bool TRUE on success, FALSE on failure
      */
     public function sendEmail(
-        $emailClassName = 'Order_InvoiceEmail',
+        $emailClassName = 'OrderInvoiceEmail',
         $subject = '',
         $message = '',
         $resend = false,
@@ -1681,7 +1681,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @return bool TRUE for success, FALSE for failure (not tested)
      */
     public function sendAdminNotification(
-        $emailClassName = 'Order_ErrorEmail',
+        $emailClassName = 'OrderErrorEmail',
         $subject = '',
         $message = '',
         $resend = false,
@@ -1716,7 +1716,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $html = $arrayData->renderWith($emailClassName);
         Config::unnest();
 
-        return Order_Email::emogrify_html($html);
+        return OrderEmail::emogrify_html($html);
     }
 
     /*******************************************************
@@ -2291,12 +2291,12 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function EmailLink($type = 'Order_StatusEmail')
+    public function EmailLink($type = 'OrderStatusEmail')
     {
         return $this->getEmailLink();
     }
 
-    public function getEmailLink($type = 'Order_StatusEmail')
+    public function getEmailLink($type = 'OrderStatusEmail')
     {
         if (! isset($_REQUEST['print'])) {
             if ($this->IsSubmitted()) {
@@ -3641,14 +3641,14 @@ class Order extends DataObject implements EditableEcommerceObject
      * @return bool TRUE for success, FALSE for failure (not tested)
      */
     protected function prepareAndSendEmail(
-        $emailClassName = 'Order_InvoiceEmail',
+        $emailClassName = 'OrderInvoiceEmail',
         $subject,
         $message,
         $resend = false,
         $adminOnlyOrToEmail = false
     ) {
         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
-        $from = Order_Email::get_from_email();
+        $from = OrderEmail::get_from_email();
         //why are we using this email and NOT the member.EMAIL?
         //for historical reasons????
         if ($adminOnlyOrToEmail) {
@@ -3656,7 +3656,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $to = $adminOnlyOrToEmail;
             // invalid e-mail address
             } else {
-                $to = Order_Email::get_from_email();
+                $to = OrderEmail::get_from_email();
             }
         } else {
             $to = $this->getOrderEmail();
