@@ -1186,7 +1186,7 @@ class ShoppingCart extends Object
         if (! count($newarray)) {
             return []; //no use for this if there are not parameters defined
         }
-        foreach ($newarray as $field => $value) {
+        foreach (array_keys($newarray) as $field) {
             if (isset($params[$field])) {
                 $newarray[$field] = Convert::raw2sql($params[$field]);
             }
