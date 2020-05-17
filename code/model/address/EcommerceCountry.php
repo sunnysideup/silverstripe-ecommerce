@@ -298,7 +298,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
         if (! $visitorCountryProviderClassName) {
-            $visitorCountryProviderClassName = 'EcommerceCountry_VisitorCountryProvider';
+            $visitorCountryProviderClassName = 'EcommerceCountryVisitorCountryProvider';
         }
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 
@@ -315,7 +315,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
         if (! $visitorCountryProviderClassName) {
-            $visitorCountryProviderClassName = 'EcommerceCountry_VisitorCountryProvider';
+            $visitorCountryProviderClassName = 'EcommerceCountryVisitorCountryProvider';
         }
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 

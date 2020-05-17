@@ -180,7 +180,7 @@ ShippingAddress:
 
 EcommerceCountry:
   allowed_country_codes: []
-  visitor_country_provider: "EcommerceCountry_VisitorCountryProvider"
+  visitor_country_provider: "EcommerceCountryVisitorCountryProvider"
   default_country_code: "NZ"
 
 EcommerceRegion:

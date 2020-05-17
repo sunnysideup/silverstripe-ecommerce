@@ -642,7 +642,7 @@ EcommerceConfig:
 
     protected function checkGEOIP()
     {
-        if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') === 'EcommerceCountry_VisitorCountryProvider' && ! class_exists('Geoip')) {
+        if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') === 'EcommerceCountryVisitorCountryProvider' && ! class_exists('Geoip')) {
             user_error(
                 "
                 You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
