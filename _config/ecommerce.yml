@@ -249,7 +249,7 @@ ProductSearchForm:
   product_group_session_variable: "ProductGroupSearchResultsProductGroups"
 
 OrderModifierForm:
-  controller_class: "OrderModifierForm_Controller"
+  controller_class: "OrderModifierFormController"
   validator_class: "OrderModifierForm_Validator"
 
 OrderStatusLogForm:

@@ -9,4 +9,4 @@ Director:
     'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTemplateTest'
     'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
     'ecommerce-email-preview//$Action/$ID/$OtherID' : 'OrderEmailRecordReview'
-    'ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version' : 'OrderModifierForm_Controller'
+    'ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version' : 'OrderModifierFormController'

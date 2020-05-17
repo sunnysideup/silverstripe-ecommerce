@@ -5,7 +5,7 @@
  * This controller allows you to submit modifier forms from anywhere on the site,
  * Most likely this will be from the the cart / checkout page.
  */
-class OrderModifierForm_Controller extends Controller
+class OrderModifierFormController extends Controller
 {
     /**
      * @var Order
