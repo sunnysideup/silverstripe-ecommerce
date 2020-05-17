@@ -2405,7 +2405,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
         if ($orderConfirmationPage->IsFeedbackEnabled) {
-            return Director::AbsoluteURL($this->getRetrieveLink()) . '#OrderForm_Feedback_FeedbackForm';
+            return Director::AbsoluteURL($this->getRetrieveLink()) . '#OrderFormFeedback_FeedbackForm';
         }
     }
 

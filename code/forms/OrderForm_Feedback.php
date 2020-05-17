@@ -1,7 +1,7 @@
 <?php
 
 
-class OrderForm_Feedback extends Form
+class OrderFormFeedback extends Form
 {
     protected $order = null;
 
@@ -40,7 +40,7 @@ class OrderForm_Feedback extends Form
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
-        $this->extend('updateOrderForm_Feedback', $this);
+        $this->extend('updateOrderFormFeedback', $this);
     }
 
     /**
@@ -65,7 +65,7 @@ class OrderForm_Feedback extends Form
         }
         $form->sessionMessage(
             _t(
-                'OrderForm_Feedback.COULD_NOT_RECORD_FEEDBACK',
+                'OrderFormFeedback.COULD_NOT_RECORD_FEEDBACK',
                 'Sorry, order feedback could not be recorded.'
             ),
             'bad'
@@ -94,7 +94,7 @@ class OrderForm_Feedback extends Form
         if ($defaults && is_array($defaults) && isset($defaults[$value])) {
             return $defaults[$value];
         }
-        return _t('OrderForm_Feedback.' . $value, 'OrderForm_Feedback.' . $value . ' value not set in translations');
+        return _t('OrderFormFeedback.' . $value, 'OrderFormFeedback.' . $value . ' value not set in translations');
     }
 
     protected function getOrderConfirmationPage()

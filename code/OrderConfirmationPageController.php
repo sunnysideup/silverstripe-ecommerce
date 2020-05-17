@@ -278,13 +278,13 @@ class OrderConfirmationPageController extends CartPageController
      * checking to see if IsFeedbackEnabled is true
      * first of all.
      *
-     * @return OrderForm_Feedback
+     * @return OrderFormFeedback
      */
     public function FeedbackForm()
     {
         if ($this->Order()) {
             if ($this->IsFeedbackEnabled) {
-                return OrderForm_Feedback::create($this, 'FeedbackForm', $this->currentOrder);
+                return OrderFormFeedback::create($this, 'FeedbackForm', $this->currentOrder);
             }
         }
     }
