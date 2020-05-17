@@ -483,10 +483,6 @@ class Product extends Page implements BuyableModel
     public function Siblings()
     {
         if ($this->ParentID) {
-            $extension = '';
-            if (Versioned::current_stage() === 'Live') {
-                $extension = '_Live';
-            }
 
             return Product::get()
                 ->filter([
