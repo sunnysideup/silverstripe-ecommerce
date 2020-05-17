@@ -36,7 +36,7 @@ Money:
   extensions:
     - EcommerceMoney
 
-OrderEmailRecord_Review:
+OrderEmailRecordReview:
   url_segment: "ecommerce-email-preview"
 
 EcommerceDatabaseAdmin:

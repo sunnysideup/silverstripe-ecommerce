@@ -243,7 +243,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                 $fields->dataFieldByName('OrderStepID'),
             ]
         );
-        $emailLink = OrderEmailRecord_Review::review_link($this);
+        $emailLink = OrderEmailRecordReview::review_link($this);
         $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"${emailLink}\" width=\"100%\" height=\"700\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
         $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
         $fields->replaceField('OrderStepID', new ReadonlyField('OrderStepNice', 'Order Step', $this->OrderStepNice()));

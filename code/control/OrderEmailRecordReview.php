@@ -9,7 +9,7 @@ class OrderEmailRecordReview extends Controller
 
     public static function review_link($email)
     {
-        return Config::inst()->get('OrderEmailRecord_Review', 'url_segment') . '/read/' . $email->ID;
+        return Config::inst()->get('OrderEmailRecordReview', 'url_segment') . '/read/' . $email->ID;
     }
 
     public function read($request)
