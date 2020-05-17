@@ -216,7 +216,7 @@ class OrderModifier extends OrderAttribute
         );
 
         $fields->addFieldToTab('Root.Main', new CheckboxField('HasBeenRemoved', 'Has been removed'));
-        $fields->removeByName('OrderAttribute_GroupID');
+        $fields->removeByName('OrderAttributeGroupID');
 
         //OrderID Field
         if ($this->OrderID && $this->exists()) {

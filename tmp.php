@@ -59,7 +59,7 @@ $array = [
     './code/model/process/OrderStatusLogs/OrderStatusLogDispatch.php',
     './code/model/process/OrderStatusLogs/OrderStatusLogDispatchPhysicalOrder.php',
     './code/model/process/CheckoutPageStepDescription.php',
-    './code/model/OrderAttribute_Group.php',
+    './code/model/OrderAttributeGroup.php',
     './code/model/OrderModifierDescriptor.php',
     './code/model/money/payment_types/EcommercePaymentTest.php',
     './code/model/money/payment_types/EcommercePaymentTestSuccess.php',

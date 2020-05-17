@@ -241,7 +241,7 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('Sort');
         $fields->removeByName('CalculatedTotal');
         $fields->removeByName('GroupSort');
-        $fields->removeByName('OrderAttribute_GroupID');
+        $fields->removeByName('OrderAttributeGroupID');
         if ($order = $this->Order()) {
             if ($order->IsSubmitted()) {
                 if ($buyable = $this->Buyable()) {

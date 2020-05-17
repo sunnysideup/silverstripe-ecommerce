@@ -4,7 +4,7 @@
 /**
  * Allows you to group OrderAttributes.
  */
-class OrderAttribute_Group extends DataObject implements EditableEcommerceObject
+class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
 {
     private static $db = [
         'Name' => 'Varchar',

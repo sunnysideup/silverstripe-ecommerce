@@ -489,13 +489,13 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     /**
      * Standard SS method
-     * We add the Sort value from the OrderAttribute_Group to the OrderAttribute.
+     * We add the Sort value from the OrderAttributeGroup to the OrderAttribute.
      */
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if ($this->OrderAttribute_GroupID) {
-            if ($group = $this->OrderAttribute_Group()) {
+        if ($this->OrderAttributeGroupID) {
+            if ($group = $this->OrderAttributeGroup()) {
                 $this->GroupSort = $group->Sort;
             }
         }
