@@ -44,7 +44,7 @@ class EcommerceTaskProductImageReset extends BuildTask
 					")->value();
                     DB::query("
 						UPDATE \"File\"
-						SET \"ClassName\" = 'Product_Image'
+						SET \"ClassName\" = 'ProductImage'
 						WHERE
 							\"File\".\"ID\" = " . $row['ImageID'] . "
 							AND  (
@@ -53,7 +53,7 @@ class EcommerceTaskProductImageReset extends BuildTask
 							 \"ClassName\" = ''
 							);
 					");
-                    $image = Product_Image::get()->byID($row['ImageID']);
+                    $image = ProductImage::get()->byID($row['ImageID']);
                     if (! $image) {
                         $remove = true;
                     } elseif (! $image->getTag()) {
@@ -62,9 +62,9 @@ class EcommerceTaskProductImageReset extends BuildTask
                     if ($remove) {
                         ++$removeCount;
                         DB::query("UPDATE \"${tableName}\" SET \"ImageID\" = 0 WHERE \"${tableName}\".\"ID\" = " . $row['ID'] . " AND \"${tableName}\".\"ImageID\" = " . $row['ImageID'] . ';');
-                    } elseif (! is_a($image, Object::getCustomClass('Product_Image'))) {
+                    } elseif (! is_a($image, Object::getCustomClass('ProductImage'))) {
                         ++$updateClassCount;
-                        $image = $image->newClassInstance('Product_Image');
+                        $image = $image->newClassInstance('ProductImage');
                         $image - write();
                     }
                 }
@@ -80,9 +80,9 @@ class EcommerceTaskProductImageReset extends BuildTask
                 DB::alteration_message("<strong>${tableName}:</strong> All product images are accounted for", 'created');
             }
             if ($updateClassCount) {
-                DB::alteration_message("<strong>${tableName}:</strong> ${removeCount} image(s) did not match the requirement 'instanceOF Product_Image', this has been corrected.", 'deleted');
+                DB::alteration_message("<strong>${tableName}:</strong> ${removeCount} image(s) did not match the requirement 'instanceOF ProductImage', this has been corrected.", 'deleted');
             } else {
-                DB::alteration_message("<strong>${tableName}:</strong> All product images instancesOF Product_Image", 'created');
+                DB::alteration_message("<strong>${tableName}:</strong> All product images instancesOF ProductImage", 'created');
             }
         }
     }

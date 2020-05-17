@@ -62,7 +62,7 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $has_one = [
-        'Image' => 'Product_Image',
+        'Image' => 'ProductImage',
     ];
 
     /**
@@ -340,8 +340,8 @@ class Product extends Page implements BuyableModel
     {
         parent::onAfterWrite();
         if ($this->ImageID) {
-            if ($normalImage = Image::get()->exclude(['ClassName' => 'Product_Image'])->byID($this->ImageID)) {
-                $normalImage = $normalImage->newClassInstance('Product_Image');
+            if ($normalImage = Image::get()->exclude(['ClassName' => 'ProductImage'])->byID($this->ImageID)) {
+                $normalImage = $normalImage->newClassInstance('ProductImage');
                 $normalImage->write();
             }
         }
@@ -565,11 +565,11 @@ class Product extends Page implements BuyableModel
      * returns a product image for use in templates
      * e.g. $DummyImage.Width();.
      *
-     * @return Product_Image
+     * @return ProductImage
      */
     public function DummyImage()
     {
-        return new Product_Image();
+        return new ProductImage();
     }
 
     // VERSIONING

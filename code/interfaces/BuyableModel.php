@@ -66,7 +66,7 @@ interface BuyableModel
      * returns a product image for use in templates
      * e.g. $DummyImage.Width();.
      *
-     * @return Product_Image
+     * @return ProductImage
      */
     public function DummyImage();
 

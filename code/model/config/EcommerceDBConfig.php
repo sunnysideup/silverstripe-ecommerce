@@ -49,7 +49,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     private static $has_one = [
         'EmailLogo' => 'Image',
-        'DefaultProductImage' => 'Product_Image',
+        'DefaultProductImage' => 'ProductImage',
     ];
 
     /**
@@ -413,7 +413,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 //new section
                 $fieldDescriptions = $self->customDescriptionsForFields();
                 $fieldLabels = $self->fieldLabels();
-                $productImage = new Product_Image();
+                $productImage = new ProductImage();
                 $versionInfo = EcommerceConfigDefinitions::create();
                 $fields->addFieldToTab('Root.Main', new TextField('Title', $fieldLabels['Title']));
                 $fields->InsertAfter(
@@ -705,7 +705,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-        $obj = Product_Image::create();
+        $obj = ProductImage::create();
         $obj->Link = $this->DefaultImageLink();
         $obj->URL = $this->DefaultImageLink();
 

@@ -64,7 +64,7 @@ class EcommerceConfigDefinitions extends Object
         ],
         'PRODUCTS' => [
             'ProductGroup',
-            'Product_Image',
+            'ProductImage',
             'ProductSearchForm',
         ],
         'ORDER OBJECTS' => [
@@ -231,7 +231,7 @@ class EcommerceConfigDefinitions extends Object
                 'folder_name_for_images' => 'Default folder for uploading product images.',
                 'add_data_to_meta_description_for_search' => 'Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details',
             ],
-            'Product_Image' => [
+            'ProductImage' => [
                 'thumbnail_width' => 'Thumbnail width in pixels. For thumbnails, we use paddedResize.',
                 'thumbnail_height' => 'Thumbnail height in pixels. For thumbnails, we use paddedResize.',
                 'small_image_width' => 'Width for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',

@@ -217,7 +217,7 @@ class ProductGroup extends Page
      * @static Array
      */
     private static $has_one = [
-        'Image' => 'Product_Image',
+        'Image' => 'ProductImage',
     ];
 
     /**
@@ -1005,8 +1005,8 @@ class ProductGroup extends Page
         parent::onAfterWrite();
 
         if ($this->ImageID) {
-            if ($normalImage = Image::get()->exclude(['ClassName' => 'Product_Image'])->byID($this->ImageID)) {
-                $normalImage = $normalImage->newClassInstance('Product_Image');
+            if ($normalImage = Image::get()->exclude(['ClassName' => 'ProductImage'])->byID($this->ImageID)) {
+                $normalImage = $normalImage->newClassInstance('ProductImage');
                 $normalImage->write();
             }
         }

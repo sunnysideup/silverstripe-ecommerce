@@ -1,7 +1,7 @@
 <?php
 
 
-class Product_Image extends Image
+class ProductImage extends Image
 {
     /**
      * standard SS variable.
@@ -23,12 +23,12 @@ class Product_Image extends Image
 
     public function i18n_singular_name()
     {
-        return _t('Product_Image.SINGULARNAME', 'Product Image');
+        return _t('ProductImage.SINGULARNAME', 'Product Image');
     }
 
     public function i18n_plural_name()
     {
-        return _t('Product_Image.PLURALNAME', 'Product Images');
+        return _t('ProductImage.PLURALNAME', 'Product Images');
     }
 
     /**
@@ -49,7 +49,7 @@ class Product_Image extends Image
      */
     public function ThumbWidth()
     {
-        return EcommerceConfig::get('Product_Image', 'thumbnail_width');
+        return EcommerceConfig::get('ProductImage', 'thumbnail_width');
     }
 
     /**
@@ -57,7 +57,7 @@ class Product_Image extends Image
      */
     public function ThumbHeight()
     {
-        return EcommerceConfig::get('Product_Image', 'thumbnail_height');
+        return EcommerceConfig::get('ProductImage', 'thumbnail_height');
     }
 
     /**
@@ -65,7 +65,7 @@ class Product_Image extends Image
      */
     public function SmallWidth()
     {
-        return EcommerceConfig::get('Product_Image', 'small_image_width');
+        return EcommerceConfig::get('ProductImage', 'small_image_width');
     }
 
     /**
@@ -73,7 +73,7 @@ class Product_Image extends Image
      */
     public function SmallHeight()
     {
-        return EcommerceConfig::get('Product_Image', 'small_image_height');
+        return EcommerceConfig::get('ProductImage', 'small_image_height');
     }
 
     /**
@@ -81,7 +81,7 @@ class Product_Image extends Image
      */
     public function ContentWidth()
     {
-        return EcommerceConfig::get('Product_Image', 'content_image_width');
+        return EcommerceConfig::get('ProductImage', 'content_image_width');
     }
 
     /**
@@ -89,7 +89,7 @@ class Product_Image extends Image
      */
     public function LargeWidth()
     {
-        return EcommerceConfig::get('Product_Image', 'large_image_width');
+        return EcommerceConfig::get('ProductImage', 'large_image_width');
     }
 
     /**

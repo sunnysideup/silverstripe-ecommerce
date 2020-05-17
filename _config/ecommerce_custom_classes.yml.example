@@ -48,7 +48,7 @@
 #    OrderStatusLog_Cancel: OrderStatusLog_Cancel
 #    OrderStepField: OrderStepField
 #    OrderStep_Created: OrderStep_Created
-#    Product_Image: Product_Image
+#    ProductImage: ProductImage
 #    SelectOrderAddressField: SelectOrderAddressField
 #    ShopAccountForm: ShopAccountForm_Validator
 #    ShopAccountForm_Validator: ShopAccountForm_Validator
