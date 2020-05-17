@@ -190,9 +190,8 @@ class ShoppingCart extends Object
                     //first reason to set to null: it is already submitted
                     if ($this->order->IsSubmitted()) {
                         $this->order = null;
-                    }
-                    //second reason to set to null: make sure we have permissions
-                    elseif (! $this->order->canView()) {
+                    } elseif (! $this->order->canView()) {
+                        //second reason to set to null: make sure we have permissions
                         $this->order = null;
                     }
                     //logged in, add Member.ID to order->MemberID
