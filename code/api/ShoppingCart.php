@@ -1196,8 +1196,8 @@ class ShoppingCart extends Object
     }
 
     /**
+     * Converts parameter array to SQL query filter
      * @param array $parameters
-     *                          Converts parameter array to SQL query filter
      */
     protected function parametersToSQL(array $parameters = [])
     {
