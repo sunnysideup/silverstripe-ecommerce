@@ -13,63 +13,64 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      *
      * @Var Array
      */
-    private static $db = array(
+    private static $db = [
         'Rating' => 'Varchar',
         'Note' => 'Text',
-        'Actioned' => 'Boolean'
-    );
-    /**
-     * standard SS variable.
-     *
-     * @Var Array
-     */
-    private static $has_one = array(
-        'Order' => 'Order'
-    );
+        'Actioned' => 'Boolean',
+    ];
 
     /**
      * standard SS variable.
      *
      * @Var Array
      */
-    private static $searchable_fields = array(
+    private static $has_one = [
+        'Order' => 'Order',
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @Var Array
+     */
+    private static $searchable_fields = [
         'Rating' => 'PartialMatchFilter',
         'Note' => 'PartialMatchFilter',
-        'OrderID' => array(
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        )
-    );
+        ],
+    ];
 
     /**
      * standard SS variable.
      *
      * @Var Array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Order.Title' => 'Order',
         'Created' => 'When',
         'Rating' => 'Rating',
-        'Note' => 'Note'
-    );
+        'Note' => 'Note',
+    ];
 
     /**
      * standard SS variable.
      *
      * @Var Array
      */
-    private static $casting = array(
-        'Title' => 'Varchar'
-    );
+    private static $casting = [
+        'Title' => 'Varchar',
+    ];
 
     /**
      * standard SS variable.
      *
      * @Var Array
      */
-    private static $default_sorting = array(
-        'Created' => 'DESC'
-    );
+    private static $default_sorting = [
+        'Created' => 'DESC',
+    ];
 
     /**
      * standard SS variable.
@@ -77,10 +78,6 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $singular_name = 'Order Feedback';
-    public function i18n_singular_name()
-    {
-        return _t('OrderFeedback.SINGULAR_NAME', 'Order Feedback');
-    }
 
     /**
      * standard SS variable.
@@ -88,10 +85,6 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $plural_name = 'Checkout Feedback Entries';
-    public function i18n_plural_name()
-    {
-        return _t('OrderFeedback.PLURAL_NAME', 'Order Feedback Entries');
-    }
 
     /**
      * Standard SS variable.
@@ -106,6 +99,16 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * @return bool
      */
     private static $can_create = false;
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderFeedback.SINGULAR_NAME', 'Order Feedback');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('OrderFeedback.PLURAL_NAME', 'Order Feedback Entries');
+    }
 
     /**
      * these are only created programmatically
@@ -207,15 +210,16 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     {
         return $this->getTitle();
     }
+
     public function getTitle()
     {
         $string = $this->Created;
         if ($this->Order()) {
-            $string .= ' ('.$this->Order()->getTitle().')';
+            $string .= ' (' . $this->Order()->getTitle() . ')';
         }
-        $string .= ' - '.$this->Rating;
+        $string .= ' - ' . $this->Rating;
         if ($this->Note) {
-            $string .= ' / '. substr($this->Note, 0, 25);
+            $string .= ' / ' . substr($this->Note, 0, 25);
         }
         return $string;
     }
@@ -226,9 +230,9 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->Note = str_replace(array("\n", "\r"), ' ¶ ', $this->Note);
-        $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
-        $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
-        $this->Note = str_replace(array("¶  ¶"), ' ¶ ', $this->Note);
+        $this->Note = str_replace(["\n", "\r"], ' ¶ ', $this->Note);
+        $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
+        $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
+        $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
     }
 }

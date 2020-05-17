@@ -16,13 +16,35 @@
  **/
 class OrderStatusLog_PaymentCheck extends OrderStatusLog
 {
-    private static $defaults = array(
+    private static $defaults = [
         'InternalUseOnly' => true,
-    );
+    ];
 
-    private static $db = array(
+    private static $db = [
         'PaymentConfirmed' => 'Boolean',
-    );
+    ];
+
+    private static $searchable_fields = [
+        'OrderID' => [
+            'field' => 'NumericField',
+            'title' => 'Order Number',
+        ],
+        'PaymentConfirmed' => true,
+    ];
+
+    private static $summary_fields = [
+        'Created' => 'Date',
+        'Author.Title' => 'Checked by',
+        'PaymentConfirmedNice' => 'Payment Confirmed',
+    ];
+
+    private static $casting = [
+        'PaymentConfirmedNice' => 'Varchar',
+    ];
+
+    private static $singular_name = 'Payment Confirmation';
+
+    private static $plural_name = 'Payment Confirmations';
 
     /**
      * Standard SS method.
@@ -36,28 +58,11 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog
         return false;
     }
 
-    private static $searchable_fields = array(
-        'OrderID' => array(
-            'field' => 'NumericField',
-            'title' => 'Order Number',
-        ),
-        'PaymentConfirmed' => true,
-    );
-
-    private static $summary_fields = array(
-        'Created' => 'Date',
-        'Author.Title' => 'Checked by',
-        'PaymentConfirmedNice' => 'Payment Confirmed',
-    );
-
-    private static $casting = array(
-        'PaymentConfirmedNice' => 'Varchar',
-    );
-
     public function PaymentConfirmedNice()
     {
         return $this->getPaymentConfirmedNice();
     }
+
     public function getPaymentConfirmedNice()
     {
         if ($this->PaymentConfirmed) {
@@ -67,13 +72,11 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog
         return _t('OrderStatusLog.No', 'no');
     }
 
-    private static $singular_name = 'Payment Confirmation';
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.PAYMENTCONFIRMATION', 'Payment Confirmation');
     }
 
-    private static $plural_name = 'Payment Confirmations';
     public function i18n_plural_name()
     {
         return _t('OrderStatusLog.PAYMENTCONFIRMATIONS', 'Payment Confirmations');
@@ -99,6 +102,7 @@ class OrderStatusLog_PaymentCheck extends OrderStatusLog
     {
         return $this->getCustomerNote();
     }
+
     public function getCustomerNote()
     {
         if ($this->Author()) {

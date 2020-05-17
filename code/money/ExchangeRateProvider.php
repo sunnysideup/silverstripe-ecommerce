@@ -21,18 +21,18 @@
 class ExchangeRateProvider extends Object
 {
     /**
-     * cache of exchange rates.
-     *
-     * @var array
-     */
-    private static $_memory_cache = array();
-
-    /**
      * adds a bit of additional cost to account for the exchange cost.
      *
      * @var floatval
      */
     protected $exchangeCostMultiplier = 1.05;
+
+    /**
+     * cache of exchange rates.
+     *
+     * @var array
+     */
+    private static $_memory_cache = [];
 
     /**
      * Get the exchange rate.
@@ -47,17 +47,16 @@ class ExchangeRateProvider extends Object
     {
         $fromCode = strtoupper($fromCode);
         $toCode = strtoupper($toCode);
-        $cacheCode = $fromCode.'_'.$toCode;
+        $cacheCode = $fromCode . '_' . $toCode;
         if (isset(self::$_memory_cache[$cacheCode])) {
             return self::$_memory_cache[$cacheCode];
+        }
+        if ($value = Session::get($cacheCode)) {
+            self::$_memory_cache[$cacheCode] = $value;
         } else {
-            if ($value = Session::get($cacheCode)) {
-                self::$_memory_cache[$cacheCode] = $value;
-            } else {
-                $value = $this->getRate($fromCode, $toCode);
-                self::$_memory_cache[$cacheCode] = $value;
-                Session::set($cacheCode, $value);
-            }
+            $value = $this->getRate($fromCode, $toCode);
+            self::$_memory_cache[$cacheCode] = $value;
+            Session::set($cacheCode, $value);
         }
 
         return self::$_memory_cache[$cacheCode];
@@ -75,29 +74,29 @@ class ExchangeRateProvider extends Object
     protected function getRate($fromCode, $toCode)
     {
         $rate = 0;
-        $reference = $fromCode.'_'.$toCode;
-        $url = 'http://free.currencyconverterapi.com/api/v5/convert?q='.$reference.'&compact=y';
+        $reference = $fromCode . '_' . $toCode;
+        $url = 'http://free.currencyconverterapi.com/api/v5/convert?q=' . $reference . '&compact=y';
         if (($ch = @curl_init())) {
             $timeout = 5; // set to zero for no timeout
-            curl_setopt($ch, CURLOPT_URL, "$url");
+            curl_setopt($ch, CURLOPT_URL, "${url}");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
             $record = curl_exec($ch);
             curl_close($ch);
         }
-        if (!$record) {
+        if (! $record) {
             $record = file_get_contents($url);
         }
 
         if ($record) {
             $currencyData = json_decode($record);
-            $rate = $currencyData->$reference->val;
-            if (!$rate) {
+            $rate = $currencyData->{$reference}->val;
+            if (! $rate) {
                 user_error('There was a problem retrieving the exchange rate.');
             }
         }
-        if ($rate != 1) {
-            $rate = $rate * $this->exchangeCostMultiplier;
+        if ($rate !== 1) {
+            $rate *= $this->exchangeCostMultiplier;
         }
 
         return $rate;

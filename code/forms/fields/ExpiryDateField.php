@@ -46,25 +46,23 @@ class ExpiryDateField extends TextField
     /**
      *@return HTML
      **/
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $monthValue = '';
         $yearValue = '';
-        if (strlen($this->value) == 4) {
+        if (strlen($this->value) === 4) {
             $monthValue = substr($this->value, 0, 2);
             $yearValue = substr($this->value, 2, 2);
         }
-        $field = '
-			<span id="'.$this->getName().'_Holder" class="expiryDateField">
-				<select class="expiryDate expiryDateMonth" name="'.$this->getName().'[month]" autocomplete="off" >
-					<option value="" selected="selected">Month</option>'.$this->makeSelectList($this->monthArray(), $monthValue).'
+        return '
+			<span id="' . $this->getName() . '_Holder" class="expiryDateField">
+				<select class="expiryDate expiryDateMonth" name="' . $this->getName() . '[month]" autocomplete="off" >
+					<option value="" selected="selected">Month</option>' . $this->makeSelectList($this->monthArray(), $monthValue) . '
 				</select>
-				<select class="expiryDate expiryDateYear" name="'.$this->getName().'[year]" autocomplete="off" >
-					<option value="" selected="selected">Year</option>'.$this->makeSelectList($this->yearArray(), $yearValue).'
+				<select class="expiryDate expiryDateYear" name="' . $this->getName() . '[year]" autocomplete="off" >
+					<option value="" selected="selected">Year</option>' . $this->makeSelectList($this->yearArray(), $yearValue) . '
 				</select>
 			</span>';
-
-        return $field;
     }
 
     /**
@@ -80,20 +78,19 @@ class ExpiryDateField extends TextField
             }
 
             return $string;
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
 
     /**
-     * @param $validator Validator
+     * @param Validator $validator
      *
      * @return bool
      **/
     public function validate($validator)
     {
         // If the field is empty then don't return an invalidation message'
-        if (!isset($this->value['month'])) {
+        if (! isset($this->value['month'])) {
             $validator->validationError(
                 $this->getName(),
                 _t('ExpiryDateField.NO_MONTH', "Please ensure you have entered the expiry date 'month' portion."),
@@ -102,7 +99,7 @@ class ExpiryDateField extends TextField
 
             return false;
         }
-        if (!isset($this->value['year'])) {
+        if (! isset($this->value['year'])) {
             $validator->validationError(
                 $this->getName(),
                 _t('ExpiryDateField.NO_YEAR', "Please ensure you have entered the expiry date 'year' portion."),
@@ -116,9 +113,9 @@ class ExpiryDateField extends TextField
         $this->value = $value;
         // months are entered as a simple number (e.g. 1,2,3, we add a leading zero if needed)
         $monthValue = substr($this->value, 0, 2);
-        $yearValue = '20'.substr($this->value, 2, 2);
+        $yearValue = '20' . substr($this->value, 2, 2);
         $ts = strtotime(Date('Y-m-01')) - (60 * 60 * 24);
-        $expiryTs = strtotime('20'.$yearValue.'-'.$monthValue.'-01');
+        $expiryTs = strtotime('20' . $yearValue . '-' . $monthValue . '-01');
         if ($ts > $expiryTs) {
             $validator->validationError(
                 $this->getName(),
@@ -133,91 +130,15 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @return array(2000 => 2000, 2001 => 2001, etc...)
-     **/
-    protected function yearArray()
-    {
-        $list = array();
-        $i = 0;
-        for ($i = 0; $i < 12; ++$i) {
-            $ts = strtotime('+'.$i.' year');
-            $list[Date('y', $ts)] = Date('Y', $ts);
-        }
-
-        return $list;
-    }
-
-    /**
-     * @param $array - list of options...
-     * @param string $currentValue
-     *
-     * @return string (html)
-     **/
-    protected function makeSelectList(array $array, $currentValue)
-    {
-        $string = '';
-        foreach ($array as $key => $value) {
-            $select = '';
-            if ($key == $currentValue) {
-                $select = ' selected="selected"';
-            }
-            $string .= '<option value="'.$key.'"'.$select.'>'.$value.'</option>';
-        }
-
-        return $string;
-    }
-
-    /**
-     * @return array(1 => "Jan", etc...)
-     **/
-    protected function monthArray()
-    {
-        $shortMonths = EcommerceConfig::get('ExpiryDateField', 'short_months');
-        if ($shortMonths) {
-            return array(
-                '01' => '01 - Jan',
-                '02' => '02 - Feb',
-                '03' => '03 - Mar',
-                '04' => '04 - Apr',
-                '05' => '05 - May',
-                '06' => '06 - Jun',
-                '07' => '07 - Jul',
-                '08' => '08 - Aug',
-                '09' => '09 - Sep',
-                '10' => '10 - Oct',
-                '11' => '11 - Nov',
-                '12' => '12 - Dec',
-            );
-        } else {
-            return array(
-                '01' => '01 - January',
-                '02' => '02 - February',
-                '03' => '03 - March',
-                '04' => '04 - April',
-                '05' => '05 - May',
-                '06' => '06 - June',
-                '07' => '07 - July',
-                '08' => '08 - August',
-                '09' => '09 - September',
-                '10' => '10 - October',
-                '11' => '11 - November',
-                '12' => '12 - December',
-            );
-        }
-    }
-
-    /**
      * Makes a read only field with some stars in it to replace the password.
      *
      * @return ReadonlyField
      */
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy('ReadonlyField')
+        return $this->castedCopy('ReadonlyField')
             ->setTitle($this->title)
-            ->setValue(substr($this->value, 0, 2).'/'.substr($this->value, 2, 2));
-
-        return $field;
+            ->setValue(substr($this->value, 0, 2) . '/' . substr($this->value, 2, 2));
     }
 
     /**
@@ -281,5 +202,78 @@ class ExpiryDateField extends TextField
         }
         */
         return $this;
+    }
+
+    /**
+     * @return array(2000 => 2000, 2001 => 2001, etc...)
+     **/
+    protected function yearArray()
+    {
+        $list = [];
+        $i = 0;
+        for ($i = 0; $i < 12; ++$i) {
+            $ts = strtotime('+' . $i . ' year');
+            $list[Date('y', $ts)] = Date('Y', $ts);
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param $array - list of options...
+     * @param string $currentValue
+     *
+     * @return string (html)
+     **/
+    protected function makeSelectList(array $array, $currentValue)
+    {
+        $string = '';
+        foreach ($array as $key => $value) {
+            $select = '';
+            if ($key === $currentValue) {
+                $select = ' selected="selected"';
+            }
+            $string .= '<option value="' . $key . '"' . $select . '>' . $value . '</option>';
+        }
+
+        return $string;
+    }
+
+    /**
+     * @return array(1 => "Jan", etc...)
+     **/
+    protected function monthArray()
+    {
+        $shortMonths = EcommerceConfig::get('ExpiryDateField', 'short_months');
+        if ($shortMonths) {
+            return [
+                '01' => '01 - Jan',
+                '02' => '02 - Feb',
+                '03' => '03 - Mar',
+                '04' => '04 - Apr',
+                '05' => '05 - May',
+                '06' => '06 - Jun',
+                '07' => '07 - Jul',
+                '08' => '08 - Aug',
+                '09' => '09 - Sep',
+                '10' => '10 - Oct',
+                '11' => '11 - Nov',
+                '12' => '12 - Dec',
+            ];
+        }
+        return [
+            '01' => '01 - January',
+            '02' => '02 - February',
+            '03' => '03 - March',
+            '04' => '04 - April',
+            '05' => '05 - May',
+            '06' => '06 - June',
+            '07' => '07 - July',
+            '08' => '08 - August',
+            '09' => '09 - September',
+            '10' => '10 - October',
+            '11' => '11 - November',
+            '12' => '12 - December',
+        ];
     }
 }

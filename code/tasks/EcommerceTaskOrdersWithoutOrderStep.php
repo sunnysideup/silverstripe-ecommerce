@@ -4,7 +4,6 @@
 /**
  * @description: cleans up old (abandonned) carts...
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
@@ -36,14 +35,14 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
             if ($submittedStatusLog) {
                 $orderStepsIDArray = OrderStep::get()->column('ID');
                 $orders = Order::get()
-                    ->where('StatusID NOT IN (' . implode(',', $orderStepsIDArray).')')
+                    ->where('StatusID NOT IN (' . implode(',', $orderStepsIDArray) . ')')
                     ->innerJoin(
                         'OrderStatusLog',
-                        "\"OrderStatusLog\".\"OrderID\" = \"Order\".\"ID\""
+                        '"OrderStatusLog"."OrderID" = "Order"."ID"'
                     )
                     ->innerJoin(
                         $submittedOrderStatusLogClassName,
-                        "\"$submittedOrderStatusLogClassName\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                        "\"${submittedOrderStatusLogClassName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
                     );
                 if ($orders->count()) {
                     foreach ($orders as $order) {
@@ -53,7 +52,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                             $order->Cancel();
                         }
                         DB::alteration_message(
-                            '<a href="'.$order->CMSEditLink().'">'.$order->getTitle().'</a><br />'.$archivingNow.'<br /><br />',
+                            '<a href="' . $order->CMSEditLink() . '">' . $order->getTitle() . '</a><br />' . $archivingNow . '<br /><br />',
                             'deleted'
                         );
                     }

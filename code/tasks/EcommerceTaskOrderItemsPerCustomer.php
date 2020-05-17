@@ -21,30 +21,28 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
 
         //file data
         $now = Date('d-m-Y-H-i');
-        $fileName = "export-$now.csv";
+        $fileName = "export-${now}.csv";
 
         //data object variables
         $orderStatusSubmissionLog = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         $fileData = '';
         $offset = 0;
         $count = 50;
-
-        while (
-            $orders = Order::get()
-                ->sort('"Order"."ID" ASC')
-                ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->innerJoin($orderStatusSubmissionLog, "\"$orderStatusSubmissionLog\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-                ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
-                ->limit($count, $offset) &&
-            $ordersCount = $orders->count()
-        ) {
-            $offset = $offset + $count;
+        $orders = Order::get()
+            ->sort('"Order"."ID" ASC')
+            ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+            ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+            ->limit($count, $offset);
+        $ordersCount = $orders->count();
+        while ($orders && $ordersCount) {
+            $offset += $count;
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
                     $memberIsOK = false;
-                    if (!$order->MemberID) {
+                    if (! $order->MemberID) {
                         $memberIsOK = true;
-                    } elseif (!$order->Member()) {
+                    } elseif (! $order->Member()) {
                         $memberIsOK = true;
                     } elseif ($member = $order->Member()) {
                         $memberIsOK = true;
@@ -53,15 +51,22 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                         }
                     }
                     if ($memberIsOK) {
-                        $items = OrderItem::get()->filter(array('OrderID' => $order->ID));
+                        $items = OrderItem::get()->filter(['OrderID' => $order->ID]);
                         if ($items && $items->count()) {
                             $fileData .= $this->generateExportFileData($order->getOrderEmail(), $order->SubmissionLog()->Created, $items);
                         }
                     }
                 }
             }
-            unset($orders);
+            $orders = Order::get()
+                ->sort('"Order"."ID" ASC')
+                ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+                ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+                ->limit($count, $offset);
+            $ordersCount = $orders->count();
         }
+        unset($orders);
         if ($fileData) {
             SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         } else {
@@ -73,8 +78,8 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
     {
         $separator = ',';
         $fileData = '';
-        $columnData = array();
-        $exportFields = array(
+        $columnData = [];
+        $exportFields = [
             'OrderID',
             'InternalItemID',
             'TableTitle',
@@ -82,18 +87,18 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             'UnitPrice',
             'Quantity',
             'CalculatedTotal',
-        );
+        ];
 
         if ($orderItems) {
             foreach ($orderItems as $item) {
-                $columnData = array();
-                $columnData[] = '"'.$email.'"';
-                $columnData[] = '"'.$date.'"';
+                $columnData = [];
+                $columnData[] = '"' . $email . '"';
+                $columnData[] = '"' . $date . '"';
                 foreach ($exportFields as $field) {
-                    $value = $item->$field;
+                    $value = $item->{$field};
                     $value = preg_replace('/\s+/', ' ', $value);
-                    $value = str_replace(array("\r", "\n"), "\n", $value);
-                    $tmpColumnData = '"'.str_replace('"', '\"', $value).'"';
+                    $value = str_replace(["\r", "\n"], "\n", $value);
+                    $tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
                     $columnData[] = $tmpColumnData;
                 }
                 $fileData .= implode($separator, $columnData);
@@ -104,8 +109,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             }
 
             return $fileData;
-        } else {
-            return '';
         }
+        return '';
     }
 }

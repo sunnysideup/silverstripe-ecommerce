@@ -13,32 +13,32 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
      */
     protected $emailClassName = 'Order_StatusEmail';
 
-    private static $db = array(
-        'SendDetailsToCustomer' => 'Boolean',
-        'EmailSubjectGift' => 'Varchar(200)',
-        'CustomerMessageGift' => 'HTMLText'
-    );
-
-    private static $defaults = array(
-        'CustomerCanEdit' => 0,
-        'CustomerCanCancel' => 0,
-        'CustomerCanPay' => 0,
-        'Name' => 'Send Order',
-        'Code' => 'SENT',
-        'ShowAsInProcessOrder' => 1
-    );
-
-    private static $field_labels = [
-        'EmailSubjectGift' => 'Email subject',
-        'CustomerMessageGift' => 'Customer message'
-    ];
-
     /**
      * The OrderStatusLog that is relevant to the particular step.
      *
      * @var string
      */
     protected $relevantLogEntryClassName = 'OrderStatusLog_DispatchPhysicalOrder';
+
+    private static $db = [
+        'SendDetailsToCustomer' => 'Boolean',
+        'EmailSubjectGift' => 'Varchar(200)',
+        'CustomerMessageGift' => 'HTMLText',
+    ];
+
+    private static $defaults = [
+        'CustomerCanEdit' => 0,
+        'CustomerCanCancel' => 0,
+        'CustomerCanPay' => 0,
+        'Name' => 'Send Order',
+        'Code' => 'SENT',
+        'ShowAsInProcessOrder' => 1,
+    ];
+
+    private static $field_labels = [
+        'EmailSubjectGift' => 'Email subject',
+        'CustomerMessageGift' => 'Customer message',
+    ];
 
     public function getCMSFields()
     {
@@ -58,7 +58,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
                 HTMLEditorField::create(
                     'CustomerMessageGift',
                     _t('OrderStep.CustomerMessageGift', 'Message')
-                )->setRows(5)
+                )->setRows(5),
             ]
         );
 
@@ -72,7 +72,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/
@@ -89,7 +89,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if run correctly.
      **/
@@ -119,7 +119,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
      **/
     public function nextStep(Order $order)
     {
-        if (!$this->SendDetailsToCustomer || $this->hasBeenSent($order)) {
+        if (! $this->SendDetailsToCustomer || $this->hasBeenSent($order)) {
             return parent::nextStep($order);
         }
 
@@ -141,26 +141,6 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
         $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog_DispatchPhysicalOrder', $title), 'ActionNextStepManually');
 
         return $fields;
-    }
-
-    /**
-     * For some ordersteps this returns true...
-     *
-     * @return bool
-     **/
-    protected function hasCustomerMessage()
-    {
-        return $this->SendDetailsToCustomer;
-    }
-
-    /**
-     * Explains the current order step.
-     *
-     * @return string
-     */
-    protected function myDescription()
-    {
-        return _t('OrderStep.SENT_DESCRIPTION', 'During this step we record the delivery details for the order such as the courrier ticket number and whatever else is relevant.');
     }
 
     public function CalculatedEmailSubject($order = null)
@@ -187,5 +167,25 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
         }
 
         return $v;
+    }
+
+    /**
+     * For some ordersteps this returns true...
+     *
+     * @return bool
+     **/
+    protected function hasCustomerMessage()
+    {
+        return $this->SendDetailsToCustomer;
+    }
+
+    /**
+     * Explains the current order step.
+     *
+     * @return string
+     */
+    protected function myDescription()
+    {
+        return _t('OrderStep.SENT_DESCRIPTION', 'During this step we record the delivery details for the order such as the courrier ticket number and whatever else is relevant.');
     }
 }

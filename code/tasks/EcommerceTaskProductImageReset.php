@@ -16,7 +16,7 @@ class EcommerceTaskProductImageReset extends BuildTask
 
     public function run($request)
     {
-        $tables = array('ProductGroup', 'ProductGroup_Live', 'Product', 'Product_Live');
+        $tables = ['ProductGroup', 'ProductGroup_Live', 'Product', 'Product_Live'];
         if (class_exists('ProductVariation')) {
             $tables[] = 'ProductVariation';
         }
@@ -25,9 +25,9 @@ class EcommerceTaskProductImageReset extends BuildTask
             $classErrorCount = 0;
             $removeCount = 0;
             $updateClassCount = 0;
-            $rowCount = DB::query("SELECT COUNT(\"ImageID\") FROM \"$tableName\" WHERE ImageID > 0;")->value();
-            DB::alteration_message("<h2><strong>CHECKING $tableName ( $rowCount records ):</strong></h2>");
-            $rows = DB::query("SELECT \"ImageID\", \"$tableName\".\"ID\" FROM \"$tableName\" WHERE ImageID > 0;");
+            $rowCount = DB::query("SELECT COUNT(\"ImageID\") FROM \"${tableName}\" WHERE ImageID > 0;")->value();
+            DB::alteration_message("<h2><strong>CHECKING ${tableName} ( ${rowCount} records ):</strong></h2>");
+            $rows = DB::query("SELECT \"ImageID\", \"${tableName}\".\"ID\" FROM \"${tableName}\" WHERE ImageID > 0;");
             if ($rows) {
                 foreach ($rows as $row) {
                     $remove = false;
@@ -35,7 +35,7 @@ class EcommerceTaskProductImageReset extends BuildTask
 						SELECT COUNT ("File"."ID")
 						FROM "File"
 						WHERE
-							"File"."ID" = '.$row['ImageID']."
+							"File"."ID" = ' . $row['ImageID'] . "
 							AND  (
 							 \"ClassName\" = 'Image' OR
 							 \"ClassName\" = 'ProductVariation_Image' OR
@@ -46,7 +46,7 @@ class EcommerceTaskProductImageReset extends BuildTask
 						UPDATE \"File\"
 						SET \"ClassName\" = 'Product_Image'
 						WHERE
-							\"File\".\"ID\" = ".$row['ImageID']."
+							\"File\".\"ID\" = " . $row['ImageID'] . "
 							AND  (
 							 \"ClassName\" = 'Image' OR
 							 \"ClassName\" = 'ProductVariation_Image' OR
@@ -54,15 +54,15 @@ class EcommerceTaskProductImageReset extends BuildTask
 							);
 					");
                     $image = Product_Image::get()->byID($row['ImageID']);
-                    if (!$image) {
+                    if (! $image) {
                         $remove = true;
-                    } elseif (!$image->getTag()) {
+                    } elseif (! $image->getTag()) {
                         $remove = true;
                     }
                     if ($remove) {
                         ++$removeCount;
-                        DB::query("UPDATE \"$tableName\" SET \"ImageID\" = 0 WHERE \"$tableName\".\"ID\" = ".$row['ID']." AND \"$tableName\".\"ImageID\" = ".$row['ImageID'].';');
-                    } elseif (!is_a($image, Object::getCustomClass('Product_Image'))) {
+                        DB::query("UPDATE \"${tableName}\" SET \"ImageID\" = 0 WHERE \"${tableName}\".\"ID\" = " . $row['ID'] . " AND \"${tableName}\".\"ImageID\" = " . $row['ImageID'] . ';');
+                    } elseif (! is_a($image, Object::getCustomClass('Product_Image'))) {
                         ++$updateClassCount;
                         $image = $image->newClassInstance('Product_Image');
                         $image - write();
@@ -70,19 +70,19 @@ class EcommerceTaskProductImageReset extends BuildTask
                 }
             }
             if ($classErrorCount) {
-                DB::alteration_message("<strong>$tableName:</strong> there were $classErrorCount files with the wrong class names.  These have been fixed.", 'deleted');
+                DB::alteration_message("<strong>${tableName}:</strong> there were ${classErrorCount} files with the wrong class names.  These have been fixed.", 'deleted');
             } else {
-                DB::alteration_message("<strong>$tableName:</strong> there were no files with the wrong class names. ", 'created');
+                DB::alteration_message("<strong>${tableName}:</strong> there were no files with the wrong class names. ", 'created');
             }
             if ($removeCount) {
-                DB::alteration_message("<strong>$tableName:</strong> Removed $removeCount image(s) from products and variations because they do not exist in the file-system or database", 'deleted');
+                DB::alteration_message("<strong>${tableName}:</strong> Removed ${removeCount} image(s) from products and variations because they do not exist in the file-system or database", 'deleted');
             } else {
-                DB::alteration_message("<strong>$tableName:</strong> All product images are accounted for", 'created');
+                DB::alteration_message("<strong>${tableName}:</strong> All product images are accounted for", 'created');
             }
             if ($updateClassCount) {
-                DB::alteration_message("<strong>$tableName:</strong> $removeCount image(s) did not match the requirement 'instanceOF Product_Image', this has been corrected.", 'deleted');
+                DB::alteration_message("<strong>${tableName}:</strong> ${removeCount} image(s) did not match the requirement 'instanceOF Product_Image', this has been corrected.", 'deleted');
             } else {
-                DB::alteration_message("<strong>$tableName:</strong> All product images instancesOF Product_Image", 'created');
+                DB::alteration_message("<strong>${tableName}:</strong> All product images instancesOF Product_Image", 'created');
             }
         }
     }

@@ -4,7 +4,6 @@
 /**
  * @description: cleans up old (abandonned) carts...
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
@@ -39,16 +38,16 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         if (isset($_GET['limit'])) {
             $limit = intval($_GET['limit']);
         }
-        if (!intval($limit)) {
+        if (! intval($limit)) {
             $limit = $this->limit;
         }
         $startAt = null;
         if (isset($_GET['startat'])) {
             $startAt = intval($_GET['startat']);
         }
-        if (!intval($startAt)) {
+        if (! intval($startAt)) {
             $startAt = intval(Session::get('EcommerceTaskTryToFinaliseOrders'));
-            if (!$startAt) {
+            if (! $startAt) {
                 $startAt = 0;
             }
         }
@@ -67,10 +66,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     if ($this->isCli()) {
                         $sort = 'RAND() ASC';
                     } else {
-                        $sort = array('ID' => 'ASC');
+                        $sort = ['ID' => 'ASC'];
                     }
                     $ordersInQueueArray = $ordersinQueue->column('ID');
-                    if(is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
+                    if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
                         //do nothing...
                     } else {
                         $ordersInQueueArray = [-1 => -1];
@@ -81,11 +80,11 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         ->exclude(['ID' => $ordersInQueueArray])
                         ->innerJoin(
                             'OrderStatusLog',
-                            "\"OrderStatusLog\".\"OrderID\" = \"Order\".\"ID\""
+                            '"OrderStatusLog"."OrderID" = "Order"."ID"'
                         )
                         ->innerJoin(
                             $submittedOrderStatusLogClassName,
-                            "\"$submittedOrderStatusLogClassName\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                            "\"${submittedOrderStatusLogClassName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
                         );
                     $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
@@ -105,12 +104,11 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
     }
 
-
     protected function tryToFinaliseOrders($orders, $limit, $startAt)
     {
         $orders = $orders->limit($limit, $startAt);
         if ($orders->count()) {
-            DB::alteration_message("<h1>Moving $limit Orders (starting from $startAt)</h1>");
+            DB::alteration_message("<h1>Moving ${limit} Orders (starting from ${startAt})</h1>");
             foreach ($orders as $order) {
                 ++$startAt;
                 Session::set('EcommerceTaskTryToFinaliseOrders', $startAt);
@@ -123,18 +121,18 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 $stepAfter = OrderStep::get()->byID($order->StatusID);
                 if ($stepBefore) {
                     if ($stepAfter) {
-                        if ($stepBefore->ID == $stepAfter->ID) {
-                            DB::alteration_message('could not move Order '.$order->getTitle().', remains at <strong>'.$stepBefore->Name.'</strong>');
+                        if ($stepBefore->ID === $stepAfter->ID) {
+                            DB::alteration_message('could not move Order ' . $order->getTitle() . ', remains at <strong>' . $stepBefore->Name . '</strong>');
                         } else {
-                            DB::alteration_message('Moving Order #'.$order->getTitle().' from <strong>'.$stepBefore->Name.'</strong> to <strong>'.$stepAfter->Name.'</strong>', 'created');
+                            DB::alteration_message('Moving Order #' . $order->getTitle() . ' from <strong>' . $stepBefore->Name . '</strong> to <strong>' . $stepAfter->Name . '</strong>', 'created');
                         }
                     } else {
-                        DB::alteration_message('Moving Order '.$order->getTitle().' from  <strong>'.$stepBefore->Name.'</strong> to <strong>unknown step</strong>', 'deleted');
+                        DB::alteration_message('Moving Order ' . $order->getTitle() . ' from  <strong>' . $stepBefore->Name . '</strong> to <strong>unknown step</strong>', 'deleted');
                     }
                 } elseif ($stepAfter) {
-                    DB::alteration_message('Moving Order '.$order->getTitle().' from <strong>unknown step</strong> to <strong>'.$stepAfter->Name.'</strong>', 'deleted');
+                    DB::alteration_message('Moving Order ' . $order->getTitle() . ' from <strong>unknown step</strong> to <strong>' . $stepAfter->Name . '</strong>', 'deleted');
                 } else {
-                    DB::alteration_message('Moving Order '.$order->getTitle().' from <strong>unknown step</strong> to <strong>unknown step</strong>', 'deleted');
+                    DB::alteration_message('Moving Order ' . $order->getTitle() . ' from <strong>unknown step</strong> to <strong>unknown step</strong>', 'deleted');
                 }
             }
         } else {

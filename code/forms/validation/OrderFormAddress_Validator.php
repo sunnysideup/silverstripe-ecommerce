@@ -9,7 +9,6 @@
  **/
 class OrderFormAddress_Validator extends ShopAccountForm_Validator
 {
-
     /**
      * Ensures member unique id stays unique and other basic stuff...
      *
@@ -25,9 +24,9 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator
         } else {
             $allowExistingEmail = true;
         }
-        if (! isset($data["UseShippingAddress"]) || ! $data["UseShippingAddress"]) {
+        if (! isset($data['UseShippingAddress']) || ! $data['UseShippingAddress']) {
             foreach ($this->required as $key => $value) {
-                if (substr($key, 0, 8) == "Shipping") {
+                if (substr($key, 0, 8) === 'Shipping') {
                     unset($this->required[$key]);
                 }
             }
@@ -47,7 +46,7 @@ class OrderFormAddress_Validator extends ShopAccountForm_Validator
             );
             $valid = false;
         }
-        if (!$valid) {
+        if (! $valid) {
             $this->form->sessionMessage(_t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
             $this->form->messageForForm('OrderForm', _t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
         }

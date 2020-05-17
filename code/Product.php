@@ -10,7 +10,6 @@
  * eCommerce platform. This means you can add an instance
  * of this page type to the shopping cart.
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: buyables
@@ -20,10 +19,15 @@
 class Product extends Page implements BuyableModel
 {
     /**
+     * @var string
+     */
+    protected $defaultClassNameForOrderItem = 'Product_OrderItem';
+
+    /**
      * Standard SS variable.
      */
-    private static $api_access = array(
-        'view' => array(
+    private static $api_access = [
+        'view' => [
             'Title',
             'Price',
             'Weight',
@@ -34,13 +38,13 @@ class Product extends Page implements BuyableModel
             'InternalItemID', //ie SKU, ProductID etc (internal / existing recognition of product)
             'NumberSold', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
             'Version',
-        ),
-    );
+        ],
+    ];
 
     /**
      * Standard SS variable.
      */
-    private static $db = array(
+    private static $db = [
         'Price' => 'Currency',
         'Weight' => 'Float',
         'Model' => 'Varchar(30)',
@@ -52,48 +56,48 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
-    );
+    ];
 
     /**
      * Standard SS variable.
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Image' => 'Product_Image',
-    );
+    ];
 
     /**
      * Standard SS variable.
      */
-    private static $many_many = array(
+    private static $many_many = [
         'ProductGroups' => 'ProductGroup',
         'AdditionalImages' => 'Image',
         'AdditionalFiles' => 'File',
-    );
+    ];
 
     /**
      * Standard SS variable.
      */
-    private static $casting = array(
+    private static $casting = [
         'CalculatedPrice' => 'Currency',
         'CalculatedPriceAsMoney' => 'Money',
         'AllowPurchaseNice' => 'Varchar',
-    );
+    ];
 
     /**
      * Standard SS variable.
      */
-    private static $indexes = array(
+    private static $indexes = [
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
-    );
+    ];
 
     /**
      * Standard SS variable.
      */
-    private static $defaults = array(
+    private static $defaults = [
         'AllowPurchase' => 1,
-    );
+    ];
 
     /**
      * Standard SS variable.
@@ -104,66 +108,44 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Image.CMSThumbnail' => 'Image',
         'FullName' => 'Description',
         'Price' => 'Price',
         'AllowPurchaseNice' => 'For Sale',
-    );
+    ];
 
     /**
      * Standard SS variable.
      */
-    private static $searchable_fields = array(
-        'FullName' => array(
+    private static $searchable_fields = [
+        'FullName' => [
             'title' => 'Keyword',
             'field' => 'TextField',
-        ),
-        'Price' => array(
+        ],
+        'Price' => [
             'title' => 'Price',
             'field' => 'NumericField',
-        ),
-        'InternalItemID' => array(
+        ],
+        'InternalItemID' => [
             'title' => 'Internal Item ID',
             'filter' => 'PartialMatchFilter',
-        ),
+        ],
         'AllowPurchase',
         'ShowInSearch',
         'ShowInMenus',
         'FeaturedProduct',
-    );
-
-    /**
-     * By default we search for products that are allowed to be purchased only
-     * standard SS method.
-     *
-     * @return FieldList
-     */
-    public function scaffoldSearchFields($_params = null)
-    {
-        $fields = parent::scaffoldSearchFields($_params);
-        $fields->fieldByName('AllowPurchase')->setValue(1);
-
-        return $fields;
-    }
+    ];
 
     /**
      * Standard SS variable.
      */
     private static $singular_name = 'Product';
-    public function i18n_singular_name()
-    {
-        return _t('Order.PRODUCT', 'Product');
-    }
 
     /**
      * Standard SS variable.
      */
     private static $plural_name = 'Products';
-    public function i18n_plural_name()
-    {
-        return _t('Order.PRODUCTS', 'Products');
-    }
 
     /**
      * Standard SS variable.
@@ -181,6 +163,32 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $icon = 'ecommerce/images/icons/product';
+
+    private static $_calculated_price_cache = [];
+
+    /**
+     * By default we search for products that are allowed to be purchased only
+     * standard SS method.
+     *
+     * @return FieldList
+     */
+    public function scaffoldSearchFields($_params = null)
+    {
+        $fields = parent::scaffoldSearchFields($_params);
+        $fields->fieldByName('AllowPurchase')->setValue(1);
+
+        return $fields;
+    }
+
+    public function i18n_singular_name()
+    {
+        return _t('Order.PRODUCT', 'Product');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('Order.PRODUCTS', 'Products');
+    }
 
     /**
      * Standard SS Method.
@@ -210,14 +218,14 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Details', new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
         $config = $this->EcomConfig();
-        if ($config && !$config->AllowFreeProductPurchase) {
+        if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
-            if ($price == 0) {
+            if ($price === 0) {
                 $link = $config->CMSEditLink();
                 $allowPurchaseField->setDescription(
                     _t(
                         'Product.DO_NOT_ALLOW_FREE_PRODUCTS_TO_BE_PURCHASED',
-                        "NB: Allow Purchase + zero price is not allowed.  Change the <a href=\"$link\">Shop Settings</a> to allow a zero price product purchases or set price on this product."
+                        "NB: Allow Purchase + zero price is not allowed.  Change the <a href=\"${link}\">Shop Settings</a> to allow a zero price product purchases or set price on this product."
                     )
                 );
             }
@@ -244,7 +252,7 @@ class Product extends Page implements BuyableModel
                 'Root.Main',
                 new LiteralField(
                     'AddToCartLink',
-                    '<p class="message good"><a href="'.$this->AddLink().'">'._t('Product.ADD_TO_CART', 'add to cart').'</a></p>'
+                    '<p class="message good"><a href="' . $this->AddLink() . '">' . _t('Product.ADD_TO_CART', 'add to cart') . '</a></p>'
                 )
             );
         } else {
@@ -252,102 +260,23 @@ class Product extends Page implements BuyableModel
                 'Root.Main',
                 new LiteralField(
                     'AddToCartLink',
-                    '<p class="message warning">'._t('Product.CAN_NOT_BE_ADDED_TO_CART', 'this product can not be added to cart').'</p>'
+                    '<p class="message warning">' . _t('Product.CAN_NOT_BE_ADDED_TO_CART', 'this product can not be added to cart') . '</p>'
                 )
             );
         }
         if ($this->EcomConfig()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.AlsoShowHere',
-                array(
+                [
                     new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
                     $this->getProductGroupsTableField(),
-                )
+                ]
             );
         }
         //if($siteTreeFieldExtensions) {
         //$this->extend('updateSettingsFields', $fields);
         //}
         return $fields;
-    }
-
-    /**
-     * Used in getCSMFields.
-     *
-     * @return GridField
-     **/
-    protected function getProductGroupsTableField()
-    {
-        $gridField = new GridField(
-            'ProductGroups',
-            _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'),
-            $this->ProductGroups(),
-            GridFieldBasicPageRelationConfig::create()
-        );
-
-        return $gridField;
-    }
-
-    /**
-     * Used in getCSMFields.
-     *
-     * @return LiteralField
-     **/
-    protected function getAdditionalImagesMessage()
-    {
-        $msg = '';
-        if ($this->InternalItemID) {
-            $findImagesTask = EcommerceTaskLinkProductWithImages::create();
-            $findImagesLink = $findImagesTask->Link();
-            $findImagesLinkOne = $findImagesLink.'?productid='.$this->ID;
-            $msg .= '
-                <h3>Batch Upload</h3>
-                <p>
-                To batch upload additional images and files, please go to the <a href="/admin/assets">Files section</a>, and upload them there.
-                Files need to be named in the following way:
-                An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image:
-                <strong>'.$this->InternalItemID."_08.jpg</strong>.
-                <br /><br />You can <a href=\"$findImagesLinkOne\" target='_blank'>find images for <i>".$this->Title."</i></a> or
-                <a href=\"$findImagesLink\" target='_blank'>images for all products</a> ...
-            </p>";
-        } else {
-            $msg .= '
-            <h3>Batch Upload</h3>
-            <p>To batch upload additional images and files, you must first specify a product code.</p>';
-        }
-        $field = new LiteralField('ImageFileNote', $msg);
-
-        return $field;
-    }
-
-    /**
-     * Used in getCSMFields.
-     *
-     * @return GridField
-     **/
-    protected function getAdditionalImagesField()
-    {
-        $uploadField = new UploadFIeld(
-            'AdditionalImages',
-            'More images'
-        );
-        $uploadField->setAllowedMaxFileNumber(12);
-        return $uploadField;
-    }
-
-    /**
-     * Used in getCSMFields.
-     *
-     * @return GridField
-     **/
-    protected function getAdditionalFilesField()
-    {
-        $uploadField = new UploadFIeld(
-            'AdditionalFiles',
-            'Additional Files'
-        );
-        $uploadField->setAllowedMaxFileNumber(12);
-        return $uploadField;
     }
 
     /**
@@ -383,9 +312,9 @@ class Product extends Page implements BuyableModel
             $this->MetaDescription = '';
             $fieldsToExclude = Config::inst()->get('SiteTree', 'db');
             foreach ($this->db() as $fieldName => $fieldType) {
-                if (is_string($this->$fieldName) && strlen($this->$fieldName) > 2) {
-                    if (!in_array($fieldName, $fieldsToExclude)) {
-                        $this->MetaDescription .= strip_tags($this->$fieldName);
+                if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
+                    if (! in_array($fieldName, $fieldsToExclude, true)) {
+                        $this->MetaDescription .= strip_tags($this->{$fieldName});
                     }
                 }
             }
@@ -395,7 +324,7 @@ class Product extends Page implements BuyableModel
                     $variationCount = $variations->count();
                     if ($variationCount > 0 && $variationCount < 8) {
                         foreach ($variations as $variation) {
-                            $this->MetaDescription .= ' - '.$variation->FullName;
+                            $this->MetaDescription .= ' - ' . $variation->FullName;
                         }
                     }
                 }
@@ -411,13 +340,12 @@ class Product extends Page implements BuyableModel
     {
         parent::onAfterWrite();
         if ($this->ImageID) {
-            if ($normalImage = Image::get()->exclude(array('ClassName' => 'Product_Image'))->byID($this->ImageID)) {
+            if ($normalImage = Image::get()->exclude(['ClassName' => 'Product_Image'])->byID($this->ImageID)) {
                 $normalImage = $normalImage->newClassInstance('Product_Image');
                 $normalImage->write();
             }
         }
     }
-
 
     /**
      * sets the FullName and FullSiteTreeField to the latest values
@@ -431,13 +359,13 @@ class Product extends Page implements BuyableModel
         //FullName
         $fullName = '';
         if ($this->InternalItemID) {
-            $fullName .= $this->InternalItemID.': ';
+            $fullName .= $this->InternalItemID . ': ';
         }
         $fullName .= $this->Title;
         //FullSiteTreeSort
-        $parentSortArray = array(sprintf('%03d', $this->Sort));
+        $parentSortArray = [sprintf('%03d', $this->Sort)];
         $obj = $this;
-        $parentTitleArray = array();
+        $parentTitleArray = [];
         while ($obj && $obj->ParentID) {
             $obj = SiteTree::get()->byID(intval($obj->ParentID) - 0);
             if ($obj) {
@@ -450,12 +378,12 @@ class Product extends Page implements BuyableModel
         $reverseArray = array_reverse($parentSortArray);
         $parentTitle = '';
         if (count($parentTitleArray)) {
-            $parentTitle = ' ('._t('product.IN', 'in').' '.implode(' / ', $parentTitleArray).')';
+            $parentTitle = ' (' . _t('product.IN', 'in') . ' ' . implode(' / ', $parentTitleArray) . ')';
         }
         //setting fields with new values!
-        $this->FullName = $fullName.$parentTitle;
+        $this->FullName = $fullName . $parentTitle;
         $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
-        if (($this->dbObject('FullName') != $this->FullName) || ($this->dbObject('FullSiteTreeSort') != $this->FullSiteTreeSort)) {
+        if (($this->dbObject('FullName') !== $this->FullName) || ($this->dbObject('FullSiteTreeSort') !== $this->FullSiteTreeSort)) {
             return true;
         }
 
@@ -474,9 +402,9 @@ class Product extends Page implements BuyableModel
         $otherGroupsArray = $this->ProductGroups()->map('ID', 'ID')->toArray();
 
         return ProductGroup::get()->filter(
-            array(
-                'ID' => array($this->ParentID => $this->ParentID) + $otherGroupsArray,
-            )
+            [
+                'ID' => [$this->ParentID => $this->ParentID] + $otherGroupsArray,
+            ]
         );
     }
 
@@ -489,7 +417,7 @@ class Product extends Page implements BuyableModel
     public function AllParentGroupsIncludingParents()
     {
         $directParents = $this->AllParentGroups();
-        $allParentsArray = array();
+        $allParentsArray = [];
         foreach ($directParents as $parent) {
             $obj = $parent;
             $allParentsArray[$obj->ID] = $obj->ID;
@@ -503,7 +431,7 @@ class Product extends Page implements BuyableModel
             }
         }
 
-        return ProductGroup::get()->filter(array('ID' => $allParentsArray));
+        return ProductGroup::get()->filter(['ID' => $allParentsArray]);
     }
 
     /**
@@ -539,7 +467,7 @@ class Product extends Page implements BuyableModel
             $returnValue = $parent;
             $parent = DataObject::get_one(
                 'ProductGroup',
-                array('ID' => $parent->ParentID)
+                ['ID' => $parent->ParentID]
             );
             ++$x;
         }
@@ -556,20 +484,21 @@ class Product extends Page implements BuyableModel
     {
         if ($this->ParentID) {
             $extension = '';
-            if (Versioned::current_stage() == 'Live') {
+            if (Versioned::current_stage() === 'Live') {
                 $extension = '_Live';
             }
 
             return Product::get()
-                ->filter(array(
+                ->filter([
                     'ShowInMenus' => 1,
                     'ParentID' => $this->ParentID,
-                ))
-                ->exclude(array('ID' => $this->ID));
+                ])
+                ->exclude(['ID' => $this->ID]);
         }
     }
 
     //IMAGE
+
     /**
      * returns a "BestAvailable" image if the current one is not available
      * In some cases this is appropriate and in some cases this is not.
@@ -612,7 +541,7 @@ class Product extends Page implements BuyableModel
             }
         }
 
-        return '['._t('product.NOIMAGE', 'no image').']';
+        return '[' . _t('product.NOIMAGE', 'no image') . ']';
     }
 
     /**
@@ -665,7 +594,7 @@ class Product extends Page implements BuyableModel
     /**
      * @TODO: complete
      *
-     * @param string $compontent - the has many relationship you are looking at, e.g. OrderAttribute
+     * @param string $component - the has many relationship you are looking at, e.g. OrderAttribute
      *
      * @return DataList (CHECK!)
      */
@@ -674,9 +603,7 @@ class Product extends Page implements BuyableModel
         return;
         $baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
         $query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
-        $result = singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
-
-        return $result;
+        return singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
     }
 
     /**
@@ -692,15 +619,15 @@ class Product extends Page implements BuyableModel
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
-        if (!$id) {
+        if (! $id) {
             $id = $this->ID;
         }
-        if (!$version) {
+        if (! $version) {
             $version = $this->Version;
         }
         //not sure why this is running via OrderItem...
         $obj = OrderItem::get_version($this->ClassName, $id, $version);
-        if (!$obj) {
+        if (! $obj) {
             $className = $this->ClassName;
             $obj = $className::get()->byID($id);
         }
@@ -720,7 +647,7 @@ class Product extends Page implements BuyableModel
     public function OrderItem()
     {
         //work out the filter
-        $filterArray = array();
+        $filterArray = [];
         $extendedFilter = $this->extend('updateItemFilter', $filter);
         if ($extendedFilter !== null && is_array($extendedFilter) && count($extendedFilter)) {
             $filterArray = $extendedFilter;
@@ -731,11 +658,6 @@ class Product extends Page implements BuyableModel
 
         return $item;
     }
-
-    /**
-     * @var string
-     */
-    protected $defaultClassNameForOrderItem = 'Product_OrderItem';
 
     /**
      * you can overwrite this function in your buyable items (such as Product).
@@ -756,7 +678,7 @@ class Product extends Page implements BuyableModel
     /**
      * You can set an alternative class name for order item using this method.
      *
-     * @param string $ClassName
+     * @param string $className
      **/
     public function setAlternativeClassNameForOrderItem($className)
     {
@@ -784,16 +706,17 @@ class Product extends Page implements BuyableModel
     {
         return $this->getHasBeenSold();
     }
+
     public function getHasBeenSold()
     {
         $dataList = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false);
         $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
         $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
         $dataList = $dataList->filter(
-            array(
+            [
                 'BuyableID' => $this->ID,
-                'buyableClassName' => $this->ClassName
-            )
+                'buyableClassName' => $this->ClassName,
+            ]
         );
 
         return $dataList->count();
@@ -882,13 +805,13 @@ class Product extends Page implements BuyableModel
     /**
      * set new specific new quantity for buyable's orderitem.
      *
-     * @param float
+     * @param float $quantity
      *
      * @return string (Link)
      */
     public function SetSpecificQuantityItemLink($quantity)
     {
-        return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters('setspecificquantityitem'), array('quantity' => $quantity)));
+        return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters('setspecificquantityitem'), ['quantity' => $quantity]));
     }
 
     /**
@@ -903,52 +826,23 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function VersionedLink()
     {
         return Controller::join_links(
-             Director::baseURL(),
-             EcommerceConfig::get('ShoppingCart_Controller', 'url_segment'),
-             'submittedbuyable',
-             $this->ClassName,
-             $this->ID,
-             $this->Version
-         );
+            Director::baseURL(),
+            EcommerceConfig::get('ShoppingCart_Controller', 'url_segment'),
+            'submittedbuyable',
+            $this->ClassName,
+            $this->ID,
+            $this->Version
+        );
     }
 
     public function RemoveFromSaleLink()
     {
         return ShoppingCart_Controller::remove_from_sale_link($this->ID, $this->ClassName);
-    }
-
-    /**
-     * Here you can add additional information to your product
-     * links such as the AddLink and the RemoveLink.
-     * One useful parameter you can add is the BackURL link.
-     *
-     * Usage would be by means of
-     * 1. decorating product
-     * 2. adding a updateLinkParameters method
-     * 3. adding items to the array.
-     *
-     * You can also extend Product and override this method...
-     *
-     * @return array
-     **/
-    protected function linkParameters($type = '')
-    {
-        $array = array();
-        $extendedArray = $this->extend('updateLinkParameters', $array, $type);
-        if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
-            foreach ($extendedArray as $extendedArrayUpdate) {
-                $array = array_merge($array, $extendedArrayUpdate);
-            }
-        }
-
-        return $array;
     }
 
     //TEMPLATE STUFF
@@ -958,7 +852,7 @@ class Product extends Page implements BuyableModel
      */
     public function IsInCart()
     {
-        return ($this->OrderItem() && $this->OrderItem()->Quantity > 0) ? true : false;
+        return $this->OrderItem() && $this->OrderItem()->Quantity > 0 ? true : false;
     }
 
     /**
@@ -1025,8 +919,6 @@ class Product extends Page implements BuyableModel
         return $this->getCalculatedPrice();
     }
 
-    private static $_calculated_price_cache = array();
-
     /**
      * Products have a standard price, but for specific situations they have a calculated price.
      * The Price can be changed for specific member discounts, etc...
@@ -1066,6 +958,7 @@ class Product extends Page implements BuyableModel
     {
         return $this->getCalculatedPriceAsMoney();
     }
+
     public function getCalculatedPriceAsMoney()
     {
         return EcommerceCurrency::get_money_object_from_order_currency($this->getCalculatedPrice());
@@ -1106,7 +999,7 @@ class Product extends Page implements BuyableModel
 
         if ($checkPrice) {
             $price = $this->getCalculatedPrice();
-            if ($price == 0 && !$config->AllowFreeProductPurchase) {
+            if ($price === 0 && ! $config->AllowFreeProductPurchase) {
                 return false;
             }
         }
@@ -1192,60 +1085,56 @@ class Product extends Page implements BuyableModel
         return $this->canEdit($member);
     }
 
-
     public function debug()
     {
         $html = EcommerceTaskDebugCart::debug_object($this);
         $html .= '<ul>';
         $html .= '<li><hr />Links<hr /></li>';
-        $html .= '<li><b>Link:</b> <a href="'.$this->Link().'">'.$this->Link().'</a></li>';
-        $html .= '<li><b>Ajax Link:</b> <a href="'.$this->AjaxLink().'">'.$this->AjaxLink().'</a></li>';
-        $html .= '<li><b>AddVariations Link:</b> <a href="'.$this->AddVariationsLink().'">'.$this->AddVariationsLink().'</a></li>';
-        $html .= '<li><b>Add to Cart Link:</b> <a href="'.$this->AddLink().'">'.$this->AddLink().'</a></li>';
-        $html .= '<li><b>Increment Link:</b> <a href="'.$this->IncrementLink().'">'.$this->IncrementLink().'</a></li>';
-        $html .= '<li><b>Decrement Link:</b> <a href="'.$this->DecrementLink().'">'.$this->DecrementLink().'</a></li>';
-        $html .= '<li><b>Remove Link:</b> <a href="'.$this->RemoveAllLink().'">'.$this->RemoveLink().'</a></li>';
-        $html .= '<li><b>Remove All Link:</b> <a href="'.$this->RemoveAllLink().'">'.$this->RemoveAllLink().'</a></li>';
-        $html .= '<li><b>Remove All and Edit Link:</b> <a href="'.$this->RemoveAllAndEditLink().'">'.$this->RemoveAllAndEditLink().'</a></li>';
-        $html .= '<li><b>Set Specific Quantity Item Link (e.g. 77):</b> <a href="'.$this->SetSpecificQuantityItemLink(77).'">'.$this->SetSpecificQuantityItemLink(77).'</a></li>';
+        $html .= '<li><b>Link:</b> <a href="' . $this->Link() . '">' . $this->Link() . '</a></li>';
+        $html .= '<li><b>Ajax Link:</b> <a href="' . $this->AjaxLink() . '">' . $this->AjaxLink() . '</a></li>';
+        $html .= '<li><b>AddVariations Link:</b> <a href="' . $this->AddVariationsLink() . '">' . $this->AddVariationsLink() . '</a></li>';
+        $html .= '<li><b>Add to Cart Link:</b> <a href="' . $this->AddLink() . '">' . $this->AddLink() . '</a></li>';
+        $html .= '<li><b>Increment Link:</b> <a href="' . $this->IncrementLink() . '">' . $this->IncrementLink() . '</a></li>';
+        $html .= '<li><b>Decrement Link:</b> <a href="' . $this->DecrementLink() . '">' . $this->DecrementLink() . '</a></li>';
+        $html .= '<li><b>Remove Link:</b> <a href="' . $this->RemoveAllLink() . '">' . $this->RemoveLink() . '</a></li>';
+        $html .= '<li><b>Remove All Link:</b> <a href="' . $this->RemoveAllLink() . '">' . $this->RemoveAllLink() . '</a></li>';
+        $html .= '<li><b>Remove All and Edit Link:</b> <a href="' . $this->RemoveAllAndEditLink() . '">' . $this->RemoveAllAndEditLink() . '</a></li>';
+        $html .= '<li><b>Set Specific Quantity Item Link (e.g. 77):</b> <a href="' . $this->SetSpecificQuantityItemLink(77) . '">' . $this->SetSpecificQuantityItemLink(77) . '</a></li>';
 
         $html .= '<li><hr />Cart<hr /></li>';
-        $html .= '<li><b>Allow Purchase (DB Value):</b> '.$this->AllowPurchaseNice().' </li>';
-        $html .= '<li><b>Can Purchase (overal calculation):</b> '.($this->canPurchase() ? 'YES' : 'NO').' </li>';
-        $html .= '<li><b>Shop Open:</b> '.($this->EcomConfig() ?  ($this->EcomConfig()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG').' </li>';
-        $html .= '<li><b>Extended Country Can Purchase:</b> '.($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')).' </li>';
-        $html .= '<li><b>Allow sales to this country ('.EcommerceCountry::get_country().'):</b> '.(EcommerceCountry::allow_sales() ? 'YES' : 'NO').' </li>';
-        $html .= '<li><b>Class Name for OrderItem:</b> '.$this->classNameForOrderItem().' </li>';
-        $html .= '<li><b>Quantity Decimals:</b> '.$this->QuantityDecimals().' </li>';
-        $html .= '<li><b>Is In Cart:</b> '.($this->IsInCart() ? 'YES' : 'NO').' </li>';
-        $html .= '<li><b>Has Been Sold:</b> '.($this->HasBeenSold() ?  'YES' : 'NO').' </li>';
-        $html .= '<li><b>Calculated Price:</b> '.$this->CalculatedPrice().' </li>';
-        $html .= '<li><b>Calculated Price as Money:</b> '.$this->getCalculatedPriceAsMoney()->Nice().' </li>';
+        $html .= '<li><b>Allow Purchase (DB Value):</b> ' . $this->AllowPurchaseNice() . ' </li>';
+        $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
+        $html .= '<li><b>Shop Open:</b> ' . ($this->EcomConfig() ? ($this->EcomConfig()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
+        $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
+        $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
+        $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
+        $html .= '<li><b>Quantity Decimals:</b> ' . $this->QuantityDecimals() . ' </li>';
+        $html .= '<li><b>Is In Cart:</b> ' . ($this->IsInCart() ? 'YES' : 'NO') . ' </li>';
+        $html .= '<li><b>Has Been Sold:</b> ' . ($this->HasBeenSold() ? 'YES' : 'NO') . ' </li>';
+        $html .= '<li><b>Calculated Price:</b> ' . $this->CalculatedPrice() . ' </li>';
+        $html .= '<li><b>Calculated Price as Money:</b> ' . $this->getCalculatedPriceAsMoney()->Nice() . ' </li>';
 
         $html .= '<li><hr />Location<hr /></li>';
-        $html .= '<li><b>Main Parent Group:</b> '.$this->MainParentGroup()->Title.'</li>';
-        $html .= '<li><b>All Others Parent Groups:</b> '.($this->AllParentGroups()->count() ? '<pre>'.print_r($this->AllParentGroups()->map()->toArray(), 1).'</pre>' : 'none').'</li>';
+        $html .= '<li><b>Main Parent Group:</b> ' . $this->MainParentGroup()->Title . '</li>';
+        $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->count() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
 
         $html .= '<li><hr />Image<hr /></li>';
-        $html .= '<li><b>Image:</b> '.($this->BestAvailableImage() ? '<img src='.$this->BestAvailableImage()->Link().' />' : 'no image').' </li>';
+        $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
         $productGroup = ProductGroup::get()->byID($this->ParentID);
         if ($productGroup) {
             $html .= '<li><hr />Product Example<hr /></li>';
-            $html .= '<li><b>Product Group View:</b> <a href="'.$productGroup->Link().'">'.$productGroup->Title.'</a> </li>';
-            $html .= '<li><b>Product Group Debug:</b> <a href="'.$productGroup->Link('debug').'">'.$productGroup->Title.'</a> </li>';
-            $html .= '<li><b>Product Group Admin:</b> <a href="'.'/admin/pages/edit/show/'.$productGroup->ID.'">'.$productGroup->Title.' Admin</a> </li>';
-            $html .= '<li><b>Edit this Product:</b> <a href="'.'/admin/pages/edit/show/'.$this->ID.'">'.$this->Title.' Admin</a> </li>';
+            $html .= '<li><b>Product Group View:</b> <a href="' . $productGroup->Link() . '">' . $productGroup->Title . '</a> </li>';
+            $html .= '<li><b>Product Group Debug:</b> <a href="' . $productGroup->Link('debug') . '">' . $productGroup->Title . '</a> </li>';
+            $html .= '<li><b>Product Group Admin:</b> <a href="' . '/admin/pages/edit/show/' . $productGroup->ID . '">' . $productGroup->Title . ' Admin</a> </li>';
+            $html .= '<li><b>Edit this Product:</b> <a href="' . '/admin/pages/edit/show/' . $this->ID . '">' . $this->Title . ' Admin</a> </li>';
         }
         $html .= '</ul>';
 
         return $html;
-        $html .= '</ul>';
-
-        return $html;
+        return $html . '</ul>';
     }
 
     /**
-     *
      * @int
      */
     public function IDForSearchResults()
@@ -1254,30 +1143,131 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     *
      * @string
      */
     public function InternalItemIDForSearchResults()
     {
         return $this->InternalItemID;
     }
+
+    /**
+     * Used in getCSMFields.
+     *
+     * @return GridField
+     **/
+    protected function getProductGroupsTableField()
+    {
+        return new GridField(
+            'ProductGroups',
+            _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'),
+            $this->ProductGroups(),
+            GridFieldBasicPageRelationConfig::create()
+        );
+    }
+
+    /**
+     * Used in getCSMFields.
+     *
+     * @return LiteralField
+     **/
+    protected function getAdditionalImagesMessage()
+    {
+        $msg = '';
+        if ($this->InternalItemID) {
+            $findImagesTask = EcommerceTaskLinkProductWithImages::create();
+            $findImagesLink = $findImagesTask->Link();
+            $findImagesLinkOne = $findImagesLink . '?productid=' . $this->ID;
+            $msg .= '
+                <h3>Batch Upload</h3>
+                <p>
+                To batch upload additional images and files, please go to the <a href="/admin/assets">Files section</a>, and upload them there.
+                Files need to be named in the following way:
+                An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image:
+                <strong>' . $this->InternalItemID . "_08.jpg</strong>.
+                <br /><br />You can <a href=\"${findImagesLinkOne}\" target='_blank'>find images for <i>" . $this->Title . "</i></a> or
+                <a href=\"${findImagesLink}\" target='_blank'>images for all products</a> ...
+            </p>";
+        } else {
+            $msg .= '
+            <h3>Batch Upload</h3>
+            <p>To batch upload additional images and files, you must first specify a product code.</p>';
+        }
+        return new LiteralField('ImageFileNote', $msg);
+    }
+
+    /**
+     * Used in getCSMFields.
+     *
+     * @return GridField
+     **/
+    protected function getAdditionalImagesField()
+    {
+        $uploadField = new UploadFIeld(
+            'AdditionalImages',
+            'More images'
+        );
+        $uploadField->setAllowedMaxFileNumber(12);
+        return $uploadField;
+    }
+
+    /**
+     * Used in getCSMFields.
+     *
+     * @return GridField
+     **/
+    protected function getAdditionalFilesField()
+    {
+        $uploadField = new UploadFIeld(
+            'AdditionalFiles',
+            'Additional Files'
+        );
+        $uploadField->setAllowedMaxFileNumber(12);
+        return $uploadField;
+    }
+
+    /**
+     * Here you can add additional information to your product
+     * links such as the AddLink and the RemoveLink.
+     * One useful parameter you can add is the BackURL link.
+     *
+     * Usage would be by means of
+     * 1. decorating product
+     * 2. adding a updateLinkParameters method
+     * 3. adding items to the array.
+     *
+     * You can also extend Product and override this method...
+     *
+     * @return array
+     **/
+    protected function linkParameters($type = '')
+    {
+        $array = [];
+        $extendedArray = $this->extend('updateLinkParameters', $array, $type);
+        if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+            foreach ($extendedArray as $extendedArrayUpdate) {
+                $array = array_merge($array, $extendedArrayUpdate);
+            }
+        }
+
+        return $array;
+    }
 }
 
 class Product_Controller extends Page_Controller
 {
-    private static $allowed_actions = array(
-        'viewversion',
-        'ajaxview',
-        'addproductfromform',
-        'debug' => 'ADMIN',
-    );
-
     /**
      * is this the current version?
      *
      * @var bool
      */
     protected $isCurrentVersion = true;
+
+    private static $allowed_actions = [
+        'viewversion',
+        'ajaxview',
+        'addproductfromform',
+        'debug' => 'ADMIN',
+    ];
 
     /**
      * Standard SS method.
@@ -1294,16 +1284,16 @@ class Product_Controller extends Page_Controller
      * returns error or changes datarecord to earlier version
      * if the ID does not match the Page then we look for the variation.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      */
     public function viewversion(SS_HTTPRequest $request)
     {
         $version = intval($request->param('ID')) - 0;
         $currentVersion = $this->Version;
-        if ($currentVersion != $version) {
+        if ($currentVersion !== $version) {
             if ($record = $this->getVersionOfBuyable($this->ID, $version)) {
                 //we check again, because we may actually get the same version back...
-                if ($record->Version != $this->Version) {
+                if ($record->Version !== $this->Version) {
                     $this->record = $record;
                     $this->dataRecord->AllowPurchase = false;
                     $this->AllowPurchase = false;
@@ -1316,7 +1306,7 @@ class Product_Controller extends Page_Controller
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -1341,8 +1331,8 @@ class Product_Controller extends Page_Controller
     public function AddProductForm()
     {
         if ($this->canPurchase()) {
-            $farray = array();
-            $requiredFields = array();
+            $farray = [];
+            $requiredFields = [];
             $fields = new FieldList($farray);
             $fields->push(new NumericField('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
             $actions = new FieldList(
@@ -1350,12 +1340,9 @@ class Product_Controller extends Page_Controller
             );
             $requiredfields[] = 'Quantity';
             $validator = new RequiredFields($requiredfields);
-            $form = new Form($this, 'AddProductForm', $fields, $actions, $validator);
-
-            return $form;
-        } else {
-            return _t('Product.PRODUCTNOTFORSALE', 'Product not for sale');
+            return new Form($this, 'AddProductForm', $fields, $actions, $validator);
         }
+        return _t('Product.PRODUCTNOTFORSALE', 'Product not for sale');
     }
 
     /**
@@ -1366,9 +1353,9 @@ class Product_Controller extends Page_Controller
      */
     public function addproductfromform(array $data, Form $form)
     {
-        if (!$this->IsInCart()) {
+        if (! $this->IsInCart()) {
             $quantity = round($data['Quantity'], $this->QuantityDecimals());
-            if (!$quantity) {
+            if (! $quantity) {
                 $quantity = 1;
             }
             $product = Product::get()->byID($this->ID);
@@ -1384,10 +1371,9 @@ class Product_Controller extends Page_Controller
             }
             if (Director::is_ajax()) {
                 return ShoppingCart::singleton()->setMessageAndReturn($msg, $status);
-            } else {
-                $form->sessionMessage($msg, $status);
-                $this->redirectBack();
             }
+            $form->sessionMessage($msg, $status);
+            $this->redirectBack();
         } else {
             return EcomQuantityField::create($this);
         }
@@ -1424,7 +1410,7 @@ class Product_Controller extends Page_Controller
         $next = 0;
         foreach ($array as $key => $id) {
             $id = intval($id);
-            if ($id == $this->ID) {
+            if ($id === $this->ID) {
                 if (isset($array[$key + 1])) {
                     return Product::get()->byID(intval($array[$key + 1]));
                 }
@@ -1443,7 +1429,7 @@ class Product_Controller extends Page_Controller
         $previousID = 0;
         foreach ($array as $key => $id) {
             $id = intval($id);
-            if ($id == $this->ID) {
+            if ($id === $this->ID) {
                 return Product::get()->byID($previousID);
             }
             $previousID = $id;
@@ -1462,6 +1448,19 @@ class Product_Controller extends Page_Controller
         return $this->PreviousProduct() || $this->NextProduct() ? true : false;
     }
 
+    public function debug()
+    {
+        $member = Member::currentUser();
+        if (! $member || ! $member->IsShopAdmin()) {
+            $messages = [
+                'default' => 'You must login as an admin to access debug functions.',
+            ];
+            Security::permissionFailure($this, $messages);
+        }
+
+        return $this->dataRecord->debug();
+    }
+
     /**
      * returns an array of product IDs, as saved in the last
      * ProductGroup view (saved using session).
@@ -1478,19 +1477,6 @@ class Product_Controller extends Page_Controller
             }
         }
 
-        return array();
-    }
-
-    public function debug()
-    {
-        $member = Member::currentUser();
-        if (!$member || !$member->IsShopAdmin()) {
-            $messages = array(
-                'default' => 'You must login as an admin to access debug functions.',
-            );
-            Security::permissionFailure($this, $messages);
-        }
-
-        return $this->dataRecord->debug();
+        return [];
     }
 }

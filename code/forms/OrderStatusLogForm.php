@@ -6,7 +6,6 @@
  *
  * @see OrderLog
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
@@ -24,11 +23,11 @@ class OrderStatusLogForm extends Form
      * You can use your own Logs or an extension of OrderLog_Controller by setting the first parameter (optionalController)
      * to your own controller.
      *
-     *@param $optionalController Controller
-     *@param $name String
-     *@param $fields FieldList
-     *@param $actions FieldList
-     *@param $validator Validator
+     *@param Controller $optionalController
+     *@param string $name
+     *@param FieldList $fields
+     *@param FieldList $actions
+     *@param Validator $optionalValidator
      **/
     public function __construct(
         Controller $optionalController = null,
@@ -37,11 +36,11 @@ class OrderStatusLogForm extends Form
         FieldList $actions,
         Validator $optionalValidator = null
     ) {
-        if (!$optionalController) {
+        if (! $optionalController) {
             $controllerClassName = EcommerceConfig::get('OrderStatusLogForm', 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (!$optionalValidator) {
+        if (! $optionalValidator) {
             $validatorClassName = EcommerceConfig::get('OrderStatusLogForm', 'validator_class');
             $optionalValidator = new $validatorClassName();
         }
@@ -57,7 +56,7 @@ class OrderStatusLogForm extends Form
 
         $this->setAttribute('autocomplete', 'off');
         Requirements::themedCSS($this->ClassName, 'ecommerce');
-        Requirements::javascript(THIRDPARTY_DIR.'/jquery-form/jquery.form.js');
+        Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
         //add JS for the Log - added in Log
         $oldData = Session::get("FormInfo.{$this->FormName()}.data");
         if ($oldData && (is_array($oldData) || is_object($oldData))) {

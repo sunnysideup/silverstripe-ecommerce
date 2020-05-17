@@ -3,7 +3,6 @@
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
@@ -21,11 +20,11 @@ class OrderModifierForm extends Form
      * You can use your own modifiers or an extension of OrderModifier_Controller by setting the first parameter (optionalController)
      * to your own controller.
      *
-     *@param $optionalController Controller
-     *@param $name String
-     *@param $fields FieldList
-     *@param $actions FieldList
-     *@param $validator SS_Validator
+     *@param Controller $optionalController
+     *@param string $name
+     *@param FieldList $fields
+     *@param FieldList $actions
+     *@param SS_Validator $optionalValidator
      **/
     public function __construct(
         Controller $optionalController = null,
@@ -34,11 +33,11 @@ class OrderModifierForm extends Form
         FieldList $actions,
         Validator $optionalValidator = null
     ) {
-        if (!$optionalController) {
+        if (! $optionalController) {
             $controllerClassName = EcommerceConfig::get('OrderModifierForm', 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (!$optionalValidator) {
+        if (! $optionalValidator) {
             $validatorClassName = EcommerceConfig::get('OrderModifierForm', 'validator_class');
             $optionalValidator = new $validatorClassName();
         }
@@ -55,27 +54,13 @@ class OrderModifierForm extends Form
         $this->setAttribute('autocomplete', 'off');
         Requirements::themedCSS($this->ClassName, 'ecommerce');
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
-        Requirements::javascript(THIRDPARTY_DIR.'/jquery-form/jquery.form.js');
+        Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier
         $oldData = Session::get("FormInfo.{$this->FormName()}.data");
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
         $this->extend('updateOrderModifierForm', $this);
-    }
-
-    protected function myLcFirst($str)
-    {
-        if (function_exists('lcfirst') === false) {
-            function lcfirst($str)
-            {
-                $str[0] = strtolower($str[0]);
-
-                return $str;
-            }
-        } else {
-            return lcfirst($str);
-        }
     }
 
     /**
@@ -110,5 +95,19 @@ class OrderModifierForm extends Form
     {
         $data = $this->getData();
         Session::set("FormInfo.{$this->FormName()}.data", $data);
+    }
+
+    protected function myLcFirst($str)
+    {
+        if (function_exists('lcfirst') === false) {
+            function lcfirst($str)
+            {
+                $str[0] = strtolower($str[0]);
+
+                return $str;
+            }
+        } else {
+            return lcfirst($str);
+        }
     }
 }

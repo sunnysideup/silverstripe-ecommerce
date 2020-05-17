@@ -2,7 +2,6 @@
 
 class OrderToArray extends OrderConverter
 {
-
     public function convert(): array
     {
         $currency = $this->order->CurrencyUsed();
@@ -10,31 +9,31 @@ class OrderToArray extends OrderConverter
         $shipping = $billing;
         $items = $this->order->OrderItems();
         $modifiers = $this->order->Modifiers();
-        if($this->order->IsSeparateShippingAddress()) {
+        if ($this->order->IsSeparateShippingAddress()) {
             $shipping = $this->order->ShippingAddress();
         }
         $array = [
-             'totalAmount' => [
+            'totalAmount' => [
                 'amount' => $this->order->Total,
                 'currency' => $currency->Code,
-             ],
-             'consumer' => [
+            ],
+            'consumer' => [
                 'phoneNumber' => $billing->Phone,
                 'givenNames' => $billing->FirstName,
                 'surname' => $billing->Surname,
                 'email' => $billing->Email,
-             ],
+            ],
             'billing' => [
-                'name' => $billing->FirstName.' '.$billing->Surname,
-                'line1' => $billing->Address.' '.$billing->Address2,
+                'name' => $billing->FirstName . ' ' . $billing->Surname,
+                'line1' => $billing->Address . ' ' . $billing->Address2,
                 'state' => $billing->City,
                 'postcode' => $billing->PostalCode,
                 'countryCode' => $billing->Country,
                 'phoneNumber' => $billing->Phone,
             ],
             'shipping' => [
-                'name' => $shipping->FirstName.' '.$shipping->Surname,
-                'line1' => $shipping->Address.' '.$shipping->Address2,
+                'name' => $shipping->FirstName . ' ' . $shipping->Surname,
+                'line1' => $shipping->Address . ' ' . $shipping->Address2,
                 'state' => $shipping->City,
                 'postcode' => $shipping->PostalCode,
                 'countryCode' => $shipping->Country,
@@ -52,7 +51,7 @@ class OrderToArray extends OrderConverter
                 'currency' => 0,
             ],
         ];
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $array['items'][] = [
                 'name' => $item->getTitle(),
                 'sku' => $item->getInternalItemID(),
@@ -63,25 +62,25 @@ class OrderToArray extends OrderConverter
                 ],
             ];
         }
-        foreach($modifiers as $modifier) {
-            switch($modifier->Type) {
+        foreach ($modifiers as $modifier) {
+            switch ($modifier->Type) {
                 case 'Discount':
                     $array['discounts'][] = [
                         'displayName' => 'discount',
                         'amount' => $modifier->CalculatedTotal,
-                        'currency' => $currency->Code
+                        'currency' => $currency->Code,
                     ];
                     break;
                 case 'Delivery':
                     $array['shippingAmount'] = [
                         'amount' => $array['shippingAmount']['amount'] + $modifier->CalculatedTotal,
-                        'currency' => $currency->Code
+                        'currency' => $currency->Code,
                     ];
                     break;
                 case 'Tax':
                     $array['taxAmount'] = [
                         'amount' => $array['taxAmount']['amount'] + $modifier->CalculatedTotal,
-                        'currency' => $currency->Code
+                        'currency' => $currency->Code,
                     ];
                     break;
             }
@@ -89,5 +88,4 @@ class OrderToArray extends OrderConverter
 
         return $array;
     }
-
 }

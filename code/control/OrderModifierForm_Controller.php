@@ -7,23 +7,22 @@
  */
 class OrderModifierForm_Controller extends Controller
 {
-
-    /**
-     * @var string
-     */
-    private static $url_segment = "ecommercemodifierformcontroller";
-
     /**
      * @var Order
      */
     protected $currentOrder = null;
 
     /**
+     * @var string
+     */
+    private static $url_segment = 'ecommercemodifierformcontroller';
+
+    /**
      * @var array
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'removemodifier',
-    );
+    ];
 
     /**
      * sets virtual methods and order.
@@ -36,6 +35,31 @@ class OrderModifierForm_Controller extends Controller
     }
 
     /**
+     * @ToDO: check this method
+     * It looks like this: /$ClassName/$action/
+     *
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        $URLSegment = Config::inst()->get($this->class, 'url_segment');
+        if (! $URLSegment) {
+            $URLSegment = $this->class;
+        }
+
+        return Controller::join_links(
+            Director::BaseURL(),
+            $URLSegment,
+            $action
+        );
+    }
+
+    public function removemodifier()
+    {
+        //@TODO: See issue 149
+    }
+
+    /**
      * Inits the virtual methods from the name of the modifier forms to
      * redirect the action method to the form class.
      */
@@ -44,7 +68,7 @@ class OrderModifierForm_Controller extends Controller
         if ($this->currentOrder) {
             if ($forms = $this->currentOrder->getModifierForms($this)) {
                 foreach ($forms as $form) {
-                    if(!($form instanceof Form)) {
+                    if (! ($form instanceof Form)) {
                         $form = $form->Form;
                     }
                     $this->addWrapperMethod($form->getName(), 'getOrderModifierForm');
@@ -66,40 +90,15 @@ class OrderModifierForm_Controller extends Controller
         if ($this->currentOrder) {
             if ($forms = $this->currentOrder->getModifierForms($this)) {
                 foreach ($forms as $form) {
-                    if(!($form instanceof Form)) {
+                    if (! ($form instanceof Form)) {
                         $form = $form->Form;
                     }
 
-                    if ($form->getName() == $name) {
+                    if ($form->getName() === $name) {
                         return $form;
                     }
                 }
             }
         }
-    }
-
-    /**
-     * @ToDO: check this method
-     * It looks like this: /$ClassName/$action/
-     *
-     * @return string
-     */
-    public function Link($action = null)
-    {
-        $URLSegment = Config::inst()->get($this->class, 'url_segment');
-        if (!$URLSegment) {
-            $URLSegment = $this->class;
-        }
-
-        return Controller::join_links(
-            Director::BaseURL(),
-            $URLSegment,
-            $action
-        );
-    }
-
-    public function removemodifier()
-    {
-        //@TODO: See issue 149
     }
 }

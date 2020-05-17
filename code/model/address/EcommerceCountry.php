@@ -5,7 +5,6 @@
  * For example: To what countries can be sold.
  * /dev/build/?resetecommercecountries=1 will reset the list of countries...
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
@@ -18,77 +17,77 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-    private static $api_access = array(
-        'view' => array(
+    private static $api_access = [
+        'view' => [
             'Code',
             'Name',
-        )
-     );
+        ],
+    ];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      **/
-    private static $db = array(
+    private static $db = [
         'Code' => 'Varchar(20)',
         'Name' => 'Varchar(200)',
         'DoNotAllowSales' => 'Boolean',
-    );
+    ];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      **/
-    private static $has_many = array(
+    private static $has_many = [
         'Regions' => 'EcommerceRegion',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Code' => 'Code',
         'Name' => 'Name',
         'AllowSalesNice' => 'Allow Sales',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'AllowSales' => 'Boolean',
         'AllowSalesNice' => 'Varchar',
-    );
+    ];
 
     /**
      * STANDARD SILVERSTRIPE STUFF.
      *
      * @todo: how to translate this?
      **/
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'Code' => 'PartialMatchFilter',
         'Name' => 'PartialMatchFilter',
-        'DoNotAllowSales' => array(
+        'DoNotAllowSales' => [
             'title' => 'Sales are prohibited',
-        ),
-    );
+        ],
+    ];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      **/
-    private static $indexes = array(
+    private static $indexes = [
         'DoNotAllowSales' => true,
         'Name' => true,
-        'Code' => true
-    );
+        'Code' => true,
+    ];
 
     /**
      * Standard SS Variable.
@@ -98,7 +97,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     private static $default_sort = [
         'DoNotAllowSales' => 'ASC',
         'Name' => 'ASC',
-        'ID' => 'ASC'
+        'ID' => 'ASC',
     ];
 
     /**
@@ -107,10 +106,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @var string
      **/
     private static $singular_name = 'Country';
-    public function i18n_singular_name()
-    {
-        return _t('EcommerceCountry.COUNTRY', 'Country');
-    }
 
     /**
      * Standard SS Variable.
@@ -118,10 +113,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @var string
      **/
     private static $plural_name = 'Countries';
-    public function i18n_plural_name()
-    {
-        return _t('EcommerceCountry.COUNTRIES', 'Countries');
-    }
 
     /**
      * Standard SS variable.
@@ -129,6 +120,73 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @var string
      */
     private static $description = 'A country.';
+
+    private static $_countries_from_db_cache = [];
+
+    /**
+     * Memory for the order's country.
+     *
+     * @var array
+     */
+    private static $_country_cache = [];
+
+    /**
+     * maps like this
+     *     NZ => 1
+     *     AU => 2
+     *     etc...
+     * @var array
+     */
+    private static $_code_to_id_map = [];
+
+    /**
+     * Memory for allow country to check.
+     *
+     * @var boolean|null
+     */
+    private static $_allow_sales_cache = [];
+
+    //DYNAMIC LIMITATIONS
+
+    /**
+     * these variables and methods allow to "dynamically limit the countries available,
+     * based on, for example: ordermodifiers, item selection, etc....
+     * for example, if a person chooses delivery within Australasia (with modifier) -
+     * then you can limit the countries available to "Australasian" countries.
+     */
+
+    /**
+     * List of countries that should be shown.
+     *
+     * @param array $a: should be country codes e.g. array("NZ", "NP", "AU");
+     *
+     * @var array
+     */
+    private static $for_current_order_only_show_countries = [];
+
+    /**
+     * List of countries that should NOT be shown.
+     *
+     * @param array $a: should be country codes e.g. array("NZ", "NP", "AU");
+     *
+     * @var array
+     */
+    private static $for_current_order_do_not_show_countries = [];
+
+    /**
+     * @var array
+     */
+    private static $list_of_allowed_entries_for_dropdown_array = [];
+
+    public function i18n_singular_name()
+    {
+        return _t('EcommerceCountry.COUNTRY', 'Country');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('EcommerceCountry.COUNTRIES', 'Countries');
+    }
 
     /**
      * Standard SS Method.
@@ -217,10 +275,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return $extended;
         }
         return false;
-        if (ShippingAddress::get()->filter(array('ShippingCountry' => $this->Code))->count()) {
+        if (ShippingAddress::get()->filter(['ShippingCountry' => $this->Code])->count()) {
             return false;
         }
-        if (BillingAddress::get()->filter(array('Country' => $this->Code))->count()) {
+        if (BillingAddress::get()->filter(['Country' => $this->Code])->count()) {
             return false;
         }
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
@@ -239,7 +297,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_country_from_ip()
     {
         $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
-        if (!$visitorCountryProviderClassName) {
+        if (! $visitorCountryProviderClassName) {
             $visitorCountryProviderClassName = 'EcommerceCountry_VisitorCountryProvider';
         }
         $visitorCountryProvider = new $visitorCountryProviderClassName();
@@ -256,15 +314,13 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_ip()
     {
         $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
-        if (!$visitorCountryProviderClassName) {
+        if (! $visitorCountryProviderClassName) {
             $visitorCountryProviderClassName = 'EcommerceCountry_VisitorCountryProvider';
         }
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 
         return $visitorCountryProvider->getIP();
     }
-
-    private static $_countries_from_db_cache = array();
 
     /**
      *               e.g.
@@ -273,18 +329,18 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public static function get_country_dropdown($showAllCountries = true, $addEmptyString = false, $useIDNotCode = false)
     {
-        $key = ($showAllCountries ? "all" : "notall");
+        $key = ($showAllCountries ? 'all' : 'notall');
         if (isset(self::$_countries_from_db_cache[$key])) {
             $array = self::$_countries_from_db_cache[$key];
         } else {
-            $array = array();
+            $array = [];
             $objects = null;
             if (class_exists('Geoip') && $showAllCountries && ! $useIDNotCode) {
                 $array = Geoip::getCountryDropDown();
             } elseif ($showAllCountries) {
                 $objects = EcommerceCountry::get();
             } else {
-                $objects = EcommerceCountry::get()->filter(array('DoNotAllowSales' => 0));
+                $objects = EcommerceCountry::get()->filter(['DoNotAllowSales' => 0]);
             }
             if ($objects && $objects->count()) {
                 if ($useIDNotCode) {
@@ -298,7 +354,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
         if (count($array)) {
             if ($addEmptyString) {
-                $array = array("", " -- please select -- ") + $array;
+                $array = ['', ' -- please select -- '] + $array;
             }
         }
         return $array;
@@ -314,7 +370,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_fixed_country_code()
     {
         $a = EcommerceConfig::get('EcommerceCountry', 'allowed_country_codes');
-        if (is_array($a) && count($a) == 1) {
+        if (is_array($a) && count($a) === 1) {
             return array_shift($a);
         }
 
@@ -349,23 +405,15 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         } elseif ($code) {
             $obj = DataObject::get_one(
                 'EcommerceCountry',
-                array('Code' => $code)
+                ['Code' => $code]
             );
             if ($obj) {
                 return $obj->Name;
             }
             return $code;
-        } else {
-            return _t('Ecommerce.COUNTRY_NOT_FOUND', '[COUNTRY NOT FOUND]');
         }
+        return _t('Ecommerce.COUNTRY_NOT_FOUND', '[COUNTRY NOT FOUND]');
     }
-
-    /**
-     * Memory for the order's country.
-     *
-     * @var array
-     */
-    private static $_country_cache = array();
 
     /**
      * @param int (optional) $orderID
@@ -445,7 +493,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         $countryCode = EcommerceConfig::get('EcommerceCountry', 'default_country_code');
         //5. take the FIRST country from the get_allowed_country_codes
-        if (!$countryCode) {
+        if (! $countryCode) {
             $countryArray = self::list_of_allowed_entries_for_dropdown();
             if (is_array($countryArray) && count($countryArray)) {
                 foreach ($countryArray as $countryCode => $countryName) {
@@ -459,7 +507,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param  int|string|EcommerceCountry
+     * @param  int $var|string|EcommerceCountry
      *
      * @return EcommerceCountry|string|null
      */
@@ -474,9 +522,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if ($var instanceof EcommerceCountry) {
             if ($asCode) {
                 return $var->Code;
-            } else {
-                return $var;
             }
+            return $var;
         }
 
         return null;
@@ -499,18 +546,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
         return DataObject::get_one(
             'EcommerceCountry',
-            array('Code' => $countryCode)
+            ['Code' => $countryCode]
         );
     }
 
-    /**
-     * maps like this
-     *     NZ => 1
-     *     AU => 2
-     *     etc...
-     * @var array
-     */
-    private static $_code_to_id_map = array();
     /**
      * returns the ID of the country or 0.
      *
@@ -521,7 +560,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function get_country_id($countryCode = null, $recalculate = false)
     {
-        if (!$countryCode) {
+        if (! $countryCode) {
             $countryCode = self::get_country($recalculate);
         }
         if (isset(self::$_code_to_id_map[$countryCode])) {
@@ -530,7 +569,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         self::$_code_to_id_map[$countryCode] = 0;
         $country = DataObject::get_one(
             'EcommerceCountry',
-            array('Code' => $countryCode)
+            ['Code' => $countryCode]
         );
         if ($country) {
             self::$_code_to_id_map[$countryCode] = $country->ID;
@@ -539,13 +578,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
         return 0;
     }
-
-    /**
-     * Memory for allow country to check.
-     *
-     * @var null | Boolean
-     */
-    private static $_allow_sales_cache = array();
 
     public static function reset_allow_sales_cache()
     {
@@ -562,15 +594,15 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function allow_sales($orderID = 0)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
-        if (!isset(self::$_allow_sales_cache[$orderID])) {
+        if (! isset(self::$_allow_sales_cache[$orderID])) {
             self::$_allow_sales_cache[$orderID] = true;
             $countryCode = self::get_country(false, $orderID);
             if ($countryCode) {
                 $countries = EcommerceCountry::get()
-                    ->filter(array(
+                    ->filter([
                         'DoNotAllowSales' => 1,
                         'Code' => $countryCode,
-                    ));
+                    ]);
                 if ($countries->count()) {
                     self::$_allow_sales_cache[$orderID] = false;
                 }
@@ -580,54 +612,25 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         return self::$_allow_sales_cache[$orderID];
     }
 
-    /**
-     * returns an array of Codes => Names of all countries that can be used.
-     * Use "list_of_allowed_entries_for_dropdown" to get the list.
-     *
-     * @todo add caching
-     *
-     * @return array
-     **/
-    protected static function get_default_array()
-    {
-        $defaultArray = array();
-        $countries = null;
-        if ($code = self::get_fixed_country_code()) {
-            $defaultArray[$code] = self::find_title($code);
-
-            return $defaultArray;
-        }
-        $countries = EcommerceCountry::get()->exclude(array('DoNotAllowSales' => 1));
-        if ($countries && $countries->count()) {
-            foreach ($countries as $country) {
-                $defaultArray[$country->Code] = $country->Name;
-            }
-        }
-
-        return $defaultArray;
-    }
-
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
             'Root.Main',
             new LiteralField(
-            'Add Add Countries',
-            '
+                'Add Add Countries',
+                '
                 <h3>Short-Cuts</h3>
                 <h6>
-                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_DisallowAllCountries" target="_blank">'._t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries').'</a> |||
-                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_AllowAllCountries" target="_blank">'._t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries').'</a>
+                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_DisallowAllCountries" target="_blank">' . _t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries') . '</a> |||
+                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_AllowAllCountries" target="_blank">' . _t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries') . '</a>
                 </h6>
             '
-        )
+            )
         );
 
         return $fields;
     }
-
-
 
     /**
      * link to edit the record.
@@ -664,27 +667,11 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         $filter->checkCode($this);
     }
 
-    //DYNAMIC LIMITATIONS
-
-    /**
-     * these variables and methods allow to "dynamically limit the countries available,
-     * based on, for example: ordermodifiers, item selection, etc....
-     * for example, if a person chooses delivery within Australasia (with modifier) -
-     * then you can limit the countries available to "Australasian" countries.
-     */
-
-    /**
-     * List of countries that should be shown.
-     *
-     * @param array $a: should be country codes e.g. array("NZ", "NP", "AU");
-     *
-     * @var array
-     */
-    private static $for_current_order_only_show_countries = array();
     public static function get_for_current_order_only_show_countries()
     {
         return self::$for_current_order_only_show_countries;
     }
+
     public static function set_for_current_order_only_show_countries(array $a)
     {
         if (count(self::$for_current_order_only_show_countries)) {
@@ -695,28 +682,16 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
     }
 
-    /**
-     * List of countries that should NOT be shown.
-     *
-     * @param array $a: should be country codes e.g. array("NZ", "NP", "AU");
-     *
-     * @var array
-     */
-    private static $for_current_order_do_not_show_countries = array();
     public static function get_for_current_order_do_not_show_countries()
     {
         return self::$for_current_order_do_not_show_countries;
     }
+
     public static function set_for_current_order_do_not_show_countries(array $a)
     {
         //We MERGE here because several modifiers may limit the countries
         self::$for_current_order_do_not_show_countries = array_merge($a, self::$for_current_order_do_not_show_countries);
     }
-
-    /**
-     * @var array
-     */
-    private static $list_of_allowed_entries_for_dropdown_array = array();
 
     /**
      * takes the defaultArray and limits it with "only show" and "do not show" value, relevant for the current order.
@@ -725,13 +700,13 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function list_of_allowed_entries_for_dropdown()
     {
-        if (!self::$list_of_allowed_entries_for_dropdown_array) {
+        if (! self::$list_of_allowed_entries_for_dropdown_array) {
             $defaultArray = self::get_default_array();
             $onlyShow = self::$for_current_order_only_show_countries;
             $doNotShow = self::$for_current_order_do_not_show_countries;
             if (is_array($onlyShow) && count($onlyShow)) {
                 foreach ($defaultArray as $key => $value) {
-                    if (!in_array($key, $onlyShow)) {
+                    if (! in_array($key, $onlyShow, true)) {
                         unset($defaultArray[$key]);
                     }
                 }
@@ -770,13 +745,13 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         return $this->getAllowSales();
     }
+
     public function getAllowSales()
     {
         if ($this->DoNotAllowSales) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -788,12 +763,39 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         return $this->getAllowSalesNice();
     }
+
     public function getAllowSalesNice()
     {
         if ($this->AllowSales()) {
             return _t('EcommerceCountry.YES', 'Yes');
-        } else {
-            return _t('EcommerceCountry.NO', 'No');
         }
+        return _t('EcommerceCountry.NO', 'No');
+    }
+
+    /**
+     * returns an array of Codes => Names of all countries that can be used.
+     * Use "list_of_allowed_entries_for_dropdown" to get the list.
+     *
+     * @todo add caching
+     *
+     * @return array
+     **/
+    protected static function get_default_array()
+    {
+        $defaultArray = [];
+        $countries = null;
+        if ($code = self::get_fixed_country_code()) {
+            $defaultArray[$code] = self::find_title($code);
+
+            return $defaultArray;
+        }
+        $countries = EcommerceCountry::get()->exclude(['DoNotAllowSales' => 1]);
+        if ($countries && $countries->count()) {
+            foreach ($countries as $country) {
+                $defaultArray[$country->Code] = $country->Name;
+            }
+        }
+
+        return $defaultArray;
     }
 }

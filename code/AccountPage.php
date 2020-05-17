@@ -12,18 +12,6 @@
  **/
 class AccountPage extends Page
 {
-
-    /**
-     * standard SS variable.
-     *
-     *@var array
-     */
-    private static $casting = array(
-        'RunningTotal' => 'Currency',
-        'RunningPaid' => 'Currency',
-        'RunningOutstanding' => 'Currency',
-    );
-
     /**
      *@var float
      */
@@ -45,11 +33,43 @@ class AccountPage extends Page
     protected $pastOrders = null;
 
     /**
+     * standard SS variable.
+     *
+     *@var array
+     */
+    private static $casting = [
+        'RunningTotal' => 'Currency',
+        'RunningPaid' => 'Currency',
+        'RunningOutstanding' => 'Currency',
+    ];
+
+    /**
      * Standard SS variable.
      *
      * @Var String
      */
     private static $icon = 'ecommerce/images/icons/AccountPage';
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $singular_name = 'Account Page';
+
+    /**
+     * standard SS variable.
+     *
+     * @Var String
+     */
+    private static $plural_name = 'Account Pages';
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $description = 'A page where the customer can view all their orders and update their details.';
 
     /**
      * Standard SS function, we only allow for one AccountPage to exist
@@ -61,7 +81,7 @@ class AccountPage extends Page
      **/
     public function canCreate($member = null)
     {
-        return AccountPage::get()->filter(array('ClassName' => 'AccountPage'))->Count() ? false : $this->canEdit($member);
+        return AccountPage::get()->filter(['ClassName' => 'AccountPage'])->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -104,34 +124,15 @@ class AccountPage extends Page
         return $this->canEdit($member);
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @Var String
-     */
-    private static $singular_name = 'Account Page';
     public function i18n_singular_name()
     {
         return _t('AccountPage.SINGULARNAME', 'Account Page');
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @Var String
-     */
-    private static $plural_name = 'Account Pages';
     public function i18n_plural_name()
     {
         return _t('AccountPage.PLURALNAME', 'Account Pages');
     }
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $description = 'A page where the customer can view all their orders and update their details.';
 
     /**
      * Returns the link to the AccountPage on this site.
@@ -142,7 +143,7 @@ class AccountPage extends Page
     {
         $page = DataObject::get_one(
             'AccountPage',
-            array('ClassName' => 'AccountPage')
+            ['ClassName' => 'AccountPage']
         );
         if ($page) {
             return $page->Link($action);
@@ -170,6 +171,7 @@ class AccountPage extends Page
     {
         return $this->getRunningTotal();
     }
+
     public function RunningTotal()
     {
         $this->calculatePastOrders();
@@ -186,6 +188,7 @@ class AccountPage extends Page
     {
         return $this->getRunningPaid();
     }
+
     public function RunningPaid()
     {
         $this->calculatePastOrders();
@@ -202,6 +205,7 @@ class AccountPage extends Page
     {
         return $this->getRunningOutstanding();
     }
+
     public function RunningOutstanding()
     {
         $this->calculatePastOrders();
@@ -210,12 +214,22 @@ class AccountPage extends Page
     }
 
     /**
+     * tells us if the current page is part of e-commerce.
+     *
+     * @return bool
+     */
+    public function IsEcommercePage()
+    {
+        return true;
+    }
+
+    /**
      * retrieves previous orders and adds totals to it...
      * return DataList.
      **/
     protected function calculatePastOrders()
     {
-        if (!$this->pastOrders) {
+        if (! $this->pastOrders) {
             $this->pastOrders = $this->pastOrdersSelection();
             $this->calculatedTotal = 0;
             $this->calculatedPaid = 0;
@@ -240,14 +254,14 @@ class AccountPage extends Page
     protected function pastOrdersSelection()
     {
         $memberID = intval(Member::currentUserID());
-        if (!$memberID) {
+        if (! $memberID) {
             //set t
             $memberID = RAND(0, 1000000) * -1;
         }
         if ($memberID) {
             return Order::get()
                 ->where(
-                    '"Order"."MemberID" = '.$memberID.'
+                    '"Order"."MemberID" = ' . $memberID . '
                     AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
                 )
                 ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"');
@@ -255,24 +269,14 @@ class AccountPage extends Page
 
         return 0;
     }
-
-    /**
-     * tells us if the current page is part of e-commerce.
-     *
-     * @return bool
-     */
-    public function IsEcommercePage()
-    {
-        return true;
-    }
 }
 
 class AccountPage_Controller extends Page_Controller
 {
     //TODO: why do we need this?
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'MemberForm',
-    );
+    ];
 
     /**
      * standard controller function.
@@ -280,11 +284,11 @@ class AccountPage_Controller extends Page_Controller
     public function init()
     {
         parent::init();
-        if (!$this->AccountMember() && 1 == 2) {
-            $messages = array(
-                'default' => '<p class="message good">'._t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ').'</p>',
+        if (! $this->AccountMember() && 1 === 2) {
+            $messages = [
+                'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
                 'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
-            );
+            ];
             Security::permissionFailure($this, $messages);
 
             return false;
@@ -310,7 +314,6 @@ class AccountPage_Controller extends Page_Controller
     {
         return Member::currentUser();
     }
-
 
     /**
      * The link that Google et al. need to index.

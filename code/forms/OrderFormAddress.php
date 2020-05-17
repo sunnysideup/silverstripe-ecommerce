@@ -19,7 +19,7 @@ class OrderFormAddress extends Form
     /**
      * @var array
      */
-    protected $debugArray = array();
+    protected $debugArray = [];
 
     /**
      * the member attached to the order
@@ -52,14 +52,14 @@ class OrderFormAddress extends Form
     protected $order = null;
 
     /**
-     * @param Controller
-     * @param string
+     * @param Controller $controller
+     * @param string $name
      */
     public function __construct(Controller $controller, $name)
     {
 
         //set basics
-        $requiredFields = array();
+        $requiredFields = [];
 
         //requirements
         Requirements::javascript('ecommerce/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
@@ -68,7 +68,6 @@ class OrderFormAddress extends Form
         }
 
         //  ________________ 1) Order + Member + Address fields
-
 
         // define field lists ...
         $addressFieldsMember = FieldList::create();
@@ -91,8 +90,8 @@ class OrderFormAddress extends Form
 
         //strange security situation...
         if ($this->orderMember->exists() && $this->loggedInMember) {
-            if ($this->orderMember->ID != $this->loggedInMember->ID) {
-                if (!$this->loggedInMember->IsShopAdmin()) {
+            if ($this->orderMember->ID !== $this->loggedInMember->ID) {
+                if (! $this->loggedInMember->IsShopAdmin()) {
                     $this->loggedInMember->logOut();
                 }
             }
@@ -121,7 +120,6 @@ class OrderFormAddress extends Form
                 }
             }
         }
-
 
         //shipping address field
 
@@ -209,10 +207,10 @@ class OrderFormAddress extends Form
         if (EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
             if ($this->orderDoesNotHaveFullyOperationalMember()) {
                 //general header
-                if (!$this->loggedInMember) {
+                if (! $this->loggedInMember) {
                     $rightFields->push(
                         //TODO: check EXACT link!!!
-                        new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO', 'If you already have an account then please').' <a href="Security/login/?BackURL=/'.urlencode(implode('/', $controller->getURLParams())).'">'._t('OrderForm.LOGIN', 'log in').'</a>.</p>')
+                        new LiteralField('MemberInfo', '<p class="message good">' . _t('OrderForm.MEMBERINFO', 'If you already have an account then please') . ' <a href="Security/login/?BackURL=/' . urlencode(implode('/', $controller->getURLParams())) . '">' . _t('OrderForm.LOGIN', 'log in') . '</a>.</p>')
                     );
                 }
             } else {
@@ -220,13 +218,13 @@ class OrderFormAddress extends Form
                     $rightFields->push(
                         new LiteralField(
                             'LoginNote',
-                            '<p class="message good">'._t('Account.LOGGEDIN', 'You are logged in as ').
-                            Convert::raw2xml($this->loggedInMember->FirstName).' '.
-                            Convert::raw2xml($this->loggedInMember->Surname).
-                            ' ('.Convert::raw2xml($this->loggedInMember->Email).').'.
-                            ' <a href="/Security/logout/">'.
-                            _t('Account.LOGOUTNOW', 'Log out?').
-                            '</a>'.
+                            '<p class="message good">' . _t('Account.LOGGEDIN', 'You are logged in as ') .
+                            Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
+                            Convert::raw2xml($this->loggedInMember->Surname) .
+                            ' (' . Convert::raw2xml($this->loggedInMember->Email) . ').' .
+                            ' <a href="/Security/logout/">' .
+                            _t('Account.LOGOUTNOW', 'Log out?') .
+                            '</a>' .
                             '</p>'
                         )
                     );
@@ -234,15 +232,15 @@ class OrderFormAddress extends Form
             }
             if ($this->orderMember->exists()) {
                 if ($this->loggedInMember) {
-                    if ($this->loggedInMember->ID !=  $this->orderMember->ID) {
+                    if ($this->loggedInMember->ID !== $this->orderMember->ID) {
                         $rightFields->push(
                             new LiteralField(
                                 'OrderAddedTo',
-                                '<p class="message good">'.
-                                _t('Account.ORDERADDEDTO', 'Order will be added to ').
-                                Convert::raw2xml($this->orderMember->FirstName).' '.
-                                Convert::raw2xml($this->orderMember->Surname).' ('.
-                                Convert::raw2xml($this->orderMember->Email).
+                                '<p class="message good">' .
+                                _t('Account.ORDERADDEDTO', 'Order will be added to ') .
+                                Convert::raw2xml($this->orderMember->FirstName) . ' ' .
+                                Convert::raw2xml($this->orderMember->Surname) . ' (' .
+                                Convert::raw2xml($this->orderMember->Email) .
                                 ').</p>'
                             )
                         );
@@ -311,35 +309,6 @@ class OrderFormAddress extends Form
     }
 
     /**
-     * Is there a member that is fully operational?
-     * - saved
-     * - has password.
-     *
-     * @return bool
-     */
-    protected function orderHasFullyOperationalMember()
-    {
-        //orderMember is Created in __CONSTRUCT
-        if ($this->orderMember) {
-            if ($this->orderMember->exists()) {
-                if ($this->orderMember->Password) {
-                    return true;
-                }
-            }
-        }
-    }
-
-    /**
-     * Opposite of orderHasFullyOperationalMember method.
-     *
-     * @return bool
-     */
-    protected function orderDoesNotHaveFullyOperationalMember()
-    {
-        return $this->orderHasFullyOperationalMember() ? false : true;
-    }
-
-    /**
      * Process the items in the shopping cart from session,
      * creating a new {@link Order} record, and updating the
      * customer's details {@link Member} record.
@@ -381,7 +350,7 @@ class OrderFormAddress extends Form
 
         $data = Convert::raw2sql($data);
         //check for cart items
-        if (!$this->order) {
+        if (! $this->order) {
             $form->sessionMessage(_t('OrderForm.ORDERNOTFOUND', 'Your order could not be found.'), 'bad');
             $this->controller->redirectBack();
 
@@ -477,6 +446,75 @@ class OrderFormAddress extends Form
     }
 
     /**
+     * returns TRUE if
+     * - there is no existing member with the same value in the unique field
+     * - OR the member is not logged in.
+     * - OR the member is a Shop Admin (we assume they are placing an order on behalf of someone else).
+     * returns FALSE if
+     * - the unique field already exists in another member
+     * - AND the member being "tested" is already logged in...
+     * in that case the logged in member tries to take on another identity.
+     * If you are not logged BUT the the unique field is used by an existing member then we can still
+     * use the field - we just CAN NOT log in the member.
+     * This method needs to be public because it is used by the OrderForm_Validator (see below).
+     *
+     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+     *
+     * @return bool
+     **/
+    public function uniqueMemberFieldCanBeUsed(array $data)
+    {
+        if ($this->loggedInMember && $this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
+            //there is an exception for shop admins
+            //who can place an order on behalve of a customer.
+            if ($this->loggedInMember->IsShopAdmin()) {
+                //REMOVED PART:
+                //but NOT when the member placing the Order is the ShopAdmin
+                //AND there is another member with the same credentials.
+                //because in that case the ShopAdmin is not placing an order
+                //on behalf of someone else.
+                //that is,
+                //if($this->orderMember->ID == $this->loggedInMember->ID) {
+                //	return false;
+                //}
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Is there a member that is fully operational?
+     * - saved
+     * - has password.
+     *
+     * @return bool
+     */
+    protected function orderHasFullyOperationalMember()
+    {
+        //orderMember is Created in __CONSTRUCT
+        if ($this->orderMember) {
+            if ($this->orderMember->exists()) {
+                if ($this->orderMember->Password) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    /**
+     * Opposite of orderHasFullyOperationalMember method.
+     *
+     * @return bool
+     */
+    protected function orderDoesNotHaveFullyOperationalMember()
+    {
+        return $this->orderHasFullyOperationalMember() ? false : true;
+    }
+
+    /**
      * Works out the most likely member for the order after submission of the form.
      * It returns a member if appropriate.
      * 1. does the order already have a member that is not a shop-admin - if so - DONE.
@@ -498,9 +536,9 @@ class OrderFormAddress extends Form
     {
         //get the best available from order.
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-        $orderPlacedByShopAdmin = ($this->loggedInMember && $this->loggedInMember->IsShopAdmin()) ? true : false;
+        $orderPlacedByShopAdmin = $this->loggedInMember && $this->loggedInMember->IsShopAdmin() ? true : false;
         //1. does the order already have a member
-        if ($this->orderMember->exists() && !$orderPlacedByShopAdmin) {
+        if ($this->orderMember->exists() && ! $orderPlacedByShopAdmin) {
             if ($this->debug) {
                 $this->debugArray[] = '1. the order already has a member';
             }
@@ -545,7 +583,7 @@ class OrderFormAddress extends Form
                     }
                     // 4. is there no member logged in yet?
                     //no logged in member
-                    if (!$this->loggedInMember) {
+                    if (! $this->loggedInMember) {
                         if ($this->debug) {
                             $this->debugArray[] = '4. is there no member logged in yet?';
                         }
@@ -559,7 +597,7 @@ class OrderFormAddress extends Form
 
                         //6. At this stage, if we dont have a member, we will create one!
                         //in case we still dont have a member AND we should create a member for every customer, then we do this below...
-                        if (!$this->orderMember) {
+                        if (! $this->orderMember) {
                             if ($this->debug) {
                                 $this->debugArray[] = '6. No other member found';
                             }
@@ -603,9 +641,8 @@ class OrderFormAddress extends Form
             if ($this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
                 if ($this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
                     return false;
-                } else {
-                    return true;
                 }
+                return true;
             }
         }
         // already logged in or already created...
@@ -618,9 +655,8 @@ class OrderFormAddress extends Form
         else {
             if ($this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
                 return false;
-            } else {
-                return true;
             }
+            return true;
         }
         //defaults to FALSE...
         return false;
@@ -635,25 +671,19 @@ class OrderFormAddress extends Form
     {
 
         //new members always need to be saved
-        $newMember = (
-            $this->memberShouldBeCreated($data) ||
-            $this->newlyCreatedMemberID
-        ) ? true : false;
+        $newMember = $this->memberShouldBeCreated($data) ||
+            $this->newlyCreatedMemberID ? true : false;
 
         // existing logged in members need to be saved if they are updateable
         // AND do not match someone else...
-        $updateableMember = (
-            $this->loggedInMember &&
-            !$this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
-            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details')
-        ) ? true : false;
+        $updateableMember = $this->loggedInMember &&
+            ! $this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
+            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details') ? true : false;
 
         // logged in member is shop admin and members are updateable...
-        $memberIsShopAdmin = (
-            $this->loggedInMember &&
+        $memberIsShopAdmin = $this->loggedInMember &&
             $this->loggedInMember->IsShopAdmin() &&
-            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details')
-        ) ? true : false;
+            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details') ? true : false;
         if ($newMember || $updateableMember || $memberIsShopAdmin) {
             return true;
         }
@@ -673,53 +703,13 @@ class OrderFormAddress extends Form
      **/
     protected function memberShouldBeLoggedIn(array $data)
     {
-        if (!$this->loggedInMember) {
+        if (! $this->loggedInMember) {
             if ($this->newlyCreatedMemberID && $this->validPasswordHasBeenEntered($data)) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    /**
-     * returns TRUE if
-     * - there is no existing member with the same value in the unique field
-     * - OR the member is not logged in.
-     * - OR the member is a Shop Admin (we assume they are placing an order on behalf of someone else).
-     * returns FALSE if
-     * - the unique field already exists in another member
-     * - AND the member being "tested" is already logged in...
-     * in that case the logged in member tries to take on another identity.
-     * If you are not logged BUT the the unique field is used by an existing member then we can still
-     * use the field - we just CAN NOT log in the member.
-     * This method needs to be public because it is used by the OrderForm_Validator (see below).
-     *
-     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
-     *
-     * @return bool
-     **/
-    public function uniqueMemberFieldCanBeUsed(array $data)
-    {
-        if ($this->loggedInMember && $this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
-            //there is an exception for shop admins
-            //who can place an order on behalve of a customer.
-            if ($this->loggedInMember->IsShopAdmin()) {
-                //REMOVED PART:
-                //but NOT when the member placing the Order is the ShopAdmin
-                //AND there is another member with the same credentials.
-                //because in that case the ShopAdmin is not placing an order
-                //on behalf of someone else.
-                //that is,
-                //if($this->orderMember->ID == $this->loggedInMember->ID) {
-                //	return false;
-                //}
-            } else {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -742,14 +732,14 @@ class OrderFormAddress extends Form
             //no need to convert raw2sql as this has already been done.
             return Member::get()
                 ->filter(
-                    array(
+                    [
                         $uniqueFieldName => $uniqueFieldValue,
-                    )
+                    ]
                 )
                 ->exclude(
-                    array(
+                    [
                         'ID' => $currentUserID,
-                    )
+                    ]
                 )
                 ->First();
         }
@@ -763,7 +753,7 @@ class OrderFormAddress extends Form
      * - user is logged in already
      * - user's email in DB does not match email entered.
      *
-     * @param array
+     * @param array $data
      *
      * @return string | false
      */
@@ -776,7 +766,7 @@ class OrderFormAddress extends Form
                 if (isset($data[$uniqueFieldName])) {
                     $enteredUniqueFieldName = $data[$uniqueFieldName];
                     if ($enteredUniqueFieldName) {
-                        if ($DBUniqueFieldName != $enteredUniqueFieldName) {
+                        if ($DBUniqueFieldName !== $enteredUniqueFieldName) {
                             return $enteredUniqueFieldName;
                         }
                     }
@@ -790,7 +780,7 @@ class OrderFormAddress extends Form
     /**
      * Check if the password is good enough.
      *
-     * @param data (from form)
+     * @param $data (from form)
      *
      * @return string
      */

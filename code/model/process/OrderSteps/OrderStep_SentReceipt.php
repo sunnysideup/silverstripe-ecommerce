@@ -13,11 +13,11 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
      */
     protected $emailClassName = 'Order_ReceiptEmail';
 
-    private static $db = array(
+    private static $db = [
         'SendReceiptToCustomer' => 'Boolean',
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
@@ -25,7 +25,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
         'Code' => 'RECEIPTED',
         'ShowAsInProcessOrder' => 1,
         'SendReceiptToCustomer' => 1,
-    );
+    ];
 
     public function getCMSFields()
     {
@@ -43,7 +43,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/
@@ -61,7 +61,7 @@ class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
      */
     public function doStep(Order $order)
     {
-        if($this->SendReceiptToCustomer) {
+        if ($this->SendReceiptToCustomer) {
             $adminOnlyOrToEmail = false;
         } else {
             $adminOnlyOrToEmail = true;

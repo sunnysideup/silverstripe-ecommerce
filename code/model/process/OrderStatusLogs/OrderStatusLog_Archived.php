@@ -8,17 +8,19 @@
  **/
 class OrderStatusLog_Archived extends OrderStatusLog
 {
-    private static $defaults = array(
+    private static $defaults = [
         'InternalUseOnly' => false,
-    );
+    ];
 
     private static $singular_name = 'Archived Order - Additional Note';
+
+    private static $plural_name = 'Archived Order - Additional Notes';
+
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.ARCHIVEDORDERS', 'Archived Order - Additional Note');
     }
 
-    private static $plural_name = 'Archived Order - Additional Notes';
     public function i18n_plural_name()
     {
         return _t('OrderStatusLog.ARCHIVEDORDERS', 'Archived Order - Additional Notes');

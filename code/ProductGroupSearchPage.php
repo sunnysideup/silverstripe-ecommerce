@@ -8,6 +8,12 @@
  **/
 class ProductGroupSearchPage extends ProductGroup
 {
+    /**
+     * Can product list (and related) be cached at all?
+     *
+     * @var bool
+     */
+    protected $allowCaching = false;
 
     /**
      * standard SS variable.
@@ -27,15 +33,17 @@ class ProductGroupSearchPage extends ProductGroup
      * Standard SS variable.
      */
     private static $singular_name = 'Product Search Page';
-    public function i18n_singular_name()
-    {
-        return _t('ProductGroupSearchPage.SINGULARNAME', 'Product Search Page');
-    }
 
     /**
      * Standard SS variable.
      */
     private static $plural_name = 'Product Search Pages';
+
+    public function i18n_singular_name()
+    {
+        return _t('ProductGroupSearchPage.SINGULARNAME', 'Product Search Page');
+    }
+
     public function i18n_plural_name()
     {
         return _t('ProductGroupSearchPage.PLURALNAME', 'Product Search Pages');
@@ -51,15 +59,8 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public function canCreate($member = null)
     {
-        return ProductGroupSearchPage::get()->filter(array('ClassName' => 'ProductGroupSearchPage'))->Count() ? false : $this->canEdit($member);
+        return ProductGroupSearchPage::get()->filter(['ClassName' => 'ProductGroupSearchPage'])->Count() ? false : $this->canEdit($member);
     }
-
-    /**
-     * Can product list (and related) be cached at all?
-     *
-     * @var bool
-     */
-    protected $allowCaching = false;
 
     /**
      * Setter for all products
@@ -79,11 +80,15 @@ class ProductGroupSearchPage extends ProductGroup
     public function getGroupFilter()
     {
         $resultArray = $this->searchResultsArrayFromSession();
-        $this->allProducts = $this->allProducts->filter(array('ID' => $resultArray));
+        $this->allProducts = $this->allProducts->filter(['ID' => $resultArray]);
 
         return $this->allProducts;
     }
 
+    public function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
+    {
+        return ArrayList::create();
+    }
 
     /**
      * returns the SORT part of the final selection of products.
@@ -96,11 +101,6 @@ class ProductGroupSearchPage extends ProductGroup
 
         return $this->getUserSettingsOptionSQL('SORT', $sortKey);
     }
-
-    public function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
-    {
-        return ArrayList::create();
-    }
 }
 
 class ProductGroupSearchPage_Controller extends ProductGroup_Controller
@@ -110,13 +110,13 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
      *
      * @var array
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'debug' => 'ADMIN',
         'filterforgroup' => true,
         'ProductSearchForm' => true,
         'searchresults' => true,
         'resetfilter' => true,
-    );
+    ];
 
     public function init()
     {
@@ -147,6 +147,7 @@ class ProductGroupSearchPage_Controller extends ProductGroup_Controller
 
         return $this->allProducts;
     }
+
     /**
      * The link that Google et al. need to index.
      * @return string

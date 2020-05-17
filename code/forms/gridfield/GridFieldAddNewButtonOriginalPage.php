@@ -16,29 +16,29 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
     {
         $singleton = singleton($gridField->getModelClass());
 
-        if (!$singleton->canCreate()) {
-            return array();
+        if (! $singleton->canCreate()) {
+            return [];
         }
 
-        if (!$this->buttonName) {
+        if (! $this->buttonName) {
             // provide a default button name, can be changed by calling {@link setButtonName()} on this component
             $objectName = $singleton->i18n_singular_name();
-            $this->buttonName = _t('GridField.Add_USING_PAGES_SECTION', 'Add {name}', array('name' => $objectName));
+            $this->buttonName = _t('GridField.Add_USING_PAGES_SECTION', 'Add {name}', ['name' => $objectName]);
         }
 
         $getSegment = '';
         if ($page = $this->BestParentPage()) {
-            $getSegment = '?ParentID='.$page->ID;
+            $getSegment = '?ParentID=' . $page->ID;
         }
 
-        $data = new ArrayData(array(
-            'NewLink' => '/admin/'.Config::inst()->get('CMSPageAddController_Products', 'url_segment').'/'.$getSegment,
+        $data = new ArrayData([
+            'NewLink' => '/admin/' . Config::inst()->get('CMSPageAddController_Products', 'url_segment') . '/' . $getSegment,
             'ButtonName' => $this->buttonName,
-        ));
+        ]);
 
-        return array(
+        return [
             $this->targetFragment => $data->renderWith('GridFieldAddNewbutton'),
-        );
+        ];
     }
 
     /**
@@ -49,20 +49,20 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
     public function BestParentPage()
     {
         $defaultRootParentClass = Config::inst()->get('CMSPageAddController_Products', 'root_parent_class_for_adding_page');
-        $rootParentClassArray = array($defaultRootParentClass, 'ProductGroup');
+        $rootParentClassArray = [$defaultRootParentClass, 'ProductGroup'];
         foreach ($rootParentClassArray as $rootParentClass) {
             $result = DataObject::get_one(
                 $rootParentClass,
-                array('ParentID' => 0)
+                ['ParentID' => 0]
             );
             if ($result) {
                 return $result;
             }
             $stage = '';
-            if (Versioned::current_stage() == 'Live') {
+            if (Versioned::current_stage() === 'Live') {
                 $stage = '_Live';
             }
-            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin('SiteTree'.$stage, 'MyParentPage.ID = SiteTree'.$stage.'.ParentID', 'MyParentPage')->First()) {
+            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin('SiteTree' . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
                 return $result;
             }
         }

@@ -14,11 +14,11 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      */
     protected $emailClassName = 'Order_InvoiceEmail';
 
-    private static $db = array(
+    private static $db = [
         'SendInvoiceToCustomer' => 'Boolean',
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 1,
@@ -26,7 +26,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
         'Code' => 'INVOICED',
         'ShowAsInProcessOrder' => 1,
         'SendInvoiceToCustomer' => 1,
-    );
+    ];
 
     public function getCMSFields()
     {
@@ -41,7 +41,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      * NOTE: must have a payment (even if it is a fake payment).
      * The reason for this is if people pay straight away then they want to see the payment shown on their invoice.
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/
@@ -65,7 +65,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      **/
     public function doStep(Order $order)
     {
-        if($this->SendInvoiceToCustomer) {
+        if ($this->SendInvoiceToCustomer) {
             $adminOnlyOrToEmail = false;
         } else {
             $adminOnlyOrToEmail = true;

@@ -17,7 +17,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(30)',
         'UseThisOne' => 'Boolean',
         'ShopClosed' => 'Boolean',
@@ -40,65 +40,133 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         //"ProductsHaveVariations" => "Boolean",
         'CurrenciesExplanation' => 'HTMLText',
         'AllowFreeProductPurchase' => 'Boolean',
-    );
+    ];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'EmailLogo' => 'Image',
         'DefaultProductImage' => 'Product_Image',
-    );
+    ];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      */
-    private static $indexes = array(
+    private static $indexes = [
         'UseThisOne' => true,
         'ShopClosed' => true,
         'ShopPricesAreTaxExclusive' => true,
         'NumberOfProductsPerPage' => true,
         'OnlyShowProductsThatCanBePurchased' => true,
-    );
+    ];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'UseThisOneNice' => 'Varchar',
-    ); //adds computed fields that can also have a type (e.g.
+    ]; //adds computed fields that can also have a type (e.g.
 
     /**
      * Standard SS Variable.
      *
      * @var array
      */
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'Title' => 'PartialMatchFilter',
-    );
+    ];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      */
-    private static $field_labels = array();
+    private static $field_labels = [];
 
     /**
      * Standard SS Variable.
      *
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Title' => 'Title',
         'UseThisOneNice' => 'Use this configuration set',
-    ); //note no => for relational fields
+    ]; //note no => for relational fields
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $default_sort = [
+        'UseThisOne' => 'DESC',
+        'ID' => 'ASC',
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var array
+     */
+    private static $defaults = [
+        'Title' => 'Ecommerce Site Config',
+        'UseThisOne' => true,
+        'ShopClosed' => false,
+        'ShopPricesAreTaxExclusive' => false,
+        'InvoiceTitle' => 'Invoice',
+        'InvoiceMessage' => '<p>Thank you for your order</p>',
+        'PackingSlipTitle' => 'Package Contents',
+        'PackingSlipNote' => 'Please make sure that all items are contained in this package.',
+        'ShopPhysicalAddress' => '<p>Enter your shop address here.</p>',
+        //"ReceiptEmail" => "Varchar(255)", - see populate defaults
+        'PostalCodeURL' => '',
+        'PostalCodeLabel' => '',
+        'NumberOfProductsPerPage' => 12,
+        'ProductsAlsoInOtherGroups' => false,
+        'OnlyShowProductsThatCanBePurchased' => false,
+        'NotForSaleMessage' => '<p>Not for sale, please contact us for more information.</p>',
+        'ProductsHaveWeight' => false,
+        'ProductsHaveModelNames' => false,
+        'ProductsHaveQuantifiers' => false,
+        //"ProductsHaveVariations" => false,
+        'CurrenciesExplanation' => '<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>',
+        'AllowFreeProductPurchase' => true,
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $singular_name = 'Main E-commerce Configuration';
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $plural_name = 'Main E-commerce Configurations';
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $description = 'A set of configurations for the shop. Each shop needs to have one or more of these settings.';
+
+    /**
+     * static holder for its own (or other EcommerceDBConfig) class.
+     *
+     * @var string | NULL
+     */
+    private static $_my_current_one = null;
 
     /**
      * Standard SS Method.
@@ -176,61 +244,20 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         if ($this->UseThisOne) {
             return false;
-        } else {
-            if (! $member) {
-                $member = Member::currentUser();
-            }
-            $extended = $this->extendedCan(__FUNCTION__, $member);
-            if ($extended !== null) {
-                return $extended;
-            }
-            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
-                return true;
-            }
-
-            return parent::canEdit($member);
         }
+        if (! $member) {
+            $member = Member::currentUser();
+        }
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
+        }
+        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+            return true;
+        }
+
+        return parent::canEdit($member);
     }
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $default_sort = [
-        'UseThisOne' => 'DESC',
-        'ID' => 'ASC'
-    ];
-
-    /**
-     * Standard SS variable.
-     *
-     * @var array
-     */
-    private static $defaults = array(
-        'Title' => 'Ecommerce Site Config',
-        'UseThisOne' => true,
-        'ShopClosed' => false,
-        'ShopPricesAreTaxExclusive' => false,
-        'InvoiceTitle' => 'Invoice',
-        'InvoiceMessage' => '<p>Thank you for your order</p>',
-        'PackingSlipTitle' => 'Package Contents',
-        'PackingSlipNote' => 'Please make sure that all items are contained in this package.',
-        'ShopPhysicalAddress' => '<p>Enter your shop address here.</p>',
-        //"ReceiptEmail" => "Varchar(255)", - see populate defaults
-        'PostalCodeURL' => '',
-        'PostalCodeLabel' => '',
-        'NumberOfProductsPerPage' => 12,
-        'ProductsAlsoInOtherGroups' => false,
-        'OnlyShowProductsThatCanBePurchased' => false,
-        'NotForSaleMessage' => '<p>Not for sale, please contact us for more information.</p>',
-        'ProductsHaveWeight' => false,
-        'ProductsHaveModelNames' => false,
-        'ProductsHaveQuantifiers' => false,
-        //"ProductsHaveVariations" => false,
-        'CurrenciesExplanation' => '<p>Apart from our main currency, you can view prices in a number of other currencies. The exchange rate is indicative only.</p>',
-        'AllowFreeProductPurchase' => true,
-    );
 
     /**
      * Standard SS Method.
@@ -243,41 +270,16 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $this->ReceiptEmail = Email::config()->admin_email;
     }
 
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $singular_name = 'Main E-commerce Configuration';
     public function i18n_singular_name()
     {
         return _t('EcommerceDBConfig.ECOMMERCECONFIGURATION', 'Main E-commerce Configuration');
     }
 
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $plural_name = 'Main E-commerce Configurations';
     public function i18n_plural_name()
     {
         return _t('EcommerceDBConfig.ECOMMERCECONFIGURATIONS', 'Main E-commerce Configurations');
     }
 
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $description = 'A set of configurations for the shop. Each shop needs to have one or more of these settings.';
-
-    /**
-     * static holder for its own (or other EcommerceDBConfig) class.
-     *
-     * @var string | NULL
-     */
-    private static $_my_current_one = null;
     public static function reset_my_current_one()
     {
         self::$_my_current_one = null;
@@ -291,14 +293,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public static function current_ecommerce_db_config()
     {
-        if (!self::$_my_current_one) {
+        if (! self::$_my_current_one) {
             $className = EcommerceConfig::get('EcommerceDBConfig', 'ecommerce_db_config_class_name');
-            if (!class_exists('EcommerceDBConfig')) {
+            if (! class_exists('EcommerceDBConfig')) {
                 $class = 'EcommerceDBConfig';
             }
             self::$_my_current_one = DataObject::get_one(
                 $className,
-                array('UseThisOne' => 1),
+                ['UseThisOne' => 1],
                 $cacheDataObjectGetOne = false
             );
             if (! self::$_my_current_one) {
@@ -339,7 +341,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function customFieldLabels()
     {
-        $newLabels = array(
+        return [
             'Title' => _t('EcommerceDBConfig.TITLE', 'Name of settings'),
             'UseThisOne' => _t('EcommerceDBConfig.USETHISONE', 'Use these configuration settings'),
             'ShopClosed' => _t('EcommerceDBConfig.SHOPCLOSED', 'Shop Closed'),
@@ -368,9 +370,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'DefaultContentImageSize' => _t('EcommerceDBConfig.DEFAULTCONTENTIMAGESIZE', 'Product Content Image Optimised Size'),
             'DefaultLargeImageSize' => _t('EcommerceDBConfig.DEFAULTLARGEIMAGESIZE', 'Product Large Image Optimised Size'),
             'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE', 'Allow free products to be purchased? '),
-        );
-
-        return $newLabels;
+        ];
     }
 
     /**
@@ -381,7 +381,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function customDescriptionsForFields()
     {
-        $newLabels = array(
+        return [
             'Title' => _t('EcommerceDBConfig.TITLE_DESCRIPTION', 'For internal use only.'),
             'UseThisOne' => _t('EcommerceDBConfig.USETHISONE_DESCRIPTION', 'You can create several setting records so that you can switch between configurations.'),
             'ShopPricesAreTaxExclusive' => _t('EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE_DESCRIPTION', 'If this option is NOT ticked, it is assumed that prices are tax inclusive.'),
@@ -392,9 +392,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'PackingSlipNote' => _t('EcommerceDBConfig.PACKING_SLIP_NOTE_DESCRIPTION', 'e.g. a disclaimer'),
             'InvoiceTitle' => _t('EcommerceDBConfig.INVOICETITLE_DESCRIPTION', 'e.g. Tax Invoice or Update for your recent order on www.yoursite.co.nz'),
             'InvoiceMessage' => _t('EcommerceDBConfig.INVOICEMESSAGE_DESCRIPTION', 'e.g. Thank you for your order.'),
-        );
-
-        return $newLabels;
+        ];
     }
 
     /**
@@ -426,7 +424,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     ),
                     'Root.Main.ShopClosed'
                 );
-                $fields->addFieldsToTab('Root', array(
+                $fields->addFieldsToTab('Root', [
                     Tab::create(
                         'Pricing',
                         _t('EcommerceDBConfig.PRICING', 'Pricing'),
@@ -450,10 +448,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         'ProductImages',
                         _t('EcommerceDBConfig.PRODUCT_IMAGES', 'Product Images'),
                         //new Product_ProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
-                        new ReadonlyField('DefaultThumbnailImageSize', $fieldLabels['DefaultThumbnailImageSize'], $productImage->ThumbWidth().'px x '.$productImage->ThumbHeight().'px '),
-                        new ReadonlyField('DefaultSmallImageSize', $fieldLabels['DefaultSmallImageSize'], $productImage->SmallWidth().'px x '.$productImage->SmallHeight().'px '),
-                        new ReadonlyField('DefaultContentImageSize', $fieldLabels['DefaultContentImageSize'], $productImage->ContentWidth().'px wide'),
-                        new ReadonlyField('DefaultLargeImageSize', $fieldLabels['DefaultLargeImageSize'], $productImage->LargeWidth().'px wide')
+                        new ReadonlyField('DefaultThumbnailImageSize', $fieldLabels['DefaultThumbnailImageSize'], $productImage->ThumbWidth() . 'px x ' . $productImage->ThumbHeight() . 'px '),
+                        new ReadonlyField('DefaultSmallImageSize', $fieldLabels['DefaultSmallImageSize'], $productImage->SmallWidth() . 'px x ' . $productImage->SmallHeight() . 'px '),
+                        new ReadonlyField('DefaultContentImageSize', $fieldLabels['DefaultContentImageSize'], $productImage->ContentWidth() . 'px wide'),
+                        new ReadonlyField('DefaultLargeImageSize', $fieldLabels['DefaultLargeImageSize'], $productImage->LargeWidth() . 'px wide')
                     ),
                     Tab::create(
                         'AddressAndDelivery',
@@ -490,8 +488,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                                 The reason they can not be set is that changing them can break your application.
                             </p>'
                         )
-                    )
-                ));
+                    ),
+                ]);
                 $mappingArray = Config::inst()->get('BillingAddress', 'fields_to_google_geocode_conversion');
                 if (is_array($mappingArray) && count($mappingArray)) {
                     $mappingArray = Config::inst()->get('ShippingAddress', 'fields_to_google_geocode_conversion');
@@ -507,15 +505,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $htmlEditorField5->setRows(3);
                 $fields->addFieldsToTab(
                     'Root.Main',
-                    array(
+                    [
                         new CheckboxField('UseThisOne', $fieldLabels['UseThisOne']),
                         new CheckboxField('ShopClosed', $fieldLabels['ShopClosed']),
                         $clearField = ReadonlyField::create(
                             'RefreshWebsite',
                             'Update site',
                             '<h2><a href="/shoppingcart/clear/?flush=all" target="_blank">Refresh website / clear caches</a></h2>'
-                        )
-                    )
+                        ),
+                    ]
                 );
                 $clearField->dontEscape = true;
                 //set cols
@@ -538,7 +536,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     }
                 }
                 Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
-                if (strnatcmp(phpversion(), '5.5.1') >= 0) {
+                if (strnatcmp(PHP_VERSION, '5.5.1') >= 0) {
                     $fields->addFieldToTab('Root.ProductImages', new Product_ProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage'], null, null, null, 'default-product-image'));
                 }
                 $fields->replaceField(
@@ -593,7 +591,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public static function is_buyable($className)
     {
         $implementorsArray = class_implements($className);
-        if (is_array($implementorsArray) && in_array('BuyableModel', $implementorsArray)) {
+        if (is_array($implementorsArray) && in_array('BuyableModel', $implementorsArray, true)) {
             return true;
         }
 
@@ -721,8 +719,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         if ($this->UseThisOne) {
             $configs = EcommerceDBConfig::get()
-                ->Filter(array('UseThisOne' => 1))
-                ->Exclude(array('ID' => $this->ID));
+                ->Filter(['UseThisOne' => 1])
+                ->Exclude(['ID' => $this->ID]);
             if ($configs->count()) {
                 foreach ($configs as $config) {
                     $config->UseThisOne = 0;
@@ -731,11 +729,11 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             }
         }
         $configs = EcommerceDBConfig::get()
-            ->Filter(array('Title' => $this->Title))
-            ->Exclude(array('ID' => $this->ID));
+            ->Filter(['Title' => $this->Title])
+            ->Exclude(['ID' => $this->ID]);
         if ($configs->count()) {
             foreach ($configs as $key => $config) {
-                $config->Title = $config->Title.'_'.$config->ID;
+                $config->Title .= '_' . $config->ID;
                 $config->write();
             }
         }
@@ -747,7 +745,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        if (!self::current_ecommerce_db_config()) {
+        if (! self::current_ecommerce_db_config()) {
             $obj = self::create();
             $obj->write();
         }

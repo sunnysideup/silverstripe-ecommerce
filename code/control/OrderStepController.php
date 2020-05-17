@@ -13,14 +13,19 @@
  */
 abstract class OrderStepController extends Controller
 {
-    private static $allowed_actions = array(
-        'error' => true,
-    );
-
     /**
      * @var string
      */
-    protected $alternativeContent = "";
+    protected $alternativeContent = '';
+
+    private static $allowed_actions = [
+        'error' => true,
+    ];
+
+    /**
+     * @var Order
+     */
+    private static $_order = null;
 
     /**
      * when no action is selected
@@ -44,11 +49,44 @@ abstract class OrderStepController extends Controller
     }
 
     /**
+     * main content ...
+     *
+     * @return string
+     */
+    public function Content($order = null)
+    {
+        if ($this->alternativeContent) {
+            return $this->alternativeContent;
+        }
+        return $this->standardContent($order);
+    }
+
+    /**
+     * @oaram string $action
+     *
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        $link = '/' . Config::inst()->get($this->nameOfControllerClass(), 'url_segment') . '/';
+        if ($action) {
+            $link .= $action . '/';
+        }
+
+        return $link . $this->getOrderGetParams();
+    }
+
+    public function errorLink()
+    {
+        return $this->Link('error');
+    }
+
+    /**
      * @return string
      */
     protected static function name_of_controller_class()
     {
-        return get_called_class();
+        return static::class;
     }
 
     /**
@@ -79,24 +117,11 @@ abstract class OrderStepController extends Controller
     abstract protected function nameOfLogClass();
 
     /**
-     * main content ...
-     *
-     * @return string
-     */
-    public function Content($order = null)
-    {
-        if ($this->alternativeContent) {
-            return $this->alternativeContent;
-        }
-        return $this->standardContent($order);
-    }
-
-    /**
      * @return string ($html)
      */
     protected function standardContent($order = null)
     {
-        user_error("Make sure to put some content here in classes that extend ".$this->class);
+        user_error('Make sure to put some content here in classes that extend ' . $this->class);
     }
 
     /**
@@ -126,26 +151,6 @@ abstract class OrderStepController extends Controller
     abstract protected function secureHash($order);
 
     /**
-     * @oaram string $action
-     *
-     * @return string
-     */
-    public function Link($action = null)
-    {
-        $link = '/'.Config::inst()->get($this->nameOfControllerClass(), 'url_segment').'/';
-        if ($action) {
-            $link = $link.$action.'/';
-        }
-
-        return $link.$this->getOrderGetParams();
-    }
-
-    public function errorLink()
-    {
-        return $this->Link('error');
-    }
-
-    /**
      * is the order valid?
      *
      * @return bool
@@ -155,28 +160,21 @@ abstract class OrderStepController extends Controller
         $order = $this->Order($dataOrRequest);
         if ($order && $order->exists()) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
-
-    /**
-     * @var Order
-     */
-    private static $_order = null;
 
     /**
      * finds the order ...
      *
-     * @param mixed
+     * @param mixed $dataOrRequest
      *
      * @return Order
      */
     protected function Order($dataOrRequest = null)
     {
-        if (!self::$_order) {
-            if (
-                is_array($dataOrRequest) &&
+        if (! self::$_order) {
+            if (is_array($dataOrRequest) &&
                 isset($dataOrRequest['OrderID']) &&
                 isset($dataOrRequest['OrderSessionID'])
             ) {
@@ -197,7 +195,7 @@ abstract class OrderStepController extends Controller
             }
             self::$_order = Order::get()->byID($id);
             if (self::$_order) {
-                if ($this->secureHash(self::$_order) != $sessionID) {
+                if ($this->secureHash(self::$_order) !== $sessionID) {
                     self::$_order = null;
                 }
             }
@@ -212,7 +210,7 @@ abstract class OrderStepController extends Controller
     protected function getOrderGetParams()
     {
         if ($order = $this->Order()) {
-            return '?OrderID='.$order->ID.'&OrderSessionID='.self::secure_hash($order);
+            return '?OrderID=' . $order->ID . '&OrderSessionID=' . self::secure_hash($order);
         }
     }
 
@@ -223,7 +221,7 @@ abstract class OrderStepController extends Controller
     {
         return DataObject::get_one(
             'OrderStep',
-            array('Code' => $this->codeOfRelevantOrderStep())
+            ['Code' => $this->codeOfRelevantOrderStep()]
         );
     }
 }

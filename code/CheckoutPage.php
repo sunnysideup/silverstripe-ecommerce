@@ -52,28 +52,28 @@ class CheckoutPage extends CartPage
      *
      * @Var Array
      */
-    private static $db = array(
+    private static $db = [
         'TermsAndConditionsMessage' => 'Varchar(200)',
         'EnableGoogleAnalytics' => 'Boolean(1)',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @Var Array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'TermsPage' => 'Page',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @Var Array
      */
-    private static $defaults = array(
+    private static $defaults = [
         'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.',
-    );
+    ];
 
     /**
      * standard SS variable.
@@ -81,10 +81,6 @@ class CheckoutPage extends CartPage
      * @Var String
      */
     private static $singular_name = 'Checkout Page';
-    public function i18n_singular_name()
-    {
-        return _t('CheckoutPage.SINGULARNAME', 'Checkout Page');
-    }
 
     /**
      * standard SS variable.
@@ -92,10 +88,6 @@ class CheckoutPage extends CartPage
      * @Var String
      */
     private static $plural_name = 'Checkout Pages';
-    public function i18n_plural_name()
-    {
-        return _t('CheckoutPage.PLURALNAME', 'Checkout Pages');
-    }
 
     /**
      * Standard SS variable.
@@ -103,6 +95,16 @@ class CheckoutPage extends CartPage
      * @var string
      */
     private static $description = 'A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.';
+
+    public function i18n_singular_name()
+    {
+        return _t('CheckoutPage.SINGULARNAME', 'Checkout Page');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('CheckoutPage.PLURALNAME', 'Checkout Pages');
+    }
 
     /**
      * Returns the Terms and Conditions Page (if there is one).
@@ -145,14 +147,14 @@ class CheckoutPage extends CartPage
      */
     public static function find_last_step_link($step = '')
     {
-        if (!$step) {
+        if (! $step) {
             $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
             if ($steps && count($steps)) {
                 $step = array_pop($steps);
             }
         }
         if ($step) {
-            $step = 'checkoutstep/'.strtolower($step).'/#'.$step;
+            $step = 'checkoutstep/' . strtolower($step) . '/#' . $step;
         }
 
         return self::find_link($step);
@@ -171,8 +173,8 @@ class CheckoutPage extends CartPage
         $nextStep = null;
         if ($link = self::find_link()) {
             $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
-            if (in_array($currentStep, $steps)) {
-                $key = array_search($currentStep, $steps);
+            if (in_array($currentStep, $steps, true)) {
+                $key = array_search($currentStep, $steps, true);
                 if ($key !== false) {
                     if ($doPreviousInstead) {
                         --$key;
@@ -191,8 +193,7 @@ class CheckoutPage extends CartPage
                 }
             }
             if ($nextStep) {
-                return $link.'checkoutstep'.'/'.$nextStep.'/';
-            } else {
+                return $link . 'checkoutstep' . '/' . $nextStep . '/';
             }
 
             return $link;
@@ -212,7 +213,7 @@ class CheckoutPage extends CartPage
     public static function get_checkout_order_link($orderID)
     {
         if ($page = self::find_link()) {
-            return $page->Link('showorder').'/'.$orderID.'/';
+            return $page->Link('showorder') . '/' . $orderID . '/';
         }
 
         return '';
@@ -228,7 +229,7 @@ class CheckoutPage extends CartPage
      **/
     public function canCreate($member = null)
     {
-        return CheckoutPage::get()->Filter(array('ClassName' => 'CheckoutPage'))->Count() ? false : $this->canEdit($member);
+        return CheckoutPage::get()->Filter(['ClassName' => 'CheckoutPage'])->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -318,6 +319,22 @@ class CheckoutPage extends CartPage
         return $fields;
     }
 
+    public function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+        if (SiteTree::config()->create_default_pages) {
+            $checkoutPage = DataObject::get_one('CheckoutPage');
+            if (! $checkoutPage) {
+                $checkoutPage = self::create();
+                $checkoutPage->Title = 'Checkout';
+                $checkoutPage->MenuTitle = 'Checkout';
+                $checkoutPage->URLSegment = 'checkout';
+                $checkoutPage->writeToStage('Stage');
+                $checkoutPage->publish('Stage', 'Live');
+            }
+        }
+    }
+
     /**
      * @return GridField
      */
@@ -353,27 +370,25 @@ class CheckoutPage extends CartPage
 
         return new GridField('CheckoutPage_StepDescription', $title, $source, $gridFieldConfig);
     }
-
-    public function requireDefaultRecords()
-    {
-        parent::requireDefaultRecords();
-        if (SiteTree::config()->create_default_pages) {
-            $checkoutPage = DataObject::get_one('CheckoutPage');
-            if (! $checkoutPage) {
-                $checkoutPage = self::create();
-                $checkoutPage->Title = 'Checkout';
-                $checkoutPage->MenuTitle = 'Checkout';
-                $checkoutPage->URLSegment = 'checkout';
-                $checkoutPage->writeToStage('Stage');
-                $checkoutPage->publish('Stage', 'Live');
-            }
-        }
-    }
 }
 
 class CheckoutPage_Controller extends CartPage_Controller
 {
-    private static $allowed_actions = array(
+    /**
+     * STEP STUFF ---------------------------------------------------------------------------.
+     */
+
+    /**
+     *@var string
+     **/
+    protected $currentStep = '';
+
+    /**
+     *@var array
+     **/
+    protected $steps = [];
+
+    private static $allowed_actions = [
         'checkoutstep',
         'OrderFormAddress',
         'saveorder',
@@ -384,7 +399,7 @@ class CheckoutPage_Controller extends CartPage_Controller
         'showorder',
         'LoginForm',
         'OrderForm',
-    );
+    ];
 
     /**
      * FOR STEP STUFF SEE BELOW.
@@ -409,13 +424,13 @@ class CheckoutPage_Controller extends CartPage_Controller
         Requirements::customScript(
             '
             if (typeof EcomOrderForm != "undefined") {
-                EcomOrderForm.set_TermsAndConditionsMessage(\''.convert::raw2js($this->TermsAndConditionsMessage).'\');
+                EcomOrderForm.set_TermsAndConditionsMessage(\'' . convert::raw2js($this->TermsAndConditionsMessage) . '\');
             }',
             'TermsAndConditionsMessage'
         );
         $this->steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         $this->currentStep = $this->request->Param('ID');
-        if ($this->currentStep && in_array($this->currentStep, $this->steps)) {
+        if ($this->currentStep && in_array($this->currentStep, $this->steps, true)) {
             //do nothing
         } else {
             $this->currentStep = array_shift($this->steps);
@@ -424,7 +439,7 @@ class CheckoutPage_Controller extends CartPage_Controller
         // this is only applicable when people submit order (start to pay)
         // and then return back
         if ($checkoutPageCurrentOrderID = Session::get('CheckoutPageCurrentOrderID')) {
-            if ($this->currentOrder->ID != $checkoutPageCurrentOrderID) {
+            if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
                 $this->clearRetrievalOrderID();
             }
         }
@@ -432,40 +447,6 @@ class CheckoutPage_Controller extends CartPage_Controller
             $this->setRetrievalOrderID($this->currentOrder->ID);
         }
         $this->includeGoogleAnalyticsCode();
-    }
-
-    protected function includeGoogleAnalyticsCode()
-    {
-        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
-            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
-            if ($var) {
-                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
-                if ($currencyUsedObject) {
-                    $currencyUsedString = $currencyUsedObject->Code;
-                }
-                if (empty($currencyUsedString)) {
-                    $currencyUsedString = EcommerceCurrency::default_currency_code();
-                }
-                $js = '
-                jQuery("#OrderForm_OrderForm").on(
-                    "submit",
-                    function(){
-                        '.$var.'(\'require\', \'ecommerce\');
-                        '.$var.'(
-                            \'ecommerce:addTransaction\',
-                            {
-                                \'id\': \''.$this->currentOrder->ID.'\',
-                                \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
-                                \'currency\': \''.$currencyUsedString.'\'
-                            }
-                        );
-                        '.$var.'(\'ecommerce:send\');
-                    }
-                );
-    ';
-                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
-            }
-        }
     }
 
     /**
@@ -527,7 +508,7 @@ class CheckoutPage_Controller extends CartPage_Controller
      */
     public function CanCheckout()
     {
-        return $this->currentOrder->getTotalItems() && !$this->currentOrder->IsSubmitted();
+        return $this->currentOrder->getTotalItems() && ! $this->currentOrder->IsSubmitted();
     }
 
     /**
@@ -537,23 +518,8 @@ class CheckoutPage_Controller extends CartPage_Controller
     {
         user_error('Make sure that you set the controller for your ModifierForm to a controller directly associated with the Modifier', E_USER_WARNING);
 
-        return array();
+        return [];
     }
-
-    /**
-     * STEP STUFF ---------------------------------------------------------------------------.
-     */
-
-
-    /**
-    *@var String
-    **/
-    protected $currentStep = '';
-
-    /**
-     *@var array
-     **/
-    protected $steps = array();
 
     /**
      * returns a dataobject set of the steps.
@@ -574,19 +540,19 @@ class CheckoutPage_Controller extends CartPage_Controller
         $completedClass = 'completed';
         $seenCodes = [];
         foreach ($steps as $code) {
-            if(! in_array($code, $seenCodes)) {
+            if (! in_array($code, $seenCodes, true)) {
                 $seenCodes[$code] = $code;
                 $do = CheckoutPage_StepDescription::get()->filter(['Code' => $code])->first();
-                if($do) {
-                    if ($this->currentStep && $do->Code == $this->currentStep) {
+                if ($do) {
+                    if ($this->currentStep && $do->Code === $this->currentStep) {
                         $do->LinkingMode = 'current';
                         $completed = 0;
                         $completedClass = 'notCompleted';
                     } else {
                         if ($completed) {
-                            $do->Link = $this->Link('checkoutstep').'/'.$do->Code.'/';
+                            $do->Link = $this->Link('checkoutstep') . '/' . $do->Code . '/';
                         }
-                        $do->LinkingMode = "link $completedClass";
+                        $do->LinkingMode = "link ${completedClass}";
                     }
                     $do->Completed = $completed;
                     $returnData->push($do);
@@ -674,7 +640,7 @@ class CheckoutPage_Controller extends CartPage_Controller
             return $this->renderWith('LayoutCheckoutPageInner');
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -695,9 +661,9 @@ class CheckoutPage_Controller extends CartPage_Controller
     public function CanShowStep($step)
     {
         if ($this->ShowOnlyCurrentStep()) {
-            $outcome = $step == $this->currentStep;
+            $outcome = $step === $this->currentStep;
         } else {
-            $outcome = in_array($step, $this->steps);
+            $outcome = in_array($step, $this->steps, true);
         }
 
         // die($step.'sadf'.$outcome);
@@ -725,7 +691,7 @@ class CheckoutPage_Controller extends CartPage_Controller
             //do nothing...
         }
 
-        return $this->currentStep == $finalStep;
+        return $this->currentStep === $finalStep;
     }
 
     /**
@@ -738,6 +704,40 @@ class CheckoutPage_Controller extends CartPage_Controller
         return round($this->currentStepNumber() / $this->numberOfSteps(), 2) * 100;
     }
 
+    protected function includeGoogleAnalyticsCode()
+    {
+        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
+            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
+            if ($var) {
+                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
+                if ($currencyUsedObject) {
+                    $currencyUsedString = $currencyUsedObject->Code;
+                }
+                if (empty($currencyUsedString)) {
+                    $currencyUsedString = EcommerceCurrency::default_currency_code();
+                }
+                $js = '
+                jQuery("#OrderForm_OrderForm").on(
+                    "submit",
+                    function(){
+                        ' . $var . '(\'require\', \'ecommerce\');
+                        ' . $var . '(
+                            \'ecommerce:addTransaction\',
+                            {
+                                \'id\': \'' . $this->currentOrder->ID . '\',
+                                \'revenue\': \'' . $this->currentOrder->getSubTotal() . '\',
+                                \'currency\': \'' . $currencyUsedString . '\'
+                            }
+                        );
+                        ' . $var . '(\'ecommerce:send\');
+                    }
+                );
+    ';
+                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
+            }
+        }
+    }
+
     /**
      * returns the number of the current step (e.g. step 1).
      *
@@ -747,7 +747,7 @@ class CheckoutPage_Controller extends CartPage_Controller
     {
         $key = 1;
         if ($this->currentStep) {
-            $key = array_search($this->currentStep, $this->steps);
+            $key = array_search($this->currentStep, $this->steps, true);
             ++$key;
         }
 

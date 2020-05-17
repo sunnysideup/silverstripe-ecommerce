@@ -32,7 +32,7 @@ class Product_ProductImageUploadField extends UploadField
      *            (will be merged into the config of the javascript file upload plugin).
      *            See framework/_config/uploadfield.yml for configuration defaults and documentation.
      */
-    protected $ufConfig = array(
+    protected $ufConfig = [
         /*
          * @var boolean
          */
@@ -97,17 +97,7 @@ class Product_ProductImageUploadField extends UploadField
          * @var string
          */
         'fileEditValidator' => null,
-    );
-
-    /**
-     * Must be a real class name.
-     *
-     * @param string $name
-     */
-    public function setCallingClass($name)
-    {
-        $this->callingClass = $name;
-    }
+    ];
 
     /**
      * Construct a new UploadField instance.
@@ -123,14 +113,24 @@ class Product_ProductImageUploadField extends UploadField
     public function __construct($name, $title = null, SS_List $items = null)
     {
         parent::__construct($name, $title, $items);
-        $this->getValidator()->setAllowedExtensions(array('gif', 'jpg', 'jpeg', 'png'));
+        $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'jpeg', 'png']);
 
         $callingClass = $this->getCallingClass();
         $folderName = Config::inst()->get($callingClass, 'folder_name_for_images');
-        if (!$folderName) {
-            $folderName = $callingClass.'_'.$name;
+        if (! $folderName) {
+            $folderName = $callingClass . '_' . $name;
         }
         $this->setFolderName($folderName);
+    }
+
+    /**
+     * Must be a real class name.
+     *
+     * @param string $name
+     */
+    public function setCallingClass($name)
+    {
+        $this->callingClass = $name;
     }
 
     /**
@@ -149,7 +149,7 @@ class Product_ProductImageUploadField extends UploadField
         for ($i = 1; $i < count($trace); ++$i) {
             if (isset($trace[$i])) {
                 // is it set?
-                if ($class != $trace[$i]['class']) { // is it a different class
+                if ($class !== $trace[$i]['class']) { // is it a different class
                     return $trace[$i]['class'];
                 }
             }

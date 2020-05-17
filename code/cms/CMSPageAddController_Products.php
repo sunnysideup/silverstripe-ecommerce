@@ -13,12 +13,11 @@ class CMSPageAddController_Products extends CMSPageAddController
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'AddForm',
         'doAdd',
         'doCancel',
-    );
-
+    ];
 
     /**
      * the class of the page that is the root parent for the shop.
@@ -27,12 +26,10 @@ class CMSPageAddController_Products extends CMSPageAddController
      */
     private static $root_parent_class_for_adding_page = 'ProductGroupSearchPage';
 
-
     public function doCancel($data, $form)
     {
         return $this->redirect(singleton('ProductsAndGroupsModelAdmin')->Link());
     }
-
 
     /**
      * @return ArrayList
@@ -52,7 +49,7 @@ class CMSPageAddController_Products extends CMSPageAddController
 
         $acceptedClasses = array_merge($acceptedClasses1, $acceptedClasses2);
         foreach ($pageTypes as $type) {
-            if (in_array($type->ClassName, $acceptedClasses)) {
+            if (in_array($type->ClassName, $acceptedClasses, true)) {
                 $result->push($type);
             }
         }

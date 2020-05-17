@@ -6,7 +6,7 @@ class OrderForm_Payment extends Form
      * @param Controller $controller
      * @param string     $name
      * @param Order      $order
-     * @param string
+     * @param string $returnToLink
      */
     public function __construct(Controller $controller, $name, Order $order, $returnToLink = '')
     {
@@ -35,7 +35,7 @@ class OrderForm_Payment extends Form
         $actions = new FieldList(
             new FormAction('dopayment', _t('OrderForm.PAYORDER', 'Pay balance'))
         );
-        $requiredFields = array();
+        $requiredFields = [];
         $validator = OrderForm_Payment_Validator::create($requiredFields);
         $form = parent::__construct($controller, $name, $fields, $actions, $validator);
 
@@ -71,15 +71,13 @@ class OrderForm_Payment extends Form
                     $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
                     if ($formHelper->validatePayment($order, $data, $form)) {
                         return $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
-                    } else {
-                        //error messages are set in validation
-                        return $this->controller->redirectBack();
                     }
-                } else {
-                    $form->sessionMessage(_t('OrderForm.NO_PAYMENTS_CAN_BE_MADE_FOR_THIS_ORDER', 'No payments can be made for this order.'), 'bad');
-
+                    //error messages are set in validation
                     return $this->controller->redirectBack();
                 }
+                $form->sessionMessage(_t('OrderForm.NO_PAYMENTS_CAN_BE_MADE_FOR_THIS_ORDER', 'No payments can be made for this order.'), 'bad');
+
+                return $this->controller->redirectBack();
             }
         }
         $form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT', 'Sorry, we could not find the Order for payment.'), 'bad');

@@ -4,7 +4,6 @@
 /**
  * @Description: Email specifically for communicating with customer about order.
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
@@ -34,10 +33,10 @@ abstract class Order_Email extends Email
     {
         //get required files
         $baseFolder = Director::baseFolder();
-        if (!class_exists('\Pelago\Emogrifier')) {
-            require_once $baseFolder.'/ecommerce/thirdparty/Emogrifier.php';
+        if (! class_exists('\Pelago\Emogrifier')) {
+            require_once $baseFolder . '/ecommerce/thirdparty/Emogrifier.php';
         }
-        $cssFileLocation = Director::baseFolder().'/'.EcommerceConfig::get('Order_Email', 'css_file_location');
+        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get('Order_Email', 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
         $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
@@ -75,10 +74,9 @@ abstract class Order_Email extends Email
     {
         $siteConfig = SiteConfig::current_site_config();
         if ($siteConfig && $siteConfig->Title) {
-            return _t('Order_Email.SALEUPDATE', 'Sale Update for Order #[OrderNumber] from ').$siteConfig->Title;
-        } else {
-            return _t('Order_Email.SALEUPDATE', 'Sale Update for Order #[OrderNumber] ');
+            return _t('Order_Email.SALEUPDATE', 'Sale Update for Order #[OrderNumber] from ') . $siteConfig->Title;
         }
+        return _t('Order_Email.SALEUPDATE', 'Sale Update for Order #[OrderNumber] ');
     }
 
     /**
@@ -101,28 +99,28 @@ abstract class Order_Email extends Email
     }
 
     /**
-     * @param null|string $messageID      - ID for the message, you can leave this blank
+     * @param string|null $messageID - ID for the message, you can leave this blank
      * @param bool        $returnBodyOnly - rather than sending the email, only return the HTML BODY
      *
      * @return bool - TRUE for success and FALSE for failure.
      */
     public function send($messageID = null, $returnBodyOnly = false)
     {
-        if (!$this->order) {
+        if (! $this->order) {
             user_error('Must set the order (Order_Email::setOrder()) before the message is sent (Order_Email::send()).', E_USER_NOTICE);
         }
-        if (!$this->subject) {
+        if (! $this->subject) {
             $this->subject = self::get_subject();
         }
         $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
-        if ((!$this->hasBeenSent()) || ($this->resend)) {
+        if (! $this->hasBeenSent() || ($this->resend)) {
             if (EcommerceConfig::get('Order_Email', 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
                 if ($memberEmail = self::get_from_email()) {
-                    $array = [ $memberEmail ];
-                    if($bcc = $this->Bcc()) {
+                    $array = [$memberEmail];
+                    if ($bcc = $this->Bcc()) {
                         $array[] = $bcc;
                     }
-                    $this->setBcc(implode(", ", $array));
+                    $this->setBcc(implode(', ', $array));
                 }
             }
             //last chance to adjust
@@ -138,7 +136,7 @@ abstract class Order_Email extends Email
             }
 
             $orderEmailRecord = $this->createRecord($result);
-            if(Director::isDev()) {
+            if (Director::isDev()) {
                 $result = true;
             }
             $orderEmailRecord->Result = $result ? true : false;
@@ -146,6 +144,43 @@ abstract class Order_Email extends Email
 
             return $result;
         }
+    }
+
+    /**
+     * converts an Email to A Varchar.
+     *
+     * @param string $email - email address
+     *
+     * @return string - returns email address without &gt; and &lt;
+     */
+    public function emailToVarchar($email)
+    {
+        return str_replace(['<', '>', '"', "'"], ' - ', $email);
+    }
+
+    /**
+     * Checks if an email has been sent for this Order for this status (order step).
+     *
+     * @return bool
+     **/
+    public function hasBeenSent(): bool
+    {
+        $orderStep = $this->order->Status();
+        if (is_a($orderStep, Object::getCustomClass('OrderStep'))) {
+            return $orderStep->hasBeenSent($this->order);
+        }
+
+        user_error('expects orderstep');
+    }
+
+    /**
+     * returns the instance of EcommerceDBConfig.
+     *
+     * @return EcommerceDBConfig
+     **/
+    public function EcomConfig()
+    {
+        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /**
@@ -159,14 +194,14 @@ abstract class Order_Email extends Email
         $orderEmailRecord->From = $this->emailToVarchar($this->from);
         $orderEmailRecord->To = $this->emailToVarchar($this->to);
         if ($this->Cc()) {
-            $orderEmailRecord->To .= ', CC: '.$this->emailToVarchar($this->Cc());
+            $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->Cc());
         }
         if ($this->Bcc()) {
-            $orderEmailRecord->To .= ', BCC: '.$this->emailToVarchar($this->Bcc());
+            $orderEmailRecord->To .= ', BCC: ' . $this->emailToVarchar($this->Bcc());
         }
         //always set result to try if
         $orderEmailRecord->Subject = $this->subject;
-        if (!$result) {
+        if (! $result) {
             if (Director::isDev()) {
                 $orderEmailRecord->Subject .= _t('Order_Email.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
             }
@@ -178,41 +213,12 @@ abstract class Order_Email extends Email
         if ($sendAllEmailsTo = Config::inst()->get('Email', 'send_all_emails_to')) {
             $orderEmailRecord->To .=
                 _t('Order_Email.ACTUALLY_SENT_TO', ' | actually sent to: ')
-                .$sendAllEmailsTo
-                ._t('Order_Email.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
+                . $sendAllEmailsTo
+                . _t('Order_Email.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
         }
         $orderEmailRecord->write();
 
         return $orderEmailRecord;
-    }
-
-    /**
-     * converts an Email to A Varchar.
-     *
-     * @param string $email - email address
-     *
-     * @return string - returns email address without &gt; and &lt;
-     */
-    public function emailToVarchar($email)
-    {
-        $email = str_replace(array('<', '>', '"', "'"), ' - ', $email);
-
-        return $email;
-    }
-
-    /**
-     * Checks if an email has been sent for this Order for this status (order step).
-     *
-     * @return bool
-     **/
-    public function hasBeenSent() : bool
-    {
-        $orderStep = $this->order->Status();
-        if (is_a($orderStep, Object::getCustomClass('OrderStep'))) {
-            return $orderStep->hasBeenSent($this->order);
-        }
-
-        user_error('expects orderstep');
     }
 
     /**
@@ -224,18 +230,8 @@ abstract class Order_Email extends Email
     {
         //start parsing
         parent::parseVariables($isPlain);
-        if (!$isPlain) {
+        if (! $isPlain) {
             $this->body = self::emogrify_html($this->body);
         }
-    }
-
-    /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 }

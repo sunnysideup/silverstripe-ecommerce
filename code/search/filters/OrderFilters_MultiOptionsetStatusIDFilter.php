@@ -18,7 +18,7 @@ class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter
         $this->model = $query->applyRelation($this->relation);
         $values = $this->getValue();
         if (is_array($values) && count($values)) {
-            $query->where('"StatusID" IN ('.implode(', ', $values).')');
+            $query->where('"StatusID" IN (' . implode(', ', $values) . ')');
         }
 
         return $query;

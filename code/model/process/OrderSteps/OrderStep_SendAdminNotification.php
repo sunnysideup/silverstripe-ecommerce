@@ -14,19 +14,19 @@ class OrderStep_SendAdminNotification extends OrderStep implements OrderStepInte
      */
     protected $emailClassName = 'Order_ReceiptEmail';
 
-    private static $defaults = array(
+    private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 1,
         'Name' => 'Send Admin Notification',
         'Code' => 'ADMINNOTIFIED',
         'ShowAsInProcessOrder' => 1,
-    );
+    ];
 
     /**
      * can run step once order has been submitted.
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/

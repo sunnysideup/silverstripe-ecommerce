@@ -8,7 +8,7 @@
  **/
 class OrderStep_Paid extends OrderStep implements OrderStepInterface
 {
-    private static $defaults = array(
+    private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         //the one below may seem a bit paradoxical, but the thing is that the customer can pay up to and inclusive of this step
@@ -17,7 +17,7 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
         'Name' => 'Pay',
         'Code' => 'PAID',
         'ShowAsInProcessOrder' => 1,
-    );
+    ];
 
     /**
      *initStep:
@@ -26,7 +26,7 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/
@@ -43,7 +43,7 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if run correctly.
      **/
@@ -81,7 +81,7 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
-        if (!$order->IsPaid()) {
+        if (! $order->IsPaid()) {
             $msg = _t(
                 'OrderStep.ORDERNOTPAID',
                 '
@@ -90,7 +90,7 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
                     See Payments tab for more details.
                 '
             );
-            $fields->addFieldToTab('Root.Next', new LiteralField('NotPaidMessage', '<p>'.$msg.'</p>'), 'ActionNextStepManually');
+            $fields->addFieldToTab('Root.Next', new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'), 'ActionNextStepManually');
         }
 
         return $fields;

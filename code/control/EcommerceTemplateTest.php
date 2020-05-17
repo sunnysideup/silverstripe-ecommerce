@@ -12,8 +12,9 @@ class EcommerceTemplateTest extends Page_Controller
 {
     public function index()
     {
-        return $this->renderWith(array("EcommerceTemplateTest", "Page"));
+        return $this->renderWith(['EcommerceTemplateTest', 'Page']);
     }
+
     /**
      * Goes through all products and find one that
      * "canPurchase".
@@ -45,10 +46,9 @@ class EcommerceTemplateTest extends Page_Controller
     {
         $lastStatusOrder = OrderStep::last_order_step();
         if ($lastStatusOrder) {
-            return
-            DataObject::get_one(
+            return DataObject::get_one(
                 'Order',
-                array('StatusID' => $lastStatusOrder->ID),
+                ['StatusID' => $lastStatusOrder->ID],
                 $cacheDataObjectGetOne = true,
                 'RAND()'
             );

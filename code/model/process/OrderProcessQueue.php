@@ -2,34 +2,33 @@
 /**
  * This class provides a bunch of Meta Objects
  * that do not interact with the object at hand, but rather with the datalist as a whole.
- *
  */
 
 class OrderProcessQueue extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'DeferTimeInSeconds' => 'Int',
         'InProcess' => 'Boolean',
-        'ProcessAttempts' => 'Int'
-    );
+        'ProcessAttempts' => 'Int',
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'Order' => 'Order',
-        'OrderStep' => 'OrderStep'
-    );
+        'OrderStep' => 'OrderStep',
+    ];
 
-    private static $indexes = array(
+    private static $indexes = [
         'DeferTimeInSeconds' => true,
-        'ProcessAttempts' => true
-    );
+        'ProcessAttempts' => true,
+    ];
 
-    private static $casting = array(
+    private static $casting = [
         'ToBeProcessedAt' => 'SS_Datetime',
-        'HasBeenInQueueSince' => 'SS_Datetime'
-    );
+        'HasBeenInQueueSince' => 'SS_Datetime',
+    ];
 
     private static $default_sort = [
-        'ID' => 'DESC'
+        'ID' => 'DESC',
     ];
 
     /**
@@ -37,28 +36,41 @@ class OrderProcessQueue extends DataObject
      *
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Order.Title' => 'Order',
         'Order.Status.Title' => 'Current Step',
         'ProcessAttempts' => 'Attempts',
         'ToBeProcessedAt.Nice' => 'To be processed at',
         'ToBeProcessedAt.Ago' => 'That is ...',
         'HasBeenInQueueForSince.Nice' => 'Added to queue ...',
-        'InProcess.Nice' => 'Currently Running'
-    );
+        'InProcess.Nice' => 'Currently Running',
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $searchable_fields = array(
-        'OrderID' => array(
+    private static $searchable_fields = [
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        )
-    );
+        ],
+    ];
 
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $singular_name = 'Order To Be Processed';
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $plural_name = 'Orders to be Processed';
 
     /**
      * Standard SS method.
@@ -124,44 +136,31 @@ class OrderProcessQueue extends DataObject
         return parent::canDelete($member);
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $singular_name = 'Order To Be Processed';
     public function i18n_singular_name()
     {
         return _t('OrderProcessQueue.SINGULAR_NAME', 'Order In Queue');
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $plural_name = 'Orders to be Processed';
     public function i18n_plural_name()
     {
         return _t('OrderProcessQueue.PLURAL_NAME', 'Orders In Queue');
     }
 
-
     /**
      * META METHOD: Add an order to the job list if it does not exist already.
      *
      * @param Order $order
-     * @param Int   $deferInSeconds
+     * @param int   $deferTimeInSeconds
      */
     public function AddOrderToQueue($order, $deferTimeInSeconds)
     {
-        if (!$order || ! $order->ID) {
+        if (! $order || ! $order->ID) {
             user_error('No real order provided.');
         }
-        $filter = array(
+        $filter = [
             'OrderID' => $order->ID,
-            'OrderStepID' => $order->StatusID
-        );
+            'OrderStepID' => $order->StatusID,
+        ];
         $existingEntry = DataObject::get_one(
             'OrderProcessQueue',
             $filter,
@@ -172,7 +171,7 @@ class OrderProcessQueue extends DataObject
             $existingEntry = OrderProcessQueue::create($filter);
         } else {
             foreach ($filter as $field => $value) {
-                $existingEntry->$field = $value;
+                $existingEntry->{$field} = $value;
             }
         }
         $existingEntry->write();
@@ -184,7 +183,6 @@ class OrderProcessQueue extends DataObject
      * META METHOD
      * processes the order ...
      * returns TRUE if SUCCESSFUL and a message if unsuccessful ...
-     *
      *
      * @param  Order $order optional
      * @return boolean | string
@@ -201,15 +199,13 @@ class OrderProcessQueue extends DataObject
         //delete if order is gone ...
         if ($order) {
             //if order has moved already ... delete
-            if (
-                $order->IsCancelled() ||
+            if ($order->IsCancelled() ||
                 $order->IsArchived()
             ) {
                 $myQueueObject->delete();
                 $message = 'Order is archived already and/or cancelled.';
-            } elseif (
-                $this->OrderStepID > 0
-                && (int)$order->StatusID !== (int)$myQueueObject->OrderStepID
+            } elseif ($this->OrderStepID > 0
+                && (int) $order->StatusID !== (int) $myQueueObject->OrderStepID
             ) {
                 $message = 'Order has already moved on.';
                 $myQueueObject->delete();
@@ -218,21 +214,20 @@ class OrderProcessQueue extends DataObject
                     if ($myQueueObject->isReadyToGo()) {
                         $oldOrderStatusID = $order->StatusID;
                         $myQueueObject->InProcess = true;
-                        $myQueueObject->ProcessAttempts = $myQueueObject->ProcessAttempts + 1;
+                        ++$myQueueObject->ProcessAttempts;
                         $myQueueObject->write();
                         $order->tryToFinaliseOrder(
                             $tryAgain = false,
                             $fromOrderQueue = true
                         );
                         $newOrderStatusID = $order->StatusID;
-                        if ($oldOrderStatusID != $newOrderStatusID) {
+                        if ($oldOrderStatusID !== $newOrderStatusID) {
                             $myQueueObject->delete();
                             return true;
-                        } else {
-                            $message = 'Attempt to move order was not successful.';
-                            $myQueueObject->InProcess = false;
-                            $myQueueObject->write();
                         }
+                        $message = 'Attempt to move order was not successful.';
+                        $myQueueObject->InProcess = false;
+                        $myQueueObject->write();
                     } else {
                         $message = 'Minimum order queue time has not been passed.';
                     }
@@ -252,12 +247,10 @@ class OrderProcessQueue extends DataObject
      * META METHOD: returns the queue object if it exists
      *
      * @param  Order $order
-     *
-     * @return null |   OrderProcessQueue
      */
     public function getQueueObject($order)
     {
-        $filter = array('OrderID' => $order->ID);
+        $filter = ['OrderID' => $order->ID];
 
         return DataObject::get_one('OrderProcessQueue', $filter);
     }
@@ -269,7 +262,7 @@ class OrderProcessQueue extends DataObject
      */
     public function removeOrderFromQueue($order)
     {
-        $queueEntries = OrderProcessQueue::get()->filter(array('OrderID' => $order->ID));
+        $queueEntries = OrderProcessQueue::get()->filter(['OrderID' => $order->ID]);
         foreach ($queueEntries as $queueEntry) {
             $queueEntry->delete();
         }
@@ -294,17 +287,17 @@ class OrderProcessQueue extends DataObject
                 "InProcess" = 0
                 AND
                 (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") < UNIX_TIMESTAMP()
-            ORDER BY '.$this->sortPhrase().'
-            LIMIT '.$limit.';
+            ORDER BY ' . $this->sortPhrase() . '
+            LIMIT ' . $limit . ';
         ';
         $rows = DB::query($sql);
-        $orderIDs = array($id => $id);
+        $orderIDs = [$id => $id];
         foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
 
         return Order::get()
-            ->filter(array('ID' => $orderIDs))
+            ->filter(['ID' => $orderIDs])
             ->sort($this->sortPhraseForOrderIDs($orderIDs));
     }
 
@@ -320,7 +313,7 @@ class OrderProcessQueue extends DataObject
         $orderIDs = OrderProcessQueue::get()->column('OrderID');
 
         return Order::get()
-            ->filter(array('ID' => $orderIDs))
+            ->filter(['ID' => $orderIDs])
             ->sort($this->sortPhraseForOrderIDs($orderIDs))
             ->limit($limit);
     }
@@ -341,17 +334,17 @@ class OrderProcessQueue extends DataObject
             FROM "OrderProcessQueue"
             WHERE
                 (UNIX_TIMESTAMP("Created") + "DeferTimeInSeconds") >= UNIX_TIMESTAMP()
-            ORDER BY '.$this->sortPhrase().'
-            LIMIT '.$limit.';
+            ORDER BY ' . $this->sortPhrase() . '
+            LIMIT ' . $limit . ';
         ';
         $rows = DB::query($sql);
-        $orderIDs = array(0 => 0);
+        $orderIDs = [0 => 0];
         foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
 
         return Order::get()
-            ->filter(array('ID' => $orderIDs))
+            ->filter(['ID' => $orderIDs])
             ->sort($this->sortPhraseForOrderIDs($orderIDs));
     }
 
@@ -366,7 +359,6 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     *
      * casted variable
      * @return SS_DateTime
      */
@@ -376,7 +368,6 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     *
      * casted variable
      * @return SS_DateTime
      */
@@ -385,9 +376,7 @@ class OrderProcessQueue extends DataObject
         return DBField::create_field('SS_Datetime', (strtotime($this->Created) + $this->DeferTimeInSeconds));
     }
 
-
     /**
-     *
      * casted variable
      * @return SS_DateTime
      */
@@ -397,15 +386,13 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     *
      * casted variable
      * @return SS_DateTime
      */
     public function getHasBeenInQueueForSince()
     {
-        return DBField::create_field('SS_Datetime', (strtotime($this->Created)));
+        return DBField::create_field('SS_Datetime', strtotime($this->Created));
     }
-
 
     /**
      * CMS Fields
@@ -438,8 +425,8 @@ class OrderProcessQueue extends DataObject
                 LiteralField::create(
                     'processQueueNow',
                     '<h2>
-                        <a href="/dev/tasks/EcommerceTaskProcessOrderQueue/?id='.$this->OrderID.'" target="_blank">'.
-                            _t('OrderProcessQueue.PROCESS', 'Process now').
+                        <a href="/dev/tasks/EcommerceTaskProcessOrderQueue/?id=' . $this->OrderID . '" target="_blank">' .
+                            _t('OrderProcessQueue.PROCESS', 'Process now') .
                         '</a>
                     </h2>'
                 )
@@ -459,7 +446,7 @@ class OrderProcessQueue extends DataObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $errors = OrderProcessQueue::get()->filter(array('OrderID' => 0));
+        $errors = OrderProcessQueue::get()->filter(['OrderID' => 0]);
         foreach ($errors as $error) {
             DB::alteration_message(' DELETING ROGUE OrderProcessQueue', 'deleted');
             $error->delete();
@@ -476,11 +463,11 @@ class OrderProcessQueue extends DataObject
 
     /**
      * sort phrase for orders, based in order IDs...
-     * @param  array $orderIds
+     * @param  array $orderIDs
      * @return string
      */
     protected function sortPhraseForOrderIDs($orderIDs)
     {
-        return 'FIELD("Order"."ID", '.implode(",", $orderIDs).')';
+        return 'FIELD("Order"."ID", ' . implode(',', $orderIDs) . ')';
     }
 }

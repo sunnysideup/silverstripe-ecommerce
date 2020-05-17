@@ -76,7 +76,137 @@
  **/
 class EcommerceDatabaseAdmin extends TaskRunner
 {
+    //##############################
+    // 0. OVERALL CONFIG
+    //##############################
 
+    /**
+     * List of overall configuration BuildTasks.
+     *
+     * @var array
+     */
+    protected $overallconfig = [
+        'ecommercetaskcheckconfiguration',
+        'ecommercetaskapiandmore',
+    ];
+
+    //##############################
+    // 1. ECOMMERCE SETUP (DEFAULT RECORDS)
+    //##############################
+
+    /**
+     * List of setup BuildTasks.
+     *
+     * @var array
+     */
+    protected $ecommerceSetup = [
+        'ecommercetasksetorderidstartingnumber',
+        'ecommercetaskcreatemembergroups',
+        'ecommercetaskdefaultrecords',
+        'ecommercetaskcountryandregion',
+        'ecommercetaskcountryandregion_disallowallcountries',
+        'ecommercetaskcountryandregion_allowallcountries',
+        'ecommercetaskadddefaultproducts',
+        'ecommercetasklinkproductwithimages',
+    ];
+
+    //##############################
+    // 2. DATA REVIEW MAINTENANCE
+    //##############################
+
+    /**
+     * List of regular maintenance BuildTasks.
+     *
+     * @var array
+     */
+    protected $dataReview = [
+        'ecommercetaskreviewreports',
+        'ecommercetaskreviewsearches',
+        'ecommercetaskorderitemspercustomer',
+    ];
+
+    //##############################
+    // 3. REGULAR MAINTENANCE
+    //##############################
+
+    /**
+     * List of regular maintenance BuildTasks.
+     *
+     * @var array
+     */
+    protected $regularMaintenance = [
+        'ecommercetaskcartcleanup',
+        'ecommercetaskaddcustomerstocustomergroups',
+        'ecommercetaskfixbrokenordersubmissiondata',
+        'ecommercetaskcleanupproductfullsitetreesorting',
+        'ecommercetaskproductvariationsfixes',
+        'ecommercetaskproductimagereset',
+        'ecommercetasktrytofinaliseorders',
+        'ecommercetaskprocessorderqueue',
+        'ecommercetaskarchiveallsubmittedorders',
+        'ecommercetasklinkorderaddressesatbothends',
+        'EcommerceTaskCleanupProducts',
+    ];
+
+    //##############################
+    // 4. DEBUG ACTIONS
+    //##############################
+
+    /**
+     * List of debug actions BuildTasks.
+     *
+     * @var array
+     */
+    protected $debugActions = [
+        'ecommercetasktemplatetest',
+        'ecommercetaskcartmanipulation_current',
+        'ecommercetaskcartmanipulation_debug',
+        'ecommercetaskbuilding_model',
+        'ecommercetaskbuilding_extending',
+    ];
+
+    //##############################
+    // 5. MIGRATIONS
+    //##############################
+
+    /**
+     * List of migration BuildTasks.
+     *
+     * @var array
+     */
+    protected $migrations = [
+        'ecommercetaskmigration',
+        'ecommercetaskcheckconfiguration',
+        'ecommercetasksetdefaultproductgroupvalues',
+    ];
+
+    //##############################
+    // 6. CRAZY SHIT
+    //##############################
+
+    /**
+     * List of crazy shit BuildTasks.
+     *
+     * @var array
+     */
+    protected $crazyshit = [
+        'ecommercetaskdeleteallorders',
+        'ecommercetaskdeleteproducts',
+        'ecommercetaskarchiveallorderswithitems',
+    ];
+
+    //##############################
+    // 7. TESTS
+    //##############################
+
+    /**
+     * List of tests.
+     *
+     * @var array
+     */
+    protected $tests = [
+        //'ShoppingCartTest' => 'Shopping Cart'
+    ];
 
     //##############################
     // BASIC FUNCTIONS
@@ -87,7 +217,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         if (Director::is_cli()) {
             echo "SILVERSTRIPE ECOMMERCE TOOLS: Tasks\n--------------------------\n\n";
             foreach ($tasks as $task) {
-                echo " * $task[title]: sake dev/tasks/".$task['class']."\n";
+                echo " * {$task['title']}: sake dev/tasks/" . $task['class'] . "\n";
             }
         } else {
             $renderer = new DebugView_EcommerceDatabaseAdmin();
@@ -114,20 +244,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
         );
     }
 
-    //##############################
-    // 0. OVERALL CONFIG
-    //##############################
-
-    /**
-     * List of overall configuration BuildTasks.
-     *
-     * @var array
-     */
-    protected $overallconfig = array(
-        'ecommercetaskcheckconfiguration',
-        'ecommercetaskapiandmore',
-    );
-
     /**
      * list of config tasks.
      *
@@ -137,26 +253,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
     {
         return $this->createMenuDOSFromArray($this->overallconfig, $type = 'Config');
     }
-
-    //##############################
-    // 1. ECOMMERCE SETUP (DEFAULT RECORDS)
-    //##############################
-
-    /**
-     * List of setup BuildTasks.
-     *
-     * @var array
-     */
-    protected $ecommerceSetup = array(
-        'ecommercetasksetorderidstartingnumber',
-        'ecommercetaskcreatemembergroups',
-        'ecommercetaskdefaultrecords',
-        'ecommercetaskcountryandregion',
-        'ecommercetaskcountryandregion_disallowallcountries',
-        'ecommercetaskcountryandregion_allowallcountries',
-        'ecommercetaskadddefaultproducts',
-        'ecommercetasklinkproductwithimages',
-    );
 
     /**
      * list of data setup tasks.
@@ -168,21 +264,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
         return $this->createMenuDOSFromArray($this->ecommerceSetup, $type = 'EcommerceSetup');
     }
 
-    //##############################
-    // 2. DATA REVIEW MAINTENANCE
-    //##############################
-
-    /**
-     * List of regular maintenance BuildTasks.
-     *
-     * @var array
-     */
-    protected $dataReview = array(
-        'ecommercetaskreviewreports',
-        'ecommercetaskreviewsearches',
-        'ecommercetaskorderitemspercustomer'
-    );
-
     /**
      * regular data cleanup tasks.
      *
@@ -192,29 +273,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
     {
         return $this->createMenuDOSFromArray($this->dataReview, $type = 'DataReview');
     }
-
-    //##############################
-    // 3. REGULAR MAINTENANCE
-    //##############################
-
-    /**
-     * List of regular maintenance BuildTasks.
-     *
-     * @var array
-     */
-    protected $regularMaintenance = array(
-        'ecommercetaskcartcleanup',
-        'ecommercetaskaddcustomerstocustomergroups',
-        'ecommercetaskfixbrokenordersubmissiondata',
-        'ecommercetaskcleanupproductfullsitetreesorting',
-        'ecommercetaskproductvariationsfixes',
-        'ecommercetaskproductimagereset',
-        'ecommercetasktrytofinaliseorders',
-        'ecommercetaskprocessorderqueue',
-        'ecommercetaskarchiveallsubmittedorders',
-        'ecommercetasklinkorderaddressesatbothends',
-        'EcommerceTaskCleanupProducts'
-    );
 
     /**
      * regular data cleanup tasks.
@@ -226,23 +284,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
         return $this->createMenuDOSFromArray($this->regularMaintenance, $type = 'RegularMaintenance');
     }
 
-    //##############################
-    // 4. DEBUG ACTIONS
-    //##############################
-
-    /**
-     * List of debug actions BuildTasks.
-     *
-     * @var array
-     */
-    protected $debugActions = array(
-        'ecommercetasktemplatetest',
-        'ecommercetaskcartmanipulation_current',
-        'ecommercetaskcartmanipulation_debug',
-        'ecommercetaskbuilding_model',
-        'ecommercetaskbuilding_extending',
-    );
-
     /**
      * list of data debug actions.
      *
@@ -252,21 +293,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
     {
         return $this->createMenuDOSFromArray($this->debugActions, $type = 'DebugActions');
     }
-
-    //##############################
-    // 5. MIGRATIONS
-    //##############################
-
-    /**
-     * List of migration BuildTasks.
-     *
-     * @var array
-     */
-    protected $migrations = array(
-        'ecommercetaskmigration',
-        'ecommercetaskcheckconfiguration',
-        'ecommercetasksetdefaultproductgroupvalues',
-    );
 
     /**
      * list of migration tasks.
@@ -278,21 +304,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
         return $this->createMenuDOSFromArray($this->migrations, $type = 'Migrations');
     }
 
-    //##############################
-    // 6. CRAZY SHIT
-    //##############################
-
-    /**
-     * List of crazy shit BuildTasks.
-     *
-     * @var array
-     */
-    protected $crazyshit = array(
-        'ecommercetaskdeleteallorders',
-        'ecommercetaskdeleteproducts',
-        'ecommercetaskarchiveallorderswithitems',
-    );
-
     /**
      * list of crazy actions tasks.
      *
@@ -303,29 +314,16 @@ class EcommerceDatabaseAdmin extends TaskRunner
         return $this->createMenuDOSFromArray($this->crazyshit, $type = 'CrazyShit');
     }
 
-    //##############################
-    // 7. TESTS
-    //##############################
-
-    /**
-     * List of tests.
-     *
-     * @var array
-     */
-    protected $tests = array(
-        //'ShoppingCartTest' => 'Shopping Cart'
-    );
-
     public function Tests()
     {
         $arrayList = new ArrayList();
         foreach ($this->tests as $class => $name) {
             $arrayList->push(
                 new ArrayData(
-                    array(
+                    [
                         'Name' => $name,
                         'Class' => $class,
-                    )
+                    ]
                 )
             );
         }
@@ -341,6 +339,41 @@ class EcommerceDatabaseAdmin extends TaskRunner
         return implode(',', array_keys($this->tests));
     }
 
+    public function runTask($request)
+    {
+        $taskName = $request->param('TaskName');
+        $renderer = new DebugView_EcommerceDatabaseAdmin();
+        $renderer->writeHeader();
+        $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
+        $renderer->writePreOutcome();
+        if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
+            $title = singleton($taskName)->getTitle();
+            if (Director::is_cli()) {
+                echo "Running task '${title}'...\n\n";
+            } elseif (! Director::is_ajax()) {
+                echo "<h1>Running task '${title}'...</h1>\n";
+            }
+
+            $task = new $taskName();
+            if ($task->isEnabled()) {
+                $task->verbose = true;
+                $task->run($request);
+            } else {
+                echo "<p>{$title} is disabled</p>";
+            }
+        } else {
+            echo "Build task '${taskName}' not found.";
+            if (class_exists($taskName)) {
+                echo "  It isn't a subclass of BuildTask.";
+            }
+            echo "\n";
+        }
+        $this->displayCompletionMessage($task);
+        $renderer->writePostOutcome();
+        $renderer->writeContent($this);
+        $renderer->writeFooter();
+    }
+
     //##############################
     // INTERNAL FUNCTIONS
     //##############################
@@ -353,7 +386,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      */
     protected function createMenuDOSFromArray(array $buildTasksArray, $type = '')
     {
-        $extendedArray = $this->extend('updateEcommerceDevMenu'.$type, $buildTasksArray);
+        $extendedArray = $this->extend('updateEcommerceDevMenu' . $type, $buildTasksArray);
         if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedBuildTasks) {
                 $buildTasksArray = array_merge($buildTasksArray, $extendedBuildTasks);
@@ -364,51 +397,16 @@ class EcommerceDatabaseAdmin extends TaskRunner
         foreach ($buildTasksArray as $buildTask) {
             $obj = new $buildTask();
             $do = new ArrayData(
-                array(
+                [
                     'Link' => $this->Link($buildTask),
                     'Title' => $obj->getTitle(),
                     'Description' => $obj->getDescription(),
-                )
+                ]
             );
             $arrayList->push($do);
         }
 
         return $arrayList;
-    }
-
-    public function runTask($request)
-    {
-        $taskName = $request->param('TaskName');
-        $renderer = new DebugView_EcommerceDatabaseAdmin();
-        $renderer->writeHeader();
-        $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
-        $renderer->writePreOutcome();
-        if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
-            $title = singleton($taskName)->getTitle();
-            if (Director::is_cli()) {
-                echo "Running task '$title'...\n\n";
-            } elseif (!Director::is_ajax()) {
-                echo "<h1>Running task '$title'...</h1>\n";
-            }
-
-            $task = new $taskName();
-            if ($task->isEnabled()) {
-                $task->verbose = true;
-                $task->run($request);
-            } else {
-                echo "<p>{$title} is disabled</p>";
-            }
-        } else {
-            echo "Build task '$taskName' not found.";
-            if (class_exists($taskName)) {
-                echo "  It isn't a subclass of BuildTask.";
-            }
-            echo "\n";
-        }
-        $this->displayCompletionMessage($task);
-        $renderer->writePostOutcome();
-        $renderer->writeContent($this);
-        $renderer->writeFooter();
     }
 
     /**
@@ -423,10 +421,10 @@ class EcommerceDatabaseAdmin extends TaskRunner
 
             ------------------------------------------------------- <br />
             COMPLETED THE FOLLOWING TASK:<br />
-            <strong>'.$buildTask->getTitle().'</strong><br />
-            '.$buildTask->getDescription()." <br />
+            <strong>' . $buildTask->getTitle() . '</strong><br />
+            ' . $buildTask->getDescription() . " <br />
             ------------------------------------------------------- <br />
-            $extraMessage
+            ${extraMessage}
         ");
     }
 }

@@ -13,46 +13,11 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
      *
      * @Var Array
      */
-    private static $db = array(
+    private static $db = [
         'Heading' => 'Varchar',
         'Above' => 'Text',
         'Below' => 'Text',
-        'Code' => 'Varchar(100)'
-    );
-
-    /**
-     * standard SS variable.
-     *
-     * @Var Array
-     */
-    private static $searchable_fields = array(
-        'Heading' => 'PartialMatchFilter',
-        'Above' => 'PartialMatchFilter',
-        'Below' => 'PartialMatchFilter',
-    );
-
-    /**
-     * standard SS variable.
-     *
-     * @Var Array
-     */
-    private static $field_labels = array(
-        'Above' => 'Above Checkout Step',
-        'Below' => 'Below Checkout Step',
-    );
-
-    /**
-     * standard SS variable.
-     *
-     * @Var Array
-     */
-    private static $summary_fields = array(
-        'ID' => 'Step Number',
-        'Heading' => 'Heading',
-    );
-
-    private static $indexes = [
-        'Code' => true
+        'Code' => 'Varchar(100)',
     ];
 
     /**
@@ -60,9 +25,44 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
      *
      * @Var Array
      */
-    private static $casting = array(
+    private static $searchable_fields = [
+        'Heading' => 'PartialMatchFilter',
+        'Above' => 'PartialMatchFilter',
+        'Below' => 'PartialMatchFilter',
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @Var Array
+     */
+    private static $field_labels = [
+        'Above' => 'Above Checkout Step',
+        'Below' => 'Below Checkout Step',
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @Var Array
+     */
+    private static $summary_fields = [
+        'ID' => 'Step Number',
+        'Heading' => 'Heading',
+    ];
+
+    private static $indexes = [
+        'Code' => true,
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @Var Array
+     */
+    private static $casting = [
         'Title' => 'Varchar',
-    );
+    ];
 
     /**
      * standard SS variable.
@@ -70,10 +70,6 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
      * @Var String
      */
     private static $singular_name = 'Checkout Step Description';
-    public function i18n_singular_name()
-    {
-        return _t('CheckoutPage.CHECKOUTSTEPDESCRIPTION', 'Checkout Step Description');
-    }
 
     /**
      * standard SS variable.
@@ -81,10 +77,6 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
      * @Var String
      */
     private static $plural_name = 'Checkout Step Descriptions';
-    public function i18n_plural_name()
-    {
-        return _t('CheckoutPage.CHECKOUTSTEPDESCRIPTIONS', 'Checkout Step Descriptions');
-    }
 
     /**
      * Standard SS variable.
@@ -99,6 +91,16 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
      * @return bool
      */
     private static $can_create = false;
+
+    public function i18n_singular_name()
+    {
+        return _t('CheckoutPage.CHECKOUTSTEPDESCRIPTION', 'Checkout Step Description');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('CheckoutPage.CHECKOUTSTEPDESCRIPTIONS', 'Checkout Step Descriptions');
+    }
 
     /**
      * these are only created programmatically
@@ -169,7 +171,7 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
     public function canDelete($member = null)
     {
         $array = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
-        if (in_array($this->getCode, $array)) {
+        if (in_array($this->getCode, $array, true)) {
             return false;
         }
         if (! $member) {
@@ -224,7 +226,6 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
-
     /**
      * casted variable.
      *
@@ -255,7 +256,7 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
             $stepsToAdd = $steps;
             if ($addCodeSteps->count()) {
                 foreach ($addCodeSteps as $addCodeStep) {
-                    DB::alteration_message('Adding Code to Step ...'.$addCodeStep->Code, 'created');
+                    DB::alteration_message('Adding Code to Step ...' . $addCodeStep->Code, 'created');
                     $addCodeStep->Code = array_shift($stepsToAdd);
                     $addCodeStep->write();
                 }
@@ -269,14 +270,14 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
                     $obj = CheckoutPage_StepDescription::create($filter);
                     $obj->Heading = $this->getDefaultTitle($code);
                     $obj->write();
-                    DB::alteration_message("Creating CheckoutPage_StepDescription $code", 'created');
+                    DB::alteration_message("Creating CheckoutPage_StepDescription ${code}", 'created');
                 }
                 $idArray[$obj->ID] = $obj->ID;
             }
-            $toDeleteObjects = CheckoutPage_StepDescription::get()->exclude(array('ID' => $idArray));
+            $toDeleteObjects = CheckoutPage_StepDescription::get()->exclude(['ID' => $idArray]);
             if ($toDeleteObjects->count()) {
                 foreach ($toDeleteObjects as $toDeleteObject) {
-                    DB::alteration_message('Deleting CheckoutPage_StepDescription '.$toDeleteObject->Code, 'deleted');
+                    DB::alteration_message('Deleting CheckoutPage_StepDescription ' . $toDeleteObject->Code, 'deleted');
                     $toDeleteObject->delete();
                 }
             }

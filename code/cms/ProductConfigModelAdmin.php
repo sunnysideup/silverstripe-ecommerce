@@ -29,7 +29,7 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();
-        if ($this->modelClass == 'SearchHistory') {
+        if ($this->modelClass === 'SearchHistory') {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 $form->Fields()->replaceField(
                     $gridField->getName(),

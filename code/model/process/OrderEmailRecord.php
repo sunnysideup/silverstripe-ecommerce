@@ -3,9 +3,7 @@
 /**
  * @Description: DataObject recording all order emails sent.
  *
- *
  * @authors: Silverstripe, Jeremy, Nicolaas
- *
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -19,82 +17,120 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'From' => 'Varchar(255)',
         'To' => 'Varchar(255)',
         'Subject' => 'Varchar(255)',
         'Content' => 'HTMLText',
         'Result' => 'Boolean',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Order' => 'Order',
         'OrderStep' => 'OrderStep',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'Title' => 'Varchar',
         'OrderStepNice' => 'Varchar',
         'ResultNice' => 'Varchar',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Created' => 'Send',
         'OrderStepNice' => 'Order Step',
         'From' => 'From',
         'To' => 'To',
         'Subject' => 'Subject',
         'ResultNice' => 'Sent Succesfully',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $field_labels = array(
+    private static $field_labels = [
         'Created' => 'Send',
         'OrderStepNice' => 'Order Step',
         'From' => 'From',
         'To' => 'To',
         'Subject' => 'Subject',
         'ResultNice' => 'Sent Succesfully',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $searchable_fields = array(
-        'OrderID' => array(
+    private static $searchable_fields = [
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        ),
+        ],
         'From' => 'PartialMatchFilter',
         'To' => 'PartialMatchFilter',
         'Subject' => 'PartialMatchFilter',
         //make sure to keep the item below, otherwise they do not show in form
-        'OrderStepID' => array(
+        'OrderStepID' => [
             'filter' => 'OrderEmailRecordFilters_MultiOptionsetStatusIDFilter',
-        ),
+        ],
         'Result' => true,
-    );
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $singular_name = 'Customer Email';
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $plural_name = 'Customer Emails';
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $description = 'A record of any email that has been sent in relation to an order.';
+
+    //defaults
+
+    /**
+     * standard SS variable.
+     *
+     * @return string
+     */
+    private static $default_sort = [
+        'ID' => 'ASC',
+    ];
+
+    private static $indexes = [
+        'From' => true,
+        'To' => true,
+        'Result' => true,
+    ];
 
     /**
      * casted Variable.
@@ -105,6 +141,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     {
         return $this->getResultNice();
     }
+
     public function getResultNice()
     {
         if ($this->Result) {
@@ -114,34 +151,15 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         return _t('OrderEmailRecord.NO', 'No');
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $singular_name = 'Customer Email';
     public function i18n_singular_name()
     {
         return _t('OrderEmailRecord.CUSTOMEREMAIL', 'Customer Email');
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $plural_name = 'Customer Emails';
     public function i18n_plural_name()
     {
         return _t('OrderEmailRecord.CUSTOMEREMAILS', 'Customer Emails');
     }
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $description = 'A record of any email that has been sent in relation to an order.';
 
     /**
      * standard SS method.
@@ -206,23 +224,6 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         return false;
     }
 
-    //defaults
-
-    /**
-     * standard SS variable.
-     *
-     * @return string
-     */
-    private static $default_sort = [
-        'ID' => 'ASC'
-    ];
-
-    private static $indexes = [
-        'From' => true,
-        'To' => true,
-        'Result' => true
-    ];
-
     /**
      * standard SS method.
      *
@@ -233,17 +234,17 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         $fields = parent::getCMSFields();
         $fields->addFieldsToTab(
             'Root.Details',
-            array(
-                $fields->dataFieldByName("To"),
-                $fields->dataFieldByName("Subject"),
-                $fields->dataFieldByName("From"),
-                $fields->dataFieldByName("Result"),
-                $fields->dataFieldByName("OrderID"),
-                $fields->dataFieldByName("OrderStepID")
-            )
+            [
+                $fields->dataFieldByName('To'),
+                $fields->dataFieldByName('Subject'),
+                $fields->dataFieldByName('From'),
+                $fields->dataFieldByName('Result'),
+                $fields->dataFieldByName('OrderID'),
+                $fields->dataFieldByName('OrderStepID'),
+            ]
         );
         $emailLink = OrderEmailRecord_Review::review_link($this);
-        $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"$emailLink\" width=\"100%\" height=\"700\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
+        $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"${emailLink}\" width=\"100%\" height=\"700\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
         $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
         $fields->replaceField('OrderStepID', new ReadonlyField('OrderStepNice', 'Order Step', $this->OrderStepNice()));
 
@@ -285,25 +286,25 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         $statusOptions = OrderStep::get();
         if ($statusOptions && $statusOptions->count()) {
             $createdOrderStatusID = 0;
-            $preSelected = array();
+            $preSelected = [];
             $createdOrderStatus = $statusOptions->First();
             if ($createdOrderStatus) {
                 $createdOrderStatusID = $createdOrderStatus->ID;
             }
             $arrayOfStatusOptions = clone $statusOptions->map('ID', 'Title');
-            $arrayOfStatusOptionsFinal = array();
+            $arrayOfStatusOptionsFinal = [];
             if (count($arrayOfStatusOptions)) {
                 foreach ($arrayOfStatusOptions as $key => $value) {
                     if (isset($_GET['q']['OrderStepID'][$key])) {
                         $preSelected[$key] = $key;
                     }
                     $count = OrderEmailRecord::get()
-                        ->Filter(array('OrderStepID' => intval($key)))
+                        ->Filter(['OrderStepID' => intval($key)])
                         ->count();
                     if ($count < 1) {
                         //do nothing
                     } else {
-                        $arrayOfStatusOptionsFinal[$key] = $value." ($count)";
+                        $arrayOfStatusOptionsFinal[$key] = $value . " (${count})";
                     }
                 }
             }
@@ -328,12 +329,13 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     {
         return $this->getTitle();
     }
+
     public function getTitle()
     {
-        $str = 'TO: '.$this->To;
+        $str = 'TO: ' . $this->To;
         if ($order = $this->Order()) {
-            $str .= ' - '.$this->Order()->getTitle();
-            $str .= ' - '.$this->OrderStepNice();
+            $str .= ' - ' . $this->Order()->getTitle();
+            $str .= ' - ' . $this->OrderStepNice();
         }
 
         return $str;
@@ -348,6 +350,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     {
         return $this->getOrderStepNice();
     }
+
     public function getOrderStepNice()
     {
         if ($this->OrderStepID) {

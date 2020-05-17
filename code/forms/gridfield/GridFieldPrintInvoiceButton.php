@@ -3,7 +3,6 @@
 
 class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField_ActionProvider
 {
-
     /**
      * Add a column 'Delete'
      *
@@ -12,7 +11,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
      */
     public function augmentColumns($gridField, &$columns)
     {
-        if (!in_array('Print', $columns)) {
+        if (! in_array('Print', $columns, true)) {
             $columns[] = 'Print';
         }
     }
@@ -27,7 +26,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return array('class' => 'col-buttons print');
+        return ['class' => 'col-buttons print'];
     }
 
     /**
@@ -39,11 +38,10 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
      */
     public function getColumnMetadata($gridField, $columnName)
     {
-        if ($columnName == 'Print') {
-            return array('title' => 'Invoice');
+        if ($columnName === 'Print') {
+            return ['title' => 'Invoice'];
         }
     }
-
 
     /**
      * @param GridField $gridField
@@ -59,27 +57,26 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
             // which can make the form readonly if no edit permissions are available.
             $onclickStatement =
                 "window.open(
-                    '".Convert::raw2js($record->PrintLink())."',
+                    '" . Convert::raw2js($record->PrintLink()) . "',
                     'print_invoice',
                     'width=600,height=300,location=0,menubar=0,scrollbars=1,status=0,toolbar=0,resizable=1'
                 );";
 
             $field = GridField_FormAction::create(
                 $gridField,
-                'PrintInvoice'.$record->ID,
+                'PrintInvoice' . $record->ID,
                 false,
-                "printinvoice",
-                array('RecordID' => $record->ID)
+                'printinvoice',
+                ['RecordID' => $record->ID]
             )
                 ->addExtraClass('gridfield-button-printinvoice')
-                ->setAttribute('title', _t('GridAction.PRINT_INVOICE', "Invoice"))
+                ->setAttribute('title', _t('GridAction.PRINT_INVOICE', 'Invoice'))
                 ->setAttribute('data-icon', 'grid_print')
                 ->setAttribute('onclick', $onclickStatement)
                 ->setDescription(_t('GridAction.PRINT_INVOICE_DESCRIPTION', 'Print Invoice'));
             return $field->Field();
         }
     }
-
 
     /**
      * Which columns are handled by this component
@@ -89,10 +86,8 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
      */
     public function getColumnsHandled($gridField)
     {
-        return array('Print');
+        return ['Print'];
     }
-
-
 
     /**
      * Which GridField actions are this component handling
@@ -102,9 +97,8 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
      */
     public function getActions($gridField)
     {
-        return array('printinvoice');
+        return ['printinvoice'];
     }
-
 
     /**
      * Handle the actions and apply any changes to the GridField
@@ -113,13 +107,12 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
      * @param string $actionName
      * @param mixed $arguments
      * @param array $data - form data
-     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'printinvoice') {
+        if ($actionName === 'printinvoice') {
             $item = $gridField->getList()->byID($arguments['RecordID']);
-            if (!$item) {
+            if (! $item) {
                 return;
             }
             // $list = $gridField->getList();

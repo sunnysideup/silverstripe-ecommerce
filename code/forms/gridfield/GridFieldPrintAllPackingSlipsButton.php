@@ -9,14 +9,6 @@
 
 class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
-
-    /**
-     *
-     * @config
-     * @var int
-     */
-    private static $packing_slip_bulk_printing_limit = 30;
-
     /**
      * HTML Fragment to render the field.
      *
@@ -25,10 +17,16 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     protected $targetFragment;
 
     /**
+     * @config
+     * @var int
+     */
+    private static $packing_slip_bulk_printing_limit = 30;
+
+    /**
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $exportColumns The columns to include in the export
      */
-    public function __construct($targetFragment = "after")
+    public function __construct($targetFragment = 'after')
     {
         $this->targetFragment = $targetFragment;
     }
@@ -48,9 +46,9 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
         $button->setAttribute('data-icon', 'grid_print');
         $button->addExtraClass('no-ajax action_print_all_packing_slips');
         $button->setForm($gridField->getForm());
-        return array(
+        return [
             $this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>',
-        );
+        ];
     }
 
     /**
@@ -58,12 +56,12 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
      */
     public function getActions($gridField)
     {
-        return array('printallpackingslips');
+        return ['printallpackingslips'];
     }
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'printallpackingslips') {
+        if ($actionName === 'printallpackingslips') {
             return $this->handlePrintAllPackingSlips($gridField);
         }
     }
@@ -73,14 +71,14 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'printallpackingslips' => 'handlePrintAllPackingSlips',
-        );
+        ];
     }
 
     /**
      * Handle the print, for both the action button and the URL
-      */
+     */
     public function handlePrintAllPackingSlips($gridField, $request = null)
     {
         $limit = Config::inst()->get('GridFieldPrintAllPackingSlipsButton', 'packing_slip_bulk_printing_limit');

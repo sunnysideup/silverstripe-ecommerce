@@ -45,7 +45,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      * @var array
      */
-    protected $definitions = array();
+    protected $definitions = [];
 
     /**
      * Array of definitions Header - set like this:
@@ -54,7 +54,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      * @var array
      */
-    protected $definitionsHeaders = array();
+    protected $definitionsHeaders = [];
 
     /**
      * Array of defaults - set like this:
@@ -63,7 +63,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      * @var array
      */
-    protected $defaults = array();
+    protected $defaults = [];
 
     /**
      * Array of configs - set like this:
@@ -72,7 +72,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      * @var array
      */
-    protected $configs = array();
+    protected $configs = [];
 
     /**
      * which values are derived from DB
@@ -81,7 +81,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      * @var array
      */
-    protected $databaseValues = array();
+    protected $databaseValues = [];
 
     /**
      * set in default yml, but not customised.
@@ -90,7 +90,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      * @var array
      */
-    protected $customisedValues = array();
+    protected $customisedValues = [];
 
     /**
      * Other configs
@@ -99,7 +99,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      * @var array
      */
-    protected $otherConfigs = array();
+    protected $otherConfigs = [];
 
     /**
      * Array of classes (partially) missing in configs.
@@ -107,7 +107,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
      *
      *  @var array
      */
-    protected $missingClasses = array();
+    protected $missingClasses = [];
 
     /**
      * Standard (required) SS method, runs buildtask.
@@ -146,6 +146,85 @@ class EcommerceTaskCheckConfiguration extends BuildTask
         }
     }
 
+    public function orderSteps()
+    {
+        $steps = OrderStep::get();
+        if ($steps->count()) {
+            foreach ($steps as $step) {
+                $fields = Config::inst()->get($step->ClassName, 'db');
+                $defaultsArray = $step->stat('defaults', true);
+                $configArray = [];
+                foreach ($fields as $fieldKey => $fieldType) {
+                    if ($fields) {
+                        $configArray[$fieldKey] = $step->{$fieldKey};
+                        if (! isset($defaultsArray[$fieldKey])) {
+                            $defaultsArray[$fieldKey] = '[default not set]';
+                        }
+                    }
+                }
+                $ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
+                $this->definitions['OrderStep'][$step->Code] = $step->Description . '<br />see: <a href="' . $step->CMSEditLink() . '">Step Configuration</a>.';
+                $this->configs['OrderStep'][$step->Code] = $configArray;
+                $this->defaults['OrderStep'][$step->Code] = $defaultsArray;
+                $this->databaseValues['OrderStep'][$step->Code] = true;
+            }
+        }
+    }
+
+    public function checkoutAndModifierDetails()
+    {
+        $checkoutPage = DataObject::get_one('CheckoutPage');
+        if (! $checkoutPage) {
+            $task = new EcommerceTaskDefaultRecords();
+            $task->run(null);
+            $checkoutPage = DataObject::get_one('CheckoutPage');
+            if (! $checkoutPage) {
+                user_error('There is no checkout page available and it seems impossible to create one.');
+            }
+        }
+        $steps = CheckoutPage_StepDescription::get();
+        if ($steps->count()) {
+            foreach ($steps as $key => $step) {
+                $stepNumber = $key + 1;
+                $fields = Config::inst()->get($step->ClassName, 'db');
+                $defaultsArray = $step->stat('defaults', true);
+                $configArray = [];
+                foreach ($fields as $fieldKey => $fieldType) {
+                    if ($fields) {
+                        $configArray[$fieldKey] = $step->{$fieldKey};
+                        if (! isset($defaultsArray[$fieldKey])) {
+                            $defaultsArray[$fieldKey] = '[default not set]';
+                        }
+                    }
+                }
+                $this->definitions['CheckoutPage_Controller']["STEP_${stepNumber}" . '_' . $step->Code] = $step->Description . '<br />see: <a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">checkout page</a>.';
+                $this->configs['CheckoutPage_Controller']["STEP_${stepNumber}" . '_' . $step->Code] = $configArray;
+                $this->defaults['CheckoutPage_Controller']["STEP_${stepNumber}" . '_' . $step->Code] = $defaultsArray;
+                $this->databaseValues['CheckoutPage_Controller']["STEP_${stepNumber}" . '_' . $step->Code] = true;
+            }
+        }
+        $steps = OrderModifier_Descriptor::get();
+        if ($steps->count()) {
+            foreach ($steps as $step) {
+                $fields = Config::inst()->get($step->ClassName, 'db');
+                $defaultsArray = $step->stat('defaults', true);
+                $configArray = [];
+                foreach ($fields as $fieldKey => $fieldType) {
+                    if ($fields) {
+                        $configArray[$fieldKey] = $step->{$fieldKey};
+                        if (! isset($defaultsArray[$fieldKey])) {
+                            $defaultsArray[$fieldKey] = '[default not set]';
+                        }
+                    }
+                }
+                $this->definitions['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = $step->Description . '<br />see: <a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">checkout page</a>.';
+                $this->configs['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = $configArray;
+                $this->defaults['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = $defaultsArray;
+                $this->databaseValues['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = true;
+            }
+        }
+    }
+
     /**
      * Check what files is being used.
      */
@@ -156,32 +235,32 @@ class EcommerceTaskCheckConfiguration extends BuildTask
         $files = implode(', ', $configsObject->fileLocations());
         global $project;
         $baseFolder = Director::baseFolder();
-        $projectFolder = $project.'/_config';
-        $baseAndProjectFolder = $baseFolder.'/'.$projectFolder;
+        $projectFolder = $project . '/_config';
+        $baseAndProjectFolder = $baseFolder . '/' . $projectFolder;
         $file = 'ecommerce.yml';
-        $projectFolderAndFile = $projectFolder.'/'.$file;
-        $fullFilePath = $baseFolder.'/'.$projectFolderAndFile;
-        $defaultFileFullPath = Director::baseFolder().'/'.$this->defaultLocation;
+        $projectFolderAndFile = $projectFolder . '/' . $file;
+        $fullFilePath = $baseFolder . '/' . $projectFolderAndFile;
+        $defaultFileFullPath = Director::baseFolder() . '/' . $this->defaultLocation;
         DB::alteration_message(
             '
-            Current files used: <strong style="color: darkRed">'.$files.'</strong>,
+            Current files used: <strong style="color: darkRed">' . $files . '</strong>,
             unless stated otherwise, all settings can be edited in these file(s).',
             'created'
         );
-        if (!file_exists($baseAndProjectFolder)) {
+        if (! file_exists($baseAndProjectFolder)) {
             mkdir($baseAndProjectFolder);
         }
-        if (!file_exists($fullFilePath)) {
+        if (! file_exists($fullFilePath)) {
             copy($defaultFileFullPath, $fullFilePath);
             DB::alteration_message('We have created a new configuration file for you.', 'created');
         }
-        if ($files == $this->defaultLocation) {
+        if ($files === $this->defaultLocation) {
             if (file_exists($fullFilePath)) {
-                DB::alteration_message("A customisable configuration file exists here: $projectFolderAndFile, you should add the following to your config.yml file:
+                DB::alteration_message("A customisable configuration file exists here: ${projectFolderAndFile}, you should add the following to your config.yml file:
 <pre>
 EcommerceConfig:
   folder_and_file_locations:
-    - \"$projectFolderAndFile\"
+    - \"${projectFolderAndFile}\"
 </pre>", 'created');
             }
         }
@@ -195,16 +274,16 @@ EcommerceConfig:
         echo '<h2>Set in configs but not defined</h2>';
         $allOK = true;
         foreach ($this->configs as $className => $setting) {
-            if (!isset($this->definitions[$className])) {
+            if (! isset($this->definitions[$className])) {
                 $allOK = false;
                 $this->missingClasses[$className] = $className;
-                DB::alteration_message("$className", 'deleted');
+                DB::alteration_message("${className}", 'deleted');
             } else {
                 $classConfigs = $this->configs[$className];
                 foreach ($classConfigs as $key => $classConfig) {
-                    if (!isset($this->definitions[$className][$key])) {
+                    if (! isset($this->definitions[$className][$key])) {
                         $allOK = false;
-                        DB::alteration_message("$className.$key", 'deleted');
+                        DB::alteration_message("${className}.${key}", 'deleted');
                     }
                 }
             }
@@ -224,9 +303,9 @@ EcommerceConfig:
         echo '<h2>Classes that do not exist</h2>';
         $allOK = true;
         foreach ($this->configs as $className => $setting) {
-            if (!class_exists($className)) {
+            if (! class_exists($className)) {
                 $allOK = false;
-                DB::alteration_message("$className", 'deleted');
+                DB::alteration_message("${className}", 'deleted');
             }
         }
         if ($allOK) {
@@ -245,26 +324,25 @@ EcommerceConfig:
         $allOK = true;
         //print_r($this->configs["EcommercePayment"]);
         foreach ($this->definitions as $className => $setting) {
-            if (!isset($this->configs[$className])) {
-                DB::alteration_message("No settings found for $className in /ecommerce/_config/config.yml", 'deleted');
+            if (! isset($this->configs[$className])) {
+                DB::alteration_message("No settings found for ${className} in /ecommerce/_config/config.yml", 'deleted');
             } else {
                 $classConfigs = $this->definitions[$className];
                 foreach ($classConfigs as $key => $classConfig) {
-                    if (!isset($this->configs[$className][$key])) {
+                    if (! isset($this->configs[$className][$key])) {
                         $this->customisedValues[$className][$key] = false;
                     //fallback to Configs...
                     } else {
                         $this->customisedValues[$className][$key] = false;
                     }
-                    if (!isset($this->configs[$className][$key])) {
-                        DB::alteration_message(" - $className.$key NOT SET in /ecommerce/_config/config.yml", 'deleted');
+                    if (! isset($this->configs[$className][$key])) {
+                        DB::alteration_message(" - ${className}.${key} NOT SET in /ecommerce/_config/config.yml", 'deleted');
                         $allOK = false;
-                    } else {
-                        //$this->configs[$className][$key] = EcommerceConfig::get($className, $key);
+                    }
+                    //$this->configs[$className][$key] = EcommerceConfig::get($className, $key);
                         //if(!$this->configs[$className][$key]) {
                             //DB::alteration_message(" - $className.$key exists, set to FALSE / [EMPTRY STRING]", "edited");
                         //}
-                    }
                 }
             }
         }
@@ -355,30 +433,30 @@ EcommerceConfig:
         $count = 0;
         $oldHeaderOfGroup = '';
         $newHeader = '';
-        $completedListOfClasses = array();
+        $completedListOfClasses = [];
         foreach ($this->definitionsHeaders as $headerOfGroup => $classesArray) {
-            if ($headerOfGroup == 'OTHER') {
+            if ($headerOfGroup === 'OTHER') {
                 $classesArray = array_keys(array_diff_key($this->configs, $completedListOfClasses));
             }
             foreach ($classesArray as $className) {
                 $completedListOfClasses[$className] = $className;
-                if (!isset($this->configs[$className])) {
-                    $this->configs[$className] = array();
+                if (! isset($this->configs[$className])) {
+                    $this->configs[$className] = [];
                 }
                 $settings = $this->configs[$className];
                 ++$count;
-                if (in_array($className, $classesArray)) {
+                if (in_array($className, $classesArray, true)) {
                     $newHeader = $headerOfGroup;
                 }
-                if ($oldHeaderOfGroup != $newHeader) {
+                if ($oldHeaderOfGroup !== $newHeader) {
                     $oldHeaderOfGroup = $headerOfGroup;
-                    $htmlTOC .= "</ul><li class=\"header\">$headerOfGroup</li><ul>";
+                    $htmlTOC .= "</ul><li class=\"header\">${headerOfGroup}</li><ul>";
                 }
 
-                $htmlTOC .= "<li><a href=\"#$className\">$count. $className</a></li>";
-                if ($className != $oldClassName) {
-                    $htmlTable .= "<tr  class='ecommerceConfigHeadings' id=\"$className\"><th colspan=\"2\" scope=\"col\">
-                    $count. $className ($newHeader)
+                $htmlTOC .= "<li><a href=\"#${className}\">${count}. ${className}</a></li>";
+                if ($className !== $oldClassName) {
+                    $htmlTable .= "<tr  class='ecommerceConfigHeadings' id=\"${className}\"><th colspan=\"2\" scope=\"col\">
+                    ${count}. ${className} (${newHeader})
                     <a class=\"backToTop\" href=\"#TaskHolder\">top</a>
                     </th></tr>";
                     $oldClassName = $className;
@@ -392,7 +470,7 @@ EcommerceConfig:
                         $isDatabaseValues = isset($this->databaseValues[$className][$key]) ? $this->databaseValues[$className][$key] : false;
                         $isOtherConfigs = isset($this->otherConfigs[$className][$key]) ? $this->otherConfigs[$className][$key] : false;
                         $isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
-                        if (!isset($this->defaults[$className][$key])) {
+                        if (! isset($this->defaults[$className][$key])) {
                             $defaultValueRaw = false;
                         //DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
                         } else {
@@ -414,9 +492,9 @@ EcommerceConfig:
                         if ($defaultValue === $manuallyAddedValue && $isCustomisedValues) {
                             $configError .= 'This is a superfluous entry in your custom config as the default value is the same.';
                         }
-                        if (($defaultValueRaw == $actualValueRaw) || (! $hasDefaultvalue)) {
+                        if (($defaultValueRaw === $actualValueRaw) || (! $hasDefaultvalue)) {
                             $class .= 'sameConfig';
-                            if ($defaultValueRaw == $actualValueRaw) {
+                            if ($defaultValueRaw === $actualValueRaw) {
                                 $showActualValue = false;
                             }
                         } else {
@@ -427,18 +505,18 @@ EcommerceConfig:
                             $defaultValue = $this->turnValueIntoHumanReadableValue($defaultValue);
                         }
 
-                        if (!isset($this->definitions[$className][$key])) {
+                        if (! isset($this->definitions[$className][$key])) {
                             $description = '<span style="color: red; font-weight: bold">ERROR: no longer required in configs!</span>';
                         } else {
                             $description = $this->definitions[$className][$key];
                             $description .= $this->specialCases($className, $key, $actualValue);
                         }
                         $defaultValueHTML = '';
-                        if ($defaultValue && !$isOtherConfigs && $showActualValue) {
-                            $defaultValueHTML = "<sub>default:</sub><pre>$defaultValue</pre>";
+                        if ($defaultValue && ! $isOtherConfigs && $showActualValue) {
+                            $defaultValueHTML = "<sub>default:</sub><pre>${defaultValue}</pre>";
                         }
                         if ($configError) {
-                            $configError = "<span style=\"color: red; font-size: 10px;\">$configError</span>";
+                            $configError = "<span style=\"color: red; font-size: 10px;\">${configError}</span>";
                         }
                         $sourceNote = '';
                         if ($isDatabaseValues) {
@@ -446,14 +524,14 @@ EcommerceConfig:
                         }
                         $htmlTable .= "<tr>
                 <td>
-                    <span class='spanTitle'>$key</span>
-                    <span>$description</span>
-                    $sourceNote
+                    <span class='spanTitle'>${key}</span>
+                    <span>${description}</span>
+                    ${sourceNote}
                 </td>
-                <td class=\"$class\">
-                    <pre>$actualValue</pre>
-                    $defaultValueHTML
-                    $configError
+                <td class=\"${class}\">
+                    <pre>${actualValue}</pre>
+                    ${defaultValueHTML}
+                    ${configError}
                 </td>
             </tr>";
                     }
@@ -465,13 +543,13 @@ EcommerceConfig:
         <h2>--- THE END ---</h2>
         ';
         $htmlTOC .= '</ul></div>';
-        echo $htmlHeader.$htmlTOC.$htmlTable.$htmlEnd;
+        echo $htmlHeader . $htmlTOC . $htmlTable . $htmlEnd;
     }
 
     protected function getDefaultValues()
     {
-        require_once Director::baseFolder().'/vendor/mustangostang/spyc/Spyc.php';
-        $fixtureFolderAndFile = Director::baseFolder().'/'.$this->defaultLocation;
+        require_once Director::baseFolder() . '/vendor/mustangostang/spyc/Spyc.php';
+        $fixtureFolderAndFile = Director::baseFolder() . '/' . $this->defaultLocation;
         $parser = new Spyc();
 
         return $parser->loadFile($fixtureFolderAndFile);
@@ -486,17 +564,17 @@ EcommerceConfig:
         $fields = $ecommerceDBConfig->fieldLabels();
         if ($fields) {
             foreach ($fields as $field => $description) {
-                if ($field != 'Title' && $field != 'UseThisOne') {
+                if ($field !== 'Title' && $field !== 'UseThisOne') {
                     $defaultsDefaults = $ecommerceDBConfig->stat('defaults');
-                    $this->definitions['EcommerceDBConfig'][$field] = "$description. <br />see: <a href=\"".$ecommerceDBConfig->CMSEditLink()."\">Ecommerce Configuration</a>";
-                    $this->configs['EcommerceDBConfig'][$field] = $ecommerceDBConfig->$field;
+                    $this->definitions['EcommerceDBConfig'][$field] = "${description}. <br />see: <a href=\"" . $ecommerceDBConfig->CMSEditLink() . '">Ecommerce Configuration</a>';
+                    $this->configs['EcommerceDBConfig'][$field] = $ecommerceDBConfig->{$field};
                     $this->databaseValues['EcommerceDBConfig'][$field] = true;
                     $this->defaults['EcommerceDBConfig'][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : 'no default set';
-                    $imageField = $field.'ID';
-                    if (isset($ecommerceDBConfig->$imageField)) {
-                        if ($image = $ecommerceDBConfig->$field()) {
+                    $imageField = $field . 'ID';
+                    if (isset($ecommerceDBConfig->{$imageField})) {
+                        if ($image = $ecommerceDBConfig->{$field}()) {
                             if ($image->exists() && is_a($image, Object::getCustomClass('Image'))) {
-                                $this->configs['EcommerceDBConfig'][$field] = '[Image]  --- <img src="'.$image->Link().'" />';
+                                $this->configs['EcommerceDBConfig'][$field] = '[Image]  --- <img src="' . $image->Link() . '" />';
                                 $this->databaseValues['EcommerceDBConfig'][$field] = true;
                             }
                         }
@@ -529,37 +607,55 @@ EcommerceConfig:
     {
         if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
             $this->getPageDefinitions($checkoutPage);
-            $this->definitions['Pages']['CheckoutPage'] = 'Page where customers finalise (checkout) their order. This page is required.<br />'.($checkoutPage ? '<a href="/admin/pages/edit/show/'.$checkoutPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['CheckoutPage'] = $checkoutPage ? 'view: <a href="'.$checkoutPage->Link().'">'.$checkoutPage->Title.'</a><br />'.$checkoutPage->configArray : ' NOT CREATED!';
+            $this->definitions['Pages']['CheckoutPage'] = 'Page where customers finalise (checkout) their order. This page is required.<br />' . ($checkoutPage ? '<a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages']['CheckoutPage'] = $checkoutPage ? 'view: <a href="' . $checkoutPage->Link() . '">' . $checkoutPage->Title . '</a><br />' . $checkoutPage->configArray : ' NOT CREATED!';
             $this->defaults['Pages']['CheckoutPage'] = $checkoutPage ? $checkoutPage->defaultsArray : '[add page first to see defaults]';
             $this->databaseValues['Pages']['CheckoutPage'] = true;
         }
 
         if ($orderConfirmationPage = DataObject::get_one('OrderConfirmationPage')) {
             $this->getPageDefinitions($orderConfirmationPage);
-            $this->definitions['Pages']['OrderConfirmationPage'] = 'Page where customers review their order after it has been placed. This page is required.<br />'.($orderConfirmationPage ? '<a href="/admin/pages/edit/show/'.$orderConfirmationPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? 'view: <a href="'.$orderConfirmationPage->Link().'">'.$orderConfirmationPage->Title.'</a><br />'.$orderConfirmationPage->configArray : ' NOT CREATED!';
+            $this->definitions['Pages']['OrderConfirmationPage'] = 'Page where customers review their order after it has been placed. This page is required.<br />' . ($orderConfirmationPage ? '<a href="/admin/pages/edit/show/' . $orderConfirmationPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? 'view: <a href="' . $orderConfirmationPage->Link() . '">' . $orderConfirmationPage->Title . '</a><br />' . $orderConfirmationPage->configArray : ' NOT CREATED!';
             $this->defaults['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : '[add page first to see defaults]';
             $this->databaseValues['Pages']['OrderConfirmationPage'] = true;
         }
 
         if ($accountPage = DataObject::get_one('AccountPage')) {
             $this->getPageDefinitions($accountPage);
-            $this->definitions['Pages']['AccountPage'] = 'Page where customers can review their account. This page is required.<br />'.($accountPage ? '<a href="/admin/pages/edit/show/'.$accountPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['AccountPage'] = $accountPage ? 'view: <a href="'.$accountPage->Link().'">'.$accountPage->Title.'</a><br />'.$accountPage->configArray : ' NOT CREATED!';
+            $this->definitions['Pages']['AccountPage'] = 'Page where customers can review their account. This page is required.<br />' . ($accountPage ? '<a href="/admin/pages/edit/show/' . $accountPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages']['AccountPage'] = $accountPage ? 'view: <a href="' . $accountPage->Link() . '">' . $accountPage->Title . '</a><br />' . $accountPage->configArray : ' NOT CREATED!';
             $this->defaults['Pages']['AccountPage'] = $accountPage ? $accountPage->defaultsArray : '[add page first to see defaults]';
             $this->databaseValues['Pages']['AccountPage'] = true;
         }
 
-        if (
-            $cartPage = DataObject::get_one('CartPage', array('ClassName' => 'CartPage'))
+        if ($cartPage = DataObject::get_one('CartPage', ['ClassName' => 'CartPage'])
         ) {
             $this->getPageDefinitions($cartPage);
-            $this->definitions['Pages']['CartPage'] = 'Page where customers review their cart while shopping. This page is optional.<br />'.($cartPage ? '<a href="/admin/pages/edit/show/'.$cartPage->ID.'/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['CartPage'] = $cartPage ? 'view: <a href="'.$cartPage->Link().'">'.$cartPage->Title.'</a>, <a href="/admin/pages/edit/show/'.$cartPage->ID.'/">edit</a><br />'.$cartPage->configArray : ' NOT CREATED!';
+            $this->definitions['Pages']['CartPage'] = 'Page where customers review their cart while shopping. This page is optional.<br />' . ($cartPage ? '<a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages']['CartPage'] = $cartPage ? 'view: <a href="' . $cartPage->Link() . '">' . $cartPage->Title . '</a>, <a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a><br />' . $cartPage->configArray : ' NOT CREATED!';
             $this->defaults['Pages']['CartPage'] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
             $this->defaults['Pages']['CartPage'] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
             $this->databaseValues['Pages']['CartPage'] = true;
+        }
+    }
+
+    protected function checkGEOIP()
+    {
+        if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') === 'EcommerceCountry_VisitorCountryProvider' && ! class_exists('Geoip')) {
+            user_error(
+                "
+                You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
+                Alternatively you can set the following config EcommerceCountry.visitor_country_provider to something like MyGEOipProvider.
+                You then create a class MyGEOipProvider with a method getCountry().",
+                E_USER_NOTICE
+            );
+        } elseif (Director::isLive() && ! EcommerceCountry::get_country_from_ip()) {
+            user_error(
+                "
+                Please make sure that '" . $this->Config()->get('visitor_country_provider') . "' (visitor_country_provider) is working on your server (see the GEOIP module for details).",
+                E_USER_NOTICE
+            );
         }
     }
 
@@ -568,11 +664,11 @@ EcommerceConfig:
         if ($page) {
             $fields = Config::inst()->get($page->ClassName, 'db');
             $defaultsArray = $page->stat('defaults', true);
-            $configArray = array();
+            $configArray = [];
             if ($fields) {
                 foreach ($fields as $fieldKey => $fieldType) {
-                    $configArray[$fieldKey] = $page->$fieldKey;
-                    if (!isset($defaultsArray[$fieldKey])) {
+                    $configArray[$fieldKey] = $page->{$fieldKey};
+                    if (! isset($defaultsArray[$fieldKey])) {
                         $defaultsArray[$fieldKey] = '[default not set]';
                     }
                 }
@@ -582,110 +678,31 @@ EcommerceConfig:
         }
     }
 
-    public function orderSteps()
-    {
-        $steps = OrderStep::get();
-        if ($steps->count()) {
-            foreach ($steps as $step) {
-                $fields = Config::inst()->get($step->ClassName, 'db');
-                $defaultsArray = $step->stat('defaults', true);
-                $configArray = array();
-                foreach ($fields as $fieldKey => $fieldType) {
-                    if ($fields) {
-                        $configArray[$fieldKey] = $step->$fieldKey;
-                        if (!isset($defaultsArray[$fieldKey])) {
-                            $defaultsArray[$fieldKey] = '[default not set]';
-                        }
-                    }
-                }
-                $ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
-                $this->definitions['OrderStep'][$step->Code] = $step->Description.'<br />see: <a href="'.$step->CMSEditLink().'">Step Configuration</a>.';
-                $this->configs['OrderStep'][$step->Code] = $configArray;
-                $this->defaults['OrderStep'][$step->Code] = $defaultsArray;
-                $this->databaseValues['OrderStep'][$step->Code] = true;
-            }
-        }
-    }
-
-    public function checkoutAndModifierDetails()
-    {
-        $checkoutPage = DataObject::get_one('CheckoutPage');
-        if (!$checkoutPage) {
-            $task = new EcommerceTaskDefaultRecords();
-            $task->run(null);
-            $checkoutPage = DataObject::get_one('CheckoutPage');
-            if (!$checkoutPage) {
-                user_error('There is no checkout page available and it seems impossible to create one.');
-            }
-        }
-        $steps = CheckoutPage_StepDescription::get();
-        if ($steps->count()) {
-            foreach ($steps as $key => $step) {
-                $stepNumber = $key + 1;
-                $fields = Config::inst()->get($step->ClassName, 'db');
-                $defaultsArray = $step->stat('defaults', true);
-                $configArray = array();
-                foreach ($fields as $fieldKey => $fieldType) {
-                    if ($fields) {
-                        $configArray[$fieldKey] = $step->$fieldKey;
-                        if (!isset($defaultsArray[$fieldKey])) {
-                            $defaultsArray[$fieldKey] = '[default not set]';
-                        }
-                    }
-                }
-                $this->definitions['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = $step->Description.'<br />see: <a href="/admin/pages/edit/show/'.$checkoutPage->ID.'/">checkout page</a>.';
-                $this->configs['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = $configArray;
-                $this->defaults['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = $defaultsArray;
-                $this->databaseValues['CheckoutPage_Controller']["STEP_$stepNumber".'_'.$step->Code] = true;
-            }
-        }
-        $steps = OrderModifier_Descriptor::get();
-        if ($steps->count()) {
-            foreach ($steps as $step) {
-                $fields = Config::inst()->get($step->ClassName, 'db');
-                $defaultsArray = $step->stat('defaults', true);
-                $configArray = array();
-                foreach ($fields as $fieldKey => $fieldType) {
-                    if ($fields) {
-                        $configArray[$fieldKey] = $step->$fieldKey;
-                        if (!isset($defaultsArray[$fieldKey])) {
-                            $defaultsArray[$fieldKey] = '[default not set]';
-                        }
-                    }
-                }
-                $this->definitions['CheckoutPage_Controller']['OrderModifier_Descriptor_'.$step->ModifierClassName] = $step->Description.'<br />see: <a href="/admin/pages/edit/show/'.$checkoutPage->ID.'/">checkout page</a>.';
-                $this->configs['CheckoutPage_Controller']['OrderModifier_Descriptor_'.$step->ModifierClassName] = $configArray;
-                $this->defaults['CheckoutPage_Controller']['OrderModifier_Descriptor_'.$step->ModifierClassName] = $defaultsArray;
-                $this->databaseValues['CheckoutPage_Controller']['OrderModifier_Descriptor_'.$step->ModifierClassName] = true;
-            }
-        }
-    }
-
     private function getAjaxDefinitions()
     {
         $definitionsObject = EcommerceConfigDefinitions::create();
         $methodArray = $definitionsObject->getAjaxMethods();
         $requestor = new ArrayData(
-            array(
+            [
                 'ID' => '[ID]',
                 'ClassName' => '[CLASSNAME]',
-            )
+            ]
         );
         $obj = EcommerceConfigAjax::get_one($requestor);
         foreach ($methodArray as $method => $description) {
-            if ($method != 'setRequestor') {
+            if ($method !== 'setRequestor') {
                 if (strpos($method, 'lassName')) {
                     $selector = 'classname';
                 } else {
                     $selector = 'id';
                 }
                 $note = "
-                    This variable can be used like this: <pre>&lt;div $selector=\"\$AJAXDefinitions.".$method.'"&gt;&lt;/div&gt;</pre>
+                    This variable can be used like this: <pre>&lt;div ${selector}=\"\$AJAXDefinitions." . $method . '"&gt;&lt;/div&gt;</pre>
                     <a href="/shoppingcart/ajaxtest/?ajax=1">AJAX</a> will then use this selector to put the following content: ';
-                $this->definitions['Templates']["AJAXDefinitions_$method"] = $note.'<br />'.$description;
-                $this->configs['Templates']["AJAXDefinitions_$method"] = $obj->$method();
-                $this->defaults['Templates']["AJAXDefinitions_$method"] = $obj->$method();
-                $this->otherConfigs['Templates']["AJAXDefinitions_$method"] = true;
+                $this->definitions['Templates']["AJAXDefinitions_${method}"] = $note . '<br />' . $description;
+                $this->configs['Templates']["AJAXDefinitions_${method}"] = $obj->{$method}();
+                $this->defaults['Templates']["AJAXDefinitions_${method}"] = $obj->{$method}();
+                $this->otherConfigs['Templates']["AJAXDefinitions_${method}"] = true;
             }
         }
     }
@@ -695,34 +712,34 @@ EcommerceConfig:
      */
     private function specialCases($className, $key, $actualValue)
     {
-        switch ($className.'.'.$key) {
+        switch ($className . '.' . $key) {
             case 'Order_Email.css_file_location':
-                if (!file_exists(Director::baseFolder()."/$actualValue")) {
-                    return '<span style="color: red">ADDITIONAL CHECK: this file '.Director::baseFolder().'/'.$actualValue.' does not exist! For proper functioning of e-commerce, please make sure to create this file.</span>';
-                } else {
-                    return '<span style="color: #7da4be">ADDITIONAL CHECK: file exists.</span>';
+                if (! file_exists(Director::baseFolder() . "/${actualValue}")) {
+                    return '<span style="color: red">ADDITIONAL CHECK: this file ' . Director::baseFolder() . '/' . $actualValue . ' does not exist! For proper functioning of e-commerce, please make sure to create this file.</span>';
                 }
+                return '<span style="color: #7da4be">ADDITIONAL CHECK: file exists.</span>';
+
                 break;
             case 'Order.modifiers':
                 $classes = ClassInfo::subclassesFor('OrderModifier');
                 unset($classes['OrderModifier']);
                 $classesAsString = implode(', <br />', $classes);
 
-                return "<br /><h4>Available Modifiers</h4>$classesAsString";
+                return "<br /><h4>Available Modifiers</h4>${classesAsString}";
                 break;
             case 'OrderStatusLog.available_log_classes_array':
                 $classes = ClassInfo::subclassesFor('OrderStatusLog');
                 unset($classes['OrderStatusLog']);
                 $classesAsString = implode(', <br />', $classes);
 
-                return "<br /><h4>Available Modifiers</h4>$classesAsString";
+                return "<br /><h4>Available Modifiers</h4>${classesAsString}";
                 break;
             case 'OrderStep.order_steps_to_include':
                 $classes = ClassInfo::subclassesFor('OrderStep');
                 unset($classes['OrderStep']);
                 $classesAsString = implode('<br /> - ', $classes);
 
-                return "<br /><h4>Available Order Steps</h4> - $classesAsString";
+                return "<br /><h4>Available Order Steps</h4> - ${classesAsString}";
                 break;
         }
     }
@@ -743,24 +760,5 @@ EcommerceConfig:
         }
 
         return $actualValue;
-    }
-
-    protected function checkGEOIP()
-    {
-        if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') == 'EcommerceCountry_VisitorCountryProvider' && !class_exists('Geoip')) {
-            user_error(
-                "
-                You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
-                Alternatively you can set the following config EcommerceCountry.visitor_country_provider to something like MyGEOipProvider.
-                You then create a class MyGEOipProvider with a method getCountry().",
-                E_USER_NOTICE
-            );
-        } elseif (Director::isLive() && !EcommerceCountry::get_country_from_ip()) {
-            user_error(
-                "
-                Please make sure that '".$this->Config()->get('visitor_country_provider')."' (visitor_country_provider) is working on your server (see the GEOIP module for details).",
-                E_USER_NOTICE
-            );
-        }
     }
 }

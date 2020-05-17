@@ -6,28 +6,27 @@
  */
 class SearchReplacement extends DataObject implements EditableEcommerceObject
 {
-    private static $db = array(
+    private static $db = [
         'Search' => 'Varchar(255)',
         'Replace' => 'Varchar(255)',
-        'ReplaceWholePhrase' => 'Boolean'
-    );
+        'ReplaceWholePhrase' => 'Boolean',
+    ];
 
-    private static $indexes = array(
+    private static $indexes = [
         'SearchIndex' => 'unique("Search")',
-        'Replace' => true
-    );
+        'Replace' => true,
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Search' => 'Search Alias (e.g. nz)',
         'Replace' => 'Actual Search Phrase (e.g. new zealand)',
-    );
+    ];
 
-    private static $field_labels = array(
+    private static $field_labels = [
         'Search' => 'Search Alias (e.g. nz)',
         'Replace' => 'Actual Search Phrase (e.g. new zealand)',
-        'ReplaceWholePhrase' => 'Replace Whole Phrase Only'
-    );
-
+        'ReplaceWholePhrase' => 'Replace Whole Phrase Only',
+    ];
 
     /**
      * standard SS variable.
@@ -35,10 +34,6 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $singular_name = 'Search Replacement';
-    public function i18n_singular_name()
-    {
-        return $this->Config()->get('singular_name');
-    }
 
     /**
      * standard SS variable.
@@ -46,19 +41,25 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $plural_name = 'Search Replacements';
+
+    private static $separator = ',';
+
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
     public function i18n_plural_name()
     {
         return $this->Config()->get('plural_name');
     }
 
-    private static $separator = ',';
-
     public function fieldLabels($includerelations = true)
     {
-        return array(
-            'Search' => 'When someone searches for ... (separate searches by '.$this->Config()->get('separator').') - aliases',
+        return [
+            'Search' => 'When someone searches for ... (separate searches by ' . $this->Config()->get('separator') . ') - aliases',
             'Replace' => 'It is replaced by - proper name ...',
-        );
+        ];
     }
 
     public function onBeforeWrite()
@@ -66,7 +67,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         parent::onBeforeWrite();
         //all lower case and make replace double spaces
         $this->Search = trim(preg_replace('!\s+!', ' ', strtolower($this->Search)));
-        $searchArray = array();
+        $searchArray = [];
         foreach (explode(',', $this->Search) as $term) {
             $searchArray[] = trim($term);
         }

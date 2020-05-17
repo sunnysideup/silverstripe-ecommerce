@@ -16,22 +16,22 @@ class EcommerceCreditCardField extends TextField
     {
         return array_merge(
             parent::getAttributes(),
-            array(
+            [
                 'autocomplete' => 'off',
                 'maxlength' => 4,
                 'size' => 4,
-            )
+            ]
         );
     }
 
     /**
      * renders with EcommerceCreditCardField.ss.
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         Requirements::javascript('ecommerce/javascript/EcomCreditCardValidation.js');
         $parts = $this->value;
-        if (!is_array($parts)) {
+        if (! is_array($parts)) {
             $parts = explode("\n", chunk_split($parts, 4, "\n"));
         }
         $parts = array_pad($parts, 4, '');
@@ -59,17 +59,17 @@ class EcommerceCreditCardField extends TextField
 
         $tabIndex = (int) $this->getAttribute('tabindex') + (int) $increment;
 
-        return (is_numeric($tabIndex)) ? ' tabindex = "'.$tabIndex.'"' : '';
+        return is_numeric($tabIndex) ? ' tabindex = "' . $tabIndex . '"' : '';
     }
 
     public function dataValue()
     {
         if (is_array($this->value)) {
             return implode('', $this->value);
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
+
     /**
      * checks if a credit card is a real credit card number.
      *
@@ -79,14 +79,14 @@ class EcommerceCreditCardField extends TextField
     {
         // If the field is empty then don't return an invalidation message
         $cardNumber = trim(implode('', $this->value));
-        if (!$cardNumber && !$this->Required()) {
+        if (! $cardNumber && ! $this->Required()) {
             return true;
         }
         for ($sum = 0, $i = strlen($cardNumber) - 1; $i >= 0; --$i) {
             $digit = (int) $cardNumber[$i];
-            $sum += (($i % 2) === 0) ? array_sum(str_split($digit * 2)) : $digit;
+            $sum += ($i % 2) === 0 ? array_sum(str_split($digit * 2)) : $digit;
         }
-        if (!(($sum % 10) === 0)) {
+        if (! (($sum % 10) === 0)) {
             $validator->validationError(
                 $this->name,
                 _t(

@@ -20,8 +20,8 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products').
-        ' ('.$this->sourceRecords()->count().')';
+        return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products') .
+        ' (' . $this->sourceRecords()->count() . ')';
     }
 
     /**
@@ -50,7 +50,7 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report
     public function sourceRecords($params = null)
     {
         return Product::get()
-            ->filter(array('FeaturedProduct' => 1))
+            ->filter(['FeaturedProduct' => 1])
             ->sort('FullSiteTreeSort', 'ASC');
     }
 
@@ -59,14 +59,13 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report
      */
     public function columns()
     {
-        return array(
-            'FullName' => array(
+        return [
+            'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
                 'link' => true,
-            ),
-        );
+            ],
+        ];
     }
-
 
     public function getReportField()
     {
@@ -74,7 +73,7 @@ class EcommerceSideReport_FeaturedProducts extends SS_Report
         $config = $field->getConfig();
         $exportButton = $config->getComponentByType('GridFieldExportButton');
         $exportButton->setExportColumns($field->getColumns());
-        
+
         return $field;
     }
 }

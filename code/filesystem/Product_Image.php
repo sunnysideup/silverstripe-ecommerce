@@ -3,18 +3,12 @@
 
 class Product_Image extends Image
 {
-
-
     /**
      * standard SS variable.
      *
      * @Var String
      */
     private static $singular_name = 'Product Image';
-    public function i18n_singular_name()
-    {
-        return _t('Product_Image.SINGULARNAME', 'Product Image');
-    }
 
     /**
      * standard SS variable.
@@ -22,14 +16,20 @@ class Product_Image extends Image
      * @Var String
      */
     private static $plural_name = 'Product Images';
+
+    private static $casting = [
+        'CMSThumbnail' => 'HTMLText',
+    ];
+
+    public function i18n_singular_name()
+    {
+        return _t('Product_Image.SINGULARNAME', 'Product Image');
+    }
+
     public function i18n_plural_name()
     {
         return _t('Product_Image.PLURALNAME', 'Product Images');
     }
-
-    private static $casting = array(
-        'CMSThumbnail' => 'HTMLText',
-    );
 
     /**
      * Fields.
@@ -38,10 +38,10 @@ class Product_Image extends Image
      */
     public function summaryFields()
     {
-        return array(
+        return [
             'CMSThumbnail' => 'Preview',
             'Title' => 'Title',
-        );
+        ];
     }
 
     /**
@@ -144,6 +144,7 @@ class Product_Image extends Image
     {
         return $this->getFormattedImage('LargeImage');
     }
+
     /**
      * @usage can be used in a template like this $Image.LargeImage.Link
      *
@@ -182,7 +183,7 @@ class Product_Image extends Image
     {
         $smallImage = $this->SmallImage();
         if ($smallImage) {
-            $icon = '<img src="'.$smallImage->FileName.'" style="border: 1px solid #555; height: 100px; " />';
+            $icon = '<img src="' . $smallImage->FileName . '" style="border: 1px solid #555; height: 100px; " />';
         } else {
             $icon = '[MISSING IMAGE]';
         }

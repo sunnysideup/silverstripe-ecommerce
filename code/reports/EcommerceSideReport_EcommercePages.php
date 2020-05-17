@@ -22,16 +22,16 @@ class EcommerceSideReport_EcommercePages extends SS_Report
      */
     protected $dataClass = 'SiteTree';
 
+    private static $additional_classnames = [];
+
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.ECOMMERCEPAGES', 'E-commerce: Non-product e-commerce pages').
-        ' ('.$this->sourceRecords()->count().')';
+        return _t('EcommerceSideReport.ECOMMERCEPAGES', 'E-commerce: Non-product e-commerce pages') .
+        ' (' . $this->sourceRecords()->count() . ')';
     }
-
-    private static $additional_classnames = array();
 
     /**
      * not sure if this is used in SS3.
@@ -58,7 +58,7 @@ class EcommerceSideReport_EcommercePages extends SS_Report
      */
     public function sourceRecords($params = null)
     {
-        return SiteTree::get()->filter('ClassName', array('CartPage', 'AccountPage', 'ProductGroupSearchPage', 'CheckoutPage', 'OrderConfirmationPage') + (array) $this->Config()->get('additional_classnames'));
+        return SiteTree::get()->filter('ClassName', ['CartPage', 'AccountPage', 'ProductGroupSearchPage', 'CheckoutPage', 'OrderConfirmationPage'] + (array) $this->Config()->get('additional_classnames'));
     }
 
     /**
@@ -66,12 +66,12 @@ class EcommerceSideReport_EcommercePages extends SS_Report
      */
     public function columns()
     {
-        return array(
-            'FullName' => array(
+        return [
+            'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
                 'link' => true,
-            ),
-        );
+            ],
+        ];
     }
 
     public function getReportField()
@@ -80,7 +80,7 @@ class EcommerceSideReport_EcommercePages extends SS_Report
         $config = $field->getConfig();
         $exportButton = $config->getComponentByType('GridFieldExportButton');
         $exportButton->setExportColumns($field->getColumns());
-        
+
         return $field;
     }
 }

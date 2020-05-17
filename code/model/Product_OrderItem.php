@@ -7,8 +7,8 @@ class Product_OrderItem extends OrderItem
      *
      * @var array
      */
-    private static $api_access = array(
-        'view' => array(
+    private static $api_access = [
+        'view' => [
             'CalculatedTotal',
             'TableTitle',
             'TableSubTitleNOHTML',
@@ -22,8 +22,8 @@ class Product_OrderItem extends OrderItem
             'Total',
             'Order',
             'InternalItemID',
-        ),
-    );
+        ],
+    ];
 
     /**
      * Overloaded Product accessor method.
@@ -65,6 +65,7 @@ class Product_OrderItem extends OrderItem
     {
         return $this->getTableTitle();
     }
+
     public function getTableTitle()
     {
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
@@ -89,6 +90,7 @@ class Product_OrderItem extends OrderItem
     {
         return $this->getTableSubTitle();
     }
+
     public function getTableSubTitle()
     {
         $tableSubTitle = '';
@@ -114,12 +116,12 @@ class Product_OrderItem extends OrderItem
         $title = $this->TableTitle();
         $productID = $this->BuyableID;
         $productVersion = $this->Version;
-        $html = parent::debug().<<<HTML
+        $html = parent::debug() . <<<HTML
             <h3>Product_OrderItem class details</h3>
             <p>
-                <b>Title : </b>$title<br/>
-                <b>Product ID : </b>$productID<br/>
-                <b>Product Version : </b>$productVersion
+                <b>Title : </b>${title}<br/>
+                <b>Product ID : </b>${productID}<br/>
+                <b>Product Version : </b>${productVersion}
             </p>
 HTML;
         $updatedHTML = $this->extend('updateDebug', $html);

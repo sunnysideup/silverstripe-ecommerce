@@ -5,32 +5,34 @@ class OrderForm_Feedback extends Form
 {
     protected $order = null;
 
+    protected $_orderConfirmationPage = null;
+
     public function __construct(Controller $controller, $name, Order $order)
     {
         $this->order = $order;
         $values = $this->getValueFromOrderConfirmationPage('FeedbackValuesOptions');
         $values = explode(',', $values);
-        $newValues = array();
+        $newValues = [];
         foreach ($values as $value) {
             $value = trim($value);
             $newValues[Convert::raw2att($value)] = $value;
         }
         $fields = FieldList::create(
-            array(
+            [
                 OptionsetField::create(
                     'Rating',
                     $this->getValueFromOrderConfirmationPage('FeedbackValuesFieldLabel'),
                     $newValues
                 ),
-                TextareaField::create('Note', $this->getValueFromOrderConfirmationPage('FeedbackNotesFieldLabel'))
-            )
+                TextareaField::create('Note', $this->getValueFromOrderConfirmationPage('FeedbackNotesFieldLabel')),
+            ]
         );
         $actions = FieldList::create(
             FormAction::create('dofeedback', $this->getValueFromOrderConfirmationPage('FeedbackFormSubmitLabel'))
         );
-        $requiredFields = array(
-            'FeedbackValue'
-        );
+        $requiredFields = [
+            'FeedbackValue',
+        ];
         $validator = OrderForm_Feedback_Validator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
 
@@ -86,17 +88,14 @@ class OrderForm_Feedback extends Form
     protected function getValueFromOrderConfirmationPage($value)
     {
         if ($page = $this->getOrderConfirmationPage()) {
-            return $page->$value;
-        } else {
-            $defaults = Config::inst()->get('OrderConfirmationPage', 'defaults');
-            if ($defaults && is_array($defaults) && isset($defaults[$value])) {
-                return $defaults[$value];
-            }
-            return _t('OrderForm_Feedback.'.$value, 'OrderForm_Feedback.'.$value.' value not set in translations');
+            return $page->{$value};
         }
+        $defaults = Config::inst()->get('OrderConfirmationPage', 'defaults');
+        if ($defaults && is_array($defaults) && isset($defaults[$value])) {
+            return $defaults[$value];
+        }
+        return _t('OrderForm_Feedback.' . $value, 'OrderForm_Feedback.' . $value . ' value not set in translations');
     }
-
-    protected $_orderConfirmationPage = null;
 
     protected function getOrderConfirmationPage()
     {

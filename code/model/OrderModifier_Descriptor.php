@@ -8,68 +8,68 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
      *
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'ModifierClassName' => 'Varchar(100)',
         'Heading' => 'Varchar',
         'Description' => 'Text',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Link' => 'SiteTree',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $indexes = array(
+    private static $indexes = [
         'ModifierClassName' => true,
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $searchable_fields = array(
+    private static $searchable_fields = [
         'Heading' => 'PartialMatchFilter',
         'Description' => 'PartialMatchFilter',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $field_labels = array(
+    private static $field_labels = [
         'ModifierClassName' => 'Code',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'RealName' => 'Code',
         'Heading' => 'Heading',
         'Description' => 'Description',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'RealName' => 'Varchar',
-    );
+    ];
 
     /**
      * standard SS variable.
@@ -77,10 +77,6 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
      * @var string
      */
     private static $singular_name = 'Order Modifier Description';
-    public function i18n_singular_name()
-    {
-        return _t('OrderModifier.ORDEREXTRADESCRIPTION', 'Order Modifier Description');
-    }
 
     /**
      * standard SS variable.
@@ -88,6 +84,12 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
      * @var string
      */
     private static $plural_name = 'Order Modifier Descriptions';
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderModifier.ORDEREXTRADESCRIPTION', 'Order Modifier Description');
+    }
+
     public function i18n_plural_name()
     {
         return _t('OrderModifier.ORDEREXTRADESCRIPTIONS', 'Order Modifier Descriptions');
@@ -176,12 +178,13 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
     {
         return $this->getRealName();
     }
+
     public function getRealName()
     {
         if (class_exists($this->ModifierClassName)) {
             $singleton = singleton($this->ModifierClassName);
 
-            return $singleton->i18n_singular_name().' ('.$this->ModifierClassName.')';
+            return $singleton->i18n_singular_name() . ' (' . $this->ModifierClassName . ')';
         }
 
         return $this->ModifierClassName;
@@ -206,14 +209,14 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
     {
         parent::requireDefaultRecords();
         $arrayOfModifiers = EcommerceConfig::get('Order', 'modifiers');
-        if (!is_array($arrayOfModifiers)) {
-            $arrayOfModifiers = array();
+        if (! is_array($arrayOfModifiers)) {
+            $arrayOfModifiers = [];
         }
         if (count($arrayOfModifiers)) {
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
                     'OrderModifier_Descriptor',
-                    array('ModifierClassName' => $className),
+                    ['ModifierClassName' => $className],
                     $cacheDataObjectGetOne = false
                 );
                 if (! $orderModifier_Descriptor) {
@@ -222,7 +225,7 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
                     $orderModifier_Descriptor->ModifierClassName = $className;
                     $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
                     $orderModifier_Descriptor->write();
-                    DB::alteration_message('Creating description for '.$className, 'created');
+                    DB::alteration_message('Creating description for ' . $className, 'created');
                 }
             }
         }
@@ -230,9 +233,9 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
         $orderModifierDescriptors = OrderModifier_Descriptor::get();
         if ($orderModifierDescriptors && $orderModifierDescriptors->count()) {
             foreach ($orderModifierDescriptors as $orderModifierDescriptor) {
-                if (!in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers)) {
+                if (! in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers, true)) {
                     $orderModifierDescriptor->delete();
-                    DB::alteration_message('Deleting description for '.$orderModifierDescriptor->ModifierClassName, 'deleted');
+                    DB::alteration_message('Deleting description for ' . $orderModifierDescriptor->ModifierClassName, 'deleted');
                 }
             }
         }

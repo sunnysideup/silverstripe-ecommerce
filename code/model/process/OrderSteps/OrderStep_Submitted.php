@@ -9,12 +9,19 @@
  **/
 class OrderStep_Submitted extends OrderStep implements OrderStepInterface
 {
-    private static $db = array(
+    /**
+     * The OrderStatusLog that is relevant to the particular step.
+     *
+     * @var string
+     */
+    protected $relevantLogEntryClassName = 'OrderStatusLog_Submitted';
+
+    private static $db = [
         'SaveOrderAsHTML' => 'Boolean',
         'SaveOrderAsSerializedObject' => 'Boolean',
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanPay' => 1,
         'CustomerCanCancel' => 0,
@@ -23,14 +30,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
         'ShowAsInProcessOrder' => 1,
         'SaveOrderAsHTML' => 1,
         'SaveOrderAsSerializedObject' => 0,
-    );
-
-    /**
-     * The OrderStatusLog that is relevant to the particular step.
-     *
-     * @var string
-     */
-    protected $relevantLogEntryClassName = 'OrderStatusLog_Submitted';
+    ];
 
     /**
      * @return string
@@ -55,7 +55,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/
@@ -67,17 +67,16 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
     /**
      * Add a member to the order - in case he / she is not a shop admin.
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if run correctly.
      **/
     public function doStep(Order $order)
     {
-        if (!$order->IsSubmitted()) {
+        if (! $order->IsSubmitted()) {
             $className = $this->getRelevantLogEntryClassName();
             if (class_exists($className)) {
-
-                 //add currency if needed.
+                //add currency if needed.
                 $order->getHasAlternativeCurrency();
                 $obj = $className::create();
                 if (is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
@@ -93,7 +92,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
                         $obj->OrderAsString = $order->ConvertToString();
                         $saved = true;
                     }
-                    if ($this->SaveOrderAsHTML || !$saved) {
+                    if ($this->SaveOrderAsHTML || ! $saved) {
                         $obj->OrderAsHTML = Convert::raw2sql($order->ConvertToHTML());
                     }
                     $obj->write();
@@ -103,10 +102,10 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
             } else {
                 user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
             }
-            $order->LastEdited = "'".SS_Datetime::now()->Rfc2822()."'";
+            $order->LastEdited = "'" . SS_Datetime::now()->Rfc2822() . "'";
 
             //add member if needed...
-            if (!$order->MemberID) {
+            if (! $order->MemberID) {
                 //lets see if we can find a member
                 $memberOrderID = Session::get('Ecommerce_Member_For_Order');
                 Session::clear('Ecommerce_Member_For_Order');
@@ -118,7 +117,7 @@ class OrderStep_Submitted extends OrderStep implements OrderStepInterface
             }
             $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
         }
-         
+
         return true;
     }
 

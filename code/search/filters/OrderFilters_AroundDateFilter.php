@@ -33,7 +33,7 @@ class OrderFilters_AroundDateFilter extends ExactMatchFilter
         $distanceFromTodayInDays = $distanceFromToday / 86400;
         $maxDays = 1;
         $maxDays += round($distanceFromTodayInDays / 30.5) * $this->additionalDaysPerMonth;
-        $query->where("(ABS(DATEDIFF(\"LastEdited\", '$formattedDate')) < ".$maxDays." OR ABS(DATEDIFF(\"Created\", '$formattedDate')) < ".$maxDays.')');
+        $query->where("(ABS(DATEDIFF(\"LastEdited\", '${formattedDate}')) < " . $maxDays . " OR ABS(DATEDIFF(\"Created\", '${formattedDate}')) < " . $maxDays . ')');
 
         return $query;
     }

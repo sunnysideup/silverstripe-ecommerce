@@ -12,33 +12,25 @@
  **/
 class OrderStatusLog_Submitted extends OrderStatusLog
 {
-    private static $db = array(
+    private static $db = [
         'OrderAsHTML' => 'HTMLText',
         'OrderAsString' => 'Text',
         'SequentialOrderNumber' => 'Int',
         'Total' => 'Currency',
         'SubTotal' => 'Currency',
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'InternalUseOnly' => true,
-    );
+    ];
 
-    private static $casting = array(
+    private static $casting = [
         'HTMLRepresentation' => 'HTMLText',
-    );
+    ];
 
     private static $singular_name = 'Submitted Order';
-    public function i18n_singular_name()
-    {
-        return _t('OrderStatusLog.SUBMITTEDORDER', 'Submitted Order - Fulltext Backup');
-    }
 
     private static $plural_name = 'Submitted Orders';
-    public function i18n_plural_name()
-    {
-        return _t('OrderStatusLog.SUBMITTEDORDERS', 'Submitted Orders - Fulltext Backup');
-    }
 
     /**
      * Standard SS variable.
@@ -46,6 +38,16 @@ class OrderStatusLog_Submitted extends OrderStatusLog
      * @var string
      */
     private static $description = 'The record that the order has been submitted by the customer.  This is important in e-commerce, because from here, nothing can change to the order.';
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderStatusLog.SUBMITTEDORDER', 'Submitted Order - Fulltext Backup');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('OrderStatusLog.SUBMITTEDORDERS', 'Submitted Orders - Fulltext Backup');
+    }
 
     /**
      * Standard SS method.
@@ -100,6 +102,7 @@ class OrderStatusLog_Submitted extends OrderStatusLog
     {
         return $this->getHTMLRepresentation();
     }
+
     public function getHTMLRepresentation()
     {
         if ($this->OrderAsHTML) {
@@ -118,12 +121,12 @@ class OrderStatusLog_Submitted extends OrderStatusLog
     {
         parent::onBeforeWrite();
         if ($order = $this->Order()) {
-            if (!$this->Total) {
+            if (! $this->Total) {
                 $this->Total = $order->Total();
                 $this->SubTotal = $order->SubTotal();
             }
         }
-        if (!intval($this->SequentialOrderNumber)) {
+        if (! intval($this->SequentialOrderNumber)) {
             $this->SequentialOrderNumber = 1;
             $min = intval(EcommerceConfig::get('Order', 'order_id_start_number')) - 0;
             if (isset($this->ID)) {
@@ -133,9 +136,9 @@ class OrderStatusLog_Submitted extends OrderStatusLog
             }
             $lastOne = DataObject::get_one(
                 'OrderStatusLog_Submitted',
-                '\'ID\' != \''.$id.'\'',
+                '\'ID\' != \'' . $id . '\'',
                 $cacheDataObjectGetOne = true,
-                array('SequentialOrderNumber' => 'DESC')
+                ['SequentialOrderNumber' => 'DESC']
             );
             if ($lastOne) {
                 $this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;

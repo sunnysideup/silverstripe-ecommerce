@@ -9,55 +9,57 @@
  **/
 class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch
 {
-    private static $db = array(
+    private static $db = [
         'DispatchedBy' => 'Varchar(100)',
         'DispatchedOn' => 'Date',
         'DispatchTicket' => 'Varchar(100)',
         'DispatchLink' => 'Varchar(255)',
-    );
+    ];
 
-    private static $indexes = array(
+    private static $indexes = [
         'DispatchedOn' => true,
         'DispatchTicket' => true,
-    );
+    ];
 
-    private static $searchable_fields = array(
-        'OrderID' => array(
+    private static $searchable_fields = [
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        ),
+        ],
         'Title' => 'PartialMatchFilter',
         'Note' => 'PartialMatchFilter',
         'DispatchedBy' => 'PartialMatchFilter',
         'DispatchTicket' => 'PartialMatchFilter',
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'DispatchedOn' => 'Date',
         'DispatchedBy' => 'Dispatched By',
         'OrderID' => 'Order ID',
-    );
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'InternalUseOnly' => false,
-    );
+    ];
 
     private static $singular_name = 'Order Log Physical Dispatch Entry';
+
+    private static $plural_name = 'Order Log Physical Dispatch Entries';
+
+    private static $default_sort = [
+        'DispatchedOn' => 'DESC',
+        'ID' => 'DESC',
+    ];
+
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.ORDERLOGPHYSICALDISPATCHENTRY', 'Order Log Physical Dispatch Entry');
     }
 
-    private static $plural_name = 'Order Log Physical Dispatch Entries';
     public function i18n_plural_name()
     {
         return _t('OrderStatusLog.ORDERLOGPHYSICALDISPATCHENTRIES', 'Order Log Physical Dispatch Entries');
     }
-
-    private static $default_sort = [
-        'DispatchedOn' =>  'DESC',
-        'ID' => 'DESC'
-    ];
 
     public function populateDefaults()
     {
@@ -91,7 +93,7 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if (!$this->DispatchedOn) {
+        if (! $this->DispatchedOn) {
             $this->DispatchedOn = DBField::create_field('Date', date('Y-m-d'));
         }
     }
@@ -103,6 +105,7 @@ class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch
     {
         return $this->getCustomerNote();
     }
+
     public function getCustomerNote()
     {
         Config::nest();

@@ -3,13 +3,13 @@
 
 class OrderEmailRecord_Review extends Controller
 {
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'read' => 'ShopAdmin',
-    );
+    ];
 
     public static function review_link($email)
     {
-        return Config::inst()->get('OrderEmailRecord_Review', 'url_segment').'/read/'.$email->ID;
+        return Config::inst()->get('OrderEmailRecord_Review', 'url_segment') . '/read/' . $email->ID;
     }
 
     public function read($request)

@@ -3,7 +3,6 @@
 
 class ShopAccountForm_Validator extends RequiredFields
 {
-
     /**
      * Ensures member unique id stays unique and other basic stuff...
      *
@@ -33,8 +32,8 @@ class ShopAccountForm_Validator extends RequiredFields
                 $uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
                 //can't be taken
                 $otherMembersWithSameEmail = Member::get()
-                    ->filter(array($uniqueFieldName => $uniqueFieldValue))
-                    ->exclude(array('ID' => $loggedInMemberID));
+                    ->filter([$uniqueFieldName => $uniqueFieldValue])
+                    ->exclude(['ID' => $loggedInMemberID]);
                 if ($otherMembersWithSameEmail->count()) {
                     //we allow existing email
                     // if we are currently NOT logged in
@@ -45,7 +44,7 @@ class ShopAccountForm_Validator extends RequiredFields
                         $message = _t(
                             'Account.ALREADYTAKEN',
                             '{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}.',
-                            array('uniqueFieldValue' => $uniqueFieldValue, 'uniqueFieldName' => $uniqueFieldName)
+                            ['uniqueFieldValue' => $uniqueFieldValue, 'uniqueFieldName' => $uniqueFieldName]
                         );
                         $this->validationError(
                             $uniqueFieldName,
@@ -59,7 +58,7 @@ class ShopAccountForm_Validator extends RequiredFields
         }
         // check password fields are the same before saving
         if (isset($data['PasswordCheck1']) && isset($data['PasswordCheck2'])) {
-            if ($data['PasswordCheck1'] != $data['PasswordCheck2']) {
+            if ($data['PasswordCheck1'] !== $data['PasswordCheck2']) {
                 $this->validationError(
                     'PasswordCheck1',
                     _t('Account.PASSWORDSERROR', 'Passwords do not match.'),
@@ -69,7 +68,7 @@ class ShopAccountForm_Validator extends RequiredFields
             }
             //if you are not logged in, you have not provided a password and the settings require you to be logged in then
             //we have a problem
-            if (!$loggedInMember && !$data['PasswordCheck1'] && EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase')) {
+            if (! $loggedInMember && ! $data['PasswordCheck1'] && EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase')) {
                 $this->validationError(
                     'PasswordCheck1',
                     _t('Account.SELECTPASSWORD', 'Please select a password.'),
@@ -108,7 +107,7 @@ class ShopAccountForm_Validator extends RequiredFields
                 $valid = false;
             }
         }
-        if (!$valid) {
+        if (! $valid) {
             $this->form->sessionMessage(_t('Account.ERRORINFORM', 'We could not save your details, please check your errors below.'), 'bad');
         }
 

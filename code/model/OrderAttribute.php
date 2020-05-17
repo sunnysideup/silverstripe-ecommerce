@@ -5,7 +5,6 @@
  * @see OrderModifier
  * @see OrderItem
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
@@ -13,109 +12,6 @@
  **/
 class OrderAttribute extends DataObject implements EditableEcommerceObject
 {
-    /**
-     * what variables are accessible through  http://mysite.com/api/ecommerce/v1/ShippingAddress/.
-     *
-     * @var array
-     */
-    private static $api_access = array(
-        'view' => array(
-            'CalculatedTotal',
-            'Sort',
-            'GroupSort',
-            'TableTitle',
-            'TableSubTitleNOHTML',
-            'CartTitle',
-            'CartSubTitle',
-            'Order',
-        ),
-     );
-
-    /**
-     * Standard SS variable.
-     *
-     * @var array
-     */
-    private static $db = array(
-        'CalculatedTotal' => 'Currency',
-        'Sort' => 'Int',
-        'GroupSort' => 'Int',
-    );
-
-    /**
-     * Standard SS variable.
-     *
-     * @var array
-     */
-    private static $has_one = array(
-        'Order' => 'Order',
-    );
-
-    /**
-     * Standard SS variable.
-     *
-     * @var array
-     */
-    private static $casting = array(
-        'TableTitle' => 'HTMLText',
-        'TableSubTitle' => 'HTMLText',
-        'TableSubTitleNOHTML' => 'Text',
-        'CartTitle' => 'HTMLText',
-        'CartSubTitle' => 'HTMLText',
-        'CalculatedTotalAsMoney' => 'Money',
-    );
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     **/
-    private static $default_sort = [
-        'OrderAttribute.GroupSort' => 'ASC',
-        'OrderAttribute.Sort' => 'ASC',
-        'OrderAttribute.ID' => 'ASC'
-    ];
-
-    /**
-     * Standard SS variable.
-     *
-     * @var array
-     */
-    private static $indexes = array(
-        'GroupSort' => true,
-        'Sort' => true,
-        'ID' => true
-    );
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $singular_name = 'Order Entry';
-    public function i18n_singular_name()
-    {
-        return _t('OrderAttribute.ORDERENTRY', 'Order Entry');
-    }
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $plural_name = 'Order Extra Descriptions';
-    public function i18n_plural_name()
-    {
-        return _t('OrderAttribute.ORDERENTRIES', 'Order Entries');
-    }
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $description = 'Any item that is added to the order - be it before (e.g. product) or after the subtotal (e.g. tax).';
-
     /**
      * save edit status for speed's sake.
      *
@@ -137,6 +33,119 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @var bool
      **/
     protected $baseInitCalled = false;
+
+    /**
+     * what variables are accessible through  http://mysite.com/api/ecommerce/v1/ShippingAddress/.
+     *
+     * @var array
+     */
+    private static $api_access = [
+        'view' => [
+            'CalculatedTotal',
+            'Sort',
+            'GroupSort',
+            'TableTitle',
+            'TableSubTitleNOHTML',
+            'CartTitle',
+            'CartSubTitle',
+            'Order',
+        ],
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var array
+     */
+    private static $db = [
+        'CalculatedTotal' => 'Currency',
+        'Sort' => 'Int',
+        'GroupSort' => 'Int',
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var array
+     */
+    private static $has_one = [
+        'Order' => 'Order',
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var array
+     */
+    private static $casting = [
+        'TableTitle' => 'HTMLText',
+        'TableSubTitle' => 'HTMLText',
+        'TableSubTitleNOHTML' => 'Text',
+        'CartTitle' => 'HTMLText',
+        'CartSubTitle' => 'HTMLText',
+        'CalculatedTotalAsMoney' => 'Money',
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     **/
+    private static $default_sort = [
+        'OrderAttribute.GroupSort' => 'ASC',
+        'OrderAttribute.Sort' => 'ASC',
+        'OrderAttribute.ID' => 'ASC',
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var array
+     */
+    private static $indexes = [
+        'GroupSort' => true,
+        'Sort' => true,
+        'ID' => true,
+    ];
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $singular_name = 'Order Entry';
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $plural_name = 'Order Extra Descriptions';
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $description = 'Any item that is added to the order - be it before (e.g. product) or after the subtotal (e.g. tax).';
+
+    /**
+     * Helps in speeding up code.
+     * This can be a static variable as it is the same for all OrderItems for an Order.
+     *
+     * @var array
+     */
+    private static $_price_has_been_fixed = [];
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderAttribute.ORDERENTRY', 'Order Entry');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('OrderAttribute.ORDERENTRIES', 'Order Entries');
+    }
 
     /**
      * extended in OrderModifier and OrderItem
@@ -189,7 +198,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             return true;
         }
         if ($this->_canView === null) {
@@ -225,7 +234,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             return true;
         }
         if ($this->_canEdit === null) {
@@ -259,16 +268,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
-
-    /**
-     * Helps in speeding up code.
-     * This can be a static variable as it is the same for all OrderItems for an Order.
-     *
-     * @var array
-     */
-    private static $_price_has_been_fixed = array();
-
-
     /**
      * @param int $orderID
      * @param bool $value
@@ -288,35 +287,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         $orderID = ShoppingCart::current_order_id($orderID);
 
         return isset(self::$_price_has_been_fixed[$orderID]) ? self::$_price_has_been_fixed[$orderID] : null;
-    }
-
-    /**
-     * @description - tells you if an order item price has been "fixed"
-     * meaning that is has been saved in the CalculatedTotal field so that
-     * it can not be altered.
-     *
-     * Default returns false; this is good for uncompleted orders
-     * but not so good for completed ones.
-     *
-     * We use direct calls to self::$_price_has_been_fixed to make the code simpler and faster.
-     *
-     * @return bool
-     **/
-    protected function priceHasBeenFixed($recalculate = false)
-    {
-        if (self::get_price_has_been_fixed($this->OrderID) === null || $recalculate) {
-            self::$_price_has_been_fixed[$this->OrderID] = false;
-            if ($order = $this->Order()) {
-                if ($order->IsSubmitted()) {
-                    self::$_price_has_been_fixed[$this->OrderID] = true;
-                    if ($recalculate) {
-                        user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
-                    }
-                }
-            }
-        }
-
-        return self::$_price_has_been_fixed[$this->OrderID];
     }
 
     ######################
@@ -364,10 +334,10 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function Classes()
     {
-        $class = get_class($this);
-        $classes = array();
+        $class = static::class;
+        $classes = [];
         $classes[] = strtolower($class);
-        while (get_parent_class($class) != 'DataObject' && $class = get_parent_class($class)) {
+        while (get_parent_class($class) !== 'DataObject' && $class = get_parent_class($class)) {
             $classes[] = strtolower($class);
         }
         if (is_a($this, Object::getCustomClass('OrderItem'))) {
@@ -428,6 +398,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         return $this->getTableTitle();
     }
+
     public function getTableTitle()
     {
         return $this->i18n_singular_name();
@@ -444,6 +415,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         return $this->getCartTitle();
     }
+
     public function getCartTitle()
     {
         return $this->TableTitle();
@@ -458,6 +430,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         return $this->getTableSubTitle();
     }
+
     public function getTableSubTitle()
     {
         return '';
@@ -472,6 +445,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         return $this->getTableSubTitleNOHTML();
     }
+
     public function getTableSubTitleNOHTML()
     {
         return str_replace("\n", '', strip_tags($this->getTableSubTitle()));
@@ -487,6 +461,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         return $this->getCartSubTitle();
     }
+
     public function getCartSubTitle()
     {
         return $this->TableSubTitle();
@@ -501,6 +476,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         return $this->getCalculatedTotalAsMoney();
     }
+
     public function getCalculatedTotalAsMoney()
     {
         return EcommerceCurrency::get_money_object_from_order_currency($this->CalculatedTotal, $this->Order());
@@ -541,8 +517,35 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function debug()
     {
-        $html = EcommerceTaskDebugCart::debug_object($this);
+        return EcommerceTaskDebugCart::debug_object($this);
+    }
 
-        return $html;
+    /**
+     * @description - tells you if an order item price has been "fixed"
+     * meaning that is has been saved in the CalculatedTotal field so that
+     * it can not be altered.
+     *
+     * Default returns false; this is good for uncompleted orders
+     * but not so good for completed ones.
+     *
+     * We use direct calls to self::$_price_has_been_fixed to make the code simpler and faster.
+     *
+     * @return bool
+     **/
+    protected function priceHasBeenFixed($recalculate = false)
+    {
+        if (self::get_price_has_been_fixed($this->OrderID) === null || $recalculate) {
+            self::$_price_has_been_fixed[$this->OrderID] = false;
+            if ($order = $this->Order()) {
+                if ($order->IsSubmitted()) {
+                    self::$_price_has_been_fixed[$this->OrderID] = true;
+                    if ($recalculate) {
+                        user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
+                    }
+                }
+            }
+        }
+
+        return self::$_price_has_been_fixed[$this->OrderID];
     }
 }

@@ -3,21 +3,11 @@
  * "Abstract" class for a number of different payment
  * types allowing a user to pay for something on a site.
  *
- *
  * This can't be an abstract class because sapphire doesn't
  * support abstract DataObject classes.
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
-    /**
-     * standard SS Variable.
-     *
-     * @var array
-     */
-    private static $dependencies = array(
-        'supportedMethodsProvider' => '%$EcommercePaymentSupportedMethodsProvider',
-    );
-
     /**
      * automatically populated by the dependency manager.
      *
@@ -26,57 +16,66 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public $supportedMethodsProvider = null;
 
     /**
+     * standard SS Variable.
+     *
+     * @var array
+     */
+    private static $dependencies = [
+        'supportedMethodsProvider' => '%$EcommercePaymentSupportedMethodsProvider',
+    ];
+
+    /**
      * Incomplete (default): Payment created but nothing confirmed as successful
      * Success: Payment successful
      * Failure: Payment failed during process
      * Pending: Payment awaiting receipt/bank transfer etc.
      */
-    private static $db = array(
+    private static $db = [
         'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
         'Amount' => 'Money',
         'Message' => 'Text',
         'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
-        'AlternativeEndPoint' => 'Varchar(255)'
-    );
+        'AlternativeEndPoint' => 'Varchar(255)',
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'PaidBy' => 'Member',
         'Order' => 'Order',
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Created' => 'Created',
-        'Order.Title' => "Order",
+        'Order.Title' => 'Order',
         'Title' => 'Type',
         'AmountCurrency' => 'Amount',
         'Amount.Nice' => 'Amount',
         'Status' => 'Status',
-    );
+    ];
 
-    private static $casting = array(
+    private static $casting = [
         'Title' => 'Varchar',
         'AmountValue' => 'Currency',
         'AmountCurrency' => 'Varchar',
-    );
+    ];
 
-    private static $searchable_fields = array(
-        'OrderID' => array(
+    private static $searchable_fields = [
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        ),
-        'Created' => array(
+        ],
+        'Created' => [
             'title' => 'Date (e.g. today)',
             'field' => 'TextField',
             'filter' => 'EcommercePaymentFilters_AroundDateFilter',
-        ),
-        'IP' => array(
+        ],
+        'IP' => [
             'title' => 'IP Address',
             'filter' => 'PartialMatchFilter',
-        ),
+        ],
         'Status',
-    );
+    ];
 
     /**
      * standard SS variable.
@@ -84,10 +83,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $singular_name = 'Shop Payment';
-    public function i18n_singular_name()
-    {
-        return $this->Config()->get('singular_name');
-    }
 
     /**
      * standard SS variable.
@@ -95,29 +90,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $plural_name = 'Shop Payments';
-    public function i18n_plural_name()
-    {
-        return $this->Config()->get('plural_name');
-    }
 
-
-    /**
-     * CRUCIAL
-     * makes sure all the relevant payment methods are available ...
-     *
-     * @return this | EcommercePayment
-     */
-    public function init()
-    {
-        self::get_supported_methods($this->Order());
-
-        return $this;
-    }
-
-    private static $indexes = array(
+    private static $indexes = [
         'Status' => true,
-        'LastEdited' => true
-    );
+        'LastEdited' => true,
+    ];
 
     /**
      * standard SS variable.
@@ -126,8 +103,33 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     private static $default_sort = [
         'LastEdited' => 'DESC',
-        'ID' => 'DESC'
+        'ID' => 'DESC',
     ];
+
+    private $ecommercePaymentFormSetupAndValidationObject = null;
+
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
+    public function i18n_plural_name()
+    {
+        return $this->Config()->get('plural_name');
+    }
+
+    /**
+     * CRUCIAL
+     * makes sure all the relevant payment methods are available ...
+     *
+     * @return $this | EcommercePayment
+     */
+    public function init()
+    {
+        self::get_supported_methods($this->Order());
+
+        return $this;
+    }
 
     public function getCMSFields()
     {
@@ -206,7 +208,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Member::currentUser();
         }
-        if ($this->Status == 'Pending' || $this->Status == 'Incomplete') {
+        if ($this->Status === 'Pending' || $this->Status === 'Incomplete') {
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if ($extended !== null) {
                 return $extended;
@@ -252,14 +254,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function redirectToOrder()
     {
         if ($this->AlternativeEndPoint) {
-            return Controller::curr()->redirect(Director::absoluteBaseURL().$this->AlternativeEndPoint);
+            return Controller::curr()->redirect(Director::absoluteBaseURL() . $this->AlternativeEndPoint);
         }
         $order = $this->Order();
         if ($order) {
             return Controller::curr()->redirect($order->Link());
-        } else {
-            user_error('No order found with this payment: '.$this->ID, E_USER_NOTICE);
         }
+        user_error('No order found with this payment: ' . $this->ID, E_USER_NOTICE);
     }
 
     /**
@@ -341,7 +342,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      **/
     public function Status()
     {
-        return _t('Payment.'.strtoupper($this->Status), $this->Status);
+        return _t('Payment.' . strtoupper($this->Status), $this->Status);
     }
 
     /**
@@ -352,7 +353,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public static function site_currency()
     {
         $currency = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
-        if (!$currency) {
+        if (! $currency) {
             user_error('It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)', E_USER_NOTICE);
         }
 
@@ -368,32 +369,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         parent::populateDefaults();
         $this->Amount->Currency = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
         $this->setClientIP();
-    }
-
-    /**
-     * Set the IP address of the user to this payment record.
-     * This isn't perfect - IP addresses can be hidden fairly easily.
-     */
-    protected function setClientIP()
-    {
-        $proxy = null;
-        $ip = null;
-        if (Controller::has_curr()) {
-            $ip = Controller::curr()->getRequest()->getIP();
-        }
-
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            //swapsies
-            $proxy = $ip;
-        }
-
-        // Only set the IP and ProxyIP if none currently set
-        if (! $this->IP) {
-            $this->IP = $ip;
-        }
-        if (! $this->ProxyIP) {
-            $this->ProxyIP = $proxy;
-        }
     }
 
     /**
@@ -432,7 +407,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *     [Code] => "Description",
      *     [Code] => "Description"
      */
-    public static function get_supported_methods($order = null) : array
+    public static function get_supported_methods($order = null): array
     {
         $obj = self::create();
 
@@ -442,7 +417,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Return the form requirements for all the payment methods.
      *
-     * @param null | Array
+     * @param null $order | Array
      *
      * @return An array suitable for passing to CustomRequiredFields
      */
@@ -457,7 +432,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * is used to define which methods are available.
      *
      * @param string       $amount formatted amount (e.g. 12.30) without the currency
-     * @param null | Order $order
+     * @param Order|null $order
      *
      * @return FieldList
      */
@@ -482,7 +457,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             $methodFields = new CompositeField(
                 $methodClass::create()->getPaymentFormFields($amount, $order)
             );
-            $methodFields->addExtraClass("methodFields_$htmlClassName");
+            $methodFields->addExtraClass("methodFields_${htmlClassName}");
             $methodFields->addExtraClass('paymentfields');
             // Add those fields to the initial FieldSet we first created
             $fields->push($methodFields);
@@ -490,7 +465,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         $optionsField->setSource($options);
 
         // Add the amount and subtotal fields for the payment amount
-        $fields->push(new HeaderField('Amount', _t('Payment.AMOUNT_COLON', 'Amount to be charged: ').'<u class="totalAmountToBeCharged">'.$amount.'</u>', 4));
+        $fields->push(new HeaderField('Amount', _t('Payment.AMOUNT_COLON', 'Amount to be charged: ') . '<u class="totalAmountToBeCharged">' . $amount . '</u>', 4));
 
         return $fields;
     }
@@ -506,7 +481,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormFields($amount = 0, $order = null)
     {
-        user_error("Please implement getPaymentFormFields() on $this->class", E_USER_ERROR);
+        user_error("Please implement getPaymentFormFields() on {$this->class}", E_USER_ERROR);
     }
 
     /**
@@ -520,7 +495,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormRequirements()
     {
-        user_error("Please implement getPaymentFormRequirements() on $this->class", E_USER_ERROR);
+        user_error("Please implement getPaymentFormRequirements() on {$this->class}", E_USER_ERROR);
     }
 
     /**
@@ -553,13 +528,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function processPayment($data, $form)
     {
-        user_error("Please implement processPayment() on $this->class", E_USER_ERROR);
-    }
-
-    protected function handleError($e)
-    {
-        $this->ExceptionError = $e->getMessage();
-        $this->write();
+        user_error("Please implement processPayment() on {$this->class}", E_USER_ERROR);
     }
 
     public function PaidObject()
@@ -573,23 +542,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function debug()
     {
-        $html = EcommerceTaskDebugCart::debug_object($this);
-
-        return $html;
-    }
-
-    private $ecommercePaymentFormSetupAndValidationObject = null;
-
-    /**
-     * @return EcommercePaymentFormSetupAndValidation
-     */
-    protected function ecommercePaymentFormSetupAndValidationObject()
-    {
-        if (!$this->ecommercePaymentFormSetupAndValidationObject) {
-            $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
-        }
-
-        return $this->ecommercePaymentFormSetupAndValidationObject;
+        return EcommerceTaskDebugCart::debug_object($this);
     }
 
     /**
@@ -600,13 +553,57 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         return Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
     }
 
-    public static function php_class_to_html_class(string $phpClass)  : string
+    public static function php_class_to_html_class(string $phpClass): string
     {
         return str_replace('\\', '-', $phpClass);
     }
-    public static function html_class_to_php_class(string $htmlClass)  : string
+
+    public static function html_class_to_php_class(string $htmlClass): string
     {
         return str_replace('-', '\\', $htmlClass);
     }
 
+    /**
+     * Set the IP address of the user to this payment record.
+     * This isn't perfect - IP addresses can be hidden fairly easily.
+     */
+    protected function setClientIP()
+    {
+        $proxy = null;
+        $ip = null;
+        if (Controller::has_curr()) {
+            $ip = Controller::curr()->getRequest()->getIP();
+        }
+
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            //swapsies
+            $proxy = $ip;
+        }
+
+        // Only set the IP and ProxyIP if none currently set
+        if (! $this->IP) {
+            $this->IP = $ip;
+        }
+        if (! $this->ProxyIP) {
+            $this->ProxyIP = $proxy;
+        }
+    }
+
+    protected function handleError($e)
+    {
+        $this->ExceptionError = $e->getMessage();
+        $this->write();
+    }
+
+    /**
+     * @return EcommercePaymentFormSetupAndValidation
+     */
+    protected function ecommercePaymentFormSetupAndValidationObject()
+    {
+        if (! $this->ecommercePaymentFormSetupAndValidationObject) {
+            $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
+        }
+
+        return $this->ecommercePaymentFormSetupAndValidationObject;
+    }
 }

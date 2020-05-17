@@ -5,17 +5,12 @@
  */
 class EcommercePayment_TestPending extends EcommercePayment_Test
 {
-
     /**
      * standard SS variable.
      *
      * @Var String
      */
     private static $singular_name = 'Ecommerce Test Pending Payment';
-    public function i18n_singular_name()
-    {
-        return $this->Config()->get('singular_name');
-    }
 
     /**
      * standard SS variable.
@@ -23,6 +18,12 @@ class EcommercePayment_TestPending extends EcommercePayment_Test
      * @Var String
      */
     private static $plural_name = 'Ecommerce Test Pending Payments';
+
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
     public function i18n_plural_name()
     {
         return $this->Config()->get('plural_name');

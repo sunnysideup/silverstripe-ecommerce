@@ -12,6 +12,13 @@
 class SalesAdmin extends ModelAdminEcommerceBaseClass
 {
     /**
+     * Change this variable if you don't want the Import from CSV form to appear.
+     * This variable can be a boolean or an array.
+     * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
+     */
+    public $showImportForm = false;
+
+    /**
      * standard SS variable.
      *
      * @var string
@@ -31,13 +38,6 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
      * @var int
      */
     private static $menu_priority = 3.1;
-
-    /**
-     * Change this variable if you don't want the Import from CSV form to appear.
-     * This variable can be a boolean or an array.
-     * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
-     */
-    public $showImportForm = false;
 
     /**
      * standard SS variable.
@@ -73,12 +73,11 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         if ($orderModelManagement) {
             unset($models['Order']);
 
-            return array('Order' => $orderModelManagement) + $models;
+            return ['Order' => $orderModelManagement] + $models;
         }
 
         return $models;
     }
-
 
     /**
      * @return DataList
@@ -91,22 +90,22 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
             $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
             $list = $list
                 ->filter(
-                    array(
-                        "CancelledByID" => 0,
-                        "StatusID:greaterThan" => 0
-                    )
+                    [
+                        'CancelledByID' => 0,
+                        'StatusID:greaterThan' => 0,
+                    ]
                 )
                 ->exclude(
-                    array(
+                    [
                         'ID' => $ordersinQueue->column('ID'),
-                    )
+                    ]
                 );
             //you can only do one exclude at the same time.
             $list = $list
                 ->exclude(
-                    array(
-                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID')
-                    )
+                    [
+                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
+                    ]
                 );
         }
 
@@ -120,7 +119,6 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         }
         return $list;
     }
-
 
     public function getEditForm($id = null, $fields = null)
     {

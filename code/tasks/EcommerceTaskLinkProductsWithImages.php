@@ -3,7 +3,6 @@
 /**
  * Add any Image (or other file) to a product using the InternalItemID.
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
@@ -11,6 +10,13 @@
  **/
 class EcommerceTaskLinkProductWithImages extends BuildTask
 {
+    /**
+     * output messages?
+     *
+     * @var bool
+     */
+    public $verbose = true;
+
     protected $title = 'Find product images';
 
     protected $description = '
@@ -44,13 +50,6 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
      */
     protected $limit = 100;
 
-    /**
-     * output messages?
-     *
-     * @var bool
-     */
-    public $verbose = true;
-
     protected $productID = 0;
 
     public function run($request)
@@ -64,7 +63,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
         if ($this->productManyManyField) {
             $products = Product::get()->limit($this->limit, $this->start);
             if ($this->productID) {
-                $products = $products->filter(array('ID' => $this->productID));
+                $products = $products->filter(['ID' => $this->productID]);
             }
             if ($products->count()) {
                 foreach ($products as $product) {
@@ -73,38 +72,38 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                             $whereStringArray[] = $product->InternalItemID;
                             for ($i = 0; $i < 10; ++$i) {
                                 for ($j = 0; $j < 10; ++$j) {
-                                    $number = strval($i).strval($j);
-                                    $whereStringArray[] = $product->InternalItemID.'_'.$number;
+                                    $number = strval($i) . strval($j);
+                                    $whereStringArray[] = $product->InternalItemID . '_' . $number;
                                 }
                             }
                             $images = File::get()
-                                ->filter(array('Name:PartialMatch' => $whereStringArray));
+                                ->filter(['Name:PartialMatch' => $whereStringArray]);
                             if ($images->count()) {
                                 $method = $this->productManyManyField;
-                                $collection = $product->$method();
+                                $collection = $product->{$method}();
                                 foreach ($images as $image) {
-                                    if (is_a($image, Object::getCustomClass('Image')) && $image->ClassName != Object::getCustomClass('Product_Image')) {
+                                    if (is_a($image, Object::getCustomClass('Image')) && $image->ClassName !== Object::getCustomClass('Product_Image')) {
                                         $image = $image->newClassInstance('Product_Image');
                                         $image->write();
                                     }
                                     $collection->add($image);
                                     if ($this->verbose) {
-                                        DB::alteration_message('Adding image '.$image->Name.' to '.$product->Title, 'created');
+                                        DB::alteration_message('Adding image ' . $image->Name . ' to ' . $product->Title, 'created');
                                     }
                                 }
                             } else {
                                 if ($this->verbose) {
-                                    DB::alteration_message('No images where found for product with Title <i>'.$product->Title.'</i>: no images could be added.');
+                                    DB::alteration_message('No images where found for product with Title <i>' . $product->Title . '</i>: no images could be added.');
                                 }
                             }
                         } else {
                             if ($this->verbose) {
-                                DB::alteration_message('The method <i>'.$this->productManyManyField.'</i> does not exist on <i>'.$product->Title.' ('.$product->ClassName.')</i>: no images could be added.');
+                                DB::alteration_message('The method <i>' . $this->productManyManyField . '</i> does not exist on <i>' . $product->Title . ' (' . $product->ClassName . ')</i>: no images could be added.');
                             }
                         }
                     } else {
                         if ($this->verbose) {
-                            DB::alteration_message('No InternalItemID set for <i>'.$product->Title.'</i>: no images could be added.');
+                            DB::alteration_message('No InternalItemID set for <i>' . $product->Title . '</i>: no images could be added.');
                         }
                     }
                 }
@@ -121,20 +120,6 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
         }
     }
 
-    protected function nextBatchLink()
-    {
-        $link = Controller::join_links(
-            Director::baseURL(),
-            'dev/ecommerce/ecommercetasklinkproductwithimages/'
-        ).
-        '?start='.($this->start + $this->limit);
-        if ($this->productID) {
-            $link .= '&productid='.$this->productID;
-        }
-
-        return $link;
-    }
-
     public function setProductID($id)
     {
         $this->productID = $id;
@@ -146,5 +131,19 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
             Director::baseURL(),
             'dev/ecommerce/ecommercetasklinkproductwithimages/'
         );
+    }
+
+    protected function nextBatchLink()
+    {
+        $link = Controller::join_links(
+            Director::baseURL(),
+            'dev/ecommerce/ecommercetasklinkproductwithimages/'
+        ) .
+        '?start=' . ($this->start + $this->limit);
+        if ($this->productID) {
+            $link .= '&productid=' . $this->productID;
+        }
+
+        return $link;
     }
 }

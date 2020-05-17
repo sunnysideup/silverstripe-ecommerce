@@ -15,14 +15,14 @@ class CartResponse extends EcommerceResponse
      *
      * @var bool
      */
-    private static $force_reload = false;
+    protected $includeHeaders = true;
 
     /**
      * Should the page be reloaded rather than using AJAX?
      *
      * @var bool
      */
-    protected $includeHeaders = true;
+    private static $force_reload = false;
 
     /**
      * Sets the $force_reload to true;.
@@ -37,7 +37,7 @@ class CartResponse extends EcommerceResponse
      * useful if you want to use the json data
      * but not the associated header.
      *
-     * @param bool
+     * @param $b
      */
     public function setIncludeHeaders($b)
     {
@@ -47,13 +47,13 @@ class CartResponse extends EcommerceResponse
     /**
      * Builds json object to be returned via ajax.
      *
-     * @param array  $message        (Type, Message)
+     * @param array  $messages        (Type, Message)
      * @param array  $additionalData
      * @param string $status
      *
      * @return HEADER + JSON
      **/
-    public function ReturnCartData(array $messages = array(), array $additionalData = null, $status = 'success')
+    public function ReturnCartData(array $messages = [], array $additionalData = null, $status = 'success')
     {
         //add header
         if ($this->includeHeaders) {
@@ -65,12 +65,12 @@ class CartResponse extends EcommerceResponse
         $messagesImploded = '';
         if (is_array($messages) && count($messages)) {
             foreach ($messages as $messageArray) {
-                $messagesImploded .= '<span class="'.$messageArray['Type'].'">'.$messageArray['Message'].'</span>';
+                $messagesImploded .= '<span class="' . $messageArray['Type'] . '">' . $messageArray['Message'] . '</span>';
             }
         }
 
         //bad status
-        if ($status != 'success') {
+        if ($status !== 'success') {
             $this->setStatusCode(400, $messagesImploded);
         }
 
@@ -82,19 +82,19 @@ class CartResponse extends EcommerceResponse
 
         $ajaxObject = $currentOrder->AJAXDefinitions();
         // populate Javascript
-        $js = array();
+        $js = [];
 
         //must be first
         if (isset($_REQUEST['loadingindex'])) {
-            $js[] = array(
+            $js[] = [
                 't' => 'loadingindex',
                 'v' => $_REQUEST['loadingindex'],
-            );
+            ];
         }
 
         //order items
 
-        $inCartArray = array();
+        $inCartArray = [];
         $items = $currentOrder->Items();
         if ($items->count()) {
             foreach ($items as $item) {
@@ -112,13 +112,13 @@ class CartResponse extends EcommerceResponse
         }
 
         //in cart items
-        $js[] = array(
+        $js[] = [
             't' => 'replaceclass',
             's' => $inCartArray,
             'p' => $currentOrder->AJAXDefinitions()->ProductListItemClassName(),
             'v' => $currentOrder->AJAXDefinitions()->ProductListItemInCartClassName(),
             'without' => $currentOrder->AJAXDefinitions()->ProductListItemNotInCartClassName(),
-        );
+        ];
 
         //order modifiers
         $modifiers = $currentOrder->Modifiers();
@@ -133,53 +133,53 @@ class CartResponse extends EcommerceResponse
 
         //messages
         if (is_array($messages)) {
-            $js[] = array(
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableMessageID(),
                 'p' => 'innerHTML',
                 'v' => $messagesImploded,
                 'isOrderMessage' => true,
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableMessageID(),
                 'p' => 'hide',
                 'v' => 0,
-            );
+            ];
         } else {
-            $js[] = array(
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableMessageID(),
                 'p' => 'hide',
                 'v' => 1,
-            );
+            ];
         }
 
         //TO DO: set it up in such a way that it specifically requests one of these
         $templates = EcommerceConfig::get('CartResponse', 'cart_responses_required');
         foreach ($templates as $idMethod => $template) {
-            $selector = $ajaxObject->$idMethod();
+            $selector = $ajaxObject->{$idMethod}();
             $classOrID = 'id';
             if (stripos($selector, 'class') !== false) {
                 $classOrID = 'class';
             }
-            $js[] = array(
+            $js[] = [
                 't' => $classOrID,
                 's' => $selector,
                 'p' => 'innerHTML',
                 //note the space is a hack to return something!
-                'v' => ' '.$currentOrder->renderWith($template),
-            );
+                'v' => ' ' . $currentOrder->renderWith($template),
+            ];
         }
         //now can check if it needs to be reloaded
         if (self::$force_reload) {
-            $js = array(
+            $js = [
                 'reload' => 1,
-            );
+            ];
         } else {
-            $js[] = array(
+            $js[] = [
                 'reload' => 0,
-            );
+            ];
         }
 
         //merge and return

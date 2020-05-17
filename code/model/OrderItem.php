@@ -4,7 +4,6 @@
  * An order item links to a Buyable (product) by class name
  * That is, we only store the BuyableID and the ClassName
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
@@ -12,13 +11,32 @@
  **/
 class OrderItem extends OrderAttribute
 {
+    ######################
+    ## TEMPLATE METHODS ##
+    ######################
+
+    protected static $calculated_buyable_price = [];
+
+    /**
+     * Store for buyables.
+     * We store this here to speed up things a little
+     * Format is like this
+     * Array(
+     *  0 => Buyable (versioned)
+     *  1 => Buyable (current)
+     * );.
+     *
+     * @var array
+     */
+    protected $tempBuyableStore = [];
+
     /**
      * what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderItem/.
      *
      * @var array
      */
-    private static $api_access = array(
-        'view' => array(
+    private static $api_access = [
+        'view' => [
             'InternalItemID',
             'CalculatedTotal',
             'TableTitle',
@@ -32,36 +50,36 @@ class OrderItem extends OrderAttribute
             'UnitPrice',
             'Total',
             'Order',
-        ),
-     );
+        ],
+    ];
 
     /**
      * stardard SS variable.
      *
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'Quantity' => 'Double',
         'BuyableID' => 'Int',
         'BuyableClassName' => 'Varchar(60)',
         'Version' => 'Int',
-    );
+    ];
 
     /**
      * @var array
      *            stardard SS definition
      */
-    private static $indexes = array(
+    private static $indexes = [
         'Quantity' => true,
         'BuyableID' => true,
         'BuyableClassName' => true,
-    );
+    ];
 
     /**
      * @var array
      *            stardard SS definition
      */
-    private static $casting = array(
+    private static $casting = [
         'UnitPrice' => 'Currency',
         'UnitPriceAsMoney' => 'Money',
         'Total' => 'Currency',
@@ -72,8 +90,8 @@ class OrderItem extends OrderAttribute
         'BuyableLink' => 'Varchar',
         'BuyableExists' => 'Boolean',
         'BuyableFullName' => 'Varchar',
-        'BuyableMoreDetails' => 'Varchar'
-    );
+        'BuyableMoreDetails' => 'Varchar',
+    ];
 
     ######################
     ## CMS CONFIG ##
@@ -83,37 +101,37 @@ class OrderItem extends OrderAttribute
      * @var array
      *            stardard SS definition
      */
-    private static $searchable_fields = array(
-        'OrderID' => array(
+    private static $searchable_fields = [
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        ),
+        ],
         //"TableTitle" => "PartialMatchFilter",
         //"UnitPrice",
         'Quantity',
         //"Total"
-    );
+    ];
 
     /**
      * @var array
      *            stardard SS definition
      */
-    private static $field_labels = array(
+    private static $field_labels = [
         //@todo - complete
-    );
+    ];
 
     /**
      * @var array
      * stardard SS definition
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'OrderID' => 'Order ID',
         'BuyableFullName' => 'Item',
         'BuyableMoreDetails' => 'Details ... ',
         'UnitPrice' => 'Unit Price',
         'Quantity' => 'Quantity',
         'Total' => 'Total Price',
-    );
+    ];
 
     /**
      * singular name of the object. it is recommended to override this
@@ -122,10 +140,6 @@ class OrderItem extends OrderAttribute
      * @var string
      */
     private static $singular_name = 'Order Item';
-    public function i18n_singular_name()
-    {
-        return _t('OrderItem.ORDERITEM', 'Order Item');
-    }
 
     /**
      * plural name of the object. it is recommended to override this
@@ -134,10 +148,6 @@ class OrderItem extends OrderAttribute
      * @var string
      */
     private static $plural_name = 'Order Items';
-    public function i18n_plural_name()
-    {
-        return _t('OrderItem.ORDERITEMS', 'Order Items');
-    }
 
     /**
      * Standard SS variable.
@@ -145,6 +155,16 @@ class OrderItem extends OrderAttribute
      * @var string
      */
     private static $description = 'Any item that is added to an order and sits before the sub-total. ';
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderItem.ORDERITEM', 'Order Item');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('OrderItem.ORDERITEMS', 'Order Items');
+    }
 
     /**
      * HACK: Versioned is BROKEN this method helps in fixing it.
@@ -185,20 +205,20 @@ class OrderItem extends OrderAttribute
             $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
             $fields->addFieldsToTab(
                 'Root.Advanced',
-                array(
+                [
                     HeaderField::create('BuyableHeading', 'Buyable'),
 
                     ReadonlyField::create('BuyableIDCheck', 'BuyableID', $this->BuyableID),
                     ReadonlyField::create('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName),
                     ReadonlyField::create('VersionCheck', 'Version', $this->Version),
-                    $linkField1 = ReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="'.$this->BuyableLink().'">'.$this->BuyableLink().'</a>'),
+                    $linkField1 = ReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="' . $this->BuyableLink() . '">' . $this->BuyableLink() . '</a>'),
                     ReadonlyField::create('TableTitle', 'TableTitle', $this->TableTitle),
                     ReadonlyField::create('Subtitle', 'Table SubTitle', $this->TableSubTitleNOHTML()),
                     ReadonlyField::create('InternalItemID', 'InternalItemID', $this->InternalItemID()),
                     ReadonlyField::create('Name', 'Name', $this->Name),
 
                     HeaderField::create('OrderItemHeading', 'Order Item'),
-                    $linkField2 = ReadonlyField::create('LinkExample', 'Link', '<a href="'.$this->Link().'">'.$this->Link().'</a>'),
+                    $linkField2 = ReadonlyField::create('LinkExample', 'Link', '<a href="' . $this->Link() . '">' . $this->Link() . '</a>'),
 
                     ReadonlyField::create('ClassName'),
                     ReadonlyField::create('Created'),
@@ -210,8 +230,8 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('CalculatedTotal', 'Total', $this->CalculatedTotal),
                     ReadonlyField::create('TableValue', 'Table Value', $this->TableValue),
                     ReadonlyField::create('Total', 'Total', $this->Total),
-                    ReadonlyField::create('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice())
-                )
+                    ReadonlyField::create('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice()),
+                ]
             );
             $linkField1->dontEscape = true;
             $linkField2->dontEscape = true;
@@ -226,7 +246,7 @@ class OrderItem extends OrderAttribute
             if ($order->IsSubmitted()) {
                 if ($buyable = $this->Buyable()) {
                     if ($this->BuyableExists()) {
-                        $buyableLink = '<a href="'.$buyable->CMSEditLink().'">'.$this->getBuyableFullName().'</a>';
+                        $buyableLink = '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
                     } else {
                         $buyableLink = $this->getBuyableFullName()
                         . _t('OrderItem.NO_LONGER_AVAILABLE', ' - NO LONGER AVAILABLE');
@@ -315,7 +335,7 @@ class OrderItem extends OrderAttribute
     /**
      * used to return data for ajax.
      *
-     * @param array
+     * @param array $js
      *
      * @return array used to create JSON for AJAX
      **/
@@ -325,61 +345,61 @@ class OrderItem extends OrderAttribute
         if (is_array($function)) {
             list($function, $format) = $function;
         }
-        $total = $this->$function();
+        $total = $this->{$function}();
         if (isset($format)) {
-            $total = $total->$format();
+            $total = $total->{$format}();
         }
         $ajaxObject = $this->AJAXDefinitions();
         if ($this->Quantity) {
-            $js[] = array(
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableID(),
                 'p' => 'hide',
                 'v' => 0,
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'name',
                 's' => $ajaxObject->QuantityFieldName(),
                 'p' => 'value',
                 'v' => $this->Quantity,
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->TableTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->CartTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableSubTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->TableSubTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartSubTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->CartSubTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableTotalID(),
                 'p' => 'innerHTML',
                 'v' => $total,
-            );
+            ];
         } else {
-            $js[] = array(
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableID(),
                 'p' => 'hide',
                 'v' => 1,
-            );
+            ];
         }
 
         return $js;
@@ -395,14 +415,14 @@ class OrderItem extends OrderAttribute
         $buyable = $this->Buyable(true);
         if ($buyable && $buyable->canPurchase()) {
             if (isset($buyable->Version)) {
-                if ($this->Version != $buyable->Version) {
+                if ($this->Version !== $buyable->Version) {
                     $this->Version = $buyable->Version;
                     $this->write();
                 }
             }
             $oldValue = $this->CalculatedTotal - 0;
             $newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
-            if ((round($newValue, 5) != round($oldValue, 5)) || $recalculate) {
+            if ((round($newValue, 5) !== round($oldValue, 5)) || $recalculate) {
                 $this->CalculatedTotal = $newValue;
                 $this->write();
             }
@@ -415,7 +435,6 @@ class OrderItem extends OrderAttribute
         return parent::runUpdate($recalculate);
     }
 
-
     /**
      * Standard SS method.
      * If the quantity is zero then we set it to 1.
@@ -423,12 +442,12 @@ class OrderItem extends OrderAttribute
      */
     public function onBeforeWrite()
     {
-        if (Session::get('EcommerceOrderGETCMSHack') && !$this->OrderID) {
+        if (Session::get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
             $this->OrderID = intval(Session::get('EcommerceOrderGETCMSHack'));
         }
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             if ($buyable = $this->Buyable(true)) {
-                if ($this->ClassName == 'OrderItem' && $this->BuyableClassName != 'OrderItem') {
+                if ($this->ClassName === 'OrderItem' && $this->BuyableClassName !== 'OrderItem') {
                     $this->setClassName($buyable->classNameForOrderItem());
                 }
             }
@@ -436,10 +455,10 @@ class OrderItem extends OrderAttribute
         //now we can do the parent thing
         parent::onBeforeWrite();
         //always keep quantity above 0
-        if (floatval($this->Quantity) == 0) {
+        if (floatval($this->Quantity) === 0) {
             $this->Quantity = 1;
         }
-        if (!$this->Version && $buyable = $this->Buyable(true)) {
+        if (! $this->Version && $buyable = $this->Buyable(true)) {
             $this->Version = $buyable->Version;
         }
     }
@@ -454,7 +473,7 @@ class OrderItem extends OrderAttribute
         parent::onAfterWrite();
         $order = $this->Order();
         if ($order) {
-            if (!$order->StatusID) {
+            if (! $order->StatusID) {
                 //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
                 $order->init(true);
             }
@@ -471,37 +490,32 @@ class OrderItem extends OrderAttribute
      **/
     public function hasSameContent(OrderItem $orderItem)
     {
-        return
-            is_a($orderItem, Object::getCustomClass('OrderItem')) &&
-            $this->BuyableID == $orderItem->BuyableID &&
-            $this->BuyableClassName == $orderItem->BuyableClassName &&
-            $this->Version == $orderItem->Version;
+        return is_a($orderItem, Object::getCustomClass('OrderItem')) &&
+            $this->BuyableID === $orderItem->BuyableID &&
+            $this->BuyableClassName === $orderItem->BuyableClassName &&
+            $this->Version === $orderItem->Version;
     }
 
-    ######################
-    ## TEMPLATE METHODS ##
-    ######################
-
-    protected static $calculated_buyable_price = array();
     public static function reset_calculated_buyable_price()
     {
-        self::$calculated_buyable_price = array();
+        self::$calculated_buyable_price = [];
     }
 
     public function UnitPrice($recalculate = false)
     {
         return $this->getUnitPrice($recalculate);
     }
+
     public function getUnitPrice($recalculate = false)
     {
-        if ($this->priceHasBeenFixed($recalculate) && !$recalculate) {
+        if ($this->priceHasBeenFixed($recalculate) && ! $recalculate) {
             if (! $this->Quantity) {
                 $this->Quantity = 1;
             }
 
             return $this->CalculatedTotal / $this->Quantity;
         } elseif ($buyable = $this->Buyable()) {
-            if (!isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
+            if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
             }
             $unitPrice = self::$calculated_buyable_price[$this->ID];
@@ -520,6 +534,7 @@ class OrderItem extends OrderAttribute
     {
         return $this->getUnitPriceAsMoney($recalculate);
     }
+
     public function getUnitPriceAsMoney($recalculate = false)
     {
         return EcommerceCurrency::get_money_object_from_order_currency($this->getUnitPrice($recalculate), $this->Order());
@@ -534,6 +549,7 @@ class OrderItem extends OrderAttribute
     {
         return $this->getTotal();
     }
+
     public function getTotal($recalculate = false)
     {
         if ($this->priceHasBeenFixed()) {
@@ -559,6 +575,7 @@ class OrderItem extends OrderAttribute
     {
         return $this->getTotalAsMoney($recalculate);
     }
+
     public function getTotalAsMoney($recalculate = false)
     {
         return EcommerceCurrency::get_money_object_from_order_currency($this->getTotal($recalculate), $this->Order());
@@ -572,6 +589,7 @@ class OrderItem extends OrderAttribute
     {
         return $this->getInternalItemID();
     }
+
     public function getInternalItemID()
     {
         if ($buyable = $this->Buyable()) {
@@ -601,27 +619,11 @@ class OrderItem extends OrderAttribute
 
     /**
      * @param int $orderID
-     *
      */
     public static function reset_price_has_been_fixed($orderID = 0)
     {
         self::set_price_has_been_fixed($orderID, false);
     }
-
-
-
-    /**
-     * Store for buyables.
-     * We store this here to speed up things a little
-     * Format is like this
-     * Array(
-     *  0 => Buyable (versioned)
-     *  1 => Buyable (current)
-     * );.
-     *
-     * @var array
-     */
-    protected $tempBuyableStore = array();
 
     /**
      * @param bool $current - is this a current one, or an older VERSION ?
@@ -641,20 +643,20 @@ class OrderItem extends OrderAttribute
     public function getBuyable($current = '')
     {
         $currentOrVersion = $current ? 'current' : 'version';
-        if (!is_null($this->Order()) && !$current) {
+        if ($this->Order() !== null && ! $current) {
             if (! $this->Order()->IsSubmitted()) {
                 $currentOrVersion = 'current';
             }
         } elseif ($current === 'version') {
             $currentOrVersion = 'version';
         }
-        if (!isset($this->tempBuyableStore[$currentOrVersion])) {
-            if (!$this->BuyableID) {
+        if (! isset($this->tempBuyableStore[$currentOrVersion])) {
+            if (! $this->BuyableID) {
                 user_error('There was an error retrieving the product', E_USER_NOTICE);
                 return Product::create();
             }
             //start hack
-            if (!$this->BuyableClassName) {
+            if (! $this->BuyableClassName) {
                 $this->BuyableClassName = str_replace('_OrderItem', '', $this->ClassName);
             }
             $turnTranslatableBackOn = false;
@@ -669,10 +671,9 @@ class OrderItem extends OrderAttribute
                 $obj = $className::get()->byID($this->BuyableID);
             }
 
-
             //run if current not available or current = false
-            if (!$obj || !$current) {
-                if (((!$obj) || (!$obj->exists())) && $this->Version) {
+            if (! $obj || ! $current) {
+                if (! $obj || (! $obj->exists()) && $this->Version) {
                     /* @TODO: check if the version exists?? - see sample below
                     $versionTable = $this->BuyableClassName."_versions";
                     $dbConnection = DB::getConn();
@@ -689,12 +690,12 @@ class OrderItem extends OrderAttribute
                     $obj = self::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
                 }
                 //our second to last resort
-                if ((!$obj) || (!$obj->exists())) {
+                if (! $obj || (! $obj->exists())) {
                     $obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
                 }
             }
             //our final backup
-            if ((!$obj) || (!$obj->exists())) {
+            if (! $obj || (! $obj->exists())) {
                 $obj = $className::get()->byID($this->BuyableID);
             }
             if ($turnTranslatableBackOn) {
@@ -733,7 +734,7 @@ class OrderItem extends OrderAttribute
             return parent::getTitle();
         }
         return 'ERROR: product not found';
-        user_error('No Buyable could be found for OrderItem with ID: '.$this->ID, E_USER_NOTICE);
+        user_error('No Buyable could be found for OrderItem with ID: ' . $this->ID, E_USER_NOTICE);
     }
 
     /**
@@ -746,7 +747,6 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     *
      * @return string
      */
     public function getBuyableLink()
@@ -755,12 +755,11 @@ class OrderItem extends OrderAttribute
         if ($buyable && $buyable->exists()) {
             $order = $this->Order();
             if ($order && $order->IsSubmitted()) {
-                return  Director::absoluteURL($buyable->VersionedLink());
+                return Director::absoluteURL($buyable->VersionedLink());
             }
-            return  Director::absoluteURL($buyable->Link());
-        } else {
-            return $this->getLink();
+            return Director::absoluteURL($buyable->Link());
         }
+        return $this->getLink();
     }
 
     /**
@@ -773,7 +772,6 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     *
      * @return bool
      */
     public function getBuyableExists()
@@ -787,10 +785,9 @@ class OrderItem extends OrderAttribute
         return false;
     }
 
-
     /**
      * @alias for getBuyableFullName
-     * @return String
+     * @return string
      */
     public function BuyableFullName()
     {
@@ -798,21 +795,20 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getBuyableFullName()
     {
         $buyable = $this->Buyable();
         if ($buyable && $buyable->exists()) {
             return $buyable->FullName;
-        } else {
-            return $this->getBuyableTitle();
         }
+        return $this->getBuyableTitle();
     }
 
     /**
      * @alias for getBuyableMoreDetails
-     * @return String
+     * @return string
      */
     public function BuyableMoreDetails()
     {
@@ -820,7 +816,7 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getBuyableMoreDetails()
     {
@@ -857,9 +853,8 @@ class OrderItem extends OrderAttribute
         $order = $this->Order();
         if ($order) {
             return $order->Link();
-        } else {
-            return  Director::absoluteURL("order-link-could-not-be-found");
         }
+        return Director::absoluteURL('order-link-could-not-be-found');
     }
 
     /**
@@ -942,7 +937,18 @@ class OrderItem extends OrderAttribute
      **/
     public function SetSpecificQuantityItemLink($quantity)
     {
-        return ShoppingCart_Controller::set_quantity_item_link($this->BuyableID, $this->BuyableClassName, array_merge($this->linkParameters(), array('quantity' => $quantity)));
+        return ShoppingCart_Controller::set_quantity_item_link($this->BuyableID, $this->BuyableClassName, array_merge($this->linkParameters(), ['quantity' => $quantity]));
+    }
+
+    public function debug()
+    {
+        $html = EcommerceTaskDebugCart::debug_object($this);
+        $html .= '<ul>';
+        $html .= '<li><b>Buyable Price:</b> ' . $this->Buyable()->Price . ' </li>';
+        $html .= '<li><b>Buyable Calculated Price:</b> ' . $this->Buyable()->CalculatedPrice() . ' </li>';
+        $html .= '</ul>';
+
+        return $html;
     }
 
     /**
@@ -952,7 +958,7 @@ class OrderItem extends OrderAttribute
      **/
     protected function linkParameters()
     {
-        $array = array();
+        $array = [];
         $updatedLinkParameters = $this->extend('updateLinkParameters', $array);
         if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
@@ -961,16 +967,5 @@ class OrderItem extends OrderAttribute
         }
 
         return $array;
-    }
-
-    public function debug()
-    {
-        $html = EcommerceTaskDebugCart::debug_object($this);
-        $html .= '<ul>';
-        $html .= '<li><b>Buyable Price:</b> '.$this->Buyable()->Price.' </li>';
-        $html .= '<li><b>Buyable Calculated Price:</b> '.$this->Buyable()->CalculatedPrice().' </li>';
-        $html .= '</ul>';
-
-        return $html;
     }
 }

@@ -8,14 +8,14 @@
  **/
 class OrderStep_Archived extends OrderStep implements OrderStepInterface
 {
-    private static $defaults = array(
+    private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
         'Name' => 'Archived Order',
         'Code' => 'ARCHIVED',
         'ShowAsCompletedOrder' => 1,
-    );
+    ];
 
     /**
      *initStep:
@@ -24,7 +24,7 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/
@@ -41,7 +41,7 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if run correctly.
      **/
@@ -77,9 +77,7 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
-        $fields = parent::addOrderStepFields($fields, $order);
-
-        return $fields;
+        return parent::addOrderStepFields($fields, $order);
     }
 
     /**

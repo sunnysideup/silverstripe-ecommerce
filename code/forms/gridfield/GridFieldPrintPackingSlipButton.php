@@ -3,7 +3,6 @@
 
 class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridField_ActionProvider
 {
-
     /**
      * Add a column 'Delete'
      *
@@ -12,7 +11,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
      */
     public function augmentColumns($gridField, &$columns)
     {
-        if (!in_array('Packing Slip', $columns)) {
+        if (! in_array('Packing Slip', $columns, true)) {
             $columns[] = 'Packing Slip';
         }
     }
@@ -27,7 +26,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        return array('class' => 'col-buttons print');
+        return ['class' => 'col-buttons print'];
     }
 
     /**
@@ -39,11 +38,10 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
      */
     public function getColumnMetadata($gridField, $columnName)
     {
-        if ($columnName == 'Packing Slip') {
-            return array('title' => 'Packing Slip');
+        if ($columnName === 'Packing Slip') {
+            return ['title' => 'Packing Slip'];
         }
     }
-
 
     /**
      * @param GridField $gridField
@@ -58,26 +56,25 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
         // which can make the form readonly if no edit permissions are available.
         $onclickStatement =
             "window.open(
-                '".Convert::raw2js($record->PackingSlipLink())."',
+                '" . Convert::raw2js($record->PackingSlipLink()) . "',
                 'print_packing_slip',
                 'width=600,height=300,location=0,menubar=0,scrollbars=1,status=0,toolbar=0,resizable=1'
             );";
 
         $field = GridField_FormAction::create(
             $gridField,
-            'PrintPackingSlip'.$record->ID,
+            'PrintPackingSlip' . $record->ID,
             false,
-            "printpackingslip",
-            array('RecordID' => $record->ID)
+            'printpackingslip',
+            ['RecordID' => $record->ID]
         )
             ->addExtraClass('gridfield-button-printpackingslip')
-            ->setAttribute('title', _t('GridPacking Slip.PRINT_PACKING_SLIP', "Packing Slip"))
+            ->setAttribute('title', _t('GridPacking Slip.PRINT_PACKING_SLIP', 'Packing Slip'))
             ->setAttribute('data-icon', 'download-csv')
             ->setAttribute('onclick', $onclickStatement)
             ->setDescription(_t('GridPacking Slip.PRINT_PACKING_SLIP_DESCRIPTION', 'Print Packing Slip'));
         return $field->FIeld();
     }
-
 
     /**
      * Which columns are handled by this component
@@ -87,10 +84,8 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
      */
     public function getColumnsHandled($gridField)
     {
-        return array('Packing Slip');
+        return ['Packing Slip'];
     }
-
-
 
     /**
      * Which GridField actions are this component handling
@@ -100,24 +95,22 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
      */
     public function getActions($gridField)
     {
-        return array('printpackingslip');
+        return ['printpackingslip'];
     }
-
 
     /**
      * Handle the actions and apply any changes to the GridField
      *
-     * @param GridField $gridFi$gridField->getList()->remove($item);eld
+     * @param GridField $gridField$gridField->getList()->remove($item);eld
      * @param string $actionName
      * @param mixed $arguments
      * @param array $data - form data
-     * @return void
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'printpackingslip') {
-            $itemID =  intval($arguments['RecordID']);
-            if (!$itemID) {
+        if ($actionName === 'printpackingslip') {
+            $itemID = intval($arguments['RecordID']);
+            if (! $itemID) {
                 return;
             }
             // $list = $gridField->getList();

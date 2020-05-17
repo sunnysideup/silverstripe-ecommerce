@@ -5,39 +5,6 @@
  **/
 class ProductSearchForm extends Form
 {
-
-    /**
-     *
-     * @return string
-     */
-    public static function get_last_search_phrase()
-    {
-        $string = '';
-        $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
-        if ($oldData && (is_array($oldData) || is_object($oldData))) {
-            if (isset($oldData['ShortKeyword'])) {
-                $string = $oldData['ShortKeyword'];
-            } elseif (isset($oldData['Keyword'])) {
-                $string = $oldData['Keyword'];
-            }
-        }
-        return trim($string);
-    }
-
-    /**
-     *
-     * @param string $phrase
-     */
-    public static function set_last_search_phrase($phrase)
-    {
-        $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
-        if ($oldData && (is_array($oldData) || is_object($oldData))) {
-            $oldData['ShortKeyword'] = $phrase;
-            $oldData['Keyword'] = $phrase;
-        }
-        Session::set(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'), $phrase);
-    }
-
     /**
      * set to TRUE to show the search logic.
      *
@@ -70,7 +37,7 @@ class ProductSearchForm extends Form
     /**
      * list of products that need to be searched.
      *
-     * @var null | Array | Datalist
+     * @var array|Datalist|null
      */
     protected $productsToSearch = null;
 
@@ -106,10 +73,10 @@ class ProductSearchForm extends Form
      *
      * @var array
      */
-    protected $extraBuyableFieldsToSearchFullText = array(
-        'Product' => array('Title', 'MenuTitle', 'Content', 'MetaDescription'),
-        'ProductVariation' => array('FullTitle', 'Description'),
-    );
+    protected $extraBuyableFieldsToSearchFullText = [
+        'Product' => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
+        'ProductVariation' => ['FullTitle', 'Description'],
+    ];
 
     /**
      * Maximum number of results to return
@@ -165,45 +132,20 @@ class ProductSearchForm extends Form
      */
     protected $isShortForm = 0;
 
-    public function setControllerSearchResultDisplayMethod($s)
-    {
-        $this->controllerSearchResultDisplayMethod = $s;
-    }
-
-    public function setExtraBuyableFieldsToSearchFullText($a)
-    {
-        $this->extraBuyableFieldsToSearchFullText = $a;
-    }
-
-    public function setBaseClassNameForBuyables($s)
-    {
-        $this->baseClassNameForBuyables = $s;
-    }
-
-    public function setUseBooleanSearch($b)
-    {
-        $this->useBooleanSearch = $b;
-    }
-
-    public function setMaximumNumberOfResults($i)
-    {
-        $this->maximumNumberOfResults = $i;
-    }
-
-    public function setAdditionalGetParameters($s)
-    {
-        $this->additionalGetParameters = $s;
-    }
-
-    public function addAdditionalField($formField, $dbField, $filterUsed)
-    {
-        $this->additionalFields[$dbField] = array(
-            'FormField' => $formField,
-            'DBField' => $dbField,
-            'FilterUsed' => $filterUsed,
-        );
-        $this->fields->push($formField);
-    }
+    /**
+     * @var array
+     *            List of words to be replaced.
+     */
+    protected $sqlWords = [
+        "\r\n SELECT" => 'SELECT',
+        "\r\n FROM" => 'FROM',
+        "\r\n WHERE" => 'WHERE',
+        "\r\n HAVING" => 'HAVING',
+        "\r\n GROUP" => 'GROUP',
+        "\r\n ORDER BY" => 'ORDER BY',
+        "\r\n INNER JOIN" => 'INNER JOIN',
+        "\r\n LEFT JOIN" => 'LEFT JOIN',
+    ];
 
     /**
      * ProductsToSearch can be left blank to search all products.
@@ -254,7 +196,7 @@ class ProductSearchForm extends Form
             );
             if ($productsToSearchCount) {
                 $fields->push(
-                    CheckboxField::create('SearchOnlyFieldsInThisSection', _t('ProductSearchForm.ONLY_SHOW', 'Only search in').' <i>'.$nameOfProductsBeingSearched.'</i> ', true)
+                    CheckboxField::create('SearchOnlyFieldsInThisSection', _t('ProductSearchForm.ONLY_SHOW', 'Only search in') . ' <i>' . $nameOfProductsBeingSearched . '</i> ', true)
                 );
             }
             if (Director::isDev() || Permission::check('ADMIN')) {
@@ -286,6 +228,76 @@ class ProductSearchForm extends Form
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public static function get_last_search_phrase()
+    {
+        $string = '';
+        $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+        if ($oldData && (is_array($oldData) || is_object($oldData))) {
+            if (isset($oldData['ShortKeyword'])) {
+                $string = $oldData['ShortKeyword'];
+            } elseif (isset($oldData['Keyword'])) {
+                $string = $oldData['Keyword'];
+            }
+        }
+        return trim($string);
+    }
+
+    /**
+     * @param string $phrase
+     */
+    public static function set_last_search_phrase($phrase)
+    {
+        $oldData = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+        if ($oldData && (is_array($oldData) || is_object($oldData))) {
+            $oldData['ShortKeyword'] = $phrase;
+            $oldData['Keyword'] = $phrase;
+        }
+        Session::set(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'), $phrase);
+    }
+
+    public function setControllerSearchResultDisplayMethod($s)
+    {
+        $this->controllerSearchResultDisplayMethod = $s;
+    }
+
+    public function setExtraBuyableFieldsToSearchFullText($a)
+    {
+        $this->extraBuyableFieldsToSearchFullText = $a;
+    }
+
+    public function setBaseClassNameForBuyables($s)
+    {
+        $this->baseClassNameForBuyables = $s;
+    }
+
+    public function setUseBooleanSearch($b)
+    {
+        $this->useBooleanSearch = $b;
+    }
+
+    public function setMaximumNumberOfResults($i)
+    {
+        $this->maximumNumberOfResults = $i;
+    }
+
+    public function setAdditionalGetParameters($s)
+    {
+        $this->additionalGetParameters = $s;
+    }
+
+    public function addAdditionalField($formField, $dbField, $filterUsed)
+    {
+        $this->additionalFields[$dbField] = [
+            'FormField' => $formField,
+            'DBField' => $dbField,
+            'FilterUsed' => $filterUsed,
+        ];
+        $this->fields->push($formField);
+    }
+
     public function doProductSearchForm($data, $form)
     {
         $searchHistoryObject = null;
@@ -302,19 +314,19 @@ class ProductSearchForm extends Form
 
         //what is the baseclass?
         $baseClassName = $this->baseClassForBuyables;
-        if (!$baseClassName) {
+        if (! $baseClassName) {
             $baseClassName = EcommerceConfig::get('ProductGroup', 'base_buyable_class');
         }
-        if (!$baseClassName) {
-            user_error("Can not find $baseClassName (baseClassName)");
+        if (! $baseClassName) {
+            user_error("Can not find ${baseClassName} (baseClassName)");
         }
         //basic get
         $singleton = Injector::inst()->get($baseClassName);
         $searchableFields = $singleton->stat('searchable_fields');
-        $baseList = $baseClassName::get()->filter(array('ShowInSearch' => 1));
+        $baseList = $baseClassName::get()->filter(['ShowInSearch' => 1]);
         $ecomConfig = EcommerceDBConfig::current_ecommerce_db_config();
         if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
-            $baseList->filter(array('AllowPurchase' => 1));
+            $baseList->filter(['AllowPurchase' => 1]);
         }
         $limitToCurrentSection = false;
         if (isset($data['SearchOnlyFieldsInThisSection']) && $data['SearchOnlyFieldsInThisSection']) {
@@ -330,25 +342,25 @@ class ProductSearchForm extends Form
             }
             //last resort
             if ($this->productsToSearch) {
-                $baseList = $baseList->filter(array('ID' => $this->productsToSearch));
+                $baseList = $baseList->filter(['ID' => $this->productsToSearch]);
             }
         }
         if (isset($data['MinimumPrice']) && $data['MinimumPrice']) {
-            $baseList = $baseList->filter(array('Price:GreaterThanOrEqual' => floatval($data['MinimumPrice'])));
+            $baseList = $baseList->filter(['Price:GreaterThanOrEqual' => floatval($data['MinimumPrice'])]);
         }
         if (isset($data['MaximumPrice']) && $data['MaximumPrice']) {
-            $baseList = $baseList->filter(array('Price:LessThanOrEqual' => floatval($data['MaximumPrice'])));
+            $baseList = $baseList->filter(['Price:LessThanOrEqual' => floatval($data['MaximumPrice'])]);
         }
         //defining some variables
         $isKeywordSearch = false;
         if ($this->debug) {
             if ($this->productsToSearch) {
-                $this->debugOutput('<hr /><h3>PRODUCTS TO SEARCH</h3><pre>'.print_r($this->productsToSearch, 1).'</pre>');
+                $this->debugOutput('<hr /><h3>PRODUCTS TO SEARCH</h3><pre>' . print_r($this->productsToSearch, 1) . '</pre>');
             }
-            $this->debugOutput('<hr /><h3>BASE LIST</h3><pre>'.str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql()).'</pre>');
+            $this->debugOutput('<hr /><h3>BASE LIST</h3><pre>' . str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql()) . '</pre>');
         }
         //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
-        if (isset($data['ShortKeyword']) && !isset($data['Keyword'])) {
+        if (isset($data['ShortKeyword']) && ! isset($data['Keyword'])) {
             $data['Keyword'] = $data['ShortKeyword'];
         }
         if (isset($data['Keyword']) && $keywordPhrase = $data['Keyword']) {
@@ -359,7 +371,7 @@ class ProductSearchForm extends Form
                     $this->resultArrayPos = 0;
                     $this->resultArray = [];
                     if ($this->debug) {
-                        $this->debugOutput('<hr /><h3>Raw Keyword '.$keywordPhrase.'</h3><pre>');
+                        $this->debugOutput('<hr /><h3>Raw Keyword ' . $keywordPhrase . '</h3><pre>');
                     }
                     $keywordPhrase = Convert::raw2sql($keywordPhrase);
                     $keywordPhrase = strtolower($keywordPhrase);
@@ -374,12 +386,12 @@ class ProductSearchForm extends Form
                     if ($this->debug) {
                         $this->debugOutput('<hr /><h2>SEARCH BY CODE</h2>');
                     }
-                    $list1 = $baseList->filter(array('InternalItemID' => $keywordPhrase));
+                    $list1 = $baseList->filter(['InternalItemID' => $keywordPhrase]);
                     $count = $list1->count();
-                    if ($count == 1) {
+                    if ($count === 1) {
                         $immediateRedirectLink = $list1->First()->Link();
                         $this->controller->redirect($immediateRedirectLink);
-                        $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: '.$immediateRedirectLink.'</p>');
+                        $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: ' . $immediateRedirectLink . '</p>');
                     }
                     if ($count > 0) {
                         if ($this->addToResults($list1)) {
@@ -387,7 +399,7 @@ class ProductSearchForm extends Form
                         }
                     }
                     if ($this->debug) {
-                        $this->debugOutput("<h3>SEARCH BY CODE RESULT: $count</h3>");
+                        $this->debugOutput("<h3>SEARCH BY CODE RESULT: ${count}</h3>");
                     }
 
                     // 2) Search for the entire keyword phrase and its replacements
@@ -403,7 +415,7 @@ class ProductSearchForm extends Form
                             $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
                         }
                         if ($this->debug) {
-                            $this->debugOutput('<pre>WORD ARRAY: '.print_r($keywordPhrase, 1).'</pre>');
+                            $this->debugOutput('<pre>WORD ARRAY: ' . print_r($keywordPhrase, 1) . '</pre>');
                         }
 
                         //work out searches
@@ -414,7 +426,7 @@ class ProductSearchForm extends Form
                             }
                         }
                         if ($this->debug) {
-                            $this->debugOutput('<pre>FIELD ARRAY: '.print_r($fieldArray, 1).'</pre>');
+                            $this->debugOutput('<pre>FIELD ARRAY: ' . print_r($fieldArray, 1) . '</pre>');
                         }
 
                         $searches = $this->getSearchArrays($keywordPhrase, $fieldArray);
@@ -425,7 +437,7 @@ class ProductSearchForm extends Form
                             $list2 = $baseList->where($search);
                             $count = $list2->count();
                             if ($this->debug) {
-                                $this->debugOutput("<p>$search: $count</p>");
+                                $this->debugOutput("<p>${search}: ${count}</p>");
                             }
                             if ($count > 0) {
                                 if ($this->addToResults($list2)) {
@@ -438,7 +450,7 @@ class ProductSearchForm extends Form
                         }
                     }
                     if ($this->debug) {
-                        $this->debugOutput("<h3>FULL KEYWORD SEARCH: $count</h3>");
+                        $this->debugOutput("<h3>FULL KEYWORD SEARCH: ${count}</h3>");
                     }
 
                     if ($this->debug) {
@@ -451,28 +463,28 @@ class ProductSearchForm extends Form
                     } else {
                         $searches = $this->getSearchArrays($keywordPhrase);
                         if ($this->debug) {
-                            $this->debugOutput('<pre>SEARCH ARRAY: '.print_r($searches, 1).'</pre>');
+                            $this->debugOutput('<pre>SEARCH ARRAY: ' . print_r($searches, 1) . '</pre>');
                         }
 
                         foreach ($searches as $search) {
-                            $productGroups = ProductGroup::get()->where($search)->filter(array('ShowInSearch' => 1));
+                            $productGroups = ProductGroup::get()->where($search)->filter(['ShowInSearch' => 1]);
                             $count = $productGroups->count();
                             //redirect if we find exactly one match and we have no matches so far...
-                            if ($count == 1 && !$this->resultArrayPos && !$limitToCurrentSection) {
+                            if ($count === 1 && ! $this->resultArrayPos && ! $limitToCurrentSection) {
                                 $immediateRedirectLink = $productGroups->First()->Link();
-                                $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: '.$immediateRedirectLink.'</p>');
+                                $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: ' . $immediateRedirectLink . '</p>');
                             }
                             if ($count > 0) {
                                 foreach ($productGroups as $productGroup) {
                                     //we add them like this because we like to keep them in order!
-                                    if (!in_array($productGroup->ID, $this->productGroupIDs)) {
+                                    if (! in_array($productGroup->ID, $this->productGroupIDs, true)) {
                                         $this->productGroupIDs[] = $productGroup->ID;
                                     }
                                 }
                             }
                         }
                         if ($this->debug) {
-                            $this->debugOutput("<h3>PRODUCT GROUP SEARCH: $count</h3>");
+                            $this->debugOutput("<h3>PRODUCT GROUP SEARCH: ${count}</h3>");
                         }
                     }
                 }
@@ -483,10 +495,10 @@ class ProductSearchForm extends Form
         }
         $redirectToPage = null;
         //if no specific section is being searched then we redirect to search page:
-        if (!$limitToCurrentSection) {
+        if (! $limitToCurrentSection) {
             $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
         }
-        if (!$redirectToPage) {
+        if (! $redirectToPage) {
             // for section specific search,
             // redirect to the specific section (basically where we came from)
             $redirectToPage = $this->controller->dataRecord;
@@ -497,9 +509,9 @@ class ProductSearchForm extends Form
 
         if ($this->debug) {
             $this->debugOutput(
-                '<hr />'.
-                '<h3>Previous Search Products: '.$sessionNameProducts.'</h3><p>'.print_r(Session::get($sessionNameProducts), 1).'</p>'.
-                '<h3>Previous Search Groups: '.$sessionNameGroups.'</h3><p>'.print_r(Session::get($sessionNameGroups), 1).'</p>'
+                '<hr />' .
+                '<h3>Previous Search Products: ' . $sessionNameProducts . '</h3><p>' . print_r(Session::get($sessionNameProducts), 1) . '</p>' .
+                '<h3>Previous Search Groups: ' . $sessionNameGroups . '</h3><p>' . print_r(Session::get($sessionNameGroups), 1) . '</p>'
             );
         }
         Session::set($sessionNameProducts, implode(',', $this->resultArray));
@@ -511,12 +523,11 @@ class ProductSearchForm extends Form
             $searchHistoryObject->write();
         }
         if ($this->debug) {
-
             $this->debugOutput(
-                '<hr />'.
-                '<h3>SAVING Products to session: '.$sessionNameProducts.'</h3><p>'.print_r(explode(',', Session::get($sessionNameProducts)), 1).'</p>'.
-                '<h3>SAVING Groups to session: '.$sessionNameGroups.'</h3><p>'.print_r(explode(',', Session::get($sessionNameGroups)), 1).'</p>'.
-                '<h3>Internal Item IDs for Products</h3><p>'.print_r($this->resultArrayPerIternalItemID, 1).'</p>'
+                '<hr />' .
+                '<h3>SAVING Products to session: ' . $sessionNameProducts . '</h3><p>' . print_r(explode(',', Session::get($sessionNameProducts)), 1) . '</p>' .
+                '<h3>SAVING Groups to session: ' . $sessionNameGroups . '</h3><p>' . print_r(explode(',', Session::get($sessionNameGroups)), 1) . '</p>' .
+                '<h3>Internal Item IDs for Products</h3><p>' . print_r($this->resultArrayPerIternalItemID, 1) . '</p>'
             );
         }
         if ($immediateRedirectLink) {
@@ -525,12 +536,37 @@ class ProductSearchForm extends Form
             $link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod);
         }
         if ($this->additionalGetParameters) {
-            $link .= '?'.$this->additionalGetParameters;
+            $link .= '?' . $this->additionalGetParameters;
         }
         if ($this->debug) {
-            die('<a href="'.$link.'">see results</a>');
+            die('<a href="' . $link . '">see results</a>');
         }
         $this->controller->redirect($link);
+    }
+
+    /**
+     * saves the form into session.
+     *
+     * @param array $data - data from form (OPTIONAL)
+     */
+    public function saveDataToSession($data = null)
+    {
+        if (! is_array($data)) {
+            $data = $this->getData();
+        }
+        if (isset($data['MinimumPrice']) && ! $data['MinimumPrice']) {
+            unset($data['MinimumPrice']);
+        }
+        if (isset($data['MaximumPrice']) && ! $data['MaximumPrice']) {
+            unset($data['MaximumPrice']);
+        }
+        if (isset($data['ShortKeyword']) && $data['ShortKeyword']) {
+            $data['Keyword'] = $data['ShortKeyword'];
+        }
+        if (isset($data['Keyword']) && $data['Keyword']) {
+            $data['ShortKeyword'] = $data['Keyword'];
+        }
+        Session::set($this->Config()->get('form_data_session_variable'), $data);
     }
 
     /**
@@ -548,14 +584,14 @@ class ProductSearchForm extends Form
         $listToAdd = $listToAdd->sort('Price', 'DESC');
         foreach ($listToAdd as $page) {
             $id = $page->IDForSearchResults();
-            if($this->debug) {
+            if ($this->debug) {
                 $internalItemID = $page->InternalItemIDForSearchResults();
             }
             if ($id) {
-                if (!in_array($id, $this->resultArray)) {
+                if (! in_array($id, $this->resultArray, true)) {
                     ++$this->resultArrayPos;
                     $this->resultArray[$this->resultArrayPos] = $id;
-                    if($this->debug) {
+                    if ($this->debug) {
                         $this->resultArrayPerIternalItemID[$this->resultArrayPos] = $internalItemID;
                     }
                     if ($this->resultArrayPos > $this->maximumNumberOfResults) {
@@ -573,63 +609,63 @@ class ProductSearchForm extends Form
      * can be executed one after the other, each
      * being less specific than the last...
      *
-     * @param array $words  - words being search
+     * @param array $keywordPhrase  - words being search
      * @param array $fields - fields being searched
      *
      * @return array
      */
-    protected function getSearchArrays($keywordPhrase, $fields = array('Title', 'MenuTitle'))
+    protected function getSearchArrays($keywordPhrase, $fields = ['Title', 'MenuTitle'])
     {
         //make three levels of search
         $searches = [];
         $wordsAsString = preg_replace('!\s+!', ' ', $keywordPhrase);
         $wordAsArray = explode(' ', $wordsAsString);
         $hasWordArray = false;
-        if(count($wordAsArray) > 1) {
+        if (count($wordAsArray) > 1) {
             $hasWordArray = true;
-            $searchStringArray =[];
-            foreach($wordAsArray as $word) {
-                $searchStringArray[] = "LOWER(\"FFFFFF\") LIKE '%$word%'";
+            $searchStringArray = [];
+            foreach ($wordAsArray as $word) {
+                $searchStringArray[] = "LOWER(\"FFFFFF\") LIKE '%${word}%'";
             }
-            $searchStringAND = '('.implode(' AND ', $searchStringArray).')';
+            $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
             // $searchStringOR = '('.implode(' OR ', $searchStringArray).')';
         }
         $wordsAsLikeString = trim(implode('%', $wordAsArray));
         $completed = [];
         $count = -1;
 
-        if (in_array('Title', $fields)) {
-            $searches[++$count][] = "LOWER(\"Title\") = '$wordsAsString'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"Title\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            if($hasWordArray) {
+        if (in_array('Title', $fields, true)) {
+            $searches[++$count][] = "LOWER(\"Title\") = '${wordsAsString}'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"Title\") LIKE '%${wordsAsString}%'"; // b) Full match within a bigger string
+            if ($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'Title', $searchStringAND); // d) Words matched individually
                 // $searches[++$count + 100][] = str_replace('FFFFFF', 'Title', $searchStringOR); // d) Words matched individually
             }
             $completed['Title'] = 'Title';
         }
-        if (in_array('MenuTitle', $fields)) {
-            $searches[++$count][] = "LOWER(\"MenuTitle\") = '$wordsAsString'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            if($hasWordArray) {
+        if (in_array('MenuTitle', $fields, true)) {
+            $searches[++$count][] = "LOWER(\"MenuTitle\") = '${wordsAsString}'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%${wordsAsString}%'"; // b) Full match within a bigger string
+            if ($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'MenuTitle', $searchStringAND); // d) Words matched individually
                 // $searches[++$count + 100][] = str_replace('FFFFFF', 'MenuTitle', $searchStringOR); // d) Words matched individually
             }
             $completed['MenuTitle'] = 'MenuTitle';
         }
-        if (in_array('MetaTitle', $fields)) {
-            $searches[++$count][] = "LOWER(\"MetaTitle\") = '$wordsAsString'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-            if($hasWordArray) {
+        if (in_array('MetaTitle', $fields, true)) {
+            $searches[++$count][] = "LOWER(\"MetaTitle\") = '${wordsAsString}'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%${wordsAsString}%'"; // b) Full match within a bigger string
+            if ($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'MetaTitle', $searchStringAND); // d) Words matched individually
                 // $searches[++$count + 100][] = str_replace('FFFFFF', 'MetaTitle', $searchStringOR); // d) Words matched individually
             }
             $completed['MetaTitle'] = 'MetaTitle';
         }
         foreach ($fields as $field) {
-            if(! isset($completed[$field])) {
-                $searches[++$count][] = "LOWER(\"$field\") = '$wordsAsString'"; // a) Exact match
-                $searches[++$count][] = "LOWER(\"$field\") LIKE '%$wordsAsString%'"; // b) Full match within a bigger string
-                if($hasWordArray) {
+            if (! isset($completed[$field])) {
+                $searches[++$count][] = "LOWER(\"${field}\") = '${wordsAsString}'"; // a) Exact match
+                $searches[++$count][] = "LOWER(\"${field}\") LIKE '%${wordsAsString}%'"; // b) Full match within a bigger string
+                if ($hasWordArray) {
                     $searches[++$count][] = str_replace('FFFFFF', $field, $searchStringAND); // d) Words matched individually
                     // $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
                 }
@@ -653,52 +689,6 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * saves the form into session.
-     *
-     * @param array $data - data from form (OPTIONAL)
-     */
-    public function saveDataToSession($data = null)
-    {
-        if (! is_array($data)) {
-            $data = $this->getData();
-        }
-        if (isset($data['MinimumPrice']) && !$data['MinimumPrice']) {
-            unset($data['MinimumPrice']);
-        }
-        if (isset($data['MaximumPrice']) && !$data['MaximumPrice']) {
-            unset($data['MaximumPrice']);
-        }
-        if (isset($data['ShortKeyword']) && $data['ShortKeyword']) {
-            $data['Keyword'] = $data['ShortKeyword'];
-        }
-        if (isset($data['Keyword']) && $data['Keyword']) {
-            $data['ShortKeyword'] = $data['Keyword'];
-        }
-        Session::set($this->Config()->get('form_data_session_variable'), $data);
-    }
-
-    private function debugOutput($string)
-    {
-        echo "<br />$string";
-    }
-
-    /**
-     * @var array
-     *            List of words to be replaced.
-     */
-    protected $sqlWords = array(
-        "\r\n SELECT" => 'SELECT',
-        "\r\n FROM" => 'FROM',
-        "\r\n WHERE" => 'WHERE',
-        "\r\n HAVING" => 'HAVING',
-        "\r\n GROUP" => 'GROUP',
-        "\r\n ORDER BY" => 'ORDER BY',
-        "\r\n INNER JOIN" => 'INNER JOIN',
-        "\r\n LEFT JOIN" => 'LEFT JOIN',
-    );
-
-    /**
-     *
      * @param  string $keywordPhrase
      * @param  string $word (optional word within keywordPhrase)
      *
@@ -712,19 +702,19 @@ class ProductSearchForm extends Form
         $replacements = SearchReplacement::get()
             ->where(
                 "
-                LOWER(\"Search\") = '$word' OR
-                LOWER(\"Search\") LIKE '%,$word' OR
-                LOWER(\"Search\") LIKE '$word,%' OR
-                LOWER(\"Search\") LIKE '%,$word,%'"
+                LOWER(\"Search\") = '${word}' OR
+                LOWER(\"Search\") LIKE '%,${word}' OR
+                LOWER(\"Search\") LIKE '${word},%' OR
+                LOWER(\"Search\") LIKE '%,${word},%'"
             );
         //if it is a word replacement then we do not want replace whole phrase ones ...
-        if ($keywordPhrase != $word) {
-            $replacements = $replacements->exclude(array('ReplaceWholePhrase' => 1));
+        if ($keywordPhrase !== $word) {
+            $replacements = $replacements->exclude(['ReplaceWholePhrase' => 1]);
         }
         if ($replacements->count()) {
             $replacementsArray = $replacements->map('ID', 'Replace')->toArray();
             if ($this->debug) {
-                $this->debugOutput("found alias for $word");
+                $this->debugOutput("found alias for ${word}");
             }
             foreach ($replacementsArray as $replacementWord) {
                 $keywordPhrase = str_replace($word, $replacementWord, $keywordPhrase);
@@ -732,5 +722,10 @@ class ProductSearchForm extends Form
         }
 
         return $keywordPhrase;
+    }
+
+    private function debugOutput($string)
+    {
+        echo "<br />${string}";
     }
 }

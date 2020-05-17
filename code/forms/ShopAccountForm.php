@@ -2,7 +2,6 @@
 /**
  * @description: ShopAccountForm allows shop members to update their details.
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
@@ -22,8 +21,8 @@ class ShopAccountForm extends Form
             $fields = $member->getEcommerceFields(false);
             $clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
             $loginMessage =
-                '<span class="customerName">'.trim(Convert::raw2xml($member->FirstName).' '.Convert::raw2xml($member->Surname)).'</span>, '
-                .'<a href="'.$clearCartAndLogoutLink.'">'._t('Account.LOGOUT', 'Log out now?').
+                '<span class="customerName">' . trim(Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname)) . '</span>, '
+                . '<a href="' . $clearCartAndLogoutLink . '">' . _t('Account.LOGOUT', 'Log out now?') .
                 '</a>';
             if ($loginMessage) {
                 $loginField = new ReadonlyField(
@@ -43,7 +42,7 @@ class ShopAccountForm extends Form
                 }
             }
         } else {
-            if (!$member) {
+            if (! $member) {
                 $member = new Member();
             }
             $fields = new FieldList();
@@ -57,7 +56,7 @@ class ShopAccountForm extends Form
                 }
             }
             $backURLLink = urlencode($backURLLink);
-            $fields->push(new LiteralField('MemberInfo', '<p class="message good">'._t('OrderForm.MEMBERINFO', 'If you already have an account then please').' <a href="Security/login?BackURL='.$backURLLink.'">'._t('OrderForm.LOGIN', 'log in').'</a>.</p>'));
+            $fields->push(new LiteralField('MemberInfo', '<p class="message good">' . _t('OrderForm.MEMBERINFO', 'If you already have an account then please') . ' <a href="Security/login?BackURL=' . $backURLLink . '">' . _t('OrderForm.LOGIN', 'log in') . '</a>.</p>'));
             $memberFields = $member->getEcommerceFields($mustCreateAccount);
             if ($memberFields) {
                 foreach ($memberFields as $memberField) {
@@ -134,7 +133,7 @@ class ShopAccountForm extends Form
                 if ($member->validate()->valid()) {
                     $member->write();
                     if ($member->exists()) {
-                        if (!$order->MemberID) {
+                        if (! $order->MemberID) {
                             $order->MemberID = $member->ID;
                             $order->write();
                         }
@@ -154,12 +153,28 @@ class ShopAccountForm extends Form
     }
 
     /**
+     * saves the form into session.
+     *
+     * @param array $data - data from form.
+     */
+    public function saveDataToSession()
+    {
+        $data = $this->getData();
+        unset($data['AccountInfo']);
+        unset($data['LoginDetails']);
+        unset($data['LoggedInAsNote']);
+        unset($data['PasswordCheck1']);
+        unset($data['PasswordCheck2']);
+        Session::set("FormInfo.{$this->FormName()}.data", $data);
+    }
+
+    /**
      *@return bool + redirection
      **/
     protected function processForm($data, $form, $request, $link = '')
     {
         $member = Member::currentUser();
-        if (!$member) {
+        if (! $member) {
             $form->sessionMessage(_t('Account.DETAILSNOTSAVED', 'Your details could not be saved.'), 'bad');
             $this->controller->redirectBack();
         }
@@ -175,29 +190,12 @@ class ShopAccountForm extends Form
             $member->write();
             if ($link) {
                 return $this->controller->redirect($link);
-            } else {
-                $form->sessionMessage(_t('Account.DETAILSSAVED', 'Your details have been saved.'), 'good');
-                $this->controller->redirectBack();
             }
+            $form->sessionMessage(_t('Account.DETAILSSAVED', 'Your details have been saved.'), 'good');
+            $this->controller->redirectBack();
         } else {
             $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
             $this->controller->redirectBack();
         }
-    }
-
-    /**
-     * saves the form into session.
-     *
-     * @param array $data - data from form.
-     */
-    public function saveDataToSession()
-    {
-        $data = $this->getData();
-        unset($data['AccountInfo']);
-        unset($data['LoginDetails']);
-        unset($data['LoggedInAsNote']);
-        unset($data['PasswordCheck1']);
-        unset($data['PasswordCheck2']);
-        Session::set("FormInfo.{$this->FormName()}.data", $data);
     }
 }

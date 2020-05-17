@@ -17,13 +17,14 @@ class EcommerceSideReport_NoImageProducts extends SS_Report
      * Set by overriding in your subclass.
      */
     protected $dataClass = 'Product';
+
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products without image').
-        ' ('.$this->sourceRecords()->count().')';
+        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products without image') .
+        ' (' . $this->sourceRecords()->count() . ')';
     }
 
     /**
@@ -61,14 +62,13 @@ class EcommerceSideReport_NoImageProducts extends SS_Report
      */
     public function columns()
     {
-        return array(
-            'FullName' => array(
+        return [
+            'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
                 'link' => true,
-            ),
-        );
+            ],
+        ];
     }
-
 
     public function getReportField()
     {
@@ -76,7 +76,7 @@ class EcommerceSideReport_NoImageProducts extends SS_Report
         $config = $field->getConfig();
         $exportButton = $config->getComponentByType('GridFieldExportButton');
         $exportButton->setExportColumns($field->getColumns());
-        
+
         return $field;
     }
 }

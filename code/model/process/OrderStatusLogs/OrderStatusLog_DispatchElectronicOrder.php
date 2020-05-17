@@ -9,17 +9,19 @@
  **/
 class OrderStatusLog_DispatchElectronicOrder extends OrderStatusLog_Dispatch
 {
-    private static $db = array(
+    private static $db = [
         'Link' => 'Text',
-    );
+    ];
 
     private static $singular_name = 'Order Log Electronic Dispatch Entry';
+
+    private static $plural_name = 'Order Log Electronic Dispatch Entries';
+
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.ORDERLOGELECTRONICDISPATCHENTRY', 'Order Log Electronic Dispatch Entry');
     }
 
-    private static $plural_name = 'Order Log Electronic Dispatch Entries';
     public function i18n_plural_name()
     {
         return _t('OrderStatusLog.ORDERLOGELECTRONICDISPATCHENTRIES', 'Order Log Electronic Dispatch Entries');

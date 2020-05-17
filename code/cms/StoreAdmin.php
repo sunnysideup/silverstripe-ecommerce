@@ -63,12 +63,11 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
         if ($ecommerceDBConfig) {
             unset($models['EcommerceDBConfig']);
 
-            return array('EcommerceDBConfig' => $ecommerceDBConfig) + $models;
+            return ['EcommerceDBConfig' => $ecommerceDBConfig] + $models;
         }
 
         return $models;
     }
-
 
     public function getEditForm($id = null, $fields = null)
     {

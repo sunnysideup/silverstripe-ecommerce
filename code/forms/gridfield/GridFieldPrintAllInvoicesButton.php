@@ -10,13 +10,6 @@
 class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
     /**
-     *
-     * @config
-     * @var int
-     */
-    private static $invoice_bulk_printing_limit = 30;
-
-    /**
      * HTML Fragment to render the field.
      *
      * @var string
@@ -24,10 +17,16 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
     protected $targetFragment;
 
     /**
+     * @config
+     * @var int
+     */
+    private static $invoice_bulk_printing_limit = 30;
+
+    /**
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $exportColumns The columns to include in the export
      */
-    public function __construct($targetFragment = "after")
+    public function __construct($targetFragment = 'after')
     {
         $this->targetFragment = $targetFragment;
     }
@@ -47,9 +46,9 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
         $button->setAttribute('data-icon', 'grid_print');
         $button->addExtraClass('no-ajax action_print_all_invoices');
         $button->setForm($gridField->getForm());
-        return array(
+        return [
             $this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>',
-        );
+        ];
     }
 
     /**
@@ -57,12 +56,12 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
      */
     public function getActions($gridField)
     {
-        return array('printallinvoices');
+        return ['printallinvoices'];
     }
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'printallinvoices') {
+        if ($actionName === 'printallinvoices') {
             return $this->handlePrint($gridField);
         }
     }
@@ -72,14 +71,14 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'printallinvoices' => 'handlePrint',
-        );
+        ];
     }
 
     /**
      * Handle the print, for both the action button and the URL
-      */
+     */
     public function handlePrint($gridField, $request = null)
     {
         $limit = Config::inst()->get('GridFieldPrintAllInvoicesButton', 'invoice_bulk_printing_limit');

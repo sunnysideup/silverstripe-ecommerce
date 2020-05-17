@@ -28,12 +28,12 @@ class EcommerceTaskDefaultRecords extends BuildTask
 
     public function run($request)
     {
-        $update = array();
+        $update = [];
         $orderStep = singleton('OrderStep');
         $orderStep->requireDefaultRecords();
         // ACCOUNT PAGE
         $accountPage = DataObject::get_one('AccountPage', null, $cacheDataObjectGetOne = false);
-        if (!$accountPage) {
+        if (! $accountPage) {
             $accountPage = new AccountPage();
             $accountPage->Title = 'Account';
             $accountPage->MenuTitle = 'Account';
@@ -52,7 +52,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         //CHECKOUT PAGE
 
         $checkoutPage = DataObject::get_one('CheckoutPage', null, $cacheDataObjectGetOne = false);
-        if (!$checkoutPage) {
+        if (! $checkoutPage) {
             $checkoutPage = new CheckoutPage();
             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
             $checkoutPage->Title = 'Checkout';
@@ -67,11 +67,10 @@ class EcommerceTaskDefaultRecords extends BuildTask
             DB::alteration_message('No need to create an checkout page, it already exists.');
         }
         if ($checkoutPage) {
-            if (
-                $checkoutPage->TermsPageID == 0 &&
+            if ($checkoutPage->TermsPageID === 0 &&
                 $termsPage = DataObject::get_one(
                     'Page',
-                    array('URLSegment' => 'terms-and-conditions'),
+                    ['URLSegment' => 'terms-and-conditions'],
                     $cacheDataObjectGetOne = false
                 )
             ) {
@@ -101,23 +100,23 @@ class EcommerceTaskDefaultRecords extends BuildTask
             }
         }
 
-        $update = array();
+        $update = [];
         $ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
         if ($ecommerceConfig) {
-            if (!$ecommerceConfig->ReceiptEmail) {
+            if (! $ecommerceConfig->ReceiptEmail) {
                 $ecommerceConfig->ReceiptEmail = Email::config()->admin_email;
-                if (!$ecommerceConfig->ReceiptEmail) {
+                if (! $ecommerceConfig->ReceiptEmail) {
                     user_error("you must set an Admin Email ... Config::inst()->update('Email', 'admin_email', 'foo@bar.nz') ... ", E_USER_NOTICE);
                 }
                 $update[] = 'created default entry for ReceiptEmail';
             }
-            if (!$ecommerceConfig->NumberOfProductsPerPage) {
+            if (! $ecommerceConfig->NumberOfProductsPerPage) {
                 $ecommerceConfig->NumberOfProductsPerPage = 12;
                 $update[] = 'created default entry for NumberOfProductsPerPage';
             }
             if (count($update)) {
                 $ecommerceConfig->write();
-                DB::alteration_message($ecommerceConfig->ClassName.' created/updated: '.implode(' --- ', $update), 'created');
+                DB::alteration_message($ecommerceConfig->ClassName . ' created/updated: ' . implode(' --- ', $update), 'created');
             }
         }
     }

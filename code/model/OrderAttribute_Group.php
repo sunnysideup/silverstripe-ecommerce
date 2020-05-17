@@ -6,20 +6,19 @@
  */
 class OrderAttribute_Group extends DataObject implements EditableEcommerceObject
 {
-    private static $db = array(
+    private static $db = [
         'Name' => 'Varchar',
         'Sort' => 'Int',
-    );
+    ];
 
     /**
      * Standard SS variable.
      *
      * @var array
      */
-    private static $indexes = array(
+    private static $indexes = [
         'Sort' => true,
-    );
-
+    ];
 
     /**
      * standard SS variable.
@@ -27,10 +26,6 @@ class OrderAttribute_Group extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $singular_name = 'Order Modifier Group';
-    public function i18n_singular_name()
-    {
-        return $this->Config()->get('singular_name');
-    }
 
     /**
      * standard SS variable.
@@ -38,6 +33,12 @@ class OrderAttribute_Group extends DataObject implements EditableEcommerceObject
      * @Var String
      */
     private static $plural_name = 'Order Modifier Types';
+
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
     public function i18n_plural_name()
     {
         return $this->Config()->get('plural_name');

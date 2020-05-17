@@ -14,16 +14,16 @@ class OrderForm_Cancel extends Form
     public function __construct(Controller $controller, $name, Order $order)
     {
         $fields = new FieldList(
-            array(
+            [
                 new HeaderField('CancelOrderHeading', _t('OrderForm.CANCELORDER', 'Changed your mind?'), 3),
                 new TextField('CancellationReason', _t('OrderForm.CANCELLATIONREASON', 'Reason for cancellation')),
                 new HiddenField('OrderID', '', $order->ID),
-            )
+            ]
         );
         $actions = new FieldList(
             new FormAction('docancel', _t('OrderForm.CANCELORDER', 'Cancel this order'))
         );
-        $requiredFields = array();
+        $requiredFields = [];
         $validator = OrderForm_Cancel_Validator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
         //extension point

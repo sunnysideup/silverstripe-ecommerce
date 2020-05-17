@@ -24,12 +24,11 @@ class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
 
         // Ensure the table level cache exists
         if (empty(self::$classname_spec_cache[$this->tableName])) {
-            self::$classname_spec_cache[$this->tableName] = array();
+            self::$classname_spec_cache[$this->tableName] = [];
         }
 
         // Ensure the field level cache exists
         if (empty(self::$classname_spec_cache[$this->tableName][$this->name])) {
-
             // Get all class names
             $classNames = ClassInfo::implementorsOf('BuyableModel');
 
@@ -43,9 +42,9 @@ class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
                 = "Enum(array('" . implode("', '", array_filter($classNames)) . "'))";
         }
 
-        return array(
+        return [
             'ID' => 'Int',
-            'Class' => self::$classname_spec_cache[$this->tableName][$this->name]
-        );
+            'Class' => self::$classname_spec_cache[$this->tableName][$this->name],
+        ];
     }
 }

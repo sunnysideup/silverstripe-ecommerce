@@ -2,7 +2,6 @@
 /**
  * @description: see OrderStep.md
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
@@ -15,54 +14,107 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(100)',
         'Note' => 'HTMLText',
         'InternalUseOnly' => 'Boolean',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $has_one = array(
+    private static $has_one = [
         'Author' => 'Member',
         'Order' => 'Order',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'CustomerNote' => 'HTMLText',
         'Type' => 'Varchar',
         'InternalUseOnlyNice' => 'Varchar',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Created' => 'Date',
         'Order.Title' => 'Order',
         'Type' => 'Type',
         'Title' => 'Title',
         'InternalUseOnlyNice' => 'Internal use only',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @var array
      */
-    private static $defaults = array(
+    private static $defaults = [
         'InternalUseOnly' => true,
-    );
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $searchable_fields = [
+        'OrderID' => [
+            'field' => 'NumericField',
+            'title' => 'Order Number',
+        ],
+        'ClassName' => [
+            'title' => 'Type',
+            'filter' => 'ExactMatchFilter',
+        ],
+        'Title' => 'PartialMatchFilter',
+        'Note' => 'PartialMatchFilter',
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $singular_name = 'Order Log Entry';
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $plural_name = 'Order Log Entries';
+
+    /**
+     * Standard SS variable.
+     *
+     * @var string
+     */
+    private static $description = 'A record of anything that happened with an order.';
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $default_sort = [
+        'ID' => 'DESC',
+    ];
+
+    private static $indexes = [
+        'Title' => true,
+        'InternalUseOnly' => true,
+    ];
 
     /**
      * casted method.
@@ -73,6 +125,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     {
         return $this->getInternalUseOnlyNice();
     }
+
     public function getInternalUseOnlyNice()
     {
         if ($this->InternalUseOnly) {
@@ -135,11 +188,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if ($this->InternalUseOnly) {
             //only Shop Administrators can see it ...
             return false;
-        } else {
-            if ($this->Order()) {
-                if ($this->Order()->canView($member)) {
-                    return true;
-                }
+        }
+        if ($this->Order()) {
+            if ($this->Order()->canView($member)) {
+                return true;
             }
         }
 
@@ -165,7 +217,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 
         if ($order = $this->Order()) {
             //Order Status Logs are so basic, anyone can edit them
-            if ($this->ClassName=='OrderStatusLog') {
+            if ($this->ClassName === 'OrderStatusLog') {
                 return $order->canView($member);
             }
 
@@ -173,8 +225,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 return $order->canEdit($member);
             }
         }
-
-
 
         return false;
     }
@@ -200,66 +250,15 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         return false;
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var array
-     */
-    private static $searchable_fields = array(
-        'OrderID' => array(
-            'field' => 'NumericField',
-            'title' => 'Order Number',
-        ),
-        'ClassName' => array(
-            'title' => 'Type',
-            'filter' => 'ExactMatchFilter',
-        ),
-        'Title' => 'PartialMatchFilter',
-        'Note' => 'PartialMatchFilter',
-    );
-
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $singular_name = 'Order Log Entry';
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.ORDERLOGENTRY', 'Order Log Entry');
     }
 
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $plural_name = 'Order Log Entries';
     public function i18n_plural_name()
     {
         return _t('OrderStatusLog.ORDERLOGENTRIES', 'Order Log Entries');
     }
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $description = 'A record of anything that happened with an order.';
-
-    /**
-     * standard SS variable.
-     *
-     * @var string
-     */
-    private static $default_sort = [
-        'ID' => 'DESC'
-    ];
-
-    private static $indexes = [
-        'Title' => true,
-        'InternalUseOnly' => true
-    ];
 
     /**
      * standard SS method.
@@ -311,28 +310,27 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 
         //ClassName Field
         $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
-        $availableLogs = array_merge($availableLogs, array(EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')));
-        $availableLogsAssociative = array();
+        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')]);
+        $availableLogsAssociative = [];
         foreach ($availableLogs as $className) {
             $availableLogsAssociative[$className] = Injector::inst()->get($className)->singular_name();
         }
         $title = _t('OrderStatusLog.TYPE', 'Type');
-        if (
-                ($this->exists() || $this->limitedToOneClassName())
+        if (($this->exists() || $this->limitedToOneClassName())
                 && $this->ClassName &&
                 isset($availableLogsAssociative[$this->ClassName])
         ) {
             $fields->removeByName('ClassName');
             $fields->addFieldsToTab(
                 'Root.Main',
-                array(
+                [
                     HiddenField::create('ClassName'),
                     ReadonlyField::create(
                         'ClassNameTitle',
                         $title,
                         $availableLogsAssociative[$this->ClassName]
-                    )
-                ),
+                    ),
+                ],
                 'Title'
             );
         } else {
@@ -346,20 +344,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
         }
         return $fields;
-    }
-
-    /**
-     * when being created, can the user choose the type of log?
-     *
-     *
-     * @return bool
-     */
-    protected function limitedToOneClassName()
-    {
-        if ($this->ClassName == 'OrderStatusLog') {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -381,6 +365,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     {
         return $this->getType();
     }
+
     public function getType()
     {
         return $this->i18n_singular_name();
@@ -407,7 +392,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         $fields = parent::scaffoldSearchFields($_params);
         $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
         $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
-        $availableLogs = array_merge($availableLogs, array(EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')));
+        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')]);
         $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', 'OrderStatusLog', $availableLogs);
         $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
         $fields->replaceField('ClassName', $ecommerceClassNameOrTypeDropdownField);
@@ -430,12 +415,12 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 //            }
 //        }
 //        //END HACK TO PREVENT LOSS
-        if (!$this->AuthorID) {
+        if (! $this->AuthorID) {
             if ($member = Member::currentUser()) {
                 $this->AuthorID = $member->ID;
             }
         }
-        if (!$this->Title) {
+        if (! $this->Title) {
             $this->Title = _t('OrderStatusLog.ORDERUPDATE', 'Order Update');
         }
     }
@@ -447,19 +432,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     {
         return $this->getCustomerNote();
     }
+
     public function getCustomerNote()
     {
         return $this->Note;
-    }
-
-    /**
-     * returns the standard EcommerceDBConfig for use within OrderSteps.
-     *
-     * @return EcommerceDBConfig
-     */
-    protected function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /**
@@ -471,5 +447,28 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function debug()
     {
         return EcommerceTaskDebugCart::debug_object($this);
+    }
+
+    /**
+     * when being created, can the user choose the type of log?
+     *
+     * @return bool
+     */
+    protected function limitedToOneClassName()
+    {
+        if ($this->ClassName === 'OrderStatusLog') {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * returns the standard EcommerceDBConfig for use within OrderSteps.
+     *
+     * @return EcommerceDBConfig
+     */
+    protected function EcomConfig()
+    {
+        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 }

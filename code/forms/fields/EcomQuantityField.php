@@ -12,16 +12,6 @@
 class EcomQuantityField extends NumericField
 {
     /**
-     * the tabindex for the form field
-     * we use this so that you can tab through all the
-     * quantity fields without disruption.
-     * It is saved like this: "FieldName (String)" => tabposition (int).
-     *
-     * @var array
-     **/
-    private static $tabindex = array();
-
-    /**
      *@var order OrderItem DataObject
      **/
     protected $orderItem = null;
@@ -29,12 +19,12 @@ class EcomQuantityField extends NumericField
     /**
      *@var Array();???
      **/
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      *@var Array()
      **/
-    protected $classes = array('ajaxQuantityField');
+    protected $classes = ['ajaxQuantityField'];
 
     /**
      * max length in digits.
@@ -51,21 +41,31 @@ class EcomQuantityField extends NumericField
     protected $fieldSize = 3;
 
     /**
-     *@var String
+     *@var string
      **/
     protected $template = 'EcomQuantityField';
 
     /**
-     * @param buyable      $object - the buyable / OrderItem
-     * @param array | null $object - parameters
+     * the tabindex for the form field
+     * we use this so that you can tab through all the
+     * quantity fields without disruption.
+     * It is saved like this: "FieldName (String)" => tabposition (int).
+     *
+     * @var array
      **/
-    public function __construct($object, $parameters = array())
+    private static $tabindex = [];
+
+    /**
+     * @param buyable      $parameters - the buyable / OrderItem
+     * @param array | null $parameters - parameters
+     **/
+    public function __construct($object, $parameters = [])
     {
         Requirements::javascript('ecommerce/javascript/EcomQuantityField.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         if ($object instanceof BuyableModel) {
             $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
-            if (!$this->orderItem) {
+            if (! $this->orderItem) {
                 $className = $object->classNameForOrderItem();
                 $this->orderItem = new $className($object->dataRecord, 0);
             }
@@ -95,7 +95,7 @@ class EcomQuantityField extends NumericField
     }
 
     /**
-     * @param string
+     * @param string $template
      */
     public function setTemplate($template)
     {
@@ -121,27 +121,27 @@ class EcomQuantityField extends NumericField
     }
 
     /**
-     * @param properties
+     * @param $properties
      *
      * @return string (HTML)
      **/
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $name = $this->orderItem->AJAXDefinitions()->TableID().'_Quantity_SetQuantityLink';
-        if (!isset(self::$tabindex[$name])) {
+        $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
+        if (! isset(self::$tabindex[$name])) {
             self::$tabindex[$name] = count(self::$tabindex) + 1;
         }
-        $attributes = array(
+        $attributes = [
             'type' => 'text',
             'class' => implode(' ', $this->classes),
             'name' => $name,
-            'value' => ($this->orderItem->Quantity) ? $this->orderItem->Quantity : 0,
+            'value' => $this->orderItem->Quantity ?: 0,
             'maxlength' => $this->maxLength,
             'size' => $this->fieldSize,
             'data-quantity-link' => $this->getQuantityLink(),
             'tabindex' => self::$tabindex[$name],
             'disabled' => 'disabled',
-        );
+        ];
         $formfield = new FormField($name);
 
         return $formfield->createTag('input', $attributes);
@@ -154,14 +154,14 @@ class EcomQuantityField extends NumericField
      */
     public function AJAXLinkHiddenField()
     {
-        $name = $this->orderItem->AJAXDefinitions()->TableID().'_Quantity_SetQuantityLink';
+        $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
         if ($quantitylink = $this->getQuantityLink()) {
-            $attributes = array(
+            $attributes = [
                 'type' => 'hidden',
                 'class' => 'ajaxQuantityField_qtylink',
                 'name' => $name,
                 'value' => $quantitylink,
-            );
+            ];
             $formfield = new FormField($name);
 
             return $formfield->createTag('input', $attributes);

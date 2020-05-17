@@ -21,7 +21,7 @@ class EcommerceConfigAjax extends Object
      *
      * @static object
      */
-    private static $singleton = array();
+    private static $singleton = [];
 
     /**
      * Returns the singleton instance of the Ajax Config definitions class.
@@ -34,7 +34,7 @@ class EcommerceConfigAjax extends Object
      */
     public static function get_one($requestor)
     {
-        if (!isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
+        if (! isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
             $className = EcommerceConfig::get('EcommerceConfigAjax', 'definitions_class_name');
             self::$singleton[$requestor->ClassName][$requestor->ID] = new $className();
             self::$singleton[$requestor->ClassName][$requestor->ID]->setRequestor($requestor);

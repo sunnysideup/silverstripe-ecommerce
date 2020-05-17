@@ -8,20 +8,20 @@
  **/
 class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
 {
-    private static $defaults = array(
+    /**
+     * @var string
+     */
+    protected $relevantLogEntryClassName = 'OrderStatusLog_PaymentCheck';
+
+    private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
         'Name' => 'Confirm',
         'Code' => 'CONFIRMED',
         'ShowAsInProcessOrder' => 1,
-        'HideStepFromCustomer' => 1
-    );
-
-    /**
-     * @var string
-     */
-    protected $relevantLogEntryClassName = 'OrderStatusLog_PaymentCheck';
+        'HideStepFromCustomer' => 1,
+    ];
 
     /**
      *initStep:
@@ -30,7 +30,7 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
      **/
@@ -47,7 +47,7 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order object
+     * @param Order $order object
      *
      * @return bool - true if run correctly.
      **/
@@ -67,7 +67,7 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
     {
         $className = $this->getRelevantLogEntryClassName();
         $orderStatusLog_PaymentChecks = $className::get()
-            ->Filter(array('OrderID' => $order->ID, 'PaymentConfirmed' => 1));
+            ->Filter(['OrderID' => $order->ID, 'PaymentConfirmed' => 1]);
         if ($orderStatusLog_PaymentChecks->Count()) {
             return parent::nextStep($order);
         }
@@ -88,7 +88,7 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.MUSTDOPAYMENTCHECK', ' ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)');
         $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog_PaymentCheck', $title), 'ActionNextStepManually');
-        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>'.implode('</li><li>', EcommerceConfig::get('OrderStep_Confirmed', 'list_of_things_to_check')).'</li></ul>'), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get('OrderStep_Confirmed', 'list_of_things_to_check')) . '</li></ul>'), 'ActionNextStepManually');
 
         return $fields;
     }

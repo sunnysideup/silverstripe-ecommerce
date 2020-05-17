@@ -48,7 +48,7 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_default_symbol($currency);
         if ($symbol && mb_strlen($symbol) < 3) {
-            $symbol = substr($currency, 0, 3 - mb_strlen($symbol)).$symbol;
+            $symbol = substr($currency, 0, 3 - mb_strlen($symbol)) . $symbol;
         }
 
         return $symbol;
@@ -64,7 +64,7 @@ class EcommerceMoney extends Extension
      */
     public function NiceDefaultSymbol($html = true)
     {
-        return self::get_default_symbol($this->owner->currency) == self::get_short_symbol($this->owner->currency) ? $this->NiceShortSymbol($html) : $this->NiceLongSymbol($html);
+        return self::get_default_symbol($this->owner->currency) === self::get_short_symbol($this->owner->currency) ? $this->NiceShortSymbol($html) : $this->NiceLongSymbol($html);
     }
 
     /**
@@ -79,11 +79,11 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_short_symbol($this->owner->currency);
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">$symbol</span></span>";
+            $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">${symbol}</span></span>";
         }
         $amount = $this->owner->getAmount();
 
-        return (is_numeric($amount)) ? $this->owner->currencyLib->toCurrency($amount, array('symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL)) : '';
+        return is_numeric($amount) ? $this->owner->currencyLib->toCurrency($amount, ['symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL]) : '';
     }
 
     /**
@@ -100,13 +100,13 @@ class EcommerceMoney extends Extension
         $short = self::get_short_symbol($this->owner->currency);
         $pre = substr($symbol, 0, mb_strlen($symbol) - mb_strlen($short));
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">$pre</span><span class=\"currencySymbol\">$short</span></span>";
+            $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">${pre}</span><span class=\"currencySymbol\">${short}</span></span>";
         } else {
-            $symbol = $pre.$short;
+            $symbol = $pre . $short;
         }
         $amount = $this->owner->getAmount();
 
-        return (is_numeric($amount)) ? $this->owner->currencyLib->toCurrency($amount, array('symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL)) : '';
+        return is_numeric($amount) ? $this->owner->currencyLib->toCurrency($amount, ['symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL]) : '';
     }
 
     /**
@@ -120,15 +120,15 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_short_symbol($this->owner->currency);
         if ($html) {
-            $symbol = "<span class=\"currencySymbol\">$symbol</span>";
+            $symbol = "<span class=\"currencySymbol\">${symbol}</span>";
         }
         $code = strtolower($this->owner->currency);
         if ($html) {
-            $code = "<span class=\"currencyHolder\">$code</span>";
+            $code = "<span class=\"currencyHolder\">${code}</span>";
         }
         $amount = $this->owner->getAmount();
 
-        return (is_numeric($amount)) ?  $symbol.$this->owner->currencyLib->toCurrency($amount, array('symbol' => '', 'precision' => 0)).' '.$code : '';
+        return is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
     }
 
     /**
@@ -142,6 +142,6 @@ class EcommerceMoney extends Extension
     {
         $function = EcommerceConfig::get('EcommerceMoney', 'default_format');
 
-        return $this->owner->$function($html);
+        return $this->owner->{$function}($html);
     }
 }

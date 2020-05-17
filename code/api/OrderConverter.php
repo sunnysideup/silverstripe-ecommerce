@@ -3,7 +3,6 @@
 
 abstract class OrderConverter extends Object
 {
-
     protected $order = null;
 
     protected $currencyCode = '';
@@ -16,16 +15,18 @@ abstract class OrderConverter extends Object
 
     protected $orderItems = null;
 
+    private $amountsPerModifierType = [];
+
     public function __construct($order = null)
     {
         parent::__construct();
-        if($order === null) {
+        if ($order === null) {
             $order = Shoppingcart::current_order();
         }
-        if($order instanceof Order) {
+        if ($order instanceof Order) {
             $this->order = $order;
         } else {
-            user_error('We expect an order here ;-), provided is: '.print_r($order, 1));
+            user_error('We expect an order here ;-), provided is: ' . print_r($order, 1));
         }
 
         $this->retrieveOrderDetails();
@@ -37,29 +38,25 @@ abstract class OrderConverter extends Object
         $this->billingAddress = $this->order->BillingAddress();
         $this->orderItems = $this->order->OrderItems();
         $this->modifiers = $this->order->Modifiers();
-        if($this->order->IsSeparateShippingAddress()) {
+        if ($this->order->IsSeparateShippingAddress()) {
             $this->shippingAddress = $this->order->ShippingAddress();
         } else {
             $this->shippingAddress = $this->billingAddress;
         }
     }
 
-
     public function getOrder()
     {
         return $this->order;
     }
 
-    private $amountsPerModifierType = [];
-
     public function getAmountForModifierType($type)
     {
-        if(empty($this->amountsPerModifierType[$type])) {
-
-            foreach($this->modifiers as $modifier) {
+        if (empty($this->amountsPerModifierType[$type])) {
+            foreach ($this->modifiers as $modifier) {
                 $myType = $modifier->Type ?? $modifier->getLiveType();
-                if($myType === $type) {
-                    if(! isset($this->amountsPerModifierType[$type])) {
+                if ($myType === $type) {
+                    if (! isset($this->amountsPerModifierType[$type])) {
                         $this->amountsPerModifierType[$type] = 0;
                     }
                     $this->amountsPerModifierType[$type] += $modifier->TableValue;
@@ -81,5 +78,4 @@ abstract class OrderConverter extends Object
             )
         );
     }
-
 }

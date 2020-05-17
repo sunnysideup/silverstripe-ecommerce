@@ -4,7 +4,6 @@
 /**
  * @description: see EcommerceTaskAddDefaultProducts::$description
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
@@ -18,8 +17,8 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
 
     public function run($request)
     {
-        if (Product::get()->Count() == 0) {
-            if (ProductGroup::get()->Count() == 0) {
+        if (Product::get()->Count() === 0) {
+            if (ProductGroup::get()->Count() === 0) {
                 $productGroup1 = new ProductGroup();
                 $productGroup1->Title = 'Products';
                 $productGroup1->Content = "
@@ -36,7 +35,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
 
             $page1 = new Product();
             $page1->Title = 'Example product';
-            $page1->Content = $content.'<p>You may also notice that we have checked it as a featured product and it will be displayed on the main Products page.</p>';
+            $page1->Content = $content . '<p>You may also notice that we have checked it as a featured product and it will be displayed on the main Products page.</p>';
             $page1->URLSegment = 'example-product';
             $page1->ParentID = $productGroup1->ID;
             $page1->Price = '15.00';

@@ -7,7 +7,6 @@
  * once submitted, the Order Confirmation page shows the
  * finalised detail of the order.
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: Pages
@@ -27,7 +26,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @var array
      */
-    private static $db = array(
+    private static $db = [
         'StartNewOrderLinkLabel' => 'Varchar(100)',
         'CopyOrderLinkLabel' => 'Varchar(100)',
         'OrderCancelledHeader' => 'Varchar(255)',
@@ -45,15 +44,15 @@ class OrderConfirmationPage extends CartPage
         'FeedbackValuesOptions' => 'Text',
         'FeedbackNotesFieldLabel' => 'Varchar(255)',
         'FeedbackFormSubmitLabel' => 'Varchar(255)',
-        'FeedbackFormThankYou' => 'Varchar(255)'
-    );
+        'FeedbackFormThankYou' => 'Varchar(255)',
+    ];
 
     /**
      * Standard SS variable.
      *
      * @var array
      */
-    private static $defaults = array(
+    private static $defaults = [
         'ShowInMenus' => false,
         'ShowInSearch' => false,
         'StartNewOrderLinkLabel' => 'start new order',
@@ -71,12 +70,12 @@ class OrderConfirmationPage extends CartPage
         'FeedbackValuesOptions' => 'Not At All, Not Likely, Not Sure, Likely, Very Likely',
         'FeedbackNotesFieldLabel' => 'What can we do to improve the ordering experience?',
         'FeedbackFormSubmitLabel' => 'Submit Your Feedback',
-        'FeedbackFormThankYou' => 'Thank you for taking the time to submit your feedback, we appreciate it!'
-    );
+        'FeedbackFormThankYou' => 'Thank you for taking the time to submit your feedback, we appreciate it!',
+    ];
 
-    private static $casting = array(
-        "PaymentMessage" => "HTMLText"
-    );
+    private static $casting = [
+        'PaymentMessage' => 'HTMLText',
+    ];
 
     /**
      * standard SS variable.
@@ -84,10 +83,6 @@ class OrderConfirmationPage extends CartPage
      * @Var String
      */
     private static $singular_name = 'Order Confirmation Page';
-    public function i18n_singular_name()
-    {
-        return _t('OrderConfirmationpage.SINGULARNAME', 'Order Confirmation Page');
-    }
 
     /**
      * standard SS variable.
@@ -95,10 +90,6 @@ class OrderConfirmationPage extends CartPage
      * @Var String
      */
     private static $plural_name = 'Order Confirmation Pages';
-    public function i18n_plural_name()
-    {
-        return _t('OrderConfirmationpage.PLURALNAME', 'Order Confirmation Pages');
-    }
 
     /**
      * Standard SS variable.
@@ -106,6 +97,16 @@ class OrderConfirmationPage extends CartPage
      * @var string
      */
     private static $description = 'A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.';
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderConfirmationpage.SINGULARNAME', 'Order Confirmation Page');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('OrderConfirmationpage.PLURALNAME', 'Order Confirmation Pages');
+    }
 
     /**
      * Standard SS function, we only allow for one OrderConfirmation Page to exist
@@ -117,7 +118,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function canCreate($member = null)
     {
-        return OrderConfirmationPage::get()->filter(array('ClassName' => 'OrderConfirmationPage'))->Count() ? false : $this->canEdit($member);
+        return OrderConfirmationPage::get()->filter(['ClassName' => 'OrderConfirmationPage'])->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -162,7 +163,7 @@ class OrderConfirmationPage extends CartPage
 
     public function customFieldLabels()
     {
-        $newLabels = array(
+        return [
             'StartNewOrderLinkLabel' => _t('OrderConfirmationPage.STARTNEWORDERLINKLABEL', 'Label for starting new order - e.g. click here to start new order.'),
             'CopyOrderLinkLabel' => _t('OrderConfirmationPage.COPYORDERLINKLABEL', 'Label for copying order items into a new one  - e.g. click here start a new order with the current order items.'),
             'OrderCancelledHeader' => _t('OrderConfirmationPage.ORDERCANCELLEDHEADER', 'Header showing when order has been cancelled.'),
@@ -179,10 +180,8 @@ class OrderConfirmationPage extends CartPage
             'FeedbackValuesOptions' => _t('OrderConfirmationPage.FEEDBACKVALUESOPTIONS', 'Feedback Form Options'),
             'FeedbackNotesFieldLabel' => _t('OrderConfirmationPage.FEEDBACKVALUESFIELDLABEL', 'Feedback Form Notes Label'),
             'FeedbackFormSubmitLabel' => _t('OrderConfirmationPage.FEEDBACKFORMSUBMITLABEL', 'Feedback Form Submit Button Text'),
-            'FeedbackFormThankYou' => _t('OrderConfirmationPage.FEEDBACKFORMTHANKYOU', 'Feedback Form Thank you Message')
-        );
-
-        return $newLabels;
+            'FeedbackFormThankYou' => _t('OrderConfirmationPage.FEEDBACKFORMTHANKYOU', 'Feedback Form Thank you Message'),
+        ];
     }
 
     /**
@@ -221,7 +220,7 @@ class OrderConfirmationPage extends CartPage
         $fieldLabels = $this->fieldLabels();
         $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
         $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
-        $fields->addFieldsToTab('Root.Messages.Messages.Payment', array(
+        $fields->addFieldsToTab('Root.Messages.Messages.Payment', [
             HeaderField::create('Successful'),
             TextField::create('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
             HTMLEditorField::create('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage'])->setRows(3),
@@ -234,11 +233,11 @@ class OrderConfirmationPage extends CartPage
             HeaderField::create('Cancelled'),
             TextField::create('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
             HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
-        ));
+        ]);
         if ($this->IsFeedbackEnabled) {
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
-                array(
+                [
                     CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
                         ->setDescription(_t('OrderConfirmationPage.IsFeedbackEnabled_RIGHT', 'Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')),
                     TextField::create('FeedbackHeader', $fieldLabels['FeedbackHeader'])
@@ -252,16 +251,16 @@ class OrderConfirmationPage extends CartPage
                     TextField::create('FeedbackFormSubmitLabel', $fieldLabels['FeedbackFormSubmitLabel'])
                         ->setRightTitle(_t('OrderConfirmationPage.FeedbackFormSubmitLabel_RIGHT', 'e.g. Submit Feedback Now')),
                     TextField::create('FeedbackFormThankYou', $fieldLabels['FeedbackFormThankYou'])
-                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form'))
-                )
+                        ->setRightTitle(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form')),
+                ]
             );
         } else {
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
-                array(
+                [
                     CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
-                        ->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')
-                )
+                        ->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails'),
+                ]
             );
         }
         return $fields;
@@ -274,7 +273,7 @@ class OrderConfirmationPage extends CartPage
      */
     public static function find_link($action = null)
     {
-        if ($page = DataObject::get_one('OrderConfirmationPage', array('ClassName' => 'OrderConfirmationPage'))) {
+        if ($page = DataObject::get_one('OrderConfirmationPage', ['ClassName' => 'OrderConfirmationPage'])) {
             return $page->Link($action);
         } elseif ($page = DataObject::get_one('OrderConfirmationPage')) {
             return $page->Link($action);
@@ -292,14 +291,14 @@ class OrderConfirmationPage extends CartPage
      */
     public static function get_order_link($orderID)
     {
-        return OrderConfirmationPage::find_link().'showorder/'.$orderID.'/';
+        return OrderConfirmationPage::find_link() . 'showorder/' . $orderID . '/';
     }
 
     /**
      * Return a link to view the order on this page.
      *
      * @param int|string $orderID                ID of the order
-     * @param string     $type                   - the type of email you want to send.
+     * @param string     $emailClassName                   - the type of email you want to send.
      * @param bool       $actuallySendEmail      - do we actually send the email
      * @param int        $alternativeOrderStepID - OrderStep to use
      *
@@ -307,8 +306,8 @@ class OrderConfirmationPage extends CartPage
      */
     public static function get_email_link($orderID, $emailClassName = 'Order_StatusEmail', $actuallySendEmail = false, $alternativeOrderStepID = 0)
     {
-        $link = OrderConfirmationPage::find_link().'sendemail/'.$orderID.'/'.$emailClassName;
-        $getParams = array();
+        $link = OrderConfirmationPage::find_link() . 'sendemail/' . $orderID . '/' . $emailClassName;
+        $getParams = [];
         if ($actuallySendEmail) {
             $getParams['send'] = 1;
         }
@@ -316,9 +315,7 @@ class OrderConfirmationPage extends CartPage
             $getParams['test'] = $alternativeOrderStepID;
         }
         $getParams = http_build_query($getParams);
-        $link .= '?'.$getParams;
-
-        return $link;
+        return $link . '?' . $getParams;
     }
 
     /**
@@ -395,7 +392,7 @@ class OrderConfirmationPage extends CartPage
         $checkoutPage = DataObject::get_one('CheckoutPage');
         if ($checkoutPage) {
             $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
-            if (!$orderConfirmationPage) {
+            if (! $orderConfirmationPage) {
                 $orderConfirmationPage = OrderConfirmationPage::create();
                 $orderConfirmationPage->Title = 'Order Confirmation';
                 $orderConfirmationPage->MenuTitle = 'Order Confirmation';
@@ -414,7 +411,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
      * standard SS variable
      * it is important that we list all the options here
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'saveorder',
         'CreateAccountForm',
         'retrieveorder',
@@ -426,7 +423,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         'CancelForm',
         'FeedbackForm',
         'PaymentForm',
-    );
+    ];
 
     /**
      * standard controller function.
@@ -460,7 +457,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
      * This method exists just so that template
      * sets CurrentOrder variable.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return array
      **/
@@ -492,7 +489,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             return $html;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -503,7 +500,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
      **/
     public function retrieveorder(SS_HTTPRequest $request)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -512,7 +509,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
      * TO DO: untested
      * TO DO: what to do with old order
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return array
      */
@@ -535,7 +532,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
     {
         $where = '';
         if ($number) {
-            $where = "\"CheckoutPage_StepDescription\".\"ID\" = $number";
+            $where = "\"CheckoutPage_StepDescription\".\"ID\" = ${number}";
         }
         if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
             if ($this->currentOrder->IsInSession()) {
@@ -545,7 +542,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                         return $dos->First();
                     }
                 }
-                $arrayList = new ArrayList(array());
+                $arrayList = new ArrayList([]);
                 foreach ($dos as $do) {
                     $do->LinkingMode = 'link completed';
                     $do->Completed = 1;
@@ -584,9 +581,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 return $this->PaymentPendingHeader;
             } elseif ($this->IsPaid()) {
                 return $this->PaymentSuccessfulHeader;
-            } else {
-                return $this->PaymentNotSuccessfulHeader;
             }
+            return $this->PaymentNotSuccessfulHeader;
         }
     }
 
@@ -602,9 +598,8 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 return $this->PaymentPendingMessage;
             } elseif ($this->IsPaid()) {
                 return $this->PaymentSuccessfulMessage;
-            } else {
-                return $this->PaymentNotSuccessfulMessage;
             }
+            return $this->PaymentNotSuccessfulMessage;
         }
     }
 
@@ -615,14 +610,13 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
     {
         if ($order = $this->Order()) {
             if ($this->OrderIsCancelled()) {
-                return "bad";
+                return 'bad';
             } elseif ($this->PaymentIsPending()) {
-                return "warning";
+                return 'warning';
             } elseif ($this->IsPaid()) {
-                return "good";
-            } else {
-                return "bad";
+                return 'good';
             }
+            return 'bad';
         }
     }
 
@@ -678,7 +672,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
         }
         //once cancelled, you will be redirected to main page - hence we need this...
         if ($this->orderID) {
-            return array();
+            return [];
         }
     }
 
@@ -713,27 +707,7 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
             }
         }
 
-        return array();
-    }
-
-    /**
-     * Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?
-     *
-     * @return bool
-     */
-    protected function onlyShowSubmittedOrders()
-    {
-        return true;
-    }
-
-    /**
-     * Can this page only show Unsubmitted Orders (e.g. CartPage) ?
-     *
-     * @return bool
-     */
-    protected function onlyShowUnsubmittedOrders()
-    {
-        return false;
+        return [];
     }
 
     /**
@@ -780,21 +754,20 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 if ($email = $this->currentOrder->getOrderEmail()) {
                     $step = OrderStep::get()->byID($this->currentOrder->StatusID);
                     $ecomConfig = $this->EcomConfig();
-                    $subject = $ecomConfig->InvoiceTitle ? $ecomConfig->InvoiceTitle : _t('OrderConfirmationPage.INVOICE', 'Invoice');
-                    $message = $ecomConfig->InvoiceMessage ? $ecomConfig->InvoiceMessage : _t('OrderConfirmationPage.MESSAGE', '<p>Thank you for your order.</p>');
+                    $subject = $ecomConfig->InvoiceTitle ?: _t('OrderConfirmationPage.INVOICE', 'Invoice');
+                    $message = $ecomConfig->InvoiceMessage ?: _t('OrderConfirmationPage.MESSAGE', '<p>Thank you for your order.</p>');
                     $emailClassName = 'Order_InvoiceEmail';
-                    if (
-                        $this->currentOrder->sendEmail(
-                            $emailClassName,
-                            $subject,
-                            $message,
-                            $resend = true,
-                            $adminOnlyOrToEmail = false
-                        )
+                    if ($this->currentOrder->sendEmail(
+                        $emailClassName,
+                        $subject,
+                        $message,
+                        $resend = true,
+                        $adminOnlyOrToEmail = false
+                    )
                     ) {
-                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ').$email.'.';
+                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ') . $email . '.';
                     } else {
-                        $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ').$email;
+                        $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ') . $email;
                     }
                 } else {
                     $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
@@ -807,8 +780,27 @@ class OrderConfirmationPage_Controller extends CartPage_Controller
                 $subject,
                 $message
             );
-        } else {
-            return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
         }
+        return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
+    }
+
+    /**
+     * Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?
+     *
+     * @return bool
+     */
+    protected function onlyShowSubmittedOrders()
+    {
+        return true;
+    }
+
+    /**
+     * Can this page only show Unsubmitted Orders (e.g. CartPage) ?
+     *
+     * @return bool
+     */
+    protected function onlyShowUnsubmittedOrders()
+    {
+        return false;
     }
 }

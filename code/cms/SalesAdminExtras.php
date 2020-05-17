@@ -12,6 +12,13 @@
 class SalesAdminExtras extends ModelAdminEcommerceBaseClass
 {
     /**
+     * Change this variable if you don't want the Import from CSV form to appear.
+     * This variable can be a boolean or an array.
+     * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
+     */
+    public $showImportForm = false;
+
+    /**
      * standard SS variable.
      *
      * @var string
@@ -33,13 +40,6 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     private static $menu_priority = 3.11;
 
     /**
-     * Change this variable if you don't want the Import from CSV form to appear.
-     * This variable can be a boolean or an array.
-     * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
-     */
-    public $showImportForm = false;
-
-    /**
      * standard SS variable.
      *
      * @var string
@@ -52,7 +52,6 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
     }
 
-
     /**
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      *               we make sure that the Order Admin is FIRST
@@ -64,7 +63,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         if ($orderModelManagement) {
             unset($models['Order']);
 
-            return array('Order' => $orderModelManagement) + $models;
+            return ['Order' => $orderModelManagement] + $models;
         }
 
         return $models;
@@ -80,8 +79,8 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
             $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
             $list = $list
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "'.$submittedOrderStatusLogClassName.'"."ID"')
-                ->where('"OrderStatusLog"."ClassName" = \''.$submittedOrderStatusLogClassName.'\'');
+                ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogClassName . '"."ID"')
+                ->where('"OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\'');
         }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
@@ -94,7 +93,6 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
 
         return $list;
     }
-
 
     public function getEditForm($id = null, $fields = null)
     {

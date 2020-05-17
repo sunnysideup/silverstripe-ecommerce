@@ -3,57 +3,50 @@
  * @description: Sometimes you need a large collection of products
  * returned as an array or ArrayList. Using the ORM can be inefficient to retrieve these collections.
  * This class is designed to be extended and allows you to retreive your desired product collection
- * using db query or whatever method you find to be most efficient.   
+ * using db query or whatever method you find to be most efficient.
  **/
 abstract class ProductCollection
 {
-
     /**
-     *
      * @return ArrayList
      */
-    abstract public function getArrayList() : ArrayList;
+    abstract public function getArrayList(): ArrayList;
 
-    
     /**
      * @return array
      */
-    abstract public function getArrayFull() : array;
-      
+    abstract public function getArrayFull(): array;
+
     /**
      * @return array
      */
-    public function getArrayBasic() : array
+    public function getArrayBasic(): array
     {
         $array = [];
 
         $products = DB::query(self::getSQL());
 
         foreach ($products as $product) {
-            $array[$product['ProductID']] =  $product['ClassName'];
+            $array[$product['ProductID']] = $product['ClassName'];
         }
 
-        return $array;    
+        return $array;
     }
 
-    public function getSQL() : string
+    public function getSQL(): string
     {
         $stage = '_Live';
-        $sql = '
+        return '
             SELECT
-                "SiteTree'.$stage.'"."ID" ProductID,
-                "SiteTree'.$stage.'"."ClassName" ClassName
+                "SiteTree' . $stage . '"."ID" ProductID,
+                "SiteTree' . $stage . '"."ClassName" ClassName
             FROM
-                "SiteTree'.$stage.'"
+                "SiteTree' . $stage . '"
             INNER JOIN
-                "Product'.$stage.'" ON "SiteTree'.$stage.'"."ID" = "Product'.$stage.'"."ID"
+                "Product' . $stage . '" ON "SiteTree' . $stage . '"."ID" = "Product' . $stage . '"."ID"
             WHERE
-                "Product'.$stage.'"."AllowPurchase" = 1
+                "Product' . $stage . '"."AllowPurchase" = 1
             ;
         ';
-
-        return $sql;
     }
-
-
 }

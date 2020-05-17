@@ -25,22 +25,22 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             $parentGroup = null,
             $permissionCode = EcommerceConfig::get('EcommerceRole', 'customer_permission_code'),
             $roleTitle = '',
-            $permissionArray = array(),
+            $permissionArray = [],
             $member = null
         );
 
         db::alteration_message('========================== <br />creating sales manager', 'created');
         //work out email
         $email = EcommerceConfig::get('EcommerceRole', 'admin_group_user_email');
-        if (!$email) {
-            $email = 'websales@'.$_SERVER['HTTP_HOST'];
+        if (! $email) {
+            $email = 'websales@' . $_SERVER['HTTP_HOST'];
         }
         $firstName = EcommerceConfig::get('EcommerceRole', 'admin_group_user_first_name');
-        if (!$firstName) {
+        if (! $firstName) {
             $firstName = 'Web';
         }
         $surname = EcommerceConfig::get('EcommerceRole', 'admin_group_user_surname');
-        if (!$surname) {
+        if (! $surname) {
             $surname = 'Sales';
         }
 
@@ -63,15 +63,15 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
 
         //work out email
         $email = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_email');
-        if (!$email) {
-            $email = 'assistant@'.$_SERVER['HTTP_HOST'];
+        if (! $email) {
+            $email = 'assistant@' . $_SERVER['HTTP_HOST'];
         }
         $firstName = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_first_name');
-        if (!$firstName) {
+        if (! $firstName) {
             $firstName = 'Web';
         }
         $surname = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_surname');
-        if (!$surname) {
+        if (! $surname) {
             $surname = 'Asssistant';
         }
 

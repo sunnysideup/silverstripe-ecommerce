@@ -10,13 +10,6 @@
  **/
 class EcommercePaymentController extends Controller
 {
-    private static $allowed_actions = array(
-        'thankyou',
-        'index',
-        'pay',
-        'PaymentForm',
-    );
-
     /**
      * @var Order
      */
@@ -32,6 +25,13 @@ class EcommercePaymentController extends Controller
      */
     protected $goodMessage = '';
 
+    private static $allowed_actions = [
+        'thankyou',
+        'index',
+        'pay',
+        'PaymentForm',
+    ];
+
     /**
      * @param string | Int $orderID
      *
@@ -40,12 +40,10 @@ class EcommercePaymentController extends Controller
     public static function make_payment_link($orderID)
     {
         $urlSegment = EcommerceConfig::get('EcommercePaymentController', 'url_segment');
-        $link = Controller::join_links(
+        return Controller::join_links(
             Director::baseURL(),
-            $urlSegment.'/pay/'.$orderID.'/'
+            $urlSegment . '/pay/' . $orderID . '/'
         );
-
-        return $link;
     }
 
     public function init()
@@ -53,11 +51,11 @@ class EcommercePaymentController extends Controller
         parent::init();
         isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
         Requirements::themedCSS('typography', $themeBaseFolder);
-        Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js');
+        Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         $id = intval($this->request->param('ID'));
-        if (!$id && isset($_REQUEST['OrderID'])) {
+        if (! $id && isset($_REQUEST['OrderID'])) {
             $id = intval($_REQUEST['OrderID']);
         }
         if ($id) {
@@ -70,12 +68,12 @@ class EcommercePaymentController extends Controller
 
     public function index()
     {
-        return array();
+        return [];
     }
 
     public function pay()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -86,7 +84,7 @@ class EcommercePaymentController extends Controller
         $this->goodMessage = _t('EcommercePaymentController.THANKYOU', 'Thank you for your payment.');
         $this->currentOrder = null;
 
-        return array();
+        return [];
     }
 
     /**
@@ -97,7 +95,7 @@ class EcommercePaymentController extends Controller
     public function Link($action = null)
     {
         $URLSegment = Config::inst()->get($this->class, 'url_segment');
-        if (!$URLSegment) {
+        if (! $URLSegment) {
             $URLSegment = $this->class;
         }
 
@@ -118,14 +116,13 @@ class EcommercePaymentController extends Controller
                 Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 
                 return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder, $this->Link('thankyou'));
-            } else {
-                $this->errorMessage = _t('EcommercePaymentController.CANNOTMAKEPAYMENT', 'You can not make a payment for this order.');
             }
+            $this->errorMessage = _t('EcommercePaymentController.CANNOTMAKEPAYMENT', 'You can not make a payment for this order.');
         } else {
             $this->errorMessage = _t('EcommercePaymentController.ORDERCANNOTBEFOUND', 'Order can not be found.');
         }
 
-        return array();
+        return [];
     }
 
     public function ErrorMessage()

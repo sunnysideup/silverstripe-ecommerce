@@ -15,11 +15,11 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 
     protected $description = 'Set default product group values such as DefaultSortOrder.';
 
-    protected $fieldsToCheck = array(
+    protected $fieldsToCheck = [
         'SORT' => 'DefaultSortOrder',
         'FILTER' => 'DefaultFilter',
         'DISPLAY' => 'DisplayStyle',
-    );
+    ];
 
     public function run($request)
     {
@@ -37,16 +37,16 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
     protected function checkField($fieldName, $acceptableValuesArray, $resetValue)
     {
         $faultyProductGroups = ProductGroup::get()
-            ->exclude(array($fieldName => $acceptableValuesArray));
+            ->exclude([$fieldName => $acceptableValuesArray]);
         if ($faultyProductGroups->count()) {
             foreach ($faultyProductGroups as $faultyProductGroup) {
-                $faultyProductGroup->$fieldName = $resetValue;
+                $faultyProductGroup->{$fieldName} = $resetValue;
                 $faultyProductGroup->writeToStage('Stage');
                 $faultyProductGroup->publish('Stage', 'Live');
-                DB::alteration_message("Reset $fieldName for ".$faultyProductGroup->Title, 'created');
+                DB::alteration_message("Reset ${fieldName} for " . $faultyProductGroup->Title, 'created');
             }
         } else {
-            DB::alteration_message("Could not find any faulty records for ProductGroup.$fieldName");
+            DB::alteration_message("Could not find any faulty records for ProductGroup.${fieldName}");
         }
     }
 }

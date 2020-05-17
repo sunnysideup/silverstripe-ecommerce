@@ -4,8 +4,6 @@
  * @description: adds a few functions to SiteTree to give each page
  * some e-commerce related functionality.
  *
- *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: extensions
@@ -56,15 +54,15 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
             $link = $this->EcomConfig()->AccountPageLink();
         }
 
-        return '/Security/login?BackURL='.urlencode($link);
+        return '/Security/login?BackURL=' . urlencode($link);
     }
 
     public function augmentValidURLSegment()
     {
         if ($this->owner instanceof ProductGroup) {
             $checkForDuplicatesURLSegments = ProductGroup::get()
-                ->filter(array('URLSegment' => $this->owner->URLSegment))
-                ->exclude(array('ID' => $this->owner->ID));
+                ->filter(['URLSegment' => $this->owner->URLSegment])
+                ->exclude(['ID' => $this->owner->ID]);
             if ($checkForDuplicatesURLSegments->count() > 0) {
                 return false;
             }
@@ -82,7 +80,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension
     {
         //$this->secureHostSwitcher();
 
-        Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js');
+        Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
@@ -115,7 +113,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension
      **/
     public function SimpleCartLinkAjax()
     {
-        return EcommerceConfig::get('ShoppingCart_Controller', 'url_segment').'/showcart/?ajax=1';
+        return EcommerceConfig::get('ShoppingCart_Controller', 'url_segment') . '/showcart/?ajax=1';
     }
 
     /**
@@ -134,13 +132,12 @@ class EcommerceSiteTreeExtension_Controller extends Extension
     public function ContinueShoppingLink()
     {
         $link = Session::get('ContinueShoppingLink');
-        if (!$link) {
+        if (! $link) {
             $link = Director::baseURL();
         }
 
         return $link;
     }
-
 
     /**
      * Is the page a secure page?

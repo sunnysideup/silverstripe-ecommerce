@@ -1,25 +1,23 @@
 <?php
-/**
- */
 class EcommerceCodeFilter extends Object
 {
     /**
      * @var array
      */
-    protected $regexReplacements = array(
+    protected $regexReplacements = [
         '/[^A-Za-z0-9.\-_]+/u' => '', // remove non-ASCII chars, only allow alphanumeric, dashes and dots.
         '/[\-]{2,}/u' => '-', // remove duplicate dashes
         '/[\_]{2,}/u' => '_', // remove duplicate underscores
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $straightReplacements = array(
+    protected $straightReplacements = [
         '&amp;' => '-and-', //change ampersands to -and-
         '&' => '-and-', //change ampersands to -and-
         ' ' => '-', // remove whitespace
-    );
+    ];
 
     /**
      * makes sure that code is unique and gets rid of special characters
@@ -31,13 +29,13 @@ class EcommerceCodeFilter extends Object
     {
         //exception dealing with Strings
         $isObject = true;
-        if (!is_object($obj)) {
+        if (! is_object($obj)) {
             $str = $obj;
             $obj = new DataObject();
-            $obj->$fieldName = strval($str);
+            $obj->{$fieldName} = strval($str);
             $isObject = false;
         }
-        $s = trim($obj->$fieldName);
+        $s = trim($obj->{$fieldName});
         foreach ($this->regexReplacements as $regex => $replace) {
             $s = preg_replace($regex, $replace, $s);
         }
@@ -49,13 +47,13 @@ class EcommerceCodeFilter extends Object
         if ($s) {
             $count = 2;
             $code = $s;
-            while ($isObject && $obj::get()->filter(array($fieldName => $s))->exclude(array('ID' => $obj->ID))->Count()) {
-                $s = $code.'_'.$count;
+            while ($isObject && $obj::get()->filter([$fieldName => $s])->exclude(['ID' => $obj->ID])->Count()) {
+                $s = $code . '_' . $count;
                 ++$count;
             }
         }
-        $obj->$fieldName = $s;
+        $obj->{$fieldName} = $s;
 
-        return $obj->$fieldName;
+        return $obj->{$fieldName};
     }
 }

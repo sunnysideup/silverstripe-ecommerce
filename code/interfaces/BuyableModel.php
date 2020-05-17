@@ -10,7 +10,6 @@
  * //TEMPLATE STUFF
  * //CRUD SETTINGS.
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: buyables
@@ -18,8 +17,6 @@
  **/
 interface BuyableModel
 {
-
-
     //GROUPS AND SIBLINGS
 
     /**
@@ -35,6 +32,7 @@ interface BuyableModel
     public function Siblings();
 
     //IMAGES
+
     /**
      * returns a "BestAvailable" image if the current one is not available
      * In some cases this is appropriate and in some cases this is not.
@@ -112,7 +110,7 @@ interface BuyableModel
     /**
      * You can set an alternative class name for order item using this method.
      *
-     * @param string $ClassName
+     * @param string $className
      **/
     public function setAlternativeClassNameForOrderItem($className);
 
@@ -180,7 +178,7 @@ interface BuyableModel
     /**
      * set new specific new quantity for buyable's orderitem.
      *
-     * @param float
+     * @param float $quantity
      *
      * @return string (Link)
      */
@@ -240,6 +238,7 @@ interface BuyableModel
      * @return float (casted variable)
      */
     public function CalculatedPrice();
+
     public function getCalculatedPrice();
 
     /**
@@ -248,6 +247,7 @@ interface BuyableModel
      * @return Money
      */
     public function CalculatedPriceAsMoney();
+
     public function getCalculatedPriceAsMoney();
 
     //CRUD SETTINGS

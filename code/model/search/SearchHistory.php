@@ -2,34 +2,33 @@
 
 class SearchHistory extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)',
         'ProductCount' => 'Int',
         'GroupCount' => 'Int',
-    );
-
-    private static $default_sort = [
-        'Created' => 'DESC'
     ];
 
-    private static $searchable_fields = array(
+    private static $default_sort = [
+        'Created' => 'DESC',
+    ];
+
+    private static $searchable_fields = [
         'Title' => 'PartialMatchFilter',
         'ProductCount' => 'GreaterThanOrEqualFilter',
         'GroupCount' => 'GreaterThanOrEqualFilter',
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Created' => 'When',
         'Title' => 'Keyword',
         'ProductCount' => 'Products Found',
         'GroupCount' => 'Categories Found',
-    );
+    ];
 
     private static $indexes = [
         'Title' => true,
-        'Created' => true
+        'Created' => true,
     ];
-
 
     /**
      * standard SS variable.
@@ -37,10 +36,6 @@ class SearchHistory extends DataObject
      * @Var String
      */
     private static $singular_name = 'Search History Entry';
-    public function i18n_singular_name()
-    {
-        return $this->Config()->get('singular_name');
-    }
 
     /**
      * standard SS variable.
@@ -48,6 +43,12 @@ class SearchHistory extends DataObject
      * @Var String
      */
     private static $plural_name = 'Search History Entries';
+
+    public function i18n_singular_name()
+    {
+        return $this->Config()->get('singular_name');
+    }
+
     public function i18n_plural_name()
     {
         return $this->Config()->get('plural_name');

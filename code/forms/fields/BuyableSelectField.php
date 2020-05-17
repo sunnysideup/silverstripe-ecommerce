@@ -61,7 +61,7 @@ class BuyableSelectField extends FormField
         $this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ''), _t('BuyableSelectField.NONE', 'No product selected yet.'));
         $this->buyable = $buyable;
         if ($this->buyable) {
-            $value = $this->buyable->FullName ? $this->buyable->FullName : $this->buyable->getTitle();
+            $value = $this->buyable->FullName ?: $this->buyable->getTitle();
         } else {
             $value = '';
         }
@@ -76,31 +76,18 @@ class BuyableSelectField extends FormField
     /**
      * @return string
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         //Requirements::javascript($this->jquery_UI_JS_location);
         //Requirements::css($this->jquery_UI_CSS_location);
         Requirements::javascript('ecommerce/javascript/EcomBuyableSelectField.js');
-        Requirements::customScript($this->getJavascript(), 'BuyableSelectField'.$this->id());
+        Requirements::customScript($this->getJavascript(), 'BuyableSelectField' . $this->id());
         Requirements::themedCSS('BuyableSelectField', 'ecommerce');
 
-        return
-        '<div class="fieldgroup">'.
-            '<div class="findBuyable fieldGroupInner">'.$this->fieldFindBuyable->SmallFieldHolder().'</div>'.
-            '<div class="selectedBuyable fieldGroupInner">'.$this->fieldSelectedBuyable->SmallFieldHolder().'</div>'.
+        return '<div class="fieldgroup">' .
+            '<div class="findBuyable fieldGroupInner">' . $this->fieldFindBuyable->SmallFieldHolder() . '</div>' .
+            '<div class="selectedBuyable fieldGroupInner">' . $this->fieldSelectedBuyable->SmallFieldHolder() . '</div>' .
         '</div>';
-    }
-
-    protected function getJavascript()
-    {
-        return '
-        EcomBuyableSelectField.set_nothingFound("'._t('BuyableSelectField.NOTHINGFOUND', 'no products found - please try again').'");
-        EcomBuyableSelectField.set_fieldName("'.Convert::raw2js($this->getName()).'");
-        EcomBuyableSelectField.set_formName("'.Convert::raw2js($this->form->FormName()).'");
-        EcomBuyableSelectField.set_countOfSuggestions('.$this->countOfSuggestions.');
-        EcomBuyableSelectField.set_selectedBuyableFieldName("'.Convert::raw2js($this->fieldSelectedBuyable->getName()).'");
-        EcomBuyableSelectField.set_selectedBuyableFieldID("'.Convert::raw2js($this->fieldSelectedBuyable->id()).'");
-        ';
     }
 
     /**
@@ -109,7 +96,7 @@ class BuyableSelectField extends FormField
     public function setValue($data)
     {
         if ($this->buyable) {
-            $value = $this->buyable->FullName ? $this->buyable->FullName : $this->buyable->getTitle();
+            $value = $this->buyable->FullName ?: $this->buyable->getTitle();
             //to TEST!!!
             $this->fieldSelectedBuyable->setValue('Once you have selected a new value, it will appear here...');
         }
@@ -126,8 +113,6 @@ class BuyableSelectField extends FormField
         return $clone;
     }
 
-    /**
-     */
     public function setReadonly($bool)
     {
         parent::setReadonly($bool);
@@ -160,27 +145,39 @@ class BuyableSelectField extends FormField
     {
         $this->jquery_UI_CSS_location = $pathFileName;
     }
+
+    protected function getJavascript()
+    {
+        return '
+        EcomBuyableSelectField.set_nothingFound("' . _t('BuyableSelectField.NOTHINGFOUND', 'no products found - please try again') . '");
+        EcomBuyableSelectField.set_fieldName("' . Convert::raw2js($this->getName()) . '");
+        EcomBuyableSelectField.set_formName("' . Convert::raw2js($this->form->FormName()) . '");
+        EcomBuyableSelectField.set_countOfSuggestions(' . $this->countOfSuggestions . ');
+        EcomBuyableSelectField.set_selectedBuyableFieldName("' . Convert::raw2js($this->fieldSelectedBuyable->getName()) . '");
+        EcomBuyableSelectField.set_selectedBuyableFieldID("' . Convert::raw2js($this->fieldSelectedBuyable->id()) . '");
+        ';
+    }
 }
 
 class BuyableSelectField_DataList extends Controller
 {
-    private static $allowed_actions = array(
-        'json',
-    );
-
-    protected $fieldsToSearch = array(
+    protected $fieldsToSearch = [
         'InternalItemID',
         'Title',
         'FullName',
         'MetaDescription',
-    );
+    ];
+
+    private static $allowed_actions = [
+        'json',
+    ];
 
     private static $url_segment = 'ecommercebuyabledatalist';
 
     public function Link($action = null)
     {
         $URLSegment = Config::inst()->get($this->class, 'url_segment');
-        if (!$URLSegment) {
+        if (! $URLSegment) {
             $URLSegment = $this->class;
         }
 
@@ -200,7 +197,7 @@ class BuyableSelectField_DataList extends Controller
      *  Title => $name
      * );.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return string (JSON)
      */
@@ -209,21 +206,21 @@ class BuyableSelectField_DataList extends Controller
         $countOfSuggestions = $request->requestVar('countOfSuggestions');
         $term = Convert::raw2sql($request->requestVar('term'));
         $arrayOfBuyables = EcommerceConfig::get('EcommerceDBConfig', 'array_of_buyables');
-        $arrayOfAddedItemIDsByClassName = array();
+        $arrayOfAddedItemIDsByClassName = [];
         $lengthOfFieldsToSearch = count($this->fieldsToSearch);
         $lenghtOfBuyables = count($arrayOfBuyables);
-        $array = array();
+        $array = [];
         //search by InternalID ....
         $absoluteCount = 0;
-        $buyables = array();
+        $buyables = [];
         foreach ($arrayOfBuyables as $key => $buyableClassName) {
-            $buyables[$key] = array();
+            $buyables[$key] = [];
             $singleton = singleton($buyableClassName);
             $buyables[$key]['Singleton'] = $singleton;
             $buyables[$key]['ClassName'] = $buyableClassName;
             $buyables[$key]['TableName'] = $buyableClassName;
             if (is_a($singleton, Object::getCustomClass('SiteTree'))) {
-                if (Versioned::current_stage() == 'Live') {
+                if (Versioned::current_stage() === 'Live') {
                     $buyables[$key]['TableName'] .= '_Live';
                 }
             }
@@ -238,19 +235,19 @@ class BuyableSelectField_DataList extends Controller
                     $singleton = $buyableArray['Singleton'];
                     $className = $buyableArray['ClassName'];
                     $tableName = $buyableArray['TableName'];
-                    if (!isset($arrayOfAddedItemIDsByClassName[$className])) {
-                        $arrayOfAddedItemIDsByClassName[$className] = array(-1 => -1);
+                    if (! isset($arrayOfAddedItemIDsByClassName[$className])) {
+                        $arrayOfAddedItemIDsByClassName[$className] = [-1 => -1];
                     }
                     if ($singleton->hasDatabaseField($fieldName)) {
-                        $where = "\"$fieldName\" LIKE '%$term%'
-                                AND \"".$tableName.'"."ID" NOT IN
+                        $where = "\"${fieldName}\" LIKE '%${term}%'
+                                AND \"" . $tableName . '"."ID" NOT IN
                                 AND "AllowPurchase" = 1';
                         $obj = $className::get()
-                            ->filter(array(
-                                $fieldName.':PartialMatch' => $term,
+                            ->filter([
+                                $fieldName . ':PartialMatch' => $term,
                                 'AllowPurchase' => 1,
-                            ))
-                            ->where("\"$tableName\".\"ID\" NOT IN (".implode(',', $arrayOfAddedItemIDsByClassName[$className]).')')
+                            ])
+                            ->where("\"${tableName}\".\"ID\" NOT IN (" . implode(',', $arrayOfAddedItemIDsByClassName[$className]) . ')')
                             ->First();
                         if ($obj) {
                             //we found an object, we dont need to find it again.
@@ -264,25 +261,24 @@ class BuyableSelectField_DataList extends Controller
                                         $useVariationsInstead = true;
                                     }
                                 }
-                                if (!$useVariationsInstead) {
-                                    $name = $obj->FullName ? $obj->FullName : $obj->getTitle();
-                                    $array[$className.$obj->ID] = array(
+                                if (! $useVariationsInstead) {
+                                    $name = $obj->FullName ?: $obj->getTitle();
+                                    $array[$className . $obj->ID] = [
                                         'ClassName' => $className,
                                         'ID' => $obj->ID,
                                         'Version' => $obj->Version,
                                         'Title' => $name,
-                                    );
+                                    ];
                                 }
                             }
                         }
-                    } else {
-                        //echo $singleton->ClassName ." does not have $fieldName";
                     }
+                    //echo $singleton->ClassName ." does not have $fieldName";
                 }
             }
         }
         //remove KEYS
-        $finalArray = array();
+        $finalArray = [];
         $count = 0;
         foreach ($array as $item) {
             if ($count < $countOfSuggestions) {
@@ -303,8 +299,6 @@ class BuyableSelectField_DataList extends Controller
      */
     protected function array2json(array $array)
     {
-        $json = Convert::array2json($array);
-
-        return $json;
+        return Convert::array2json($array);
     }
 }

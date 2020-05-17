@@ -4,16 +4,16 @@ global $lang;
 
 $lang['en_US']['AccountPage']['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you place your first order, otherwise please enter your details below.';
 $lang['en_US']['AccountPage']['NOPAGE'] = 'No AccountPage on this site - please create one !';
-$lang['en_US']['AccountPage']['PLURALNAME'] = array(
+$lang['en_US']['AccountPage']['PLURALNAME'] = [
     'Account Pags',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['AccountPage']['SINGULARNAME'] = array(
+];
+$lang['en_US']['AccountPage']['SINGULARNAME'] = [
     'Account Page',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['General']['DATEFORMATSHORT'] = '%m/%d/%G';
 $lang['en_US']['General']['DATEFORMATLONG'] = '%m/%d/%G %I:%M%p';
 $lang['en_US']['AccountPage.ss']['COMPLETED'] = 'Completed Orders';
@@ -47,74 +47,74 @@ $lang['en_US']['Cart.ss']['REMOVEONE'] = 'Remove one of &quot;%s&quot; from your
 $lang['en_US']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
 $lang['en_US']['Cart.ss']['TOTAL'] = 'Total';
 $lang['en_US']['CheckoutPage']['NOPAGE'] = 'No CheckoutPage on this site - please create one!';
-$lang['en_US']['CheckoutPage']['PLURALNAME'] = array(
+$lang['en_US']['CheckoutPage']['PLURALNAME'] = [
     'Checkout Pags',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['CheckoutPage']['SINGULARNAME'] = array(
+];
+$lang['en_US']['CheckoutPage']['SINGULARNAME'] = [
     'Checkout Page',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['CheckoutPage.ss']['CHECKOUT'] = 'Checkout';
 $lang['en_US']['CheckoutPage.ss']['ORDERSTEP'] = 'Order Status';
 $lang['en_US']['CheckoutPage.ss']['PROCESS'] = 'Process';
 $lang['en_US']['ChequePayment']['MESSAGE'] = 'Payment accepted via Cheque. Please note : products will not be shipped until payment has been received.';
-$lang['en_US']['ChequePayment']['PLURALNAME'] = array(
+$lang['en_US']['ChequePayment']['PLURALNAME'] = [
     'Cheque Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['ChequePayment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['ChequePayment']['SINGULARNAME'] = [
     'Cheque Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['DPSPayment']['PLURALNAME'] = array(
+];
+$lang['en_US']['DPSPayment']['PLURALNAME'] = [
     'D P S Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['DPSPayment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['DPSPayment']['SINGULARNAME'] = [
     'D P S Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['EwayXMLPayment']['PLURALNAME'] = array(
+];
+$lang['en_US']['EwayXMLPayment']['PLURALNAME'] = [
     'Eway X M L Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['EwayXMLPayment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['EwayXMLPayment']['SINGULARNAME'] = [
     'Eway X M L Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['MemberForm']['DETAILSSAVED'] = 'Your details have been saved';
 $lang['en_US']['MemberForm']['LOGGEDIN'] = 'You are currently logged in as ';
 $lang['en_US']['Order']['INCOMPLETE'] = 'Order Incomplete';
-$lang['en_US']['Order']['PLURALNAME'] = array(
+$lang['en_US']['Order']['PLURALNAME'] = [
     'Orders',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['Order']['SINGULARNAME'] = array(
+];
+$lang['en_US']['Order']['SINGULARNAME'] = [
     'Order',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['Order']['SUCCESSFULL'] = 'Order Successful';
-$lang['en_US']['OrderAttribute']['PLURALNAME'] = array(
+$lang['en_US']['OrderAttribute']['PLURALNAME'] = [
     'Order Attributs',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['OrderAttribute']['SINGULARNAME'] = array(
+];
+$lang['en_US']['OrderAttribute']['SINGULARNAME'] = [
     'Order Attribute',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['OrderInformation.ss']['ADDRESS'] = 'Address';
 $lang['en_US']['OrderInformation.ss']['AMOUNT'] = 'Amount';
 $lang['en_US']['OrderInformation.ss']['BUYERSADDRESS'] = 'Buyer\'s Address';
@@ -174,39 +174,39 @@ $lang['en_US']['OrderInformation_PackingSlip.ss']['PAGETITLE'] = 'Shop Print Ord
 $lang['en_US']['OrderInformation_PackingSlip.ss']['QUANTITY'] = 'Quantity';
 $lang['en_US']['OrderInformation_PackingSlip.ss']['TABLESUMMARY'] = 'The contents of your cart are displayed in this form and summary of all fees associated with an order and a rundown of payments options.';
 $lang['en_US']['OrderInformation_Print.ss']['PAGETITLE'] = 'Print Orders';
-$lang['en_US']['OrderItem']['PLURALNAME'] = array(
+$lang['en_US']['OrderItem']['PLURALNAME'] = [
     'Order Items',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['OrderItem']['SINGULARNAME'] = array(
+];
+$lang['en_US']['OrderItem']['SINGULARNAME'] = [
     'Order Item',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['OrderModifier']['PLURALNAME'] = array(
+];
+$lang['en_US']['OrderModifier']['PLURALNAME'] = [
     'Order Modifiers',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['OrderModifier']['SINGULARNAME'] = array(
+];
+$lang['en_US']['OrderModifier']['SINGULARNAME'] = [
     'Order Modifier',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['OrderReport']['CHANGESTATUS'] = 'Change Order Status';
 $lang['en_US']['OrderReport']['NOTEEMAIL'] = 'Note/Email';
 $lang['en_US']['OrderReport']['SENDNOTETO'] = 'Send this note to %s (%s)';
-$lang['en_US']['OrderStatusLog']['PLURALNAME'] = array(
+$lang['en_US']['OrderStatusLog']['PLURALNAME'] = [
     'Order Status Logs',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['OrderStatusLog']['SINGULARNAME'] = array(
+];
+$lang['en_US']['OrderStatusLog']['SINGULARNAME'] = [
     'Order Status Log',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['Order_Content.ss']['NOITEMS'] = 'There are <strong>no</strong> items in your order.';
 $lang['en_US']['Order_Content.ss']['PRICE'] = 'Price';
 $lang['en_US']['Order_Content.ss']['PRODUCT'] = 'Product';
@@ -228,28 +228,28 @@ $lang['en_US']['Order_ReceiptEmail.ss']['TITLE'] = 'Shop Receipt';
 $lang['en_US']['Order_StatusEmail.ss']['HEADLINE'] = 'Shop Status Change';
 $lang['en_US']['Order_StatusEmail.ss']['STATUSCHANGE'] = 'Status changed to \"%s\" for Order #';
 $lang['en_US']['Order_StatusEmail.ss']['TITLE'] = 'Shop Status Change';
-$lang['en_US']['PayPalPayment']['PLURALNAME'] = array(
+$lang['en_US']['PayPalPayment']['PLURALNAME'] = [
     'Pay Pal Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['PayPalPayment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['PayPalPayment']['SINGULARNAME'] = [
     'Pay Pal Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['Payment']['AMOUNT'] = 'Amount';
 $lang['en_US']['Payment']['PAYMENTTYPE'] = 'Payment Type';
-$lang['en_US']['Payment']['PLURALNAME'] = array(
+$lang['en_US']['Payment']['PLURALNAME'] = [
     'Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['Payment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['Payment']['SINGULARNAME'] = [
     'Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['Payment']['SUBTOTAL'] = 'Subtotal';
 $lang['en_US']['PaymentInformation.ss']['AMOUNT'] = 'Amount';
 $lang['en_US']['PaymentInformation.ss']['DATE'] = 'Date';
@@ -259,36 +259,36 @@ $lang['en_US']['PaymentInformation.ss']['PAYMENTINFORMATION'] = 'Payment Informa
 $lang['en_US']['PaymentInformation.ss']['PAYMENTMETHOD'] = 'Method';
 $lang['en_US']['PaymentInformation.ss']['PAYMENTSTATUS'] = 'Payment Status';
 $lang['en_US']['PaymentInformation.ss']['TABLESUMMARY'] = 'The contents of your cart are displayed in this form and summary of all fees associated with an order and a rundown of payments options.';
-$lang['en_US']['PaystationHostedPayment']['PLURALNAME'] = array(
+$lang['en_US']['PaystationHostedPayment']['PLURALNAME'] = [
     'Paystation Hosted Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['PaystationHostedPayment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['PaystationHostedPayment']['SINGULARNAME'] = [
     'Paystation Hosted Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['PaystationPayment']['PLURALNAME'] = array(
+];
+$lang['en_US']['PaystationPayment']['PLURALNAME'] = [
     'Paystation Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['PaystationPayment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['PaystationPayment']['SINGULARNAME'] = [
     'Paystation Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['Product']['PLURALNAME'] = array(
+];
+$lang['en_US']['Product']['PLURALNAME'] = [
     'Products',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['Product']['SINGULARNAME'] = array(
+];
+$lang['en_US']['Product']['SINGULARNAME'] = [
     'Product',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['Product.ss']['ADD'] = 'Add &quot;%s&quot; to your cart';
 $lang['en_US']['Product.ss']['ADDLINK'] = 'Add this item to cart';
 $lang['en_US']['Product.ss']['ADDONE'] = 'Add one more of &quot;%s&quot; to your cart';
@@ -305,16 +305,16 @@ $lang['en_US']['Product.ss']['REMOVE'] = 'Remove &quot;%s&quot; from your cart';
 $lang['en_US']['Product.ss']['REMOVEALL'] = 'Remove one of &quot;%s&quot; from your cart';
 $lang['en_US']['Product.ss']['REMOVELINK'] = '&#187; Remove from cart';
 $lang['en_US']['Product.ss']['SIZE'] = 'Size';
-$lang['en_US']['ProductGroup']['PLURALNAME'] = array(
+$lang['en_US']['ProductGroup']['PLURALNAME'] = [
     'Product Groups',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['ProductGroup']['SINGULARNAME'] = array(
+];
+$lang['en_US']['ProductGroup']['SINGULARNAME'] = [
     'Product Group',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];
 $lang['en_US']['ProductGroup.ss']['FEATURED'] = 'Featured Products';
 $lang['en_US']['ProductGroup.ss']['OTHER'] = 'Other Products';
 $lang['en_US']['ProductGroupItem.ss']['ADD'] = 'Add &quot;%s&quot; to your cart';
@@ -332,53 +332,53 @@ $lang['en_US']['ProductGroupItem.ss']['REMOVE'] = 'Remove &quot;%s&quot; from yo
 $lang['en_US']['ProductGroupItem.ss']['REMOVEALL'] = 'Remove one of &quot;%s&quot; from your cart';
 $lang['en_US']['ProductGroupItem.ss']['REMOVELINK'] = '&#187; Remove from cart';
 $lang['en_US']['ProductMenu.ss']['GOTOPAGE'] = 'Go to the %s page';
-$lang['en_US']['ProductVariation']['PLURALNAME'] = array(
+$lang['en_US']['ProductVariation']['PLURALNAME'] = [
     'Product Variations',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['ProductVariation']['SINGULARNAME'] = array(
+];
+$lang['en_US']['ProductVariation']['SINGULARNAME'] = [
     'Product Variation',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['SimpleShippingModifier']['PLURALNAME'] = array(
+];
+$lang['en_US']['SimpleShippingModifier']['PLURALNAME'] = [
     'Simple Shipping Modifiers',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['SimpleShippingModifier']['SINGULARNAME'] = array(
+];
+$lang['en_US']['SimpleShippingModifier']['SINGULARNAME'] = [
     'Simple Shipping Modifier',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['TaxModifier']['PLURALNAME'] = array(
+];
+$lang['en_US']['TaxModifier']['PLURALNAME'] = [
     'Tax Modifiers',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['TaxModifier']['SINGULARNAME'] = array(
+];
+$lang['en_US']['TaxModifier']['SINGULARNAME'] = [
     'Tax Modifier',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['WeightShippingModifier']['PLURALNAME'] = array(
+];
+$lang['en_US']['WeightShippingModifier']['PLURALNAME'] = [
     'Weight Shipping Modifiers',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['WeightShippingModifier']['SINGULARNAME'] = array(
+];
+$lang['en_US']['WeightShippingModifier']['SINGULARNAME'] = [
     'Weight Shipping Modifier',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
-$lang['en_US']['WorldpayPayment']['PLURALNAME'] = array(
+];
+$lang['en_US']['WorldpayPayment']['PLURALNAME'] = [
     'Worldpay Payments',
     50,
     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
-);
-$lang['en_US']['WorldpayPayment']['SINGULARNAME'] = array(
+];
+$lang['en_US']['WorldpayPayment']['SINGULARNAME'] = [
     'Worldpay Payment',
     50,
     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
-);
+];

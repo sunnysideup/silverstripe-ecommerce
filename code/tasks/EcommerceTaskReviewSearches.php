@@ -13,6 +13,7 @@ class EcommerceTaskReviewSearches extends BuildTask
      * @int
      */
     protected $defaultMaxRows = 999;
+
     /**
      * number of days shown.
      *
@@ -54,19 +55,19 @@ class EcommerceTaskReviewSearches extends BuildTask
     {
         $maxRows = intval(preg_replace('/[^\d.]/', '', $request->getVar('maxrows')));
         $maxRows = intval($maxRows - 0);
-        if (!$maxRows) {
+        if (! $maxRows) {
             $maxRows = $this->defaultMaxRows;
         }
         $days = intval($request->getVar('days') - 0);
-        if (!$days) {
+        if (! $days) {
             $days = $this->defaultDays;
         }
         $countMin = intval($request->getVar('min') - 0);
-        if (!$countMin) {
+        if (! $countMin) {
             $countMin = $this->defaultMinimum;
         }
         $endingDaysBack = intval($request->getVar('ago') - 0);
-        if (!$endingDaysBack) {
+        if (! $endingDaysBack) {
             $endingDaysBack = $this->endingDaysBack;
         }
         $field = EcommerceSearchHistoryFormField::create('stats', $this->title)
@@ -75,7 +76,6 @@ class EcommerceTaskReviewSearches extends BuildTask
             ->setMaxRows($maxRows)
             ->setEndingDaysBack($endingDaysBack);
         echo $field->forTemplate();
-        $arrayNumberOfDays = array(30, 365);
 
         $fields = FieldList::create(
             HeaderField::create(
@@ -103,8 +103,8 @@ class EcommerceTaskReviewSearches extends BuildTask
                 isset($_GET['min']) ? $_GET['min'] : $this->defaultMinimum
             )->setRightTitle('Minimum number of searches for it to show up in the statistics. For example, enter five to show only phrases that were searched for at least five times during the specified period.')
         );
-        $actions = FieldList::create(FormAction::create("run")->setTitle("show results"));
-        $form = Form::create($this, "SearchFields", $fields, $actions, null);
+        $actions = FieldList::create(FormAction::create('run')->setTitle('show results'));
+        $form = Form::create($this, 'SearchFields', $fields, $actions, null);
         $form->setAttribute('method', 'get');
         $form->setAttribute('action', $this->Link());
         echo $form->forTemplate();

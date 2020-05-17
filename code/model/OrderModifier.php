@@ -22,7 +22,6 @@
  * The Cart is a smaller version of the Table. Table is used for Checkout Page + Confirmation page.
  * Cart is used for other pages (pre-checkout for example). At times, the values and names may differ
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
@@ -30,13 +29,39 @@
  **/
 class OrderModifier extends OrderAttribute
 {
+    // ########################################  *** 3. other static variables (e.g. special_name_for_something)
+
+    /**
+     * $doNotAddAutomatically Identifies whether a modifier is NOT automatically added
+     * Most modifiers, such as delivery and GST would be added automatically.
+     * However, there are also ones that are not added automatically.
+     *
+     * @var bool
+     **/
+    protected $doNotAddAutomatically = false;
+
+    /**
+     * $can_be_removed Identifies whether a modifier can be removed by the user.
+     *
+     * @var bool
+     **/
+    protected $canBeRemoved = false;
+
+    /**
+     * This is a flag for running an update.
+     * Running an update means that all fields are (re)set, using the Live{FieldName} methods.
+     *
+     * @var bool
+     **/
+    protected $mustUpdate = false;
+
     /**
      * what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderModifier/.
      *
      * @var array
      */
-    private static $api_access = array(
-        'view' => array(
+    private static $api_access = [
+        'view' => [
             'CalculatedTotal',
             'Sort',
             'GroupSort',
@@ -48,8 +73,8 @@ class OrderModifier extends OrderAttribute
             'TableValue',
             'HasBeenRemoved',
             'Order',
-        ),
-    );
+        ],
+    ];
 
     // ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
 
@@ -57,12 +82,12 @@ class OrderModifier extends OrderAttribute
      * @var array
      *            stardard SS definition
      */
-    private static $db = array(
+    private static $db = [
         'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
         'TableValue' => 'Currency', //the $$ shown in the checkout table
         'HasBeenRemoved' => 'Boolean', // we add this so that we can see what modifiers have been removed
-        'Type' => 'Enum("Other,Discount,Tax,Delivery", "Other")'
-    );
+        'Type' => 'Enum("Other,Discount,Tax,Delivery", "Other")',
+    ];
 
     /**
      * make sure to choose the right Type and Name for this.
@@ -70,9 +95,9 @@ class OrderModifier extends OrderAttribute
      *
      * @var array
      */
-    private static $defaults = array(
+    private static $defaults = [
         'Name' => 'Modifier', //making sure that you choose a different name for any class extensions.
-    );
+    ];
 
     // ########################################  *** 2. cms variables  + functions (e.g. getCMSFields, $searchableFields)
 
@@ -81,38 +106,38 @@ class OrderModifier extends OrderAttribute
      *
      * @var array
      */
-    private static $searchable_fields = array(
-        'OrderID' => array(
+    private static $searchable_fields = [
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        ),
+        ],
         //"TableTitle" => "PartialMatchFilter",
-        'TableValue' => "PartialMatchFilter",
-        'HasBeenRemoved' => "ExactMatchFilter",
-        'Type' => "ExactMatchFilter",
-    );
+        'TableValue' => 'PartialMatchFilter',
+        'HasBeenRemoved' => 'ExactMatchFilter',
+        'Type' => 'ExactMatchFilter',
+    ];
 
     /**
      * stardard SS definition.
      *
      * @var array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'OrderID' => 'Order ID',
         'TableTitle' => 'Table Title',
         'TableSubTitle' => 'More ...',
         'TableValue' => 'Value Shown',
         'CalculatedTotal' => 'Calculation Total',
-    );
+    ];
 
     /**
      * stardard SS definition.
      *
      * @var array
      */
-    private static $casting = array(
+    private static $casting = [
         'TableValueAsMoney' => 'Money',
-    );
+    ];
 
     /**
      * stardard SS variable.
@@ -120,10 +145,6 @@ class OrderModifier extends OrderAttribute
      * @var string
      */
     private static $singular_name = 'Order Modifier';
-    public function i18n_singular_name()
-    {
-        return _t('OrderModifier.SINGULARNAME', 'Order Modifier');
-    }
 
     /**
      * stardard SS variable.
@@ -131,10 +152,6 @@ class OrderModifier extends OrderAttribute
      * @var string
      */
     private static $plural_name = 'Order Modifiers';
-    public function i18n_plural_name()
-    {
-        return _t('OrderModifier.PLURALNAME', 'Order Modifiers');
-    }
 
     /**
      * Standard SS variable.
@@ -142,6 +159,34 @@ class OrderModifier extends OrderAttribute
      * @var string
      */
     private static $description = 'An addition to the order that sits between the sub-total and the total (e.g. tax, delivery, etc...).';
+
+    /**
+     * When recalculating all the modifiers, this private variable is added to as a running total
+     * other modifiers can then tap into this to work out their own values.
+     * For example, a tax modifier needs to know the value of the other modifiers before calculating
+     * its own value (i.e. tax is also paid over handling and shipping).
+     * Always consider the "order" (which one first) of the order modifiers when using this variable.
+     *
+     * @var float
+     **/
+    private $runningTotal = 0;
+
+    /**
+     * caching of relevant OrderModifier_Descriptor.
+     *
+     * @var OrderModifier_Descriptor
+     */
+    private $orderModifier_Descriptor = null;
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderModifier.SINGULARNAME', 'Order Modifier');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('OrderModifier.PLURALNAME', 'Order Modifiers');
+    }
 
     /**
      * stardard SS metbod.
@@ -184,7 +229,7 @@ class OrderModifier extends OrderAttribute
         $availableModifiers = EcommerceConfig::get('Order', 'modifiers');
 
         if ($this->exists()) {
-            $fields->addFieldToTab('Root.Main', new LiteralField('MyClassName', '<h2>'.$this->singular_name().'</h2>'), 'Name');
+            $fields->addFieldToTab('Root.Main', new LiteralField('MyClassName', '<h2>' . $this->singular_name() . '</h2>'), 'Name');
         } else {
             $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', 'OrderModifier', $availableModifiers);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Name');
@@ -217,50 +262,10 @@ class OrderModifier extends OrderAttribute
         return $fields;
     }
 
-    // ########################################  *** 3. other static variables (e.g. special_name_for_something)
-
-    /**
-     * $doNotAddAutomatically Identifies whether a modifier is NOT automatically added
-     * Most modifiers, such as delivery and GST would be added automatically.
-     * However, there are also ones that are not added automatically.
-     *
-     * @var bool
-     **/
-    protected $doNotAddAutomatically = false;
-
-    /**
-     * $can_be_removed Identifies whether a modifier can be removed by the user.
-     *
-     * @var bool
-     **/
-    protected $canBeRemoved = false;
-
-    /**
-     * This is a flag for running an update.
-     * Running an update means that all fields are (re)set, using the Live{FieldName} methods.
-     *
-     * @var bool
-     **/
-    protected $mustUpdate = false;
-
-    /**
-     * When recalculating all the modifiers, this private variable is added to as a running total
-     * other modifiers can then tap into this to work out their own values.
-     * For example, a tax modifier needs to know the value of the other modifiers before calculating
-     * its own value (i.e. tax is also paid over handling and shipping).
-     * Always consider the "order" (which one first) of the order modifiers when using this variable.
-     *
-     * @var float
-     **/
-    private $runningTotal = 0;
-
     // ######################################## *** 4. CRUD functions (e.g. canEdit)
 
     // ########################################  *** 5. init and update functions
 
-    /**
-     *
-     */
     public static function init_for_order($className)
     {
         user_error('the init_for_order method has been depreciated, instead, use $myModifier->init()', E_USER_ERROR);
@@ -287,7 +292,7 @@ class OrderModifier extends OrderAttribute
      **/
     public function runUpdate($recalculate = false)
     {
-        if (!$this->IsRemoved()) {
+        if (! $this->IsRemoved()) {
             $this->checkField('Name');
             $this->checkField('CalculatedTotal');
             $this->checkField('TableValue');
@@ -298,16 +303,6 @@ class OrderModifier extends OrderAttribute
             $this->runningTotal += $this->CalculatedTotal;
         }
         parent::runUpdate($recalculate);
-    }
-
-    /**
-     * You can overload this method as canEdit might not be the right indicator.
-     *
-     * @return bool
-     **/
-    protected function canBeUpdated()
-    {
-        return $this->canEdit();
     }
 
     /**
@@ -328,24 +323,6 @@ class OrderModifier extends OrderAttribute
     public function canDelete($member = null)
     {
         return false;
-    }
-
-    /**
-     * This method simply checks if a fields has changed and if it has changed it updates the field.
-     *
-     * @param string $fieldName
-     **/
-    protected function checkField($fieldName)
-    {
-        if ($this->canBeUpdated()) {
-            $functionName = 'Live'.$fieldName;
-            $oldValue = $this->$fieldName;
-            $newValue = $this->$functionName();
-            if ($oldValue != $newValue) {
-                $this->$fieldName = $newValue;
-                $this->mustUpdate = true;
-            }
-        }
     }
 
     /**
@@ -424,32 +401,6 @@ class OrderModifier extends OrderAttribute
         }
     }
 
-    /**
-     * @return object (HeadingField)
-     */
-    protected function headingField()
-    {
-        $name = $this->ClassName.'Heading';
-        if ($this->Heading()) {
-            return new HeaderField($name, $this->Heading(), 4);
-        }
-
-        return new LiteralField($name, '<!-- EmptyHeading -->', '<!-- EmptyHeading -->');
-    }
-
-    /**
-     * @return object (LiteralField)
-     */
-    protected function descriptionField()
-    {
-        $name = $this->ClassName.'Description';
-        if ($this->Description()) {
-            return new LiteralField($name, '<div id="'.Convert::raw2att($name).'DescriptionHolder" class="descriptionHolder">'.Convert::raw2xml($this->Description()).'</div>');
-        }
-
-        return new LiteralField($name, '<!-- EmptyDescription -->', '<!-- EmptyDescription -->');
-    }
-
     // ######################################## *** 7. template functions (e.g. ShowInTable, TableTitle, etc...)
 
     /**
@@ -461,33 +412,10 @@ class OrderModifier extends OrderAttribute
     {
         return $this->getTableTitle();
     }
+
     public function getTableTitle()
     {
         return $this->Name;
-    }
-
-    /**
-     * caching of relevant OrderModifier_Descriptor.
-     *
-     * @var OrderModifier_Descriptor
-     */
-    private $orderModifier_Descriptor = null;
-
-    /**
-     * returns the relevant orderModifier_Descriptor.
-     *
-     * @return OrderModifier_Descriptor | Null
-     */
-    protected function getOrderModifier_Descriptor()
-    {
-        if ($this->orderModifier_Descriptor === null) {
-            $this->orderModifier_Descriptor = DataObject::get_one(
-                'OrderModifier_Descriptor',
-                array('ModifierClassName' => $this->ClassName)
-            );
-        }
-
-        return $this->orderModifier_Descriptor;
     }
 
     /**
@@ -540,7 +468,7 @@ class OrderModifier extends OrderAttribute
      */
     public function ShowInTable()
     {
-        if (!$this->baseRunUpdateCalled) {
+        if (! $this->baseRunUpdateCalled) {
             if ($this->canBeUpdated()) {
                 user_error('While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier', E_USER_ERROR);
             }
@@ -558,6 +486,7 @@ class OrderModifier extends OrderAttribute
     {
         return $this->getTableValueAsMoney();
     }
+
     public function getTableValueAsMoney()
     {
         return EcommerceCurrency::get_money_object_from_order_currency($this->TableValue, $this->Order());
@@ -628,7 +557,7 @@ class OrderModifier extends OrderAttribute
      **/
     public function AddLink()
     {
-        $params = array();
+        $params = [];
         $updatedLinkParameters = $this->extend('ModifierAddLinkUpdate', $params);
         if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
@@ -646,7 +575,7 @@ class OrderModifier extends OrderAttribute
      **/
     public function RemoveLink()
     {
-        $param = array();
+        $param = [];
         $updatedLinkParameters = $this->extend('ModifierRemoveLinkUpdate', $param);
         if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
@@ -664,9 +593,8 @@ class OrderModifier extends OrderAttribute
      */
     public function PostSubmitAction()
     {
-        return array();
+        return [];
     }
-
 
     // ######################################## ***  8. inner calculations....
 
@@ -682,41 +610,9 @@ class OrderModifier extends OrderAttribute
         return $this->runningTotal;
     }
 
-    // ######################################## ***  9. calculate database fields ( = protected function Live[field name]() { ....}
-
-    protected function LiveName()
-    {
-        user_error('The "LiveName" method has be defined in ...'.$this->ClassName, E_USER_NOTICE);
-        $defaults = $this->config()->get('defaults');
-
-        return $defaults['Name'];
-    }
-
-    protected function LiveTableValue()
-    {
-        return $this->LiveCalculatedTotal();
-    }
-
-    /**
-     * This function is always called to determine the
-     * amount this modifier needs to charge or deduct - if any.
-     *
-     *
-     * @return Currency
-     */
-    protected function LiveCalculatedTotal()
-    {
-        return $this->CalculatedTotal;
-    }
-
-    public function getLiveType() : string
+    public function getLiveType(): string
     {
         return $this->LiveType();
-    }
-
-    protected function LiveType()
-    {
-        return $this->Type ??  'Other';;
     }
 
     // ######################################## ***  10. Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
@@ -730,6 +626,7 @@ class OrderModifier extends OrderAttribute
     {
         return $this->CalculatedTotal > 0;
     }
+
     /**
      * should be extended if it is true in child class.
      *
@@ -747,7 +644,7 @@ class OrderModifier extends OrderAttribute
      */
     public function IsNoChange()
     {
-        return $this->CalculatedTotal == 0;
+        return $this->CalculatedTotal === 0;
     }
 
     /**
@@ -760,7 +657,6 @@ class OrderModifier extends OrderAttribute
     {
         return $this->HasBeenRemoved;
     }
-
 
     // ######################################## ***  11. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
@@ -809,57 +705,57 @@ class OrderModifier extends OrderAttribute
         if (is_array($function)) {
             list($function, $format) = $function;
         }
-        $total = $this->$function();
+        $total = $this->{$function}();
         if (isset($format)) {
-            $total = $total->$format();
+            $total = $total->{$format}();
         }
         $ajaxObject = $this->AJAXDefinitions();
         //TableValue is a database value
         $tableValue = DBField::create_field('Currency', $this->TableValue)->Nice();
         if ($this->HideInAjaxUpdate()) {
-            $js[] = array(
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableID(),
                 'p' => 'hide',
                 'v' => 1,
-            );
+            ];
         } else {
-            $js[] = array(
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableID(),
                 'p' => 'hide',
                 'v' => 0,
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->TableTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->CartTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableSubTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->TableSubTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartSubTitleID(),
                 'p' => 'innerHTML',
                 'v' => $this->CartSubTitle(),
-            );
-            $js[] = array(
+            ];
+            $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableTotalID(),
                 'p' => 'innerHTML',
                 'v' => $total,
-            );
+            ];
         }
 
         return $js;
@@ -873,8 +769,108 @@ class OrderModifier extends OrderAttribute
      */
     public function debug()
     {
-        $html = EcommerceTaskDebugCart::debug_object($this);
+        return EcommerceTaskDebugCart::debug_object($this);
+    }
 
-        return $html;
+    /**
+     * You can overload this method as canEdit might not be the right indicator.
+     *
+     * @return bool
+     **/
+    protected function canBeUpdated()
+    {
+        return $this->canEdit();
+    }
+
+    /**
+     * This method simply checks if a fields has changed and if it has changed it updates the field.
+     *
+     * @param string $fieldName
+     **/
+    protected function checkField($fieldName)
+    {
+        if ($this->canBeUpdated()) {
+            $functionName = 'Live' . $fieldName;
+            $oldValue = $this->{$fieldName};
+            $newValue = $this->{$functionName}();
+            if ($oldValue !== $newValue) {
+                $this->{$fieldName} = $newValue;
+                $this->mustUpdate = true;
+            }
+        }
+    }
+
+    /**
+     * @return object (HeadingField)
+     */
+    protected function headingField()
+    {
+        $name = $this->ClassName . 'Heading';
+        if ($this->Heading()) {
+            return new HeaderField($name, $this->Heading(), 4);
+        }
+
+        return new LiteralField($name, '<!-- EmptyHeading -->', '<!-- EmptyHeading -->');
+    }
+
+    /**
+     * @return object (LiteralField)
+     */
+    protected function descriptionField()
+    {
+        $name = $this->ClassName . 'Description';
+        if ($this->Description()) {
+            return new LiteralField($name, '<div id="' . Convert::raw2att($name) . 'DescriptionHolder" class="descriptionHolder">' . Convert::raw2xml($this->Description()) . '</div>');
+        }
+
+        return new LiteralField($name, '<!-- EmptyDescription -->', '<!-- EmptyDescription -->');
+    }
+
+    /**
+     * returns the relevant orderModifier_Descriptor.
+     *
+     * @return OrderModifier_Descriptor | Null
+     */
+    protected function getOrderModifier_Descriptor()
+    {
+        if ($this->orderModifier_Descriptor === null) {
+            $this->orderModifier_Descriptor = DataObject::get_one(
+                'OrderModifier_Descriptor',
+                ['ModifierClassName' => $this->ClassName]
+            );
+        }
+
+        return $this->orderModifier_Descriptor;
+    }
+
+    // ######################################## ***  9. calculate database fields ( = protected function Live[field name]() { ....}
+
+    protected function LiveName()
+    {
+        user_error('The "LiveName" method has be defined in ...' . $this->ClassName, E_USER_NOTICE);
+        $defaults = $this->config()->get('defaults');
+
+        return $defaults['Name'];
+    }
+
+    protected function LiveTableValue()
+    {
+        return $this->LiveCalculatedTotal();
+    }
+
+    /**
+     * This function is always called to determine the
+     * amount this modifier needs to charge or deduct - if any.
+     *
+     * @return Currency
+     */
+    protected function LiveCalculatedTotal()
+    {
+        return $this->CalculatedTotal;
+    }
+
+    protected function LiveType()
+    {
+        return $this->Type ?? 'Other';
     }
 }

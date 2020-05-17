@@ -4,7 +4,6 @@
 /**
  * @description:
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
@@ -36,24 +35,22 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $id = intval($request->getVar('id')) - 0;
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
-        if ($ordersinQueue->count() == 0) {
+        if ($ordersinQueue->count() === 0) {
             echo 'No orders in queue';
             return;
         }
-        echo '<h3>There are '.$ordersinQueue->count().' in the queue, processing '.$this->limit.' now</h3>';
+        echo '<h3>There are ' . $ordersinQueue->count() . ' in the queue, processing ' . $this->limit . ' now</h3>';
         if ($id) {
-            echo '<h3>FORCING Order with ID: '.$id.'</h3>';
-            $ordersinQueue = $ordersinQueue->filter(array('ID' => $id));
+            echo '<h3>FORCING Order with ID: ' . $id . '</h3>';
+            $ordersinQueue = $ordersinQueue->filter(['ID' => $id]);
         }
         $this->tryToFinaliseOrders($ordersinQueue);
         echo '<hr />';
         echo '<hr />';
-        echo 'PROCESSED IN: '.round(((microtime(true) - $now) / 1), 5).' seconds';
+        echo 'PROCESSED IN: ' . round(((microtime(true) - $now) / 1), 5) . ' seconds';
     }
 
-
     /**
-     *
      * @param  DataList $orders orders to be processsed.
      */
     protected function tryToFinaliseOrders($orders)
@@ -64,12 +61,12 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $orders = $orders->sort('RAND()');
         $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
         foreach ($orders as $order) {
-            echo '<hr />Processing order: '.$order->ID;
+            echo '<hr />Processing order: ' . $order->ID;
             $outcome = $queueObjectSingleton->process($order);
             if ($outcome === true) {
                 echo '<br />... Order moved successfully.<hr />';
             } else {
-                echo '<br />... '.$outcome.'<hr />';
+                echo '<br />... ' . $outcome . '<hr />';
             }
         }
     }

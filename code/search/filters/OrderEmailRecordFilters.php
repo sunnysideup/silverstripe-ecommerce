@@ -19,7 +19,7 @@ class OrderEmailRecordFilters_MultiOptionsetStatusIDFilter extends ExactMatchFil
         $this->model = $query->applyRelation($this->relation);
         $values = $this->getValue();
         if (is_array($values) && count($values)) {
-            $query->where('"OrderStepID" IN ('.implode(', ', $values).')');
+            $query->where('"OrderStepID" IN (' . implode(', ', $values) . ')');
         }
 
         return $query;

@@ -20,7 +20,7 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
     {
         $problem = DB::query('SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = 0');
         if ($problem->value()) {
-            DB::alteration_message('the size of the problem is: '.$problem->value(), 'deleted');
+            DB::alteration_message('the size of the problem is: ' . $problem->value(), 'deleted');
         } else {
             DB::alteration_message('No broken links found.', 'created');
         }
@@ -28,20 +28,20 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
         if ($rows) {
             foreach ($rows as $row) {
                 $orderID = $row['ID'];
-                $inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = $orderID");
+                $inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = ${orderID}");
                 if ($inners->value() < 1) {
                     $sql = "
 					SELECT *
 					FROM OrderStatusLog_Submitted
 					WHERE
-						\"OrderAsString\" LIKE '%s:7:\"OrderID\";i:".$orderID."%'
-						OR \"OrderAsHTML\" LIKE '%Order #".$orderID."%'
+						\"OrderAsString\" LIKE '%s:7:\"OrderID\";i:" . $orderID . "%'
+						OR \"OrderAsHTML\" LIKE '%Order #" . $orderID . "%'
 
 					LIMIT 1";
                     if ($innerInners = DB::query($sql)) {
                         foreach ($innerInners as $innerInnerRow) {
-                            DB::alteration_message('FOUND '.$innerInnerRow['ID'], 'created');
-                            DB::query("UPDATE \"OrderStatusLog\" SET \"OrderID\" = $orderID WHERE \"OrderStatusLog\".\"ID\" = ".$innerInnerRow['ID'].' AND "OrderID" < 1');
+                            DB::alteration_message('FOUND ' . $innerInnerRow['ID'], 'created');
+                            DB::query("UPDATE \"OrderStatusLog\" SET \"OrderID\" = ${orderID} WHERE \"OrderStatusLog\".\"ID\" = " . $innerInnerRow['ID'] . ' AND "OrderID" < 1');
                         }
                     }
                 }

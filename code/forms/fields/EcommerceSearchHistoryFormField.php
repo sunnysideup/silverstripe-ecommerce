@@ -31,13 +31,11 @@ class EcommerceSearchHistoryFormField extends LiteralField
     protected $maxRows = 20;
 
     /**
-     *
      * @var bool
      */
     protected $addTitle = true;
 
     /**
-     *
      * @var bool
      */
     protected $addAtoZ = true;
@@ -55,7 +53,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param int
+     * @param int $days
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -67,7 +65,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param int
+     * @param int $count
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -79,7 +77,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param int
+     * @param int $b
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -91,7 +89,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param int
+     * @param int $count
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -103,7 +101,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param int
+     * @param int $number
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -115,7 +113,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param bool
+     * @param $b
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -127,7 +125,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param bool
+     * @param $b
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -138,13 +136,12 @@ class EcommerceSearchHistoryFormField extends LiteralField
         return $this;
     }
 
-
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         return $this->Field($properties);
     }
 
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
         $title = $this->getContent();
@@ -152,54 +149,54 @@ class EcommerceSearchHistoryFormField extends LiteralField
         $data = DB::query('
             SELECT COUNT(ID) myCount, "Title"
             FROM "SearchHistory"
-            WHERE Created > ( NOW() - INTERVAL '.$totalNumberOfDaysBack.' DAY )
-                AND Created < ( NOW() - INTERVAL '.$this->endingDaysBack." DAY )
+            WHERE Created > ( NOW() - INTERVAL ' . $totalNumberOfDaysBack . ' DAY )
+                AND Created < ( NOW() - INTERVAL ' . $this->endingDaysBack . " DAY )
             GROUP BY \"Title\"
-            HAVING COUNT(\"ID\") >= $this->minimumCount
+            HAVING COUNT(\"ID\") >= {$this->minimumCount}
             ORDER BY myCount DESC
-            LIMIT ".$this->maxRows."
-        ");
-        if (!$this->minimumCount) {
+            LIMIT " . $this->maxRows . '
+        ');
+        if (! $this->minimumCount) {
             ++$this->minimumCount;
         }
         $content = '';
         $tableContent = '';
         if ($title && $this->addTitle) {
-            $content .= '<h3>'.$title.'</h3>';
+            $content .= '<h3>' . $title . '</h3>';
         }
         $content .= '
         <div id="SearchHistoryTableForCMS">
             <h3>
                 Search Phrases'
-                .($this->minimumCount > 1 ? ', entered at least '.$this->minimumCount.' times' : '')
-                .($this->maxRows < 1000 ? ', limited to '.$this->maxRows.' entries, ' : '')
-                .' between '.date('j-M-Y', strtotime('-'.$totalNumberOfDaysBack.' days')).' and '.date('j-M-Y', strtotime('-'.$this->endingDaysBack.' days')).'
+                . ($this->minimumCount > 1 ? ', entered at least ' . $this->minimumCount . ' times' : '')
+                . ($this->maxRows < 1000 ? ', limited to ' . $this->maxRows . ' entries, ' : '')
+                . ' between ' . date('j-M-Y', strtotime('-' . $totalNumberOfDaysBack . ' days')) . ' and ' . date('j-M-Y', strtotime('-' . $this->endingDaysBack . ' days')) . '
             </h3>';
         $count = 0;
         if ($data && count($data)) {
             $tableContent .= '
                 <table class="highToLow" style="widht: 100%">';
-            $list = array();
+            $list = [];
             foreach ($data as $key => $row) {
                 $count++;
                 //for the highest count, we work out a max-width
-                if (!$key) {
+                if (! $key) {
                     $maxWidth = $row['myCount'];
                 }
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
-                $list[$row['myCount'].'-'.$key] = $row['Title'];
-                $link = $redirectToPage->Link('ProductSearchForm').'?Keyword='.urlencode($row['Title']).'&action_doProductSearchForm=Search';
-                $debugLink = $link .'&DebugSearch=1';
+                $list[$row['myCount'] . '-' . $key] = $row['Title'];
+                $link = $redirectToPage->Link('ProductSearchForm') . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                $debugLink = $link . '&DebugSearch=1';
                 $tableContent .= '
                     <tr>
                         <td style="text-align: right; width: 30%; padding: 5px;">
-                            <a href="'.$link.'">'.$row['Title'].'</a>
+                            <a href="' . $link . '">' . $row['Title'] . '</a>
                         </td>
                         <td style="background-color: silver;  padding: 5px; width: 70%;">
-                            <div style="width: '.$multipliedWidthInPercentage.'%; background-color: #C51162; color: #fff;">'.$row['myCount'].'</div>
+                            <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #C51162; color: #fff;">' . $row['myCount'] . '</div>
                         </td>
                         <td style="background-color: silver; width: 20px">
-                            <a href="'.$debugLink.'">☕</a>
+                            <a href="' . $debugLink . '">☕</a>
                         </td>
                     </tr>';
             }
@@ -211,20 +208,20 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     <h3>A - Z</h3>
                     <table class="aToz" style="widht: 100%">';
                 foreach ($list as $key => $title) {
-                    $link = $redirectToPage->Link('ProductSearchForm').'?Keyword='.urlencode($row['Title']).'&action_doProductSearchForm=Search';
-                    $debugLink = $link .'&DebugSearch=1';
+                    $link = $redirectToPage->Link('ProductSearchForm') . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                    $debugLink = $link . '&DebugSearch=1';
                     $array = explode('-', $key);
                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);
                     $tableContent .= '
                         <tr>
                             <td style="text-align: right; width: 30%; padding: 5px;">
-                                <a href="'.$link.'">'.$title.'</a>
+                                <a href="' . $link . '">' . $title . '</a>
                             </td>
                             <td style="background-color: silver;  padding: 5px; width: 70%">
-                                <div style="width: '.$multipliedWidthInPercentage.'%; background-color: #004D40; color: #fff;">'.trim($array[0]).'</div>
+                                <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #004D40; color: #fff;">' . trim($array[0]) . '</div>
                             </td>
                             <td style="background-color: silver; width: 20px">
-                                <a href="'.$debugLink.'">☕</a>
+                                <a href="' . $debugLink . '">☕</a>
                             </td>
                         </tr>';
                 }
@@ -242,8 +239,8 @@ class EcommerceSearchHistoryFormField extends LiteralField
             <p>
                 <a href="/dev/tasks/EcommerceTaskReviewSearches/">Query more resuts</a>
             </p>';
-        } else {
         }
+
         $content .= '
         </div>';
 

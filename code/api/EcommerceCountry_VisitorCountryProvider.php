@@ -16,9 +16,8 @@ class EcommerceCountry_VisitorCountryProvider extends Object implements Ecommerc
     {
         if (class_exists('Geoip')) {
             return Geoip::visitor_country();
-        } else {
-            return Config::inst()->get('EcommerceCountry', 'default_country_code');
         }
+        return Config::inst()->get('EcommerceCountry', 'default_country_code');
     }
 
     /**

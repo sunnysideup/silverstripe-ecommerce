@@ -24,13 +24,12 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
         // No permission checks, handled through GridFieldDetailForm,
         // which can make the form readonly if no edit permissions are available.
         if ($record->hasMethod('CMSEditLink')) {
-            $data = new ArrayData(array(
+            $data = new ArrayData([
                 'Link' => Controller::join_links($record->CMSEditLink()),
-            ));
+            ]);
 
             return $data->renderWith('GridFieldEditButtonInSiteTree');
-        } else {
-            return parent::getColumnContent($gridField, $record, $columnName);
         }
+        return parent::getColumnContent($gridField, $record, $columnName);
     }
 }

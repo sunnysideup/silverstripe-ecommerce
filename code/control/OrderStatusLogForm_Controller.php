@@ -15,9 +15,9 @@ class OrderStatusLogForm_Controller extends Controller
     /**
      * @var array
      */
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'removeLog',
-    );
+    ];
 
     /**
      * init Class
@@ -29,6 +29,30 @@ class OrderStatusLogForm_Controller extends Controller
         parent::init();
         $this->currentOrder = ShoppingCart::current_order();
         $this->initVirtualMethods();
+    }
+
+    /**
+     * @param string $action
+     *
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        $URLSegment = Config::inst()->get($this->class, 'url_segment');
+        if (! $URLSegment) {
+            $URLSegment = $this->class;
+        }
+
+        return Controller::join_links(
+            Director::BaseURL(),
+            $URLSegment,
+            $action
+        );
+    }
+
+    public function removeLog()
+    {
+        //See issue 149
     }
 
     /**
@@ -59,35 +83,11 @@ class OrderStatusLogForm_Controller extends Controller
         if ($this->currentOrder) {
             if ($forms = $this->currentOrder->getLogForms($this)) {
                 foreach ($forms as $form) {
-                    if ($form->getName() == $name) {
+                    if ($form->getName() === $name) {
                         return $form;
                     }
                 }
             }
         }
-    }
-
-    /**
-     * @param string $action
-     *
-     * @return string
-     */
-    public function Link($action = null)
-    {
-        $URLSegment = Config::inst()->get($this->class, 'url_segment');
-        if (!$URLSegment) {
-            $URLSegment = $this->class;
-        }
-
-        return Controller::join_links(
-            Director::BaseURL(),
-            $URLSegment,
-            $action
-        );
-    }
-
-    public function removeLog()
-    {
-        //See issue 149
     }
 }

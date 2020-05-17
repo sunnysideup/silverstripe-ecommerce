@@ -6,7 +6,6 @@
  * @TODO: consider whether this does not sit better in its own module.
  * @TODO: refactor based on new database fields
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks

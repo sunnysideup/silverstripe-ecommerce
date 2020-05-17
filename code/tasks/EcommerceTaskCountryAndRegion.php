@@ -22,19 +22,19 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         foreach ($array as $code => $name) {
             $ecommerceCountry = DataObject::get_one(
                 'EcommerceCountry',
-                array('Code' => Convert::raw2sql($code)),
+                ['Code' => Convert::raw2sql($code)],
                 $cacheDataObjectGetOne = false
             );
             if ($ecommerceCountry) {
                 //do nothing
                 ++$count;
             } else {
-                DB::alteration_message("adding $code to Ecommerce Country", 'created');
+                DB::alteration_message("adding ${code} to Ecommerce Country", 'created');
                 $ecommerceCountry = EcommerceCountry::create();
                 $ecommerceCountry->Code = $code;
             }
             if ($allowedArray && count($allowedArray)) {
-                if (in_array($code, $allowedArray)) {
+                if (in_array($code, $allowedArray, true)) {
                     //do nothing
                     $ecommerceCountry->DoNotAllowSales = 0;
                 } else {
@@ -44,7 +44,7 @@ class EcommerceTaskCountryAndRegion extends BuildTask
             $ecommerceCountry->Name = $name;
             $ecommerceCountry->write();
         }
-        DB::alteration_message("Created / Checked $count Ecommerce Countries", 'edited');
+        DB::alteration_message("Created / Checked ${count} Ecommerce Countries", 'edited');
     }
 }
 
@@ -67,12 +67,12 @@ class EcommerceTaskCountryAndRegion_DisallowAllCountries extends BuildTask
         $count = 0;
         $array = EcommerceCountry::get_country_dropdown();
         $allowedArray = EcommerceCountry::get()
-            ->filter(array('DoNotAllowSales' => 0));
+            ->filter(['DoNotAllowSales' => 0]);
         if ($allowedArray->count()) {
             foreach ($allowedArray as $obj) {
                 $obj->DoNotAllowSales = 1;
                 $obj->write();
-                DB::alteration_message('Disallowing sales to '.$obj->Name);
+                DB::alteration_message('Disallowing sales to ' . $obj->Name);
             }
         } else {
             DB::alteration_message('Could not find any countries that are allowed', 'created');
@@ -98,12 +98,12 @@ class EcommerceTaskCountryAndRegion_AllowAllCountries extends BuildTask
         $count = 0;
         $array = EcommerceCountry::get_country_dropdown();
         $allowedArray = EcommerceCountry::get()
-            ->filter(array('DoNotAllowSales' => 1));
+            ->filter(['DoNotAllowSales' => 1]);
         if ($allowedArray->count()) {
             foreach ($allowedArray as $obj) {
                 $obj->DoNotAllowSales = 0;
                 $obj->write();
-                DB::alteration_message('Disallowing sales to '.$obj->Name);
+                DB::alteration_message('Disallowing sales to ' . $obj->Name);
             }
         } else {
             DB::alteration_message('Could not find any countries that are not allowed', 'created');

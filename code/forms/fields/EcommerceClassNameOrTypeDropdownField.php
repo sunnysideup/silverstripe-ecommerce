@@ -12,7 +12,7 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
     /**
      * @var array
      */
-    protected $availableClasses = array();
+    protected $availableClasses = [];
 
     /**
      * @var string
@@ -33,16 +33,16 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
      * @return EcommerceClassNameOrTypeDropdownField
      */
     public function __construct(
-            $name = 'ClassName',
-            $title = 'Type',
-            $sourceClass,
-            array $availableClasses = array(),
-            $value = '',
-            $form = null
-        ) {
+        $name = 'ClassName',
+        $title = 'Type',
+        $sourceClass,
+        array $availableClasses = [],
+        $value = '',
+        $form = null
+    ) {
         $this->sourceClass = $sourceClass;
         $this->availableClasses = $availableClasses;
-        parent::__construct($name, $title, array(), $value, $form);
+        parent::__construct($name, $title, [], $value, $form);
         $this->addExtraClass('dropdown');
     }
 
@@ -51,23 +51,23 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
         if ($this->includeBaseClass) {
             $classes[] = $this->sourceClass;
         } else {
-            $classes = array();
+            $classes = [];
         }
-        $classes = $classes + ClassInfo::subclassesFor($this->sourceClass);
+        $classes += ClassInfo::subclassesFor($this->sourceClass);
 
-        if (!count($this->availableClasses)) {
+        if (! count($this->availableClasses)) {
             $this->availableClasses = $classes;
         } elseif ($this->includeBaseClass) {
             $this->availableClasses[] = $this->sourceClass;
         }
-        $dropdownArray = array();
+        $dropdownArray = [];
         if ($this->getHasEmptyDefault()) {
             $dropdownArray[''] = $this->emptyString;
         }
         if ($classes) {
             foreach ($classes as $key => $className) {
                 if (class_exists($key)) {
-                    if (in_array($className, $this->availableClasses)) {
+                    if (in_array($className, $this->availableClasses, true)) {
                         $obj = singleton($className);
                         if ($obj) {
                             $dropdownArray[$className] = $obj->i18n_singular_name();
@@ -76,15 +76,15 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
                 }
             }
         }
-        if (!count($dropdownArray)) {
-            $dropdownArray = array($this->sourceClass => _t('EcommerceClassNameOrTypeDropdownField.CAN_NOT_CREATE', "Can't create.").$title);
+        if (! count($dropdownArray)) {
+            $dropdownArray = [$this->sourceClass => _t('EcommerceClassNameOrTypeDropdownField.CAN_NOT_CREATE', "Can't create.") . $title];
         }
 
         return $dropdownArray;
     }
 
     /**
-     * @param array $availableClasses - e.g. Array(MyFavouriteClassName, MyOtherFavouriteClassName)
+     * @param array $array - e.g. Array(MyFavouriteClassName, MyOtherFavouriteClassName)
      */
     public function setAvailableClasses(array $array)
     {

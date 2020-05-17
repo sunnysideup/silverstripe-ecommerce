@@ -32,7 +32,7 @@ interface OrderStepInterface
      * Returns the nextStep when we are ready or null if we are not ready.
      * You should be able to run this method many times without causing problems.
      *
-     * @param Order
+     * @param Order $order
      *
      * @return OrderStep | Null (nextStep DataObject)
      **/

@@ -9,12 +9,11 @@
 
 class GridFieldExportSalesButton extends GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
-
     /**
      * Array of fields to be exporoted
      * @var array
      */
-    private static $fields_and_methods_to_be_exported = array(
+    private static $fields_and_methods_to_be_exported = [
         'OrderID',
         'InternalItemID',
         'TableTitle',
@@ -22,22 +21,21 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         'UnitPrice',
         'Quantity',
         'CalculatedTotal',
-    );
+    ];
 
-
-
+    private $isFirstRow = true;
 
     /**
      * export is an action button
      */
     public function getActions($gridField)
     {
-        return array('exportsales');
+        return ['exportsales'];
     }
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName == 'exportsales') {
+        if ($actionName === 'exportsales') {
             return $this->handleSales($gridField);
         }
     }
@@ -47,24 +45,23 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      */
     public function getURLHandlers($gridField)
     {
-        return array(
+        return [
             'exportsales' => 'handleSales',
-        );
+        ];
     }
 
     /**
      * Handle the export, for both the action button and the URL
-      */
+     */
     public function handleSales($gridField, $request = null)
     {
-        $now = Date("d-m-Y-H-i");
-        $fileName = "sales-$now.csv";
+        $now = Date('d-m-Y-H-i');
+        $fileName = "sales-${now}.csv";
 
         if ($fileData = $this->generateExportFileData($gridField)) {
             return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         }
     }
-
 
     /**
      * Place the export button in a <p> tag below the field
@@ -81,9 +78,9 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $button->setAttribute('data-icon', 'download-csv');
         $button->addExtraClass('no-ajax action_export');
         $button->setForm($gridField->getForm());
-        return array(
+        return [
             $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
-        );
+        ];
     }
 
     /**
@@ -97,19 +94,19 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         //reset time limit
         set_time_limit(1200);
 
-        $idArray = array();
+        $idArray = [];
 
         $items = $gridField->getManipulatedList();
 
         foreach ($items->limit(null) as $item) {
-            if (!$item->hasMethod('canView') || $item->canView()) {
+            if (! $item->hasMethod('canView') || $item->canView()) {
                 $idArray[$item->ID] = $item->ID;
             }
         }
 
         //file data
         $now = Date('d-m-Y-H-i');
-        $fileName = "export-$now.csv";
+        $fileName = "export-${now}.csv";
 
         //data object variables
         $orderStatusSubmissionLog = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
@@ -118,16 +115,15 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $count = 50;
         $orders = $this->getMyOrders($idArray, $count, $offset);
 
-        while (
-            $orders->count()
+        while ($orders->count()
         ) {
-            $offset = $offset + $count;
+            $offset += $count;
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
                     $memberIsOK = false;
-                    if (!$order->MemberID) {
+                    if (! $order->MemberID) {
                         $memberIsOK = true;
-                    } elseif (!$order->Member()) {
+                    } elseif (! $order->Member()) {
                         $memberIsOK = true;
                     } elseif ($member = $order->Member()) {
                         $memberIsOK = true;
@@ -136,7 +132,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                         }
                     }
                     if ($memberIsOK) {
-                        $items = OrderItem::get()->filter(array('OrderID' => $order->ID));
+                        $items = OrderItem::get()->filter(['OrderID' => $order->ID]);
                         if ($items && $items->count()) {
                             $fileData .= $this->generateExportFileDataDetails($order->getOrderEmail(), $order->SubmissionLog()->Created, $items);
                         }
@@ -148,56 +144,36 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         }
         if ($fileData) {
             return $fileData;
-        } else {
-            return null;
         }
+        return null;
     }
-
-    /**
-     *
-     *
-     * @param  array    $idArray Order IDs
-     * @param  int      $count
-     * @param  int      $offset
-     * @return DataList
-     */
-    protected function getMyOrders($idArray, $count, $offset)
-    {
-        return  Order::get()
-            ->sort('"Order"."ID" ASC')
-            ->filter(array('ID' => $idArray))
-            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
-            ->limit($count, $offset);
-    }
-
-    private $isFirstRow = true;
 
     public function generateExportFileDataDetails($email, $date, $orderItems)
     {
         $separator = $this->csvSeparator;
         $fileData = '';
-        $columnData = array();
+        $columnData = [];
         $exportFields = Config::inst()->get('GridFieldExportSalesButton', 'fields_and_methods_to_be_exported');
         if ($this->isFirstRow) {
-            $fileData = '"Email"'.$separator.'"SubmittedDate"'.$separator.'"'.implode('"'.$separator.'"', $exportFields).'"'."\n";
+            $fileData = '"Email"' . $separator . '"SubmittedDate"' . $separator . '"' . implode('"' . $separator . '"', $exportFields) . '"' . "\n";
             $this->isFirstRow = false;
         }
         if ($orderItems) {
             foreach ($orderItems as $item) {
-                $columnData = array();
-                $columnData[] = '"'.$email.'"';
-                $columnData[] = '"'.$date.'"';
+                $columnData = [];
+                $columnData[] = '"' . $email . '"';
+                $columnData[] = '"' . $date . '"';
                 foreach ($exportFields as $field) {
                     if ($item->hasMethod($field)) {
-                        $value = $item->$field();
+                        $value = $item->{$field}();
                     } else {
-                        $value = $item->$field;
+                        $value = $item->{$field};
                     }
                     $value = preg_replace('/\s+/', ' ', $value);
                     $value = preg_replace('/\s+/', ' ', $value);
-                    $value = str_replace(array("\r", "\n"), "\n", $value);
-                    $value = str_replace(array("\r", "\n"), "\n", $value);
-                    $tmpColumnData = '"'.str_replace('"', '\"', $value).'"';
+                    $value = str_replace(["\r", "\n"], "\n", $value);
+                    $value = str_replace(["\r", "\n"], "\n", $value);
+                    $tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
                     $columnData[] = $tmpColumnData;
                 }
                 $fileData .= implode($separator, $columnData);
@@ -208,8 +184,22 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             }
 
             return $fileData;
-        } else {
-            return '';
         }
+        return '';
+    }
+
+    /**
+     * @param  array    $idArray Order IDs
+     * @param  int      $count
+     * @param  int      $offset
+     * @return DataList
+     */
+    protected function getMyOrders($idArray, $count, $offset)
+    {
+        return Order::get()
+            ->sort('"Order"."ID" ASC')
+            ->filter(['ID' => $idArray])
+            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+            ->limit($count, $offset);
     }
 }

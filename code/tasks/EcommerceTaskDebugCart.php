@@ -16,49 +16,49 @@ class EcommerceTaskDebugCart extends BuildTask
     public static function debug_object($obj)
     {
         $html = '
-			<h2>'.$obj->ClassName.'</h2><ul>';
+			<h2>' . $obj->ClassName . '</h2><ul>';
         $fields = Config::inst()->get($obj->ClassName, 'db', Config::INHERITED);
 
         //db
         if (count($fields)) {
-            foreach ($fields as  $key => $type) {
-                $value = self::cleanup_value($type, $obj->$key);
-                $html .= "<li><b>$key ($type):</b> ".$value.'</li>';
+            foreach ($fields as $key => $type) {
+                $value = self::cleanup_value($type, $obj->{$key});
+                $html .= "<li><b>${key} (${type}):</b> " . $value . '</li>';
             }
         }
 
         //casted variables
         $fields = Config::inst()->get($obj->ClassName, 'casting', Config::FIRST_SET);
         if (count($fields)) {
-            foreach ($fields as  $key => $type) {
+            foreach ($fields as $key => $type) {
                 $method = $key;
                 if ($obj->hasMethod($method)) {
-                    $value = $obj->$method();
+                    $value = $obj->{$method}();
                 } else {
-                    $method = 'get'.$key;
+                    $method = 'get' . $key;
                     if ($obj->hasMethod($method)) {
-                        $value = $obj->$method();
+                        $value = $obj->{$method}();
                     } else {
-                        $value = $obj->$key;
+                        $value = $obj->{$key};
                     }
                 }
                 $value = self::cleanup_value($type, $value);
-                $html .= "<li><b>$key ($type):</b> ".$value.'</li>';
+                $html .= "<li><b>${key} (${type}):</b> " . $value . '</li>';
             }
         }
 
         //has_one
         $fields = Config::inst()->get($obj->ClassName, 'has_one', Config::FIRST_SET);
         if (count($fields)) {
-            foreach ($fields as  $key => $type) {
+            foreach ($fields as $key => $type) {
                 $value = '';
-                $field = $key.'ID';
-                if ($object = $obj->$key()) {
+                $field = $key . 'ID';
+                if ($object = $obj->{$key}()) {
                     if ($object && $object->exists()) {
-                        $value = ', '.$object->getTitle();
+                        $value = ', ' . $object->getTitle();
                     }
                 }
-                $html .= "<li><b>$key ($type):</b> ".$obj->$field.$value.' </li>';
+                $html .= "<li><b>${key} (${type}):</b> " . $obj->{$field} . $value . ' </li>';
             }
         }
         //to do: has_many and many_many
@@ -71,7 +71,7 @@ class EcommerceTaskDebugCart extends BuildTask
     {
         switch ($type) {
             case 'HTMLText':
-                $value = (substr(strip_tags($value), 0, 100));
+                $value = substr(strip_tags($value), 0, 100);
                 break;
             case 'Boolean':
                 $value = $value ? 'YES' : 'NO';

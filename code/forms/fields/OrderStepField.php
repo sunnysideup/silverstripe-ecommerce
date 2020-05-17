@@ -23,10 +23,10 @@ class OrderStepField extends DatalessField
      */
     public function __construct($name, Order $order, Member $member = null)
     {
-        if (!$member) {
+        if (! $member) {
             $member = $order->Member();
         }
-        if (!$member) {
+        if (! $member) {
             $member = new Member();
         }
         $orderSteps = OrderStep::get();
@@ -37,7 +37,7 @@ class OrderStepField extends DatalessField
         } else {
             $currentStep = $order->CurrentStepVisibleToCustomer();
             $orderSteps = $orderSteps
-                ->filter(array('HideStepFromCustomer' => 0));
+                ->filter(['HideStepFromCustomer' => 0]);
         }
         $future = false;
         $html = '
@@ -51,11 +51,11 @@ class OrderStepField extends DatalessField
                 $description = '';
                 if ($member->IsShopAdmin()) {
                     if ($orderStep->Description) {
-                        $description = ' title="'.Convert::raw2att($orderStep->Description).'" ';
+                        $description = ' title="' . Convert::raw2att($orderStep->Description) . '" ';
                     }
                 }
                 $class = '';
-                if ($orderStep->ID == $currentStep->ID) {
+                if ($orderStep->ID === $currentStep->ID) {
                     $future = true;
                     $class .= ' current';
                 } elseif ($future) {
@@ -63,7 +63,7 @@ class OrderStepField extends DatalessField
                 } else {
                     $class .= ' done';
                 }
-                $html .= '<li class="'.$class.'" '.$description.'><a href="'.$orderStep->CMSEditLink().'">'.$orderStep->Title.'</a></li>';
+                $html .= '<li class="' . $class . '" ' . $description . '><a href="' . $orderStep->CMSEditLink() . '">' . $orderStep->Title . '</a></li>';
             }
         } else {
             $html .= 'no steps';
@@ -81,7 +81,7 @@ class OrderStepField extends DatalessField
      *
      * @return HTML
      */
-    public function FieldHolder($properties = array())
+    public function FieldHolder($properties = [])
     {
         return is_object($this->content) ? $this->content->forTemplate() : $this->content;
     }
@@ -93,7 +93,7 @@ class OrderStepField extends DatalessField
      *
      * @return HTML
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
         return $this->FieldHolder();
     }
@@ -119,7 +119,7 @@ class OrderStepField extends DatalessField
     /**
      * Synonym of {@link setContent()} so that LiteralField is more compatible with other field types.
      *
-     * @param mixed
+     * @param mixed $value
      */
     public function setValue($value)
     {

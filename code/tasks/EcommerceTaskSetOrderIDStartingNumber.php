@@ -27,10 +27,10 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
                 $currentMax = DB::Query('SELECT MAX( "ID" ) FROM "Order"')->value();
             }
             if ($number > $currentMax) {
-                DB::query("ALTER TABLE \"Order\"  AUTO_INCREMENT = $number ROW_FORMAT = DYNAMIC ");
-                DB::alteration_message('Change OrderID start number to '.$number, 'created');
+                DB::query("ALTER TABLE \"Order\"  AUTO_INCREMENT = ${number} ROW_FORMAT = DYNAMIC ");
+                DB::alteration_message('Change OrderID start number to ' . $number, 'created');
             } else {
-                DB::alteration_message('Can not set OrderID start number to '.$number.' because this number has already been used.', 'deleted');
+                DB::alteration_message('Can not set OrderID start number to ' . $number . ' because this number has already been used.', 'deleted');
             }
         } else {
             DB::alteration_message('Starting OrderID has not been set.', 'deleted');

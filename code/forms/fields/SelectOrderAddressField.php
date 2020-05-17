@@ -26,9 +26,9 @@ class SelectOrderAddressField extends OptionsetField
     public function __construct($name, $title = '', $addresses = null, $value = '', Form $form = null)
     {
         $this->addresses = $addresses;
-        $source = array();
+        $source = [];
         if ($this->addresses && $this->addresses instanceof SS_List) {
-            $source = array();
+            $source = [];
             foreach ($this->addresses as $address) {
                 $source[$address->ID] = $address->FullString();
             }
@@ -42,24 +42,24 @@ class SelectOrderAddressField extends OptionsetField
      *
      * @return HTML
      */
-    public function Field($properties = array())
+    public function Field($properties = [])
     {
-        $jsArray = array();
+        $jsArray = [];
         $js = '
             if(typeof EcomSelectOrderAddressFieldOptions === "undefined") {
                 EcomSelectOrderAddressFieldOptions = [];
             }
         ';
-        $jsonCompare = array();
+        $jsonCompare = [];
         if ($this->addresses) {
             foreach ($this->addresses as $address) {
                 $js .= '
-            EcomSelectOrderAddressFieldOptions.push({id: '.$address->ID.', address: '.$address->JSONData().'});
+            EcomSelectOrderAddressFieldOptions.push({id: ' . $address->ID . ', address: ' . $address->JSONData() . '});
                 ';
             }
         }
         Requirements::javascript('ecommerce/javascript/EcomSelectOrderAddressField.js');
-        Requirements::customScript($js, 'Update_'.$this->getName());
+        Requirements::customScript($js, 'Update_' . $this->getName());
 
         return parent::Field();
     }

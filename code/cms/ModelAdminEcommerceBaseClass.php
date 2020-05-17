@@ -7,19 +7,6 @@
  */
 class ModelAdminEcommerceBaseClass extends ModelAdmin
 {
-
-    /**
-     * @return array Map of class name to an array of 'title' (see {@link $managed_models})
-     */
-    public function getManagedModels()
-    {
-        if ($this->class === 'ModelAdminEcommerceBaseClass') {
-            //never used
-            return array('NothingGoesHere' => array('title' => 'All Orders'));
-        }
-        return parent::getManagedModels();
-    }
-
     /**
      * Change this variable if you don't want the Import from CSV form to appear.
      * This variable can be a boolean or an array.
@@ -28,7 +15,18 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     public $showImportForm = false;
 
     /**
-     *
+     * @return array Map of class name to an array of 'title' (see {@link $managed_models})
+     */
+    public function getManagedModels()
+    {
+        if ($this->class === 'ModelAdminEcommerceBaseClass') {
+            //never used
+            return ['NothingGoesHere' => ['title' => 'All Orders']];
+        }
+        return parent::getManagedModels();
+    }
+
+    /**
      * @param DataObject $record
      *
      * @return Form

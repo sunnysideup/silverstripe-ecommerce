@@ -15,7 +15,7 @@ class OrderForm extends Form
 {
     /**
      * @param Controller $controller
-     * @param string
+     * @param string $name
      */
     public function __construct(Controller $controller, $name)
     {
@@ -26,7 +26,7 @@ class OrderForm extends Form
         //set basics
         $order = ShoppingCart::current_order();
         $order->calculateOrderAttributes($force = false);
-        $requiredFields = array();
+        $requiredFields = [];
 
         //  ________________  3) Payment fields - BOTTOM FIELDS
 
@@ -60,7 +60,7 @@ class OrderForm extends Form
             } else {
                 $alreadyTicked = true;
             }
-            $finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ').' <a href="'.$termsAndConditionsPage->Link().'">'.trim(Convert::raw2xml($termsAndConditionsPage->Title)).'</a>'._t('OrderForm.AGREEWITHTERMS2', '.'), $alreadyTicked));
+            $finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ') . ' <a href="' . $termsAndConditionsPage->Link() . '">' . trim(Convert::raw2xml($termsAndConditionsPage->Title)) . '</a>' . _t('OrderForm.AGREEWITHTERMS2', '.'), $alreadyTicked));
         }
         $textAreaField = new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE', 'Note / Question'));
         $finalFields->push($textAreaField);
@@ -72,14 +72,14 @@ class OrderForm extends Form
         //  ________________  6) Actions and required fields creation + Final Form construction
 
         $actions = FieldList::create();
-        if (!$order->canSubmit()) {
+        if (! $order->canSubmit()) {
             $submitErrors = $order->SubmitErrors();
             if ($submitErrors && $submitErrors->count()) {
-                $submitErrorsString = "";
+                $submitErrorsString = '';
                 foreach ($submitErrors as $error) {
-                    $submitErrorsString .= "<li>".$error->Title."</li>";
+                    $submitErrorsString .= '<li>' . $error->Title . '</li>';
                 }
-                $message = '<div class="submitErrors"><p class="message bad">'._t('OrderForm.KNOWN_ISSUES', 'This order can not be completed, because: ').'</p><ul>'.$submitErrorsString.'</ul></div>';
+                $message = '<div class="submitErrors"><p class="message bad">' . _t('OrderForm.KNOWN_ISSUES', 'This order can not be completed, because: ') . '</p><ul>' . $submitErrorsString . '</ul></div>';
             }
             $actions->push(LiteralField::create('SubmitErrors', $message));
         }
@@ -123,7 +123,7 @@ class OrderForm extends Form
         $order = ShoppingCart::current_order();
         $this->extend('onRawSubmit', $data, $form, $order);
         //check for cart items
-        if (!$order) {
+        if (! $order) {
             $form->sessionMessage(_t('OrderForm.ORDERNOTFOUND', 'Your order could not be found.'), 'bad');
             $this->controller->redirectBack();
 
@@ -136,7 +136,7 @@ class OrderForm extends Form
 
             return false;
         }
-        if (!$order->canSubmit()) {
+        if (! $order->canSubmit()) {
             $message = _t('OrderForm.ORDER_CAN_NOT_BE_COMPLETED', 'Order can not be completed.  For more details see below.');
             $form->sessionMessage($message, 'bad');
             $this->controller->redirectBack();
@@ -157,7 +157,7 @@ class OrderForm extends Form
         // is an error in the form (e.g. Payment Option not entered)
         $order->calculateOrderAttributes($force = true);
         $newTotal = $order->Total();
-        if (floatval($newTotal) != floatval($oldTotal)) {
+        if (floatval($newTotal) !== floatval($oldTotal)) {
             $form->sessionMessage(_t('OrderForm.PRICEUPDATED', 'The order price has been updated, please review the order and submit again.'), 'warning');
             $this->controller->redirectBack();
 
@@ -191,7 +191,7 @@ class OrderForm extends Form
         //----------------- VALIDATE PAYMENT ------------------------------
         $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
         $paymentIsValid = $formHelper->validatePayment($order, $data, $form);
-        if (!$paymentIsValid) {
+        if (! $paymentIsValid) {
             $this->controller->redirectBack();
 
             return false;
@@ -214,14 +214,14 @@ class OrderForm extends Form
         if ($paymentResult) {
             //redirection is taken care of by EcommercePayment
             return $paymentResult;
-        } else {
-            //there is an error with payment
-            if (!Controller::curr()->redirectedTo()) {
-                $this->controller->redirect($order->Link());
-            }
-
-            return false;
         }
+        //there is an error with payment
+        if (! Controller::curr()->redirectedTo()) {
+            $this->controller->redirect($order->Link());
+        }
+
+        return false;
+
         //------------------------------
     }
 
@@ -264,7 +264,6 @@ class OrderForm extends Form
 /**
  * @Description: checks the data for the OrderForm, before submission.
  *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
@@ -285,7 +284,7 @@ class OrderForm_Validator extends RequiredFields
         $checkoutPage = DataObject::get_one('CheckoutPage');
         if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
             if (isset($data['ReadTermsAndConditions'])) {
-                if (!$data['ReadTermsAndConditions']) {
+                if (! $data['ReadTermsAndConditions']) {
                     $this->validationError(
                         'ReadTermsAndConditions',
                         $checkoutPage->TermsAndConditionsMessage,
@@ -296,7 +295,7 @@ class OrderForm_Validator extends RequiredFields
             }
         }
         $order = ShoppingCart::current_order();
-        if (!$order) {
+        if (! $order) {
             $this->validationError(
                 'Order',
                 _t('OrderForm.ORDERNOTFOUND', 'There was an error in processing your order, please try again or contact the administrator.'),
@@ -305,7 +304,7 @@ class OrderForm_Validator extends RequiredFields
             $valid = false;
         }
         $billingAddress = BillingAddress::get()->byID($order->BillingAddressID);
-        if (!$billingAddress) {
+        if (! $billingAddress) {
             $this->validationError(
                 'BillingAddress',
                 _t('OrderForm.MUSTHAVEBILLINGADDRESS', 'All orders must have a billing address, please go back and add your details.'),

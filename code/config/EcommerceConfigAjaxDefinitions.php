@@ -12,13 +12,6 @@
 class EcommerceConfigAjaxDefinitions extends ViewableData
 {
     /**
-     * prefix used for all classes and IDs.
-     *
-     * @var null | String
-     */
-    private static $prefix = null;
-
-    /**
      * the class that is requesting the ajax definitions
      * we provide the requestor so that we can dynamically change
      * the ids and classes, using the requestor.
@@ -32,6 +25,13 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * @var DataObject
      */
     protected $requestor = null;
+
+    /**
+     * prefix used for all classes and IDs.
+     *
+     * @var string|null
+     */
+    private static $prefix = null;
 
     /**
      * set the requestor.
@@ -61,7 +61,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function SideBarCartID()
     {
-        return self::$prefix.'Side_Bar_Cart';
+        return self::$prefix . 'Side_Bar_Cart';
     }
 
     /**
@@ -73,7 +73,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function SmallCartID()
     {
-        return self::$prefix.'small_cart_id';
+        return self::$prefix . 'small_cart_id';
     }
 
     /**
@@ -87,7 +87,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TinyCartClassName()
     {
-        return self::$prefix.'tiny_cart_class';
+        return self::$prefix . 'tiny_cart_class';
     }
 
     /**
@@ -95,7 +95,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function HiddenPageTitleID()
     {
-        return self::$prefix.'HiddenPageTitle';
+        return self::$prefix . 'HiddenPageTitle';
     }
 
     /**
@@ -103,7 +103,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ProductListHolderID()
     {
-        return self::$prefix.'ProductGroup';
+        return self::$prefix . 'ProductGroup';
     }
 
     /**
@@ -111,7 +111,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ProductListAjaxifiedLinkClassName()
     {
-        return self::$prefix.'ajaxifyMyProductGroupLinks';
+        return self::$prefix . 'ajaxifyMyProductGroupLinks';
     }
 
     /**
@@ -123,7 +123,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ProductListItemClassName()
     {
-        return self::$prefix.'productActions';
+        return self::$prefix . 'productActions';
     }
 
     /**
@@ -135,7 +135,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ProductListItemInCartClassName()
     {
-        return self::$prefix.'inCart';
+        return self::$prefix . 'inCart';
     }
 
     /**
@@ -147,7 +147,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ProductListItemNotInCartClassName()
     {
-        return self::$prefix.'notInCart';
+        return self::$prefix . 'notInCart';
     }
 
     /*___________________
@@ -160,7 +160,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TableID()
     {
-        return self::$prefix.$this->requestor->ClassName.'_DB_'.$this->requestor->ID;
+        return self::$prefix . $this->requestor->ClassName . '_DB_' . $this->requestor->ID;
     }
 
     /**
@@ -168,7 +168,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TableTotalID()
     {
-        return $this->TableID().'_Total';
+        return $this->TableID() . '_Total';
     }
 
     /*___________________
@@ -183,7 +183,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TableMessageID()
     {
-        return $this->TableID().'_Message';
+        return $this->TableID() . '_Message';
     }
 
     /**
@@ -193,7 +193,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TableSubTotalID()
     {
-        return $this->TableID().'_SubTotal';
+        return $this->TableID() . '_SubTotal';
     }
 
     /**
@@ -203,7 +203,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TotalItemsTimesQuantityClassName()
     {
-        return self::$prefix.'number_of_items_times_quantity';
+        return self::$prefix . 'number_of_items_times_quantity';
     }
 
     /**
@@ -213,8 +213,9 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TotalItemsClassName()
     {
-        return self::$prefix.'number_of_items';
+        return self::$prefix . 'number_of_items';
     }
+
     /**
      * class that is used in templates and in the JSON return @see CartResponse.
      *
@@ -222,7 +223,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ExpectedCountryClassName()
     {
-        return self::$prefix.'expected_country_selector';
+        return self::$prefix . 'expected_country_selector';
     }
 
     /**
@@ -255,7 +256,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TableTitleID()
     {
-        return $this->TableID().'_Title';
+        return $this->TableID() . '_Title';
     }
 
     /**
@@ -263,7 +264,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function CartTitleID()
     {
-        return $this->TableID().'_Title_Cart';
+        return $this->TableID() . '_Title_Cart';
     }
 
     /**
@@ -271,7 +272,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TableSubTitleID()
     {
-        return $this->TableID().'_Sub_Title';
+        return $this->TableID() . '_Sub_Title';
     }
 
     /**
@@ -279,7 +280,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function CartSubTitleID()
     {
-        return $this->TableID().'_Sub_Title_Cart';
+        return $this->TableID() . '_Sub_Title_Cart';
     }
 
     /*___________________
@@ -294,7 +295,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function QuantityFieldName()
     {
-        return $this->TableID().'_Quantity_SetQuantityLink';
+        return $this->TableID() . '_Quantity_SetQuantityLink';
     }
 
     /*___________________
@@ -314,7 +315,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      */
     public function UniqueIdentifier()
     {
-        return $this->TableID().'_Button';
+        return $this->TableID() . '_Button';
     }
 
     public function Define($name)

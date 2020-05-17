@@ -9,22 +9,14 @@
  **/
 class OrderStatusLog_Cancel extends OrderStatusLog
 {
-    private static $defaults = array(
+    private static $defaults = [
         'Title' => 'Order Cancelled',
         'InternalUseOnly' => false,
-    );
+    ];
 
     private static $singular_name = 'Cancelled Order';
-    public function i18n_singular_name()
-    {
-        return _t('OrderStatusLog.SUBMITTEDORDER', 'Cancelled Order');
-    }
 
     private static $plural_name = 'Cancelled Orders';
-    public function i18n_plural_name()
-    {
-        return _t('OrderStatusLog.SUBMITTEDORDERS', 'Cancelled Orders');
-    }
 
     /**
      * Standard SS variable.
@@ -32,6 +24,16 @@ class OrderStatusLog_Cancel extends OrderStatusLog
      * @var string
      */
     private static $description = 'A record noting the cancellation of an order.  ';
+
+    public function i18n_singular_name()
+    {
+        return _t('OrderStatusLog.SUBMITTEDORDER', 'Cancelled Order');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('OrderStatusLog.SUBMITTEDORDERS', 'Cancelled Orders');
+    }
 
     /**
      * Standard SS method.

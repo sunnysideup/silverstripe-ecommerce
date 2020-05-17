@@ -3,8 +3,6 @@
 /**
  * @description: each order has a billing address.
  *
- *
- *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
@@ -17,8 +15,8 @@ class BillingAddress extends OrderAddress
      *
      * @var array
      */
-    private static $api_access = array(
-        'view' => array(
+    private static $api_access = [
+        'view' => [
             'Prefix',
             'FirstName',
             'Surname',
@@ -30,15 +28,15 @@ class BillingAddress extends OrderAddress
             'Country',
             'Phone',
             'Email',
-        ),
-    );
+        ],
+    ];
 
     /**
      * standard SS variable.
      *
      * @return array
      */
-    private static $db = array(
+    private static $db = [
         'Prefix' => 'Varchar(10)',
         'FirstName' => 'Varchar(100)',
         'Surname' => 'Varchar(100)',
@@ -52,7 +50,7 @@ class BillingAddress extends OrderAddress
         'Email' => 'Varchar(250)',
         'Obsolete' => 'Boolean',
         'OrderID' => 'Int', //NOTE: we have this here for faster look-ups and to make addresses behave similar to has_many dataobjects
-    );
+    ];
 
     /**
      * HAS_ONE =array(ORDER => ORDER);
@@ -61,22 +59,22 @@ class BillingAddress extends OrderAddress
      * because that makes for a cleaner relationship
      * (otherwise we ended up with a "has two" relationship in Order).
      **/
-    private static $has_one = array(
+    private static $has_one = [
         'Region' => 'EcommerceRegion',
-    );
+    ];
 
     /**
      * standard SS static definition.
      **/
-    private static $belongs_to = array(
+    private static $belongs_to = [
         'Order' => 'Order',
-    );
+    ];
 
     /**
      * standard SS static definition.
      */
     private static $default_sort = [
-        'ID' => 'DESC'
+        'ID' => 'DESC',
     ];
 
     /**
@@ -84,31 +82,31 @@ class BillingAddress extends OrderAddress
      *
      * @return array
      */
-    private static $indexes = array(
+    private static $indexes = [
         'Obsolete' => true,
         'OrderID' => true,
-        'Country' => true
-    );
+        'Country' => true,
+    ];
 
     /**
      * standard SS variable.
      *
      * @return array
      */
-    private static $casting = array(
+    private static $casting = [
         'FullCountryName' => 'Varchar',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @return array
      */
-    private static $searchable_fields = array(
-        'OrderID' => array(
+    private static $searchable_fields = [
+        'OrderID' => [
             'field' => 'NumericField',
             'title' => 'Order Number',
-        ),
+        ],
         'Email' => 'PartialMatchFilter',
         'FirstName' => 'PartialMatchFilter',
         'Surname' => 'PartialMatchFilter',
@@ -116,33 +114,33 @@ class BillingAddress extends OrderAddress
         'City' => 'PartialMatchFilter',
         'Country' => 'PartialMatchFilter',
         'Obsolete',
-    );
+    ];
 
     /**
      * standard SS variable.
      *
      * @return array
      */
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Order.Title',
         'FirstName',
         'Surname',
         'City',
         'PostalCode',
         'Country',
-        'Phone'
-    );
+        'Phone',
+    ];
 
     /**
      * standard SS variable.
      *
      * @return array
      */
-    private static $field_labels = array(
+    private static $field_labels = [
         'Order.Title' => 'Order',
         'Obsolete' => 'Do not use for future transactions',
-        'Email' => 'Email'
-    );
+        'Email' => 'Email',
+    ];
 
     /**
      * standard SS variable.
@@ -150,10 +148,6 @@ class BillingAddress extends OrderAddress
      * @return string
      */
     private static $singular_name = 'Billing Address';
-    public function i18n_singular_name()
-    {
-        return _t('BillingAddress.BILLINGADDRESS', 'Billing Address');
-    }
 
     /**
      * standard SS variable.
@@ -161,10 +155,6 @@ class BillingAddress extends OrderAddress
      * @return string
      */
     private static $plural_name = 'Billing Addresses';
-    public function i18n_plural_name()
-    {
-        return _t('BillingAddress.BILLINGADDRESSES', 'Billing Addresses');
-    }
 
     /**
      * Standard SS variable.
@@ -172,6 +162,16 @@ class BillingAddress extends OrderAddress
      * @var string
      */
     private static $description = 'The details of the person buying the order.';
+
+    public function i18n_singular_name()
+    {
+        return _t('BillingAddress.BILLINGADDRESS', 'Billing Address');
+    }
+
+    public function i18n_plural_name()
+    {
+        return _t('BillingAddress.BILLINGADDRESSES', 'Billing Addresses');
+    }
 
     /**
      * method for casted variable.
@@ -182,6 +182,7 @@ class BillingAddress extends OrderAddress
     {
         return $this->getFullCountryName();
     }
+
     public function getFullCountryName()
     {
         return EcommerceCountry::find_title($this->Country);
@@ -219,14 +220,14 @@ class BillingAddress extends OrderAddress
                 $headerTitle,
                 3
             )
-            ->setAttribute('data-title-with-shipping-address', _t('BillingAddress.BILLING_ADDRESS_ONLY', 'Billing Address Only'))
-            ->setAttribute('data-title-with-shipping-address_default', $headerTitle)
+                ->setAttribute('data-title-with-shipping-address', _t('BillingAddress.BILLING_ADDRESS_ONLY', 'Billing Address Only'))
+                ->setAttribute('data-title-with-shipping-address_default', $headerTitle)
         );
         $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
         $hasPreviousAddresses = false;
         if ($member && Member::currentUser()) {
-            if ($member->exists() && !$member->IsShopAdmin()) {
+            if ($member->exists() && ! $member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
                 if (EcommerceConfig::get('BillingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
                     $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
@@ -247,7 +248,7 @@ class BillingAddress extends OrderAddress
 
         $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
         if (is_array($mappingArray) && count($mappingArray)) {
-            if (!class_exists('GoogleAddressField')) {
+            if (! class_exists('GoogleAddressField')) {
                 user_error('You must install the Sunny Side Up google_address_field module OR remove entries from: BillingAddress.fields_to_google_geocode_conversion');
             }
             $billingFields->push(

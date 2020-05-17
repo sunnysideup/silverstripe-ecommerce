@@ -15,21 +15,13 @@
  */
 class ShoppingCart_Controller extends Controller
 {
-
-    /**
-     * Default URL handlers - (Action)/(ID)/(OtherID).
-     */
-    private static $url_handlers = array(
-        '$Action//$ID/$OtherID/$Version' => 'handleAction',
-    );
-
     /**
      * We need to only use the Security ID on a few
      * actions, these are listed here.
      *
      * @var array
      */
-    protected $methodsRequiringSecurityID = array(
+    protected $methodsRequiringSecurityID = [
         'additem',
         'removeitem',
         'removeallitem',
@@ -39,38 +31,21 @@ class ShoppingCart_Controller extends Controller
         'copyorder',
         'deleteorder',
         'save',
-    );
+    ];
 
     /**
      * @var ShoppingCart
      */
     protected $cart = null;
 
-    public function init()
-    {
-        parent::init();
-        $action = $this->request->param('Action');
-        if (!isset($_GET['cached'])) {
-            if ($action && (in_array($action, $this->methodsRequiringSecurityID))) {
-                $savedSecurityID = Session::get('SecurityID');
-                if ($savedSecurityID) {
-                    if (!isset($_GET['SecurityID'])) {
-                        $_GET['SecurityID'] = '';
-                    }
-                    if ($savedSecurityID) {
-                        if ($_GET['SecurityID'] != $savedSecurityID) {
-                            $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
-                        } else {
-                            //all OK!
-                        }
-                    }
-                }
-            }
-        }
-        $this->cart = ShoppingCart::singleton();
-    }
+    /**
+     * Default URL handlers - (Action)/(ID)/(OtherID).
+     */
+    private static $url_handlers = [
+        '$Action//$ID/$OtherID/$Version' => 'handleAction',
+    ];
 
-    private static $allowed_actions = array(
+    private static $allowed_actions = [
         'json',
         'index',
         'additem',
@@ -95,10 +70,33 @@ class ShoppingCart_Controller extends Controller
         'removeaddress',
         'submittedbuyable',
         'placeorderformember',
-        'loginas',// no need to set to  => 'ADMIN',
+        'loginas', // no need to set to  => 'ADMIN',
         'debug', // no need to set to  => 'ADMIN',
         'ajaxtest', // no need to set to  => 'ADMIN',
-    );
+    ];
+
+    public function init()
+    {
+        parent::init();
+        $action = $this->request->param('Action');
+        if (! isset($_GET['cached'])) {
+            if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
+                $savedSecurityID = Session::get('SecurityID');
+                if ($savedSecurityID) {
+                    if (! isset($_GET['SecurityID'])) {
+                        $_GET['SecurityID'] = '';
+                    }
+                    if ($savedSecurityID) {
+                        if ($_GET['SecurityID'] !== $savedSecurityID) {
+                            $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+                        }
+                        //all OK!
+                    }
+                }
+            }
+        }
+        $this->cart = ShoppingCart::singleton();
+    }
 
     public function index()
     {
@@ -127,17 +125,15 @@ class ShoppingCart_Controller extends Controller
     }
 
     /**
-     * returns ABSOLUTE link to the shopping cart controller.
-     * @param null | array | string $actionAndOtherLinkVariables
+     * @param int    $buyableID
+     * @param string $classNameForBuyable
+     * @param array  $parameters
+     *
      * @return string
      */
-    protected static function create_link($actionAndOtherLinkVariables = null)
+    public static function add_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            Config::inst()->get('ShoppingCart_Controller', 'url_segment'),
-            $actionAndOtherLinkVariables
-        );
+        return self::create_link('additem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -147,9 +143,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function add_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = array())
+    public static function remove_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
     {
-        return self::create_link('additem/'.$buyableID.'/'.$classNameForBuyable.'/'.self::params_to_get_string($parameters));
+        return self::create_link('removeitem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -159,9 +155,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function remove_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = array())
+    public static function remove_all_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
     {
-        return self::create_link('removeitem/'.$buyableID.'/'.$classNameForBuyable.'/'.self::params_to_get_string($parameters));
+        return self::create_link('removeallitem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -171,9 +167,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function remove_all_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = array())
+    public static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
     {
-        return self::create_link('removeallitem/'.$buyableID.'/'.$classNameForBuyable.'/'.self::params_to_get_string($parameters));
+        return self::create_link('removeallitemandedit/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -183,21 +179,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = 'Product', array $parameters = array())
+    public static function set_quantity_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
     {
-        return self::create_link('removeallitemandedit/'.$buyableID.'/'.$classNameForBuyable.'/'.self::params_to_get_string($parameters));
-    }
-
-    /**
-     * @param int    $buyableID
-     * @param string $classNameForBuyable
-     * @param array  $parameters
-     *
-     * @return string
-     */
-    public static function set_quantity_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = array())
-    {
-        return self::create_link('setquantityitem/'.$buyableID.'/'.$classNameForBuyable.'/'.self::params_to_get_string($parameters));
+        return self::create_link('setquantityitem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -206,9 +190,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function remove_modifier_link($modifierID, array $parameters = array())
+    public static function remove_modifier_link($modifierID, array $parameters = [])
     {
-        return self::create_link('removemodifier/'.$modifierID.'/'.self::params_to_get_string($parameters));
+        return self::create_link('removemodifier/' . $modifierID . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -217,9 +201,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function add_modifier_link($modifierID, array $parameters = array())
+    public static function add_modifier_link($modifierID, array $parameters = [])
     {
-        return self::create_link('addmodifier/'.$modifierID.'/'.self::params_to_get_string($parameters));
+        return self::create_link('addmodifier/' . $modifierID . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -229,9 +213,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function remove_address_link($addressID, $addressClassName, array $parameters = array())
+    public static function remove_address_link($addressID, $addressClassName, array $parameters = [])
     {
-        return self::create_link('removeaddress/'.$addressID.'/'.$addressClassName.'/'.self::params_to_get_string($parameters));
+        return self::create_link('removeaddress/' . $addressID . '/' . $addressClassName . '/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -239,9 +223,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function clear_cart_link($parameters = array())
+    public static function clear_cart_link($parameters = [])
     {
-        return self::create_link('clear/'.self::params_to_get_string($parameters));
+        return self::create_link('clear/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -249,9 +233,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function save_cart_link(array $parameters = array())
+    public static function save_cart_link(array $parameters = [])
     {
-        return self::create_link('save/'.self::params_to_get_string($parameters));
+        return self::create_link('save/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -259,9 +243,9 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function clear_cart_and_logout_link(array $parameters = array())
+    public static function clear_cart_and_logout_link(array $parameters = [])
     {
-        return self::create_link('clearandlogout/'.self::params_to_get_string($parameters));
+        return self::create_link('clearandlogout/' . self::params_to_get_string($parameters));
     }
 
     /**
@@ -269,20 +253,19 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function delete_order_link($orderID, array $parameters = array())
+    public static function delete_order_link($orderID, array $parameters = [])
     {
-        return self::create_link('deleteorder/'.$orderID.'/'.self::params_to_get_string($parameters));
+        return self::create_link('deleteorder/' . $orderID . '/' . self::params_to_get_string($parameters));
     }
 
     /**
-     *
-     * @return null | string
+     * @return string|null
      */
-    public static function copy_order_link($orderID, $parameters = array())
+    public static function copy_order_link($orderID, $parameters = [])
     {
         $order = Order::get()->byID($orderID);
         if ($order && $order->IsSubmitted()) {
-            return self::create_link('copyorder/'.$orderID.'/'.self::params_to_get_string($parameters));
+            return self::create_link('copyorder/' . $orderID . '/' . self::params_to_get_string($parameters));
         }
     }
 
@@ -294,27 +277,25 @@ class ShoppingCart_Controller extends Controller
      *
      * @return string
      */
-    public static function set_currency_link($code, array $parameters = array())
+    public static function set_currency_link($code, array $parameters = [])
     {
-        return self::create_link('setcurrency/'.$code.'/'.self::params_to_get_string($parameters));
+        return self::create_link('setcurrency/' . $code . '/' . self::params_to_get_string($parameters));
     }
 
     /**
-     *
-     *
      * @param  int    $id
      * @param  string $className
      * @return string
      */
     public static function remove_from_sale_link($id, $className)
     {
-        return self::create_link('removefromsale/'.$className.'/'.$id .'/');
+        return self::create_link('removefromsale/' . $className . '/' . $id . '/');
     }
 
     /**
      * return json for cart... no further actions.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return JSON
      */
@@ -326,7 +307,7 @@ class ShoppingCart_Controller extends Controller
     /**
      * Adds item to cart via controller action; one by default.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -337,16 +318,15 @@ class ShoppingCart_Controller extends Controller
         if ($buyable) {
             $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters());
             return $this->cart->setMessageAndReturn();
-        } else {
-            return $this->goToErrorPage();
         }
+        return $this->goToErrorPage();
     }
 
     /**
      * Sets the exact passed quantity.
      * Note: If no ?quantity=x is specified in URL, then quantity will be set to 1.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -358,15 +338,14 @@ class ShoppingCart_Controller extends Controller
             $this->cart->setQuantity($buyable, $this->quantity(), $this->parameters());
 
             return $this->cart->setMessageAndReturn();
-        } else {
-            return $this->goToErrorPage();
         }
+        return $this->goToErrorPage();
     }
 
     /**
      * Removes item from cart via controller action; one by default.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -378,15 +357,14 @@ class ShoppingCart_Controller extends Controller
             $this->cart->decrementBuyable($buyable, $this->quantity(), $this->parameters());
 
             return $this->cart->setMessageAndReturn();
-        } else {
-            return $this->goToErrorPage();
         }
+        return $this->goToErrorPage();
     }
 
     /**
      * Removes all of a specific item.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -401,15 +379,14 @@ class ShoppingCart_Controller extends Controller
             $order->calculateOrderAttributes($force = true);
 
             return $this->cart->setMessageAndReturn();
-        } else {
-            return $this->goToErrorPage();
         }
+        return $this->goToErrorPage();
     }
 
     /**
      * Removes all of a specific item AND return back.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -429,7 +406,7 @@ class ShoppingCart_Controller extends Controller
     /**
      * Removes a specified modifier from the cart;.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -447,7 +424,7 @@ class ShoppingCart_Controller extends Controller
     /**
      * Adds a specified modifier to the cart;.
      *
-     * @param HTTPRequest
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -465,7 +442,7 @@ class ShoppingCart_Controller extends Controller
     /**
      * sets the country.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -480,7 +457,7 @@ class ShoppingCart_Controller extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -494,7 +471,7 @@ class ShoppingCart_Controller extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -508,7 +485,7 @@ class ShoppingCart_Controller extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -530,13 +507,12 @@ class ShoppingCart_Controller extends Controller
             }
 
             return $this->cart->setMessageAndReturn();
-        } else {
-            return Security::permissionFailure($this);
         }
+        return Security::permissionFailure($this);
     }
 
     /**
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -549,7 +525,7 @@ class ShoppingCart_Controller extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return REDIRECT
      **/
@@ -558,11 +534,11 @@ class ShoppingCart_Controller extends Controller
         $this->cart->clear();
         $this->redirect(Director::baseURL());
 
-        return array();
+        return [];
     }
 
     /**
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return REDIRECT
      **/
@@ -574,11 +550,11 @@ class ShoppingCart_Controller extends Controller
         }
         $this->redirect(Director::baseURL());
 
-        return array();
+        return [];
     }
 
     /**
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return REDIRECT
      **/
@@ -606,7 +582,7 @@ class ShoppingCart_Controller extends Controller
     /**
      * return number of items in cart.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return int
      **/
@@ -620,7 +596,7 @@ class ShoppingCart_Controller extends Controller
     /**
      * return cart for ajax call.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return HTML
      */
@@ -632,7 +608,7 @@ class ShoppingCart_Controller extends Controller
     /**
      * loads an order.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return REDIRECT
      */
@@ -642,15 +618,14 @@ class ShoppingCart_Controller extends Controller
         $cartPageLink = CartPage::find_link();
         if ($cartPageLink) {
             return $this->redirect($cartPageLink);
-        } else {
-            return $this->redirect(Director::baseURL());
         }
+        return $this->redirect(Director::baseURL());
     }
 
     /**
      * remove address from list of available addresses in checkout.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return string | REDIRECT
      * @TODO: add non-ajax version of this request.
@@ -667,19 +642,17 @@ class ShoppingCart_Controller extends Controller
                     $address->MakeObsolete($member);
                     if ($request->isAjax()) {
                         return _t('Order.ADDRESSREMOVED', 'Address removed.');
-                    } else {
-                        $this->redirectBack();
                     }
+                    $this->redirectBack();
                 }
             }
         }
         if ($request->isAjax()) {
             return _t('Order.ADDRESSNOTREMOVED', 'Address could not be removed.');
-        } else {
-            $this->redirectBack();
         }
+        $this->redirectBack();
 
-        return array();
+        return [];
     }
 
     /**
@@ -687,7 +660,7 @@ class ShoppingCart_Controller extends Controller
      * where only old versions exist.
      * this method should redirect.
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return REDIRECT
      */
@@ -700,23 +673,23 @@ class ShoppingCart_Controller extends Controller
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
                 $bestBuyable = $buyableClassName::get()->byID($buyableID);
                 if ($bestBuyable instanceof ProductVariation) {
-                    $link = $bestBuyable->Link('filterforvariations/'.$buyableID.'/?version='.$version.'/');
+                    $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
                     $this->redirect($link);
 
-                    return array();
+                    return [];
                 }
                 if ($bestBuyable) {
                     //show singleton with old version
-                    $link = $bestBuyable->Link('viewversion/'.$version.'/');
+                    $link = $bestBuyable->Link('viewversion/' . $version . '/');
                     $this->redirect($link);
 
-                    return array();
+                    return [];
                 }
             }
         }
         $errorPage404 = DataObject::get_one(
             'ErrorPage',
-            array('ErrorCode' => '404')
+            ['ErrorCode' => '404']
         );
         if ($errorPage404) {
             return $this->redirect($errorPage404->Link());
@@ -729,7 +702,7 @@ class ShoppingCart_Controller extends Controller
      * This can be used by admins to log in as customers
      * to place orders on their behalf...
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return REDIRECT
      */
@@ -746,9 +719,8 @@ class ShoppingCart_Controller extends Controller
                 $this->cart->loadOrder($newOrder);
 
                 return $this->redirect($newOrder->Link());
-            } else {
-                user_error('Can not find this member.');
             }
+            user_error('Can not find this member.');
         } else {
             //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/placeorderformember/".$request->param("ID")."/")."\">log in</a> first.";
             return Security::permissionFailure($this);
@@ -759,7 +731,7 @@ class ShoppingCart_Controller extends Controller
      * This can be used by admins to log in as customers
      * to place orders on their behalf...
      *
-     * @param SS_HTTPRequest
+     * @param SS_HTTPRequest $request
      *
      * @return REDIRECT
      */
@@ -772,15 +744,67 @@ class ShoppingCart_Controller extends Controller
                 $newMember->logIn();
                 if ($accountPage = DataObject::get_one('AccountPage')) {
                     return $this->redirect($accountPage->Link());
-                } else {
-                    return $this->redirect(Director::baseURL());
                 }
-            } else {
-                user_error('Can not find this member.');
+                return $this->redirect(Director::baseURL());
             }
+            user_error('Can not find this member.');
         } else {
             return Security::permissionFailure($this);
         }
+    }
+
+    /**
+     * Handy debugging action visit.
+     * Log in as an administrator and visit mysite/shoppingcart/debug.
+     */
+    public function debug()
+    {
+        if (Director::isDev() || EcommerceRole::current_member_is_shop_admin()) {
+            return $this->cart->debug();
+        }
+        return Security::permissionFailure($this);
+        //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/debug/")."\">log in</a> first.";
+    }
+
+    /**
+     * test the ajax response
+     * for developers only.
+     *
+     * @return output to buffer
+     */
+    public function ajaxtest(SS_HTTPRequest $request)
+    {
+        if (Director::isDev() || Permission::check('ADMIN')) {
+            header('Content-Type', 'text/plain');
+            echo '<pre>';
+            $_REQUEST['ajax'] = 1;
+            $v = $this->cart->setMessageAndReturn('test only');
+            $v = str_replace(',', ",\r\n\t\t", $v);
+            $v = str_replace('}', "\r\n\t}", $v);
+            $v = str_replace('{', "\t{\r\n\t\t", $v);
+            $v = str_replace(']', "\r\n]", $v);
+            echo $v;
+            echo '</pre>';
+        } else {
+            echo 'please <a href="Security/login/?BackURL=' . urlencode($this->config()->get('url_segment') . '/ajaxtest/') . '">log in</a> first.';
+        }
+        if (! $request->isAjax()) {
+            die('---- make sure to add ?ajax=1 to the URL ---');
+        }
+    }
+
+    /**
+     * returns ABSOLUTE link to the shopping cart controller.
+     * @param array|string|null $actionAndOtherLinkVariables
+     * @return string
+     */
+    protected static function create_link($actionAndOtherLinkVariables = null)
+    {
+        return Controller::join_links(
+            Director::baseURL(),
+            Config::inst()->get('ShoppingCart_Controller', 'url_segment'),
+            $actionAndOtherLinkVariables
+        );
     }
 
     /**
@@ -799,11 +823,11 @@ class ShoppingCart_Controller extends Controller
     protected static function params_to_get_string(array $array)
     {
         $token = SecurityToken::inst();
-        if (!isset($array['SecurityID'])) {
+        if (! isset($array['SecurityID'])) {
             $array['SecurityID'] = $token->getValue();
         }
 
-        return '?'.http_build_query($array);
+        return '?' . http_build_query($array);
     }
 
     /**
@@ -819,7 +843,7 @@ class ShoppingCart_Controller extends Controller
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
                 $obj = $buyableClassName::get()->byID(intval($buyableID));
                 if ($obj) {
-                    if ($obj->ClassName == $buyableClassName) {
+                    if ($obj->ClassName === $buyableClassName) {
                         return $obj;
                     }
                 }
@@ -857,59 +881,18 @@ class ShoppingCart_Controller extends Controller
      */
     protected function parameters($getpost = 'GET')
     {
-        return ($getpost == 'GET') ? $this->getRequest()->getVars() : $_POST;
+        return $getpost === 'GET' ? $this->getRequest()->getVars() : $_POST;
     }
 
     protected function goToErrorPage()
     {
         $errorPage404 = DataObject::get_one(
             'ErrorPage',
-            array('ErrorCode' => '404')
+            ['ErrorCode' => '404']
         );
         if ($errorPage404) {
             return $this->redirect($errorPage404->Link());
         }
         return $this->redirect('page-not-found');
-    }
-
-    /**
-     * Handy debugging action visit.
-     * Log in as an administrator and visit mysite/shoppingcart/debug.
-     */
-    public function debug()
-    {
-        if (Director::isDev() || EcommerceRole::current_member_is_shop_admin()) {
-            return $this->cart->debug();
-        } else {
-            return Security::permissionFailure($this);
-            //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/debug/")."\">log in</a> first.";
-        }
-    }
-
-    /**
-     * test the ajax response
-     * for developers only.
-     *
-     * @return output to buffer
-     */
-    public function ajaxtest(SS_HTTPRequest $request)
-    {
-        if (Director::isDev() || Permission::check('ADMIN')) {
-            header('Content-Type', 'text/plain');
-            echo '<pre>';
-            $_REQUEST['ajax'] = 1;
-            $v = $this->cart->setMessageAndReturn('test only');
-            $v = str_replace(',', ",\r\n\t\t", $v);
-            $v = str_replace('}', "\r\n\t}", $v);
-            $v = str_replace('{', "\t{\r\n\t\t", $v);
-            $v = str_replace(']', "\r\n]", $v);
-            echo $v;
-            echo '</pre>';
-        } else {
-            echo 'please <a href="Security/login/?BackURL='.urlencode($this->config()->get('url_segment').'/ajaxtest/').'">log in</a> first.';
-        }
-        if (!$request->isAjax()) {
-            die('---- make sure to add ?ajax=1 to the URL ---');
-        }
     }
 }

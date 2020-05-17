@@ -21,8 +21,8 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOPRICE', 'E-commerce: Products without Price').
-        ' ('.$this->sourceRecords()->count().')';
+        return _t('EcommerceSideReport.NOPRICE', 'E-commerce: Products without Price') .
+        ' (' . $this->sourceRecords()->count() . ')';
     }
 
     /**
@@ -60,14 +60,13 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report
      */
     public function columns()
     {
-        return array(
-            'FullName' => array(
+        return [
+            'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
                 'link' => true,
-            ),
-        );
+            ],
+        ];
     }
-
 
     public function getReportField()
     {
@@ -75,7 +74,7 @@ class EcommerceSideReport_NoPriceProducts extends SS_Report
         $config = $field->getConfig();
         $exportButton = $config->getComponentByType('GridFieldExportButton');
         $exportButton->setExportColumns($field->getColumns());
-        
+
         return $field;
     }
 }

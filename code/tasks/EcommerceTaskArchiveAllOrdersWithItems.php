@@ -30,29 +30,29 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
             'OrderStep',
             '',
             $cache = true,
-            array('Sort' => 'DESC')
+            ['Sort' => 'DESC']
         );
         if ($lastOrderStep) {
             $joinSQL = '
             INNER JOIN "OrderAttribute" ON "Order"."ID" = "OrderAttribute"."OrderID"
             INNER JOIN "OrderItem" ON "OrderItem"."ID" = "OrderAttribute"."ID"
-            INNER JOIN "'.self::$payment_table.'" ON "'.self::$payment_table.'"."OrderID" = "Order"."ID"
+            INNER JOIN "' . self::$payment_table . '" ON "' . self::$payment_table . '"."OrderID" = "Order"."ID"
             ';
-            $whereSQL = 'WHERE "StatusID" <> '.$lastOrderStep->ID.' ';
+            $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' ';
             $count = DB::query("
                 SELECT COUNT (\"Order\".\"ID\")
                 FROM \"Order\"
-                $joinSQL
-                $whereSQL
+                ${joinSQL}
+                ${whereSQL}
             ")->value();
             $do = DB::query("
                 UPDATE \"Order\"
-                $joinSQL
-                SET \"Order\".\"StatusID\" = ".$lastOrderStep->ID."
-                $whereSQL
+                ${joinSQL}
+                SET \"Order\".\"StatusID\" = " . $lastOrderStep->ID . "
+                ${whereSQL}
             ");
             if ($count) {
-                DB::alteration_message("NOTE: $count records were updated.", 'created');
+                DB::alteration_message("NOTE: ${count} records were updated.", 'created');
             } else {
                 DB::alteration_message('No records were updated.');
             }
@@ -62,17 +62,26 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         $this->createSubmissionLogForArchivedOrders();
     }
 
+    public function getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset)
+    {
+        return Order::get()
+            ->filter(['StatusID' => $lastOrderStep->ID])
+            ->leftJoin($orderStatusLogClassName, "\"${orderStatusLogClassName}\".\"OrderID\" = \"Order\".\"ID\"")
+            ->where("\"${orderStatusLogClassName}\".\"ID\" IS NULL")
+            ->limit(100, $offset);
+    }
+
     protected function createSubmissionLogForArchivedOrders()
     {
         $lastOrderStep = DataObject::get_one(
             'OrderStep',
             '',
             $cache = true,
-            array('Sort' => 'DESC')
+            ['Sort' => 'DESC']
         );
         $submissionLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         $obj = $submissionLogClassName::create();
-        if (!is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
+        if (! is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
         }
         $orderStatusLogClassName = 'OrderStatusLog';
@@ -81,9 +90,9 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         while ($orders->count()) {
             foreach ($orders as $order) {
                 $isSubmitted = $submissionLogClassName::get()
-                    ->Filter(array('OrderID' => $order->ID))
+                    ->Filter(['OrderID' => $order->ID])
                     ->count();
-                if (!$isSubmitted) {
+                if (! $isSubmitted) {
                     $obj = $submissionLogClassName::create();
 
                     $obj->OrderID = $order->ID;
@@ -92,20 +101,11 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
                     $obj->write();
                     $obj->OrderAsHTML = $order->ConvertToHTML();
                     $obj->write();
-                    DB::alteration_message('creating submission log for Order #'.$obj->OrderID, 'created');
+                    DB::alteration_message('creating submission log for Order #' . $obj->OrderID, 'created');
                 }
             }
             $offset += 100;
             $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
         }
-    }
-
-    public function getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset)
-    {
-        return Order::get()
-            ->filter(array('StatusID' => $lastOrderStep->ID))
-            ->leftJoin($orderStatusLogClassName, "\"$orderStatusLogClassName\".\"OrderID\" = \"Order\".\"ID\"")
-            ->where("\"$orderStatusLogClassName\".\"ID\" IS NULL")
-            ->limit(100, $offset);
     }
 }
