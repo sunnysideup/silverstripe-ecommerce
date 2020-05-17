@@ -1,7 +1,7 @@
 <?php
 
 
-class OrderEmailRecord_Review extends Controller
+class OrderEmailRecordReview extends Controller
 {
     private static $allowed_actions = [
         'read' => 'ShopAdmin',
