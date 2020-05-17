@@ -5,7 +5,7 @@
  * This controller allows you to submit Log forms from anywhere on the site,
  * especially the cart / checkout page.
  */
-class OrderStatusLogForm_Controller extends Controller
+class OrderStatusLogFormController extends Controller
 {
     /**
      * @var Order

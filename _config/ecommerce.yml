@@ -253,7 +253,7 @@ OrderModifierForm:
   validator_class: "OrderModifierForm_Validator"
 
 OrderStatusLogForm:
-  controller_class: "OrderStatusLogForm_Controller"
+  controller_class: "OrderStatusLogFormController"
   validator_class: "OrderStatusLogForm_Validator"
 
 ExpiryDateField:
