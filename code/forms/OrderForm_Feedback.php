@@ -33,7 +33,7 @@ class OrderForm_Feedback extends Form
         $requiredFields = [
             'FeedbackValue',
         ];
-        $validator = OrderForm_Feedback_Validator::create($requiredFields);
+        $validator = OrderFormFeedbackValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
 
         $oldData = Session::get("FormInfo.{$this->FormName()}.data");
