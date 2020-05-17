@@ -1075,9 +1075,8 @@ class ProductGroup extends Page
                   . ProductVariation::get()->count();
             }
         }
-        $cacheKey .= self::$_product_group_cache_key_cache;
 
-        return $cacheKey;
+        return $cacheKey . self::$_product_group_cache_key_cache;
     }
 
     /**
