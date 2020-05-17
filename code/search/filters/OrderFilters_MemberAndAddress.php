@@ -12,7 +12,7 @@
  * @sub-package: search
 
  **/
-class OrderFilters_MemberAndAddress extends ExactMatchFilter
+class OrderFiltersMemberAndAddress extends ExactMatchFilter
 {
     /**
      *@return SQLQuery

@@ -278,20 +278,20 @@ class Order extends DataObject implements EditableEcommerceObject
         ],
         'MemberID' => [
             'field' => 'TextField',
-            'filter' => 'OrderFilters_MemberAndAddress',
+            'filter' => 'OrderFiltersMemberAndAddress',
             'title' => 'Customer Details',
         ],
         'Created' => [
             'field' => 'TextField',
-            'filter' => 'OrderFilters_AroundDateFilter',
+            'filter' => 'OrderFiltersAroundDateFilter',
             'title' => 'Date (e.g. Today, 1 jan 2007, or last week)',
         ],
         //make sure to keep the items below, otherwise they do not show in form
         'StatusID' => [
-            'filter' => 'OrderFilters_MultiOptionsetStatusIDFilter',
+            'filter' => 'OrderFiltersMultiOptionsetStatusIDFilter',
         ],
         'CancelledByID' => [
-            'filter' => 'OrderFilters_HasBeenCancelled',
+            'filter' => 'OrderFiltersHasBeenCancelled',
             'title' => 'Cancelled by ...',
         ],
     ];

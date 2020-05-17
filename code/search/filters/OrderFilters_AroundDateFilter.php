@@ -8,7 +8,7 @@
  * @sub-package: search
 
  **/
-class OrderFilters_AroundDateFilter extends ExactMatchFilter
+class OrderFiltersAroundDateFilter extends ExactMatchFilter
 {
     /**
      * Additional days to add each month to make the filter for fuzzy as

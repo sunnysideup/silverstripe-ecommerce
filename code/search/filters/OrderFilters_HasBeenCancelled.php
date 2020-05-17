@@ -8,7 +8,7 @@
  * @sub-package: search
 
  **/
-class OrderFilters_HasBeenCancelled extends ExactMatchFilter
+class OrderFiltersHasBeenCancelled extends ExactMatchFilter
 {
     /**
      *@return SQLQuery

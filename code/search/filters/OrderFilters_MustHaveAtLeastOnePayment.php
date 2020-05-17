@@ -8,7 +8,7 @@
  * @sub-package: search
 
  **/
-class OrderFilters_MustHaveAtLeastOnePayment extends ExactMatchFilter
+class OrderFiltersMustHaveAtLeastOnePayment extends ExactMatchFilter
 {
     /**
      *@return SQLQuery

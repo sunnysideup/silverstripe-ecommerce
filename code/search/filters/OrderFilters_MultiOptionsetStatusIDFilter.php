@@ -8,7 +8,7 @@
  * @sub-package: search
 
  **/
-class OrderFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter
+class OrderFiltersMultiOptionsetStatusIDFilter extends ExactMatchFilter
 {
     /**
      *@return SQLQuery
