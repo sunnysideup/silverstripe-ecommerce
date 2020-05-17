@@ -1,7 +1,7 @@
 <?php
 
 
-class OrderModifierForm_Validator extends RequiredFields
+class OrderModifierFormValidator extends RequiredFields
 {
     public function php($data)
     {

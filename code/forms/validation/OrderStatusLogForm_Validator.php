@@ -1,7 +1,7 @@
 <?php
 
 
-class OrderStatusLogForm_Validator extends RequiredFields
+class OrderStatusLogFormValidator extends RequiredFields
 {
     public function php($data)
     {

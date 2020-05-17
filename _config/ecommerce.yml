@@ -250,11 +250,11 @@ ProductSearchForm:
 
 OrderModifierForm:
   controller_class: "OrderModifierFormController"
-  validator_class: "OrderModifierForm_Validator"
+  validator_class: "OrderModifierFormValidator"
 
 OrderStatusLogForm:
   controller_class: "OrderStatusLogFormController"
-  validator_class: "OrderStatusLogForm_Validator"
+  validator_class: "OrderStatusLogFormValidator"
 
 ExpiryDateField:
   short_months: true
