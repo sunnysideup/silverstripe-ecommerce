@@ -1300,6 +1300,7 @@ class ProductGroup extends Page
             //all good
         } else {
             //reset
+            // TODO: what is this for?
             $key = $this->getMyUserPreferencesDefault($type);
             $this->getSortFilterDisplayNames($type, 'getVariable');
             //clear bogus value from session ...
