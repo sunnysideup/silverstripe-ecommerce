@@ -193,9 +193,8 @@ class ShoppingCart extends Object
                     } elseif (! $this->order->canView()) {
                         //second reason to set to null: make sure we have permissions
                         $this->order = null;
-                    }
-                    //logged in, add Member.ID to order->MemberID
-                    elseif ($loggedInMember && $loggedInMember->exists()) {
+                    } elseif ($loggedInMember && $loggedInMember->exists()) {
+                        //logged in, add Member.ID to order->MemberID
                         if ($this->order->MemberID !== $loggedInMember->ID) {
                             $updateMember = false;
                             if (! $this->order->MemberID) {
