@@ -259,7 +259,7 @@ class OrderFormAddress extends Form
         $nextButton->addExtraClass('next');
         $actions = FieldList::create($nextButton);
 
-        $validator = OrderFormAddress_Validator::create($requiredFields);
+        $validator = OrderFormAddressValidator::create($requiredFields);
 
         parent::__construct($controller, $name, $fields, $actions, $validator);
         $this->setAttribute('autocomplete', 'off');
