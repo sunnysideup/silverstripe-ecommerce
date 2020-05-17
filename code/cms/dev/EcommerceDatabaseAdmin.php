@@ -104,8 +104,8 @@ class EcommerceDatabaseAdmin extends TaskRunner
         'ecommercetaskcreatemembergroups',
         'ecommercetaskdefaultrecords',
         'ecommercetaskcountryandregion',
-        'ecommercetaskcountryandregion_disallowallcountries',
-        'ecommercetaskcountryandregion_allowallcountries',
+        'EcommerceTaskCountryAndRegiondisallowallcountries',
+        'EcommerceTaskCountryAndRegionallowallcountries',
         'ecommercetaskadddefaultproducts',
         'ecommercetasklinkproductwithimages',
     ];

@@ -622,8 +622,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                 '
                 <h3>Short-Cuts</h3>
                 <h6>
-                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_DisallowAllCountries" target="_blank">' . _t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries') . '</a> |||
-                    <a href="/dev/tasks/EcommerceTaskCountryAndRegion_AllowAllCountries" target="_blank">' . _t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries') . '</a>
+                    <a href="/dev/tasks/EcommerceTaskCountryAndRegionDisallowAllCountries" target="_blank">' . _t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries') . '</a> |||
+                    <a href="/dev/tasks/EcommerceTaskCountryAndRegionAllowAllCountries" target="_blank">' . _t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries') . '</a>
                 </h6>
             '
             )
