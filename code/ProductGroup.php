@@ -1301,7 +1301,7 @@ class ProductGroup extends Page
         } else {
             //reset
             $key = $this->getMyUserPreferencesDefault($type);
-            $myGetVariable = $this->getSortFilterDisplayNames($type, 'getVariable');
+            $this->getSortFilterDisplayNames($type, 'getVariable');
             //clear bogus value from session ...
             $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
             Session::set('ProductGroup_' . $sessionName, '');
