@@ -1,6 +1,6 @@
 <?php
 
-class Product_OrderItem extends OrderItem
+class ProductOrderItem extends OrderItem
 {
     /**
      * standard SS method.
@@ -117,7 +117,7 @@ class Product_OrderItem extends OrderItem
         $productID = $this->BuyableID;
         $productVersion = $this->Version;
         $html = parent::debug() . <<<HTML
-            <h3>Product_OrderItem class details</h3>
+            <h3>ProductOrderItem class details</h3>
             <p>
                 <b>Title : </b>${title}<br/>
                 <b>Product ID : </b>${productID}<br/>

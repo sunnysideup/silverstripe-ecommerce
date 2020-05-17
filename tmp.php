@@ -41,7 +41,7 @@ $array = [
     './code/search/filters/OrderFilters_HasBeenCancelled.php',
     './code/search/filters/OrderFilters_MultiOptionsetStatusIDFilter.php',
     './code/filesystem/Product_Image.php',
-    './code/model/Product_OrderItem.php',
+    './code/model/ProductOrderItem.php',
     './code/model/process/OrderSteps/OrderStepSent.php',
     './code/model/process/OrderSteps/OrderStepSubmitted.php',
     './code/model/process/OrderSteps/OrderStepSendAdminNotification.php',

@@ -53,7 +53,7 @@ Do you want to change the lists / display / functionality of products?:
     - Extend the ProductVariation / Product / ProductGroup class and make sure to have a good look through any of these three classes that you are extending.
     - In the ProductGroup class you can decide exactly what products you like to show in what sort of lists, with what filters, etc...
     - Add static $hide_ancestor = "Product(Group)" to hide the default Product(Group).
-    - If you need to, you can also extend the relevant OrderItem (e.g. MyProduct_OrderItem extends Product_OrderItem)
+    - If you need to, you can also extend the relevant OrderItem (e.g. MyProductOrderItem extends ProductOrderItem)
     - This option is the most likely and easiest way to make substantial changes to e-commerce without having to edit the core. There are lots more options, but it is recommended to start here.
 
 Do you want to add a new type of product that does not suit Product or Product Variation?:

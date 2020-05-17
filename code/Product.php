@@ -4,7 +4,7 @@
  * Price, Weight, Model and basic management of
  * groups.
  *
- * It also has an associated Product_OrderItem class,
+ * It also has an associated ProductOrderItem class,
  * an extension of OrderItem, which is the mechanism
  * that links this page type class to the rest of the
  * eCommerce platform. This means you can add an instance
@@ -21,7 +21,7 @@ class Product extends Page implements BuyableModel
     /**
      * @var string
      */
-    protected $defaultClassNameForOrderItem = 'Product_OrderItem';
+    protected $defaultClassNameForOrderItem = 'ProductOrderItem';
 
     /**
      * Standard SS variable.
