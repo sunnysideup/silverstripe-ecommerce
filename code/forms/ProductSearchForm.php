@@ -205,7 +205,7 @@ class ProductSearchForm extends Form
             $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
         }
         $requiredFields = [];
-        $validator = ProductSearchForm_Validator::create($requiredFields);
+        $validator = ProductSearchFormValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
         //make it an easily accessible form  ...
         $this->setFormMethod('get');

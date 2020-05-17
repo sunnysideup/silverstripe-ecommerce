@@ -1,7 +1,7 @@
 <?php
 
 
-class ProductSearchForm_Validator extends RequiredFields
+class ProductSearchFormValidator extends RequiredFields
 {
     public function php($data)
     {
