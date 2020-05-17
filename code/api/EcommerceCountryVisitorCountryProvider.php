@@ -7,7 +7,7 @@
  * but you can switch it to your own system by changing
  * the classname in the ecommerce.yml config file.
  */
-class EcommerceCountry_VisitorCountryProvider extends Object implements EcommerceGEOipProvider
+class EcommerceCountryVisitorCountryProvider extends Object implements EcommerceGEOipProvider
 {
     /**
      * @return string (Country Code - e.g. NZ, AU, or AF)
