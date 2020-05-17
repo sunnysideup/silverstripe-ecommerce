@@ -311,7 +311,7 @@ class Product extends Page implements BuyableModel
         if ($this->Config()->get('add_data_to_meta_description_for_search')) {
             $this->MetaDescription = '';
             $fieldsToExclude = Config::inst()->get('SiteTree', 'db');
-            foreach ($this->db() as $fieldName => $fieldType) {
+            foreach (array_keys($this->db()) as $fieldName) {
                 if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
                     if (! in_array($fieldName, $fieldsToExclude, true)) {
                         $this->MetaDescription .= strip_tags($this->{$fieldName});
