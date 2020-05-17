@@ -9,7 +9,7 @@
  * @sub-package: forms
 
  **/
-class OrderForm_Cancel extends Form
+class OrderFormCancel extends Form
 {
     public function __construct(Controller $controller, $name, Order $order)
     {
@@ -38,11 +38,11 @@ class OrderForm_Cancel extends Form
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
-        $this->extend('updateOrderForm_Cancel', $this);
+        $this->extend('updateOrderFormCancel', $this);
     }
 
     /**
-     * Form action handler for OrderForm_Cancel.
+     * Form action handler for OrderFormCancel.
      *
      * Take the order that this was to be change on,
      * and set the status that was requested from

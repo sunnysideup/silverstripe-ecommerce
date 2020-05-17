@@ -258,13 +258,13 @@ class OrderConfirmationPageController extends CartPageController
      * checking to see if they can cancel their order
      * first of all.
      *
-     * @return OrderForm_Cancel
+     * @return OrderFormCancel
      */
     public function CancelForm()
     {
         if ($this->Order()) {
             if ($this->currentOrder->canCancel()) {
-                return OrderForm_Cancel::create($this, 'CancelForm', $this->currentOrder);
+                return OrderFormCancel::create($this, 'CancelForm', $this->currentOrder);
             }
         }
         //once cancelled, you will be redirected to main page - hence we need this...
