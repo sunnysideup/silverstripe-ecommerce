@@ -8,7 +8,7 @@
  *
  */
 
-class ShopAccountForm_PasswordValidator extends Object
+class ShopAccountFormPasswordValidator extends Object
 {
     /**
      * returns a valid, mysql safe password OR an empty string.

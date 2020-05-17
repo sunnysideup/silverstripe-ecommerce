@@ -786,6 +786,6 @@ class OrderFormAddress extends Form
      */
     protected function validPasswordHasBeenEntered($data)
     {
-        return ShopAccountForm_PasswordValidator::clean_password($data);
+        return ShopAccountFormPasswordValidator::clean_password($data);
     }
 }

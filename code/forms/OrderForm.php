@@ -171,7 +171,7 @@ class OrderForm extends Form
         //e.g. newslettersignup
         if ($member = Member::currentUser()) {
             $form->saveInto($member);
-            $password = ShopAccountForm_PasswordValidator::clean_password($data);
+            $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {
                 $member->changePassword($password);
             }

@@ -127,7 +127,7 @@ class ShopAccountForm extends Form
         $order = ShoppingCart::current_order();
         if ($order && $order->exists()) {
             $form->saveInto($member);
-            $password = ShopAccountForm_PasswordValidator::clean_password($data);
+            $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {
                 $member->changePassword($password);
                 if ($member->validate()->valid()) {
@@ -179,7 +179,7 @@ class ShopAccountForm extends Form
             $this->controller->redirectBack();
         }
         $form->saveInto($member);
-        $password = ShopAccountForm_PasswordValidator::clean_password($data);
+        $password = ShopAccountFormPasswordValidator::clean_password($data);
         if ($password) {
             $member->changePassword($password);
         } elseif ($data['PasswordCheck1']) {
