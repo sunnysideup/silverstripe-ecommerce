@@ -203,7 +203,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                 $this->databaseValues['CheckoutPage_Controller']["STEP_${stepNumber}" . '_' . $step->Code] = true;
             }
         }
-        $steps = OrderModifier_Descriptor::get();
+        $steps = OrderModifierDescriptor::get();
         if ($steps->count()) {
             foreach ($steps as $step) {
                 $fields = Config::inst()->get($step->ClassName, 'db');
@@ -217,10 +217,10 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                         }
                     }
                 }
-                $this->definitions['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = $step->Description . '<br />see: <a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">checkout page</a>.';
-                $this->configs['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = $configArray;
-                $this->defaults['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = $defaultsArray;
-                $this->databaseValues['CheckoutPage_Controller']['OrderModifier_Descriptor_' . $step->ModifierClassName] = true;
+                $this->definitions['CheckoutPage_Controller']['OrderModifierDescriptor_' . $step->ModifierClassName] = $step->Description . '<br />see: <a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">checkout page</a>.';
+                $this->configs['CheckoutPage_Controller']['OrderModifierDescriptor_' . $step->ModifierClassName] = $configArray;
+                $this->defaults['CheckoutPage_Controller']['OrderModifierDescriptor_' . $step->ModifierClassName] = $defaultsArray;
+                $this->databaseValues['CheckoutPage_Controller']['OrderModifierDescriptor_' . $step->ModifierClassName] = true;
             }
         }
     }

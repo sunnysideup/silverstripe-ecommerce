@@ -308,7 +308,7 @@ class CheckoutPage extends CartPage
         $fields->removeFieldFromTab('Root.Main', 'Content');
         $fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t('CheckoutPage.CONTENT', 'General note - always visible on the checkout page')));
         $htmlEditorField->setRows(3);
-        if (OrderModifier_Descriptor::get()->count()) {
+        if (OrderModifierDescriptor::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
         if (CheckoutPageStepDescription::get()->count()) {
@@ -348,9 +348,9 @@ class CheckoutPage extends CartPage
             new GridFieldDetailForm()
         );
         $title = _t('CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES', 'Messages relating to order form extras (e.g. tax or shipping)');
-        $source = OrderModifier_Descriptor::get();
+        $source = OrderModifierDescriptor::get();
 
-        return new GridField('OrderModifier_Descriptor', $title, $source, $gridFieldConfig);
+        return new GridField('OrderModifierDescriptor', $title, $source, $gridFieldConfig);
     }
 
     /**

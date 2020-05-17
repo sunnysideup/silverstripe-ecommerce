@@ -1,7 +1,7 @@
 <?php
 
 
-class OrderModifier_Descriptor extends DataObject implements EditableEcommerceObject
+class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
 {
     /**
      * standard SS variable.
@@ -196,13 +196,13 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if (isset($_REQUEST['NoLinkForOrderModifier_Descriptor']) && $_REQUEST['NoLinkForOrderModifier_Descriptor']) {
+        if (isset($_REQUEST['NoLinkForOrderModifierDescriptor']) && $_REQUEST['NoLinkForOrderModifierDescriptor']) {
             $this->LinkID = 0;
         }
     }
 
     /**
-     * Adds OrderModifier_Descriptors and deletes the irrelevant ones
+     * Adds OrderModifierDescriptors and deletes the irrelevant ones
      * stardard SS method.
      */
     public function requireDefaultRecords()
@@ -215,13 +215,13 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
         if (count($arrayOfModifiers)) {
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
-                    'OrderModifier_Descriptor',
+                    'OrderModifierDescriptor',
                     ['ModifierClassName' => $className],
                     $cacheDataObjectGetOne = false
                 );
                 if (! $orderModifier_Descriptor) {
                     $modifier = Injector::inst()->get($className);
-                    $orderModifier_Descriptor = OrderModifier_Descriptor::create();
+                    $orderModifier_Descriptor = OrderModifierDescriptor::create();
                     $orderModifier_Descriptor->ModifierClassName = $className;
                     $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
                     $orderModifier_Descriptor->write();
@@ -230,7 +230,7 @@ class OrderModifier_Descriptor extends DataObject implements EditableEcommerceOb
             }
         }
         //delete the ones that are not relevant
-        $orderModifierDescriptors = OrderModifier_Descriptor::get();
+        $orderModifierDescriptors = OrderModifierDescriptor::get();
         if ($orderModifierDescriptors && $orderModifierDescriptors->count()) {
             foreach ($orderModifierDescriptors as $orderModifierDescriptor) {
                 if (! in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers, true)) {

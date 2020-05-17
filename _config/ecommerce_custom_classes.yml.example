@@ -43,7 +43,7 @@
 #    OrderForm_Validator: OrderForm_Validator
 #    OrderFormAddress: OrderFormAddress
 #    OrderFormAddressValidator: OrderFormAddressValidator
-#    OrderModifier_Descriptor: OrderModifier_Descriptor
+#    OrderModifierDescriptor: OrderModifierDescriptor
 #    OrderModifierForm: OrderModifierForm
 #    OrderStatusLogCancel: OrderStatusLogCancel
 #    OrderStepField: OrderStepField

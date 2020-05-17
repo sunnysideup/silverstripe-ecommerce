@@ -172,9 +172,9 @@ class OrderModifier extends OrderAttribute
     private $runningTotal = 0;
 
     /**
-     * caching of relevant OrderModifier_Descriptor.
+     * caching of relevant OrderModifierDescriptor.
      *
-     * @var OrderModifier_Descriptor
+     * @var OrderModifierDescriptor
      */
     private $orderModifier_Descriptor = null;
 
@@ -425,7 +425,7 @@ class OrderModifier extends OrderAttribute
      **/
     public function Heading()
     {
-        if ($obj = $this->getOrderModifier_Descriptor()) {
+        if ($obj = $this->getOrderModifierDescriptor()) {
             return $obj->Heading;
         }
 
@@ -439,7 +439,7 @@ class OrderModifier extends OrderAttribute
      **/
     public function Description()
     {
-        if ($obj = $this->getOrderModifier_Descriptor()) {
+        if ($obj = $this->getOrderModifierDescriptor()) {
             return $obj->Description;
         }
 
@@ -453,7 +453,7 @@ class OrderModifier extends OrderAttribute
      **/
     public function MoreInfoPage()
     {
-        if ($obj = $this->getOrderModifier_Descriptor()) {
+        if ($obj = $this->getOrderModifierDescriptor()) {
             return $obj->Link();
         }
 
@@ -829,13 +829,13 @@ class OrderModifier extends OrderAttribute
     /**
      * returns the relevant orderModifier_Descriptor.
      *
-     * @return OrderModifier_Descriptor | Null
+     * @return OrderModifierDescriptor | Null
      */
-    protected function getOrderModifier_Descriptor()
+    protected function getOrderModifierDescriptor()
     {
         if ($this->orderModifier_Descriptor === null) {
             $this->orderModifier_Descriptor = DataObject::get_one(
-                'OrderModifier_Descriptor',
+                'OrderModifierDescriptor',
                 ['ModifierClassName' => $this->ClassName]
             );
         }
