@@ -483,7 +483,6 @@ class Product extends Page implements BuyableModel
     public function Siblings()
     {
         if ($this->ParentID) {
-
             return Product::get()
                 ->filter([
                     'ShowInMenus' => 1,
