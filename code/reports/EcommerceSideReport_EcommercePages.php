@@ -14,7 +14,7 @@
  * @sub-package: reports
 
  **/
-class EcommerceSideReport_EcommercePages extends SS_Report
+class EcommerceSideReportEcommercePages extends SS_Report
 {
     /**
      * The class of object being managed by this report.
