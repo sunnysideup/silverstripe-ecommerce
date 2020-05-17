@@ -134,25 +134,25 @@ OrderModifier:
 OrderStep:
 # we only add the basics here, so that it is easy to add additional ones...
   order_steps_to_include:
-    step1: OrderStep_Created
-    step2: OrderStep_Submitted
-    step3: OrderStep_Archived
+    step1: OrderStepCreated
+    step2: OrderStepSubmitted
+    step3: OrderStepArchived
 
   number_of_days_to_send_update_email: 10
 
-OrderStep_Confirmed:
+OrderStepConfirmed:
   list_of_things_to_check:
     check1:  "Payment has arrived in Bank Account"
     check2:  "Products are available"
 
 OrderStatusLog:
   available_log_classes_array: []
-    #- OrderStatusLog_Cancel
-    #- OrderStatusLog_DispatchElectronicOrder
-    #- OrderStatusLog_DispatchPhysicalOrder
-    #- OrderStatusLog_PaymentCheck
-    #- OrderStatusLog_Archived
-  order_status_log_class_used_for_submitting_order: "OrderStatusLog_Submitted"
+    #- OrderStatusLogCancel
+    #- OrderStatusLogDispatchElectronicOrder
+    #- OrderStatusLogDispatchPhysicalOrder
+    #- OrderStatusLogPaymentCheck
+    #- OrderStatusLogArchived
+  order_status_log_class_used_for_submitting_order: "OrderStatusLogSubmitted"
 
 BillingAddress:
   allow_selection_of_previous_addresses_in_checkout: false

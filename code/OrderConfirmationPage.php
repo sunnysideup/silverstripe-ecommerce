@@ -339,7 +339,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function CurrentCheckoutStep($isCurrentStep = false)
     {
-        $do = new CheckoutPage_StepDescription();
+        $do = new CheckoutPageStepDescription();
         $do->Link = $this->Link;
         $do->Heading = $this->MenuTitle;
         $do->Code = $this->URLSegment;

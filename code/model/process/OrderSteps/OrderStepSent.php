@@ -6,7 +6,7 @@
  * @sub-package: model
 
  **/
-class OrderStep_Sent extends OrderStep implements OrderStepInterface
+class OrderStepSent extends OrderStep implements OrderStepInterface
 {
     /**
      * @var string
@@ -18,7 +18,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
      *
      * @var string
      */
-    protected $relevantLogEntryClassName = 'OrderStatusLog_DispatchPhysicalOrder';
+    protected $relevantLogEntryClassName = 'OrderStatusLogDispatchPhysicalOrder';
 
     private static $db = [
         'SendDetailsToCustomer' => 'Boolean',
@@ -138,7 +138,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step please enter dispatch details.');
-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog_DispatchPhysicalOrder', $title), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLogDispatchPhysicalOrder', $title), 'ActionNextStepManually');
 
         return $fields;
     }

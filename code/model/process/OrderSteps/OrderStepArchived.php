@@ -6,17 +6,15 @@
  * @sub-package: model
 
  **/
-class OrderStep_Paid extends OrderStep implements OrderStepInterface
+class OrderStepArchived extends OrderStep implements OrderStepInterface
 {
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
-        //the one below may seem a bit paradoxical, but the thing is that the customer can pay up to and inclusive of this step
-        //that ist he code PAID means that the Order has been paid ONCE this step is completed
-        'CustomerCanPay' => 1,
-        'Name' => 'Pay',
-        'Code' => 'PAID',
-        'ShowAsInProcessOrder' => 1,
+        'CustomerCanPay' => 0,
+        'Name' => 'Archived Order',
+        'Code' => 'ARCHIVED',
+        'ShowAsCompletedOrder' => 1,
     ];
 
     /**
@@ -53,7 +51,9 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
     }
 
     /**
-     * can go to next step if order has been paid.
+     *nextStep:
+     * returns the next step (after it checks if everything is in place for the next step to run...)
+     * As this is the last step, we always return NULL!
      *
      * @see Order::doNextStatus
      *
@@ -63,37 +63,21 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
      **/
     public function nextStep(Order $order)
     {
-        if ($order->IsPaid()) {
-            return parent::nextStep($order);
-        }
-
+        //IMPORTANT
         return;
     }
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     *@param FieldList $fields
-     *@param Order $order
+     * @param FieldList $fields
+     * @param Order     $order
      *
-     *@return FieldList
+     * @return FieldList
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
-        $fields = parent::addOrderStepFields($fields, $order);
-        if (! $order->IsPaid()) {
-            $msg = _t(
-                'OrderStep.ORDERNOTPAID',
-                '
-                    This order can not be completed, because it has not been paid.
-                    You can either create a payment or change the status of any existing payment to <i>success</i>.
-                    See Payments tab for more details.
-                '
-            );
-            $fields->addFieldToTab('Root.Next', new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'), 'ActionNextStepManually');
-        }
-
-        return $fields;
+        return parent::addOrderStepFields($fields, $order);
     }
 
     /**
@@ -103,6 +87,6 @@ class OrderStep_Paid extends OrderStep implements OrderStepInterface
      */
     protected function myDescription()
     {
-        return _t('OrderStep.PAID_DESCRIPTION', 'The order is paid in full.');
+        return _t('OrderStep.ARCHIVED_DESCRIPTION', 'This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.');
     }
 }

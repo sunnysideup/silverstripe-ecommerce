@@ -182,7 +182,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                 user_error('There is no checkout page available and it seems impossible to create one.');
             }
         }
-        $steps = CheckoutPage_StepDescription::get();
+        $steps = CheckoutPageStepDescription::get();
         if ($steps->count()) {
             foreach ($steps as $key => $step) {
                 $stepNumber = $key + 1;

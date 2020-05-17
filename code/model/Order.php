@@ -1142,7 +1142,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @param Member $member - (optional) the user cancelling the order
      * @param string $reason - (optional) the reason the order is cancelled
      *
-     * @return OrderStatusLog_Cancel
+     * @return OrderStatusLogCancel
      */
     public function Cancel($member = null, $reason = '')
     {
@@ -1161,7 +1161,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $this->write();
             }
             //create log ...
-            $log = OrderStatusLog_Cancel::create();
+            $log = OrderStatusLogCancel::create();
             $log->AuthorID = $member->ID;
             $log->OrderID = $this->ID;
             $log->Note = $reason;
@@ -1231,7 +1231,7 @@ class Order extends DataObject implements EditableEcommerceObject
             );
         }
         if (! $step) {
-            $step = OrderStep_Created::create();
+            $step = OrderStepCreated::create();
         }
         if (! $step) {
             user_error('You need an order step in your Database.');
@@ -3081,7 +3081,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Submission Log for this Order (if any).
      *
-     * @return Submission Log (OrderStatusLog_Submitted) | Null
+     * @return Submission Log (OrderStatusLogSubmitted) | Null
      **/
     public function SubmissionLog()
     {

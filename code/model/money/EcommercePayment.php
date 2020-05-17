@@ -524,7 +524,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * @param array     $data The form request data - see OrderForm
      * @param OrderForm $form The form object submitted on
      *
-     * @return EcommercePayment_Result
+     * @return EcommercePaymentResult
      */
     public function processPayment($data, $form)
     {

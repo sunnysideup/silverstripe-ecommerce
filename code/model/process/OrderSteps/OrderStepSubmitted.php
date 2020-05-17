@@ -7,14 +7,14 @@
  * @sub-package: model
 
  **/
-class OrderStep_Submitted extends OrderStep implements OrderStepInterface
+class OrderStepSubmitted extends OrderStep implements OrderStepInterface
 {
     /**
      * The OrderStatusLog that is relevant to the particular step.
      *
      * @var string
      */
-    protected $relevantLogEntryClassName = 'OrderStatusLog_Submitted';
+    protected $relevantLogEntryClassName = 'OrderStatusLogSubmitted';
 
     private static $db = [
         'SaveOrderAsHTML' => 'Boolean',

@@ -4,7 +4,7 @@
 /**
  * Payment object representing a generic test payment.
  */
-class EcommercePayment_Test extends EcommercePayment
+class EcommercePaymentTest extends EcommercePayment
 {
     /**
      * standard SS variable.

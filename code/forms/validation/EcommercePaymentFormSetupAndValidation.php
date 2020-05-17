@@ -267,7 +267,7 @@ class EcommercePaymentFormSetupAndValidation extends Object
         $this->paymentObject->write();
         // Process payment, get the result back
         $result = $this->paymentObject->processPayment($data, $form);
-        if (! is_a($result, Object::getCustomClass('EcommercePayment_Result'))) {
+        if (! is_a($result, Object::getCustomClass('EcommercePaymentResult'))) {
             $form->controller->redirectBack();
 
             return false;

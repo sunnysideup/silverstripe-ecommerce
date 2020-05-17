@@ -7,7 +7,7 @@
  * @sub-package: model
 
  **/
-class OrderStatusLog_DispatchElectronicOrder extends OrderStatusLog_Dispatch
+class OrderStatusLogDispatchElectronicOrder extends OrderStatusLogDispatch
 {
     private static $db = [
         'Link' => 'Text',

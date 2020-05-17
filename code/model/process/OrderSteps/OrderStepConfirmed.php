@@ -6,15 +6,21 @@
  * @sub-package: model
 
  **/
-class OrderStep_Archived extends OrderStep implements OrderStepInterface
+class OrderStepConfirmed extends OrderStep implements OrderStepInterface
 {
+    /**
+     * @var string
+     */
+    protected $relevantLogEntryClassName = 'OrderStatusLogPaymentCheck';
+
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 0,
-        'Name' => 'Archived Order',
-        'Code' => 'ARCHIVED',
-        'ShowAsCompletedOrder' => 1,
+        'Name' => 'Confirm',
+        'Code' => 'CONFIRMED',
+        'ShowAsInProcessOrder' => 1,
+        'HideStepFromCustomer' => 1,
     ];
 
     /**
@@ -51,19 +57,21 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
     }
 
     /**
-     *nextStep:
-     * returns the next step (after it checks if everything is in place for the next step to run...)
-     * As this is the last step, we always return NULL!
+     * can go to next step if order payment has been confirmed...
      *
-     * @see Order::doNextStatus
+     * @param DataObject $order Order
      *
-     * @param Order $order
-     *
-     * @return OrderStep | Null (next step OrderStep object)
+     * @return DataObject | Null - DataObject = OrderStep
      **/
     public function nextStep(Order $order)
     {
-        //IMPORTANT
+        $className = $this->getRelevantLogEntryClassName();
+        $orderStatusLog_PaymentChecks = $className::get()
+            ->Filter(['OrderID' => $order->ID, 'PaymentConfirmed' => 1]);
+        if ($orderStatusLog_PaymentChecks->Count()) {
+            return parent::nextStep($order);
+        }
+
         return;
     }
 
@@ -77,7 +85,12 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
-        return parent::addOrderStepFields($fields, $order);
+        $fields = parent::addOrderStepFields($fields, $order);
+        $title = _t('OrderStep.MUSTDOPAYMENTCHECK', ' ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)');
+        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLogPaymentCheck', $title), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get('OrderStepConfirmed', 'list_of_things_to_check')) . '</li></ul>'), 'ActionNextStepManually');
+
+        return $fields;
     }
 
     /**
@@ -87,6 +100,6 @@ class OrderStep_Archived extends OrderStep implements OrderStepInterface
      */
     protected function myDescription()
     {
-        return _t('OrderStep.ARCHIVED_DESCRIPTION', 'This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.');
+        return _t('OrderStep.CONFIRMED_DESCRIPTION', 'The shop administrator confirms all the details for the current order.');
     }
 }

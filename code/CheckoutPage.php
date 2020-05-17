@@ -311,7 +311,7 @@ class CheckoutPage extends CartPage
         if (OrderModifier_Descriptor::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
-        if (CheckoutPage_StepDescription::get()->count()) {
+        if (CheckoutPageStepDescription::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps', $this->getCheckoutStepDescriptionField());
         }
         $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.'));
@@ -366,8 +366,8 @@ class CheckoutPage extends CartPage
             new GridFieldDetailForm()
         );
         $title = _t('CheckoutPage.CHECKOUTSTEPESCRIPTIONS', 'Checkout Step Descriptions');
-        $source = CheckoutPage_StepDescription::get();
+        $source = CheckoutPageStepDescription::get();
 
-        return new GridField('CheckoutPage_StepDescription', $title, $source, $gridFieldConfig);
+        return new GridField('CheckoutPageStepDescription', $title, $source, $gridFieldConfig);
     }
 }

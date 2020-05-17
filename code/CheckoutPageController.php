@@ -162,7 +162,7 @@ class CheckoutPageController extends CartPageController
         if ($number) {
             $code = $steps[$number - 1];
 
-            return CheckoutPage_StepDescription::get()->filter(['Code' => $code])->first();
+            return CheckoutPageStepDescription::get()->filter(['Code' => $code])->first();
         }
         $returnData = ArrayList::create();
         $completed = 1;
@@ -171,7 +171,7 @@ class CheckoutPageController extends CartPageController
         foreach ($steps as $code) {
             if (! in_array($code, $seenCodes, true)) {
                 $seenCodes[$code] = $code;
-                $do = CheckoutPage_StepDescription::get()->filter(['Code' => $code])->first();
+                $do = CheckoutPageStepDescription::get()->filter(['Code' => $code])->first();
                 if ($do) {
                     if ($this->currentStep && $do->Code === $this->currentStep) {
                         $do->LinkingMode = 'current';

@@ -7,7 +7,7 @@
  * @sub-package: model
 
  **/
-class OrderStatusLog_DispatchPhysicalOrder extends OrderStatusLog_Dispatch
+class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
 {
     private static $db = [
         'DispatchedBy' => 'Varchar(100)',

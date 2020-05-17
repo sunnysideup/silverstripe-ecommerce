@@ -6,7 +6,7 @@
  * @sub-package: model
 
  **/
-class OrderStep_SentReceipt extends OrderStep implements OrderStepInterface
+class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
 {
     /**
      * @var string

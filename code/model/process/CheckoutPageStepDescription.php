@@ -6,7 +6,7 @@
  *
  */
 
-class CheckoutPage_StepDescription extends DataObject implements EditableEcommerceObject
+class CheckoutPageStepDescription extends DataObject implements EditableEcommerceObject
 {
     /**
      * standard SS variable.
@@ -250,7 +250,7 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
         $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         if (is_array($steps) && count($steps)) {
             $idArray = [];
-            $addCodeSteps = CheckoutPage_StepDescription::get()
+            $addCodeSteps = CheckoutPageStepDescription::get()
                 ->where('"Code" = \'\' OR "Code" IS NULL');
 
             $stepsToAdd = $steps;
@@ -263,21 +263,21 @@ class CheckoutPage_StepDescription extends DataObject implements EditableEcommer
             }
             foreach ($steps as $id => $code) {
                 $filter = ['Code' => $code];
-                $obj = CheckoutPage_StepDescription::get()->filter($filter)->first();
+                $obj = CheckoutPageStepDescription::get()->filter($filter)->first();
                 if ($obj) {
                     //do nothing
                 } else {
-                    $obj = CheckoutPage_StepDescription::create($filter);
+                    $obj = CheckoutPageStepDescription::create($filter);
                     $obj->Heading = $this->getDefaultTitle($code);
                     $obj->write();
-                    DB::alteration_message("Creating CheckoutPage_StepDescription ${code}", 'created');
+                    DB::alteration_message("Creating CheckoutPageStepDescription ${code}", 'created');
                 }
                 $idArray[$obj->ID] = $obj->ID;
             }
-            $toDeleteObjects = CheckoutPage_StepDescription::get()->exclude(['ID' => $idArray]);
+            $toDeleteObjects = CheckoutPageStepDescription::get()->exclude(['ID' => $idArray]);
             if ($toDeleteObjects->count()) {
                 foreach ($toDeleteObjects as $toDeleteObject) {
-                    DB::alteration_message('Deleting CheckoutPage_StepDescription ' . $toDeleteObject->Code, 'deleted');
+                    DB::alteration_message('Deleting CheckoutPageStepDescription ' . $toDeleteObject->Code, 'deleted');
                     $toDeleteObject->delete();
                 }
             }

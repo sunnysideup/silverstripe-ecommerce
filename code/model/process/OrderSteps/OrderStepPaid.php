@@ -6,21 +6,17 @@
  * @sub-package: model
 
  **/
-class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
+class OrderStepPaid extends OrderStep implements OrderStepInterface
 {
-    /**
-     * @var string
-     */
-    protected $relevantLogEntryClassName = 'OrderStatusLog_PaymentCheck';
-
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
-        'CustomerCanPay' => 0,
-        'Name' => 'Confirm',
-        'Code' => 'CONFIRMED',
+        //the one below may seem a bit paradoxical, but the thing is that the customer can pay up to and inclusive of this step
+        //that ist he code PAID means that the Order has been paid ONCE this step is completed
+        'CustomerCanPay' => 1,
+        'Name' => 'Pay',
+        'Code' => 'PAID',
         'ShowAsInProcessOrder' => 1,
-        'HideStepFromCustomer' => 1,
     ];
 
     /**
@@ -57,18 +53,17 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
     }
 
     /**
-     * can go to next step if order payment has been confirmed...
+     * can go to next step if order has been paid.
      *
-     * @param DataObject $order Order
+     * @see Order::doNextStatus
      *
-     * @return DataObject | Null - DataObject = OrderStep
+     * @param Order $order
+     *
+     * @return OrderStep | Null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {
-        $className = $this->getRelevantLogEntryClassName();
-        $orderStatusLog_PaymentChecks = $className::get()
-            ->Filter(['OrderID' => $order->ID, 'PaymentConfirmed' => 1]);
-        if ($orderStatusLog_PaymentChecks->Count()) {
+        if ($order->IsPaid()) {
             return parent::nextStep($order);
         }
 
@@ -78,17 +73,25 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @param FieldList $fields
-     * @param Order     $order
+     *@param FieldList $fields
+     *@param Order $order
      *
-     * @return FieldList
+     *@return FieldList
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
-        $title = _t('OrderStep.MUSTDOPAYMENTCHECK', ' ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)');
-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog_PaymentCheck', $title), 'ActionNextStepManually');
-        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get('OrderStep_Confirmed', 'list_of_things_to_check')) . '</li></ul>'), 'ActionNextStepManually');
+        if (! $order->IsPaid()) {
+            $msg = _t(
+                'OrderStep.ORDERNOTPAID',
+                '
+                    This order can not be completed, because it has not been paid.
+                    You can either create a payment or change the status of any existing payment to <i>success</i>.
+                    See Payments tab for more details.
+                '
+            );
+            $fields->addFieldToTab('Root.Next', new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'), 'ActionNextStepManually');
+        }
 
         return $fields;
     }
@@ -100,6 +103,6 @@ class OrderStep_Confirmed extends OrderStep implements OrderStepInterface
      */
     protected function myDescription()
     {
-        return _t('OrderStep.CONFIRMED_DESCRIPTION', 'The shop administrator confirms all the details for the current order.');
+        return _t('OrderStep.PAID_DESCRIPTION', 'The order is paid in full.');
     }
 }

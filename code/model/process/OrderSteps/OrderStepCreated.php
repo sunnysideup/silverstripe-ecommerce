@@ -9,7 +9,7 @@
  * @sub-package: model
 
  **/
-class OrderStep_Created extends OrderStep implements OrderStepInterface
+class OrderStepCreated extends OrderStep implements OrderStepInterface
 {
     private static $defaults = [
         'CustomerCanEdit' => 1,

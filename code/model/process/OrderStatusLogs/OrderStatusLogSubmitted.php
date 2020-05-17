@@ -2,7 +2,7 @@
 
 
 /**
- * OrderStatusLog_Submitted is an important class that is created when an order is submitted.
+ * OrderStatusLogSubmitted is an important class that is created when an order is submitted.
  * It is created by the order and it signifies to the OrderStep to continue to the next step.
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -10,7 +10,7 @@
  * @sub-package: model
 
  **/
-class OrderStatusLog_Submitted extends OrderStatusLog
+class OrderStatusLogSubmitted extends OrderStatusLog
 {
     private static $db = [
         'OrderAsHTML' => 'HTMLText',
@@ -135,7 +135,7 @@ class OrderStatusLog_Submitted extends OrderStatusLog
                 $id = 0;
             }
             $lastOne = DataObject::get_one(
-                'OrderStatusLog_Submitted',
+                'OrderStatusLogSubmitted',
                 '\'ID\' != \'' . $id . '\'',
                 $cacheDataObjectGetOne = true,
                 ['SequentialOrderNumber' => 'DESC']

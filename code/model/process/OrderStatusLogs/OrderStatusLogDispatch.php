@@ -7,7 +7,7 @@
  * @sub-package: model
 
  **/
-class OrderStatusLog_Dispatch extends OrderStatusLog
+class OrderStatusLogDispatch extends OrderStatusLog
 {
     private static $defaults = [
         'InternalUseOnly' => true,

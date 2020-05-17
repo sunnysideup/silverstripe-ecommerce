@@ -1,6 +1,6 @@
 <?php
 
-class EcommercePayment_Processing extends EcommercePayment_Result
+class EcommercePaymentProcessing extends EcommercePaymentResult
 {
     public function isSuccess()
     {

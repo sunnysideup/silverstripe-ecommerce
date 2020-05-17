@@ -1,38 +1,29 @@
 <?php
 
-
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
 
  **/
-class OrderStatusLog_Cancel extends OrderStatusLog
+class OrderStatusLogArchived extends OrderStatusLog
 {
     private static $defaults = [
-        'Title' => 'Order Cancelled',
         'InternalUseOnly' => false,
     ];
 
-    private static $singular_name = 'Cancelled Order';
+    private static $singular_name = 'Archived Order - Additional Note';
 
-    private static $plural_name = 'Cancelled Orders';
-
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
-    private static $description = 'A record noting the cancellation of an order.  ';
+    private static $plural_name = 'Archived Order - Additional Notes';
 
     public function i18n_singular_name()
     {
-        return _t('OrderStatusLog.SUBMITTEDORDER', 'Cancelled Order');
+        return _t('OrderStatusLog.ARCHIVEDORDERS', 'Archived Order - Additional Note');
     }
 
     public function i18n_plural_name()
     {
-        return _t('OrderStatusLog.SUBMITTEDORDERS', 'Cancelled Orders');
+        return _t('OrderStatusLog.ARCHIVEDORDERS', 'Archived Order - Additional Notes');
     }
 
     /**
@@ -44,14 +35,6 @@ class OrderStatusLog_Cancel extends OrderStatusLog
      */
     public function canDelete($member = null)
     {
-        if (! $member) {
-            $member = Member::currentUser();
-        }
-        $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
-            return $extended;
-        }
-
         return false;
     }
 
@@ -72,7 +55,7 @@ class OrderStatusLog_Cancel extends OrderStatusLog
             return $extended;
         }
 
-        return false;
+        return parent::canEdit($member);
     }
 
     /**
@@ -84,14 +67,15 @@ class OrderStatusLog_Cancel extends OrderStatusLog
      */
     public function canCreate($member = null)
     {
-        if (! $member) {
-            $member = Member::currentUser();
-        }
-        $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
-            return $extended;
-        }
+        return true;
+    }
 
-        return false;
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->replaceField('ClassName', new HiddenField('ClassName', 'ClassName', $this->ClassName));
+        $fields->addFieldToTab('Root.Main', new ReadonlyField('Created', 'Created'));
+
+        return $fields;
     }
 }

@@ -7,39 +7,24 @@
  * @sub-package: model
 
  **/
-class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
+class OrderStepSendAdminNotification extends OrderStep implements OrderStepInterface
 {
     /**
      * @var string
      */
-    protected $emailClassName = 'OrderInvoiceEmail';
-
-    private static $db = [
-        'SendInvoiceToCustomer' => 'Boolean',
-    ];
+    protected $emailClassName = 'OrderReceiptEmail';
 
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 1,
-        'Name' => 'Send Invoice',
-        'Code' => 'INVOICED',
+        'Name' => 'Send Admin Notification',
+        'Code' => 'ADMINNOTIFIED',
         'ShowAsInProcessOrder' => 1,
-        'SendInvoiceToCustomer' => 1,
     ];
-
-    public function getCMSFields()
-    {
-        $fields = parent::getCMSFields();
-        $fields->addFieldToTab('Root.Main', new HeaderField('ActuallySendTheInvoice', _t('OrderStep.ACTUALLYSENDTHEINVOICE', 'Actually send the invoice? '), 3), 'SendInvoiceToCustomer');
-
-        return $fields;
-    }
 
     /**
      * can run step once order has been submitted.
-     * NOTE: must have a payment (even if it is a fake payment).
-     * The reason for this is if people pay straight away then they want to see the payment shown on their invoice.
      *
      * @param Order $order object
      *
@@ -65,23 +50,18 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      **/
     public function doStep(Order $order)
     {
-        if ($this->SendInvoiceToCustomer) {
-            $adminOnlyOrToEmail = false;
-        } else {
-            $adminOnlyOrToEmail = true;
-        }
         return $this->sendEmailForStep(
             $order,
             $subject = $this->EmailSubject,
             $message = '',
             $resend = false,
-            $adminOnlyOrToEmail,
+            $adminOnlyOrToEmail = true,
             $this->getEmailClassName()
         );
     }
 
     /**
-     * can do next step once the invoice has been sent or in case the invoice does not need to be sent.
+     * can do next step once the admin notification has been sent
      *
      * @param Order $order
      *
@@ -120,7 +100,7 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      **/
     protected function hasCustomerMessage()
     {
-        return $this->SendInvoiceToCustomer;
+        return false;
     }
 
     /**
@@ -130,6 +110,9 @@ class OrderStep_SentInvoice extends OrderStep implements OrderStepInterface
      */
     protected function myDescription()
     {
-        return _t('OrderStep.SENTINVOICE_DESCRIPTION', 'Invoice gets sent to the customer via e-mail. In many cases, it is better to only send a receipt and sent the invoice to the shop admin only so that they know an order is coming, while the customer only sees a receipt which shows payment as well as the order itself.');
+        return _t(
+            'OrderStep.SENDADMIN_NOTIFICATION',
+            'Admin notification to admin about order.'
+        );
     }
 }

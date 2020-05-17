@@ -18,7 +18,7 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
 
     public function run($request)
     {
-        $problem = DB::query('SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = 0');
+        $problem = DB::query('SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = 0');
         if ($problem->value()) {
             DB::alteration_message('the size of the problem is: ' . $problem->value(), 'deleted');
         } else {
@@ -28,11 +28,11 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
         if ($rows) {
             foreach ($rows as $row) {
                 $orderID = $row['ID'];
-                $inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLog_Submitted INNER JOIN OrderStatusLog ON OrderStatusLog_Submitted.ID = OrderStatusLog.ID WHERE OrderID = ${orderID}");
+                $inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = ${orderID}");
                 if ($inners->value() < 1) {
                     $sql = "
 					SELECT *
-					FROM OrderStatusLog_Submitted
+					FROM OrderStatusLogSubmitted
 					WHERE
 						\"OrderAsString\" LIKE '%s:7:\"OrderID\";i:" . $orderID . "%'
 						OR \"OrderAsHTML\" LIKE '%Order #" . $orderID . "%'

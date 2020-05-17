@@ -45,9 +45,9 @@
 #    OrderFormAddressValidator: OrderFormAddressValidator
 #    OrderModifier_Descriptor: OrderModifier_Descriptor
 #    OrderModifierForm: OrderModifierForm
-#    OrderStatusLog_Cancel: OrderStatusLog_Cancel
+#    OrderStatusLogCancel: OrderStatusLogCancel
 #    OrderStepField: OrderStepField
-#    OrderStep_Created: OrderStep_Created
+#    OrderStepCreated: OrderStepCreated
 #    ProductImage: ProductImage
 #    SelectOrderAddressField: SelectOrderAddressField
 #    ShopAccountForm: ShopAccountForm_Validator

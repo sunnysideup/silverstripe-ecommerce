@@ -3,7 +3,7 @@
 /**
  * Payment object representing a TEST = PENDING.
  */
-class EcommercePayment_TestPending extends EcommercePayment_Test
+class EcommercePaymentTestPending extends EcommercePaymentTest
 {
     /**
      * standard SS variable.
@@ -33,7 +33,7 @@ class EcommercePayment_TestPending extends EcommercePayment_Test
      * @param array     $data The form request data - see OrderForm
      * @param OrderForm $form The form object submitted on
      *
-     * @return EcommercePayment_Result
+     * @return EcommercePaymentResult
      */
     public function processPayment($data, $form)
     {
@@ -41,7 +41,7 @@ class EcommercePayment_TestPending extends EcommercePayment_Test
         $this->Message = '<div>PAYMENT TEST: PENDING</div>';
         $this->write();
 
-        return new EcommercePayment_Processing();
+        return new EcommercePaymentProcessing();
     }
 
     public function getPaymentFormFields($amount = 0, $order = null)

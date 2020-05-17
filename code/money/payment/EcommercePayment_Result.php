@@ -1,7 +1,7 @@
 <?php
 
 
-abstract class EcommercePayment_Result extends Object
+abstract class EcommercePaymentResult extends Object
 {
     protected $value;
 

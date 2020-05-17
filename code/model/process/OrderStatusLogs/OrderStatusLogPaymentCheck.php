@@ -14,7 +14,7 @@
  * @sub-package: model
 
  **/
-class OrderStatusLog_PaymentCheck extends OrderStatusLog
+class OrderStatusLogPaymentCheck extends OrderStatusLog
 {
     private static $defaults = [
         'InternalUseOnly' => true,

@@ -89,7 +89,7 @@ class EcommerceConfigDefinitions extends Object
         'POST SALE PROCESSING' => [
             'OrderConfirmationPage_Controller',
             'OrderStep',
-            'OrderStep_Confirmed',
+            'OrderStepConfirmed',
             'OrderStatusLog',
             'OrderStatusLogForm',
             'Email',
@@ -290,11 +290,11 @@ class EcommerceConfigDefinitions extends Object
                 'order_steps_to_include' => 'Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.',
                 'number_of_days_to_send_update_email' => 'The maximum number of days available to send an status update for the customer for the specific order step',
             ],
-            'OrderStep_Confirmed' => [
+            'OrderStepConfirmed' => [
                 'list_of_things_to_check' => 'One of the steps in the order steps sequence is the Order Confirmation.  This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.  Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock, is there a delivery address, etc....)',
             ],
             'OrderStatusLog' => [
-                'available_log_classes_array' => 'Tells us what order log classes are to be used. OrderStatusLog_Submitted should always be used and does not need to be listed here.',
+                'available_log_classes_array' => 'Tells us what order log classes are to be used. OrderStatusLogSubmitted should always be used and does not need to be listed here.',
                 'order_status_log_class_used_for_submitting_order' => 'This is the log class used to record the submission of the order.  It is crucial to set this to the right log class, as a lot of the functionality in e-commerce depends on it: ',
             ],
             'OrderStatusLogForm' => [

@@ -37,7 +37,7 @@ class EcommercePaymentSupportedMethodsProvider extends Object implements Ecommer
             if (ArrayLib::is_associative($supportedMethods)) {
                 if ($hideTestPaymentMethods) {
                     foreach ($supportedMethods as $methodClass => $methodTitle) {
-                        if (is_subclass_of($methodClass, 'EcommercePayment_Test')) {
+                        if (is_subclass_of($methodClass, 'EcommercePaymentTest')) {
                             unset($supportedMethods[$methodClass]);
                         }
                     }
