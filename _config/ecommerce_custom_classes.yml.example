@@ -39,7 +39,7 @@
 #    OrderEmailRecord: OrderEmailRecord
 #    OrderForm: OrderForm
 #    OrderFormCancel: OrderFormCancel
-#    OrderForm_Payment: OrderForm_Payment
+#    OrderFormPayment: OrderFormPayment
 #    OrderForm_Validator: OrderForm_Validator
 #    OrderFormAddress: OrderFormAddress
 #    OrderFormAddressValidator: OrderFormAddressValidator

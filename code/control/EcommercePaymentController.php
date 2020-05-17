@@ -107,7 +107,7 @@ class EcommercePaymentController extends Controller
     }
 
     /**
-     * @return Form (OrderForm_Payment) | Array
+     * @return Form (OrderFormPayment) | Array
      **/
     public function PaymentForm()
     {
@@ -115,7 +115,7 @@ class EcommercePaymentController extends Controller
             if ($this->currentOrder->canPay()) {
                 Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 
-                return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder, $this->Link('thankyou'));
+                return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder, $this->Link('thankyou'));
             }
             $this->errorMessage = _t('EcommercePaymentController.CANNOTMAKEPAYMENT', 'You can not make a payment for this order.');
         } else {

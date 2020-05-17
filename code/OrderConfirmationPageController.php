@@ -292,7 +292,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * show the payment form.
      *
-     * @return Form (OrderForm_Payment) or Null
+     * @return Form (OrderFormPayment) or Null
      **/
     public function PaymentForm()
     {
@@ -300,7 +300,7 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->currentOrder->canPay()) {
                 Requirements::javascript('ecommerce/javascript/EcomPayment.js');
 
-                return OrderForm_Payment::create($this, 'PaymentForm', $this->currentOrder);
+                return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
             }
         }
 

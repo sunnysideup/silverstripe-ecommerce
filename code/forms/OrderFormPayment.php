@@ -1,6 +1,6 @@
 <?php
 
-class OrderForm_Payment extends Form
+class OrderFormPayment extends Form
 {
     /**
      * @param Controller $controller
@@ -36,7 +36,7 @@ class OrderForm_Payment extends Form
             new FormAction('dopayment', _t('OrderForm.PAYORDER', 'Pay balance'))
         );
         $requiredFields = [];
-        $validator = OrderForm_Payment_Validator::create($requiredFields);
+        $validator = OrderFormPayment_Validator::create($requiredFields);
         $form = parent::__construct($controller, $name, $fields, $actions, $validator);
 
         //extension point
@@ -52,7 +52,7 @@ class OrderForm_Payment extends Form
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
-        $this->extend('updateOrderForm_Payment', $this);
+        $this->extend('updateOrderFormPayment', $this);
     }
 
     /**
@@ -98,7 +98,7 @@ class OrderForm_Payment extends Form
     }
 }
 
-class OrderForm_Payment_Validator extends RequiredFields
+class OrderFormPayment_Validator extends RequiredFields
 {
     public function php($data)
     {
