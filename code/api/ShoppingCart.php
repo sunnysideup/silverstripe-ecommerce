@@ -239,6 +239,13 @@ class ShoppingCart extends Object
                                     }
                                     $previousOrderFromMember->delete();
                                 }
+                                $previousOrderFromMember = DataObject::get_one(
+                                    'Order',
+                                    '
+                                        "MemberID" = ' . $loggedInMember->ID . '
+                                        AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
+                                        AND "Order"."ID" <> ' . $this->order->ID
+                                );
                             }
                         }
                     }
