@@ -1610,7 +1610,7 @@ class ProductGroup extends Page
     protected function createSortStatementFromIDArray($IDarray, $table = 'Product')
     {
         $ifStatement = 'CASE ';
-        $sortStatement = '';
+        // $sortStatement = '';
         $stage = $this->getStage();
         $count = 0;
         foreach ($IDarray as $productID) {
