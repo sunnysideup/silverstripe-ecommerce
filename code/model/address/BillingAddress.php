@@ -225,7 +225,6 @@ class BillingAddress extends OrderAddress
         );
         $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
-        $hasPreviousAddresses = false;
         if ($member && Member::currentUser()) {
             if ($member->exists() && ! $member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
@@ -240,7 +239,6 @@ class BillingAddress extends OrderAddress
                                 $addresses
                             )
                         );
-                        $hasPreviousAddresses = true;
                     }
                 }
             }
