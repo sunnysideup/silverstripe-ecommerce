@@ -70,7 +70,7 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
     }
 }
 
-class EcommerceSiteTreeExtension_Controller extends Extension
+class EcommerceSiteTreeExtensionController extends Extension
 {
     /**
      * standard SS method.
