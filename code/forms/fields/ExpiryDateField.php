@@ -191,7 +191,7 @@ class ExpiryDateField extends TextField
     {
 
         //store this for later
-        $oldValue = $this->value;
+        // $oldValue = $this->value;
         $this->value = $value;
 
         //looking up field by name is expensive, so lets check it needs to change
