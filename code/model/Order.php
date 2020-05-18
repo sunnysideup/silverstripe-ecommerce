@@ -3637,8 +3637,8 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     protected function prepareAndSendEmail(
         $emailClassName = 'OrderInvoiceEmail',
-        $subject,
-        $message,
+        $subject = '',
+        $message = '',
         $resend = false,
         $adminOnlyOrToEmail = false
     ) {
