@@ -45,7 +45,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
                 ${joinSQL}
                 ${whereSQL}
             ")->value();
-            $do = DB::query("
+            DB::query("
                 UPDATE \"Order\"
                 ${joinSQL}
                 SET \"Order\".\"StatusID\" = " . $lastOrderStep->ID . "
