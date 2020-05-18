@@ -150,7 +150,7 @@ class ShippingAddress extends OrderAddress
         $shippingLabels = parent::fieldLabels($includerelations);
         $billingLabels = $billingAddress->fieldLabels($includerelations);
         $summaryFields = $this->stat('field_labels');
-        foreach ($shippingLabels as $shippingKey => $shippingLabel) {
+        foreach (array_keys($shippingLabels) as $shippingKey) {
             if (! isset($summaryFields[$shippingKey])) {
                 $billingKey = str_replace('Shipping', '', $shippingKey);
                 if (isset($billingLabels[$billingKey])) {
