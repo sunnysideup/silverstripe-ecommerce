@@ -329,7 +329,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     public function getTitle()
     {
         $str = 'TO: ' . $this->To;
-        if ($order = $this->Order()) {
+        if ($this->Order()) {
             $str .= ' - ' . $this->Order()->getTitle();
             $str .= ' - ' . $this->OrderStepNice();
         }
