@@ -10,7 +10,7 @@
  * @sub-package: forms
 
  **/
-class OrderForm_Validator extends RequiredFields
+class OrderFormValidator extends RequiredFields
 {
     /**
      * Ensures member unique id stays unique and other basic stuff...
