@@ -867,7 +867,6 @@ class Order extends DataObject implements EditableEcommerceObject
             //MEMBER FIELD!!!!!!!
             $memberArray = $specialOptionsArray + EcommerceRole::list_of_customers(true);
             $fields->addFieldToTab('Root.Next', new DropdownField('MemberID', _t('Order.SELECTCUSTOMER', 'Select Customer'), $memberArray), 'CustomerOrderNote');
-            $memberArray = null;
         }
         $fields->addFieldToTab('Root.Addresses', new HeaderField('BillingAddressHeader', _t('Order.BILLINGADDRESS', 'Billing Address')));
 
