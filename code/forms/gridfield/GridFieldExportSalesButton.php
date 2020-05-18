@@ -103,7 +103,6 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             }
         }
 
-
         //data object variables
         $orderStatusSubmissionLog = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
         $fileData = '';
