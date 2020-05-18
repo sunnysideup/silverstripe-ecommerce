@@ -279,7 +279,7 @@ EcommerceConfig:
                 DB::alteration_message("${className}", 'deleted');
             } else {
                 $classConfigs = $this->configs[$className];
-                foreach ($classConfigs as $key => $classConfig) {
+                foreach (array_keys($classConfigs) as $key) {
                     if (! isset($this->definitions[$className][$key])) {
                         $allOK = false;
                         DB::alteration_message("${className}.${key}", 'deleted');
