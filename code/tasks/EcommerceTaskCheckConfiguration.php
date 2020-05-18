@@ -327,7 +327,7 @@ EcommerceConfig:
                 DB::alteration_message("No settings found for ${className} in /ecommerce/_config/config.yml", 'deleted');
             } else {
                 $classConfigs = $this->definitions[$className];
-                foreach ($classConfigs as $key => $classConfig) {
+                foreach (array_keys($classConfigs) as $key) {
                     if (! isset($this->configs[$className][$key])) {
                         $this->customisedValues[$className][$key] = false;
                     //fallback to Configs...
@@ -461,7 +461,7 @@ EcommerceConfig:
                     $oldClassName = $className;
                 }
                 if (is_array($settings)) {
-                    foreach ($settings as $key => $classConfig) {
+                    foreach (array_keys($settings) as $key) {
                         $configError = '';
                         $class = '';
                         $hasDefaultvalue = false;
