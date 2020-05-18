@@ -9,7 +9,7 @@
  * @sub-package: search
 
  **/
-class EcommercePaymentFilters_AroundDateFilter extends ExactMatchFilter
+class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
 {
     /**
      * The divider is used to work out the
