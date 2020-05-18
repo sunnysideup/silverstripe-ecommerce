@@ -650,7 +650,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 )
                 ->sort('LastEdited', 'DESC')
                 ->exclude(['ID' => $excludeID])
-                //->limit($limit)
+                ->limit($limit)
                 ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
             if ($addresses->count()) {
                 if ($keepDoubles) {
