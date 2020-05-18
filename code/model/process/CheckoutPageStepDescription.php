@@ -261,7 +261,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
                     $addCodeStep->write();
                 }
             }
-            foreach ($steps as $id => $code) {
+            foreach ($steps as $code) {
                 $filter = ['Code' => $code];
                 $obj = CheckoutPageStepDescription::get()->filter($filter)->first();
                 if ($obj) {
