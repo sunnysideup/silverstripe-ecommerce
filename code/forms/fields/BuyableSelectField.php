@@ -159,7 +159,7 @@ class BuyableSelectField extends FormField
     }
 }
 
-class BuyableSelectField_DataList extends Controller
+class BuyableSelectFieldDataList extends Controller
 {
     protected $fieldsToSearch = [
         'InternalItemID',

@@ -7,6 +7,6 @@ Director:
     'shoppingcart//$Action/$ID/$OtherID/$Version' : 'ShoppingCartController'
     'ecommercepayment//$Action/$ID/$OtherID' : 'EcommercePaymentController'
     'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTemplateTest'
-    'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
+    'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectFieldDataList'
     'ecommerce-email-preview//$Action/$ID/$OtherID' : 'OrderEmailRecordReview'
     'ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version' : 'OrderModifierFormController'
