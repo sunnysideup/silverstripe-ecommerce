@@ -322,7 +322,7 @@ EcommerceConfig:
         echo '<h2>Defined variables not set in configs ...</h2>';
         $allOK = true;
         //print_r($this->configs["EcommercePayment"]);
-        foreach ($this->definitions as $className => $setting) {
+        foreach (array_keys($this->definitions) as $className) {
             if (! isset($this->configs[$className])) {
                 DB::alteration_message("No settings found for ${className} in /ecommerce/_config/config.yml", 'deleted');
             } else {
