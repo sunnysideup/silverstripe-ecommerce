@@ -162,7 +162,6 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                         }
                     }
                 }
-                $ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
                 $this->definitions['OrderStep'][$step->Code] = $step->Description . '<br />see: <a href="' . $step->CMSEditLink() . '">Step Configuration</a>.';
                 $this->configs['OrderStep'][$step->Code] = $configArray;
                 $this->defaults['OrderStep'][$step->Code] = $defaultsArray;
