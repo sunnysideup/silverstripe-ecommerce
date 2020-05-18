@@ -618,7 +618,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * @return string
      */
-    public function getExchangeRateExplanation() : string
+    public function getExchangeRateExplanation(): string
     {
         $string = '1 ' . EcommerceConfig::get('EcommerceCurrency', 'default_currency') . ' = ' . round($this->getExchangeRate(), 3) . ' ' . $this->Code;
         $exchangeRate = $this->getExchangeRate();
