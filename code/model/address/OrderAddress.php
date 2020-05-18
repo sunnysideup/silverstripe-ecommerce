@@ -479,7 +479,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             $fields[$regionFieldName] = $regionFieldName;
         }
         if ($fields) {
-            foreach ($fields as $name => $field) {
+            foreach (array_keys($fields) as $name) {
                 $jsArray[$name] = $this->{$name};
             }
         }
