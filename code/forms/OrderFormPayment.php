@@ -37,7 +37,7 @@ class OrderFormPayment extends Form
         );
         $requiredFields = [];
         $validator = OrderFormPayment_Validator::create($requiredFields);
-        $form = parent::__construct($controller, $name, $fields, $actions, $validator);
+        parent::__construct($controller, $name, $fields, $actions, $validator);
 
         //extension point
         $this->extend('updateFields', $fields);
