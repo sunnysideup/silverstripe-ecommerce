@@ -732,7 +732,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             ->Filter(['Title' => $this->Title])
             ->Exclude(['ID' => $this->ID]);
         if ($configs->count()) {
-            foreach ($configs as $key => $config) {
+            foreach ($configs as $config) {
                 $config->Title .= '_' . $config->ID;
                 $config->write();
             }
