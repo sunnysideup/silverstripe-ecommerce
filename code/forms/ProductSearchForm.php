@@ -322,7 +322,7 @@ class ProductSearchForm extends Form
         }
         //basic get
         $singleton = Injector::inst()->get($baseClassName);
-        $searchableFields = $singleton->stat('searchable_fields');
+        // $searchableFields = $singleton->stat('searchable_fields');
         $baseList = $baseClassName::get()->filter(['ShowInSearch' => 1]);
         $ecomConfig = EcommerceDBConfig::current_ecommerce_db_config();
         if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
