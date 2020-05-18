@@ -403,13 +403,13 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        foreach (array_keys($self->customFieldLabels()) as $name) {
+            $fields->removeByName($name);
+        }
 
         $self = $this;
         $self->beforeUpdateCMSFields(
             function ($fields) use ($self) {
-                foreach (array_keys($self->customFieldLabels()) as $name) {
-                    $fields->removeByName($name);
-                }
                 //new section
                 $fieldDescriptions = $self->customDescriptionsForFields();
                 $fieldLabels = $self->fieldLabels();
