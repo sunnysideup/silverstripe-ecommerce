@@ -110,8 +110,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $count = 50;
         $orders = $this->getMyOrders($idArray, $count, $offset);
 
-        while ($orders->count()
-        ) {
+        while ($orders->count()) {
             $offset += $count;
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
