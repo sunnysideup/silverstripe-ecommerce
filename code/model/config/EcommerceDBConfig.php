@@ -414,7 +414,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $fieldDescriptions = $self->customDescriptionsForFields();
                 $fieldLabels = $self->fieldLabels();
                 $productImage = new ProductImage();
-                $versionInfo = EcommerceConfigDefinitions::create();
                 $fields->addFieldToTab('Root.Main', new TextField('Title', $fieldLabels['Title']));
                 $fields->InsertAfter(
                     'Root.Main',
