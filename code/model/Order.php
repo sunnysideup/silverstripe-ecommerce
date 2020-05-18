@@ -450,7 +450,7 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         if ($statusOptions && $statusOptions->count()) {
             $preSelected = [];
-            $createdOrderStatus = $statusOptions->First();
+            // $createdOrderStatus = $statusOptions->First();
             $arrayOfStatusOptions = clone $statusOptions->map('ID', 'Title');
             $arrayOfStatusOptionsFinal = [];
             if (count($arrayOfStatusOptions)) {
