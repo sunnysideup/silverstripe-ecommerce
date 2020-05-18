@@ -631,7 +631,7 @@ class ProductSearchForm extends Form
             $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
             // $searchStringOR = '('.implode(' OR ', $searchStringArray).')';
         }
-        $wordsAsLikeString = trim(implode('%', $wordAsArray));
+        // $wordsAsLikeString = trim(implode('%', $wordAsArray));
         $completed = [];
         $count = -1;
 
