@@ -46,7 +46,7 @@ class OptionalTreeDropdownField extends TreeDropdownField
      */
     public function tree(SS_HTTPRequest $request)
     {
-        if ($ID = (int) $request->latestparam('ID')) {
+        if ($request->latestparam('ID')) {
             return parent::tree($request);
         }
         return $this->preTree() . parent::tree($request) . self::$postTree;
