@@ -702,7 +702,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             $onlyShow = self::$for_current_order_only_show_countries;
             $doNotShow = self::$for_current_order_do_not_show_countries;
             if (is_array($onlyShow) && count($onlyShow)) {
-                foreach ($defaultArray as $key => $value) {
+                foreach (array_keys($defaultArray) as $key) {
                     if (! in_array($key, $onlyShow, true)) {
                         unset($defaultArray[$key]);
                     }
