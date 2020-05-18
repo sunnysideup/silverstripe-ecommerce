@@ -68,7 +68,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'Created' => [
             'title' => 'Date (e.g. today)',
             'field' => 'TextField',
-            'filter' => 'EcommercePaymentFilters_AroundDateFilter',
+            'filter' => 'EcommercePaymentFiltersAroundDateFilter',
         ],
         'IP' => [
             'title' => 'IP Address',
