@@ -22,7 +22,7 @@ $array = [
     './code/forms/validation/OrderForm_Cancel_Validator.php',
     './code/forms/validation/OrderStatusLogForm_Validator.php',
     './code/forms/fields/Product_ProductImageUploadField.php',
-    './code/forms/ProductSearchForm_Short.php',
+    './code/forms/ProductSearchFormShort.php',
     './code/forms/OrderForm_Cancel.php',
     './code/email/Order_StatusEmail.php',
     './code/email/Order_InvoiceEmail.php',

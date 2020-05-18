@@ -1,6 +1,6 @@
 <?php
 
-class ProductSearchForm_Short extends ProductSearchForm
+class ProductSearchFormShort extends ProductSearchForm
 {
     public function __construct($controller, $name, $nameOfProductsBeingSearched = '', $productsToSearch = null)
     {
