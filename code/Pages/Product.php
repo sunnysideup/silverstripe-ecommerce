@@ -209,7 +209,7 @@ class Product extends Page implements BuyableModel
         $htmlEditorField->setRows(3);
         $fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), 'Content');
         //dirty hack to show images!
-        $fields->addFieldToTab('Root.Images', $uploadField = new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
+        $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
         $uploadField->setCallingClass('Product');
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());

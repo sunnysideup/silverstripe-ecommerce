@@ -81,7 +81,7 @@ class EcommerceConfigDefinitions extends Object
             'Pages',
             'CartPage_Controller',
             'CheckoutPage_Controller',
-            'ShopAccountForm_Validator',
+            'ShopAccountFormValidator',
             'OrderModifierForm',
             'EcommercePaymentController',
             'OrderFormAddress',
@@ -266,7 +266,7 @@ class EcommerceConfigDefinitions extends Object
                 'checkout_steps' => 'The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment.',
                 'ajaxify_steps' => 'Array of Javascript files that are required to ajaxify the steps in the checkout. Defaults to none, but there is a sample JS file available: ecommerce/javascript/EcomCheckoutPage.js.',
             ],
-            'ShopAccountForm_Validator' => [
+            'ShopAccountFormValidator' => [
                 'minimum_password_length' => 'The minimum length of the password for an account.',
             ],
             'OrderModifierForm' => [

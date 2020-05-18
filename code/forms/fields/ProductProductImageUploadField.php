@@ -17,10 +17,10 @@
  * e.g.
  *
  *
- *     $fields->addFieldToTab('Root.Images', $uploadField = new Product_ProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
+ *     $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
  *     $uploadField->setCallingClass("Product");
  */
-class Product_ProductImageUploadField extends UploadField
+class ProductProductImageUploadField extends UploadField
 {
     /**
      * @var string

@@ -447,7 +447,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     Tab::create(
                         'ProductImages',
                         _t('EcommerceDBConfig.PRODUCT_IMAGES', 'Product Images'),
-                        //new Product_ProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
+                        //new ProductProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
                         new ReadonlyField('DefaultThumbnailImageSize', $fieldLabels['DefaultThumbnailImageSize'], $productImage->ThumbWidth() . 'px x ' . $productImage->ThumbHeight() . 'px '),
                         new ReadonlyField('DefaultSmallImageSize', $fieldLabels['DefaultSmallImageSize'], $productImage->SmallWidth() . 'px x ' . $productImage->SmallHeight() . 'px '),
                         new ReadonlyField('DefaultContentImageSize', $fieldLabels['DefaultContentImageSize'], $productImage->ContentWidth() . 'px wide'),
@@ -537,7 +537,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
                 Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
                 if (strnatcmp(PHP_VERSION, '5.5.1') >= 0) {
-                    $fields->addFieldToTab('Root.ProductImages', new Product_ProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage'], null, null, null, 'default-product-image'));
+                    $fields->addFieldToTab('Root.ProductImages', new ProductProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage'], null, null, null, 'default-product-image'));
                 }
                 $fields->replaceField(
                     'UseThisOne',

@@ -7,7 +7,7 @@
  * @package: ecommerce
  * @authors: Silverstripe, Jeremy, Nicolaas
  **/
-class OrderFormAddressValidator extends ShopAccountForm_Validator
+class OrderFormAddressValidator extends ShopAccountFormValidator
 {
     /**
      * Ensures member unique id stays unique and other basic stuff...

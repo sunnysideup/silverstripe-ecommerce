@@ -1,7 +1,7 @@
 <?php
 
 
-class ShopAccountForm_Validator extends RequiredFields
+class ShopAccountFormValidator extends RequiredFields
 {
     /**
      * Ensures member unique id stays unique and other basic stuff...
@@ -77,7 +77,7 @@ class ShopAccountForm_Validator extends RequiredFields
                 $valid = false;
             }
             $letterCount = strlen($data['PasswordCheck1']);
-            $minLength = Config::inst()->get('ShopAccountForm_Validator', 'minimum_password_length');
+            $minLength = Config::inst()->get('ShopAccountFormValidator', 'minimum_password_length');
             if ($letterCount > 0 && $letterCount < $minLength) {
                 $this->validationError(
                     'PasswordCheck1',

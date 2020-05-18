@@ -50,8 +50,8 @@
 #    OrderStepCreated: OrderStepCreated
 #    ProductImage: ProductImage
 #    SelectOrderAddressField: SelectOrderAddressField
-#    ShopAccountForm: ShopAccountForm_Validator
-#    ShopAccountForm_Validator: ShopAccountForm_Validator
+#    ShopAccountForm: ShopAccountFormValidator
+#    ShopAccountFormValidator: ShopAccountFormValidator
 #    ShippingAddress: ShippingAddress
 #    ShoppingCart: ShoppingCart
 #    SS_Datetime: I18nDatetime

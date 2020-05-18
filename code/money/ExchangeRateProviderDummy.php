@@ -1,6 +1,6 @@
 <?php
 
-class ExchangeRateProvider_Dummy extends ExchangeRateProvider
+class ExchangeRateProviderDummy extends ExchangeRateProvider
 {
     /**
      * @param string $fromCode

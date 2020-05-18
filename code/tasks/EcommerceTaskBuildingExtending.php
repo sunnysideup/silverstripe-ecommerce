@@ -6,7 +6,7 @@
  * @sub-package: tasks
 
  **/
-class EcommerceTaskBuilding_Extending extends BuildTask
+class EcommerceTaskBuildingExtending extends BuildTask
 {
     protected $title = 'Customise e-commerce';
 
