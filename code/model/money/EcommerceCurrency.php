@@ -538,7 +538,6 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
 
     public function getIsDefault()
     {
-        $outcome = false;
         if ($this->exists()) {
             if (! $this->Code) {
                 user_error('This currency (ID = ' . $this->ID . ') does not have a code ');
