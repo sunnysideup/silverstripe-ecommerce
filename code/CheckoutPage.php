@@ -53,6 +53,7 @@ class CheckoutPage extends CartPage
      * @Var Array
      */
     private static $db = array(
+        'ContentAboveCheckout' => 'HTMLText',
         'TermsAndConditionsMessage' => 'Varchar(200)',
         'EnableGoogleAnalytics' => 'Boolean(1)',
     );
@@ -305,8 +306,20 @@ class CheckoutPage extends CartPage
         );
         //The Content field has a slightly different meaning for the Checkout Page.
         $fields->removeFieldFromTab('Root.Main', 'Content');
-        $fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t('CheckoutPage.CONTENT', 'General note - always visible on the checkout page')));
-        $htmlEditorField->setRows(3);
+        $fields->addFieldsToTab(
+            'Root.Messages.Messages.AlwaysVisible', 
+            [
+                HTMLEditorField::create(
+                    'ContentAboveCheckout', 
+                    _t('CheckoutPage.TOPCONTENT', 'General note - always visible above a checkout step on the checkout page')
+                )->setRows(5),
+                HTMLEditorField::create(
+                    'Content', 
+                    _t('CheckoutPage.CONTENT', 'General note - always visible below a checkout step on the checkout page ')
+                )->setRows(5)
+            ]
+        );
+        $htmlEditorField;
         if (OrderModifier_Descriptor::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
