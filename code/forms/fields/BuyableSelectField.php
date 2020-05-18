@@ -96,7 +96,7 @@ class BuyableSelectField extends FormField
     public function setValue($data)
     {
         if ($this->buyable) {
-            $value = $this->buyable->FullName ?: $this->buyable->getTitle();
+            // $value = $this->buyable->FullName ?: $this->buyable->getTitle();
             //to TEST!!!
             $this->fieldSelectedBuyable->setValue('Once you have selected a new value, it will appear here...');
         }
