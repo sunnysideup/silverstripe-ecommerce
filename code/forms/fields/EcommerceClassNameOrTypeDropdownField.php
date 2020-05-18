@@ -35,7 +35,7 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
         $name = 'ClassName',
         $title = 'Type',
         $sourceClass,
-        array $availableClasses = [],
+        $availableClasses = [],
         $value = '',
         $form = null
     ) {
