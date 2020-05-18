@@ -644,15 +644,13 @@ class OrderFormAddress extends Form
                 }
                 return true;
             }
-        }
-        // already logged in or already created...
-        // FALSE!
-        elseif ($this->loggedInMember || $this->newlyCreatedMemberID) {
+        } elseif ($this->loggedInMember || $this->newlyCreatedMemberID) {
+            // already logged in or already created...
+            // FALSE!
             return false;
-        }
-        // no other user exists with the email...
-        // TRUE!
-        else {
+        } else {
+            // no other user exists with the email...
+            // TRUE!
             if ($this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
                 return false;
             }
