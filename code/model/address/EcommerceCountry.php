@@ -496,7 +496,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $countryCode) {
             $countryArray = self::list_of_allowed_entries_for_dropdown();
             if (is_array($countryArray) && count($countryArray)) {
-                return array_key_first($countryArray);
+                $countryCode = array_key_first($countryArray);
             }
         }
 
