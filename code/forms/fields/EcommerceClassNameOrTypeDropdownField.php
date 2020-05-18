@@ -5,8 +5,7 @@
  * classname.
  * usage:
  * EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type or so', 'MyBaseClass');
- )
- */
+ **/
 class EcommerceClassNameOrTypeDropdownField extends DropdownField
 {
     /**
