@@ -456,7 +456,7 @@ class OrderFormAddress extends Form
      * in that case the logged in member tries to take on another identity.
      * If you are not logged BUT the the unique field is used by an existing member then we can still
      * use the field - we just CAN NOT log in the member.
-     * This method needs to be public because it is used by the OrderForm_Validator (see below).
+     * This method needs to be public because it is used by the OrderFormValidator (see below).
      *
      * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *

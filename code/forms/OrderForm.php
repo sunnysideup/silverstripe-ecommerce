@@ -84,7 +84,7 @@ class OrderForm extends Form
             $actions->push(LiteralField::create('SubmitErrors', $message));
         }
         $actions->push(new FormAction('processOrder', _t('OrderForm.PROCESSORDER', 'Place order and make payment')));
-        $validator = OrderForm_Validator::create($requiredFields);
+        $validator = OrderFormValidator::create($requiredFields);
         //we stick with standard validation here, because of the complexity and
         //hard-coded payment validation that is required
         parent::__construct($controller, $name, $fields, $actions, $validator);

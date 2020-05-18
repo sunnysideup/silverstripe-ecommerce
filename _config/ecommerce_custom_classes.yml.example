@@ -40,7 +40,7 @@
 #    OrderForm: OrderForm
 #    OrderFormCancel: OrderFormCancel
 #    OrderFormPayment: OrderFormPayment
-#    OrderForm_Validator: OrderForm_Validator
+#    OrderFormValidator: OrderFormValidator
 #    OrderFormAddress: OrderFormAddress
 #    OrderFormAddressValidator: OrderFormAddressValidator
 #    OrderModifierDescriptor: OrderModifierDescriptor
