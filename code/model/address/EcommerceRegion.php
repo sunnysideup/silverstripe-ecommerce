@@ -162,7 +162,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $title = singleton('EcommerceRegion')->i18n_singular_name();
+
         $fields->removeByName('CountryID');
 
         return $fields;
