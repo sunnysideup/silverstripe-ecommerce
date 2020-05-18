@@ -334,9 +334,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
                 }
             }
             if (is_array($regionArray) && count($regionArray)) {
-                foreach ($regionArray as $regionID => $regionName) {
-                    break;
-                }
+                return array_key_first($regionArray);
             }
         }
 
