@@ -519,7 +519,7 @@ class ShoppingCartController extends Controller
      **/
     public function save(SS_HTTPRequest $request)
     {
-        $order = $this->cart->save();
+        $this->cart->save();
 
         return $this->cart->setMessageAndReturn();
     }
