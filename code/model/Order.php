@@ -663,7 +663,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $lastStep = OrderStep::last_order_step();
             if ($this->StatusID !== $lastStep->ID) {
                 $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
-                if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+                if ($queueObjectSingleton->getQueueObject($this)) {
                     $myQueueObjectField = GridField::create(
                         'MyQueueObjectField',
                         _t('Order.QUEUE_DETAILS', 'Queue Details'),
