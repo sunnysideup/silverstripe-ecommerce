@@ -631,8 +631,6 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             ', 1 ' . $this->Code . ' = ' . round(1 / $exchangeRate, 3) . ' ' .
             EcommerceConfig::get('EcommerceCurrency', 'default_currency') . '. ' .
             $exchangeRateError;
-
-        return $string;
     }
 
     /**
