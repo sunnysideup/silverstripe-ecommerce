@@ -711,7 +711,7 @@ class OrderModifier extends OrderAttribute
         }
         $ajaxObject = $this->AJAXDefinitions();
         //TableValue is a database value
-        $tableValue = DBField::create_field('Currency', $this->TableValue)->Nice();
+        // $tableValue = DBField::create_field('Currency', $this->TableValue)->Nice();
         if ($this->HideInAjaxUpdate()) {
             $js[] = [
                 't' => 'id',
