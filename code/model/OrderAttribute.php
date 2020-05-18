@@ -336,9 +336,10 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         $class = static::class;
         $classes = [];
-        $class = get_parent_class($class)
+        $class = get_parent_class($class);
         while ($class && $class !== 'DataObject') {
             $classes[] = strtolower($class);
+            $class = get_parent_class($class);
         }
         if (is_a($this, Object::getCustomClass('OrderItem'))) {
             $classes[] = strtolower($this->BuyableClassName);
