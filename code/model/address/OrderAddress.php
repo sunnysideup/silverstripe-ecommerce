@@ -332,7 +332,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $regionFieldName = $this->fieldPrefix() . 'RegionID';
         $fields[$regionFieldName] = $regionFieldName;
         if ($fields) {
-            foreach ($fields as $field => $useless) {
+            foreach (array_keys($fields) as $field) {
                 if (! in_array($field, $excludedFields, true)) {
                     $comparisonString .= preg_replace('/\s+/', '', $this->{$field});
                 }
