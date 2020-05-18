@@ -36,7 +36,7 @@ class OrderFormPayment extends Form
             new FormAction('dopayment', _t('OrderForm.PAYORDER', 'Pay balance'))
         );
         $requiredFields = [];
-        $validator = OrderFormPayment_Validator::create($requiredFields);
+        $validator = OrderFormPaymentValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
 
         //extension point
@@ -95,15 +95,5 @@ class OrderFormPayment extends Form
         $data = $this->getData();
         unset($data['LoggedInAsNote']);
         Session::set("FormInfo.{$this->FormName()}.data", $data);
-    }
-}
-
-class OrderFormPayment_Validator extends RequiredFields
-{
-    public function php($data)
-    {
-        $this->form->saveDataToSession();
-
-        return parent::php($data);
     }
 }
