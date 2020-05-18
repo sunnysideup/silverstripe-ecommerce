@@ -81,9 +81,9 @@ class BuyableSelectFieldDataList extends Controller
                         $arrayOfAddedItemIDsByClassName[$className] = [-1 => -1];
                     }
                     if ($singleton->hasDatabaseField($fieldName)) {
-                        $where = "\"${fieldName}\" LIKE '%${term}%'
-                                AND \"" . $tableName . '"."ID" NOT IN
-                                AND "AllowPurchase" = 1';
+                        // $where = "\"${fieldName}\" LIKE '%${term}%'
+                        //         AND \"" . $tableName . '"."ID" NOT IN
+                        //         AND "AllowPurchase" = 1';
                         $obj = $className::get()
                             ->filter([
                                 $fieldName . ':PartialMatch' => $term,
