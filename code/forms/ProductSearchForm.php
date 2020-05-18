@@ -413,7 +413,7 @@ class ProductSearchForm extends Form
                         $words = explode(' ', trim(preg_replace('!\s+!', ' ', $keywordPhrase)));
                         foreach ($words as $word) {
                             //todo: why are we looping through words?
-                            $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
+                            $keywordPhrase = $this->replaceSearchPhraseOrWord($word);
                         }
                         if ($this->debug) {
                             $this->debugOutput('<pre>WORD ARRAY: ' . print_r($keywordPhrase, 1) . '</pre>');
