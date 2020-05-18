@@ -1185,7 +1185,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $ordersWithThisStatus = Order::get()->filter(['StatusID' => $this->ID]);
         if ($ordersWithThisStatus->count()) {
-            $previousOrderStepObject = null;
             $bestOrderStep = $this->NextOrderStep();
             //backup
             if ($bestOrderStep && $bestOrderStep->exists()) {
