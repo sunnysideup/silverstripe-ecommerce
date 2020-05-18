@@ -411,8 +411,8 @@ class ProductSearchForm extends Form
                         $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
                         //now we are going to look for synonyms
                         $words = explode(' ', trim(preg_replace('!\s+!', ' ', $keywordPhrase)));
-                        //todo: why are we looping through words?
                         foreach ($words as $word) {
+                            //todo: why are we looping through words?
                             $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
                         }
                         if ($this->debug) {
