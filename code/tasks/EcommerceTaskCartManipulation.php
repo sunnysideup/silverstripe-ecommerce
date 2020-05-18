@@ -8,7 +8,7 @@
  * @sub-package: tasks
 
  **/
-class EcommerceTaskCartManipulation_Current extends BuildTask
+class EcommerceTaskCartManipulationCurrent extends BuildTask
 {
     protected $title = 'Clear the current Cart';
 
