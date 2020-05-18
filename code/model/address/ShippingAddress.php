@@ -208,7 +208,6 @@ class ShippingAddress extends OrderAddress
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();
-        $hasPreviousAddresses = false;
         if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
             $shippingFieldsHeader = new CompositeField(
                 new HeaderField('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 3),
