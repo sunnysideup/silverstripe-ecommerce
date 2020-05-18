@@ -44,7 +44,7 @@ class SelectOrderAddressField extends OptionsetField
      */
     public function Field($properties = [])
     {
-        $jsArray = [];
+        // $jsArray = [];
         $js = '
             if(typeof EcomSelectOrderAddressFieldOptions === "undefined") {
                 EcomSelectOrderAddressFieldOptions = [];
