@@ -242,7 +242,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         $onlyShow = self::get_for_current_order_only_show_regions();
         $doNotShow = self::get_for_current_order_do_not_show_regions();
         if (is_array($onlyShow) && count($onlyShow)) {
-            foreach ($defaultArray as $id => $value) {
+            foreach (array_keys($defaultArray) as $id) {
                 if (! in_array($id, $onlyShow, true)) {
                     unset($defaultArray[$id]);
                 }
