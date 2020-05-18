@@ -74,7 +74,7 @@ class EcommerceConfigDefinitions extends Object
         ],
         'CART' => [
             'ShoppingCart',
-            'ShoppingCart_Controller',
+            'ShoppingCartController',
             'CartResponse',
         ],
         'CHECKOUT' => [
@@ -253,7 +253,7 @@ class EcommerceConfigDefinitions extends Object
                 'default_param_filters' => 'Advanced filtering in the shopping cart.  Not currently being used. ',
                 'response_class' => 'Class used for ajax responses.',
             ],
-            'ShoppingCart_Controller' => [
+            'ShoppingCartController' => [
                 'url_segment' => 'URL Segment used for the shopping cart.',
             ],
             'CartResponse' => [

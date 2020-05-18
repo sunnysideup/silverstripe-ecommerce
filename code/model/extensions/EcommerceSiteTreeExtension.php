@@ -113,7 +113,7 @@ class EcommerceSiteTreeExtension_Controller extends Extension
      **/
     public function SimpleCartLinkAjax()
     {
-        return EcommerceConfig::get('ShoppingCart_Controller', 'url_segment') . '/showcart/?ajax=1';
+        return EcommerceConfig::get('ShoppingCartController', 'url_segment') . '/showcart/?ajax=1';
     }
 
     /**

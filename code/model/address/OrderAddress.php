@@ -457,7 +457,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     public function RemoveLink()
     {
-        return ShoppingCart_Controller::remove_address_link($this->ID, $this->ClassName);
+        return ShoppingCartController::remove_address_link($this->ID, $this->ClassName);
     }
 
     /**

@@ -19,7 +19,7 @@ class ShopAccountForm extends Form
         $requiredFields = null;
         if ($member && $member->exists()) {
             $fields = $member->getEcommerceFields(false);
-            $clearCartAndLogoutLink = ShoppingCart_Controller::clear_cart_and_logout_link();
+            $clearCartAndLogoutLink = ShoppingCartController::clear_cart_and_logout_link();
             $loginMessage =
                 '<span class="customerName">' . trim(Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname)) . '</span>, '
                 . '<a href="' . $clearCartAndLogoutLink . '">' . _t('Account.LOGOUT', 'Log out now?') .

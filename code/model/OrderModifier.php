@@ -565,7 +565,7 @@ class OrderModifier extends OrderAttribute
             }
         }
 
-        return ShoppingCart_Controller::add_modifier_link($this->ID, $params, $this->ClassName);
+        return ShoppingCartController::add_modifier_link($this->ID, $params, $this->ClassName);
     }
 
     /**
@@ -583,7 +583,7 @@ class OrderModifier extends OrderAttribute
             }
         }
 
-        return ShoppingCart_Controller::remove_modifier_link($this->ID, $param, $this->ClassName);
+        return ShoppingCartController::remove_modifier_link($this->ID, $param, $this->ClassName);
     }
 
     /**

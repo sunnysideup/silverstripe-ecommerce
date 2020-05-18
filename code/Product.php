@@ -742,7 +742,7 @@ class Product extends Page implements BuyableModel
      */
     public function AddLink()
     {
-        return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $this->linkParameters('add'));
+        return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('add'));
     }
 
     /**
@@ -753,7 +753,7 @@ class Product extends Page implements BuyableModel
     public function IncrementLink()
     {
         //we can do this, because by default add link adds one
-        return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $this->linkParameters('increment'));
+        return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('increment'));
     }
 
     /**
@@ -764,7 +764,7 @@ class Product extends Page implements BuyableModel
      */
     public function DecrementLink()
     {
-        return ShoppingCart_Controller::remove_item_link($this->ID, $this->ClassName, $this->linkParameters('decrement'));
+        return ShoppingCartController::remove_item_link($this->ID, $this->ClassName, $this->linkParameters('decrement'));
     }
 
     /**
@@ -774,7 +774,7 @@ class Product extends Page implements BuyableModel
      */
     public function RemoveLink()
     {
-        return ShoppingCart_Controller::remove_item_link($this->ID, $this->ClassName, $this->linkParameters('remove'));
+        return ShoppingCartController::remove_item_link($this->ID, $this->ClassName, $this->linkParameters('remove'));
     }
 
     /**
@@ -784,7 +784,7 @@ class Product extends Page implements BuyableModel
      */
     public function RemoveAllLink()
     {
-        return ShoppingCart_Controller::remove_all_item_link($this->ID, $this->ClassName, $this->linkParameters('removeall'));
+        return ShoppingCartController::remove_all_item_link($this->ID, $this->ClassName, $this->linkParameters('removeall'));
     }
 
     /**
@@ -794,7 +794,7 @@ class Product extends Page implements BuyableModel
      */
     public function RemoveAllAndEditLink()
     {
-        return ShoppingCart_Controller::remove_all_item_and_edit_link($this->ID, $this->ClassName, $this->linkParameters('removeallandedit'));
+        return ShoppingCartController::remove_all_item_and_edit_link($this->ID, $this->ClassName, $this->linkParameters('removeallandedit'));
     }
 
     /**
@@ -806,7 +806,7 @@ class Product extends Page implements BuyableModel
      */
     public function SetSpecificQuantityItemLink($quantity)
     {
-        return ShoppingCart_Controller::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters('setspecificquantityitem'), ['quantity' => $quantity]));
+        return ShoppingCartController::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters('setspecificquantityitem'), ['quantity' => $quantity]));
     }
 
     /**
@@ -817,7 +817,7 @@ class Product extends Page implements BuyableModel
         $array = $this->linkParameters();
         $array['BackURL'] = urlencode(CheckoutPage::find_link());
 
-        return ShoppingCart_Controller::add_item_link($this->ID, $this->ClassName, $array);
+        return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $array);
     }
 
     /**
@@ -827,7 +827,7 @@ class Product extends Page implements BuyableModel
     {
         return Controller::join_links(
             Director::baseURL(),
-            EcommerceConfig::get('ShoppingCart_Controller', 'url_segment'),
+            EcommerceConfig::get('ShoppingCartController', 'url_segment'),
             'submittedbuyable',
             $this->ClassName,
             $this->ID,
@@ -837,7 +837,7 @@ class Product extends Page implements BuyableModel
 
     public function RemoveFromSaleLink()
     {
-        return ShoppingCart_Controller::remove_from_sale_link($this->ID, $this->ClassName);
+        return ShoppingCartController::remove_from_sale_link($this->ID, $this->ClassName);
     }
 
     //TEMPLATE STUFF

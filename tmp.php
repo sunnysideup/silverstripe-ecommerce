@@ -33,7 +33,7 @@ $array = [
     './code/control/OrderEmailRecord_Review.php',
     './code/control/OrderModifierForm_Controller.php',
     './code/control/OrderStatusLogForm_Controller.php',
-    './code/control/ShoppingCart_Controller.php',
+    './code/control/ShoppingCartController.php',
     './code/cms/CMSPageAddController_Products.php',
     './code/search/filters/OrderFiltersMemberAndAddress.php',
     './code/search/filters/OrderFiltersMustHaveAtLeastOnePayment.php',

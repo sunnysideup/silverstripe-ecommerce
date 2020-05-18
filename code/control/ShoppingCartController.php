@@ -2,7 +2,7 @@
 
 
 /**
- * ShoppingCart_Controller.
+ * ShoppingCartController.
  *
  * Handles the modification of a shopping cart via http requests.
  * Provides links for making these modifications.
@@ -13,7 +13,7 @@
  *@todo supply links for adding, removing, and clearing cart items
  *@todo link for removing modifier(s)
  */
-class ShoppingCart_Controller extends Controller
+class ShoppingCartController extends Controller
 {
     /**
      * We need to only use the Security ID on a few
@@ -802,7 +802,7 @@ class ShoppingCart_Controller extends Controller
     {
         return Controller::join_links(
             Director::baseURL(),
-            Config::inst()->get('ShoppingCart_Controller', 'url_segment'),
+            Config::inst()->get('ShoppingCartController', 'url_segment'),
             $actionAndOtherLinkVariables
         );
     }

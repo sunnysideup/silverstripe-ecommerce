@@ -366,7 +366,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
         $link = Controller::join_links(
             Director::baseURL(),
-            Config::inst()->get('ShoppingCart_Controller', 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
+            Config::inst()->get('ShoppingCartController', 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
         );
         $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"${link}\" target=\"_blank\">Place order for customer</a></p>");
         $fields->addFieldsToTab(
@@ -695,7 +695,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         return Controller::join_links(
             Director::baseURL(),
-            Config::inst()->get('ShoppingCart_Controller', 'url_segment') .
+            Config::inst()->get('ShoppingCartController', 'url_segment') .
             '/loginas/' . $this->owner->ID . '/'
         );
     }

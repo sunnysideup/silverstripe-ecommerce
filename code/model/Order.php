@@ -2422,7 +2422,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getDeleteLink()
     {
         if ($this->canDelete()) {
-            return ShoppingCart_Controller::delete_order_link($this->ID);
+            return ShoppingCartController::delete_order_link($this->ID);
         }
         return '';
     }
@@ -2440,7 +2440,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getCopyOrderLink()
     {
         if ($this->canView() && $this->IsSubmitted()) {
-            return ShoppingCart_Controller::copy_order_link($this->ID);
+            return ShoppingCartController::copy_order_link($this->ID);
         }
         return '';
     }

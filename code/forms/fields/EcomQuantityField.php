@@ -173,7 +173,7 @@ class EcomQuantityField extends NumericField
      **/
     public function IncrementLink()
     {
-        return ShoppingCart_Controller::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
+        return ShoppingCartController::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
 
     /**
@@ -181,7 +181,7 @@ class EcomQuantityField extends NumericField
      **/
     public function DecrementLink()
     {
-        return ShoppingCart_Controller::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
+        return ShoppingCartController::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
 
     /**
@@ -197,7 +197,7 @@ class EcomQuantityField extends NumericField
      */
     protected function getQuantityLink()
     {
-        return ShoppingCart_Controller::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
+        return ShoppingCartController::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
 
     /**

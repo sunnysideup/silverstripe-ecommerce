@@ -651,7 +651,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function Link()
     {
-        return ShoppingCart_Controller::set_currency_link($this->Code);
+        return ShoppingCartController::set_currency_link($this->Code);
     }
 
     /**

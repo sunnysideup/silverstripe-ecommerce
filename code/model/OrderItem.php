@@ -889,7 +889,7 @@ class OrderItem extends OrderAttribute
      **/
     public function AddLink()
     {
-        return ShoppingCart_Controller::add_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
+        return ShoppingCartController::add_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
     }
 
     /**
@@ -897,7 +897,7 @@ class OrderItem extends OrderAttribute
      **/
     public function IncrementLink()
     {
-        return ShoppingCart_Controller::add_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
+        return ShoppingCartController::add_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
     }
 
     /**
@@ -905,7 +905,7 @@ class OrderItem extends OrderAttribute
      **/
     public function DecrementLink()
     {
-        return ShoppingCart_Controller::remove_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
+        return ShoppingCartController::remove_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
     }
 
     /**
@@ -913,7 +913,7 @@ class OrderItem extends OrderAttribute
      **/
     public function RemoveLink()
     {
-        return ShoppingCart_Controller::remove_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
+        return ShoppingCartController::remove_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
     }
 
     /**
@@ -921,7 +921,7 @@ class OrderItem extends OrderAttribute
      **/
     public function RemoveAllLink()
     {
-        return ShoppingCart_Controller::remove_all_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
+        return ShoppingCartController::remove_all_item_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
     }
 
     /**
@@ -929,7 +929,7 @@ class OrderItem extends OrderAttribute
      **/
     public function RemoveAllAndEditLink()
     {
-        return ShoppingCart_Controller::remove_all_item_and_edit_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
+        return ShoppingCartController::remove_all_item_and_edit_link($this->BuyableID, $this->BuyableClassName, $this->linkParameters());
     }
 
     /**
@@ -937,7 +937,7 @@ class OrderItem extends OrderAttribute
      **/
     public function SetSpecificQuantityItemLink($quantity)
     {
-        return ShoppingCart_Controller::set_quantity_item_link($this->BuyableID, $this->BuyableClassName, array_merge($this->linkParameters(), ['quantity' => $quantity]));
+        return ShoppingCartController::set_quantity_item_link($this->BuyableID, $this->BuyableClassName, array_merge($this->linkParameters(), ['quantity' => $quantity]));
     }
 
     public function debug()
