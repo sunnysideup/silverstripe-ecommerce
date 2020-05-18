@@ -55,7 +55,6 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      */
     public function handleSales($gridField, $request = null)
     {
-
         if ($fileData = $this->generateExportFileData($gridField)) {
             $now = Date('d-m-Y-H-i');
             $fileName = "sales-${now}.csv";
@@ -104,9 +103,6 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             }
         }
 
-        //file data
-        $now = Date('d-m-Y-H-i');
-        $fileName = "export-${now}.csv";
 
         //data object variables
         $orderStatusSubmissionLog = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
