@@ -50,7 +50,6 @@ class SelectOrderAddressField extends OptionsetField
                 EcomSelectOrderAddressFieldOptions = [];
             }
         ';
-        $jsonCompare = [];
         if ($this->addresses) {
             foreach ($this->addresses as $address) {
                 $js .= '
