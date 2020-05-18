@@ -55,10 +55,10 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      */
     public function handleSales($gridField, $request = null)
     {
-        $now = Date('d-m-Y-H-i');
-        $fileName = "sales-${now}.csv";
 
         if ($fileData = $this->generateExportFileData($gridField)) {
+            $now = Date('d-m-Y-H-i');
+            $fileName = "sales-${now}.csv";
             return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         }
     }
