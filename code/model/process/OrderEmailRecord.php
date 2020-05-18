@@ -89,7 +89,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         'Subject' => 'PartialMatchFilter',
         //make sure to keep the item below, otherwise they do not show in form
         'OrderStepID' => [
-            'filter' => 'OrderEmailRecordFilters_MultiOptionsetStatusIDFilter',
+            'filter' => 'OrderEmailRecordFiltersMultiOptionsetStatusIDFilter',
         ],
         'Result' => true,
     ];

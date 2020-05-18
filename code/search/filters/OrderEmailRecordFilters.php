@@ -9,7 +9,7 @@
  * @sub-package: search
 
  **/
-class OrderEmailRecordFilters_MultiOptionsetStatusIDFilter extends ExactMatchFilter
+class OrderEmailRecordFiltersMultiOptionsetStatusIDFilter extends ExactMatchFilter
 {
     /**
      *@return SQLQuery
