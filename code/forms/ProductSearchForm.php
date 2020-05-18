@@ -634,7 +634,7 @@ class ProductSearchForm extends Form
         // $wordsAsLikeString = trim(implode('%', $wordAsArray));
         $completed = [];
         $count = -1;
-
+        //@todo: make this smarter!
         if (in_array('Title', $fields, true)) {
             $searches[++$count][] = "LOWER(\"Title\") = '${$wordsAsLikeString}'"; // a) Exact match
             $searches[++$count][] = "LOWER(\"Title\") LIKE '%${$wordsAsLikeString}%'"; // b) Full match within a bigger string
