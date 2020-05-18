@@ -272,7 +272,7 @@ EcommerceConfig:
     {
         echo '<h2>Set in configs but not defined</h2>';
         $allOK = true;
-        foreach ($this->configs as $className => $setting) {
+        foreach (array_keys($this->configs) as $className) {
             if (! isset($this->definitions[$className])) {
                 $allOK = false;
                 $this->missingClasses[$className] = $className;
@@ -301,7 +301,7 @@ EcommerceConfig:
     {
         echo '<h2>Classes that do not exist</h2>';
         $allOK = true;
-        foreach ($this->configs as $className => $setting) {
+        foreach (array_keys($this->configs) as $className) {
             if (! class_exists($className)) {
                 $allOK = false;
                 DB::alteration_message("${className}", 'deleted');
