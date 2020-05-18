@@ -72,7 +72,6 @@ class EcommerceTaskCartCleanup extends BuildTask
                 $maximumNumberOfObjectsDeleted = intval($limitFromGetVar);
             }
         }
-        $limit = '0, ' . $maximumNumberOfObjectsDeleted;
 
         //sort
         $sort = '"Order"."Created" ASC';
