@@ -66,7 +66,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $array[0] = _t('Member.SELECTCUSTOMER', ' --- SELECT CUSTOMER ---');
         }
         //get customer group
-        $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
         $group = self::get_customer_group();
         //fill array
         if ($group) {
@@ -105,7 +104,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $array[0] = _t('Member.SELECT_ECOMMERCE_ADMIN', ' --- SELECT ADMIN ---');
         }
         //get customer group
-        $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
         $group = self::get_admin_group();
         //fill array
         if ($group) {
