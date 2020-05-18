@@ -357,7 +357,7 @@ class EcommercePaymentFormSetupAndValidation extends Object
             //Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
             if (is_numeric($cvv)) {
                 //Splits up the card number into various identifying lengths.
-                $firstOne = substr($cardNumber, 0, 1);
+                // $firstOne = substr($cardNumber, 0, 1);
                 $firstTwo = substr($cardNumber, 0, 2);
 
                 //If the card is an American Express
