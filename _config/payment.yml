@@ -1,7 +1,10 @@
 ---
 Name: ecommerce_payment_settings
-Before: 'app/*'
-After: 'framework/*','cms/*'
+Before:
+  - 'app/*'
+After:
+  - 'framework/*'
+  - 'cms/*'
 only:
   environment: 'dev'
 ---

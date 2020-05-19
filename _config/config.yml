@@ -1,9 +1,10 @@
 ---
 Name: ecommerce
-Before: 'app/*'
+Before:
+  - 'app/*'
 After:
-   - 'framework/*'
-   - 'cms/*'
+  - 'framework/*'
+  - 'cms/*'
 ---
 SilverStripe\Dev\DevelopmentAdmin:
   extensions:

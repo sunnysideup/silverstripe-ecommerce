@@ -1,6 +1,10 @@
 ---
 Name: ecommerce_routes
-After: framework/routes#coreroutes
+Before:
+  - 'app/*'
+After:
+  - 'framework/*'
+  - 'cms/*'
 ---
 SilverStripe\Control\Director:
   rules:
