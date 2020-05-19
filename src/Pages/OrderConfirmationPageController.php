@@ -61,11 +61,11 @@ class OrderConfirmationPageController extends CartPageController
             }
         }
         parent::init();
-        Requirements::themedCSS('Order', 'ecommerce');
-        Requirements::themedCSS('Order_Print', 'ecommerce', 'print');
-        Requirements::themedCSS('CheckoutPage', 'ecommerce');
-        Requirements::javascript('ecommerce/javascript/EcomPayment.js');
-        Requirements::javascript('ecommerce/javascript/EcomPrintAndMail.js');
+        Requirements::themedCSS('sunnysideup/ecommerce: Order', 'ecommerce');
+        Requirements::themedCSS('sunnysideup/ecommerce: Order_Print', 'ecommerce', 'print');
+        Requirements::themedCSS('sunnysideup/ecommerce: CheckoutPage', 'ecommerce');
+        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPayment.js');
+        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPrintAndMail.js');
     }
 
     /**

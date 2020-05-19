@@ -21,7 +21,7 @@ class OrderForm extends Form
     {
 
         //requirements
-        Requirements::javascript('ecommerce/javascript/EcomOrderForm.js');
+        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderForm.js');
 
         //set basics
         $order = ShoppingCart::current_order();

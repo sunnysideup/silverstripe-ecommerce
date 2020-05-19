@@ -57,7 +57,7 @@ class SelectOrderAddressField extends OptionsetField
                 ';
             }
         }
-        Requirements::javascript('ecommerce/javascript/EcomSelectOrderAddressField.js');
+        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomSelectOrderAddressField.js');
         Requirements::customScript(
             $js,
             'Update_' . $this->getName()

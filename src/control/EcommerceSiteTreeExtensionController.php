@@ -29,7 +29,7 @@ class EcommerceSiteTreeExtensionController extends Extension
   * EXP: Check for best usage and inclusion of Jquery
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('sunnysideup/ecommerce: silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
@@ -66,8 +66,8 @@ class EcommerceSiteTreeExtensionController extends Extension
     {
         Requirements::javascript(EcommerceConfig::get('EcommerceConfigAjax', 'cart_js_file_location'));
         Requirements::javascript(EcommerceConfig::get('EcommerceConfigAjax', 'dialogue_js_file_location'));
-        Requirements::themedCSS('Cart', 'ecommerce');
-        Requirements::themedCSS('jquery.colorbox', 'ecommerce');
+        Requirements::themedCSS('sunnysideup/ecommerce: Cart', 'ecommerce');
+        Requirements::themedCSS('sunnysideup/ecommerce: jquery.colorbox', 'ecommerce');
     }
 
     /**

@@ -78,9 +78,9 @@ class ProductGroupController extends Page_Controller
     {
         parent::init();
         $this->originalTitle = $this->Title;
-        Requirements::themedCSS('ProductGroup', 'ecommerce');
-        Requirements::themedCSS('ProductGroupPopUp', 'ecommerce');
-        Requirements::javascript('ecommerce/javascript/EcomProducts.js');
+        Requirements::themedCSS('sunnysideup/ecommerce: ProductGroup', 'ecommerce');
+        Requirements::themedCSS('sunnysideup/ecommerce: ProductGroupPopUp', 'ecommerce');
+        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();
         //makes sure best match only applies to search -i.e. reset otherwise.

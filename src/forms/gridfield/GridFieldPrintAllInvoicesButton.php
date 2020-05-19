@@ -90,9 +90,9 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
         }
         Requirements::clear();
         Config::modify()->update('SSViewer', 'theme_enabled', true);
-        Requirements::themedCSS('OrderReport', 'ecommerce');
-        Requirements::themedCSS('Order_Invoice', 'ecommerce');
-        Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print');
+        Requirements::themedCSS('sunnysideup/ecommerce: OrderReport', 'ecommerce');
+        Requirements::themedCSS('sunnysideup/ecommerce: Order_Invoice', 'ecommerce');
+        Requirements::themedCSS('sunnysideup/ecommerce: Order_Invoice_Print_Only', 'ecommerce', 'print');
         $curr = Controller::curr();
         $curr->Orders = $al;
 

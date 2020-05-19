@@ -493,7 +493,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email'))
             );
         } else {
-            Requirements::javascript('ecommerce/javascript/EcomPasswordField.js');
+            Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPasswordField.js');
 
             if ($this->owner->exists()) {
                 if ($this->owner->Password) {
