@@ -8,6 +8,7 @@ use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+
 /**
  * see description in class.
  *
@@ -40,27 +41,27 @@ class EcommerceTaskProductImageReset extends BuildTask
                 foreach ($rows as $row) {
                     $remove = false;
                     $classErrorCount += DB::query('
-						SELECT COUNT ("File"."ID")
-						FROM "File"
-						WHERE
-							"File"."ID" = ' . $row['ImageID'] . "
-							AND  (
-							 \"ClassName\" = 'Image' OR
-							 \"ClassName\" = 'ProductVariation_Image' OR
-							 \"ClassName\" = ''
-							);
-					")->value();
+                        SELECT COUNT ("File"."ID")
+                        FROM "File"
+                        WHERE
+                            "File"."ID" = ' . $row['ImageID'] . "
+                            AND  (
+                             \"ClassName\" = 'Image' OR
+                             \"ClassName\" = 'ProductVariation_Image' OR
+                             \"ClassName\" = ''
+                            );
+                    ")->value();
                     DB::query("
-						UPDATE \"File\"
-						SET \"ClassName\" = 'ProductImage'
-						WHERE
-							\"File\".\"ID\" = " . $row['ImageID'] . "
-							AND  (
-							 \"ClassName\" = 'Image' OR
-							 \"ClassName\" = 'ProductVariation_Image' OR
-							 \"ClassName\" = ''
-							);
-					");
+                        UPDATE \"File\"
+                        SET \"ClassName\" = 'ProductImage'
+                        WHERE
+                            \"File\".\"ID\" = " . $row['ImageID'] . "
+                            AND  (
+                             \"ClassName\" = 'Image' OR
+                             \"ClassName\" = 'ProductVariation_Image' OR
+                             \"ClassName\" = ''
+                            );
+                    ");
                     $image = ProductImage::get()->byID($row['ImageID']);
                     if (! $image) {
                         $remove = true;
