@@ -65,7 +65,7 @@ ProductGroup:
       SQL: "\"Sort\" ASC, \"Title\" ASC"
     price:
       Title: 'Lowest Price'
-      SQL: "\"Price\" ASC, \"Sort\" ASC", \"Title\" ASC"
+      SQL: "\"Price\" ASC, \"Sort\" ASC, \"Title\" ASC"
   filter_options:
     default:
       Title: 'All Products (default)'

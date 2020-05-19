@@ -14,7 +14,7 @@ class OrderFormPayment extends Form
             new HiddenField('OrderID', '', $order->ID)
         );
         if ($returnToLink) {
-            $fields->push(new HiddenField('returntolink', '', convert::raw2att($returnToLink)));
+            $fields->push(new HiddenField('returntolink', '', Convert::raw2att($returnToLink)));
         }
 
         $bottomFields = new CompositeField();
