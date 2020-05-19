@@ -194,8 +194,8 @@ Sunnysideup\Ecommerce\Control\EcommercePaymentController:
   url_segment: ecommercepayment
 Sunnysideup\Ecommerce\Config\EcommerceConfigAjax:
   definitions_class_name: Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions
-  cart_js_file_location: ecommerce/javascript/EcomCart.js
-  dialogue_js_file_location: ecommerce/javascript/jquery.colorbox-min.js
+  cart_js_file_location: sunnysideup:ecommerce client/javascript/EcomCart.js
+  dialogue_js_file_location: sunnysideup:ecommerce client/javascript/jquery.colorbox-min.js
 Sunnysideup\Ecommerce\Control\CartResponse:
   cart_responses_required:
     SideBarCartID: Sidebar_Cart_Inner

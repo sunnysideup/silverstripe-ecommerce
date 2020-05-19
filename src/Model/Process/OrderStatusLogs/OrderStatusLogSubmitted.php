@@ -19,7 +19,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  **/
 class OrderStatusLogSubmitted extends OrderStatusLog
 {
-
     private static $table_name = 'OrderStatusLogSubmitted';
 
     private static $db = [

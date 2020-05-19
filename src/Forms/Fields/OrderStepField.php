@@ -78,7 +78,7 @@ class OrderStepField extends DatalessField
         }
         $html .= '</ol><div class="clear"></div></div>';
         $this->content = $html;
-        Requirements::themedCSS('sunnysideup/ecommerce: OrderStepField', 'ecommerce');
+        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: OrderStepField', 'ecommerce');
         parent::__construct($name);
     }
 

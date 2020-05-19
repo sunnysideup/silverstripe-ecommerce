@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\OrderItem;

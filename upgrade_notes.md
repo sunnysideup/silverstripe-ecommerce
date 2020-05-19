@@ -10834,7 +10834,7 @@ modified:	src/Model/Extensions/EcommerceRole.php
 +                new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class))
              );
          } else {
-             Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPasswordField.js');
+             Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPasswordField.js');
 @@ -546,7 +580,7 @@
                  );
              } else {
@@ -11533,10 +11533,10 @@ modified:	src/Forms/OrderFormAddress.php
 @@ -85,7 +110,7 @@
 
          //requirements
-         Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 -        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
 +        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
-             Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+             Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
          }
 
 @@ -96,7 +121,7 @@
@@ -11952,7 +11952,7 @@ modified:	src/Forms/Fields/BuyableSelectField.php
 @@ -90,7 +97,7 @@
          //Requirements::javascript($this->jquery_UI_JS_location);
          //Requirements::css($this->jquery_UI_CSS_location);
-         Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomBuyableSelectField.js');
+         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
 -        Requirements::customScript($this->getJavascript(), 'BuyableSelectField' . $this->id());
 +        Requirements::customScript($this->getJavascript(), BuyableSelectField::class . $this->id());
          Requirements::themedCSS('sunnysideup/ecommerce: BuyableSelectField', 'ecommerce');

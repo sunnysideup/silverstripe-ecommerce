@@ -62,11 +62,11 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     public function init()
     {
         parent::init();
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomBuyableSelectField.js');
-        //Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //Requirements::themedCSS("OrderStepField",'ecommerce'); // LEAVE HERE
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
+        //// TODO: find replacement for: Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        //// TODO: find replacement for: Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        //// TODO: find replacement for: Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        //// TODO: find replacement for: Requirements::themedCSS("OrderStepField",'ecommerce'); // LEAVE HERE
         //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
     }
 

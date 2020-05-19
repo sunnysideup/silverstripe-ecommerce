@@ -247,8 +247,8 @@ class ProductController extends PageController
     protected function init()
     {
         parent::init();
-        Requirements::themedCSS('sunnysideup/ecommerce: Product', 'ecommerce');
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomProducts.js');
+        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Product', 'ecommerce');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
     }
 
     /**

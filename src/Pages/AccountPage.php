@@ -29,8 +29,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  **/
 class AccountPage extends Page
 {
-    private static $table_name = 'AccountPage';
-
     /**
      *@var float
      */
@@ -50,6 +48,8 @@ class AccountPage extends Page
      *@var DataList
      */
     protected $pastOrders = null;
+
+    private static $table_name = 'AccountPage';
 
     /**
      * standard SS variable.

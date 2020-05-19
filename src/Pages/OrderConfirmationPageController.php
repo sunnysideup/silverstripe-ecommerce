@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\ArrayList;
@@ -10,6 +9,7 @@ use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Email\OrderEmail;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
 use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
@@ -80,11 +80,11 @@ class OrderConfirmationPageController extends CartPageController
             }
         }
         parent::init();
-        Requirements::themedCSS('sunnysideup/ecommerce: Order', 'ecommerce');
-        Requirements::themedCSS('sunnysideup/ecommerce: Order_Print', 'ecommerce', 'print');
-        Requirements::themedCSS('sunnysideup/ecommerce: CheckoutPage', 'ecommerce');
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPayment.js');
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPrintAndMail.js');
+        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Order', 'ecommerce');
+        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Order_Print', 'ecommerce', 'print');
+        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: CheckoutPage', 'ecommerce');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
     }
 
     /**
@@ -97,13 +97,13 @@ class OrderConfirmationPageController extends CartPageController
      **/
     public function showorder(HTTPRequest $request)
     {
-        isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
+        // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
         if (isset($_REQUEST['print'])) {
             Requirements::clear();
-            Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('Order_Invoice', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            // TODO: find replacement for: Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            // TODO: find replacement for: Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            // TODO: find replacement for: Requirements::themedCSS('Order_Invoice', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            // TODO: find replacement for: Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::inst()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('Invoice');
@@ -112,9 +112,9 @@ class OrderConfirmationPageController extends CartPageController
             return $html;
         } elseif (isset($_REQUEST['packingslip'])) {
             Requirements::clear();
-            Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            // TODO: find replacement for: Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            // TODO: find replacement for: Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            // TODO: find replacement for: Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::inst()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('PackingSlip');

@@ -143,8 +143,7 @@ class EcommercePaymentController extends Controller
     protected function init()
     {
         parent::init();
-        isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'app';
-        Requirements::themedCSS('sunnysideup/ecommerce: typography', $themeBaseFolder);
+        // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'app';
 
         /**
          * ### @@@@ START REPLACEMENT @@@@ ###
@@ -154,7 +153,7 @@ class EcommercePaymentController extends Controller
          * EXP: Check for best usage and inclusion of Jquery
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        Requirements::javascript('sunnysideup/ecommerce: silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         $id = intval($this->request->param('ID'));

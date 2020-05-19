@@ -72,7 +72,7 @@ class OrderStatusLogForm extends Form
          * EXP: Check if the class name can still be used as such
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        Requirements::themedCSS($this->ClassName, 'ecommerce');
+        // TODO: find replacement for: Requirements::themedCSS($this->ClassName, 'ecommerce');
         Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
         //add JS for the Log - added in Log
 

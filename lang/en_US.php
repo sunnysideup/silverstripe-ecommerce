@@ -1,15 +1,15 @@
 <?php
 
-use Sunnysideup\Ecommerce\Pages\AccountPage;
+use SilverStripe\Control\Email\Email;
 use SilverStripe\ORM\FieldType\DBDate;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderAttribute;
-use SilverStripe\Control\Email\Email;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 global $lang;

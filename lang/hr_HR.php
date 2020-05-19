@@ -1,8 +1,8 @@
 <?php
 
+use SilverStripe\Control\Email\Email;
 use SilverStripe\i18n\i18n;
 use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Control\Email\Email;
 
 /**
  * Croatian (Croatia) language pack.

@@ -1,7 +1,7 @@
 <?php
 
-use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 use SilverStripe\Admin\CMSMenu;
+use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 
 /**
  * @author: Nicolaas - modules [at] sunnysideup.co.nz

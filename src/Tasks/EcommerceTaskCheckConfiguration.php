@@ -3,14 +3,13 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\Image;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-
-
-
-
-
-
 use SilverStripe\CMS\Model\SiteTree;
+
+
+
+
+
+
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\ClassInfo;
@@ -24,6 +23,7 @@ use Spyc;
 use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigDefinitions;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;

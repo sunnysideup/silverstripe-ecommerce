@@ -1,9 +1,9 @@
 <?php
 
 use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * Arabic (Saudi Arabia) language pack.

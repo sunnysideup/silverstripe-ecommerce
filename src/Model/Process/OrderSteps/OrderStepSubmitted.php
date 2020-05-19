@@ -1,12 +1,13 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;

@@ -1,17 +1,17 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Control;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\Core\Injector\Injector;
 
 /**
  * ### @@@@ START REPLACEMENT @@@@ ###
@@ -39,7 +39,7 @@ class EcommerceSiteTreeExtensionController extends Extension
          * EXP: Check for best usage and inclusion of Jquery
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        Requirements::javascript('sunnysideup/ecommerce: silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
@@ -53,11 +53,10 @@ class EcommerceSiteTreeExtensionController extends Extension
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            if (
-                is_a(
-                    $this->owner->dataRecord,
-                    EcommerceConfigClassNames::getName(Product::class)
-                ) ||
+            if (is_a(
+                $this->owner->dataRecord,
+                EcommerceConfigClassNames::getName(Product::class)
+            ) ||
                 is_a(
                     $this->owner->dataRecord,
                     EcommerceConfigClassNames::getName(ProductGroup::class)
@@ -85,8 +84,8 @@ class EcommerceSiteTreeExtensionController extends Extension
     {
         Requirements::javascript(EcommerceConfig::get(EcommerceConfigAjax::class, 'cart_js_file_location'));
         Requirements::javascript(EcommerceConfig::get(EcommerceConfigAjax::class, 'dialogue_js_file_location'));
-        Requirements::themedCSS('sunnysideup/ecommerce: Cart', 'ecommerce');
-        Requirements::themedCSS('sunnysideup/ecommerce: jquery.colorbox', 'ecommerce');
+        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Cart');
+        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: client/js/jquery.colorbox', 'ecommerce');
     }
 
     /**

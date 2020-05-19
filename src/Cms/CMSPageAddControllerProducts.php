@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\CMS\Controllers\CMSPageAddController;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayList;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;

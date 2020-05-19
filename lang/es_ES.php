@@ -1,8 +1,8 @@
 <?php
 
+use SilverStripe\Control\Email\Email;
 use SilverStripe\i18n\i18n;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use SilverStripe\Control\Email\Email;
 
 /**
  * Spanish (Spain) language pack.

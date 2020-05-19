@@ -61,7 +61,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     public function init()
     {
         parent::init();
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomBuyableSelectField.js');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
     }
 
     /**

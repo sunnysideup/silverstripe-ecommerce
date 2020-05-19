@@ -28,13 +28,13 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
  * "Abstract" class for a number of different payment
@@ -58,7 +58,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $dependencies = [
-        'supportedMethodsProvider' => '%$'.EcommercePaymentSupportedMethodsProvider::class,
+        'supportedMethodsProvider' => '%$' . EcommercePaymentSupportedMethodsProvider::class,
     ];
 
     /**

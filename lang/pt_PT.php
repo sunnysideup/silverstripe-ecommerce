@@ -1,7 +1,7 @@
 <?php
 
-use SilverStripe\i18n\i18n;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\i18n\i18n;
 
 /**
  * Portuguese (Portugal) language pack.

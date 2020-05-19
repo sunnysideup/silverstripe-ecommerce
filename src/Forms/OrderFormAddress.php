@@ -88,9 +88,9 @@ class OrderFormAddress extends Form
         $requiredFields = [];
 
         //requirements
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
-            Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         }
 
         //  ________________ 1) Order + Member + Address fields

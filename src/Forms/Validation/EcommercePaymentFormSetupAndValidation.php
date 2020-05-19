@@ -6,11 +6,11 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\ViewableData;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCreditCardField;
 use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 //get_credit_card_payment_form_fields: $formHelper->getCreditCardPaymentFormFields
 //get_credit_card_payment_form_fields_required: : $formHelper->getCreditCardPaymentFormFieldsRequired

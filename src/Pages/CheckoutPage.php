@@ -73,8 +73,6 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  **/
 class CheckoutPage extends CartPage
 {
-
-
     /**
      * standard SS variable.
      *

@@ -3,17 +3,17 @@
 namespace Sunnysideup\Ecommerce\Model;
 
 use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-
-
-
 use SilverStripe\Forms\HeaderField;
+
+
+
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;

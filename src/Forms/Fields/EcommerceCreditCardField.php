@@ -36,7 +36,7 @@ class EcommerceCreditCardField extends TextField
      */
     public function Field($properties = [])
     {
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomCreditCardValidation.js');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomCreditCardValidation.js');
         $parts = $this->value;
         if (! is_array($parts)) {
             $parts = explode("\n", chunk_split($parts, 4, "\n"));
